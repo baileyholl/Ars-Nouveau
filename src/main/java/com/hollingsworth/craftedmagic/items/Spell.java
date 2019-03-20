@@ -2,8 +2,8 @@ package com.hollingsworth.craftedmagic.items;
 
 import com.hollingsworth.craftedmagic.ExampleMod;
 import com.hollingsworth.craftedmagic.spell.SpellResolver;
-import com.hollingsworth.craftedmagic.spell.cast_types.CastingType;
-import com.hollingsworth.craftedmagic.spell.spell_types.SpellType;
+import com.hollingsworth.craftedmagic.spell.method.MethodType;
+import com.hollingsworth.craftedmagic.spell.effect.EffectType;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,8 +24,8 @@ public class Spell extends Item {
     public static final String CAST_TYPE = "cast_type";
     public static final String SPELL_TYPE = "spell_type";
 
-    public CastingType castingType;
-    public SpellType spellType;
+    public MethodType methodType;
+    public EffectType effectType;
 
 
 
@@ -55,8 +55,8 @@ public class Spell extends Item {
     {
         if(stack != null && stack.hasTagCompound()) {
             NBTTagCompound tag = stack.getTagCompound();
-            tooltip.add("Casting Type:     " + tag.getString(CAST_TYPE));
-            tooltip.add("Spell Type:        " + tag.getString(SPELL_TYPE));
+            tooltip.add("Method:     " + tag.getString(CAST_TYPE));
+            tooltip.add("Effect:     " + tag.getString(SPELL_TYPE));
         }
     }
 
@@ -66,7 +66,7 @@ public class Spell extends Item {
         if(!worldIn.isRemote && stack.hasTagCompound()){
             NBTTagCompound tag = playerIn.getHeldItem(handIn).getTagCompound();
             SpellResolver resolver = new SpellResolver(tag.getString(CAST_TYPE), tag.getString(SPELL_TYPE));
-            resolver.onRightClick();
+            resolver.onCast();
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }

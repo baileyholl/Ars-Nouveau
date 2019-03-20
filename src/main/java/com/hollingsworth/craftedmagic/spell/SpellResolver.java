@@ -1,19 +1,20 @@
 package com.hollingsworth.craftedmagic.spell;
 
-import com.hollingsworth.craftedmagic.spell.cast_types.CastingType;
-import com.hollingsworth.craftedmagic.spell.spell_types.SpellType;
+import com.hollingsworth.craftedmagic.api.AbstractSpellPart;
+import com.hollingsworth.craftedmagic.spell.method.MethodType;
+import com.hollingsworth.craftedmagic.spell.effect.EffectType;
 
 public class SpellResolver {
-    CastingType castType;
-    SpellType spellType;
+    MethodType castType;
+    EffectType effectType;
 
-    public SpellResolver(CastingType cast, SpellType spell){
+    public SpellResolver(MethodType cast, EffectType spell){
         this.castType = cast;
-        this.spellType = spell;
+        this.effectType = spell;
     }
 
-    public SpellResolver(SpellComponent cast, SpellComponent spell){
-        this((CastingType) cast, (SpellType) spell);
+    public SpellResolver(AbstractSpellPart cast, AbstractSpellPart spell){
+        this((MethodType) cast, (EffectType) spell);
     }
 
     public SpellResolver(String castTag, String spellTag){
@@ -21,8 +22,8 @@ public class SpellResolver {
     }
 
 
-    public void onRightClick(){
-        castType.onRightClick();
-        spellType.onRightClick();
+    public void onCast(){
+        castType.onCast();
+        effectType.onCast();
     }
 }
