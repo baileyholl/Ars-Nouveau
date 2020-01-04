@@ -1,0 +1,2 @@
+Resolve Spell = zapsplat_fantasy_magic_spell_whoosh_powerful_energy_pass_electric_019_39300
+cast_spell = modtut:zapsplat_fantasy_magic_spell_whoosh_ball_of_energy_pass_by_fast_001_32444

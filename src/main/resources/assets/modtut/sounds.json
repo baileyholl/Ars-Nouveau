@@ -1,0 +1,16 @@
+{
+  "cast_spell": {
+    "category": "block",
+    "sounds": [ {
+		"name":"modtut:cast_spell"
+	}	
+	]
+  },
+  "resolve_spell": {
+    "category": "block",
+    "sounds": [ {
+		"name":"modtut:resolve_spell"
+	}	
+	]
+  }
+}

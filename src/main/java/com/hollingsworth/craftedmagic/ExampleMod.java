@@ -26,6 +26,7 @@ public class ExampleMod
     public void preInit(FMLPreInitializationEvent event) {
         logger = event.getModLog();
         proxy.preInit(event);
+
     }
 
     @Mod.EventHandler

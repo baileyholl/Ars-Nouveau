@@ -1,0 +1,19 @@
+{
+    "parent": "item/generated",
+    "textures": {
+        "layer0": "modtut:items/spell_00"
+    },
+    "overrides": [
+        { "predicate": { "age": 0 }, "model": "modtut:item/spell" },
+        { "predicate": { "age": 1 }, "model": "modtut:item/spell_01" },
+        { "predicate": { "age": 2 }, "model": "modtut:item/spell_02" },
+        { "predicate": { "age": 3 }, "model": "modtut:item/spell_03" },
+        { "predicate": { "age": 4 }, "model": "modtut:item/spell_04" },
+        { "predicate": { "age": 5 }, "model": "modtut:item/spell_05" },
+        { "predicate": { "age": 6 }, "model": "modtut:item/spell_06" },
+        { "predicate": { "age": 7 }, "model": "modtut:item/spell_07" },
+        { "predicate": { "age": 8 }, "model": "modtut:item/spell_08" },
+        { "predicate": { "age": 9 }, "model": "modtut:item/spell_09" },
+        { "predicate": { "age": 10 }, "model": "modtut:item/spell_10" }
+    ]
+}
