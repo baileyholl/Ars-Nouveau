@@ -1,68 +1,50 @@
 package com.hollingsworth.craftedmagic.entity;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import com.hollingsworth.craftedmagic.ExampleMod;
-import com.hollingsworth.craftedmagic.api.Position;
 import com.hollingsworth.craftedmagic.spell.SpellResolver;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IProjectile;
-import net.minecraft.entity.MoverType;
-import net.minecraft.entity.boss.EntityDragon;
-import net.minecraft.entity.monster.EntityEnderman;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.entity.projectile.EntityArrow;
-import net.minecraft.entity.projectile.EntityThrowable;
-import net.minecraft.init.Enchantments;
-import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.network.play.server.SPacketChangeGameState;
-import net.minecraft.util.*;
-import net.minecraft.util.datafix.DataFixer;
-import net.minecraft.util.math.*;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ThrowableEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
-import java.util.List;
-
-public class EntityProjectileSpell extends EntityThrowable {
+public class EntityProjectileSpell extends ThrowableEntity {
 
     private int age;
     private SpellResolver spellResolver;
     public int xpColor;
-    public EntityProjectileSpell(World worldIn){
-        super(worldIn);
+
+    public EntityProjectileSpell(final EntityType<? extends EntityProjectileSpell> entityType, World worldIn){
+        super(entityType,worldIn);
         this.age = 0;
         this.spellResolver = null;
     }
-    public EntityProjectileSpell(World worldIn, SpellResolver spellResolver) {
-        super(worldIn);
+    public EntityProjectileSpell(EntityType<? extends ThrowableEntity> type, World worldIn, SpellResolver spellResolver) {
+        super(type, worldIn);
         this.spellResolver = spellResolver;
         age = 0;
     }
 
 
-    public EntityProjectileSpell(World worldIn, SpellResolver spellResolver,  double x, double y, double z) {
-        super(worldIn, x, y, z);
+    public EntityProjectileSpell(EntityType<? extends ThrowableEntity> type, World worldIn, SpellResolver spellResolver,  double x, double y, double z) {
+        super(type, x, y, z, worldIn);
         this.spellResolver = spellResolver;
         age = 0;
     }
 
 
-    public EntityProjectileSpell(World world, EntityLivingBase thrower, SpellResolver spellResolver) {
-        super(world, thrower);
+    public EntityProjectileSpell(EntityType<? extends ThrowableEntity> type, World world, LivingEntity thrower, SpellResolver spellResolver) {
+        super(type,  thrower, world);
         this.spellResolver = spellResolver;
         age = 0;
     }
@@ -72,17 +54,12 @@ public class EntityProjectileSpell extends EntityThrowable {
      */
     public void shoot(Entity entityThrower, float rotationPitchIn, float rotationYawIn, float pitchOffset, float velocity, float inaccuracy)
     {
-        float f = -MathHelper.sin(rotationYawIn * 0.017453292F) * MathHelper.cos(rotationPitchIn * 0.017453292F);
-        float f1 = -MathHelper.sin((rotationPitchIn + pitchOffset) * 0.017453292F);
-        float f2 = MathHelper.cos(rotationYawIn * 0.017453292F) * MathHelper.cos(rotationPitchIn * 0.017453292F);
+        float f = -MathHelper.sin(rotationYawIn * ((float)Math.PI / 180F)) * MathHelper.cos(rotationPitchIn * ((float)Math.PI / 180F));
+        float f1 = -MathHelper.sin((rotationPitchIn + pitchOffset) * ((float)Math.PI / 180F));
+        float f2 = MathHelper.cos(rotationYawIn * ((float)Math.PI / 180F)) * MathHelper.cos(rotationPitchIn * ((float)Math.PI / 180F));
         this.shoot((double)f, (double)f1, (double)f2, velocity, inaccuracy);
-        this.motionX += entityThrower.motionX;
-        this.motionZ += entityThrower.motionZ;
-
-        if (!entityThrower.onGround)
-        {
-            this.motionY += entityThrower.motionY;
-        }
+        Vec3d vec3d = entityThrower.getMotion();
+        this.setMotion(this.getMotion().add(vec3d.x, entityThrower.onGround ? 0.0D : vec3d.y, vec3d.z));
     }
 
     /**
@@ -90,22 +67,11 @@ public class EntityProjectileSpell extends EntityThrowable {
      */
     public void shoot(double x, double y, double z, float velocity, float inaccuracy)
     {
-        float f = MathHelper.sqrt(x * x + y * y + z * z);
-        x = x / (double)f;
-        y = y / (double)f;
-        z = z / (double)f;
-        x = x + this.rand.nextGaussian() * 0.007499999832361937D * (double)inaccuracy;
-        y = y + this.rand.nextGaussian() * 0.007499999832361937D * (double)inaccuracy;
-        z = z + this.rand.nextGaussian() * 0.007499999832361937D * (double)inaccuracy;
-        x = x * (double)velocity;
-        y = y * (double)velocity;
-        z = z * (double)velocity;
-        this.motionX = x;
-        this.motionY = y;
-        this.motionZ = z;
-        float f1 = MathHelper.sqrt(x * x + z * z);
-        this.rotationYaw = (float)(MathHelper.atan2(x, z) * (180D / Math.PI));
-        this.rotationPitch = (float)(MathHelper.atan2(y, (double)f1) * (180D / Math.PI));
+        Vec3d vec3d = (new Vec3d(x, y, z)).normalize().add(this.rand.nextGaussian() * (double)0.0075F * (double)inaccuracy, this.rand.nextGaussian() * (double)0.0075F * (double)inaccuracy, this.rand.nextGaussian() * (double)0.0075F * (double)inaccuracy).scale((double)velocity);
+        this.setMotion(vec3d);
+        float f = MathHelper.sqrt(func_213296_b(vec3d));
+        this.rotationYaw = (float)(MathHelper.atan2(vec3d.x, vec3d.z) * (double)(180F / (float)Math.PI));
+        this.rotationPitch = (float)(MathHelper.atan2(vec3d.y, (double)f) * (double)(180F / (float)Math.PI));
         this.prevRotationYaw = this.rotationYaw;
         this.prevRotationPitch = this.rotationPitch;
 
@@ -124,7 +90,8 @@ public class EntityProjectileSpell extends EntityThrowable {
             if(this.spellResolver != null && result != null)
                 this.spellResolver.onResolveEffect(this.world, this.getThrower(), result);
 
-            this.setDead();
+            this.remove();
+
         }
 
     }
@@ -133,10 +100,10 @@ public class EntityProjectileSpell extends EntityThrowable {
     /**
      * Checks if the entity is in range to render.
      */
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public boolean isInRangeToRenderDist(double distance)
     {
-        double d0 = this.getEntityBoundingBox().getAverageEdgeLength() * 4.0D;
+        double d0 = this.getBoundingBox().getAverageEdgeLength() * 4.0D;
 
         if (Double.isNaN(d0))
         {
@@ -148,10 +115,10 @@ public class EntityProjectileSpell extends EntityThrowable {
     }
 
 
-    private boolean damageable(EntityLivingBase entity) {
-        boolean out = entity.getIsInvulnerable() || entity.world.isRemote || (entity.getHealth() <= 0.0);
-        if(entity instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer)entity;
+    private boolean damageable(LivingEntity entity) {
+        boolean out = entity.isInvulnerable() || entity.world.isRemote || (entity.getHealth() <= 0.0);
+        if(entity instanceof PlayerEntity) {
+            PlayerEntity player = (PlayerEntity)entity;
             out = out || player.isCreative();
         }
         return !out;
@@ -165,16 +132,16 @@ public class EntityProjectileSpell extends EntityThrowable {
 
 
     @Override
-    public void onUpdate() {
+    public void tick() {
         age++;
         ++this.xpColor;
         if ((age >= 200) && !world.isRemote) {
-            this.setDead();
+            this.remove();
         }
-        super.onUpdate();
+        super.tick();
     }
 
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public int getTextureByXP() {
         System.out.println(age);
         if (this.age >= 12)
@@ -219,22 +186,23 @@ public class EntityProjectileSpell extends EntityThrowable {
         }
     }
 
+
     @Override
-    public void writeEntityToNBT(NBTTagCompound compound) {
-        super.writeEntityToNBT(compound);
-        compound.setInteger("Age", age);
+    public void deserializeNBT(CompoundNBT nbt) {
+        super.deserializeNBT(nbt);
+        age = nbt.getInt("Age");
+    }
+
+    @Override
+    public CompoundNBT serializeNBT() {
+        super.serializeNBT();
+        CompoundNBT nbt = new CompoundNBT();
+        nbt.putInt("Age", age);
+        return nbt;
     }
 
 
-    @Override
-    public void readEntityFromNBT(NBTTagCompound compound) {
-        super.readEntityFromNBT(compound);
-        age = compound.getInteger("Age");
-
-    }
-
-
-    @SideOnly(Side.CLIENT)
+    @OnlyIn(Dist.CLIENT)
     public int getBrightnessForRender()
     {
         float f = 0.5F;
@@ -252,6 +220,11 @@ public class EntityProjectileSpell extends EntityThrowable {
         return j | k << 16;
     }
 
+
+    @Override
+    protected void registerData() {
+
+    }
 
     @Override
     public boolean hasNoGravity() {

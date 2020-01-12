@@ -2,23 +2,17 @@ package com.hollingsworth.craftedmagic;
 
 import com.hollingsworth.craftedmagic.entity.EntityProjectileSpell;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.init.Biomes;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.EntityEntry;
-import net.minecraftforge.fml.common.registry.EntityEntryBuilder;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.ObjectHolder;
 
-@GameRegistry.ObjectHolder(ExampleMod.MODID)
+@ObjectHolder(ExampleMod.MODID)
 public class ModEntities {
+    public static final EntityType<EntityProjectileSpell> PROJECTILE_SPELL_ENTITY = null;
 
 //    public static void init() {
 //        // Every entity in our mod has an ID (local to this mod)
@@ -33,7 +27,7 @@ public class ModEntities {
 ////        // This is the loot table for our mob
 ////        LootTableList.register(EntityWeirdZombie.LOOT);
 //    }
-    @Mod.EventBusSubscriber(modid = ExampleMod.MODID)
+    @Mod.EventBusSubscriber(modid = ExampleMod.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
     public static final int lightballID = 29;
 
@@ -43,7 +37,7 @@ public class ModEntities {
          * @param event The event
          */
         @SubscribeEvent
-        public static void registerEntities(final RegistryEvent.Register<EntityEntry> event) {
+        public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
             System.out.println("Registered entitites");
 //            final EntityEntry[] entries = {
 //                    createBuilder("mod_projectile_spell")
@@ -53,31 +47,41 @@ public class ModEntities {
 //
 //
 //            };
-            EntityRegistry.registerModEntity(new ResourceLocation(ExampleMod.MODID, "dmlightball"),
-                    EntityProjectileSpell.class, ExampleMod.MODID + ".dmlightball", lightballID, ExampleMod.instance,
-                    80, 20, true);
+            final EntityType<EntityProjectileSpell> spell_proj = build(
+                    "spell_proj",
+                    EntityType.Builder.<EntityProjectileSpell>create((EntityProjectileSpell::new), EntityClassification.MISC)
+                            .size(0.5f, 0.5f));
+            event.getRegistry().registerAll(
+                    spell_proj
+            );
+
+//            EntityRegistry.registerModEntity(new ResourceLocation(ExampleMod.MODID, "dmlightball"),
+//                    EntityProjectileSpell.class, ExampleMod.MODID + ".dmlightball", lightballID, ExampleMod.instance,
+//                    80, 20, true);
 
             //event.getRegistry().registerAll(entries);
 
         }
+    }
+    /**
+     * Build an {@link EntityType} from a {@link EntityType.Builder} using the specified name.
+     *
+     * @param name    The entity type name
+     * @param builder The entity type builder to build
+     * @return The built entity type
+     */
+    private static <T extends Entity> EntityType<T> build(final String name, final EntityType.Builder<T> builder) {
+        final ResourceLocation registryName = new ResourceLocation(ExampleMod.MODID, name);
 
-        private static int entityID = 0;
+        final EntityType<T> entityType = builder
+                .build(registryName.toString());
 
-        /**
-         * Create an {@link EntityEntryBuilder} with the specified registry name/translation key and an automatically-assigned network ID.
-         *
-         * @param name The name
-         * @param <E>  The entity type
-         * @return The builder
-         */
-        private static <E extends Entity> EntityEntryBuilder<E> createBuilder(final String name) {
-            final EntityEntryBuilder<E> builder = EntityEntryBuilder.create();
-            final ResourceLocation registryName = new ResourceLocation(ExampleMod.MODID, name);
-            return builder.id(registryName, entityID++).name(registryName.toString());
-        }
+        entityType.setRegistryName(registryName);
+
+        return entityType;
     }
 
-    @SideOnly(Side.CLIENT)
+
     public static void initModels() {
         //RenderingRegistry.registerEntityRenderingHandler(EntityWeirdZombie.class, RenderWeirdZombie.FACTORY);
     }

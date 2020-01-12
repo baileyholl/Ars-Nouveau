@@ -1,13 +1,12 @@
 package com.hollingsworth.craftedmagic.spell;
 
 import com.hollingsworth.craftedmagic.api.AbstractSpellPart;
-import com.hollingsworth.craftedmagic.api.CraftedMagicAPI;
 import com.hollingsworth.craftedmagic.api.Position;
+import com.hollingsworth.craftedmagic.spell.effect.EffectType;
 import com.hollingsworth.craftedmagic.spell.enhancement.EnhancementType;
 import com.hollingsworth.craftedmagic.spell.method.CastMethod;
-import com.hollingsworth.craftedmagic.spell.effect.EffectType;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
@@ -23,7 +22,6 @@ public class SpellResolver {
         this.castType = cast;
         this.spell_recipe = spell_recipe;
         this.castType.resolver = this;
-        spell_recipe =  new ArrayList<>();
     }
 
     public SpellResolver(ArrayList<AbstractSpellPart> spell_recipe){
@@ -40,13 +38,13 @@ public class SpellResolver {
 
 
 
-    public void onCast(Position pos, World world, EntityLivingBase shooter){
+    public void onCast(Position pos, World world, LivingEntity shooter){
         castType.onCast(pos, world, shooter);
         //effectType.onCast();
     }
 
 
-    public void onResolveEffect(World world, EntityLivingBase shooter, RayTraceResult result){
+    public void onResolveEffect(World world, LivingEntity shooter, RayTraceResult result){
         for(int i = 0; i < spell_recipe.size(); i++){
             AbstractSpellPart spell = spell_recipe.get(i);
             if(spell instanceof EffectType){
@@ -66,11 +64,11 @@ public class SpellResolver {
         }
     }
 
-    public NBTTagCompound getNBTTag(){
-        NBTTagCompound tag = new NBTTagCompound();
-        tag.setString("cast_tag", this.castType.getTag());
+    public CompoundNBT getNBTTag(){
+        CompoundNBT tag = new CompoundNBT();
+        tag.putString("cast_tag", this.castType.getTag());
         for(int i=0; i<spell_recipe.size(); i++){
-            tag.setString("recipe_spell_"+i, spell_recipe.get(i).getTag());
+            tag.putString("recipe_spell_"+i, spell_recipe.get(i).getTag());
         }
         return tag;
     }

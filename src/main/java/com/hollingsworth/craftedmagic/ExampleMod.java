@@ -1,41 +1,99 @@
 package com.hollingsworth.craftedmagic;
 
+import com.hollingsworth.craftedmagic.items.Spell;
+import com.hollingsworth.craftedmagic.network.Networking;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
 import org.apache.logging.log4j.Logger;
 
-@Mod(modid = ExampleMod.MODID, name = ExampleMod.MODNAME, version = ExampleMod.MODVERSION, dependencies = "required-after:forge@[11.16.0.1865,)", useMetadata = true)
-public class ExampleMod
-{
+import static net.minecraft.world.biome.Biome.LOGGER;
+
+@Mod(ExampleMod.MODID)
+@Mod.EventBusSubscriber(modid = ExampleMod.MODID)
+public class ExampleMod {
     public static final String MODID = "modtut";
     public static final String MODNAME = "Mod tutorials";
-    public static final String MODVERSION= "0.0.1";
+    public static final String MODVERSION = "0.0.1";
 
-    @SidedProxy(clientSide = "com.hollingsworth.craftedmagic.ClientProxy", serverSide = "com.hollingsworth.craftedmagic.ServerProxy")
-    public static CommonProxy proxy;
+//    @SidedProxy(clientSide = "com.hollingsworth.craftedmagic.ClientProxy", serverSide = "com.hollingsworth.craftedmagic.ServerProxy")
+//    public static CommonProxy proxy;
 
-    @Mod.Instance
-    public static ExampleMod instance;
+//    @Mod.Instance
+//    public static ExampleMod instance;
 
+    public static IProxy proxy = DistExecutor.runForDist(()-> () -> new ClientProxy(), () -> ()-> new ServerProxy());
     public static Logger logger;
 
-    @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        logger = event.getModLog();
-        proxy.preInit(event);
+
+    public static ItemGroup itemGroup = new ItemGroup("crafted_magic") {
+        @Override
+        public ItemStack createIcon() {
+            return Items.COBBLESTONE.getDefaultInstance();
+        }
+    };
+
+//    @Mod.EventHandler
+//    public void preInit(FMLPreInitializationEvent event) {
+//        logger = event.getModLog();
+//        proxy.preInit(event);
+//
+//    }
+
+    public ExampleMod(){
+        // modLoading setup
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        // Register the doClientStuff method for modloading
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
+
+        MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    public void setup (final FMLCommonSetupEvent event){
+        //Pre-init code
+        proxy.init();
+        Networking.registerMessages();
+    }
+
+    public void clientSetup(final FMLClientSetupEvent event){
 
     }
 
-    @Mod.EventHandler
-    public void init(FMLInitializationEvent e) {
-        proxy.init(e);
-    }
+    // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
+    // Event bus for receiving Registry Events)
+    @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
+    public static class RegistryEvents {
+        @SubscribeEvent
+        public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
+            // register a new block here
+            LOGGER.info("HELLO from Register Block");
+        }
 
-    @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent e) {
-        proxy.postInit(e);
+        @SubscribeEvent
+        public static void onItemsRegistry(final RegistryEvent.Register<Item> itemRegistryEvent) {
+            // register a new block here
+            LOGGER.info("HELLO from Register Block");
+            itemRegistryEvent.getRegistry().register(new Spell());
+        }
     }
+//    @Mod.EventHandler
+//    public void init(FMLInitializationEvent e) {
+//        proxy.init(e);
+//    }
+//
+//    @Mod.EventHandler
+//    public void postInit(FMLPostInitializationEvent e) {
+//        proxy.postInit(e);
+//    }
 }

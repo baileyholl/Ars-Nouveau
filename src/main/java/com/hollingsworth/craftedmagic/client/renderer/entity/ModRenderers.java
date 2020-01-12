@@ -1,11 +1,6 @@
 package com.hollingsworth.craftedmagic.client.renderer.entity;
 
-import com.hollingsworth.craftedmagic.ExampleMod;
 import com.hollingsworth.craftedmagic.entity.EntityProjectileSpell;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 
 public class ModRenderers {

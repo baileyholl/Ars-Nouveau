@@ -3,24 +3,28 @@ package com.hollingsworth.craftedmagic.client.renderer.entity;
 
 import com.hollingsworth.craftedmagic.ExampleMod;
 import com.hollingsworth.craftedmagic.entity.EntityProjectileSpell;
-import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderManager;
+import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererManager;
+
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.item.ItemClock;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
 
 import java.util.Random;
 
-@SideOnly(Side.CLIENT)
-public class RenderSpell extends Render<EntityProjectileSpell>
+@OnlyIn(Dist.CLIENT)
+public class RenderSpell extends EntityRenderer<EntityProjectileSpell>
 {
     private static final ResourceLocation EXPERIENCE_ORB_TEXTURES =  new ResourceLocation(ExampleMod.MODID, "textures/entity/spell_proj.png");
 
-    public RenderSpell(RenderManager renderManagerIn)
+    public RenderSpell(EntityRendererManager renderManagerIn)
     {
         super(renderManagerIn);
         this.shadowSize = 0.15F;
@@ -37,7 +41,7 @@ public class RenderSpell extends Render<EntityProjectileSpell>
         if (!this.renderOutlines)
         {
             GlStateManager.pushMatrix();
-            GlStateManager.translate((float)x, (float)y, (float)z);
+            GlStateManager.translated((float)x, (float)y, (float)z);
 
             this.bindEntityTexture(entity);
             RenderHelper.enableStandardItemLighting();
@@ -52,18 +56,20 @@ public class RenderSpell extends Render<EntityProjectileSpell>
             int j = entity.getBrightnessForRender();
             int k = j % 65536;
             int l = j / 65536;
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)k, (float)l);
-            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
+            //OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)k, (float)l);
+
+            GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
             float f8 = 255.0F;
             float f9 = ((float)entity.xpColor + partialTicks) / 2.0F;
             l = (int)((MathHelper.sin(f9 + 0.0F) + 1.0F) * 0.5F * 255.0F);
             int i1 = 255;
             int j1 = (int)((MathHelper.sin(f9 + 4.1887903F) + 1.0F) * 0.1F * 255.0F);
-            GlStateManager.translate(0.0F, 0.1F, 0.0F);
-            GlStateManager.rotate(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
-            GlStateManager.rotate((float)(this.renderManager.options.thirdPersonView == 2 ? -1 : 1) * -this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
+            GlStateManager.translated(0.0F, 0.1F, 0.0F);
+            GlStateManager.rotated(180.0F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
+            GlStateManager.rotated((float)(this.renderManager.options.thirdPersonView == 2 ? -1 : 1) * -this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
             float f7 = 0.3F;
-            GlStateManager.scale(0.3F, 0.3F, 0.3F);
+            GlStateManager.scaled(0.3F, 0.3F, 0.3F);
             Tessellator tessellator = Tessellator.getInstance();
             BufferBuilder bufferbuilder = tessellator.getBuffer();
             bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR_NORMAL);
