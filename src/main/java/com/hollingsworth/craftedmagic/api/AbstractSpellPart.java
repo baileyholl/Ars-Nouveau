@@ -18,7 +18,7 @@ public abstract class AbstractSpellPart {
         this.description = description;
     }
 
-    public String getBookDescription(){return this.description;};
+    public String getBookDescription(){return this.description;}
 
 
 }

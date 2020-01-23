@@ -4,6 +4,7 @@ import com.hollingsworth.craftedmagic.entity.EntityProjectileSpell;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.projectile.SnowballEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -12,7 +13,10 @@ import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(ExampleMod.MODID)
 public class ModEntities {
-    public static final EntityType<EntityProjectileSpell> PROJECTILE_SPELL_ENTITY = null;
+
+
+    public static final EntityType<EntityProjectileSpell> SPELL_PROJ = null;
+
 
 //    public static void init() {
 //        // Every entity in our mod has an ID (local to this mod)
@@ -49,11 +53,15 @@ public class ModEntities {
 //            };
             final EntityType<EntityProjectileSpell> spell_proj = build(
                     "spell_proj",
-                    EntityType.Builder.<EntityProjectileSpell>create((EntityProjectileSpell::new), EntityClassification.MISC)
-                            .size(0.5f, 0.5f));
+                    EntityType.Builder.<EntityProjectileSpell>create(EntityProjectileSpell::new, EntityClassification.MISC)
+                            .size(0.5f, 0.5f)
+                            .setTrackingRange(10)
+                            .setShouldReceiveVelocityUpdates(true)
+                            .setUpdateInterval(60).setCustomClientFactory(EntityProjectileSpell::new));
             event.getRegistry().registerAll(
                     spell_proj
             );
+            //ENT_PROJECTILE = registerEntity(EntityType.Builder.<EntityModProjectile>create(EntityClassification.MISC).setCustomClientFactory(EntityModProjectile::new).size(0.25F, 0.25F), "ent_projectile");
 
 //            EntityRegistry.registerModEntity(new ResourceLocation(ExampleMod.MODID, "dmlightball"),
 //                    EntityProjectileSpell.class, ExampleMod.MODID + ".dmlightball", lightballID, ExampleMod.instance,
@@ -79,10 +87,5 @@ public class ModEntities {
         entityType.setRegistryName(registryName);
 
         return entityType;
-    }
-
-
-    public static void initModels() {
-        //RenderingRegistry.registerEntityRenderingHandler(EntityWeirdZombie.class, RenderWeirdZombie.FACTORY);
     }
 }

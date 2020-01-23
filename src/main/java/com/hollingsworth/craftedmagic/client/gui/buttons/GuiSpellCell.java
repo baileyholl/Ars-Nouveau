@@ -1,29 +1,27 @@
-package com.hollingsworth.craftedmagic.client.gui;
+package com.hollingsworth.craftedmagic.client.gui.buttons;
 
 import com.hollingsworth.craftedmagic.ExampleMod;
+import com.hollingsworth.craftedmagic.client.gui.GuiSpellCreation;
 import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
-class GuiSpellSlot extends GuiImageButton{
+public class GuiSpellCell extends GuiImageButton{
 
     public boolean isCraftingSlot;
     public String resourceIcon;
     public String spell_id; //Reference to a spell ID for spell crafting
-    public int id;
+    private int id;
     public String tooltip = "tooltip";
 
     GuiSpellCreation parent;
 
-    public GuiSpellSlot(GuiSpellCreation parent, int x, int y,boolean isCraftingSlot, String resource_image,  String spell_id) {
+    public GuiSpellCell(GuiSpellCreation parent, int x, int y, boolean isCraftingSlot, String resource_image, String spell_id) {
         super(x, y, 0, 0, 18, 18, "textures/gui/spell_cell.png", parent::onCraftingSlotClick);
         this.parent = parent;
         this.x = x;
@@ -34,18 +32,19 @@ class GuiSpellSlot extends GuiImageButton{
         this.resourceIcon = resource_image;
         this.spell_id = spell_id;
         this.id = 0;
-        System.out.println("x:" + x + " y:" + y);
     }
 
-    public GuiSpellSlot(GuiSpellCreation parent, int x, int y,boolean isCraftingSlot, String resource_image,  String spell_id, Integer id) {
+    public GuiSpellCell(GuiSpellCreation parent, int x, int y, boolean isCraftingSlot, String resource_image, String spell_id, Integer id) {
         this(parent, x, y, isCraftingSlot, resource_image, spell_id);
         this.id = id;
     }
 
+    public int getId() {
+        return id;
+    }
 
-
-//
-//    public GuiSpellSlot(int parPosX, int parPosY,boolean isCraftingSlot, String resource_image, String spell_id, Button.IPressable pressable) {
+    //
+//    public GuiSpellCell(int parPosX, int parPosY,boolean isCraftingSlot, String resource_image, String spell_id, Button.IPressable pressable) {
 //        this(parPosX, parPosY, isCraftingSlot, resource_image,spell_id, pressable);
 //
 //    }

@@ -2,18 +2,18 @@ package com.hollingsworth.craftedmagic.network;
 
 import com.hollingsworth.craftedmagic.api.CraftedMagicAPI;
 import com.hollingsworth.craftedmagic.client.gui.GuiSpellCreation;
-import io.netty.buffer.ByteBufUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class PacketOpenGUI{
+public class PacketUpdateBookGUI {
+
     public CompoundNBT tag;
     //Decoder
-    public PacketOpenGUI(PacketBuffer buf){
+    public PacketUpdateBookGUI(PacketBuffer buf){
         tag = buf.readCompoundTag();
     }
 
@@ -22,12 +22,18 @@ public class PacketOpenGUI{
         buf.writeCompoundTag(tag);
     }
 
-    public PacketOpenGUI(CompoundNBT tag){
+    public PacketUpdateBookGUI(CompoundNBT tag){
         this.tag = tag;
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(()->GuiSpellCreation.open(CraftedMagicAPI.getInstance(), tag));
+        ctx.get().enqueueWork(()->{
+            if(Minecraft.getInstance().currentScreen instanceof GuiSpellCreation){
+                ((GuiSpellCreation) Minecraft.getInstance().currentScreen).spell_book_tag = tag;
+            }else{
+                System.out.println("Screen is not GuiSpellCreation!");
+            }
+        } );
         ctx.get().setPacketHandled(true);
     }
 

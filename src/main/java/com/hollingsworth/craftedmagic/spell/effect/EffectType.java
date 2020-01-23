@@ -17,4 +17,6 @@ public abstract class EffectType extends AbstractSpellPart {
 
     // Apply the effect at the destination position.
     public abstract void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<EnhancementType> enhancements);
+
+
 }

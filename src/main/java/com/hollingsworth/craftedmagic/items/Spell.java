@@ -7,81 +7,39 @@ import com.hollingsworth.craftedmagic.api.Position;
 import com.hollingsworth.craftedmagic.network.Networking;
 import com.hollingsworth.craftedmagic.network.PacketOpenGUI;
 import com.hollingsworth.craftedmagic.spell.SpellResolver;
-import com.hollingsworth.craftedmagic.spell.effect.EffectDig;
-import com.hollingsworth.craftedmagic.spell.effect.EffectType;
-import com.hollingsworth.craftedmagic.spell.method.CastMethod;
-import com.hollingsworth.craftedmagic.spell.method.ModifierProjectile;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.PacketDispatcher;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Spell extends Item {
-
     public static final String BOOK_MODE_TAG = "mode";
+
 
 
     public Spell(){
         super(new Item.Properties().maxStackSize(1).group(ExampleMod.itemGroup));
-        this.addPropertyOverride(new ResourceLocation("age"), new IItemPropertyGetter() {
-            @Override
-            public float call(ItemStack p_call_1_, @Nullable World p_call_2_, @Nullable LivingEntity p_call_3_) {
-                return 0;
-            }
-
-            @OnlyIn(Dist.CLIENT)
-            private int model;
-            @OnlyIn(Dist.CLIENT)
-            long lastUpdateTick;
-            @OnlyIn(Dist.CLIENT)
-            public float apply(ItemStack stack, @Nullable World worldIn, @Nullable LivingEntity entityIn) {
-
-
-                if (entityIn == null && !stack.isOnItemFrame())
-                {
-                    return 0;
-                }
-                else {
-                    boolean flag = entityIn != null;
-                    Entity entity = (Entity) (flag ? entityIn : stack.getItemFrame());
-                    if(model == 10){
-                        model = 0;
-                    }
-                    if (worldIn == null) {
-                        worldIn = entity.world;
-                    }
-                    if(worldIn.getGameTime() != lastUpdateTick) {
-                        if (worldIn.getGameTime() % 10 == 0) {
-                            model += 1;
-                        }
-                        lastUpdateTick = worldIn.getGameTime();
-                    }
-                }
-                return model;
-            }
-        });
         setRegistryName("spell_book");        // The unique name (within your mod) that identifies this item
 
         //setUnlocalizedName(ExampleMod.MODID + ".spell_book");     // Used for localization (en_US.lang)
@@ -98,85 +56,136 @@ public class Spell extends Item {
     }
 
 
+    /**
+     * Returns true if the item can be used on the given entity, e.g. shears on sheep.
+     */
+    public boolean itemInteractionForEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
+        if(!playerIn.getEntityWorld().isRemote) {
+            System.out.println("Touched Entity");
+
+            ArrayList<AbstractSpellPart> spell_r = getCurrentRecipe(stack);
+            if(!spell_r.isEmpty()) {
+                SpellResolver resolver = new SpellResolver(spell_r);
+                resolver.onCastOnEntity(stack, playerIn, target, hand);
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        if(!worldIn.isRemote())
+            System.out.println("Right clicked");
+        ItemStack stack = playerIn.getHeldItem(handIn);
+        if(worldIn.isRemote || !stack.hasTag()){
+            return new ActionResult<>(ActionResultType.SUCCESS, stack);
+        }
+
+        if(getMode(stack.getTag()) == 0 && !playerIn.isSneaking() && playerIn instanceof ServerPlayerEntity) {
+            ServerPlayerEntity player = (ServerPlayerEntity) playerIn;
+            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->player), new PacketOpenGUI(stack.getTag()));
+            return new ActionResult<>(ActionResultType.SUCCESS, stack);
+        }
+        if (playerIn.isSneaking() && stack.hasTag()){
+            changeMode(stack);
+            return new ActionResult<>(ActionResultType.SUCCESS, stack);
+        }
+
+        ArrayList<AbstractSpellPart> spell_r = getCurrentRecipe(stack);
+        if(!spell_r.isEmpty()) {
+            SpellResolver resolver = new SpellResolver(spell_r);
+            resolver.onCast(stack, playerIn, worldIn);
+        }
+        return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
+    }
+
+    /*
+    Called on block use
+     */
+    @Override
+    public ActionResultType onItemUse(ItemUseContext context) {
+        System.out.println("Spell used");
+        World worldIn = context.getWorld();
+
+        PlayerEntity playerIn = context.getPlayer();
+        Hand handIn = context.getHand();
+        BlockPos blockpos = context.getPos();
+        BlockPos blockpos1 = blockpos.offset(context.getFace());
+        ItemStack stack = playerIn.getHeldItem(handIn);
+
+        if(worldIn.isRemote || !stack.hasTag() || getMode(stack.getTag()) == 0 || playerIn.isSneaking()) return ActionResultType.PASS;
+
+        ArrayList<AbstractSpellPart> spell_r = getCurrentRecipe(stack);
+        if(!spell_r.isEmpty()){
+
+            SpellResolver resolver = new SpellResolver(spell_r);
+            resolver.onCastOnBlock(context);
+
+            SoundEvent event = new SoundEvent(new ResourceLocation(ExampleMod.MODID, "cast_spell"));
+            worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, event, SoundCategory.BLOCKS,
+                    4.0F, (1.0F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.2F) * 0.7F);
+        }
+
+        return ActionResultType.PASS;
+    }
+
+    public ArrayList<AbstractSpellPart> getCurrentRecipe(ItemStack stack){
+        return Spell.getRecipeFromTag(stack.getTag(), getMode(stack.getTag()));
+    }
+
+
+    private void changeMode(ItemStack stack) {
+        setMode(stack, (getMode(stack.getTag()) + 1) % 4);
+    }
+
+    public static ArrayList<AbstractSpellPart> getRecipeFromTag(CompoundNBT tag, int r_slot){
+        ArrayList<AbstractSpellPart> recipe = new ArrayList<>();
+        String recipeStr = getRecipeString(tag, r_slot);
+        if (recipeStr.length() <= 3) // Account for empty strings and '[,]'
+            return recipe;
+        String[] recipeList = recipeStr.substring(1, recipeStr.length() - 1).split(",");
+        for(String id : recipeList){
+            if (CraftedMagicAPI.getInstance().spell_map.containsKey(id.trim()))
+                recipe.add(CraftedMagicAPI.getInstance().spell_map.get(id.trim()));
+        }
+        return recipe;
+    }
+
+    public static void setSpellName(CompoundNBT tag, String name, int slot){
+        tag.putString(slot + "_name", name);
+    }
+
+    public static String getSpellName(CompoundNBT tag, int slot){
+        return tag.getString( slot+ "_name");
+    }
+
+    public static String getSpellName(CompoundNBT tag){
+        return getSpellName( tag, getMode(tag));
+    }
+
+    public static String getRecipeString(CompoundNBT tag, int spell_slot){
+        return tag.getString(spell_slot + "recipe");
+    }
+
+    public static void setRecipe(CompoundNBT tag, String recipe, int spell_slot){
+        tag.putString(spell_slot + "recipe", recipe);
+    }
+
+    public static int getMode(CompoundNBT tag){
+        return tag.getInt(Spell.BOOK_MODE_TAG);
+    }
+
+    public void setMode(ItemStack stack, int mode){
+        stack.getTag().putInt(Spell.BOOK_MODE_TAG, mode);
+    }
+
     @Override
     @OnlyIn(Dist.CLIENT)
     public void addInformation(final ItemStack stack, @Nullable final World world, final List<ITextComponent> tooltip, final ITooltipFlag flag) {
         super.addInformation(stack, world, tooltip, flag);
         if(stack != null && stack.hasTag()) {
             CompoundNBT tag = stack.getTag();
-            tooltip.add(new StringTextComponent("Mode" + tag.getInt(Spell.BOOK_MODE_TAG)));
-            tooltip.add(new StringTextComponent(tag.getString(tag.getInt(Spell.BOOK_MODE_TAG) + "recipe")));
-        };
-    }
-
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-//
-        if(!worldIn.isRemote && playerIn.getHeldItem(handIn).getTag().getInt(Spell.BOOK_MODE_TAG) == 0 && !playerIn.isSneaking() && playerIn instanceof ServerPlayerEntity) {
-
-            ServerPlayerEntity player = (ServerPlayerEntity) playerIn;
-            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->player), new PacketOpenGUI(playerIn.getHeldItem(handIn).getTag()));
-
-            //            ExampleMod.proxy.openSpellGUI(playerIn.getHeldItem(handIn));
-            return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
+            tooltip.add(new StringTextComponent(Spell.getSpellName(stack.getTag())));
         }
-        if (!worldIn.isRemote &&playerIn.isSneaking() && playerIn.getHeldItem(handIn).hasTag()){
-            changeMode(playerIn.getHeldItem(handIn));
-            return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
-        }
-        ItemStack stack = playerIn.getHeldItem(handIn);
-        if(!worldIn.isRemote && stack.hasTag()){
-            CompoundNBT tag = playerIn.getHeldItem(handIn).getTag();
-            if(tag.contains(tag.getInt(Spell.BOOK_MODE_TAG) + "recipe")){
-
-                ArrayList<AbstractSpellPart> spell_r = getRecipeFromTag(stack.getTag(), tag.getInt(Spell.BOOK_MODE_TAG));
-
-                SpellResolver resolver = new SpellResolver(spell_r);
-                resolver.onCast(new Position(playerIn.posX, playerIn.posY, playerIn.posZ), worldIn, playerIn);
-
-                SoundEvent event = new SoundEvent(new ResourceLocation(ExampleMod.MODID, "cast_spell"));
-                worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ,
-                        event, SoundCategory.BLOCKS,
-                        4.0F, (1.0F + (worldIn.rand.nextFloat()
-                                - worldIn.rand.nextFloat()) * 0.2F) * 0.7F);
-            }
-//            ArrayList<AbstractSpellPart> recipe = new ArrayList<>();
-//            recipe.add(new ModifierProjectile());
-//            recipe.add(new EffectDig());
-//            SpellResolver resolver = new SpellResolver(recipe);
-//            resolver.onCast(new Position(playerIn.posX, playerIn.posY, playerIn.posZ), worldIn, playerIn);
-//
-//            SoundEvent event = new SoundEvent(new ResourceLocation(ExampleMod.MODID, "cast_spell"));
-//            worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ,
-//                    event, SoundCategory.BLOCKS,
-//                    4.0F, (1.0F + (worldIn.rand.nextFloat()
-//                            - worldIn.rand.nextFloat()) * 0.2F) * 0.7F);
-        }
-        return new ActionResult<>(ActionResultType.SUCCESS, stack);
     }
-
-    public static ArrayList<AbstractSpellPart> getRecipeFromTag(CompoundNBT tag, int spell_slot){
-        String recipe = tag.getString(spell_slot + "recipe");
-        System.out.println("Contains a spell");
-        ArrayList<AbstractSpellPart> spell_r = new ArrayList<>();
-        try {
-            for (String id : recipe.substring(1, recipe.length() - 1).split(",")) {
-                System.out.println(id.trim());
-                if (CraftedMagicAPI.getInstance().spell_map.containsKey(id.trim()))
-                    spell_r.add(CraftedMagicAPI.getInstance().spell_map.get(id.trim()));
-            }
-        }catch (Exception e){
-            System.out.println("Couldn't parse recipe.");
-            return new ArrayList<>();
-        }
-        return spell_r;
-    }
-    private void changeMode(ItemStack stack) {
-        int mode = stack.getTag().getInt(Spell.BOOK_MODE_TAG) + 1;
-        stack.getTag().putInt(Spell.BOOK_MODE_TAG, mode%4);
-        
-    }
-
-
-
 }

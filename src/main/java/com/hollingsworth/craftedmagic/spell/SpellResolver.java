@@ -6,7 +6,11 @@ import com.hollingsworth.craftedmagic.spell.effect.EffectType;
 import com.hollingsworth.craftedmagic.spell.enhancement.EnhancementType;
 import com.hollingsworth.craftedmagic.spell.method.CastMethod;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
@@ -24,25 +28,21 @@ public class SpellResolver {
         this.castType.resolver = this;
     }
 
-    public SpellResolver(ArrayList<AbstractSpellPart> spell_recipe){
-        this((CastMethod)spell_recipe.get(0), spell_recipe);
-    }
-//
-//    public SpellResolver(AbstractSpellPart cast, AbstractSpellPart spell, Position cast_position, World world, EntityLivingBase shooter){
-//        this((CastMethod) cast, (EffectType) spell, cast_position, world, shooter);
-//    }
-//
-//    public SpellResolver(String castTag, String spellTag, Position cast_position, World world, EntityLivingBase shooter){
-//        this(CraftedMagicAPI.craftedMagicAPI.spell_map.get(castTag), CraftedMagicAPI.craftedMagicAPI.spell_map.get(spellTag), cast_position, world, shooter);
-//    }
-
-
-
-    public void onCast(Position pos, World world, LivingEntity shooter){
-        castType.onCast(pos, world, shooter);
-        //effectType.onCast();
+    public SpellResolver(ArrayList<AbstractSpellPart> spell_recipe) {
+        this((CastMethod) spell_recipe.get(0), spell_recipe);
     }
 
+    public void onCast(ItemStack stack, PlayerEntity playerEntity, World world){
+        castType.onCast(stack, playerEntity, world);
+    }
+
+    public void onCastOnBlock(ItemUseContext context){
+        castType.onCastOnBlock(context);
+    }
+
+    public void onCastOnEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand){
+        castType.onCastOnEntity(stack, playerIn, target, hand);
+    }
 
     public void onResolveEffect(World world, LivingEntity shooter, RayTraceResult result){
         for(int i = 0; i < spell_recipe.size(); i++){
@@ -63,15 +63,4 @@ public class SpellResolver {
             }
         }
     }
-
-    public CompoundNBT getNBTTag(){
-        CompoundNBT tag = new CompoundNBT();
-        tag.putString("cast_tag", this.castType.getTag());
-        for(int i=0; i<spell_recipe.size(); i++){
-            tag.putString("recipe_spell_"+i, spell_recipe.get(i).getTag());
-        }
-        return tag;
-    }
-
-
 }

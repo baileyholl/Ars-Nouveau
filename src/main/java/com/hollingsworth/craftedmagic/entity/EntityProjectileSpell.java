@@ -1,50 +1,125 @@
 package com.hollingsworth.craftedmagic.entity;
 
 import com.hollingsworth.craftedmagic.ExampleMod;
+import com.hollingsworth.craftedmagic.ModEntities;
 import com.hollingsworth.craftedmagic.spell.SpellResolver;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ArrowEntity;
+import net.minecraft.entity.projectile.ProjectileHelper;
+import net.minecraft.entity.projectile.ProjectileItemEntity;
 import net.minecraft.entity.projectile.ThrowableEntity;
+import net.minecraft.item.Item;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.IPacket;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.datafix.fixes.TippedArrow;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.network.FMLPlayMessages;
+import net.minecraftforge.fml.network.NetworkHooks;
 
-public class EntityProjectileSpell extends ThrowableEntity {
+public class EntityProjectileSpell extends ArrowEntity {
 
     private int age;
     private SpellResolver spellResolver;
     public int xpColor;
 
-    public EntityProjectileSpell(final EntityType<? extends EntityProjectileSpell> entityType, World worldIn){
-        super(entityType,worldIn);
-        this.age = 0;
-        this.spellResolver = null;
-    }
-    public EntityProjectileSpell(EntityType<? extends ThrowableEntity> type, World worldIn, SpellResolver spellResolver) {
+    public EntityProjectileSpell(EntityType<? extends ArrowEntity> type, World worldIn, SpellResolver spellResolver) {
         super(type, worldIn);
         this.spellResolver = spellResolver;
         age = 0;
     }
 
+    public EntityProjectileSpell(final EntityType<? extends EntityProjectileSpell> entityType, final World world) {
+        super(entityType, world);
+    }
 
-    public EntityProjectileSpell(EntityType<? extends ThrowableEntity> type, World worldIn, SpellResolver spellResolver,  double x, double y, double z) {
-        super(type, x, y, z, worldIn);
-        this.spellResolver = spellResolver;
-        age = 0;
+    public EntityProjectileSpell(final World world, final double x, final double y, final double z) {
+        super(world, x, y, z);
+    }
+
+    public EntityProjectileSpell(final World world, final LivingEntity shooter) {
+        super(world, shooter);
     }
 
 
-    public EntityProjectileSpell(EntityType<? extends ThrowableEntity> type, World world, LivingEntity thrower, SpellResolver spellResolver) {
-        super(type,  thrower, world);
+    @Override
+    public void tick() {
+        this.lastTickPosX = this.posX;
+        this.lastTickPosY = this.posY;
+        this.lastTickPosZ = this.posZ;
+        //super.tick();
+
+
+        if (this.inGround) {
+            this.inGround = false;
+            this.setMotion(this.getMotion().mul((double)(this.rand.nextFloat() * 0.2F), (double)(this.rand.nextFloat() * 0.2F), (double)(this.rand.nextFloat() * 0.2F)));
+        }
+
+        AxisAlignedBB axisalignedbb = this.getBoundingBox().expand(this.getMotion()).grow(1.0D);
+
+        for(Entity entity : this.world.getEntitiesInAABBexcluding(this, axisalignedbb, (p_213881_0_) -> {
+            return !p_213881_0_.isSpectator() && p_213881_0_.canBeCollidedWith();
+        })) {
+
+        }
+
+        RayTraceResult raytraceresult = ProjectileHelper.func_221267_a(this, axisalignedbb, (p_213880_1_) -> {
+            return !p_213880_1_.isSpectator() && p_213880_1_.canBeCollidedWith();
+        }, RayTraceContext.BlockMode.OUTLINE, true);
+
+
+        if (raytraceresult.getType() != RayTraceResult.Type.MISS) {
+            if (raytraceresult.getType() == RayTraceResult.Type.BLOCK && this.world.getBlockState(((BlockRayTraceResult)raytraceresult).getPos()).getBlock() == Blocks.NETHER_PORTAL) {
+                this.setPortal(((BlockRayTraceResult)raytraceresult).getPos());
+            } else if (!net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult)){
+                this.onHit(raytraceresult);
+            }
+        }
+
+        Vec3d vec3d = this.getMotion();
+        this.posX += vec3d.x;
+        this.posY += vec3d.y;
+        this.posZ += vec3d.z;
+        this.rotationYaw = (float)(MathHelper.atan2(vec3d.x, vec3d.z) * (double)(180F / (float)Math.PI));
+
+
+        while(this.rotationPitch - this.prevRotationPitch >= 180.0F) {
+            this.prevRotationPitch += 360.0F;
+        }
+
+        while(this.rotationYaw - this.prevRotationYaw < -180.0F) {
+            this.prevRotationYaw -= 360.0F;
+        }
+
+        while(this.rotationYaw - this.prevRotationYaw >= 180.0F) {
+            this.prevRotationYaw += 360.0F;
+        }
+
+        this.rotationPitch = MathHelper.lerp(0.2F, this.prevRotationPitch, this.rotationPitch);
+        this.rotationYaw = MathHelper.lerp(0.2F, this.prevRotationYaw, this.rotationYaw);
+
+
+        if (!this.hasNoGravity()) {
+            Vec3d vec3d1 = this.getMotion();
+            this.setMotion(vec3d1.x, vec3d1.y , vec3d1.z);
+        }
+
+        this.setPosition(this.posX, this.posY, this.posZ);
+    }
+
+    public EntityProjectileSpell( World world, LivingEntity shooter, SpellResolver spellResolver) {
+        super(world, shooter);
         this.spellResolver = spellResolver;
         age = 0;
     }
@@ -77,163 +152,72 @@ public class EntityProjectileSpell extends ThrowableEntity {
 
     }
 
-
-    @Override
-    protected void onImpact(RayTraceResult result) {
-        if (!world.isRemote) {
-            SoundEvent event = new SoundEvent(new ResourceLocation(ExampleMod.MODID, "resolve_spell"));
-            world.playSound(null, this.posX, this.posY, this.posZ,
-                    event, SoundCategory.BLOCKS,
-                    4.0F, (1.0F + (this.world.rand.nextFloat()
-                            - world.rand.nextFloat()) * 0.2F) * 0.7F);
-
-            if(this.spellResolver != null && result != null)
-                this.spellResolver.onResolveEffect(this.world, this.getThrower(), result);
-
-            this.remove();
-
-        }
-
-    }
-
-
-    /**
-     * Checks if the entity is in range to render.
-     */
-    @OnlyIn(Dist.CLIENT)
-    public boolean isInRangeToRenderDist(double distance)
-    {
-        double d0 = this.getBoundingBox().getAverageEdgeLength() * 4.0D;
-
-        if (Double.isNaN(d0))
-        {
-            d0 = 4.0D;
-        }
-
-        d0 = d0 * 64.0D;
-        return distance < d0 * d0;
-    }
-
-
-    private boolean damageable(LivingEntity entity) {
-        boolean out = entity.isInvulnerable() || entity.world.isRemote || (entity.getHealth() <= 0.0);
-        if(entity instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity)entity;
-            out = out || player.isCreative();
-        }
-        return !out;
-    }
-
-
-    @Override
-    public float getGravityVelocity() {
-        return 0.0f;
-    }
-
-
-    @Override
-    public void tick() {
-        age++;
-        ++this.xpColor;
-        if ((age >= 200) && !world.isRemote) {
-            this.remove();
-        }
-        super.tick();
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public int getTextureByXP() {
-        System.out.println(age);
-        if (this.age >= 12)
-        {
-            return 10;
-        }
-        else if (this.age >= 11)
-        {
-            return 9;
-        }
-        else if (this.age >= 10)
-        {
-            return 8;
-        }
-        else if (this.age >= 9)
-        {
-            return 7;
-        }
-        else if (this.age >= 8)
-        {
-            return 6;
-        }
-        else if (this.age >= 7)
-        {
-            return 5;
-        }
-        else if (this.age >= 6)
-        {
-            return 4;
-        }
-        else if (this.age >= 5)
-        {
-            return 3;
-        }
-        else if (this.age >= 4)
-        {
-            return 2;
-        }
-        else
-        {
-            return this.age >= 3 ? 1 : 0;
-        }
-    }
-
-
-    @Override
-    public void deserializeNBT(CompoundNBT nbt) {
-        super.deserializeNBT(nbt);
-        age = nbt.getInt("Age");
-    }
-
-    @Override
-    public CompoundNBT serializeNBT() {
-        super.serializeNBT();
-        CompoundNBT nbt = new CompoundNBT();
-        nbt.putInt("Age", age);
-        return nbt;
-    }
-
-
-    @OnlyIn(Dist.CLIENT)
-    public int getBrightnessForRender()
-    {
-        float f = 0.5F;
-        f = MathHelper.clamp(f, 0.0F, 1.0F);
-        int i = super.getBrightnessForRender();
-        int j = i & 255;
-        int k = i >> 16 & 255;
-        j = j + (int)(f * 15.0F * 16.0F);
-
-        if (j > 240)
-        {
-            j = 240;
-        }
-
-        return j | k << 16;
-    }
-
-
-    @Override
-    protected void registerData() {
-
-    }
-
     @Override
     public boolean hasNoGravity() {
         return true;
     }
 
+    @Override
+    public EntityType<?> getType() {
+        return ModEntities.SPELL_PROJ;
+    }
 
     @Override
-    public boolean isInWater() {
-        return false;
+    protected void onHit(RayTraceResult result) {
+        //super.onHit(result);
+        if(!world.isRemote && result.getType() == RayTraceResult.Type.ENTITY) {
+            if (((EntityRayTraceResult) result).getEntity().equals(this.getShooter())) return;
+            if(this.spellResolver != null && result != null) {
+                this.spellResolver.onResolveEffect(world, (LivingEntity) this.getShooter(), (EntityRayTraceResult) result);
+                this.world.setEntityState(this, (byte)3);
+                this.remove();
+            }
+        }
+
+        if (!world.isRemote && result.getType() == RayTraceResult.Type.BLOCK) {
+            SoundEvent event = new SoundEvent(new ResourceLocation(ExampleMod.MODID, "resolve_spell"));
+            world.playSound(null, this.posX, this.posY, this.posZ,
+                    event, SoundCategory.BLOCKS,
+                    4.0F, (1.0F + (this.world.rand.nextFloat()
+                            - world.rand.nextFloat()) * 0.2F) * 0.7F);
+            BlockRayTraceResult blockraytraceresult = (BlockRayTraceResult)result;
+            BlockState blockstate = this.world.getBlockState(blockraytraceresult.getPos());
+            System.out.println(blockstate.getBlock());
+            if(this.spellResolver != null && result != null) {
+                System.out.println(blockraytraceresult.getPos());
+                this.spellResolver.onResolveEffect(this.world, (LivingEntity) this.getShooter(), blockraytraceresult);
+            }
+            this.world.setEntityState(this, (byte)3);
+            this.remove();
+
+        }
+    }
+
+    //    @Override
+//    protected void onImpact(RayTraceResult result) {
+//        if (!world.isRemote) {
+//            SoundEvent event = new SoundEvent(new ResourceLocation(ExampleMod.MODID, "resolve_spell"));
+//            world.playSound(null, this.posX, this.posY, this.posZ,
+//                    event, SoundCategory.BLOCKS,
+//                    4.0F, (1.0F + (this.world.rand.nextFloat()
+//                            - world.rand.nextFloat()) * 0.2F) * 0.7F);
+//
+//            if(this.spellResolver != null && result != null)
+//                this.spellResolver.onResolveEffect(this.world, this.getThrower(), result);
+//
+//            this.world.setEntityState(this, (byte)3);
+//            this.remove();
+//
+//        }
+//
+//    }
+
+    public EntityProjectileSpell(FMLPlayMessages.SpawnEntity packet, World world){
+        super(ModEntities.SPELL_PROJ, world);
+    }
+
+    @Override
+    public IPacket<?> createSpawnPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
     }
 }

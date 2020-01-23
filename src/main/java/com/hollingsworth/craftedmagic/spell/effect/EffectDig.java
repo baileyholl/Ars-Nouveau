@@ -6,6 +6,7 @@ import com.hollingsworth.craftedmagic.spell.enhancement.EnhancementType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
@@ -25,17 +26,14 @@ public class EffectDig extends EffectType {
 
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<EnhancementType> enhancements) {
-        if(!world.isRemote){
+        if(!world.isRemote && rayTraceResult instanceof BlockRayTraceResult){
 
-            BlockPos pos = new BlockPos(rayTraceResult.getHitVec());
+            BlockPos pos = new BlockPos(((BlockRayTraceResult) rayTraceResult).getPos());
             BlockState state = world.getBlockState(pos);
             //Iron block and lower.
             if (state.getBlockHardness(world, pos) <= 3 && state.getBlockHardness(world, pos) >= 0) {
                 System.out.println("Destroying");
-                if(!world.destroyBlock(pos, true)){ // Check if we hit the top of the block.
-                    world.destroyBlock(pos.down(), true);
-
-                }
+                world.destroyBlock(pos, true);
             }
 
         }

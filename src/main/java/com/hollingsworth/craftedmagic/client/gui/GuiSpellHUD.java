@@ -19,8 +19,7 @@ public class GuiSpellHUD extends AbstractGui {
             int mode = tag.getInt(Spell.BOOK_MODE_TAG);
             String renderString = "";
             if(mode != 0){
-            String recipe = tag.getString(tag.getInt(Spell.BOOK_MODE_TAG) + "recipe");
-            renderString = mode + " " + recipe;
+            renderString = mode + " " + Spell.getSpellName(stack.getTag());
             }else{
                 renderString = "Crafting Mode";
             }

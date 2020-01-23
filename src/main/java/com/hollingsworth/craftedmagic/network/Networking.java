@@ -34,6 +34,12 @@ public class Networking {
                 PacketUpdateSpellbook::toBytes,
                 PacketUpdateSpellbook::new,
                 PacketUpdateSpellbook::handle);
+
+        INSTANCE.registerMessage(nextID(),
+                PacketUpdateBookGUI.class,
+                PacketUpdateBookGUI::toBytes,
+                PacketUpdateBookGUI::new,
+                PacketUpdateBookGUI::handle);
        // register(PacketOpenGUI.class, NetworkDirection.PLAY_TO_CLIENT);
       //  register(PacketUpdateSpellbook.class, NetworkDirection.PLAY_TO_SERVER);
     }

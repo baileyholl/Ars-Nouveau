@@ -1,7 +1,8 @@
-package com.hollingsworth.craftedmagic.client.gui;
+package com.hollingsworth.craftedmagic.client.gui.buttons;
 
 
 import com.hollingsworth.craftedmagic.ExampleMod;
+import com.hollingsworth.craftedmagic.client.gui.GuiSpellCreation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
@@ -10,13 +11,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 
 @OnlyIn(Dist.CLIENT)
-class GuiImageButton extends Button
+public class GuiImageButton extends Button
 {
     private ResourceLocation image;
 
     public String resourceIcon;
 
     int u, v;
+    GuiSpellCreation parent;
 
 
 
