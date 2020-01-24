@@ -108,7 +108,11 @@ public class GuiSpellCreation extends ModdedScreen {
             if(spell instanceof CastMethod) {
                 cell = new GuiSpellCell(this, bookLeft + 20, bookTop + 10 + 18 * numCast++, false, spell.getIcon(), spell.tag);
             }else if(spell instanceof EffectType){
-                cell = new GuiSpellCell(this, bookLeft + 20 + 65, bookTop + 10 + 18 * numEffect++, false, spell.getIcon(), spell.tag);
+                int yOffset = numEffect % 2 == 0 ? 18 * (numEffect/2 -1) : 18*(numEffect/2);
+                int xOffset = (numEffect % 2 == 0 ? 20 : 0);
+
+                cell = new GuiSpellCell(this, bookLeft + 75 + xOffset, bookTop + 28 +  yOffset, false, spell.getIcon(), spell.tag);
+                numEffect ++;
             }else{
                 cell = new GuiSpellCell(this, bookLeft + 20 + 95, bookTop + 10 + 18 * numEnhancement++, false, spell.getIcon(), spell.tag);
             }

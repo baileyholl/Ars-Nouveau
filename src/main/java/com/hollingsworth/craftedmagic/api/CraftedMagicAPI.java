@@ -5,6 +5,8 @@ import com.hollingsworth.craftedmagic.spell.effect.*;
 import com.hollingsworth.craftedmagic.spell.method.MethodSelf;
 import com.hollingsworth.craftedmagic.spell.method.MethodTouch;
 import com.hollingsworth.craftedmagic.spell.method.MethodProjectile;
+import net.minecraftforge.fml.common.Mod;
+
 import java.util.HashMap;
 
 public class CraftedMagicAPI {
@@ -26,6 +28,7 @@ public class CraftedMagicAPI {
         spell_map.put(ModConfig.EffectPhantomBlockID, new EffectPhantomBlock());
         spell_map.put(ModConfig.EffectHealID, new EffectHeal());
         spell_map.put(ModConfig.EffectGrowID, new EffectGrow());
+        spell_map.put(ModConfig.EffectKnockbackID, new EffectKnockback());
 
     }
 

@@ -11,5 +11,6 @@ public class ModConfig {
     public static final String EffectPhantomBlockID = "phantom_block";
     public static final String EffectGrowID = "grow";
     public static final String EffectHealID = "heal";
+    public static final String EffectKnockbackID = "knockback";
 
 }

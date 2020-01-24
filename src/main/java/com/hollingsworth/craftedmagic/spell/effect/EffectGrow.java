@@ -24,7 +24,6 @@ public class EffectGrow  extends EffectType{
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<EnhancementType> enhancements) {
         if(rayTraceResult instanceof BlockRayTraceResult) {
             BlockPos blockpos = ((BlockRayTraceResult) rayTraceResult).getPos();
-            BlockPos blockpos1 = blockpos.offset(((BlockRayTraceResult) rayTraceResult).getFace());
             if (applyBonemeal(world, blockpos)) {
                 if (!world.isRemote) {
                     world.playEvent(2005, blockpos, 0);
