@@ -4,6 +4,8 @@ import com.hollingsworth.craftedmagic.ExampleMod;
 import com.hollingsworth.craftedmagic.api.AbstractSpellPart;
 import com.hollingsworth.craftedmagic.api.CraftedMagicAPI;
 import com.hollingsworth.craftedmagic.api.Position;
+import com.hollingsworth.craftedmagic.api.mana.IMana;
+import com.hollingsworth.craftedmagic.capability.ManaCapability;
 import com.hollingsworth.craftedmagic.network.Networking;
 import com.hollingsworth.craftedmagic.network.PacketOpenGUI;
 import com.hollingsworth.craftedmagic.spell.SpellResolver;
@@ -74,8 +76,13 @@ public class Spell extends Item {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        if(!worldIn.isRemote())
+        if(!worldIn.isRemote()) {
             System.out.println("Right clicked");
+            ManaCapability.getMana(playerIn).ifPresent(mana -> {
+                System.out.println(mana.getCurrentMana());
+                System.out.println(mana.addMana(50));
+            });
+        }
         ItemStack stack = playerIn.getHeldItem(handIn);
         if(worldIn.isRemote || !stack.hasTag()){
             return new ActionResult<>(ActionResultType.SUCCESS, stack);

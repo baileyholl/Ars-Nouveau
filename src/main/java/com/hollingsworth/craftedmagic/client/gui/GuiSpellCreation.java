@@ -138,6 +138,7 @@ public class GuiSpellCreation extends ModdedScreen {
             ((GuiSpellCell) button).spell_id = "";
             ((GuiSpellCell) button).resourceIcon = "";
         }
+
     }
 
     public void onSlotChange(Button button){

@@ -14,7 +14,7 @@ public class GuiSpellHUD extends AbstractGui {
 
     public void drawHUD() {
         ItemStack stack = minecraft.player.getHeldItemMainhand();
-        if(stack != null && stack.getItem() instanceof Spell){
+        if(stack != null && stack.getItem() instanceof Spell && stack.getTag() != null){
             CompoundNBT tag = stack.getTag();
             int mode = tag.getInt(Spell.BOOK_MODE_TAG);
             String renderString = "";

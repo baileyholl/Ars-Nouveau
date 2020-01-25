@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 
 public class EffectAccelerate extends EffectType{
+
     protected EffectAccelerate(String tag, String description) {
         super(tag, description);
     }
