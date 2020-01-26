@@ -29,7 +29,13 @@ public class CraftedMagicAPI {
         spell_map.put(ModConfig.EffectHealID, new EffectHeal());
         spell_map.put(ModConfig.EffectGrowID, new EffectGrow());
         spell_map.put(ModConfig.EffectKnockbackID, new EffectKnockback());
+        spell_map.put(ModConfig.EffectAccelerateID, new EffectAccelerate());
 
+        spell_map.put(ModConfig.EffectLightID, new EffectLight());
+        spell_map.put(ModConfig.EffectDispelID, new EffectDispel());
+        spell_map.put(ModConfig.EffectFreezeID, new EffectFreeze());
+        spell_map.put(ModConfig.EffectPullID, new EffectPull());
+        spell_map.put(ModConfig.EffectBlinkID, new EffectBlink());
     }
 
     public static CraftedMagicAPI getInstance(){

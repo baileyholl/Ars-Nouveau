@@ -60,7 +60,6 @@ public class EntityProjectileSpell extends ArrowEntity {
         this.lastTickPosZ = this.posZ;
         //super.tick();
 
-
         if (this.inGround) {
             this.inGround = false;
             this.setMotion(this.getMotion().mul((double)(this.rand.nextFloat() * 0.2F), (double)(this.rand.nextFloat() * 0.2F), (double)(this.rand.nextFloat() * 0.2F)));

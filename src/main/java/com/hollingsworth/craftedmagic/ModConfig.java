@@ -13,4 +13,11 @@ public class ModConfig {
     public static final String EffectHealID = "heal";
     public static final String EffectKnockbackID = "knockback";
 
+
+    public static final String EffectAccelerateID = "accelerate";
+    public static final String EffectLightID = "light";
+    public static final String EffectDispelID = "dispel";
+    public static final String EffectFreezeID = "freeze";
+    public static final String EffectPullID = "pull";
+    public static final String EffectBlinkID = "blink";
 }

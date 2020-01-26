@@ -67,7 +67,8 @@ public class ExampleMod {
     }
 
     public void clientSetup(final FMLClientSetupEvent event){
-
+        System.out.println("Hello from setup");
+        System.out.println("Debugger hello");
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
