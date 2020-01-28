@@ -1,6 +1,6 @@
 package com.hollingsworth.craftedmagic;
 
-import com.hollingsworth.craftedmagic.items.Spell;
+import com.hollingsworth.craftedmagic.items.SpellBook;
 import com.hollingsworth.craftedmagic.network.Networking;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -15,7 +15,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
 import org.apache.logging.log4j.Logger;
 
 import static net.minecraft.world.biome.Biome.LOGGER;
@@ -85,7 +84,7 @@ public class ExampleMod {
         public static void onItemsRegistry(final RegistryEvent.Register<Item> itemRegistryEvent) {
             // register a new block here
             LOGGER.info("HELLO from Register Block");
-            itemRegistryEvent.getRegistry().register(new Spell());
+            itemRegistryEvent.getRegistry().register(new SpellBook());
         }
     }
 //    @Mod.EventHandler

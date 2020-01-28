@@ -1,12 +1,6 @@
 package com.hollingsworth.craftedmagic;
 
-import com.hollingsworth.craftedmagic.api.CraftedMagicAPI;
-import com.hollingsworth.craftedmagic.client.gui.GuiSpellCreation;
-import com.hollingsworth.craftedmagic.client.renderer.entity.ModRenderers;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponent;
 import net.minecraft.world.World;
 
 public class ClientProxy implements  IProxy {

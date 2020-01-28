@@ -1,7 +1,7 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.api.AbstractSpellPart;
-import com.hollingsworth.craftedmagic.spell.enhancement.EnhancementType;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -16,7 +16,7 @@ public abstract class EffectType extends AbstractSpellPart {
     }
 
     // Apply the effect at the destination position.
-    public abstract void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<EnhancementType> enhancements);
+    public abstract void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> enhancements);
 
 
 }

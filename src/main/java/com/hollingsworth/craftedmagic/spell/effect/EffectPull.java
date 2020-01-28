@@ -1,12 +1,11 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
-import com.hollingsworth.craftedmagic.spell.enhancement.EnhancementType;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -20,7 +19,7 @@ public class EffectPull extends EffectType{
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<EnhancementType> enhancements) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> enhancements) {
         if(rayTraceResult instanceof EntityRayTraceResult){
             Entity target = ((EntityRayTraceResult) rayTraceResult).getEntity();
             System.out.println(target);

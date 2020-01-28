@@ -32,7 +32,7 @@ public class HUDEventHandler {
         if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) return;
 
         final PlayerEntity player = minecraft.player;
-        if (player.getHeldItemMainhand().getItem() != ModItems.spell && player.getHeldItemOffhand().getItem() != ModItems.spell)
+        if (player.getHeldItemMainhand().getItem() != ModItems.spellBook && player.getHeldItemOffhand().getItem() != ModItems.spellBook)
             return;
 
         spellHUD.drawHUD();

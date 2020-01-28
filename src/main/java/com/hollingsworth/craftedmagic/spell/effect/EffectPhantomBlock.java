@@ -1,9 +1,7 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
-import com.hollingsworth.craftedmagic.spell.enhancement.EnhancementType;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.BlockPos;
@@ -20,7 +18,7 @@ public class EffectPhantomBlock extends EffectType{
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<EnhancementType> enhancements) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> enhancements) {
         if(rayTraceResult instanceof BlockRayTraceResult){
             System.out.println(((BlockRayTraceResult) rayTraceResult).getPos().offset(((BlockRayTraceResult) rayTraceResult).getFace()));
             BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getPos().offset(((BlockRayTraceResult) rayTraceResult).getFace());

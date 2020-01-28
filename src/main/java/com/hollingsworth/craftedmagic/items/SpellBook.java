@@ -3,24 +3,19 @@ package com.hollingsworth.craftedmagic.items;
 import com.hollingsworth.craftedmagic.ExampleMod;
 import com.hollingsworth.craftedmagic.api.AbstractSpellPart;
 import com.hollingsworth.craftedmagic.api.CraftedMagicAPI;
-import com.hollingsworth.craftedmagic.api.Position;
-import com.hollingsworth.craftedmagic.api.mana.IMana;
 import com.hollingsworth.craftedmagic.capability.ManaCapability;
 import com.hollingsworth.craftedmagic.network.Networking;
 import com.hollingsworth.craftedmagic.network.PacketOpenGUI;
 import com.hollingsworth.craftedmagic.spell.SpellResolver;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -35,12 +30,12 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Spell extends Item {
+public class SpellBook extends Item {
     public static final String BOOK_MODE_TAG = "mode";
 
 
 
-    public Spell(){
+    public SpellBook(){
         super(new Item.Properties().maxStackSize(1).group(ExampleMod.itemGroup));
         setRegistryName("spell_book");        // The unique name (within your mod) that identifies this item
 
@@ -51,7 +46,7 @@ public class Spell extends Item {
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         if(!worldIn.isRemote && worldIn.getGameTime() % 20 == 0 && !stack.hasTag()) {
             CompoundNBT tag = new CompoundNBT();
-            tag.putInt(Spell.BOOK_MODE_TAG, 0);
+            tag.putInt(SpellBook.BOOK_MODE_TAG, 0);
             stack.setTag(tag);
         }
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
@@ -77,10 +72,10 @@ public class Spell extends Item {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         if(!worldIn.isRemote()) {
-            System.out.println("Right clicked");
+//            System.out.println("Right clicked");
             ManaCapability.getMana(playerIn).ifPresent(mana -> {
-                System.out.println(mana.getCurrentMana());
-                System.out.println(mana.addMana(50));
+//                System.out.println(mana.getCurrentMana());
+//                System.out.println(mana.addMana(50));
             });
         }
         ItemStack stack = playerIn.getHeldItem(handIn);
@@ -102,6 +97,7 @@ public class Spell extends Item {
         if(!spell_r.isEmpty()) {
             SpellResolver resolver = new SpellResolver(spell_r);
             resolver.onCast(stack, playerIn, worldIn);
+
         }
         return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
     }
@@ -137,7 +133,7 @@ public class Spell extends Item {
     }
 
     public ArrayList<AbstractSpellPart> getCurrentRecipe(ItemStack stack){
-        return Spell.getRecipeFromTag(stack.getTag(), getMode(stack.getTag()));
+        return SpellBook.getRecipeFromTag(stack.getTag(), getMode(stack.getTag()));
     }
 
 
@@ -179,11 +175,11 @@ public class Spell extends Item {
     }
 
     public static int getMode(CompoundNBT tag){
-        return tag.getInt(Spell.BOOK_MODE_TAG);
+        return tag.getInt(SpellBook.BOOK_MODE_TAG);
     }
 
     public void setMode(ItemStack stack, int mode){
-        stack.getTag().putInt(Spell.BOOK_MODE_TAG, mode);
+        stack.getTag().putInt(SpellBook.BOOK_MODE_TAG, mode);
     }
 
     @Override
@@ -192,7 +188,7 @@ public class Spell extends Item {
         super.addInformation(stack, world, tooltip, flag);
         if(stack != null && stack.hasTag()) {
             CompoundNBT tag = stack.getTag();
-            tooltip.add(new StringTextComponent(Spell.getSpellName(stack.getTag())));
+            tooltip.add(new StringTextComponent(SpellBook.getSpellName(stack.getTag())));
         }
     }
 }

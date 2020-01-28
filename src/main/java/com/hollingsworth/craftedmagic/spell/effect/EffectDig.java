@@ -1,7 +1,7 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
-import com.hollingsworth.craftedmagic.spell.enhancement.EnhancementType;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
@@ -25,7 +25,7 @@ public class EffectDig extends EffectType {
 
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<EnhancementType> enhancements) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> enhancements) {
         if(!world.isRemote && rayTraceResult instanceof BlockRayTraceResult){
 
             BlockPos pos = new BlockPos(((BlockRayTraceResult) rayTraceResult).getPos());

@@ -1,15 +1,13 @@
 package com.hollingsworth.craftedmagic.spell;
 
 import com.hollingsworth.craftedmagic.api.AbstractSpellPart;
-import com.hollingsworth.craftedmagic.api.Position;
 import com.hollingsworth.craftedmagic.spell.effect.EffectType;
-import com.hollingsworth.craftedmagic.spell.enhancement.EnhancementType;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
 import com.hollingsworth.craftedmagic.spell.method.CastMethod;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -49,12 +47,12 @@ public class SpellResolver {
             AbstractSpellPart spell = spell_recipe.get(i);
             if(spell instanceof EffectType){
 
-                ArrayList<EnhancementType> enhancements = new ArrayList<>();
+                ArrayList<AugmentType> enhancements = new ArrayList<>();
                 for(int j = i + 1; j < spell_recipe.size(); j++){
                     AbstractSpellPart next_spell = spell_recipe.get(j);
-                    if(next_spell instanceof EnhancementType){
+                    if(next_spell instanceof AugmentType){
                         System.out.println("Applying enhancement ");
-                        enhancements.add((EnhancementType) next_spell);
+                        enhancements.add((AugmentType) next_spell);
                     }else{
                         break;
                     }

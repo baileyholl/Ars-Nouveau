@@ -1,18 +1,19 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
-import com.hollingsworth.craftedmagic.spell.enhancement.EnhancementType;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IGrowable;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
+
+import static net.minecraft.item.BoneMealItem.growSeagrass;
 
 public class EffectGrow  extends EffectType{
 
@@ -21,14 +22,21 @@ public class EffectGrow  extends EffectType{
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<EnhancementType> enhancements) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> enhancements) {
         if(rayTraceResult instanceof BlockRayTraceResult) {
             BlockPos blockpos = ((BlockRayTraceResult) rayTraceResult).getPos();
+            System.out.println(((BlockRayTraceResult) rayTraceResult).getPos());
+            System.out.println(((BlockRayTraceResult) rayTraceResult).getFace());
+            System.out.println(rayTraceResult.getHitVec());
+
+
+            //BlockPos blockpos = new BlockPos(rayTraceResult.getHitVec());
             if (applyBonemeal(world, blockpos)) {
                 if (!world.isRemote) {
                     world.playEvent(2005, blockpos, 0);
                 }
             }
+
         }
     }
     public static boolean applyBonemeal(World worldIn, BlockPos pos) {

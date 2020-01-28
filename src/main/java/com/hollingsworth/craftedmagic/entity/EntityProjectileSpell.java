@@ -180,10 +180,9 @@ public class EntityProjectileSpell extends ArrowEntity {
                     4.0F, (1.0F + (this.world.rand.nextFloat()
                             - world.rand.nextFloat()) * 0.2F) * 0.7F);
             BlockRayTraceResult blockraytraceresult = (BlockRayTraceResult)result;
-            BlockState blockstate = this.world.getBlockState(blockraytraceresult.getPos());
-            System.out.println(blockstate.getBlock());
+//            BlockState blockstate = this.world.getBlockState(blockraytraceresult.getPos());
+//            System.out.println(blockstate.getBlock());
             if(this.spellResolver != null && result != null) {
-                System.out.println(blockraytraceresult.getPos());
                 this.spellResolver.onResolveEffect(this.world, (LivingEntity) this.getShooter(), blockraytraceresult);
             }
             this.world.setEntityState(this, (byte)3);

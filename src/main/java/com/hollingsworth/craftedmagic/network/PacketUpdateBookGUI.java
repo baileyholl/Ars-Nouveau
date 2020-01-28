@@ -1,7 +1,6 @@
 package com.hollingsworth.craftedmagic.network;
 
-import com.hollingsworth.craftedmagic.api.CraftedMagicAPI;
-import com.hollingsworth.craftedmagic.client.gui.GuiSpellCreation;
+import com.hollingsworth.craftedmagic.client.gui.GuiSpellBook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
@@ -28,8 +27,8 @@ public class PacketUpdateBookGUI {
 
     public void handle(Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(()->{
-            if(Minecraft.getInstance().currentScreen instanceof GuiSpellCreation){
-                ((GuiSpellCreation) Minecraft.getInstance().currentScreen).spell_book_tag = tag;
+            if(Minecraft.getInstance().currentScreen instanceof GuiSpellBook){
+                ((GuiSpellBook) Minecraft.getInstance().currentScreen).spell_book_tag = tag;
             }else{
                 System.out.println("Screen is not GuiSpellCreation!");
             }

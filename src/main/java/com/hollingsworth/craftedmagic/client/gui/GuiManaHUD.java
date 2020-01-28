@@ -1,10 +1,9 @@
 package com.hollingsworth.craftedmagic.client.gui;
 
-import com.hollingsworth.craftedmagic.items.Spell;
+import com.hollingsworth.craftedmagic.items.SpellBook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 
 import java.awt.*;
 
@@ -13,7 +12,7 @@ public class GuiManaHUD extends AbstractGui {
 
     public void drawHUD() {
         ItemStack stack = minecraft.player.getHeldItemMainhand();
-        if(stack != null && stack.getItem() instanceof Spell && stack.getTag() != null){
+        if(stack != null && stack.getItem() instanceof SpellBook && stack.getTag() != null){
 
             int x = 50; //Length
             int y = 15;

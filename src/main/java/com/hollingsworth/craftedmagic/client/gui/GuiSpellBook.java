@@ -3,10 +3,11 @@ package com.hollingsworth.craftedmagic.client.gui;
 import com.hollingsworth.craftedmagic.ExampleMod;
 import com.hollingsworth.craftedmagic.api.AbstractSpellPart;
 import com.hollingsworth.craftedmagic.api.CraftedMagicAPI;
+import com.hollingsworth.craftedmagic.client.gui.buttons.CraftingButton;
+import com.hollingsworth.craftedmagic.client.gui.buttons.GlyphButton;
 import com.hollingsworth.craftedmagic.client.gui.buttons.GuiImageButton;
-import com.hollingsworth.craftedmagic.client.gui.buttons.GuiSpellCell;
 import com.hollingsworth.craftedmagic.client.gui.buttons.GuiSpellSlot;
-import com.hollingsworth.craftedmagic.items.Spell;
+import com.hollingsworth.craftedmagic.items.SpellBook;
 import com.hollingsworth.craftedmagic.network.Networking;
 import com.hollingsworth.craftedmagic.network.PacketUpdateSpellbook;
 import com.hollingsworth.craftedmagic.spell.effect.EffectType;
@@ -26,16 +27,16 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class GuiSpellCreation extends ModdedScreen {
+public class GuiSpellBook extends ModdedScreen {
 
-    private final int FULL_WIDTH = 256;
-    private final int FULL_HEIGHT = 192;
-    private static ResourceLocation background = new ResourceLocation(ExampleMod.MODID, "textures/gui/spell_creation.png");
-    public int numLinks = 5;
+    private final int FULL_WIDTH = 272;
+    private final int FULL_HEIGHT = 180;
+    private static ResourceLocation background = new ResourceLocation(ExampleMod.MODID, "textures/gui/spell_book.png");
+    public int numLinks = 10;
     public int bookLeft;
     public int bookTop;
     public int bookRight;
-    public Spell spellBook;
+    public SpellBook spellBook;
     public CraftedMagicAPI api;
     private int offsetFromScreenLeft;
     private int offsetFromScreenTop;
@@ -44,9 +45,9 @@ public class GuiSpellCreation extends ModdedScreen {
     public CompoundNBT spell_book_tag;
     public GuiSpellSlot selected_slot;
 
-    List<GuiSpellCell> craftingCells;
+    List<CraftingButton> craftingCells;
 
-    public GuiSpellCreation(CraftedMagicAPI api, CompoundNBT tag) {
+    public GuiSpellBook(CraftedMagicAPI api, CompoundNBT tag) {
         super(new StringTextComponent(""));
         this.api = api;
         selected_cast_slot = 1;
@@ -68,25 +69,27 @@ public class GuiSpellCreation extends ModdedScreen {
         int bookBottom = height / 2 + FULL_HEIGHT / 2;
 
         //Crafting slots
-        for (int i = 0; i <= numLinks; i++) {
+        for (int i = 0; i < numLinks; i++) {
             String icon = null;
             String spell_id = "";
-            GuiSpellCell cell = new GuiSpellCell(this,bookLeft + 10 + 28 * i, bookTop + FULL_HEIGHT - 24, true, icon, spell_id, i+1);
+            int offset = i >= 5 ? 5 : 0;
+            CraftingButton cell = new CraftingButton(bookLeft +14 + 24 * i + offset, bookTop + FULL_HEIGHT - 50, i, this::onCraftingSlotClick);
+            //GlyphButton glyphButton = new GlyphButton(this,bookLeft + 10 + 28 * i, bookTop + FULL_HEIGHT - 24, )
             addButton(cell);
             craftingCells.add(cell);
         }
         updateCraftingSlots(1);
 
         addSpellParts();
-        addButton(new GuiImageButton(bookRight - 43, bookBottom - 22, 0,0,38, 16, "textures/gui/create.png", this::onCreateClick));
-        spell_name = new TextFieldWidget(minecraft.fontRenderer, bookLeft + 6, bookTop + FULL_HEIGHT - 42, 100, 12, null, "Spell Name");
-        spell_name.setText(Spell.getSpellName(spell_book_tag, 1));
-
+        addButton(new GuiImageButton(bookRight - 60, bookBottom - 28, 0,0,38, 16, 38, 16, "textures/gui/create_button.png", this::onCreateClick));
+        spell_name = new TextFieldWidget(minecraft.fontRenderer, bookLeft + 16, bookTop + FULL_HEIGHT - 25, 115, 12, null, "Spell Name");
+        spell_name.setText(SpellBook.getSpellName(spell_book_tag, 1));
+//
         addButton(spell_name);
 
         // Add spell slots
-        for(int i = 1; i <= 3; i++){
-            GuiSpellSlot slot = new GuiSpellSlot(this,bookLeft + 220, bookTop   + 20 * i, "textures/gui/spell_cell.png", i);
+        for(int i = 1; i <= 10; i++){
+            GuiSpellSlot slot = new GuiSpellSlot(this,bookLeft + 261, bookTop - 3 + 15 * i, i);
             if(i == 1) {
                 selected_slot = slot;
                 slot.isSelected = true;
@@ -99,46 +102,50 @@ public class GuiSpellCreation extends ModdedScreen {
     public void addSpellParts(){
         Set<String> keys = this.api.spell_map.keySet();
         //Adding spell parts
-        int numCast = 1;
-        int numEffect =1;
-        int numEnhancement = 1;
+        int numCast = 0;
+        int numEffect = 0;
+        int numAugment = 0;
         for(String key  : keys){
             AbstractSpellPart spell = this.api.spell_map.get(key);
-            GuiSpellCell cell;
+            GlyphButton cell;
             if(spell instanceof CastMethod) {
-                cell = new GuiSpellCell(this, bookLeft + 20, bookTop + 10 + 18 * numCast++, false, spell.getIcon(), spell.tag);
+//                int xOffset = numCast % 2 == 0 ? 18 * (numCast/2 -1) : 18*(numCast/2);
+                int xOffset = 18 * (numCast % 6 );
+                int yOffset = (numCast / 6) * 20 ;
+                cell = new GlyphButton(this, bookLeft + 15 + xOffset, bookTop + 20 + yOffset, false, spell.getIcon(), spell.tag);
+                numCast++;
             }else if(spell instanceof EffectType){
-                int yOffset = numEffect % 2 == 0 ? 18 * (numEffect/2 -1) : 18*(numEffect/2);
-                int xOffset = (numEffect % 2 == 0 ? 20 : 0);
+//                int xOffset = numEffect % 2 == 0 ? 18 * (numEffect/2 -1) : 18*(numEffect/2);
+//                int yOffset = (numEffect % 2 == 0 ? 20 : 0);
 
-                cell = new GuiSpellCell(this, bookLeft + 75 + xOffset, bookTop + 28 +  yOffset, false, spell.getIcon(), spell.tag);
+                int xOffset = 20 * (numEffect % 6 );
+                int yOffset = (numEffect / 6) * 20 ;
+                cell = new GlyphButton(this, bookLeft + 140 + xOffset, bookTop + 20 +  yOffset, false, spell.getIcon(), spell.tag);
                 numEffect ++;
             }else{
-                cell = new GuiSpellCell(this, bookLeft + 20 + 95, bookTop + 10 + 18 * numEnhancement++, false, spell.getIcon(), spell.tag);
+                int xOffset = 20 * (numAugment % 6 );
+                int yOffset = (numAugment / 6) * 20 ;
+                cell = new GlyphButton(this, bookLeft + 15 + xOffset, bookTop + 70 +  yOffset, false, spell.getIcon(), spell.tag);
+                numAugment++;
             }
             addButton(cell);
         }
     }
 
     public void onCraftingSlotClick(Button button){
-        if(!(button instanceof GuiSpellCell)) {
-            throw new IllegalStateException("Wrong button type passed.");
-        }
+        ((CraftingButton) button).spell_id = "";
+        ((CraftingButton) button).resourceIcon = "";
+    }
 
-        if(!((GuiSpellCell) button).isCraftingSlot){
-            List<Widget> test = this.buttons.stream().filter(b-> b instanceof GuiSpellCell && ((GuiSpellCell) b).getId() != 0).collect(Collectors.toList());
-            for(Widget b : test){
-                if(((GuiSpellCell) b).spell_id.equals("") || ((GuiSpellCell) b).spell_id == null){
-                    ((GuiSpellCell) b).spell_id = ((GuiSpellCell) button).spell_id;
-                    ((GuiSpellCell) b).resourceIcon = this.api.spell_map.get(((GuiSpellCell) button).spell_id).getIcon();
-                    break;
-                }
+    public void onGlyphClick(Button button){
+        GlyphButton button1 = (GlyphButton) button;
+        for(CraftingButton b : craftingCells){
+            if(b.resourceIcon.equals("")){
+                b.resourceIcon = button1.resourceIcon;
+                b.spell_id = button1.spell_id;
+                return;
             }
-        }else if(((GuiSpellCell) button).isCraftingSlot){
-            ((GuiSpellCell) button).spell_id = "";
-            ((GuiSpellCell) button).resourceIcon = "";
         }
-
     }
 
     public void onSlotChange(Button button){
@@ -147,18 +154,15 @@ public class GuiSpellCreation extends ModdedScreen {
         this.selected_slot.isSelected = true;
         this.selected_cast_slot = this.selected_slot.slotNum;
         updateCraftingSlots(this.selected_cast_slot);
-        spell_name.setText(Spell.getSpellName(spell_book_tag, this.selected_cast_slot));
+        spell_name.setText(SpellBook.getSpellName(spell_book_tag, this.selected_cast_slot));
     }
 
     public void updateCraftingSlots(int bookSlot){
         //Crafting slots
-        ArrayList<AbstractSpellPart> spell_recipe = this.spell_book_tag != null ? Spell.getRecipeFromTag(spell_book_tag, bookSlot) : null;
+        ArrayList<AbstractSpellPart> spell_recipe = this.spell_book_tag != null ? SpellBook.getRecipeFromTag(spell_book_tag, bookSlot) : null;
         for (int i = 0; i < craftingCells.size(); i++) {
-            GuiSpellCell slot = craftingCells.get(i);
-            if (slot.isCraftingSlot) {
-                slot.spell_id = "";
-                slot.resourceIcon = "";
-            }
+            CraftingButton slot = craftingCells.get(i);
+
             if (spell_recipe != null && i < spell_recipe.size()){
                 slot.spell_id = spell_recipe.get(i).getTag();
                 slot.resourceIcon = spell_recipe.get(i).getIcon();
@@ -168,14 +172,14 @@ public class GuiSpellCreation extends ModdedScreen {
 
     public void onCreateClick(Button button){
         List<String> ids = new ArrayList<>();
-        for(GuiSpellCell slot : craftingCells){
+        for(CraftingButton slot : craftingCells){
             ids.add(slot.spell_id);
         }
         Networking.INSTANCE.sendToServer(new PacketUpdateSpellbook(ids.toString(), this.selected_cast_slot, this.spell_name.getText()));
 
     }
 
-    public static void open(CraftedMagicAPI api, CompoundNBT spell_book_tag){ Minecraft.getInstance().displayGuiScreen(new GuiSpellCreation(api, spell_book_tag)); }
+    public static void open(CraftedMagicAPI api, CompoundNBT spell_book_tag){ Minecraft.getInstance().displayGuiScreen(new GuiSpellBook(api, spell_book_tag)); }
 
     final void drawScreenAfterScale(int mouseX, int mouseY, float partialTicks) {
         resetTooltip();
@@ -192,17 +196,24 @@ public class GuiSpellCreation extends ModdedScreen {
 
     final void drawBackgroundElements(int mouseX, int mouseY, float partialTicks) {
         Minecraft.getInstance().textureManager.bindTexture(background);
-        blit(0, 0, 0, 0, FULL_WIDTH, FULL_HEIGHT);
-        minecraft.fontRenderer.drawSplitString("Cast Type", 10, 10, 116, 0);
-        minecraft.fontRenderer.drawSplitString("Effect", 80, 10, 116, 0);
-        minecraft.fontRenderer.drawSplitString("Enhancement", 130, 10, 116, 0);
-        minecraft.fontRenderer.drawSplitString("Slot", 220, 10, 116, 0);
-        minecraft.fontRenderer.drawSplitString("Create", 214, 172, 116, 0);
+        int png_width = FULL_WIDTH;
+        int png_height = FULL_HEIGHT;
+        drawFromTexture(background,0, 0, 0, 0, FULL_WIDTH, FULL_HEIGHT, png_width, png_height);
+        minecraft.fontRenderer.drawSplitString("Form", 15, 10, 116, 0);
+        minecraft.fontRenderer.drawSplitString("Effect", 140, 10, 116, 0);
+        minecraft.fontRenderer.drawSplitString("Augment", 15, 60, 116, 0);
+        //minecraft.fontRenderer.drawSplitString("Slot", 220, 10, 116, 0);
+        minecraft.fontRenderer.drawSplitString("Create", 214, 156, 116, 0);
     }
 
     public static void drawFromTexture(ResourceLocation resourceLocation, int x, int y, int u, int v, int w, int h) {
         Minecraft.getInstance().textureManager.bindTexture(resourceLocation);
-        blit(x, y, u, v, w, h, 256, 256);
+        blit(x, y, u, v, w, h, w, h);
+    }
+
+    public static void drawFromTexture(ResourceLocation resourceLocation, int x, int y, int u, int v, int w, int h, int fileWidth, int fileHeight) {
+        Minecraft.getInstance().textureManager.bindTexture(resourceLocation);
+        blit(x, y, u, v, w, h, fileWidth, fileHeight);
     }
 
     private void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {

@@ -26,7 +26,7 @@ public class MethodTouch extends CastMethod {
 
     @Override
     public void onCast(ItemStack stack, PlayerEntity playerEntity, World world) {
-
+        resolver.onResolveEffect(playerEntity.getEntityWorld(), playerEntity, null);
     }
 
     @Override

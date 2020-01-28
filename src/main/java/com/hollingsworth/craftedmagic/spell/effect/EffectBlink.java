@@ -1,8 +1,7 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
-import com.hollingsworth.craftedmagic.spell.enhancement.EnhancementType;
-import net.minecraft.block.Blocks;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.*;
@@ -13,11 +12,11 @@ import java.util.ArrayList;
 public class EffectBlink extends EffectType{
 
     public EffectBlink() {
-        super(ModConfig.EffectBlinkID, "blink");
+        super(ModConfig.EffectBlinkID, "Blink");
     }
     
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<EnhancementType> enhancements) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> enhancements) {
         if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity().equals(shooter)) {
             Direction facing = shooter.getAdjustedHorizontalFacing();
             double distance = 8.0f;
@@ -47,7 +46,6 @@ public class EffectBlink extends EffectType{
             if(isValidTeleport(world, new BlockPos(vec))){
                 shooter.setPositionAndUpdate(vec.getX(), vec.getY(), vec.getZ());
             }
-
         }
     }
 

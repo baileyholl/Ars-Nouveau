@@ -1,6 +1,6 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
-import com.hollingsworth.craftedmagic.spell.enhancement.EnhancementType;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -13,7 +13,7 @@ public class EffectShield extends EffectType{
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<EnhancementType> enhancements) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> enhancements) {
 
     }
 

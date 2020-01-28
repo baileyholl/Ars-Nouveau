@@ -1,12 +1,9 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
-import com.google.gson.stream.JsonToken;
 import com.hollingsworth.craftedmagic.ModConfig;
-import com.hollingsworth.craftedmagic.spell.enhancement.EnhancementType;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -20,7 +17,7 @@ public class EffectDispel extends EffectType{
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<EnhancementType> enhancements) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> enhancements) {
         if(rayTraceResult instanceof EntityRayTraceResult){
             if(((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
                 LivingEntity entity = (LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity();

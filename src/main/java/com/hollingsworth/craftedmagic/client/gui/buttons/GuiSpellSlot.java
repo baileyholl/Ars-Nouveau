@@ -1,26 +1,27 @@
 package com.hollingsworth.craftedmagic.client.gui.buttons;
 
 import com.hollingsworth.craftedmagic.ExampleMod;
-import com.hollingsworth.craftedmagic.client.gui.GuiSpellCreation;
+import com.hollingsworth.craftedmagic.client.gui.GuiSpellBook;
+import javafx.scene.paint.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
+import java.awt.*;
+
+/**
+ * Slots for selecting the spell recipes stored in the book.
+ */
 public class GuiSpellSlot extends GuiImageButton {
 
 
     public int slotNum;
     public boolean isSelected;
 
-    public GuiSpellSlot(GuiSpellCreation parent, int x, int y, String resource_image, int slotNum) {
-        super(x, y, 0, 0, 19, 19, "textures/gui/spell_cell.png", parent::onSlotChange);
+    public GuiSpellSlot(GuiSpellBook parent, int x, int y,  int slotNum) {
+        super(x, y, 0, 0, 20, 12, 20, 12,"textures/gui/tab.png", parent::onSlotChange);
         this.parent = parent;
-        this.x = x;
-        this.y = y;
-        this.width = 19;
-        this.height = 19;
         this.slotNum = slotNum;
-        this.resourceIcon = resource_image;
         this.isSelected = false;
     }
 
@@ -29,12 +30,11 @@ public class GuiSpellSlot extends GuiImageButton {
         if (visible)
         {
             ResourceLocation image;
-            image = this.isSelected ? new ResourceLocation(ExampleMod.MODID, "textures/gui/spell_cell_selected.png") : new ResourceLocation(ExampleMod.MODID,"textures/gui/spell_cell.png");
+            image = this.isSelected ? new ResourceLocation(ExampleMod.MODID, "textures/gui/tab_selected.png") : new ResourceLocation(ExampleMod.MODID,"textures/gui/tab.png");
+            //GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, width, height);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            GuiSpellCreation.drawFromTexture(image, x, y, u, v, width, height);
-            Minecraft.getInstance().fontRenderer.drawSplitString(String.valueOf(this.slotNum), x + 6, y + 5, 116, 0);
+            GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, image_width, image_height);
+            Minecraft.getInstance().fontRenderer.drawSplitString(String.valueOf(this.slotNum), x + 6, y + 2, 116, 16777215); // White
         }
-
-
     }
 }

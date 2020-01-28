@@ -1,7 +1,6 @@
 package com.hollingsworth.craftedmagic.network;
 
-import com.hollingsworth.craftedmagic.items.Spell;
-import net.minecraft.client.Minecraft;
+import com.hollingsworth.craftedmagic.items.SpellBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
@@ -42,10 +41,10 @@ public class PacketUpdateSpellbook{
         ctx.get().enqueueWork(()->{
             if(ctx.get().getSender() != null){
                 ItemStack stack = ctx.get().getSender().getHeldItemMainhand();
-                if(stack != null && stack.getItem() instanceof Spell && spellRecipe != null){
+                if(stack != null && stack.getItem() instanceof SpellBook && spellRecipe != null){
                     CompoundNBT tag = stack.hasTag() ? stack.getTag() : new CompoundNBT();
-                    Spell.setRecipe(tag, spellRecipe, cast_slot);
-                    Spell.setSpellName(tag, spellName, cast_slot);
+                    SpellBook.setRecipe(tag, spellRecipe, cast_slot);
+                    SpellBook.setSpellName(tag, spellName, cast_slot);
                     stack.setTag(tag);
                     Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->ctx.get().getSender()), new PacketUpdateBookGUI(tag));
                 }

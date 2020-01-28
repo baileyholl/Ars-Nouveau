@@ -1,12 +1,10 @@
 package com.hollingsworth.craftedmagic.client.gui;
 
-import com.hollingsworth.craftedmagic.items.Spell;
+import com.hollingsworth.craftedmagic.items.SpellBook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.BlockPos;
 
 
 public class GuiSpellHUD extends AbstractGui {
@@ -14,12 +12,12 @@ public class GuiSpellHUD extends AbstractGui {
 
     public void drawHUD() {
         ItemStack stack = minecraft.player.getHeldItemMainhand();
-        if(stack != null && stack.getItem() instanceof Spell && stack.getTag() != null){
+        if(stack != null && stack.getItem() instanceof SpellBook && stack.getTag() != null){
             CompoundNBT tag = stack.getTag();
-            int mode = tag.getInt(Spell.BOOK_MODE_TAG);
+            int mode = tag.getInt(SpellBook.BOOK_MODE_TAG);
             String renderString = "";
             if(mode != 0){
-            renderString = mode + " " + Spell.getSpellName(stack.getTag());
+            renderString = mode + " " + SpellBook.getSpellName(stack.getTag());
             }else{
                 renderString = "Crafting Mode";
             }
