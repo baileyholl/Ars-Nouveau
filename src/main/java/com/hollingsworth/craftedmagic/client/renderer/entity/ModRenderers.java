@@ -1,6 +1,6 @@
 package com.hollingsworth.craftedmagic.client.renderer.entity;
 
-import com.hollingsworth.craftedmagic.ExampleMod;
+import com.hollingsworth.craftedmagic.ArsNouveau;
 import com.hollingsworth.craftedmagic.entity.EntityProjectileSpell;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -9,7 +9,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-@Mod.EventBusSubscriber(modid = ExampleMod.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = ArsNouveau.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModRenderers {
     @SubscribeEvent
     public static void register(final FMLClientSetupEvent event) {
@@ -20,7 +20,7 @@ public class ModRenderers {
 //                                "textures/entity/spell_proj.png")));
 
         RenderingRegistry.registerEntityRenderingHandler(EntityProjectileSpell.class,
-                renderManager -> new RenderSpell(renderManager, new ResourceLocation(ExampleMod.MODID, "textures/entity/spell_proj.png")));
+                renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
 
     }
 }

@@ -1,13 +1,10 @@
 package com.hollingsworth.craftedmagic.client.gui.buttons;
 
-import com.hollingsworth.craftedmagic.ExampleMod;
+import com.hollingsworth.craftedmagic.ArsNouveau;
 import com.hollingsworth.craftedmagic.client.gui.GuiSpellBook;
-import javafx.scene.paint.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
-
-import java.awt.*;
 
 /**
  * Slots for selecting the spell recipes stored in the book.
@@ -30,7 +27,7 @@ public class GuiSpellSlot extends GuiImageButton {
         if (visible)
         {
             ResourceLocation image;
-            image = this.isSelected ? new ResourceLocation(ExampleMod.MODID, "textures/gui/tab_selected.png") : new ResourceLocation(ExampleMod.MODID,"textures/gui/tab.png");
+            image = this.isSelected ? new ResourceLocation(ArsNouveau.MODID, "textures/gui/tab_selected.png") : new ResourceLocation(ArsNouveau.MODID,"textures/gui/tab.png");
             //GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, width, height);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, image_width, image_height);

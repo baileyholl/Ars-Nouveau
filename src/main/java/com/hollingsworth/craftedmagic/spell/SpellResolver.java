@@ -47,17 +47,17 @@ public class SpellResolver {
             AbstractSpellPart spell = spell_recipe.get(i);
             if(spell instanceof EffectType){
 
-                ArrayList<AugmentType> enhancements = new ArrayList<>();
+                ArrayList<AugmentType> augments = new ArrayList<>();
                 for(int j = i + 1; j < spell_recipe.size(); j++){
                     AbstractSpellPart next_spell = spell_recipe.get(j);
                     if(next_spell instanceof AugmentType){
                         System.out.println("Applying enhancement ");
-                        enhancements.add((AugmentType) next_spell);
+                        augments.add((AugmentType) next_spell);
                     }else{
                         break;
                     }
                 }
-                ((EffectType) spell).onResolve(result, world, shooter, enhancements);
+                ((EffectType) spell).onResolve(result, world, shooter, augments);
             }
         }
     }

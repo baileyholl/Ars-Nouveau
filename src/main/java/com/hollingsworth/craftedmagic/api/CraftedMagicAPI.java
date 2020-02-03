@@ -39,6 +39,8 @@ public class CraftedMagicAPI {
         spell_map.put(ModConfig.EffectPullID, new EffectPull());
         spell_map.put(ModConfig.EffectBlinkID, new EffectBlink());
         spell_map.put(ModConfig.EffectJumpID, new EffectJump());
+        spell_map.put(ModConfig.EffectExplosion, new EffectExplosion());
+
 
         spell_map.put(ModConfig.AugmentEmpower, new AugmentEmpower());
         spell_map.put(ModConfig.AugmentAOEID, new AugmentAOE());

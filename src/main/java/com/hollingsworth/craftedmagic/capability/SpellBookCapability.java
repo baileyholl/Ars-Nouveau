@@ -1,13 +1,12 @@
 package com.hollingsworth.craftedmagic.capability;
 
-import com.hollingsworth.craftedmagic.ExampleMod;
+import com.hollingsworth.craftedmagic.ArsNouveau;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.LongNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -30,7 +29,7 @@ public class SpellBookCapability {
     /**
      * The ID of this capability.
      */
-    public static final ResourceLocation ID = new ResourceLocation(ExampleMod.MODID, "spell_book");
+    public static final ResourceLocation ID = new ResourceLocation(ArsNouveau.MODID, "spell_book");
 
     public static void register() {
         final String BOOK_MODE_TAG = "mode";
@@ -98,7 +97,7 @@ public class SpellBookCapability {
     /**
      * Event handler for the {@link ILastUseTime} capability.
      */
-    @Mod.EventBusSubscriber(modid = ExampleMod.MODID)
+    @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
     public static class EventHandler {
         /**
          * Update the {@link ILastUseTime} of the player's held item when they right click.
@@ -124,7 +123,7 @@ public class SpellBookCapability {
         /**
          * The ID of this getter.
          */
-        public static final ResourceLocation ID = new ResourceLocation(ExampleMod.MODID, "ticks_since_last_use");
+        public static final ResourceLocation ID = new ResourceLocation(ArsNouveau.MODID, "ticks_since_last_use");
 
         /**
          * The getter.

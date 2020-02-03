@@ -1,6 +1,7 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentExtendTime;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
@@ -18,9 +19,10 @@ public class EffectIgnite  extends EffectType{
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> enhancements) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> augments) {
         if(rayTraceResult instanceof EntityRayTraceResult){
-            ((EntityRayTraceResult) rayTraceResult).getEntity().setFire(2);
+            int duration = 2 + 2*getBuffCount(augments, AugmentExtendTime.class);
+            ((EntityRayTraceResult) rayTraceResult).getEntity().setFire(duration);
         }else if(rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos().up()) == Blocks.AIR.getDefaultState()){
             world.setBlockState(((BlockRayTraceResult) rayTraceResult).getPos().up(), Blocks.FIRE.getDefaultState());
         }
@@ -28,6 +30,6 @@ public class EffectIgnite  extends EffectType{
 
     @Override
     public int getManaCost() {
-        return 0;
+        return 20;
     }
 }

@@ -1,6 +1,6 @@
 package com.hollingsworth.craftedmagic.items;
 
-import com.hollingsworth.craftedmagic.ExampleMod;
+import com.hollingsworth.craftedmagic.ArsNouveau;
 import com.hollingsworth.craftedmagic.api.AbstractSpellPart;
 import com.hollingsworth.craftedmagic.api.CraftedMagicAPI;
 import com.hollingsworth.craftedmagic.capability.ManaCapability;
@@ -36,7 +36,7 @@ public class SpellBook extends Item {
 
 
     public SpellBook(){
-        super(new Item.Properties().maxStackSize(1).group(ExampleMod.itemGroup));
+        super(new Item.Properties().maxStackSize(1).group(ArsNouveau.itemGroup));
         setRegistryName("spell_book");        // The unique name (within your mod) that identifies this item
 
         //setUnlocalizedName(ExampleMod.MODID + ".spell_book");     // Used for localization (en_US.lang)
@@ -53,6 +53,8 @@ public class SpellBook extends Item {
     }
 
 
+
+
     /**
      * Returns true if the item can be used on the given entity, e.g. shears on sheep.
      */
@@ -61,9 +63,19 @@ public class SpellBook extends Item {
             System.out.println("Touched Entity");
 
             ArrayList<AbstractSpellPart> spell_r = getCurrentRecipe(stack);
+            int totalCost = spell_r.stream().mapToInt(AbstractSpellPart::getManaCost).sum();
             if(!spell_r.isEmpty()) {
-                SpellResolver resolver = new SpellResolver(spell_r);
-                resolver.onCastOnEntity(stack, playerIn, target, hand);
+                ManaCapability.getMana(playerIn).ifPresent(mana -> {
+                    System.out.println(totalCost);
+                    if(totalCost <= mana.getCurrentMana() || playerIn.isCreative()) {
+                        SpellResolver resolver = new SpellResolver(spell_r);
+                        resolver.onCastOnEntity(stack, playerIn, target, hand);
+                        mana.removeMana(totalCost);
+                        System.out.println(mana.getCurrentMana());
+                    }else{
+                        System.out.println("Not enough mana");
+                    }
+                });
             }
         }
         return false;
@@ -71,13 +83,6 @@ public class SpellBook extends Item {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        if(!worldIn.isRemote()) {
-//            System.out.println("Right clicked");
-            ManaCapability.getMana(playerIn).ifPresent(mana -> {
-//                System.out.println(mana.getCurrentMana());
-//                System.out.println(mana.addMana(50));
-            });
-        }
         ItemStack stack = playerIn.getHeldItem(handIn);
         if(worldIn.isRemote || !stack.hasTag()){
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
@@ -94,9 +99,19 @@ public class SpellBook extends Item {
         }
 
         ArrayList<AbstractSpellPart> spell_r = getCurrentRecipe(stack);
+        int totalCost = spell_r.stream().mapToInt(AbstractSpellPart::getManaCost).sum();
         if(!spell_r.isEmpty()) {
-            SpellResolver resolver = new SpellResolver(spell_r);
-            resolver.onCast(stack, playerIn, worldIn);
+            ManaCapability.getMana(playerIn).ifPresent(mana -> {
+                System.out.println(totalCost);
+                if(totalCost <= mana.getCurrentMana() || playerIn.isCreative()) {
+                    SpellResolver resolver = new SpellResolver(spell_r);
+                    resolver.onCast(stack, playerIn, worldIn);
+                    mana.removeMana(totalCost);
+                    System.out.println(mana.getCurrentMana());
+                }else{
+                    System.out.println("Not enough mana");
+                }
+            });
 
         }
         return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
@@ -119,14 +134,20 @@ public class SpellBook extends Item {
         if(worldIn.isRemote || !stack.hasTag() || getMode(stack.getTag()) == 0 || playerIn.isSneaking()) return ActionResultType.PASS;
 
         ArrayList<AbstractSpellPart> spell_r = getCurrentRecipe(stack);
+        int totalCost = spell_r.stream().mapToInt(AbstractSpellPart::getManaCost).sum();
         if(!spell_r.isEmpty()){
+            ManaCapability.getMana(playerIn).ifPresent(mana -> {
+                System.out.println(totalCost);
+                if (totalCost <= mana.getCurrentMana() || playerIn.isCreative()) {
+                    SpellResolver resolver = new SpellResolver(spell_r);
+                    resolver.onCastOnBlock(context);
 
-            SpellResolver resolver = new SpellResolver(spell_r);
-            resolver.onCastOnBlock(context);
+                    SoundEvent event = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, "cast_spell"));
+                    worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, event, SoundCategory.BLOCKS,
+                            4.0F, (1.0F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.2F) * 0.7F);
+                }
+            });
 
-            SoundEvent event = new SoundEvent(new ResourceLocation(ExampleMod.MODID, "cast_spell"));
-            worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, event, SoundCategory.BLOCKS,
-                    4.0F, (1.0F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.2F) * 0.7F);
         }
 
         return ActionResultType.PASS;

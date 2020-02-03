@@ -20,6 +20,7 @@ public class ModConfig {
     public static final String EffectBlinkID = "blink";
     public static final String EffectJumpID = "jump";
     public static final String EffectAquatic = "aquatic";
+    public static final String EffectExplosion = "explosion";
 
     public static final String AugmentExtendTimeID = "extend_time";
     public static final String AugmentPierceID = "pierce";

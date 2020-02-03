@@ -1,19 +1,10 @@
 package com.hollingsworth.craftedmagic.network;
 
-import com.hollingsworth.craftedmagic.ExampleMod;
+import com.hollingsworth.craftedmagic.ArsNouveau;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
-
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class Networking {
     public static SimpleChannel INSTANCE;
@@ -22,7 +13,7 @@ public class Networking {
     public static int nextID(){return ID++;}
     public static void registerMessages(){
         System.out.println("Registering packets!!");
-        INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(ExampleMod.MODID, "network"), () -> "1.0", s->true, s->true);
+        INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(ArsNouveau.MODID, "network"), () -> "1.0", s->true, s->true);
 
         INSTANCE.registerMessage(nextID(),
                 PacketOpenGUI.class,
@@ -40,6 +31,11 @@ public class Networking {
                 PacketUpdateBookGUI::toBytes,
                 PacketUpdateBookGUI::new,
                 PacketUpdateBookGUI::handle);
+        INSTANCE.registerMessage(nextID(),
+                PacketUpdateMana.class,
+                PacketUpdateMana::toBytes,
+                PacketUpdateMana::new,
+                PacketUpdateMana::handle);
        // register(PacketOpenGUI.class, NetworkDirection.PLAY_TO_CLIENT);
       //  register(PacketUpdateSpellbook.class, NetworkDirection.PLAY_TO_SERVER);
     }

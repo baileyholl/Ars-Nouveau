@@ -1,6 +1,8 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentEmpower;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentExtendTime;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.EffectInstance;
@@ -18,17 +20,14 @@ public class EffectAccelerate extends EffectType{
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> enhancements) {
-        if(rayTraceResult instanceof EntityRayTraceResult){
-            if(((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
-                int seconds = 30;
-                ((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity()).addPotionEffect(new EffectInstance(Effects.SPEED, seconds * 20, 1));
-            }
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> augments) {
+        if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
+            applyPotion(((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity()), Effects.SPEED, augments);
         }
     }
 
     @Override
     public int getManaCost() {
-        return 0;
+        return 10;
     }
 }

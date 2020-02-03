@@ -1,6 +1,6 @@
 package com.hollingsworth.craftedmagic.client.gui.buttons;
 
-import com.hollingsworth.craftedmagic.ExampleMod;
+import com.hollingsworth.craftedmagic.ArsNouveau;
 import com.hollingsworth.craftedmagic.client.gui.GuiSpellBook;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.gui.widget.button.Button;
@@ -61,7 +61,7 @@ public class GlyphButton extends Button {
                 GlStateManager.color3f(1F, 1F, 1F);
 //                Minecraft.getInstance().getTextureManager().bindTexture(new ResourceLocation(ExampleMod.MODID, "textures/gui/spells/" + this.resourceIcon));
 //                blit(x + 2, y + 2, 0, 0, 16, 16);
-                GuiSpellBook.drawFromTexture(new ResourceLocation(ExampleMod.MODID, "textures/gui/spells/" + this.resourceIcon), x, y, 0, 0, 16, 16,16,16 );
+                GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/spells/" + this.resourceIcon), x, y, 0, 0, 16, 16,16,16 );
             }
 //
 //            if(parent != null && parent.isMouseInRelativeRange(mouseX, mouseY,x, y,  16, 16)){

@@ -1,6 +1,6 @@
 package com.hollingsworth.craftedmagic.capability;
 
-import com.hollingsworth.craftedmagic.ExampleMod;
+import com.hollingsworth.craftedmagic.ArsNouveau;
 import com.hollingsworth.craftedmagic.api.mana.IMana;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -32,7 +32,7 @@ public class ManaCapability {
     public static final Direction DEFAULT_FACING = null;
 
 
-    public static final ResourceLocation ID = new ResourceLocation(ExampleMod.MODID, "mana");
+    public static final ResourceLocation ID = new ResourceLocation(ArsNouveau.MODID, "mana");
 
     public static void register(){
         CapabilityManager.INSTANCE.register(IMana.class, new Capability.IStorage<IMana>() {
@@ -67,7 +67,7 @@ public class ManaCapability {
      * Event handler for the {@link IMana} capability.
      */
     @SuppressWarnings("unused")
-    @Mod.EventBusSubscriber(modid = ExampleMod.MODID)
+    @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
     private static class EventHandler {
 
         /**

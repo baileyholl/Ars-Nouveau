@@ -1,6 +1,6 @@
 package com.hollingsworth.craftedmagic.client;
 
-import com.hollingsworth.craftedmagic.ExampleMod;
+import com.hollingsworth.craftedmagic.ArsNouveau;
 import com.hollingsworth.craftedmagic.ModItems;
 import com.hollingsworth.craftedmagic.client.gui.GuiManaHUD;
 import com.hollingsworth.craftedmagic.client.gui.GuiSpellHUD;
@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.Mod;
  *
  * @author Choonster
  */
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ExampleMod.MODID)
+@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
 public class HUDEventHandler {
     private static final Minecraft minecraft = Minecraft.getInstance();
     private static final GuiSpellHUD spellHUD = new GuiSpellHUD();

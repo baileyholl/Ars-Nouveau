@@ -1,7 +1,7 @@
 package com.hollingsworth.craftedmagic.client.gui.buttons;
 
 
-import com.hollingsworth.craftedmagic.ExampleMod;
+import com.hollingsworth.craftedmagic.ArsNouveau;
 import com.hollingsworth.craftedmagic.client.gui.GuiSpellBook;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
@@ -32,7 +32,7 @@ public class GuiImageButton extends Button
         this.image_height = image_height;
         this.image_width = image_width;
         //System.out.println(width);
-        image = new ResourceLocation(ExampleMod.MODID, resource_image);
+        image = new ResourceLocation(ArsNouveau.MODID, resource_image);
 
     }
 

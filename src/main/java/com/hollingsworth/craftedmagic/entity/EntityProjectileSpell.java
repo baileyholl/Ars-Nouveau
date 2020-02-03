@@ -1,30 +1,20 @@
 package com.hollingsworth.craftedmagic.entity;
 
-import com.hollingsworth.craftedmagic.ExampleMod;
+import com.hollingsworth.craftedmagic.ArsNouveau;
 import com.hollingsworth.craftedmagic.ModEntities;
 import com.hollingsworth.craftedmagic.spell.SpellResolver;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
-import net.minecraft.entity.projectile.ProjectileItemEntity;
-import net.minecraft.entity.projectile.ThrowableEntity;
-import net.minecraft.item.Item;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.datafix.fixes.TippedArrow;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -174,7 +164,7 @@ public class EntityProjectileSpell extends ArrowEntity {
         }
 
         if (!world.isRemote && result.getType() == RayTraceResult.Type.BLOCK) {
-            SoundEvent event = new SoundEvent(new ResourceLocation(ExampleMod.MODID, "resolve_spell"));
+            SoundEvent event = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, "resolve_spell"));
             world.playSound(null, this.posX, this.posY, this.posZ,
                     event, SoundCategory.BLOCKS,
                     4.0F, (1.0F + (this.world.rand.nextFloat()

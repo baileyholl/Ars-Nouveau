@@ -20,16 +20,9 @@ public class EffectFreeze extends EffectType{
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> enhancements) {
-        if(world.isRemote){
-            return;
-        }
-        System.out.println("Casting");
-        if(rayTraceResult instanceof EntityRayTraceResult){
-            if(((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
-                int seconds = 10;
-                ((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity()).addPotionEffect(new EffectInstance(Effects.SLOWNESS, seconds * 20, 1));
-            }
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> augments) {
+        if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
+            applyPotion((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity(), Effects.SLOWNESS, augments, 10, 5);
         }
         else if (rayTraceResult instanceof BlockRayTraceResult) {
             System.out.println(rayTraceResult);
@@ -43,7 +36,6 @@ public class EffectFreeze extends EffectType{
         }else{
             RayTraceResult result = rayTrace(world, (PlayerEntity) shooter, RayTraceContext.FluidMode.SOURCE_ONLY);
             if (result instanceof BlockRayTraceResult) {
-                System.out.println(world.getBlockState(((BlockRayTraceResult) result).getPos()));
                 BlockState state = world.getBlockState(((BlockRayTraceResult) result).getPos());
                 if (state.getBlock().getDefaultState() == Blocks.WATER.getDefaultState()) {
                     world.setBlockState(((BlockRayTraceResult) result).getPos(), Blocks.ICE.getDefaultState());
@@ -72,6 +64,6 @@ public class EffectFreeze extends EffectType{
 
     @Override
     public int getManaCost() {
-        return 0;
+        return 15;
     }
 }

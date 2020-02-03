@@ -1,12 +1,13 @@
 package com.hollingsworth.craftedmagic;
 
+import com.hollingsworth.craftedmagic.block.ModBlocks;
+import com.hollingsworth.craftedmagic.block.PhantomBlock;
+import com.hollingsworth.craftedmagic.block.PhantomBlockTile;
 import com.hollingsworth.craftedmagic.items.SpellBook;
 import com.hollingsworth.craftedmagic.network.Networking;
 import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,11 +20,11 @@ import org.apache.logging.log4j.Logger;
 
 import static net.minecraft.world.biome.Biome.LOGGER;
 
-@Mod(ExampleMod.MODID)
-@Mod.EventBusSubscriber(modid = ExampleMod.MODID)
-public class ExampleMod {
-    public static final String MODID = "modtut";
-    public static final String MODNAME = "Mod tutorials";
+@Mod(ArsNouveau.MODID)
+@Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
+public class ArsNouveau {
+    public static final String MODID = "ars_nouveau";
+    public static final String MODNAME = "Ars Nouveau";
     public static final String MODVERSION = "0.0.1";
 
 //    @SidedProxy(clientSide = "com.hollingsworth.craftedmagic.ClientProxy", serverSide = "com.hollingsworth.craftedmagic.ServerProxy")
@@ -50,7 +51,7 @@ public class ExampleMod {
 //
 //    }
 
-    public ExampleMod(){
+    public ArsNouveau(){
         // modLoading setup
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the doClientStuff method for modloading
@@ -78,6 +79,13 @@ public class ExampleMod {
         public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
             // register a new block here
             LOGGER.info("HELLO from Register Block");
+            blockRegistryEvent.getRegistry().register(new PhantomBlock());
+
+        }
+
+        @SubscribeEvent
+        public static void onTileEntityRegistry(final RegistryEvent.Register<TileEntityType<?>> event){
+            event.getRegistry().register(TileEntityType.Builder.create(PhantomBlockTile::new, ModBlocks.PHANTOM_BLOCK).build(null).setRegistryName("phantom_block"));
         }
 
         @SubscribeEvent
@@ -85,6 +93,7 @@ public class ExampleMod {
             // register a new block here
             LOGGER.info("HELLO from Register Block");
             itemRegistryEvent.getRegistry().register(new SpellBook());
+            itemRegistryEvent.getRegistry().register(new BlockItem(ModBlocks.PHANTOM_BLOCK, new Item.Properties()).setRegistryName("phantom_block"));
         }
     }
 //    @Mod.EventHandler

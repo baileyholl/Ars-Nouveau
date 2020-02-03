@@ -21,7 +21,7 @@ public class MethodProjectile extends CastMethod {
 
     @Override
     public int getManaCost() {
-        return 0;
+        return 10;
     }
 
 

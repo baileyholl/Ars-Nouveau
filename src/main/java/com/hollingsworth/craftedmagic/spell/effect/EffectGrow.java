@@ -5,15 +5,12 @@ import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IGrowable;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
-
-import static net.minecraft.item.BoneMealItem.growSeagrass;
 
 public class EffectGrow  extends EffectType{
 
@@ -22,7 +19,7 @@ public class EffectGrow  extends EffectType{
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> enhancements) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> augments) {
         if(rayTraceResult instanceof BlockRayTraceResult) {
             BlockPos blockpos = ((BlockRayTraceResult) rayTraceResult).getPos();
             System.out.println(((BlockRayTraceResult) rayTraceResult).getPos());
@@ -59,6 +56,6 @@ public class EffectGrow  extends EffectType{
 
     @Override
     public int getManaCost() {
-        return 0;
+        return 30;
     }
 }

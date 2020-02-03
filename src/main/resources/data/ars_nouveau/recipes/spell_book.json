@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "pattern":
+    [
+        "   ",
+        " y ",
+        "   "
+    ],
+    "key": {
+        "y": {
+            "item": "minecraft:stick"
+        }
+    },
+	"ingredients": [
+        {
+            "item": "minecraft:stick"
+        }
+    ],
+    "result":
+    {
+        "item": "modtut:spell_book"
+    }
+}

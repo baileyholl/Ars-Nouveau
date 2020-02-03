@@ -1,6 +1,6 @@
 package com.hollingsworth.craftedmagic.client.gui;
 
-import com.hollingsworth.craftedmagic.ExampleMod;
+import com.hollingsworth.craftedmagic.ArsNouveau;
 import com.hollingsworth.craftedmagic.api.AbstractSpellPart;
 import com.hollingsworth.craftedmagic.api.CraftedMagicAPI;
 import com.hollingsworth.craftedmagic.client.gui.buttons.CraftingButton;
@@ -15,7 +15,6 @@ import com.hollingsworth.craftedmagic.spell.method.CastMethod;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
@@ -25,13 +24,12 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class GuiSpellBook extends ModdedScreen {
 
     private final int FULL_WIDTH = 272;
     private final int FULL_HEIGHT = 180;
-    private static ResourceLocation background = new ResourceLocation(ExampleMod.MODID, "textures/gui/spell_book.png");
+    private static ResourceLocation background = new ResourceLocation(ArsNouveau.MODID, "textures/gui/spell_book.png");
     public int numLinks = 10;
     public int bookLeft;
     public int bookTop;
@@ -81,7 +79,7 @@ public class GuiSpellBook extends ModdedScreen {
         updateCraftingSlots(1);
 
         addSpellParts();
-        addButton(new GuiImageButton(bookRight - 60, bookBottom - 28, 0,0,38, 16, 38, 16, "textures/gui/create_button.png", this::onCreateClick));
+        addButton(new GuiImageButton(bookRight - 70, bookBottom - 28, 0,0,46, 18, 46, 18, "textures/gui/create_button.png", this::onCreateClick));
         spell_name = new TextFieldWidget(minecraft.fontRenderer, bookLeft + 16, bookTop + FULL_HEIGHT - 25, 115, 12, null, "Spell Name");
         spell_name.setText(SpellBook.getSpellName(spell_book_tag, 1));
 //
@@ -203,7 +201,7 @@ public class GuiSpellBook extends ModdedScreen {
         minecraft.fontRenderer.drawSplitString("Effect", 140, 10, 116, 0);
         minecraft.fontRenderer.drawSplitString("Augment", 15, 60, 116, 0);
         //minecraft.fontRenderer.drawSplitString("Slot", 220, 10, 116, 0);
-        minecraft.fontRenderer.drawSplitString("Create", 214, 156, 116, 0);
+        minecraft.fontRenderer.drawSplitString("Create", 208, 157, 116, 0);
     }
 
     public static void drawFromTexture(ResourceLocation resourceLocation, int x, int y, int u, int v, int w, int h) {

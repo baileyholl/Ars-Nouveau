@@ -17,7 +17,7 @@ public class EffectDispel extends EffectType{
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> enhancements) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> augments) {
         if(rayTraceResult instanceof EntityRayTraceResult){
             if(((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
                 LivingEntity entity = (LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity();
@@ -33,6 +33,6 @@ public class EffectDispel extends EffectType{
 
     @Override
     public int getManaCost() {
-        return 0;
+        return 30;
     }
 }

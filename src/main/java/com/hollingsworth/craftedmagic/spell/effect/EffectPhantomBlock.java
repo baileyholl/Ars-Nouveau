@@ -1,6 +1,7 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
+import com.hollingsworth.craftedmagic.block.ModBlocks;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
@@ -18,18 +19,18 @@ public class EffectPhantomBlock extends EffectType{
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> enhancements) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> augments) {
         if(rayTraceResult instanceof BlockRayTraceResult){
             System.out.println(((BlockRayTraceResult) rayTraceResult).getPos().offset(((BlockRayTraceResult) rayTraceResult).getFace()));
             BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getPos().offset(((BlockRayTraceResult) rayTraceResult).getFace());
             if(world.getBlockState(pos).getBlock() == Blocks.AIR){
-                world.setBlockState(pos, Blocks.COBBLESTONE.getDefaultState());
+                world.setBlockState(pos, ModBlocks.PHANTOM_BLOCK.getDefaultState());
             }
         }
     }
 
     @Override
     public int getManaCost() {
-        return 0;
+        return 5;
     }
 }

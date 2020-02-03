@@ -1,26 +1,11 @@
 package com.hollingsworth.craftedmagic.client.renderer.entity;
 
 
-import com.hollingsworth.craftedmagic.ExampleMod;
-import com.hollingsworth.craftedmagic.entity.EntityProjectileSpell;
-import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.culling.ICamera;
-import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 
 import net.minecraft.client.renderer.entity.TippedArrowRenderer;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-
-
-import java.util.Random;
 
 public class RenderSpell extends TippedArrowRenderer {
     private final ResourceLocation entityTexture; // new ResourceLocation(ExampleMod.MODID, "textures/entity/spell_proj.png");

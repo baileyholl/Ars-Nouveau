@@ -4,14 +4,13 @@ import com.hollingsworth.craftedmagic.entity.EntityProjectileSpell;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.projectile.SnowballEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ObjectHolder;
 
-@ObjectHolder(ExampleMod.MODID)
+@ObjectHolder(ArsNouveau.MODID)
 public class ModEntities {
 
 
@@ -31,7 +30,7 @@ public class ModEntities {
 ////        // This is the loot table for our mob
 ////        LootTableList.register(EntityWeirdZombie.LOOT);
 //    }
-    @Mod.EventBusSubscriber(modid = ExampleMod.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
+    @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
     public static final int lightballID = 29;
 
@@ -79,7 +78,7 @@ public class ModEntities {
      * @return The built entity type
      */
     private static <T extends Entity> EntityType<T> build(final String name, final EntityType.Builder<T> builder) {
-        final ResourceLocation registryName = new ResourceLocation(ExampleMod.MODID, name);
+        final ResourceLocation registryName = new ResourceLocation(ArsNouveau.MODID, name);
 
         final EntityType<T> entityType = builder
                 .build(registryName.toString());

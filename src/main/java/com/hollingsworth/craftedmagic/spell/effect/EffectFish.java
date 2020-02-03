@@ -14,12 +14,12 @@ public class EffectFish extends EffectType{
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> enhancements) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> augments) {
 
     }
 
     @Override
     public int getManaCost() {
-        return 0;
+        return 25;
     }
 }

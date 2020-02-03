@@ -1,6 +1,7 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentEmpower;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.EntityRayTraceResult;
@@ -15,15 +16,16 @@ public class EffectHeal extends EffectType{
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> enhancements) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> augments) {
         if(rayTraceResult instanceof EntityRayTraceResult){
             if(((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
                 LivingEntity entity = ((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity());
                 float maxHealth = entity.getMaxHealth();
-                if(entity.getHealth() + 3.0f > maxHealth){
+                float healVal = 3.0f + 3 * getBuffCount(augments, AugmentEmpower.class);
+                if(entity.getHealth() + healVal > maxHealth){
                     entity.setHealth(entity.getMaxHealth());
                 }else{
-                    entity.setHealth(entity.getHealth() + 3.0f);
+                    entity.setHealth(entity.getHealth() + healVal);
                 }
             }
         }
@@ -31,6 +33,6 @@ public class EffectHeal extends EffectType{
 
     @Override
     public int getManaCost() {
-        return 0;
+        return 30;
     }
 }
