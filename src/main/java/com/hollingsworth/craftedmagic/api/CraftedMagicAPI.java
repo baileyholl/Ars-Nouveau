@@ -1,10 +1,7 @@
 package com.hollingsworth.craftedmagic.api;
 
 import com.hollingsworth.craftedmagic.ModConfig;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentAOE;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentEmpower;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentExtendTime;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentPierce;
+import com.hollingsworth.craftedmagic.spell.augment.*;
 import com.hollingsworth.craftedmagic.spell.effect.*;
 import com.hollingsworth.craftedmagic.spell.method.MethodSelf;
 import com.hollingsworth.craftedmagic.spell.method.MethodTouch;
@@ -32,7 +29,7 @@ public class CraftedMagicAPI {
         spell_map.put(ModConfig.EffectHealID, new EffectHeal());
         spell_map.put(ModConfig.EffectGrowID, new EffectGrow());
         spell_map.put(ModConfig.EffectKnockbackID, new EffectKnockback());
-        spell_map.put(ModConfig.EffectAccelerateID, new EffectAccelerate());
+        spell_map.put(ModConfig.EffectHasteID, new EffectHaste());
         spell_map.put(ModConfig.EffectLightID, new EffectLight());
         spell_map.put(ModConfig.EffectDispelID, new EffectDispel());
         spell_map.put(ModConfig.EffectFreezeID, new EffectFreeze());
@@ -41,13 +38,13 @@ public class CraftedMagicAPI {
         spell_map.put(ModConfig.EffectJumpID, new EffectJump());
         spell_map.put(ModConfig.EffectExplosion, new EffectExplosion());
 
-
-        spell_map.put(ModConfig.AugmentEmpower, new AugmentEmpower());
+        spell_map.put(ModConfig.AugmentAccelerateID, new AugmentAccelerate());
+        spell_map.put(ModConfig.AugmentAmplifyID, new AugmentAmplify());
         spell_map.put(ModConfig.AugmentAOEID, new AugmentAOE());
         spell_map.put(ModConfig.AugmentExtendTimeID, new AugmentExtendTime());
         spell_map.put(ModConfig.AugmentPierceID, new AugmentPierce());
-
-
+        spell_map.put(ModConfig.AugmentDampenID, new AugmentDampen());
+        spell_map.put(ModConfig.AugmentExtractID, new AugmentExtract());
     }
 
     public static CraftedMagicAPI getInstance(){

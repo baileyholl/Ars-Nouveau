@@ -1,7 +1,7 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentEmpower;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentAmplify;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.EntityRayTraceResult;
@@ -25,7 +25,7 @@ public class EffectJump extends EffectType{
             System.out.println(vec3d);
             System.out.println(entity);
             entity.setMotion(vec3d.x,
-                    .75 + .75 * getBuffCount(augments, AugmentEmpower.class), vec3d.z);
+                    .75 + .75 * getBuffCount(augments, AugmentAmplify.class), vec3d.z);
             entity.velocityChanged = true;
         }
     }

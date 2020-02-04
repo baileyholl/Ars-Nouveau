@@ -2,14 +2,14 @@ package com.hollingsworth.craftedmagic.spell.augment;
 
 import com.hollingsworth.craftedmagic.ModConfig;
 
-public class AugmentDampen extends AugmentType{
+public class AugmentExtract extends AugmentType{
 
-    public AugmentDampen() {
-        super(ModConfig.AugmentDampenID, "Dampen");
+    public AugmentExtract() {
+        super(ModConfig.AugmentExtractID, "Extract");
     }
 
     @Override
     public int getManaCost() {
-        return -10;
+        return 20;
     }
 }

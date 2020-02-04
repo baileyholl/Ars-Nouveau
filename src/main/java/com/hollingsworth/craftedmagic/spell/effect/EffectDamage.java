@@ -1,7 +1,7 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentEmpower;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentAmplify;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,7 +19,7 @@ public class EffectDamage extends EffectType {
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> augments) {
         if(rayTraceResult instanceof EntityRayTraceResult){
-            float damage = 5.0f + 2.0f * getBuffCount(augments, AugmentEmpower.class);
+            float damage = 5.0f + 2.0f * getBuffCount(augments, AugmentAmplify.class);
             ((EntityRayTraceResult) rayTraceResult).getEntity().attackEntityFrom(DamageSource.causePlayerDamage((PlayerEntity) shooter), damage);
         }
     }

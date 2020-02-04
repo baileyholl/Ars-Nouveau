@@ -1,7 +1,7 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentEmpower;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentAmplify;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
 
 import net.minecraft.block.BlockState;
@@ -32,7 +32,7 @@ public class EffectDig extends EffectType {
             BlockPos pos = new BlockPos(((BlockRayTraceResult) rayTraceResult).getPos());
             BlockState state = world.getBlockState(pos);
             float maxHardness = 3.0f;
-            switch (getBuffCount(augments, AugmentEmpower.class)){
+            switch (getBuffCount(augments, AugmentAmplify.class)){
                 case 1:
                     maxHardness = 5.0f; // Spawners, iron doors, enchantment tbales
                     break;

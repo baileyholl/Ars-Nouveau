@@ -71,7 +71,7 @@ public class GuiSpellBook extends ModdedScreen {
             String icon = null;
             String spell_id = "";
             int offset = i >= 5 ? 5 : 0;
-            CraftingButton cell = new CraftingButton(bookLeft +14 + 24 * i + offset, bookTop + FULL_HEIGHT - 50, i, this::onCraftingSlotClick);
+            CraftingButton cell = new CraftingButton(this,bookLeft +14 + 24 * i + offset, bookTop + FULL_HEIGHT - 50, i, this::onCraftingSlotClick);
             //GlyphButton glyphButton = new GlyphButton(this,bookLeft + 10 + 28 * i, bookTop + FULL_HEIGHT - 24, )
             addButton(cell);
             craftingCells.add(cell);
@@ -151,6 +151,7 @@ public class GuiSpellBook extends ModdedScreen {
         this.selected_slot = (GuiSpellSlot) button;
         this.selected_slot.isSelected = true;
         this.selected_cast_slot = this.selected_slot.slotNum;
+        System.out.println("Slot clicked" + this.selected_slot.slotNum);
         updateCraftingSlots(this.selected_cast_slot);
         spell_name.setText(SpellBook.getSpellName(spell_book_tag, this.selected_cast_slot));
     }
@@ -158,9 +159,12 @@ public class GuiSpellBook extends ModdedScreen {
     public void updateCraftingSlots(int bookSlot){
         //Crafting slots
         ArrayList<AbstractSpellPart> spell_recipe = this.spell_book_tag != null ? SpellBook.getRecipeFromTag(spell_book_tag, bookSlot) : null;
+        System.out.println(spell_recipe.toString());
+
         for (int i = 0; i < craftingCells.size(); i++) {
             CraftingButton slot = craftingCells.get(i);
-
+            slot.spell_id = "";
+            slot.resourceIcon = "";
             if (spell_recipe != null && i < spell_recipe.size()){
                 slot.spell_id = spell_recipe.get(i).getTag();
                 slot.resourceIcon = spell_recipe.get(i).getIcon();

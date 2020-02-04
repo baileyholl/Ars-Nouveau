@@ -1,7 +1,7 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.api.AbstractSpellPart;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentEmpower;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentAmplify;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentExtendTime;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
 import net.minecraft.entity.LivingEntity;
@@ -10,7 +10,6 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
-import javax.swing.*;
 import java.util.ArrayList;
 
 public abstract class EffectType extends AbstractSpellPart {
@@ -29,11 +28,15 @@ public abstract class EffectType extends AbstractSpellPart {
 
     public void applyPotion(LivingEntity entity, Effect potionEffect, ArrayList<AugmentType> augmentTypes, int baseDuration, int durationBuffBase){
         int duration = baseDuration + durationBuffBase * getBuffCount(augmentTypes, AugmentExtendTime.class);
-        int amp = getBuffCount(augmentTypes, AugmentEmpower.class);
+        int amp = getBuffCount(augmentTypes, AugmentAmplify.class);
         entity.addPotionEffect(new EffectInstance(potionEffect, duration * 20, amp));
     }
 
     public int getBuffCount(ArrayList<AugmentType> augments, Class spellClass){
         return (int) augments.stream().filter(spellClass::isInstance).count();
+    }
+
+    public boolean hasBuff(ArrayList<AugmentType> augments, Class spellClass){
+        return getBuffCount(augments, spellClass) > 0;
     }
 }

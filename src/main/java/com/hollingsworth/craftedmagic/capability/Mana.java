@@ -49,6 +49,8 @@ public class Mana implements IMana {
 
     @Override
     public int removeMana(int manaToRemove) {
+        if(manaToRemove < 0)
+            manaToRemove = 0;
         this.setMana(this.getCurrentMana() - manaToRemove);
         return this.mana;
     }

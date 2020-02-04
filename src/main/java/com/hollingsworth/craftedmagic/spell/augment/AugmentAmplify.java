@@ -2,13 +2,13 @@ package com.hollingsworth.craftedmagic.spell.augment;
 
 import com.hollingsworth.craftedmagic.ModConfig;
 
-public class AugmentEmpower extends AugmentType{
-    public AugmentEmpower() {
-        super(ModConfig.AugmentEmpower, "Empower");
+public class AugmentAmplify extends AugmentType{
+    public AugmentAmplify() {
+        super(ModConfig.AugmentAmplifyID, "Amplify");
     }
 
     @Override
     public int getManaCost() {
-        return 0;
+        return 15;
     }
 }

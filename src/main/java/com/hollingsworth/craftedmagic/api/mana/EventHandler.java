@@ -23,7 +23,6 @@ public class EventHandler {
         if(e.player instanceof ServerPlayerEntity && !e.player.world.isRemote && e.player.world.getGameTime() % 5 == 0 ){
             ServerPlayerEntity entity = (ServerPlayerEntity) e.player;
             ManaCapability.getMana(entity).ifPresent(mana ->{
-                System.out.println(mana.getCurrentMana());
                 mana.addMana(1);
                 Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->entity), new PacketUpdateMana(mana.getCurrentMana()));
             });
