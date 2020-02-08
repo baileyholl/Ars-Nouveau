@@ -33,10 +33,13 @@ public class CraftedMagicAPI {
         spell_map.put(ModConfig.EffectLightID, new EffectLight());
         spell_map.put(ModConfig.EffectDispelID, new EffectDispel());
         spell_map.put(ModConfig.EffectFreezeID, new EffectFreeze());
+        spell_map.put(ModConfig.EffectFlingID, new EffectFling());
         spell_map.put(ModConfig.EffectPullID, new EffectPull());
         spell_map.put(ModConfig.EffectBlinkID, new EffectBlink());
-        spell_map.put(ModConfig.EffectJumpID, new EffectJump());
-        spell_map.put(ModConfig.EffectExplosion, new EffectExplosion());
+//        spell_map.put(ModConfig.EffectJumpID, new EffectJump());
+        spell_map.put(ModConfig.EffectExplosionID, new EffectExplosion());
+        spell_map.put(ModConfig.EffectLightningID, new EffectLightning());
+        spell_map.put(ModConfig.EffectSlowfallID, new EffectSlowfall());
 
         spell_map.put(ModConfig.AugmentAccelerateID, new AugmentAccelerate());
         spell_map.put(ModConfig.AugmentAmplifyID, new AugmentAmplify());
@@ -45,6 +48,7 @@ public class CraftedMagicAPI {
         spell_map.put(ModConfig.AugmentPierceID, new AugmentPierce());
         spell_map.put(ModConfig.AugmentDampenID, new AugmentDampen());
         spell_map.put(ModConfig.AugmentExtractID, new AugmentExtract());
+        spell_map.put(ModConfig.AugmentFortuneID, new AugmentFortune());
     }
 
     public static CraftedMagicAPI getInstance(){
@@ -52,4 +56,6 @@ public class CraftedMagicAPI {
             craftedMagicAPI = new CraftedMagicAPI();
         return craftedMagicAPI;
     }
+
+
 }

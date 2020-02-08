@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class EffectExplosion extends EffectType{
 
     public EffectExplosion() {
-        super(ModConfig.EffectExplosion, "Explosion");
+        super(ModConfig.EffectExplosionID, "Explosion");
     }
 
     @Override
@@ -36,5 +36,10 @@ public class EffectExplosion extends EffectType{
     @Override
     public int getManaCost() {
         return 35;
+    }
+
+    @Override
+    public boolean dampenIsAllowed() {
+        return true;
     }
 }

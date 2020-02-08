@@ -18,7 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
@@ -52,10 +52,75 @@ public class SpellBook extends Item {
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
     }
 
+//    @Override
+//    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+//        System.out.println("On right click");
+//        return super.onItemRightClick(worldIn, playerIn, handIn);
+//    }
+//
+//    @Override
+//    public ActionResultType onItemUse(ItemUseContext context) {
+//        System.out.println("On item use");
+//        return super.onItemUse(context);
+//    }
+//
+//    @Override
+//    public boolean itemInteractionForEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
+//        System.out.println("Interacted with entity");
+//        return super.itemInteractionForEntity(stack, playerIn, target, hand);
+//    }
+//
+//    /**
+//     * Gets the block or object that is being moused over.
+//     */
+//    public void getMouseOver(Entity entity, World world) {
+//
+//        if (entity != null) {
+//            double blockReach = 5.0;
+//            Vec3d vec3d = entity.getEyePosition(0);
+//            boolean flag = false;
+//            int i = 3;
+//            double d1 = blockReach;
+//            if (this.mc.playerController.extendedReach()) {
+//                d1 = 6.0D;
+//                blockReach = d1;
+//            } else {
+//                if (blockReach > 3.0D) {
+//                    flag = true;
+//                }
+//
+//                blockReach = blockReach;
+//            }
+//
+//            d1 = d1 * d1;
+//            if (this.mc.objectMouseOver != null) {
+//                d1 = this.mc.objectMouseOver.getHitVec().squareDistanceTo(vec3d);
+//            }
+//
+//            Vec3d vec3d1 = entity.getLook(1.0F);
+//            Vec3d vec3d2 = vec3d.add(vec3d1.x * blockReach, vec3d1.y * blockReach, vec3d1.z * blockReach);
+//            float f = 1.0F;
+//            AxisAlignedBB axisalignedbb = entity.getBoundingBox().expand(vec3d1.scale(blockReach)).grow(1.0D, 1.0D, 1.0D);
+//            EntityRayTraceResult entityraytraceresult = ProjectileHelper.func_221273_a(entity, vec3d, vec3d2, axisalignedbb, (p_215312_0_) -> {
+//                return !p_215312_0_.isSpectator() && p_215312_0_.canBeCollidedWith();
+//            }, d1);
+//            if (entityraytraceresult != null) {
+//                Entity entity1 = entityraytraceresult.getEntity();
+//                Vec3d vec3d3 = entityraytraceresult.getHitVec();
+//                double d2 = vec3d.squareDistanceTo(vec3d3);
+//                if (flag && d2 > 9.0D) {
+//                    this.mc.objectMouseOver = BlockRayTraceResult.createMiss(vec3d3, Direction.getFacingFromVector(vec3d1.x, vec3d1.y, vec3d1.z), new BlockPos(vec3d3));
+//                } else if (d2 < d1 || this.mc.objectMouseOver == null) {
+//                    this.mc.objectMouseOver = entityraytraceresult;
+//                    if (entity1 instanceof LivingEntity || entity1 instanceof ItemFrameEntity) {
+//                        this.mc.pointedEntity = entity1;
+//                    }
+//                }
+//            }
+//        }
+//    }
 
-
-
-    /**
+        /**
      * Returns true if the item can be used on the given entity, e.g. shears on sheep.
      */
     public boolean itemInteractionForEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
@@ -65,6 +130,7 @@ public class SpellBook extends Item {
             ArrayList<AbstractSpellPart> spell_r = getCurrentRecipe(stack);
             int totalCost = spell_r.stream().mapToInt(AbstractSpellPart::getManaCost).sum();
             if(!spell_r.isEmpty()) {
+
                 ManaCapability.getMana(playerIn).ifPresent(mana -> {
                     System.out.println(totalCost);
                     if(totalCost <= mana.getCurrentMana() || playerIn.isCreative()) {
@@ -87,7 +153,7 @@ public class SpellBook extends Item {
         if(worldIn.isRemote || !stack.hasTag()){
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
         }
-
+        System.out.println("Right click");
         if(getMode(stack.getTag()) == 0 && !playerIn.isSneaking() && playerIn instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = (ServerPlayerEntity) playerIn;
             Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->player), new PacketOpenGUI(stack.getTag()));
@@ -98,32 +164,33 @@ public class SpellBook extends Item {
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
         }
 
-        ArrayList<AbstractSpellPart> spell_r = getCurrentRecipe(stack);
-        int totalCost = spell_r.stream().mapToInt(AbstractSpellPart::getManaCost).sum();
-        if(!spell_r.isEmpty()) {
-            ManaCapability.getMana(playerIn).ifPresent(mana -> {
-                System.out.println(totalCost);
-                if(totalCost <= mana.getCurrentMana() || playerIn.isCreative()) {
-                    SpellResolver resolver = new SpellResolver(spell_r);
-                    resolver.onCast(stack, playerIn, worldIn);
-                    mana.removeMana(totalCost);
-                    System.out.println(mana.getCurrentMana());
-                }else{
-                    System.out.println("Not enough mana");
-                }
-            });
 
-        }
+        SpellResolver resolver = new SpellResolver(getCurrentRecipe(stack));
+        resolver.onCast(stack, playerIn, worldIn);
+//        if(!spell_r.isEmpty()) {
+//            ManaCapability.getMana(playerIn).ifPresent(mana -> {
+//                int totalCost = ManaUtil.calculateCost(spell_r);
+//                if(totalCost <= mana.getCurrentMana() || playerIn.isCreative()) {
+//                    SpellResolver resolver = new SpellResolver(spell_r);
+//                    resolver.onCast(stack, playerIn, worldIn);
+//                    mana.removeMana(totalCost);
+//
+//                }else{
+//                    System.out.println("Not enough mana");
+//                }
+//            });
+//
+//        }
         return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
     }
 
     /*
-    Called on block use
+    Called on block use. TOUCH ONLY
      */
     @Override
     public ActionResultType onItemUse(ItemUseContext context) {
-        System.out.println("Spell used");
         World worldIn = context.getWorld();
+
 
         PlayerEntity playerIn = context.getPlayer();
         Hand handIn = context.getHand();
@@ -133,22 +200,23 @@ public class SpellBook extends Item {
 
         if(worldIn.isRemote || !stack.hasTag() || getMode(stack.getTag()) == 0 || playerIn.isSneaking()) return ActionResultType.PASS;
 
-        ArrayList<AbstractSpellPart> spell_r = getCurrentRecipe(stack);
-        int totalCost = spell_r.stream().mapToInt(AbstractSpellPart::getManaCost).sum();
-        if(!spell_r.isEmpty()){
-            ManaCapability.getMana(playerIn).ifPresent(mana -> {
-                System.out.println(totalCost);
-                if (totalCost <= mana.getCurrentMana() || playerIn.isCreative()) {
-                    SpellResolver resolver = new SpellResolver(spell_r);
-                    resolver.onCastOnBlock(context);
-
-                    SoundEvent event = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, "cast_spell"));
-                    worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, event, SoundCategory.BLOCKS,
-                            4.0F, (1.0F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.2F) * 0.7F);
-                }
-            });
-
-        }
+        SpellResolver resolver = new SpellResolver(getCurrentRecipe(stack));
+        resolver.onCastOnBlock(context);
+//        int totalCost = ManaUtil.calculateCost(spell_r);
+//        if(!spell_r.isEmpty()){
+//            ManaCapability.getMana(playerIn).ifPresent(mana -> {
+//                if ( (totalCost <= mana.getCurrentMana() || playerIn.isCreative())) {
+//                    SpellResolver resolver = new SpellResolver(spell_r);
+//                    resolver.onCastOnBlock(context);
+//                    mana.removeMana(totalCost);
+//
+//                    SoundEvent event = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, "cast_spell"));
+//                    worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, event, SoundCategory.BLOCKS,
+//                            4.0F, (1.0F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.2F) * 0.7F);
+//                }
+//            });
+//
+//        }
 
         return ActionResultType.PASS;
     }

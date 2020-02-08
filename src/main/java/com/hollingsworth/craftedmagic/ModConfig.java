@@ -16,11 +16,14 @@ public class ModConfig {
     public static final String EffectLightID = "light";
     public static final String EffectDispelID = "dispel";
     public static final String EffectFreezeID = "freeze";
+    public static final String EffectFlingID = "fling";
     public static final String EffectPullID = "pull";
     public static final String EffectBlinkID = "blink";
     public static final String EffectJumpID = "jump";
     public static final String EffectAquatic = "aquatic";
-    public static final String EffectExplosion = "explosion";
+    public static final String EffectExplosionID = "explosion";
+    public static final String EffectLightningID = "lightning";
+    public static final String EffectSlowfallID = "slowfall";
 
     public static final String AugmentAccelerateID = "accelerate";
     public static final String AugmentExtendTimeID = "extend_time";
@@ -29,4 +32,5 @@ public class ModConfig {
     public static final String AugmentAmplifyID = "amplify";
     public static final String AugmentDampenID = "dampen";
     public static final String AugmentExtractID = "extract";
+    public static final String AugmentFortuneID = "fortune";
 }

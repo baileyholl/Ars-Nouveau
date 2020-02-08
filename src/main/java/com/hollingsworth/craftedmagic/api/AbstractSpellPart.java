@@ -1,6 +1,11 @@
 package com.hollingsworth.craftedmagic.api;
 
 
+import com.hollingsworth.craftedmagic.spell.augment.AugmentDampen;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
+
+import java.util.ArrayList;
+
 public abstract class AbstractSpellPart {
 
     public abstract int getManaCost();
@@ -19,6 +24,5 @@ public abstract class AbstractSpellPart {
     }
 
     public String getBookDescription(){return this.description;}
-
 
 }

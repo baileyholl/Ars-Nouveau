@@ -1,13 +1,18 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentAmplify;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentDampen;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
+import net.minecraft.client.gui.IngameGui;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EffectBlink extends EffectType{
 
@@ -19,7 +24,7 @@ public class EffectBlink extends EffectType{
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> augments) {
         if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity().equals(shooter)) {
             Direction facing = shooter.getAdjustedHorizontalFacing();
-            double distance = 8.0f;
+            double distance = 8.0f + 3.0f *getAmplificationBonus(augments);
             //BlockPos pos = shooter.getPosition().offset(shooter.getHorizontalFacing(), 3);
 
             Vec3d lookVec = new Vec3d(shooter.getLookVec().getX(), 0, shooter.getLookVec().getZ());
@@ -49,6 +54,11 @@ public class EffectBlink extends EffectType{
         }
     }
 
+    @Override
+    public boolean dampenIsAllowed() {
+        return true;
+    }
+
     /**
      * Checks is a player can be placed at a given position without suffocating.
      */
@@ -58,6 +68,6 @@ public class EffectBlink extends EffectType{
 
     @Override
     public int getManaCost() {
-        return 0;
+        return 20;
     }
 }

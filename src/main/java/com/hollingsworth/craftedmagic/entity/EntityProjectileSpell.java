@@ -10,6 +10,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.network.IPacket;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -42,9 +43,29 @@ public class EntityProjectileSpell extends ArrowEntity {
         super(world, shooter);
     }
 
+    public void particles(){
+
+        if(world.getGameTime() % 1 == 0)
+            for(int i =0; i < 2; i++){
+                double d0 = posX + world.rand.nextFloat();
+                double d1 = posY + world.rand.nextFloat() -1;
+                double d2 = posZ + world.rand.nextFloat();
+                world.addParticle(ParticleTypes.ENCHANT, d0, d1, d2, 0, 1, 0);
+            }
+        for(int i =0; i < 1; i++){
+            double d0 = posX + world.rand.nextFloat();
+            double d1 = posY + world.rand.nextFloat();
+            double d2 = posZ + world.rand.nextFloat();
+            world.addParticle(ParticleTypes.LAVA, d0, d1, d2, 0.1, 0.1, 0.1);
+        }
+    }
 
     @Override
     public void tick() {
+        if(world.isRemote){
+            particles();
+        }
+
         this.lastTickPosX = this.posX;
         this.lastTickPosY = this.posY;
         this.lastTickPosZ = this.posZ;
@@ -112,6 +133,7 @@ public class EntityProjectileSpell extends ArrowEntity {
         this.spellResolver = spellResolver;
         age = 0;
     }
+
 
     /**
      * Sets throwable heading based on an entity that's throwing it

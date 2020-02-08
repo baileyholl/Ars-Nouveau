@@ -24,7 +24,14 @@ public class EffectHaste extends EffectType{
     }
 
     @Override
+    public boolean dampenIsAllowed() {
+        return true;
+    }
+
+    @Override
     public int getManaCost() {
         return 10;
     }
+
+
 }

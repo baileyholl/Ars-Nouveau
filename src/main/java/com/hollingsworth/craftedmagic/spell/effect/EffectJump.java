@@ -19,11 +19,8 @@ public class EffectJump extends EffectType{
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> augments) {
         if(rayTraceResult instanceof EntityRayTraceResult){
-            System.out.println("Jumping");
             LivingEntity entity = (LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity();
             Vec3d vec3d = entity.getMotion();
-            System.out.println(vec3d);
-            System.out.println(entity);
             entity.setMotion(vec3d.x,
                     .75 + .75 * getBuffCount(augments, AugmentAmplify.class), vec3d.z);
             entity.velocityChanged = true;

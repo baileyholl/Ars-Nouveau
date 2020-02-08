@@ -10,6 +10,6 @@ public class AugmentDampen extends AugmentType{
 
     @Override
     public int getManaCost() {
-        return -10;
+        return -5;
     }
 }

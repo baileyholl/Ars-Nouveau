@@ -23,10 +23,8 @@ public class EffectDispel extends EffectType{
                 LivingEntity entity = (LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity();
                 Collection<EffectInstance> effects =  entity.getActivePotionEffects();
                 for(EffectInstance e : effects){
-                    System.out.println(e);
                     entity.removePotionEffect(e.getPotion());
                 }
-                System.out.println("Done dispelling");
             }
         }
     }

@@ -27,11 +27,16 @@ public class EffectPull extends EffectType{
             Vec3d vec3d = new Vec3d(shooter.posX - target.posX, shooter.posY - target.posY, shooter.posZ - target.posZ);
             double d1 = 7;
 
-            double d2 = 1.0D + 0.5 * getBuffCount(augments, AugmentAmplify.class);
+            double d2 = 1.0D + 0.5 * getAmplificationBonus(augments);
             //target.setMotion(target.getMotion().add(vec3d.normalize().scale(d2 * d2 * 0.1D)));
             target.setMotion(target.getMotion().add(vec3d.normalize().scale(d2 )));
             target.move(MoverType.SELF, target.getMotion());
         }
+    }
+
+    @Override
+    public boolean dampenIsAllowed() {
+        return true;
     }
 
     @Override

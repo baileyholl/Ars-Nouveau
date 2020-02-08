@@ -26,7 +26,12 @@ public class EffectLight extends EffectType{
     }
 
     @Override
+    public boolean dampenIsAllowed() {
+        return true;
+    }
+
+    @Override
     public int getManaCost() {
-        return 0;
+        return 20;
     }
 }

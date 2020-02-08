@@ -27,13 +27,10 @@ public class MethodProjectile extends CastMethod {
 
     @Override
     public void onCast(ItemStack stack, PlayerEntity shooter, World world) {
-        System.out.println("Summoning projectile");
-        if(!world.getWorld().isRemote){
-            EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, shooter, this.resolver);
-            projectileSpell.shoot(shooter, shooter.rotationPitch, shooter.rotationYaw, 0.0F, 1.0f, 1.0F);
-            world.addEntity(projectileSpell);
-
-        }
+        EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, shooter, this.resolver);
+        projectileSpell.shoot(shooter, shooter.rotationPitch, shooter.rotationYaw, 0.0F, 1.0f, 1.0F);
+        world.addEntity(projectileSpell);
+        resolver.expendMana(shooter);
     }
 
     @Override

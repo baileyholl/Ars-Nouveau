@@ -21,26 +21,25 @@ public class MethodTouch extends CastMethod {
 
     @Override
     public int getManaCost() {
-        return 0;
+        return 10;
     }
 
     @Override
     public void onCast(ItemStack stack, PlayerEntity playerEntity, World world) {
-        resolver.onResolveEffect(playerEntity.getEntityWorld(), playerEntity, null);
+
     }
 
     @Override
     public void onCastOnBlock(ItemUseContext context) {
-
         World world = context.getWorld();
-        if(world.isRemote) return;
         BlockRayTraceResult res = new BlockRayTraceResult(context.getHitVec(), context.getFace(), context.getPos(), false);
         resolver.onResolveEffect(world, context.getPlayer(), res);
+        resolver.expendMana(context.getPlayer());
     }
 
     @Override
     public void onCastOnEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
-        System.out.println("Cast on entity" + target);
         resolver.onResolveEffect(playerIn.getEntityWorld(), playerIn, new EntityRayTraceResult(target));
+        resolver.expendMana(playerIn);
     }
 }

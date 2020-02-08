@@ -19,11 +19,22 @@ public class EffectKnockback extends EffectType{
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> augments) {
         if(rayTraceResult instanceof EntityRayTraceResult){
+
             if(((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
-                LivingEntity entity = (LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity();
-                entity.knockBack(shooter, (float)3 * 0.5F, (double) MathHelper.sin(shooter.rotationYaw * ((float)Math.PI / 180F)), (double)(-MathHelper.cos(shooter.rotationYaw * ((float)Math.PI / 180F))));
+                LivingEntity target = (LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity();
+                int strength = 3 + getAmplificationBonus(augments);
+                knockback(target, shooter, strength);
             }
         }
+    }
+
+    public void knockback(LivingEntity target, LivingEntity entityKnockingAway, float strength){
+        target.knockBack(entityKnockingAway, strength, (double) MathHelper.sin(entityKnockingAway.rotationYaw * ((float)Math.PI / 180F)), (double)(-MathHelper.cos(entityKnockingAway.rotationYaw * ((float)Math.PI / 180F))));
+    }
+
+    @Override
+    public boolean dampenIsAllowed() {
+        return true;
     }
 
     @Override
