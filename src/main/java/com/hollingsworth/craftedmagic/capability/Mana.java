@@ -6,6 +6,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.network.play.server.SEntityPropertiesPacket;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.registries.ObjectHolder;
 
 import javax.annotation.Nullable;
 import java.util.Collections;
@@ -15,6 +16,8 @@ public class Mana implements IMana {
     private final LivingEntity livingEntity;
 
     private int mana;
+
+    private int maxMana;
 
     public Mana(@Nullable final LivingEntity entity) {
         this.livingEntity = entity;
@@ -27,7 +30,12 @@ public class Mana implements IMana {
 
     @Override
     public int getMaxMana() {
-        return 100;
+        return maxMana;
+    }
+
+    @Override
+    public void setMaxMana(int maxMana) {
+        this.maxMana = maxMana;
     }
 
     @Override

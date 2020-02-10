@@ -1,7 +1,6 @@
 package com.hollingsworth.craftedmagic.entity;
 
 import com.hollingsworth.craftedmagic.ArsNouveau;
-import com.hollingsworth.craftedmagic.ModEntities;
 import com.hollingsworth.craftedmagic.spell.SpellResolver;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;

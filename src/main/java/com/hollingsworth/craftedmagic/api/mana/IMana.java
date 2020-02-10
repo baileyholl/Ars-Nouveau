@@ -6,6 +6,8 @@ public interface IMana {
 
     int getMaxMana();
 
+    void setMaxMana(int max);
+
     void setMana(final int mana);
 
     int addMana(final int manaToAdd);

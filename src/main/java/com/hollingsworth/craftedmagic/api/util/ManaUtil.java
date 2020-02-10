@@ -1,13 +1,16 @@
 package com.hollingsworth.craftedmagic.api.util;
 
 import com.hollingsworth.craftedmagic.api.AbstractSpellPart;
+import com.hollingsworth.craftedmagic.armor.MagicArmor;
+import com.hollingsworth.craftedmagic.enchantment.EnchantmentRegistry;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
 import com.hollingsworth.craftedmagic.spell.effect.EffectType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ManaUtil {
 
@@ -31,7 +34,29 @@ public class ManaUtil {
                 System.out.println(cost);
             }
         }
-        System.out.println(cost);
         return cost;
+    }
+
+    public static int getMaxMana(PlayerEntity e){
+        AtomicInteger max = new AtomicInteger(100);
+        e.getEquipmentAndArmor().forEach(i->{
+            if(i.getItem() instanceof MagicArmor){
+                //max.addAndGet(((MagicArmor) i.getItem()).getMaxManaBonus());
+                int newMax = max.get() +((MagicArmor) i.getItem()).getMaxManaBonus() + 25 * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, i);
+                max.set(newMax);
+            }
+        });
+        return max.get();
+    }
+
+    public static int getArmorRegen(PlayerEntity e) {
+        int regen = 0;
+        for(ItemStack i : e.getEquipmentAndArmor()){
+            if(i.getItem() instanceof MagicArmor){
+                MagicArmor armor = ((MagicArmor) i.getItem());
+                regen += armor.getRegenBonus() + 5 * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, i);
+            }
+        }
+        return regen;
     }
 }

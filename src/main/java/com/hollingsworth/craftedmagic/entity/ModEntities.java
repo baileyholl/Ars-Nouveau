@@ -1,5 +1,6 @@
-package com.hollingsworth.craftedmagic;
+package com.hollingsworth.craftedmagic.entity;
 
+import com.hollingsworth.craftedmagic.ArsNouveau;
 import com.hollingsworth.craftedmagic.entity.EntityProjectileSpell;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;

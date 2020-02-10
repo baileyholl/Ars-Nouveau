@@ -21,7 +21,7 @@ public class MethodTouch extends CastMethod {
 
     @Override
     public int getManaCost() {
-        return 10;
+        return 5;
     }
 
     @Override

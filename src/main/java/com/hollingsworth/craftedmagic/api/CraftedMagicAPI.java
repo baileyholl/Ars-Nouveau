@@ -40,6 +40,7 @@ public class CraftedMagicAPI {
         spell_map.put(ModConfig.EffectExplosionID, new EffectExplosion());
         spell_map.put(ModConfig.EffectLightningID, new EffectLightning());
         spell_map.put(ModConfig.EffectSlowfallID, new EffectSlowfall());
+        spell_map.put(ModConfig.EffectShieldID, new EffectShield());
 
         spell_map.put(ModConfig.AugmentAccelerateID, new AugmentAccelerate());
         spell_map.put(ModConfig.AugmentAmplifyID, new AugmentAmplify());

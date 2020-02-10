@@ -1,7 +1,7 @@
 package com.hollingsworth.craftedmagic.client;
 
 import com.hollingsworth.craftedmagic.ArsNouveau;
-import com.hollingsworth.craftedmagic.ModItems;
+import com.hollingsworth.craftedmagic.items.ModItems;
 import com.hollingsworth.craftedmagic.client.gui.GuiManaHUD;
 import com.hollingsworth.craftedmagic.client.gui.GuiSpellHUD;
 import net.minecraft.client.Minecraft;
