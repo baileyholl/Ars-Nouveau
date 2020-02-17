@@ -1,7 +1,8 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
+import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
+import com.hollingsworth.craftedmagic.api.spell.AugmentType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IGrowable;
 import net.minecraft.entity.LivingEntity;
@@ -12,7 +13,7 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 
-public class EffectGrow  extends EffectType{
+public class EffectGrow  extends AbstractEffect {
 
     public EffectGrow() {
         super(ModConfig.EffectGrowID, "Grow");

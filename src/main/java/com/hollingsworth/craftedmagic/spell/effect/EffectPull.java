@@ -1,8 +1,8 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentAmplify;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
+import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
+import com.hollingsworth.craftedmagic.api.spell.AugmentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MoverType;
@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 
-public class EffectPull extends EffectType{
+public class EffectPull extends AbstractEffect {
 
     public EffectPull() {
         super(ModConfig.EffectPullID, "Pull");

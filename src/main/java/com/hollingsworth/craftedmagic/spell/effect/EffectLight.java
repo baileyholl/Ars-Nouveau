@@ -1,10 +1,9 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
+import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
+import com.hollingsworth.craftedmagic.api.spell.AugmentType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -12,7 +11,7 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 
-public class EffectLight extends EffectType{
+public class EffectLight extends AbstractEffect {
 
     public EffectLight() {
         super(ModConfig.EffectLightID, "Light");

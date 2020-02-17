@@ -1,6 +1,8 @@
 package com.hollingsworth.craftedmagic.entity;
 
 import com.hollingsworth.craftedmagic.ArsNouveau;
+import com.hollingsworth.craftedmagic.client.particle.WispParticleData;
+import com.hollingsworth.craftedmagic.client.particle.WispParticleType;
 import com.hollingsworth.craftedmagic.spell.SpellResolver;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
@@ -45,18 +47,33 @@ public class EntityProjectileSpell extends ArrowEntity {
     public void particles(){
 
         if(world.getGameTime() % 1 == 0)
-            for(int i =0; i < 2; i++){
+            for(int i =0; i < 20; i++){
                 double d0 = posX + world.rand.nextFloat();
                 double d1 = posY + world.rand.nextFloat() -1;
                 double d2 = posZ + world.rand.nextFloat();
-                world.addParticle(ParticleTypes.ENCHANT, d0, d1, d2, 0, 1, 0);
+              //  world.addParticle(WispParticleData.wisp(0.25F + (float) Math.random() * 0.1F, (float) Math.random() * 0.25F, 0.75F + (float) Math.random() * 0.25F, (float) Math.random() * 0.25F, 1), d0, d1, d2, 0, 0, 0);
             }
-        for(int i =0; i < 1; i++){
-            double d0 = posX + world.rand.nextFloat();
-            double d1 = posY + world.rand.nextFloat();
-            double d2 = posZ + world.rand.nextFloat();
-            world.addParticle(ParticleTypes.LAVA, d0, d1, d2, 0.1, 0.1, 0.1);
+        for(int i =0; i < 2; i++){
+            double d0 = posX; //+ world.rand.nextFloat();
+            double d1 = posY;//+ world.rand.nextFloat() ;
+            double d2 = posZ; //+ world.rand.nextFloat();
+
+            world.addParticle(ParticleTypes.ENCHANTED_HIT, d0, d1, d2, 0.0, 0.0, 0.0);
+             d0 = posX + world.rand.nextFloat();
+             d1 = posY + world.rand.nextFloat() -1 ;
+             d2 = posZ + world.rand.nextFloat();
+            //world.addParticle(ParticleTypes.WITCH, d0, d1, d2, 0.1, 0.1, 0.1);
+            //WispParticleData data = WispParticleData.wisp(0.25F + (float) Math.random() * 0.1F, (float) Math.random() * 0.25F, 0.75F + (float) Math.random() * 0.25F, (float) Math.random() * 0.25F, 1);
+           // world.addParticle(data, d0, d1 + 0.25, d2, 0, -(-0.075F - (float) Math.random() * 0.015F), 0);
+
+          //  world.addParticle(WispParticleData.wisp(0.25F + (float) Math.random() * 0.1F, (float) Math.random() * 0.25F, 0.75F + (float) Math.random() * 0.25F, (float) Math.random() * 0.25F, 1), d0, d1, d2, 0, 0, 0);
         }
+////        for(int i =0; i < 1; i++){
+//            double d0 = posX + world.rand.nextFloat();
+//            double d1 = posY + world.rand.nextFloat();
+//            double d2 = posZ + world.rand.nextFloat();
+//            world.addParticle(ParticleTypes.LAVA, d0, d1, d2, 0.1, 0.1, 0.1);
+////        }
     }
 
     @Override

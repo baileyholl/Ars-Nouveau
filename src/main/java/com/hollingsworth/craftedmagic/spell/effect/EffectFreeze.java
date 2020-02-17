@@ -1,20 +1,20 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
+import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
+import com.hollingsworth.craftedmagic.api.spell.AugmentType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
 
-public class EffectFreeze extends EffectType{
+public class EffectFreeze extends AbstractEffect {
     public EffectFreeze() {
         super(ModConfig.EffectFreezeID, "Freeze");
     }

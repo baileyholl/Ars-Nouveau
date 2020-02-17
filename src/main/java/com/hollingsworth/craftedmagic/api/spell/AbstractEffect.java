@@ -1,10 +1,8 @@
-package com.hollingsworth.craftedmagic.spell.effect;
+package com.hollingsworth.craftedmagic.api.spell;
 
-import com.hollingsworth.craftedmagic.api.AbstractSpellPart;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentAmplify;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentDampen;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentExtendTime;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
@@ -15,10 +13,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class EffectType extends AbstractSpellPart {
+public abstract class AbstractEffect extends AbstractSpellPart {
 
 
-    protected EffectType(String tag, String description) {
+    protected AbstractEffect(String tag, String description) {
         super(tag, description);
     }
 
@@ -73,4 +71,6 @@ public abstract class EffectType extends AbstractSpellPart {
         map.put(AugmentAmplify.class, 10);
         return map;
     }
+
+
 }

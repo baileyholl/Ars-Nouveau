@@ -1,6 +1,7 @@
 package com.hollingsworth.craftedmagic.client.renderer.entity;
 
 import com.hollingsworth.craftedmagic.ArsNouveau;
+import com.hollingsworth.craftedmagic.entity.EntityEvokerFangs;
 import com.hollingsworth.craftedmagic.entity.EntityProjectileSpell;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -21,6 +22,6 @@ public class ModRenderers {
 
         RenderingRegistry.registerEntityRenderingHandler(EntityProjectileSpell.class,
                 renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
-
+        RenderingRegistry.registerEntityRenderingHandler(EntityEvokerFangs.class, RenderFangs::new);
     }
 }

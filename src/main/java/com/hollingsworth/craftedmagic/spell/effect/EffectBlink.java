@@ -1,20 +1,16 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentAmplify;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentDampen;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
-import net.minecraft.client.gui.IngameGui;
+import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
+import com.hollingsworth.craftedmagic.api.spell.AugmentType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
-public class EffectBlink extends EffectType{
+public class EffectBlink extends AbstractEffect {
 
     public EffectBlink() {
         super(ModConfig.EffectBlinkID, "Blink");

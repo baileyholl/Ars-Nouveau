@@ -27,12 +27,6 @@ public class ArsNouveau {
     public static final String MODNAME = "Ars Nouveau";
     public static final String MODVERSION = "0.0.1";
 
-//    @SidedProxy(clientSide = "com.hollingsworth.craftedmagic.ClientProxy", serverSide = "com.hollingsworth.craftedmagic.ServerProxy")
-//    public static CommonProxy proxy;
-
-//    @Mod.Instance
-//    public static ExampleMod instance;
-
     public static IProxy proxy = DistExecutor.runForDist(()-> () -> new ClientProxy(), () -> ()-> new ServerProxy());
     public static Logger logger;
 
@@ -43,13 +37,6 @@ public class ArsNouveau {
             return Items.COBBLESTONE.getDefaultInstance();
         }
     };
-
-//    @Mod.EventHandler
-//    public void preInit(FMLPreInitializationEvent event) {
-//        logger = event.getModLog();
-//        proxy.preInit(event);
-//
-//    }
 
     public ArsNouveau(){
         // modLoading setup
@@ -96,13 +83,4 @@ public class ArsNouveau {
             itemRegistryEvent.getRegistry().register(new BlockItem(ModBlocks.PHANTOM_BLOCK, new Item.Properties()).setRegistryName("phantom_block"));
         }
     }
-//    @Mod.EventHandler
-//    public void init(FMLInitializationEvent e) {
-//        proxy.init(e);
-//    }
-//
-//    @Mod.EventHandler
-//    public void postInit(FMLPostInitializationEvent e) {
-//        proxy.postInit(e);
-//    }
 }

@@ -1,7 +1,7 @@
 package com.hollingsworth.craftedmagic.spell.method;
 
 import com.hollingsworth.craftedmagic.ModConfig;
-import com.hollingsworth.craftedmagic.api.Position;
+import com.hollingsworth.craftedmagic.api.spell.CastMethod;
 import com.hollingsworth.craftedmagic.entity.EntityProjectileSpell;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -9,7 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
-import net.minecraftforge.event.world.NoteBlockEvent;
 
 public class MethodProjectile extends CastMethod {
 

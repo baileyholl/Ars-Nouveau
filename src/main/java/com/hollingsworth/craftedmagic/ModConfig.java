@@ -25,6 +25,7 @@ public class ModConfig {
     public static final String EffectLightningID = "lightning";
     public static final String EffectSlowfallID = "slowfall";
     public static final String EffectShieldID = "shield";
+    public static final String EffectFangsID = "fangs";
 
     public static final String AugmentAccelerateID = "accelerate";
     public static final String AugmentExtendTimeID = "extend_time";

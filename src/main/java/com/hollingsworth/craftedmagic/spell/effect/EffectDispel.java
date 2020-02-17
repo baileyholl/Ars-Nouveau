@@ -1,7 +1,8 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
+import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
+import com.hollingsworth.craftedmagic.api.spell.AugmentType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.math.EntityRayTraceResult;
@@ -11,7 +12,7 @@ import net.minecraft.world.World;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class EffectDispel extends EffectType{
+public class EffectDispel extends AbstractEffect {
     public EffectDispel() {
         super(ModConfig.EffectDispelID, "Dispel");
     }

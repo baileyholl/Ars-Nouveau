@@ -1,17 +1,17 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
+import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
 import com.hollingsworth.craftedmagic.potions.ModPotions;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
+import com.hollingsworth.craftedmagic.api.spell.AugmentType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.potion.Effects;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
 
-public class EffectShield extends EffectType{
+public class EffectShield extends AbstractEffect {
     public EffectShield() {
         super(ModConfig.EffectShieldID , "Shield");
     }

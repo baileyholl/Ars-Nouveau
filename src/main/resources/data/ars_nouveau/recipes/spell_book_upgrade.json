@@ -1,0 +1,23 @@
+{
+  "type": "ars_nouveau:book_upgrade",
+  "pattern":
+  [
+    "   ",
+    " y ",
+    "   "
+  ],
+  "key": {
+    "y": {
+      "item": "ars_nouveau:spell_book"
+    }
+  },
+  "ingredients": [
+    {
+      "item": "ars_nouveau:spell_book"
+    }
+  ],
+  "result":
+  {
+    "item": "ars_nouveau:spell_book"
+  }
+}

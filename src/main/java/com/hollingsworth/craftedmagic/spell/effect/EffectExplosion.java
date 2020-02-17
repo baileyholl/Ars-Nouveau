@@ -1,10 +1,11 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
+import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentDampen;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentAmplify;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentExtract;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
+import com.hollingsworth.craftedmagic.api.spell.AugmentType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -13,7 +14,7 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 
-public class EffectExplosion extends EffectType{
+public class EffectExplosion extends AbstractEffect {
 
     public EffectExplosion() {
         super(ModConfig.EffectExplosionID, "Explosion");
@@ -41,5 +42,10 @@ public class EffectExplosion extends EffectType{
     @Override
     public boolean dampenIsAllowed() {
         return true;
+    }
+
+    @Override
+    public Tier getTier() {
+        return Tier.TWO;
     }
 }

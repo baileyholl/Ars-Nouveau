@@ -1,6 +1,7 @@
 package com.hollingsworth.craftedmagic.api;
 
 import com.hollingsworth.craftedmagic.ModConfig;
+import com.hollingsworth.craftedmagic.api.spell.AbstractSpellPart;
 import com.hollingsworth.craftedmagic.spell.augment.*;
 import com.hollingsworth.craftedmagic.spell.effect.*;
 import com.hollingsworth.craftedmagic.spell.method.MethodSelf;
@@ -12,7 +13,7 @@ import java.util.HashMap;
 public class CraftedMagicAPI {
     private static CraftedMagicAPI craftedMagicAPI = null;
 
-    public HashMap<String,AbstractSpellPart> spell_map;
+    public HashMap<String, AbstractSpellPart> spell_map;
 
 
 
@@ -41,6 +42,8 @@ public class CraftedMagicAPI {
         spell_map.put(ModConfig.EffectLightningID, new EffectLightning());
         spell_map.put(ModConfig.EffectSlowfallID, new EffectSlowfall());
         spell_map.put(ModConfig.EffectShieldID, new EffectShield());
+        spell_map.put(ModConfig.EffectFangsID, new EffectFangs());
+
 
         spell_map.put(ModConfig.AugmentAccelerateID, new AugmentAccelerate());
         spell_map.put(ModConfig.AugmentAmplifyID, new AugmentAmplify());

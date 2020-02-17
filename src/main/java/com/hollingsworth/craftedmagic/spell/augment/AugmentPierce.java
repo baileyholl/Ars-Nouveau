@@ -1,6 +1,7 @@
 package com.hollingsworth.craftedmagic.spell.augment;
 
 import com.hollingsworth.craftedmagic.ModConfig;
+import com.hollingsworth.craftedmagic.api.spell.AugmentType;
 
 public class AugmentPierce extends AugmentType {
     public AugmentPierce() {

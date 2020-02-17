@@ -1,8 +1,9 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
+import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
 import com.hollingsworth.craftedmagic.block.ModBlocks;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
+import com.hollingsworth.craftedmagic.api.spell.AugmentType;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.BlockPos;
@@ -12,7 +13,7 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 
-public class EffectPhantomBlock extends EffectType{
+public class EffectPhantomBlock extends AbstractEffect {
 
     public EffectPhantomBlock() {
         super(ModConfig.EffectPhantomBlockID, "Phantom");

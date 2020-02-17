@@ -16,7 +16,15 @@ import java.util.function.Supplier;
 // https://github.com/TheKiritoPlayer20/SuperTools/blob/SuperTools_1.14/src/main/java/me/KG20/supertools/Armor/BasisArmorMaterial.java
 public class Materials {
 
-    public final static IArmorMaterial novice = new ArmorMaterial(ArsNouveau.MODID + ":novice", 15,new int[]{1, 4, 5, 2}, 30, SoundEvents.ITEM_ARMOR_EQUIP_CHAIN, 0.0F, () -> Ingredient.fromItems(Items.LEATHER));
+    public final static IArmorMaterial novice = new ArmorMaterial(ArsNouveau.MODID + ":novice", 25,new int[]{1, 4, 5, 2},
+            30, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F, () -> Ingredient.fromItems(Items.WHITE_WOOL));
+
+    public final static IArmorMaterial apprentice = new ArmorMaterial(ArsNouveau.MODID + ":apprentice", 25, new int[]{2, 5, 6, 2},
+            30, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F, () -> Ingredient.fromItems(Items.SCUTE));
+
+    public final static IArmorMaterial master = new ArmorMaterial(ArsNouveau.MODID + ":master", 33, new int[]{3, 6, 8, 3},
+            30, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 2.5f, () -> Ingredient.fromItems(Items.SCUTE));
+
     //Fuck mojang
     private static class ArmorMaterial implements IArmorMaterial{
 

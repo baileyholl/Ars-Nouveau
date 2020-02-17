@@ -58,8 +58,15 @@ public class ModEntities {
                             .setTrackingRange(10)
                             .setShouldReceiveVelocityUpdates(true)
                             .setUpdateInterval(60).setCustomClientFactory(EntityProjectileSpell::new));
+            final EntityType<EntityEvokerFangs> evokerFangs = build(
+                    "fangs",
+                    EntityType.Builder.<EntityEvokerFangs>create(EntityEvokerFangs::new, EntityClassification.MISC)
+                    .size(0.5F, 0.8F)
+                    .setUpdateInterval(60));
+
             event.getRegistry().registerAll(
-                    spell_proj
+                    spell_proj,
+                    evokerFangs
             );
             //ENT_PROJECTILE = registerEntity(EntityType.Builder.<EntityModProjectile>create(EntityClassification.MISC).setCustomClientFactory(EntityModProjectile::new).size(0.25F, 0.25F), "ent_projectile");
 

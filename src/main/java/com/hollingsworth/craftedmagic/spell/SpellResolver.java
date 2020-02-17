@@ -1,11 +1,11 @@
 package com.hollingsworth.craftedmagic.spell;
 
-import com.hollingsworth.craftedmagic.api.AbstractSpellPart;
+import com.hollingsworth.craftedmagic.api.spell.AbstractSpellPart;
 import com.hollingsworth.craftedmagic.api.util.ManaUtil;
 import com.hollingsworth.craftedmagic.capability.ManaCapability;
-import com.hollingsworth.craftedmagic.spell.effect.EffectType;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
-import com.hollingsworth.craftedmagic.spell.method.CastMethod;
+import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
+import com.hollingsworth.craftedmagic.api.spell.AugmentType;
+import com.hollingsworth.craftedmagic.api.spell.CastMethod;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -64,7 +64,7 @@ public class SpellResolver {
     public void onResolveEffect(World world, LivingEntity shooter, RayTraceResult result){
         for(int i = 0; i < spell_recipe.size(); i++){
             AbstractSpellPart spell = spell_recipe.get(i);
-            if(spell instanceof EffectType){
+            if(spell instanceof AbstractEffect){
                 ArrayList<AugmentType> augments = new ArrayList<>();
                 for(int j = i + 1; j < spell_recipe.size(); j++){
                     AbstractSpellPart next_spell = spell_recipe.get(j);
@@ -74,7 +74,7 @@ public class SpellResolver {
                         break;
                     }
                 }
-                ((EffectType) spell).onResolve(result, world, shooter, augments);
+                ((AbstractEffect) spell).onResolve(result, world, shooter, augments);
             }
         }
     }

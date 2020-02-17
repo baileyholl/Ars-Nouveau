@@ -1,7 +1,7 @@
 package com.hollingsworth.craftedmagic.client.gui;
 
 import com.hollingsworth.craftedmagic.ArsNouveau;
-import com.hollingsworth.craftedmagic.api.AbstractSpellPart;
+import com.hollingsworth.craftedmagic.api.spell.AbstractSpellPart;
 import com.hollingsworth.craftedmagic.api.CraftedMagicAPI;
 import com.hollingsworth.craftedmagic.client.gui.buttons.CraftingButton;
 import com.hollingsworth.craftedmagic.client.gui.buttons.GlyphButton;
@@ -10,8 +10,8 @@ import com.hollingsworth.craftedmagic.client.gui.buttons.GuiSpellSlot;
 import com.hollingsworth.craftedmagic.items.SpellBook;
 import com.hollingsworth.craftedmagic.network.Networking;
 import com.hollingsworth.craftedmagic.network.PacketUpdateSpellbook;
-import com.hollingsworth.craftedmagic.spell.effect.EffectType;
-import com.hollingsworth.craftedmagic.spell.method.CastMethod;
+import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
+import com.hollingsworth.craftedmagic.api.spell.CastMethod;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -42,14 +42,15 @@ public class GuiSpellBook extends ModdedScreen {
     TextFieldWidget spell_name;
     public CompoundNBT spell_book_tag;
     public GuiSpellSlot selected_slot;
-
+    public int max_spell_tier; // Used to load spells that are appropriate tier
     List<CraftingButton> craftingCells;
 
-    public GuiSpellBook(CraftedMagicAPI api, CompoundNBT tag) {
+    public GuiSpellBook(CraftedMagicAPI api, CompoundNBT tag, int tier) {
         super(new StringTextComponent(""));
         this.api = api;
         selected_cast_slot = 1;
         craftingCells = new ArrayList<>();
+        this.max_spell_tier = tier;
         this.spell_book_tag = tag;
     }
 
@@ -106,13 +107,16 @@ public class GuiSpellBook extends ModdedScreen {
         for(String key  : keys){
             AbstractSpellPart spell = this.api.spell_map.get(key);
             GlyphButton cell;
+            if(spell.getTier().ordinal() > max_spell_tier)
+                continue; //Skip spells too high of a tier
+
             if(spell instanceof CastMethod) {
 //                int xOffset = numCast % 2 == 0 ? 18 * (numCast/2 -1) : 18*(numCast/2);
                 int xOffset = 18 * (numCast % 6 );
                 int yOffset = (numCast / 6) * 20 ;
                 cell = new GlyphButton(this, bookLeft + 15 + xOffset, bookTop + 20 + yOffset, false, spell.getIcon(), spell.tag);
                 numCast++;
-            }else if(spell instanceof EffectType){
+            }else if(spell instanceof AbstractEffect){
 //                int xOffset = numEffect % 2 == 0 ? 18 * (numEffect/2 -1) : 18*(numEffect/2);
 //                int yOffset = (numEffect % 2 == 0 ? 20 : 0);
 
@@ -181,7 +185,7 @@ public class GuiSpellBook extends ModdedScreen {
 
     }
 
-    public static void open(CraftedMagicAPI api, CompoundNBT spell_book_tag){ Minecraft.getInstance().displayGuiScreen(new GuiSpellBook(api, spell_book_tag)); }
+    public static void open(CraftedMagicAPI api, CompoundNBT spell_book_tag, int tier){ Minecraft.getInstance().displayGuiScreen(new GuiSpellBook(api, spell_book_tag, tier)); }
 
     final void drawScreenAfterScale(int mouseX, int mouseY, float partialTicks) {
         resetTooltip();

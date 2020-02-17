@@ -1,6 +1,4 @@
-package com.hollingsworth.craftedmagic.spell.augment;
-
-import com.hollingsworth.craftedmagic.api.AbstractSpellPart;
+package com.hollingsworth.craftedmagic.api.spell;
 
 public abstract class AugmentType extends AbstractSpellPart {
 

@@ -1,14 +1,11 @@
 package com.hollingsworth.craftedmagic.spell.method;
 
 import com.hollingsworth.craftedmagic.ModConfig;
-import com.hollingsworth.craftedmagic.api.Position;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import com.hollingsworth.craftedmagic.api.spell.CastMethod;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;

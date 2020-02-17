@@ -1,10 +1,10 @@
 package com.hollingsworth.craftedmagic.api.util;
 
-import com.hollingsworth.craftedmagic.api.AbstractSpellPart;
+import com.hollingsworth.craftedmagic.api.spell.AbstractSpellPart;
 import com.hollingsworth.craftedmagic.armor.MagicArmor;
 import com.hollingsworth.craftedmagic.enchantment.EnchantmentRegistry;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
-import com.hollingsworth.craftedmagic.spell.effect.EffectType;
+import com.hollingsworth.craftedmagic.api.spell.AugmentType;
+import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -18,7 +18,7 @@ public class ManaUtil {
         int cost = 0;
         for (int i = 0; i < recipe.size(); i++) {
             AbstractSpellPart spell = recipe.get(i);
-            if (spell instanceof EffectType) {
+            if (spell instanceof AbstractEffect) {
 
                 ArrayList<AugmentType> augments = new ArrayList<>();
                 for (int j = i + 1; j < recipe.size(); j++) {
@@ -30,7 +30,7 @@ public class ManaUtil {
                     }
                 }
 
-                cost += ((EffectType) spell).getAdjustedManaCost(augments);
+                cost += ((AbstractEffect) spell).getAdjustedManaCost(augments);
                 System.out.println(cost);
             }
         }

@@ -1,7 +1,5 @@
-package com.hollingsworth.craftedmagic.spell.method;
+package com.hollingsworth.craftedmagic.api.spell;
 
-import com.hollingsworth.craftedmagic.api.AbstractSpellPart;
-import com.hollingsworth.craftedmagic.api.Position;
 import com.hollingsworth.craftedmagic.spell.SpellResolver;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;

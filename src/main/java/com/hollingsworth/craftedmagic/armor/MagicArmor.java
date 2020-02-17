@@ -14,16 +14,6 @@ public abstract class MagicArmor extends ArmorItem {
         super(materialIn, slot, builder);
     }
 
-    @Override
-    public void onArmorTick(ItemStack stack, World world, PlayerEntity player) {
-//        if(world.isRemote || world.getGameTime() % 20 == 0)
-//            return;
-//        ManaCapability.getMana(player).ifPresent(mana ->{
-//            mana.addMana(getRegenBonus());
-//           // System.out.println(mana.getMaxMana());
-//        });
-    }
-
     public abstract int getMaxManaBonus();
 
     public abstract int getRegenBonus();

@@ -1,9 +1,7 @@
 package com.hollingsworth.craftedmagic.items;
 
 import com.hollingsworth.craftedmagic.ArsNouveau;
-import com.hollingsworth.craftedmagic.armor.MagicArmor;
-import com.hollingsworth.craftedmagic.armor.Materials;
-import com.hollingsworth.craftedmagic.armor.NoviceArmor;
+import com.hollingsworth.craftedmagic.armor.*;
 import com.hollingsworth.craftedmagic.items.SpellBook;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
@@ -21,6 +19,8 @@ public class ModItems {
     @ObjectHolder("ars_nouveau:spell_book")
     public static SpellBook spellBook;
 
+    @ObjectHolder("ars_noveau:test")
+    public static Test test;
 
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -33,11 +33,30 @@ public class ModItems {
             final MagicArmor novicePants = new NoviceArmor(EquipmentSlotType.LEGS);
             final MagicArmor noviceChest = new NoviceArmor(EquipmentSlotType.CHEST);
             final MagicArmor noviceHead = new NoviceArmor(EquipmentSlotType.HEAD);
+
+            final MagicArmor apprenticeBoots = new ApprenticeArmor(EquipmentSlotType.FEET);
+            final MagicArmor apprenticePants = new ApprenticeArmor(EquipmentSlotType.LEGS);
+            final MagicArmor apprenticeChest = new ApprenticeArmor(EquipmentSlotType.CHEST);
+            final MagicArmor apprenticeHead = new ApprenticeArmor(EquipmentSlotType.HEAD);
+
+            final MagicArmor masterBoots = new MasterArmor(EquipmentSlotType.FEET);
+            final MagicArmor masterPants = new MasterArmor(EquipmentSlotType.LEGS);
+            final MagicArmor masterChest = new MasterArmor(EquipmentSlotType.CHEST);
+            final MagicArmor masterHead = new MasterArmor(EquipmentSlotType.HEAD);
+
             final Item[] items = {
                     noviceBoots.setRegistryName("novice_boots"),
                     novicePants.setRegistryName("novice_legs"),
                     noviceChest.setRegistryName("novice_chest"),
                     noviceHead.setRegistryName("novice_head"),
+                    apprenticeBoots.setRegistryName("apprentice_boots"),
+                    apprenticePants.setRegistryName("apprentice_pants"),
+                    apprenticeChest.setRegistryName("apprentice_chest"),
+                    apprenticeHead.setRegistryName("apprentice_head"),
+                    masterBoots.setRegistryName("master_boots"),
+                    masterPants.setRegistryName("master_pants"),
+                    masterChest.setRegistryName("master_chest"),
+                    masterHead.setRegistryName("master_head"),
             };
             final IForgeRegistry<Item> registry = event.getRegistry();
 

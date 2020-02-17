@@ -10,22 +10,26 @@ import java.util.function.Supplier;
 
 public class PacketOpenGUI{
     public CompoundNBT tag;
+    public int tier;
     //Decoder
     public PacketOpenGUI(PacketBuffer buf){
         tag = buf.readCompoundTag();
+        tier = buf.readInt();
     }
 
     //Encoder
     public void toBytes(PacketBuffer buf){
         buf.writeCompoundTag(tag);
+        buf.writeInt(tier);
     }
 
-    public PacketOpenGUI(CompoundNBT tag){
+    public PacketOpenGUI(CompoundNBT tag, int tier){
         this.tag = tag;
+        this.tier = tier;
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(()-> GuiSpellBook.open(CraftedMagicAPI.getInstance(), tag));
+        ctx.get().enqueueWork(()-> GuiSpellBook.open(CraftedMagicAPI.getInstance(), tag, tier));
         ctx.get().setPacketHandled(true);
     }
 

@@ -10,6 +10,7 @@ import com.hollingsworth.craftedmagic.potions.ModPotions;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.util.DamageSource;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -38,17 +39,11 @@ public class EventHandler {
     public static void playerDamaged(LivingDamageEvent e){
         System.out.println(e.getEntity());
         if(e.getEntityLiving() != null && e.getEntityLiving().getActivePotionMap().containsKey(ModPotions.SHIELD_POTION)){
-            float damage = e.getAmount() - 2.5f * e.getEntityLiving().getActivePotionMap().get(ModPotions.SHIELD_POTION).getAmplifier();
-            if(damage < 0) damage = 0;
-            e.setAmount(damage);
+            if(e.getSource() == DamageSource.MAGIC || e.getSource() == DamageSource.GENERIC ){
+                float damage = e.getAmount() - 1f * e.getEntityLiving().getActivePotionMap().get(ModPotions.SHIELD_POTION).getAmplifier();
+                if (damage < 0) damage = 0;
+                e.setAmount(damage);
+            }
         }
     }
-//        if(e.getEntityLiving().world.isRemote )
-//            return;
-//        float damage = e.getAmount();
-//        EffectInstance effect = e.getEntityLiving().getActivePotionMap().get(ModPotions.SHIELD_POTION);
-//        damage -= effect.getAmplifier() * 2.5;
-//        e.setAmount(damage);
-//    }
-
 }

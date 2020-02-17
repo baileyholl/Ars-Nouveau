@@ -1,12 +1,5 @@
-package com.hollingsworth.craftedmagic.api;
-
-
-import com.hollingsworth.craftedmagic.spell.augment.AugmentDampen;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentType;
-
-import java.util.ArrayList;
-
-public abstract class AbstractSpellPart {
+package com.hollingsworth.craftedmagic.api.spell;
+public abstract class AbstractSpellPart implements ISpellTier{
 
     public abstract int getManaCost();
     public String tag;
@@ -25,4 +18,7 @@ public abstract class AbstractSpellPart {
 
     public String getBookDescription(){return this.description;}
 
+    public ISpellTier.Tier getTier(){
+        return ISpellTier.Tier.ONE;
+    }
 }
