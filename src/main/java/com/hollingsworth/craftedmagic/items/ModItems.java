@@ -11,17 +11,21 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
+import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
+import static com.hollingsworth.craftedmagic.InjectionUtil.Null;
+
 @ObjectHolder(ArsNouveau.MODID)
 public class ModItems {
-    @ObjectHolder("ars_nouveau:spell_book")
-    public static SpellBook spellBook;
+//    @ObjectHolder("ars_nouveau:spell_book")
+//    public static SpellBook spellBook;
+//
+//    @ObjectHolder("ars_noveau:test")
+//    public static Test test;
 
-    @ObjectHolder("ars_noveau:test")
-    public static Test test;
-
+    public static SpellBook spellBook = Null();
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler{
@@ -29,6 +33,9 @@ public class ModItems {
 
         @SubscribeEvent
         public static void registerItems(final RegistryEvent.Register<Item> event) {
+            spellBook = new SpellBook();
+            final AdvancedSpellBook advancedSpellBook = new AdvancedSpellBook();
+
             final MagicArmor noviceBoots = new NoviceArmor(EquipmentSlotType.FEET);
             final MagicArmor novicePants = new NoviceArmor(EquipmentSlotType.LEGS);
             final MagicArmor noviceChest = new NoviceArmor(EquipmentSlotType.CHEST);
@@ -57,6 +64,8 @@ public class ModItems {
                     masterPants.setRegistryName("master_pants"),
                     masterChest.setRegistryName("master_chest"),
                     masterHead.setRegistryName("master_head"),
+                    spellBook.setRegistryName("spell_book"),
+                    advancedSpellBook.setRegistryName("advanced_spell_book")
             };
             final IForgeRegistry<Item> registry = event.getRegistry();
 

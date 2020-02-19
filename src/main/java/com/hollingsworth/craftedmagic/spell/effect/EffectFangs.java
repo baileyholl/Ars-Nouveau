@@ -5,7 +5,7 @@ import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
 import com.hollingsworth.craftedmagic.entity.EntityEvokerFangs;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentAccelerate;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentExtendTime;
-import com.hollingsworth.craftedmagic.api.spell.AugmentType;
+import com.hollingsworth.craftedmagic.api.spell.AbstractAugment;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Direction;
@@ -22,7 +22,7 @@ public class EffectFangs extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
         Vec3d vec = rayTraceResult.getHitVec();
         float bonusDamage = 2.5f * getAmplificationBonus(augments);
         double targetX = vec.x;

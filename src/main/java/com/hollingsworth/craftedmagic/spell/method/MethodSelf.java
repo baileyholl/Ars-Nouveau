@@ -1,7 +1,8 @@
 package com.hollingsworth.craftedmagic.spell.method;
 
 import com.hollingsworth.craftedmagic.ModConfig;
-import com.hollingsworth.craftedmagic.api.spell.CastMethod;
+import com.hollingsworth.craftedmagic.api.spell.AbstractAugment;
+import com.hollingsworth.craftedmagic.api.spell.AbstractCastMethod;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -10,24 +11,26 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.world.World;
 
-public class MethodSelf extends CastMethod {
+import java.util.ArrayList;
+
+public class MethodSelf extends AbstractCastMethod {
     public MethodSelf() {
         super(ModConfig.MethodSelfID, "Self");
     }
 
     @Override
-    public void onCast(ItemStack stack, PlayerEntity playerEntity, World world) {
+    public void onCast(ItemStack stack, PlayerEntity playerEntity, World world, ArrayList<AbstractAugment> augments) {
         resolver.onResolveEffect(playerEntity.getEntityWorld(), playerEntity, new EntityRayTraceResult(playerEntity));
         resolver.expendMana(playerEntity);
     }
 
     @Override
-    public void onCastOnBlock(ItemUseContext context) {
+    public void onCastOnBlock(ItemUseContext context, ArrayList<AbstractAugment> augments) {
 
     }
 
     @Override
-    public void onCastOnEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
+    public void onCastOnEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand, ArrayList<AbstractAugment> augments) {
 
     }
 

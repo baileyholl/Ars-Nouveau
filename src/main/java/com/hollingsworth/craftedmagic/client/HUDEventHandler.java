@@ -4,6 +4,7 @@ import com.hollingsworth.craftedmagic.ArsNouveau;
 import com.hollingsworth.craftedmagic.items.ModItems;
 import com.hollingsworth.craftedmagic.client.gui.GuiManaHUD;
 import com.hollingsworth.craftedmagic.client.gui.GuiSpellHUD;
+import com.hollingsworth.craftedmagic.items.SpellBook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -32,7 +33,7 @@ public class HUDEventHandler {
         if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) return;
 
         final PlayerEntity player = minecraft.player;
-        if (player.getHeldItemMainhand().getItem() != ModItems.spellBook && player.getHeldItemOffhand().getItem() != ModItems.spellBook)
+        if (!(player.getHeldItemMainhand().getItem() instanceof SpellBook))
             return;
 
         spellHUD.drawHUD();

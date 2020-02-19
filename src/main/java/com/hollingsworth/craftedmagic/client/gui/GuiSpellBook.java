@@ -11,7 +11,7 @@ import com.hollingsworth.craftedmagic.items.SpellBook;
 import com.hollingsworth.craftedmagic.network.Networking;
 import com.hollingsworth.craftedmagic.network.PacketUpdateSpellbook;
 import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
-import com.hollingsworth.craftedmagic.api.spell.CastMethod;
+import com.hollingsworth.craftedmagic.api.spell.AbstractCastMethod;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -110,7 +110,7 @@ public class GuiSpellBook extends ModdedScreen {
             if(spell.getTier().ordinal() > max_spell_tier)
                 continue; //Skip spells too high of a tier
 
-            if(spell instanceof CastMethod) {
+            if(spell instanceof AbstractCastMethod) {
 //                int xOffset = numCast % 2 == 0 ? 18 * (numCast/2 -1) : 18*(numCast/2);
                 int xOffset = 18 * (numCast % 6 );
                 int yOffset = (numCast / 6) * 20 ;

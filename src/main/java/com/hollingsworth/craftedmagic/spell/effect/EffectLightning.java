@@ -2,7 +2,7 @@ package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
 import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
-import com.hollingsworth.craftedmagic.api.spell.AugmentType;
+import com.hollingsworth.craftedmagic.api.spell.AbstractAugment;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -19,7 +19,7 @@ public class EffectLightning extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
         Vec3d pos = rayTraceResult.getHitVec();
         LightningBoltEntity lightningBoltEntity =new LightningBoltEntity(world, pos.getX(), pos.getY(), pos.getZ(), false);
         lightningBoltEntity.setCaster((ServerPlayerEntity) shooter);

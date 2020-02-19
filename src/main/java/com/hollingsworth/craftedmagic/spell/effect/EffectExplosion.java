@@ -5,7 +5,7 @@ import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentDampen;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentAmplify;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentExtract;
-import com.hollingsworth.craftedmagic.api.spell.AugmentType;
+import com.hollingsworth.craftedmagic.api.spell.AbstractAugment;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -21,7 +21,7 @@ public class EffectExplosion extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
         System.out.println(rayTraceResult);
         if(rayTraceResult == null)
             return;

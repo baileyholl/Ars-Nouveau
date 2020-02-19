@@ -1,11 +1,14 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
+import com.google.common.collect.ImmutableList;
 import com.hollingsworth.craftedmagic.ModConfig;
 import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
 import com.hollingsworth.craftedmagic.api.util.LootUtil;
+import com.hollingsworth.craftedmagic.api.util.SpellUtil;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentAOE;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentExtract;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentFortune;
-import com.hollingsworth.craftedmagic.api.spell.AugmentType;
+import com.hollingsworth.craftedmagic.api.spell.AbstractAugment;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -30,11 +33,14 @@ public class EffectDig extends AbstractEffect {
         return 15;
     }
 
+
+
+
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
         if(!world.isRemote && rayTraceResult instanceof BlockRayTraceResult){
             BlockPos pos = new BlockPos(((BlockRayTraceResult) rayTraceResult).getPos());
-            BlockState state = world.getBlockState(pos);
+            BlockState state;
             float maxHardness = 3.0f;
             int buff = getAmplificationBonus(augments);
             if(buff >= 3){
@@ -50,18 +56,24 @@ public class EffectDig extends AbstractEffect {
             }else if(buff < -2){
                 maxHardness = 0.5f;
             }
-            //Iron block and lower.
-            if(!(state.getBlockHardness(world, pos) <= maxHardness && state.getBlockHardness(world, pos) >= 0)){
-                return;
-            }
-            if(hasBuff(augments, AugmentExtract.class)){
-                Block.spawnDrops(state, LootUtil.getSilkContext((ServerWorld)world, pos, (PlayerEntity)shooter));
-                world.destroyBlock(pos, false);
-            }else if(hasBuff(augments, AugmentFortune.class)){
-                Block.spawnDrops(state, LootUtil.getFortuneContext((ServerWorld)world, pos, (PlayerEntity)shooter, getBuffCount(augments, AugmentFortune.class)));
-                world.destroyBlock(pos, false);
-            }else {
-                world.destroyBlock(pos, true);
+
+            int aoeBuff = getBuffCount(augments, AugmentAOE.class);
+            ImmutableList<BlockPos> posList = SpellUtil.calcAOEBlocks((PlayerEntity)shooter, pos, (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
+            for(BlockPos pos1 : posList) {
+                state = world.getBlockState(pos1);
+                // Iron block or lower unpowered
+                if(!(state.getBlockHardness(world, pos1) <= maxHardness && state.getBlockHardness(world, pos1) >= 0)){
+                    continue;
+                }
+                if (hasBuff(augments, AugmentExtract.class)) {
+                    Block.spawnDrops(state, LootUtil.getSilkContext((ServerWorld) world, pos1, (PlayerEntity) shooter));
+                    world.destroyBlock(pos1, false);
+                } else if (hasBuff(augments, AugmentFortune.class)) {
+                    Block.spawnDrops(state, LootUtil.getFortuneContext((ServerWorld) world, pos1, (PlayerEntity) shooter, getBuffCount(augments, AugmentFortune.class)));
+                    world.destroyBlock(pos1, false);
+                } else {
+                    world.destroyBlock(pos1, true);
+                }
             }
         }
     }

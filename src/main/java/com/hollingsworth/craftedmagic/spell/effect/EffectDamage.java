@@ -4,7 +4,7 @@ import com.hollingsworth.craftedmagic.ModConfig;
 import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
 import com.hollingsworth.craftedmagic.api.util.LootUtil;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentFortune;
-import com.hollingsworth.craftedmagic.api.spell.AugmentType;
+import com.hollingsworth.craftedmagic.api.spell.AbstractAugment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
@@ -26,7 +26,7 @@ public class EffectDamage extends AbstractEffect {
     public EffectDamage() {super(ModConfig.EffectDamageID, "Damage" ); }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
         if(rayTraceResult instanceof EntityRayTraceResult){
             float damage = 5.0f + 2.0f * getAmplificationBonus(augments);
             Entity entity = ((EntityRayTraceResult) rayTraceResult).getEntity();

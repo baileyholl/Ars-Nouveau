@@ -2,13 +2,17 @@ package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
 import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
+import com.hollingsworth.craftedmagic.api.util.SpellUtil;
 import com.hollingsworth.craftedmagic.block.ModBlocks;
-import com.hollingsworth.craftedmagic.api.spell.AugmentType;
+import com.hollingsworth.craftedmagic.api.spell.AbstractAugment;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentAOE;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -20,11 +24,14 @@ public class EffectPhantomBlock extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
         if(rayTraceResult instanceof BlockRayTraceResult){
-            BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getPos().offset(((BlockRayTraceResult) rayTraceResult).getFace());
-            if(world.getBlockState(pos).getBlock() == Blocks.AIR){
-                world.setBlockState(pos, ModBlocks.PHANTOM_BLOCK.getDefaultState());
+
+            for(BlockPos pos : SpellUtil.calcAOEBlocks((PlayerEntity) shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult, getBuffCount(augments, AugmentAOE.class))) {
+                pos = pos.offset(((BlockRayTraceResult) rayTraceResult).getFace());
+                if (world.getBlockState(pos).getBlock() == Blocks.AIR && world.func_217350_a(ModBlocks.PHANTOM_BLOCK.getDefaultState(), pos, ISelectionContext.dummy())) {
+                    world.setBlockState(pos, ModBlocks.PHANTOM_BLOCK.getDefaultState());
+                }
             }
         }
     }

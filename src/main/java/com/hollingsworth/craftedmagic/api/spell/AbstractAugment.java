@@ -1,8 +1,8 @@
 package com.hollingsworth.craftedmagic.api.spell;
 
-public abstract class AugmentType extends AbstractSpellPart {
+public abstract class AbstractAugment extends AbstractSpellPart {
 
-    public AugmentType(String tag, String description) {
+    public AbstractAugment(String tag, String description) {
         super(tag, description);
     }
 

@@ -2,7 +2,7 @@ package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
 import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
-import com.hollingsworth.craftedmagic.api.spell.AugmentType;
+import com.hollingsworth.craftedmagic.api.spell.AbstractAugment;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.*;
@@ -17,7 +17,7 @@ public class EffectBlink extends AbstractEffect {
     }
     
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
         if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity().equals(shooter)) {
             Direction facing = shooter.getAdjustedHorizontalFacing();
             double distance = 8.0f + 3.0f *getAmplificationBonus(augments);

@@ -1,7 +1,8 @@
 package com.hollingsworth.craftedmagic.spell.method;
 
 import com.hollingsworth.craftedmagic.ModConfig;
-import com.hollingsworth.craftedmagic.api.spell.CastMethod;
+import com.hollingsworth.craftedmagic.api.spell.AbstractAugment;
+import com.hollingsworth.craftedmagic.api.spell.AbstractCastMethod;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -10,7 +11,9 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
-public class MethodTouch extends CastMethod {
+import java.util.ArrayList;
+
+public class MethodTouch extends AbstractCastMethod {
 
     public MethodTouch() {
         super(ModConfig.MethodTouchID, "Touch");
@@ -22,12 +25,12 @@ public class MethodTouch extends CastMethod {
     }
 
     @Override
-    public void onCast(ItemStack stack, PlayerEntity playerEntity, World world) {
+    public void onCast(ItemStack stack, PlayerEntity playerEntity, World world, ArrayList<AbstractAugment> augments) {
 
     }
 
     @Override
-    public void onCastOnBlock(ItemUseContext context) {
+    public void onCastOnBlock(ItemUseContext context, ArrayList<AbstractAugment> augments) {
         World world = context.getWorld();
         BlockRayTraceResult res = new BlockRayTraceResult(context.getHitVec(), context.getFace(), context.getPos(), false);
         resolver.onResolveEffect(world, context.getPlayer(), res);
@@ -35,7 +38,7 @@ public class MethodTouch extends CastMethod {
     }
 
     @Override
-    public void onCastOnEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
+    public void onCastOnEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand, ArrayList<AbstractAugment> augments) {
         resolver.onResolveEffect(playerIn.getEntityWorld(), playerIn, new EntityRayTraceResult(target));
         resolver.expendMana(playerIn);
     }

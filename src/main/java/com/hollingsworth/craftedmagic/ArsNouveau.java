@@ -79,7 +79,7 @@ public class ArsNouveau {
         public static void onItemsRegistry(final RegistryEvent.Register<Item> itemRegistryEvent) {
             // register a new block here
             LOGGER.info("HELLO from Register Block");
-            itemRegistryEvent.getRegistry().register(new SpellBook());
+          //  itemRegistryEvent.getRegistry().register(new SpellBook());
             itemRegistryEvent.getRegistry().register(new BlockItem(ModBlocks.PHANTOM_BLOCK, new Item.Properties()).setRegistryName("phantom_block"));
         }
     }

@@ -36,8 +36,6 @@ public class SpellBook extends Item implements ISpellTier {
 
     public SpellBook(){
         super(new Item.Properties().maxStackSize(1).group(ArsNouveau.itemGroup));
-        setRegistryName("spell_book");        // The unique name (within your mod) that identifies this item
-
         //setUnlocalizedName(ExampleMod.MODID + ".spell_book");     // Used for localization (en_US.lang)
     }
 

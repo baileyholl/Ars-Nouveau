@@ -2,10 +2,13 @@ package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
 import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
-import com.hollingsworth.craftedmagic.api.spell.AugmentType;
+import com.hollingsworth.craftedmagic.api.spell.AbstractAugment;
+import com.hollingsworth.craftedmagic.api.util.SpellUtil;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentAOE;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IGrowable;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -20,21 +23,16 @@ public class EffectGrow  extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
         if(rayTraceResult instanceof BlockRayTraceResult) {
-            BlockPos blockpos = ((BlockRayTraceResult) rayTraceResult).getPos();
-            System.out.println(((BlockRayTraceResult) rayTraceResult).getPos());
-            System.out.println(((BlockRayTraceResult) rayTraceResult).getFace());
-            System.out.println(rayTraceResult.getHitVec());
-
-
-            //BlockPos blockpos = new BlockPos(rayTraceResult.getHitVec());
-            if (applyBonemeal(world, blockpos)) {
-                if (!world.isRemote) {
-                    world.playEvent(2005, blockpos, 0);
+            for(BlockPos blockpos : SpellUtil.calcAOEBlocks((PlayerEntity) shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult) rayTraceResult, getBuffCount(augments, AugmentAOE.class))){
+                //BlockPos blockpos = ((BlockRayTraceResult) rayTraceResult).getPos();
+                if (applyBonemeal(world, blockpos)) {
+                    if (!world.isRemote) {
+                        world.playEvent(2005, blockpos, 0);
+                    }
                 }
             }
-
         }
     }
     public static boolean applyBonemeal(World worldIn, BlockPos pos) {

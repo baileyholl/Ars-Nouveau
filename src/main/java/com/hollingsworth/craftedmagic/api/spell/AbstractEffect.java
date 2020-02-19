@@ -21,45 +21,30 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     // Apply the effect at the destination position.
-    public abstract void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AugmentType> augments);
+    public abstract void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments);
 
-    public void applyPotion(LivingEntity entity, Effect potionEffect, ArrayList<AugmentType> augmentTypes){
+    public void applyPotion(LivingEntity entity, Effect potionEffect, ArrayList<AbstractAugment> augmentTypes){
         applyPotion(entity, potionEffect, augmentTypes, 30, 30);
     }
 
-    public void applyPotion(LivingEntity entity, Effect potionEffect, ArrayList<AugmentType> augmentTypes, int baseDuration, int durationBuffBase){
+    public void applyPotion(LivingEntity entity, Effect potionEffect, ArrayList<AbstractAugment> augmentTypes, int baseDuration, int durationBuffBase){
         int duration = baseDuration + durationBuffBase * getBuffCount(augmentTypes, AugmentExtendTime.class);
         int amp = getBuffCount(augmentTypes, AugmentAmplify.class);
         entity.addPotionEffect(new EffectInstance(potionEffect, duration * 20, amp));
     }
 
-    public int getBuffCount(ArrayList<AugmentType> augments, Class spellClass){
+    public int getBuffCount(ArrayList<AbstractAugment> augments, Class spellClass){
         return (int) augments.stream().filter(spellClass::isInstance).count();
     }
 
-    public boolean hasBuff(ArrayList<AugmentType> augments, Class spellClass){
+    public boolean hasBuff(ArrayList<AbstractAugment> augments, Class spellClass){
         return getBuffCount(augments, spellClass) > 0;
     }
 
-    public int getAmplificationBonus(ArrayList<AugmentType> augmentTypes){
+    public int getAmplificationBonus(ArrayList<AbstractAugment> augmentTypes){
         return getBuffCount(augmentTypes, AugmentAmplify.class) - getBuffCount(augmentTypes, AugmentDampen.class);
     }
 
-    public int getAdjustedManaCost(ArrayList<AugmentType> augmentTypes){
-        int cost = getManaCost();
-        for(AugmentType a: augmentTypes){
-            if(a instanceof AugmentDampen && !dampenIsAllowed()){
-                continue;
-            }
-            cost += a.getManaCost();
-        }
-        return Math.max(cost, 0);
-    }
-
-    // Check for mana reduction exploit
-    public boolean dampenIsAllowed(){
-        return false;
-    }
 
     public Map<Class, Integer> getAllowedAugments(){
         return new HashMap<>();
@@ -71,6 +56,4 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         map.put(AugmentAmplify.class, 10);
         return map;
     }
-
-
 }

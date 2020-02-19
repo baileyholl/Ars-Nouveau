@@ -1,9 +1,9 @@
 package com.hollingsworth.craftedmagic.spell.augment;
 
 import com.hollingsworth.craftedmagic.ModConfig;
-import com.hollingsworth.craftedmagic.api.spell.AugmentType;
+import com.hollingsworth.craftedmagic.api.spell.AbstractAugment;
 
-public class AugmentExtract extends AugmentType {
+public class AugmentExtract extends AbstractAugment {
 
     public AugmentExtract() {
         super(ModConfig.AugmentExtractID, "Extract");
