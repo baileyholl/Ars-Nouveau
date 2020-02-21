@@ -80,6 +80,11 @@ public class EffectFangs extends AbstractEffect {
 
     @Override
     public int getManaCost() {
-        return 0;
+        return 35;
+    }
+
+    @Override
+    public Tier getTier() {
+        return Tier.THREE;
     }
 }

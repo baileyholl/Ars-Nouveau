@@ -20,7 +20,7 @@ public class EffectFling extends AbstractEffect {
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
         if(rayTraceResult instanceof EntityRayTraceResult){
             Entity entity = ((EntityRayTraceResult) rayTraceResult).getEntity();
-            entity.setMotion(entity.getMotion().add(0, 1 + getAmplificationBonus(augments), 0));
+            entity.setMotion(entity.getMotion().add(0, 0.8 + getAmplificationBonus(augments), 0));
             entity.velocityChanged = true;
         }
     }
@@ -34,4 +34,6 @@ public class EffectFling extends AbstractEffect {
     public int getManaCost() {
         return 20;
     }
+
+
 }

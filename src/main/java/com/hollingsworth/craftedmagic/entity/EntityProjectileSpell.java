@@ -201,7 +201,7 @@ public class EntityProjectileSpell extends ArrowEntity {
             }
         }
 
-        if (!world.isRemote && result.getType() == RayTraceResult.Type.BLOCK) {
+        if (!world.isRemote && result instanceof BlockRayTraceResult) {
             SoundEvent event = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, "resolve_spell"));
             world.playSound(null, this.posX, this.posY, this.posZ,
                     event, SoundCategory.BLOCKS,
@@ -210,8 +210,9 @@ public class EntityProjectileSpell extends ArrowEntity {
             BlockRayTraceResult blockraytraceresult = (BlockRayTraceResult)result;
 //            BlockState blockstate = this.world.getBlockState(blockraytraceresult.getPos());
 //            System.out.println(blockstate.getBlock());
-            if(this.spellResolver != null && result != null) {
+            if(this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(this.world, (LivingEntity) this.getShooter(), blockraytraceresult);
+                System.out.println("Resolving");
             }
             this.world.setEntityState(this, (byte)3);
             this.remove();

@@ -88,8 +88,8 @@ public class SpellResolver {
     public void expendMana(LivingEntity entity){
         int totalCost = ManaUtil.calculateCost(spell_recipe);
         ManaCapability.getMana(entity).ifPresent(mana -> {
-            System.out.println("Removing " + totalCost);
             mana.removeMana(totalCost);
+            System.out.println("Expending  Mana");
         });
     }
 }

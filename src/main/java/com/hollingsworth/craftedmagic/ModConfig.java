@@ -35,4 +35,5 @@ public class ModConfig {
     public static final String AugmentDampenID = "dampen";
     public static final String AugmentExtractID = "extract";
     public static final String AugmentFortuneID = "fortune";
+    public static final String AugmentSplitID = "split";
 }

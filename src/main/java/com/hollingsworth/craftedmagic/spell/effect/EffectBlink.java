@@ -64,6 +64,11 @@ public class EffectBlink extends AbstractEffect {
 
     @Override
     public int getManaCost() {
-        return 20;
+        return 50;
+    }
+
+    @Override
+    public Tier getTier() {
+        return Tier.THREE;
     }
 }

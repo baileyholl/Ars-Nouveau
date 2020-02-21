@@ -10,6 +10,11 @@ public class AugmentExtendTime extends AbstractAugment {
 
     @Override
     public int getManaCost() {
-        return 0;
+        return 10;
+    }
+
+    @Override
+    public Tier getTier() {
+        return Tier.TWO;
     }
 }

@@ -11,6 +11,11 @@ public class AugmentExtract extends AbstractAugment {
 
     @Override
     public int getManaCost() {
-        return 20;
+        return 30;
+    }
+
+    @Override
+    public Tier getTier() {
+        return Tier.TWO;
     }
 }

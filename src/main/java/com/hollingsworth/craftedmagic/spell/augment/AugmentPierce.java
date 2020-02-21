@@ -10,6 +10,11 @@ public class AugmentPierce extends AbstractAugment {
 
     @Override
     public int getManaCost() {
-        return 0;
+        return 20;
+    }
+
+    @Override
+    public Tier getTier() {
+        return Tier.TWO;
     }
 }

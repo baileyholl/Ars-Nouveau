@@ -1,23 +1,30 @@
 {
-    "type": "minecraft:crafting_shaped",
+    "type": "minecraft:crafting_shapeless",
     "pattern":
     [
         "   ",
         " y ",
         "   "
     ],
-    "key": {
-        "y": {
-            "item": "minecraft:stick"
-        }
-    },
 	"ingredients": [
         {
-            "item": "minecraft:stick"
+            "item": "minecraft:writable_book"
+        },
+        {
+            "item": "minecraft:bone_meal"
+        },
+        {
+            "item": "minecraft:iron_pickaxe"
+        },
+        {
+            "item": "minecraft:iron_sword"
+        },
+        {
+            "item": "minecraft:flint_and_steel"
         }
     ],
     "result":
     {
-        "item": "ars_noveau:spell_book"
+        "item": "ars_nouveau:novice_spell_book"
     }
 }

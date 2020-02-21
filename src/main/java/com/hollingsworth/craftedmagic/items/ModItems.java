@@ -2,7 +2,6 @@ package com.hollingsworth.craftedmagic.items;
 
 import com.hollingsworth.craftedmagic.ArsNouveau;
 import com.hollingsworth.craftedmagic.armor.*;
-import com.hollingsworth.craftedmagic.items.SpellBook;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
@@ -11,7 +10,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
-import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,7 +32,9 @@ public class ModItems {
         @SubscribeEvent
         public static void registerItems(final RegistryEvent.Register<Item> event) {
             spellBook = new SpellBook();
-            final AdvancedSpellBook advancedSpellBook = new AdvancedSpellBook();
+            final ApprenticeSpellBook apprenticeSpellBook = new ApprenticeSpellBook();
+            final ArchmageSpellBook archmageSpellBook = new ArchmageSpellBook();
+
 
             final MagicArmor noviceBoots = new NoviceArmor(EquipmentSlotType.FEET);
             final MagicArmor novicePants = new NoviceArmor(EquipmentSlotType.LEGS);
@@ -53,19 +53,20 @@ public class ModItems {
 
             final Item[] items = {
                     noviceBoots.setRegistryName("novice_boots"),
-                    novicePants.setRegistryName("novice_legs"),
-                    noviceChest.setRegistryName("novice_chest"),
-                    noviceHead.setRegistryName("novice_head"),
+                    novicePants.setRegistryName("novice_leggings"),
+                    noviceChest.setRegistryName("novice_robes"),
+                    noviceHead.setRegistryName("novice_hood"),
                     apprenticeBoots.setRegistryName("apprentice_boots"),
-                    apprenticePants.setRegistryName("apprentice_pants"),
-                    apprenticeChest.setRegistryName("apprentice_chest"),
-                    apprenticeHead.setRegistryName("apprentice_head"),
-                    masterBoots.setRegistryName("master_boots"),
-                    masterPants.setRegistryName("master_pants"),
-                    masterChest.setRegistryName("master_chest"),
-                    masterHead.setRegistryName("master_head"),
-                    spellBook.setRegistryName("spell_book"),
-                    advancedSpellBook.setRegistryName("advanced_spell_book")
+                    apprenticePants.setRegistryName("apprentice_leggings"),
+                    apprenticeChest.setRegistryName("apprentice_robes"),
+                    apprenticeHead.setRegistryName("apprentice_hood"),
+                    masterBoots.setRegistryName("archmage_boots"),
+                    masterPants.setRegistryName("archmage_leggings"),
+                    masterChest.setRegistryName("archmage_robes"),
+                    masterHead.setRegistryName("archmage_hood"),
+                    spellBook.setRegistryName("novice_spell_book"),
+                    apprenticeSpellBook.setRegistryName("apprentice_spell_book"),
+                    archmageSpellBook.setRegistryName("archmage_spell_book")
             };
             final IForgeRegistry<Item> registry = event.getRegistry();
 

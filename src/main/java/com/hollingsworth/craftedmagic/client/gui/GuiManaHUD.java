@@ -18,9 +18,6 @@ public class GuiManaHUD extends AbstractGui {
         if(stack != null && stack.getItem() instanceof SpellBook && stack.getTag() != null){
             ManaCapability.getMana(minecraft.player).ifPresent(mana ->{
                 double x = 50; //Length
-                if(minecraft.world.getGameTime() %20 == 0){
-                    System.out.println(mana.getMaxMana());
-                }
                 x = (50) * ((new Double(mana.getCurrentMana()) ) / (new Double(mana.getMaxMana()) - 0.0));
                 int y = 15;
                 int offsetLeft = 2;

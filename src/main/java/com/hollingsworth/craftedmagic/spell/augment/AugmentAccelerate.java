@@ -13,4 +13,9 @@ public class AugmentAccelerate extends AbstractAugment {
     public int getManaCost() {
         return 5;
     }
+
+    @Override
+    public Tier getTier() {
+        return Tier.TWO;
+    }
 }

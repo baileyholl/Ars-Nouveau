@@ -10,6 +10,11 @@ public class AugmentAOE extends AbstractAugment {
 
     @Override
     public int getManaCost() {
-        return 0;
+        return 40;
+    }
+
+    @Override
+    public Tier getTier() {
+        return Tier.TWO;
     }
 }

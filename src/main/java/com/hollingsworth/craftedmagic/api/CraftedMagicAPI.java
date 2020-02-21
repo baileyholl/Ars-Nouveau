@@ -46,6 +46,7 @@ public class CraftedMagicAPI {
 
 
         spell_map.put(ModConfig.AugmentAccelerateID, new AugmentAccelerate());
+        spell_map.put(ModConfig.AugmentSplitID, new AugmentSplit());
         spell_map.put(ModConfig.AugmentAmplifyID, new AugmentAmplify());
         spell_map.put(ModConfig.AugmentAOEID, new AugmentAOE());
         spell_map.put(ModConfig.AugmentExtendTimeID, new AugmentExtendTime());

@@ -30,4 +30,9 @@ public class EffectLightning extends AbstractEffect {
     public int getManaCost() {
         return 50;
     }
+
+    @Override
+    public Tier getTier() {
+        return Tier.THREE;
+    }
 }

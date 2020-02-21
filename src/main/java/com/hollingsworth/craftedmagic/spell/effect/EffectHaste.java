@@ -35,4 +35,8 @@ public class EffectHaste extends AbstractEffect {
     }
 
 
+    @Override
+    public Tier getTier() {
+        return Tier.TWO;
+    }
 }

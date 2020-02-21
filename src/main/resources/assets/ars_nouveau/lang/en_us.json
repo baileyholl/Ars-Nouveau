@@ -1,0 +1,22 @@
+{
+	"itemGroup.ars_nouveau":"Ars Nouveau",
+	"item.ars_nouveau.novice_spell_book":"Novice Spell Book",
+	"item.ars_nouveau.apprentice_spell_book":"Apprentice Spell Book",
+	"item.ars_nouveau.archmage_spell_book":"Archmage Spell Book",
+
+
+	"item.ars_nouveau.archmage_robes":"Archmage Robes",
+	"item.ars_nouveau.archmage_leggings":"Archmage Leggings",
+	"item.ars_nouveau.archmage_boots":"Archmage Boots",
+	"item.ars_nouveau.archmage_hood":"Archmage Hood",
+
+	"item.ars_nouveau.novice_boots":"Novice Boots",
+	"item.ars_nouveau.novice_leggings":"Novice Leggings",
+	"item.ars_nouveau.novice_robes":"Novice Robes",
+	"item.ars_nouveau.novice_hood":"Novice Hood",
+
+	"item.ars_nouveau.apprentice_robes":"Apprentice Robes",
+	"item.ars_nouveau.apprentice_leggings":"Apprentice Leggings",
+	"item.ars_nouveau.apprentice_boots":"Apprentice Boots",
+	"item.ars_nouveau.apprentice_hood":"Apprentice Hood"
+}

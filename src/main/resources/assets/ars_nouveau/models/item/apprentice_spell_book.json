@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "ars_nouveau:items/spell_book"
+        "layer0": "ars_nouveau:items/apprentice_spell_book"
     }
 }

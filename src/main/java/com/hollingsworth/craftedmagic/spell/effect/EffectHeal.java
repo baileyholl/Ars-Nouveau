@@ -36,4 +36,9 @@ public class EffectHeal extends AbstractEffect {
     public int getManaCost() {
         return 30;
     }
+
+    @Override
+    public Tier getTier() {
+        return Tier.TWO;
+    }
 }

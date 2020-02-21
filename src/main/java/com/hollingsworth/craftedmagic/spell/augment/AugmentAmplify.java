@@ -10,6 +10,11 @@ public class AugmentAmplify extends AbstractAugment {
 
     @Override
     public int getManaCost() {
-        return 15;
+        return 20;
+    }
+
+    @Override
+    public Tier getTier() {
+        return Tier.TWO;
     }
 }

@@ -54,24 +54,23 @@ public class SpellBook extends Item implements ISpellTier {
      */
     public boolean itemInteractionForEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
         if(!playerIn.getEntityWorld().isRemote) {
-            System.out.println("Touched Entity");
-
-            ArrayList<AbstractSpellPart> spell_r = getCurrentRecipe(stack);
-            int totalCost = spell_r.stream().mapToInt(AbstractSpellPart::getManaCost).sum();
-            if(!spell_r.isEmpty()) {
-
-                ManaCapability.getMana(playerIn).ifPresent(mana -> {
-                    System.out.println(totalCost);
-                    if(totalCost <= mana.getCurrentMana() || playerIn.isCreative()) {
-                        SpellResolver resolver = new SpellResolver(spell_r);
-                        resolver.onCastOnEntity(stack, playerIn, target, hand);
-                        mana.removeMana(totalCost);
-                        System.out.println(mana.getCurrentMana());
-                    }else{
-                        System.out.println("Not enough mana");
-                    }
-                });
-            }
+            SpellResolver resolver = new SpellResolver(getCurrentRecipe(stack));
+            resolver.onCastOnEntity(stack, playerIn, target, hand);
+//            int totalCost = spell_r.stream().mapToInt(AbstractSpellPart::getManaCost).sum();
+//            if(!spell_r.isEmpty()) {
+//
+//                ManaCapability.getMana(playerIn).ifPresent(mana -> {
+//                    System.out.println(totalCost);
+//                    if(totalCost <= mana.getCurrentMana() || playerIn.isCreative()) {
+//                        SpellResolver resolver = new SpellResolver(spell_r);
+//                        resolver.onCastOnEntity(stack, playerIn, target, hand);
+//                        mana.removeMana(totalCost);
+//                        System.out.println(mana.getCurrentMana());
+//                    }else{
+//                        System.out.println("Not enough mana");
+//                    }
+//                });
+//            }
         }
         return false;
     }
@@ -105,35 +104,17 @@ public class SpellBook extends Item implements ISpellTier {
     @Override
     public ActionResultType onItemUse(ItemUseContext context) {
         World worldIn = context.getWorld();
-
-
         PlayerEntity playerIn = context.getPlayer();
         Hand handIn = context.getHand();
         BlockPos blockpos = context.getPos();
         BlockPos blockpos1 = blockpos.offset(context.getFace());
         ItemStack stack = playerIn.getHeldItem(handIn);
 
-        if(worldIn.isRemote || !stack.hasTag() || getMode(stack.getTag()) == 0 || playerIn.isSneaking()) return ActionResultType.PASS;
+        if(worldIn.isRemote || !stack.hasTag() || getMode(stack.getTag()) == 0 || playerIn.isSneaking()) return ActionResultType.FAIL;
 
         SpellResolver resolver = new SpellResolver(getCurrentRecipe(stack));
         resolver.onCastOnBlock(context);
-//        int totalCost = ManaUtil.calculateCost(spell_r);
-//        if(!spell_r.isEmpty()){
-//            ManaCapability.getMana(playerIn).ifPresent(mana -> {
-//                if ( (totalCost <= mana.getCurrentMana() || playerIn.isCreative())) {
-//                    SpellResolver resolver = new SpellResolver(spell_r);
-//                    resolver.onCastOnBlock(context);
-//                    mana.removeMana(totalCost);
-//
-//                    SoundEvent event = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, "cast_spell"));
-//                    worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, event, SoundCategory.BLOCKS,
-//                            4.0F, (1.0F + (worldIn.rand.nextFloat() - worldIn.rand.nextFloat()) * 0.2F) * 0.7F);
-//                }
-//            });
-//
-//        }
-
-        return ActionResultType.PASS;
+        return ActionResultType.SUCCESS;
     }
 
     public ArrayList<AbstractSpellPart> getCurrentRecipe(ItemStack stack){

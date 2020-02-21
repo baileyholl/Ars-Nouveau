@@ -29,6 +29,7 @@ public class MethodProjectile extends AbstractCastMethod {
 
     @Override
     public void onCast(ItemStack stack, PlayerEntity shooter, World world, ArrayList<AbstractAugment> augments) {
+        System.out.println("On Cast");
         EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, shooter, this.resolver);
         projectileSpell.shoot(shooter, shooter.rotationPitch, shooter.rotationYaw, 0.0F, 1.0f, 1.0F);
         world.addEntity(projectileSpell);
@@ -37,6 +38,13 @@ public class MethodProjectile extends AbstractCastMethod {
 
     @Override
     public void onCastOnBlock(ItemUseContext context, ArrayList<AbstractAugment> augments) {
+        System.out.println("On cast on block");
+        World world = context.getWorld();
+        PlayerEntity shooter = context.getPlayer();
+        EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, shooter, this.resolver);
+        projectileSpell.shoot(shooter, shooter.rotationPitch, shooter.rotationYaw, 0.0F, 1.0f, 1.0F);
+        world.addEntity(projectileSpell);
+        resolver.expendMana(shooter);
 
     }
 

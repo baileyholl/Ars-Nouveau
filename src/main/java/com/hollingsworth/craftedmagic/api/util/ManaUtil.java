@@ -21,9 +21,9 @@ public class ManaUtil {
 
                 ArrayList<AbstractAugment> augments = SpellRecipeUtil.getAugments(recipe, i);
                 cost += spell.getAdjustedManaCost(augments);
-                System.out.println(cost);
             }
         }
+//        System.out.println("Cost: " + cost);
         return cost;
     }
 

@@ -20,6 +20,7 @@ public class MethodSelf extends AbstractCastMethod {
 
     @Override
     public void onCast(ItemStack stack, PlayerEntity playerEntity, World world, ArrayList<AbstractAugment> augments) {
+        System.out.println("On Cast");
         resolver.onResolveEffect(playerEntity.getEntityWorld(), playerEntity, new EntityRayTraceResult(playerEntity));
         resolver.expendMana(playerEntity);
     }
@@ -27,15 +28,18 @@ public class MethodSelf extends AbstractCastMethod {
     @Override
     public void onCastOnBlock(ItemUseContext context, ArrayList<AbstractAugment> augments) {
 
+        resolver.onResolveEffect(context.getWorld(), context.getPlayer(), new EntityRayTraceResult(context.getPlayer()));
+        resolver.expendMana(context.getPlayer());
     }
 
     @Override
     public void onCastOnEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand, ArrayList<AbstractAugment> augments) {
-
+//        resolver.onResolveEffect(playerIn.world, playerIn, new EntityRayTraceResult(playerIn));
+//        resolver.expendMana(playerIn);
     }
 
     @Override
     public int getManaCost() {
-        return 0;
+        return 10;
     }
 }

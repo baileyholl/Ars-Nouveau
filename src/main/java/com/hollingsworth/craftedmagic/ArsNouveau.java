@@ -3,6 +3,7 @@ package com.hollingsworth.craftedmagic;
 import com.hollingsworth.craftedmagic.block.ModBlocks;
 import com.hollingsworth.craftedmagic.block.PhantomBlock;
 import com.hollingsworth.craftedmagic.block.PhantomBlockTile;
+import com.hollingsworth.craftedmagic.items.ModItems;
 import com.hollingsworth.craftedmagic.items.SpellBook;
 import com.hollingsworth.craftedmagic.network.Networking;
 import net.minecraft.block.Block;
@@ -31,10 +32,10 @@ public class ArsNouveau {
     public static Logger logger;
 
 
-    public static ItemGroup itemGroup = new ItemGroup("crafted_magic") {
+    public static ItemGroup itemGroup = new ItemGroup("ars_nouveau") {
         @Override
         public ItemStack createIcon() {
-            return Items.COBBLESTONE.getDefaultInstance();
+            return ModItems.spellBook.getDefaultInstance();
         }
     };
 

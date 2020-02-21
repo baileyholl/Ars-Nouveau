@@ -13,7 +13,7 @@ public class SpellUtil {
     }
     // https://github.com/SlimeKnights/TinkersConstruct/blob/1.12/src/main/java/slimeknights/tconstruct/library/utils/ToolHelper.java
     public static ImmutableList<BlockPos> calcAOEBlocks(PlayerEntity player, BlockPos origin, BlockRayTraceResult mop, int width, int height, int depth, int distance) {
-
+        System.out.println("Getting AOE blocks");
         // we know the block and we know which side of the block we're hitting. time to calculate the depth along the different axes
         int x, y, z;
         BlockPos start = origin;
