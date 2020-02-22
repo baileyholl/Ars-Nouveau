@@ -2,14 +2,13 @@ package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.google.common.collect.ImmutableList;
 import com.hollingsworth.craftedmagic.ModConfig;
+import com.hollingsworth.craftedmagic.api.spell.AbstractAugment;
 import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
 import com.hollingsworth.craftedmagic.api.util.LootUtil;
 import com.hollingsworth.craftedmagic.api.util.SpellUtil;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentAOE;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentExtract;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentFortune;
-import com.hollingsworth.craftedmagic.api.spell.AbstractAugment;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;

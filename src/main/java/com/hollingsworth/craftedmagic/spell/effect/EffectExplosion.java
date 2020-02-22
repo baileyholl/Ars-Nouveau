@@ -1,11 +1,11 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
-import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentDampen;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentAmplify;
-import com.hollingsworth.craftedmagic.spell.augment.AugmentExtract;
 import com.hollingsworth.craftedmagic.api.spell.AbstractAugment;
+import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentAmplify;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentDampen;
+import com.hollingsworth.craftedmagic.spell.augment.AugmentExtract;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;

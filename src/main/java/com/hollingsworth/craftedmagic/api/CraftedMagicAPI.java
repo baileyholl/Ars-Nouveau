@@ -4,9 +4,9 @@ import com.hollingsworth.craftedmagic.ModConfig;
 import com.hollingsworth.craftedmagic.api.spell.AbstractSpellPart;
 import com.hollingsworth.craftedmagic.spell.augment.*;
 import com.hollingsworth.craftedmagic.spell.effect.*;
+import com.hollingsworth.craftedmagic.spell.method.MethodProjectile;
 import com.hollingsworth.craftedmagic.spell.method.MethodSelf;
 import com.hollingsworth.craftedmagic.spell.method.MethodTouch;
-import com.hollingsworth.craftedmagic.spell.method.MethodProjectile;
 
 import java.util.HashMap;
 

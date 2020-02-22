@@ -1,7 +1,6 @@
 package com.hollingsworth.craftedmagic.client.particle;
 
 
-import com.hollingsworth.craftedmagic.ArsNouveau;
 import net.minecraft.client.particle.IParticleFactory;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.particles.ParticleType;

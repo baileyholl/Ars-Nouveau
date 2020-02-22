@@ -1,11 +1,9 @@
 package com.hollingsworth.craftedmagic.block;
 
-import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.IntNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
 
 public class PhantomBlockTile extends TileEntity implements ITickableTileEntity {
 

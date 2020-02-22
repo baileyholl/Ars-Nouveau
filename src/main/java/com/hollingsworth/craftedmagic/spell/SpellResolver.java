@@ -1,10 +1,10 @@
 package com.hollingsworth.craftedmagic.spell;
 
+import com.hollingsworth.craftedmagic.api.spell.AbstractCastMethod;
+import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
 import com.hollingsworth.craftedmagic.api.spell.AbstractSpellPart;
 import com.hollingsworth.craftedmagic.api.util.ManaUtil;
 import com.hollingsworth.craftedmagic.capability.ManaCapability;
-import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
-import com.hollingsworth.craftedmagic.api.spell.AbstractCastMethod;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;

@@ -16,12 +16,13 @@ public class ModCrafting {
     @ObjectHolder(ArsNouveau.MODID)
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class Recipes {
-        public static final IRecipeSerializer<BookUpgradeRecipe> BOOK_UPGRADE_RECIPE = Null();
+        public static IRecipeSerializer<BookUpgradeRecipe> BOOK_UPGRADE_RECIPE = Null();
 
         @SubscribeEvent
         public static void register(final RegistryEvent.Register<IRecipeSerializer<?>> event) {
+            BOOK_UPGRADE_RECIPE = new BookUpgradeRecipe.Serializer();
             event.getRegistry().registerAll(
-                    new BookUpgradeRecipe.Serializer().setRegistryName(new ResourceLocation(ArsNouveau.MODID, "book_upgrade"))
+                    BOOK_UPGRADE_RECIPE.setRegistryName(new ResourceLocation(ArsNouveau.MODID, "book_upgrade"))
             );
         }
     }

@@ -1,6 +1,7 @@
 package com.hollingsworth.craftedmagic;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 
 public class ClientProxy implements  IProxy {
@@ -14,6 +15,12 @@ public class ClientProxy implements  IProxy {
     public World getClientWorld() {
         return Minecraft.getInstance().world;
     }
+
+    @Override
+    public PlayerEntity getPlayer(){return Minecraft.getInstance().player;}
+
+    @Override
+    public Minecraft getMinecraft(){return Minecraft.getInstance();}
 
     //
 //    @Override

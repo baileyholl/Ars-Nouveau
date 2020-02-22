@@ -1,9 +1,9 @@
 package com.hollingsworth.craftedmagic.api.util;
 
+import com.hollingsworth.craftedmagic.api.spell.AbstractAugment;
 import com.hollingsworth.craftedmagic.api.spell.AbstractSpellPart;
 import com.hollingsworth.craftedmagic.armor.MagicArmor;
 import com.hollingsworth.craftedmagic.enchantment.EnchantmentRegistry;
-import com.hollingsworth.craftedmagic.api.spell.AbstractAugment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;

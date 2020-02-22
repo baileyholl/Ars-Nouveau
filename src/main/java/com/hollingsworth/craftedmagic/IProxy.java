@@ -1,7 +1,7 @@
 package com.hollingsworth.craftedmagic;
 
-import com.hollingsworth.craftedmagic.api.CraftedMagicAPI;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
 
 public interface IProxy {
@@ -10,4 +10,7 @@ public interface IProxy {
 
     World getClientWorld();
 
+    Minecraft getMinecraft();
+
+    PlayerEntity getPlayer();
 }

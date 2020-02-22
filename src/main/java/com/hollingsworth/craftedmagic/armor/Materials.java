@@ -1,7 +1,6 @@
 package com.hollingsworth.craftedmagic.armor;
 
 import com.hollingsworth.craftedmagic.ArsNouveau;
-
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.Items;

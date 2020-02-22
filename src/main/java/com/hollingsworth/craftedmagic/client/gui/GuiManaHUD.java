@@ -1,9 +1,7 @@
 package com.hollingsworth.craftedmagic.client.gui;
 
-import com.google.common.graph.Network;
 import com.hollingsworth.craftedmagic.capability.ManaCapability;
 import com.hollingsworth.craftedmagic.items.SpellBook;
-import com.hollingsworth.craftedmagic.network.Networking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.item.ItemStack;

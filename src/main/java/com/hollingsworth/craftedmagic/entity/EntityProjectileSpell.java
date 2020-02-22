@@ -1,8 +1,6 @@
 package com.hollingsworth.craftedmagic.entity;
 
 import com.hollingsworth.craftedmagic.ArsNouveau;
-import com.hollingsworth.craftedmagic.client.particle.WispParticleData;
-import com.hollingsworth.craftedmagic.client.particle.WispParticleType;
 import com.hollingsworth.craftedmagic.spell.SpellResolver;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;

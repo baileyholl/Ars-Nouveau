@@ -1,10 +1,10 @@
 package com.hollingsworth.craftedmagic.spell.effect;
 
 import com.hollingsworth.craftedmagic.ModConfig;
+import com.hollingsworth.craftedmagic.api.spell.AbstractAugment;
 import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
 import com.hollingsworth.craftedmagic.api.util.SpellUtil;
 import com.hollingsworth.craftedmagic.block.ModBlocks;
-import com.hollingsworth.craftedmagic.api.spell.AbstractAugment;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentAOE;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;

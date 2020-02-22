@@ -1,7 +1,7 @@
 [
 {
-  "modid": "examplemod",
-  "name": "Example Mod",
+  "modid": "ars_nouveau",
+  "name": "Ars Nouveau",
   "description": "Example placeholder mod.",
   "version": "${version}",
   "mcversion": "${mcversion}",

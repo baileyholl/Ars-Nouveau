@@ -2,14 +2,9 @@ package com.hollingsworth.craftedmagic.client.renderer.entity;
 
 
 import net.minecraft.client.renderer.entity.EntityRendererManager;
-
 import net.minecraft.client.renderer.entity.TippedArrowRenderer;
-import net.minecraft.client.renderer.tileentity.BeaconTileEntityRenderer;
 import net.minecraft.entity.projectile.ArrowEntity;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.BeaconTileEntity;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 public class RenderSpell extends TippedArrowRenderer {
     private final ResourceLocation entityTexture; // new ResourceLocation(ExampleMod.MODID, "textures/entity/spell_proj.png");

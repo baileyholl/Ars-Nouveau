@@ -2,7 +2,6 @@ package com.hollingsworth.craftedmagic.armor;
 
 import com.hollingsworth.craftedmagic.items.ModItems;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.IArmorMaterial;
 
 public class ApprenticeArmor extends MagicArmor{
     public ApprenticeArmor(EquipmentSlotType slot) {

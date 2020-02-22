@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 import com.hollingsworth.craftedmagic.crafting.ModCrafting;
 import com.hollingsworth.craftedmagic.items.SpellBook;
 import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ArmorItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.Ingredient;
@@ -13,7 +12,6 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 

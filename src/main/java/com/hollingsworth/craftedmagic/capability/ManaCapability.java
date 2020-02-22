@@ -35,6 +35,7 @@ public class ManaCapability {
     public static final ResourceLocation ID = new ResourceLocation(ArsNouveau.MODID, "mana");
 
     public static void register(){
+
         CapabilityManager.INSTANCE.register(IMana.class, new Capability.IStorage<IMana>() {
             @Nullable
             @Override
@@ -47,6 +48,7 @@ public class ManaCapability {
                 instance.setMana(((IntNBT) nbt).getInt());
             }
         }, () -> new Mana(null));
+        System.out.println("Finished Registering ManaCapability");
     }
 
     /**
@@ -79,7 +81,6 @@ public class ManaCapability {
         public static void attachCapabilities(final AttachCapabilitiesEvent<Entity> event) {
 
             if (event.getObject() instanceof PlayerEntity) {
-                System.out.println("Attaching mana!");
                 final Mana mana = new Mana((LivingEntity) event.getObject());
                 event.addCapability(ID, createProvider(mana));
             }
@@ -94,7 +95,6 @@ public class ManaCapability {
         public static void playerClone(final PlayerEvent.Clone event) {
             getMana(event.getOriginal()).ifPresent(oldMaxMana -> {
                 getMana(event.getPlayer()).ifPresent(newMaxHealth -> {
-                    System.out.println("Setting mana! ");
                     newMaxHealth.setMana(oldMaxMana.getCurrentMana());
                 });
             });

@@ -1,11 +1,11 @@
 package com.hollingsworth.craftedmagic.api.util;
 
 import com.google.common.collect.ImmutableList;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.*;
-import net.minecraft.world.World;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3i;
 
 public class SpellUtil {
     public static ImmutableList<BlockPos> calcAOEBlocks(PlayerEntity player, BlockPos origin, BlockRayTraceResult mop, int aoeBonus) {

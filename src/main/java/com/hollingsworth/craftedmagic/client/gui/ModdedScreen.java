@@ -1,6 +1,5 @@
 package com.hollingsworth.craftedmagic.client.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;

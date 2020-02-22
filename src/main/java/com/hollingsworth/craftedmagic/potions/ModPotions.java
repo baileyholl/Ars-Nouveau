@@ -1,11 +1,7 @@
 package com.hollingsworth.craftedmagic.potions;
 
 import com.hollingsworth.craftedmagic.ArsNouveau;
-import com.hollingsworth.craftedmagic.enchantment.ManaBoost;
-import com.hollingsworth.craftedmagic.enchantment.ManaRegenEnchantment;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.potion.Effect;
-import net.minecraft.potion.Potion;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

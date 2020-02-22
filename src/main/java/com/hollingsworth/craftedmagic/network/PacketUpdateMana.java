@@ -1,9 +1,7 @@
 package com.hollingsworth.craftedmagic.network;
 
+import com.hollingsworth.craftedmagic.ArsNouveau;
 import com.hollingsworth.craftedmagic.capability.ManaCapability;
-import com.hollingsworth.craftedmagic.client.gui.GuiSpellBook;
-import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -33,10 +31,10 @@ public class PacketUpdateMana {
 
     public void handle(Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(()->{
-            ManaCapability.getMana(Minecraft.getInstance().player).ifPresent(mana ->{
-                mana.setMana(this.mana);
-                mana.setMaxMana(this.maxMana);
-            });
+//            ManaCapability.getMana(ArsNouveau.proxy.getPlayer()).ifPresent(mana ->{
+//                mana.setMana(this.mana);
+//                mana.setMaxMana(this.maxMana);
+//            });
         } );
         ctx.get().setPacketHandled(true);
     }

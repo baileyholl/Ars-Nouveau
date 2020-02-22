@@ -1,8 +1,10 @@
 package com.hollingsworth.craftedmagic.client.gui;
 
 import com.hollingsworth.craftedmagic.ArsNouveau;
-import com.hollingsworth.craftedmagic.api.spell.AbstractSpellPart;
 import com.hollingsworth.craftedmagic.api.CraftedMagicAPI;
+import com.hollingsworth.craftedmagic.api.spell.AbstractCastMethod;
+import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
+import com.hollingsworth.craftedmagic.api.spell.AbstractSpellPart;
 import com.hollingsworth.craftedmagic.client.gui.buttons.CraftingButton;
 import com.hollingsworth.craftedmagic.client.gui.buttons.GlyphButton;
 import com.hollingsworth.craftedmagic.client.gui.buttons.GuiImageButton;
@@ -10,8 +12,6 @@ import com.hollingsworth.craftedmagic.client.gui.buttons.GuiSpellSlot;
 import com.hollingsworth.craftedmagic.items.SpellBook;
 import com.hollingsworth.craftedmagic.network.Networking;
 import com.hollingsworth.craftedmagic.network.PacketUpdateSpellbook;
-import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
-import com.hollingsworth.craftedmagic.api.spell.AbstractCastMethod;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;

@@ -1,7 +1,10 @@
 package com.hollingsworth.craftedmagic.items;
 
 import com.hollingsworth.craftedmagic.ArsNouveau;
-import com.hollingsworth.craftedmagic.armor.*;
+import com.hollingsworth.craftedmagic.armor.ApprenticeArmor;
+import com.hollingsworth.craftedmagic.armor.MagicArmor;
+import com.hollingsworth.craftedmagic.armor.MasterArmor;
+import com.hollingsworth.craftedmagic.armor.NoviceArmor;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;

@@ -1,7 +1,7 @@
 package com.hollingsworth.craftedmagic.api.util;
 
-import com.hollingsworth.craftedmagic.api.spell.AbstractSpellPart;
 import com.hollingsworth.craftedmagic.api.spell.AbstractAugment;
+import com.hollingsworth.craftedmagic.api.spell.AbstractSpellPart;
 
 import java.util.ArrayList;
 

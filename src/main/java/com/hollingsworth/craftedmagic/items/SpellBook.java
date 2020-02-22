@@ -1,14 +1,12 @@
 package com.hollingsworth.craftedmagic.items;
 
 import com.hollingsworth.craftedmagic.ArsNouveau;
-import com.hollingsworth.craftedmagic.api.spell.AbstractSpellPart;
 import com.hollingsworth.craftedmagic.api.CraftedMagicAPI;
+import com.hollingsworth.craftedmagic.api.spell.AbstractSpellPart;
 import com.hollingsworth.craftedmagic.api.spell.ISpellTier;
-import com.hollingsworth.craftedmagic.capability.ManaCapability;
 import com.hollingsworth.craftedmagic.network.Networking;
 import com.hollingsworth.craftedmagic.network.PacketOpenGUI;
 import com.hollingsworth.craftedmagic.spell.SpellResolver;
-
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -19,7 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.*;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
@@ -56,6 +54,9 @@ public class SpellBook extends Item implements ISpellTier {
         if(!playerIn.getEntityWorld().isRemote) {
             SpellResolver resolver = new SpellResolver(getCurrentRecipe(stack));
             resolver.onCastOnEntity(stack, playerIn, target, hand);
+                                SoundEvent event = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, "cast_spell"));
+                    playerIn.world.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, event, SoundCategory.BLOCKS,
+                            4.0F, (1.0F + (playerIn.world.rand.nextFloat() - playerIn.world.rand.nextFloat()) * 0.2F) * 0.7F);
 //            int totalCost = spell_r.stream().mapToInt(AbstractSpellPart::getManaCost).sum();
 //            if(!spell_r.isEmpty()) {
 //
@@ -95,6 +96,9 @@ public class SpellBook extends Item implements ISpellTier {
 
         SpellResolver resolver = new SpellResolver(getCurrentRecipe(stack));
         resolver.onCast(stack, playerIn, worldIn);
+        SoundEvent event = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, "cast_spell"));
+        playerIn.world.playSound( playerIn.posX, playerIn.posY, playerIn.posZ, event, SoundCategory.BLOCKS,
+                4.0F, 1.0f, false);
         return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
     }
 
