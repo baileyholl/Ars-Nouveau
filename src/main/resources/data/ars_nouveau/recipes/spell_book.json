@@ -11,7 +11,7 @@
             "item": "minecraft:writable_book"
         },
         {
-            "item": "minecraft:bone_meal"
+            "item": "minecraft:fishing_rod"
         },
         {
             "item": "minecraft:iron_pickaxe"
@@ -20,7 +20,16 @@
             "item": "minecraft:iron_sword"
         },
         {
+            "item": "minecraft:iron_shovel"
+        },
+        {
+            "item": "minecraft:iron_axe"
+        },
+        {
             "item": "minecraft:flint_and_steel"
+        },
+        {
+            "item": "minecraft:shears"
         }
     ],
     "result":

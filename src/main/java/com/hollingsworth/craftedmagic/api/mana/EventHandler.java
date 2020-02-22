@@ -25,14 +25,25 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void playerOnTick(TickEvent.PlayerTickEvent e){
-        if(e.player instanceof ServerPlayerEntity)
-            ManaCapability.getMana(e.player).ifPresent(mana ->{
-                mana.setMaxMana(ManaUtil.getMaxMana(e.player));
-                double regenPerSecond = 5 + ManaUtil.getArmorRegen(e.player);
-                if(mana.getCurrentMana() != mana.getMaxMana())
-                    mana.addMana((int)Math.ceil(regenPerSecond / 20.0));
-                Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()-> (ServerPlayerEntity) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana()));
+        if(e.player instanceof ServerPlayerEntity) {
+            ManaCapability.getMana(e.player).ifPresent(mana -> {
+                if (e.player.world.getGameTime() % 20 == 0) {
+                    double regenPerSecond = 5 + ManaUtil.getArmorRegen(e.player);
+                    if (mana.getCurrentMana() != mana.getMaxMana()) {
+                        mana.addMana((int) regenPerSecond);
+                        Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana()));
+                    }
+                }
             });
+
+            ManaCapability.getMana(e.player).ifPresent(mana -> {
+                mana.setMaxMana(ManaUtil.getMaxMana(e.player));
+                Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana()));
+            });
+
+
+        }
+
     }
 
     @SubscribeEvent

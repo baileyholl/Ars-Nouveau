@@ -44,7 +44,7 @@ public class ManaUtil {
         for(ItemStack i : e.getEquipmentAndArmor()){
             if(i.getItem() instanceof MagicArmor){
                 MagicArmor armor = ((MagicArmor) i.getItem());
-                regen += armor.getRegenBonus() + 5 * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, i);
+                regen += armor.getRegenBonus() + 2 * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, i);
             }
         }
         return regen;

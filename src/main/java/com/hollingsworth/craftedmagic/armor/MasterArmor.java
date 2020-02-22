@@ -15,6 +15,6 @@ public class MasterArmor  extends MagicArmor{
 
     @Override
     public int getRegenBonus() {
-        return 6;
+        return 3;
     }
 }

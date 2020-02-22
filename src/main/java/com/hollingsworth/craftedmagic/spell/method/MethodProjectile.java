@@ -23,7 +23,7 @@ public class MethodProjectile extends AbstractCastMethod {
 
     @Override
     public int getManaCost() {
-        return 10;
+        return 15;
     }
 
 

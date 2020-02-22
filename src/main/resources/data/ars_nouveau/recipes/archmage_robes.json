@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "xax",
+    "axa",
+    "xxx"
+  ],
+  "key":
+  {
+    "a":
+    {
+      "item": "minecraft:ender_pearl"
+    },
+    "x":
+    {
+      "item": "minecraft:popped_chorus_fruit"
+    }
+  },
+  "result":
+  {
+    "item": "ars_nouveau:archmage_robes",
+    "count": 1
+  }
+}

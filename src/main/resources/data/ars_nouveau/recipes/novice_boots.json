@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "   ",
+    "a a",
+    "x x"
+  ],
+  "key":
+  {
+    "a":
+    {
+      "item": "minecraft:redstone"
+    },
+    "x":
+    {
+      "item": "minecraft:brown_wool"
+    }
+  },
+  "result":
+  {
+    "item": "ars_nouveau:novice_boots",
+    "count": 1
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "   ",
+    "a a",
+    "x x"
+  ],
+  "key":
+  {
+    "a":
+    {
+      "item": "minecraft:blaze_powder"
+    },
+    "x":
+    {
+      "item": "minecraft:leather"
+    }
+  },
+  "result":
+  {
+    "item": "ars_nouveau:apprentice_boots",
+    "count": 1
+  }
+}
