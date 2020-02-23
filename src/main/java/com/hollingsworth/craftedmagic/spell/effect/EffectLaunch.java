@@ -11,9 +11,9 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 
-public class EffectFling extends AbstractEffect {
-    public EffectFling() {
-        super(ModConfig.EffectFlingID, "Fling");
+public class EffectLaunch extends AbstractEffect {
+    public EffectLaunch() {
+        super(ModConfig.EffectLaunchID, "Launch");
     }
 
     @Override

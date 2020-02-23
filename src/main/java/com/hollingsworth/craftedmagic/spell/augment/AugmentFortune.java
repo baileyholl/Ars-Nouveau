@@ -15,6 +15,6 @@ public class AugmentFortune extends AbstractAugment {
 
     @Override
     public Tier getTier() {
-        return Tier.THREE;
+        return Tier.TWO;
     }
 }

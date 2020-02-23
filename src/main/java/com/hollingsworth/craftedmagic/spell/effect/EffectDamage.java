@@ -30,7 +30,7 @@ public class EffectDamage extends AbstractEffect {
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
         if(rayTraceResult instanceof EntityRayTraceResult){
-            float damage = 5.0f + 2.0f * getAmplificationBonus(augments);
+            float damage = 5.0f + 5.0f * getAmplificationBonus(augments);
             Entity entity = ((EntityRayTraceResult) rayTraceResult).getEntity();
             if(entity instanceof MobEntity){
                 MobEntity mob = (MobEntity) entity;

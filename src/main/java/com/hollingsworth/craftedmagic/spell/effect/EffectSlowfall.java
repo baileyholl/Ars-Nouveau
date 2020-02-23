@@ -25,11 +25,11 @@ public class EffectSlowfall extends AbstractEffect {
 
     @Override
     public int getManaCost() {
-        return 10;
+        return 25;
     }
 
     @Override
     public Tier getTier() {
-        return Tier.TWO;
+        return Tier.ONE;
     }
 }

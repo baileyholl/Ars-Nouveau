@@ -21,19 +21,16 @@ import net.minecraft.world.server.ServerWorld;
 
 import java.util.ArrayList;
 
-public class EffectDig extends AbstractEffect {
+public class EffectBreak extends AbstractEffect {
 
-    public EffectDig() {
-        super(ModConfig.EffectDigID, "Dig");
+    public EffectBreak() {
+        super(ModConfig.EffectBreakID, "Break");
     }
 
     @Override
     public int getManaCost() {
         return 15;
     }
-
-
-
 
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {

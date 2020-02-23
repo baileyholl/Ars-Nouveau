@@ -25,9 +25,9 @@ public class PacketUpdateSpellbook{
 
     //Decoder
     public PacketUpdateSpellbook(PacketBuffer buf){
-        spellRecipe = buf.readString();
+        spellRecipe = buf.readString(32767);
         cast_slot = buf.readInt();
-        spellName = buf.readString();
+        spellName = buf.readString(32767);
     }
 
     //Encoder

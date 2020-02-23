@@ -199,7 +199,7 @@ public class EntityProjectileSpell extends ArrowEntity {
             }
         }
 
-        if (!world.isRemote && result instanceof BlockRayTraceResult) {
+        if (!world.isRemote && result instanceof BlockRayTraceResult && (world.getBlockState(((BlockRayTraceResult) result).getPos()).isSolid() ) ) {
             SoundEvent event = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, "resolve_spell"));
             world.playSound(null, this.posX, this.posY, this.posZ,
                     event, SoundCategory.BLOCKS,

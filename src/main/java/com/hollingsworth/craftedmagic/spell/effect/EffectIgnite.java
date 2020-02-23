@@ -38,11 +38,11 @@ public class EffectIgnite  extends AbstractEffect {
 
     @Override
     public int getManaCost() {
-        return 20;
+        return 15;
     }
 
     @Override
     public Tier getTier() {
-        return Tier.TWO;
+        return Tier.ONE;
     }
 }

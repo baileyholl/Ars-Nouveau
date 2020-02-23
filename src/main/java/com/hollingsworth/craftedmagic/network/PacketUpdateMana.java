@@ -31,10 +31,10 @@ public class PacketUpdateMana {
 
     public void handle(Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(()->{
-//            ManaCapability.getMana(ArsNouveau.proxy.getPlayer()).ifPresent(mana ->{
-//                mana.setMana(this.mana);
-//                mana.setMaxMana(this.maxMana);
-//            });
+            ManaCapability.getMana(ArsNouveau.proxy.getPlayer()).ifPresent(mana ->{
+                mana.setMana(this.mana);
+                mana.setMaxMana(this.maxMana);
+            });
         } );
         ctx.get().setPacketHandled(true);
     }

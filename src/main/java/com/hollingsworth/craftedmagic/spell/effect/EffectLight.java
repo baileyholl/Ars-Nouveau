@@ -31,6 +31,6 @@ public class EffectLight extends AbstractEffect {
 
     @Override
     public int getManaCost() {
-        return 20;
+        return 25;
     }
 }

@@ -87,7 +87,7 @@ public class GuiSpellBook extends ModdedScreen {
         addButton(spell_name);
 
         // Add spell slots
-        for(int i = 1; i <= 10; i++){
+        for(int i = 1; i <= 3; i++){
             GuiSpellSlot slot = new GuiSpellSlot(this,bookLeft + 261, bookTop - 3 + 15 * i, i);
             if(i == 1) {
                 selected_slot = slot;

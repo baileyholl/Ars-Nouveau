@@ -23,7 +23,7 @@ public class CraftedMagicAPI {
         spell_map.put(ModConfig.MethodTouchID, new MethodTouch());
         spell_map.put(ModConfig.MethodSelfID, new MethodSelf());
 
-        spell_map.put(ModConfig.EffectDigID, new EffectDig());
+        spell_map.put(ModConfig.EffectBreakID, new EffectBreak());
         spell_map.put(ModConfig.EffectDamageID, new EffectDamage());
         spell_map.put(ModConfig.EffectIgniteID, new EffectIgnite());
         spell_map.put(ModConfig.EffectPhantomBlockID, new EffectPhantomBlock());
@@ -34,7 +34,7 @@ public class CraftedMagicAPI {
         spell_map.put(ModConfig.EffectLightID, new EffectLight());
         spell_map.put(ModConfig.EffectDispelID, new EffectDispel());
         spell_map.put(ModConfig.EffectFreezeID, new EffectFreeze());
-        spell_map.put(ModConfig.EffectFlingID, new EffectFling());
+        spell_map.put(ModConfig.EffectLaunchID, new EffectLaunch());
         spell_map.put(ModConfig.EffectPullID, new EffectPull());
         spell_map.put(ModConfig.EffectBlinkID, new EffectBlink());
 //        spell_map.put(ModConfig.EffectJumpID, new EffectJump());

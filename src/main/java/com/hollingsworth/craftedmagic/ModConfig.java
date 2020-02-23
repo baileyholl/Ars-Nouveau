@@ -5,7 +5,7 @@ public class ModConfig {
     public static final String MethodTouchID = "touch";
     public static final String MethodSelfID = "self";
 
-    public static final String EffectDigID = "dig";
+    public static final String EffectBreakID = "break";
     public static final String EffectDamageID = "damage";
     public static final String EffectIgniteID = "ignite";
     public static final String EffectPhantomBlockID = "phantom_block";
@@ -16,7 +16,7 @@ public class ModConfig {
     public static final String EffectLightID = "light";
     public static final String EffectDispelID = "dispel";
     public static final String EffectFreezeID = "freeze";
-    public static final String EffectFlingID = "fling";
+    public static final String EffectLaunchID = "launch";
     public static final String EffectPullID = "pull";
     public static final String EffectBlinkID = "blink";
     public static final String EffectJumpID = "jump";

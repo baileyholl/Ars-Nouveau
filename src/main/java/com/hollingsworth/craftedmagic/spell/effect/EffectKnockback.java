@@ -23,7 +23,7 @@ public class EffectKnockback extends AbstractEffect {
 
             if(((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
                 LivingEntity target = (LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity();
-                int strength = 3 + getAmplificationBonus(augments);
+                float strength = 1.5f + getAmplificationBonus(augments);
                 knockback(target, shooter, strength);
             }
         }
@@ -40,6 +40,6 @@ public class EffectKnockback extends AbstractEffect {
 
     @Override
     public int getManaCost() {
-        return 10;
+        return 15;
     }
 }

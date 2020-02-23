@@ -34,7 +34,7 @@ public class EffectHeal extends AbstractEffect {
 
     @Override
     public int getManaCost() {
-        return 30;
+        return 40;
     }
 
     @Override

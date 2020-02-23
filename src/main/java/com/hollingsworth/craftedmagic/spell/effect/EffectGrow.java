@@ -55,7 +55,7 @@ public class EffectGrow  extends AbstractEffect {
 
     @Override
     public int getManaCost() {
-        return 30;
+        return 70;
     }
 
     @Override

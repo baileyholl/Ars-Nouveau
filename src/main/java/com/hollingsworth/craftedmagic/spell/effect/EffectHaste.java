@@ -31,12 +31,12 @@ public class EffectHaste extends AbstractEffect {
 
     @Override
     public int getManaCost() {
-        return 10;
+        return 30;
     }
 
 
     @Override
     public Tier getTier() {
-        return Tier.TWO;
+        return Tier.ONE;
     }
 }
