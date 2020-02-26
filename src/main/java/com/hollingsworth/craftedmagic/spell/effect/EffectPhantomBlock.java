@@ -7,6 +7,7 @@ import com.hollingsworth.craftedmagic.api.util.SpellUtil;
 import com.hollingsworth.craftedmagic.block.ModBlocks;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentAOE;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
@@ -29,7 +30,7 @@ public class EffectPhantomBlock extends AbstractEffect {
 
             for(BlockPos pos : SpellUtil.calcAOEBlocks((PlayerEntity) shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult, getBuffCount(augments, AugmentAOE.class))) {
                 pos = pos.offset(((BlockRayTraceResult) rayTraceResult).getFace());
-                if (world.getBlockState(pos).getBlock() == Blocks.AIR && world.func_217350_a(ModBlocks.PHANTOM_BLOCK.getDefaultState(), pos, ISelectionContext.dummy())) {
+                if (world.getBlockState(pos).getMaterial() == Material.AIR && world.func_217350_a(ModBlocks.PHANTOM_BLOCK.getDefaultState(), pos, ISelectionContext.dummy())) {
                     world.setBlockState(pos, ModBlocks.PHANTOM_BLOCK.getDefaultState());
                 }
             }

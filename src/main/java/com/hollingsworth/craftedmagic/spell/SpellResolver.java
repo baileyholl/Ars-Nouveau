@@ -15,6 +15,8 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.hollingsworth.craftedmagic.api.util.SpellRecipeUtil.getAugments;
@@ -49,12 +51,20 @@ public class SpellResolver {
             entity.sendMessage(new StringTextComponent("Invalid Spell."));
             return false;
         }
+        Set<AbstractSpellPart> testSet = new HashSet<>(spell_recipe.size());
+        for(AbstractSpellPart part : spell_recipe){
+            if(part instanceof AbstractEffect && !testSet.add(part)) {
+                entity.sendMessage(new StringTextComponent("No duplicate effects are allowed. Use Augments!"));
+                return false;
+            }
+        }
 
         int totalCost = ManaUtil.calculateCost(spell_recipe);
         AtomicBoolean canCast = new AtomicBoolean(false);
         ManaCapability.getMana(entity).ifPresent(mana -> {
             canCast.set(totalCost <= mana.getCurrentMana() || entity.isCreative());
-
+            if(!canCast.get())
+                entity.sendMessage(new StringTextComponent("Not enough mana."));
         });
         return canCast.get();
     }

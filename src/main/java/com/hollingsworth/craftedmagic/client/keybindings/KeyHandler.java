@@ -3,6 +3,7 @@ package com.hollingsworth.craftedmagic.client.keybindings;
 
 import com.hollingsworth.craftedmagic.ArsNouveau;
 import com.hollingsworth.craftedmagic.api.CraftedMagicAPI;
+import com.hollingsworth.craftedmagic.client.gui.GuiRadialMenu;
 import com.hollingsworth.craftedmagic.client.gui.GuiSpellBook;
 import com.hollingsworth.craftedmagic.items.SpellBook;
 import net.minecraft.client.Minecraft;
@@ -20,6 +21,15 @@ public class KeyHandler {
 
     @SubscribeEvent
     public static void clientTick(final TickEvent.ClientTickEvent event) {
+        while(ModKeyBindings.OPEN_CRAFTING_HUD.isKeyDown()){
+            if(MINECRAFT.currentScreen != null)
+                return;
+            ItemStack stack = MINECRAFT.player.getHeldItemMainhand();
+            if(stack.getItem() instanceof SpellBook && stack.hasTag()){
+                MINECRAFT.displayGuiScreen(new GuiRadialMenu(ModKeyBindings.OPEN_CRAFTING_HUD, stack.getTag()));
+            }
+        }
+
         if (event.phase != TickEvent.Phase.END) return;
 
         if (ModKeyBindings.OPEN_BOOK.isKeyDown()) {
@@ -29,5 +39,6 @@ public class KeyHandler {
                 GuiSpellBook.open(CraftedMagicAPI.getInstance(), tag, ((SpellBook) stack.getItem()).getTier().ordinal());
             }
         }
+
     }
 }

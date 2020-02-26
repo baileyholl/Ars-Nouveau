@@ -7,6 +7,7 @@ import com.hollingsworth.craftedmagic.api.util.SpellUtil;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentAOE;
 import com.hollingsworth.craftedmagic.spell.augment.AugmentExtendTime;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
@@ -28,9 +29,9 @@ public class EffectIgnite  extends AbstractEffect {
         if(rayTraceResult instanceof EntityRayTraceResult){
             int duration = 2 + 2*getBuffCount(augments, AugmentExtendTime.class);
             ((EntityRayTraceResult) rayTraceResult).getEntity().setFire(duration);
-        }else if(rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos().up()) == Blocks.AIR.getDefaultState()){
+        }else if(rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos().up()).getMaterial() == Material.AIR){
             for(BlockPos pos : SpellUtil.calcAOEBlocks((PlayerEntity) shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult, getBuffCount(augments, AugmentAOE.class))) {
-                if(world.getBlockState(pos.up()).getBlock() == Blocks.AIR)
+                if(world.getBlockState(pos.up()).getMaterial() == Material.AIR)
                     world.setBlockState(pos.up(), Blocks.FIRE.getDefaultState());
             }
         }

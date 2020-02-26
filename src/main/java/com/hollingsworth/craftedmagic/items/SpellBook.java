@@ -7,6 +7,10 @@ import com.hollingsworth.craftedmagic.api.spell.ISpellTier;
 import com.hollingsworth.craftedmagic.network.Networking;
 import com.hollingsworth.craftedmagic.network.PacketOpenGUI;
 import com.hollingsworth.craftedmagic.spell.SpellResolver;
+import com.mojang.blaze3d.platform.GlStateManager;
+import net.minecraft.block.Blocks;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -16,22 +20,32 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.PacketDistributor;
+import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+/**
+ * HUD from Botania ItemCraftingHalo
+ * Thank you Vazkii <3
+ * https://botaniamod.net/license.php
+ */
 public class SpellBook extends Item implements ISpellTier {
     public static final String BOOK_MODE_TAG = "mode";
-
+    public static final int SEGMENTS = 10;
     public SpellBook(){
         super(new Item.Properties().maxStackSize(1).group(ArsNouveau.itemGroup));
         //setUnlocalizedName(ExampleMod.MODID + ".spell_book");     // Used for localization (en_US.lang)
@@ -39,7 +53,9 @@ public class SpellBook extends Item implements ISpellTier {
 
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-        if(!worldIn.isRemote && worldIn.getGameTime() % 20 == 0 && !stack.hasTag()) {
+        if(!stack.hasTag())
+            stack.setTag(new CompoundNBT());
+        if(!worldIn.isRemote && worldIn.getGameTime() % 5 == 0 && !stack.hasTag()) {
             CompoundNBT tag = new CompoundNBT();
             tag.putInt(SpellBook.BOOK_MODE_TAG, 0);
             stack.setTag(tag);
@@ -51,27 +67,16 @@ public class SpellBook extends Item implements ISpellTier {
      * Returns true if the item can be used on the given entity, e.g. shears on sheep.
      */
     public boolean itemInteractionForEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
+        if(playerIn.world.isRemote)
+            spawnParticles(target.posX, target.posY + target.getHeight(), target.posZ, target.world);
+
         if(!playerIn.getEntityWorld().isRemote) {
             SpellResolver resolver = new SpellResolver(getCurrentRecipe(stack));
             resolver.onCastOnEntity(stack, playerIn, target, hand);
-                                SoundEvent event = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, "cast_spell"));
-                    playerIn.world.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, event, SoundCategory.BLOCKS,
+
+            SoundEvent event = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, "cast_spell"));
+            playerIn.world.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, event, SoundCategory.BLOCKS,
                             4.0F, (1.0F + (playerIn.world.rand.nextFloat() - playerIn.world.rand.nextFloat()) * 0.2F) * 0.7F);
-//            int totalCost = spell_r.stream().mapToInt(AbstractSpellPart::getManaCost).sum();
-//            if(!spell_r.isEmpty()) {
-//
-//                ManaCapability.getMana(playerIn).ifPresent(mana -> {
-//                    System.out.println(totalCost);
-//                    if(totalCost <= mana.getCurrentMana() || playerIn.isCreative()) {
-//                        SpellResolver resolver = new SpellResolver(spell_r);
-//                        resolver.onCastOnEntity(stack, playerIn, target, hand);
-//                        mana.removeMana(totalCost);
-//                        System.out.println(mana.getCurrentMana());
-//                    }else{
-//                        System.out.println("Not enough mana");
-//                    }
-//                });
-//            }
         }
         return false;
     }
@@ -82,7 +87,7 @@ public class SpellBook extends Item implements ISpellTier {
         if(worldIn.isRemote || !stack.hasTag()){
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
         }
-        System.out.println("Right click");
+
         if(getMode(stack.getTag()) == 0 && !playerIn.isSneaking() && playerIn instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = (ServerPlayerEntity) playerIn;
             Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->player), new PacketOpenGUI(stack.getTag(), getTier().ordinal()));
@@ -96,12 +101,20 @@ public class SpellBook extends Item implements ISpellTier {
 
         SpellResolver resolver = new SpellResolver(getCurrentRecipe(stack));
         resolver.onCast(stack, playerIn, worldIn);
-        SoundEvent event = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, "cast_spell"));
-        playerIn.world.playSound( playerIn.posX, playerIn.posY, playerIn.posZ, event, SoundCategory.BLOCKS,
-                4.0F, 1.0f, false);
-        return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
+
+
+        return new ActionResult<>(ActionResultType.SUCCESS, stack);
     }
 
+    public void spawnParticles(double posX, double posY, double posZ, World world){
+        for(int i =0; i < 5; i++) {
+            double d0 = posX + world.rand.nextFloat();
+            double d1 = posY + world.rand.nextFloat();
+            double d2 = posZ + world.rand.nextFloat();
+            world.addParticle(ParticleTypes.ENCHANTED_HIT, d0, d1, d2, 0.0, 0.1, 0.0);
+
+        }
+    }
     /*
     Called on block use. TOUCH ONLY
      */
@@ -113,11 +126,19 @@ public class SpellBook extends Item implements ISpellTier {
         BlockPos blockpos = context.getPos();
         BlockPos blockpos1 = blockpos.offset(context.getFace());
         ItemStack stack = playerIn.getHeldItem(handIn);
+        if(worldIn.isRemote){
+            SoundEvent event = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, "cast_spell"));
+            playerIn.world.playSound(playerIn, blockpos, event, SoundCategory.BLOCKS, 0.5F, 1.0f);
+            spawnParticles(blockpos.getX(),  blockpos.getY() + worldIn.getBlockState(blockpos)
+                    .getShape(worldIn, blockpos).getBoundingBox().maxY, blockpos.getZ(), worldIn);
+        }
+
 
         if(worldIn.isRemote || !stack.hasTag() || getMode(stack.getTag()) == 0 || playerIn.isSneaking()) return ActionResultType.FAIL;
 
         SpellResolver resolver = new SpellResolver(getCurrentRecipe(stack));
         resolver.onCastOnBlock(context);
+
         return ActionResultType.SUCCESS;
     }
 
@@ -127,7 +148,7 @@ public class SpellBook extends Item implements ISpellTier {
 
 
     private void changeMode(ItemStack stack) {
-        setMode(stack, (getMode(stack.getTag()) + 1) % 4);
+        setMode(stack.getTag(), (getMode(stack.getTag()) + 1) % 4);
     }
 
     public static ArrayList<AbstractSpellPart> getRecipeFromTag(CompoundNBT tag, int r_slot){
@@ -142,6 +163,8 @@ public class SpellBook extends Item implements ISpellTier {
         }
         return recipe;
     }
+
+
 
     public static void setSpellName(CompoundNBT tag, String name, int slot){
         tag.putString(slot + "_name", name);
@@ -167,8 +190,19 @@ public class SpellBook extends Item implements ISpellTier {
         return tag.getInt(SpellBook.BOOK_MODE_TAG);
     }
 
-    public void setMode(ItemStack stack, int mode){
-        stack.getTag().putInt(SpellBook.BOOK_MODE_TAG, mode);
+    public static void setMode(CompoundNBT tag, int mode){
+        tag.putInt(SpellBook.BOOK_MODE_TAG, mode);
+    }
+
+
+
+    private static final String TAG_ROTATION_BASE = "rotationBase";
+    private static float getRotationBase(CompoundNBT tag) {
+        return tag.getFloat(TAG_ROTATION_BASE);
+    }
+
+    private static void setRotationBase(CompoundNBT tag, float rotation) {
+        tag.putFloat(TAG_ROTATION_BASE, rotation);
     }
 
     @Override

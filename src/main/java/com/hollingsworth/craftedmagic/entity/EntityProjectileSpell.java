@@ -45,12 +45,7 @@ public class EntityProjectileSpell extends ArrowEntity {
     public void particles(){
 
         if(world.getGameTime() % 1 == 0)
-            for(int i =0; i < 20; i++){
-                double d0 = posX + world.rand.nextFloat();
-                double d1 = posY + world.rand.nextFloat() -1;
-                double d2 = posZ + world.rand.nextFloat();
-              //  world.addParticle(WispParticleData.wisp(0.25F + (float) Math.random() * 0.1F, (float) Math.random() * 0.25F, 0.75F + (float) Math.random() * 0.25F, (float) Math.random() * 0.25F, 1), d0, d1, d2, 0, 0, 0);
-            }
+
         for(int i =0; i < 2; i++){
             double d0 = posX; //+ world.rand.nextFloat();
             double d1 = posY;//+ world.rand.nextFloat() ;
@@ -217,25 +212,6 @@ public class EntityProjectileSpell extends ArrowEntity {
 
         }
     }
-
-    //    @Override
-//    protected void onImpact(RayTraceResult result) {
-//        if (!world.isRemote) {
-//            SoundEvent event = new SoundEvent(new ResourceLocation(ExampleMod.MODID, "resolve_spell"));
-//            world.playSound(null, this.posX, this.posY, this.posZ,
-//                    event, SoundCategory.BLOCKS,
-//                    4.0F, (1.0F + (this.world.rand.nextFloat()
-//                            - world.rand.nextFloat()) * 0.2F) * 0.7F);
-//
-//            if(this.spellResolver != null && result != null)
-//                this.spellResolver.onResolveEffect(this.world, this.getThrower(), result);
-//
-//            this.world.setEntityState(this, (byte)3);
-//            this.remove();
-//
-//        }
-//
-//    }
 
     public EntityProjectileSpell(FMLPlayMessages.SpawnEntity packet, World world){
         super(ModEntities.SPELL_PROJ, world);

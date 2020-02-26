@@ -2,14 +2,14 @@
   "cast_spell": {
     "category": "block",
     "sounds": [ {
-		"name":"modtut:cast_spell"
+		"name":"ars_nouveau:cast_spell"
 	}	
 	]
   },
   "resolve_spell": {
     "category": "block",
     "sounds": [ {
-		"name":"modtut:resolve_spell"
+		"name":"ars_nouveau:resolve_spell"
 	}	
 	]
   }

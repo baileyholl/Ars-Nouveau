@@ -15,6 +15,6 @@ public class ApprenticeArmor extends MagicArmor{
 
     @Override
     public int getRegenBonus() {
-        return 2;
+        return 4;
     }
 }

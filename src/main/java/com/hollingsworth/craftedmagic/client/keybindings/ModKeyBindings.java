@@ -22,9 +22,12 @@ public class ModKeyBindings {
     private static final String CATEGORY = "key.category.ars_nouveau.general";
 
     public static final KeyBinding OPEN_BOOK = new KeyBinding("key.ars_nouveau.open_book", KeyConflictContext.IN_GAME, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_C, CATEGORY);
+    public static final KeyBinding OPEN_CRAFTING_HUD = new KeyBinding("key.ars_nouveau.crafting_hud",
+            KeyConflictContext.IN_GAME, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_B, CATEGORY);
 
     @SubscribeEvent
     public static void registerKeyBindings(final FMLClientSetupEvent event) {
         ClientRegistry.registerKeyBinding(OPEN_BOOK);
+        ClientRegistry.registerKeyBinding(OPEN_CRAFTING_HUD);
     }
 }

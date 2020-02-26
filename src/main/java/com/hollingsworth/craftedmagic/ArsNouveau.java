@@ -1,5 +1,6 @@
 package com.hollingsworth.craftedmagic;
 
+import com.hollingsworth.craftedmagic.block.LightBlock;
 import com.hollingsworth.craftedmagic.block.ModBlocks;
 import com.hollingsworth.craftedmagic.block.PhantomBlock;
 import com.hollingsworth.craftedmagic.block.PhantomBlockTile;
@@ -70,6 +71,7 @@ public class ArsNouveau {
             // register a new block here
             LOGGER.info("HELLO from Register Block");
             blockRegistryEvent.getRegistry().register(new PhantomBlock());
+            blockRegistryEvent.getRegistry().register(new LightBlock());
 
         }
 
@@ -84,6 +86,7 @@ public class ArsNouveau {
             LOGGER.info("HELLO from Register Block");
           //  itemRegistryEvent.getRegistry().register(new SpellBook());
             itemRegistryEvent.getRegistry().register(new BlockItem(ModBlocks.PHANTOM_BLOCK, new Item.Properties()).setRegistryName("phantom_block"));
+            itemRegistryEvent.getRegistry().register(new BlockItem(ModBlocks.lightBlock, new Item.Properties()).setRegistryName("light_block"));
         }
     }
 }

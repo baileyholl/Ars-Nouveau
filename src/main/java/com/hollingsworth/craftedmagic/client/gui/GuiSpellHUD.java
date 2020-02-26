@@ -13,6 +13,7 @@ public class GuiSpellHUD extends AbstractGui {
     public void drawHUD() {
         ItemStack stack = minecraft.player.getHeldItemMainhand();
         if(stack != null && stack.getItem() instanceof SpellBook && stack.getTag() != null){
+            int offsetLeft = 10;
             CompoundNBT tag = stack.getTag();
             int mode = tag.getInt(SpellBook.BOOK_MODE_TAG);
             String renderString = "";
@@ -21,7 +22,7 @@ public class GuiSpellHUD extends AbstractGui {
             }else{
                 renderString = "Crafting Mode";
             }
-            minecraft.fontRenderer.drawStringWithShadow(renderString, 3, 3 , 0xFFFFFF);
+            minecraft.fontRenderer.drawStringWithShadow(renderString, offsetLeft, minecraft.mainWindow.getScaledHeight() - 30 , 0xFFFFFF);
         }
     }
 }

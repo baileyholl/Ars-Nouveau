@@ -15,6 +15,6 @@ public class AugmentAmplify extends AbstractAugment {
 
     @Override
     public Tier getTier() {
-        return Tier.TWO;
+        return Tier.ONE;
     }
 }

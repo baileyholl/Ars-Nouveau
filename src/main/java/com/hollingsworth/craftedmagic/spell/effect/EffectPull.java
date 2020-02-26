@@ -30,7 +30,7 @@ public class EffectPull extends AbstractEffect {
             double d2 = 1.0D + 0.5 * getAmplificationBonus(augments);
             //target.setMotion(target.getMotion().add(vec3d.normalize().scale(d2 * d2 * 0.1D)));
             target.setMotion(target.getMotion().add(vec3d.normalize().scale(d2 )));
-            target.move(MoverType.SELF, target.getMotion());
+            target.move(MoverType.PLAYER, target.getMotion());
         }
     }
 

@@ -37,6 +37,7 @@ public class HUDEventHandler {
 
         spellHUD.drawHUD();
         manaHUD.drawHUD();
+
     }
 
 //    @SubscribeEvent

@@ -35,6 +35,11 @@ public class Networking {
                 PacketUpdateMana::toBytes,
                 PacketUpdateMana::new,
                 PacketUpdateMana::handle);
+        INSTANCE.registerMessage(nextID(),
+                PacketSetBookMode.class,
+                PacketSetBookMode::toBytes,
+                PacketSetBookMode::new,
+                PacketSetBookMode::handle);
        // register(PacketOpenGUI.class, NetworkDirection.PLAY_TO_CLIENT);
       //  register(PacketUpdateSpellbook.class, NetworkDirection.PLAY_TO_SERVER);
     }
