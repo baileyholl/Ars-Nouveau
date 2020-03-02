@@ -25,12 +25,14 @@ public class EffectKnockback extends AbstractEffect {
                 LivingEntity target = (LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity();
                 float strength = 1.5f + getAmplificationBonus(augments);
                 knockback(target, shooter, strength);
+                target.velocityChanged = true;
             }
         }
     }
 
     public void knockback(LivingEntity target, LivingEntity entityKnockingAway, float strength){
         target.knockBack(entityKnockingAway, strength, (double) MathHelper.sin(entityKnockingAway.rotationYaw * ((float)Math.PI / 180F)), (double)(-MathHelper.cos(entityKnockingAway.rotationYaw * ((float)Math.PI / 180F))));
+
     }
 
     @Override

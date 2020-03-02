@@ -62,10 +62,16 @@ public class ModEntities {
                     EntityType.Builder.<EntityEvokerFangs>create(EntityEvokerFangs::new, EntityClassification.MISC)
                     .size(0.5F, 0.8F)
                     .setUpdateInterval(60));
+            final EntityType<EntityAllyVex> allyVex = build(
+                    "ally_vex",
+                    EntityType.Builder.<EntityAllyVex>create(EntityAllyVex::new, EntityClassification.MISC)
+                            .size(0.4F, 0.8F).immuneToFire()
+                            .setUpdateInterval(60));
 
             event.getRegistry().registerAll(
                     spell_proj,
-                    evokerFangs
+                    evokerFangs,
+                    allyVex
             );
             //ENT_PROJECTILE = registerEntity(EntityType.Builder.<EntityModProjectile>create(EntityClassification.MISC).setCustomClientFactory(EntityModProjectile::new).size(0.25F, 0.25F), "ent_projectile");
 

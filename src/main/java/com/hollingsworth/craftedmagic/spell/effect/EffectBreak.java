@@ -37,15 +37,9 @@ public class EffectBreak extends AbstractEffect {
         if(!world.isRemote && rayTraceResult instanceof BlockRayTraceResult){
             BlockPos pos = new BlockPos(((BlockRayTraceResult) rayTraceResult).getPos());
             BlockState state;
-            float maxHardness = 3.0f;
+            float maxHardness = 5.0f + 25 * getAmplificationBonus(augments);
             int buff = getAmplificationBonus(augments);
-            if(buff >= 3){
-                maxHardness = 50.0f + 25 * (getAmplificationBonus(augments) - 3);
-            }else if(buff == 2){
-                maxHardness = 23.0f;
-            }else if(buff == 1){
-                maxHardness = 5.0f;
-            }else if(buff == -1){
+            if(buff == -1){
                 maxHardness = 2.5f;
             }else if(buff == -2){
                 maxHardness = 1.0f;

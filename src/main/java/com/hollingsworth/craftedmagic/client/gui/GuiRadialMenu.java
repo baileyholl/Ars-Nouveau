@@ -1,14 +1,18 @@
 package com.hollingsworth.craftedmagic.client.gui;
 
+import com.hollingsworth.craftedmagic.ArsNouveau;
+import com.hollingsworth.craftedmagic.api.spell.AbstractCastMethod;
+import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
+import com.hollingsworth.craftedmagic.api.spell.AbstractSpellPart;
 import com.hollingsworth.craftedmagic.client.keybindings.ModKeyBindings;
 import com.hollingsworth.craftedmagic.items.SpellBook;
 import com.hollingsworth.craftedmagic.network.Networking;
 import com.hollingsworth.craftedmagic.network.PacketSetBookMode;
 import com.mojang.blaze3d.platform.GlStateManager;
-import javafx.geometry.Side;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderHelper;
@@ -17,14 +21,27 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.play.client.CInputPacket;
+import net.minecraft.network.play.client.CPlayerPacket;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.network.PacketDistributor;
 import org.lwjgl.opengl.GL11;
+
+import java.util.Collections;
+import java.util.List;
 
 @Mod.EventBusSubscriber(Dist.CLIENT)
 public class GuiRadialMenu extends Screen {
@@ -39,6 +56,12 @@ public class GuiRadialMenu extends Screen {
 
     private CompoundNBT tag;
     private int selectedItem;
+
+    @Override
+    public List<? extends IGuiEventListener> children() {
+        return Collections.emptyList();
+    }
+
 
     public GuiRadialMenu(KeyBinding keybinding, CompoundNBT book_tag) {
         super(new StringTextComponent(""));
@@ -62,19 +85,16 @@ public class GuiRadialMenu extends Screen {
         }
     }
 
-
-
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int state) {
-        super.mouseReleased(mouseX, mouseY, state);
-
-        return false;
+    public boolean shouldCloseOnEsc() {
+        return true;
     }
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
         super.render(mouseX, mouseY, partialTicks);
         //List<Category> categories = mainHandCategories();
+
         if (true) {
             final float OPEN_ANIMATION_LENGTH = 2.5f;
             long worldTime = Minecraft.getInstance().world.getGameTime();
@@ -85,7 +105,7 @@ public class GuiRadialMenu extends Screen {
             }
 
             float animProgress = MathHelper.clamp(openAnimation, 0, 1);
-            float radiusIn = Math.max(0.1f, 30 * animProgress);
+            float radiusIn = Math.max(0.1f, 45 * animProgress);
             float radiusOut = radiusIn * 2;
             float itemRadius = (radiusIn + radiusOut) * 0.5f;
             float animTop = (1 - animProgress) * height / 2.0f;
@@ -133,11 +153,9 @@ public class GuiRadialMenu extends Screen {
                 float s = (((i - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
                 float e = (((i + 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
                 if (selectedItem == i) {
-                    drawSlice(buffer, x, y, 10, radiusIn, radiusOut, s, e, 88, 148, 255, 245);
+                    drawSlice(buffer, x, y, 10, radiusIn, radiusOut, s, e, 63, 161, 191, 60);
                     hasMouseOver = true;
-
                     mousedOverSlot = selectedItem;
-
                 }
                 else
                     drawSlice(buffer, x, y, 10, radiusIn, radiusOut, s, e, 0, 0, 0, 64);
@@ -147,104 +165,58 @@ public class GuiRadialMenu extends Screen {
             GlStateManager.enableTexture();
 
             if (hasMouseOver && mousedOverSlot != -1) {
-                drawCenteredString(font, "Test", width/2,(height - font.FONT_HEIGHT) / 2,0xFFFFFFFF);
+                int adjusted =  (mousedOverSlot+ 6) % 10;
+                adjusted = adjusted == 0 ? 10 : adjusted;
+                drawCenteredString(font, SpellBook.getSpellName(tag,  adjusted), width/2,(height - font.FONT_HEIGHT) / 2,0xFFFFFFFF);
             }
             RenderHelper.enableGUIStandardItemLighting();
+            GlStateManager.popMatrix();
             for(int i = 0; i< numberOfSlices; i++){
                 ItemStack stack = new ItemStack(Blocks.DIRT);
                 float angle1 = ((i / (float) numberOfSlices) - 0.25f) * 2 * (float) Math.PI;
                 float posX = x - 8 + itemRadius * (float) Math.cos(angle1);
                 float posY = y - 8 + itemRadius * (float) Math.sin(angle1);
 
+                String resourceIcon = "";
+                String castType = "";
+                for(AbstractSpellPart p : SpellBook.getRecipeFromTag(tag, i +1)){
+                    if(p instanceof AbstractCastMethod)
+                        castType = p.getIcon();
 
-                this.itemRenderer.renderItemAndEffectIntoGUI(stack, (int) posX, (int) posY);
-                this.itemRenderer.renderItemOverlayIntoGUI(font, stack, (int) posX, (int) posY, String.valueOf(i + 1));
+                    if(p instanceof AbstractEffect){
+                        resourceIcon = p.getIcon();
+                        break;
+                    }
+                }
+                GlStateManager.disableRescaleNormal();
+                RenderHelper.disableStandardItemLighting();
+                GlStateManager.disableLighting();
+                GlStateManager.disableDepthTest();
+                if(!resourceIcon.isEmpty()) {
+                    GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/spells/" + resourceIcon), (int) posX, (int) posY, 0, 0, 16, 16, 16, 16);
+                    GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/spells/" + castType), (int) posX +3 , (int) posY - 10, 0, 0, 10, 10, 10, 10);
+
+
+                }
+                this.itemRenderer.renderItemOverlayIntoGUI(font, stack, (int) posX + 5, (int) posY, String.valueOf(i + 1));
 
             }
-//            if (selectedCategory != null) {
-//                int[] slotIndices = selectedCategory.slotIndices();
-//                for (int i = 0; i < slotIndices.length; i++) {
-//                    ItemStack inSlot = toolbox.getStackInSlot(slotIndices[i]);
-//                    if (inSlot.getCount() <= 0) {
-//                        float angle1 =
-//                                ((i / (float) selectedCategory.numberOfIndices()) + 0.25f) * 2 * (float) Math.PI;
-//                        float posX = x + itemRadius * (float) Math.cos(angle1);
-//                        float posY = y + itemRadius * (float) Math.sin(angle1);
-//                        drawCenteredString(
-//                                fontRenderer,
-//                                I18n.format("text.immersiveradialmenu.empty"),
-//                                (int)posX,
-//                                (int)posY - fontRenderer.FONT_HEIGHT / 2,
-//                                0x7FFFFFFF
-//                        );
-//                    }
-//                }
-//
-//                RenderHelper.enableGUIStandardItemLighting();
-//                for (int i = 0; i < slotIndices.length; i++) {
-//                    float angle1 = ((i / (float) selectedCategory.numberOfIndices()) + 0.25f) * 2 * (float) Math.PI;
-//                    float posX = x - 8 + itemRadius * (float) Math.cos(angle1);
-//                    float posY = y - 8 + itemRadius * (float) Math.sin(angle1);
-//                    ItemStack inSlot = toolbox.getStackInSlot(slotIndices[i]);
-//                    if (inSlot.getCount() > 0) {
-//                        this.itemRender.renderItemAndEffectIntoGUI(
-//                                inSlot,
-//                                (int) posX,
-//                                (int) posY
-//                        );
-//                        this.itemRender.renderItemOverlayIntoGUI(
-//                                this.fontRenderer,
-//                                inSlot,
-//                                (int) posX,
-//                                (int) posY,
-//                                ""
-//                        );
-//                    } else {
-//                        posX = x + itemRadius * (float) Math.cos(angle1);
-//                        posY = y + itemRadius * (float) Math.sin(angle1);
-//                        drawCenteredString(
-//                                fontRenderer,
-//                                I18n.format("text.immersiveradialmenu.empty"),
-//                                (int)posX,
-//                                (int)posY - fontRenderer.FONT_HEIGHT / 2,
-//                                0x7FFFFFFF
-//                        );
-//                    }
-//                }
-//                RenderHelper.disableStandardItemLighting();
-//            } else {
-//                RenderHelper.enableGUIStandardItemLighting();
-//                for (int i = 0; i < categories.size(); i++) {
-//                    float angle1 = ((i / (float) categories.size()) + 0.25f) * 2 * (float) Math.PI;
-//                    float posX = x - 8 + itemRadius * (float) Math.cos(angle1);
-//                    float posY = y - 8 + itemRadius * (float) Math.sin(angle1);
-//                    ItemStack icon = categories.get(i).icon();
-//                    if (icon != null) {
-//                        this.itemRender.renderItemAndEffectIntoGUI(
-//                                icon,
-//                                (int) posX,
-//                                (int) posY
-//                        );
-//                        this.itemRender.renderItemOverlayIntoGUI(
-//                                this.fontRenderer,
-//                                icon,
-//                                (int) posX,
-//                                (int) posY,
-//                                ""
-//                        );
-//                    }
-//                }
-//                RenderHelper.disableStandardItemLighting();
-//            }
-//
-            GlStateManager.popMatrix();
+
 
             if (mousedOverSlot != -1) {
-                int adjusted = (mousedOverSlot+ 6) % 10;
+                int adjusted = (mousedOverSlot + 6) % 10;
                 adjusted = adjusted == 0 ? 10 : adjusted;
                 selectedItem = adjusted;
-                renderTooltip("SLOT:" + adjusted, mouseX, mouseY);
             }
+//                String name = "";
+//                for(AbstractSpellPart p : SpellBook.getRecipeFromTag(tag, adjusted)){
+//                    if(p instanceof AbstractCastMethod){
+//                        name = p.getTag().toUpperCase();
+//                        break;
+//                    }
+//                }
+//                renderTooltip("SLOT:" + name, mouseX, mouseY);
+//            }
         }
     }
 

@@ -28,11 +28,8 @@ public class PacketUpdateBookGUI {
 
     public void handle(Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(()->{
-            if(Minecraft.getInstance().currentScreen instanceof GuiSpellBook){
+            if(Minecraft.getInstance().currentScreen instanceof GuiSpellBook)
                 ((GuiSpellBook) ArsNouveau.proxy.getMinecraft().currentScreen).spell_book_tag = tag;
-            }else{
-                System.out.println("Screen is not GuiSpellCreation!");
-            }
         } );
         ctx.get().setPacketHandled(true);
     }

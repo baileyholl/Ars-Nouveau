@@ -1,10 +1,12 @@
 package com.hollingsworth.craftedmagic.api.spell;
 
 import com.hollingsworth.craftedmagic.spell.augment.AugmentDampen;
+import net.minecraft.nbt.CompoundNBT;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
-public abstract class AbstractSpellPart implements ISpellTier{
+public abstract class AbstractSpellPart implements ISpellTier, Comparable<AbstractSpellPart> {
 
     public abstract int getManaCost();
     public String tag;
@@ -39,9 +41,12 @@ public abstract class AbstractSpellPart implements ISpellTier{
 
     public String getBookDescription(){return this.description;}
 
-    public ISpellTier.Tier getTier(){
+    public ISpellTier.Tier getTier() {
         return ISpellTier.Tier.ONE;
     }
 
-
+    @Override
+    public int compareTo(AbstractSpellPart o) {
+        return this.getTier().ordinal() - o.getTier().ordinal();
+    }
 }

@@ -24,7 +24,7 @@ public class CraftedMagicAPI {
         spell_map.put(ModConfig.MethodSelfID, new MethodSelf());
 
         spell_map.put(ModConfig.EffectBreakID, new EffectBreak());
-        spell_map.put(ModConfig.EffectDamageID, new EffectDamage());
+        spell_map.put(ModConfig.EffectHarmID, new EffectHarm());
         spell_map.put(ModConfig.EffectIgniteID, new EffectIgnite());
         spell_map.put(ModConfig.EffectPhantomBlockID, new EffectPhantomBlock());
         spell_map.put(ModConfig.EffectHealID, new EffectHeal());
@@ -44,7 +44,7 @@ public class CraftedMagicAPI {
         spell_map.put(ModConfig.EffectShieldID, new EffectShield());
         spell_map.put(ModConfig.EffectAquatic, new EffectAquatic());
         spell_map.put(ModConfig.EffectFangsID, new EffectFangs());
-
+        spell_map.put(ModConfig.EffectSummonVexID, new EffectSummonVex());
 
         spell_map.put(ModConfig.AugmentAccelerateID, new AugmentAccelerate());
         spell_map.put(ModConfig.AugmentSplitID, new AugmentSplit());

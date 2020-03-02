@@ -1,7 +1,9 @@
 package com.hollingsworth.craftedmagic.entity;
 
 import com.hollingsworth.craftedmagic.ArsNouveau;
+import com.hollingsworth.craftedmagic.items.SpellBook;
 import com.hollingsworth.craftedmagic.spell.SpellResolver;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -185,6 +187,7 @@ public class EntityProjectileSpell extends ArrowEntity {
     @Override
     protected void onHit(RayTraceResult result) {
         //super.onHit(result);
+
         if(!world.isRemote && result.getType() == RayTraceResult.Type.ENTITY) {
             if (((EntityRayTraceResult) result).getEntity().equals(this.getShooter())) return;
             if(this.spellResolver != null && result != null) {
@@ -192,14 +195,15 @@ public class EntityProjectileSpell extends ArrowEntity {
                 this.world.setEntityState(this, (byte)3);
                 this.remove();
             }
+
+        }
+        if(world.isRemote && result instanceof BlockRayTraceResult){
+            SpellBook.spawnParticles(result.getHitVec().x, result.getHitVec().y, result.getHitVec().z, world);
         }
 
-        if (!world.isRemote && result instanceof BlockRayTraceResult && (world.getBlockState(((BlockRayTraceResult) result).getPos()).isSolid() ) ) {
-            SoundEvent event = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, "resolve_spell"));
-            world.playSound(null, this.posX, this.posY, this.posZ,
-                    event, SoundCategory.BLOCKS,
-                    4.0F, (1.0F + (this.world.rand.nextFloat()
-                            - world.rand.nextFloat()) * 0.2F) * 0.7F);
+        if (!world.isRemote && result instanceof BlockRayTraceResult) {
+           if(!world.getBlockState(((BlockRayTraceResult) result).getPos()).getMaterial().isSolid())
+               return;
             BlockRayTraceResult blockraytraceresult = (BlockRayTraceResult)result;
 //            BlockState blockstate = this.world.getBlockState(blockraytraceresult.getPos());
 //            System.out.println(blockstate.getBlock());

@@ -23,9 +23,9 @@ import net.minecraft.world.storage.loot.LootTable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EffectDamage extends AbstractEffect {
+public class EffectHarm extends AbstractEffect {
 
-    public EffectDamage() {super(ModConfig.EffectDamageID, "Damage" ); }
+    public EffectHarm() {super(ModConfig.EffectHarmID, "Harm" ); }
 
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {

@@ -45,6 +45,7 @@ public class PacketUpdateSpellbook{
                     CompoundNBT tag = stack.hasTag() ? stack.getTag() : new CompoundNBT();
                     SpellBook.setRecipe(tag, spellRecipe, cast_slot);
                     SpellBook.setSpellName(tag, spellName, cast_slot);
+                    SpellBook.setMode(tag, cast_slot);
                     stack.setTag(tag);
                     Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->ctx.get().getSender()), new PacketUpdateBookGUI(tag));
                 }

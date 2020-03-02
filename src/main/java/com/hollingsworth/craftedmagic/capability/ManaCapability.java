@@ -5,6 +5,7 @@ import com.hollingsworth.craftedmagic.api.mana.IMana;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.IntNBT;
 import net.minecraft.util.Direction;
@@ -15,7 +16,10 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.terraingen.WorldTypeEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -40,12 +44,19 @@ public class ManaCapability {
             @Nullable
             @Override
             public INBT writeNBT(Capability<IMana> capability, IMana instance, Direction side) {
-                return new IntNBT(instance.getCurrentMana());
+                CompoundNBT tag = new CompoundNBT();
+                tag.putInt("current", instance.getCurrentMana());
+                tag.putInt("max", instance.getMaxMana());
+                return tag;
             }
 
             @Override
             public void readNBT(Capability<IMana> capability, IMana instance, Direction side, INBT nbt) {
-                instance.setMana(((IntNBT) nbt).getInt());
+                if(!(nbt instanceof CompoundNBT))
+                    return;
+                CompoundNBT tag = (CompoundNBT)nbt;
+                instance.setMaxMana(tag.getInt("max"));
+                instance.setMana(tag.getInt("current"));
             }
         }, () -> new Mana(null));
         System.out.println("Finished Registering ManaCapability");
@@ -94,11 +105,13 @@ public class ManaCapability {
         @SubscribeEvent
         public static void playerClone(final PlayerEvent.Clone event) {
             getMana(event.getOriginal()).ifPresent(oldMaxMana -> {
-                getMana(event.getPlayer()).ifPresent(newMaxHealth -> {
-                    newMaxHealth.setMana(oldMaxMana.getCurrentMana());
+                getMana(event.getPlayer()).ifPresent(newMaxMana -> {
+                    newMaxMana.setMaxMana(oldMaxMana.getMaxMana());
+                    newMaxMana.setMana(oldMaxMana.getCurrentMana());
                 });
             });
         }
+        
 
         /**
          * Synchronise a player's mana to watching clients when they change dimensions.

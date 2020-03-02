@@ -4,6 +4,7 @@ import com.hollingsworth.craftedmagic.ArsNouveau;
 import com.hollingsworth.craftedmagic.api.CraftedMagicAPI;
 import com.hollingsworth.craftedmagic.api.spell.AbstractSpellPart;
 import com.hollingsworth.craftedmagic.api.spell.ISpellTier;
+import com.hollingsworth.craftedmagic.client.keybindings.ModKeyBindings;
 import com.hollingsworth.craftedmagic.network.Networking;
 import com.hollingsworth.craftedmagic.network.PacketOpenGUI;
 import com.hollingsworth.craftedmagic.spell.SpellResolver;
@@ -24,6 +25,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -67,16 +69,13 @@ public class SpellBook extends Item implements ISpellTier {
      * Returns true if the item can be used on the given entity, e.g. shears on sheep.
      */
     public boolean itemInteractionForEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
-        if(playerIn.world.isRemote)
-            spawnParticles(target.posX, target.posY + target.getHeight(), target.posZ, target.world);
+//        if(playerIn.world.isRemote)
+//            spawnParticles(target.posX, target.posY + target.getHeight(), target.posZ, target.world);
 
         if(!playerIn.getEntityWorld().isRemote) {
             SpellResolver resolver = new SpellResolver(getCurrentRecipe(stack));
             resolver.onCastOnEntity(stack, playerIn, target, hand);
 
-            SoundEvent event = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, "cast_spell"));
-            playerIn.world.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, event, SoundCategory.BLOCKS,
-                            4.0F, (1.0F + (playerIn.world.rand.nextFloat() - playerIn.world.rand.nextFloat()) * 0.2F) * 0.7F);
         }
         return false;
     }
@@ -85,18 +84,19 @@ public class SpellBook extends Item implements ISpellTier {
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
         if(worldIn.isRemote || !stack.hasTag()){
+            //spawnParticles(playerIn.posX, playerIn.posY + 2, playerIn.posZ, worldIn);
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
         }
 
-        if(getMode(stack.getTag()) == 0 && !playerIn.isSneaking() && playerIn instanceof ServerPlayerEntity) {
+        if(getMode(stack.getTag()) == 0 && playerIn instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = (ServerPlayerEntity) playerIn;
             Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->player), new PacketOpenGUI(stack.getTag(), getTier().ordinal()));
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
         }
-        if (playerIn.isSneaking() && stack.hasTag()){
-            changeMode(stack);
-            return new ActionResult<>(ActionResultType.SUCCESS, stack);
-        }
+//        if (playerIn.isSneaking() && stack.hasTag()){
+//            changeMode(stack);
+//            return new ActionResult<>(ActionResultType.SUCCESS, stack);
+//        }
 
 
         SpellResolver resolver = new SpellResolver(getCurrentRecipe(stack));
@@ -106,12 +106,16 @@ public class SpellBook extends Item implements ISpellTier {
         return new ActionResult<>(ActionResultType.SUCCESS, stack);
     }
 
-    public void spawnParticles(double posX, double posY, double posZ, World world){
+    public static void spawnParticles(double posX, double posY, double posZ, World world){
+        BlockPos pos = new BlockPos(posX, posY, posZ);
+        VoxelShape shape = world.getBlockState(pos).getShape(world, pos);
+        double yOffset = 0.0;
+        yOffset = shape.isEmpty() ? yOffset : shape.getBoundingBox().maxY/2;
         for(int i =0; i < 5; i++) {
             double d0 = posX + world.rand.nextFloat();
-            double d1 = posY + world.rand.nextFloat();
+            double d1 = posY + world.rand.nextFloat() + yOffset;
             double d2 = posZ + world.rand.nextFloat();
-            world.addParticle(ParticleTypes.ENCHANTED_HIT, d0, d1, d2, 0.0, 0.1, 0.0);
+            world.addParticle(ParticleTypes.POOF, d0, d1, d2, 0.0, 0.1, 0.0);
 
         }
     }
@@ -120,22 +124,22 @@ public class SpellBook extends Item implements ISpellTier {
      */
     @Override
     public ActionResultType onItemUse(ItemUseContext context) {
+
         World worldIn = context.getWorld();
         PlayerEntity playerIn = context.getPlayer();
         Hand handIn = context.getHand();
         BlockPos blockpos = context.getPos();
         BlockPos blockpos1 = blockpos.offset(context.getFace());
         ItemStack stack = playerIn.getHeldItem(handIn);
-        if(worldIn.isRemote){
-            SoundEvent event = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, "cast_spell"));
-            playerIn.world.playSound(playerIn, blockpos, event, SoundCategory.BLOCKS, 0.5F, 1.0f);
-            spawnParticles(blockpos.getX(),  blockpos.getY() + worldIn.getBlockState(blockpos)
-                    .getShape(worldIn, blockpos).getBoundingBox().maxY, blockpos.getZ(), worldIn);
+        if(getMode(stack.getTag()) == 0 && playerIn instanceof ServerPlayerEntity) {
+            ServerPlayerEntity player = (ServerPlayerEntity) playerIn;
+            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->player), new PacketOpenGUI(stack.getTag(), getTier().ordinal()));
+            return ActionResultType.SUCCESS;
         }
-
-
-        if(worldIn.isRemote || !stack.hasTag() || getMode(stack.getTag()) == 0 || playerIn.isSneaking()) return ActionResultType.FAIL;
-
+        if(worldIn.isRemote || !stack.hasTag() || getMode(stack.getTag()) == 0 ) {
+          //  spawnParticles(blockpos.getX(), blockpos.getY(), blockpos.getZ(), worldIn);
+            return ActionResultType.FAIL;
+        }
         SpellResolver resolver = new SpellResolver(getCurrentRecipe(stack));
         resolver.onCastOnBlock(context);
 
@@ -171,6 +175,8 @@ public class SpellBook extends Item implements ISpellTier {
     }
 
     public static String getSpellName(CompoundNBT tag, int slot){
+        if(slot == 0)
+            return "Create Mode";
         return tag.getString( slot+ "_name");
     }
 
@@ -210,8 +216,10 @@ public class SpellBook extends Item implements ISpellTier {
     public void addInformation(final ItemStack stack, @Nullable final World world, final List<ITextComponent> tooltip, final ITooltipFlag flag) {
         super.addInformation(stack, world, tooltip, flag);
         if(stack != null && stack.hasTag()) {
-            CompoundNBT tag = stack.getTag();
             tooltip.add(new StringTextComponent(SpellBook.getSpellName(stack.getTag())));
+            tooltip.add(new StringTextComponent("Press " + ModKeyBindings.OPEN_SPELL_SELECTION.getKeyBinding().getLocalizedName() + " to quick select"));
+            tooltip.add(new StringTextComponent("Press " + ModKeyBindings.OPEN_BOOK.getKeyBinding().getLocalizedName() + " to quick craft"));
+
         }
     }
 
@@ -219,4 +227,6 @@ public class SpellBook extends Item implements ISpellTier {
     public Tier getTier() {
         return Tier.ONE;
     }
+
+
 }

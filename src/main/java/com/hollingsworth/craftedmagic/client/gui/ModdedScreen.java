@@ -48,13 +48,6 @@ public class ModdedScreen extends Screen {
     }
     final void drawTooltip(int mouseX, int mouseY) {
         if(tooltip != null) {
-
-//            List<String> tooltip = this.getTooltipFromItem(tooltipStack);
-//            Pair<BookEntry, Integer> provider = book.contents.getEntryForStack(tooltipStack);
-//            if(provider != null && (!(this instanceof GuiBookEntry) || ((GuiBookEntry) this).entry != provider.getLeft())) {
-//                tooltip.add(TextFormatting.GOLD + "(" + I18n.format("patchouli.gui.lexicon.shift_for_recipe") + ')');
-//            }
-            //GuiUtils.preItemToolTip(tooltipStack);
             FontRenderer font = Minecraft.getInstance().fontRenderer;
             this.renderTooltip(tooltip, mouseX, mouseY, (font == null ? this.font : font));
 

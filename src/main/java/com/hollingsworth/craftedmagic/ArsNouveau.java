@@ -1,9 +1,6 @@
 package com.hollingsworth.craftedmagic;
 
-import com.hollingsworth.craftedmagic.block.LightBlock;
-import com.hollingsworth.craftedmagic.block.ModBlocks;
-import com.hollingsworth.craftedmagic.block.PhantomBlock;
-import com.hollingsworth.craftedmagic.block.PhantomBlockTile;
+import com.hollingsworth.craftedmagic.block.*;
 import com.hollingsworth.craftedmagic.items.ModItems;
 import com.hollingsworth.craftedmagic.network.Networking;
 import net.minecraft.block.Block;
@@ -64,29 +61,5 @@ public class ArsNouveau {
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
     // Event bus for receiving Registry Events)
-    @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
-    public static class RegistryEvents {
-        @SubscribeEvent
-        public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
-            // register a new block here
-            LOGGER.info("HELLO from Register Block");
-            blockRegistryEvent.getRegistry().register(new PhantomBlock());
-            blockRegistryEvent.getRegistry().register(new LightBlock());
 
-        }
-
-        @SubscribeEvent
-        public static void onTileEntityRegistry(final RegistryEvent.Register<TileEntityType<?>> event){
-            event.getRegistry().register(TileEntityType.Builder.create(PhantomBlockTile::new, ModBlocks.PHANTOM_BLOCK).build(null).setRegistryName("phantom_block"));
-        }
-
-        @SubscribeEvent
-        public static void onItemsRegistry(final RegistryEvent.Register<Item> itemRegistryEvent) {
-            // register a new block here
-            LOGGER.info("HELLO from Register Block");
-          //  itemRegistryEvent.getRegistry().register(new SpellBook());
-            itemRegistryEvent.getRegistry().register(new BlockItem(ModBlocks.PHANTOM_BLOCK, new Item.Properties()).setRegistryName("phantom_block"));
-            itemRegistryEvent.getRegistry().register(new BlockItem(ModBlocks.lightBlock, new Item.Properties()).setRegistryName("light_block"));
-        }
-    }
 }

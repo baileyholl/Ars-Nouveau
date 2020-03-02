@@ -21,9 +21,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class GuiSpellBook extends ModdedScreen {
 
@@ -39,7 +37,7 @@ public class GuiSpellBook extends ModdedScreen {
     private int offsetFromScreenLeft;
     private int offsetFromScreenTop;
     private int selected_cast_slot;
-    TextFieldWidget spell_name;
+    public TextFieldWidget spell_name;
     public CompoundNBT spell_book_tag;
     public GuiSpellSlot selected_slot;
     public int max_spell_tier; // Used to load spells that are appropriate tier
@@ -57,14 +55,15 @@ public class GuiSpellBook extends ModdedScreen {
     @Override
     public void init() {
         super.init();
-
+        this.minecraft.keyboardListener.enableRepeatEvents(true);
         // DEBUG
         offsetFromScreenLeft = (width - FULL_WIDTH) / 2;
         offsetFromScreenTop = (height - FULL_HEIGHT) / 2;
         bookLeft = width / 2 - FULL_WIDTH / 2;
         bookTop = height / 2 - FULL_HEIGHT / 2;
         bookRight = width / 2 + FULL_WIDTH / 2;
-
+        int selected_slot_ind = SpellBook.getMode(spell_book_tag);
+        if(selected_slot_ind == 0) selected_slot_ind = 1;
         int bookBottom = height / 2 + FULL_HEIGHT / 2;
 
         //Crafting slots
@@ -77,35 +76,38 @@ public class GuiSpellBook extends ModdedScreen {
             addButton(cell);
             craftingCells.add(cell);
         }
-        updateCraftingSlots(1);
+        updateCraftingSlots(selected_slot_ind);
 
         addSpellParts();
         addButton(new GuiImageButton(bookRight - 70, bookBottom - 28, 0,0,46, 18, 46, 18, "textures/gui/create_button.png", this::onCreateClick));
         spell_name = new TextFieldWidget(minecraft.fontRenderer, bookLeft + 16, bookTop + FULL_HEIGHT - 25, 115, 12, null, "Spell Name");
         spell_name.setText(SpellBook.getSpellName(spell_book_tag, 1));
+        if(spell_name.getText().isEmpty())
+            spell_name.setSuggestion("My Spell");
 //
         addButton(spell_name);
-
         // Add spell slots
-        for(int i = 1; i <= 3; i++){
+        for(int i = 1; i <= 10; i++){
             GuiSpellSlot slot = new GuiSpellSlot(this,bookLeft + 261, bookTop - 3 + 15 * i, i);
-            if(i == 1) {
+            if(i == selected_slot_ind) {
                 selected_slot = slot;
                 slot.isSelected = true;
             }
             addButton(slot);
         }
-
     }
 
     public void addSpellParts(){
         Set<String> keys = this.api.spell_map.keySet();
+        ArrayList<AbstractSpellPart> all_spells = new ArrayList<>(this.api.spell_map.values());
+        Collections.sort(all_spells);
+
         //Adding spell parts
         int numCast = 0;
         int numEffect = 0;
         int numAugment = 0;
-        for(String key  : keys){
-            AbstractSpellPart spell = this.api.spell_map.get(key);
+        for(AbstractSpellPart key  : all_spells){
+            AbstractSpellPart spell = this.api.spell_map.get(key.tag);
             GlyphButton cell;
             if(spell.getTier().ordinal() > max_spell_tier)
                 continue; //Skip spells too high of a tier
@@ -232,6 +234,11 @@ public class GuiSpellBook extends ModdedScreen {
      */
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
+        if(spell_name.getText().isEmpty()) {
+            spell_name.setSuggestion("My Spell Name");
+        }else
+            spell_name.setSuggestion("");
+
         GlStateManager.pushMatrix();
         if(scaleFactor != 1) {
             GlStateManager.scalef(scaleFactor, scaleFactor, scaleFactor);

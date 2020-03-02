@@ -3,12 +3,34 @@ package com.hollingsworth.craftedmagic.client.gui;
 import com.hollingsworth.craftedmagic.items.SpellBook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.FocusableGui;
+import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 
+import java.util.Collections;
+import java.util.List;
 
-public class GuiSpellHUD extends AbstractGui {
+
+public class GuiSpellHUD extends FocusableGui implements IGuiEventListener {
     private static final Minecraft minecraft = Minecraft.getInstance();
+
+    @Override
+    public List<? extends IGuiEventListener> children() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
+        System.out.println("Memes");
+        return false;
+    }
+
+    @Override
+    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
+        System.out.println("Extra meme");
+        return false;
+    }
 
     public void drawHUD() {
         ItemStack stack = minecraft.player.getHeldItemMainhand();

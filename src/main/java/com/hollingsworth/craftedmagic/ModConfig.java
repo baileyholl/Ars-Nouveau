@@ -6,7 +6,7 @@ public class ModConfig {
     public static final String MethodSelfID = "self";
 
     public static final String EffectBreakID = "break";
-    public static final String EffectDamageID = "damage";
+    public static final String EffectHarmID = "harm";
     public static final String EffectIgniteID = "ignite";
     public static final String EffectPhantomBlockID = "phantom_block";
     public static final String EffectGrowID = "grow";
@@ -26,6 +26,7 @@ public class ModConfig {
     public static final String EffectSlowfallID = "slowfall";
     public static final String EffectShieldID = "shield";
     public static final String EffectFangsID = "fangs";
+    public static final String EffectSummonVexID = "summon_vex";
 
     public static final String AugmentAccelerateID = "accelerate";
     public static final String AugmentExtendTimeID = "extend_time";
@@ -36,4 +37,5 @@ public class ModConfig {
     public static final String AugmentExtractID = "extract";
     public static final String AugmentFortuneID = "fortune";
     public static final String AugmentSplitID = "split";
+
 }
