@@ -1,12 +1,15 @@
 package com.hollingsworth.craftedmagic.block;
 
+import com.hollingsworth.craftedmagic.api.util.BlockUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.IProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.Property;
@@ -18,6 +21,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
@@ -34,6 +38,19 @@ public class ManaCondenserBlock extends Block {
     @Override
     public boolean hasTileEntity(BlockState state) {
         return true;
+    }
+
+
+    @Override
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+        if(worldIn.isRemote)
+            return;
+        if(BlockUtil.containsStateInRadius(worldIn, pos, 5, ManaCondenserBlock.class)){
+            ((ManaCondenserTile)worldIn.getTileEntity(pos)).isDisabled = true;
+            if(placer != null)
+                placer.sendMessage(new StringTextComponent("Another condenser is nearby..."));
+        }
     }
 
     @Nullable
@@ -62,6 +79,7 @@ public class ManaCondenserBlock extends Block {
     public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if(worldIn.isRemote)
             return true;
+        System.out.println(((AbstractManaTile)worldIn.getTileEntity(pos)).getCurrentMana());
 
         return true;
     }

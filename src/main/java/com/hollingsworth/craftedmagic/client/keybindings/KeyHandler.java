@@ -2,18 +2,16 @@ package com.hollingsworth.craftedmagic.client.keybindings;
 
 
 import com.hollingsworth.craftedmagic.ArsNouveau;
-import com.hollingsworth.craftedmagic.api.CraftedMagicAPI;
+import com.hollingsworth.craftedmagic.api.ArsNouveauAPI;
 import com.hollingsworth.craftedmagic.client.gui.GuiRadialMenu;
 import com.hollingsworth.craftedmagic.client.gui.GuiSpellBook;
 import com.hollingsworth.craftedmagic.items.SpellBook;
 import com.hollingsworth.craftedmagic.network.Networking;
 import com.hollingsworth.craftedmagic.network.PacketUpdateSpellbook;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -69,7 +67,7 @@ public class KeyHandler {
             }
             ItemStack stack = MINECRAFT.player.getHeldItemMainhand();
             if(stack.getItem() instanceof SpellBook && stack.hasTag() && MINECRAFT.currentScreen == null){
-                GuiSpellBook.open(CraftedMagicAPI.getInstance(), stack.getTag(), ((SpellBook) stack.getItem()).getTier().ordinal());
+                GuiSpellBook.open(ArsNouveauAPI.getInstance(), stack.getTag(), ((SpellBook) stack.getItem()).getTier().ordinal());
             }
         }
     }

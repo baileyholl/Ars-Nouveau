@@ -71,17 +71,17 @@ public class SpellResolver {
 
     public void onCast(ItemStack stack, PlayerEntity playerEntity, World world){
         if(canCast(playerEntity))
-            castType.onCast(stack, playerEntity, world, getAugments(spell_recipe, 0));
+            castType.onCast(stack, playerEntity, world, getAugments(spell_recipe, 0, playerEntity));
     }
 
     public void onCastOnBlock(ItemUseContext context){
         if(canCast(context.getPlayer()))
-            castType.onCastOnBlock(context, getAugments(spell_recipe, 0));
+            castType.onCastOnBlock(context, getAugments(spell_recipe, 0, context.getPlayer()));
     }
 
     public void onCastOnEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand){
         if(canCast(playerIn))
-            castType.onCastOnEntity(stack, playerIn, target, hand, getAugments(spell_recipe, 0));
+            castType.onCastOnEntity(stack, playerIn, target, hand, getAugments(spell_recipe, 0, playerIn));
     }
 
 
@@ -90,7 +90,7 @@ public class SpellResolver {
         for(int i = 0; i < spell_recipe.size(); i++){
             AbstractSpellPart spell = spell_recipe.get(i);
             if(spell instanceof AbstractEffect){
-                ((AbstractEffect) spell).onResolve(result, world, shooter, getAugments(spell_recipe, i));
+                ((AbstractEffect) spell).onResolve(result, world, shooter, getAugments(spell_recipe, i, (PlayerEntity) shooter));
             }
         }
     }

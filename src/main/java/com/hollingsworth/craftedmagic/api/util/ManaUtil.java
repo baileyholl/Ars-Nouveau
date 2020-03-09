@@ -1,5 +1,6 @@
 package com.hollingsworth.craftedmagic.api.util;
 
+import com.hollingsworth.craftedmagic.api.mana.IManaEquipment;
 import com.hollingsworth.craftedmagic.api.spell.AbstractAugment;
 import com.hollingsworth.craftedmagic.api.spell.AbstractSpellPart;
 import com.hollingsworth.craftedmagic.armor.MagicArmor;
@@ -19,7 +20,7 @@ public class ManaUtil {
             AbstractSpellPart spell = recipe.get(i);
             if (!(spell instanceof AbstractAugment)) {
 
-                ArrayList<AbstractAugment> augments = SpellRecipeUtil.getAugments(recipe, i);
+                ArrayList<AbstractAugment> augments = SpellRecipeUtil.getAugments(recipe, i, null);
                 cost += spell.getAdjustedManaCost(augments);
             }
         }
@@ -30,9 +31,9 @@ public class ManaUtil {
     public static int getMaxMana(PlayerEntity e){
         AtomicInteger max = new AtomicInteger(100);
         e.getEquipmentAndArmor().forEach(i->{
-            if(i.getItem() instanceof MagicArmor){
+            if(i.getItem() instanceof IManaEquipment){
                 //max.addAndGet(((MagicArmor) i.getItem()).getMaxManaBonus());
-                int newMax = max.get() +((MagicArmor) i.getItem()).getMaxManaBonus() + 25 * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, i);
+                int newMax = max.get() +((MagicArmor) i.getItem()).getMaxManaBoost() + 25 * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, i);
                 max.set(newMax);
             }
         });
@@ -42,9 +43,9 @@ public class ManaUtil {
     public static int getArmorRegen(PlayerEntity e) {
         int regen = 0;
         for(ItemStack i : e.getEquipmentAndArmor()){
-            if(i.getItem() instanceof MagicArmor){
+            if(i.getItem() instanceof IManaEquipment){
                 MagicArmor armor = ((MagicArmor) i.getItem());
-                regen += armor.getRegenBonus() + 2 * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, i);
+                regen += armor.getManaRegenBonus() + 2 * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, i);
             }
         }
         return regen;

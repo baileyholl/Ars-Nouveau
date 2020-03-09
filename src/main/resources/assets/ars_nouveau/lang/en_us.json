@@ -19,8 +19,15 @@
 	"item.ars_nouveau.apprentice_leggings":"Apprentice Leggings",
 	"item.ars_nouveau.apprentice_boots":"Apprentice Boots",
 	"item.ars_nouveau.apprentice_hood":"Apprentice Hood",
+
+	"item.ars_nouveau.ring_of_amplify": "Ring of Amplify",
+
+
 	"block.ars_nouveau.light_block": "Light",
 	"block.ars_nouveau.phantom_block": "Phantom Block",
+	"block.ars_nouveau.mana_condenser": "Mana Condenser",
+	"block.ars_nouveau.mana_jar": "Mana Jar",
+
 
 	"enchantment.ars_nouveau.mana_boost": "Mana Boost",
 	"enchantment.ars_nouveau.mana_regen": "Mana Regen"

@@ -7,7 +7,9 @@ buildscript {
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
+
 }
+
 apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
@@ -84,13 +86,32 @@ minecraft {
         }
     }
 }
+repositories {
+    maven {
+        url = "https://maven.theillusivec4.top/"
+    }
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        // location of a maven mirror for JEI files, as a fallback
+        name = "ModMaven"
+        url = "https://modmaven.k-4u.nl"
+    }
+}
 
 dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.14.4-28.1.0'
+    compileOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.11:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.11")
 
+    compileOnly fg.deobf("top.theillusivec4.curios:curios:FORGE-1.14.4-1.0.2:api")
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios:FORGE-1.14.4-1.0.2")
     // You may put jars on which you depend on in ./libs or you may define them like so..
     // compile "some.group:artifact:version:classifier"
     // compile "some.group:artifact:version"
@@ -104,18 +125,19 @@ dependencies {
 
     // These dependencies get remapped to your current MCP mappings
     // deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+ //   compileOnly fg.deobf("top.theillusivec4.curios:curios:FORGE-1.14.4-1.0.2:api")
 
     // For more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
 }
+
 
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
     manifest {
         attributes([
-            "Specification-Title": "examplemod",
+            "Specification-Title": "ArsNouveau",
             "Specification-Vendor": "examplemodsareus",
             "Specification-Version": "1", // We are version 1 of ourselves
             "Implementation-Title": project.name,

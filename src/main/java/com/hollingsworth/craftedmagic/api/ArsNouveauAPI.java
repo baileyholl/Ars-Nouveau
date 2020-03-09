@@ -10,14 +10,20 @@ import com.hollingsworth.craftedmagic.spell.method.MethodTouch;
 
 import java.util.HashMap;
 
-public class CraftedMagicAPI {
-    private static CraftedMagicAPI craftedMagicAPI = null;
+public class ArsNouveauAPI {
+    private static ArsNouveauAPI arsNouveauAPI = null;
 
-    public HashMap<String, AbstractSpellPart> spell_map;
+    private HashMap<String, AbstractSpellPart> spell_map;
 
+    public AbstractSpellPart registerSpell(String id, AbstractSpellPart part){
+        return spell_map.put(id, part);
+    }
 
+    public HashMap<String, AbstractSpellPart> getSpell_map() {
+        return spell_map;
+    }
 
-    private CraftedMagicAPI(){
+    private ArsNouveauAPI(){
         spell_map = new HashMap<>();
         spell_map.put(ModConfig.MethodProjectileID, new MethodProjectile());
         spell_map.put(ModConfig.MethodTouchID, new MethodTouch());
@@ -57,10 +63,10 @@ public class CraftedMagicAPI {
         spell_map.put(ModConfig.AugmentFortuneID, new AugmentFortune());
     }
 
-    public static CraftedMagicAPI getInstance(){
-        if(craftedMagicAPI == null)
-            craftedMagicAPI = new CraftedMagicAPI();
-        return craftedMagicAPI;
+    public static ArsNouveauAPI getInstance(){
+        if(arsNouveauAPI == null)
+            arsNouveauAPI = new ArsNouveauAPI();
+        return arsNouveauAPI;
     }
 
 

@@ -1,7 +1,7 @@
 package com.hollingsworth.craftedmagic.client.gui;
 
 import com.hollingsworth.craftedmagic.ArsNouveau;
-import com.hollingsworth.craftedmagic.api.CraftedMagicAPI;
+import com.hollingsworth.craftedmagic.api.ArsNouveauAPI;
 import com.hollingsworth.craftedmagic.api.spell.AbstractCastMethod;
 import com.hollingsworth.craftedmagic.api.spell.AbstractEffect;
 import com.hollingsworth.craftedmagic.api.spell.AbstractSpellPart;
@@ -33,7 +33,7 @@ public class GuiSpellBook extends ModdedScreen {
     public int bookTop;
     public int bookRight;
     public SpellBook spellBook;
-    public CraftedMagicAPI api;
+    public ArsNouveauAPI api;
     private int offsetFromScreenLeft;
     private int offsetFromScreenTop;
     private int selected_cast_slot;
@@ -43,7 +43,7 @@ public class GuiSpellBook extends ModdedScreen {
     public int max_spell_tier; // Used to load spells that are appropriate tier
     List<CraftingButton> craftingCells;
 
-    public GuiSpellBook(CraftedMagicAPI api, CompoundNBT tag, int tier) {
+    public GuiSpellBook(ArsNouveauAPI api, CompoundNBT tag, int tier) {
         super(new StringTextComponent(""));
         this.api = api;
         selected_cast_slot = 1;
@@ -98,8 +98,8 @@ public class GuiSpellBook extends ModdedScreen {
     }
 
     public void addSpellParts(){
-        Set<String> keys = this.api.spell_map.keySet();
-        ArrayList<AbstractSpellPart> all_spells = new ArrayList<>(this.api.spell_map.values());
+        Set<String> keys = this.api.getSpell_map().keySet();
+        ArrayList<AbstractSpellPart> all_spells = new ArrayList<>(this.api.getSpell_map().values());
         Collections.sort(all_spells);
 
         //Adding spell parts
@@ -107,7 +107,7 @@ public class GuiSpellBook extends ModdedScreen {
         int numEffect = 0;
         int numAugment = 0;
         for(AbstractSpellPart key  : all_spells){
-            AbstractSpellPart spell = this.api.spell_map.get(key.tag);
+            AbstractSpellPart spell = this.api.getSpell_map().get(key.tag);
             GlyphButton cell;
             if(spell.getTier().ordinal() > max_spell_tier)
                 continue; //Skip spells too high of a tier
@@ -187,7 +187,7 @@ public class GuiSpellBook extends ModdedScreen {
 
     }
 
-    public static void open(CraftedMagicAPI api, CompoundNBT spell_book_tag, int tier){ Minecraft.getInstance().displayGuiScreen(new GuiSpellBook(api, spell_book_tag, tier)); }
+    public static void open(ArsNouveauAPI api, CompoundNBT spell_book_tag, int tier){ Minecraft.getInstance().displayGuiScreen(new GuiSpellBook(api, spell_book_tag, tier)); }
 
     final void drawScreenAfterScale(int mouseX, int mouseY, float partialTicks) {
         resetTooltip();

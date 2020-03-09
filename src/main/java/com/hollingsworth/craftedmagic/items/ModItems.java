@@ -5,6 +5,7 @@ import com.hollingsworth.craftedmagic.armor.ApprenticeArmor;
 import com.hollingsworth.craftedmagic.armor.MagicArmor;
 import com.hollingsworth.craftedmagic.armor.MasterArmor;
 import com.hollingsworth.craftedmagic.armor.NoviceArmor;
+import com.hollingsworth.craftedmagic.items.curios.RingOfAmplify;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
@@ -54,6 +55,7 @@ public class ModItems {
             final MagicArmor masterChest = new MasterArmor(EquipmentSlotType.CHEST);
             final MagicArmor masterHead = new MasterArmor(EquipmentSlotType.HEAD);
 
+            final RingOfAmplify ringOfAmplify = new RingOfAmplify();
             final Item[] items = {
                     noviceBoots.setRegistryName("novice_boots"),
                     novicePants.setRegistryName("novice_leggings"),
@@ -69,7 +71,8 @@ public class ModItems {
                     masterHead.setRegistryName("archmage_hood"),
                     spellBook.setRegistryName("novice_spell_book"),
                     apprenticeSpellBook.setRegistryName("apprentice_spell_book"),
-                    archmageSpellBook.setRegistryName("archmage_spell_book")
+                    archmageSpellBook.setRegistryName("archmage_spell_book"),
+                    ringOfAmplify.setRegistryName("ring_of_amplify")
             };
             final IForgeRegistry<Item> registry = event.getRegistry();
 

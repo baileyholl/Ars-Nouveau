@@ -1,6 +1,13 @@
 
 {
   "variants": {
-    "": { "model": "ars_nouveau:block/light_block" }
+    "stage=1": { "model": "ars_nouveau:block/light_block/light_spell_block1" },
+	"stage=2": { "model": "ars_nouveau:block/light_block/light_spell_block2" },
+	"stage=3": { "model": "ars_nouveau:block/light_block/light_spell_block3" },
+	"stage=4": { "model": "ars_nouveau:block/light_block/light_spell_block4" },
+	"stage=5": { "model": "ars_nouveau:block/light_block/light_spell_block5" },
+	"stage=6": { "model": "ars_nouveau:block/light_block/light_spell_block6" },
+	"stage=7": { "model": "ars_nouveau:block/light_block/light_spell_block7" },
+	"stage=8": { "model": "ars_nouveau:block/light_block/light_spell_block8" }
   }
 }

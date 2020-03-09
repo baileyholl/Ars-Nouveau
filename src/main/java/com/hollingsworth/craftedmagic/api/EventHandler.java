@@ -1,4 +1,4 @@
-package com.hollingsworth.craftedmagic.api.mana;
+package com.hollingsworth.craftedmagic.api;
 
 import com.hollingsworth.craftedmagic.ArsNouveau;
 import com.hollingsworth.craftedmagic.api.util.ManaUtil;

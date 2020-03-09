@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 public class ManaJar extends Block {
 
     public static final IProperty fill = IntegerProperty.create("fill", 0, 10);
+
     public ManaJar() {
         super(Block.Properties.create(Material.ROCK).sound(SoundType.STONE).hardnessAndResistance(0.0f));
         setRegistryName("mana_jar");
@@ -40,14 +41,11 @@ public class ManaJar extends Block {
 
     @Override
     public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.TRANSLUCENT;
+        return BlockRenderLayer.CUTOUT;
     }
-
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<net.minecraft.block.Block, BlockState> builder) {
-        builder.add(ManaJar.fill);
-    }
+    protected void fillStateContainer(StateContainer.Builder<net.minecraft.block.Block, BlockState> builder) { builder.add(ManaJar.fill); }
 
     @Nullable
     @Override
@@ -59,6 +57,7 @@ public class ManaJar extends Block {
     public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if(worldIn.isRemote)
             return true;
+        System.out.println(((AbstractManaTile)worldIn.getTileEntity(pos)).getCurrentMana());
 
         return true;
     }

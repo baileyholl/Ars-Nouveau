@@ -1,6 +1,7 @@
 package com.hollingsworth.craftedmagic.block;
 
 import com.hollingsworth.craftedmagic.ArsNouveau;
+import com.hollingsworth.craftedmagic.items.ModItems;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -8,6 +9,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ObjectHolder;
 
 import static net.minecraft.world.biome.Biome.LOGGER;
@@ -19,6 +21,9 @@ public class ModBlocks {
 
     @ObjectHolder(ArsNouveau.MODID + ":light_block")
     public static LightBlock lightBlock;
+
+    @ObjectHolder(ArsNouveau.MODID + ":light_block")
+    public static TileEntityType<LightTile> LIGHT_TILE;
 
     @ObjectHolder(ArsNouveau.MODID + ":phantom_block")
     public static TileEntityType<PhantomBlockTile> PHANTOM_TILE;
@@ -54,6 +59,7 @@ public class ModBlocks {
             event.getRegistry().register(TileEntityType.Builder.create(PhantomBlockTile::new, ModBlocks.PHANTOM_BLOCK).build(null).setRegistryName("phantom_block"));
             event.getRegistry().register(TileEntityType.Builder.create(ManaCondenserTile::new, ModBlocks.MANA_CONDENSER).build(null).setRegistryName("mana_condenser"));
             event.getRegistry().register(TileEntityType.Builder.create(ManaJarTile::new, ModBlocks.MANA_JAR).build(null).setRegistryName("mana_jar"));
+            event.getRegistry().register(TileEntityType.Builder.create(LightTile::new, ModBlocks.lightBlock).build(null).setRegistryName("light_block"));
         }
 
         @SubscribeEvent
@@ -61,11 +67,11 @@ public class ModBlocks {
             // register a new block here
             LOGGER.info("HELLO from Register Block");
             //  itemRegistryEvent.getRegistry().register(new SpellBook());
-            itemRegistryEvent.getRegistry().register(new BlockItem(ModBlocks.PHANTOM_BLOCK, new Item.Properties()).setRegistryName("phantom_block"));
-            itemRegistryEvent.getRegistry().register(new BlockItem(ModBlocks.lightBlock, new Item.Properties()).setRegistryName("light_block"));
-            itemRegistryEvent.getRegistry().register(new BlockItem(ModBlocks.MANA_CONDENSER, new Item.Properties()).setRegistryName("mana_condenser"));
+            itemRegistryEvent.getRegistry().register(new BlockItem(ModBlocks.PHANTOM_BLOCK, ModItems.defaultItemProperties()).setRegistryName("phantom_block"));
+            itemRegistryEvent.getRegistry().register(new BlockItem(ModBlocks.lightBlock, ModItems.defaultItemProperties()).setRegistryName("light_block"));
+            itemRegistryEvent.getRegistry().register(new BlockItem(ModBlocks.MANA_CONDENSER, ModItems.defaultItemProperties()).setRegistryName("mana_condenser"));
 
-            itemRegistryEvent.getRegistry().register(new BlockItem(ModBlocks.MANA_JAR, new Item.Properties()).setRegistryName("mana_jar"));
+            itemRegistryEvent.getRegistry().register(new BlockItem(ModBlocks.MANA_JAR, ModItems.defaultItemProperties()).setRegistryName("mana_jar"));
         }
     }
 }

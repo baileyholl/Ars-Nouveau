@@ -1,17 +1,13 @@
 package com.hollingsworth.craftedmagic.items;
 
 import com.hollingsworth.craftedmagic.ArsNouveau;
-import com.hollingsworth.craftedmagic.api.CraftedMagicAPI;
+import com.hollingsworth.craftedmagic.api.ArsNouveauAPI;
 import com.hollingsworth.craftedmagic.api.spell.AbstractSpellPart;
 import com.hollingsworth.craftedmagic.api.spell.ISpellTier;
 import com.hollingsworth.craftedmagic.client.keybindings.ModKeyBindings;
 import com.hollingsworth.craftedmagic.network.Networking;
 import com.hollingsworth.craftedmagic.network.PacketOpenGUI;
 import com.hollingsworth.craftedmagic.spell.SpellResolver;
-import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -24,20 +20,16 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.PacketDistributor;
-import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -162,8 +154,8 @@ public class SpellBook extends Item implements ISpellTier {
             return recipe;
         String[] recipeList = recipeStr.substring(1, recipeStr.length() - 1).split(",");
         for(String id : recipeList){
-            if (CraftedMagicAPI.getInstance().spell_map.containsKey(id.trim()))
-                recipe.add(CraftedMagicAPI.getInstance().spell_map.get(id.trim()));
+            if (ArsNouveauAPI.getInstance().getSpell_map().containsKey(id.trim()))
+                recipe.add(ArsNouveauAPI.getInstance().getSpell_map().get(id.trim()));
         }
         return recipe;
     }

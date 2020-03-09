@@ -10,12 +10,12 @@ public class NoviceArmor extends MagicArmor{
     }
 
     @Override
-    public int getMaxManaBonus() {
+    public int getMaxManaBoost() {
         return 25;
     }
 
     @Override
-    public int getRegenBonus() {
+    public int getManaRegenBonus() {
         return 2;
     }
 }

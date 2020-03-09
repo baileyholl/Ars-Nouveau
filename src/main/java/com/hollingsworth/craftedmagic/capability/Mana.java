@@ -38,7 +38,7 @@ public class Mana implements IMana {
     }
 
     @Override
-    public void setMana(int mana) {
+    public int setMana(int mana) {
         if(mana > getMaxMana()){
             this.mana = getMaxMana();
         }else if(mana < 0){
@@ -46,12 +46,13 @@ public class Mana implements IMana {
         }else {
             this.mana = mana;
         }
+        return this.getCurrentMana();
     }
 
     @Override
     public int addMana(int manaToAdd) {
         this.setMana(this.getCurrentMana() + manaToAdd);
-        return this.mana;
+        return this.getCurrentMana();
     }
 
     @Override
@@ -59,16 +60,6 @@ public class Mana implements IMana {
         if(manaToRemove < 0)
             manaToRemove = 0;
         this.setMana(this.getCurrentMana() - manaToRemove);
-        return this.mana;
-    }
-
-    @Override
-    public void synchronise() {
-        if (livingEntity != null && !livingEntity.getEntityWorld().isRemote) {
-            final IAttributeInstance entityMaxHealthAttribute = livingEntity.getAttribute(SharedMonsterAttributes.MAX_HEALTH);
-            final SEntityPropertiesPacket packet = new SEntityPropertiesPacket(livingEntity.getEntityId(), Collections.singleton(entityMaxHealthAttribute));
-
-            ((ServerWorld) livingEntity.getEntityWorld()).getChunkProvider().sendToTrackingAndSelf(livingEntity, packet);
-        }
+        return this.getCurrentMana();
     }
 }

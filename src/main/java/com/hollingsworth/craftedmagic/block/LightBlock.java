@@ -4,8 +4,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.state.StateContainer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -14,6 +17,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
 public class LightBlock extends Block {
@@ -25,35 +29,39 @@ public class LightBlock extends Block {
         setRegistryName("light_block");
     }
 
+
+    @Nullable
     @Override
-    public boolean ticksRandomly(BlockState state) {
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+        return new LightTile();
+    }
+
+    @Override
+    public boolean hasTileEntity(BlockState state) {
         return true;
     }
 
     @Override
-    public int tickRate(IWorldReader worldIn) {
-        return 1;
+    public boolean ticksRandomly(BlockState state) {
+        return false;
     }
-
 
     @Override
-    public void animateTick(BlockState stateIn, World world, BlockPos pos, Random rand) {
-        if(world.getGameTime() % 5 == 0){
-            for(int i =0; i < 5; i++) {
-                double d0 = pos.getX() + .6; //+ world.rand.nextFloat();
-                double d1 = pos.getY() + .6; //+ world.rand.nextFloat();
-                double d2 = pos.getZ() + .6; //+ world.rand.nextFloat();
-                int mod = world.rand.nextFloat() < 0.5 ? -1 : 1;
-                world.addParticle(ParticleTypes.END_ROD, d0, d1, d2, mod*0.05*world.rand.nextFloat(), 0.05*world.rand.nextFloat(), mod*0.05*world.rand.nextFloat());
-
-            }
-        }
-
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(ManaCondenserBlock.stage);
     }
+
 
     @Override
     public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
+        return BlockRenderLayer.TRANSLUCENT;
+    }
+
+
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        return super.getStateForPlacement(context);
     }
 
     @Override

@@ -111,17 +111,5 @@ public class ManaCapability {
                 });
             });
         }
-        
-
-        /**
-         * Synchronise a player's mana to watching clients when they change dimensions.
-         *
-         * @param event The event
-         */
-        @SubscribeEvent
-        public static void playerChangeDimension(final PlayerEvent.PlayerChangedDimensionEvent event) {
-            getMana(event.getPlayer())
-                    .ifPresent(IMana::synchronise);
-        }
     }
 }

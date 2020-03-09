@@ -25,7 +25,7 @@ public class EffectSummonVex extends AbstractEffect {
 
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
-        for(int i = 0; i <1; ++i) {
+        for(int i = 0; i < 3; ++i) {
             BlockPos blockpos = (new BlockPos(shooter)).add(-2 + shooter.getRNG().nextInt(5), 1, -2 + shooter.getRNG().nextInt(5));
             EntityAllyVex vexentity = new EntityAllyVex(world, (PlayerEntity)shooter);
             vexentity.moveToBlockPosAndAngles(blockpos, 0.0F, 0.0F);

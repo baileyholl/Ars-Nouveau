@@ -5,11 +5,11 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
-public class ManaJarTile extends TileEntity implements ITickableTileEntity {
+public class ManaJarTile extends AbstractManaTile implements ITickableTileEntity {
     public ManaJarTile() {
         super(ModBlocks.MANA_JAR_TILE);
+        this.setMaxMana(10000);
     }
-    private int counter = 0;
 
     @Override
     public void tick() {
@@ -20,26 +20,13 @@ public class ManaJarTile extends TileEntity implements ITickableTileEntity {
         if(world.getGameTime() % 20 != 0)
             return;
 
-        counter += 1;
-
-        if(counter > 10){
-            counter = 0;
-        }
-        System.out.println("Counted");
-
         BlockState state = world.getBlockState(pos);
-        world.setBlockState(pos, state.with(ManaJar.fill, counter),3);
+        world.setBlockState(pos, state.with(ManaJar.fill, this.getCurrentMana() / 1000),3);
     }
 
-    @Override
-    public void read(CompoundNBT tag) {
-        counter = tag.getInt("counter");
-        super.read(tag);
-    }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
-        tag.putInt("counter", counter);
-        return super.write(tag);
+    public int getTransferRate() {
+        return 100;
     }
 }

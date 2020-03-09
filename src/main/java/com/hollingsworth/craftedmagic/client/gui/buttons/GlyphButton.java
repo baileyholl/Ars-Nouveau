@@ -72,9 +72,9 @@ public class GlyphButton extends Button {
 
             if(parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)){
 
-                if(parent.api.spell_map.containsKey(this.spell_id)) {
+                if(parent.api.getSpell_map().containsKey(this.spell_id)) {
                     List<String> test = new ArrayList<>();
-                    test.add(parent.api.spell_map.get(this.spell_id).description);
+                    test.add(parent.api.getSpell_map().get(this.spell_id).description);
                     parent.tooltip = test;
                 }
             }

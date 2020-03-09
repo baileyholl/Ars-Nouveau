@@ -1,6 +1,6 @@
 package com.hollingsworth.craftedmagic.network;
 
-import com.hollingsworth.craftedmagic.api.CraftedMagicAPI;
+import com.hollingsworth.craftedmagic.api.ArsNouveauAPI;
 import com.hollingsworth.craftedmagic.client.gui.GuiSpellBook;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
@@ -29,7 +29,7 @@ public class PacketOpenGUI{
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(()-> GuiSpellBook.open(CraftedMagicAPI.getInstance(), tag, tier));
+        ctx.get().enqueueWork(()-> GuiSpellBook.open(ArsNouveauAPI.getInstance(), tag, tier));
         ctx.get().setPacketHandled(true);
     }
 
