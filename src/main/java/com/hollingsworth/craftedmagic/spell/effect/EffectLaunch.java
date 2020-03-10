@@ -22,6 +22,7 @@ public class EffectLaunch extends AbstractEffect {
             Entity entity = ((EntityRayTraceResult) rayTraceResult).getEntity();
             entity.setMotion(entity.getMotion().add(0, 0.8 + .25*getAmplificationBonus(augments), 0));
             entity.velocityChanged = true;
+            entity.fallDistance = 0.0f;
         }
     }
 

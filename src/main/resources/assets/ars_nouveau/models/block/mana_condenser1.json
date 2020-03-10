@@ -1,4 +1,5 @@
 {
+	"parent": "block/cube_all",
 	"credit": "Made with Blockbench",
 	"textures": {
 		"0": "ars_nouveau:blocks/arcane_stone",

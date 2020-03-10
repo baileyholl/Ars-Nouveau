@@ -1,4 +1,5 @@
 {
+	"parent": "block/cube_all",
     "credit": "Made with Blockbench", 
     "textures": {
         "main": "ars_nouveau:blocks/mana_condenser"

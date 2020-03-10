@@ -21,7 +21,9 @@
 	"item.ars_nouveau.apprentice_hood":"Apprentice Hood",
 
 	"item.ars_nouveau.ring_of_amplify": "Ring of Amplify",
-
+	"item.ars_nouveau.lesser_ring_of_mana": "Lesser Ring of Mana",
+	"item.ars_nouveau.belt_of_levitation": "Belt of Levitation",
+	"item.ars_nouveau.belt_of_unstable_gifts": "Belt of Unstable Gifts",
 
 	"block.ars_nouveau.light_block": "Light",
 	"block.ars_nouveau.phantom_block": "Phantom Block",
