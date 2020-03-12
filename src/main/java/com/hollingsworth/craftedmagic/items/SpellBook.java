@@ -32,11 +32,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * HUD from Botania ItemCraftingHalo
- * Thank you Vazkii <3
- * https://botaniamod.net/license.php
- */
+
 public class SpellBook extends Item implements ISpellTier {
     public static final String BOOK_MODE_TAG = "mode";
     public static final int SEGMENTS = 10;

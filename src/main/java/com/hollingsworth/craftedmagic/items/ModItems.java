@@ -60,6 +60,8 @@ public class ModItems {
             final RingOfAmplify ringOfAmplify = new RingOfAmplify();
             final BeltOfLevitation beltOfLevitation = new BeltOfLevitation();
             final LesserManaRing lesserManaRing = new LesserManaRing();
+
+
             final Item[] items = {
                     noviceBoots.setRegistryName("novice_boots"),
                     novicePants.setRegistryName("novice_leggings"),

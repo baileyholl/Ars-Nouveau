@@ -41,6 +41,8 @@ public class ModBlocks {
     @ObjectHolder(ArsNouveau.MODID + ":mana_jar")
     public static TileEntityType<ManaJarTile> MANA_JAR_TILE;
 
+    @ObjectHolder(ArsNouveau.MODID + ":ward_block")
+    public static WardBlock WARD_BLOCK;
 
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
@@ -52,6 +54,7 @@ public class ModBlocks {
             blockRegistryEvent.getRegistry().register(new LightBlock());
             blockRegistryEvent.getRegistry().register(new ManaCondenserBlock());
             blockRegistryEvent.getRegistry().register(new ManaJar());
+            blockRegistryEvent.getRegistry().register(new WardBlock());
         }
 
         @SubscribeEvent
@@ -70,8 +73,8 @@ public class ModBlocks {
             itemRegistryEvent.getRegistry().register(new BlockItem(ModBlocks.PHANTOM_BLOCK, ModItems.defaultItemProperties()).setRegistryName("phantom_block"));
             itemRegistryEvent.getRegistry().register(new BlockItem(ModBlocks.lightBlock, ModItems.defaultItemProperties()).setRegistryName("light_block"));
             itemRegistryEvent.getRegistry().register(new BlockItem(ModBlocks.MANA_CONDENSER, ModItems.defaultItemProperties()).setRegistryName("mana_condenser"));
-
             itemRegistryEvent.getRegistry().register(new BlockItem(ModBlocks.MANA_JAR, ModItems.defaultItemProperties()).setRegistryName("mana_jar"));
+            itemRegistryEvent.getRegistry().register(new BlockItem(ModBlocks.WARD_BLOCK, ModItems.defaultItemProperties()).setRegistryName("ward_block"));
         }
     }
 }

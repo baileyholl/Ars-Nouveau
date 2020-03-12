@@ -36,6 +36,7 @@ public abstract class AbstractManaTile extends AnimatedTile  implements IManaBlo
             this.mana = this.getMaxMana();
         if(this.mana < 0)
             this.mana = 0;
+        System.out.println("Set mana" + mana);
         return this.mana;
     }
 
