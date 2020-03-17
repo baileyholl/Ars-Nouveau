@@ -37,7 +37,7 @@ public class EffectHarm extends AbstractEffect {
                 if(mob.getHealth() <= damage && mob.getHealth() > 0 && hasBuff(augments, AugmentFortune.class)){
                     int looting = getBuffCount(augments, AugmentFortune.class);
                     LootContext.Builder lootContext = LootUtil.getLootingContext((ServerWorld)world, (PlayerEntity)shooter, mob, looting, DamageSource.causePlayerDamage((PlayerEntity) shooter));
-                    ResourceLocation lootTable = mob.func_213346_cF();
+                    ResourceLocation lootTable = mob.getLootTableResourceLocation();
                     LootTable loottable = world.getServer().getLootTableManager().getLootTableFromLocation(lootTable);
                     List<ItemStack> items = loottable.generate(lootContext.build(LootParameterSets.GENERIC));
                     items.forEach(mob::entityDropItem);

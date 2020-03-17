@@ -1,4 +1,4 @@
-package com.hollingsworth.craftedmagic.block;
+package com.hollingsworth.craftedmagic.block.tile;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;

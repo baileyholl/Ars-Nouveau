@@ -1,15 +1,13 @@
 package com.hollingsworth.craftedmagic.block;
 
-import com.hollingsworth.craftedmagic.api.mana.IMana;
+import com.hollingsworth.craftedmagic.block.tile.AbstractManaTile;
+import com.hollingsworth.craftedmagic.block.tile.ManaJarTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.IProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
@@ -20,20 +18,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootParameters;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 
-public class ManaJar extends Block {
+public class ManaJar extends ModBlock {
 
     public static final IProperty fill = IntegerProperty.create("fill", 0, 10);
 
     public ManaJar() {
-        super(Block.Properties.create(Material.ROCK).sound(SoundType.STONE).hardnessAndResistance(0.0f));
-        setRegistryName("mana_jar");
+        super("mana_jar");
     }
 
     @Override

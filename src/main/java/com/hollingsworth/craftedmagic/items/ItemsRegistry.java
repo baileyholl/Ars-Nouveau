@@ -22,7 +22,7 @@ import java.util.Set;
 import static com.hollingsworth.craftedmagic.InjectionUtil.Null;
 
 @ObjectHolder(ArsNouveau.MODID)
-public class ModItems {
+public class ItemsRegistry {
 //    @ObjectHolder("ars_nouveau:spell_book")
 //    public static SpellBook spellBook;
 //
@@ -38,6 +38,7 @@ public class ModItems {
         @SubscribeEvent
         public static void registerItems(final RegistryEvent.Register<Item> event) {
             spellBook = new SpellBook();
+            LightBag lightBag = new LightBag();
             final ApprenticeSpellBook apprenticeSpellBook = new ApprenticeSpellBook();
             final ArchmageSpellBook archmageSpellBook = new ArchmageSpellBook();
 
@@ -80,7 +81,8 @@ public class ModItems {
                     archmageSpellBook.setRegistryName("archmage_spell_book"),
                     ringOfAmplify.setRegistryName("ring_of_amplify"),
                     beltOfLevitation.setRegistryName("belt_of_levitation"),
-                    lesserManaRing.setRegistryName("lesser_ring_of_mana")
+                    lesserManaRing.setRegistryName("lesser_ring_of_mana"),
+                    lightBag.setRegistryName("light_bag")
             };
             final IForgeRegistry<Item> registry = event.getRegistry();
 

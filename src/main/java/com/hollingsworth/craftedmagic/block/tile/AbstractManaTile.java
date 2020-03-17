@@ -1,16 +1,15 @@
-package com.hollingsworth.craftedmagic.block;
+package com.hollingsworth.craftedmagic.block.tile;
 
-import com.hollingsworth.craftedmagic.api.mana.IMana;
 import com.hollingsworth.craftedmagic.api.mana.IManaBlock;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
+
+import static com.hollingsworth.craftedmagic.api.NbtTags.MANA_TAG;
+import static com.hollingsworth.craftedmagic.api.NbtTags.MAX_MANA_TAG;
 
 public abstract class AbstractManaTile extends AnimatedTile  implements IManaBlock {
     private int mana = 0;
     private int maxMana = 0;
-    public static String MANA_TAG = "mana";
-    public static String MAX_MANA_TAG ="max_mana";
     public AbstractManaTile(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
     }
@@ -36,7 +35,6 @@ public abstract class AbstractManaTile extends AnimatedTile  implements IManaBlo
             this.mana = this.getMaxMana();
         if(this.mana < 0)
             this.mana = 0;
-        System.out.println("Set mana" + mana);
         return this.mana;
     }
 

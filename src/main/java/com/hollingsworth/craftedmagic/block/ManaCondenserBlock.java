@@ -1,8 +1,9 @@
 package com.hollingsworth.craftedmagic.block;
 
 import com.hollingsworth.craftedmagic.api.util.BlockUtil;
+import com.hollingsworth.craftedmagic.block.tile.AbstractManaTile;
+import com.hollingsworth.craftedmagic.block.tile.ManaCondenserTile;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -13,27 +14,24 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.IProperty;
 import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class ManaCondenserBlock extends Block {
+public class ManaCondenserBlock extends ModBlock {
 
     public static final IProperty stage = IntegerProperty.create("stage", 1, 8);
+
     public ManaCondenserBlock() {
-        super(Properties.create(Material.ROCK).sound(SoundType.STONE).hardnessAndResistance(0.0f));
-        setRegistryName("mana_condenser");
+        super("mana_condenser");
     }
 
     @Override
@@ -88,9 +86,4 @@ public class ManaCondenserBlock extends Block {
 
         return true;
     }
-
-    //    @Override
-//    public BlockRenderType getRenderType(BlockState state) {
-//        return BlockRenderType.ENTITYBLOCK_ANIMATED;
-//    }
 }

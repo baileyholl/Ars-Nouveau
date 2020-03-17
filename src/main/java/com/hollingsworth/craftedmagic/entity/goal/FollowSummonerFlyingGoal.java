@@ -16,6 +16,6 @@ public class FollowSummonerFlyingGoal extends FollowSummonerGoal{
 
     protected boolean canTeleportToBlock(BlockPos pos) {
         BlockState blockstate = this.world.getBlockState(pos);
-        return (blockstate.func_215682_a(this.world, pos, this.summon.getSelfEntity()) || blockstate.isIn(BlockTags.LEAVES)) && this.world.isAirBlock(pos.up()) && this.world.isAirBlock(pos.up(2));
+        return (blockstate.isLadder(this.world, pos, this.summon.getSelfEntity()) || blockstate.isIn(BlockTags.LEAVES)) && this.world.isAirBlock(pos.up()) && this.world.isAirBlock(pos.up(2));
     }
 }

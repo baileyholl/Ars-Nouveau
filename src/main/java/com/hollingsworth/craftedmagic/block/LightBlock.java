@@ -1,12 +1,12 @@
 package com.hollingsworth.craftedmagic.block;
 
+import com.hollingsworth.craftedmagic.block.tile.LightTile;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.particles.ParticleType;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -14,19 +14,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 
-public class LightBlock extends Block {
+public class LightBlock extends ModBlock {
 
     protected static final VoxelShape SHAPE = Block.makeCuboidShape(6.0D, 6.0D, 6.0D, 12.0D, 12.0D, 12.0D);
 
     public LightBlock() {
-        super(Properties.create(Material.ROCK).sound(SoundType.STONE).hardnessAndResistance(0.0f).lightValue(14).doesNotBlockMovement());
-        setRegistryName("light_block");
+        super(defaultProperties().lightValue(14).doesNotBlockMovement(), "light_block");
     }
 
 
@@ -51,12 +47,10 @@ public class LightBlock extends Block {
         builder.add(ManaCondenserBlock.stage);
     }
 
-
     @Override
     public BlockRenderLayer getRenderLayer() {
         return BlockRenderLayer.TRANSLUCENT;
     }
-
 
     @Nullable
     @Override

@@ -1,13 +1,11 @@
-package com.hollingsworth.craftedmagic.block;
+package com.hollingsworth.craftedmagic.block.tile;
 
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import top.theillusivec4.curios.api.CuriosAPI;
+import com.hollingsworth.craftedmagic.block.ManaCondenserBlock;
+import com.hollingsworth.craftedmagic.block.BlockRegistry;
 
 public class LightTile extends AnimatedTile {
     public LightTile() {
-        super(ModBlocks.LIGHT_TILE);
+        super(BlockRegistry.LIGHT_TILE);
     }
 
     @Override

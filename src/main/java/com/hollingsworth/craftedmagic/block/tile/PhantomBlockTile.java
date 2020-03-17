@@ -1,5 +1,6 @@
-package com.hollingsworth.craftedmagic.block;
+package com.hollingsworth.craftedmagic.block.tile;
 
+import com.hollingsworth.craftedmagic.block.BlockRegistry;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.IntNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -9,7 +10,7 @@ public class PhantomBlockTile extends TileEntity implements ITickableTileEntity 
 
     int age;
     public PhantomBlockTile() {
-        super(ModBlocks.PHANTOM_TILE);
+        super(BlockRegistry.PHANTOM_TILE);
     }
 
     @Override

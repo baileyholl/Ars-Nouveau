@@ -1,29 +1,22 @@
-package com.hollingsworth.craftedmagic.block;
+package com.hollingsworth.craftedmagic.block.tile;
 
-import com.hollingsworth.craftedmagic.ArsNouveau;
-import com.hollingsworth.craftedmagic.api.spell.AbstractCastMethod;
 import com.hollingsworth.craftedmagic.api.util.BlockUtil;
+import com.hollingsworth.craftedmagic.block.ManaCondenserBlock;
+import com.hollingsworth.craftedmagic.block.BlockRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 
 public class ManaCondenserTile extends AbstractManaTile implements ITickableTileEntity {
     public boolean isDisabled = false;
     public ManaCondenserTile() {
-        super(ModBlocks.MANA_CONDENSER_TILE);
+        super(BlockRegistry.MANA_CONDENSER_TILE);
         MinecraftForge.EVENT_BUS.register(this);
         setMaxMana(500);
     }

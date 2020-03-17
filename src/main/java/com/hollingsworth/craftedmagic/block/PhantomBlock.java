@@ -1,5 +1,6 @@
 package com.hollingsworth.craftedmagic.block;
 
+import com.hollingsworth.craftedmagic.block.tile.PhantomBlockTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -13,10 +14,10 @@ import net.minecraft.world.IWorld;
 
 import javax.annotation.Nullable;
 
-public class PhantomBlock extends Block {
+public class PhantomBlock extends ModBlock {
+
     public PhantomBlock() {
-        super(Properties.create(Material.ROCK).sound(SoundType.STONE).hardnessAndResistance(0.0f).lightValue(7));
-        setRegistryName("phantom_block");
+        super(defaultProperties().lightValue(7), "phantom_block");
     }
 
     @Override
@@ -38,11 +39,6 @@ public class PhantomBlock extends Block {
     @Override
     public boolean canDropFromExplosion(BlockState state, IBlockReader world, BlockPos pos, Explosion explosion) {
         return false;
-    }
-
-    @Override
-    public void onPlayerDestroy(IWorld worldIn, BlockPos pos, BlockState state) {
-        super.onPlayerDestroy(worldIn, pos, state);
     }
 }
 

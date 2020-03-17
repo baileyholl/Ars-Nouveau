@@ -1,13 +1,14 @@
-package com.hollingsworth.craftedmagic.block;
+package com.hollingsworth.craftedmagic.block.tile;
 
+import com.hollingsworth.craftedmagic.block.ManaJar;
+import com.hollingsworth.craftedmagic.block.BlockRegistry;
 import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
 
 public class ManaJarTile extends AbstractManaTile implements ITickableTileEntity {
+
     public ManaJarTile() {
-        super(ModBlocks.MANA_JAR_TILE);
+        super(BlockRegistry.MANA_JAR_TILE);
         this.setMaxMana(10000);
     }
 

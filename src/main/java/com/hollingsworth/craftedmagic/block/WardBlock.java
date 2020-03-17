@@ -17,10 +17,10 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class WardBlock extends Block {
+public class WardBlock extends ModBlock {
+
     public WardBlock() {
-        super(Properties.create(Material.ROCK).sound(SoundType.STONE).hardnessAndResistance(0.0f).lightValue(7));
-        setRegistryName("ward_block");
+        super(defaultProperties().lightValue(7), "ward_block");
     }
 
     @Override

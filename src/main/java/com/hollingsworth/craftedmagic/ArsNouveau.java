@@ -1,17 +1,10 @@
 package com.hollingsworth.craftedmagic;
 
-import com.hollingsworth.craftedmagic.block.*;
-import com.hollingsworth.craftedmagic.items.ModItems;
+import com.hollingsworth.craftedmagic.items.ItemsRegistry;
 import com.hollingsworth.craftedmagic.network.Networking;
-import net.minecraft.block.Block;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
@@ -22,8 +15,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.Logger;
 import top.theillusivec4.curios.api.CuriosAPI;
 import top.theillusivec4.curios.api.imc.CurioIMCMessage;
-
-import static net.minecraft.world.biome.Biome.LOGGER;
 
 @Mod(ArsNouveau.MODID)
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
@@ -39,7 +30,7 @@ public class ArsNouveau {
     public static ItemGroup itemGroup = new ItemGroup("ars_nouveau") {
         @Override
         public ItemStack createIcon() {
-            return ModItems.spellBook.getDefaultInstance();
+            return ItemsRegistry.spellBook.getDefaultInstance();
         }
     };
 
@@ -50,7 +41,7 @@ public class ArsNouveau {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::sendImc);
         MinecraftForge.EVENT_BUS.register(this);
-
+        APIRegistry.initApi();
     }
 
     public void setup (final FMLCommonSetupEvent event){
@@ -60,13 +51,11 @@ public class ArsNouveau {
     }
 
     public void clientSetup(final FMLClientSetupEvent event){
-        System.out.println("Hello from setup");
-        System.out.println("Debugger hello");
+
     }
 
 
     public void sendImc(InterModEnqueueEvent evt) {
-        System.out.println("Pinging Curios!");
         InterModComms.sendTo("curios", CuriosAPI.IMC.REGISTER_TYPE, () -> new CurioIMCMessage("charm"));
         InterModComms.sendTo("curios", CuriosAPI.IMC.REGISTER_TYPE, () -> new CurioIMCMessage("ring").setSize(2));
         InterModComms.sendTo("curios", CuriosAPI.IMC.REGISTER_TYPE, () -> new CurioIMCMessage("belt"));

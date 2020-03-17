@@ -1,12 +1,12 @@
 package com.hollingsworth.craftedmagic.armor;
 
-import com.hollingsworth.craftedmagic.items.ModItems;
+import com.hollingsworth.craftedmagic.items.ItemsRegistry;
 import net.minecraft.inventory.EquipmentSlotType;
 
 public class NoviceArmor extends MagicArmor{
 
     public NoviceArmor(EquipmentSlotType slot) {
-        super(Materials.novice, slot, ModItems.defaultItemProperties());
+        super(Materials.novice, slot, ItemsRegistry.defaultItemProperties());
     }
 
     @Override
