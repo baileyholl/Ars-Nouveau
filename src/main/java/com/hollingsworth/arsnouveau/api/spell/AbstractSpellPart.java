@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.hollingsworth.arsnouveau.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.spell.augment.AugmentDampen;
 
 import java.util.ArrayList;
@@ -41,6 +42,18 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
 
     public ISpellTier.Tier getTier() {
         return ISpellTier.Tier.ONE;
+    }
+
+    public int getBuffCount(ArrayList<AbstractAugment> augments, Class spellClass){
+        return (int) augments.stream().filter(spellClass::isInstance).count();
+    }
+
+    public boolean hasBuff(ArrayList<AbstractAugment> augments, Class spellClass){
+        return getBuffCount(augments, spellClass) > 0;
+    }
+
+    public int getAmplificationBonus(ArrayList<AbstractAugment> augmentTypes){
+        return getBuffCount(augmentTypes, AugmentAmplify.class) - getBuffCount(augmentTypes, AugmentDampen.class);
     }
 
     @Override

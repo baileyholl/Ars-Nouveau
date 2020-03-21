@@ -33,19 +33,6 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         entity.addPotionEffect(new EffectInstance(potionEffect, duration * 20, amp));
     }
 
-    public int getBuffCount(ArrayList<AbstractAugment> augments, Class spellClass){
-        return (int) augments.stream().filter(spellClass::isInstance).count();
-    }
-
-    public boolean hasBuff(ArrayList<AbstractAugment> augments, Class spellClass){
-        return getBuffCount(augments, spellClass) > 0;
-    }
-
-    public int getAmplificationBonus(ArrayList<AbstractAugment> augmentTypes){
-        return getBuffCount(augmentTypes, AugmentAmplify.class) - getBuffCount(augmentTypes, AugmentDampen.class);
-    }
-
-
     public Map<Class, Integer> getAllowedAugments(){
         return new HashMap<>();
     }
