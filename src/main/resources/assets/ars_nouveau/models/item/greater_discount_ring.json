@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "ars_nouveau:items/lesser_ring_of_mana"
+        "layer0": "ars_nouveau:items/greater_discount_ring"
     }
 }

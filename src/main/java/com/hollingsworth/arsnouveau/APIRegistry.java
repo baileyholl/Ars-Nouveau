@@ -42,7 +42,7 @@ public class APIRegistry {
         registerSpell(ModConfig.EffectAquatic, new EffectAquatic());
         registerSpell(ModConfig.EffectFangsID, new EffectFangs());
         registerSpell(ModConfig.EffectSummonVexID, new EffectSummonVex());
-
+        registerSpell(ModConfig.EffectStrength, new EffectStrength());
         registerSpell(ModConfig.AugmentAccelerateID, new AugmentAccelerate());
         registerSpell(ModConfig.AugmentSplitID, new AugmentSplit());
         registerSpell(ModConfig.AugmentAmplifyID, new AugmentAmplify());

@@ -8,7 +8,7 @@ import net.minecraft.potion.Effects;
 import net.minecraft.world.World;
 
 public class BeltOfLevitation extends ArsNouveauCurio {
-    public BeltOfLevitation() { super(); }
+    public BeltOfLevitation() { super("belt_of_levitation"); }
 
 
     @Override

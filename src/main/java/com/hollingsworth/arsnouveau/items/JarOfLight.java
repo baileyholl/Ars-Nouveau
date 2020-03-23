@@ -17,10 +17,10 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class LightBag extends Item {
+public class JarOfLight extends ModItem {
 
-    public LightBag() {
-        super(ItemsRegistry.defaultItemProperties().maxStackSize(1));
+    public JarOfLight() {
+        super("jar_of_light");
     }
     //If the light is dispatched
 

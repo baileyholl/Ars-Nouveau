@@ -10,7 +10,7 @@ import net.minecraft.item.Item;
 public class RingOfAmplify extends AbstractAugmentItem {
 
     public RingOfAmplify() {
-        super(new Item.Properties().maxStackSize(1).group(ArsNouveau.itemGroup));
+        super("ring_of_amplify");
     }
 
     @Override

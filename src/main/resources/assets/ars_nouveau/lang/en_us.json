@@ -21,16 +21,21 @@
 	"item.ars_nouveau.apprentice_hood":"Apprentice Hood",
 
 	"item.ars_nouveau.ring_of_amplify": "Ring of Amplify",
-	"item.ars_nouveau.lesser_ring_of_mana": "Lesser Ring of Mana",
+	"item.ars_nouveau.lesser_discount_ring": "Ring of Lesser Discount",
+	"item.ars_nouveau.greater_discount_ring": "Ring of Greater Discount",
 	"item.ars_nouveau.belt_of_levitation": "Belt of Levitation",
 	"item.ars_nouveau.belt_of_unstable_gifts": "Belt of Unstable Gifts",
+	"item.ars_nouveau.jar_of_light":"Jar of Light",
 
 	"block.ars_nouveau.light_block": "Light",
 	"block.ars_nouveau.phantom_block": "Phantom Block",
 	"block.ars_nouveau.mana_condenser": "Mana Condenser",
 	"block.ars_nouveau.mana_jar": "Mana Jar",
-
-
+	"block.ars_nouveau.mana_siphon": "Mana Siphon",
+	"block.ars_nouveau.glyph_press": "Glyph Press",
+	"block.ars_nouveau.glyph_painter": "Glyph Painter",
+	"block.ars_nouveau.glyph_imbuer": "Glyph Imbuer",
+	"block.ars_nouveau.ward_block": "Warding Stone",
 	"enchantment.ars_nouveau.mana_boost": "Mana Boost",
 	"enchantment.ars_nouveau.mana_regen": "Mana Regen"
 }

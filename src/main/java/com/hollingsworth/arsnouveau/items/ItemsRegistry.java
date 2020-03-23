@@ -6,7 +6,8 @@ import com.hollingsworth.arsnouveau.armor.MagicArmor;
 import com.hollingsworth.arsnouveau.armor.MasterArmor;
 import com.hollingsworth.arsnouveau.armor.NoviceArmor;
 import com.hollingsworth.arsnouveau.items.curios.BeltOfLevitation;
-import com.hollingsworth.arsnouveau.items.curios.LesserManaRing;
+import com.hollingsworth.arsnouveau.items.curios.GreaterDiscountRing;
+import com.hollingsworth.arsnouveau.items.curios.LesserDiscountRing;
 import com.hollingsworth.arsnouveau.items.curios.RingOfAmplify;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
@@ -38,7 +39,7 @@ public class ItemsRegistry {
         @SubscribeEvent
         public static void registerItems(final RegistryEvent.Register<Item> event) {
             spellBook = new SpellBook();
-            LightBag lightBag = new LightBag();
+            JarOfLight jarOfLight = new JarOfLight();
             final ApprenticeSpellBook apprenticeSpellBook = new ApprenticeSpellBook();
             final ArchmageSpellBook archmageSpellBook = new ArchmageSpellBook();
 
@@ -60,8 +61,10 @@ public class ItemsRegistry {
 
             final RingOfAmplify ringOfAmplify = new RingOfAmplify();
             final BeltOfLevitation beltOfLevitation = new BeltOfLevitation();
-            final LesserManaRing lesserManaRing = new LesserManaRing();
 
+
+            final LesserDiscountRing lesserDiscountRing = new LesserDiscountRing();
+            final GreaterDiscountRing greaterDiscountRing = new GreaterDiscountRing();
 
             final Item[] items = {
                     noviceBoots.setRegistryName("novice_boots"),
@@ -79,10 +82,11 @@ public class ItemsRegistry {
                     spellBook.setRegistryName("novice_spell_book"),
                     apprenticeSpellBook.setRegistryName("apprentice_spell_book"),
                     archmageSpellBook.setRegistryName("archmage_spell_book"),
-                    ringOfAmplify.setRegistryName("ring_of_amplify"),
-                    beltOfLevitation.setRegistryName("belt_of_levitation"),
-                    lesserManaRing.setRegistryName("lesser_ring_of_mana"),
-                    lightBag.setRegistryName("light_bag")
+                    ringOfAmplify,
+                    beltOfLevitation,
+                    lesserDiscountRing,
+                    jarOfLight,
+                    greaterDiscountRing,
             };
             final IForgeRegistry<Item> registry = event.getRegistry();
 

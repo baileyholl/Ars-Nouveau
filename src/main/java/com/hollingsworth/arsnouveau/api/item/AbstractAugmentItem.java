@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.api.item;
 
 import com.hollingsworth.arsnouveau.api.ISpellBonus;
+import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.util.RomanNumber;
+import com.hollingsworth.arsnouveau.items.ModItem;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -12,9 +14,17 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public abstract class AbstractAugmentItem extends Item implements ISpellBonus {
+public abstract class AbstractAugmentItem extends ModItem implements ISpellBonus {
     public AbstractAugmentItem(Properties properties) {
         super(properties);
+    }
+
+    public AbstractAugmentItem(Properties properties, String registryName){
+        super(properties, registryName);
+    }
+
+    public AbstractAugmentItem(String registryName){
+        super(registryName);
     }
 
     @Override
