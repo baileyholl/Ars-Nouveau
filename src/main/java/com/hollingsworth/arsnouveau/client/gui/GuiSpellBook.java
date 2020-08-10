@@ -5,13 +5,14 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.client.gui.buttons.CraftingButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GlyphButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiSpellSlot;
-import com.hollingsworth.arsnouveau.items.SpellBook;
-import com.hollingsworth.arsnouveau.network.Networking;
-import com.hollingsworth.arsnouveau.network.PacketUpdateSpellbook;
+import com.hollingsworth.arsnouveau.common.items.SpellBook;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellbook;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -43,13 +44,15 @@ public class GuiSpellBook extends ModdedScreen {
     public int max_spell_tier; // Used to load spells that are appropriate tier
     List<CraftingButton> craftingCells;
 
-    public GuiSpellBook(ArsNouveauAPI api, CompoundNBT tag, int tier) {
+    public ArrayList<AbstractSpellPart>unlockedSpells;
+    public GuiSpellBook(ArsNouveauAPI api, CompoundNBT tag, int tier, String unlockedSpells) {
         super(new StringTextComponent(""));
         this.api = api;
         selected_cast_slot = 1;
         craftingCells = new ArrayList<>();
         this.max_spell_tier = tier;
         this.spell_book_tag = tag;
+        this.unlockedSpells = SpellRecipeUtil.getSpellsFromString(unlockedSpells);
     }
 
     @Override
@@ -99,14 +102,13 @@ public class GuiSpellBook extends ModdedScreen {
 
     public void addSpellParts(){
         Set<String> keys = this.api.getSpell_map().keySet();
-        ArrayList<AbstractSpellPart> all_spells = new ArrayList<>(this.api.getSpell_map().values());
-        Collections.sort(all_spells);
+        Collections.sort(unlockedSpells);
 
         //Adding spell parts
         int numCast = 0;
         int numEffect = 0;
         int numAugment = 0;
-        for(AbstractSpellPart key  : all_spells){
+        for(AbstractSpellPart key  : unlockedSpells){
             AbstractSpellPart spell = this.api.getSpell_map().get(key.tag);
             GlyphButton cell;
             if(spell.getTier().ordinal() > max_spell_tier)
@@ -187,7 +189,7 @@ public class GuiSpellBook extends ModdedScreen {
 
     }
 
-    public static void open(ArsNouveauAPI api, CompoundNBT spell_book_tag, int tier){ Minecraft.getInstance().displayGuiScreen(new GuiSpellBook(api, spell_book_tag, tier)); }
+    public static void open(ArsNouveauAPI api, CompoundNBT spell_book_tag, int tier, String unlockedSpells){ Minecraft.getInstance().displayGuiScreen(new GuiSpellBook(api, spell_book_tag, tier, unlockedSpells)); }
 
     final void drawScreenAfterScale(int mouseX, int mouseY, float partialTicks) {
         resetTooltip();

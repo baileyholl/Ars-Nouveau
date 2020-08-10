@@ -1,0 +1,7 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "block/crop",
+	"textures": {
+		"crop": "ars_nouveau:blocks/manabloom/stage4"
+	}
+}

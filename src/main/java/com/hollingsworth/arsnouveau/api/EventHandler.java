@@ -2,10 +2,10 @@ package com.hollingsworth.arsnouveau.api;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
-import com.hollingsworth.arsnouveau.capability.ManaCapability;
-import com.hollingsworth.arsnouveau.network.Networking;
-import com.hollingsworth.arsnouveau.network.PacketUpdateMana;
-import com.hollingsworth.arsnouveau.potions.ModPotions;
+import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketUpdateMana;
+import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.DamageSource;

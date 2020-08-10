@@ -1,0 +1,15 @@
+{
+    "name": "Arcane Ore",
+    "icon": "ars_nouveau:arcane_ore",
+    "category": "resources",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Arcane Ore can be found at the same levels as iron. Fairly common, Arcane Ore is required for building magical machines and devices."
+        },
+		{
+            "type":"smelting",
+			"recipe":"ars_nouveau:arcane_brick"
+		}
+    ]
+}

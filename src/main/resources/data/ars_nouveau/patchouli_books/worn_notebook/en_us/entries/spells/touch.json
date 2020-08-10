@@ -1,0 +1,16 @@
+{
+  "name": "Touch",
+  "icon": "ars_nouveau:glyph_touch",
+  "category": "spells",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Applies spells at the block or entity that is targeted."
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "ONE",
+      "mana_cost": "Low"
+    }
+  ]
+}

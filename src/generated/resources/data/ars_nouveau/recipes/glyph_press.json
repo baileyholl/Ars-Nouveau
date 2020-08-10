@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "xxx",
+    "xyx",
+    "aba"
+  ],
+  "key": {
+    "x": {
+      "item": "ars_nouveau:arcane_brick"
+    },
+    "y": {
+      "item": "minecraft:piston"
+    },
+    "a": {
+      "item": "minecraft:stone"
+    },
+    "b": {
+      "item": "minecraft:iron_block"
+    }
+  },
+  "result": {
+    "item": "ars_nouveau:glyph_press"
+  }
+}

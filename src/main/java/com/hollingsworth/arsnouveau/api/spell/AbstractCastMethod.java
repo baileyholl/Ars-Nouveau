@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
-import com.hollingsworth.arsnouveau.spell.SpellResolver;
+import com.hollingsworth.arsnouveau.common.spell.SpellResolver;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;

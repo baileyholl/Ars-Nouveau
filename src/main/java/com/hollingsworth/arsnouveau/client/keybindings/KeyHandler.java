@@ -5,9 +5,9 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.client.gui.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.GuiSpellBook;
-import com.hollingsworth.arsnouveau.items.SpellBook;
-import com.hollingsworth.arsnouveau.network.Networking;
-import com.hollingsworth.arsnouveau.network.PacketUpdateSpellbook;
+import com.hollingsworth.arsnouveau.common.items.SpellBook;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellbook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -22,6 +22,8 @@ public class KeyHandler {
     private static final Minecraft MINECRAFT = Minecraft.getInstance();
     @SubscribeEvent
     public static void keyEvent(final InputEvent.KeyInputEvent event) {
+        if(MINECRAFT.player == null)
+            return;
         ItemStack heldItem = MINECRAFT.player.getHeldItemMainhand();
 
 
@@ -67,7 +69,7 @@ public class KeyHandler {
             }
             ItemStack stack = MINECRAFT.player.getHeldItemMainhand();
             if(stack.getItem() instanceof SpellBook && stack.hasTag() && MINECRAFT.currentScreen == null){
-                GuiSpellBook.open(ArsNouveauAPI.getInstance(), stack.getTag(), ((SpellBook) stack.getItem()).getTier().ordinal());
+                GuiSpellBook.open(ArsNouveauAPI.getInstance(), stack.getTag(), ((SpellBook) stack.getItem()).getTier().ordinal(), SpellBook.getUnlockedSpellString(stack.getTag()));
             }
         }
     }

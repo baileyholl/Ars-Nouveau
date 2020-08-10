@@ -35,7 +35,7 @@ public class CraftingButton extends GuiImageButton{
 
                 if(parent.api.getSpell_map().containsKey(this.spell_id)) {
                     List<String> test = new ArrayList<>();
-                    test.add(parent.api.getSpell_map().get(this.spell_id).description);
+                    test.add(parent.api.getSpell_map().get(this.spell_id).name);
                     parent.tooltip = test;
                 }
             }

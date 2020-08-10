@@ -1,0 +1,27 @@
+{
+	"variants": {
+		"facing=north": {
+			"model": "ars_nouveau:block/warding_stone"
+		},
+		"facing=south": {
+			"model": "ars_nouveau:block/warding_stone",
+			"y": 180
+		},
+		"facing=west": {
+			"model": "ars_nouveau:block/warding_stone",
+			"y": 270
+		},
+		"facing=east": {
+			"model": "ars_nouveau:block/warding_stone",
+			"y": 90
+		},
+		"facing=up": {
+			"model": "ars_nouveau:block/warding_stone",
+			"x": -90
+		},
+		"facing=down": {
+			"model": "ars_nouveau:block/warding_stone",
+			"x": 90
+		}
+	}
+}

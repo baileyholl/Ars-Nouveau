@@ -1,7 +1,13 @@
 package com.hollingsworth.arsnouveau;
 
-import com.hollingsworth.arsnouveau.items.ItemsRegistry;
-import com.hollingsworth.arsnouveau.network.Networking;
+import com.hollingsworth.arsnouveau.client.ClientHandler;
+import com.hollingsworth.arsnouveau.common.items.ItemsRegistry;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.world.FeatureGen;
+import com.hollingsworth.arsnouveau.setup.APIRegistry;
+import com.hollingsworth.arsnouveau.setup.ClientProxy;
+import com.hollingsworth.arsnouveau.setup.IProxy;
+import com.hollingsworth.arsnouveau.setup.ServerProxy;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -30,28 +36,32 @@ public class ArsNouveau {
     public static ItemGroup itemGroup = new ItemGroup("ars_nouveau") {
         @Override
         public ItemStack createIcon() {
-            return ItemsRegistry.spellBook.getDefaultInstance();
+            return ItemsRegistry.noviceSpellBook.getDefaultInstance();
         }
     };
 
     public ArsNouveau(){
+        APIRegistry.registerSpells();
+
         // modLoading setup
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the doClientStuff method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::sendImc);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientHandler::init);
         MinecraftForge.EVENT_BUS.register(this);
-        APIRegistry.initApi();
     }
 
     public void setup (final FMLCommonSetupEvent event){
+        APIRegistry.registerApparatusRecipes();
+        FeatureGen.setupOreGen();
         //Pre-init code
         proxy.init();
         Networking.registerMessages();
     }
 
     public void clientSetup(final FMLClientSetupEvent event){
-
+        proxy.init();
     }
 
 

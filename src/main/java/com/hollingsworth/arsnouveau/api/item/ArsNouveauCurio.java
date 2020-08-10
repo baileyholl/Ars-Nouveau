@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.api.item;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.items.ModItem;
+import com.hollingsworth.arsnouveau.common.items.ModItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 

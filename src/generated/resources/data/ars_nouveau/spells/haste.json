@@ -1,0 +1,18 @@
+{
+  "name": "Haste",
+  "icon": "ars_nouveau:glyph_haste",
+  "category": "spells",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Provides a speed boost to the target"
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "ONE",
+      "mana_cost": "Medium",
+      "clay_type": "ars_nouveau:magic_clay",
+      "reagent": "minecraft:minecart"
+    }
+  ]
+}

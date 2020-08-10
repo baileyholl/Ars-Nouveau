@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "ars_nouveau:mythical_clay"
+    ]
+  },
+  "criteria": {
+    "has_journal": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "ars_nouveau:worn_notebook"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "ars_nouveau:mythical_clay"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_journal",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -1,15 +1,20 @@
 package com.hollingsworth.arsnouveau.api.util;
 
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.ISpellBonus;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.CompoundNBT;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class SpellRecipeUtil {
 
@@ -47,5 +52,16 @@ public class SpellRecipeUtil {
                 augments.addAll(((ISpellBonus) itemStack.getItem()).getList());
         });
         return augments;
+    }
+
+    public static ArrayList<AbstractSpellPart> getSpellsFromString(String spellString){
+        List<String> spellStrings = Arrays.asList(spellString.split(","));
+        ArrayList<AbstractSpellPart> spells = new ArrayList<>();
+
+        spellStrings.forEach(s->{
+            Optional<AbstractSpellPart> spell =  ArsNouveauAPI.getInstance().getSpell_map().values().stream().filter(sp -> sp.getTag().equals(s.trim())).findFirst();
+            spell.ifPresent(spells::add);
+        });
+        return spells;
     }
 }

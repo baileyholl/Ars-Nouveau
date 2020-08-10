@@ -1,0 +1,6 @@
+
+{
+  "variants": {
+    "stage=1": { "model": "ars_nouveau:block/glyph_painter/glyph_painter" }
+  }
+}

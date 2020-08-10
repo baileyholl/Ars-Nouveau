@@ -12,6 +12,4 @@ public interface ISpellTier {
      * Get the tier of spells this thing can access
      */
     Tier getTier();
-
-
 }

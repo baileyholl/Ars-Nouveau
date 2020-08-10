@@ -1,0 +1,36 @@
+
+{
+  "variants": {
+    "stage=1": { "model": "ars_nouveau:block/glyph_press/glyph_assembly1" },
+	"stage=2": { "model": "ars_nouveau:block/glyph_press/glyph_assembly2" },
+	"stage=3": { "model": "ars_nouveau:block/glyph_press/glyph_assembly3" },
+	"stage=4": { "model": "ars_nouveau:block/glyph_press/glyph_assembly4" },
+	"stage=5": { "model": "ars_nouveau:block/glyph_press/glyph_assembly5" },
+	"stage=6": { "model": "ars_nouveau:block/glyph_press/glyph_assembly6" },
+	"stage=7": { "model": "ars_nouveau:block/glyph_press/glyph_assembly7" },
+	"stage=8": { "model": "ars_nouveau:block/glyph_press/glyph_assembly8" },
+	"stage=9": { "model": "ars_nouveau:block/glyph_press/glyph_assembly9" },
+	"stage=10": { "model": "ars_nouveau:block/glyph_press/glyph_assembly10" },
+	"stage=11": { "model": "ars_nouveau:block/glyph_press/glyph_assembly11" },
+	"stage=12": { "model": "ars_nouveau:block/glyph_press/glyph_assembly12" },
+	"stage=13": { "model": "ars_nouveau:block/glyph_press/glyph_assembly13" },
+	"stage=14": { "model": "ars_nouveau:block/glyph_press/glyph_assembly14" },
+	"stage=15": { "model": "ars_nouveau:block/glyph_press/glyph_assembly15" },
+	"stage=16": { "model": "ars_nouveau:block/glyph_press/glyph_assembly16" },
+	"stage=17": { "model": "ars_nouveau:block/glyph_press/glyph_assembly17" },
+	"stage=18": { "model": "ars_nouveau:block/glyph_press/glyph_assembly18" },
+	"stage=19": { "model": "ars_nouveau:block/glyph_press/glyph_assembly19" },
+	"stage=20": { "model": "ars_nouveau:block/glyph_press/glyph_assembly20" },
+	"stage=21": { "model": "ars_nouveau:block/glyph_press/glyph_assembly21" },
+	"stage=22": { "model": "ars_nouveau:block/glyph_press/glyph_assembly22" },
+	"stage=23": { "model": "ars_nouveau:block/glyph_press/glyph_assembly23" },
+	"stage=24": { "model": "ars_nouveau:block/glyph_press/glyph_assembly24" },
+	"stage=25": { "model": "ars_nouveau:block/glyph_press/glyph_assembly25" },
+	"stage=26": { "model": "ars_nouveau:block/glyph_press/glyph_assembly26" },
+	"stage=27": { "model": "ars_nouveau:block/glyph_press/glyph_assembly27" },
+	"stage=28": { "model": "ars_nouveau:block/glyph_press/glyph_assembly28" },
+	"stage=29": { "model": "ars_nouveau:block/glyph_press/glyph_assembly29" },
+	"stage=30": { "model": "ars_nouveau:block/glyph_press/glyph_assembly30" },
+	"stage=31": { "model": "ars_nouveau:block/glyph_press/glyph_assembly31" }
+  }
+}

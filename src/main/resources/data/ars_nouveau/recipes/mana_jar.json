@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "xyx",
+    "x x",
+    "xxx"
+  ],
+  "key": {
+    "x": {
+      "item": "minecraft:glass"
+    },
+    "y": {
+      "item": "ars_nouveau:arcane_brick"
+    }
+  },
+  "result": {
+    "item": "ars_nouveau:mana_jar"
+  }
+}

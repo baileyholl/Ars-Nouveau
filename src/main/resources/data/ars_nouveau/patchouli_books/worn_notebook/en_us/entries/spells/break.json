@@ -1,0 +1,16 @@
+{
+  "name": "Break",
+  "icon": "ars_nouveau:glyph_break",
+  "category": "spells",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Breaks blocks of an average hardness. Can be amplified to break harder blocks!"
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "ONE",
+      "mana_cost": "Low"
+    }
+  ]
+}

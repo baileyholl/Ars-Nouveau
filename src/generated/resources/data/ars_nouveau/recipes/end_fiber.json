@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:blaze_fiber"
+    },
+    {
+      "item": "ars_nouveau:blaze_fiber"
+    },
+    {
+      "item": "minecraft:popped_chorus_fruit"
+    }
+  ],
+  "result": {
+    "item": "ars_nouveau:end_fiber",
+    "count": 2
+  }
+}

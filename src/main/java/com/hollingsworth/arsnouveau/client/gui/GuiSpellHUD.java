@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
-import com.hollingsworth.arsnouveau.items.SpellBook;
+import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FocusableGui;
 import net.minecraft.client.gui.IGuiEventListener;

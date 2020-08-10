@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.client;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.GuiManaHUD;
 import com.hollingsworth.arsnouveau.client.gui.GuiSpellHUD;
-import com.hollingsworth.arsnouveau.items.SpellBook;
+import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraftforge.api.distmarker.Dist;

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "xyx",
+    "x x",
+    "zzz"
+  ],
+  "key": {
+    "x": {
+      "item": "minecraft:iron_ingot"
+    },
+    "y": {
+      "item": "minecraft:diamond"
+    },
+    "z": {
+      "item": "ars_nouveau:arcane_brick"
+    }
+  },
+  "result": {
+    "item": "ars_nouveau:enchanting_apparatus"
+  }
+}

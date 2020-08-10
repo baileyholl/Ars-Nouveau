@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.entity.EntityAllyVex;
-import com.hollingsworth.arsnouveau.entity.EntityEvokerFangs;
-import com.hollingsworth.arsnouveau.entity.EntityProjectileSpell;
+import com.hollingsworth.arsnouveau.common.entity.EntityAllyVex;
+import com.hollingsworth.arsnouveau.common.entity.EntityEvokerFangs;
+import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

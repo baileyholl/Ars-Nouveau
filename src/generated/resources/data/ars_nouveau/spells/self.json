@@ -1,0 +1,16 @@
+{
+  "name": "Self",
+  "icon": "ars_nouveau:glyph_self",
+  "category": "spells",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Applies spells on the caster."
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "ONE",
+      "mana_cost": "Low"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+
+{    "parent": "block/cube_all",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "ars_nouveau:blocks/warding_stone",
+		"1": "ars_nouveau:blocks/test",
+		"down": "ars_nouveau:blocks/warding_stone",
+		"up": "ars_nouveau:blocks/warding_stone",
+		"east": "ars_nouveau:blocks/warding_stone",
+		"west": "ars_nouveau:blocks/warding_stone",
+		"north": "ars_nouveau:blocks/test",
+		"south": "ars_nouveau:blocks/warding_stone",
+		"particle": "ars_nouveau:blocks/warding_stone"
+	},
+	"elements": [{
+		"from": [0, 0, 0],
+		"to": [16, 16, 16],
+		"faces": {
+			"north": {
+				"uv": [0, 0, 16, 16],
+				"texture": "#1"
+			},
+			"east": {
+				"uv": [0, 0, 16, 16],
+				"texture": "#0"
+			},
+			"south": {
+				"uv": [0, 0, 16, 16],
+				"texture": "#0"
+			},
+			"west": {
+				"uv": [0, 0, 16, 16],
+				"texture": "#0"
+			},
+			"up": {
+				"uv": [0, 0, 16, 16],
+				"texture": "#0"
+			},
+			"down": {
+				"uv": [0, 0, 16, 16],
+				"texture": "#0"
+			}
+		}
+	}]
+}

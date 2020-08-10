@@ -8,10 +8,7 @@
     ],
 	"ingredients": [
         {
-            "item": "minecraft:writable_book"
-        },
-        {
-            "item": "minecraft:fishing_rod"
+            "item": "ars_nouveau:worn_notebook"
         },
         {
             "item": "minecraft:iron_pickaxe"
@@ -24,12 +21,6 @@
         },
         {
             "item": "minecraft:iron_axe"
-        },
-        {
-            "item": "minecraft:iron_hoe"
-        },
-        {
-            "item": "minecraft:flint_and_steel"
         },
         {
             "item": "minecraft:shears"

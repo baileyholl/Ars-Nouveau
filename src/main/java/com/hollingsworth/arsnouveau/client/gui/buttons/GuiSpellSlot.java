@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.GuiSpellBook;
-import com.hollingsworth.arsnouveau.items.SpellBook;
+import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;

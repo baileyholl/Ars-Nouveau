@@ -1,0 +1,18 @@
+{
+  "name": "Slowfall",
+  "icon": "ars_nouveau:glyph_slowfall",
+  "category": "spells",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Applies the Slow Fall buff."
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "ONE",
+      "mana_cost": "Medium",
+      "clay_type": "ars_nouveau:magic_clay",
+      "reagent": "minecraft:feather"
+    }
+  ]
+}

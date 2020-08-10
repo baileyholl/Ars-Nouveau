@@ -1,0 +1,18 @@
+{
+  "name": "Light",
+  "icon": "ars_nouveau:glyph_light",
+  "category": "spells",
+  "pages": [
+    {
+      "type": "text",
+      "text": "If cast on a block, a permanent light source is created. When cast on an entity, the target will receive Night Vision."
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "ONE",
+      "mana_cost": "Medium",
+      "clay_type": "ars_nouveau:magic_clay",
+      "reagent": "minecraft:glowstone"
+    }
+  ]
+}

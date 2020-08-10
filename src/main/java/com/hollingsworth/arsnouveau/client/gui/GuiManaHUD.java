@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
-import com.hollingsworth.arsnouveau.capability.ManaCapability;
-import com.hollingsworth.arsnouveau.items.SpellBook;
+import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
+import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.item.ItemStack;

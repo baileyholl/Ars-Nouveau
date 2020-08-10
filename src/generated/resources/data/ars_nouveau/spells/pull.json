@@ -1,0 +1,18 @@
+{
+  "name": "Pull",
+  "icon": "ars_nouveau:glyph_pull",
+  "category": "spells",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Pulls the target closer to the caster"
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "ONE",
+      "mana_cost": "Low",
+      "clay_type": "ars_nouveau:magic_clay",
+      "reagent": "minecraft:fishing_rod"
+    }
+  ]
+}

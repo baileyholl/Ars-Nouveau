@@ -1,0 +1,18 @@
+{
+  "name": "AOE",
+  "icon": "ars_nouveau:glyph_aoe",
+  "category": "spells",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Spells will affect a larger area around a targetted block."
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "TWO",
+      "mana_cost": "Medium",
+      "clay_type": "ars_nouveau:marvelous_clay",
+      "reagent": "minecraft:firework_star"
+    }
+  ]
+}

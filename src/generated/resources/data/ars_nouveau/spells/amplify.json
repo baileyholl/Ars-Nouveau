@@ -1,0 +1,18 @@
+{
+  "name": "Amplify",
+  "icon": "ars_nouveau:glyph_amplify",
+  "category": "spells",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Additively increases the power of most spell effects."
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "ONE",
+      "mana_cost": "Medium",
+      "clay_type": "ars_nouveau:magic_clay",
+      "reagent": "minecraft:quartz_block"
+    }
+  ]
+}

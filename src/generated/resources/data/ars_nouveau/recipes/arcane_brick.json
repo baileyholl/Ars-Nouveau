@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "ars_nouveau:arcane_ore"
+  },
+  "result": "ars_nouveau:arcane_brick",
+  "experience": 0.0,
+  "cookingtime": 200
+}

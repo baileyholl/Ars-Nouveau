@@ -1,0 +1,16 @@
+{
+  "name": "Harm",
+  "icon": "ars_nouveau:glyph_harm",
+  "category": "spells",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Damages a target."
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "ONE",
+      "mana_cost": "Medium"
+    }
+  ]
+}

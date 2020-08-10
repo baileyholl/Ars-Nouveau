@@ -1,0 +1,18 @@
+{
+  "name": "Fortune",
+  "icon": "ars_nouveau:glyph_fortune",
+  "category": "spells",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Increases the drop chance from mobs killed by Damage and blocks that are destroyed by Break. Cannot be combined with Extract"
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "TWO",
+      "mana_cost": "Medium",
+      "clay_type": "ars_nouveau:marvelous_clay",
+      "reagent": "minecraft:rabbit_foot"
+    }
+  ]
+}
