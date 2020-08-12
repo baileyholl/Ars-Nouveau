@@ -127,6 +127,9 @@ public class Recipes extends RecipeProvider {
                     .patternLine(" y ")
                     .patternLine("zzz").key('x', Items.IRON_INGOT).key('y', Items.HOPPER).key('z', ItemsRegistry.arcaneBrick).build(consumer);;
 
+            ShapelessRecipeBuilder.shapelessRecipe(BlockRegistry.WARD_BLOCK, 2).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                    .addIngredient(ItemsRegistry.arcaneBrick, 9)
+                    .build(consumer);
 
 
         }

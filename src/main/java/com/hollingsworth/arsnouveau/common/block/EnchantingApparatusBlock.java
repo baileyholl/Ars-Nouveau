@@ -51,6 +51,7 @@ public class EnchantingApparatusBlock extends ModBlock{
         return true;
     }
 
+
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {

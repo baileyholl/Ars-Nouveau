@@ -48,7 +48,6 @@ public class ArsNouveau {
         // Register the doClientStuff method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::sendImc);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientHandler::init);
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -62,6 +61,7 @@ public class ArsNouveau {
 
     public void clientSetup(final FMLClientSetupEvent event){
         proxy.init();
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientHandler::init);
     }
 
 

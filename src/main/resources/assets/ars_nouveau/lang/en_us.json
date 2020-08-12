@@ -49,10 +49,10 @@
 	"block.ars_nouveau.arcane_pedestal": "Arcane Pedestal",
 	"block.ars_nouveau.enchanting_apparatus": "Enchanting Apparatus",
 
-	"ars_nouveau.page.jar_of_light": "Jar of light",
-	"ars_nouveau.entry.jar_of_light": "Jar of light",
+	"ars_nouveau.page.jar_of_light": "Summons a light that will follow the user as they move. Can be summoned and dismissed at any time.",
 
-	"ars_nouveau.entry.mana_bloom": "A magically infused flower, Mana Blooms provide additional mana to nearby Mana Condensers as they grow and provide a source of mana fiber.",
+	"ars_nouveau.page.mana_bloom": "A magically infused flower, Mana Blooms provide additional mana to nearby Mana Condensers as they grow and provide a source of mana fiber.",
+	"ars_nouveau.page.belt_of_levitation": "A belt that allows the user levitate a moderate distance above the ground. Useful for climbing mountains! Simply sneak in the air while falling (or jumping) to rise.",
 
 	"enchantment.ars_nouveau.mana_boost": "Mana Boost",
 	"enchantment.ars_nouveau.mana_regen": "Mana Regen",

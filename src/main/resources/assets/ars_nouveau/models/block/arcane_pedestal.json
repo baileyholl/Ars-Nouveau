@@ -5,7 +5,8 @@
 	"textures": {
 		"5": "ars_nouveau:blocks/arcane_pedestal_2",
 		"6": "ars_nouveau:blocks/arcane_pedestal_3",
-		"7": "ars_nouveau:blocks/arcane_pedestal_4"
+		"7": "ars_nouveau:blocks/arcane_pedestal_4",
+		"particle": "ars_nouveau:blocks/arcane_pedestal_4"
 	},
 	"elements": [
 		{
