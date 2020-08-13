@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.renderer;
 
+import com.hollingsworth.arsnouveau.api.util.MappingUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.hollingsworth.arsnouveau.common.block.tile.GlyphPressTile;
 import com.hollingsworth.arsnouveau.common.items.ItemsRegistry;
@@ -49,7 +50,7 @@ public class ArcanePedestalRenderer extends TileEntityRenderer<ArcanePedestalTil
         entityItem.setRotationYawHead(tileEntityIn.frames);
         //Prevent 'jump' in the bobbing
         //Bobbing is calculated as the age plus the yaw
-        ObfuscationReflectionHelper.setPrivateValue(ItemEntity.class, entityItem, (int) (800f - tileEntityIn.frames), "age");
+        ObfuscationReflectionHelper.setPrivateValue(ItemEntity.class, entityItem, (int) (800f - tileEntityIn.frames), MappingUtil.getItemEntityAge());
         Minecraft.getInstance().getRenderManager().renderEntity(entityItem, x, y, z, entityItem.rotationYaw, 0, false);
 
         GlStateManager.disableLighting();

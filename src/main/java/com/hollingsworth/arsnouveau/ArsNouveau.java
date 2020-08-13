@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau;
 
+import com.hollingsworth.arsnouveau.api.util.MappingUtil;
 import com.hollingsworth.arsnouveau.client.ClientHandler;
 import com.hollingsworth.arsnouveau.common.items.ItemsRegistry;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -42,7 +43,7 @@ public class ArsNouveau {
 
     public ArsNouveau(){
         APIRegistry.registerSpells();
-
+        MappingUtil.setup();
         // modLoading setup
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the doClientStuff method for modloading

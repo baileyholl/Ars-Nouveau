@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.items.ItemsRegistry;
 import com.hollingsworth.arsnouveau.common.items.ModItem;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
@@ -21,10 +22,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class APIRegistry {
 
-    public static void initApi(){
-        registerSpells();
-    }
-
     public static void registerApparatusRecipes(){
         registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.beltOfLevitation, ItemsRegistry.mundaneBelt, new Item[]
                 {Items.GOLD_INGOT,Items.GOLD_INGOT,Items.GOLD_INGOT,Items.GOLD_INGOT,
@@ -33,7 +30,7 @@ public class APIRegistry {
         registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.jarOfLight, Items.GLASS_BOTTLE, new Item[]
                 {Items.GLOWSTONE, Items.GLOWSTONE, Items.GLOWSTONE, Items.GLOWSTONE, Items.REDSTONE_LAMP, Items.GLASS, Items.GLASS, Items.REDSTONE_LAMP}, ArsNouveauAPI.PatchouliCategories.equipment.name()));
 
-        registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.manaBloom, Items.WHEAT_SEEDS, new Item[]
+        registerApparatusRecipe(new EnchantingApparatusRecipe( BlockRegistry.MANA_BLOOM_CROP.asItem(), Items.WHEAT_SEEDS, new Item[]
                 {ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana},  ArsNouveauAPI.PatchouliCategories.resources.name()));
 
 

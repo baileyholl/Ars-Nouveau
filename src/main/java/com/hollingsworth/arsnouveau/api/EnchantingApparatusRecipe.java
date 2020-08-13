@@ -56,38 +56,24 @@ public class EnchantingApparatusRecipe {
     public ItemStack isResultOf(ItemStack catalyst, List<ItemStack> pedestalItems){
         System.out.println("Checking result");
         pedestalItems = pedestalItems.stream().filter(itemStack -> !itemStack.isEmpty()).collect(Collectors.toList());
-        if(this.catalyst.getItem() != catalyst.getItem()){
-            System.out.println("Wrong catalyst");
-        }
 
         if (this.catalyst.getItem() != catalyst.getItem() || this.pedestalItems.size() != pedestalItems.size() || !areSameSet(pedestalItems, this.pedestalItems)) {
-            System.out.println(catalyst);
-            System.out.println(this.catalyst);
-            System.out.println(pedestalItems);
-            System.out.println(this.pedestalItems);
-            System.out.println("Returning null");
+
             return null;
         }
-        System.out.println("returning");
-        System.out.println(this);
+
         return this.result;
     }
 
     // Function to check if both arrays are same
     static boolean areSameSet(List<ItemStack> A, List<ItemStack> B)
     {
-        System.out.println("Checking same set ");
-        System.out.println(A);
-        System.out.println(B);
         if(A.size() != B.size()) {
-            System.out.println("Wrong size");
             return false;
         }
         A.sort(Comparator.comparing(a -> a.getItem().getName().getString()));
         B.sort(Comparator.comparing(a -> a.getItem().getName().getString()));
-        System.out.println("SET COMP");
-        System.out.println(A);
-        System.out.println(B);
+
         for(int i = 0; i < A.size(); i++){
             if(A.get(i).getItem() != B.get(i).getItem()) {
                 return false;
