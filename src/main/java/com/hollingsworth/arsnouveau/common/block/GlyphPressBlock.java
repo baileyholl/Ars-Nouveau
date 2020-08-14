@@ -12,7 +12,8 @@ import net.minecraft.state.IProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
+
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -33,13 +34,12 @@ public class GlyphPressBlock extends ModBlock{
         return true;
     }
 
-
     @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult p_225533_6_) {
         if(!world.isRemote) {
             GlyphPressTile tile = (GlyphPressTile) world.getTileEntity(pos);
             if(tile.isCrafting)
-                return true;
+                return ActionResultType.PASS;
 //
 //            if(player.isSneaking())
 //            {
@@ -49,7 +49,7 @@ public class GlyphPressBlock extends ModBlock{
 //            }
 
             if (tile.baseMaterial != null && player.getHeldItem(handIn).isEmpty()) {
-                ItemEntity item = new ItemEntity(world, player.posX, player.posY, player.posZ, tile.baseMaterial);
+                ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.baseMaterial);
                 world.addEntity(item);
                 tile.baseMaterial = null;
             }
@@ -64,14 +64,14 @@ public class GlyphPressBlock extends ModBlock{
                         tile.reagentItem = null;
                     }
                 }
-            //    System.out.println("Set stack " +  tile.itemStack);
+                //    System.out.println("Set stack " +  tile.itemStack);
             }
-           // world.markBlocksDirtyVertical(pos.getX(), pos.getZ(), pos.getX(), pos.getZ());
-          //  world.markChunkDirty(pos, tile);
-        //    world.markAndNotifyBlock(pos, world.getChunkAt(pos), getDefaultState(), getDefaultState(), 2);
+            // world.markBlocksDirtyVertical(pos.getX(), pos.getZ(), pos.getX(), pos.getZ());
+            //  world.markChunkDirty(pos, tile);
+            //    world.markAndNotifyBlock(pos, world.getChunkAt(pos), getDefaultState(), getDefaultState(), 2);
             world.notifyBlockUpdate(pos, state, state, 2);
         }
-        return true;
+        return ActionResultType.PASS;
     }
 
     @Nullable
@@ -81,10 +81,6 @@ public class GlyphPressBlock extends ModBlock{
     }
 
 
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<net.minecraft.block.Block, BlockState> builder) { builder.add(stage); }

@@ -157,7 +157,8 @@ public class GuiRadialMenu extends Screen {
                 adjusted = adjusted == 0 ? 10 : adjusted;
                 drawCenteredString(font, SpellBook.getSpellName(tag,  adjusted), width/2,(height - font.FONT_HEIGHT) / 2,0xFFFFFFFF);
             }
-            RenderHelper.enableGUIStandardItemLighting();
+//            RenderHelper.enableGUIStandardItemLighting();
+            RenderHelper.enable();
             GlStateManager.popMatrix();
             for(int i = 0; i< numberOfSlices; i++){
                 ItemStack stack = new ItemStack(Blocks.DIRT);
@@ -245,10 +246,15 @@ public class GuiRadialMenu extends Screen {
             float pos2InX = x + radiusIn * (float) Math.cos(angle2);
             float pos2InY = y + radiusIn * (float) Math.sin(angle2);
 
-            buffer.pos(pos1OutX, pos1OutY, z).color(r, g, b, a).endVertex();
-            buffer.pos(pos1InX, pos1InY, z).color(r, g, b, a).endVertex();
-            buffer.pos(pos2InX, pos2InY, z).color(r, g, b, a).endVertex();
-            buffer.pos(pos2OutX, pos2OutY, z).color(r, g, b, a).endVertex();
+//            buffer.pos(pos1OutX, pos1OutY, z).color(r, g, b, a).endVertex();
+//            buffer.pos(pos1InX, pos1InY, z).color(r, g, b, a).endVertex();
+//            buffer.pos(pos2InX, pos2InY, z).color(r, g, b, a).endVertex();
+//            buffer.pos(pos2OutX, pos2OutY, z).color(r, g, b, a).endVertex();
+
+            buffer.normal(pos1OutX, pos1OutY, z).color(r, g, b, a).endVertex();
+            buffer.normal(pos1InX, pos1InY, z).color(r, g, b, a).endVertex();
+            buffer.normal(pos2InX, pos2InY, z).color(r, g, b, a).endVertex();
+            buffer.normal(pos2OutX, pos2OutY, z).color(r, g, b, a).endVertex();
         }
     }
 

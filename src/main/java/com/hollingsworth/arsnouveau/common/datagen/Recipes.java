@@ -15,7 +15,7 @@ import net.minecraft.item.Items;
 import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.chunk.BlockStatePaletteRegistry;
+
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Consumer;

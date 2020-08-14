@@ -26,7 +26,7 @@ public class EffectPull extends AbstractEffect {
         if(rayTraceResult instanceof EntityRayTraceResult){
             Entity target = ((EntityRayTraceResult) rayTraceResult).getEntity();
             System.out.println(target);
-            Vec3d vec3d = new Vec3d(shooter.posX - target.posX, shooter.posY - target.posY, shooter.posZ - target.posZ);
+            Vec3d vec3d = new Vec3d(shooter.getX() - target.getX(), shooter.getY() - target.getY(), shooter.getZ() - target.getZ());
             double d1 = 7;
 
             double d2 = 1.0D + 0.5 * getAmplificationBonus(augments);

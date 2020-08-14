@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.common.block.tile.ManaSiphonTile;
 import net.minecraft.block.*;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
+
 import net.minecraft.world.IBlockReader;
 
 import javax.annotation.Nullable;
@@ -36,10 +36,6 @@ public class ManaSiphonBlock extends ModBlock {
         return new ManaSiphonTile();
     }
 
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
 
     public static class SiphonData{
         int mana;

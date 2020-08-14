@@ -5,7 +5,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.LazyLoadBase;
+import net.minecraft.util.LazyValue;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraftforge.api.distmarker.Dist;
@@ -40,12 +40,12 @@ public class Materials {
             this.enchantability = enchantability;
             this.soundEvent = soundEvent;
             this.toughness = toughness;
-            this.repairMaterial = new LazyLoadBase<Ingredient>(supplier);
+            this.repairMaterial = new LazyValue<Ingredient>(supplier);
         }
 
         private final SoundEvent soundEvent;
         private final float toughness;
-        private final LazyLoadBase<Ingredient> repairMaterial;
+        private final LazyValue<Ingredient> repairMaterial;
 
 
         @Override

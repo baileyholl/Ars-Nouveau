@@ -1,16 +1,23 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.util.BlockRenderLayer;
+
 
 public class ArcaneOre extends ModBlock{
     public ArcaneOre() {
         super("arcane_ore");
     }
 
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
-    }
+//    @Override
+//    public BlockRenderLayer getRenderLayer() {
+//        return BlockRenderLayer.CUTOUT;
+//    }
+//
 
+
+    @Override
+    public BlockRenderType getRenderType(BlockState p_149645_1_) {
+        return BlockRenderType.MODEL;
+    }
 }

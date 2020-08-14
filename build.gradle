@@ -29,7 +29,8 @@ minecraft {
     // stable_#            Stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'snapshot', version: '20200119-1.14.4'
+	
+    mappings channel: 'snapshot', version: '20200426-mixed-1.15.2'
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -110,35 +111,12 @@ repositories {
 }
 
 dependencies {
-    // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
-    // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
-    // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.14.4-28.2.0'
-    compileOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.11:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.14.4:6.0.0.11")
-//
-    compileOnly fg.deobf("top.theillusivec4.curios:curios:FORGE-1.14.4-1.0.2:api")
-    runtimeOnly fg.deobf("top.theillusivec4.curios:curios:FORGE-1.14.4-1.0.2")
-
-    compile fg.deobf("vazkii.patchouli:Patchouli:1.14.4-1.1-25.135") { transitive = false }
-    // You may put jars on which you depend on in ./libs or you may define them like so..
-    // compile "some.group:artifact:version:classifier"
-    // compile "some.group:artifact:version"
-
-    // Real examples
-    // compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    // compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-
-    // The 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
-    // provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
-
-    // These dependencies get remapped to your current MCP mappings
-    // deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
- //   compileOnly fg.deobf("top.theillusivec4.curios:curios:FORGE-1.14.4-1.0.2:api")
-
-    // For more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+   minecraft 'net.minecraftforge:forge:1.15.2-31.2.5'
+	compile fg.deobf('mezz.jei:jei-1.15.2:+')
+	compile fileTree(dir: 'libs', include: '*.jar')
+	compile fg.deobf('top.theillusivec4.curios:curios:FORGE-1.15.2-+')
+	compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.15.2-1.2-32.168:api")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.15.2-1.2-32.168")
 }
 
 

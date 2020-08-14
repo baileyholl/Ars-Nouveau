@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.GuiSpellBook;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -58,7 +59,7 @@ public class GlyphButton extends Button {
         if (visible)
         {
             if(this.resourceIcon != null && !this.resourceIcon.equals("")) {
-                GlStateManager.color3f(1F, 1F, 1F);
+                RenderSystem.color3f(1F, 1F, 1F);
 //                Minecraft.getInstance().getTextureManager().bindTexture(new ResourceLocation(ExampleMod.MODID, "textures/gui/spells/" + this.resourceIcon));
 //                blit(x + 2, y + 2, 0, 0, 16, 16);
                 GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/spells/" + this.resourceIcon), x, y, 0, 0, 16, 16,16,16 );

@@ -19,10 +19,10 @@ public class GuiManaHUD extends AbstractGui {
                 double x = 100 ; //Length
                 x = (x) * ((new Double(mana.getCurrentMana())) / (new Double(mana.getMaxMana()) - 0.0))  + offsetLeft;
 
-                int y = minecraft.mainWindow.getScaledHeight() - 5;
+                int y = minecraft.getWindow().getScaledHeight() - 5;
                 //int offsetLeft = minecraft.mainWindow.getScaledWidth()/2;
 
-                int offsetStop =  minecraft.mainWindow.getScaledHeight() - 15;; // This determines the thickness from Y. Draws from Y to this value. Must be > y.
+                int offsetStop =  minecraft.getWindow().getScaledHeight() - 15;; // This determines the thickness from Y. Draws from Y to this value. Must be > y.
                 fill((int)offsetLeft, y, (int)100+ offsetLeft, offsetStop, 0xFF000000 | Integer.parseInt("C9CAB9", 16));
                 fillGradient((int)x, y, offsetLeft, offsetStop, 0xFF000000 | Integer.parseInt("337CFF", 16), new Color(0xFF000000 | Integer.parseInt("1145A1", 16)).darker().getRGB());
                 //fillGradient(50, 10, 8, 5,  0xFF000000 | Integer.parseInt("DDDDDD", 16), new Color(0xFF000000 | Integer.parseInt("DDDDDD", 16)).darker().getRGB());

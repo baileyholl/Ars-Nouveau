@@ -5,7 +5,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.client.config.GuiUtils;
+
+import net.minecraftforge.fml.client.gui.GuiUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,7 +27,7 @@ public class ModdedScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        MainWindow res = minecraft.mainWindow;
+        MainWindow res = getMinecraft().getWindow();
         double oldGuiScale = res.calcGuiScale(minecraft.gameSettings.guiScale, minecraft.getForceUnicodeFont());
         maxScale = getMaxAllowedScale();
         int persistentScale = Math.min(0, maxScale);;
@@ -70,7 +71,7 @@ public class ModdedScreen extends Screen {
     }
 
     int getMaxAllowedScale() {
-        return minecraft.mainWindow.calcGuiScale(0, minecraft.getForceUnicodeFont());
+        return getMinecraft().getWindow().calcGuiScale(0, minecraft.getForceUnicodeFont());
     }
 
 }

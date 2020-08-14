@@ -52,7 +52,7 @@ public class GlyphPressRenderer extends TileEntityRenderer<GlyphPressTile> {
         GlStateManager.enableLighting();
 
         tileEntityIn.frames++;
-        Minecraft.getInstance().gameRenderer.disableLightmap();
+        Minecraft.getInstance().gameRenderer.getLightmapTextureManager().disableLightmap();
 
         entityItem.setRotationYawHead(tileEntityIn.frames);
         //Prevent 'jump' in the bobbing
@@ -62,7 +62,7 @@ public class GlyphPressRenderer extends TileEntityRenderer<GlyphPressTile> {
 
         GlStateManager.disableLighting();
         GlStateManager.popMatrix();
-        Minecraft.getInstance().gameRenderer.enableLightmap();
+        Minecraft.getInstance().gameRenderer.getLightmapTextureManager().enableLightmap();
 
     }
 

@@ -9,7 +9,8 @@ import net.minecraft.state.IProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
+
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -32,15 +33,15 @@ public class EnchantingApparatusBlock extends ModBlock{
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if(!world.isRemote) {
             EnchantingApparatusTile tile = (EnchantingApparatusTile) world.getTileEntity(pos);
             if(player.isSneaking()){
                 tile.attemptCraft();
-                return true;
+                return ActionResultType.SUCCESS;
             }
             if (tile.catalystItem != null && player.getHeldItem(handIn).isEmpty()) {
-                ItemEntity item = new ItemEntity(world, player.posX, player.posY, player.posZ, tile.catalystItem);
+                ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.catalystItem);
                 world.addEntity(item);
                 tile.catalystItem = null;
             } else if (!player.inventory.getCurrentItem().isEmpty()) {
@@ -48,7 +49,7 @@ public class EnchantingApparatusBlock extends ModBlock{
             }
             world.notifyBlockUpdate(pos, state, state, 2);
         }
-        return true;
+        return ActionResultType.SUCCESS;
     }
 
 
@@ -56,10 +57,6 @@ public class EnchantingApparatusBlock extends ModBlock{
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new EnchantingApparatusTile();
-    }
-    @Override
-    public BlockRenderLayer getRenderLayer() {
-        return BlockRenderLayer.CUTOUT;
     }
 
     @Override

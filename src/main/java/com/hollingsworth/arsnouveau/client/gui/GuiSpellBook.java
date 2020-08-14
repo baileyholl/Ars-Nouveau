@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellbook;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -196,7 +197,7 @@ public class GuiSpellBook extends ModdedScreen {
         renderBackground();
         GlStateManager.pushMatrix();
         GlStateManager.translatef(bookLeft, bookTop, 0);
-        GlStateManager.color3f(1F, 1F, 1F);
+        RenderSystem.color3f(1F, 1F, 1F);
         drawBackgroundElements(mouseX, mouseY, partialTicks);
         drawForegroundElements(mouseX, mouseY, partialTicks);
         GlStateManager.popMatrix();

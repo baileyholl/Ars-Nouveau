@@ -35,14 +35,14 @@ public class EffectFangs extends AbstractEffect {
         double targetY = vec.y;
         double targetZ = vec.z;
 
-        double d0 = Math.min(targetY, shooter.posY);
-        double d1 = Math.max(targetY, shooter.posY) + 1.0D;
-        float f = (float)MathHelper.atan2(targetZ - shooter.posZ, targetX - shooter.posX);
+        double d0 = Math.min(targetY, shooter.getY());
+        double d1 = Math.max(targetY, shooter.getY()) + 1.0D;
+        float f = (float)MathHelper.atan2(targetZ - shooter.getZ(), targetX - shooter.getX());
 
         for(int l = 0; l < 16; ++l) {
             double d2 = 1.25D * (double)(l + 1);
             int j =  ( l + getBuffCount(augments, AugmentExtendTime.class)) / (1 + getBuffCount(augments, AugmentAccelerate.class));
-            this.spawnFangs(world, shooter.posX + (double)MathHelper.cos(f) * d2, shooter.posZ + (double)MathHelper.sin(f) * d2, d0, d1, f, j, shooter, bonusDamage);
+            this.spawnFangs(world, shooter.getX() + (double)MathHelper.cos(f) * d2, shooter.getZ() + (double)MathHelper.sin(f) * d2, d0, d1, f, j, shooter, bonusDamage);
         }
     }
 
