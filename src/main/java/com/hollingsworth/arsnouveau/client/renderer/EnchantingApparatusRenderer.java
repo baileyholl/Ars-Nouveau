@@ -2,10 +2,13 @@ package com.hollingsworth.arsnouveau.client.renderer;
 
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -14,7 +17,11 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class EnchantingApparatusRenderer extends TileEntityRenderer<EnchantingApparatusTile> {
 
-    @Override
+    public EnchantingApparatusRenderer(TileEntityRendererDispatcher p_i226006_1_) {
+        super(p_i226006_1_);
+    }
+
+
     public void render(EnchantingApparatusTile tileEntityIn, double x, double y, double z, float partialTicks, int destroyStage) {
         //  ItemStack dirt = new ItemStack(Items.DIRT);
         //     System.out.println("rendering");
@@ -48,8 +55,13 @@ public class EnchantingApparatusRenderer extends TileEntityRenderer<EnchantingAp
 
         GlStateManager.scalef(0.35f, 0.35f, 0.35F);
 
-        Minecraft.getInstance().getItemRenderer().renderItem(entityItem.getItem(), ItemCameraTransforms.TransformType.FIXED);
+//        Minecraft.getInstance().getItemRenderer().renderItem(entityItem.getItem(), ItemCameraTransforms.TransformType.FIXED);
         GlStateManager.popMatrix();
+
+    }
+
+    @Override
+    public void render(EnchantingApparatusTile enchantingApparatusTile, float v, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int i1) {
 
     }
 }

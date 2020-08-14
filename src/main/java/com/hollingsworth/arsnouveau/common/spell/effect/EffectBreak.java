@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.storage.loot.LootParameterSets;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -58,10 +59,12 @@ public class EffectBreak extends AbstractEffect {
                     continue;
                 }
                 if (hasBuff(augments, AugmentExtract.class)) {
-                    Block.spawnDrops(state, LootUtil.getSilkContext((ServerWorld) world, pos1, (PlayerEntity) shooter));
+                //TODO
+//                    Block.spawnDrops(state, LootUtil.getSilkContext((ServerWorld) world, pos1, (PlayerEntity) shooter).build(LootParameterSets.BLOCK));
                     world.destroyBlock(pos1, false);
                 } else if (hasBuff(augments, AugmentFortune.class)) {
-                    Block.spawnDrops(state, LootUtil.getFortuneContext((ServerWorld) world, pos1, (PlayerEntity) shooter, getBuffCount(augments, AugmentFortune.class)));
+                    //TODO
+//                    Block.spawnDrops(state, LootUtil.getFortuneContext((ServerWorld) world, pos1, (PlayerEntity) shooter, getBuffCount(augments, AugmentFortune.class)));
                     world.destroyBlock(pos1, false);
                 } else {
                     world.destroyBlock(pos1, true);

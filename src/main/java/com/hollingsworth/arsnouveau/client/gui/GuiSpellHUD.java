@@ -43,7 +43,7 @@ public class GuiSpellHUD extends FocusableGui implements IGuiEventListener {
             }else{
                 renderString = "Crafting Mode";
             }
-            minecraft.fontRenderer.drawStringWithShadow(renderString, offsetLeft, minecraft.getWindow().getScaledHeight() - 30 , 0xFFFFFF);
+            minecraft.fontRenderer.drawStringWithShadow(renderString, offsetLeft, minecraft.getMainWindow().getScaledHeight() - 30 , 0xFFFFFF);
         }
     }
 }

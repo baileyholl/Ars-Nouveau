@@ -44,14 +44,14 @@ public class EntityProjectileSpell extends ArrowEntity {
         if(world.getGameTime() % 1 == 0)
 
         for(int i =0; i < 2; i++){
-            double d0 = getX(); //+ world.rand.nextFloat();
-            double d1 = getY();//+ world.rand.nextFloat() ;
-            double d2 = getZ(); //+ world.rand.nextFloat();
+            double d0 = getPosX(); //+ world.rand.nextFloat();
+            double d1 = getPosY();//+ world.rand.nextFloat() ;
+            double d2 = getPosZ(); //+ world.rand.nextFloat();
 
             world.addParticle(ParticleTypes.ENCHANTED_HIT, d0, d1, d2, 0.0, 0.0, 0.0);
-             d0 = getX() + world.rand.nextFloat();
-             d1 = getY() + world.rand.nextFloat() -1 ;
-             d2 = getZ() + world.rand.nextFloat();
+//             d0 = getX() + world.rand.nextFloat();
+//             d1 = getY() + world.rand.nextFloat() -1 ;
+//             d2 = getZ() + world.rand.nextFloat();
             //world.addParticle(ParticleTypes.WITCH, d0, d1, d2, 0.1, 0.1, 0.1);
             //WispParticleData data = WispParticleData.wisp(0.25F + (float) Math.random() * 0.1F, (float) Math.random() * 0.25F, 0.75F + (float) Math.random() * 0.25F, (float) Math.random() * 0.25F, 1);
            // world.addParticle(data, d0, d1 + 0.25, d2, 0, -(-0.075F - (float) Math.random() * 0.015F), 0);
@@ -72,9 +72,9 @@ public class EntityProjectileSpell extends ArrowEntity {
             particles();
         }
 
-        this.lastTickPosX = this.getX();
-        this.lastTickPosY = this.getY();
-        this.lastTickPosZ = this.getZ();
+        this.lastTickPosX = this.getPosX();
+        this.lastTickPosY = this.getPosY();
+        this.lastTickPosZ = this.getPosZ();
         //super.tick();
 
         if (this.inGround) {
@@ -104,9 +104,10 @@ public class EntityProjectileSpell extends ArrowEntity {
         }
 
         Vec3d vec3d = this.getMotion();
-        this.posX += vec3d.x;
-        this.posY += vec3d.y;
-        this.posZ += vec3d.z;
+        double x = this.getPosX() +vec3d.x;
+        double y = this.getPosY() + vec3d.y;
+        double z = this.getPosZ() + vec3d.getZ();
+
         this.rotationYaw = (float)(MathHelper.atan2(vec3d.x, vec3d.z) * (double)(180F / (float)Math.PI));
 
 
@@ -131,7 +132,7 @@ public class EntityProjectileSpell extends ArrowEntity {
             this.setMotion(vec3d1.x, vec3d1.y , vec3d1.z);
         }
 
-        this.setPosition(this.posX, this.posY, this.posZ);
+        this.setPosition(x,y,z);
     }
 
     public EntityProjectileSpell( World world, LivingEntity shooter, SpellResolver spellResolver) {

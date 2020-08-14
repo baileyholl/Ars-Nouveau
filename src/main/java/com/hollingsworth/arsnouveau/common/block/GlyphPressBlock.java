@@ -35,7 +35,7 @@ public class GlyphPressBlock extends ModBlock{
     }
 
     @Override
-    public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult p_225533_6_) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult p_225533_6_) {
         if(!world.isRemote) {
             GlyphPressTile tile = (GlyphPressTile) world.getTileEntity(pos);
             if(tile.isCrafting)
@@ -49,7 +49,7 @@ public class GlyphPressBlock extends ModBlock{
 //            }
 
             if (tile.baseMaterial != null && player.getHeldItem(handIn).isEmpty()) {
-                ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.baseMaterial);
+                ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.baseMaterial);
                 world.addEntity(item);
                 tile.baseMaterial = null;
             }

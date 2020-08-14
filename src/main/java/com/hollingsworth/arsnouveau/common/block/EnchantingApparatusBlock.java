@@ -33,7 +33,7 @@ public class EnchantingApparatusBlock extends ModBlock{
     }
 
     @Override
-    public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if(!world.isRemote) {
             EnchantingApparatusTile tile = (EnchantingApparatusTile) world.getTileEntity(pos);
             if(player.isSneaking()){
@@ -41,7 +41,7 @@ public class EnchantingApparatusBlock extends ModBlock{
                 return ActionResultType.SUCCESS;
             }
             if (tile.catalystItem != null && player.getHeldItem(handIn).isEmpty()) {
-                ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.catalystItem);
+                ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.catalystItem);
                 world.addEntity(item);
                 tile.catalystItem = null;
             } else if (!player.inventory.getCurrentItem().isEmpty()) {

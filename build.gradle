@@ -30,7 +30,7 @@ minecraft {
     // Use non-default mappings at your own risk. they may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
 	
-    mappings channel: 'snapshot', version: '20200426-mixed-1.15.2'
+    mappings channel: 'snapshot', version: '20200814-1.15.1'
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     
     // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')

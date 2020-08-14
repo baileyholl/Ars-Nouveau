@@ -33,7 +33,7 @@ public class EffectLight extends AbstractEffect {
 
         if(rayTraceResult instanceof BlockRayTraceResult){
             BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getPos().offset(((BlockRayTraceResult) rayTraceResult).getFace());
-            if (world.getBlockState(pos).getMaterial() == Material.AIR && world.func_217350_a(BlockRegistry.LIGHT_BLOCK.getDefaultState(), pos, ISelectionContext.dummy())) {
+            if (world.getBlockState(pos).getMaterial() == Material.AIR && world.placedBlockWouldCollide(BlockRegistry.LIGHT_BLOCK.getDefaultState(), pos, ISelectionContext.dummy())) {
                 world.setBlockState(pos, BlockRegistry.LIGHT_BLOCK.getDefaultState());
             }
 

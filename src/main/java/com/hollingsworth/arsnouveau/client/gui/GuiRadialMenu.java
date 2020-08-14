@@ -157,8 +157,8 @@ public class GuiRadialMenu extends Screen {
                 adjusted = adjusted == 0 ? 10 : adjusted;
                 drawCenteredString(font, SpellBook.getSpellName(tag,  adjusted), width/2,(height - font.FONT_HEIGHT) / 2,0xFFFFFFFF);
             }
-//            RenderHelper.enableGUIStandardItemLighting();
-            RenderHelper.enable();
+
+            RenderHelper.enableStandardItemLighting();
             GlStateManager.popMatrix();
             for(int i = 0; i< numberOfSlices; i++){
                 ItemStack stack = new ItemStack(Blocks.DIRT);

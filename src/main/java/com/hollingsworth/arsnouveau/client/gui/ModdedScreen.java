@@ -27,7 +27,7 @@ public class ModdedScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        MainWindow res = getMinecraft().getWindow();
+        MainWindow res = getMinecraft().getMainWindow();
         double oldGuiScale = res.calcGuiScale(minecraft.gameSettings.guiScale, minecraft.getForceUnicodeFont());
         maxScale = getMaxAllowedScale();
         int persistentScale = Math.min(0, maxScale);;
@@ -71,7 +71,7 @@ public class ModdedScreen extends Screen {
     }
 
     int getMaxAllowedScale() {
-        return getMinecraft().getWindow().calcGuiScale(0, minecraft.getForceUnicodeFont());
+        return getMinecraft().getMainWindow().calcGuiScale(0, minecraft.getForceUnicodeFont());
     }
 
 }

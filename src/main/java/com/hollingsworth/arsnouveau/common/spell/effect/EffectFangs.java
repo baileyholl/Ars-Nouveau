@@ -35,14 +35,14 @@ public class EffectFangs extends AbstractEffect {
         double targetY = vec.y;
         double targetZ = vec.z;
 
-        double d0 = Math.min(targetY, shooter.getY());
-        double d1 = Math.max(targetY, shooter.getY()) + 1.0D;
-        float f = (float)MathHelper.atan2(targetZ - shooter.getZ(), targetX - shooter.getX());
+        double d0 = Math.min(targetY, shooter.getPosY());
+        double d1 = Math.max(targetY, shooter.getPosY()) + 1.0D;
+        float f = (float)MathHelper.atan2(targetZ - shooter.getPosZ(), targetX - shooter.getPosX());
 
         for(int l = 0; l < 16; ++l) {
             double d2 = 1.25D * (double)(l + 1);
             int j =  ( l + getBuffCount(augments, AugmentExtendTime.class)) / (1 + getBuffCount(augments, AugmentAccelerate.class));
-            this.spawnFangs(world, shooter.getX() + (double)MathHelper.cos(f) * d2, shooter.getZ() + (double)MathHelper.sin(f) * d2, d0, d1, f, j, shooter, bonusDamage);
+            this.spawnFangs(world, shooter.getPosX() + (double)MathHelper.cos(f) * d2, shooter.getPosZ() + (double)MathHelper.sin(f) * d2, d0, d1, f, j, shooter, bonusDamage);
         }
     }
 
@@ -59,7 +59,7 @@ public class EffectFangs extends AbstractEffect {
         while(true) {
             BlockPos blockpos1 = blockpos.down();
             BlockState blockstate = world.getBlockState(blockpos1);
-            if (blockstate.func_224755_d(world, blockpos1, Direction.UP)) {
+            if (blockstate.isSolidSide(world, blockpos1, Direction.UP)) {
                 if (!world.isAirBlock(blockpos)) {
                     BlockState blockstate1 = world.getBlockState(blockpos);
                     VoxelShape voxelshape = blockstate1.getCollisionShape(world, blockpos);

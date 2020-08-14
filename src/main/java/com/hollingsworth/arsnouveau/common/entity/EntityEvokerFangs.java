@@ -53,9 +53,9 @@ public class EntityEvokerFangs extends EvokerFangsEntity {
                 --this.lifeTicks;
                 if (this.lifeTicks == 14) {
                     for(int i = 0; i < 12; ++i) {
-                        double d0 = this.getX() + (this.rand.nextDouble() * 2.0D - 1.0D) * (double)this.getWidth() * 0.5D;
-                        double d1 = this.getY() + 0.05D + this.rand.nextDouble();
-                        double d2 = this.getZ() + (this.rand.nextDouble() * 2.0D - 1.0D) * (double)this.getWidth() * 0.5D;
+                        double d0 = this.getPosX() + (this.rand.nextDouble() * 2.0D - 1.0D) * (double)this.getWidth() * 0.5D;
+                        double d1 = this.getPosY() + 0.05D + this.rand.nextDouble();
+                        double d2 = this.getPosZ() + (this.rand.nextDouble() * 2.0D - 1.0D) * (double)this.getWidth() * 0.5D;
                         double d3 = (this.rand.nextDouble() * 2.0D - 1.0D) * 0.3D;
                         double d4 = 0.3D + this.rand.nextDouble() * 0.3D;
                         double d5 = (this.rand.nextDouble() * 2.0D - 1.0D) * 0.3D;
@@ -123,7 +123,7 @@ public class EntityEvokerFangs extends EvokerFangsEntity {
         if (id == 4) {
             this.clientSideAttackStarted = true;
             if (!this.isSilent()) {
-                this.world.playSound(this.getX(), this.getY(), this.getZ(), SoundEvents.ENTITY_EVOKER_FANGS_ATTACK, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.2F + 0.85F, false);
+                this.world.playSound(this.getPosX(), this.getPosY(), this.getPosZ(), SoundEvents.ENTITY_EVOKER_FANGS_ATTACK, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.2F + 0.85F, false);
             }
         }
 

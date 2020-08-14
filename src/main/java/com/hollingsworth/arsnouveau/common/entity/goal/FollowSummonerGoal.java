@@ -113,8 +113,8 @@ public class FollowSummonerGoal extends Goal {
             if (!this.navigator.tryMoveToEntityLiving(this.summon.getSummoner(), this.followSpeed)) {
                 System.out.println("Ticking");
                 if (!(this.summon.getSelfEntity().getDistanceSq(this.summon.getSummoner()) < 144.0D)) {
-                    int i = MathHelper.floor(this.summon.getSummoner().getX()) - 2;
-                    int j = MathHelper.floor(this.summon.getSummoner().getZ()) - 2;
+                    int i = MathHelper.floor(this.summon.getSummoner().getPosX()) - 2;
+                    int j = MathHelper.floor(this.summon.getSummoner().getPosZ()) - 2;
                     int k = MathHelper.floor(this.summon.getSummoner().getBoundingBox().minY);
 
                     for(int l = 0; l <= 4; ++l) {

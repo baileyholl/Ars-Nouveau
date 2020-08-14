@@ -34,7 +34,7 @@ public class PhantomBlockTile extends TileEntity implements ITickableTileEntity 
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
-        compound.put("age", new IntNBT(age));
+        compound.put("age", IntNBT.valueOf(age));
         return super.write(compound);
     }
 }

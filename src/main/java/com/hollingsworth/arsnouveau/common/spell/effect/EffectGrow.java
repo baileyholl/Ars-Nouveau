@@ -15,6 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class EffectGrow  extends AbstractEffect {
             if (igrowable.canGrow(worldIn, pos, blockstate, worldIn.isRemote)) {
                 if (!worldIn.isRemote) {
                     if (igrowable.canUseBonemeal(worldIn, worldIn.rand, pos, blockstate)) {
-                        igrowable.grow(worldIn, worldIn.rand, pos, blockstate);
+                        igrowable.grow((ServerWorld)worldIn, worldIn.rand, pos, blockstate);
                     }
                 }
 

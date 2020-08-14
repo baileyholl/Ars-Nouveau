@@ -10,6 +10,7 @@ import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -49,12 +50,12 @@ public class ManaJar extends ManaBlock {
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         super.onBlockActivated(state,worldIn,pos,player,handIn,hit);
         if(worldIn.isRemote)
-            return true;
+            return ActionResultType.SUCCESS;
         System.out.println(((AbstractManaTile)worldIn.getTileEntity(pos)).getCurrentMana());
 
-        return true;
+        return ActionResultType.SUCCESS;
     }
 }

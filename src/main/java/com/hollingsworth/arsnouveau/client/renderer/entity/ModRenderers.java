@@ -21,9 +21,9 @@ public class ModRenderers {
 //                        new ResourceLocation(ExampleMod.MODID,
 //                                "textures/entity/spell_proj.png")));
 
-        RenderingRegistry.registerEntityRenderingHandler(EntityProjectileSpell.class,
-                renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
-        RenderingRegistry.registerEntityRenderingHandler(EntityEvokerFangs.class, RenderFangs::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityAllyVex.class, RenderAllyVex::new);
+//        RenderingRegistry.registerEntityRenderingHandler(EntityProjectileSpell.class,
+//                renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
+//        RenderingRegistry.registerEntityRenderingHandler(EntityEvokerFangs.class, RenderFangs::new);
+//        RenderingRegistry.registerEntityRenderingHandler(EntityAllyVex.class, RenderAllyVex::new);
     }
 }

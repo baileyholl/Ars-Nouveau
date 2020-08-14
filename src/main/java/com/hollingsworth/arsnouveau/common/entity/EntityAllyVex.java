@@ -259,7 +259,7 @@ public class EntityAllyVex extends VexEntity implements ISummon {
 
         public void tick() {
             if (this.action == MovementController.Action.MOVE_TO) {
-                Vec3d vec3d = new Vec3d(this.posX - EntityAllyVex.this.getX(), this.posY - EntityAllyVex.this.getY(), this.posZ - EntityAllyVex.this.getZ());
+                Vec3d vec3d = new Vec3d(this.posX - EntityAllyVex.this.getPosX(), this.posY - EntityAllyVex.this.getPosY(), this.posZ - EntityAllyVex.this.getPosZ());
                 double d0 = vec3d.length();
                 if (d0 < EntityAllyVex.this.getBoundingBox().getAverageEdgeLength()) {
                     this.action = MovementController.Action.WAIT;
@@ -271,8 +271,8 @@ public class EntityAllyVex extends VexEntity implements ISummon {
                         EntityAllyVex.this.rotationYaw = -((float) MathHelper.atan2(vec3d1.x, vec3d1.z)) * (180F / (float)Math.PI);
                         EntityAllyVex.this.renderYawOffset = EntityAllyVex.this.rotationYaw;
                     } else {
-                        double d2 = EntityAllyVex.this.getAttackTarget().getX() - EntityAllyVex.this.getX();
-                        double d1 = EntityAllyVex.this.getAttackTarget().getZ() - EntityAllyVex.this.getZ();
+                        double d2 = EntityAllyVex.this.getAttackTarget().getPosX() - EntityAllyVex.this.getPosX();
+                        double d1 = EntityAllyVex.this.getAttackTarget().getPosZ() - EntityAllyVex.this.getPosZ();
                         EntityAllyVex.this.rotationYaw = -((float)MathHelper.atan2(d2, d1)) * (180F / (float)Math.PI);
                         EntityAllyVex.this.renderYawOffset = EntityAllyVex.this.rotationYaw;
                     }
