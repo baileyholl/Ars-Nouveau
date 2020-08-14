@@ -44,14 +44,14 @@ public class EntityProjectileSpell extends ArrowEntity {
         if(world.getGameTime() % 1 == 0)
 
         for(int i =0; i < 2; i++){
-            double d0 = posX; //+ world.rand.nextFloat();
-            double d1 = posY;//+ world.rand.nextFloat() ;
-            double d2 = posZ; //+ world.rand.nextFloat();
+            double d0 = getX(); //+ world.rand.nextFloat();
+            double d1 = getY();//+ world.rand.nextFloat() ;
+            double d2 = getZ(); //+ world.rand.nextFloat();
 
             world.addParticle(ParticleTypes.ENCHANTED_HIT, d0, d1, d2, 0.0, 0.0, 0.0);
-             d0 = posX + world.rand.nextFloat();
-             d1 = posY + world.rand.nextFloat() -1 ;
-             d2 = posZ + world.rand.nextFloat();
+             d0 = getX() + world.rand.nextFloat();
+             d1 = getY() + world.rand.nextFloat() -1 ;
+             d2 = getZ() + world.rand.nextFloat();
             //world.addParticle(ParticleTypes.WITCH, d0, d1, d2, 0.1, 0.1, 0.1);
             //WispParticleData data = WispParticleData.wisp(0.25F + (float) Math.random() * 0.1F, (float) Math.random() * 0.25F, 0.75F + (float) Math.random() * 0.25F, (float) Math.random() * 0.25F, 1);
            // world.addParticle(data, d0, d1 + 0.25, d2, 0, -(-0.075F - (float) Math.random() * 0.015F), 0);
@@ -72,9 +72,9 @@ public class EntityProjectileSpell extends ArrowEntity {
             particles();
         }
 
-        this.lastTickPosX = this.posX;
-        this.lastTickPosY = this.posY;
-        this.lastTickPosZ = this.posZ;
+        this.lastTickPosX = this.getX();
+        this.lastTickPosY = this.getY();
+        this.lastTickPosZ = this.getZ();
         //super.tick();
 
         if (this.inGround) {

@@ -11,6 +11,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -31,13 +32,13 @@ public class ArcanePedestal extends ModBlock{
     }
 
     @Override
-    public boolean onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if(!world.isRemote) {
             ArcanePedestalTile tile = (ArcanePedestalTile) world.getTileEntity(pos);
             if (tile.stack != null && player.getHeldItem(handIn).isEmpty()) {
                 if(world.getBlockState(pos.up()).getMaterial() != Material.AIR)
-                    return true;
-                ItemEntity item = new ItemEntity(world, player.posX, player.posY, player.posZ, tile.stack);
+                    return ActionResultType.SUCCESS;
+                ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
                 world.addEntity(item);
                 tile.stack = null;
             } else if (!player.inventory.getCurrentItem().isEmpty()) {
@@ -45,7 +46,7 @@ public class ArcanePedestal extends ModBlock{
             }
             world.notifyBlockUpdate(pos, state, state, 2);
         }
-        return true;
+        return  ActionResultType.SUCCESS;
     }
 
     @Nullable
