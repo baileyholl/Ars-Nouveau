@@ -8,6 +8,8 @@ import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.block.tile.GlyphPressTile;
 import com.hollingsworth.arsnouveau.client.renderer.GlyphPressRenderer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -20,9 +22,19 @@ public class ClientHandler {
     public static void init(final FMLClientSetupEvent evt) {
         System.out.println("Rendering model");
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.GLYPH_PRESS_TILE, GlyphPressRenderer::new);
-//        ClientRegistry.bindTileEntitySpecialRenderer(GlyphPressTile.class, new GlyphPressRenderer());
-//        ClientRegistry.bindTileEntitySpecialRenderer(ArcanePedestalTile.class, new ArcanePedestalRenderer());
-//        ClientRegistry.bindTileEntitySpecialRenderer(EnchantingApparatusTile.class, new EnchantingApparatusRenderer());
+        ClientRegistry.bindTileEntityRenderer(BlockRegistry.ARCANE_PEDESTAL_TILE, ArcanePedestalRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(BlockRegistry.ENCHANTING_APP_TILE, EnchantingApparatusRenderer::new);
+
+        RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_JAR, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.GLYPH_PRESS_BLOCK, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.ARCANE_PEDESTAL, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_SIPHON_BLOCK, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.ENCHANTING_APP_BLOCK, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.ARCANE_ORE, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.LIGHT_BLOCK, RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.PHANTOM_BLOCK, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_BLOOM_CROP, RenderType.getCutout());
+
     }
 
 }

@@ -99,7 +99,6 @@ public class SpellResolver {
         int totalCost = ManaUtil.calculateCost(spell_recipe);
         ManaCapability.getMana(entity).ifPresent(mana -> {
             mana.removeMana(totalCost);
-            System.out.println("Expending  Mana");
         });
     }
 }

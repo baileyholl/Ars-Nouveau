@@ -20,7 +20,6 @@ public class MethodSelf extends AbstractCastMethod {
 
     @Override
     public void onCast(ItemStack stack, PlayerEntity playerEntity, World world, ArrayList<AbstractAugment> augments) {
-        System.out.println("On Cast");
         resolver.onResolveEffect(playerEntity.getEntityWorld(), playerEntity, new EntityRayTraceResult(playerEntity));
         resolver.expendMana(playerEntity);
     }

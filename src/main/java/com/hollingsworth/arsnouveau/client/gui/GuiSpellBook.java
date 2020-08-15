@@ -160,7 +160,6 @@ public class GuiSpellBook extends ModdedScreen {
         this.selected_slot = (GuiSpellSlot) button;
         this.selected_slot.isSelected = true;
         this.selected_cast_slot = this.selected_slot.slotNum;
-        System.out.println("Slot clicked" + this.selected_slot.slotNum);
         updateCraftingSlots(this.selected_cast_slot);
         spell_name.setText(SpellBook.getSpellName(spell_book_tag, this.selected_cast_slot));
     }
@@ -168,8 +167,6 @@ public class GuiSpellBook extends ModdedScreen {
     public void updateCraftingSlots(int bookSlot){
         //Crafting slots
         ArrayList<AbstractSpellPart> spell_recipe = this.spell_book_tag != null ? SpellBook.getRecipeFromTag(spell_book_tag, bookSlot) : null;
-        System.out.println(spell_recipe.toString());
-
         for (int i = 0; i < craftingCells.size(); i++) {
             CraftingButton slot = craftingCells.get(i);
             slot.spell_id = "";

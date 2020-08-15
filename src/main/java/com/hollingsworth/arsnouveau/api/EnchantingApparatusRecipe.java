@@ -54,7 +54,6 @@ public class EnchantingApparatusRecipe {
      */
     @Nullable
     public ItemStack isResultOf(ItemStack catalyst, List<ItemStack> pedestalItems){
-        System.out.println("Checking result");
         pedestalItems = pedestalItems.stream().filter(itemStack -> !itemStack.isEmpty()).collect(Collectors.toList());
 
         if (this.catalyst.getItem() != catalyst.getItem() || this.pedestalItems.size() != pedestalItems.size() || !areSameSet(pedestalItems, this.pedestalItems)) {

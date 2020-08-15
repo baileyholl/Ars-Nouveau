@@ -33,9 +33,6 @@ public class BeltOfLevitation extends ArsNouveauCurio {
                 player.addPotionEffect(new EffectInstance(Effects.SLOW_FALLING, 5, 2));
             }
             player.fallDistance = 0.0f;
-//            player.setMotion(player.getMotion().getX(), player.getMotion().getY(), player.getMotion().getZ());
-//            System.out.println(player.getMotion().getY());
-//            player.velocityChanged = true;
         }
     }
 }

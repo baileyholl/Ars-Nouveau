@@ -31,11 +31,14 @@ public class ManaUtil {
     public static int getMaxMana(PlayerEntity e){
         AtomicInteger max = new AtomicInteger(100);
         e.getEquipmentAndArmor().forEach(i->{
+            int newMax = 0;
             if(i.getItem() instanceof IManaEquipment){
                 //max.addAndGet(((MagicArmor) i.getItem()).getMaxManaBonus());
-                int newMax = max.get() +((MagicArmor) i.getItem()).getMaxManaBoost() + 25 * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, i);
-                max.set(newMax);
+                newMax = max.get() +((MagicArmor) i.getItem()).getMaxManaBoost();
+
             }
+            newMax = max.get() + 25 * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, i);
+            max.set(newMax);
         });
         return max.get();
     }
@@ -45,8 +48,9 @@ public class ManaUtil {
         for(ItemStack i : e.getEquipmentAndArmor()){
             if(i.getItem() instanceof IManaEquipment){
                 MagicArmor armor = ((MagicArmor) i.getItem());
-                regen += armor.getManaRegenBonus() + 2 * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, i);
+                regen += armor.getManaRegenBonus();
             }
+            regen += 2 * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, i);
         }
         return regen;
     }

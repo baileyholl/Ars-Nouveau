@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.IProperty;
@@ -23,7 +24,7 @@ public class EnchantingApparatusBlock extends ModBlock{
     public static final IProperty stage = IntegerProperty.create("stage", 1, 47);
 
     public EnchantingApparatusBlock() {
-        super("enchanting_apparatus");
+        super(Properties.create(Material.ROCK).notSolid(),"enchanting_apparatus");
     }
 
 

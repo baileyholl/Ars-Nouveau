@@ -10,6 +10,7 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.network.FMLPlayMessages;
 
 import java.util.UUID;
 
@@ -28,6 +29,8 @@ public class EntityEvokerFangs extends EvokerFangsEntity {
     public EntityEvokerFangs(EntityType<? extends EvokerFangsEntity> p_i50170_1_, World p_i50170_2_) {
         super(p_i50170_1_, p_i50170_2_);
     }
+
+
 
     public EntityEvokerFangs(World worldIn, double x, double y, double z, float p_i47276_8_, int p_i47276_9_, LivingEntity casterIn, float bonusDamage) {
         this(EntityType.EVOKER_FANGS, worldIn);

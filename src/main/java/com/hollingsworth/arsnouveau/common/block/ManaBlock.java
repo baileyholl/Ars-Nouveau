@@ -19,6 +19,7 @@ public abstract class ManaBlock extends ModBlock{
     public ManaBlock(String registryName) {
         super(registryName);
     }
+
     public ManaBlock(Properties properties, String registry) {
         super(properties, registry);
     }

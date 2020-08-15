@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.common.block.tile.GlyphPressTile;
 import com.hollingsworth.arsnouveau.common.items.ItemsRegistry;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
@@ -26,7 +27,7 @@ public class GlyphPressBlock extends ModBlock{
     public static final IProperty stage = IntegerProperty.create("stage", 1, 31);
 
     public GlyphPressBlock() {
-        super("glyph_press");
+        super(Properties.create(Material.ROCK).notSolid(),"glyph_press");
     }
 
     @Override
@@ -56,8 +57,16 @@ public class GlyphPressBlock extends ModBlock{
             else if (!player.inventory.getCurrentItem().isEmpty()) {
                 if(player.getHeldItem(handIn).getItem() == Items.CLAY_BALL || player.getHeldItem(handIn).getItem() == ItemsRegistry.magicClay ||
                         player.getHeldItem(handIn).getItem() == ItemsRegistry.marvelousClay || player.getHeldItem(handIn).getItem() == ItemsRegistry.mythicalClay) {
+                    if(tile.baseMaterial != null){
+                        ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.baseMaterial);
+                        world.addEntity(item);
+                    }
                     tile.baseMaterial = player.inventory.decrStackSize(player.inventory.currentItem, 1);
                 }else if(ArsNouveauAPI.getInstance().hasCraftingReagent(player.getHeldItem(handIn).getItem()) != null && tile.baseMaterial != null){
+                    if(tile.reagentItem != null){
+                        ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.reagentItem);
+                        world.addEntity(item);
+                    }
                     tile.reagentItem = player.inventory.decrStackSize(player.inventory.currentItem, 1);
                     if(!tile.craft(player)) {
                         player.inventory.addItemStackToInventory(tile.reagentItem);
@@ -71,7 +80,7 @@ public class GlyphPressBlock extends ModBlock{
             //    world.markAndNotifyBlock(pos, world.getChunkAt(pos), getDefaultState(), getDefaultState(), 2);
             world.notifyBlockUpdate(pos, state, state, 2);
         }
-        return ActionResultType.PASS;
+        return ActionResultType.SUCCESS;
     }
 
     @Nullable

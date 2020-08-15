@@ -93,7 +93,7 @@ public class SpellBook extends Item implements ISpellTier {
         resolver.onCast(stack, playerIn, worldIn);
 
 
-        return new ActionResult<>(ActionResultType.SUCCESS, stack);
+        return new ActionResult<>(ActionResultType.PASS, stack);
     }
 
     public static void spawnParticles(double posX, double posY, double posZ, World world){
@@ -133,7 +133,7 @@ public class SpellBook extends Item implements ISpellTier {
         SpellResolver resolver = new SpellResolver(getCurrentRecipe(stack));
         resolver.onCastOnBlock(context);
 
-        return ActionResultType.SUCCESS;
+        return ActionResultType.PASS;
     }
 
     public ArrayList<AbstractSpellPart> getCurrentRecipe(ItemStack stack){

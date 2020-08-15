@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 public class PhantomBlock extends ModBlock {
 
     public PhantomBlock() {
-        super(defaultProperties().lightValue(7), "phantom_block");
+        super(defaultProperties().lightValue(7).notSolid(), "phantom_block");
     }
 
     @Override

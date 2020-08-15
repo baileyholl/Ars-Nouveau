@@ -79,7 +79,7 @@ public class EffectFangs extends AbstractEffect {
         }
 
         if (flag) {
-            world.addEntity(new EntityEvokerFangs(world, xAngle, (double)blockpos.getY() + d0, zAngle, rotationYaw, tickDelay, caster, bonusDamage));
+           world.addEntity(new EntityEvokerFangs(world, xAngle, (double)blockpos.getY() + d0, zAngle, rotationYaw, tickDelay, caster, bonusDamage));
         }
 
     }

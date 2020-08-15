@@ -70,11 +70,9 @@ public class EnchantingApparatusTile extends AnimatedTile {
         BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
             if(world.getTileEntity(blockPos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack != null) {
                 pedestalItems.add(((ArcanePedestalTile) world.getTileEntity(blockPos)).stack);
-
             }
         });
         EnchantingApparatusRecipe resultRecipe  =  ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes().stream().filter(r-> r.isResultOf(catalystItem, pedestalItems) != null).findFirst().orElse(null);
-        System.out.println("Result" + resultRecipe);
         return resultRecipe;
 
     }

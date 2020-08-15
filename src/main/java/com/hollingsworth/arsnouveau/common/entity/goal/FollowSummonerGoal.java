@@ -33,7 +33,7 @@ public class FollowSummonerGoal extends Goal {
         this.navigator = mobEntity.getNavigator();
         this.minDist = minDistIn;
         this.maxDist = maxDistIn;
-        System.out.println("Made follow goal2");
+
         this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
         if (!(mobEntity.getNavigator() instanceof GroundPathNavigator) && !(mobEntity.getNavigator() instanceof FlyingPathNavigator)) {
             throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
@@ -63,7 +63,7 @@ public class FollowSummonerGoal extends Goal {
      * Returns whether an in-progress EntityAIBase should continue executing
      */
     public boolean shouldContinueExecuting() {
-        System.out.println("Shoul continue");
+
         boolean flag = true;
         if(this.summon instanceof TameableEntity)
             flag = !((TameableEntity) this.summon).isSitting();
@@ -78,7 +78,7 @@ public class FollowSummonerGoal extends Goal {
      * Execute a one shot task or start executing a continuous task
      */
     public void startExecuting() {
-        System.out.println("Started executing");
+
         this.timeToRecalcPath = 0;
         this.oldWaterCost = this.summon.getSelfEntity().getPathPriority(PathNodeType.WATER);
         this.summon.getSelfEntity().setPathPriority(PathNodeType.WATER, 0.0F);
@@ -88,7 +88,7 @@ public class FollowSummonerGoal extends Goal {
      * Reset the task's internal state. Called when this task is interrupted by another one
      */
     public void resetTask() {
-        System.out.println("Interupted");
+
         this.navigator.clearPath();
         this.summon.getSelfEntity().setPathPriority(PathNodeType.WATER, this.oldWaterCost);
     }
@@ -98,9 +98,9 @@ public class FollowSummonerGoal extends Goal {
      * Keep ticking a continuous task that has already been started
      */
     public void tick() {
-        System.out.println("Ticking");
+
         if(this.summon.getSummoner() == null) {
-            System.out.println("Null owner");
+
             return;
         }
         this.summon.getSelfEntity().getLookController().setLookPositionWithEntity(this.summon.getSummoner(), 10.0F, (float)this.summon.getSelfEntity().getVerticalFaceSpeed());
@@ -109,9 +109,9 @@ public class FollowSummonerGoal extends Goal {
 
         if (--this.timeToRecalcPath <= 0) {
             this.timeToRecalcPath = 10;
-            System.out.println("Ticking");
+
             if (!this.navigator.tryMoveToEntityLiving(this.summon.getSummoner(), this.followSpeed)) {
-                System.out.println("Ticking");
+
                 if (!(this.summon.getSelfEntity().getDistanceSq(this.summon.getSummoner()) < 144.0D)) {
                     int i = MathHelper.floor(this.summon.getSummoner().getPosX()) - 2;
                     int j = MathHelper.floor(this.summon.getSummoner().getPosZ()) - 2;

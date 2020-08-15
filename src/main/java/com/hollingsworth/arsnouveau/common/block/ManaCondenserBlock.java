@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.ManaCondenserTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
@@ -29,7 +30,7 @@ public class ManaCondenserBlock extends ModBlock {
     public static final IProperty stage = IntegerProperty.create("stage", 1, 8);
 
     public ManaCondenserBlock() {
-        super("mana_condenser");
+        super(Properties.create(Material.ROCK).notSolid(),"mana_condenser");
     }
 
     @Override

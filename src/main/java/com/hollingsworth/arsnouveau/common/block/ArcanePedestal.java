@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 public class ArcanePedestal extends ModBlock{
 
     public ArcanePedestal() {
-        super(LibBlockNames.ARCANE_PEDESTAL);
+        super(Properties.create(Material.ROCK).notSolid(),LibBlockNames.ARCANE_PEDESTAL);
     }
 
     @Override
@@ -42,7 +42,13 @@ public class ArcanePedestal extends ModBlock{
                 world.addEntity(item);
                 tile.stack = null;
             } else if (!player.inventory.getCurrentItem().isEmpty()) {
+                if(tile.stack != null){
+                    ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.stack);
+                    world.addEntity(item);
+                }
+
                 tile.stack = player.inventory.decrStackSize(player.inventory.currentItem, 1);
+
             }
             world.notifyBlockUpdate(pos, state, state, 2);
         }

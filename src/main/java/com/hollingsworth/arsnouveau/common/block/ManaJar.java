@@ -2,7 +2,9 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.AbstractManaTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ManaJarTile;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.IProperty;
@@ -24,7 +26,7 @@ public class ManaJar extends ManaBlock {
     public static final IProperty fill = IntegerProperty.create("fill", 0, 10);
 
     public ManaJar() {
-        super("mana_jar");
+        super(Properties.create(Material.ROCK).notSolid(),"mana_jar");
     }
 
     @Override
@@ -38,7 +40,10 @@ public class ManaJar extends ManaBlock {
         return new ManaJarTile();
     }
 
-
+    @Override
+    public BlockRenderType getRenderType(BlockState p_149645_1_) {
+        return BlockRenderType.MODEL;
+    }
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<net.minecraft.block.Block, BlockState> builder) { builder.add(ManaJar.fill); }
@@ -54,7 +59,6 @@ public class ManaJar extends ManaBlock {
         super.onBlockActivated(state,worldIn,pos,player,handIn,hit);
         if(worldIn.isRemote)
             return ActionResultType.SUCCESS;
-        System.out.println(((AbstractManaTile)worldIn.getTileEntity(pos)).getCurrentMana());
 
         return ActionResultType.SUCCESS;
     }

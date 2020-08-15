@@ -12,6 +12,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.BlockPos;
@@ -59,12 +60,12 @@ public class EffectBreak extends AbstractEffect {
                     continue;
                 }
                 if (hasBuff(augments, AugmentExtract.class)) {
-                //TODO
-//                    Block.spawnDrops(state, LootUtil.getSilkContext((ServerWorld) world, pos1, (PlayerEntity) shooter).build(LootParameterSets.BLOCK));
+
+                    state.getDrops(LootUtil.getSilkContext((ServerWorld) world, pos1, (PlayerEntity) shooter)).forEach(i -> world.addEntity(new ItemEntity(world,pos1.getX(), pos1.getY(), pos1.getZ(), i )));
+
                     world.destroyBlock(pos1, false);
                 } else if (hasBuff(augments, AugmentFortune.class)) {
-                    //TODO
-//                    Block.spawnDrops(state, LootUtil.getFortuneContext((ServerWorld) world, pos1, (PlayerEntity) shooter, getBuffCount(augments, AugmentFortune.class)));
+                    state.getDrops(LootUtil.getFortuneContext((ServerWorld) world, pos1, (PlayerEntity) shooter, getBuffCount(augments, AugmentFortune.class))).forEach(i -> world.addEntity(new ItemEntity(world,pos1.getX(), pos1.getY(), pos1.getZ(),i )));;
                     world.destroyBlock(pos1, false);
                 } else {
                     world.destroyBlock(pos1, true);

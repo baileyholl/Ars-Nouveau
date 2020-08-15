@@ -21,13 +21,11 @@ public class GuiSpellHUD extends FocusableGui implements IGuiEventListener {
 
     @Override
     public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
-        System.out.println("Memes");
         return false;
     }
 
     @Override
     public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
-        System.out.println("Extra meme");
         return false;
     }
 

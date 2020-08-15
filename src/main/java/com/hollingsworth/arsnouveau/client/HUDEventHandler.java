@@ -39,15 +39,4 @@ public class HUDEventHandler {
         manaHUD.drawHUD();
 
     }
-
-//    @SubscribeEvent
-//    public static void renderManaHUD(final RenderGameOverlayEvent.Post event) {
-//        if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) return;
-//
-//        final PlayerEntity player = minecraft.player;
-//        if (player.getHeldItemMainhand().getItem() != ModItems.spell && player.getHeldItemOffhand().getItem() != ModItems.spell)
-//            return;
-//
-//        manaHUD.drawHUD();
-//    }
 }

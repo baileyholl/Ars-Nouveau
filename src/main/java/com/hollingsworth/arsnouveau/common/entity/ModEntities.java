@@ -14,10 +14,17 @@ import net.minecraftforge.registries.ObjectHolder;
 public class ModEntities {
 
 
-    public static final EntityType<EntityProjectileSpell> SPELL_PROJ = null;
+    public static EntityType<EntityProjectileSpell> SPELL_PROJ = null;
 
 
-//    public static void init() {
+    public static EntityType<EntityAllyVex> ALLY_VEX = null;
+
+
+    public static EntityType<EntityEvokerFangs> ENTITY_EVOKER_FANGS_ENTITY_TYPE = null;
+
+
+
+    //    public static void init() {
 //        // Every entity in our mod has an ID (local to this mod)
 //        int id = 1;
 //         EntityRegistry.registerModEntity(new ResourceLocation(""), EntityProjectileSpell.class, "ProjectileSpell", id++, ExampleMod.instance, 64, 3, true);
@@ -32,8 +39,6 @@ public class ModEntities {
 //    }
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
-    public static final int lightballID = 29;
-
         /**
          * Register this mod's {@link Entity} types.
          *
@@ -41,37 +46,28 @@ public class ModEntities {
          */
         @SubscribeEvent
         public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
-            System.out.println("Registered entitites");
-//            final EntityEntry[] entries = {
-//                    createBuilder("mod_projectile_spell")
-//                            .entity(EntityProjectileSpell.class)
-//                            .tracker(64, 20, false)
-//                            .build(),
-//
-//
-//            };
-            final EntityType<EntityProjectileSpell> spell_proj = build(
+            SPELL_PROJ = build(
                     "spell_proj",
                     EntityType.Builder.<EntityProjectileSpell>create(EntityProjectileSpell::new, EntityClassification.MISC)
                             .size(0.5f, 0.5f)
                             .setTrackingRange(10)
                             .setShouldReceiveVelocityUpdates(true)
                             .setUpdateInterval(60).setCustomClientFactory(EntityProjectileSpell::new));
-            final EntityType<EntityEvokerFangs> evokerFangs = build(
+            ENTITY_EVOKER_FANGS_ENTITY_TYPE = build(
                     "fangs",
                     EntityType.Builder.<EntityEvokerFangs>create(EntityEvokerFangs::new, EntityClassification.MISC)
                     .size(0.5F, 0.8F)
                     .setUpdateInterval(60));
-            final EntityType<EntityAllyVex> allyVex = build(
+           ALLY_VEX = build(
                     "ally_vex",
                     EntityType.Builder.<EntityAllyVex>create(EntityAllyVex::new, EntityClassification.MISC)
                             .size(0.4F, 0.8F).immuneToFire()
                             .setUpdateInterval(60));
 
             event.getRegistry().registerAll(
-                    spell_proj,
-                    evokerFangs,
-                    allyVex
+                    SPELL_PROJ,
+                    ENTITY_EVOKER_FANGS_ENTITY_TYPE,
+                    ALLY_VEX
             );
             //ENT_PROJECTILE = registerEntity(EntityType.Builder.<EntityModProjectile>create(EntityClassification.MISC).setCustomClientFactory(EntityModProjectile::new).size(0.25F, 0.25F), "ent_projectile");
 

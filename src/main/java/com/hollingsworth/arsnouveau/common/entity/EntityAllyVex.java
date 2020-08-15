@@ -35,17 +35,20 @@ public class EntityAllyVex extends VexEntity implements ISummon {
     private int limitedLifeTicks;
 
     public EntityAllyVex(EntityType<? extends VexEntity> p_i50190_1_, World p_i50190_2_) {
-        super(p_i50190_1_, p_i50190_2_);
+        super(ModEntities.ALLY_VEX, p_i50190_2_);
     }
 
     public EntityAllyVex(World p_i50190_2_, PlayerEntity owner) {
         super(EntityType.VEX, p_i50190_2_);
         this.owner = owner;
-        System.out.println("Created owner");
-        System.out.println(owner);
         this.limitedLifespan = false;
         setOwnerId(owner.getUniqueID());
         this.moveController = new EntityAllyVex.MoveHelperController(this);
+    }
+
+    @Override
+    public EntityType<?> getType() {
+        return ModEntities.ALLY_VEX;
     }
 
     @Nullable
@@ -65,7 +68,7 @@ public class EntityAllyVex extends VexEntity implements ISummon {
 
     @Override
     protected void registerGoals() {
-        System.out.println("Registering goal");
+
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(4, new EntityAllyVex.ChargeAttackGoal());
         this.goalSelector.addGoal(1, new EntityAllyVex.MoveRandomGoal());
@@ -207,7 +210,7 @@ public class EntityAllyVex extends VexEntity implements ISummon {
     public LivingEntity getOwnerFromID(){
         try {
             UUID uuid = this.getOwnerId();
-            System.out.println("returning " +  this.world.getPlayerByUuid(uuid));
+
             return uuid == null ? null : this.world.getPlayerByUuid(uuid);
         } catch (IllegalArgumentException var2) {
             return null;
@@ -217,8 +220,6 @@ public class EntityAllyVex extends VexEntity implements ISummon {
 
     @Nullable
     public UUID getOwnerId() {
-        System.out.println("Getting owner ID");
-        System.out.println(this.dataManager.get(OWNER_UNIQUE_ID));
         return this.dataManager.get(OWNER_UNIQUE_ID).orElse((UUID)null);
     }
 

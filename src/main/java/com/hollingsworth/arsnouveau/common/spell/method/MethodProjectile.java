@@ -57,14 +57,12 @@ public class MethodProjectile extends AbstractCastMethod {
 
     @Override
     public void onCast(ItemStack stack, PlayerEntity shooter, World world, ArrayList<AbstractAugment> augments) {
-        System.out.println("On Cast");
         summonProjectiles(world, shooter, augments);
         resolver.expendMana(shooter);
     }
 
     @Override
     public void onCastOnBlock(ItemUseContext context, ArrayList<AbstractAugment> augments) {
-        System.out.println("On cast on block");
         World world = context.getWorld();
         PlayerEntity shooter = context.getPlayer();
         summonProjectiles(world, shooter, augments);

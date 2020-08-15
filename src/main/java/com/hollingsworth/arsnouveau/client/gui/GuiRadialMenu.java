@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetBookMode;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
@@ -109,13 +110,13 @@ public class GuiRadialMenu extends Screen {
                 a += 360;
             }
 
-            GlStateManager.pushMatrix();
-            GlStateManager.disableAlphaTest();
-            GlStateManager.enableBlend();
-            GlStateManager.disableTexture();
-            GlStateManager.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.pushMatrix();
+            RenderSystem.disableAlphaTest();
+            RenderSystem.enableBlend();
+            RenderSystem.disableTexture();
+            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-            GlStateManager.translated(0, animTop, 0);
+            RenderSystem.translated(0, animTop, 0);
 
             Tessellator tessellator = Tessellator.getInstance();
             BufferBuilder buffer = tessellator.getBuffer();
@@ -150,16 +151,16 @@ public class GuiRadialMenu extends Screen {
             }
 
             tessellator.draw();
-            GlStateManager.enableTexture();
+            RenderSystem.enableTexture();
 
             if (hasMouseOver && mousedOverSlot != -1) {
                 int adjusted =  (mousedOverSlot+ 6) % 10;
                 adjusted = adjusted == 0 ? 10 : adjusted;
-                drawCenteredString(font, SpellBook.getSpellName(tag,  adjusted), width/2,(height - font.FONT_HEIGHT) / 2,0xFFFFFFFF);
+                drawCenteredString(font, SpellBook.getSpellName(tag,  adjusted), width/2,(height - font.FONT_HEIGHT) / 2,16777215);
             }
 
             RenderHelper.enableStandardItemLighting();
-            GlStateManager.popMatrix();
+            RenderSystem.popMatrix();
             for(int i = 0; i< numberOfSlices; i++){
                 ItemStack stack = new ItemStack(Blocks.DIRT);
                 float angle1 = ((i / (float) numberOfSlices) - 0.25f) * 2 * (float) Math.PI;
@@ -177,10 +178,10 @@ public class GuiRadialMenu extends Screen {
                         break;
                     }
                 }
-                GlStateManager.disableRescaleNormal();
+                RenderSystem.disableRescaleNormal();
                 RenderHelper.disableStandardItemLighting();
-                GlStateManager.disableLighting();
-                GlStateManager.disableDepthTest();
+                RenderSystem.disableLighting();
+                RenderSystem.disableDepthTest();
                 if(!resourceIcon.isEmpty()) {
                     GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/spells/" + resourceIcon), (int) posX, (int) posY, 0, 0, 16, 16, 16, 16);
                     GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/spells/" + castType), (int) posX +3 , (int) posY - 10, 0, 0, 10, 10, 10, 10);
@@ -213,8 +214,7 @@ public class GuiRadialMenu extends Screen {
 
     @Override
     public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
-        System.out.println("Click");
-        System.out.println(this.selectedItem);
+
         if(this.selectedItem != -1){
             SpellBook.setMode(tag, selectedItem);
             Networking.INSTANCE.sendToServer(new PacketSetBookMode(tag));
@@ -246,15 +246,10 @@ public class GuiRadialMenu extends Screen {
             float pos2InX = x + radiusIn * (float) Math.cos(angle2);
             float pos2InY = y + radiusIn * (float) Math.sin(angle2);
 
-//            buffer.pos(pos1OutX, pos1OutY, z).color(r, g, b, a).endVertex();
-//            buffer.pos(pos1InX, pos1InY, z).color(r, g, b, a).endVertex();
-//            buffer.pos(pos2InX, pos2InY, z).color(r, g, b, a).endVertex();
-//            buffer.pos(pos2OutX, pos2OutY, z).color(r, g, b, a).endVertex();
-
-            buffer.normal(pos1OutX, pos1OutY, z).color(r, g, b, a).endVertex();
-            buffer.normal(pos1InX, pos1InY, z).color(r, g, b, a).endVertex();
-            buffer.normal(pos2InX, pos2InY, z).color(r, g, b, a).endVertex();
-            buffer.normal(pos2OutX, pos2OutY, z).color(r, g, b, a).endVertex();
+            buffer.pos(pos1OutX, pos1OutY, z).color(r, g, b, a).endVertex();
+            buffer.pos(pos1InX, pos1InY, z).color(r, g, b, a).endVertex();
+            buffer.pos(pos2InX, pos2InY, z).color(r, g, b, a).endVertex();
+            buffer.pos(pos2OutX, pos2OutY, z).color(r, g, b, a).endVertex();
         }
     }
 

@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.GlyphPressTile;
 import com.hollingsworth.arsnouveau.common.items.ItemsRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
@@ -23,11 +24,35 @@ public class ArcanePedestalRenderer extends TileEntityRenderer<ArcanePedestalTil
         super(p_i226006_1_);
     }
 
+    public void renderFloatingItem(ArcanePedestalTile tileEntityIn, ItemEntity entityItem, double x, double y, double z, MatrixStack stack, IRenderTypeBuffer iRenderTypeBuffer){
+        stack.push();
 
-    public void render(ArcanePedestalTile tileEntityIn, double x, double y, double z, float partialTicks, int destroyStage) {
+        RenderSystem.enableLighting();
+
+        tileEntityIn.frames++;
+//        Minecraft.getInstance().gameRenderer.getLightTexture().disableLightmap();
+
+        entityItem.setRotationYawHead(tileEntityIn.frames);
+        //Prevent 'jump' in the bobbing
+        //Bobbing is calculated as the age plus the yaw
+        ObfuscationReflectionHelper.setPrivateValue(ItemEntity.class, entityItem, (int) (800f - tileEntityIn.frames), MappingUtil.getItemEntityAge());
+
+        Minecraft.getInstance().getRenderManager().renderEntityStatic(entityItem, 0.5,1,0.5, entityItem.rotationYaw, 2.0f,stack, iRenderTypeBuffer,15728880);
+
+        Minecraft.getInstance().getRenderManager().getRenderer(entityItem);
+        RenderSystem.disableLighting();
+        stack.pop();
+        Minecraft.getInstance().gameRenderer.getLightTexture().enableLightmap();
+
+    }
+
+    @Override
+    public void render(ArcanePedestalTile tileEntityIn, float v, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int i1) {
         //  ItemStack dirt = new ItemStack(Items.DIRT);
         //     System.out.println("rendering");
-
+        double x = tileEntityIn.getPos().getX();
+        double y = tileEntityIn.getPos().getY();
+        double z = tileEntityIn.getPos().getZ();
         if(tileEntityIn.stack == null)
             return;
 
@@ -42,32 +67,7 @@ public class ArcanePedestalRenderer extends TileEntityRenderer<ArcanePedestalTil
         y = y + 0.9;
         z = z +.5;
 
-//        renderFloatingItem(tileEntityIn, entityItem, x, y , z, );
-
-
-    }
-
-    public void renderFloatingItem(ArcanePedestalTile tileEntityIn, ItemEntity entityItem, double x, double y, double z, MatrixStack stack){
-        GlStateManager.pushMatrix();
-        GlStateManager.enableLighting();
-
-        tileEntityIn.frames++;
-        Minecraft.getInstance().gameRenderer.getLightTexture().disableLightmap();
-
-        entityItem.setRotationYawHead(tileEntityIn.frames);
-        //Prevent 'jump' in the bobbing
-        //Bobbing is calculated as the age plus the yaw
-        ObfuscationReflectionHelper.setPrivateValue(ItemEntity.class, entityItem, (int) (800f - tileEntityIn.frames), MappingUtil.getItemEntityAge());
-        IRenderTypeBuffer.Impl irendertypebuffer$impl = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
-        Minecraft.getInstance().getRenderManager().renderEntityStatic(entityItem, x, y, z,entityItem.rotationYaw, 0.0f,stack, irendertypebuffer$impl,10000);
-        GlStateManager.disableLighting();
-        GlStateManager.popMatrix();
-        Minecraft.getInstance().gameRenderer.getLightTexture().enableLightmap();
-
-    }
-
-    @Override
-    public void render(ArcanePedestalTile arcanePedestalTile, float v, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int i1) {
+        renderFloatingItem(tileEntityIn, entityItem, x, y , z, matrixStack, iRenderTypeBuffer);
 
     }
 }

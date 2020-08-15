@@ -19,7 +19,7 @@ public class LightBlock extends ModBlock {
     protected static final VoxelShape SHAPE = Block.makeCuboidShape(6.0D, 6.0D, 6.0D, 12.0D, 12.0D, 12.0D);
 
     public LightBlock() {
-        super(defaultProperties().lightValue(14).doesNotBlockMovement(), "light_block");
+        super(defaultProperties().lightValue(14).doesNotBlockMovement().notSolid().variableOpacity(), "light_block");
     }
 
 
@@ -46,7 +46,7 @@ public class LightBlock extends ModBlock {
 
     @Override
     public BlockRenderType getRenderType(BlockState p_149645_1_) {
-        return BlockRenderType.INVISIBLE;
+        return BlockRenderType.MODEL;
     }
 
     @Nullable
