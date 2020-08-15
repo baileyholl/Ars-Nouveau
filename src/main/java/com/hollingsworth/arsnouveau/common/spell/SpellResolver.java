@@ -59,7 +59,7 @@ public class SpellResolver {
             }
         }
 
-        int totalCost = ManaUtil.calculateCost(spell_recipe);
+        int totalCost = ManaUtil.getCastingCost(spell_recipe, entity);
         AtomicBoolean canCast = new AtomicBoolean(false);
         ManaCapability.getMana(entity).ifPresent(mana -> {
             canCast.set(totalCost <= mana.getCurrentMana() || entity.isCreative());
@@ -96,7 +96,7 @@ public class SpellResolver {
     }
 
     public void expendMana(LivingEntity entity){
-        int totalCost = ManaUtil.calculateCost(spell_recipe);
+        int totalCost = ManaUtil.getCastingCost(spell_recipe, (PlayerEntity) entity);
         ManaCapability.getMana(entity).ifPresent(mana -> {
             mana.removeMana(totalCost);
         });

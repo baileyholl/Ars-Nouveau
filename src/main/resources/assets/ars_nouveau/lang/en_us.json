@@ -54,6 +54,11 @@
 	"ars_nouveau.page.mana_bloom": "A magically infused flower, Mana Blooms provide additional mana to nearby Mana Condensers as they grow and provide a source of mana fiber.",
 	"ars_nouveau.page.belt_of_levitation": "A belt that allows the user levitate a moderate distance above the ground. Useful for climbing mountains! Simply sneak in the air while falling (or jumping) to rise.",
 
+	"ars_nouveau.page.ring_of_lesser_discount": "In addition to providing a small bonus to maximum mana and mana regen, Rings of Discount reduce the total cost to cast a spell.",
+
+	"ars_nouveau.page.ring_of_greater_discount": "Provides a slightly larger discount over the Lesser Ring of Discount.",
+
+
 	"enchantment.ars_nouveau.mana_boost": "Mana Boost",
 	"enchantment.ars_nouveau.mana_regen": "Mana Regen",
 	"item.ars_nouveau.bucket_of_mana":"Mana Bucket",
@@ -69,7 +74,9 @@
 	"item.ars_nouveau.mana_gem":"Mana Gem",
 	"item.ars_nouveau.blank_glyph": "Blank Glyph",
 	"item.ars_nouveau.worn_notebook": "Worn Notebook",
+	"item.ars_nouveau.ring_of_greater_discount": "Ring of Greater Discount",
 
+	"item.ars_nouveau.ring_of_lesser_discount": "Ring of Lesser Discount",
 
 
 	"item.ars_nouveau.glyph_accelerate": "Glyph:Accelerate",

@@ -33,6 +33,13 @@ public class APIRegistry {
         registerApparatusRecipe(new EnchantingApparatusRecipe( BlockRegistry.MANA_BLOOM_CROP.asItem(), Items.WHEAT_SEEDS, new Item[]
                 {ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana},  ArsNouveauAPI.PatchouliCategories.resources.name()));
 
+        registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.ringOfLesserDiscount, ItemsRegistry.ringOfPotential, new Item[]{
+                Items.DIAMOND, Items.ENDER_PEARL, Items.DIAMOND, ItemsRegistry.arcaneBrick, ItemsRegistry.arcaneBrick, Items.DIAMOND, Items.ENDER_PEARL, Items.DIAMOND
+        }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
+
+        registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.ringOfGreaterDiscount, ItemsRegistry.ringOfLesserDiscount, new Item[]{
+                Items.DIAMOND, Items.BLAZE_ROD, Items.DIAMOND, ItemsRegistry.arcaneBrick, ItemsRegistry.arcaneBrick, Items.DIAMOND, Items.BLAZE_ROD, Items.DIAMOND
+        }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
 
     }
 
@@ -72,7 +79,7 @@ public class APIRegistry {
         registerSpell(ModConfig.AugmentDampenID, new AugmentDampen());
         registerSpell(ModConfig.AugmentExtractID, new AugmentExtract());
         registerSpell(ModConfig.AugmentFortuneID, new AugmentFortune());
-
+        registerSpell(ModConfig.EffectEnderChestID, new EffectEnderChest());
         addStartingSpell(ModConfig.MethodProjectileID);
         addStartingSpell(ModConfig.MethodTouchID);
         addStartingSpell(ModConfig.MethodSelfID);

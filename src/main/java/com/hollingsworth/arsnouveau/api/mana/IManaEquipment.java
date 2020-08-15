@@ -2,7 +2,15 @@ package com.hollingsworth.arsnouveau.api.mana;
 
 public interface IManaEquipment{
 
-    int getMaxManaBoost();
+    default int getMaxManaBoost(){
+        return 0;
+    }
 
-    int getManaRegenBonus();
+    default int getManaRegenBonus(){
+        return 0;
+    }
+
+    default int getManaDiscount(){
+        return 0;
+    }
 }

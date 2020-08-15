@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.common.armor.MagicArmor;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ManaUtil {
 
-    public static int calculateCost(ArrayList<AbstractSpellPart> recipe) {
+    public static int getRecipeCost(ArrayList<AbstractSpellPart> recipe) {
         int cost = 0;
         for (int i = 0; i < recipe.size(); i++) {
             AbstractSpellPart spell = recipe.get(i);
@@ -28,30 +29,66 @@ public class ManaUtil {
         return cost;
     }
 
+    public static int getPlayerDiscounts(PlayerEntity e){
+        AtomicInteger discounts = new AtomicInteger();
+        CuriosUtil.getAllWornItems(e).ifPresent(items ->{
+
+            for(int i = 0; i < items.getSlots(); i++){
+                Item item = items.getStackInSlot(i).getItem();
+                if(item instanceof IManaEquipment)
+                    discounts.addAndGet(((IManaEquipment) item).getManaDiscount());
+            }
+        });
+        return discounts.get();
+    }
+
+    public static int getCastingCost(ArrayList<AbstractSpellPart> recipe, PlayerEntity e){
+        int cost = getRecipeCost(recipe) - getPlayerDiscounts(e);
+        return Math.max(cost, 0);
+    }
+
+
     public static int getMaxMana(PlayerEntity e){
         AtomicInteger max = new AtomicInteger(100);
         e.getEquipmentAndArmor().forEach(i->{
-            int newMax = 0;
             if(i.getItem() instanceof IManaEquipment){
                 //max.addAndGet(((MagicArmor) i.getItem()).getMaxManaBonus());
-                newMax = max.get() +((MagicArmor) i.getItem()).getMaxManaBoost();
+                max.addAndGet(((MagicArmor) i.getItem()).getMaxManaBoost());
 
             }
-            newMax = max.get() + 25 * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, i);
-            max.set(newMax);
+            max.addAndGet( 25 * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, i));
+        });
+
+        CuriosUtil.getAllWornItems(e).ifPresent(items ->{
+
+            for(int i = 0; i < items.getSlots(); i++){
+                Item item = items.getStackInSlot(i).getItem();
+                if(item instanceof IManaEquipment)
+                    max.addAndGet(((IManaEquipment) item).getMaxManaBoost());
+            }
         });
         return max.get();
     }
 
     public static int getArmorRegen(PlayerEntity e) {
-        int regen = 0;
+        AtomicInteger regen = new AtomicInteger();
         for(ItemStack i : e.getEquipmentAndArmor()){
             if(i.getItem() instanceof IManaEquipment){
                 MagicArmor armor = ((MagicArmor) i.getItem());
-                regen += armor.getManaRegenBonus();
+                regen.addAndGet(armor.getManaRegenBonus());
             }
-            regen += 2 * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, i);
+            regen.addAndGet(2 * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, i));
         }
-        return regen;
+        CuriosUtil.getAllWornItems(e).ifPresent(items ->{
+            int newregen = regen.get();
+            for(int i = 0; i < items.getSlots(); i++){
+                Item item = items.getStackInSlot(i).getItem();
+                if(item instanceof IManaEquipment)
+                    newregen += ((IManaEquipment) item).getManaRegenBonus();
+            }
+            regen.set(newregen);
+
+        });
+        return regen.get();
     }
 }

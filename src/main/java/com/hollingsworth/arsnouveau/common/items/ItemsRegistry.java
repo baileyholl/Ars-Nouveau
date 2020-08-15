@@ -2,15 +2,13 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.item.ArsNouveauCurio;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.common.armor.ApprenticeArmor;
 import com.hollingsworth.arsnouveau.common.armor.MagicArmor;
 import com.hollingsworth.arsnouveau.common.armor.MasterArmor;
 import com.hollingsworth.arsnouveau.common.armor.NoviceArmor;
-import com.hollingsworth.arsnouveau.common.items.curios.BeltOfLevitation;
-import com.hollingsworth.arsnouveau.common.items.curios.GreaterDiscountRing;
-import com.hollingsworth.arsnouveau.common.items.curios.LesserDiscountRing;
-import com.hollingsworth.arsnouveau.common.items.curios.RingOfAmplify;
+import com.hollingsworth.arsnouveau.common.items.curios.*;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
@@ -58,6 +56,11 @@ public class ItemsRegistry {
 
     @ObjectHolder(LibItemNames.RING_OF_POTENTIAL) public  static ModItem ringOfPotential;
 
+    @ObjectHolder(LibItemNames.RING_OF_LESSER_DISCOUNT) public static DiscountRing ringOfLesserDiscount;
+
+
+    @ObjectHolder(LibItemNames.RING_OF_GREATER_DISCOUNT) public static DiscountRing ringOfGreaterDiscount;
+
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler{
         public static final Set<Item> ITEMS = new HashSet<>();
@@ -95,10 +98,20 @@ public class ItemsRegistry {
                     new SpellBook(ISpellTier.Tier.THREE).setRegistryName(LibItemNames.ARCHMAGE_SPELL_BOOK),
                     new RingOfAmplify(),
                     new BeltOfLevitation(),
-                    new LesserDiscountRing(),
-                    new GreaterDiscountRing(),
                     new JarOfLight(),
-                    new WornNotebook()
+                    new WornNotebook(),
+                    new DiscountRing(LibItemNames.RING_OF_LESSER_DISCOUNT) {
+                        @Override
+                        public int getManaDiscount() {
+                            return 10;
+                        }
+                    },
+                    new DiscountRing(LibItemNames.RING_OF_GREATER_DISCOUNT) {
+                        @Override
+                        public int getManaDiscount() {
+                            return 20;
+                        }
+                    }
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

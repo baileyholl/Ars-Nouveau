@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
-    "ars_nouveau:ring_of_amplify"
+    "ars_nouveau:ring_of_amplify",
+	"ars_nouveau:ring_of_lesser_discount",
+	"ars_nouveau:ring_of_greater_discount"
   ]
 }

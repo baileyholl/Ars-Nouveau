@@ -39,4 +39,5 @@ public class ModConfig {
     public static final String AugmentFortuneID = "fortune";
     public static final String AugmentSplitID = "split";
 
+    public static String EffectEnderChestID = "ender_inventory";
 }
