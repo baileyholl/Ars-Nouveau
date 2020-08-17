@@ -27,7 +27,7 @@ public class GlyphPressBlock extends ModBlock{
     public static final IProperty stage = IntegerProperty.create("stage", 1, 31);
 
     public GlyphPressBlock() {
-        super(Properties.create(Material.ROCK).notSolid(),"glyph_press");
+        super(ModBlock.defaultProperties().notSolid(),"glyph_press");
     }
 
     @Override

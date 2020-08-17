@@ -30,7 +30,7 @@ public class ManaCondenserBlock extends ModBlock {
     public static final IProperty stage = IntegerProperty.create("stage", 1, 8);
 
     public ManaCondenserBlock() {
-        super(Properties.create(Material.ROCK).notSolid(),"mana_condenser");
+        super(ModBlock.defaultProperties().notSolid(),"mana_condenser");
     }
 
     @Override

@@ -10,10 +10,10 @@
 		{
             "type":"crafting",
 			"recipe":"ars_nouveau:novice_spell_book",
-			"recipe2":"ars_nouveau:apprentice_spell_book"
+			"recipe2":"ars_nouveau:apprentice_spell_book_upgrade"
 		},{
             "type":"crafting",
-			"recipe":"ars_nouveau:archmage_spell_book"
+			"recipe":"ars_nouveau:archmage_spell_book_upgrade"
 		}
     ]
 }

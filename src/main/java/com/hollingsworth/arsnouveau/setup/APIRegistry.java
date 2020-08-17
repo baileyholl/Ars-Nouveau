@@ -40,7 +40,9 @@ public class APIRegistry {
         registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.ringOfGreaterDiscount, ItemsRegistry.ringOfLesserDiscount, new Item[]{
                 Items.DIAMOND, Items.BLAZE_ROD, Items.DIAMOND, ItemsRegistry.arcaneBrick, ItemsRegistry.arcaneBrick, Items.DIAMOND, Items.BLAZE_ROD, Items.DIAMOND
         }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
-
+        registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.beltOfUnstableGifts, ItemsRegistry.mundaneBelt, new Item[]{
+                Items.SUGAR, Items.NETHER_WART, Items.BLAZE_POWDER, Items.GLOWSTONE_DUST, Items.FERMENTED_SPIDER_EYE, Items.REDSTONE, Items.BREWING_STAND, Items.FEATHER
+        }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
     }
 
     public static void registerSpells(){

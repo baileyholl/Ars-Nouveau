@@ -31,7 +31,8 @@ public class LibItemNames {
     public static final String JAR_OF_LIGHT = "jar_of_light";
     public static final String RING_OF_GREATER_DISCOUNT = "ring_of_greater_discount";
     public static final String RING_OF_LESSER_DISCOUNT = "ring_of_lesser_discount";
-
+    public static final String BELT_OF_UNSTABLE_GIFTS = "belt_of_unstable_gifts";
     public static final String AMULET_OF_MANA_REGEN = "amulet_of_mana_regen";
     public static final String AMULET_OF_MANA_BOOST = "amulet_of_mana_boost";
+    public static final String WARP_SCROLL = "warp_scroll";
 }

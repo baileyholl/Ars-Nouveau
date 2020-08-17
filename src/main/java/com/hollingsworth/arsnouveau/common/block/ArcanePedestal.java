@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 public class ArcanePedestal extends ModBlock{
 
     public ArcanePedestal() {
-        super(Properties.create(Material.ROCK).notSolid(),LibBlockNames.ARCANE_PEDESTAL);
+        super(ModBlock.defaultProperties().notSolid(),LibBlockNames.ARCANE_PEDESTAL);
     }
 
     @Override

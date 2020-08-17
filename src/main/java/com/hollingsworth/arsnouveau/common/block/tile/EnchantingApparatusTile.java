@@ -7,12 +7,14 @@ import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.block.EnchantingApparatusBlock;
 import com.hollingsworth.arsnouveau.common.block.GlyphPressBlock;
 import com.hollingsworth.arsnouveau.common.block.ManaCondenserBlock;
+import com.hollingsworth.arsnouveau.common.items.ItemsRegistry;
 import com.sun.jna.platform.win32.WinDef;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -53,7 +55,12 @@ public class EnchantingApparatusTile extends AnimatedTile {
                     this.catalystItem = recipe.result;
                     BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
                         if(world.getTileEntity(blockPos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack != null) {
-                          ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack = null;
+                            if(((ArcanePedestalTile) world.getTileEntity(blockPos)).stack.getItem() == ItemsRegistry.bucketOfMana){
+                                ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack = new ItemStack(Items.BUCKET);
+                            }else{
+                                ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack = null;
+                            }
+
                             BlockState state = world.getBlockState(blockPos);
                             world.notifyBlockUpdate(blockPos, state, state, 3);
                         }

@@ -1,6 +1,6 @@
 {
   "name": "Worn Notebook",
-  "landing_text": "Ars Nouveau provides spell crafting, magical devices, and powerful trinkets. This mod is currently in beta! More content is on the way. To help  development or report issues, visit: https://github.com/baileyholl/Ars-Nouveau. Thank you for playing.",
+  "landing_text": "Ars Nouveau provides spell crafting, magical devices, and powerful trinkets. This mod is currently in testing! To help  development or report issues, join the community: https://discord.gg/y7TMXZu Thank you for playing.",
   "dont_generate_book":true,
   "custom_book_item":"ars_nouveau:worn_notebook",
   "version": "1",

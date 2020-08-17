@@ -23,6 +23,7 @@ public class BookUpgradeRecipe extends ShapelessRecipe {
 
     @Override
     public ItemStack getCraftingResult(final CraftingInventory inv) {
+        System.out.println("Book recipe");
         final ItemStack output = super.getCraftingResult(inv); // Get the default output
 
         if (!output.isEmpty()) {
@@ -34,7 +35,7 @@ public class BookUpgradeRecipe extends ShapelessRecipe {
 //                    final int newDamage = MathHelper.clamp(ingredient.getDamage(), 0, output.getMaxDamage());
 //                    output.setDamage(newDamage);
 //                    break; // Break now
-
+                    System.out.println(output);
                     output.setTag(ingredient.getTag());
                 }
             }

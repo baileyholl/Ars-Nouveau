@@ -57,6 +57,8 @@
 	"ars_nouveau.page.ring_of_lesser_discount": "In addition to providing a small bonus to maximum mana and mana regen, Rings of Discount reduce the total cost to cast a spell.",
 
 	"ars_nouveau.page.ring_of_greater_discount": "Provides a slightly larger discount over the Lesser Ring of Discount.",
+	"ars_nouveau.page.belt_of_unstable_gifts": "Occasionally grants a random positive potion effect for a short duration. These effects can vary in strength.",
+
 
 
 	"enchantment.ars_nouveau.mana_boost": "Mana Boost",
@@ -74,6 +76,8 @@
 	"item.ars_nouveau.mana_gem":"Mana Gem",
 	"item.ars_nouveau.blank_glyph": "Blank Glyph",
 	"item.ars_nouveau.worn_notebook": "Worn Notebook",
+	"item.ars_nouveau.warp_scroll": "Warp Scroll",
+
 	"item.ars_nouveau.ring_of_greater_discount": "Ring of Greater Discount",
 
 	"item.ars_nouveau.ring_of_lesser_discount": "Ring of Lesser Discount",
@@ -112,5 +116,6 @@
 	"item.ars_nouveau.glyph_split": "Glyph:Split",
 	"item.ars_nouveau.glyph_strength": "Glyph:Strength",
 	"item.ars_nouveau.glyph_summon_vex": "Glyph:Summon Vex",
-	"item.ars_nouveau.glyph_touch": "Glyph:Touch"
+	"item.ars_nouveau.glyph_touch": "Glyph:Touch",
+	"effect.ars_nouveau.shield": "Magic Shield"
 }

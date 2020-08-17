@@ -1,0 +1,16 @@
+{
+  "name": "Access Ender Inventory",
+  "icon": "ars_nouveau:glyph_ender_inventory",
+  "category": "spells",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Opens your personal ender chest inventory from anywhere."
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "ONE",
+      "mana_cost": "Medium"
+    }
+  ]
+}

@@ -24,30 +24,5 @@ public class CuriosEventHandler {
             }
 
         });
-
-//        if(e.side.isClient() || e.phase == TickEvent.Phase.START)
-//            return;
-//        ServerPlayerEntity player = (ServerPlayerEntity) e.player;
-//        if(!player.onGround && player.isSneaking()){
-//            boolean isTooHigh = true;
-//            World world = player.getServerWorld();
-//            for(int i = 1; i < 6; i ++){
-//                if(world.getBlockState(player.getPosition().down(i)).getMaterial() != Material.AIR) {
-//                    isTooHigh = false;
-//                    break;
-//                }
-//            }
-//
-//            if(!isTooHigh) {
-//                player.addPotionEffect(new EffectInstance(Effects.LEVITATION, 5, 2));
-//            }else {
-//                player.addPotionEffect(new EffectInstance(Effects.SLOW_FALLING, 5, 2));
-//            }
-//            player.fallDistance = 0.0f;
-////            player.setMotion(player.getMotion().getX(), player.getMotion().getY(), player.getMotion().getZ());
-////            System.out.println(player.getMotion().getY());
-////            player.velocityChanged = true;
-//        }
-
     }
 }

@@ -33,7 +33,7 @@ public class EffectBreak extends AbstractEffect {
 
     @Override
     public int getManaCost() {
-        return 15;
+        return 10;
     }
 
     @Override

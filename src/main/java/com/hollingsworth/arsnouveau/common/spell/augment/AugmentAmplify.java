@@ -20,7 +20,7 @@ public class AugmentAmplify extends AbstractAugment {
     @Nullable
     @Override
     public Item getCraftingReagent() {
-        return Items.QUARTZ_BLOCK;
+        return Items.DIAMOND;
     }
 
     @Override
@@ -30,6 +30,6 @@ public class AugmentAmplify extends AbstractAugment {
 
     @Override
     protected String getBookDescription() {
-        return "Additively increases the power of most spell effects.";
+        return "Additively increases the power of most spell effects. Can empower Break to harvest Obsidian, and increases the damage of spells.";
     }
 }

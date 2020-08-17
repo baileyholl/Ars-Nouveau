@@ -24,7 +24,7 @@ public class EnchantingApparatusBlock extends ModBlock{
     public static final IProperty stage = IntegerProperty.create("stage", 1, 47);
 
     public EnchantingApparatusBlock() {
-        super(Properties.create(Material.ROCK).notSolid(),"enchanting_apparatus");
+        super(ModBlock.defaultProperties().notSolid(),"enchanting_apparatus");
     }
 
 

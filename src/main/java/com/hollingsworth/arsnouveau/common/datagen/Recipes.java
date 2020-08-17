@@ -39,38 +39,16 @@ public class Recipes extends RecipeProvider {
                    .addIngredient(ItemsRegistry.arcaneBrick, 1)
                    .addIngredient(Items.BOOK).build(consumer);
 
-            ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.noviceSpellBook).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
-                    .addIngredient(ItemsRegistry.wornNotebook)
-                    .addIngredient(Items.IRON_SHOVEL)
-                    .addIngredient(Items.IRON_PICKAXE)
-                    .addIngredient(Items.IRON_AXE)
-                    .addIngredient(Items.IRON_SWORD)
-                    .build(consumer);
-
-            ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.apprenticeSpellBook).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
-                    .addIngredient(ItemsRegistry.noviceSpellBook)
-                    .addIngredient(Items.DIAMOND, 3)
-                    .addIngredient(Items.BLAZE_ROD, 2)
-                    .addIngredient(Items.QUARTZ_BLOCK, 2)
-                    .addIngredient(Items.OBSIDIAN)
-                    .build(consumer);
-
-            ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.archmageSpellBook).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
-                    .addIngredient(ItemsRegistry.apprenticeSpellBook)
-                    .addIngredient(Items.NETHER_STAR)
-                    .addIngredient(Items.EMERALD, 3)
-                    .addIngredient(Items.ENDER_PEARL, 3)
-                    .addIngredient(Items.TOTEM_OF_UNDYING)
-                    .build(consumer);
 
             ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.magicClay).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                     .addIngredient(Items.CLAY_BALL)
-                    .addIngredient(Items.IRON_INGOT, 2)
+                    .addIngredient(ItemsRegistry.arcaneBrick, 2)
                     .addIngredient(Items.REDSTONE, 2)
                     .build(consumer);
             ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.marvelousClay).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                     .addIngredient(ItemsRegistry.magicClay)
-                    .addIngredient(Items.GOLD_INGOT, 2)
+                    .addIngredient(Items.GOLD_INGOT, 1)
+                    .addIngredient(ItemsRegistry.arcaneBrick, 1)
                     .addIngredient(Items.LAPIS_LAZULI, 2)
                     .build(consumer);
 
@@ -79,6 +57,10 @@ public class Recipes extends RecipeProvider {
                     .addIngredient(Items.DIAMOND, 2)
                     .addIngredient(Items.BLAZE_POWDER, 2)
                     .build(consumer);
+
+            ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.warpScroll).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                .addIngredient(ItemsRegistry.manaFiber, 4)
+                .build(consumer);
 
 
             ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.manaFiber, 4).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))

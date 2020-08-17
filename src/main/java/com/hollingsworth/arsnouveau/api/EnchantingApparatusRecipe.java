@@ -70,8 +70,8 @@ public class EnchantingApparatusRecipe {
         if(A.size() != B.size()) {
             return false;
         }
-        A.sort(Comparator.comparing(a -> a.getItem().getName().getString()));
-        B.sort(Comparator.comparing(a -> a.getItem().getName().getString()));
+        A.sort(Comparator.comparing(a -> a.getItem().getRegistryName().toString()));
+        B.sort(Comparator.comparing(a -> a.getItem().getRegistryName().toString()));
 
         for(int i = 0; i < A.size(); i++){
             if(A.get(i).getItem() != B.get(i).getItem()) {

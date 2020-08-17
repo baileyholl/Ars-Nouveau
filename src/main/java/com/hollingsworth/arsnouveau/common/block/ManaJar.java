@@ -26,7 +26,7 @@ public class ManaJar extends ManaBlock {
     public static final IProperty fill = IntegerProperty.create("fill", 0, 10);
 
     public ManaJar() {
-        super(Properties.create(Material.ROCK).notSolid(),"mana_jar");
+        super(ModBlock.defaultProperties().notSolid(),"mana_jar");
     }
 
     @Override

@@ -56,6 +56,8 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
         return ISpellTier.Tier.ONE;
     }
 
+
+
     public int getBuffCount(ArrayList<AbstractAugment> augments, Class spellClass){
         return (int) augments.stream().filter(spellClass::isInstance).count();
     }

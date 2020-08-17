@@ -61,6 +61,10 @@ public class ItemsRegistry {
 
     @ObjectHolder(LibItemNames.RING_OF_GREATER_DISCOUNT) public static DiscountRing ringOfGreaterDiscount;
 
+    @ObjectHolder(LibItemNames.BELT_OF_UNSTABLE_GIFTS) public static BeltOfUnstableGifts beltOfUnstableGifts;
+
+    @ObjectHolder(LibItemNames.WARP_SCROLL) public static WarpScroll warpScroll;
+
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler{
         public static final Set<Item> ITEMS = new HashSet<>();
@@ -80,6 +84,7 @@ public class ItemsRegistry {
                     new ModItem(LibItemNames.MUNDANE_BELT),
                     new ModItem(LibItemNames.ARCANE_BRICK),
                     new ModItem(LibItemNames.RING_OF_POTENTIAL),
+                    new BeltOfUnstableGifts(LibItemNames.BELT_OF_UNSTABLE_GIFTS),
                     new ModItem(new Item.Properties().group(ArsNouveau.itemGroup).maxStackSize(1), "bucket_of_mana"),
                     new NoviceArmor(EquipmentSlotType.FEET).setRegistryName("novice_boots"),
                     new NoviceArmor(EquipmentSlotType.LEGS).setRegistryName("novice_leggings"),
@@ -98,6 +103,7 @@ public class ItemsRegistry {
                     new SpellBook(ISpellTier.Tier.THREE).setRegistryName(LibItemNames.ARCHMAGE_SPELL_BOOK),
                     new RingOfAmplify(),
                     new BeltOfLevitation(),
+                    new WarpScroll(),
                     new JarOfLight(),
                     new WornNotebook(),
                     new DiscountRing(LibItemNames.RING_OF_LESSER_DISCOUNT) {

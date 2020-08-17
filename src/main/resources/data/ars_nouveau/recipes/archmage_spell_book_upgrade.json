@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "ars_nouveau:book_upgrade",
   "ingredients": [
     {
       "item": "ars_nouveau:apprentice_spell_book"

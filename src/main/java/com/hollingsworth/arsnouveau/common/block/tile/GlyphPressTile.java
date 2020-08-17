@@ -4,11 +4,14 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.block.GlyphPressBlock;
+import com.hollingsworth.arsnouveau.common.block.ManaJar;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
+import com.hollingsworth.arsnouveau.common.items.ItemsRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -20,6 +23,7 @@ import net.minecraft.util.text.StringTextComponent;
 
 import javax.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity, IInventory {
     public long frames;
@@ -165,6 +169,15 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
         world.notifyBlockUpdate(pos, state, state, 2);
     }
 
+    public Item getMatchingClay(ISpellTier.Tier tier){
+        if(tier == ISpellTier.Tier.ONE)
+            return ItemsRegistry.magicClay;
+        else if(tier == ISpellTier.Tier.TWO){
+            return ItemsRegistry.marvelousClay;
+        }
+        return ItemsRegistry.mythicalClay;
+    }
+
     @Override
     public int getSizeInventory() {
         return 1;
@@ -210,7 +223,6 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
     }
 
     public boolean craft(PlayerEntity playerEntity) {
-        System.out.println("crafting");
         if(isCrafting)
             return false;
         Glyph glyph = ArsNouveauAPI.getInstance().hasCraftingReagent(reagentItem.getItem());
@@ -218,17 +230,23 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
         AtomicBoolean valid = new AtomicBoolean(false);
         if(glyph == null)
             return false;
+        AtomicReference<BlockPos> jar = new AtomicReference<>();
         BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
             if(world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= manaCost) {
                 valid.set(true);
-
+                jar.set(blockPos);
             }
         });
         if(!valid.get())
             playerEntity.sendMessage(new StringTextComponent("There does not appear to be enough mana nearby. "));
-        if(glyph != null && valid.get()){
-            isCrafting = true;
-            return true;
+
+
+        if(glyph != null && valid.get() && this.baseMaterial != null &&  getMatchingClay(glyph.spellPart.getTier()) == this.baseMaterial.getItem()){
+            if(world.getTileEntity(jar.get()) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(jar.get())).getCurrentMana() >= manaCost){
+                ((ManaJarTile) world.getTileEntity(jar.get())).removeMana(manaCost);
+                isCrafting = true;
+                return true;
+            }
         }
         return false;
     }
