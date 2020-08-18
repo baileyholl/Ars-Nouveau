@@ -33,6 +33,7 @@ public class MethodTouch extends AbstractCastMethod {
     @Override
     public void onCastOnBlock(ItemUseContext context, ArrayList<AbstractAugment> augments) {
         World world = context.getWorld();
+
         BlockRayTraceResult res = new BlockRayTraceResult(context.getHitVec(), context.getFace(), context.getPos(), false);
 
         resolver.onResolveEffect(world, context.getPlayer(), res);

@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,26 +24,25 @@ public class MethodProjectile extends AbstractCastMethod {
         super(ModConfig.MethodProjectileID, "Projectile");
     }
 
-
-
     @Override
     public int getManaCost() {
         return 10;
     }
 
-
     public void summonProjectiles(World world, PlayerEntity shooter, ArrayList<AbstractAugment> augments){
         ArrayList<EntityProjectileSpell> projectiles = new ArrayList<>();
-        EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, shooter, this.resolver);
+        int numPierce = getBuffCount(augments, AugmentPierce.class);
+        EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, shooter, this.resolver, numPierce);
         projectiles.add(projectileSpell);
         int numSplits = getBuffCount(augments, AugmentSplit.class);
+
         for(int i =1; i < numSplits + 1; i++){
             Direction offset =shooter.getHorizontalFacing().rotateY();
             if(i%2==0) offset = offset.getOpposite();
              // Alternate sides
             BlockPos projPos = shooter.getPosition().offset(offset, i);
             projPos = projPos.add(0, 1.5, 0);
-            EntityProjectileSpell spell = new EntityProjectileSpell(world, shooter, this.resolver);
+            EntityProjectileSpell spell = new EntityProjectileSpell(world, shooter, this.resolver, numPierce);
             spell.setPosition(projPos.getX(), projPos.getY(), projPos.getZ());
             projectiles.add(spell);
         }

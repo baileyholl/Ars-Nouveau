@@ -234,14 +234,15 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
         BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
             if(world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= manaCost) {
                 valid.set(true);
-                jar.set(blockPos);
+                jar.set(new BlockPos(blockPos));
+
             }
         });
         if(!valid.get())
             playerEntity.sendMessage(new StringTextComponent("There does not appear to be enough mana nearby. "));
 
-
         if(glyph != null && valid.get() && this.baseMaterial != null &&  getMatchingClay(glyph.spellPart.getTier()) == this.baseMaterial.getItem()){
+
             if(world.getTileEntity(jar.get()) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(jar.get())).getCurrentMana() >= manaCost){
                 ((ManaJarTile) world.getTileEntity(jar.get())).removeMana(manaCost);
                 isCrafting = true;

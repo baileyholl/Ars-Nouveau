@@ -27,4 +27,9 @@ public class AugmentPierce extends AbstractAugment {
     public Item getCraftingReagent() {
         return Items.ARROW;
     }
+
+    @Override
+    protected String getBookDescription() {
+        return "When applied to the Projectile spell, projectiles may continue through their path an additional time after hitting a mob or block.";
+    }
 }

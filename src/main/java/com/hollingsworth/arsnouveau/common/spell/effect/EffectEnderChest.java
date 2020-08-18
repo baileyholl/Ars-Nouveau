@@ -8,9 +8,12 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.inventory.container.ChestContainer;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 import static net.minecraft.block.EnderChestBlock.CONTAINER_NAME;
@@ -40,5 +43,16 @@ public class EffectEnderChest extends AbstractEffect {
     @Override
     public int getManaCost() {
         return 50;
+    }
+
+    @Nullable
+    @Override
+    public Item getCraftingReagent() {
+        return Items.ENDER_CHEST;
+    }
+
+    @Override
+    public Tier getTier() {
+        return Tier.TWO;
     }
 }

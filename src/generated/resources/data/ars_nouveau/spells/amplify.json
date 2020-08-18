@@ -5,14 +5,14 @@
   "pages": [
     {
       "type": "text",
-      "text": "Additively increases the power of most spell effects."
+      "text": "Additively increases the power of most spell effects. Can empower Break to harvest Obsidian, and increases the damage of spells."
     },
     {
       "type": "glyph_recipe",
       "tier": "ONE",
       "mana_cost": "Medium",
       "clay_type": "ars_nouveau:magic_clay",
-      "reagent": "minecraft:quartz_block"
+      "reagent": "minecraft:diamond"
     }
   ]
 }

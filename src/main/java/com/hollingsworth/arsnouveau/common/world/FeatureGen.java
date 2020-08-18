@@ -17,9 +17,7 @@ import net.minecraftforge.registries.ForgeRegistry;
 public class FeatureGen {
 
     public static void setupOreGen() {
-        System.out.println("REGISTERING ORE GEN");
         for (Biome biome : ForgeRegistries.BIOMES) {
-            System.out.println(biome);
             biome.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, Feature.ORE.withConfiguration(
                     new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE, BlockRegistry.ARCANE_ORE.getDefaultState(), 9)).withPlacement(Placement.COUNT_RANGE.configure(
                     new CountRangeConfig(20,0,0,64))));

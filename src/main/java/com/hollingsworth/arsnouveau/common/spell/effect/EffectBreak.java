@@ -70,6 +70,7 @@ public class EffectBreak extends AbstractEffect {
                 } else {
                     world.destroyBlock(pos1, true);
                 }
+                world.notifyBlockUpdate(pos1, state, state, 2);
             }
         }
     }

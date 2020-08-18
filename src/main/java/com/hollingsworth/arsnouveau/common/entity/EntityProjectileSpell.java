@@ -8,6 +8,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.*;
@@ -21,14 +22,18 @@ public class EntityProjectileSpell extends ArrowEntity {
     private SpellResolver spellResolver;
     public int xpColor;
 
-    public EntityProjectileSpell(EntityType<? extends ArrowEntity> type, World worldIn, SpellResolver spellResolver) {
+    public int pierceLeft;
+
+    public EntityProjectileSpell(EntityType<? extends ArrowEntity> type, World worldIn, SpellResolver spellResolver, int pierceLeft) {
         super(type, worldIn);
         this.spellResolver = spellResolver;
         age = 0;
+        this.pierceLeft = pierceLeft;
     }
 
     public EntityProjectileSpell(final EntityType<? extends EntityProjectileSpell> entityType, final World world) {
         super(entityType, world);
+
     }
 
     public EntityProjectileSpell(final World world, final double x, final double y, final double z) {
@@ -49,21 +54,8 @@ public class EntityProjectileSpell extends ArrowEntity {
             double d2 = getPosZ(); //+ world.rand.nextFloat();
 
             world.addParticle(ParticleTypes.ENCHANTED_HIT, d0, d1, d2, 0.0, 0.0, 0.0);
-//             d0 = getX() + world.rand.nextFloat();
-//             d1 = getY() + world.rand.nextFloat() -1 ;
-//             d2 = getZ() + world.rand.nextFloat();
-            //world.addParticle(ParticleTypes.WITCH, d0, d1, d2, 0.1, 0.1, 0.1);
-            //WispParticleData data = WispParticleData.wisp(0.25F + (float) Math.random() * 0.1F, (float) Math.random() * 0.25F, 0.75F + (float) Math.random() * 0.25F, (float) Math.random() * 0.25F, 1);
-           // world.addParticle(data, d0, d1 + 0.25, d2, 0, -(-0.075F - (float) Math.random() * 0.015F), 0);
+       }
 
-          //  world.addParticle(WispParticleData.wisp(0.25F + (float) Math.random() * 0.1F, (float) Math.random() * 0.25F, 0.75F + (float) Math.random() * 0.25F, (float) Math.random() * 0.25F, 1), d0, d1, d2, 0, 0, 0);
-        }
-////        for(int i =0; i < 1; i++){
-//            double d0 = posX + world.rand.nextFloat();
-//            double d1 = posY + world.rand.nextFloat();
-//            double d2 = posZ + world.rand.nextFloat();
-//            world.addParticle(ParticleTypes.LAVA, d0, d1, d2, 0.1, 0.1, 0.1);
-////        }
     }
 
     @Override
@@ -135,10 +127,11 @@ public class EntityProjectileSpell extends ArrowEntity {
         this.setPosition(x,y,z);
     }
 
-    public EntityProjectileSpell( World world, LivingEntity shooter, SpellResolver spellResolver) {
+    public EntityProjectileSpell( World world, LivingEntity shooter, SpellResolver spellResolver, int maxPierce) {
         super(world, shooter);
         this.spellResolver = spellResolver;
         age = 0;
+        pierceLeft = maxPierce;
     }
 
 
@@ -180,6 +173,14 @@ public class EntityProjectileSpell extends ArrowEntity {
         return ModEntities.SPELL_PROJ;
     }
 
+    protected void attemptRemoval(){
+        this.pierceLeft--;
+        if(this.pierceLeft < 0){
+            this.world.setEntityState(this, (byte)3);
+            this.remove();
+        }
+    }
+
     @Override
     protected void onHit(RayTraceResult result) {
         //super.onHit(result);
@@ -188,12 +189,11 @@ public class EntityProjectileSpell extends ArrowEntity {
             if (((EntityRayTraceResult) result).getEntity().equals(this.getShooter())) return;
             if(this.spellResolver != null && result != null) {
                 this.spellResolver.onResolveEffect(world, (LivingEntity) this.getShooter(), (EntityRayTraceResult) result);
-                this.world.setEntityState(this, (byte)3);
-                this.remove();
+                 attemptRemoval();
             }
 
         }
-        if(world.isRemote && result instanceof BlockRayTraceResult){
+        if(world.isRemote && result instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) result).getPos()).getMaterial().isSolid()){
             SpellBook.spawnParticles(result.getHitVec().x, result.getHitVec().y, result.getHitVec().z, world);
         }
 
@@ -203,11 +203,8 @@ public class EntityProjectileSpell extends ArrowEntity {
             BlockRayTraceResult blockraytraceresult = (BlockRayTraceResult)result;
             if(this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(this.world, (LivingEntity) this.getShooter(), blockraytraceresult);
-
             }
-            this.world.setEntityState(this, (byte)3);
-            this.remove();
-
+           attemptRemoval();
         }
     }
 
@@ -218,5 +215,19 @@ public class EntityProjectileSpell extends ArrowEntity {
     @Override
     public IPacket<?> createSpawnPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    @Override
+    public void readAdditional(CompoundNBT tag) {
+        super.readAdditional(tag);
+        if(tag.contains("pierce")){
+            this.pierceLeft = tag.getInt("pierce");
+        }
+    }
+
+    @Override
+    public void writeAdditional(CompoundNBT tag) {
+        super.writeAdditional(tag);
+        tag.putInt("pierce", this.pierceLeft);
     }
 }
