@@ -22,6 +22,8 @@ public class ModEntities {
 
     public static EntityType<EntityEvokerFangs> ENTITY_EVOKER_FANGS_ENTITY_TYPE = null;
 
+    public static EntityType<EntityKobold> ENTITY_KOBOLD_TYPE = null;
+
 
 
     //    public static void init() {
@@ -61,13 +63,15 @@ public class ModEntities {
            ALLY_VEX = build(
                     "ally_vex",
                     EntityType.Builder.<EntityAllyVex>create(EntityAllyVex::new, EntityClassification.MISC)
-                            .size(0.4F, 0.8F).immuneToFire()
-                            .setUpdateInterval(60));
+                            .size(0.4F, 0.8F).immuneToFire());
+           ENTITY_KOBOLD_TYPE = build("kobold", EntityType.Builder.<EntityKobold>create(EntityKobold::new, EntityClassification.MISC)
+                   .size(0.4F, 0.8F)   .setTrackingRange(10)
+                   .setShouldReceiveVelocityUpdates(true));
 
             event.getRegistry().registerAll(
                     SPELL_PROJ,
                     ENTITY_EVOKER_FANGS_ENTITY_TYPE,
-                    ALLY_VEX
+                    ALLY_VEX, ENTITY_KOBOLD_TYPE
             );
             //ENT_PROJECTILE = registerEntity(EntityType.Builder.<EntityModProjectile>create(EntityClassification.MISC).setCustomClientFactory(EntityModProjectile::new).size(0.25F, 0.25F), "ent_projectile");
 

@@ -79,6 +79,11 @@ public class BlockRegistry {
     public static EnchantingApparatusBlock ENCHANTING_APP_BLOCK;
 
 
+    @ObjectHolder(ArsNouveau.MODID + ":" + LibBlockNames.SUMMONING_CRYSTAL)
+    public static SummoningCrystal SUMMONING_CRYSTAL;
+
+
+
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
         @SubscribeEvent
@@ -96,6 +101,8 @@ public class BlockRegistry {
             blockRegistryEvent.getRegistry().register(new ManaBloomCrop());
             blockRegistryEvent.getRegistry().register(new EnchantingApparatusBlock());
             blockRegistryEvent.getRegistry().register(new ArcanePedestal());
+            blockRegistryEvent.getRegistry().register(new SummoningCrystal());
+
         }
 
         @SubscribeEvent
@@ -127,7 +134,7 @@ public class BlockRegistry {
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.MANA_BLOOM_CROP, ItemsRegistry.defaultItemProperties()).setRegistryName("mana_bloom_crop"));
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.ENCHANTING_APP_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName("enchanting_apparatus"));
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.ARCANE_PEDESTAL, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.ARCANE_PEDESTAL));
-
+            itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.SUMMONING_CRYSTAL, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.SUMMONING_CRYSTAL));
         }
     }
 }

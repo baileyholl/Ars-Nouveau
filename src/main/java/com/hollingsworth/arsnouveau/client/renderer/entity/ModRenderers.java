@@ -16,12 +16,10 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 public class ModRenderers {
     @SubscribeEvent
     public static void register(final FMLClientSetupEvent event) {
-
         RenderingRegistry.registerEntityRenderingHandler( ModEntities.SPELL_PROJ,
                 renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
-
-
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_EVOKER_FANGS_ENTITY_TYPE, RenderFangs::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ALLY_VEX, RenderAllyVex::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_KOBOLD_TYPE, KoboldRenderer::new);
     }
 }

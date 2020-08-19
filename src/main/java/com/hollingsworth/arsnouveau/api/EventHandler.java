@@ -19,7 +19,6 @@ import net.minecraftforge.fml.network.PacketDistributor;
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class EventHandler {
 
-
     @SubscribeEvent
     public static void playerClone(PlayerEvent.PlayerRespawnEvent e) {
         syncPlayerEvent(e.getPlayer());
@@ -46,21 +45,22 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void playerOnTick(TickEvent.PlayerTickEvent e) {
-        if (e.player instanceof ServerPlayerEntity) {
-            ManaCapability.getMana(e.player).ifPresent(mana -> {
-                if (e.player.world.getGameTime() % 20 == 0) {
+        if (e.player instanceof ServerPlayerEntity && e.player.world.getGameTime() % 5 == 0) {
+            if (e.player.world.getGameTime() % 20 == 0) {
+                ManaCapability.getMana(e.player).ifPresent(mana -> {
                     double regenPerSecond = 5 + ManaUtil.getArmorRegen(e.player);
                     if (mana.getCurrentMana() != mana.getMaxMana()) {
                         mana.addMana((int) regenPerSecond);
                         Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana()));
                     }
-                }
-            });
-
-            ManaCapability.getMana(e.player).ifPresent(mana -> {
-                mana.setMaxMana(ManaUtil.getMaxMana(e.player));
-                Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana()));
-            });
+                });
+            }
+            if (e.player.world.getGameTime() % 10 == 0) {
+                ManaCapability.getMana(e.player).ifPresent(mana -> {
+                    mana.setMaxMana(ManaUtil.getMaxMana(e.player));
+                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana()));
+                });
+            }
         }
     }
 
@@ -73,5 +73,7 @@ public class EventHandler {
                 e.setAmount(damage);
             }
         }
+
+
     }
 }
