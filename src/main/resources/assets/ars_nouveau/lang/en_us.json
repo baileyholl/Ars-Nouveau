@@ -10,7 +10,8 @@
 	"item.ars_nouveau.apprentice_spell_book":"Apprentice Spell Book",
 	"item.ars_nouveau.archmage_spell_book":"Archmage Spell Book",
 
-
+	"enchantment.ars_nouveau.mana_regen.desc": "Increases the mana regeneration of the player.",
+	"enchantment.ars_nouveau.mana_boost.desc": "Increases the maximum mana of the player.",
 	"item.ars_nouveau.archmage_robes":"Archmage Robes",
 	"item.ars_nouveau.archmage_leggings":"Archmage Leggings",
 	"item.ars_nouveau.archmage_boots":"Archmage Boots",

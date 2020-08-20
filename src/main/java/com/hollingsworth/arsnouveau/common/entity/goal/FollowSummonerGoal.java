@@ -30,12 +30,12 @@ public class FollowSummonerGoal extends Goal {
         this.summon = mobEntity;
         this.world = mobEntity.getWorld();
         this.followSpeed = followSpeedIn;
-        this.navigator = mobEntity.getNavigator();
+        this.navigator = mobEntity.getPathNav();
         this.minDist = minDistIn;
         this.maxDist = maxDistIn;
 
         this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
-        if (!(mobEntity.getNavigator() instanceof GroundPathNavigator) && !(mobEntity.getNavigator() instanceof FlyingPathNavigator)) {
+        if (!(mobEntity.getPathNav() instanceof GroundPathNavigator) && !(mobEntity.getPathNav() instanceof FlyingPathNavigator)) {
             throw new IllegalArgumentException("Unsupported mob type for FollowOwnerGoal");
         }
     }

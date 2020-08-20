@@ -28,7 +28,6 @@ public class ArcanePedestalTile extends TileEntity implements ITickableTileEntit
     }
 
 
-
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         if(stack != null) {
@@ -39,6 +38,7 @@ public class ArcanePedestalTile extends TileEntity implements ITickableTileEntit
 
         return super.write(compound);
     }
+
     @Override
     @Nullable
     public SUpdateTileEntityPacket getUpdatePacket() {

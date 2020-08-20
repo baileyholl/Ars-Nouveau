@@ -16,7 +16,7 @@ public interface  ISummon {
     DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(TameableEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     World getWorld();
 
-    PathNavigator getNavigator();
+    PathNavigator getPathNav();
 
     LivingEntity getSummoner();
 

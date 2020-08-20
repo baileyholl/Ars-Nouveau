@@ -10,6 +10,7 @@ import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.BeeEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
@@ -27,6 +28,8 @@ import javax.annotation.Nullable;
 import java.util.EnumSet;
 
 public class EntityKobold extends FlyingEntity {
+
+    BlockPos crystalPos;
     protected EntityKobold(EntityType<? extends FlyingEntity> p_i48568_1_, World p_i48568_2_) {
         super(p_i48568_1_, p_i48568_2_);
         this.moveController = new MoveHelperController(this);
@@ -36,7 +39,11 @@ public class EntityKobold extends FlyingEntity {
     public EntityKobold(World p_i50190_2_) {
         super(ModEntities.ENTITY_KOBOLD_TYPE, p_i50190_2_);
         this.moveController = new MoveHelperController(this);
+    }
 
+    public EntityKobold(World world, BlockPos crystalPos){
+        this(world);
+        this.crystalPos = crystalPos;
     }
 
     @Override
@@ -73,10 +80,12 @@ public class EntityKobold extends FlyingEntity {
            this.setMotion(this.getMotion().add(0.0D, (0.30000001192092896D - lvt_2_1_.y) * 0.30000001192092896D, 0.0D));
            this.isAirBorne = true;
        }else{
-           System.out.println("Flying down");
-           Vec3d lvt_2_1_ = this.getMotion();
-           this.setMotion(this.getMotion().add(0.0D, (-0.15 - lvt_2_1_.y) * 0.30000001192092896D, 0.0D));
-           this.isAirBorne = true;
+           if(!world.getBlockState(EntityKobold.this.getPosition().down()).isSolid()){
+               Vec3d lvt_2_1_ = this.getMotion();
+               this.setMotion(this.getMotion().add(0.0D, (-0.15 - lvt_2_1_.y) * 0.30000001192092896D, 0.0D));
+               this.isAirBorne = true;
+           }
+
        }
 
 
@@ -87,6 +96,24 @@ public class EntityKobold extends FlyingEntity {
         return ModEntities.ENTITY_KOBOLD_TYPE;
     }
 
+
+    @Override
+    public void writeAdditional(CompoundNBT tag) {
+        super.writeAdditional(tag);
+        if(crystalPos != null){
+            tag.putInt("summoner_x", crystalPos.getX());
+            tag.putInt("summoner_y", crystalPos.getY());
+            tag.putInt("summoner_z", crystalPos.getZ());
+
+        }
+    }
+
+    @Override
+    public void readAdditional(CompoundNBT tag) {
+        super.readAdditional(tag);
+        if(tag.contains("summoner_x"))
+            crystalPos = new BlockPos(tag.getInt("summoner_x"), tag.getInt("summoner_y"), tag.getInt("summoner_z"));
+    }
 
     @Override
     public ILivingEntityData onInitialSpawn(IWorld p_213386_1_, DifficultyInstance p_213386_2_, SpawnReason p_213386_3_, @Nullable ILivingEntityData p_213386_4_, @Nullable CompoundNBT p_213386_5_) {

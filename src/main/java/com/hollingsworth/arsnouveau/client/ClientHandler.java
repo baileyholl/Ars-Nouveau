@@ -30,7 +30,6 @@ public class ClientHandler {
         RenderTypeLookup.setRenderLayer(BlockRegistry.ARCANE_PEDESTAL, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_SIPHON_BLOCK, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.ENCHANTING_APP_BLOCK, RenderType.getCutout());
-        RenderTypeLookup.setRenderLayer(BlockRegistry.ARCANE_ORE, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.LIGHT_BLOCK, RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.PHANTOM_BLOCK, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_BLOOM_CROP, RenderType.getCutout());

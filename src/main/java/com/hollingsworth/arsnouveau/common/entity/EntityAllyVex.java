@@ -38,6 +38,7 @@ public class EntityAllyVex extends VexEntity implements ISummon {
         super(ModEntities.ALLY_VEX, p_i50190_2_);
     }
 
+
     public EntityAllyVex(World p_i50190_2_, PlayerEntity owner) {
         super(EntityType.VEX, p_i50190_2_);
         this.owner = owner;
@@ -71,7 +72,7 @@ public class EntityAllyVex extends VexEntity implements ISummon {
 
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(4, new EntityAllyVex.ChargeAttackGoal());
-        this.goalSelector.addGoal(1, new EntityAllyVex.MoveRandomGoal());
+
         this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 3.0F, 1.0F));
         this.goalSelector.addGoal(10, new LookAtGoal(this, MobEntity.class, 8.0F));
         this.goalSelector.addGoal(2, new FollowSummonerFlyingGoal(this, this.owner, 1.0, 10.0f, 5.0f));
@@ -100,6 +101,11 @@ public class EntityAllyVex extends VexEntity implements ISummon {
     @Override
     public World getWorld() {
         return this.world;
+    }
+
+    @Override
+    public PathNavigator getPathNav() {
+        return this.navigator;
     }
 
     @Override
