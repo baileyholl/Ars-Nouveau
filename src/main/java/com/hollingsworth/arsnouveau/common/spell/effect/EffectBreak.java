@@ -52,7 +52,7 @@ public class EffectBreak extends AbstractEffect {
             }
 
             int aoeBuff = getBuffCount(augments, AugmentAOE.class);
-            ImmutableList<BlockPos> posList = SpellUtil.calcAOEBlocks((PlayerEntity)shooter, pos, (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
+            ImmutableList<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
             for(BlockPos pos1 : posList) {
                 state = world.getBlockState(pos1);
                 // Iron block or lower unpowered
@@ -61,7 +61,7 @@ public class EffectBreak extends AbstractEffect {
                 }
                 if (hasBuff(augments, AugmentExtract.class)) {
 
-                    state.getDrops(LootUtil.getSilkContext((ServerWorld) world, pos1, (PlayerEntity) shooter)).forEach(i -> world.addEntity(new ItemEntity(world,pos1.getX(), pos1.getY(), pos1.getZ(), i )));
+                    state.getDrops(LootUtil.getSilkContext((ServerWorld) world, pos1,  shooter)).forEach(i -> world.addEntity(new ItemEntity(world,pos1.getX(), pos1.getY(), pos1.getZ(), i )));
 
                     world.destroyBlock(pos1, false);
                 } else if (hasBuff(augments, AugmentFortune.class)) {

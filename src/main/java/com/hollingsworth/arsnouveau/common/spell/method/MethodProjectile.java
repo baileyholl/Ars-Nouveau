@@ -14,6 +14,7 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class MethodProjectile extends AbstractCastMethod {
         return 10;
     }
 
-    public void summonProjectiles(World world, PlayerEntity shooter, ArrayList<AbstractAugment> augments){
+    public void summonProjectiles(World world, LivingEntity shooter, ArrayList<AbstractAugment> augments){
         ArrayList<EntityProjectileSpell> projectiles = new ArrayList<>();
         int numPierce = getBuffCount(augments, AugmentPierce.class);
         EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, shooter, this.resolver, numPierce);
@@ -56,7 +57,7 @@ public class MethodProjectile extends AbstractCastMethod {
     }
 
     @Override
-    public void onCast(ItemStack stack, PlayerEntity shooter, World world, ArrayList<AbstractAugment> augments) {
+    public void onCast(ItemStack stack, LivingEntity shooter, World world, ArrayList<AbstractAugment> augments) {
         summonProjectiles(world, shooter, augments);
         resolver.expendMana(shooter);
     }
@@ -71,7 +72,12 @@ public class MethodProjectile extends AbstractCastMethod {
     }
 
     @Override
-    public void onCastOnEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand, ArrayList<AbstractAugment> augments) {
+    public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, ArrayList<AbstractAugment> augments) {
+
+    }
+
+    @Override
+    public void onCastOnEntity(ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, ArrayList<AbstractAugment> augments) {
 
     }
 

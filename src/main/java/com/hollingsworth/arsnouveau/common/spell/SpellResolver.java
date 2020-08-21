@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell;
 
+import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
@@ -10,28 +11,32 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil.getAugments;
 
 public class SpellResolver {
-    private AbstractCastMethod castType;
+    protected AbstractCastMethod castType;
 //    private EffectType effectType;
 
-    private ArrayList<AbstractSpellPart> spell_recipe;
+    protected ArrayList<AbstractSpellPart> spell_recipe;
     
     public SpellResolver(AbstractCastMethod cast, ArrayList<AbstractSpellPart> spell_recipe){
         this.castType = cast;
         this.spell_recipe = spell_recipe;
         if(castType != null)
             this.castType.resolver = this;
+    }
+
+
+    public SpellResolver(AbstractSpellPart[] spellParts){
+        this(new ArrayList<>(Arrays.asList(spellParts)));
     }
 
     public SpellResolver(ArrayList<AbstractSpellPart> spell_recipe) {
@@ -46,7 +51,8 @@ public class SpellResolver {
 
     }
 
-    public boolean canCast(PlayerEntity entity){
+
+    public boolean canCast(LivingEntity entity){
         if(spell_recipe.isEmpty() || castType == null) {
             entity.sendMessage(new StringTextComponent("Invalid Spell."));
             return false;
@@ -59,19 +65,28 @@ public class SpellResolver {
             }
         }
 
+        return enoughMana(entity);
+    }
+
+    boolean enoughMana(LivingEntity entity){
         int totalCost = ManaUtil.getCastingCost(spell_recipe, entity);
         AtomicBoolean canCast = new AtomicBoolean(false);
         ManaCapability.getMana(entity).ifPresent(mana -> {
-            canCast.set(totalCost <= mana.getCurrentMana() || entity.isCreative());
+            canCast.set(totalCost <= mana.getCurrentMana() || (entity instanceof PlayerEntity &&  ((PlayerEntity) entity).isCreative()));
             if(!canCast.get())
                 entity.sendMessage(new StringTextComponent("Not enough mana."));
         });
         return canCast.get();
     }
 
-    public void onCast(ItemStack stack, PlayerEntity playerEntity, World world){
-        if(canCast(playerEntity))
-            castType.onCast(stack, playerEntity, world, getAugments(spell_recipe, 0, playerEntity));
+    public void onCast(ItemStack stack, LivingEntity livingEntity, World world){
+        if(canCast(livingEntity))
+            castType.onCast(stack, livingEntity, world, getAugments(spell_recipe, 0, livingEntity));
+    }
+
+    public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster){
+        if(canCast(caster))
+            castType.onCastOnBlock(blockRayTraceResult, caster, getAugments(spell_recipe, 0, caster));
     }
 
     public void onCastOnBlock(ItemUseContext context){
@@ -90,13 +105,13 @@ public class SpellResolver {
         for(int i = 0; i < spell_recipe.size(); i++){
             AbstractSpellPart spell = spell_recipe.get(i);
             if(spell instanceof AbstractEffect){
-                ((AbstractEffect) spell).onResolve(result, world, shooter, getAugments(spell_recipe, i, (PlayerEntity) shooter));
+                ((AbstractEffect) spell).onResolve(result, world, shooter, getAugments(spell_recipe, i, shooter));
             }
         }
     }
 
     public void expendMana(LivingEntity entity){
-        int totalCost = ManaUtil.getCastingCost(spell_recipe, (PlayerEntity) entity);
+        int totalCost = ManaUtil.getCastingCost(spell_recipe, entity);
         ManaCapability.getMana(entity).ifPresent(mana -> {
             mana.removeMana(totalCost);
         });

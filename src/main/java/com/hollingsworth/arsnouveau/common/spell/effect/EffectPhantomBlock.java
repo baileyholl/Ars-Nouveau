@@ -8,7 +8,7 @@ import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
@@ -30,7 +30,7 @@ public class EffectPhantomBlock extends AbstractEffect {
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
         if(rayTraceResult instanceof BlockRayTraceResult){
 
-            for(BlockPos pos : SpellUtil.calcAOEBlocks((PlayerEntity) shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult, getBuffCount(augments, AugmentAOE.class))) {
+            for(BlockPos pos : SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult, getBuffCount(augments, AugmentAOE.class))) {
                 pos = pos.offset(((BlockRayTraceResult) rayTraceResult).getFace());
                 if (world.getBlockState(pos).getMaterial() == Material.AIR && world.placedBlockWouldCollide(BlockRegistry.PHANTOM_BLOCK.getDefaultState(), pos, ISelectionContext.dummy())) {
                     world.setBlockState(pos, BlockRegistry.PHANTOM_BLOCK.getDefaultState());

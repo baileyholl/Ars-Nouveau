@@ -8,7 +8,6 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IGrowable;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
@@ -29,7 +28,7 @@ public class EffectGrow  extends AbstractEffect {
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
         if(rayTraceResult instanceof BlockRayTraceResult) {
-            for(BlockPos blockpos : SpellUtil.calcAOEBlocks((PlayerEntity) shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult) rayTraceResult, getBuffCount(augments, AugmentAOE.class))){
+            for(BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult) rayTraceResult, getBuffCount(augments, AugmentAOE.class))){
                 //BlockPos blockpos = ((BlockRayTraceResult) rayTraceResult).getPos();
                 if (applyBonemeal(world, blockpos)) {
                     if (!world.isRemote) {

@@ -6,8 +6,10 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import top.theillusivec4.curios.api.CuriosAPI;
 
+import javax.annotation.Nonnull;
+
 public class CuriosUtil {
-    public static LazyOptional<IItemHandlerModifiable> getAllWornItems(LivingEntity living) {
+    public static LazyOptional<IItemHandlerModifiable> getAllWornItems(@Nonnull LivingEntity living) {
         return CuriosAPI.getCuriosHandler(living).map(h -> {
             IItemHandlerModifiable[] invs = h.getCurioMap().values().toArray(new IItemHandlerModifiable[0]);
             return new CombinedInvWrapper(invs);

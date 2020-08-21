@@ -28,7 +28,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class EntityAllyVex extends VexEntity implements ISummon {
-    private PlayerEntity owner;
+    private LivingEntity owner;
     @Nullable
     private BlockPos boundOrigin;
     private boolean limitedLifespan;
@@ -39,7 +39,7 @@ public class EntityAllyVex extends VexEntity implements ISummon {
     }
 
 
-    public EntityAllyVex(World p_i50190_2_, PlayerEntity owner) {
+    public EntityAllyVex(World p_i50190_2_, LivingEntity owner) {
         super(EntityType.VEX, p_i50190_2_);
         this.owner = owner;
         this.limitedLifespan = false;
@@ -87,7 +87,7 @@ public class EntityAllyVex extends VexEntity implements ISummon {
         return flyingpathnavigator;
     }
 
-    public void setOwner(PlayerEntity owner) {
+    public void setOwner(LivingEntity owner) {
         this.owner = owner;
     }
 
@@ -113,11 +113,11 @@ public class EntityAllyVex extends VexEntity implements ISummon {
         return this;
     }
 
-    public PlayerEntity getSummoner() {
-        return (PlayerEntity)this.getOwnerFromID();
+    public LivingEntity getSummoner() {
+        return this.getOwnerFromID();
     }
 
-    public PlayerEntity getActualOwner() {
+    public LivingEntity getActualOwner() {
         return owner;
     }
 

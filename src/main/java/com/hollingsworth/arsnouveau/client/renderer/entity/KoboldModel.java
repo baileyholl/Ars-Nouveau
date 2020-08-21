@@ -3,15 +3,14 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;// Made with Blockbe
 // Paste this class into your mod and generate all required imports
 
 
-import com.hollingsworth.arsnouveau.common.entity.EntityKobold;
+import com.hollingsworth.arsnouveau.common.entity.EntityWelp;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
-public class KoboldModel extends EntityModel<EntityKobold> {
+public class KoboldModel extends EntityModel<EntityWelp> {
 	private final ModelRenderer kobold;
 	private final ModelRenderer head;
 	private final ModelRenderer lower_jaw;
@@ -24,7 +23,6 @@ public class KoboldModel extends EntityModel<EntityKobold> {
 	private final ModelRenderer arm_right;
 	private final ModelRenderer arm_left;
 	private final ModelRenderer ridges;
-	private final ModelRenderer bb_main;
 
 	public KoboldModel() {
 		textureWidth = 32;
@@ -46,6 +44,8 @@ public class KoboldModel extends EntityModel<EntityKobold> {
 		head.setTextureOffset(16, 12).addBox(-3.0F, -4.0F, -0.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
 		head.setTextureOffset(16, 12).addBox(2.0F, -4.0F, -0.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
 		head.setTextureOffset(0, 0).addBox(-2.0F, -4.0F, -2.5F, 4.0F, 4.0F, 4.0F, 0.0F, false);
+		head.setTextureOffset(12, 15).addBox(-0.5F, -5.0F, -1.5F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+		head.setTextureOffset(4, 18).addBox(-0.5F, -3.0F, 1.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
 
 		lower_jaw = new ModelRenderer(this);
 		lower_jaw.setRotationPoint(0.0F, -1.0F, -2.5F);
@@ -105,10 +105,6 @@ public class KoboldModel extends EntityModel<EntityKobold> {
 		ridges.setRotationPoint(0.0F, 24.0F, 0.0F);
 
 
-		bb_main = new ModelRenderer(this);
-		bb_main.setRotationPoint(0.0F, 24.0F, 0.0F);
-		bb_main.setTextureOffset(12, 15).addBox(-0.5F, -16.0F, -4.0F, 1.0F, 1.0F, 2.0F, 0.0F, false);
-		bb_main.setTextureOffset(4, 18).addBox(-0.5F, -14.0F, -1.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
 	}
 
 	public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
@@ -117,7 +113,7 @@ public class KoboldModel extends EntityModel<EntityKobold> {
 		modelRenderer.rotateAngleZ = z;
 	}
 	@Override
-	public void setRotationAngles(EntityKobold entityKobold, float v, float v1, float v2, float v3, float v4) {
+	public void setRotationAngles(EntityWelp entityWelp, float v, float v1, float v2, float v3, float v4) {
 //		entityKobold.rotateAngleX = x;
 //		entityKobold.rotateAngleY = y;
 //		entityKobold.rotateAngleZ = z;
@@ -152,11 +148,10 @@ public class KoboldModel extends EntityModel<EntityKobold> {
 		arm_right.render(matrixStack, buffer, packedLight, packedOverlay);
 		arm_left.render(matrixStack, buffer, packedLight, packedOverlay);
 		ridges.render(matrixStack, buffer, packedLight, packedOverlay);
-		bb_main.render(matrixStack, buffer, packedLight, packedOverlay);
 	}
 
 	@Override
-	public void setLivingAnimations(EntityKobold p_212843_1_, float x, float y, float z) {
+	public void setLivingAnimations(EntityWelp p_212843_1_, float x, float y, float z) {
 		super.setLivingAnimations(p_212843_1_, x, y, z);
 //		this.head.rotateAngleX = z * 0.017453292F;
 //		this.head.rotateAngleY = z * 0.017453292F;

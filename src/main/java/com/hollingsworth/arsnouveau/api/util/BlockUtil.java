@@ -11,8 +11,6 @@ public class BlockUtil {
                 for(double z = start.getZ() - radius; z <= start.getZ() + radius; z++){
                     BlockPos pos = new BlockPos( x, y, z);
                     if(!pos.equals(start) && world.getBlockState(pos).getBlock().getClass().equals(clazz)) {
-                        System.out.println(start);
-                        System.out.println( pos);
                         return true;
                     }
                 }

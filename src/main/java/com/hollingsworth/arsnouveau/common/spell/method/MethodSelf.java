@@ -8,6 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.world.World;
 
@@ -19,9 +20,9 @@ public class MethodSelf extends AbstractCastMethod {
     }
 
     @Override
-    public void onCast(ItemStack stack, PlayerEntity playerEntity, World world, ArrayList<AbstractAugment> augments) {
-        resolver.onResolveEffect(playerEntity.getEntityWorld(), playerEntity, new EntityRayTraceResult(playerEntity));
-        resolver.expendMana(playerEntity);
+    public void onCast(ItemStack stack, LivingEntity caster, World world, ArrayList<AbstractAugment> augments) {
+        resolver.onResolveEffect(caster.getEntityWorld(), caster, new EntityRayTraceResult(caster));
+        resolver.expendMana(caster);
     }
 
     @Override
@@ -32,9 +33,13 @@ public class MethodSelf extends AbstractCastMethod {
     }
 
     @Override
-    public void onCastOnEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand, ArrayList<AbstractAugment> augments) {
-//        resolver.onResolveEffect(playerIn.world, playerIn, new EntityRayTraceResult(playerIn));
-//        resolver.expendMana(playerIn);
+    public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, ArrayList<AbstractAugment> augments) {
+
+    }
+
+    @Override
+    public void onCastOnEntity(ItemStack stack, LivingEntity playerIn, LivingEntity target, Hand hand, ArrayList<AbstractAugment> augments) {
+
     }
 
     @Override

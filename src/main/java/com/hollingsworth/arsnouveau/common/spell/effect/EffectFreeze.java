@@ -13,6 +13,7 @@ import net.minecraft.item.Items;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
+import net.minecraftforge.event.world.NoteBlockEvent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -34,10 +35,10 @@ public class EffectFreeze extends AbstractEffect {
             if(state.getMaterial() == Material.WATER){
                 world.setBlockState(pos.up(), Blocks.ICE.getDefaultState());
             }else if(state.getMaterial() == Material.FIRE){
-                world.extinguishFire((PlayerEntity) shooter, pos, ((BlockRayTraceResult) rayTraceResult).getFace());
+                world.extinguishFire( shooter instanceof PlayerEntity ? (PlayerEntity) shooter : null, pos, ((BlockRayTraceResult) rayTraceResult).getFace());
             }
-        }else{
-            RayTraceResult result = rayTrace(world, (PlayerEntity) shooter, RayTraceContext.FluidMode.SOURCE_ONLY);
+        }else if(shooter instanceof PlayerEntity){
+            RayTraceResult result = rayTrace(world, (PlayerEntity)shooter, RayTraceContext.FluidMode.SOURCE_ONLY);
             if (result instanceof BlockRayTraceResult) {
                 BlockState state = world.getBlockState(((BlockRayTraceResult) result).getPos());
                 if (state.getBlock().getDefaultState() == Blocks.WATER.getDefaultState()) {

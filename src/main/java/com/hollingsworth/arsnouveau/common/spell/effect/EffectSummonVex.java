@@ -29,10 +29,10 @@ public class EffectSummonVex extends AbstractEffect {
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
         for(int i = 0; i < 3; ++i) {
             BlockPos blockpos = (new BlockPos(shooter)).add(-2 + shooter.getRNG().nextInt(5), 1, -2 + shooter.getRNG().nextInt(5));
-            EntityAllyVex vexentity = new EntityAllyVex(world, (PlayerEntity)shooter);
+            EntityAllyVex vexentity = new EntityAllyVex(world, shooter);
             vexentity.moveToBlockPosAndAngles(blockpos, 0.0F, 0.0F);
             vexentity.onInitialSpawn(world, world.getDifficultyForLocation(blockpos), SpawnReason.MOB_SUMMONED, (ILivingEntityData)null, (CompoundNBT)null);
-            vexentity.setOwner((PlayerEntity)shooter);
+            vexentity.setOwner(shooter);
             vexentity.setBoundOrigin(blockpos);
             vexentity.setLimitedLife(20 * (75 + 10 * getBuffCount(augments, AugmentExtendTime.class)));
             world.addEntity(vexentity);

@@ -22,7 +22,7 @@ public class ModEntities {
 
     public static EntityType<EntityEvokerFangs> ENTITY_EVOKER_FANGS_ENTITY_TYPE = null;
 
-    public static EntityType<EntityKobold> ENTITY_KOBOLD_TYPE = null;
+    public static EntityType<EntityWelp> ENTITY_KOBOLD_TYPE = null;
 
 
 
@@ -64,7 +64,7 @@ public class ModEntities {
                     "ally_vex",
                     EntityType.Builder.<EntityAllyVex>create(EntityAllyVex::new, EntityClassification.MISC)
                             .size(0.4F, 0.8F).immuneToFire());
-           ENTITY_KOBOLD_TYPE = build("kobold", EntityType.Builder.<EntityKobold>create(EntityKobold::new, EntityClassification.MISC)
+           ENTITY_KOBOLD_TYPE = build("kobold", EntityType.Builder.<EntityWelp>create(EntityWelp::new, EntityClassification.MISC)
                    .size(0.4F, 0.8F)   .setTrackingRange(10)
                    .setShouldReceiveVelocityUpdates(true));
 

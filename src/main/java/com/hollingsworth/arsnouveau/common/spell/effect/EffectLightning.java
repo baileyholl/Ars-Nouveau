@@ -24,8 +24,8 @@ public class EffectLightning extends AbstractEffect {
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
         Vec3d pos = rayTraceResult.getHitVec();
-        LightningBoltEntity lightningBoltEntity =new LightningBoltEntity(world, pos.getX(), pos.getY(), pos.getZ(), false);
-        lightningBoltEntity.setCaster((ServerPlayerEntity) shooter);
+        LightningBoltEntity lightningBoltEntity = new LightningBoltEntity(world, pos.getX(), pos.getY(), pos.getZ(), false);
+        lightningBoltEntity.setCaster(shooter instanceof ServerPlayerEntity ? (ServerPlayerEntity) shooter : null);
         ((ServerWorld) world).addLightningBolt(lightningBoltEntity);
     }
 

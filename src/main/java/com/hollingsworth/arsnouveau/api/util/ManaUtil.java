@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.armor.MagicArmor;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -29,7 +30,7 @@ public class ManaUtil {
         return cost;
     }
 
-    public static int getPlayerDiscounts(PlayerEntity e){
+    public static int getPlayerDiscounts(LivingEntity e){
         AtomicInteger discounts = new AtomicInteger();
         CuriosUtil.getAllWornItems(e).ifPresent(items ->{
 
@@ -42,7 +43,7 @@ public class ManaUtil {
         return discounts.get();
     }
 
-    public static int getCastingCost(ArrayList<AbstractSpellPart> recipe, PlayerEntity e){
+    public static int getCastingCost(ArrayList<AbstractSpellPart> recipe, LivingEntity e){
         int cost = getRecipeCost(recipe) - getPlayerDiscounts(e);
         return Math.max(cost, 0);
     }

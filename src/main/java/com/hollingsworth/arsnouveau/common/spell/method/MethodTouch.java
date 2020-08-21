@@ -26,7 +26,7 @@ public class MethodTouch extends AbstractCastMethod {
     }
 
     @Override
-    public void onCast(ItemStack stack, PlayerEntity playerEntity, World world, ArrayList<AbstractAugment> augments) {
+    public void onCast(ItemStack stack, LivingEntity caster, World world, ArrayList<AbstractAugment> augments) {
 
     }
 
@@ -41,9 +41,15 @@ public class MethodTouch extends AbstractCastMethod {
     }
 
     @Override
-    public void onCastOnEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand, ArrayList<AbstractAugment> augments) {
-        resolver.onResolveEffect(playerIn.getEntityWorld(), playerIn, new EntityRayTraceResult(target));
-        resolver.expendMana(playerIn);
+    public void onCastOnBlock(BlockRayTraceResult res, LivingEntity caster, ArrayList<AbstractAugment> augments) {
+        resolver.onResolveEffect(caster.getEntityWorld(),caster, res);
+        resolver.expendMana(caster);
+    }
+
+    @Override
+    public void onCastOnEntity(ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, ArrayList<AbstractAugment> augments) {
+        resolver.onResolveEffect(caster.getEntityWorld(), caster, new EntityRayTraceResult(target));
+        resolver.expendMana(caster);
     }
 
     @Override

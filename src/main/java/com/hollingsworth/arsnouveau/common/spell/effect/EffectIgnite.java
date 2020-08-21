@@ -9,7 +9,6 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
@@ -33,7 +32,7 @@ public class EffectIgnite  extends AbstractEffect {
             int duration = 2 + 2*getBuffCount(augments, AugmentExtendTime.class);
             ((EntityRayTraceResult) rayTraceResult).getEntity().setFire(duration);
         }else if(rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos().up()).getMaterial() == Material.AIR){
-            for(BlockPos pos : SpellUtil.calcAOEBlocks((PlayerEntity) shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult, getBuffCount(augments, AugmentAOE.class))) {
+            for(BlockPos pos : SpellUtil.calcAOEBlocks( shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult, getBuffCount(augments, AugmentAOE.class))) {
                 if(world.getBlockState(pos.up()).getMaterial() == Material.AIR)
                     world.setBlockState(pos.up(), Blocks.FIRE.getDefaultState());
             }
