@@ -17,4 +17,6 @@ public class KoboldRenderer extends MobRenderer<EntityWelp, KoboldModel> {
     public ResourceLocation getEntityTexture(EntityWelp entity) {
         return TEXTURE;
     }
+
+
 }

@@ -72,19 +72,20 @@ public class BlockRegistry {
     @ObjectHolder("arcane_ore")
     public static ArcaneOre ARCANE_ORE;
 
-    @ObjectHolder(ArsNouveau.MODID + ":mana_bloom_crop")
-    public static ManaBloomCrop MANA_BLOOM_CROP;
+    @ObjectHolder(ArsNouveau.MODID + ":mana_bloom_crop") public static ManaBloomCrop MANA_BLOOM_CROP;
 
-    @ObjectHolder(ArsNouveau.MODID + ":enchanting_apparatus")
-    public static EnchantingApparatusBlock ENCHANTING_APP_BLOCK;
+    @ObjectHolder(ArsNouveau.MODID + ":enchanting_apparatus") public static EnchantingApparatusBlock ENCHANTING_APP_BLOCK;
+
+    @ObjectHolder(LibBlockNames.ARCANE_BRICKS) public static ModBlock ARCANE_BRICKS;
 
 
-    @ObjectHolder(ArsNouveau.MODID + ":" + LibBlockNames.SUMMONING_CRYSTAL)
-    public static SummoningCrystal SUMMONING_CRYSTAL;
+    @ObjectHolder(LibBlockNames.SCRIBES_BLOCK) public static ScribesBlock SCRIBES_BLOCK;
 
-    @ObjectHolder(ArsNouveau.MODID + ":" + LibBlockNames.SUMMONING_CRYSTAL)
-    public static TileEntityType<SummoningCrytalTile> SUMMONING_CRYSTAL_TILE;
+    @ObjectHolder(LibBlockNames.SUMMONING_CRYSTAL) public static SummoningCrystal SUMMONING_CRYSTAL;
 
+    @ObjectHolder(LibBlockNames.SUMMONING_CRYSTAL) public static TileEntityType<SummoningCrytalTile> SUMMONING_CRYSTAL_TILE;
+
+    @ObjectHolder(LibBlockNames.SCRIBES_BLOCK) public static TileEntityType<ScribesTile> SCRIBES_TABLE_TILE;
 
 
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
@@ -105,6 +106,8 @@ public class BlockRegistry {
             blockRegistryEvent.getRegistry().register(new EnchantingApparatusBlock());
             blockRegistryEvent.getRegistry().register(new ArcanePedestal());
             blockRegistryEvent.getRegistry().register(new SummoningCrystal());
+            blockRegistryEvent.getRegistry().register(new ModBlock(LibBlockNames.ARCANE_BRICKS));
+            blockRegistryEvent.getRegistry().register(new ScribesBlock());
 
         }
 
@@ -120,6 +123,7 @@ public class BlockRegistry {
             event.getRegistry().register(TileEntityType.Builder.create(EnchantingApparatusTile::new, BlockRegistry.ENCHANTING_APP_BLOCK).build(null).setRegistryName("enchanting_apparatus"));
             event.getRegistry().register(TileEntityType.Builder.create(ArcanePedestalTile::new, BlockRegistry.ARCANE_PEDESTAL).build(null).setRegistryName(LibBlockNames.ARCANE_PEDESTAL));
             event.getRegistry().register(TileEntityType.Builder.create(SummoningCrytalTile::new, BlockRegistry.SUMMONING_CRYSTAL).build(null).setRegistryName(LibBlockNames.SUMMONING_CRYSTAL));
+            event.getRegistry().register(TileEntityType.Builder.create(ScribesTile::new, BlockRegistry.SCRIBES_BLOCK).build(null).setRegistryName(LibBlockNames.SCRIBES_BLOCK));
 
         }
 
@@ -140,6 +144,9 @@ public class BlockRegistry {
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.ENCHANTING_APP_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName("enchanting_apparatus"));
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.ARCANE_PEDESTAL, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.ARCANE_PEDESTAL));
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.SUMMONING_CRYSTAL, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.SUMMONING_CRYSTAL));
+            itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.ARCANE_BRICKS, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.ARCANE_BRICKS));
+            itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.SCRIBES_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.SCRIBES_BLOCK));
+
         }
     }
 }

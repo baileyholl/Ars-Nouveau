@@ -38,6 +38,8 @@
 	"item.ars_nouveau.jar_of_light":"Jar of Light",
 
 	"block.ars_nouveau.arcane_ore": "Arcane Ore",
+	"block.ars_nouveau.arcane_bricks": "Arcane Bricks",
+	"block.ars_nouveau.scribes_table": "Scribes Table",
 	"block.ars_nouveau.light_block": "Light",
 	"block.ars_nouveau.phantom_block": "Phantom Block",
 	"block.ars_nouveau.mana_condenser": "Mana Condenser",
@@ -49,6 +51,7 @@
 	"block.ars_nouveau.warding_stone": "Warding Stone",
 	"block.ars_nouveau.arcane_pedestal": "Arcane Pedestal",
 	"block.ars_nouveau.enchanting_apparatus": "Enchanting Apparatus",
+	"block.ars_nouveau.summoning_crystal": "Summoning Crystal",
 
 	"ars_nouveau.page.jar_of_light": "Summons a light that will follow the user as they move. Can be summoned and dismissed at any time.",
 
@@ -78,6 +81,7 @@
 	"item.ars_nouveau.blank_glyph": "Blank Glyph",
 	"item.ars_nouveau.worn_notebook": "Worn Notebook",
 	"item.ars_nouveau.warp_scroll": "Warp Scroll",
+	"item.ars_nouveau.spell_parchment": "Spell Parchment",
 
 	"item.ars_nouveau.ring_of_greater_discount": "Ring of Greater Discount",
 
@@ -118,5 +122,8 @@
 	"item.ars_nouveau.glyph_strength": "Glyph:Strength",
 	"item.ars_nouveau.glyph_summon_vex": "Glyph:Summon Vex",
 	"item.ars_nouveau.glyph_touch": "Glyph:Touch",
+	"item.ars_nouveau.glyph_interact": "Glyph:Interact",
+	"item.ars_nouveau.glyph_pickup": "Glyph:Pickup",
+	"item.ars_nouveau.glyph_harvest": "Glyph:Harvest",
 	"effect.ars_nouveau.shield": "Magic Shield"
 }

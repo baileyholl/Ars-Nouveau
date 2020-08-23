@@ -64,4 +64,19 @@ public class SpellRecipeUtil {
         });
         return spells;
     }
+
+    /**
+     * Parses the NBT stored string, which is stored as an array of spell IDs. ex: [touch, harm, , , ,]
+     */
+    public static ArrayList<AbstractSpellPart> getSpellsFromTagString(String recipeStr){
+        ArrayList<AbstractSpellPart> recipe = new ArrayList<>();
+        if (recipeStr.length() <= 3) // Account for empty strings and '[,]'
+            return recipe;
+        String[] recipeList = recipeStr.substring(1, recipeStr.length() - 1).split(",");
+        for(String id : recipeList){
+            if (ArsNouveauAPI.getInstance().getSpell_map().containsKey(id.trim()))
+                recipe.add(ArsNouveauAPI.getInstance().getSpell_map().get(id.trim()));
+        }
+        return recipe;
+    }
 }

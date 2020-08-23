@@ -82,6 +82,9 @@ public class APIRegistry {
         registerSpell(ModConfig.AugmentExtractID, new AugmentExtract());
         registerSpell(ModConfig.AugmentFortuneID, new AugmentFortune());
         registerSpell(ModConfig.EffectEnderChestID, new EffectEnderChest());
+        registerSpell(ModConfig.EffectHarvestID, new EffectHarvest());
+        registerSpell(ModConfig.EffectPickupID, new EffectPickup());
+        registerSpell(ModConfig.EffectInteractID, new EffectInteract());
         addStartingSpell(ModConfig.MethodProjectileID);
         addStartingSpell(ModConfig.MethodTouchID);
         addStartingSpell(ModConfig.MethodSelfID);

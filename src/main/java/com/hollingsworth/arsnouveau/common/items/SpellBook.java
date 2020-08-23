@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
+import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOpenGUI;
 import com.hollingsworth.arsnouveau.common.spell.SpellResolver;
@@ -24,6 +25,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -46,18 +48,25 @@ public class SpellBook extends Item implements ISpellTier {
     public SpellBook(Tier tier){
         super(new Item.Properties().maxStackSize(1).group(ArsNouveau.itemGroup));
         this.tier = tier;
-        //setUnlocalizedName(ExampleMod.MODID + ".spell_book");     // Used for localization (en_US.lang)
     }
 
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         if(!stack.hasTag())
             stack.setTag(new CompoundNBT());
+
+
+
         if(!worldIn.isRemote && worldIn.getGameTime() % 5 == 0 && !stack.hasTag()) {
             CompoundNBT tag = new CompoundNBT();
             tag.putInt(SpellBook.BOOK_MODE_TAG, 0);
             StringBuilder starting_spells = new StringBuilder();
-            ArsNouveauAPI.getInstance().getStartingSpells().forEach(s-> starting_spells.append(",").append(s.getTag().trim()));
+
+            if(stack.getItem() == ItemsRegistry.creativeSpellBook){
+                ArsNouveauAPI.getInstance().getSpell_map().values().forEach(s -> starting_spells.append(",").append(s.getTag().trim()));
+            }else{
+                ArsNouveauAPI.getInstance().getStartingSpells().forEach(s-> starting_spells.append(",").append(s.getTag().trim()));
+            }
             tag.putString(SpellBook.UNLOCKED_SPELLS, starting_spells.toString());
             stack.setTag(tag);
         }
@@ -83,7 +92,7 @@ public class SpellBook extends Item implements ISpellTier {
             //spawnParticles(playerIn.posX, playerIn.posY + 2, playerIn.posZ, worldIn);
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
         }
-
+        // Crafting mode
         if(getMode(stack.getTag()) == 0 && playerIn instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = (ServerPlayerEntity) playerIn;
             Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->player), new PacketOpenGUI(stack.getTag(), getTier().ordinal(), getUnlockedSpellString(player.getHeldItem(handIn).getTag())));
@@ -120,6 +129,11 @@ public class SpellBook extends Item implements ISpellTier {
         Hand handIn = context.getHand();
         BlockPos blockpos = context.getPos();
         BlockPos blockpos1 = blockpos.offset(context.getFace());
+        if(worldIn.getBlockState(blockpos).getBlock() instanceof ScribesBlock) {
+            System.out.println("Interacting with scribes");
+            return ActionResultType.PASS;
+        }
+
         ItemStack stack = playerIn.getHeldItem(handIn);
         if(getMode(stack.getTag()) == 0 && playerIn instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = (ServerPlayerEntity) playerIn;
@@ -153,7 +167,10 @@ public class SpellBook extends Item implements ISpellTier {
         return recipe;
     }
 
-
+    @Override
+    public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player) {
+        return true;
+    }
 
     public static void setSpellName(CompoundNBT tag, String name, int slot){
         tag.putString(slot + "_name", name);
@@ -189,13 +206,27 @@ public class SpellBook extends Item implements ISpellTier {
         return SpellRecipeUtil.getSpellsFromString(tag.getString(SpellBook.UNLOCKED_SPELLS));
     }
 
+
+
     public static String getUnlockedSpellString(CompoundNBT tag){
         return tag.getString(SpellBook.UNLOCKED_SPELLS);
+    }
+
+    public static boolean unlockSpell(CompoundNBT tag, AbstractSpellPart spellPart){
+        if(containsSpell(tag, spellPart))
+            return false;
+        String newSpells = tag.getString(SpellBook.UNLOCKED_SPELLS) + "," + spellPart.getTag();
+        tag.putString(SpellBook.UNLOCKED_SPELLS, newSpells);
+        return true;
     }
 
     public static void unlockSpell(CompoundNBT tag, String spellTag){
         String newSpells = tag.getString(SpellBook.UNLOCKED_SPELLS) + "," + spellTag;
         tag.putString(SpellBook.UNLOCKED_SPELLS, newSpells);
+    }
+
+    public static boolean containsSpell(CompoundNBT tag, AbstractSpellPart spellPart){
+        return SpellBook.getUnlockedSpells(tag).contains(spellPart);
     }
 
     @Override
@@ -214,6 +245,4 @@ public class SpellBook extends Item implements ISpellTier {
     public Tier getTier() {
         return this.tier;
     }
-
-
 }

@@ -16,7 +16,7 @@ import java.util.Map;
 public abstract class AbstractEffect extends AbstractSpellPart {
 
 
-    protected AbstractEffect(String tag, String description) {
+    public AbstractEffect(String tag, String description) {
         super(tag, description);
     }
 

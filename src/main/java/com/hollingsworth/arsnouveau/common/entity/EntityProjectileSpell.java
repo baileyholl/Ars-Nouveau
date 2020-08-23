@@ -193,13 +193,13 @@ public class EntityProjectileSpell extends ArrowEntity {
             }
 
         }
-        if(world.isRemote && result instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) result).getPos()).getMaterial().isSolid()){
+        if(world.isRemote && result instanceof BlockRayTraceResult){
             SpellBook.spawnParticles(result.getHitVec().x, result.getHitVec().y, result.getHitVec().z, world);
         }
 
         if (!world.isRemote && result instanceof BlockRayTraceResult) {
-           if(!world.getBlockState(((BlockRayTraceResult) result).getPos()).getMaterial().isSolid())
-               return;
+//           if(!world.getBlockState(((BlockRayTraceResult) result).getPos()).getMaterial().blocksMovement())
+//               return;
             BlockRayTraceResult blockraytraceresult = (BlockRayTraceResult)result;
             if(this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(this.world, (LivingEntity) this.getShooter(), blockraytraceresult);

@@ -24,6 +24,7 @@ public class KoboldModel extends EntityModel<EntityWelp> {
 	private final ModelRenderer arm_left;
 	private final ModelRenderer ridges;
 
+
 	public KoboldModel() {
 		textureWidth = 32;
 		textureHeight = 32;
@@ -103,7 +104,6 @@ public class KoboldModel extends EntityModel<EntityWelp> {
 
 		ridges = new ModelRenderer(this);
 		ridges.setRotationPoint(0.0F, 24.0F, 0.0F);
-
 
 	}
 

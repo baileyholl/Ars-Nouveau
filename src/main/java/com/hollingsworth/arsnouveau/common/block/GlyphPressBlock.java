@@ -67,10 +67,12 @@ public class GlyphPressBlock extends ModBlock{
                         ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.reagentItem);
                         world.addEntity(item);
                     }
+
                     tile.reagentItem = player.inventory.decrStackSize(player.inventory.currentItem, 1);
                     if(!tile.craft(player)) {
-                        player.inventory.addItemStackToInventory(tile.reagentItem);
-                        tile.reagentItem = null;
+                        if(player.inventory.addItemStackToInventory(tile.reagentItem)){
+                            tile.reagentItem = null;
+                        }
                     }
                 }
                 //    System.out.println("Set stack " +  tile.itemStack);

@@ -30,6 +30,7 @@ public class ItemsRegistry {
 
     @ObjectHolder(LibItemNames.APPRENTICE_SPELL_BOOK) public static SpellBook apprenticeSpellBook;
     @ObjectHolder(LibItemNames.ARCHMAGE_SPELL_BOOK) public static SpellBook archmageSpellBook;
+    @ObjectHolder(LibItemNames.CREATIVE_SPELL_BOOK) public static SpellBook creativeSpellBook;
 
 
     @ObjectHolder(LibItemNames.BLANK_GLYPH) public static  Item blankGlyph;
@@ -64,6 +65,8 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.BELT_OF_UNSTABLE_GIFTS) public static BeltOfUnstableGifts beltOfUnstableGifts;
 
     @ObjectHolder(LibItemNames.WARP_SCROLL) public static WarpScroll warpScroll;
+
+    @ObjectHolder(LibItemNames.SPELL_PARCHMENT) public static SpellParchment spellParchment;
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler{
@@ -101,6 +104,7 @@ public class ItemsRegistry {
                     new SpellBook(ISpellTier.Tier.ONE).setRegistryName(LibItemNames.NOVICE_SPELL_BOOK),
                     new SpellBook(ISpellTier.Tier.TWO).setRegistryName(LibItemNames.APPRENTICE_SPELL_BOOK),
                     new SpellBook(ISpellTier.Tier.THREE).setRegistryName(LibItemNames.ARCHMAGE_SPELL_BOOK),
+                    new SpellBook(ISpellTier.Tier.THREE).setRegistryName(LibItemNames.CREATIVE_SPELL_BOOK),
                     new RingOfAmplify(),
                     new BeltOfLevitation(),
                     new WarpScroll(),
@@ -117,7 +121,8 @@ public class ItemsRegistry {
                         public int getManaDiscount() {
                             return 20;
                         }
-                    }
+                    },
+                    new SpellParchment()
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

@@ -35,4 +35,6 @@ public class LibItemNames {
     public static final String AMULET_OF_MANA_REGEN = "amulet_of_mana_regen";
     public static final String AMULET_OF_MANA_BOOST = "amulet_of_mana_boost";
     public static final String WARP_SCROLL = "warp_scroll";
+    public static final String CREATIVE_SPELL_BOOK = "creative_spell_book";
+    public static final String SPELL_PARCHMENT = "spell_parchment";
 }

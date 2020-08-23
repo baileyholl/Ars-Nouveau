@@ -1,5 +1,5 @@
 {
-	"credit": "Made with Blockbench",
+	"parent": "block/cube_all",
 	"textures": {
 	"1": "ars_nouveau:blocks/generic_yellow",
 		"2": "ars_nouveau:blocks/glyph_assembly_blue_1",

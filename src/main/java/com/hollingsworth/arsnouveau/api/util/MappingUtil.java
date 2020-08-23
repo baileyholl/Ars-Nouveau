@@ -5,6 +5,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class MappingUtil {
     private static String ITEM_ENTITY_AGE;
+    private static String GET_SEEDS_ITEM;
 
     public static void setup(){
         //Prevent 'jump' in the bobbing
@@ -18,6 +19,8 @@ public class MappingUtil {
            ITEM_ENTITY_AGE = "age";
        }
     }
+
+
 
     public static String getItemEntityAge() {
         return ITEM_ENTITY_AGE;

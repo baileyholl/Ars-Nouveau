@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.entity.EntityWelp;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -23,7 +24,7 @@ public class SummoningCrytalTile extends AbstractManaTile {
 
     public SummoningCrytalTile() {
         super(BlockRegistry.SUMMONING_CRYSTAL_TILE);
-        tier = 1;
+        tier = 2;
     }
 
     @Override
@@ -42,33 +43,38 @@ public class SummoningCrytalTile extends AbstractManaTile {
     }
 
     public @Nullable BlockPos getNextTaskLoc(){
-        if(taskIndex + 1 > getTargets().size()){
+        List<BlockPos> posList = getTargets();
+        if(posList == null || posList.size() == 0) {
+            return null;
+        }
+        if(taskIndex + 1 > posList.size()){
             taskIndex = 0;
         }
         if(world == null || world.isRemote)
             return null;
-        BlockPos pos = getTargets().get(taskIndex++);
+        BlockPos pos = posList.get(taskIndex);
+        taskIndex += 1;
         for(int i = 1; i < 4; i++) {
             if (world.getBlockState(pos.up(i)).getMaterial() != Material.AIR){
                 pos = pos.up(i);
                 break;
             }
         }
-
         return world.getBlockState(pos.up()).getMaterial() == Material.AIR ? pos : null;
     }
 
 
-    public ArrayList<BlockPos> getTargets(){
-        ArrayList<BlockPos> positions = new ArrayList<>();
+    public List<BlockPos> getTargets(){
+        List<BlockPos> positions = new ArrayList<>();
         if(tier == 1){
             positions.add(getPos().north().down());
             positions.add(getPos().south().down());
             positions.add(getPos().east().down());
             positions.add(getPos().west().down());
-            return positions;
+        }if(tier == 2){
+            BlockPos.getAllInBox(getPos().north(2).east(2).down(1), getPos().south(2).west(2).down()).forEach(t -> positions.add(new BlockPos(t)));
         }
-        return  new ArrayList<>();
+        return positions;
     }
 
     public int getRange(){
@@ -91,16 +97,15 @@ public class SummoningCrytalTile extends AbstractManaTile {
 
     @Override
     public void tick() {
+        setTier();
         if(world.getGameTime() % 20 != 0  || world.isRemote)
             return;
 
-        for(EntityWelp kobold : world.getEntitiesWithinAABB(EntityWelp.class, new AxisAlignedBB(pos).grow(10))){
-            System.out.println(kobold.getUniqueID());
-        }
-        System.out.println(this.numEntities);
-        System.out.println(this.entityList);
         cleanupKobolds();
+    }
 
+    public void setTier(){
+        tier = 2;
     }
 
     @Override
@@ -112,6 +117,8 @@ public class SummoningCrytalTile extends AbstractManaTile {
             entityList.add(tag.getUniqueId("entity" + count));
             count++;
         }
+        taskIndex = tag.getInt("task_index");
+        tier = tag.getInt("tier");
     }
 
     @Override
@@ -120,6 +127,8 @@ public class SummoningCrytalTile extends AbstractManaTile {
         for (int i = 0; i < entityList.size(); i++) {
             tag.putUniqueId("entity" + i, entityList.get(i));
         }
+        tag.putInt("task_index", taskIndex);
+        tag.putInt("tier", tier);
         return super.write(tag);
     }
 }

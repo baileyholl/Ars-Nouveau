@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.renderer.ArcanePedestalRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.EnchantingApparatusRenderer;
+import com.hollingsworth.arsnouveau.client.renderer.ScribeTableRenderer;
 import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
@@ -24,6 +25,8 @@ public class ClientHandler {
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.GLYPH_PRESS_TILE, GlyphPressRenderer::new);
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.ARCANE_PEDESTAL_TILE, ArcanePedestalRenderer::new);
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.ENCHANTING_APP_TILE, EnchantingApparatusRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(BlockRegistry.SCRIBES_TABLE_TILE, ScribeTableRenderer::new);
+
 
         RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_JAR, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.GLYPH_PRESS_BLOCK, RenderType.getCutout());
@@ -34,6 +37,7 @@ public class ClientHandler {
         RenderTypeLookup.setRenderLayer(BlockRegistry.PHANTOM_BLOCK, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_BLOOM_CROP, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.SUMMONING_CRYSTAL, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.SCRIBES_BLOCK, RenderType.getCutout());
 
     }
 

@@ -1,0 +1,18 @@
+{
+  "name": "Item Pickup",
+  "icon": "ars_nouveau:glyph_pickup",
+  "category": "spells",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Picks up nearby items in a medium radius where this spell is activated. The range may be expanded with AOE."
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "ONE",
+      "mana_cost": "Low",
+      "clay_type": "ars_nouveau:magic_clay",
+      "reagent": "minecraft:hopper"
+    }
+  ]
+}

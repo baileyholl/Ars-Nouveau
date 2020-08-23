@@ -65,12 +65,12 @@ public class EffectBreak extends AbstractEffect {
 
                     world.destroyBlock(pos1, false);
                 } else if (hasBuff(augments, AugmentFortune.class)) {
-                    state.getDrops(LootUtil.getFortuneContext((ServerWorld) world, pos1, (PlayerEntity) shooter, getBuffCount(augments, AugmentFortune.class))).forEach(i -> world.addEntity(new ItemEntity(world,pos1.getX(), pos1.getY(), pos1.getZ(),i )));;
+                    state.getDrops(LootUtil.getFortuneContext((ServerWorld) world, pos1, shooter, getBuffCount(augments, AugmentFortune.class))).forEach(i -> world.addEntity(new ItemEntity(world,pos1.getX(), pos1.getY(), pos1.getZ(),i )));;
                     world.destroyBlock(pos1, false);
                 } else {
                     world.destroyBlock(pos1, true);
                 }
-                world.notifyBlockUpdate(pos1, state, state, 2);
+                world.notifyBlockUpdate(pos1, state, state, 3);
             }
         }
     }
@@ -88,6 +88,6 @@ public class EffectBreak extends AbstractEffect {
 
     @Override
     protected String getBookDescription() {
-        return "Breaks blocks of an average hardness. Can be amplified to break harder blocks!";
+        return "Breaks blocks of an average hardness. Can be amplified to break harder blocks or can break multiple blocks with the AOE augment.";
     }
 }

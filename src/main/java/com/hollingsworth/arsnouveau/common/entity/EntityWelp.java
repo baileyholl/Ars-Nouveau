@@ -34,6 +34,11 @@ public class EntityWelp extends FlyingEntity {
     int ticksSinceLastSpell;
 
 
+    @Override
+    public boolean canDespawn(double p_213397_1_) {
+        return false;
+    }
+
     protected EntityWelp(EntityType<? extends FlyingEntity> p_i48568_1_, World p_i48568_2_) {
         super(p_i48568_1_, p_i48568_2_);
         this.moveController =  new FlyingMovementController(this, 10, true);
@@ -75,10 +80,10 @@ public class EntityWelp extends FlyingEntity {
     }
 
     public boolean canPerformAnotherTask(){
-        return  ticksSinceLastSpell > 100;
+        return  ticksSinceLastSpell > 60;
     }
 
-    public BlockPos getTaskLoc(){
+    public @Nullable BlockPos getTaskLoc(){
         if(world.getTileEntity(crystalPos) instanceof SummoningCrytalTile){
             return ((SummoningCrytalTile) world.getTileEntity(crystalPos)).getNextTaskLoc();
         }
@@ -86,7 +91,7 @@ public class EntityWelp extends FlyingEntity {
     }
 
     public void castSpell(BlockPos target){
-        System.out.println("Casting");
+//        System.out.println("Casting");
         if(world.isRemote)
             return;
         if(world instanceof ServerWorld){
@@ -152,30 +157,33 @@ public class EntityWelp extends FlyingEntity {
         @Override
         public void startExecuting() {
             super.startExecuting();
-            System.out.println("Executing");
-            this.kobold.getNavigator().clearPath();
+//            System.out.println("Executing");
             taskLoc = this.kobold.getTaskLoc();
             timePerformingTask = 0;
-            this.kobold.navigator.setPath(this.kobold.navigator.getPathToPos(taskLoc, 1), 1.0f);
+            if(this.kobold != null && this.kobold.navigator != null && taskLoc != null)
+                 this.kobold.navigator.setPath(this.kobold.navigator.getPathToPos(taskLoc, 1), 1.0f);
         }
 
         @Override
         public void tick() {
             super.tick();
             timePerformingTask++;
+            if(kobold == null  || taskLoc == null)
+                return;
+
             if(BlockUtil.distanceFrom(kobold.getPosition(), taskLoc) <= 1){
                 kobold.castSpell(taskLoc);
                 kobold.navigator.clearPath();
-            }else{
+                timePerformingTask = 0;
+            }else if(this.kobold != null && kobold.navigator != null && taskLoc != null){
                 this.kobold.navigator.setPath(this.kobold.navigator.getPathToPos(taskLoc.up(), 0), 1f);
             }
         }
 
         @Override
         public boolean shouldContinueExecuting() {
-            System.out.println("Executing shoul");
-
-            return kobold.ticksSinceLastSpell > 100 && this.taskLoc != null || timePerformingTask > 300;
+//            System.out.println("Executing shoul");
+            return kobold.ticksSinceLastSpell > 60 && this.taskLoc != null && timePerformingTask < 300;
         }
 
         @Override
