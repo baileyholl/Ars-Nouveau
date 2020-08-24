@@ -1,5 +1,6 @@
 {
 	"name": "Getting Started",
 	"description": "An introduction to Ars Nouveau.",
-	"icon": "ars_nouveau:novice_spell_book"
+	"icon": "ars_nouveau:novice_spell_book",
+	"sortnum":0
 }

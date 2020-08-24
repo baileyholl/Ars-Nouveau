@@ -68,6 +68,8 @@ public class ItemsRegistry {
 
     @ObjectHolder(LibItemNames.SPELL_PARCHMENT) public static SpellParchment spellParchment;
 
+    @ObjectHolder(LibItemNames.WHELP_CHARM) public static WhelpCharm whelpCharm;
+
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler{
         public static final Set<Item> ITEMS = new HashSet<>();
@@ -76,6 +78,7 @@ public class ItemsRegistry {
         public static void registerItems(final RegistryEvent.Register<Item> event) {
 
             Item[] items = {
+                    new WhelpCharm(),
                     new ModItem(LibItemNames.BLANK_GLYPH),
                     new ModItem(LibItemNames.MARVELOUS_CLAY),
                     new ModItem(LibItemNames.MAGIC_CLAY),

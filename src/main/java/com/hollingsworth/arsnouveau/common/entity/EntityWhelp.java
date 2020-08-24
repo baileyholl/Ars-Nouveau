@@ -1,56 +1,89 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.SummoningCrytalTile;
+import com.hollingsworth.arsnouveau.common.items.ItemsRegistry;
+import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.spell.EntitySpellResolver;
-import com.hollingsworth.arsnouveau.common.spell.SpellResolver;
-import com.hollingsworth.arsnouveau.common.spell.effect.EffectBlink;
-import com.hollingsworth.arsnouveau.common.spell.effect.EffectGrow;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.controller.FlyingMovementController;
-import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.FlyingPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.*;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.EnumSet;
 
-public class EntityWelp extends FlyingEntity {
+public class EntityWhelp extends FlyingEntity implements IPickupResponder {
 
     BlockPos crystalPos;
     int ticksSinceLastSpell;
-
+    ArrayList<AbstractSpellPart> spellRecipe;
 
     @Override
     public boolean canDespawn(double p_213397_1_) {
         return false;
     }
 
-    protected EntityWelp(EntityType<? extends FlyingEntity> p_i48568_1_, World p_i48568_2_) {
+    protected EntityWhelp(EntityType<? extends FlyingEntity> p_i48568_1_, World p_i48568_2_) {
         super(p_i48568_1_, p_i48568_2_);
         this.moveController =  new FlyingMovementController(this, 10, true);
 
     }
 
-    public EntityWelp(World p_i50190_2_) {
-        super(ModEntities.ENTITY_KOBOLD_TYPE, p_i50190_2_);
+    public EntityWhelp setRecipe(ArrayList<AbstractSpellPart> recipe){
+        this.spellRecipe = recipe;
+        return this;
+    }
+
+    public EntityWhelp(World p_i50190_2_) {
+        super(ModEntities.ENTITY_WHELP_TYPE, p_i50190_2_);
         this.moveController = new FlyingMovementController(this, 10, true);
     }
 
-    public EntityWelp(World world, BlockPos crystalPos){
+    @Override
+    protected boolean processInteract(PlayerEntity player, Hand hand) {
+        if(world.isRemote)
+            return true;
+        ItemStack stack = player.getHeldItem(hand);
+        if(stack != ItemStack.EMPTY && stack.getItem() instanceof SpellParchment){
+            ArrayList<AbstractSpellPart> spellParts = SpellParchment.getSpellRecipe(stack);
+            if(new EntitySpellResolver(spellParts).canCast(this)) {
+                this.spellRecipe = SpellParchment.getSpellRecipe(stack);
+                player.sendMessage(new StringTextComponent("Spell set."));
+            } else{
+                player.sendMessage(new StringTextComponent("A whelp cannot cast an invalid spell."));
+                return false;
+            }
+        }else{
+            if(spellRecipe == null || spellRecipe.size() == 0){
+                player.sendMessage(new StringTextComponent("Give this whelp a spell by giving it some inscribed Spell Parchment. "));
+            }else
+                player.sendMessage(new StringTextComponent("This whelp is casting " + SpellRecipeUtil.getDisplayString(spellRecipe)));
+        }
+        return true;
+    }
+
+    public EntityWhelp(World world, BlockPos crystalPos){
         this(world);
         this.crystalPos = crystalPos;
     }
@@ -58,7 +91,29 @@ public class EntityWelp extends FlyingEntity {
     @Override
     public void tick() {
         super.tick();
+        if(world == null || this.dead || crystalPos == null)
+            return;
         ticksSinceLastSpell += 1;
+        if(world.getGameTime() % 20 == 0){
+            if(!(world.getTileEntity(crystalPos) instanceof SummoningCrytalTile)){
+                if(!world.isRemote){
+                    this.attackEntityFrom(DamageSource.causePlayerDamage(FakePlayerFactory.getMinecraft((ServerWorld)world)), 99);
+                }
+                if(world.isRemote){
+
+                    for(int i =0; i < 2; i++){
+                        double d0 = getPosX(); //+ world.rand.nextFloat();
+                        double d1 = getPosY();//+ world.rand.nextFloat() ;
+                        double d2 = getPosZ(); //+ world.rand.nextFloat();
+
+                        world.addParticle(ParticleTypes.ENCHANTED_HIT, d0, d1, d2, 0.0, 0.0, 0.0);
+                    }
+
+                }
+
+            }
+
+        }
     }
 
     @Override
@@ -80,7 +135,7 @@ public class EntityWelp extends FlyingEntity {
     }
 
     public boolean canPerformAnotherTask(){
-        return  ticksSinceLastSpell > 60;
+        return  ticksSinceLastSpell > 60 && new EntitySpellResolver(spellRecipe).canCast(this);
     }
 
     public @Nullable BlockPos getTaskLoc(){
@@ -91,28 +146,27 @@ public class EntityWelp extends FlyingEntity {
     }
 
     public void castSpell(BlockPos target){
-//        System.out.println("Casting");
         if(world.isRemote)
             return;
         if(world instanceof ServerWorld){
-
-
             double d0 = target.getX() +0.5; //+ world.rand.nextFloat();
             double d1 = target.getY() + 1;//+ world.rand.nextFloat() ;
             double d2 = target.getZ() +0.5; //+ world.rand.nextFloat();
-
             ((ServerWorld)world).spawnParticle(ParticleTypes.ENCHANTED_HIT, d0, d1, d2,rand.nextInt(4), 0,0.3,0, 0.1);
-
+        }
+        if(!(world.getTileEntity(crystalPos) instanceof SummoningCrytalTile))
+            return;
+        if(((SummoningCrytalTile) world.getTileEntity(crystalPos)).removeMana(spellRecipe)){
+            EntitySpellResolver resolver = new EntitySpellResolver(this.spellRecipe);
+            resolver.onCastOnBlock(new BlockRayTraceResult(new Vec3d(target.getX(), target.getY(), target.getZ()), Direction.UP,target, false ), this);
         }
         this.ticksSinceLastSpell = 0;
-        EntitySpellResolver resolver = new EntitySpellResolver(new AbstractSpellPart[]{
-           new MethodTouch(), new EffectGrow()
-        });
-        resolver.onCastOnBlock(new BlockRayTraceResult(new Vec3d(target.getX(), target.getY(), target.getZ()), Direction.UP,target, false ), this);
     }
 
     public boolean enoughManaForTask(){
-        return true;
+        if(!(world.getTileEntity(crystalPos) instanceof SummoningCrytalTile || spellRecipe == null || spellRecipe.size() == 0))
+            return false;
+        return ((SummoningCrytalTile) world.getTileEntity(crystalPos)).enoughMana(spellRecipe);
     }
 
     protected void updateAITasks() {
@@ -144,12 +198,27 @@ public class EntityWelp extends FlyingEntity {
         super.updateAITasks();
     }
 
+    @Override
+    public void onDeath(DamageSource source) {
+        if(!world.isRemote){
+            ItemStack stack = new ItemStack(ItemsRegistry.whelpCharm);
+            world.addEntity(new ItemEntity(world, getPosX(), getPosY(), getPosZ(), stack));
+        }
+
+        super.onDeath(source);
+    }
+
+    @Override
+    public ItemStack onPickup(ItemStack stack) {
+        SummoningCrytalTile tile = world.getTileEntity(crystalPos) instanceof SummoningCrytalTile ? (SummoningCrytalTile) world.getTileEntity(crystalPos) : null;
+        return tile == null ? stack : tile.insertItem(stack);
+    }
 
     public static class PerformTaskGoal extends Goal {
-        EntityWelp kobold;
+        EntityWhelp kobold;
         BlockPos taskLoc;
         int timePerformingTask;
-        public PerformTaskGoal(EntityWelp kobold){
+        public PerformTaskGoal(EntityWhelp kobold){
             this.kobold = kobold;
             this.setMutexFlags(EnumSet.of(Flag.MOVE));
         }
@@ -194,7 +263,7 @@ public class EntityWelp extends FlyingEntity {
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_KOBOLD_TYPE;
+        return ModEntities.ENTITY_WHELP_TYPE;
     }
 
 
@@ -207,6 +276,9 @@ public class EntityWelp extends FlyingEntity {
             tag.putInt("summoner_z", crystalPos.getZ());
         }
         tag.putInt("last_spell", ticksSinceLastSpell);
+        if(spellRecipe != null){
+            tag.putString("spell", SpellRecipeUtil.serializeForNBT(spellRecipe));
+        }
     }
 
     @Override
@@ -214,7 +286,7 @@ public class EntityWelp extends FlyingEntity {
         super.readAdditional(tag);
         if(tag.contains("summoner_x"))
             crystalPos = new BlockPos(tag.getInt("summoner_x"), tag.getInt("summoner_y"), tag.getInt("summoner_z"));
-
+        spellRecipe = SpellRecipeUtil.getSpellsFromTagString(tag.getString("spell"));
         ticksSinceLastSpell = tag.getInt("last_spell");
     }
 
@@ -248,7 +320,7 @@ public class EntityWelp extends FlyingEntity {
          * method as well.
          */
         public boolean shouldExecute() {
-            EntityWelp kobold = EntityWelp.this;
+            EntityWhelp kobold = EntityWhelp.this;
             kobold.world.getBlockState(kobold.getPosition());
             int yCorrection = 0;
             int blocksBelow = 0;
@@ -256,14 +328,14 @@ public class EntityWelp extends FlyingEntity {
                 blocksBelow++;
             }
             System.out.println(blocksBelow);
-            return EntityWelp.this.navigator.noPath() && blocksBelow != 3;
+            return EntityWhelp.this.navigator.noPath() && blocksBelow != 3;
         }
 
         /**
          * Returns whether an in-progress EntityAIBase should continue executing
          */
         public boolean shouldContinueExecuting() {
-            EntityWelp kobold = EntityWelp.this;
+            EntityWhelp kobold = EntityWhelp.this;
             return kobold.navigator.func_226337_n_();
         }
 
@@ -273,22 +345,22 @@ public class EntityWelp extends FlyingEntity {
         public void startExecuting() {
 
             BlockPos loc = getFloatingLoc();
-            EntityWelp.this.navigator.setPath(EntityWelp.this.navigator.getPathToPos(loc, 1), 1.0D);
-            EntityWelp.this.moveController.setMoveTo(loc.getX(), loc.getY(), loc.getZ(), 0.1);
-            System.out.println(EntityWelp.this.navigator.getPathToPos(loc, 1).getTarget());
+            EntityWhelp.this.navigator.setPath(EntityWhelp.this.navigator.getPathToPos(loc, 1), 1.0D);
+            EntityWhelp.this.moveController.setMoveTo(loc.getX(), loc.getY(), loc.getZ(), 0.1);
+            System.out.println(EntityWhelp.this.navigator.getPathToPos(loc, 1).getTarget());
 
         }
         @Nullable
         private BlockPos getFloatingLoc() {
-            Vec3d vec3d = EntityWelp.this.getLook(0.0F);
+            Vec3d vec3d = EntityWhelp.this.getLook(0.0F);
             boolean flyUp = false;
             for(int i =0; i < 3; i++){
-                if(world.getBlockState(EntityWelp.this.getPosition().down(i)).isSolid()){ // Too close to the ground
+                if(world.getBlockState(EntityWhelp.this.getPosition().down(i)).isSolid()){ // Too close to the ground
                     flyUp = true;
                     continue;
                 }
             }
-            return flyUp ? EntityWelp.this.getPosition().up() : EntityWelp.this.getPosition().down();
+            return flyUp ? EntityWhelp.this.getPosition().up() : EntityWhelp.this.getPosition().down();
         }
 
         @Override

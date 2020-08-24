@@ -2,7 +2,7 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "name": "mana_ore",
+      "name": "arcane_ore",
       "rolls": 1,
       "entries": [
         {

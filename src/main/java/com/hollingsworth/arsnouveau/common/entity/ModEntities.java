@@ -22,23 +22,9 @@ public class ModEntities {
 
     public static EntityType<EntityEvokerFangs> ENTITY_EVOKER_FANGS_ENTITY_TYPE = null;
 
-    public static EntityType<EntityWelp> ENTITY_KOBOLD_TYPE = null;
+    public static EntityType<EntityWhelp> ENTITY_WHELP_TYPE = null;
 
 
-
-    //    public static void init() {
-//        // Every entity in our mod has an ID (local to this mod)
-//        int id = 1;
-//         EntityRegistry.registerModEntity(new ResourceLocation(""), EntityProjectileSpell.class, "ProjectileSpell", id++, ExampleMod.instance, 64, 3, true);
-////        EntityRegistry.registerModEntity(EntityWeirdZombie.class, "WeirdZombie", id++, ModTut.instance, 64, 3, true, 0x996600, 0x00ff00);
-////
-////        // We want our mob to spawn in Plains and ice plains biomes. If you don't add this then it will not spawn automatically
-////        // but you can of course still make it spawn manually
-////        EntityRegistry.addSpawn(EntityWeirdZombie.class, 100, 3, 5, EnumCreatureType.MONSTER, Biomes.PLAINS, Biomes.ICE_PLAINS);
-////
-////        // This is the loot table for our mob
-////        LootTableList.register(EntityWeirdZombie.LOOT);
-//    }
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
         /**
@@ -64,14 +50,14 @@ public class ModEntities {
                     "ally_vex",
                     EntityType.Builder.<EntityAllyVex>create(EntityAllyVex::new, EntityClassification.MISC)
                             .size(0.4F, 0.8F).immuneToFire());
-           ENTITY_KOBOLD_TYPE = build("kobold", EntityType.Builder.<EntityWelp>create(EntityWelp::new, EntityClassification.MISC)
-                   .size(0.4F, 0.8F)   .setTrackingRange(10)
+           ENTITY_WHELP_TYPE = build("whelp", EntityType.Builder.<EntityWhelp>create(EntityWhelp::new, EntityClassification.MISC)
+                   .size(0.6F, 0.8F).setTrackingRange(10)
                    .setShouldReceiveVelocityUpdates(true));
 
             event.getRegistry().registerAll(
                     SPELL_PROJ,
                     ENTITY_EVOKER_FANGS_ENTITY_TYPE,
-                    ALLY_VEX, ENTITY_KOBOLD_TYPE
+                    ALLY_VEX, ENTITY_WHELP_TYPE
             );
             //ENT_PROJECTILE = registerEntity(EntityType.Builder.<EntityModProjectile>create(EntityClassification.MISC).setCustomClientFactory(EntityModProjectile::new).size(0.25F, 0.25F), "ent_projectile");
 

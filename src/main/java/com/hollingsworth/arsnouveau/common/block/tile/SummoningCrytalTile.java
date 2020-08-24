@@ -1,12 +1,22 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
-import com.hollingsworth.arsnouveau.common.entity.EntityWelp;
-import net.minecraft.block.Blocks;
+import com.hollingsworth.arsnouveau.common.block.ManaBlock;
+import com.hollingsworth.arsnouveau.common.block.SummoningCrystal;
+import com.hollingsworth.arsnouveau.common.entity.EntityWhelp;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.HopperTileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.StringTextComponent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -24,7 +34,7 @@ public class SummoningCrytalTile extends AbstractManaTile {
 
     public SummoningCrytalTile() {
         super(BlockRegistry.SUMMONING_CRYSTAL_TILE);
-        tier = 2;
+        tier = 1;
     }
 
     @Override
@@ -32,14 +42,46 @@ public class SummoningCrytalTile extends AbstractManaTile {
         return 0;
     }
 
-    public void summon(){
+    public void summon(EntityWhelp whelp){
         if(!world.isRemote){
-            EntityWelp kobold = new EntityWelp(world, pos);
-            kobold.setPosition(this.pos.getX(), this.pos.getY() + 1, this.pos.getZ());
-            world.addEntity(kobold);
             numEntities +=1;
-            entityList.add(kobold.getUniqueID());
+            entityList.add(whelp.getUniqueID());
         }
+    }
+
+    public void changeTier(PlayerEntity entity){
+        if(tier == 1){
+            tier = 2;
+            entity.sendMessage(new StringTextComponent("Set area to 5 x 5"));
+        }else if(tier == 2){
+            tier = 3;
+            entity.sendMessage(new StringTextComponent("Set area to 9 x 9"));
+        }else if(tier == 3){
+            tier = 1;
+            entity.sendMessage(new StringTextComponent("Set area to adjacent blocks only."));
+        }
+    }
+
+    public ArrayList<IInventory> inventories(){
+        if(world == null)return new ArrayList<>();
+        ArrayList<IInventory> iInventories = new ArrayList<>();
+        for(Direction d : Direction.values()){
+            IInventory iInventory =  HopperTileEntity.getInventoryAtPosition(world, pos.offset(d));
+            if(iInventory != null)
+                iInventories.add(iInventory);
+        }
+
+        return iInventories;
+    }
+
+    public ItemStack insertItem(ItemStack stack){
+
+        for(IInventory i : inventories()){
+            if(stack == ItemStack.EMPTY || stack == null)
+                break;
+            stack = HopperTileEntity.putStackInInventoryAllSlots(null, i, stack, null);
+        }
+        return stack;
     }
 
     public @Nullable BlockPos getNextTaskLoc(){
@@ -54,15 +96,44 @@ public class SummoningCrytalTile extends AbstractManaTile {
             return null;
         BlockPos pos = posList.get(taskIndex);
         taskIndex += 1;
-        for(int i = 1; i < 4; i++) {
-            if (world.getBlockState(pos.up(i)).getMaterial() != Material.AIR){
-                pos = pos.up(i);
-                break;
+        if (!(world.getBlockState(pos).getBlock() instanceof LogBlock) && !(world.getBlockState(pos).getBlock() instanceof LeavesBlock)) {
+            for(int i = 1; i < 4; i++) {
+
+                if (world.getBlockState(pos.up(i)).getMaterial() != Material.AIR){
+                    pos = pos.up(i);
+                    break;
+                }
             }
         }
+
+        Block block = world.getBlockState(pos).getBlock();
+        if(block instanceof SummoningCrystal || block instanceof ContainerBlock || block instanceof ManaBlock || block instanceof IInventory)
+            return null;
         return world.getBlockState(pos.up()).getMaterial() == Material.AIR ? pos : null;
     }
 
+    public boolean enoughMana(ArrayList<AbstractSpellPart> spellParts){
+        final boolean[] enough = {false};
+        int manaCost = ManaUtil.getRecipeCost(spellParts) / 4;
+        BlockPos.getAllInBox(this.getPos().add(7, -3, 7), this.getPos().add(-7, 3, -7)).forEach(blockPos -> {
+            if(!enough[0] && world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= manaCost ) {
+                enough[0] = true;
+            }
+        });
+        return enough[0];
+    }
+
+    public boolean removeMana(ArrayList<AbstractSpellPart> spellParts){
+        final boolean[] enough = {false};
+        int manaCost = ManaUtil.getRecipeCost(spellParts) / 4;
+        BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
+            if(!enough[0] && world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= manaCost ) {
+                ((ManaJarTile) world.getTileEntity(blockPos)).removeMana(manaCost);
+                enough[0] = true;
+            }
+        });
+        return enough[0];
+    }
 
     public List<BlockPos> getTargets(){
         List<BlockPos> positions = new ArrayList<>();
@@ -71,8 +142,12 @@ public class SummoningCrytalTile extends AbstractManaTile {
             positions.add(getPos().south().down());
             positions.add(getPos().east().down());
             positions.add(getPos().west().down());
-        }if(tier == 2){
+        }
+        if(tier == 2){
             BlockPos.getAllInBox(getPos().north(2).east(2).down(1), getPos().south(2).west(2).down()).forEach(t -> positions.add(new BlockPos(t)));
+        }
+        if(tier == 3){
+            BlockPos.getAllInBox(getPos().north(4).east(4).down(1), getPos().south(4).west(4).down()).forEach(t -> positions.add(new BlockPos(t)));
         }
         return positions;
     }
@@ -82,7 +157,7 @@ public class SummoningCrytalTile extends AbstractManaTile {
     }
 
     public void cleanupKobolds(){
-        List<UUID> list = world.getEntitiesWithinAABB(EntityWelp.class, new AxisAlignedBB(pos).grow(10)).stream().map(f -> f.getUniqueID()).collect(Collectors.toList());
+        List<UUID> list = world.getEntitiesWithinAABB(EntityWhelp.class, new AxisAlignedBB(pos).grow(10)).stream().map(f -> f.getUniqueID()).collect(Collectors.toList());
         ArrayList<UUID> removed = new ArrayList<>();
         for(UUID uuid : this.entityList) {
             if (!list.contains(uuid)) {
@@ -97,15 +172,10 @@ public class SummoningCrytalTile extends AbstractManaTile {
 
     @Override
     public void tick() {
-        setTier();
         if(world.getGameTime() % 20 != 0  || world.isRemote)
             return;
 
         cleanupKobolds();
-    }
-
-    public void setTier(){
-        tier = 2;
     }
 
     @Override

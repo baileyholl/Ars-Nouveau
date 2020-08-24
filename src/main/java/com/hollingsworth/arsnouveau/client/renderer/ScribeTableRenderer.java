@@ -35,7 +35,6 @@ public class ScribeTableRenderer extends TileEntityRenderer<ScribesTile> {
         double y = tileEntityIn.getPos().getY();
         double z = tileEntityIn.getPos().getZ();
         if(tileEntityIn.stack == null){
-            System.out.println(tileEntityIn.stack);
             return;
         }
 

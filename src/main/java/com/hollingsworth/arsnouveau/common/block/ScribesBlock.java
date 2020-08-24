@@ -99,7 +99,10 @@ public class ScribesBlock extends ModBlock{
 
     public static Direction getFacingFromEntity(BlockPos clickedBlock, LivingEntity entity) {
         Vec3d vec = entity.getPositionVec();
-        return Direction.getFacingFromVector((float) (vec.x - clickedBlock.getX()), (float) (vec.y - clickedBlock.getY()), (float) (vec.z - clickedBlock.getZ()));
+        Direction direction = Direction.getFacingFromVector((float) (vec.x - clickedBlock.getX()), (float) (vec.y - clickedBlock.getY()), (float) (vec.z - clickedBlock.getZ()));
+        if(direction == Direction.UP || direction == Direction.DOWN)
+            direction = Direction.NORTH;
+        return direction;
     }
 
     @Override

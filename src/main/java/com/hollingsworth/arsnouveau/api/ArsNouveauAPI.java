@@ -18,7 +18,8 @@ public class ArsNouveauAPI {
         machines,
         equipment,
         resources,
-        getting_started
+        getting_started,
+        automation
     }
 
     /**

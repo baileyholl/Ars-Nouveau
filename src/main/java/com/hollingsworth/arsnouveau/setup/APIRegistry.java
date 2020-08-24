@@ -43,6 +43,16 @@ public class APIRegistry {
         registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.beltOfUnstableGifts, ItemsRegistry.mundaneBelt, new Item[]{
                 Items.SUGAR, Items.NETHER_WART, Items.BLAZE_POWDER, Items.GLOWSTONE_DUST, Items.FERMENTED_SPIDER_EYE, Items.REDSTONE, Items.BREWING_STAND, Items.FEATHER
         }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
+
+        registerApparatusRecipe(new EnchantingApparatusRecipe(BlockRegistry.SUMMONING_CRYSTAL.asItem(), Items.DIAMOND_BLOCK, new Item[]{
+                Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, ItemsRegistry.arcaneBrick, ItemsRegistry.arcaneBrick, ItemsRegistry.arcaneBrick, ItemsRegistry.arcaneBrick
+        }, ArsNouveauAPI.PatchouliCategories.automation.name()));
+
+        registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.whelpCharm, Items.EGG, new Item[]{
+                ItemsRegistry.bucketOfMana,ItemsRegistry.bucketOfMana,Items.DIAMOND, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, ItemsRegistry.noviceSpellBook,
+        }, ArsNouveauAPI.PatchouliCategories.automation.name()));
+
+
     }
 
     public static void registerSpells(){

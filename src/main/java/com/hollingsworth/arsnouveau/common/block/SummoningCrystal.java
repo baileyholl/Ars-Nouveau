@@ -26,12 +26,11 @@ public class SummoningCrystal extends ModBlock{
 
     @Override
     public ActionResultType onBlockActivated(BlockState p_225533_1_, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult p_225533_6_) {
-        if(!world.isRemote && hand == Hand.MAIN_HAND){
-            if(world.getTileEntity(pos) instanceof SummoningCrytalTile){
-                ((SummoningCrytalTile) world.getTileEntity(pos)).summon();
-            }
+        if(!world.isRemote && hand == Hand.MAIN_HAND && player.getHeldItem(hand).isEmpty()){
+            if(world.getTileEntity(pos) instanceof SummoningCrytalTile)
+                ((SummoningCrytalTile) world.getTileEntity(pos)).changeTier(player);
         }
-        return   super.onBlockActivated(p_225533_1_, world, pos, player, hand, p_225533_6_);
+        return super.onBlockActivated(p_225533_1_, world, pos, player, hand, p_225533_6_);
 
     }
 

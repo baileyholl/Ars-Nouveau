@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
+import net.minecraft.command.arguments.EntityAnchorArgument;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -55,6 +56,36 @@ public class MethodProjectile extends AbstractCastMethod {
             world.addEntity(proj);
         }
     }
+    // Summons the projectiles directly above the block, facing downwards.
+    public void summonProjectiles(World world, BlockPos pos, LivingEntity shooter, ArrayList<AbstractAugment> augments){
+        ArrayList<EntityProjectileSpell> projectiles = new ArrayList<>();
+        int numPierce = getBuffCount(augments, AugmentPierce.class);
+        EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, shooter, this.resolver, numPierce);
+        projectileSpell.setPosition(pos.getX(), pos.getY() +1, pos.getZ());
+        projectiles.add(projectileSpell);
+
+        int numSplits = getBuffCount(augments, AugmentSplit.class);
+
+        for(int i =1; i < numSplits + 1; i++){
+            Direction offset = shooter.getHorizontalFacing().rotateY();
+            if(i%2==0) offset = offset.getOpposite();
+            // Alternate sides
+            BlockPos projPos = pos.offset(offset, i);
+            projPos = projPos.add(0, 1.5, 0);
+            EntityProjectileSpell spell = new EntityProjectileSpell(world, shooter, this.resolver, numPierce);
+            spell.setPosition(projPos.getX(), projPos.getY(), projPos.getZ());
+            projectiles.add(spell);
+        }
+
+        float velocity = 1.0f + getBuffCount(augments, AugmentAccelerate.class);
+
+
+        for(EntityProjectileSpell proj : projectiles) {
+
+            proj.shoot(shooter, 90,90f, 0.0F, velocity, .00F);
+            world.addEntity(proj);
+        }
+    }
 
     @Override
     public void onCast(ItemStack stack, LivingEntity shooter, World world, ArrayList<AbstractAugment> augments) {
@@ -71,9 +102,14 @@ public class MethodProjectile extends AbstractCastMethod {
 
     }
 
+    /**
+     * Cast by entities.
+     */
     @Override
     public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, ArrayList<AbstractAugment> augments) {
-
+        caster.lookAt(EntityAnchorArgument.Type.EYES, blockRayTraceResult.getHitVec());
+        summonProjectiles(caster.getEntityWorld(), blockRayTraceResult.getPos(), caster, augments);
+        resolver.expendMana(caster);
     }
 
     @Override

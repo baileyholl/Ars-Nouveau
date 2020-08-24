@@ -113,6 +113,21 @@ public class Recipes extends RecipeProvider {
                     .addIngredient(ItemsRegistry.arcaneBrick, 9)
                     .build(consumer);
 
+            ShapedRecipeBuilder.shapedRecipe(BlockRegistry.ARCANE_BRICKS).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                    .patternLine("xx ")
+                    .patternLine("xx ")
+                    .patternLine("   ").key('x', ItemsRegistry.arcaneBrick).build(consumer);;
+
+
+            ShapedRecipeBuilder.shapedRecipe(BlockRegistry.SCRIBES_BLOCK).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                    .patternLine("xxx")
+                    .patternLine("yzy")
+                    .patternLine("y y").key('x', Blocks.OAK_SLAB).key('y', Items.STICK).key('z', Items.OAK_LOG).build(consumer);
+
+            ShapedRecipeBuilder.shapedRecipe(ItemsRegistry.spellParchment).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                    .patternLine("xxx")
+                    .patternLine("xyx")
+                    .patternLine("xxx").key('x', ItemsRegistry.manaFiber).key('y', Items.PAPER).build(consumer);
 
         }
     }

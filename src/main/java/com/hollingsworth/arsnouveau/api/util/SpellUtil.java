@@ -1,6 +1,9 @@
 package com.hollingsworth.arsnouveau.api.util;
 
 import com.google.common.collect.ImmutableList;
+import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
+import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
+import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import net.minecraft.entity.LivingEntity;
 
 import net.minecraft.util.math.BlockPos;
@@ -8,7 +11,31 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 public class SpellUtil {
+
+    public static boolean isValidSpell(ArrayList<AbstractSpellPart> recipe){
+        AbstractCastMethod method = null;
+        if(recipe != null && !recipe.isEmpty() && recipe.get(0) instanceof AbstractCastMethod) {
+            method = (AbstractCastMethod) recipe.get(0);
+        }else
+            return false;
+
+        if(recipe.isEmpty() || method == null) {
+            return false;
+        }
+        Set<AbstractSpellPart> testSet = new HashSet<>(recipe.size());
+        for(AbstractSpellPart part : recipe){
+            if(part instanceof AbstractEffect && !testSet.add(part)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static ImmutableList<BlockPos> calcAOEBlocks(LivingEntity caster, BlockPos origin, BlockRayTraceResult mop, int aoeBonus) {
         return calcAOEBlocks(caster, origin, mop, 1 + aoeBonus, 1 + aoeBonus, 1, -1);
     }

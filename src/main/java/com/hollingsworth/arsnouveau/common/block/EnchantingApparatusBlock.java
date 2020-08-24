@@ -6,6 +6,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.IProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
@@ -46,7 +47,12 @@ public class EnchantingApparatusBlock extends ModBlock{
                 world.addEntity(item);
                 tile.catalystItem = null;
             } else if (!player.inventory.getCurrentItem().isEmpty()) {
-                tile.catalystItem = player.inventory.decrStackSize(player.inventory.currentItem, 1);
+                if(tile.catalystItem != null){
+                    ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.catalystItem);
+                    world.addEntity(item);
+                }
+                tile.catalystItem = player.inventory.decrStackSize(player.inventory.currentItem, 1);;
+
             }
             world.notifyBlockUpdate(pos, state, state, 2);
         }

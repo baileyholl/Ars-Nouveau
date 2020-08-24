@@ -11,13 +11,13 @@ import java.util.List;
 
 public class CraftingButton extends GuiImageButton{
     int slotNum;
-    public String spell_id;
+    public String spellTag;
     public String resourceIcon;
 
     public CraftingButton(GuiSpellBook parent, int x, int y, int slotNum, Button.IPressable onPress) {
         super( x, y, 0, 0, 20, 20, 20, 20, "textures/gui/glyph_slot.png", onPress);
         this.slotNum = slotNum;
-        this.spell_id = "";
+        this.spellTag = "";
         this.resourceIcon = "";
         this.parent = parent;
     }
@@ -33,9 +33,9 @@ public class CraftingButton extends GuiImageButton{
             }
             if(parent.isMouseInRelativeRange(parX, parY, x, y, width, height)){
 
-                if(parent.api.getSpell_map().containsKey(this.spell_id)) {
+                if(parent.api.getSpell_map().containsKey(this.spellTag)) {
                     List<String> test = new ArrayList<>();
-                    test.add(parent.api.getSpell_map().get(this.spell_id).name);
+                    test.add(parent.api.getSpell_map().get(this.spellTag).name);
                     parent.tooltip = test;
                 }
             }

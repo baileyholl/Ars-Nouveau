@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.ISpellBonus;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.client.gui.buttons.CraftingButton;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
@@ -78,5 +79,25 @@ public class SpellRecipeUtil {
                 recipe.add(ArsNouveauAPI.getInstance().getSpell_map().get(id.trim()));
         }
         return recipe;
+    }
+
+    public static String serializeForNBT(ArrayList<AbstractSpellPart> abstractSpellPart){
+        List<String> tags = new ArrayList<>();
+        for(AbstractSpellPart slot : abstractSpellPart){
+            tags.add(slot.tag);
+        }
+        return tags.toString();
+    }
+
+    public static String getDisplayString(ArrayList<AbstractSpellPart> abstractSpellPart){
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < abstractSpellPart.size(); i++) {
+            AbstractSpellPart spellPart = abstractSpellPart.get(i);
+            str.append(spellPart.name);
+            if(i < abstractSpellPart.size() - 1){
+                str.append(" -> ");
+            }
+        }
+        return str.toString();
     }
 }

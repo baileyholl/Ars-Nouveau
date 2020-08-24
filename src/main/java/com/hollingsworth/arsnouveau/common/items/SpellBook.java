@@ -147,7 +147,7 @@ public class SpellBook extends Item implements ISpellTier {
         SpellResolver resolver = new SpellResolver(getCurrentRecipe(stack));
         resolver.onCastOnBlock(context);
 
-        return ActionResultType.PASS;
+        return ActionResultType.SUCCESS;
     }
 
     public ArrayList<AbstractSpellPart> getCurrentRecipe(ItemStack stack){

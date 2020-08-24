@@ -69,8 +69,7 @@ public class BlockRegistry {
     @ObjectHolder(ArsNouveau.MODID + ":glyph_press")
     public static GlyphPressBlock GLYPH_PRESS_BLOCK;
 
-    @ObjectHolder("arcane_ore")
-    public static ArcaneOre ARCANE_ORE;
+    @ObjectHolder("arcane_ore") public static ArcaneOre ARCANE_ORE;
 
     @ObjectHolder(ArsNouveau.MODID + ":mana_bloom_crop") public static ManaBloomCrop MANA_BLOOM_CROP;
 

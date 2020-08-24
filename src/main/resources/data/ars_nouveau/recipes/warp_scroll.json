@@ -4,18 +4,17 @@
     {
       "item": "ars_nouveau:mana_fiber"
     },
-	{
+    {
       "item": "ars_nouveau:mana_fiber"
     },
-	{
+    {
       "item": "ars_nouveau:mana_fiber"
     },
-	{
+    {
       "item": "ars_nouveau:mana_fiber"
     }
   ],
   "result": {
-    "item": "ars_nouveau:warp_scroll",
-    "count": 1
+    "item": "ars_nouveau:warp_scroll"
   }
 }

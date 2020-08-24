@@ -1,0 +1,15 @@
+{
+    "name": "Decorative Blocks",
+    "icon": "ars_nouveau:arcane_bricks",
+    "category": "resources",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Purely decorative blocks. More on the way!"
+        },
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:arcane_bricks"
+		}
+    ]
+}

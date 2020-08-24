@@ -3,14 +3,14 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;// Made with Blockbe
 // Paste this class into your mod and generate all required imports
 
 
-import com.hollingsworth.arsnouveau.common.entity.EntityWelp;
+import com.hollingsworth.arsnouveau.common.entity.EntityWhelp;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 import net.minecraft.util.math.MathHelper;
 
-public class KoboldModel extends EntityModel<EntityWelp> {
+public class WhelpModel extends EntityModel<EntityWhelp> {
 	private final ModelRenderer kobold;
 	private final ModelRenderer head;
 	private final ModelRenderer lower_jaw;
@@ -25,7 +25,7 @@ public class KoboldModel extends EntityModel<EntityWelp> {
 	private final ModelRenderer ridges;
 
 
-	public KoboldModel() {
+	public WhelpModel() {
 		textureWidth = 32;
 		textureHeight = 32;
 
@@ -113,7 +113,7 @@ public class KoboldModel extends EntityModel<EntityWelp> {
 		modelRenderer.rotateAngleZ = z;
 	}
 	@Override
-	public void setRotationAngles(EntityWelp entityWelp, float v, float v1, float v2, float v3, float v4) {
+	public void setRotationAngles(EntityWhelp entityWhelp, float v, float v1, float v2, float v3, float v4) {
 //		entityKobold.rotateAngleX = x;
 //		entityKobold.rotateAngleY = y;
 //		entityKobold.rotateAngleZ = z;
@@ -137,6 +137,7 @@ public class KoboldModel extends EntityModel<EntityWelp> {
 
 	@Override
 	public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
+		matrixStack.scale(.85f, .85f, .85f);
 		kobold.render(matrixStack, buffer, packedLight, packedOverlay);
 		head.render(matrixStack, buffer, packedLight, packedOverlay);
 		body.render(matrixStack, buffer, packedLight, packedOverlay);
@@ -151,7 +152,7 @@ public class KoboldModel extends EntityModel<EntityWelp> {
 	}
 
 	@Override
-	public void setLivingAnimations(EntityWelp p_212843_1_, float x, float y, float z) {
+	public void setLivingAnimations(EntityWhelp p_212843_1_, float x, float y, float z) {
 		super.setLivingAnimations(p_212843_1_, x, y, z);
 //		this.head.rotateAngleX = z * 0.017453292F;
 //		this.head.rotateAngleY = z * 0.017453292F;

@@ -37,4 +37,5 @@ public class LibItemNames {
     public static final String WARP_SCROLL = "warp_scroll";
     public static final String CREATIVE_SPELL_BOOK = "creative_spell_book";
     public static final String SPELL_PARCHMENT = "spell_parchment";
+    public static final String WHELP_CHARM = "whelp_charm";
 }

@@ -8,13 +8,16 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IGrowable;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.BoneMealItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -30,11 +33,9 @@ public class EffectGrow  extends AbstractEffect {
         if(rayTraceResult instanceof BlockRayTraceResult) {
             for(BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult) rayTraceResult, getBuffCount(augments, AugmentAOE.class))){
                 //BlockPos blockpos = ((BlockRayTraceResult) rayTraceResult).getPos();
-                if (applyBonemeal(world, blockpos)) {
-                    if (!world.isRemote) {
-                        world.playEvent(2005, blockpos, 0);
-                    }
-                }
+                ItemStack stack = new ItemStack(Items.BONE_MEAL);
+                if(world instanceof ServerWorld)
+                    BoneMealItem.applyBonemeal(stack, world, blockpos, FakePlayerFactory.getMinecraft((ServerWorld) world));
             }
         }
     }
@@ -46,6 +47,7 @@ public class EffectGrow  extends AbstractEffect {
                 if (!worldIn.isRemote) {
                     if (igrowable.canUseBonemeal(worldIn, worldIn.rand, pos, blockstate)) {
                         igrowable.grow((ServerWorld)worldIn, worldIn.rand, pos, blockstate);
+                        worldIn.notifyBlockUpdate(pos, blockstate, blockstate, 3);
                     }
                 }
 

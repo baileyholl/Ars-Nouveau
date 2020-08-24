@@ -140,7 +140,7 @@ public class GuiSpellBook extends ModdedScreen {
     }
 
     public void onCraftingSlotClick(Button button){
-        ((CraftingButton) button).spell_id = "";
+        ((CraftingButton) button).spellTag = "";
         ((CraftingButton) button).resourceIcon = "";
     }
 
@@ -149,7 +149,7 @@ public class GuiSpellBook extends ModdedScreen {
         for(CraftingButton b : craftingCells){
             if(b.resourceIcon.equals("")){
                 b.resourceIcon = button1.resourceIcon;
-                b.spell_id = button1.spell_id;
+                b.spellTag = button1.spell_id;
                 return;
             }
         }
@@ -169,10 +169,10 @@ public class GuiSpellBook extends ModdedScreen {
         ArrayList<AbstractSpellPart> spell_recipe = this.spell_book_tag != null ? SpellBook.getRecipeFromTag(spell_book_tag, bookSlot) : null;
         for (int i = 0; i < craftingCells.size(); i++) {
             CraftingButton slot = craftingCells.get(i);
-            slot.spell_id = "";
+            slot.spellTag = "";
             slot.resourceIcon = "";
             if (spell_recipe != null && i < spell_recipe.size()){
-                slot.spell_id = spell_recipe.get(i).getTag();
+                slot.spellTag = spell_recipe.get(i).getTag();
                 slot.resourceIcon = spell_recipe.get(i).getIcon();
             }
         }
@@ -181,7 +181,7 @@ public class GuiSpellBook extends ModdedScreen {
     public void onCreateClick(Button button){
         List<String> ids = new ArrayList<>();
         for(CraftingButton slot : craftingCells){
-            ids.add(slot.spell_id);
+            ids.add(slot.spellTag);
         }
         Networking.INSTANCE.sendToServer(new PacketUpdateSpellbook(ids.toString(), this.selected_cast_slot, this.spell_name.getText()));
 

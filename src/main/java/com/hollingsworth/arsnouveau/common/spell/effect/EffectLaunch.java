@@ -42,7 +42,7 @@ public class EffectLaunch extends AbstractEffect {
     @Nullable
     @Override
     public Item getCraftingReagent() {
-        return Items.PISTON;
+        return Items.SLIME_BALL;
     }
 
     @Override

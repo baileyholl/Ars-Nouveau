@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
+import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -33,6 +34,8 @@ public class EffectPickup extends AbstractEffect {
             i.setPosition(shooter.getPosX(), shooter.getPosY(), shooter.getPosZ());
             if(shooter instanceof PlayerEntity){
                 i.onCollideWithPlayer((PlayerEntity) shooter);
+            }else if(shooter instanceof IPickupResponder){
+                i.setItem(((IPickupResponder) shooter).onPickup(i.getItem()));
             }
         }
     }

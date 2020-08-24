@@ -53,7 +53,7 @@ public class SpellResolver {
 
 
     public boolean canCast(LivingEntity entity){
-        if(spell_recipe.isEmpty() || castType == null) {
+        if(spell_recipe == null || spell_recipe.isEmpty() || castType == null) {
             entity.sendMessage(new StringTextComponent("Invalid Spell."));
             return false;
         }

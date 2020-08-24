@@ -16,14 +16,15 @@ public class LootTables extends BaseLootTableProvider{
     protected void addTables() {
         System.out.println(BlockRegistry.MANA_JAR);
         lootTables.put(BlockRegistry.MANA_JAR, createManaManchineTable("mana_jar", BlockRegistry.MANA_JAR));
-        lootTables.put(BlockRegistry.ARCANE_ORE, createStandardTable("mana_ore", BlockRegistry.ARCANE_ORE));
-
-        lootTables.put(BlockRegistry.GLYPH_PRESS_BLOCK, createStandardTable("mana_ore", BlockRegistry.ARCANE_ORE));
+        putStandardLoot(BlockRegistry.ARCANE_ORE);
         putStandardLoot(BlockRegistry.GLYPH_PRESS_BLOCK);
         putStandardLoot(BlockRegistry.WARD_BLOCK);
         putStandardLoot(BlockRegistry.MANA_CONDENSER);
         putStandardLoot(BlockRegistry.ENCHANTING_APP_BLOCK);
         putStandardLoot(BlockRegistry.ARCANE_PEDESTAL);
+        putStandardLoot(BlockRegistry.SCRIBES_BLOCK);
+        putStandardLoot(BlockRegistry.SUMMONING_CRYSTAL);
+        putStandardLoot(BlockRegistry.ARCANE_BRICKS);
     }
 
     public void putStandardLoot(Block block){
