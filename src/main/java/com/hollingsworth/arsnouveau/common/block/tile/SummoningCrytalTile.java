@@ -10,8 +10,10 @@ import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -22,6 +24,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class SummoningCrytalTile extends AbstractManaTile {
@@ -31,7 +34,7 @@ public class SummoningCrytalTile extends AbstractManaTile {
 
     int tier;
     int taskIndex;
-
+    public boolean isOff;
     public SummoningCrytalTile() {
         super(BlockRegistry.SUMMONING_CRYSTAL_TILE);
         tier = 1;
@@ -84,7 +87,25 @@ public class SummoningCrytalTile extends AbstractManaTile {
         return stack;
     }
 
+    public ItemStack getItem(Item item){
+        ItemStack stack = ItemStack.EMPTY;
+        for(IInventory inv : inventories()){
+            for(int i = 0; i < inv.getSizeInventory(); ++i) {
+                if(inv.getStackInSlot(i).getItem() == item)
+                    return inv.getStackInSlot(i);
+            }
+        }
+        return stack;
+    }
+
+
+    public boolean isTree(Block block){
+        return block instanceof LogBlock || block instanceof LeavesBlock;
+    }
     public @Nullable BlockPos getNextTaskLoc(){
+        if(isOff)
+            return null;
+
         List<BlockPos> posList = getTargets();
         if(posList == null || posList.size() == 0) {
             return null;
@@ -92,24 +113,33 @@ public class SummoningCrytalTile extends AbstractManaTile {
         if(taskIndex + 1 > posList.size()){
             taskIndex = 0;
         }
-        if(world == null || world.isRemote)
-            return null;
-        BlockPos pos = posList.get(taskIndex);
+//        if(world == null || world.isRemote)
+//            return null;
+        BlockPos taskPos = posList.get(taskIndex);
+        BlockPos origPos = new BlockPos(taskPos);
         taskIndex += 1;
-        if (!(world.getBlockState(pos).getBlock() instanceof LogBlock) && !(world.getBlockState(pos).getBlock() instanceof LeavesBlock)) {
+        // If the block above is not air
+        if (world.getBlockState(taskPos.up()).getMaterial() != Material.AIR && !isTree(world.getBlockState(taskPos).getBlock())){
+            System.out.println(world.getBlockState(taskPos).getBlock());
             for(int i = 1; i < 4; i++) {
-
-                if (world.getBlockState(pos.up(i)).getMaterial() != Material.AIR){
-                    pos = pos.up(i);
+                if (world.getBlockState(taskPos.up(i)).getMaterial() != Material.AIR || isTree(world.getBlockState(taskPos.up()).getBlock())){
+                    taskPos = taskPos.up(i);
                     break;
                 }
             }
         }
 
-        Block block = world.getBlockState(pos).getBlock();
+//
+        Block block = world.getBlockState(taskPos).getBlock();
         if(block instanceof SummoningCrystal || block instanceof ContainerBlock || block instanceof ManaBlock || block instanceof IInventory)
             return null;
-        return world.getBlockState(pos.up()).getMaterial() == Material.AIR ? pos : null;
+//
+//        if(world.getBlockState(pos).getMaterial() == Material.AIR)
+//            return pos;
+//        if(world.getBlockState(pos.up()))
+//
+//        return world.getBlockState(pos).getMaterial() != Material.AIR ? pos ;
+            return taskPos;
     }
 
     public boolean enoughMana(ArrayList<AbstractSpellPart> spellParts){
@@ -144,10 +174,14 @@ public class SummoningCrytalTile extends AbstractManaTile {
             positions.add(getPos().west().down());
         }
         if(tier == 2){
-            BlockPos.getAllInBox(getPos().north(2).east(2).down(1), getPos().south(2).west(2).down()).forEach(t -> positions.add(new BlockPos(t)));
+            BlockPos.getAllInBox(getPos().north(2).east(2).down(1), getPos().south(2).west(2).down()).forEach(t -> {
+                positions.add(new BlockPos(t));
+            });
         }
         if(tier == 3){
-            BlockPos.getAllInBox(getPos().north(4).east(4).down(1), getPos().south(4).west(4).down()).forEach(t -> positions.add(new BlockPos(t)));
+            BlockPos.getAllInBox(getPos().north(4).east(4).down(1), getPos().south(4).west(4).down()).forEach(t -> {
+                positions.add(new BlockPos(t));
+            });
         }
         return positions;
     }
@@ -174,7 +208,7 @@ public class SummoningCrytalTile extends AbstractManaTile {
     public void tick() {
         if(world.getGameTime() % 20 != 0  || world.isRemote)
             return;
-
+//        this.isOff = world.isBlockPowered(pos);
         cleanupKobolds();
     }
 
@@ -189,6 +223,7 @@ public class SummoningCrytalTile extends AbstractManaTile {
         }
         taskIndex = tag.getInt("task_index");
         tier = tag.getInt("tier");
+        isOff = tag.getBoolean("is_off");
     }
 
     @Override
@@ -199,6 +234,7 @@ public class SummoningCrytalTile extends AbstractManaTile {
         }
         tag.putInt("task_index", taskIndex);
         tag.putInt("tier", tier);
+        tag.putBoolean("is_off", isOff);
         return super.write(tag);
     }
 }

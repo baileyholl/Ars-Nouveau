@@ -51,7 +51,7 @@ public class ModEntities {
                     EntityType.Builder.<EntityAllyVex>create(EntityAllyVex::new, EntityClassification.MISC)
                             .size(0.4F, 0.8F).immuneToFire());
            ENTITY_WHELP_TYPE = build("whelp", EntityType.Builder.<EntityWhelp>create(EntityWhelp::new, EntityClassification.MISC)
-                   .size(0.6F, 0.8F).setTrackingRange(10)
+                   .size(0.6F, 0.4F).setTrackingRange(10)
                    .setShouldReceiveVelocityUpdates(true));
 
             event.getRegistry().registerAll(

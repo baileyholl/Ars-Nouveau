@@ -10,7 +10,7 @@ public class WhelpRenderer extends MobRenderer<EntityWhelp, WhelpModel> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/kobold_texture.png");
 
     public WhelpRenderer(EntityRendererManager manager) {
-        super(manager, new WhelpModel(), 0.5f);
+        super(manager, new WhelpModel(), 0.2f);
     }
 
     @Override

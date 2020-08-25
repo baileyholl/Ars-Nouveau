@@ -60,13 +60,12 @@ public class EffectBreak extends AbstractEffect {
                     continue;
                 }
                 if (hasBuff(augments, AugmentExtract.class)) {
-
-                    state.getDrops(LootUtil.getSilkContext((ServerWorld) world, pos1,  shooter)).forEach(i -> world.addEntity(new ItemEntity(world,pos1.getX(), pos1.getY(), pos1.getZ(), i )));
-
                     world.destroyBlock(pos1, false);
+                    state.getDrops(LootUtil.getSilkContext((ServerWorld) world, pos1,  shooter)).forEach(i -> world.addEntity(new ItemEntity(world,pos.getX(), pos.getY(), pos.getZ(), i )));
+
                 } else if (hasBuff(augments, AugmentFortune.class)) {
-                    state.getDrops(LootUtil.getFortuneContext((ServerWorld) world, pos1, shooter, getBuffCount(augments, AugmentFortune.class))).forEach(i -> world.addEntity(new ItemEntity(world,pos1.getX(), pos1.getY(), pos1.getZ(),i )));;
                     world.destroyBlock(pos1, false);
+                    state.getDrops(LootUtil.getFortuneContext((ServerWorld) world, pos1, shooter, getBuffCount(augments, AugmentFortune.class))).forEach(i -> world.addEntity(new ItemEntity(world,pos.getX(), pos.getY(), pos.getZ(),i )));;
                 } else {
                     world.destroyBlock(pos1, true);
                 }

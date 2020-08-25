@@ -12,6 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.loot.LootContext;
 import net.minecraft.world.storage.loot.LootParameters;
+import net.minecraftforge.common.util.FakePlayerFactory;
 
 public class LootUtil {
 
@@ -40,7 +41,7 @@ public class LootUtil {
         ItemStack stack = getDefaultFakeWeapon();
         stack.addEnchantment(Enchantments.LOOTING, looting);
         return(new LootContext.Builder(world)).withRandom(world.rand).withParameter(LootParameters.THIS_ENTITY, slainEntity)
-                .withParameter(LootParameters.POSITION, new BlockPos(slainEntity)).withParameter(LootParameters.DAMAGE_SOURCE, source).withNullableParameter(LootParameters.KILLER_ENTITY, source.getTrueSource())
+                .withParameter(LootParameters.POSITION, new BlockPos(slainEntity)).withParameter(LootParameters.LAST_DAMAGE_PLAYER, FakePlayerFactory.getMinecraft(world)).withParameter(LootParameters.DAMAGE_SOURCE, source).withNullableParameter(LootParameters.KILLER_ENTITY, source.getTrueSource())
                 .withNullableParameter(LootParameters.DIRECT_KILLER_ENTITY, source.getImmediateSource()).withParameter(LootParameters.KILLER_ENTITY, player).withLuck( player instanceof PlayerEntity ? ((PlayerEntity)player).getLuck() : 1.0f).withParameter(LootParameters.TOOL, stack).withParameter(LootParameters.EXPLOSION_RADIUS, 0.0f)
                 .withParameter(LootParameters.BLOCK_STATE, Blocks.AIR.getDefaultState()).withParameter(LootParameters.BLOCK_ENTITY, new FurnaceTileEntity());
     }

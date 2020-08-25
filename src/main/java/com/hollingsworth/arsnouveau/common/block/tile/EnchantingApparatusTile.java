@@ -18,8 +18,11 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.server.ServerWorld;
+import vazkii.patchouli.api.IComponentProcessor;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -38,38 +41,51 @@ public class EnchantingApparatusTile extends AnimatedTile {
 
     @Override
     public void tick() {
-        if(world.isRemote)
-            return;
-        if(isCrafting){
+
+        if(isCrafting && !world.isRemote){
             if(this.getRecipe() == null)
                 this.isCrafting = false;
             counter += 1;
 
         }
-        if(counter > 47) {
-            counter = 1;
-            if(this.isCrafting){
-                EnchantingApparatusRecipe recipe = this.getRecipe();
-                if(recipe != null){
-                    recipe.pedestalItems.forEach(i -> i = null);
-                    this.catalystItem = recipe.result;
-                    BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
-                        if(world.getTileEntity(blockPos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack != null) {
-                            if(((ArcanePedestalTile) world.getTileEntity(blockPos)).stack.getItem() == ItemsRegistry.bucketOfMana){
-                                ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack = new ItemStack(Items.BUCKET);
-                            }else{
-                                ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack = null;
-                            }
 
-                            BlockState state = world.getBlockState(blockPos);
-                            world.notifyBlockUpdate(blockPos, state, state, 3);
-                        }
-                    });
+        if(counter > 47) {
+            if(!world.isRemote) {
+                counter = 1;
+                if (this.isCrafting) {
+                    EnchantingApparatusRecipe recipe = this.getRecipe();
+                    if (recipe != null) {
+                        recipe.pedestalItems.forEach(i -> i = null);
+                        this.catalystItem = recipe.result;
+                        BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
+                            if (world.getTileEntity(blockPos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack != null) {
+                                if (((ArcanePedestalTile) world.getTileEntity(blockPos)).stack.getItem() == ItemsRegistry.bucketOfMana) {
+                                    ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack = new ItemStack(Items.BUCKET);
+                                } else {
+                                    ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack = null;
+                                }
+
+                                BlockState state = world.getBlockState(blockPos);
+                                world.notifyBlockUpdate(blockPos, state, state, 3);
+                            }
+                        });
+                    }
+
+                    this.isCrafting = false;
                 }
-                this.isCrafting = false;
+            }
+        }else if(world.isRemote && counter >= 46){
+            if(world.isRemote){
+                for(int i =0; i < 10; i++){
+                    double d0 = getPos().getX() +0.5; //+ world.rand.nextFloat();
+                    double d1 = getPos().getY() +1.2;//+ world.rand.nextFloat() ;
+                    double d2 = getPos().getZ() +.5 ; //+ world.rand.nextFloat();
+                    world.addParticle(ParticleTypes.END_ROD, d0, d1, d2, (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3);
+                }
             }
         }
-        updateBlock();
+        if(!world.isRemote)
+            updateBlock();
     }
 
     public EnchantingApparatusRecipe getRecipe(){
@@ -96,6 +112,8 @@ public class EnchantingApparatusTile extends AnimatedTile {
     }
 
     public void updateBlock(){
+        if(counter == 0)
+            counter = 1;
         BlockState state = world.getBlockState(pos);
         world.setBlockState(pos, world.getBlockState(pos).with(EnchantingApparatusBlock.stage, counter),3);
         world.notifyBlockUpdate(pos, state, state, 2);
@@ -104,6 +122,8 @@ public class EnchantingApparatusTile extends AnimatedTile {
     @Override
     public void read(CompoundNBT compound) {
         catalystItem = ItemStack.read((CompoundNBT)compound.get("itemStack"));
+        isCrafting = compound.getBoolean("is_crafting");
+        counter = compound.getInt("counter");
         super.read(compound);
     }
 
@@ -114,6 +134,8 @@ public class EnchantingApparatusTile extends AnimatedTile {
             catalystItem.write(reagentTag);
             compound.put("itemStack", reagentTag);
         }
+        compound.putBoolean("is_crafting", isCrafting);
+        compound.putInt("counter", counter);
 
         return super.write(compound);
     }
@@ -125,7 +147,10 @@ public class EnchantingApparatusTile extends AnimatedTile {
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        CompoundNBT tag = new CompoundNBT();
+        tag.putInt("counter", this.counter);
+        tag.putBoolean("is_crafting", this.isCrafting);
+        return this.write(tag);
     }
 
     @Override

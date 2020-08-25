@@ -22,45 +22,43 @@ public class WhelpModel extends EntityModel<EntityWhelp> {
 	private final ModelRenderer leg1;
 	private final ModelRenderer arm_right;
 	private final ModelRenderer arm_left;
-	private final ModelRenderer ridges;
-
 
 	public WhelpModel() {
 		textureWidth = 32;
 		textureHeight = 32;
 
 
+
 		kobold = new ModelRenderer(this);
-		kobold.setRotationPoint(0.0F, 14.0F, -2.0F);
-		kobold.setTextureOffset(16, 3).addBox(-1.0F, -2.0F, -1.0F, 2.0F, 2.0F, 1.0F, 0.0F, false);
+		kobold.setRotationPoint(0.0F, 18.0F, -2.5F);
+		kobold.setTextureOffset(16, 3).addBox(-1.0F, -1.0F, -0.5F, 2.0F, 2.0F, 1.0F, 0.0F, false);
 
 		head = new ModelRenderer(this);
-		head.setRotationPoint(0.0F, 13.0F, -2.5F);
-		setRotationAngle(head, 0.0F, 0.0F, 0.0F);
-		head.setTextureOffset(12, 0).addBox(-1.5F, -2.0F, -4.5F, 3.0F, 1.0F, 2.0F, 0.0F, false);
-		head.setTextureOffset(17, 17).addBox(-4.0F, -5.0F, -0.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
-		head.setTextureOffset(17, 17).addBox(3.0F, -5.0F, -0.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
-		head.setTextureOffset(16, 12).addBox(-4.0F, -5.0F, 0.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-		head.setTextureOffset(16, 12).addBox(3.0F, -5.0F, 0.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-		head.setTextureOffset(16, 12).addBox(-3.0F, -4.0F, -0.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-		head.setTextureOffset(16, 12).addBox(2.0F, -4.0F, -0.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-		head.setTextureOffset(0, 0).addBox(-2.0F, -4.0F, -2.5F, 4.0F, 4.0F, 4.0F, 0.0F, false);
-		head.setTextureOffset(12, 15).addBox(-0.5F, -5.0F, -1.5F, 1.0F, 1.0F, 2.0F, 0.0F, false);
-		head.setTextureOffset(4, 18).addBox(-0.5F, -3.0F, 1.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+		head.setRotationPoint(0.0F, 16.0F, -3.0F);
+		head.setTextureOffset(12, 0).addBox(-1.5F, 0.0F, -4.0F, 3.0F, 1.0F, 2.0F, 0.0F, false);
+		head.setTextureOffset(17, 17).addBox(-4.0F, -3.0F, 0.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+		head.setTextureOffset(17, 17).addBox(3.0F, -3.0F, 0.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+		head.setTextureOffset(16, 12).addBox(-4.0F, -3.0F, 1.0F, 1.0F, 1.0F, 1.0F, 0.0F, false);
+		head.setTextureOffset(16, 12).addBox(3.0F, -3.0F, 1.0F, 1.0F, 1.0F, 1.0F, 0.0F, false);
+		head.setTextureOffset(16, 12).addBox(-3.0F, -2.0F, 0.0F, 1.0F, 1.0F, 1.0F, 0.0F, false);
+		head.setTextureOffset(16, 12).addBox(2.0F, -2.0F, 0.0F, 1.0F, 1.0F, 1.0F, 0.0F, false);
+		head.setTextureOffset(0, 0).addBox(-2.0F, -2.0F, -2.0F, 4.0F, 4.0F, 4.0F, 0.0F, false);
+		head.setTextureOffset(12, 15).addBox(-0.5F, -3.0F, -1.0F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+		head.setTextureOffset(4, 18).addBox(-0.5F, -1.0F, 2.0F, 1.0F, 2.0F, 1.0F, 0.0F, false);
 
 		lower_jaw = new ModelRenderer(this);
-		lower_jaw.setRotationPoint(0.0F, -1.0F, -2.5F);
+		lower_jaw.setRotationPoint(0.0F, -4.0F, -2.0F);
 		head.addChild(lower_jaw);
 		setRotationAngle(lower_jaw, 0.3491F, 0.0F, 0.0F);
-		lower_jaw.setTextureOffset(0, 14).addBox(-1.0F, 0.0F, -2.0F, 2.0F, 1.0F, 2.0F, 0.0F, false);
+		lower_jaw.setTextureOffset(0, 14).addBox(-1.0F, 4.6984F, -3.7103F, 2.0F, 1.0F, 2.0F, 0.0F, false);
 
 		body = new ModelRenderer(this);
-		body.setRotationPoint(0.0F, 15.0F, -1.0F);
+		body.setRotationPoint(0.0F, 20.0F, -1.5F);
 		setRotationAngle(body, 0.7854F, 0.0F, 0.0F);
-		body.setTextureOffset(0, 8).addBox(-2.0F, -2.1213F, -1.2929F, 4.0F, 4.0F, 2.0F, 0.0F, false);
+		body.setTextureOffset(0, 8).addBox(-2.0F, -1.7678F, -0.9393F, 4.0F, 4.0F, 2.0F, 0.0F, false);
 
 		tail = new ModelRenderer(this);
-		tail.setRotationPoint(0.0F, 16.0F, 0.0F);
+		tail.setRotationPoint(0.0F, 21.0F, 0.0F);
 		setRotationAngle(tail, -0.3927F, 0.0F, 0.0F);
 		tail.setTextureOffset(8, 10).addBox(-1.0F, -0.5F, 0.0F, 2.0F, 1.0F, 4.0F, 0.0F, false);
 		tail.setTextureOffset(16, 10).addBox(-1.0F, -1.5F, 3.5F, 2.0F, 1.0F, 1.0F, 0.0F, false);
@@ -69,42 +67,38 @@ public class WhelpModel extends EntityModel<EntityWhelp> {
 		tail.setTextureOffset(6, 15).addBox(-0.5F, -4.0F, 2.0F, 1.0F, 1.0F, 2.0F, 0.0F, false);
 
 		wing1 = new ModelRenderer(this);
-		wing1.setRotationPoint(0.5F, 14.5F, -1.5F);
-		wing1.setTextureOffset(0, 7).addBox(0.5F, -3.0F, 3.0F, 0.0F, 1.0F, 1.0F, 0.0F, false);
-		wing1.setTextureOffset(10, 6).addBox(0.5F, -3.0F, 1.0F, 0.0F, 2.0F, 2.0F, 0.0F, false);
-		wing1.setTextureOffset(12, 1).addBox(0.5F, -1.0F, 0.0F, 0.0F, 1.0F, 2.0F, 0.0F, false);
+		wing1.setRotationPoint(1.0F, 19.0F, -1.0F);
+		wing1.setTextureOffset(0, 7).addBox(0.0F, -2.5F, 2.5F, 0.0F, 1.0F, 1.0F, 0.0F, false);
+		wing1.setTextureOffset(10, 6).addBox(0.0F, -2.5F, 0.5F, 0.0F, 2.0F, 2.0F, 0.0F, false);
+		wing1.setTextureOffset(12, 1).addBox(0.0F, -0.5F, -0.5F, 0.0F, 1.0F, 2.0F, 0.0F, false);
 
 		wing2 = new ModelRenderer(this);
-		wing2.setRotationPoint(-1.5F, 14.5F, -1.5F);
-		wing2.setTextureOffset(0, 7).addBox(0.5F, -3.0F, 3.0F, 0.0F, 1.0F, 1.0F, 0.0F, false);
-		wing2.setTextureOffset(10, 6).addBox(0.5F, -3.0F, 1.0F, 0.0F, 2.0F, 2.0F, 0.0F, false);
-		wing2.setTextureOffset(12, 1).addBox(0.5F, -1.0F, 0.0F, 0.0F, 1.0F, 2.0F, 0.0F, false);
+		wing2.setRotationPoint(-1.0F, 19.0F, -1.0F);
+		wing2.setTextureOffset(0, 7).addBox(0.0F, -2.5F, 2.5F, 0.0F, 1.0F, 1.0F, 0.0F, false);
+		wing2.setTextureOffset(10, 6).addBox(0.0F, -2.5F, 0.5F, 0.0F, 2.0F, 2.0F, 0.0F, false);
+		wing2.setTextureOffset(12, 1).addBox(0.0F, -0.5F, -0.5F, 0.0F, 1.0F, 2.0F, 0.0F, false);
 
 		leg2 = new ModelRenderer(this);
-		leg2.setRotationPoint(-2.0F, 15.5F, -0.5F);
+		leg2.setRotationPoint(-2.0F, 20.5F, -0.5F);
 		setRotationAngle(leg2, 1.1781F, 0.0F, 0.0F);
 		leg2.setTextureOffset(14, 6).addBox(-1.0F, -0.5F, -1.5F, 1.0F, 2.0F, 2.0F, 0.0F, false);
 		leg2.setTextureOffset(12, 15).addBox(-1.0F, 1.5F, -2.5F, 1.0F, 1.0F, 2.0F, 0.0F, false);
 
 		leg1 = new ModelRenderer(this);
-		leg1.setRotationPoint(2.0F, 15.5F, -0.5F);
+		leg1.setRotationPoint(2.0F, 20.5F, -0.5F);
 		setRotationAngle(leg1, 1.1781F, 0.0F, 0.0F);
 		leg1.setTextureOffset(14, 6).addBox(0.0F, -0.5F, -1.5F, 1.0F, 2.0F, 2.0F, 0.0F, false);
 		leg1.setTextureOffset(12, 15).addBox(0.0F, 1.5F, -2.5F, 1.0F, 1.0F, 2.0F, 0.0F, false);
 
 		arm_right = new ModelRenderer(this);
-		arm_right.setRotationPoint(-2.0F, 14.5F, -2.0F);
+		arm_right.setRotationPoint(-2.0F, 19.5F, -2.0F);
 		setRotationAngle(arm_right, -0.3927F, 0.0F, 0.0F);
 		arm_right.setTextureOffset(0, 0).addBox(-1.0F, -0.5F, -0.5F, 1.0F, 3.0F, 1.0F, 0.0F, false);
 
 		arm_left = new ModelRenderer(this);
-		arm_left.setRotationPoint(2.0F, 14.5F, -2.0F);
+		arm_left.setRotationPoint(2.0F, 19.5F, -2.0F);
 		setRotationAngle(arm_left, -0.3927F, 0.0F, 0.0F);
 		arm_left.setTextureOffset(0, 0).addBox(0.0F, -0.5F, -0.5F, 1.0F, 3.0F, 1.0F, 0.0F, false);
-
-		ridges = new ModelRenderer(this);
-		ridges.setRotationPoint(0.0F, 24.0F, 0.0F);
-
 	}
 
 	public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {
@@ -148,7 +142,7 @@ public class WhelpModel extends EntityModel<EntityWhelp> {
 		leg1.render(matrixStack, buffer, packedLight, packedOverlay);
 		arm_right.render(matrixStack, buffer, packedLight, packedOverlay);
 		arm_left.render(matrixStack, buffer, packedLight, packedOverlay);
-		ridges.render(matrixStack, buffer, packedLight, packedOverlay);
+
 	}
 
 	@Override

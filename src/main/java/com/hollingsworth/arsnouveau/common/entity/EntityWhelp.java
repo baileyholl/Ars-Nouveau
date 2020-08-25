@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
+import com.hollingsworth.arsnouveau.api.spell.IPlaceBlockResponder;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.SummoningCrytalTile;
@@ -33,12 +34,12 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.EnumSet;
 
-public class EntityWhelp extends FlyingEntity implements IPickupResponder {
+public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlaceBlockResponder {
 
     BlockPos crystalPos;
     int ticksSinceLastSpell;
     ArrayList<AbstractSpellPart> spellRecipe;
-
+    ItemStack heldStack;
     @Override
     public boolean canDespawn(double p_213397_1_) {
         return false;
@@ -65,21 +66,30 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder {
         if(world.isRemote)
             return true;
         ItemStack stack = player.getHeldItem(hand);
+
+
         if(stack != ItemStack.EMPTY && stack.getItem() instanceof SpellParchment){
             ArrayList<AbstractSpellPart> spellParts = SpellParchment.getSpellRecipe(stack);
             if(new EntitySpellResolver(spellParts).canCast(this)) {
                 this.spellRecipe = SpellParchment.getSpellRecipe(stack);
                 player.sendMessage(new StringTextComponent("Spell set."));
+                return true;
             } else{
                 player.sendMessage(new StringTextComponent("A whelp cannot cast an invalid spell."));
                 return false;
             }
-        }else{
+        }else if(stack == ItemStack.EMPTY){
             if(spellRecipe == null || spellRecipe.size() == 0){
                 player.sendMessage(new StringTextComponent("Give this whelp a spell by giving it some inscribed Spell Parchment. "));
             }else
                 player.sendMessage(new StringTextComponent("This whelp is casting " + SpellRecipeUtil.getDisplayString(spellRecipe)));
+            return true;
         }
+        if(stack != ItemStack.EMPTY){
+            this.heldStack = new ItemStack(stack.getItem());
+            player.sendMessage(new StringTextComponent("This whelp will use " + stack.getItem().getDisplayName(stack).getFormattedText() +  " in spells if this item is in a Summoning Crystal chest."));
+        }
+
         return true;
     }
 
@@ -170,31 +180,6 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder {
     }
 
     protected void updateAITasks() {
-//        EntityKobold kobold = EntityKobold.this;
-//        boolean flyUp = false;
-//        boolean stopMoving = true;
-//        int blocksBelow = 0;
-//        while(!kobold.world.getBlockState(kobold.getPosition().down(blocksBelow)).isSolid() && blocksBelow < 5){
-//            blocksBelow++;
-//        }
-//        stopMoving = blocksBelow == 2;
-//        flyUp = blocksBelow <= 2 ;
-//        if(stopMoving)
-//            return;
-//       if(flyUp && !world.getBlockState(EntityKobold.this.getPosition().up()).isSolid()){
-//           Vec3d lvt_2_1_ = this.getMotion();
-//           this.setMotion(this.getMotion().add(0.0D, (0.30000001192092896D - lvt_2_1_.y) * 0.30000001192092896D, 0.0D));
-//           this.isAirBorne = true;
-//       }else{
-//           if(!world.getBlockState(EntityKobold.this.getPosition().down()).isSolid()){
-//               Vec3d lvt_2_1_ = this.getMotion();
-//               this.setMotion(this.getMotion().add(0.0D, (-0.15 - lvt_2_1_.y) * 0.30000001192092896D, 0.0D));
-//               this.isAirBorne = true;
-//           }
-//
-//       }
-
-
         super.updateAITasks();
     }
 
@@ -212,6 +197,14 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder {
     public ItemStack onPickup(ItemStack stack) {
         SummoningCrytalTile tile = world.getTileEntity(crystalPos) instanceof SummoningCrytalTile ? (SummoningCrytalTile) world.getTileEntity(crystalPos) : null;
         return tile == null ? stack : tile.insertItem(stack);
+    }
+
+    @Override
+    public ItemStack onPlaceBlock() {
+        if(heldStack == null )
+            return  ItemStack.EMPTY;
+        SummoningCrytalTile tile = world.getTileEntity(crystalPos) instanceof SummoningCrytalTile ? (SummoningCrytalTile) world.getTileEntity(crystalPos) : null;
+        return tile == null ? heldStack : tile.getItem(heldStack.getItem());
     }
 
     public static class PerformTaskGoal extends Goal {
@@ -240,12 +233,12 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder {
             if(kobold == null  || taskLoc == null)
                 return;
 
-            if(BlockUtil.distanceFrom(kobold.getPosition(), taskLoc) <= 1){
+            if(BlockUtil.distanceFrom(kobold.getPosition(), taskLoc) <= 2){
                 kobold.castSpell(taskLoc);
                 kobold.navigator.clearPath();
                 timePerformingTask = 0;
             }else if(this.kobold != null && kobold.navigator != null && taskLoc != null){
-                this.kobold.navigator.setPath(this.kobold.navigator.getPathToPos(taskLoc.up(), 0), 1f);
+                this.kobold.navigator.setPath(this.kobold.navigator.getPathToPos(taskLoc.up(2), 0), 1f);
             }
         }
 
@@ -279,6 +272,11 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder {
         if(spellRecipe != null){
             tag.putString("spell", SpellRecipeUtil.serializeForNBT(spellRecipe));
         }
+        if(heldStack != null) {
+            CompoundNBT itemTag = new CompoundNBT();
+            heldStack.write(itemTag);
+            tag.put("held", itemTag);
+        }
     }
 
     @Override
@@ -288,6 +286,8 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder {
             crystalPos = new BlockPos(tag.getInt("summoner_x"), tag.getInt("summoner_y"), tag.getInt("summoner_z"));
         spellRecipe = SpellRecipeUtil.getSpellsFromTagString(tag.getString("spell"));
         ticksSinceLastSpell = tag.getInt("last_spell");
+        if(tag.contains("held"))
+            heldStack = ItemStack.read((CompoundNBT)tag.get("held"));
     }
 
     @Override
