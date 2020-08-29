@@ -39,6 +39,10 @@
 	"item.ars_nouveau.jar_of_light":"Jar of Light",
 	"item.ars_nouveau.whelp_charm":"Whelp Charm",
 	"item.ars_nouveau.creative_spell_book":"Creative Spell Book",
+	"item.ars_nouveau.dull_trinket":"Dull Trinket",
+	"item.ars_nouveau.amulet_of_mana_boost":"Amulet of Mana Boost",
+	"item.ars_nouveau.amulet_of_mana_regen":"Amulet of Mana Regen",
+	"item.ars_nouveau.dominion_wand":"Dominion Wand",
 
 	"block.ars_nouveau.arcane_ore": "Arcane Ore",
 	"block.ars_nouveau.arcane_bricks": "Arcane Bricks",
@@ -55,8 +59,14 @@
 	"block.ars_nouveau.arcane_pedestal": "Arcane Pedestal",
 	"block.ars_nouveau.enchanting_apparatus": "Enchanting Apparatus",
 	"block.ars_nouveau.summoning_crystal": "Summoning Crystal",
+	"block.ars_nouveau.arcane_relay": "Arcane Relay",
 
 	"ars_nouveau.page.jar_of_light": "Summons a light that will follow the user as they move. Can be summoned and dismissed at any time.",
+	"ars_nouveau.page.amulet_of_mana_boost": "Increases max mana by a moderate amount.",
+	"ars_nouveau.page.amulet_of_mana_regen": "Increases mana regeneration by a moderate amount.",
+
+	"ars_nouveau.page.arcane_relay": "Enables the transport of mana between Mana Jars and other Arcane Relays. To pull mana from jars, use the Dominion Wand on the jar, and then on the relay. To send between relays or from a relay to a jar, use the wand on the relay and then the target you wish to send mana to. Relays may only reach up to 10 blocks away. To clear connections, sneak while using the Dominion Wand on the relay.",
+
 
 	"ars_nouveau.page.mana_bloom_crop": "A magically infused flower, Mana Blooms provide additional mana to nearby Mana Condensers as they grow and provide a source of mana fiber.",
 	"ars_nouveau.page.belt_of_levitation": "A belt that allows the user levitate a moderate distance above the ground. Useful for climbing mountains! Simply sneak in the air while falling (or jumping) to rise.",
@@ -67,10 +77,11 @@
 	"ars_nouveau.page.belt_of_unstable_gifts": "Occasionally grants a random positive potion effect for a short duration. These effects can vary in strength.",
 	"ars_nouveau.page.whelp_charm": "Whelps are helpful creatures with the ability to cast spells using mana from mana jars. Given a spell inscribed on Spell Parchment, whelps will cast spells in the area surrounding their Summoning Crystal. To summon a whelp, use a Whelp Charm on a summoning crystal.",
 	"ars_nouveau.page2.whelp_charm": "Whelps are fragile and should be defended. In the event that they die, they will drop their charm.",
-	"ars_nouveau.page3.whelp_charm": "Whelps can cast spells that begin with Touch or Projectile. You may give them a spell that is written on Spell Parchment. Currently, whelps will only target blocks surrounding their crystal. While whelps cannot pickup blocks on their own, they may store items in chests that are next to the Summoning Crystal using the Item Pickup spell. Whelps require a constant source of mana provided by mana jars nearby. ",
+	"ars_nouveau.page3.whelp_charm": "Whelps can cast spells that begin with Touch or Projectile. You may give them a spell that is written on Spell Parchment. Currently, whelps will only target blocks surrounding their crystal. Spell casting will consume mana from jars that are in the vicinity of the Summoning Crystal.",
+	"ars_nouveau.page4.whelp_charm": "While whelps cannot pickup blocks on their own, they may store items in chests that are next to the Summoning Crystal using the Item Pickup spell. Conversely, Whelps may place blocks and interact with the world using Items. You may give an item or block to the Whelp, and it will use the item directly from the chests adjacent to the Summoning Crystal.",
+
 	"ars_nouveau.page.summoning_crystal": "Automation in Ars Nouveau begins with the Summoning Crystal. Summoning Crystals provide mana, resources, and tasks to special magical creatures, like Whelps! Placing a chest next to a Summoning Crystal will provide a place for summoned creatures to store their items. The area of the Summoning Crystal may be changed by right clicking. ",
 	"ars_nouveau.page2.summoning_crystal": "Creatures like Whelps will require mana to interact with the world. Place a Mana Jar within the vicinity and begin providing it with mana. To begin your first automation, see the entry on the Whelp Charm and the Scribes Table.",
-
 
 	"enchantment.ars_nouveau.mana_boost": "Mana Boost",
 	"enchantment.ars_nouveau.mana_regen": "Mana Regen",
@@ -133,5 +144,6 @@
 	"item.ars_nouveau.glyph_interact": "Glyph:Interact",
 	"item.ars_nouveau.glyph_pickup": "Glyph:Pickup",
 	"item.ars_nouveau.glyph_harvest": "Glyph:Harvest",
+	"item.ars_nouveau.glyph_place_block": "Glyph:Place Block",
 	"effect.ars_nouveau.shield": "Magic Shield"
 }

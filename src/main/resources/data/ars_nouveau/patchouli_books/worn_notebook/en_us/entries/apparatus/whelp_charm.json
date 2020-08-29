@@ -22,15 +22,17 @@
 	{
 	 "type": "entity",
       "entity": "ars_nouveau:whelp",
-	  "text":"ars_nouveau.page2.whelp_charm",
-	  "offset":0.25
+	  "text":"ars_nouveau.page2.whelp_charm"
 	},
 	{
       "type": "text",
       "text": "ars_nouveau.page3.whelp_charm"
     },{
+      "type": "text",
+      "text": "ars_nouveau.page4.whelp_charm"
+    },{
             "type": "relations",
-            "entries":["machines/scribes_table", "apparatus/summoning_crystal"]        
+            "entries":["machines/scribes_table", "apparatus/summoning_crystal","spells/interact", "spells/pickup", "spells/place_block"]        
         }
   ]
 }

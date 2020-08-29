@@ -1,7 +1,7 @@
 {
   "name": "item.ars_nouveau.whelp_charm",
   "icon": "ars_nouveau:whelp_charm",
-  "category": "equipment",
+  "category": "automation",
   "pages": [
     {
       "type": "text",

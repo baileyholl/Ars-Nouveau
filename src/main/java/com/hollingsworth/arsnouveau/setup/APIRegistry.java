@@ -1,24 +1,18 @@
 package com.hollingsworth.arsnouveau.setup;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
-import com.hollingsworth.arsnouveau.common.items.ItemsRegistry;
-import com.hollingsworth.arsnouveau.common.items.ModItem;
-import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodBeam;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.registries.ForgeRegistries;
 
 public class APIRegistry {
 
@@ -52,6 +46,18 @@ public class APIRegistry {
                 ItemsRegistry.bucketOfMana,ItemsRegistry.bucketOfMana,Items.DIAMOND, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, ItemsRegistry.noviceSpellBook,
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
 
+        registerApparatusRecipe(new EnchantingApparatusRecipe(BlockRegistry.ARCANE_RELAY.asItem(), BlockRegistry.MANA_JAR.asItem(), new Item[]{
+                ItemsRegistry.bucketOfMana,ItemsRegistry.bucketOfMana,Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT,
+        }, ArsNouveauAPI.PatchouliCategories.automation.name()));
+
+
+        registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.amuletOfManaBoost, ItemsRegistry.dullTrinket, new Item[]{
+                Items.DIAMOND, Items.DIAMOND, Items.DIAMOND, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana
+        }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
+
+        registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.amuletOfManaRegen, ItemsRegistry.dullTrinket, new Item[]{
+                Items.DIAMOND, Items.DIAMOND, Items.GOLD_INGOT, Items.GOLD_INGOT, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana
+        }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
 
     }
 
@@ -59,7 +65,7 @@ public class APIRegistry {
         registerSpell(ModConfig.MethodProjectileID, new MethodProjectile());
         registerSpell(ModConfig.MethodTouchID, new MethodTouch());
         registerSpell(ModConfig.MethodSelfID, new MethodSelf());
-
+//        registerSpell(ModConfig.MethodBeamID, new MethodBeam());
         registerSpell(ModConfig.EffectBreakID, new EffectBreak());
         registerSpell(ModConfig.EffectHarmID, new EffectHarm());
         registerSpell(ModConfig.EffectIgniteID, new EffectIgnite());

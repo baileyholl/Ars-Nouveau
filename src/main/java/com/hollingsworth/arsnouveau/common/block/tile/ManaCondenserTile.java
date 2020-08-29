@@ -40,6 +40,7 @@ public class ManaCondenserTile extends AbstractManaTile implements ITickableTile
                     counter = 1;
                 BlockState state = world.getBlockState(pos);
                 world.setBlockState(pos, state.with(ManaCondenserBlock.stage, counter), 3);
+
             }
             ManaJarTile jar = (ManaJarTile) world.getTileEntity(pos.down());
             if(jar.canAcceptMana() && world.getGameTime() % 20 == 0 ) {

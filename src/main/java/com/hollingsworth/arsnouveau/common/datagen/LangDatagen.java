@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.common.items.Glyph;
-import com.hollingsworth.arsnouveau.common.items.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.LanguageProvider;
 

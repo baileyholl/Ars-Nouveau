@@ -1,11 +1,14 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.EnchantmentTableParticle;
 import net.minecraft.particles.ParticleType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import java.util.Random;
 
@@ -61,7 +64,7 @@ public class ParticleUtil {
         double x1 = getCenterOfBlock(fromThisBlock.getX());
         double z1 = getCenterOfBlock(fromThisBlock.getZ());
         double y1 = getCenterOfBlock(fromThisBlock.getY());
-        double d5 = 1.0;
+        double d5 = 1.2;
         double d0 = x2 - x1;
         double y = toThisBlock.getY() - fromThisBlock.getY();
         double d1 = y2 - y1;
@@ -75,8 +78,12 @@ public class ParticleUtil {
 
         while ((d4 + .65) < d3)
         {
-            d4 += 1.8D - d5 + rand.nextDouble() * (1.7D - d5);
-            world.addParticle(ParticleTypes.ENCHANT, x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4, 0.0D, 0.0D, 0.0D);
+            d4 += 1.8D - d5 + rand.nextDouble() * (1.5D - d5);
+            if(world.isRemote)
+                world.addParticle(ParticleTypes.ENCHANT, x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4, 0.0D, 0.0D, 0.0D);
+            if(world instanceof ServerWorld){
+                ((ServerWorld)world).spawnParticle(ParticleTypes.WITCH,x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4,rand.nextInt(4), 0,0.0,0, 0.0);
+            }
         }
     }
 
@@ -139,9 +146,9 @@ public class ParticleUtil {
         float green = rand.nextFloat() * 0.03F + (rand.nextBoolean() ? 0.5F : 0.3F);
         float blue = rand.nextFloat() * 0.05F;
         float ageMultiplier = (float) (rand.nextDouble() * 2.5D + 10D);
-
-        //ParticleEnchantmentTable blur = new ParticleEnchantmentTable(world, x, y, z, scale, 1,1,1);
-        //Minecraft.getMinecraft().effectRenderer.addEffect(blur);
+//
+//        EnchantmentTableParticle blur = new EnchantmentTableParticle(world, x, y, z, scale, 1,1,1);
+//        Minecraft.getInstance().eff.addEffect(blur);
     }
 //
 //    public static void spawnPoof(BlockPos pos, World world) {

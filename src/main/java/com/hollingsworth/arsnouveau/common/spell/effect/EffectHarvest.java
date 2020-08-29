@@ -75,10 +75,8 @@ public class EffectHarvest extends AbstractEffect {
                     cropDrops = state.getDrops(LootUtil.getFortuneContext((ServerWorld) world, blockpos, shooter, getBuffCount(augments, AugmentFortune.class)));
                 }
                 BlockPos finalBlockpos = blockpos;
-                BlockState finalState = state;
                 cropDrops.forEach(d -> {
-                    if(d.getItem() != cropsBlock.getItem(world, finalBlockpos, finalState).getItem())
-                        world.addEntity(new ItemEntity(world, finalBlockpos.getX(), finalBlockpos.getY(), finalBlockpos.getZ(), d));
+                    world.addEntity(new ItemEntity(world, finalBlockpos.getX(), finalBlockpos.getY(), finalBlockpos.getZ(), d));
                 });
                 world.setBlockState(blockpos,cropsBlock.withAge(1));
             }
@@ -121,6 +119,6 @@ public class EffectHarvest extends AbstractEffect {
 
     @Override
     protected String getBookDescription() {
-        return "Harvests grown crops and trees. When used on grown crops, this spell will obtain the fully grown product without destroying the plant, but will not grant any additional seeds.";
+        return "Harvests grown crops and trees. When used on grown crops, this spell will obtain the fully grown product without destroying the plant.";
     }
 }

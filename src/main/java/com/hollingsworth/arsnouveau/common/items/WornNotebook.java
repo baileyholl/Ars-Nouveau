@@ -2,17 +2,16 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.NetworkManager;
 import net.minecraft.util.*;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import vazkii.patchouli.api.PatchouliAPI;
 
 import javax.annotation.Nonnull;
-import java.awt.print.Book;
 
 public class WornNotebook extends ModItem{
 

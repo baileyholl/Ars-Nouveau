@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.api.spell.IPlaceBlockResponder;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.SummoningCrytalTile;
-import com.hollingsworth.arsnouveau.common.items.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.spell.EntitySpellResolver;
 import net.minecraft.entity.*;
@@ -16,6 +16,9 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.FlyingPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
@@ -35,11 +38,14 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 
 public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlaceBlockResponder {
+    public static final DataParameter<String> SPELL_STRING = EntityDataManager.createKey(EntityWhelp.class, DataSerializers.STRING);
+    public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.createKey(EntityWhelp.class, DataSerializers.ITEMSTACK);
+
 
     BlockPos crystalPos;
     int ticksSinceLastSpell;
-    ArrayList<AbstractSpellPart> spellRecipe;
-    ItemStack heldStack;
+    public ArrayList<AbstractSpellPart> spellRecipe;
+
     @Override
     public boolean canDespawn(double p_213397_1_) {
         return false;
@@ -72,6 +78,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
             ArrayList<AbstractSpellPart> spellParts = SpellParchment.getSpellRecipe(stack);
             if(new EntitySpellResolver(spellParts).canCast(this)) {
                 this.spellRecipe = SpellParchment.getSpellRecipe(stack);
+                setRecipeString(SpellRecipeUtil.serializeForNBT(spellRecipe));
                 player.sendMessage(new StringTextComponent("Spell set."));
                 return true;
             } else{
@@ -86,7 +93,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
             return true;
         }
         if(stack != ItemStack.EMPTY){
-            this.heldStack = new ItemStack(stack.getItem());
+            setHeldStack(new ItemStack(stack.getItem()));
             player.sendMessage(new StringTextComponent("This whelp will use " + stack.getItem().getDisplayName(stack).getFormattedText() +  " in spells if this item is in a Summoning Crystal chest."));
         }
 
@@ -201,6 +208,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
 
     @Override
     public ItemStack onPlaceBlock() {
+        ItemStack heldStack = getHeldStack();
         if(heldStack == null )
             return  ItemStack.EMPTY;
         SummoningCrytalTile tile = world.getTileEntity(crystalPos) instanceof SummoningCrytalTile ? (SummoningCrytalTile) world.getTileEntity(crystalPos) : null;
@@ -272,11 +280,27 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         if(spellRecipe != null){
             tag.putString("spell", SpellRecipeUtil.serializeForNBT(spellRecipe));
         }
-        if(heldStack != null) {
+        if(getHeldStack() != null) {
             CompoundNBT itemTag = new CompoundNBT();
-            heldStack.write(itemTag);
+            getHeldStack().write(itemTag);
             tag.put("held", itemTag);
         }
+    }
+
+    public String getRecipeString(){
+        return this.dataManager.get(SPELL_STRING);
+    }
+
+    public void setRecipeString(String recipeString){
+        this.dataManager.set(SPELL_STRING, recipeString);
+    }
+
+    public ItemStack getHeldStack(){
+        return this.dataManager.get(HELD_ITEM);
+    }
+
+    public void setHeldStack(ItemStack stack){
+        this.dataManager.set(HELD_ITEM,stack);
     }
 
     @Override
@@ -287,7 +311,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         spellRecipe = SpellRecipeUtil.getSpellsFromTagString(tag.getString("spell"));
         ticksSinceLastSpell = tag.getInt("last_spell");
         if(tag.contains("held"))
-            heldStack = ItemStack.read((CompoundNBT)tag.get("held"));
+            setHeldStack(ItemStack.read((CompoundNBT)tag.get("held")));
     }
 
     @Override
@@ -302,6 +326,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     public void livingTick() {
         super.livingTick();
     }
+
     protected void registerAttributes() {
         super.registerAttributes();
         this.getAttributes().registerAttribute(SharedMonsterAttributes.FLYING_SPEED);
@@ -309,6 +334,12 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         this.getAttribute(SharedMonsterAttributes.FLYING_SPEED).setBaseValue((double)0.4F);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue((double)0.2F);
     }
+    protected void registerData() {
+        super.registerData();
+        this.dataManager.register(HELD_ITEM, ItemStack.EMPTY);
+        this.dataManager.register(SPELL_STRING, "");
+    }
+
 
     class LevitateGoal extends Goal {
         LevitateGoal() {

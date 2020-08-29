@@ -29,6 +29,7 @@ public class WhelpModel extends EntityModel<EntityWhelp> {
 
 
 
+
 		kobold = new ModelRenderer(this);
 		kobold.setRotationPoint(0.0F, 18.0F, -2.5F);
 		kobold.setTextureOffset(16, 3).addBox(-1.0F, -1.0F, -0.5F, 2.0F, 2.0F, 1.0F, 0.0F, false);
@@ -131,7 +132,10 @@ public class WhelpModel extends EntityModel<EntityWhelp> {
 
 	@Override
 	public void render(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha){
+		matrixStack.push();
 		matrixStack.scale(.85f, .85f, .85f);
+        matrixStack.translate(0, -0.5, 0);
+		matrixStack.pop();
 		kobold.render(matrixStack, buffer, packedLight, packedOverlay);
 		head.render(matrixStack, buffer, packedLight, packedOverlay);
 		body.render(matrixStack, buffer, packedLight, packedOverlay);

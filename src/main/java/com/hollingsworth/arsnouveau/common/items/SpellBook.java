@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOpenGUI;
 import com.hollingsworth.arsnouveau.common.spell.SpellResolver;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -33,9 +34,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 
 public class SpellBook extends Item implements ISpellTier {

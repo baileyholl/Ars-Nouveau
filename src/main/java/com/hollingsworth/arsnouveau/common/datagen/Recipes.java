@@ -1,18 +1,13 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.armor.NoviceArmor;
 import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
-import com.hollingsworth.arsnouveau.common.block.ModBlock;
-import com.hollingsworth.arsnouveau.common.items.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.*;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 
@@ -128,6 +123,16 @@ public class Recipes extends RecipeProvider {
                     .patternLine("xxx")
                     .patternLine("xyx")
                     .patternLine("xxx").key('x', ItemsRegistry.manaFiber).key('y', Items.PAPER).build(consumer);
+
+            ShapedRecipeBuilder.shapedRecipe(ItemsRegistry.dullTrinket).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                    .patternLine(" x ")
+                    .patternLine("xyx")
+                    .patternLine(" x ").key('x', Items.IRON_NUGGET).key('y', ItemsRegistry.arcaneBrick).build(consumer);
+
+            ShapedRecipeBuilder.shapedRecipe(ItemsRegistry.dominionWand).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                    .patternLine("  y")
+                    .patternLine(" x ")
+                    .patternLine("x  ").key('x', Items.STICK).key('y', ItemsRegistry.arcaneBrick).build(consumer);
 
         }
     }

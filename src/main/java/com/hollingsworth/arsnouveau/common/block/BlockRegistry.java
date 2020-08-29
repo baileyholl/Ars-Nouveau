@@ -1,11 +1,11 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.client.renderer.RelayRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.*;
-import com.hollingsworth.arsnouveau.common.items.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
@@ -58,16 +58,15 @@ public class BlockRegistry {
 
     @ObjectHolder(ArsNouveau.MODID + ":mana_jar")
     public static TileEntityType<ManaJarTile> MANA_JAR_TILE;
+    @ObjectHolder(LibBlockNames.ARCANE_RELAY)
+    public static TileEntityType<ArcaneRelayTile> ARCANE_RELAY_TILE;
 
-    @ObjectHolder(ArsNouveau.MODID + ":warding_stone")
-    public static WardBlock WARD_BLOCK;
+    @ObjectHolder(ArsNouveau.MODID + ":warding_stone") public static WardBlock WARD_BLOCK;
 
-    @ObjectHolder(ArsNouveau.MODID + ":mana_siphon")
-    public static ManaSiphonBlock MANA_SIPHON_BLOCK;
+    @ObjectHolder(ArsNouveau.MODID + ":mana_siphon") public static ManaSiphonBlock MANA_SIPHON_BLOCK;
 
 
-    @ObjectHolder(ArsNouveau.MODID + ":glyph_press")
-    public static GlyphPressBlock GLYPH_PRESS_BLOCK;
+    @ObjectHolder(ArsNouveau.MODID + ":glyph_press") public static GlyphPressBlock GLYPH_PRESS_BLOCK;
 
     @ObjectHolder("arcane_ore") public static ArcaneOre ARCANE_ORE;
 
@@ -85,6 +84,11 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.SUMMONING_CRYSTAL) public static TileEntityType<SummoningCrytalTile> SUMMONING_CRYSTAL_TILE;
 
     @ObjectHolder(LibBlockNames.SCRIBES_BLOCK) public static TileEntityType<ScribesTile> SCRIBES_TABLE_TILE;
+
+    @ObjectHolder(LibBlockNames.ARCANE_ROAD) public static ModBlock ARCANE_ROAD;
+
+    @ObjectHolder(LibBlockNames.ARCANE_RELAY) public static ArcaneRelay ARCANE_RELAY;
+
 
 
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
@@ -107,7 +111,8 @@ public class BlockRegistry {
             blockRegistryEvent.getRegistry().register(new SummoningCrystal());
             blockRegistryEvent.getRegistry().register(new ModBlock(LibBlockNames.ARCANE_BRICKS));
             blockRegistryEvent.getRegistry().register(new ScribesBlock());
-
+            blockRegistryEvent.getRegistry().register(new ArcaneRoad());
+            blockRegistryEvent.getRegistry().register(new ArcaneRelay());
         }
 
         @SubscribeEvent
@@ -123,6 +128,7 @@ public class BlockRegistry {
             event.getRegistry().register(TileEntityType.Builder.create(ArcanePedestalTile::new, BlockRegistry.ARCANE_PEDESTAL).build(null).setRegistryName(LibBlockNames.ARCANE_PEDESTAL));
             event.getRegistry().register(TileEntityType.Builder.create(SummoningCrytalTile::new, BlockRegistry.SUMMONING_CRYSTAL).build(null).setRegistryName(LibBlockNames.SUMMONING_CRYSTAL));
             event.getRegistry().register(TileEntityType.Builder.create(ScribesTile::new, BlockRegistry.SCRIBES_BLOCK).build(null).setRegistryName(LibBlockNames.SCRIBES_BLOCK));
+            event.getRegistry().register(TileEntityType.Builder.create(ArcaneRelayTile::new, BlockRegistry.ARCANE_RELAY).build(null).setRegistryName(LibBlockNames.ARCANE_RELAY));
 
         }
 
@@ -145,7 +151,9 @@ public class BlockRegistry {
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.SUMMONING_CRYSTAL, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.SUMMONING_CRYSTAL));
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.ARCANE_BRICKS, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.ARCANE_BRICKS));
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.SCRIBES_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.SCRIBES_BLOCK));
-
+            itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.ARCANE_ROAD, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.ARCANE_ROAD));
+            itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.ARCANE_RELAY, ItemsRegistry.defaultItemProperties().setISTER(()-> RelayRenderer.ISRender::new)).setRegistryName(LibBlockNames.ARCANE_RELAY));
         }
     }
+
 }

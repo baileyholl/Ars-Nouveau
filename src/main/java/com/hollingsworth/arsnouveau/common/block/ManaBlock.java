@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.AbstractManaTile;
 
-import com.hollingsworth.arsnouveau.common.items.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
@@ -35,7 +35,8 @@ public abstract class ManaBlock extends ModBlock{
 
                     if(tile.getMaxMana() - tile.getCurrentMana() >= 1000){
                         tile.addMana(1000);
-                        player.setHeldItem(handIn, new ItemStack(Items.BUCKET));
+                        if(!player.isCreative())
+                            player.setHeldItem(handIn, new ItemStack(Items.BUCKET));
                     }
                     return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
                 }else if(player.getHeldItem(handIn).getItem() instanceof BucketItem && ((BucketItem)player.getHeldItem(handIn).getItem()).getFluid() == Fluids.EMPTY){

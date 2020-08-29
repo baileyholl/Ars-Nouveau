@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " x ",
+    "xyx",
+    " x "
+  ],
+  "key": {
+    "x": {
+      "item": "minecraft:iron_nugget"
+    },
+    "y": {
+      "item": "ars_nouveau:arcane_brick"
+    }
+  },
+  "result": {
+    "item": "ars_nouveau:dull_trinket"
+  }
+}

@@ -56,10 +56,10 @@ public class ManaJar extends ManaBlock {
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        super.onBlockActivated(state,worldIn,pos,player,handIn,hit);
-        if(worldIn.isRemote)
-            return ActionResultType.SUCCESS;
-
-        return ActionResultType.SUCCESS;
+        return super.onBlockActivated(state,worldIn,pos,player,handIn,hit);
+//        if(worldIn.isRemote)
+//            return ActionResultType.SUCCESS;
+//
+//        return ActionResultType.SUCCESS;
     }
 }

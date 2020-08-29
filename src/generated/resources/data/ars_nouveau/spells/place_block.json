@@ -1,0 +1,18 @@
+{
+  "name": "Place Block",
+  "icon": "ars_nouveau:glyph_place_block",
+  "category": "spells",
+  "pages": [
+    {
+      "type": "text",
+      "text": "Places blocks from the casters inventory. If a player is casting this, this spell will place blocks from the hot bar first."
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "ONE",
+      "mana_cost": "Low",
+      "clay_type": "ars_nouveau:magic_clay",
+      "reagent": "minecraft:dispenser"
+    }
+  ]
+}

@@ -89,7 +89,7 @@ public class SpellRecipeUtil {
         return tags.toString();
     }
 
-    public static String getDisplayString(ArrayList<AbstractSpellPart> abstractSpellPart){
+    public static String getDisplayString(List<AbstractSpellPart> abstractSpellPart){
         StringBuilder str = new StringBuilder();
         for (int i = 0; i < abstractSpellPart.size(); i++) {
             AbstractSpellPart spellPart = abstractSpellPart.get(i);

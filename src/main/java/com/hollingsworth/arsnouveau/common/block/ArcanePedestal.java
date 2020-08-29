@@ -1,15 +1,11 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
-import com.hollingsworth.arsnouveau.common.block.tile.GlyphPressTile;
-import com.hollingsworth.arsnouveau.common.items.ItemsRegistry;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Items;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;

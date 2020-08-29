@@ -1,14 +1,11 @@
 package com.hollingsworth.arsnouveau.client;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.client.renderer.ArcanePedestalRenderer;
-import com.hollingsworth.arsnouveau.client.renderer.EnchantingApparatusRenderer;
-import com.hollingsworth.arsnouveau.client.renderer.ScribeTableRenderer;
+import com.hollingsworth.arsnouveau.client.renderer.*;
 import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.block.tile.GlyphPressTile;
-import com.hollingsworth.arsnouveau.client.renderer.GlyphPressRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraftforge.api.distmarker.Dist;
@@ -27,6 +24,7 @@ public class ClientHandler {
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.ENCHANTING_APP_TILE, EnchantingApparatusRenderer::new);
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.SCRIBES_TABLE_TILE, ScribeTableRenderer::new);
 
+        ClientRegistry.bindTileEntityRenderer(BlockRegistry.ARCANE_RELAY_TILE, RelayRenderer::new);
 
         RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_JAR, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.GLYPH_PRESS_BLOCK, RenderType.getCutout());
@@ -38,6 +36,7 @@ public class ClientHandler {
         RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_BLOOM_CROP, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.SUMMONING_CRYSTAL, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.SCRIBES_BLOCK, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.ARCANE_RELAY, RenderType.getCutout());
 
     }
 

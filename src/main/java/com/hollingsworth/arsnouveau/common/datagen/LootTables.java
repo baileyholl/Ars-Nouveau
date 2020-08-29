@@ -25,6 +25,8 @@ public class LootTables extends BaseLootTableProvider{
         putStandardLoot(BlockRegistry.SCRIBES_BLOCK);
         putStandardLoot(BlockRegistry.SUMMONING_CRYSTAL);
         putStandardLoot(BlockRegistry.ARCANE_BRICKS);
+        putStandardLoot(BlockRegistry.ARCANE_ROAD);
+        putStandardLoot(BlockRegistry.ARCANE_RELAY);
     }
 
     public void putStandardLoot(Block block){

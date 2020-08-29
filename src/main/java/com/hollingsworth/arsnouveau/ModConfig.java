@@ -4,7 +4,7 @@ public class ModConfig {
     public static final String MethodProjectileID = "projectile";
     public static final String MethodTouchID = "touch";
     public static final String MethodSelfID = "self";
-
+    public static final String MethodBeamID = "beam";
     public static final String EffectBreakID = "break";
     public static final String EffectHarmID = "harm";
     public static final String EffectIgniteID = "ignite";
@@ -44,4 +44,6 @@ public class ModConfig {
     public static final String EffectPickupID = "pickup";
     public static final String EffectInteractID = "interact";
     public static final String EffectPlaceBlockID = "place_block";
+
+
 }

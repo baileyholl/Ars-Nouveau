@@ -1,7 +1,7 @@
 {
   "name": "block.ars_nouveau.summoning_crystal",
   "icon": "ars_nouveau:summoning_crystal",
-  "category": "equipment",
+  "category": "automation",
   "pages": [
     {
       "type": "text",

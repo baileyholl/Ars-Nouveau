@@ -34,8 +34,13 @@ public class LibItemNames {
     public static final String BELT_OF_UNSTABLE_GIFTS = "belt_of_unstable_gifts";
     public static final String AMULET_OF_MANA_REGEN = "amulet_of_mana_regen";
     public static final String AMULET_OF_MANA_BOOST = "amulet_of_mana_boost";
+    public static final String AMULET_OF_ENVIRONMENTAL_PROTECTION = "amulet_of_environment";
+
+
     public static final String WARP_SCROLL = "warp_scroll";
     public static final String CREATIVE_SPELL_BOOK = "creative_spell_book";
     public static final String SPELL_PARCHMENT = "spell_parchment";
     public static final String WHELP_CHARM = "whelp_charm";
+    public static final String DOMINION_WAND = "dominion_wand";
+    public static final String DULL_TRINKET = "dull_trinket";
 }

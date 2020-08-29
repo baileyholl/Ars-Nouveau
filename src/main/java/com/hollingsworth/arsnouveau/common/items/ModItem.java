@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.item.Item;
 
 public class ModItem extends Item {

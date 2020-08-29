@@ -1,13 +1,12 @@
-package com.hollingsworth.arsnouveau.common.items;
+package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.item.ArsNouveauCurio;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.common.armor.ApprenticeArmor;
-import com.hollingsworth.arsnouveau.common.armor.MagicArmor;
 import com.hollingsworth.arsnouveau.common.armor.MasterArmor;
 import com.hollingsworth.arsnouveau.common.armor.NoviceArmor;
+import com.hollingsworth.arsnouveau.common.items.*;
 import com.hollingsworth.arsnouveau.common.items.curios.*;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -69,6 +68,13 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.SPELL_PARCHMENT) public static SpellParchment spellParchment;
 
     @ObjectHolder(LibItemNames.WHELP_CHARM) public static WhelpCharm whelpCharm;
+    @ObjectHolder(LibItemNames.DOMINION_WAND) public static DominionWand DOMAIN_CONTROLLER;
+
+    @ObjectHolder(LibItemNames.AMULET_OF_MANA_BOOST)public static AbstractManaCurio amuletOfManaBoost;
+    @ObjectHolder(LibItemNames.AMULET_OF_MANA_REGEN)public static AbstractManaCurio amuletOfManaRegen;
+    @ObjectHolder(LibItemNames.DULL_TRINKET)public static ModItem dullTrinket;
+
+    @ObjectHolder(LibItemNames.DOMINION_WAND)public static DominionWand dominionWand;
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler{
@@ -79,7 +85,9 @@ public class ItemsRegistry {
 
             Item[] items = {
                     new WhelpCharm(),
+                    new DominionWand(),
                     new ModItem(LibItemNames.BLANK_GLYPH),
+                    new ModItem(LibItemNames.DULL_TRINKET),
                     new ModItem(LibItemNames.MARVELOUS_CLAY),
                     new ModItem(LibItemNames.MAGIC_CLAY),
                     new ModItem(LibItemNames.MYTHICAL_CLAY),
@@ -125,7 +133,19 @@ public class ItemsRegistry {
                             return 20;
                         }
                     },
-                    new SpellParchment()
+                    new SpellParchment(),
+                    new AbstractManaCurio(LibItemNames.AMULET_OF_MANA_BOOST){
+                        @Override
+                        public int getMaxManaBoost() {
+                            return 50;
+                        }
+                    },
+                    new AbstractManaCurio(LibItemNames.AMULET_OF_MANA_REGEN){
+                        @Override
+                        public int getManaRegenBonus() {
+                            return 3;
+                        }
+                    }
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

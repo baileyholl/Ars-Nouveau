@@ -2,13 +2,10 @@ package com.hollingsworth.arsnouveau.client.renderer;
 
 import com.hollingsworth.arsnouveau.api.util.MappingUtil;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
-import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
-import com.hollingsworth.arsnouveau.common.items.ItemsRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.LecternBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Vector3f;
@@ -18,7 +15,6 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 

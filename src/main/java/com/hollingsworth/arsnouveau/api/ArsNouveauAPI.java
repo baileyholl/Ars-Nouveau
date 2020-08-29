@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.api;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
-import com.hollingsworth.arsnouveau.common.items.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 

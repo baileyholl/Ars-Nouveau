@@ -49,15 +49,10 @@ public class EffectPlaceBlock extends AbstractEffect {
                 if(!(stack.getItem() instanceof BlockItem))
                     return;
                 BlockItem item = (BlockItem) stack.getItem();
-                System.out.println("Attempt place");
-
                 if(world.getBlockState(result.getPos()).getMaterial() != Material.AIR){
-                    System.out.println("Set new result");
                     result = new BlockRayTraceResult(result.getHitVec().add(0, 1, 0), Direction.UP, result.getPos(),false);
                 }
-                System.out.println(world.getBlockState(result.getPos()));
-                System.out.println(attemptPlace(world, stack, item, result));
-
+                attemptPlace(world, stack, item, result);
             }
         }
     }
@@ -67,7 +62,6 @@ public class EffectPlaceBlock extends AbstractEffect {
         fakePlayer.setHeldItem(Hand.MAIN_HAND, stack);
         BlockItemUseContext context = BlockItemUseContext.func_221536_a(new BlockItemUseContext(new ItemUseContext(fakePlayer, Hand.MAIN_HAND, result)), result.getPos(), result.getFace());
 
-        System.out.println(context.canPlace());
         return item.tryPlace(context);
     }
 
@@ -80,5 +74,10 @@ public class EffectPlaceBlock extends AbstractEffect {
     @Override
     public Item getCraftingReagent() {
         return Items.DISPENSER;
+    }
+
+    @Override
+    protected String getBookDescription() {
+        return "Places blocks from the casters inventory. If a player is casting this, this spell will place blocks from the hot bar first.";
     }
 }

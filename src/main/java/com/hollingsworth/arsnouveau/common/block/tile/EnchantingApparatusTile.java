@@ -1,28 +1,19 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.block.EnchantingApparatusBlock;
-import com.hollingsworth.arsnouveau.common.block.GlyphPressBlock;
-import com.hollingsworth.arsnouveau.common.block.ManaCondenserBlock;
-import com.hollingsworth.arsnouveau.common.items.ItemsRegistry;
-import com.sun.jna.platform.win32.WinDef;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
-import vazkii.patchouli.api.IComponentProcessor;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
