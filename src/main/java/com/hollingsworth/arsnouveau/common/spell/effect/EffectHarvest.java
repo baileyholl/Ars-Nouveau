@@ -5,6 +5,8 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
+import com.hollingsworth.arsnouveau.common.block.ManaBloomCrop;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtract;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
@@ -75,7 +77,11 @@ public class EffectHarvest extends AbstractEffect {
                     cropDrops = state.getDrops(LootUtil.getFortuneContext((ServerWorld) world, blockpos, shooter, getBuffCount(augments, AugmentFortune.class)));
                 }
                 BlockPos finalBlockpos = blockpos;
+                boolean noSeed = false;
                 cropDrops.forEach(d -> {
+                    if(d.getItem() == BlockRegistry.MANA_BLOOM_CROP.asItem()){
+                        return;
+                    }
                     world.addEntity(new ItemEntity(world, finalBlockpos.getX(), finalBlockpos.getY(), finalBlockpos.getZ(), d));
                 });
                 world.setBlockState(blockpos,cropsBlock.withAge(1));

@@ -36,19 +36,6 @@ public class DominionWand extends ModItem{
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
         ItemStack stack = player.getHeldItem(hand);
-//        if(world.isRemote())
-//            return new ActionResult<>(ActionResultType.SUCCESS, stack);
-//        BlockPos pos = getPos(stack);
-//        if(pos != null ){
-//            if(getDimension(stack) !=  player.dimension.getId()){
-//                player.sendMessage(new StringTextComponent("Using this scroll from a different dimension would be a bad idea."));
-//                return ActionResult.resultFail(stack);
-//            }
-//            player.teleportKeepLoaded(pos.getX(), pos.getY(), pos.getZ());
-//            stack.shrink(1);
-//            return ActionResult.resultPass(stack);
-//        }
-//
         return new ActionResult<>(ActionResultType.SUCCESS, stack);
     }
 
@@ -88,7 +75,7 @@ public class DominionWand extends ModItem{
         // If we are going FROM a non-relay mana tile to a relay. (Jar to relay)
         if(manaTile instanceof ArcaneRelayTile && world.getTileEntity(getPos(stack)) instanceof AbstractManaTile && !(world.getTileEntity(getPos(stack)) instanceof ArcaneRelayTile)){
             if(((ArcaneRelayTile) manaTile).setTakeFrom(getPos(stack))){
-                playerEntity.sendMessage(new StringTextComponent("Relay set to take from " + getPos(stack).toString()));
+                playerEntity.sendMessage(new StringTextComponent("Relay set to take from " + getPosString(getPos(stack))));
                 drawConnection(getPos(stack),pos, (ServerWorld) world);
                 setPosTag(stack, null, 0);
             }else{
@@ -99,7 +86,7 @@ public class DominionWand extends ModItem{
         // From relay to any other mana tile
         if(world.getTileEntity(getPos(stack)) instanceof ArcaneRelayTile){
             if(((ArcaneRelayTile) world.getTileEntity(getPos(stack))).setSendTo(pos)){
-                playerEntity.sendMessage(new StringTextComponent("Relay set to send to " + getPos(stack).toString()));
+                playerEntity.sendMessage(new StringTextComponent("Relay set to send to " + getPosString(getPos(stack))));
                 drawConnection(getPos(stack),pos, (ServerWorld) world);
                 setPosTag(stack, null, 0);
             }else{

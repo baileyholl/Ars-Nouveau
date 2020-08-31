@@ -1,16 +1,21 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.client.particle.engine.ParticleEngine;
+import com.hollingsworth.arsnouveau.client.particle.engine.TimedBeam;
 import com.hollingsworth.arsnouveau.common.block.ManaBloomCrop;
 import com.hollingsworth.arsnouveau.common.block.ManaCondenserBlock;
 import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 
@@ -26,9 +31,6 @@ public class ManaCondenserTile extends AbstractManaTile implements ITickableTile
     @Override
     public void tick() {
         if(world.isRemote || isDisabled) {
-            if(isDisabled)
-                System.out.println("Disabled");
-           // world.addParticle(ParticleTypes.DRIPPING_WATER, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0);
             return;
         }
 
@@ -61,13 +63,18 @@ public class ManaCondenserTile extends AbstractManaTile implements ITickableTile
         return super.write(tag);
     }
     @SubscribeEvent
-    public void cropGrow(BlockEvent.CropGrowEvent event) {
-        if(BlockUtil.distanceFrom(pos, event.getPos()) <= 10) {
-            int mana = 50;
+    public void cropGrow(BlockEvent.CropGrowEvent.Post event) {
+
+        if(BlockUtil.distanceFrom(pos, event.getPos()) <= 11) {
+            int mana = 200;
             if(world.getBlockState(event.getPos()).getBlock() instanceof ManaBloomCrop) {
-                mana += 50;
+                mana += 100;
             }
             this.addMana(mana);
+
+            if(world instanceof ServerWorld){
+                ParticleEngine.getInstance().addEffect(new TimedBeam(pos, event.getPos(), 5, (ServerWorld) world));
+            }
         }
     }
 
@@ -75,14 +82,21 @@ public class ManaCondenserTile extends AbstractManaTile implements ITickableTile
     public void babySpawnEvent(BabyEntitySpawnEvent event) {
         if(event.getChild() == null)
             return;
+        System.out.println("spawning");
         if(BlockUtil.distanceFrom(pos, event.getChild().getPosition()) <= 10)
             this.addMana(100);
     }
 
     @SubscribeEvent
     public void livingDeath(LivingDeathEvent e) {
-        if(BlockUtil.distanceFrom(pos, e.getEntity().getPosition()) <= 10)
-            this.addMana(50);
+
+        if(BlockUtil.distanceFrom(pos, e.getEntity().getPosition()) <= 10) {
+            if(world instanceof ServerWorld){
+                ParticleEngine.getInstance().addEffect(new TimedBeam(pos, e.getEntity().getPosition(), 1, (ServerWorld) world));
+            }
+            this.addMana(150);
+
+        }
     }
 
     @Override

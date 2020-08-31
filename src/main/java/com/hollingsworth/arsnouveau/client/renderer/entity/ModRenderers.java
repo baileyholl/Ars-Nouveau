@@ -18,6 +18,7 @@ public class ModRenderers {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_EVOKER_FANGS_ENTITY_TYPE, RenderFangs::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ALLY_VEX, RenderAllyVex::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_WHELP_TYPE, WhelpRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_CARBUNCLE_TYPE, CarbuncleRenderer::new);
 
     }
 }

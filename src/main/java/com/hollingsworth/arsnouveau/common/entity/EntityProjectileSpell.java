@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.client.particle.*;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.spell.SpellResolver;
 import net.minecraft.block.Blocks;
@@ -46,22 +47,48 @@ public class EntityProjectileSpell extends ArrowEntity {
 
     public void particles(){
 
-        if(world.getGameTime() % 1 == 0)
+        for(int i =0; i < 10; i++){
+            double minRange = -0.1;
+            double maxRange = 0.1;
+            double d0 = getPosX() + ParticleUtil.inRange(minRange, maxRange);
+            double d1 = getPosY()+ ParticleUtil.inRange(minRange, maxRange);
+            double d2 = getPosZ()+ ParticleUtil.inRange(minRange, maxRange);
+            world.rand.nextInt(255);
+//            world.addParticle(ParticleTypes.ENCHANTED_HIT, d0, d1, d2, 0.0, 0.0, 0.0);
+//            world.addParticle(ParticleSource.createData(new ParticleColor( world.rand.nextInt(255),  world.rand.nextInt(255),  world.rand.nextInt(255))), d0, d1, d2, 0.0, 0.0, 0.0);
+            world.addParticle(ParticleSource.createData(new ParticleColor(204,51,255)), d0, d1, d2, 0.0, 0.0, 0.0);
 
-        for(int i =0; i < 2; i++){
-            double d0 = getPosX(); //+ world.rand.nextFloat();
-            double d1 = getPosY();//+ world.rand.nextFloat() ;
-            double d2 = getPosZ(); //+ world.rand.nextFloat();
-
-            world.addParticle(ParticleTypes.ENCHANTED_HIT, d0, d1, d2, 0.0, 0.0, 0.0);
-       }
+        }
 
     }
 
     @Override
     public void tick() {
-        if(world.isRemote){
-            particles();
+        age++;
+        if(world.isRemote && this.age > 1) {
+            for (int i = 0; i < 10; i++) {
+                double minRange = -0.1;
+                double maxRange = 0.1;
+                double d0 = getPosX() + ParticleUtil.inRange(minRange, maxRange);
+                double d1 = getPosY() + ParticleUtil.inRange(minRange, maxRange);
+                double d2 = getPosZ() + ParticleUtil.inRange(minRange, maxRange);
+
+//            world.addParticle(ParticleTypes.ENCHANT, d0, d1, d2, 0.0, 0.0, 0.0);
+//                world.addParticle(ParticleSource.createData(new ParticleColor(204,51,255)), d0, d1, d2, this.getMotion().x, this.getMotion().y, this.getMotion().z);
+//                world.addParticle(ParticleSource.createData(new ParticleColor(204,51,255)), prevPosX, prevPosY, prevPosZ, this.getMotion().x, this.getMotion().y, this.getMotion().z);
+
+            }
+            double minRange = -0.1;
+            double maxRange = 0.1;
+            for (float j = 0.0F; j < 1.0F; j += 0.05F) {
+                for (int i = 0; i < 2; ++i) {
+                    world.addParticle(ParticleSource.createData(new ParticleColor(204, 51, 255)),
+                            this.prevPosX + (this.getMotion().x * j) +ParticleUtil.inRange(minRange, maxRange),
+                            this.prevPosY + (this.getMotion().y * j) +ParticleUtil.inRange(minRange, maxRange),
+                            this.prevPosZ + (this.getMotion().z * j) +ParticleUtil.inRange(minRange, maxRange),
+                            0, 0, 0);
+                }
+            }
         }
 
         this.lastTickPosX = this.getPosX();
@@ -127,7 +154,12 @@ public class EntityProjectileSpell extends ArrowEntity {
         this.setPosition(x,y,z);
     }
 
-    public EntityProjectileSpell( World world, LivingEntity shooter, SpellResolver spellResolver, int maxPierce) {
+    @Override
+    public void baseTick() {
+        super.baseTick();
+    }
+
+    public EntityProjectileSpell(World world, LivingEntity shooter, SpellResolver spellResolver, int maxPierce) {
         super(world, shooter);
         this.spellResolver = spellResolver;
         age = 0;

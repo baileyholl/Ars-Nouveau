@@ -2,6 +2,9 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.client.particle.engine.ParticleEngine;
+import com.hollingsworth.arsnouveau.client.particle.engine.TimedBeam;
 import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.block.ManaBlock;
 import com.hollingsworth.arsnouveau.common.block.SummoningCrystal;
@@ -19,6 +22,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -113,14 +117,12 @@ public class SummoningCrytalTile extends AbstractManaTile {
         if(taskIndex + 1 > posList.size()){
             taskIndex = 0;
         }
-//        if(world == null || world.isRemote)
-//            return null;
+
         BlockPos taskPos = posList.get(taskIndex);
-        BlockPos origPos = new BlockPos(taskPos);
+
         taskIndex += 1;
         // If the block above is not air
         if (world.getBlockState(taskPos.up()).getMaterial() != Material.AIR && !isTree(world.getBlockState(taskPos).getBlock())){
-            System.out.println(world.getBlockState(taskPos).getBlock());
             for(int i = 1; i < 4; i++) {
                 if (world.getBlockState(taskPos.up(i)).getMaterial() != Material.AIR || isTree(world.getBlockState(taskPos.up()).getBlock())){
                     taskPos = taskPos.up(i);
@@ -129,16 +131,10 @@ public class SummoningCrytalTile extends AbstractManaTile {
             }
         }
 
-//
         Block block = world.getBlockState(taskPos).getBlock();
         if(block instanceof SummoningCrystal || block instanceof ContainerBlock || block instanceof ManaBlock || block instanceof IInventory)
             return null;
-//
-//        if(world.getBlockState(pos).getMaterial() == Material.AIR)
-//            return pos;
-//        if(world.getBlockState(pos.up()))
-//
-//        return world.getBlockState(pos).getMaterial() != Material.AIR ? pos ;
+
             return taskPos;
     }
 
@@ -159,6 +155,9 @@ public class SummoningCrytalTile extends AbstractManaTile {
         BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
             if(!enough[0] && world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= manaCost ) {
                 ((ManaJarTile) world.getTileEntity(blockPos)).removeMana(manaCost);
+                if(world instanceof ServerWorld){
+                    ParticleEngine.getInstance().addEffect(new TimedBeam(pos, blockPos, 5, (ServerWorld) world));
+                }
                 enough[0] = true;
             }
         });

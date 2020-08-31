@@ -23,6 +23,7 @@ public class ModEntities {
     public static EntityType<EntityEvokerFangs> ENTITY_EVOKER_FANGS_ENTITY_TYPE = null;
 
     public static EntityType<EntityWhelp> ENTITY_WHELP_TYPE = null;
+    public static EntityType<EntityCarbuncle> ENTITY_CARBUNCLE_TYPE = null;
 
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
@@ -53,11 +54,15 @@ public class ModEntities {
            ENTITY_WHELP_TYPE = build("whelp", EntityType.Builder.<EntityWhelp>create(EntityWhelp::new, EntityClassification.MISC)
                    .size(0.6F, 0.63F).setTrackingRange(10)
                    .setShouldReceiveVelocityUpdates(true));
+            ENTITY_CARBUNCLE_TYPE = build("carbuncle", EntityType.Builder.<EntityCarbuncle>create(EntityCarbuncle::new, EntityClassification.MISC)
+                    .size(0.6F, 0.63F).setTrackingRange(10)
+                    .setShouldReceiveVelocityUpdates(true));
 
             event.getRegistry().registerAll(
                     SPELL_PROJ,
                     ENTITY_EVOKER_FANGS_ENTITY_TYPE,
-                    ALLY_VEX, ENTITY_WHELP_TYPE
+                    ALLY_VEX, ENTITY_WHELP_TYPE,
+                    ENTITY_CARBUNCLE_TYPE
             );
             //ENT_PROJECTILE = registerEntity(EntityType.Builder.<EntityModProjectile>create(EntityClassification.MISC).setCustomClientFactory(EntityModProjectile::new).size(0.25F, 0.25F), "ent_projectile");
 

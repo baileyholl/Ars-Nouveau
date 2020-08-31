@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static java.lang.Math.*;
 
@@ -18,6 +19,11 @@ import static java.lang.Math.*;
  * Created by Bailey on 12/26/2016.
  */
 public class ParticleUtil {
+    public static Random r = new Random();
+
+    public static double inRange(double min, double max){
+        return ThreadLocalRandom.current().nextDouble(min, max);
+    }
 
     public static void fallingLightParticles(World world, BlockPos pos){
         double posX = getCenterOfBlock(pos.getX());
