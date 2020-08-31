@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.renderer.RelayRenderer;
+import com.hollingsworth.arsnouveau.client.renderer.tile.ManaCondenserRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.*;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
@@ -139,7 +140,7 @@ public class BlockRegistry {
             //  itemRegistryEvent.getRegistry().register(new SpellBook());
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.PHANTOM_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName("phantom_block"));
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.LIGHT_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName("light_block"));
-            itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.MANA_CONDENSER, ItemsRegistry.defaultItemProperties()).setRegistryName("mana_condenser"));
+            itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.MANA_CONDENSER, ItemsRegistry.defaultItemProperties().setISTER(()-> ManaCondenserRenderer.ISRender::new)).setRegistryName("mana_condenser"));
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.MANA_JAR, ItemsRegistry.defaultItemProperties()).setRegistryName("mana_jar"));
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.WARD_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName("warding_stone"));
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.MANA_SIPHON_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName("mana_siphon"));

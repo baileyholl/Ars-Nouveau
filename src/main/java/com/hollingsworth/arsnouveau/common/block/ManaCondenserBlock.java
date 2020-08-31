@@ -27,8 +27,6 @@ import javax.annotation.Nullable;
 
 public class ManaCondenserBlock extends ModBlock {
 
-    public static final IProperty stage = IntegerProperty.create("stage", 1, 8);
-
     public ManaCondenserBlock() {
         super(ModBlock.defaultProperties().notSolid(),"mana_condenser");
     }
@@ -36,11 +34,6 @@ public class ManaCondenserBlock extends ModBlock {
     @Override
     public boolean hasTileEntity(BlockState state) {
         return true;
-    }
-
-    @Override
-    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
-        return super.allowsMovement(state, worldIn, pos, type);
     }
 
     @Override
@@ -61,16 +54,9 @@ public class ManaCondenserBlock extends ModBlock {
         return new ManaCondenserTile();
     }
 
-
-
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(ManaCondenserBlock.stage);
+    public BlockRenderType getRenderType(BlockState p_149645_1_) {
+        return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
-    @Nullable
-    @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return super.getStateForPlacement(context);
-    }
 }

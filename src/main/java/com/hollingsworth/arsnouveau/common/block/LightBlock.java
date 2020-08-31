@@ -41,7 +41,7 @@ public class LightBlock extends ModBlock {
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(ManaCondenserBlock.stage);
+        builder.add(LightTile.stage);
     }
 
     @Override

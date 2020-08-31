@@ -88,7 +88,6 @@ public class RelayModel extends Model  {
 	@Override
 	public void render(MatrixStack ms, IVertexBuilder buffer, int light, int overlay, float r, float g, float b, float a) {
 			render(ms, buffer, light, overlay, r, g, b, a, 1);
-
 	}
 
 

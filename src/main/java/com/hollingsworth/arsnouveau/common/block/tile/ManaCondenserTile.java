@@ -33,17 +33,7 @@ public class ManaCondenserTile extends AbstractManaTile implements ITickableTile
         if(world.isRemote || isDisabled) {
             return;
         }
-
-
         if(world.getTileEntity(pos.down()) instanceof ManaJarTile ) {
-            if(this.getCurrentMana() < getMaxMana()){
-                counter += 1;
-                if(counter > 8)
-                    counter = 1;
-                BlockState state = world.getBlockState(pos);
-                world.setBlockState(pos, state.with(ManaCondenserBlock.stage, counter), 3);
-
-            }
             ManaJarTile jar = (ManaJarTile) world.getTileEntity(pos.down());
             if(jar.canAcceptMana() && world.getGameTime() % 20 == 0 ) {
                 transferMana(this, jar);
