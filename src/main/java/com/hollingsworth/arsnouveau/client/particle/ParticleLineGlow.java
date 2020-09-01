@@ -1,16 +1,9 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
-
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -18,17 +11,23 @@ import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.Random;
 
-public class ParticleGlow extends SpriteTexturedParticle {
+public class ParticleLineGlow extends SpriteTexturedParticle {
+
     public float colorR = 0;
     public float colorG = 0;
     public float colorB = 0;
     public float initScale = 0;
-    public float initAlpha = 0;
-    public static final String NAME = "glow";
+    public float initX = 0;
+    public float initY = 0;
+    public float initZ = 0;
+    public float destX = 0;
+    public float destY = 0;
+    public float destZ = 0;
+    public static final String NAME = "line_glow";
 
-    @ObjectHolder(ArsNouveau.MODID + ":" + ParticleGlow.NAME) public static ParticleType<ColorParticleTypeData> TYPE;
+    @ObjectHolder(ArsNouveau.MODID + ":" + ParticleLineGlow.NAME) public static ParticleType<ColorParticleTypeData> TYPE;
 
-    public ParticleGlow(World worldIn, double x, double y, double z, double vx, double vy, double vz, float r, float g, float b, float a, float scale, int lifetime, IAnimatedSprite sprite) {
+    public ParticleLineGlow(World worldIn, double x, double y, double z, double vx, double vy, double vz, float r, float g, float b, float a, float scale, int lifetime, IAnimatedSprite sprite) {
         super(worldIn, x,y,z,0,0,0);
         this.colorR = r;
         this.colorG = g;
@@ -43,17 +42,20 @@ public class ParticleGlow extends SpriteTexturedParticle {
             this.colorB = this.colorB/255.0f;
         }
         this.setColor(colorR, colorG, colorB);
-        this.maxAge = (int)((float)lifetime*0.5f);
-        this.particleScale = scale/8;
+        this.maxAge = lifetime;
+        this.particleScale = scale;
         this.initScale = scale;
-        this.motionX = vx*2.0f;
-        this.motionY = vy*2.0f;
-        this.motionZ = vz*2.0f;
-        this.initAlpha = a;
-//        this.particleAngle = 2.0f*(float)Math.PI;
+        this.motionX = 0;
+        this.motionY = 0;
+        this.motionZ = 0;
+        this.initX = (float)x;
+        this.initY = (float)y;
+        this.initZ = (float)z;
+        this.destX = (float)vx;
+        this.destY = (float)vy;
+        this.destZ = (float)vz;
+        this.particleAngle = 2.0f*(float)Math.PI;
         this.selectSpriteRandomly(sprite);
-//        this.setParticleTexture(sprite);
-//        this.set
     }
     @Override
     public IParticleRenderType getRenderType() {
@@ -75,8 +77,11 @@ public class ParticleGlow extends SpriteTexturedParticle {
             this.age++;
         }
         float lifeCoeff = (float)this.age/(float)this.maxAge;
+        this.posX = ((1.0f-lifeCoeff)*initX + (lifeCoeff)*destX);
+        this.posY = ((1.0f-lifeCoeff)*initY + (lifeCoeff)*destY);
+        this.posZ = ((1.0f-lifeCoeff)*initZ + (lifeCoeff)*destZ);
         this.particleScale = initScale-initScale*lifeCoeff;
-        this.particleAlpha = initAlpha*(1.0f-lifeCoeff);
+        this.particleAlpha = 1.0f-lifeCoeff;
         this.prevParticleAngle = particleAngle;
         particleAngle += 1.0f;
     }
@@ -103,8 +108,10 @@ public class ParticleGlow extends SpriteTexturedParticle {
         @Override
         public Particle makeParticle(ColorParticleTypeData data, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
 //            return new ParticleGlow(worldIn, x,y,z,xSpeed, ySpeed, zSpeed, worldIn.rand.nextInt(255), worldIn.rand.nextInt(255), worldIn.rand.nextInt(255), 1.0f, .25f, 36, this.spriteSet);
-            return new ParticleGlow(worldIn, x,y,z,xSpeed, ySpeed, zSpeed, data.color.getRed(), data.color.getGreen(), data.color.getBlue(), 1.0f, .25f, 36, this.spriteSet);
+            return new ParticleLineGlow(worldIn, x,y,z,xSpeed, ySpeed, zSpeed, 225, 60, 60, 1.0f, 1.0f, 36, this.spriteSet);
 
         }
     }
+
+
 }

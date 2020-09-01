@@ -46,7 +46,7 @@ public class TimedEffect {
         }
 
         public void addToWorld(ServerWorld world){
-            world.spawnParticle(particleData, x, y, z, world.rand.nextInt(4), 0,0.0,0, 0.0);
+            world.spawnParticle(particleData, x, y, z, world.rand.nextInt(10), 0,0.0,0, 0.0);
         }
     }
 }

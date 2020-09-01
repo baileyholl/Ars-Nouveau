@@ -93,7 +93,7 @@ public class ArcaneRelayTile extends AbstractManaTile{
         if(this.getCurrentMana() >= this.getTransferRate() && toTile.getCurrentMana() + this.getTransferRate() <= toTile.getMaxMana()){
             this.removeMana(this.getTransferRate());
             toTile.addMana(this.getTransferRate());
-            ParticleEngine.getInstance().addEffect(new TimedBeam(toPos, pos, 5,(ServerWorld)world));
+            ParticleEngine.getInstance().addEffect(new TimedBeam(toPos, pos, 3,(ServerWorld)world));
 //            ParticleUtil.beam(toPos, pos, world);
         }
     }

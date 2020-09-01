@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.client.particle.*;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.spell.SpellResolver;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -16,6 +17,8 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
+
+import java.util.Random;
 
 public class EntityProjectileSpell extends ArrowEntity {
 
@@ -65,31 +68,7 @@ public class EntityProjectileSpell extends ArrowEntity {
     @Override
     public void tick() {
         age++;
-        if(world.isRemote && this.age > 1) {
-            for (int i = 0; i < 10; i++) {
-                double minRange = -0.1;
-                double maxRange = 0.1;
-                double d0 = getPosX() + ParticleUtil.inRange(minRange, maxRange);
-                double d1 = getPosY() + ParticleUtil.inRange(minRange, maxRange);
-                double d2 = getPosZ() + ParticleUtil.inRange(minRange, maxRange);
 
-//            world.addParticle(ParticleTypes.ENCHANT, d0, d1, d2, 0.0, 0.0, 0.0);
-//                world.addParticle(ParticleSource.createData(new ParticleColor(204,51,255)), d0, d1, d2, this.getMotion().x, this.getMotion().y, this.getMotion().z);
-//                world.addParticle(ParticleSource.createData(new ParticleColor(204,51,255)), prevPosX, prevPosY, prevPosZ, this.getMotion().x, this.getMotion().y, this.getMotion().z);
-
-            }
-            double minRange = -0.1;
-            double maxRange = 0.1;
-            for (float j = 0.0F; j < 1.0F; j += 0.05F) {
-                for (int i = 0; i < 2; ++i) {
-                    world.addParticle(ParticleSource.createData(new ParticleColor(204, 51, 255)),
-                            this.prevPosX + (this.getMotion().x * j) +ParticleUtil.inRange(minRange, maxRange),
-                            this.prevPosY + (this.getMotion().y * j) +ParticleUtil.inRange(minRange, maxRange),
-                            this.prevPosZ + (this.getMotion().z * j) +ParticleUtil.inRange(minRange, maxRange),
-                            0, 0, 0);
-                }
-            }
-        }
 
         this.lastTickPosX = this.getPosX();
         this.lastTickPosY = this.getPosY();
@@ -152,6 +131,49 @@ public class EntityProjectileSpell extends ArrowEntity {
         }
 
         this.setPosition(x,y,z);
+        if(world.isRemote && this.age > 1) {
+            for (int i = 0; i < 10; i++) {
+                double minRange = -0.1;
+                double maxRange = 0.1;
+                double d0 = getPosX() + ParticleUtil.inRange(minRange, maxRange);
+                double d1 = getPosY() + ParticleUtil.inRange(minRange, maxRange);
+                double d2 = getPosZ() + ParticleUtil.inRange(minRange, maxRange);
+
+//            world.addParticle(ParticleTypes.ENCHANT, d0, d1, d2, 0.0, 0.0, 0.0);
+//                world.addParticle(ParticleSource.createData(new ParticleColor(204,51,255)), d0, d1, d2, this.getMotion().x, this.getMotion().y, this.getMotion().z);
+//                world.addParticle(ParticleSource.createData(new ParticleColor(204,51,255)), prevPosX, prevPosY, prevPosZ, this.getMotion().x, this.getMotion().y, this.getMotion().z);
+
+            }
+//            double minRange = -0.1;
+//            double maxRange = 0.1;
+//            for (float j = 0.0F; j < 1.0F; j += 0.05F) {
+//                for (int i = 0; i < 2; ++i) {
+//                    world.addParticle(ParticleSource.createData(new ParticleColor(204, 51, 255)),
+//                            this.prevPosX + (this.getMotion().x * j) +ParticleUtil.inRange(minRange, maxRange),
+//                            this.prevPosY + (this.getMotion().y * j) +ParticleUtil.inRange(minRange, maxRange),
+//                            this.prevPosZ + (this.getMotion().z * j) +ParticleUtil.inRange(minRange, maxRange),
+//                            0, 0, 0);
+//                }
+//            }
+            double deltaX = getPosX() - lastTickPosX;
+            double deltaY = getPosY() - lastTickPosY;
+            double deltaZ = getPosZ() - lastTickPosZ;
+            double dist = Math.ceil(Math.sqrt(deltaX*deltaX+deltaY*deltaY+deltaZ*deltaZ) * 20);
+            int counter = 0;
+
+            for (double i = 0; i < dist; i ++){
+                double coeff = i/dist;
+                counter += world.rand.nextInt(3);
+                if (counter % (Minecraft.getInstance().gameSettings.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().gameSettings.particles.getId()) == 0) {
+
+
+                    world.addParticle(ParticleGlow.createData(new ParticleColor(255, 30, 20)), (float) (prevPosX + deltaX * coeff), (float) (prevPosY + deltaY * coeff), (float) (prevPosZ + deltaZ * coeff), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f));
+                }
+                //                ParticleUtil.spawnParticleGlow(getEntityWorld(), (float)(prevPosX+ deltaX *coeff), (float)(prevPosY+ deltaY *coeff), (float)(prevPosZ+ deltaZ *coeff), 0.0125f*(rand.nextFloat()-0.5f), 0.0125f*(rand.nextFloat()-0.5f), 0.0125f*(rand.nextFloat()-0.5f), 255, 64, 16, 2.0f, 12);
+                //                ParticleUtil.spawnParticleGlow(getEntityWorld(), (float)(prevPosX+ deltaX *coeff), (float)(prevPosY+ deltaY *coeff), (float)(prevPosZ+ deltaZ *coeff), 0.0125f*(rand.nextFloat()-0.5f), 0.0125f*(rand.nextFloat()-0.5f), 0.0125f*(rand.nextFloat()-0.5f), 255, 64, 16, 2.0f, 12);
+            }
+
+        }
     }
 
     @Override

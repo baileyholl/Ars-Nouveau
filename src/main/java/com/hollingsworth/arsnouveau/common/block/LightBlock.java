@@ -22,7 +22,6 @@ public class LightBlock extends ModBlock {
         super(defaultProperties().lightValue(14).doesNotBlockMovement().notSolid().variableOpacity(), "light_block");
     }
 
-
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
@@ -40,13 +39,8 @@ public class LightBlock extends ModBlock {
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(LightTile.stage);
-    }
-
-    @Override
     public BlockRenderType getRenderType(BlockState p_149645_1_) {
-        return BlockRenderType.MODEL;
+        return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
     @Nullable

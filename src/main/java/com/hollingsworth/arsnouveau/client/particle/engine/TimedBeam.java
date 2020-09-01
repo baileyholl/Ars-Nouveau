@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.client.particle.engine;
 
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.particle.ParticleLineGlow;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -34,6 +36,7 @@ public class TimedBeam extends TimedEffect{
 
 
     public static LinkedList<ParticleElem> beam(BlockPos toThisBlock, BlockPos fromThisBlock){
+
         Random rand = new Random();
         double x2 = getCenterOfBlock(toThisBlock.getX());
         double z2 = getCenterOfBlock(toThisBlock.getZ());
@@ -57,7 +60,9 @@ public class TimedBeam extends TimedEffect{
         {
             d4 += 1.8D - d5 + rand.nextDouble() * (1.5D - d5);
             elemArrayList.add(new ParticleElem(ParticleTypes.WITCH, x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4, 0.0D, 0.0D, 0.0D));
+//            elemArrayList.add(new ParticleElem(ParticleLineGlow.createData(new ParticleColor(225, 60, 60)), fromThisBlock.getX(), fromThisBlock.getY(), fromThisBlock.getZ(), toThisBlock.getX(), toThisBlock.getY(), toThisBlock.getZ()));
 
+//            return elemArrayList;
 //            if(world instanceof ServerWorld){
 //                ((ServerWorld)world).spawnParticle(ParticleTypes.WITCH,x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4,rand.nextInt(4), 0,0.0,0, 0.0);
 //            }

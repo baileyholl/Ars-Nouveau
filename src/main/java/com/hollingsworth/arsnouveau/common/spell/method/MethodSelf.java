@@ -35,6 +35,7 @@ public class MethodSelf extends AbstractCastMethod {
             Vec3d pos = caster.getPositionVec();
             pos = pos.add(0.0, -1.0, 0.0);
             ParticleEngine.getInstance().addEffect(new TimedHelix(new BlockPos(pos), 0, ParticleTypes.WITCH, (ServerWorld) caster.world));
+
         }
     }
 

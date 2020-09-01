@@ -2,11 +2,13 @@ package com.hollingsworth.arsnouveau.client;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.renderer.*;
+import com.hollingsworth.arsnouveau.client.renderer.tile.LightRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.ManaCondenserRenderer;
 import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.block.tile.GlyphPressTile;
+import com.hollingsworth.arsnouveau.common.block.tile.LightTile;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraftforge.api.distmarker.Dist;
@@ -27,6 +29,7 @@ public class ClientHandler {
 
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.ARCANE_RELAY_TILE, RelayRenderer::new);
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.MANA_CONDENSER_TILE, ManaCondenserRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(BlockRegistry.LIGHT_TILE, LightRenderer::new);
 
         RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_JAR, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.GLYPH_PRESS_BLOCK, RenderType.getCutout());
