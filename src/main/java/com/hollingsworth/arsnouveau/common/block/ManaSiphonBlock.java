@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.block;
+
 import com.hollingsworth.arsnouveau.common.block.tile.ManaSiphonTile;
 import net.minecraft.block.*;
 import net.minecraft.tileentity.TileEntity;
-
 import net.minecraft.world.IBlockReader;
 
 import javax.annotation.Nullable;

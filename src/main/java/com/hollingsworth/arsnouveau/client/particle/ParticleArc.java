@@ -1,29 +1,23 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleType;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.registries.ObjectHolder;
-import org.lwjgl.opengl.GL11;
 
+@OnlyIn(Dist.CLIENT)
 public class ParticleArc  extends SpriteTexturedParticle {
     public static final String NAME = "arc";
-    @ObjectHolder(ArsNouveau.MODID + ":" + ParticleArc.NAME) public static ParticleType<ArcParticleTypeData> TYPE;
+//    @ObjectHolder(ArsNouveau.MODID + ":" + ParticleArc.NAME) public static ParticleType<ArcParticleTypeData> TYPE;
 
     float forwardFactor;
 
@@ -137,7 +131,7 @@ public class ParticleArc  extends SpriteTexturedParticle {
 
     @Override
     public IParticleRenderType getRenderType() {
-        return ModParticles.AN_RENDER;
+        return RenderTypes.AN_RENDER;
     }
 
 
@@ -185,8 +179,8 @@ public class ParticleArc  extends SpriteTexturedParticle {
             float dy = (float) (deltaY + MathHelper.sin((float)((srcY % 16.0D + dist * (1.0F - lengthFactor) * fxQuality / 2.0F - time % 32767.0F / 5.0F) / 3.0D)) * 0.5F * f3);
             float dz = (float) (deltaZ + MathHelper.sin((float)((srcZ % 16.0D + dist * (1.0F - lengthFactor) * fxQuality / 2.0F - time % 32767.0F / 5.0F) / 2.0D)) * 0.5F * f3);
             System.out.println(dy * lengthFactor);
-            world.addParticle(ParticleSource.createData(new ParticleColor( world.rand.nextInt(255),  world.rand.nextInt(255),  world.rand.nextInt(255))),
-                    targetPoint.x + dx * lengthFactor - curWidth,  targetPoint.y + dy * lengthFactor, targetPoint.z + dz * lengthFactor, 0,0,0);
+//            world.addParticle(ParticleSource.createData(new ParticleColor( world.rand.nextInt(255),  world.rand.nextInt(255),  world.rand.nextInt(255))),
+//                    targetPoint.x + dx * lengthFactor - curWidth,  targetPoint.y + dy * lengthFactor, targetPoint.z + dz * lengthFactor, 0,0,0);
 
 //            tessellator.getBuffer().color(this.particleRed, this.particleGreen, this.particleBlue, this.particleAlpha);
 
@@ -210,7 +204,8 @@ public class ParticleArc  extends SpriteTexturedParticle {
 
 
     public static IParticleData createData(Vec3d source, Vec3d target){
-        return new ArcParticleTypeData(TYPE, source, target);
+        return null;
+//        return new ArcParticleTypeData(TYPE, source, target);
     }
 
     @OnlyIn(Dist.CLIENT)

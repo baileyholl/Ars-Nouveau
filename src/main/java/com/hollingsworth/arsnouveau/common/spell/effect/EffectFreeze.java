@@ -13,7 +13,6 @@ import net.minecraft.item.Items;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
-import net.minecraftforge.event.world.NoteBlockEvent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

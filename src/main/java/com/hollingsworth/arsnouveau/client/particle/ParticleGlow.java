@@ -1,32 +1,21 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.*;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.particle.IAnimatedSprite;
+import net.minecraft.client.particle.IParticleRenderType;
+import net.minecraft.client.particle.SpriteTexturedParticle;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.Random;
-
+@OnlyIn(Dist.CLIENT)
 public class ParticleGlow extends SpriteTexturedParticle {
     public float colorR = 0;
     public float colorG = 0;
     public float colorB = 0;
     public float initScale = 0;
     public float initAlpha = 0;
-    public static final String NAME = "glow";
-
-    @ObjectHolder(ArsNouveau.MODID + ":" + ParticleGlow.NAME) public static ParticleType<ColorParticleTypeData> TYPE;
 
     public ParticleGlow(World worldIn, double x, double y, double z, double vx, double vy, double vz, float r, float g, float b, float a, float scale, int lifetime, IAnimatedSprite sprite) {
         super(worldIn, x,y,z,0,0,0);
@@ -57,7 +46,7 @@ public class ParticleGlow extends SpriteTexturedParticle {
     }
     @Override
     public IParticleRenderType getRenderType() {
-        return ModParticles.EMBER_RENDER;
+        return RenderTypes.EMBER_RENDER;
     }
 
 
@@ -86,25 +75,5 @@ public class ParticleGlow extends SpriteTexturedParticle {
     @Override
     public boolean isAlive() {
         return this.age < this.maxAge;
-    }
-
-    public static IParticleData createData(ParticleColor color) {
-        return new ColorParticleTypeData(TYPE, color);
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    static class Factory implements IParticleFactory<ColorParticleTypeData> {
-        private final IAnimatedSprite spriteSet;
-
-        public Factory(IAnimatedSprite sprite) {
-            this.spriteSet = sprite;
-        }
-
-        @Override
-        public Particle makeParticle(ColorParticleTypeData data, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-//            return new ParticleGlow(worldIn, x,y,z,xSpeed, ySpeed, zSpeed, worldIn.rand.nextInt(255), worldIn.rand.nextInt(255), worldIn.rand.nextInt(255), 1.0f, .25f, 36, this.spriteSet);
-            return new ParticleGlow(worldIn, x,y,z,xSpeed, ySpeed, zSpeed, data.color.getRed(), data.color.getGreen(), data.color.getBlue(), 1.0f, .25f, 36, this.spriteSet);
-
-        }
     }
 }

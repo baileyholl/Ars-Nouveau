@@ -1,20 +1,16 @@
 package com.hollingsworth.arsnouveau.client.particle.engine;
 
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.IParticleData;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
 
 public class TimedEffect {
     public boolean isDone;
     int ticks; // Num ticks
     LinkedList<ParticleElem> particles;
 
-    ServerWorld world;
+    ClientWorld world;
     public TimedEffect(){
         isDone = false;
         ticks = 0;
@@ -45,8 +41,8 @@ public class TimedEffect {
             this.zSpeed = zSpeed;
         }
 
-        public void addToWorld(ServerWorld world){
-            world.spawnParticle(particleData, x, y, z, world.rand.nextInt(10), 0,0.0,0, 0.0);
+        public void addToWorld(ClientWorld world){
+            world.addParticle(particleData, x, y, z, xSpeed,ySpeed,zSpeed);
         }
     }
 }

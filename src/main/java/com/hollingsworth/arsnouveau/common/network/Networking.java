@@ -40,6 +40,12 @@ public class Networking {
                 PacketSetBookMode::toBytes,
                 PacketSetBookMode::new,
                 PacketSetBookMode::handle);
+
+        INSTANCE.registerMessage(nextID(),
+                PacketANEffect.class,
+                PacketANEffect::encode,
+                PacketANEffect::decode,
+                PacketANEffect.Handler::handle);
        // register(PacketOpenGUI.class, NetworkDirection.PLAY_TO_CLIENT);
       //  register(PacketUpdateSpellbook.class, NetworkDirection.PLAY_TO_SERVER);
     }

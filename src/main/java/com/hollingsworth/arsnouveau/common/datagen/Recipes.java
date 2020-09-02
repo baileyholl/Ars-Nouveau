@@ -10,7 +10,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
-
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Consumer;

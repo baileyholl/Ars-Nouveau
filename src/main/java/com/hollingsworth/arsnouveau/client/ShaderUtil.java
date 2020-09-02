@@ -1,10 +1,6 @@
 package com.hollingsworth.arsnouveau.client;
 
 
-import org.lwjgl.opengl.ARBShaderObjects;
-
-import java.io.InputStream;
-
 public class ShaderUtil {
 //
 //    public static int currentProgram = 0;

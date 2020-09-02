@@ -2,33 +2,33 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
-import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.client.particle.engine.ParticleEngine;
 import com.hollingsworth.arsnouveau.client.particle.engine.TimedBeam;
 import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.block.ManaBlock;
 import com.hollingsworth.arsnouveau.common.block.SummoningCrystal;
 import com.hollingsworth.arsnouveau.common.entity.EntityWhelp;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.ContainerBlock;
+import net.minecraft.block.LeavesBlock;
+import net.minecraft.block.LogBlock;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class SummoningCrytalTile extends AbstractManaTile {
@@ -154,11 +154,12 @@ public class SummoningCrytalTile extends AbstractManaTile {
         int manaCost = ManaUtil.getRecipeCost(spellParts) / 4;
         BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
             if(!enough[0] && world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= manaCost ) {
-                ((ManaJarTile) world.getTileEntity(blockPos)).removeMana(manaCost);
-                if(world instanceof ServerWorld){
-                    ParticleEngine.getInstance().addEffect(new TimedBeam(pos, blockPos, 5, (ServerWorld) world));
+                if(!world.isRemote){
+                    ((ManaJarTile) world.getTileEntity(blockPos)).removeMana(manaCost);
+                    enough[0] = true;
+                }else{
+                    ParticleEngine.getInstance().addEffect(new TimedBeam(pos, blockPos, 5, (ClientWorld) world));
                 }
-                enough[0] = true;
             }
         });
         return enough[0];

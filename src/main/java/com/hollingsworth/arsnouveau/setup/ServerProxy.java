@@ -1,5 +1,5 @@
 package com.hollingsworth.arsnouveau.setup;
-import com.hollingsworth.arsnouveau.common.world.FeatureGen;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;

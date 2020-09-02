@@ -5,19 +5,17 @@ import com.hollingsworth.arsnouveau.client.renderer.*;
 import com.hollingsworth.arsnouveau.client.renderer.tile.LightRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.ManaCondenserRenderer;
 import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
-import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
-import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
-import com.hollingsworth.arsnouveau.common.block.tile.GlyphPressTile;
-import com.hollingsworth.arsnouveau.common.block.tile.LightTile;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@OnlyIn(Dist.CLIENT)
 public class ClientHandler {
     @SubscribeEvent
     public static void init(final FMLClientSetupEvent evt) {

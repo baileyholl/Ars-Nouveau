@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
-import com.hollingsworth.arsnouveau.client.particle.*;
+import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.spell.SpellResolver;
 import net.minecraft.block.Blocks;
@@ -12,13 +14,10 @@ import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
-
-import java.util.Random;
 
 public class EntityProjectileSpell extends ArrowEntity {
 
@@ -48,22 +47,6 @@ public class EntityProjectileSpell extends ArrowEntity {
         super(world, shooter);
     }
 
-    public void particles(){
-
-        for(int i =0; i < 10; i++){
-            double minRange = -0.1;
-            double maxRange = 0.1;
-            double d0 = getPosX() + ParticleUtil.inRange(minRange, maxRange);
-            double d1 = getPosY()+ ParticleUtil.inRange(minRange, maxRange);
-            double d2 = getPosZ()+ ParticleUtil.inRange(minRange, maxRange);
-            world.rand.nextInt(255);
-//            world.addParticle(ParticleTypes.ENCHANTED_HIT, d0, d1, d2, 0.0, 0.0, 0.0);
-//            world.addParticle(ParticleSource.createData(new ParticleColor( world.rand.nextInt(255),  world.rand.nextInt(255),  world.rand.nextInt(255))), d0, d1, d2, 0.0, 0.0, 0.0);
-            world.addParticle(ParticleSource.createData(new ParticleColor(204,51,255)), d0, d1, d2, 0.0, 0.0, 0.0);
-
-        }
-
-    }
 
     @Override
     public void tick() {
@@ -167,7 +150,7 @@ public class EntityProjectileSpell extends ArrowEntity {
                 if (counter % (Minecraft.getInstance().gameSettings.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().gameSettings.particles.getId()) == 0) {
 
 
-                    world.addParticle(ParticleGlow.createData(new ParticleColor(255, 30, 20)), (float) (prevPosX + deltaX * coeff), (float) (prevPosY + deltaY * coeff), (float) (prevPosZ + deltaZ * coeff), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f));
+                    world.addParticle(GlowParticleData.createData(new ParticleColor(255,25,180)), (float) (prevPosX + deltaX * coeff), (float) (prevPosY + deltaY * coeff), (float) (prevPosZ + deltaZ * coeff), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f));
                 }
                 //                ParticleUtil.spawnParticleGlow(getEntityWorld(), (float)(prevPosX+ deltaX *coeff), (float)(prevPosY+ deltaY *coeff), (float)(prevPosZ+ deltaZ *coeff), 0.0125f*(rand.nextFloat()-0.5f), 0.0125f*(rand.nextFloat()-0.5f), 0.0125f*(rand.nextFloat()-0.5f), 255, 64, 16, 2.0f, 12);
                 //                ParticleUtil.spawnParticleGlow(getEntityWorld(), (float)(prevPosX+ deltaX *coeff), (float)(prevPosY+ deltaY *coeff), (float)(prevPosZ+ deltaZ *coeff), 0.0125f*(rand.nextFloat()-0.5f), 0.0125f*(rand.nextFloat()-0.5f), 0.0125f*(rand.nextFloat()-0.5f), 255, 64, 16, 2.0f, 12);

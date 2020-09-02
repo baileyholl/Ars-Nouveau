@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.client.particle.engine;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraftforge.api.distmarker.Dist;
-
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;

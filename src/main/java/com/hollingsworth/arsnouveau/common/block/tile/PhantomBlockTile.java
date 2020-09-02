@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
 import net.minecraft.nbt.CompoundNBT;
-
 import net.minecraft.nbt.IntNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;

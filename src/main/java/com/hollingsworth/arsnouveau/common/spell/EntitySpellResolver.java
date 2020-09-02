@@ -1,15 +1,10 @@
 package com.hollingsworth.arsnouveau.common.spell;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.text.StringTextComponent;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * A special Spell resolver that ignores player limits such as mana.

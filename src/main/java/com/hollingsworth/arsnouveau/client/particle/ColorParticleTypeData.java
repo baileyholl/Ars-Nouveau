@@ -6,9 +6,11 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
 
+
 /**
  * Simplified verison of ElementalCraft https://github.com/Sirttas/ElementalCraft/blob/b91ca42b3d139904d9754d882a595406bad1bd18/src/main/java/sirttas/elementalcraft/particle/ElementTypeParticleData.java
  */
+
 public class ColorParticleTypeData implements IParticleData {
 
     private ParticleType<ColorParticleTypeData> type;

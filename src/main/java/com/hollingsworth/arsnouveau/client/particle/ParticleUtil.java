@@ -1,9 +1,6 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EnchantmentTableParticle;
-import net.minecraft.particles.ParticleType;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.util.math.BlockPos;
@@ -58,7 +55,7 @@ public class ParticleUtil {
         world.addParticle(ParticleTypes.SPIT, posX, posY, posZ , 0F, 0.1F, 0F);
     }
 
-    public static double getCenterOfBlock(int a){
+    public static double getCenterOfBlock(double a){
         return (a + .5);
     }
 

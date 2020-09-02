@@ -2,10 +2,8 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
-import com.hollingsworth.arsnouveau.common.block.GlyphPressBlock;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.world.storage.loot.LootTable;
 
 public class LootTables extends BaseLootTableProvider{
     public LootTables(DataGenerator dataGeneratorIn) {

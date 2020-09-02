@@ -5,7 +5,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.ITextComponent;
-
 import net.minecraftforge.fml.client.gui.GuiUtils;
 
 import java.util.ArrayList;

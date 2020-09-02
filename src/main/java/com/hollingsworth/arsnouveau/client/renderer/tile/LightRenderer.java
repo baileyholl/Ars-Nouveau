@@ -1,10 +1,9 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
+import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.client.particle.ParticleGlow;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.LightTile;
-import com.hollingsworth.arsnouveau.common.block.tile.ManaCondenserTile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -39,7 +38,7 @@ public class LightRenderer extends TileEntityRenderer<LightTile> {
 //                    pos.getX() +0.5 +ParticleUtil.inRange(-0.02, 0.2) , pos.getY() +0.5 +ParticleUtil.inRange(-0.05, 0.05), pos.getZ() +0.5 +ParticleUtil.inRange(-0.2, 0.2),
 //                    0,0,0);
             world.addParticle(
-                    ParticleGlow.createData(new ParticleColor(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255))),
+                    GlowParticleData.createData(new ParticleColor(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255))),
                     pos.getX() +0.5 + ParticleUtil.inRange(-0.05, 0.05)  , pos.getY() +0.5  + ParticleUtil.inRange(-0.05, 0.05) , pos.getZ() +0.5 + ParticleUtil.inRange(-0.05, 0.05),
                     0,0,0);
         }

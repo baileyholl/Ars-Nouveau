@@ -1,13 +1,10 @@
 package com.hollingsworth.arsnouveau.client.particle.engine;
 
+import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.client.particle.ParticleLineGlow;
-import net.minecraft.particles.ParticleTypes;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -16,7 +13,7 @@ import static com.hollingsworth.arsnouveau.client.particle.ParticleUtil.getCente
 public class TimedBeam extends TimedEffect{
     int delay;
 
-    public TimedBeam(BlockPos toPos, BlockPos fromPos, int delay, ServerWorld world){
+    public TimedBeam(BlockPos toPos, BlockPos fromPos, int delay, ClientWorld world){
         this.particles = beam(toPos, fromPos);
         this.delay = delay;
         this.world = world;
@@ -54,13 +51,19 @@ public class TimedBeam extends TimedEffect{
         d1 = d1 / d3;
         d2 = d2 / d3;
 
-        double d4 = rand.nextDouble();
+        double d4 = 0.1;
         LinkedList<ParticleElem> elemArrayList = new LinkedList<>();
-        while ((d4 + .65) < d3)
+        while ((d4) < d3)
         {
-            d4 += 1.8D - d5 + rand.nextDouble() * (1.5D - d5);
-            elemArrayList.add(new ParticleElem(ParticleTypes.WITCH, x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4, 0.0D, 0.0D, 0.0D));
-//            elemArrayList.add(new ParticleElem(ParticleLineGlow.createData(new ParticleColor(225, 60, 60)), fromThisBlock.getX(), fromThisBlock.getY(), fromThisBlock.getZ(), toThisBlock.getX(), toThisBlock.getY(), toThisBlock.getZ()));
+            d4 += 1.8D - d5 + 0.05 * (1.5D - d5);
+//            d4 = d4/2;
+            for(int i =0; i < 3; i ++){
+                elemArrayList.add(new ParticleElem(GlowParticleData.createData(new ParticleColor(255,25,90)), x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4, 0.0D, 0.0D, 0.0D));
+            }
+//            elemArrayList.add(new ParticleElem(ParticleGlow.createData(new ParticleColor(255,25,180)), x1 + d0 * d4 + ParticleUtil.inRange(-0.1, 0.1), y1 + d1 * d4 + ParticleUtil.inRange(-0.1, 0.1), z1 + d2 * d4 + ParticleUtil.inRange(-0.1, 0.1), 0.0D, 0.0D, 0.0D));
+//            elemArrayList.add(new ParticleElem(ParticleGlow.createData(new ParticleColor(255,25,180)), x1 + d0 * d4 + ParticleUtil.inRange(-0.1, 0.1), y1 + d1 * d4 + ParticleUtil.inRange(-0.1, 0.1), z1 + d2 * d4 + ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1)));
+
+            //            elemArrayList.add(new ParticleElem(ParticleLineGlow.createData(new ParticleColor(225, 60, 60)), fromThisBlock.getX(), fromThisBlock.getY(), fromThisBlock.getZ(), toThisBlock.getX(), toThisBlock.getY(), toThisBlock.getZ()));
 
 //            return elemArrayList;
 //            if(world instanceof ServerWorld){

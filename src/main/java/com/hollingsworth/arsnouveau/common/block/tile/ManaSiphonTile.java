@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
+
 import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
-import com.hollingsworth.arsnouveau.common.block.ManaSiphonBlock;
-import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 

@@ -2,13 +2,9 @@ package com.hollingsworth.arsnouveau;
 
 import com.hollingsworth.arsnouveau.api.util.MappingUtil;
 import com.hollingsworth.arsnouveau.client.ClientHandler;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.world.FeatureGen;
-import com.hollingsworth.arsnouveau.setup.APIRegistry;
-import com.hollingsworth.arsnouveau.setup.ClientProxy;
-import com.hollingsworth.arsnouveau.setup.IProxy;
-import com.hollingsworth.arsnouveau.setup.ServerProxy;
+import com.hollingsworth.arsnouveau.setup.*;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;

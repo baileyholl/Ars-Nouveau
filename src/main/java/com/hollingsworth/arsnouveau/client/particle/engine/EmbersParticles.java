@@ -1,20 +1,6 @@
 package com.hollingsworth.arsnouveau.client.particle.engine;
 
 
-import com.google.common.collect.Queues;
-import com.mojang.blaze3d.platform.GlStateManager;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.player.PlayerEntity;
-
-import java.util.ArrayDeque;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Queue;
-
 public class EmbersParticles  {
 //    ArrayDeque<Particle> normalParticles = new ArrayDeque<>();
 //    ArrayDeque<Particle> additiveParticles = new ArrayDeque<>();
