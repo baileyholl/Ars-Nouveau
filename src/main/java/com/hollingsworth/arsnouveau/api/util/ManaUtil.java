@@ -2,17 +2,23 @@ package com.hollingsworth.arsnouveau.api.util;
 
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
+import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
+import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.armor.MagicArmor;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
+import com.hollingsworth.arsnouveau.common.items.SpellBook;
+import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Hand;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class ManaUtil {
 
@@ -68,6 +74,12 @@ public class ManaUtil {
                     max.addAndGet(((IManaEquipment) item).getMaxManaBoost());
             }
         });
+        if(e.getHeldItem(Hand.MAIN_HAND).getItem() instanceof SpellBook && e.getHeldItem(Hand.MAIN_HAND).hasTag()){
+            ArrayList<AbstractSpellPart> list = SpellBook.getUnlockedSpells(e.getHeldItem(Hand.MAIN_HAND).getTag());
+            int numUnlocks = list.stream().filter(p -> p instanceof AbstractAugment || p instanceof AbstractEffect).collect(Collectors.toList()).size() - 3;
+            max.addAndGet(numUnlocks * 15);
+            max.addAndGet(((SpellBook)e.getHeldItem(Hand.MAIN_HAND).getItem()).tier.ordinal() * 50);
+        }
         return max.get();
     }
 
@@ -88,8 +100,14 @@ public class ManaUtil {
                     newregen += ((IManaEquipment) item).getManaRegenBonus();
             }
             regen.set(newregen);
-
         });
+        if(e.getHeldItem(Hand.MAIN_HAND).getItem() instanceof SpellBook && e.getHeldItem(Hand.MAIN_HAND).hasTag()){
+            ArrayList<AbstractSpellPart> list = SpellBook.getUnlockedSpells(e.getHeldItem(Hand.MAIN_HAND).getTag());
+            int numUnlocks = list.stream().filter(p -> p instanceof AbstractAugment || p instanceof AbstractEffect).collect(Collectors.toList()).size() - 3;
+
+            regen.addAndGet(numUnlocks/3);
+            regen.addAndGet(((SpellBook)e.getHeldItem(Hand.MAIN_HAND).getItem()).tier.ordinal());
+        }
         return regen.get();
     }
 

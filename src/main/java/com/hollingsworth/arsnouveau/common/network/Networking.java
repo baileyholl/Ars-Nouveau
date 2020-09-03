@@ -52,6 +52,11 @@ public class Networking {
                 PacketANEffect::encode,
                 PacketANEffect::decode,
                 PacketANEffect.Handler::handle);
+        INSTANCE.registerMessage(nextID(),
+                PacketBeam.class,
+                PacketBeam::encode,
+                PacketBeam::decode,
+                PacketBeam.Handler::handle);
     }
 
     public static void sendToNearby(World world, BlockPos pos, Object toSend){

@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodBeam;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
@@ -64,7 +65,7 @@ public class APIRegistry {
         registerSpell(ModConfig.MethodProjectileID, new MethodProjectile());
         registerSpell(ModConfig.MethodTouchID, new MethodTouch());
         registerSpell(ModConfig.MethodSelfID, new MethodSelf());
-//        registerSpell(ModConfig.MethodBeamID, new MethodBeam());
+        registerSpell(ModConfig.MethodBeamID, new MethodBeam());
         registerSpell(ModConfig.EffectBreakID, new EffectBreak());
         registerSpell(ModConfig.EffectHarmID, new EffectHarm());
         registerSpell(ModConfig.EffectIgniteID, new EffectIgnite());

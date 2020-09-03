@@ -26,7 +26,8 @@ public class TimedBeam extends TimedEffect{
             this.isDone = true;
             return;
         }
-        if(ticks % delay == 0){
+
+        if(delay == 0 || ticks % delay == 0){
             particles.poll().addToWorld(world);
         }
     }

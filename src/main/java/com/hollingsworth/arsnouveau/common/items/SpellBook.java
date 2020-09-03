@@ -214,8 +214,6 @@ public class SpellBook extends Item implements ISpellTier {
         return SpellRecipeUtil.getSpellsFromString(tag.getString(SpellBook.UNLOCKED_SPELLS));
     }
 
-
-
     public static String getUnlockedSpellString(CompoundNBT tag){
         return tag.getString(SpellBook.UNLOCKED_SPELLS);
     }

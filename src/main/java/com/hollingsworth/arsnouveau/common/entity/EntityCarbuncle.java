@@ -4,9 +4,13 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.goal.LookAtGoal;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class EntityCarbuncle extends MobEntity {
+
+    BlockPos fromPos;
+    BlockPos toPos;
 
     public EntityCarbuncle(EntityType<EntityCarbuncle> entityCarbuncleEntityType, World world) {
         super(entityCarbuncleEntityType, world);
