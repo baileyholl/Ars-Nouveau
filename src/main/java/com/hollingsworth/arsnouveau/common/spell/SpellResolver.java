@@ -119,4 +119,5 @@ public class SpellResolver {
             mana.removeMana(totalCost);
         });
     }
+
 }

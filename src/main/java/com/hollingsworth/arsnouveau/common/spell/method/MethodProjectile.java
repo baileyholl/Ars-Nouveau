@@ -114,7 +114,8 @@ public class MethodProjectile extends AbstractCastMethod {
 
     @Override
     public void onCastOnEntity(ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, ArrayList<AbstractAugment> augments) {
-
+        summonProjectiles(caster.getEntityWorld(), caster, augments);
+        resolver.expendMana(caster);
     }
 
     @Override

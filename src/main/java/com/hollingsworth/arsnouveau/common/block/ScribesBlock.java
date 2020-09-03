@@ -8,6 +8,8 @@ import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,7 +30,7 @@ import java.util.ArrayList;
 
 public class ScribesBlock extends ModBlock{
     public ScribesBlock() {
-        super(ModBlock.defaultProperties().notSolid(), LibBlockNames.SCRIBES_BLOCK);
+        super(Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(2.0f, 3.0f).notSolid(), LibBlockNames.SCRIBES_BLOCK);
     }
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 
@@ -37,7 +39,7 @@ public class ScribesBlock extends ModBlock{
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if(handIn != Hand.MAIN_HAND)
             return ActionResultType.PASS;
-        System.out.println("Activated");
+
         if(!world.isRemote && world.getTileEntity(pos) instanceof ScribesTile && !player.isSneaking()) {
             ScribesTile tile = (ScribesTile) world.getTileEntity(pos);
             if (tile.stack != null && player.getHeldItem(handIn).isEmpty()) {

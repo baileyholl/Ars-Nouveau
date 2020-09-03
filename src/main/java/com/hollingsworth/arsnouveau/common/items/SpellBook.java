@@ -133,6 +133,7 @@ public class SpellBook extends Item implements ISpellTier {
         }
         EntityRayTraceResult entityRes = MathUtil.getLookedAtEntity(playerIn, 25);
         if(entityRes != null && entityRes.getEntity() instanceof LivingEntity){
+
             resolver.onCastOnEntity(stack, playerIn, (LivingEntity) entityRes.getEntity(), handIn);
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
         }

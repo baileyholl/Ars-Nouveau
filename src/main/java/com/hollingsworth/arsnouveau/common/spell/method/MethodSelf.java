@@ -32,27 +32,30 @@ public class MethodSelf extends AbstractCastMethod {
         resolver.onResolveEffect(caster.getEntityWorld(), caster, new EntityRayTraceResult(caster));
         resolver.expendMana(caster);
         Networking.sendToNearby(caster.world, caster, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, caster.getPosition()));
-//        if(caster.world.isRemote){
-//            Vec3d pos = caster.getPositionVec();
-//            pos = pos.add(0.0, -1.0, 0.0);
-//            System.out.println("adding");
-//            ParticleEngine.getInstance().addEffect(new TimedHelix(new BlockPos(pos), 0, GlowParticleData.createData(new ParticleColor(255,25,180)), (ClientWorld) caster.world));
-//        }
     }
 
     @Override
     public void onCastOnBlock(ItemUseContext context, ArrayList<AbstractAugment> augments) {
-
+        World world = context.getWorld();
+        resolver.onResolveEffect(world, context.getPlayer(),  new EntityRayTraceResult(context.getPlayer()));
+        resolver.expendMana(context.getPlayer());
+        Networking.sendToNearby(context.getWorld(), context.getPlayer(), new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, context.getPlayer().getPosition()));
     }
 
     @Override
     public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, ArrayList<AbstractAugment> augments) {
-
+        World world = caster.world;
+        resolver.onResolveEffect(world, caster,  new EntityRayTraceResult(caster));
+        resolver.expendMana(caster);
+        Networking.sendToNearby(caster.world, caster, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, caster.getPosition()));
     }
 
     @Override
     public void onCastOnEntity(ItemStack stack, LivingEntity playerIn, LivingEntity target, Hand hand, ArrayList<AbstractAugment> augments) {
-
+        World world = playerIn.world;
+        resolver.onResolveEffect(world, playerIn,  new EntityRayTraceResult(playerIn));
+        resolver.expendMana(playerIn);
+        Networking.sendToNearby(playerIn.world, playerIn, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, playerIn.getPosition()));
     }
 
     @Override
