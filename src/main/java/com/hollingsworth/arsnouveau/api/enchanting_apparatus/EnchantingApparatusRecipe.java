@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.api;
+package com.hollingsworth.arsnouveau.api.enchanting_apparatus;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

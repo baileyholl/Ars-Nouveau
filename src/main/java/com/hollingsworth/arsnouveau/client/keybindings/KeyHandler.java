@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.keybindings;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.client.gui.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.GuiSpellBook;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
@@ -24,13 +25,12 @@ public class KeyHandler {
     public static void keyEvent(final InputEvent.KeyInputEvent event) {
         if(MINECRAFT.player == null)
             return;
-        ItemStack heldItem = MINECRAFT.player.getHeldItemMainhand();
+        ItemStack stack = StackUtil.getHeldSpellbook(MINECRAFT.player);
 
-
-        if(event.getKey() == ModKeyBindings.NEXT_SLOT.getKey().getKeyCode() && event.getAction() == 1 && heldItem.getItem() instanceof SpellBook){
-            if(!heldItem.hasTag())
+        if(event.getKey() == ModKeyBindings.NEXT_SLOT.getKey().getKeyCode() && event.getAction() == 1 && stack.getItem() instanceof SpellBook){
+            if(!stack.hasTag())
                 return;
-            CompoundNBT tag = heldItem.getTag();
+            CompoundNBT tag = stack.getTag();
             int newMode = SpellBook.getMode(tag) + 1;
             if(newMode > 10)
                 newMode = 0;
@@ -39,10 +39,10 @@ public class KeyHandler {
            return;
         }
 
-        if(event.getKey() == ModKeyBindings.PREVIOUS__SLOT.getKey().getKeyCode() && event.getAction() == 1 && heldItem.getItem() instanceof SpellBook){
-            if(!heldItem.hasTag())
+        if(event.getKey() == ModKeyBindings.PREVIOUS__SLOT.getKey().getKeyCode() && event.getAction() == 1 && stack.getItem() instanceof SpellBook){
+            if(!stack.hasTag())
                 return;
-            CompoundNBT tag = heldItem.getTag();
+            CompoundNBT tag = stack.getTag();
             int newMode = SpellBook.getMode(tag) - 1;
             if(newMode < 0)
                 newMode = 10;
@@ -56,7 +56,6 @@ public class KeyHandler {
                 MINECRAFT.player.closeScreen();
                 return;
             }
-            ItemStack stack = MINECRAFT.player.getHeldItemMainhand();
             if(stack.getItem() instanceof SpellBook && stack.hasTag() && MINECRAFT.currentScreen == null){
                 MINECRAFT.displayGuiScreen(new GuiRadialMenu(ModKeyBindings.OPEN_SPELL_SELECTION, stack.getTag()));
             }
@@ -67,7 +66,7 @@ public class KeyHandler {
                 MINECRAFT.player.closeScreen();
                 return;
             }
-            ItemStack stack = MINECRAFT.player.getHeldItemMainhand();
+
             if(stack.getItem() instanceof SpellBook && stack.hasTag() && MINECRAFT.currentScreen == null){
                 GuiSpellBook.open(ArsNouveauAPI.getInstance(), stack.getTag(), ((SpellBook) stack.getItem()).getTier().ordinal(), SpellBook.getUnlockedSpellString(stack.getTag()));
             }
@@ -83,29 +82,6 @@ public class KeyHandler {
     @SubscribeEvent
     public static void clientTick(final TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.END) return;
-
-//        if(ModKeyBindings.OPEN_SPELL_SELECTION.isKeyDown()){
-//            System.out.println("Ticking with radial down");
-//            ItemStack stack = MINECRAFT.player.getHeldItemMainhand();
-//            if(stack.getItem() instanceof SpellBook && stack.hasTag()){
-//                if(MINECRAFT.currentScreen instanceof GuiRadialMenu){
-//                    System.out.println("Closing radial");
-//                    MINECRAFT.player.closeScreen();
-//                }else
-//                    MINECRAFT.displayGuiScreen(new GuiRadialMenu(ModKeyBindings.OPEN_SPELL_SELECTION, stack.getTag()));
-//            }
-//        }
-
-//        if (ModKeyBindings.OPEN_BOOK.isKeyDown()) {
-//            ItemStack stack = MINECRAFT.player.getHeldItemMainhand();
-//            if(stack.getItem() instanceof SpellBook && stack.hasTag()){
-//                CompoundNBT tag = stack.getTag();
-//                if(MINECRAFT.currentScreen instanceof GuiSpellBook){
-//                    MINECRAFT.player.closeScreen();
-//                }else
-//                    GuiSpellBook.open(CraftedMagicAPI.getInstance(), tag, ((SpellBook) stack.getItem()).getTier().ordinal());
-//            }
-//        }
 
     }
 }

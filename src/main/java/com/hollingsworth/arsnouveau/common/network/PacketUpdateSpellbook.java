@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -40,7 +41,7 @@ public class PacketUpdateSpellbook{
     public void handle(Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(()->{
             if(ctx.get().getSender() != null){
-                ItemStack stack = ctx.get().getSender().getHeldItemMainhand();
+                ItemStack stack = StackUtil.getHeldSpellbook(ctx.get().getSender());
                 if(stack != null && stack.getItem() instanceof SpellBook && spellRecipe != null){
                     CompoundNBT tag = stack.hasTag() ? stack.getTag() : new CompoundNBT();
                     SpellBook.setRecipe(tag, spellRecipe, cast_slot);

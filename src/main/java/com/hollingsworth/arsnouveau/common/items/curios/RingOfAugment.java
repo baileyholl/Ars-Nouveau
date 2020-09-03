@@ -8,13 +8,4 @@ public class RingOfAugment extends AbstractAugmentItem {
         super(registryName);
     }
 
-    @Override
-    public AbstractAugment getBonusAugment() {
-        return null;
-    }
-
-    @Override
-    public int getBonusLevel() {
-        return 0;
-    }
 }

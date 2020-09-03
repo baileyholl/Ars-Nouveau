@@ -13,15 +13,19 @@ import com.hollingsworth.arsnouveau.client.gui.buttons.GuiSpellSlot;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellbook;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.StringTextComponent;
 import org.lwjgl.opengl.GL11;
+import vazkii.patchouli.api.PatchouliAPI;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,7 +56,7 @@ public class GuiSpellBook extends ModdedScreen {
     public GuiSpellBook(ArsNouveauAPI api, CompoundNBT tag, int tier, String unlockedSpells) {
         super(new StringTextComponent(""));
         this.api = api;
-        selected_cast_slot = 1;
+        this.selected_cast_slot = 1;
         craftingCells = new ArrayList<>();
         this.max_spell_tier = tier;
         this.spell_book_tag = tag;
@@ -98,10 +102,13 @@ public class GuiSpellBook extends ModdedScreen {
             GuiSpellSlot slot = new GuiSpellSlot(this,bookLeft + 261, bookTop - 3 + 15 * i, i);
             if(i == selected_slot_ind) {
                 selected_slot = slot;
+                selected_cast_slot = i;
                 slot.isSelected = true;
             }
             addButton(slot);
         }
+
+        addButton(new GuiImageButton(bookLeft - 15, bookTop, 0, 0, 16, 16, 16,16, "textures/items/worn_notebook.png",this::onDocumentationClick));
     }
 
     public void addSpellParts(){
@@ -140,6 +147,11 @@ public class GuiSpellBook extends ModdedScreen {
             }
             addButton(cell);
         }
+    }
+
+    public void onDocumentationClick(Button button){
+        PatchouliAPI.instance.openBookGUI(Registry.ITEM.getKey(ItemsRegistry.wornNotebook));
+
     }
 
     public void onCraftingSlotClick(Button button){
@@ -190,7 +202,9 @@ public class GuiSpellBook extends ModdedScreen {
 
     }
 
-    public static void open(ArsNouveauAPI api, CompoundNBT spell_book_tag, int tier, String unlockedSpells){ Minecraft.getInstance().displayGuiScreen(new GuiSpellBook(api, spell_book_tag, tier, unlockedSpells)); }
+    public static void open(ArsNouveauAPI api, CompoundNBT spell_book_tag, int tier, String unlockedSpells){
+        Minecraft.getInstance().displayGuiScreen(new GuiSpellBook(api, spell_book_tag, tier, unlockedSpells));
+    }
 
     final void drawScreenAfterScale(int mouseX, int mouseY, float partialTicks) {
         resetTooltip();

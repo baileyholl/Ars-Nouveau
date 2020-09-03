@@ -3,7 +3,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.EnchantingApparatusRecipe;
+import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.setup.APIRegistry;
 import net.minecraft.data.DataGenerator;

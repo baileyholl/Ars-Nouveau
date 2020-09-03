@@ -10,6 +10,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
+import vazkii.patchouli.api.PatchouliAPI;
 
 public class Networking {
     public static SimpleChannel INSTANCE;

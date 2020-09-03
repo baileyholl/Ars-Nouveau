@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
+import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FocusableGui;
@@ -30,7 +31,7 @@ public class GuiSpellHUD extends FocusableGui implements IGuiEventListener {
     }
 
     public void drawHUD() {
-        ItemStack stack = minecraft.player.getHeldItemMainhand();
+        ItemStack stack = StackUtil.getHeldSpellbook(minecraft.player);
         if(stack != null && stack.getItem() instanceof SpellBook && stack.getTag() != null){
             int offsetLeft = 10;
             CompoundNBT tag = stack.getTag();

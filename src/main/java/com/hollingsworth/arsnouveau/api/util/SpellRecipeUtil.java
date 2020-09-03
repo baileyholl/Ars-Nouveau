@@ -41,13 +41,13 @@ public class SpellRecipeUtil {
             for(int i = 0; i < e.getSlots(); i++){
                 Item item = e.getStackInSlot(i).getItem();
                 if(item instanceof ISpellBonus)
-                    augments.addAll(((ISpellBonus) item).getList());
+                    augments.addAll(((ISpellBonus) item).getList( e.getStackInSlot(i)));
             }
 
         });
         caster.getArmorInventoryList().forEach(itemStack -> {
             if(itemStack.getItem() instanceof ISpellBonus)
-                augments.addAll(((ISpellBonus) itemStack.getItem()).getList());
+                augments.addAll(((ISpellBonus) itemStack.getItem()).getList( itemStack));
         });
         return augments;
     }

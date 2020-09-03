@@ -11,13 +11,4 @@ public class RingOfAmplify extends AbstractAugmentItem {
         super("ring_of_amplify");
     }
 
-    @Override
-    public AbstractAugment getBonusAugment() {
-        return (AbstractAugment) ArsNouveauAPI.getInstance().getSpell_map().get(ModConfig.AugmentAmplifyID);
-    }
-
-    @Override
-    public int getBonusLevel() {
-        return 1;
-    }
 }

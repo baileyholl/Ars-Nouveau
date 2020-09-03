@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.client.gui.GuiManaHUD;
 import com.hollingsworth.arsnouveau.client.gui.GuiSpellHUD;
 import com.hollingsworth.arsnouveau.common.entity.EntityWhelp;
@@ -44,7 +45,8 @@ public class HUDEventHandler {
         if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) return;
 
         final PlayerEntity player = minecraft.player;
-        if (!(player.getHeldItemMainhand().getItem() instanceof SpellBook))
+
+        if ((StackUtil.getHeldSpellbook(player) == null))
             return;
 
         spellHUD.drawHUD();

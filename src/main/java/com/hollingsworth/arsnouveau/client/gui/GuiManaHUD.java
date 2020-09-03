@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
+import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import net.minecraft.client.Minecraft;
@@ -12,7 +13,7 @@ public class GuiManaHUD extends AbstractGui {
     private static final Minecraft minecraft = Minecraft.getInstance();
 
     public void drawHUD() {
-        ItemStack stack = minecraft.player.getHeldItemMainhand();
+        ItemStack stack = StackUtil.getHeldSpellbook(minecraft.player);
         if(stack != null && stack.getItem() instanceof SpellBook && stack.getTag() != null){
             ManaCapability.getMana(minecraft.player).ifPresent(mana ->{
                 int offsetLeft = 10;

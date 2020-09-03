@@ -62,7 +62,8 @@ public class SpellResolver {
         Set<AbstractSpellPart> testSet = new HashSet<>(spell_recipe.size());
         for(AbstractSpellPart part : spell_recipe){
             if(part instanceof AbstractEffect && !testSet.add(part)) {
-                entity.sendMessage(new StringTextComponent("No duplicate effects are allowed. Use Augments!"));
+                if(!entity.getEntityWorld().isRemote)
+                    entity.sendMessage(new StringTextComponent("No duplicate effects are allowed. Use Augments!"));
                 return false;
             }
         }
@@ -75,7 +76,7 @@ public class SpellResolver {
         AtomicBoolean canCast = new AtomicBoolean(false);
         ManaCapability.getMana(entity).ifPresent(mana -> {
             canCast.set(totalCost <= mana.getCurrentMana() || (entity instanceof PlayerEntity &&  ((PlayerEntity) entity).isCreative()));
-            if(!canCast.get())
+            if(!canCast.get() && !entity.getEntityWorld().isRemote)
                 entity.sendMessage(new StringTextComponent("Not enough mana."));
         });
         return canCast.get();
