@@ -7,6 +7,8 @@ import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.engine.ParticleEngine;
 import com.hollingsworth.arsnouveau.client.particle.engine.TimedHelix;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
@@ -33,60 +35,29 @@ public class MethodTouch extends AbstractCastMethod {
     }
 
     @Override
-    public void onCast(ItemStack stack, LivingEntity caster, World world, ArrayList<AbstractAugment> augments) {
-
-    }
+    public void onCast(ItemStack stack, LivingEntity caster, World world, ArrayList<AbstractAugment> augments) { }
 
     @Override
     public void onCastOnBlock(ItemUseContext context, ArrayList<AbstractAugment> augments) {
         World world = context.getWorld();
         BlockRayTraceResult res = new BlockRayTraceResult(context.getHitVec(), context.getFace(), context.getPos(), false);
-
-       resolver.onResolveEffect(world, context.getPlayer(), res);
+        resolver.onResolveEffect(world, context.getPlayer(), res);
         resolver.expendMana(context.getPlayer());
-        if(context.getWorld() instanceof ServerWorld){
-            Vec3d pos = res.getHitVec();
-            pos = pos.add(0.0, -1.0, 0.0);
-//            ParticleEngine.getInstance().addEffect(new TimedHelix(new BlockPos(pos), 0, ParticleTypes.WITCH, (ServerWorld) context.getWorld()));
-            for(int i =0; i < 3; i++){
-                double d0 = pos.getX(); //+ world.rand.nextFloat();
-                double d1 = pos.getY() +1.2;//+ world.rand.nextFloat() ;
-                double d2 = pos.getZ()  ; //+ world.rand.nextFloat();
-//                world.sap(ParticleTypes.END_ROD, d0, d1, d2, (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3);
-                ((ServerWorld)world).spawnParticle(GlowParticleData.createData(new ParticleColor(255,25,180)),d0, d1, d2, world.rand.nextInt(10), (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3, 0.1);
-
-            }
-        }
+        Networking.sendToNearby(context.getWorld(), context.getPlayer(), new PacketANEffect(PacketANEffect.EffectType.BURST, res.getPos()));
     }
 
     @Override
     public void onCastOnBlock(BlockRayTraceResult res, LivingEntity caster, ArrayList<AbstractAugment> augments) {
         resolver.onResolveEffect(caster.getEntityWorld(),caster, res);
         resolver.expendMana(caster);
-        if(caster.world instanceof ServerWorld){
-            Vec3d pos = res.getHitVec();
-            World world = caster.world;
-//            pos = pos.add(0.0, -1.0, 0.0);
-            for(int i =0; i < 10; i++){
-                double d0 = pos.getX() +0.5; //+ world.rand.nextFloat();
-                double d1 = pos.getY() +1.2;//+ world.rand.nextFloat() ;
-                double d2 = pos.getZ() +.5 ; //+ world.rand.nextFloat();
-//                world.sap(ParticleTypes.END_ROD, d0, d1, d2, (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3);
-                ((ServerWorld)world).spawnParticle(GlowParticleData.createData(new ParticleColor(255,25,180)),d0, d1, d2, world.rand.nextInt(10), (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3, 0.1);
-
-            }
-        }
+        Networking.sendToNearby(caster.world, caster, new PacketANEffect(PacketANEffect.EffectType.BURST, res.getPos()));
     }
 
     @Override
     public void onCastOnEntity(ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, ArrayList<AbstractAugment> augments) {
         resolver.onResolveEffect(caster.getEntityWorld(), caster, new EntityRayTraceResult(target));
         resolver.expendMana(caster);
-        if(caster.world instanceof ClientWorld){
-            Vec3d pos = target.getPositionVec();
-            pos = pos.add(0.0, -1.0, 0.0);
-            ParticleEngine.getInstance().addEffect(new TimedHelix(new BlockPos(pos), 0, GlowParticleData.createData(new ParticleColor(255,25,180)), (ClientWorld) caster.world));
-        }
+        Networking.sendToNearby(caster.world, caster, new PacketANEffect(PacketANEffect.EffectType.BURST, target.getPosition()));
     }
 
     @Override

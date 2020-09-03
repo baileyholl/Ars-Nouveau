@@ -5,13 +5,18 @@ import com.hollingsworth.arsnouveau.client.particle.engine.ParticleEngine;
 import com.hollingsworth.arsnouveau.client.particle.engine.TimedBeam;
 import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.block.ManaBloomCrop;
+import com.hollingsworth.arsnouveau.common.entity.EntityWhelp;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 
@@ -58,9 +63,8 @@ public class ManaCondenserTile extends AbstractManaTile implements ITickableTile
             }
             this.addMana(mana);
 
-            if(world instanceof ClientWorld){
-                ParticleEngine.getInstance().addEffect(new TimedBeam(pos, event.getPos(), 5, (ClientWorld) world));
-            }
+            Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW, pos.getX(), pos.getY(), pos.getZ(), event.getPos().getX(),
+                    event.getPos().getY(), event.getPos().getZ(),5));
         }
     }
 
@@ -74,11 +78,14 @@ public class ManaCondenserTile extends AbstractManaTile implements ITickableTile
 
     @SubscribeEvent
     public void livingDeath(LivingDeathEvent e) {
+        if(e.getEntityLiving().world.isRemote)
+            return;
 
+        if(e.getEntity() instanceof EntityWhelp)
+            return;
         if(BlockUtil.distanceFrom(pos, e.getEntity().getPosition()) <= 15) {
-            if(world instanceof ClientWorld){
-                ParticleEngine.getInstance().addEffect(new TimedBeam(pos, e.getEntity().getPosition(), 1, (ClientWorld) world));
-            }
+            Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW, pos.getX(), pos.getY(), pos.getZ(), e.getEntity().getPosition().getX(),
+                    e.getEntity().getPosition().getY(), e.getEntity().getPosition().getZ(),10));
             this.addMana(150);
 
         }

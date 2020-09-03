@@ -7,6 +7,8 @@ import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.engine.ParticleEngine;
 import com.hollingsworth.arsnouveau.client.particle.engine.TimedHelix;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
@@ -29,23 +31,18 @@ public class MethodSelf extends AbstractCastMethod {
     public void onCast(ItemStack stack, LivingEntity caster, World world, ArrayList<AbstractAugment> augments) {
         resolver.onResolveEffect(caster.getEntityWorld(), caster, new EntityRayTraceResult(caster));
         resolver.expendMana(caster);
-        if(caster.world instanceof ClientWorld){
-            Vec3d pos = caster.getPositionVec();
-            pos = pos.add(0.0, -1.0, 0.0);
-            ParticleEngine.getInstance().addEffect(new TimedHelix(new BlockPos(pos), 0, GlowParticleData.createData(new ParticleColor(255,25,180)), (ClientWorld) caster.world));
-        }
+        Networking.sendToNearby(caster.world, caster, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, caster.getPosition()));
+//        if(caster.world.isRemote){
+//            Vec3d pos = caster.getPositionVec();
+//            pos = pos.add(0.0, -1.0, 0.0);
+//            System.out.println("adding");
+//            ParticleEngine.getInstance().addEffect(new TimedHelix(new BlockPos(pos), 0, GlowParticleData.createData(new ParticleColor(255,25,180)), (ClientWorld) caster.world));
+//        }
     }
 
     @Override
     public void onCastOnBlock(ItemUseContext context, ArrayList<AbstractAugment> augments) {
 
-//        resolver.onResolveEffect(context.getWorld(), context.getPlayer(), new EntityRayTraceResult(context.getPlayer()));
-//        resolver.expendMana(context.getPlayer());
-//        if(context.getWorld() instanceof ServerWorld){
-//            BlockPos pos = context.getPlayer().getPosition();
-//            pos = pos.add(00, -1, 0);
-//            ParticleEngine.getInstance().addEffect(new TimedHelix(pos, 0, ParticleTypes.ENCHANTED_HIT, (ServerWorld) context.getWorld()));
-//        }
     }
 
     @Override

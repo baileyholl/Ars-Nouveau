@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.google.common.graph.Network;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
@@ -60,6 +61,7 @@ public class ArcaneRelayTile extends AbstractManaTile{
     @Override
     public void tick() {
         if(world.isRemote){
+            return;
 //            System.out.println(this.fromPos);
         }
 
@@ -74,21 +76,12 @@ public class ArcaneRelayTile extends AbstractManaTile{
                 return;
             }else if(world.getTileEntity(fromPos) instanceof AbstractManaTile){
                 // Transfer mana fromPos to this
-
                 AbstractManaTile fromTile = (AbstractManaTile) world.getTileEntity(fromPos);
                 if(fromTile.getCurrentMana() >= this.getTransferRate() && this.getCurrentMana() + this.getTransferRate() <= this.getMaxMana()){
-                    if(world.isRemote){
-//                        System.out.println(this.getCurrentMana());
-//                        ParticleEngine.getInstance().addEffect(new TimedBeam(pos, fromPos, 5, (ClientWorld) world));
-                    }else{
+                    fromTile.removeMana(this.getTransferRate());
+                    this.addMana(this.getTransferRate());
+                    Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW,  fromPos.getX(), fromPos.getY(), fromPos.getZ(),pos.getX(), pos.getY(), pos.getZ(), 5));
 
-                        fromTile.removeMana(this.getTransferRate());
-                        this.addMana(this.getTransferRate());
-                        System.out.println("packet");
-                        Networking.INSTANCE.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), 15, world.dimension.getType())),
-                                new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW, pos.getX(), pos.getY(), pos.getZ(), fromPos.getX(), fromPos.getY(), fromPos.getZ(), 5));
-
-                    }
                 }
             }
         }
@@ -100,18 +93,9 @@ public class ArcaneRelayTile extends AbstractManaTile{
         }
         AbstractManaTile toTile = (AbstractManaTile) this.world.getTileEntity(toPos);
         if(this.getCurrentMana() >= this.getTransferRate() && toTile.getCurrentMana() + this.getTransferRate() <= toTile.getMaxMana()){
-
-            if(world.isRemote){
-
-//                ParticleEngine.getInstance().addEffect(new TimedBeam(toPos, pos, 3,(ClientWorld) world));
-            }else{
-
-                this.removeMana(this.getTransferRate());
-                toTile.addMana(this.getTransferRate());
-                Networking.INSTANCE.send(PacketDistributor.NEAR.with(PacketDistributor.TargetPoint.p(pos.getX(), pos.getY(), pos.getZ(), 15, world.dimension.getType())),
-                        new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW,  toPos.getX(), toPos.getY(), toPos.getZ(),pos.getX(), pos.getY(), pos.getZ(), 5));
-
-            }
+            this.removeMana(this.getTransferRate());
+            toTile.addMana(this.getTransferRate());
+            Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW,  toPos.getX(), toPos.getY(), toPos.getZ(),pos.getX(), pos.getY(), pos.getZ(), 5));
         }
     }
 

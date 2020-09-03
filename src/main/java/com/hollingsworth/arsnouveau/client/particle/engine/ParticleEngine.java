@@ -8,10 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-@Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ParticleEngine {
     List<TimedEffect> effects;
-
 
     public void tick(){
         if(effects == null || effects.size() == 0) {

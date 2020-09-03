@@ -8,6 +8,8 @@ import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.block.ManaBlock;
 import com.hollingsworth.arsnouveau.common.block.SummoningCrystal;
 import com.hollingsworth.arsnouveau.common.entity.EntityWhelp;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import net.minecraft.block.Block;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.LeavesBlock;
@@ -157,8 +159,7 @@ public class SummoningCrytalTile extends AbstractManaTile {
                 if(!world.isRemote){
                     ((ManaJarTile) world.getTileEntity(blockPos)).removeMana(manaCost);
                     enough[0] = true;
-                }else{
-                    ParticleEngine.getInstance().addEffect(new TimedBeam(pos, blockPos, 5, (ClientWorld) world));
+                    Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW, pos.getX(), pos.getY(), pos.getZ(), blockPos.getX(), blockPos.getY(), blockPos.getZ(),5));
                 }
             }
         });

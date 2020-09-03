@@ -58,7 +58,7 @@ public class TimedBeam extends TimedEffect{
             d4 += 1.8D - d5 + 0.05 * (1.5D - d5);
 //            d4 = d4/2;
             for(int i =0; i < 3; i ++){
-                elemArrayList.add(new ParticleElem(GlowParticleData.createData(new ParticleColor(255,25,90)), x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4, 0.0D, 0.0D, 0.0D));
+                elemArrayList.add(new ParticleElem(GlowParticleData.createData(new ParticleColor(255,25,155)), x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4, 0.0D, 0.0D, 0.0D));
             }
 //            elemArrayList.add(new ParticleElem(ParticleGlow.createData(new ParticleColor(255,25,180)), x1 + d0 * d4 + ParticleUtil.inRange(-0.1, 0.1), y1 + d1 * d4 + ParticleUtil.inRange(-0.1, 0.1), z1 + d2 * d4 + ParticleUtil.inRange(-0.1, 0.1), 0.0D, 0.0D, 0.0D));
 //            elemArrayList.add(new ParticleElem(ParticleGlow.createData(new ParticleColor(255,25,180)), x1 + d0 * d4 + ParticleUtil.inRange(-0.1, 0.1), y1 + d1 * d4 + ParticleUtil.inRange(-0.1, 0.1), z1 + d2 * d4 + ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1)));

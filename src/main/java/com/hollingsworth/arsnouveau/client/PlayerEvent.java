@@ -22,23 +22,8 @@ public class PlayerEvent {
 
     private static final Minecraft minecraft = Minecraft.getInstance();
 
-
-//    @SubscribeEvent
-//    public static void onRightClick(final PlayerInteractEvent event) {
-//        PlayerEntity entity = event.getPlayer();
-//        if(!event.getWorld().isRemote || event.getHand() != Hand.MAIN_HAND)
-//            return;
-//        if(entity.getHeldItem(event.getHand()).getItem() instanceof SpellBook){
-//            event.setCanceled(true);
-//            ObfuscationReflectionHelper.setPrivateValue(FirstPersonRenderer.class, minecraft.getFirstPersonRenderer(), 1f, MappingUtil.getEquippedProgressMainhand());
-//        }
-//    }
-
     @SubscribeEvent
-    public static void onTick(final TickEvent.WorldTickEvent evt) {
-        if(evt.world.isRemote)
-            return;
-//        System.out.println("Ticking");
+    public static void onTick(final TickEvent.RenderTickEvent evt) {
         ParticleEngine.getInstance().tick();
     }
 
@@ -52,18 +37,6 @@ public class PlayerEvent {
             ObfuscationReflectionHelper.setPrivateValue(FirstPersonRenderer.class, minecraft.getFirstPersonRenderer(), 1f, MappingUtil.getEquippedProgressMainhand());
         }
     }
-
-    @SubscribeEvent
-    public static void onEntity(final PlayerInteractEvent.EntityInteract event) {
-//        PlayerEntity entity = event.getPlayer();
-//        if(!event.getWorld().isRemote || event.getHand() != Hand.MAIN_HAND)
-//            return;
-//        if(entity.getHeldItem(event.getHand()).getItem() instanceof SpellBook){
-//            event.setCanceled(true);
-//            ObfuscationReflectionHelper.setPrivateValue(FirstPersonRenderer.class, minecraft.getFirstPersonRenderer(), 1f, MappingUtil.getEquippedProgressMainhand());
-//        }
-    }
-
 
     @SubscribeEvent
     public static void onItem(final PlayerInteractEvent.RightClickItem event) {

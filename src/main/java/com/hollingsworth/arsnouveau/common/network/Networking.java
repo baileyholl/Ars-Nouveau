@@ -1,8 +1,14 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 public class Networking {
@@ -46,8 +52,19 @@ public class Networking {
                 PacketANEffect::encode,
                 PacketANEffect::decode,
                 PacketANEffect.Handler::handle);
-       // register(PacketOpenGUI.class, NetworkDirection.PLAY_TO_CLIENT);
-      //  register(PacketUpdateSpellbook.class, NetworkDirection.PLAY_TO_SERVER);
+    }
+
+    public static void sendToNearby(World world, BlockPos pos, Object toSend){
+        if (world instanceof ServerWorld) {
+            ServerWorld ws = (ServerWorld) world;
+            ws.getChunkProvider().chunkManager.getTrackingPlayers(new ChunkPos(pos), false)
+                    .filter(p -> p.getDistanceSq(pos.getX(), pos.getY(), pos.getZ()) < 64 * 64)
+                    .forEach(p -> INSTANCE.send(PacketDistributor.PLAYER.with(() -> p), toSend));
+        }
+    }
+
+    public static void sendToNearby(World world, Entity e, Object toSend) {
+        sendToNearby(world, e.getPosition(), toSend);
     }
 
 }
