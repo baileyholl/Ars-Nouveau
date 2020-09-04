@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.mana.IManaBlock;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -19,10 +20,10 @@ public abstract class AbstractManaTile extends AnimatedTile  implements IManaBlo
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void read(BlockState state, CompoundNBT tag) {
         mana = tag.getInt(MANA_TAG);
         maxMana = tag.getInt(MAX_MANA_TAG);
-        super.read(tag);
+        super.read(state, tag);
     }
 
     @Override
@@ -32,21 +33,6 @@ public abstract class AbstractManaTile extends AnimatedTile  implements IManaBlo
         return super.write(tag);
     }
 
-    @Override
-    @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 3, this.getUpdateTag());
-    }
-    @Override
-    public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        super.onDataPacket(net, pkt);
-        handleUpdateTag(pkt.getNbtCompound());
-    }
 
 
     @Override

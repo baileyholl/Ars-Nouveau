@@ -10,7 +10,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
@@ -27,7 +27,7 @@ public class EffectExplosion extends AbstractEffect {
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
         if(rayTraceResult == null)
             return;
-        Vec3d vec = rayTraceResult.getHitVec();
+        Vector3d vec = rayTraceResult.getHitVec();
         float intensity = 0.75f + getBuffCount(augments, AugmentAmplify.class);
         int dampen = getBuffCount(augments, AugmentDampen.class);
         intensity -= 0.5 * dampen;

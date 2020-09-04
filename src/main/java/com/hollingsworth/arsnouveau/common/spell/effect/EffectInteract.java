@@ -39,11 +39,11 @@ public class EffectInteract extends AbstractEffect {
             Entity e = ((EntityRayTraceResult) rayTraceResult).getEntity();
             if(e instanceof AgeableEntity){
                 if(shooter instanceof PlayerEntity){
-                    ((AgeableEntity) e).processInteract((PlayerEntity) shooter, Hand.MAIN_HAND);
+                    e.applyPlayerInteraction((PlayerEntity) shooter, rayTraceResult.getHitVec(), Hand.MAIN_HAND);
                 }else{
                     FakePlayer fakePlayer = FakePlayerFactory.getMinecraft((ServerWorld)world);
                     fakePlayer.setHeldItem(Hand.MAIN_HAND, shooter.getHeldItemMainhand());
-                    ((AgeableEntity) e).processInteract( fakePlayer, Hand.MAIN_HAND);
+                    e.applyPlayerInteraction( fakePlayer, rayTraceResult.getHitVec(), Hand.MAIN_HAND);
                 }
             }
         }

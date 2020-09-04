@@ -3,8 +3,10 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.GuiSpellBook;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
@@ -22,7 +24,7 @@ public class GuiImageButton extends Button
 
 
     public GuiImageButton( int x, int y,int u,int v,int w, int h, int image_width, int image_height, String resource_image, Button.IPressable onPress) {
-        super(x, y, w, h, "", onPress);
+        super(x, y, w, h, new StringTextComponent(""), onPress);
         this.x = x;
         this.y = y;
         this.resourceIcon = resource_image;
@@ -36,16 +38,13 @@ public class GuiImageButton extends Button
 
     }
 
-    /**
-     * Draws this button to the screen.
-     */
     @Override
-    public void render(int parX, int parY, float partialTicks)
-    {
+    public void render(MatrixStack ms, int parX, int parY, float partialTicks) {
+        super.render(ms, parX, parY, partialTicks);
         if (visible)
         {
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, image_width, image_height);
+            GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, image_width, image_height,ms);
         }
     }
 }

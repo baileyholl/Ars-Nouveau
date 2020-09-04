@@ -15,6 +15,7 @@ import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -33,7 +34,8 @@ public class EffectLight extends AbstractEffect {
 
         if(rayTraceResult instanceof BlockRayTraceResult){
             BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getPos().offset(((BlockRayTraceResult) rayTraceResult).getFace());
-            if (world.getBlockState(pos).getMaterial() == Material.AIR && world.placedBlockWouldCollide(BlockRegistry.LIGHT_BLOCK.getDefaultState(), pos, ISelectionContext.dummy())) {
+            //placedBlockWouldCollide
+            if (world.getBlockState(pos).getMaterial() == Material.AIR && world.func_226663_a_(BlockRegistry.LIGHT_BLOCK.getDefaultState(), pos, ISelectionContext.dummy())) {
                 world.setBlockState(pos, BlockRegistry.LIGHT_BLOCK.getDefaultState());
             }
 

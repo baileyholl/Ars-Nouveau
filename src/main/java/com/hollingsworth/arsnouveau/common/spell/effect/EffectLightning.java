@@ -3,13 +3,14 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
@@ -23,10 +24,11 @@ public class EffectLightning extends AbstractEffect {
 
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
-        Vec3d pos = rayTraceResult.getHitVec();
-        LightningBoltEntity lightningBoltEntity = new LightningBoltEntity(world, pos.getX(), pos.getY(), pos.getZ(), false);
+        Vector3d pos = rayTraceResult.getHitVec();
+        LightningBoltEntity lightningBoltEntity = new LightningBoltEntity(EntityType.LIGHTNING_BOLT,world);
+        lightningBoltEntity.setPosition(pos.getX(), pos.getY(), pos.getZ());
         lightningBoltEntity.setCaster(shooter instanceof ServerPlayerEntity ? (ServerPlayerEntity) shooter : null);
-        ((ServerWorld) world).addLightningBolt(lightningBoltEntity);
+        (world).addEntity(lightningBoltEntity);
     }
 
     @Override

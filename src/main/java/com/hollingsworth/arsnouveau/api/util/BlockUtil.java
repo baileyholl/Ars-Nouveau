@@ -1,9 +1,15 @@
 package com.hollingsworth.arsnouveau.api.util;
 
+import net.minecraft.block.Block;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class BlockUtil {
+
+    public static boolean isTreeBlock(Block block){
+        return block.isIn(BlockTags.LEAVES) || block.isIn(BlockTags.LOGS);
+    }
 
     public static boolean containsStateInRadius(World world, BlockPos start, int radius, Class clazz){
         for(double x = start.getX() - radius; x <= start.getX() + radius; x++){

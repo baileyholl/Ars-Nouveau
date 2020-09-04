@@ -13,6 +13,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -50,47 +51,47 @@ public class DominionWand extends ModItem{
         AbstractManaTile manaTile = world.getTileEntity(pos) instanceof AbstractManaTile ? (AbstractManaTile) world.getTileEntity(pos) : null;
         if(playerEntity.isSneaking() && manaTile != null && manaTile instanceof ArcaneRelayTile){
             ((ArcaneRelayTile) manaTile).clearPos();
-            playerEntity.sendMessage(new StringTextComponent("Connections cleared."));
+            playerEntity.sendMessage(new StringTextComponent("Connections cleared."), Util.DUMMY_UUID);
             return super.onItemUse(context);
         }
 
         if(pos.equals(getPos(stack))){
             this.setPosTag(stack,null, 0);
-            playerEntity.sendMessage(new StringTextComponent("Cleared link."));
+            playerEntity.sendMessage(new StringTextComponent("Cleared link."), Util.DUMMY_UUID);
             return super.onItemUse(context);
         }
 
         if(manaTile == null){
             if(getPos(stack) != null) {
                 this.setPosTag(stack,null, 0);
-                playerEntity.sendMessage(new StringTextComponent("Cleared link."));
+                playerEntity.sendMessage(new StringTextComponent("Cleared link."), Util.DUMMY_UUID);
             }
             return super.onItemUse(context);
         }
         if(getPos(stack) == null){
-            setPosTag(stack, pos, playerEntity.dimension.getId());
-            playerEntity.sendMessage(new StringTextComponent("Stored position."));
+            setPosTag(stack, pos, 0);
+            playerEntity.sendMessage(new StringTextComponent("Stored position."), Util.DUMMY_UUID);
             return super.onItemUse(context);
         }
         // If we are going FROM a non-relay mana tile to a relay. (Jar to relay)
         if(manaTile instanceof ArcaneRelayTile && world.getTileEntity(getPos(stack)) instanceof AbstractManaTile && !(world.getTileEntity(getPos(stack)) instanceof ArcaneRelayTile)){
             if(((ArcaneRelayTile) manaTile).setTakeFrom(getPos(stack))){
-                playerEntity.sendMessage(new StringTextComponent("Relay set to take from " + getPosString(getPos(stack))));
+                playerEntity.sendMessage(new StringTextComponent("Relay set to take from " + getPosString(getPos(stack))),Util.DUMMY_UUID);
                 drawConnection(getPos(stack),pos, (ServerWorld) world);
                 setPosTag(stack, null, 0);
             }else{
-                playerEntity.sendMessage(new StringTextComponent("Too far away."));
+                playerEntity.sendMessage(new StringTextComponent("Too far away."), Util.DUMMY_UUID);
             }
             return super.onItemUse(context);
         }
         // From relay to any other mana tile
         if(world.getTileEntity(getPos(stack)) instanceof ArcaneRelayTile){
             if(((ArcaneRelayTile) world.getTileEntity(getPos(stack))).setSendTo(pos)){
-                playerEntity.sendMessage(new StringTextComponent("Relay set to send to " + getPosString(getPos(stack))));
+                playerEntity.sendMessage(new StringTextComponent("Relay set to send to " + getPosString(getPos(stack))), Util.DUMMY_UUID);
                 drawConnection(getPos(stack),pos, (ServerWorld) world);
                 setPosTag(stack, null, 0);
             }else{
-                playerEntity.sendMessage(new StringTextComponent("Too far away."));
+                playerEntity.sendMessage(new StringTextComponent("Too far away."), Util.DUMMY_UUID);
             }
             return super.onItemUse(context);
         }
@@ -112,7 +113,7 @@ public class DominionWand extends ModItem{
             stack.getTag().putInt("to_x", pos.getX());
             stack.getTag().putInt("to_y", pos.getY());
             stack.getTag().putInt( "to_z", pos.getZ());
-            stack.getTag().putInt("to_dim", dim);
+
         }
     }
 

@@ -5,7 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class ArcaneRoad extends ModBlock{
@@ -16,8 +16,7 @@ public class ArcaneRoad extends ModBlock{
 
     @Override
     public void onEntityCollision(BlockState p_196262_1_, World p_196262_2_, BlockPos p_196262_3_, Entity entity) {
-        System.out.println("colliding");
-        Vec3d dir = entity.getMotion();
+        Vector3d dir = entity.getMotion();
 
         dir = dir.normalize();
         entity.addVelocity(dir.x * 5, dir.y * 5, dir.z * 5);
@@ -28,7 +27,7 @@ public class ArcaneRoad extends ModBlock{
     public void onEntityWalk(World world, BlockPos p_176199_2_, Entity entity) {
         System.out.println("Walking");
         if(world.isRemote){
-            Vec3d motion = entity.getMotion().scale(1.5);
+            Vector3d motion = entity.getMotion().scale(1.5);
 
             entity.setVelocity(motion.x, motion.y, motion.z);
 

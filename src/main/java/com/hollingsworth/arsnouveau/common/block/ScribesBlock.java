@@ -20,7 +20,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
+
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
@@ -69,15 +70,15 @@ public class ScribesBlock extends ModBlock{
                     if(SpellBook.unlockSpell(stack.getTag(), spellPart))
                         unlocked++;
                 }
-                player.sendMessage(new StringTextComponent("Copied " + unlocked + " new spells to the book."));
+                player.sendMessage(new StringTextComponent("Copied " + unlocked + " new spells to the book."), null);
             }else if(stack.getItem() instanceof SpellParchment){
                 if(SpellBook.getMode(player.getHeldItem(handIn).getTag()) == 0){
-                    player.sendMessage(new StringTextComponent("Set your spell book to a spell."));
+                    player.sendMessage(new StringTextComponent("Set your spell book to a spell."), null);
                     return ActionResultType.FAIL;
                 }
 
                 SpellParchment.setSpell(stack, SpellBook.getRecipeString(player.getHeldItem(Hand.MAIN_HAND).getTag(), SpellBook.getMode(player.getHeldItem(handIn).getTag())));
-                player.sendMessage(new StringTextComponent("Spell inscribed."));
+                player.sendMessage(new StringTextComponent("Spell inscribed."), null);
             }else{
                 return ActionResultType.FAIL;
             }
@@ -95,7 +96,7 @@ public class ScribesBlock extends ModBlock{
     }
 
     public static Direction getFacingFromEntity(BlockPos clickedBlock, LivingEntity entity) {
-        Vec3d vec = entity.getPositionVec();
+        Vector3d vec = entity.getPositionVec();
         Direction direction = Direction.getFacingFromVector((float) (vec.x - clickedBlock.getX()), (float) (vec.y - clickedBlock.getY()), (float) (vec.z - clickedBlock.getZ()));
         if(direction == Direction.UP || direction == Direction.DOWN)
             direction = Direction.NORTH;

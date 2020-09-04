@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.api.util;
 
-import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
@@ -9,12 +8,11 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.vector.Vector3i;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingEvent;
-
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class SpellUtil {
@@ -42,11 +40,11 @@ public class SpellUtil {
         return true;
     }
 
-    public static ImmutableList<BlockPos> calcAOEBlocks(LivingEntity caster, BlockPos origin, BlockRayTraceResult mop, int aoeBonus) {
+    public static List<BlockPos> calcAOEBlocks(LivingEntity caster, BlockPos origin, BlockRayTraceResult mop, int aoeBonus) {
         return calcAOEBlocks(caster, origin, mop, 1 + aoeBonus, 1 + aoeBonus, 1, -1);
     }
     // https://github.com/SlimeKnights/TinkersConstruct/blob/1.12/src/main/java/slimeknights/tconstruct/library/utils/ToolHelper.java
-    public static ImmutableList<BlockPos> calcAOEBlocks(LivingEntity caster, BlockPos origin, BlockRayTraceResult mop, int width, int height, int depth, int distance) {
+    public static List<BlockPos> calcAOEBlocks(LivingEntity caster, BlockPos origin, BlockRayTraceResult mop, int width, int height, int depth, int distance) {
         // we know the block and we know which side of the block we're hitting. time to calculate the depth along the different axes
         int x, y, z;
         BlockPos start = origin;
@@ -54,7 +52,7 @@ public class SpellUtil {
             case DOWN:
             case UP:
                 // x y depends on the angle we look?
-                Vec3i vec = caster.getHorizontalFacing().getDirectionVec();
+                Vector3i vec = caster.getHorizontalFacing().getDirectionVec();
                 x = vec.getX() * height + vec.getZ() * width;
                 y = mop.getFace().getAxisDirection().getOffset() * -depth;
                 z = vec.getX() * width + vec.getZ() * height;
@@ -106,7 +104,7 @@ public class SpellUtil {
                 x = y = z = 0;
         }
 
-        ImmutableList.Builder<BlockPos> builder = ImmutableList.builder();
+        ArrayList<BlockPos> builder = new ArrayList<>();
         for(int xp = start.getX(); xp != start.getX() + x; xp += x / MathHelper.abs(x)) {
             for(int yp = start.getY(); yp != start.getY() + y; yp += y / MathHelper.abs(y)) {
                 for(int zp = start.getZ(); zp != start.getZ() + z; zp += z / MathHelper.abs(z)) {
@@ -125,6 +123,6 @@ public class SpellUtil {
         }
         builder.add(origin);
 
-        return builder.build();
+        return builder;
     }
 }

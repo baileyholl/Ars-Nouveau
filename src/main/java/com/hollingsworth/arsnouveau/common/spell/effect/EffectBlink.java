@@ -8,6 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.*;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -26,8 +27,8 @@ public class EffectBlink extends AbstractEffect {
             double distance = 8.0f + 3.0f *getAmplificationBonus(augments);
             //BlockPos pos = shooter.getPosition().offset(shooter.getHorizontalFacing(), 3);
 
-            Vec3d lookVec = new Vec3d(shooter.getLookVec().getX(), 0, shooter.getLookVec().getZ());
-            Vec3d vec = shooter.getPositionVec().add(lookVec.scale(distance));
+            Vector3d lookVec = new Vector3d(shooter.getLookVec().getX(), 0, shooter.getLookVec().getZ());
+            Vector3d vec = shooter.getPositionVec().add(lookVec.scale(distance));
             BlockPos pos = new BlockPos(vec);
             if (!isValidTeleport(world, pos)){
                 for(double i = distance; i >= 0; i--){
@@ -46,7 +47,7 @@ public class EffectBlink extends AbstractEffect {
             }
             shooter.setPositionAndUpdate(vec.getX(), vec.getY(), vec.getZ());
         }else if(rayTraceResult instanceof BlockRayTraceResult){
-            Vec3d vec = rayTraceResult.getHitVec();
+            Vector3d vec = rayTraceResult.getHitVec();
             if(isValidTeleport(world, new BlockPos(vec))){
                 shooter.setPositionAndUpdate(vec.getX(), vec.getY(), vec.getZ());
             }

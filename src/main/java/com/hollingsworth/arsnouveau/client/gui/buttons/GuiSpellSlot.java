@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.GuiSpellBook;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -27,7 +28,7 @@ public class GuiSpellSlot extends GuiImageButton {
     }
 
     @Override
-    public void render(int parX, int parY, float partialTicks) {
+    public void render(MatrixStack stack, int parX, int parY, float partialTicks) {
         if (visible)
         {
             if(parent.isMouseInRelativeRange(parX, parY, x, y, width, height)){
@@ -43,8 +44,8 @@ public class GuiSpellSlot extends GuiImageButton {
             image = this.isSelected ? new ResourceLocation(ArsNouveau.MODID, "textures/gui/tab_selected.png") : new ResourceLocation(ArsNouveau.MODID,"textures/gui/tab.png");
             //GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, width, height);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, image_width, image_height);
-            drawCenteredString(Minecraft.getInstance().fontRenderer, String.valueOf(this.slotNum), x + 8, y + 2,  16777215); // White
+            GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, image_width, image_height, stack);
+            drawCenteredString(stack,Minecraft.getInstance().fontRenderer, String.valueOf(this.slotNum), x + 8, y + 2,  16777215); // White
 
         }
     }

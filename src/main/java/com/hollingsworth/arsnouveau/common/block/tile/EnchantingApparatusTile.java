@@ -111,11 +111,11 @@ public class EnchantingApparatusTile extends AnimatedTile {
     }
 
     @Override
-    public void read(CompoundNBT compound) {
+    public void read(BlockState state, CompoundNBT compound) {
         catalystItem = ItemStack.read((CompoundNBT)compound.get("itemStack"));
         isCrafting = compound.getBoolean("is_crafting");
         counter = compound.getInt("counter");
-        super.read(compound);
+        super.read(state,compound);
     }
 
     @Override
@@ -142,11 +142,5 @@ public class EnchantingApparatusTile extends AnimatedTile {
         tag.putInt("counter", this.counter);
         tag.putBoolean("is_crafting", this.isCrafting);
         return this.write(tag);
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        super.onDataPacket(net, pkt);
-        handleUpdateTag(pkt.getNbtCompound());
     }
 }

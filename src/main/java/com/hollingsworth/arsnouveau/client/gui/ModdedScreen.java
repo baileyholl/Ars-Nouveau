@@ -1,10 +1,12 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 
 import java.util.ArrayList;
@@ -46,16 +48,18 @@ public class ModdedScreen extends Screen {
 
         return mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h;
     }
-    final void drawTooltip(int mouseX, int mouseY) {
+    final void drawTooltip(MatrixStack stack, int mouseX, int mouseY) {
         if(tooltip != null) {
             FontRenderer font = Minecraft.getInstance().fontRenderer;
-            this.renderTooltip(tooltip, mouseX, mouseY, (font == null ? this.font : font));
+            this.renderTooltip(stack,new StringTextComponent(tooltip.get(0)), mouseX, mouseY);
 
         } else if(tooltip != null && !tooltip.isEmpty()) {
             List<String> wrappedTooltip = new ArrayList<>();
             for (String s : tooltip)
                 Collections.addAll(wrappedTooltip, s.split("\n"));
-            GuiUtils.drawHoveringText(wrappedTooltip, mouseX, mouseY, width, height, -1, this.font);
+//            GuiUtils.drawHoveringText(wrappedTooltip, mouseX, mouseY, width, height, -1, this.font);
+
+
         }
     }
 

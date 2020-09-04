@@ -17,6 +17,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 
@@ -39,12 +40,12 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
     }
 
     @Override
-    public void read(CompoundNBT compound) {
+    public void read(BlockState state,CompoundNBT compound) {
         reagentItem = ItemStack.read((CompoundNBT)compound.get("itemStack"));
         baseMaterial = ItemStack.read((CompoundNBT)compound.get("baseMat"));
         isCrafting = compound.getBoolean("crafting");
         timeStartedSpraying = compound.getLong("spraying");
-        super.read(compound);
+        super.read(state, compound);
     }
 
     @Override
@@ -63,23 +64,7 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
         compound.putLong("spraying", timeStartedSpraying);
         return super.write(compound);
     }
-    @Override
-    @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
 
-        return new SUpdateTileEntityPacket(this.pos, 3, this.getUpdateTag());
-    }
-
-    @Override
-    public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        super.onDataPacket(net, pkt);
-        handleUpdateTag(pkt.getNbtCompound());
-    }
 
 // 5 - become template
 // 20 - spraying
@@ -238,7 +223,7 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
             }
         });
         if(!valid.get())
-            playerEntity.sendMessage(new StringTextComponent("There does not appear to be enough mana nearby. "));
+            playerEntity.sendMessage(new StringTextComponent("There does not appear to be enough mana nearby. "), Util.DUMMY_UUID);
 
         if(glyph != null && valid.get() && this.baseMaterial != null &&  getMatchingClay(glyph.spellPart.getTier()) == this.baseMaterial.getItem()){
 

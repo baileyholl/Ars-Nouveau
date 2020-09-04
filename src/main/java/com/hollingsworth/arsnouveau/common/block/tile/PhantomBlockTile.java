@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.IntNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -26,8 +27,8 @@ public class PhantomBlockTile extends TileEntity implements ITickableTileEntity 
     }
 
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
+    public void read(BlockState state, CompoundNBT compound) {
+        super.read(state,compound);
         this.age = compound.getInt("age");
     }
 

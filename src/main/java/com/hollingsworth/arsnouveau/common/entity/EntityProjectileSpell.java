@@ -10,11 +10,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.util.math.*;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -52,11 +54,11 @@ public class EntityProjectileSpell extends ArrowEntity {
     public void tick() {
         age++;
 
-
+        Vector3d vector3d = this.getMotion();
         this.lastTickPosX = this.getPosX();
         this.lastTickPosY = this.getPosY();
         this.lastTickPosZ = this.getPosZ();
-        //super.tick();
+        super.tick();
 
         if (this.inGround) {
             this.inGround = false;
@@ -64,27 +66,48 @@ public class EntityProjectileSpell extends ArrowEntity {
         }
 
         AxisAlignedBB axisalignedbb = this.getBoundingBox().expand(this.getMotion()).grow(1.0D);
-
-        for(Entity entity : this.world.getEntitiesInAABBexcluding(this, axisalignedbb, (p_213881_0_) -> {
-            return !p_213881_0_.isSpectator() && p_213881_0_.canBeCollidedWith();
-        })) {
-
+        Vector3d vector3d2 = this.getPositionVec();
+        Vector3d vector3d3 = vector3d2.add(vector3d);
+        RayTraceResult raytraceresult = this.world.rayTraceBlocks(new RayTraceContext(vector3d2, vector3d3, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this));
+        if (raytraceresult.getType() != RayTraceResult.Type.MISS) {
+            vector3d3 = raytraceresult.getHitVec();
+        }
+        EntityRayTraceResult entityraytraceresult = this.rayTraceEntities(vector3d2, vector3d3);
+        if (entityraytraceresult != null) {
+            raytraceresult = entityraytraceresult;
         }
 
-        RayTraceResult raytraceresult = ProjectileHelper.rayTrace(this, axisalignedbb, (p_213880_1_) -> {
-            return !p_213880_1_.isSpectator() && p_213880_1_.canBeCollidedWith();
-        }, RayTraceContext.BlockMode.OUTLINE, true);
-
-
-        if (raytraceresult.getType() != RayTraceResult.Type.MISS) {
-            if (raytraceresult.getType() == RayTraceResult.Type.BLOCK && this.world.getBlockState(((BlockRayTraceResult)raytraceresult).getPos()).getBlock() == Blocks.NETHER_PORTAL) {
-                this.setPortal(((BlockRayTraceResult)raytraceresult).getPos());
-            } else if (!net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult)){
-                this.onHit(raytraceresult);
+        if (raytraceresult != null && raytraceresult.getType() == RayTraceResult.Type.ENTITY) {
+            Entity entity = ((EntityRayTraceResult)raytraceresult).getEntity();
+            Entity entity1 = this.func_234616_v_();
+            if (entity instanceof PlayerEntity && entity1 instanceof PlayerEntity && !((PlayerEntity)entity1).canAttackPlayer((PlayerEntity)entity)) {
+                raytraceresult = null;
+                entityraytraceresult = null;
             }
         }
 
-        Vec3d vec3d = this.getMotion();
+        if (raytraceresult != null && raytraceresult.getType() != RayTraceResult.Type.MISS  && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
+            this.onImpact(raytraceresult);
+            this.isAirBorne = true;
+        }
+
+        if (entityraytraceresult == null || this.getPierceLevel() <= 0) {
+
+        }
+        System.out.println("Hiya");
+        raytraceresult = null;
+
+
+
+//        if (raytraceresult.getType() != RayTraceResult.Type.MISS) {
+//            if (raytraceresult.getType() == RayTraceResult.Type.BLOCK && this.world.getBlockState(((BlockRayTraceResult)raytraceresult).getPos()).getBlock() == Blocks.NETHER_PORTAL) {
+//                this.setPortal(((BlockRayTraceResult)raytraceresult).getPos());
+//            } else if (!net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult)){
+//                this.onHit(raytraceresult);
+//            }
+//        }
+
+        Vector3d vec3d = this.getMotion();
         double x = this.getPosX() +vec3d.x;
         double y = this.getPosY() + vec3d.y;
         double z = this.getPosZ() + vec3d.getZ();
@@ -109,12 +132,13 @@ public class EntityProjectileSpell extends ArrowEntity {
 
 
         if (!this.hasNoGravity()) {
-            Vec3d vec3d1 = this.getMotion();
+            Vector3d vec3d1 = this.getMotion();
             this.setMotion(vec3d1.x, vec3d1.y , vec3d1.z);
         }
 
         this.setPosition(x,y,z);
         if(world.isRemote && this.age > 1) {
+            System.out.println("Spawning particles3 7");
             for (int i = 0; i < 10; i++) {
                 double minRange = -0.1;
                 double maxRange = 0.1;
@@ -122,42 +146,25 @@ public class EntityProjectileSpell extends ArrowEntity {
                 double d1 = getPosY() + ParticleUtil.inRange(minRange, maxRange);
                 double d2 = getPosZ() + ParticleUtil.inRange(minRange, maxRange);
 
-//            world.addParticle(ParticleTypes.ENCHANT, d0, d1, d2, 0.0, 0.0, 0.0);
-//                world.addParticle(ParticleSource.createData(new ParticleColor(204,51,255)), d0, d1, d2, this.getMotion().x, this.getMotion().y, this.getMotion().z);
-//                world.addParticle(ParticleSource.createData(new ParticleColor(204,51,255)), prevPosX, prevPosY, prevPosZ, this.getMotion().x, this.getMotion().y, this.getMotion().z);
+                double deltaX = getPosX() - lastTickPosX;
+                double deltaY = getPosY() - lastTickPosY;
+                double deltaZ = getPosZ() - lastTickPosZ;
+                double dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 20);
+                int counter = 0;
 
-            }
-//            double minRange = -0.1;
-//            double maxRange = 0.1;
-//            for (float j = 0.0F; j < 1.0F; j += 0.05F) {
-//                for (int i = 0; i < 2; ++i) {
-//                    world.addParticle(ParticleSource.createData(new ParticleColor(204, 51, 255)),
-//                            this.prevPosX + (this.getMotion().x * j) +ParticleUtil.inRange(minRange, maxRange),
-//                            this.prevPosY + (this.getMotion().y * j) +ParticleUtil.inRange(minRange, maxRange),
-//                            this.prevPosZ + (this.getMotion().z * j) +ParticleUtil.inRange(minRange, maxRange),
-//                            0, 0, 0);
-//                }
-//            }
-            double deltaX = getPosX() - lastTickPosX;
-            double deltaY = getPosY() - lastTickPosY;
-            double deltaZ = getPosZ() - lastTickPosZ;
-            double dist = Math.ceil(Math.sqrt(deltaX*deltaX+deltaY*deltaY+deltaZ*deltaZ) * 20);
-            int counter = 0;
-
-            for (double i = 0; i < dist; i ++){
-                double coeff = i/dist;
-                counter += world.rand.nextInt(3);
-                if (counter % (Minecraft.getInstance().gameSettings.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().gameSettings.particles.getId()) == 0) {
+                for (double j = 0; j < dist; j++) {
+                    double coeff = j / dist;
+                    counter += world.rand.nextInt(3);
+                    if (counter % (Minecraft.getInstance().gameSettings.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().gameSettings.particles.getId()) == 0) {
 
 
-                    world.addParticle(GlowParticleData.createData(new ParticleColor(255,25,180)), (float) (prevPosX + deltaX * coeff), (float) (prevPosY + deltaY * coeff), (float) (prevPosZ + deltaZ * coeff), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f));
+                        world.addParticle(GlowParticleData.createData(new ParticleColor(255, 25, 180)), (float) (prevPosX + deltaX * coeff), (float) (prevPosY + deltaY * coeff), (float) (prevPosZ + deltaZ * coeff), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f));
+                    }
                 }
-                //                ParticleUtil.spawnParticleGlow(getEntityWorld(), (float)(prevPosX+ deltaX *coeff), (float)(prevPosY+ deltaY *coeff), (float)(prevPosZ+ deltaZ *coeff), 0.0125f*(rand.nextFloat()-0.5f), 0.0125f*(rand.nextFloat()-0.5f), 0.0125f*(rand.nextFloat()-0.5f), 255, 64, 16, 2.0f, 12);
-                //                ParticleUtil.spawnParticleGlow(getEntityWorld(), (float)(prevPosX+ deltaX *coeff), (float)(prevPosY+ deltaY *coeff), (float)(prevPosZ+ deltaZ *coeff), 0.0125f*(rand.nextFloat()-0.5f), 0.0125f*(rand.nextFloat()-0.5f), 0.0125f*(rand.nextFloat()-0.5f), 255, 64, 16, 2.0f, 12);
             }
-
         }
     }
+
 
     @Override
     public void baseTick() {
@@ -181,8 +188,8 @@ public class EntityProjectileSpell extends ArrowEntity {
         float f1 = -MathHelper.sin((rotationPitchIn + pitchOffset) * ((float)Math.PI / 180F));
         float f2 = MathHelper.cos(rotationYawIn * ((float)Math.PI / 180F)) * MathHelper.cos(rotationPitchIn * ((float)Math.PI / 180F));
         this.shoot((double)f, (double)f1, (double)f2, velocity, inaccuracy);
-        Vec3d vec3d = entityThrower.getMotion();
-        this.setMotion(this.getMotion().add(vec3d.x, entityThrower.onGround ? 0.0D : vec3d.y, vec3d.z));
+        Vector3d vec3d = entityThrower.getMotion();
+        this.setMotion(this.getMotion().add(vec3d.x, entityThrower.isOnGround() ? 0.0D : vec3d.y, vec3d.z));
     }
 
     /**
@@ -190,7 +197,7 @@ public class EntityProjectileSpell extends ArrowEntity {
      */
     public void shoot(double x, double y, double z, float velocity, float inaccuracy)
     {
-        Vec3d vec3d = (new Vec3d(x, y, z)).normalize().add(this.rand.nextGaussian() * (double)0.0075F * (double)inaccuracy, this.rand.nextGaussian() * (double)0.0075F * (double)inaccuracy, this.rand.nextGaussian() * (double)0.0075F * (double)inaccuracy).scale((double)velocity);
+        Vector3d vec3d = (new Vector3d(x, y, z)).normalize().add(this.rand.nextGaussian() * (double)0.0075F * (double)inaccuracy, this.rand.nextGaussian() * (double)0.0075F * (double)inaccuracy, this.rand.nextGaussian() * (double)0.0075F * (double)inaccuracy).scale((double)velocity);
         this.setMotion(vec3d);
         float f = MathHelper.sqrt(horizontalMag(vec3d));
         this.rotationYaw = (float)(MathHelper.atan2(vec3d.x, vec3d.z) * (double)(180F / (float)Math.PI));
@@ -218,11 +225,13 @@ public class EntityProjectileSpell extends ArrowEntity {
         }
     }
 
+
     @Override
-    protected void onHit(RayTraceResult result) {
+    protected void onImpact(RayTraceResult result) {
         //super.onHit(result);
 
         if(!world.isRemote &&  result != null && result.getType() == RayTraceResult.Type.ENTITY) {
+
             if (((EntityRayTraceResult) result).getEntity().equals(this.getShooter())) return;
             if(this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(world, (LivingEntity) this.getShooter(), (EntityRayTraceResult) result);
@@ -244,6 +253,10 @@ public class EntityProjectileSpell extends ArrowEntity {
            attemptRemoval();
         }
     }
+    public Entity getShooter(){
+        return this.func_234616_v_();
+    }
+
 
     public EntityProjectileSpell(FMLPlayMessages.SpawnEntity packet, World world){
         super(ModEntities.SPELL_PROJ, world);

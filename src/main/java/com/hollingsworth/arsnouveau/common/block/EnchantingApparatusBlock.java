@@ -4,8 +4,9 @@ import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.state.IProperty;
+
 import net.minecraft.state.IntegerProperty;
+import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -18,7 +19,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 
 public class EnchantingApparatusBlock extends ModBlock{
-    public static final IProperty stage = IntegerProperty.create("stage", 1, 47);
+    public static final Property<Integer> stage = IntegerProperty.create("stage", 1, 47);
 
     public EnchantingApparatusBlock() {
         super(ModBlock.defaultProperties().notSolid(),"enchanting_apparatus");

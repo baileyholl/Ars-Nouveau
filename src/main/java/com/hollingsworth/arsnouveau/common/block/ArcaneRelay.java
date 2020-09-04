@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.ArcaneRelayTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.state.IProperty;
+
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockReader;
@@ -12,10 +12,9 @@ import net.minecraft.world.IBlockReader;
 import javax.annotation.Nullable;
 
 public class ArcaneRelay extends ModBlock {
-    public static final IProperty stage = IntegerProperty.create("stage", 1, 15);
 
     public ArcaneRelay() {
-        super(defaultProperties().lightValue(8).notSolid(), LibBlockNames.ARCANE_RELAY);
+        super(defaultProperties().setLightLevel((blockState) ->8).notSolid(), LibBlockNames.ARCANE_RELAY);
     }
 
     @Override

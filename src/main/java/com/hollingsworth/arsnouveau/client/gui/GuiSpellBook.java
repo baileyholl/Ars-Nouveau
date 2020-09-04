@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellbook;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
@@ -91,7 +92,8 @@ public class GuiSpellBook extends ModdedScreen {
 
         addSpellParts();
         addButton(new GuiImageButton(bookRight - 70, bookBottom - 28, 0,0,46, 18, 46, 18, "textures/gui/create_button.png", this::onCreateClick));
-        spell_name = new TextFieldWidget(minecraft.fontRenderer, bookLeft + 16, bookTop + FULL_HEIGHT - 25, 115, 12, null, "Spell Name");
+        spell_name = new TextFieldWidget(minecraft.fontRenderer, bookLeft + 16, bookTop + FULL_HEIGHT - 25,
+                115, 12, null, new StringTextComponent("Spell Name"));
         spell_name.setText(SpellBook.getSpellName(spell_book_tag, 1));
         if(spell_name.getText().isEmpty())
             spell_name.setSuggestion("My Spell");
@@ -206,39 +208,39 @@ public class GuiSpellBook extends ModdedScreen {
         Minecraft.getInstance().displayGuiScreen(new GuiSpellBook(api, spell_book_tag, tier, unlockedSpells));
     }
 
-    final void drawScreenAfterScale(int mouseX, int mouseY, float partialTicks) {
+    final void drawScreenAfterScale(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         resetTooltip();
-        renderBackground();
-        GlStateManager.pushMatrix();
-        GlStateManager.translatef(bookLeft, bookTop, 0);
+        renderBackground(stack);
+        stack.push();
+        stack.translate(bookLeft, bookTop, 0);
         RenderSystem.color3f(1F, 1F, 1F);
-        drawBackgroundElements(mouseX, mouseY, partialTicks);
+        drawBackgroundElements(stack,mouseX, mouseY, partialTicks);
         drawForegroundElements(mouseX, mouseY, partialTicks);
-        GlStateManager.popMatrix();
-        super.render(mouseX, mouseY, partialTicks);
-        drawTooltip(mouseX, mouseY);
+        stack.pop();
+        super.render(stack, mouseX, mouseY, partialTicks);
+        drawTooltip(stack, mouseX, mouseY);
     }
 
-    final void drawBackgroundElements(int mouseX, int mouseY, float partialTicks) {
+    final void drawBackgroundElements(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         Minecraft.getInstance().textureManager.bindTexture(background);
         int png_width = FULL_WIDTH;
         int png_height = FULL_HEIGHT;
-        drawFromTexture(background,0, 0, 0, 0, FULL_WIDTH, FULL_HEIGHT, png_width, png_height);
-        minecraft.fontRenderer.drawSplitString("Form", 15, 10, 116, 0);
-        minecraft.fontRenderer.drawSplitString("Effect", 140, 10, 116, 0);
-        minecraft.fontRenderer.drawSplitString("Augment", 15, 60, 116, 0);
+        drawFromTexture(background,0, 0, 0, 0, FULL_WIDTH, FULL_HEIGHT, png_width, png_height, stack);
+        minecraft.fontRenderer.drawString(stack, "Form", 15, 10,  0);
+        minecraft.fontRenderer.drawString(stack,"Effect", 140, 10,  0);
+        minecraft.fontRenderer.drawString(stack,"Augment", 15, 60,  0);
         //minecraft.fontRenderer.drawSplitString("Slot", 220, 10, 116, 0);
-        minecraft.fontRenderer.drawSplitString("Create", 208, 157, 116, 0);
+        minecraft.fontRenderer.drawString(stack,"Create", 208, 157,  0);
     }
 
-    public static void drawFromTexture(ResourceLocation resourceLocation, int x, int y, int u, int v, int w, int h) {
-        Minecraft.getInstance().textureManager.bindTexture(resourceLocation);
-        blit(x, y, u, v, w, h, w, h);
-    }
+//    public static void drawFromTexture(ResourceLocation resourceLocation, int x, int y, int u, int v, int w, int h) {
+//        Minecraft.getInstance().textureManager.bindTexture(resourceLocation);
+//        blit(x, y, u, v, w, h, w, h);
+//    }
 
-    public static void drawFromTexture(ResourceLocation resourceLocation, int x, int y, int u, int v, int w, int h, int fileWidth, int fileHeight) {
+    public static void drawFromTexture(ResourceLocation resourceLocation, int x, int y, int u, int v, int w, int h, int fileWidth, int fileHeight, MatrixStack stack) {
         Minecraft.getInstance().textureManager.bindTexture(resourceLocation);
-        blit(x, y, u, v, w, h, fileWidth, fileHeight);
+        blit(stack,x, y, u, v, w, h, fileWidth, fileHeight);
     }
 
     private void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
@@ -250,7 +252,7 @@ public class GuiSpellBook extends ModdedScreen {
      * Draws the screen and all the components in it.
      */
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
+    public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
         if(spell_name.getText().isEmpty()) {
             spell_name.setSuggestion("My Spell Name");
         }else
@@ -263,7 +265,7 @@ public class GuiSpellBook extends ModdedScreen {
             mouseX /= scaleFactor;
             mouseY /= scaleFactor;
         }
-        drawScreenAfterScale(mouseX, mouseY, partialTicks);
+        drawScreenAfterScale(ms,mouseX, mouseY, partialTicks);
         GlStateManager.popMatrix();
     }
 

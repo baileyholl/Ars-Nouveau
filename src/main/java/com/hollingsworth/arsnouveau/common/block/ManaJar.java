@@ -5,8 +5,8 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.IProperty;
 import net.minecraft.state.IntegerProperty;
+import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 
 public class ManaJar extends ManaBlock {
 
-    public static final IProperty fill = IntegerProperty.create("fill", 0, 10);
+    public static final Property<Integer> fill = IntegerProperty.create("fill", 0, 10);
 
     public ManaJar() {
         super(ModBlock.defaultProperties().notSolid(),"mana_jar");

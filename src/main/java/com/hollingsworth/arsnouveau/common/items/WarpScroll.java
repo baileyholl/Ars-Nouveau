@@ -10,6 +10,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -37,8 +38,9 @@ public class WarpScroll extends ModItem{
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
 
         if(pos != null ){
-            if(getDimension(stack) !=  player.dimension.getId()){
-                player.sendMessage(new StringTextComponent("Using this scroll from a different dimension would be a bad idea."));
+            // TODO: Get player dimension
+            if(getDimension(stack) !=  0){
+                player.sendMessage(new StringTextComponent("Using this scroll from a different dimension would be a bad idea."), Util.DUMMY_UUID);
                 return ActionResult.resultFail(stack);
             }
             player.teleportKeepLoaded(pos.getX(), pos.getY(), pos.getZ());
@@ -48,12 +50,13 @@ public class WarpScroll extends ModItem{
         if(player.isSneaking()){
             ItemStack newWarpStack = new ItemStack(ItemsRegistry.warpScroll);
             newWarpStack.setTag(new CompoundNBT());
-            setTeleportTag(newWarpStack, player.getPosition(), player.dimension.getId());
+            //TODO: player.dimension.getId()
+            setTeleportTag(newWarpStack, player.getPosition(), 0);
             if(!player.addItemStackToInventory(newWarpStack)){
-                player.sendMessage(new StringTextComponent("There is no room in your inventory."));
+                player.sendMessage(new StringTextComponent("There is no room in your inventory."), Util.DUMMY_UUID);
                 return ActionResult.resultFail(stack);
             }else{
-                player.sendMessage(new StringTextComponent("You record your location to your Warp Scroll."));
+                player.sendMessage(new StringTextComponent("You record your location to your Warp Scroll."), Util.DUMMY_UUID);
                 stack.shrink(1);
             }
         }

@@ -31,7 +31,7 @@ public class EffectPhantomBlock extends AbstractEffect {
 
             for(BlockPos pos : SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult, getBuffCount(augments, AugmentAOE.class))) {
                 pos = pos.offset(((BlockRayTraceResult) rayTraceResult).getFace());
-                if (world.getBlockState(pos).getMaterial() == Material.AIR && world.placedBlockWouldCollide(BlockRegistry.PHANTOM_BLOCK.getDefaultState(), pos, ISelectionContext.dummy())) {
+                if (world.getBlockState(pos).getMaterial() == Material.AIR && world.func_226663_a_(BlockRegistry.PHANTOM_BLOCK.getDefaultState(), pos, ISelectionContext.dummy())) {
                     world.setBlockState(pos, BlockRegistry.PHANTOM_BLOCK.getDefaultState());
                 }
             }

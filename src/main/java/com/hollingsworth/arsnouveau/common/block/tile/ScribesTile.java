@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -28,9 +29,9 @@ public class ScribesTile extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public void read(CompoundNBT compound) {
+    public void read(BlockState state, CompoundNBT compound) {
         stack = ItemStack.read((CompoundNBT)compound.get("itemStack"));
-        super.read(compound);
+        super.read(state,compound);
     }
 
     @Override
@@ -57,6 +58,6 @@ public class ScribesTile extends TileEntity implements ITickableTileEntity {
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         super.onDataPacket(net, pkt);
-        handleUpdateTag(pkt.getNbtCompound());
+        handleUpdateTag(world.getBlockState(pos),pkt.getNbtCompound());
     }
 }

@@ -13,7 +13,9 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -25,11 +27,14 @@ public class EffectSummonVex extends AbstractEffect {
 
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
+        if(!(world instanceof ServerWorld))
+            return;
+
         for(int i = 0; i < 3; ++i) {
-            BlockPos blockpos = (new BlockPos(shooter)).add(-2 + shooter.getRNG().nextInt(5), 1, -2 + shooter.getRNG().nextInt(5));
+            BlockPos blockpos = (new BlockPos(shooter.getPosition())).add(-2 + shooter.getRNG().nextInt(5), 1, -2 + shooter.getRNG().nextInt(5));
             EntityAllyVex vexentity = new EntityAllyVex(world, shooter);
             vexentity.moveToBlockPosAndAngles(blockpos, 0.0F, 0.0F);
-            vexentity.onInitialSpawn(world, world.getDifficultyForLocation(blockpos), SpawnReason.MOB_SUMMONED, (ILivingEntityData)null, (CompoundNBT)null);
+            vexentity.onInitialSpawn((IServerWorld) world, world.getDifficultyForLocation(blockpos), SpawnReason.MOB_SUMMONED, (ILivingEntityData)null, (CompoundNBT)null);
             vexentity.setOwner(shooter);
             vexentity.setBoundOrigin(blockpos);
             vexentity.setLimitedLife(20 * (75 + 10 * getBuffCount(augments, AugmentExtendTime.class)));

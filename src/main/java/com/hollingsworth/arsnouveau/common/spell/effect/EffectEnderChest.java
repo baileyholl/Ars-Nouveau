@@ -11,14 +11,17 @@ import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-import static net.minecraft.block.EnderChestBlock.CONTAINER_NAME;
 
 public class EffectEnderChest extends AbstractEffect {
+    private static final ITextComponent CONTAINER_NAME = new TranslationTextComponent("container.enderchest");
+
     public EffectEnderChest() {
         super(ModConfig.EffectEnderChestID, "Access Ender Inventory");
     }

@@ -11,9 +11,9 @@ import com.hollingsworth.arsnouveau.common.entity.EntityWhelp;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.LeavesBlock;
-import net.minecraft.block.LogBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
@@ -32,6 +33,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static com.hollingsworth.arsnouveau.api.util.BlockUtil.isTreeBlock;
 
 public class SummoningCrytalTile extends AbstractManaTile {
 
@@ -61,13 +64,13 @@ public class SummoningCrytalTile extends AbstractManaTile {
     public void changeTier(PlayerEntity entity){
         if(tier == 1){
             tier = 2;
-            entity.sendMessage(new StringTextComponent("Set area to 5 x 5"));
+            entity.sendMessage(new StringTextComponent("Set area to 5 x 5"), Util.DUMMY_UUID);
         }else if(tier == 2){
             tier = 3;
-            entity.sendMessage(new StringTextComponent("Set area to 9 x 9"));
+            entity.sendMessage(new StringTextComponent("Set area to 9 x 9"), Util.DUMMY_UUID);
         }else if(tier == 3){
             tier = 1;
-            entity.sendMessage(new StringTextComponent("Set area to adjacent blocks only."));
+            entity.sendMessage(new StringTextComponent("Set area to adjacent blocks only."), Util.DUMMY_UUID);
         }
     }
 
@@ -104,10 +107,6 @@ public class SummoningCrytalTile extends AbstractManaTile {
         return stack;
     }
 
-
-    public boolean isTree(Block block){
-        return block instanceof LogBlock || block instanceof LeavesBlock;
-    }
     public @Nullable BlockPos getNextTaskLoc(){
         if(isOff)
             return null;
@@ -124,9 +123,9 @@ public class SummoningCrytalTile extends AbstractManaTile {
 
         taskIndex += 1;
         // If the block above is not air
-        if (world.getBlockState(taskPos.up()).getMaterial() != Material.AIR && !isTree(world.getBlockState(taskPos).getBlock())){
+        if (world.getBlockState(taskPos.up()).getMaterial() != Material.AIR && !isTreeBlock(world.getBlockState(taskPos).getBlock())){
             for(int i = 1; i < 4; i++) {
-                if (world.getBlockState(taskPos.up(i)).getMaterial() != Material.AIR || isTree(world.getBlockState(taskPos.up()).getBlock())){
+                if (world.getBlockState(taskPos.up(i)).getMaterial() != Material.AIR || isTreeBlock(world.getBlockState(taskPos.up()).getBlock())){
                     taskPos = taskPos.up(i);
                     break;
                 }
@@ -214,8 +213,8 @@ public class SummoningCrytalTile extends AbstractManaTile {
     }
 
     @Override
-    public void read(CompoundNBT tag) {
-        super.read(tag);
+    public void read(BlockState state, CompoundNBT tag) {
+        super.read(state,tag);
         this.numEntities = tag.getInt("entities");
         int count = 0;
         while(tag.hasUniqueId("entity" + count)){

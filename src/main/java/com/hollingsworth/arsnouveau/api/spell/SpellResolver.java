@@ -56,14 +56,14 @@ public class SpellResolver {
 
     public boolean canCast(LivingEntity entity){
         if(spell_recipe == null || spell_recipe.isEmpty() || castType == null) {
-            entity.sendMessage(new StringTextComponent("Invalid Spell."));
+            entity.sendMessage(new StringTextComponent("Invalid Spell."), null);
             return false;
         }
         Set<AbstractSpellPart> testSet = new HashSet<>(spell_recipe.size());
         for(AbstractSpellPart part : spell_recipe){
             if(part instanceof AbstractEffect && !testSet.add(part)) {
                 if(!entity.getEntityWorld().isRemote)
-                    entity.sendMessage(new StringTextComponent("No duplicate effects are allowed. Use Augments!"));
+                    entity.sendMessage(new StringTextComponent("No duplicate effects are allowed. Use Augments!"), null);
                 return false;
             }
         }
@@ -77,7 +77,7 @@ public class SpellResolver {
         ManaCapability.getMana(entity).ifPresent(mana -> {
             canCast.set(totalCost <= mana.getCurrentMana() || (entity instanceof PlayerEntity &&  ((PlayerEntity) entity).isCreative()));
             if(!canCast.get() && !entity.getEntityWorld().isRemote)
-                entity.sendMessage(new StringTextComponent("Not enough mana."));
+                entity.sendMessage(new StringTextComponent("Not enough mana."), null);
         });
         return canCast.get();
     }

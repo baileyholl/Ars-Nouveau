@@ -5,7 +5,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
-import net.minecraft.util.math.Vec3d;
+
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -13,8 +14,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class ArcParticleTypeData implements IParticleData {
 
     private ParticleType<ArcParticleTypeData> type;
-    public Vec3d source;
-    public Vec3d target;
+    public Vector3d source;
+    public Vector3d target;
     static final IParticleData.IDeserializer<ArcParticleTypeData> DESERIALIZER = new IParticleData.IDeserializer<ArcParticleTypeData>() {
         @Override
         public ArcParticleTypeData deserialize(ParticleType<ArcParticleTypeData> type, StringReader reader) throws CommandSyntaxException {
@@ -28,7 +29,7 @@ public class ArcParticleTypeData implements IParticleData {
         }
     };
 
-    public ArcParticleTypeData(ParticleType<ArcParticleTypeData> particleTypeData, Vec3d source, Vec3d target){
+    public ArcParticleTypeData(ParticleType<ArcParticleTypeData> particleTypeData, Vector3d source, Vector3d target){
         this.type = particleTypeData;
         this.source = source;
         this.target = target;
@@ -50,12 +51,12 @@ public class ArcParticleTypeData implements IParticleData {
         return type.getRegistryName().toString() + " " + serializeVec(target) + " " + serializeVec(source);
     }
 
-    public String serializeVec(Vec3d vec3d){
+    public String serializeVec(Vector3d vec3d){
         return ""+vec3d.x + "," + vec3d.y + "," + vec3d.z;
     }
-    public static Vec3d deseralizeVec(String string){
+    public static Vector3d deseralizeVec(String string){
         String[] arr = string.split(",");
-        return new Vec3d(Double.parseDouble(arr[0].trim()), Double.parseDouble(arr[1].trim()),Double.parseDouble(arr[2].trim()));
+        return new Vector3d(Double.parseDouble(arr[0].trim()), Double.parseDouble(arr[1].trim()),Double.parseDouble(arr[2].trim()));
     }
 }
 

@@ -15,6 +15,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -88,7 +89,7 @@ public class EffectHarvest extends AbstractEffect {
     }
 
     public boolean isTree(BlockState blockstate){
-        return blockstate.getBlock() instanceof LogBlock || blockstate.getBlock() instanceof LeavesBlock;
+        return blockstate.getBlock().isIn(BlockTags.LOGS)  || blockstate.getBlock().isIn(BlockTags.LEAVES);
     }
 
     public HashSet<BlockPos> getTree(World world, int x, int y, int z, boolean fromTree, HashSet<BlockPos> blocks){

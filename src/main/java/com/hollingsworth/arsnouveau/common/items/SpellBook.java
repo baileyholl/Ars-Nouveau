@@ -83,14 +83,15 @@ public class SpellBook extends Item implements ISpellTier {
 
         /**
      * Returns true if the item can be used on the given entity, e.g. shears on sheep.
-     */
-    public boolean itemInteractionForEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
+         * @return
+         */
+    public ActionResultType itemInteractionForEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
 //        if(!playerIn.getEntityWorld().isRemote) {
 //            SpellResolver resolver = new SpellResolver(getCurrentRecipe(stack));
 //            resolver.onCastOnEntity(stack, playerIn, target, hand);
 //
 //        }
-        return false;
+        return ActionResultType.FAIL;
     }
 
     @Override
@@ -248,8 +249,8 @@ public class SpellBook extends Item implements ISpellTier {
         super.addInformation(stack, world, tooltip, flag);
         if(stack != null && stack.hasTag()) {
             tooltip.add(new StringTextComponent(SpellBook.getSpellName(stack.getTag())));
-            tooltip.add(new StringTextComponent("Press " + ModKeyBindings.OPEN_SPELL_SELECTION.getKeyBinding().getLocalizedName() + " to quick select"));
-            tooltip.add(new StringTextComponent("Press " + ModKeyBindings.OPEN_BOOK.getKeyBinding().getLocalizedName() + " to quick craft"));
+            tooltip.add(new StringTextComponent("Press " + ModKeyBindings.OPEN_SPELL_SELECTION.getKeyBinding().getKeyDescription() + " to quick select"));
+            tooltip.add(new StringTextComponent("Press " + ModKeyBindings.OPEN_BOOK.getKeyBinding().getKeyDescription() + " to quick craft"));
 
         }
     }

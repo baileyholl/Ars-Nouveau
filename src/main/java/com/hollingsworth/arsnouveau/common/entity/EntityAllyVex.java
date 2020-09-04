@@ -15,10 +15,12 @@ import net.minecraft.pathfinding.FlyingPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.server.management.PreYggdrasilConverter;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
@@ -53,7 +55,7 @@ public class EntityAllyVex extends VexEntity implements ISummon {
     }
 
     @Nullable
-    public ILivingEntityData onInitialSpawn(IWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+    public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         this.setEquipmentBasedOnDifficulty(difficultyIn);
         this.setEnchantmentBasedOnDifficulty(difficultyIn);
         return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
@@ -149,7 +151,7 @@ public class EntityAllyVex extends VexEntity implements ISummon {
          */
         public void startExecuting() {
             LivingEntity livingentity = EntityAllyVex.this.getAttackTarget();
-            Vec3d vec3d = livingentity.getEyePosition(1.0F);
+            Vector3d vec3d = livingentity.getEyePosition(1.0F);
             EntityAllyVex.this.moveController.setMoveTo(vec3d.x, vec3d.y, vec3d.z, 1.0D);
             EntityAllyVex.this.setCharging(true);
             EntityAllyVex.this.playSound(SoundEvents.ENTITY_VEX_CHARGE, 1.0F, 1.0F);
@@ -173,7 +175,7 @@ public class EntityAllyVex extends VexEntity implements ISummon {
             } else {
                 double d0 = EntityAllyVex.this.getDistanceSq(livingentity);
                 if (d0 < 9.0D) {
-                    Vec3d vec3d = livingentity.getEyePosition(1.0F);
+                    Vector3d vec3d = livingentity.getEyePosition(1.0F);
                     EntityAllyVex.this.moveController.setMoveTo(vec3d.x, vec3d.y, vec3d.z, 1.0D);
                 }
             }
@@ -195,17 +197,17 @@ public class EntityAllyVex extends VexEntity implements ISummon {
         if (compound.contains("LifeTicks")) {
             this.setLimitedLife(compound.getInt("LifeTicks"));
         }
-        String s = "";
+        UUID s;
         if (compound.contains("OwnerUUID", 8)) {
-            s = compound.getString("OwnerUUID");
+            s = compound.getUniqueId("OwnerUUID");
         } else {
             String s1 = compound.getString("Owner");
             s = PreYggdrasilConverter.convertMobOwnerIfNeeded(this.getServer(), s1);
         }
 
-        if (!s.isEmpty()) {
+        if (s != null) {
             try {
-                this.setOwnerId(UUID.fromString(s));
+                this.setOwnerId(s);
 
             } catch (Throwable ignored) {
             }
@@ -251,9 +253,9 @@ public class EntityAllyVex extends VexEntity implements ISummon {
             compound.putInt("LifeTicks", this.limitedLifeTicks);
         }
         if (this.getOwnerId() == null) {
-            compound.putString("OwnerUUID", "");
+            compound.putUniqueId("OwnerUUID", Util.DUMMY_UUID);
         } else {
-            compound.putString("OwnerUUID", this.getOwnerId().toString());
+            compound.putUniqueId("OwnerUUID", this.getOwnerId());
         }
 
     }
@@ -266,7 +268,7 @@ public class EntityAllyVex extends VexEntity implements ISummon {
 
         public void tick() {
             if (this.action == MovementController.Action.MOVE_TO) {
-                Vec3d vec3d = new Vec3d(this.posX - EntityAllyVex.this.getPosX(), this.posY - EntityAllyVex.this.getPosY(), this.posZ - EntityAllyVex.this.getPosZ());
+                Vector3d vec3d = new Vector3d(this.posX - EntityAllyVex.this.getPosX(), this.posY - EntityAllyVex.this.getPosY(), this.posZ - EntityAllyVex.this.getPosZ());
                 double d0 = vec3d.length();
                 if (d0 < EntityAllyVex.this.getBoundingBox().getAverageEdgeLength()) {
                     this.action = MovementController.Action.WAIT;
@@ -274,7 +276,7 @@ public class EntityAllyVex extends VexEntity implements ISummon {
                 } else {
                     EntityAllyVex.this.setMotion(EntityAllyVex.this.getMotion().add(vec3d.scale(this.speed * 0.05D / d0)));
                     if (EntityAllyVex.this.getAttackTarget() == null) {
-                        Vec3d vec3d1 = EntityAllyVex.this.getMotion();
+                        Vector3d vec3d1 = EntityAllyVex.this.getMotion();
                         EntityAllyVex.this.rotationYaw = -((float) MathHelper.atan2(vec3d1.x, vec3d1.z)) * (180F / (float)Math.PI);
                         EntityAllyVex.this.renderYawOffset = EntityAllyVex.this.rotationYaw;
                     } else {
@@ -337,7 +339,7 @@ public class EntityAllyVex extends VexEntity implements ISummon {
         public void tick() {
             BlockPos blockpos = EntityAllyVex.this.getBoundOrigin();
             if (blockpos == null) {
-                blockpos = new BlockPos(EntityAllyVex.this);
+                blockpos = new BlockPos(EntityAllyVex.this.getPosition());
             }
 
             for(int i = 0; i < 3; ++i) {

@@ -50,7 +50,7 @@ public class FollowSummonerGoal extends Goal {
             return false;
         } else if (livingentity instanceof PlayerEntity && ((PlayerEntity)livingentity).isSpectator()) {
             return false;
-        } else if (this.summon instanceof TameableEntity && ((TameableEntity) this.summon).isSitting()) {
+        } else if (this.summon instanceof TameableEntity && ((TameableEntity) this.summon).func_233685_eM_()) {
             return false;
         } else if (this.summon.getSelfEntity().getDistanceSq(livingentity) < (double)(this.minDist * this.minDist)) {
             return false;
@@ -66,7 +66,7 @@ public class FollowSummonerGoal extends Goal {
 
         boolean flag = true;
         if(this.summon instanceof TameableEntity)
-            flag = !((TameableEntity) this.summon).isSitting();
+            flag = !((TameableEntity) this.summon).func_233685_eM_();
 
         if(this.summon.getSummoner() == null)
             return false;
@@ -104,7 +104,7 @@ public class FollowSummonerGoal extends Goal {
             return;
         }
         this.summon.getSelfEntity().getLookController().setLookPositionWithEntity(this.summon.getSummoner(), 10.0F, (float)this.summon.getSelfEntity().getVerticalFaceSpeed());
-        if(this.summon instanceof TameableEntity && ((TameableEntity) this.summon).isSitting())
+        if(this.summon instanceof TameableEntity && ((TameableEntity) this.summon).func_233685_eM_())
             return;
 
         if (--this.timeToRecalcPath <= 0) {

@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.gui;
 
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FocusableGui;
 import net.minecraft.client.gui.IGuiEventListener;
@@ -15,8 +16,9 @@ import java.util.List;
 public class GuiSpellHUD extends FocusableGui implements IGuiEventListener {
     private static final Minecraft minecraft = Minecraft.getInstance();
 
+
     @Override
-    public List<? extends IGuiEventListener> children() {
+    public List<? extends IGuiEventListener> getEventListeners() {
         return Collections.emptyList();
     }
 
@@ -30,7 +32,7 @@ public class GuiSpellHUD extends FocusableGui implements IGuiEventListener {
         return false;
     }
 
-    public void drawHUD() {
+    public void drawHUD(MatrixStack ms) {
         ItemStack stack = StackUtil.getHeldSpellbook(minecraft.player);
         if(stack != null && stack.getItem() instanceof SpellBook && stack.getTag() != null){
             int offsetLeft = 10;
@@ -42,7 +44,7 @@ public class GuiSpellHUD extends FocusableGui implements IGuiEventListener {
             }else{
                 renderString = "Crafting Mode";
             }
-            minecraft.fontRenderer.drawStringWithShadow(renderString, offsetLeft, minecraft.getMainWindow().getScaledHeight() - 30 , 0xFFFFFF);
+            minecraft.fontRenderer.drawStringWithShadow(ms,renderString, offsetLeft, minecraft.getMainWindow().getScaledHeight() - 30 , 0xFFFFFF);
         }
     }
 }

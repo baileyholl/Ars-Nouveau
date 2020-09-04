@@ -2,6 +2,8 @@ package com.hollingsworth.arsnouveau.client.particle;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
@@ -14,7 +16,15 @@ import net.minecraft.particles.ParticleType;
 public class ColorParticleTypeData implements IParticleData {
 
     private ParticleType<ColorParticleTypeData> type;
+    public static final Codec<ColorParticleTypeData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.FLOAT.fieldOf("r").forGetter(d -> d.color.getRed()),
+            Codec.FLOAT.fieldOf("g").forGetter(d -> d.color.getGreen()),
+            Codec.FLOAT.fieldOf("b").forGetter(d -> d.color.getBlue())
+    )
+            .apply(instance, ColorParticleTypeData::new));
+
     public ParticleColor color;
+
 
     static final IParticleData.IDeserializer<ColorParticleTypeData> DESERIALIZER = new IParticleData.IDeserializer<ColorParticleTypeData>() {
         @Override
@@ -28,6 +38,10 @@ public class ColorParticleTypeData implements IParticleData {
             return new ColorParticleTypeData(type, ParticleColor.deserialize(buffer.readString()));
         }
     };
+    public ColorParticleTypeData(float r, float g, float b){
+        this.color = new ParticleColor(r, g, b);
+        this.type = ModParticles.GLOW_TYPE;
+    }
 
     public ColorParticleTypeData(ParticleType<ColorParticleTypeData> particleTypeData, ParticleColor color){
         this.type = particleTypeData;

@@ -14,8 +14,8 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -29,7 +29,7 @@ public class EffectFangs extends AbstractEffect {
 
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
-        Vec3d vec = rayTraceResult.getHitVec();
+        Vector3d vec = rayTraceResult.getHitVec();
         float bonusDamage = 2.5f * getAmplificationBonus(augments);
         double targetX = vec.x;
         double targetY = vec.y;

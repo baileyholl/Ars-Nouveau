@@ -9,6 +9,7 @@ modLoader="javafml" #mandatory
 loaderVersion="[28,)" #mandatory (28 is current forge version)
 # A URL to refer people to when problems occur with this mod
 issueTrackerURL="http://my.issue.tracker/" #optional
+license="GNU GENERAL PUBLIC LICENSE"
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
 # The modid of the mod
@@ -25,6 +26,7 @@ displayURL="http://example.com/" #optional
 logoFile="examplemod.png" #optional
 # A text field displayed in the mod UI
 credits="Vazkii, Azanor" #optional
+license="GNU GENERAL PUBLIC LICENSE"
 # A text field displayed in the mod UI
 authors="Bailey :)" #optional
 # The description text for the mod (multi line!) (#mandatory)

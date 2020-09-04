@@ -83,5 +83,10 @@ public class Materials {
         public float getToughness() {
             return toughness;
         }
+
+        @Override
+        public float getKnockbackResistance() {
+            return 0;
+        }
     }
 }

@@ -7,6 +7,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IBlockReader;
@@ -33,7 +34,7 @@ public class ManaCondenserBlock extends ModBlock {
         if(BlockUtil.containsStateInRadius(worldIn, pos, 5, ManaCondenserBlock.class)){
             ((ManaCondenserTile)worldIn.getTileEntity(pos)).isDisabled = true;
             if(placer != null)
-                placer.sendMessage(new StringTextComponent("Another condenser is nearby..."));
+                placer.sendMessage(new StringTextComponent("Another condenser is nearby..."), Util.DUMMY_UUID);
         }
     }
 

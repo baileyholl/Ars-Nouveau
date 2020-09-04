@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetBookMode;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -45,11 +46,6 @@ public class GuiRadialMenu extends Screen {
     private CompoundNBT tag;
     private int selectedItem;
 
-    @Override
-    public List<? extends IGuiEventListener> children() {
-        return Collections.emptyList();
-    }
-
 
     public GuiRadialMenu(KeyBinding keybinding, CompoundNBT book_tag) {
         super(new StringTextComponent(""));
@@ -79,8 +75,8 @@ public class GuiRadialMenu extends Screen {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        super.render(mouseX, mouseY, partialTicks);
+    public void render(MatrixStack ms,int mouseX, int mouseY, float partialTicks) {
+        super.render(ms,mouseX, mouseY, partialTicks);
         //List<Category> categories = mainHandCategories();
 
         if (true) {
@@ -155,7 +151,7 @@ public class GuiRadialMenu extends Screen {
             if (hasMouseOver && mousedOverSlot != -1) {
                 int adjusted =  (mousedOverSlot+ 6) % 10;
                 adjusted = adjusted == 0 ? 10 : adjusted;
-                drawCenteredString(font, SpellBook.getSpellName(tag,  adjusted), width/2,(height - font.FONT_HEIGHT) / 2,16777215);
+                drawCenteredString(ms,font, SpellBook.getSpellName(tag,  adjusted), width/2,(height - font.FONT_HEIGHT) / 2,16777215);
             }
 
             RenderHelper.enableStandardItemLighting();
@@ -182,10 +178,10 @@ public class GuiRadialMenu extends Screen {
                 RenderSystem.disableLighting();
                 RenderSystem.disableDepthTest();
                 if(!resourceIcon.isEmpty()) {
-                    GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/spells/" + resourceIcon), (int) posX, (int) posY, 0, 0, 16, 16, 16, 16);
-                    GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/spells/" + castType), (int) posX +3 , (int) posY - 10, 0, 0, 10, 10, 10, 10);
-
-
+                    GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/spells/" + resourceIcon),
+                            (int) posX, (int) posY, 0, 0, 16, 16, 16, 16,ms);
+                    GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/spells/" + castType),
+                            (int) posX +3 , (int) posY - 10, 0, 0, 10, 10, 10, 10,ms);
                 }
                 this.itemRenderer.renderItemOverlayIntoGUI(font, stack, (int) posX + 5, (int) posY, String.valueOf(i + 1));
 

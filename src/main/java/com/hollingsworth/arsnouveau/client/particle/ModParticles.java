@@ -19,10 +19,11 @@ public class ModParticles {
     public static void registerParticles(RegistryEvent.Register<ParticleType<?>> event) {
         System.out.println("Rendering particles");
         IForgeRegistry<ParticleType<?>> r = event.getRegistry();
+
 //        r.register( new ParticleType<ColorParticleTypeData>(false, ColorParticleTypeData.DESERIALIZER).setRegistryName(ParticleSource.NAME));
 //        r.register( new ParticleType<ArcParticleTypeData>(false, ArcParticleTypeData.DESERIALIZER).setRegistryName(ParticleArc.NAME));
 
-        r.register( new ParticleType<ColorParticleTypeData>(false, ColorParticleTypeData.DESERIALIZER).setRegistryName(GlowParticleData.NAME));
+          r.register( new GlowParticleType().setRegistryName(GlowParticleData.NAME));
 //        r.register( new ParticleType<ColorParticleTypeData>(false, ColorParticleTypeData.DESERIALIZER).setRegistryName(ParticleLineGlow.NAME));
 //        RegistryHelper.register(r, new ParticleType<ElementTypeParticleData>(false, ElementTypeParticleData.DESERIALIZER), ParticleSource.NAME);
 //        RegistryHelper.register(r, new ParticleType<ElementTypeParticleData>(false, ElementTypeParticleData.DESERIALIZER), ParticleElementFlow.NAME);

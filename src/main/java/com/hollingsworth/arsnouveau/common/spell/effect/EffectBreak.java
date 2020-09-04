@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
@@ -21,6 +20,7 @@ import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class EffectBreak extends AbstractEffect {
 
@@ -49,7 +49,7 @@ public class EffectBreak extends AbstractEffect {
             }
 
             int aoeBuff = getBuffCount(augments, AugmentAOE.class);
-            ImmutableList<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
+            List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
             for(BlockPos pos1 : posList) {
                 state = world.getBlockState(pos1);
                 // Iron block or lower unpowered

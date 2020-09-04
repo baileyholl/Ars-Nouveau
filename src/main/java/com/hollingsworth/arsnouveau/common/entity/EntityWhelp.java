@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.controller.FlyingMovementController;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.LookAtGoal;
@@ -24,15 +25,13 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.FlyingPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -72,9 +71,9 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     }
 
     @Override
-    protected boolean processInteract(PlayerEntity player, Hand hand) {
+    public ActionResultType applyPlayerInteraction(PlayerEntity player, Vector3d vec, Hand hand) {
         if(world.isRemote)
-            return true;
+            return ActionResultType.SUCCESS;
         ItemStack stack = player.getHeldItem(hand);
 
 
@@ -83,25 +82,24 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
             if(new EntitySpellResolver(spellParts).canCast(this)) {
                 this.spellRecipe = SpellParchment.getSpellRecipe(stack);
                 setRecipeString(SpellRecipeUtil.serializeForNBT(spellRecipe));
-                player.sendMessage(new StringTextComponent("Spell set."));
-                return true;
+                player.sendMessage(new StringTextComponent("Spell set."), Util.DUMMY_UUID);
+                return ActionResultType.SUCCESS;
             } else{
-                player.sendMessage(new StringTextComponent("A whelp cannot cast an invalid spell."));
-                return false;
+                player.sendMessage(new StringTextComponent("A whelp cannot cast an invalid spell."), Util.DUMMY_UUID);
+                return ActionResultType.SUCCESS;
             }
         }else if(stack == ItemStack.EMPTY){
             if(spellRecipe == null || spellRecipe.size() == 0){
-                player.sendMessage(new StringTextComponent("Give this whelp a spell by giving it some inscribed Spell Parchment. "));
+                player.sendMessage(new StringTextComponent("Give this whelp a spell by giving it some inscribed Spell Parchment. "), Util.DUMMY_UUID);
             }else
-                player.sendMessage(new StringTextComponent("This whelp is casting " + SpellRecipeUtil.getDisplayString(spellRecipe)));
-            return true;
+                player.sendMessage(new StringTextComponent("This whelp is casting " + SpellRecipeUtil.getDisplayString(spellRecipe)), Util.DUMMY_UUID);
+            return ActionResultType.SUCCESS;
         }
         if(stack != ItemStack.EMPTY){
             setHeldStack(new ItemStack(stack.getItem()));
-            player.sendMessage(new StringTextComponent("This whelp will use " + stack.getItem().getDisplayName(stack).getFormattedText() +  " in spells if this item is in a Summoning Crystal chest."));
+            player.sendMessage(new StringTextComponent("This whelp will use " + stack.getItem().getDisplayName(stack).getString() +  " in spells if this item is in a Summoning Crystal chest."), Util.DUMMY_UUID);
         }
-
-        return true;
+        return super.applyPlayerInteraction(player, vec, hand);
     }
 
     public EntityWhelp(World world, BlockPos crystalPos){
@@ -179,7 +177,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
             return;
         if(((SummoningCrytalTile) world.getTileEntity(crystalPos)).removeMana(spellRecipe)){
             EntitySpellResolver resolver = new EntitySpellResolver(this.spellRecipe);
-            resolver.onCastOnBlock(new BlockRayTraceResult(new Vec3d(target.getX(), target.getY(), target.getZ()), Direction.UP,target, false ), this);
+            resolver.onCastOnBlock(new BlockRayTraceResult(new Vector3d(target.getX(), target.getY(), target.getZ()), Direction.UP,target, false ), this);
         }
         this.ticksSinceLastSpell = 0;
     }
@@ -319,7 +317,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     }
 
     @Override
-    public ILivingEntityData onInitialSpawn(IWorld p_213386_1_, DifficultyInstance p_213386_2_, SpawnReason p_213386_3_, @Nullable ILivingEntityData p_213386_4_, @Nullable CompoundNBT p_213386_5_) {
+    public ILivingEntityData onInitialSpawn(IServerWorld p_213386_1_, DifficultyInstance p_213386_2_, SpawnReason p_213386_3_, @Nullable ILivingEntityData p_213386_4_, @Nullable CompoundNBT p_213386_5_) {
         return super.onInitialSpawn(p_213386_1_, p_213386_2_, p_213386_3_, p_213386_4_, p_213386_5_);
     }
 
@@ -331,13 +329,18 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         super.livingTick();
     }
 
-    protected void registerAttributes() {
-        super.registerAttributes();
-        this.getAttributes().registerAttribute(SharedMonsterAttributes.FLYING_SPEED);
-        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(6.0D);
-        this.getAttribute(SharedMonsterAttributes.FLYING_SPEED).setBaseValue((double)0.4F);
-        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue((double)0.2F);
-    }
+//    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+//        super.registerAttributes();
+////        this.dataManager.register(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.getDefaultValue());
+////        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(6.0D);
+////        this.getAttribute(SharedMonsterAttributes.FLYING_SPEED).setBaseValue((double)0.4F);
+////        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue((double)0.2F);
+//        return null;
+//    }
+//
+
+
+
     protected void registerData() {
         super.registerData();
         this.dataManager.register(HELD_ITEM, ItemStack.EMPTY);
@@ -387,7 +390,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         }
         @Nullable
         private BlockPos getFloatingLoc() {
-            Vec3d vec3d = EntityWhelp.this.getLook(0.0F);
+            Vector3d vec3d = EntityWhelp.this.getLook(0.0F);
             boolean flyUp = false;
             for(int i =0; i < 3; i++){
                 if(world.getBlockState(EntityWhelp.this.getPosition().down(i)).isSolid()){ // Too close to the ground

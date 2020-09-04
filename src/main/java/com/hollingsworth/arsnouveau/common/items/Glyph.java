@@ -24,12 +24,12 @@ public class Glyph extends ModItem{
         playerIn.inventory.mainInventory.forEach(itemStack -> {
             if(itemStack.getItem() instanceof SpellBook){
                 if(SpellBook.getUnlockedSpells(itemStack.getTag()).contains(spellPart)){
-                    playerIn.sendMessage(new StringTextComponent("You already know this spell!"));
+                    playerIn.sendMessage(new StringTextComponent("You already know this spell!"), null);
                     return;
                 }
                 SpellBook.unlockSpell(itemStack.getTag(), this.spellPart.getTag());
                 playerIn.getHeldItem(handIn).shrink(1);
-                playerIn.sendMessage(new StringTextComponent("Unlocked " + this.spellPart.getName()));
+                playerIn.sendMessage(new StringTextComponent("Unlocked " + this.spellPart.getName()), null);
             }
         });
     return super.onItemRightClick(worldIn, playerIn, handIn);

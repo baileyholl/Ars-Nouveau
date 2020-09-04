@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -100,14 +101,14 @@ public class ArcaneRelayTile extends AbstractManaTile{
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void read(BlockState state, CompoundNBT tag) {
         if(NBTUtil.hasBlockPos(tag, "to")){
             this.toPos = NBTUtil.getBlockPos(tag, "to");
         }
         if(NBTUtil.hasBlockPos(tag, "from")){
             this.fromPos = NBTUtil.getBlockPos(tag, "from");
         }
-        super.read(tag);
+        super.read(state, tag);
     }
 
     @Override
@@ -117,22 +118,6 @@ public class ArcaneRelayTile extends AbstractManaTile{
         if(fromPos != null)
             NBTUtil.storeBlockPos(tag, "from", fromPos);
         return super.write(tag);
-    }
-
-    @Override
-    @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 3, this.getUpdateTag());
-    }
-    @Override
-    public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        super.onDataPacket(net, pkt);
-        handleUpdateTag(pkt.getNbtCompound());
     }
 
 }

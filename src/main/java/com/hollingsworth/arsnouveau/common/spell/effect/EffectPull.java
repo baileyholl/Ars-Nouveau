@@ -9,7 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -25,7 +25,7 @@ public class EffectPull extends AbstractEffect {
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
         if(rayTraceResult instanceof EntityRayTraceResult){
             Entity target = ((EntityRayTraceResult) rayTraceResult).getEntity();
-            Vec3d vec3d = new Vec3d(shooter.getPosX() - target.getPosX(), shooter.getPosY() - target.getPosY(), shooter.getPosZ() - target.getPosZ());
+            Vector3d vec3d = new Vector3d(shooter.getPosX() - target.getPosX(), shooter.getPosY() - target.getPosY(), shooter.getPosZ() - target.getPosZ());
             double d1 = 7;
 
             double d2 = 1.0D + 0.5 * getAmplificationBonus(augments);

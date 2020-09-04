@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.block.ManaBloomCrop;
 import com.hollingsworth.arsnouveau.common.entity.EntityWhelp;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -43,9 +44,9 @@ public class ManaCondenserTile extends AbstractManaTile implements ITickableTile
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void read(BlockState state, CompoundNBT tag) {
         isDisabled = tag.getBoolean("disabled");
-        super.read(tag);
+        super.read(state, tag);
     }
 
     @Override

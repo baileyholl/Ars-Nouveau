@@ -2,9 +2,11 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.GuiSpellBook;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -23,7 +25,7 @@ public class GlyphButton extends Button {
     GuiSpellBook parent;
 
     public GlyphButton(GuiSpellBook parent, int x, int y, boolean isCraftingSlot, String resource_image, String spell_id) {
-        super(x, y,  16, 16, "", parent::onGlyphClick);
+        super(x, y,  16, 16, ITextComponent.func_244388_a(""), parent::onGlyphClick);
         this.parent = parent;
         this.x = x;
         this.y = y;
@@ -50,7 +52,7 @@ public class GlyphButton extends Button {
     }
 
     @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
+    public void render(MatrixStack ms,int mouseX, int mouseY, float partialTicks) {
 //        System.out.println(mouseX);
 //        System.out.println(mouseY);
 
@@ -59,16 +61,9 @@ public class GlyphButton extends Button {
         {
             if(this.resourceIcon != null && !this.resourceIcon.equals("")) {
                 RenderSystem.color3f(1F, 1F, 1F);
-//                Minecraft.getInstance().getTextureManager().bindTexture(new ResourceLocation(ExampleMod.MODID, "textures/gui/spells/" + this.resourceIcon));
-//                blit(x + 2, y + 2, 0, 0, 16, 16);
-                GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/spells/" + this.resourceIcon), x, y, 0, 0, 16, 16,16,16 );
+
+                GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/spells/" + this.resourceIcon), x, y, 0, 0, 16, 16,16,16 , ms);
             }
-//
-//            if(parent != null && parent.isMouseInRelativeRange(mouseX, mouseY,x, y,  16, 16)){
-//                List<String> test = new ArrayList<>();
-//                test.add("Memes");
-//                parent.tooltip = test;
-//            }mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height)
 
             if(parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)){
 

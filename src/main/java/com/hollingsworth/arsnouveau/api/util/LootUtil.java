@@ -6,12 +6,14 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameters;
 import net.minecraft.tileentity.FurnaceTileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.loot.LootContext;
-import net.minecraft.world.storage.loot.LootParameters;
+
 import net.minecraftforge.common.util.FakePlayerFactory;
 
 public class LootUtil {
@@ -19,7 +21,7 @@ public class LootUtil {
     public static ItemStack getDefaultFakeTool(){return new ItemStack(Items.DIAMOND_PICKAXE);}
     public static ItemStack getDefaultFakeWeapon(){return new ItemStack(Items.DIAMOND_SWORD);}
     public static LootContext.Builder getDefaultContext(ServerWorld serverWorld, BlockPos pos, LivingEntity shooter){
-        return (new LootContext.Builder(serverWorld)).withRandom(serverWorld.rand).withParameter(LootParameters.POSITION, pos).withParameter(LootParameters.THIS_ENTITY, shooter)
+        return (new LootContext.Builder(serverWorld)).withRandom(serverWorld.rand).withParameter(LootParameters.field_237457_g_, new Vector3d(pos.getX(), pos.getY(), pos.getZ())).withParameter(LootParameters.THIS_ENTITY, shooter)
                 .withNullableParameter(LootParameters.BLOCK_ENTITY, serverWorld.getTileEntity(pos));
     }
 
@@ -41,7 +43,7 @@ public class LootUtil {
         ItemStack stack = getDefaultFakeWeapon();
         stack.addEnchantment(Enchantments.LOOTING, looting);
         return(new LootContext.Builder(world)).withRandom(world.rand).withParameter(LootParameters.THIS_ENTITY, slainEntity)
-                .withParameter(LootParameters.POSITION, new BlockPos(slainEntity)).withParameter(LootParameters.LAST_DAMAGE_PLAYER, FakePlayerFactory.getMinecraft(world)).withParameter(LootParameters.DAMAGE_SOURCE, source).withNullableParameter(LootParameters.KILLER_ENTITY, source.getTrueSource())
+                .withParameter(LootParameters.field_237457_g_, new Vector3d(slainEntity.getPosX(), slainEntity.getPosY(), slainEntity.getPosZ())).withParameter(LootParameters.LAST_DAMAGE_PLAYER, FakePlayerFactory.getMinecraft(world)).withParameter(LootParameters.DAMAGE_SOURCE, source).withNullableParameter(LootParameters.KILLER_ENTITY, source.getTrueSource())
                 .withNullableParameter(LootParameters.DIRECT_KILLER_ENTITY, source.getImmediateSource()).withParameter(LootParameters.KILLER_ENTITY, player).withLuck( player instanceof PlayerEntity ? ((PlayerEntity)player).getLuck() : 1.0f).withParameter(LootParameters.TOOL, stack).withParameter(LootParameters.EXPLOSION_RADIUS, 0.0f)
                 .withParameter(LootParameters.BLOCK_STATE, Blocks.AIR.getDefaultState()).withParameter(LootParameters.BLOCK_ENTITY, new FurnaceTileEntity());
     }

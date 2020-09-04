@@ -17,9 +17,11 @@ public class ParticleColor {
         this.color = (r << 16) | (g << 8) | b;
     }
 
-    public float getRed() {
-        return r;
+    public ParticleColor(float r, float g, float b){
+        this((int)r,(int) g,(int) b);
     }
+
+    public float getRed(){return r;}
 
     public float getGreen() {
         return g;

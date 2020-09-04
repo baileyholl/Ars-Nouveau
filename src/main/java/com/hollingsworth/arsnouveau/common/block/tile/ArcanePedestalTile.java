@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -19,12 +20,13 @@ public class ArcanePedestalTile extends TileEntity implements ITickableTileEntit
         super(BlockRegistry.ARCANE_PEDESTAL_TILE);
     }
 
-    @Override
-    public void read(CompoundNBT compound) {
-        stack = ItemStack.read((CompoundNBT)compound.get("itemStack"));
-        super.read(compound);
-    }
 
+
+    @Override
+    public void read(BlockState state, CompoundNBT compound) {
+        stack = ItemStack.read((CompoundNBT)compound.get("itemStack"));
+        super.read(state, compound);
+    }
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
@@ -37,26 +39,8 @@ public class ArcanePedestalTile extends TileEntity implements ITickableTileEntit
         return super.write(compound);
     }
 
-    @Override
-    @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 3, this.getUpdateTag());
-    }
+
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        super.onDataPacket(net, pkt);
-        handleUpdateTag(pkt.getNbtCompound());
-    }
-
-    @Override
-    public void tick() {
-
-
-    }
+    public void tick() { }
 }
