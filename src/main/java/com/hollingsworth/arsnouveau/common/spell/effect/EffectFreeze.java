@@ -28,7 +28,6 @@ public class EffectFreeze extends AbstractEffect {
             applyPotion((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity(), Effects.SLOWNESS, augments, 10, 5);
         }
         else if (rayTraceResult instanceof BlockRayTraceResult) {
-            System.out.println(rayTraceResult);
             BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getPos();
             BlockState state = world.getBlockState(pos.up());
             if(state.getMaterial() == Material.WATER){

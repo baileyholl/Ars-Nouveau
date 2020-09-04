@@ -50,13 +50,4 @@ public class PlayerEvent {
             ObfuscationReflectionHelper.setPrivateValue(FirstPersonRenderer.class, minecraft.getFirstPersonRenderer(), 1f, MappingUtil.getEquippedProgressMainhand());
         }
     }
-
-    @SubscribeEvent
-    public static void onJump(final LivingEvent.LivingJumpEvent event) {
-        LivingEntity entity = event.getEntityLiving();
-        if(entity == null)
-            return;
-
-    }
-
 }

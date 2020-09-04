@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.util;
 
 import com.google.common.collect.ImmutableList;
+import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
@@ -9,12 +10,18 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingEvent;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 public class SpellUtil {
+
+    public static boolean postEvent(SpellCastEvent e){
+        return MinecraftForge.EVENT_BUS.post(e);
+    }
 
     public static boolean isValidSpell(ArrayList<AbstractSpellPart> recipe){
         AbstractCastMethod method = null;

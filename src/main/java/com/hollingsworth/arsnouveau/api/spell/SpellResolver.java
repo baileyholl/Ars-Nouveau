@@ -1,9 +1,11 @@
-package com.hollingsworth.arsnouveau.common.spell;
+package com.hollingsworth.arsnouveau.api.spell;
 
+import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,8 +27,6 @@ import static com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil.getAugments;
 
 public class SpellResolver {
     protected AbstractCastMethod castType;
-//    private EffectType effectType;
-
     protected ArrayList<AbstractSpellPart> spell_recipe;
     
     public SpellResolver(AbstractCastMethod cast, ArrayList<AbstractSpellPart> spell_recipe){
@@ -81,24 +81,27 @@ public class SpellResolver {
         });
         return canCast.get();
     }
+    public boolean postEvent(LivingEntity entity){
+        return SpellUtil.postEvent(new SpellCastEvent(entity, spell_recipe));
+    }
 
     public void onCast(ItemStack stack, LivingEntity livingEntity, World world){
-        if(canCast(livingEntity))
+        if(canCast(livingEntity) && !postEvent(livingEntity))
             castType.onCast(stack, livingEntity, world, getAugments(spell_recipe, 0, livingEntity));
     }
 
     public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster){
-        if(canCast(caster))
+        if(canCast(caster) && !postEvent(caster))
             castType.onCastOnBlock(blockRayTraceResult, caster, getAugments(spell_recipe, 0, caster));
     }
 
     public void onCastOnBlock(ItemUseContext context){
-        if(canCast(context.getPlayer()))
+        if(canCast(context.getPlayer()) && !postEvent(context.getPlayer()))
             castType.onCastOnBlock(context, getAugments(spell_recipe, 0, context.getPlayer()));
     }
 
     public void onCastOnEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand){
-        if(canCast(playerIn))
+        if(canCast(playerIn) && !postEvent(playerIn))
             castType.onCastOnEntity(stack, playerIn, target, hand, getAugments(spell_recipe, 0, playerIn));
     }
 

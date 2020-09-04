@@ -1,7 +1,5 @@
-package com.hollingsworth.arsnouveau.common.spell;
+package com.hollingsworth.arsnouveau.api.spell;
 
-import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import net.minecraft.entity.LivingEntity;
 
 import java.util.ArrayList;

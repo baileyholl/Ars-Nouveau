@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.api;
+package com.hollingsworth.arsnouveau.api.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
@@ -73,7 +73,8 @@ public class EventHandler {
                 e.setAmount(damage);
             }
         }
-
-
     }
+
+    @SubscribeEvent
+    public static void spellCast(SpellCastEvent e){ }
 }

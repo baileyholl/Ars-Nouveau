@@ -25,7 +25,6 @@ public class EffectExplosion extends AbstractEffect {
 
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
-        System.out.println(rayTraceResult);
         if(rayTraceResult == null)
             return;
         Vec3d vec = rayTraceResult.getHitVec();

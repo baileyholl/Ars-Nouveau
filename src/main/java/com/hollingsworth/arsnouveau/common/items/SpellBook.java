@@ -10,16 +10,13 @@ import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOpenGUI;
-import com.hollingsworth.arsnouveau.common.spell.SpellResolver;
+import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -125,18 +122,19 @@ public class SpellBook extends Item implements ISpellTier {
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
         }
         SpellResolver resolver = new SpellResolver(getCurrentRecipe(stack));
-        RayTraceResult result =  playerIn.pick(5, 0, true);
-        if(result.getType() == RayTraceResult.Type.BLOCK){
-            ItemUseContext context = new ItemUseContext(playerIn, handIn, (BlockRayTraceResult) result);
-            resolver.onCastOnBlock(context);
-            return new ActionResult<>(ActionResultType.SUCCESS, stack);
-        }
         EntityRayTraceResult entityRes = MathUtil.getLookedAtEntity(playerIn, 25);
         if(entityRes != null && entityRes.getEntity() instanceof LivingEntity){
 
             resolver.onCastOnEntity(stack, playerIn, (LivingEntity) entityRes.getEntity(), handIn);
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
         }
+        RayTraceResult result =  playerIn.pick(5, 0, true);
+        if(result.getType() == RayTraceResult.Type.BLOCK){
+            ItemUseContext context = new ItemUseContext(playerIn, handIn, (BlockRayTraceResult) result);
+            resolver.onCastOnBlock(context);
+            return new ActionResult<>(ActionResultType.SUCCESS, stack);
+        }
+
         resolver.onCast(stack,playerIn,worldIn);
         return new ActionResult<>(ActionResultType.SUCCESS, stack);
     }
@@ -160,29 +158,6 @@ public class SpellBook extends Item implements ISpellTier {
     @Override
     public ActionResultType onItemUse(ItemUseContext context) {
         return ActionResultType.CONSUME;
-//
-//        World worldIn = context.getWorld();
-//        PlayerEntity playerIn = context.getPlayer();
-//        Hand handIn = context.getHand();
-//        BlockPos blockpos = context.getPos();
-//        BlockPos blockpos1 = blockpos.offset(context.getFace());
-//        if(worldIn.getBlockState(blockpos).getBlock() instanceof ScribesBlock) {
-//            return ActionResultType.SUCCESS;
-//        }
-//
-//        ItemStack stack = playerIn.getHeldItem(handIn);
-//        if(getMode(stack.getTag()) == 0 && playerIn instanceof ServerPlayerEntity) {
-//            ServerPlayerEntity player = (ServerPlayerEntity) playerIn;
-//            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->player), new PacketOpenGUI(stack.getTag(), getTier().ordinal(),getUnlockedSpellString(context.getItem().getTag()) ));
-//            return ActionResultType.SUCCESS;
-//        }
-//        if(worldIn.isRemote || !stack.hasTag() || getMode(stack.getTag()) == 0 ) {
-//            //  spawnParticles(blockpos.getX(), blockpos.getY(), blockpos.getZ(), worldIn);
-//            return ActionResultType.SUCCESS;
-//        }
-//        SpellResolver resolver = new SpellResolver(getCurrentRecipe(stack));
-//        resolver.onCastOnBlock(context);
-//        return ActionResultType.SUCCESS;
     }
 
     public ArrayList<AbstractSpellPart> getCurrentRecipe(ItemStack stack){
