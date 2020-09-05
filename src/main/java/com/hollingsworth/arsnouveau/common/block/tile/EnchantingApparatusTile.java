@@ -130,17 +130,22 @@ public class EnchantingApparatusTile extends AnimatedTile {
 
         return super.write(compound);
     }
-    @Override
-    @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 3, this.getUpdateTag());
-    }
-
-    @Override
-    public CompoundNBT getUpdateTag() {
-        CompoundNBT tag = new CompoundNBT();
-        tag.putInt("counter", this.counter);
-        tag.putBoolean("is_crafting", this.isCrafting);
-        return this.write(tag);
-    }
+//    @Override
+//    @Nullable
+//    public SUpdateTileEntityPacket getUpdatePacket() {
+//        return new SUpdateTileEntityPacket(this.pos, 3, this.getUpdateTag());
+//    }
+//
+//    @Override
+//    public CompoundNBT getUpdateTag() {
+//        CompoundNBT tag = new CompoundNBT();
+//        tag.putInt("counter", this.counter);
+//        tag.putBoolean("is_crafting", this.isCrafting);
+//        return this.write(tag);
+//    }
+//    @Override
+//    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+//        super.onDataPacket(net, pkt);
+//        handleUpdateTag(world.getBlockState(pos),pkt.getNbtCompound());
+//    }
 }

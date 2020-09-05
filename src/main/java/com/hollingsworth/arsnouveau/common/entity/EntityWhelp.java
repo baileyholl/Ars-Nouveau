@@ -10,7 +10,9 @@ import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.AttributeModifierManager;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.FlyingMovementController;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.LookAtGoal;
@@ -35,6 +37,7 @@ import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayerFactory;
+import org.w3c.dom.Attr;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -329,17 +332,11 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         super.livingTick();
     }
 
-//    public static AttributeModifierMap.MutableAttribute registerAttributes() {
-//        super.registerAttributes();
-////        this.dataManager.register(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.getDefaultValue());
-////        this.getAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(6.0D);
-////        this.getAttribute(SharedMonsterAttributes.FLYING_SPEED).setBaseValue((double)0.4F);
-////        this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue((double)0.2F);
-//        return null;
-//    }
-//
-
-
+    public static AttributeModifierMap.MutableAttribute attributes() {
+        return MobEntity.func_233666_p_().createMutableAttribute(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.getDefaultValue())
+                .createMutableAttribute(Attributes.MAX_HEALTH, 6.0D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.2D);
+    }
 
     protected void registerData() {
         super.registerData();

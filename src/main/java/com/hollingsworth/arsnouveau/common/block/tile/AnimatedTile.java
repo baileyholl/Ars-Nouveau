@@ -30,7 +30,6 @@ public abstract class AnimatedTile extends TileEntity implements ITickableTileEn
     @Override
     @Nullable
     public SUpdateTileEntityPacket getUpdatePacket() {
-
         return new SUpdateTileEntityPacket(this.pos, 3, this.getUpdateTag());
     }
 

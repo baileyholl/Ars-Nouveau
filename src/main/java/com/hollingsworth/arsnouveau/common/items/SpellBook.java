@@ -95,16 +95,6 @@ public class SpellBook extends Item implements ISpellTier {
     }
 
     @Override
-    public UseAction getUseAction(ItemStack p_77661_1_) {
-        return UseAction.NONE;
-    }
-
-    @Override
-    public int getUseDuration(ItemStack p_77626_1_) {
-        return super.getUseDuration(p_77626_1_);
-    }
-
-    @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
 
@@ -158,7 +148,7 @@ public class SpellBook extends Item implements ISpellTier {
      */
     @Override
     public ActionResultType onItemUse(ItemUseContext context) {
-        return ActionResultType.CONSUME;
+        return ActionResultType.SUCCESS;
     }
 
     public ArrayList<AbstractSpellPart> getCurrentRecipe(ItemStack stack){
@@ -181,11 +171,6 @@ public class SpellBook extends Item implements ISpellTier {
     @Override
     public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player) {
         return true;
-    }
-
-    @Override
-    public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
-        return false;
     }
 
     public static void setSpellName(CompoundNBT tag, String name, int slot){

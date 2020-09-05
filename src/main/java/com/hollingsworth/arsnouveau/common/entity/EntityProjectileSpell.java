@@ -62,7 +62,7 @@ public class EntityProjectileSpell extends ArrowEntity {
 
         if (this.inGround) {
             this.inGround = false;
-            this.setMotion(this.getMotion().mul((double)(this.rand.nextFloat() * 0.2F), (double)(this.rand.nextFloat() * 0.2F), (double)(this.rand.nextFloat() * 0.2F)));
+            this.setMotion(this.getMotion().mul((double)(0.2F), (double)(0.2F), (double)(0.2F)));
         }
 
         AxisAlignedBB axisalignedbb = this.getBoundingBox().expand(this.getMotion()).grow(1.0D);
@@ -91,44 +91,29 @@ public class EntityProjectileSpell extends ArrowEntity {
             this.isAirBorne = true;
         }
 
-        if (entityraytraceresult == null || this.getPierceLevel() <= 0) {
-
-        }
-        System.out.println("Hiya");
-        raytraceresult = null;
-
-
-
-//        if (raytraceresult.getType() != RayTraceResult.Type.MISS) {
-//            if (raytraceresult.getType() == RayTraceResult.Type.BLOCK && this.world.getBlockState(((BlockRayTraceResult)raytraceresult).getPos()).getBlock() == Blocks.NETHER_PORTAL) {
-//                this.setPortal(((BlockRayTraceResult)raytraceresult).getPos());
-//            } else if (!net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult)){
-//                this.onHit(raytraceresult);
-//            }
-//        }
 
         Vector3d vec3d = this.getMotion();
         double x = this.getPosX() +vec3d.x;
         double y = this.getPosY() + vec3d.y;
         double z = this.getPosZ() + vec3d.getZ();
-
-        this.rotationYaw = (float)(MathHelper.atan2(vec3d.x, vec3d.z) * (double)(180F / (float)Math.PI));
-
-
-        while(this.rotationPitch - this.prevRotationPitch >= 180.0F) {
-            this.prevRotationPitch += 360.0F;
-        }
-
-        while(this.rotationYaw - this.prevRotationYaw < -180.0F) {
-            this.prevRotationYaw -= 360.0F;
-        }
-
-        while(this.rotationYaw - this.prevRotationYaw >= 180.0F) {
-            this.prevRotationYaw += 360.0F;
-        }
-
-        this.rotationPitch = MathHelper.lerp(0.2F, this.prevRotationPitch, this.rotationPitch);
-        this.rotationYaw = MathHelper.lerp(0.2F, this.prevRotationYaw, this.rotationYaw);
+//
+//        this.rotationYaw = (float)(MathHelper.atan2(vec3d.x, vec3d.z) * (double)(180F / (float)Math.PI));
+//
+//
+//        while(this.rotationPitch - this.prevRotationPitch >= 180.0F) {
+//            this.prevRotationPitch += 360.0F;
+//        }
+//
+//        while(this.rotationYaw - this.prevRotationYaw < -180.0F) {
+//            this.prevRotationYaw -= 360.0F;
+//        }
+//
+//        while(this.rotationYaw - this.prevRotationYaw >= 180.0F) {
+//            this.prevRotationYaw += 360.0F;
+//        }
+//
+//        this.rotationPitch = MathHelper.lerp(0.2F, this.prevRotationPitch, this.rotationPitch);
+//        this.rotationYaw = MathHelper.lerp(0.2F, this.prevRotationYaw, this.rotationYaw);
 
 
         if (!this.hasNoGravity()) {
@@ -138,7 +123,7 @@ public class EntityProjectileSpell extends ArrowEntity {
 
         this.setPosition(x,y,z);
         if(world.isRemote && this.age > 1) {
-            System.out.println("Spawning particles3 7");
+
             for (int i = 0; i < 10; i++) {
                 double minRange = -0.1;
                 double maxRange = 0.1;
@@ -207,6 +192,10 @@ public class EntityProjectileSpell extends ArrowEntity {
 
     }
 
+    public void shootDown(){
+        this.setMotion(new Vector3d(0, -0.1, 0));
+    }
+
     @Override
     public boolean hasNoGravity() {
         return true;
@@ -243,7 +232,7 @@ public class EntityProjectileSpell extends ArrowEntity {
             SpellBook.spawnParticles(result.getHitVec().x, result.getHitVec().y, result.getHitVec().z, world);
         }
 
-        if (!world.isRemote && result instanceof BlockRayTraceResult) {
+        if (!world.isRemote && result instanceof BlockRayTraceResult && !this.removed) {
 //           if(!world.getBlockState(((BlockRayTraceResult) result).getPos()).getMaterial().blocksMovement())
 //               return;
             BlockRayTraceResult blockraytraceresult = (BlockRayTraceResult)result;

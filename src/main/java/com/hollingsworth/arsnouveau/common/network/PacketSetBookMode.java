@@ -31,7 +31,6 @@ public class PacketSetBookMode {
                 if (ctx.get().getSender() != null) {
                     ItemStack stack = ctx.get().getSender().getHeldItemMainhand();
                     if (stack != null && stack.getItem() instanceof SpellBook ) {
-                        System.out.println("Setting tag");
                         stack.setTag(tag);
                     }
                 }

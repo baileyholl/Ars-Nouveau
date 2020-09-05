@@ -10,10 +10,7 @@ import com.hollingsworth.arsnouveau.common.block.SummoningCrystal;
 import com.hollingsworth.arsnouveau.common.entity.EntityWhelp;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.LeavesBlock;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
@@ -27,6 +24,7 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -136,7 +134,7 @@ public class SummoningCrytalTile extends AbstractManaTile {
         if(block instanceof SummoningCrystal || block instanceof ContainerBlock || block instanceof ManaBlock || block instanceof IInventory)
             return null;
 
-            return taskPos;
+        return taskPos;
     }
 
     public boolean enoughMana(ArrayList<AbstractSpellPart> spellParts){

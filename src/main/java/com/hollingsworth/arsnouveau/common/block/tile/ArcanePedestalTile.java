@@ -12,7 +12,7 @@ import net.minecraft.tileentity.TileEntity;
 
 import javax.annotation.Nullable;
 
-public class ArcanePedestalTile extends TileEntity implements ITickableTileEntity {
+public class ArcanePedestalTile extends AnimatedTile implements ITickableTileEntity {
     public int frames;
     public ItemEntity entity;
     public ItemStack stack;

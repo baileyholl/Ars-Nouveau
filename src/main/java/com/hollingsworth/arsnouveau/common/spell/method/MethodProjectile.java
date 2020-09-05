@@ -16,6 +16,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -82,7 +83,8 @@ public class MethodProjectile extends AbstractCastMethod {
 
         for(EntityProjectileSpell proj : projectiles) {
 
-            proj.shoot(shooter, 90,90f, 0.0F, velocity, .00F);
+//            proj.shoot(shooter, 90.0f, 90.0f, 0.0F, velocity, .00F);
+            proj.setMotion(new Vector3d(0, -0.1, 0));
             world.addEntity(proj);
         }
     }
@@ -107,7 +109,7 @@ public class MethodProjectile extends AbstractCastMethod {
      */
     @Override
     public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, ArrayList<AbstractAugment> augments) {
-        caster.lookAt(EntityAnchorArgument.Type.EYES, blockRayTraceResult.getHitVec());
+        caster.lookAt(EntityAnchorArgument.Type.EYES, blockRayTraceResult.getHitVec().add(0, 0, 0));
         summonProjectiles(caster.getEntityWorld(), blockRayTraceResult.getPos(), caster, augments);
         resolver.expendMana(caster);
     }

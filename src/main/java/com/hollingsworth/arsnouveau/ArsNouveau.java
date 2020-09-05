@@ -41,6 +41,7 @@ public class ArsNouveau {
         APIRegistry.registerSpells();
         MappingUtil.setup();
         // modLoading setup
+        System.out.println("Hiya");
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the doClientStuff method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);

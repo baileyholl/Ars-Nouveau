@@ -4,6 +4,7 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.GuiSpellBook;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
@@ -39,8 +40,13 @@ public class GuiImageButton extends Button
     }
 
     @Override
+    protected void renderBg(MatrixStack p_230441_1_, Minecraft p_230441_2_, int p_230441_3_, int p_230441_4_) {
+
+    }
+
+    @Override
     public void render(MatrixStack ms, int parX, int parY, float partialTicks) {
-        super.render(ms, parX, parY, partialTicks);
+//        super.render(ms, parX, parY, partialTicks);
         if (visible)
         {
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

@@ -4,6 +4,8 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
+import net.minecraft.entity.monster.VexEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -64,13 +66,10 @@ public class ModEntities {
                     ALLY_VEX, ENTITY_WHELP_TYPE,
                     ENTITY_CARBUNCLE_TYPE
             );
-            //ENT_PROJECTILE = registerEntity(EntityType.Builder.<EntityModProjectile>create(EntityClassification.MISC).setCustomClientFactory(EntityModProjectile::new).size(0.25F, 0.25F), "ent_projectile");
 
-//            EntityRegistry.registerModEntity(new ResourceLocation(ExampleMod.MODID, "dmlightball"),
-//                    EntityProjectileSpell.class, ExampleMod.MODID + ".dmlightball", lightballID, ExampleMod.instance,
-//                    80, 20, true);
+            GlobalEntityTypeAttributes.put(ENTITY_WHELP_TYPE, EntityWhelp.attributes().create());
+            GlobalEntityTypeAttributes.put(ALLY_VEX, VexEntity.func_234321_m_().create());
 
-            //event.getRegistry().registerAll(entries);
 
         }
     }

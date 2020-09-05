@@ -110,7 +110,6 @@ public class JarOfLight extends ModItem {
     }
 
     public void setLightExists(CompoundNBT tag, boolean lightExists){
-        System.out.println("Set exists");
         tag.putBoolean("light_exists", lightExists);
     }
 

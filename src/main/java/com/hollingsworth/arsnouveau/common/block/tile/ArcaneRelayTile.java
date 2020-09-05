@@ -81,7 +81,8 @@ public class ArcaneRelayTile extends AbstractManaTile{
                 if(fromTile.getCurrentMana() >= this.getTransferRate() && this.getCurrentMana() + this.getTransferRate() <= this.getMaxMana()){
                     fromTile.removeMana(this.getTransferRate());
                     this.addMana(this.getTransferRate());
-                    Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW,  fromPos.getX(), fromPos.getY(), fromPos.getZ(),pos.getX(), pos.getY(), pos.getZ(), 5));
+                    Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW,
+                            pos.getX(), pos.getY(), pos.getZ(), fromPos.getX(), fromPos.getY(), fromPos.getZ(), 5));
 
                 }
             }
