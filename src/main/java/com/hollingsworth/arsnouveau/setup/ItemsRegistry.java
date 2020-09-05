@@ -75,6 +75,7 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.DULL_TRINKET)public static ModItem dullTrinket;
 
     @ObjectHolder(LibItemNames.DOMINION_WAND)public static DominionWand dominionWand;
+    @ObjectHolder("debug")public static Debug debug;
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler{
@@ -84,6 +85,7 @@ public class ItemsRegistry {
         public static void registerItems(final RegistryEvent.Register<Item> event) {
 
             Item[] items = {
+                    new Debug(),
                     new WhelpCharm(),
                     new DominionWand(),
                     new ModItem(LibItemNames.BLANK_GLYPH),

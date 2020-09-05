@@ -6,7 +6,7 @@
 # The name of the mod loader type to load - for regular FML @Mod mods it should be javafml
 modLoader="javafml" #mandatory
 # A version range to match for said mod loader - for regular FML @Mod it will be the forge version
-loaderVersion="[28,)" #mandatory (28 is current forge version)
+loaderVersion="[33,)" #mandatory (28 is current forge version)
 # A URL to refer people to when problems occur with this mod
 issueTrackerURL="http://my.issue.tracker/" #optional
 license="GNU GENERAL PUBLIC LICENSE"
@@ -28,10 +28,10 @@ logoFile="examplemod.png" #optional
 credits="Vazkii, Azanor" #optional
 license="GNU GENERAL PUBLIC LICENSE"
 # A text field displayed in the mod UI
-authors="Bailey :)" #optional
+authors="Bailey Hollingsworth" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-A mod for spell casters.
+Craft spells, create powerful baubles, and summon magical creatures!
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.ars_nouveau]] #optional
@@ -40,7 +40,7 @@ A mod for spell casters.
     # Does this dependency have to exist - if not, ordering below must be specified
     mandatory=true #mandatory
     # The version range of the dependency
-    versionRange="[28,)" #mandatory
+    versionRange="[33,)" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
@@ -49,12 +49,12 @@ A mod for spell casters.
 [[dependencies.ars_nouveau]]
     modId="patchouli"
     mandatory=true
-    versionRange="[1.15.2,)"
+    versionRange="[1.16,)"
     side="BOTH"
 
 [[dependencies.ars_nouveau]]
     modId="curios"
     mandatory=true
-    versionRange="[FORGE-1.15.2,)"
+    versionRange="[FORGE-1.16.2,)"
     ordering="AFTER"
     side="BOTH"
