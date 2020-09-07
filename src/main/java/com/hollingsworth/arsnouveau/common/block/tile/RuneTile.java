@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
+import com.hollingsworth.arsnouveau.common.block.RuneBlock;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
@@ -49,8 +50,11 @@ public class RuneTile extends AnimatedTile {
         resolver.onCastOnEntity(ItemStack.EMPTY, FakePlayerFactory.getMinecraft((ServerWorld) world),(LivingEntity)entity, Hand.MAIN_HAND);
         if(this.isTemporary){
             world.destroyBlock(pos, false);
+            return;
         }
         this.isCharged = false;
+
+        world.setBlockState(pos, world.getBlockState(pos).cycle(RuneBlock.POWERED));
         ticksUntilCharge = 20 * 2;
     }
 
@@ -103,7 +107,7 @@ public class RuneTile extends AnimatedTile {
                 this.isCharged = true;
                 Networking.sendToNearby(world, this.pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW,
                         pos.getX(), pos.getY(), pos.getZ(),fromPos.getX(), fromPos.getY(), fromPos.getZ(), 5));
-
+                world.setBlockState(pos, world.getBlockState(pos).cycle(RuneBlock.POWERED));
             }else
                 ticksUntilCharge = 20 * 3;
         }

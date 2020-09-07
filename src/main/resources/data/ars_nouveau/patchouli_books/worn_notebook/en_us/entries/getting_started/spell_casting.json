@@ -17,7 +17,7 @@
         },
 		{
             "type":"crafting",
-			"recipe":"ars_nouveau:spell_book"
+			"recipe":"ars_nouveau:novice_spell_book"
 		}
     ]
 }

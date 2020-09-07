@@ -11,6 +11,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -25,6 +28,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 public class RuneBlock extends ModBlock{
+    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public RuneBlock() {
         super(defaultProperties().doesNotBlockMovement().notSolid().hardnessAndResistance(0f,0f), LibBlockNames.RUNE);
     }
@@ -68,5 +72,8 @@ public class RuneBlock extends ModBlock{
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new RuneTile();
+    }
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(POWERED);
     }
 }

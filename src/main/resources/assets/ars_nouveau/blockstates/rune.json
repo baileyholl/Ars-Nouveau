@@ -1,5 +1,6 @@
 {
   "variants": {
-    "": { "model": "ars_nouveau:block/rune" }
+    "powered=true": { "model": "ars_nouveau:block/rune" },
+	"powered=false": { "model": "ars_nouveau:block/rune_deactivated" }
   }
 }

@@ -75,9 +75,6 @@ public class PacketANEffect {
                             BlockPos fromPos = new BlockPos(message.x + 0.5, message.y + 0.5, message.z + 0.5);
                             BlockPos destPos = new BlockPos(message.args[0], message.args[1],message.args[2]);
                             int delay = message.args[3];
-                            System.out.println("sending to " + fromPos.toString());
-                            System.out.println("sending from " + destPos.toString());
-
                             ParticleEngine.getInstance().addEffect(new TimedBeam(fromPos, destPos, delay, world));
                             break;
                         }
