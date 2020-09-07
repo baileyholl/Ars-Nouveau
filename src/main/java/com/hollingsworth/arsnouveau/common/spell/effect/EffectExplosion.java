@@ -15,7 +15,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.util.List;
 
 public class EffectExplosion extends AbstractEffect {
 
@@ -24,7 +24,7 @@ public class EffectExplosion extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         if(rayTraceResult == null)
             return;
         Vec3d vec = rayTraceResult.getHitVec();

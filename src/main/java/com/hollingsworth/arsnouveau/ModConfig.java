@@ -46,4 +46,5 @@ public class ModConfig {
     public static final String EffectPlaceBlockID = "place_block";
 
 
+    public static final String MethodRuneID = "rune";
 }

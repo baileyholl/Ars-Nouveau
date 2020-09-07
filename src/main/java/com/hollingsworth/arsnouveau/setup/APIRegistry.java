@@ -4,13 +4,9 @@ import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodBeam;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
+import com.hollingsworth.arsnouveau.common.spell.method.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 
@@ -66,6 +62,7 @@ public class APIRegistry {
         registerSpell(ModConfig.MethodTouchID, new MethodTouch());
         registerSpell(ModConfig.MethodSelfID, new MethodSelf());
         registerSpell(ModConfig.MethodBeamID, new MethodBeam());
+        registerSpell(ModConfig.MethodRuneID, new MethodRune());
         registerSpell(ModConfig.EffectBreakID, new EffectBreak());
         registerSpell(ModConfig.EffectHarmID, new EffectHarm());
         registerSpell(ModConfig.EffectIgniteID, new EffectIgnite());

@@ -31,6 +31,8 @@ public class SpellParchment extends ModItem{
     }
 
     public static ArrayList<AbstractSpellPart> getSpellRecipe(ItemStack stack){
+        if(!stack.hasTag())
+            return null;
         return SpellRecipeUtil.getSpellsFromTagString(stack.getTag().getString("spell"));
     }
 

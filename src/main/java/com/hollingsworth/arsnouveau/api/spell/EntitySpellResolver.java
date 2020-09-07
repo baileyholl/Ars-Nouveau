@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.spell;
 import net.minecraft.entity.LivingEntity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A special Spell resolver that ignores player limits such as mana.
@@ -17,7 +18,7 @@ public class EntitySpellResolver extends SpellResolver {
         super(spellParts);
     }
 
-    public EntitySpellResolver(ArrayList<AbstractSpellPart> spell_recipe) {
+    public EntitySpellResolver(List<AbstractSpellPart> spell_recipe) {
         super(spell_recipe);
     }
 
@@ -25,7 +26,5 @@ public class EntitySpellResolver extends SpellResolver {
     boolean enoughMana(LivingEntity entity) {
         return true;
     }
-
-
 
 }

@@ -2,10 +2,11 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
-import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.block.EnchantingApparatusBlock;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.PressurePlateBlock;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -86,6 +87,7 @@ public class EnchantingApparatusTile extends AnimatedTile {
                 pedestalItems.add(((ArcanePedestalTile) world.getTileEntity(blockPos)).stack);
             }
         });
+
         EnchantingApparatusRecipe resultRecipe  =  ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes().stream().filter(r-> r.isResultOf(catalystItem, pedestalItems) != null).findFirst().orElse(null);
         return resultRecipe;
 

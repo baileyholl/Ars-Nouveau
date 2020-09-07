@@ -75,6 +75,7 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.DULL_TRINKET)public static ModItem dullTrinket;
 
     @ObjectHolder(LibItemNames.DOMINION_WAND)public static DominionWand dominionWand;
+    @ObjectHolder(LibItemNames.RUNIC_CHALK)public static RunicChalk runicChalk;
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler{
@@ -86,6 +87,7 @@ public class ItemsRegistry {
             Item[] items = {
                     new WhelpCharm(),
                     new DominionWand(),
+                    new RunicChalk(),
                     new ModItem(LibItemNames.BLANK_GLYPH),
                     new ModItem(LibItemNames.DULL_TRINKET),
                     new ModItem(LibItemNames.MARVELOUS_CLAY),

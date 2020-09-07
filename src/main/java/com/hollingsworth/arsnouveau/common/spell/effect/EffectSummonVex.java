@@ -16,7 +16,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.util.List;
 
 public class EffectSummonVex extends AbstractEffect {
     public EffectSummonVex() {
@@ -24,7 +24,7 @@ public class EffectSummonVex extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         for(int i = 0; i < 3; ++i) {
             BlockPos blockpos = (new BlockPos(shooter)).add(-2 + shooter.getRNG().nextInt(5), 1, -2 + shooter.getRNG().nextInt(5));
             EntityAllyVex vexentity = new EntityAllyVex(world, shooter);

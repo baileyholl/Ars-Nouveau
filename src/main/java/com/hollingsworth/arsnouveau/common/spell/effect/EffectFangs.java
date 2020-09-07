@@ -19,7 +19,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.util.List;
 
 public class EffectFangs extends AbstractEffect {
 
@@ -28,7 +28,7 @@ public class EffectFangs extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         Vec3d vec = rayTraceResult.getHitVec();
         float bonusDamage = 2.5f * getAmplificationBonus(augments);
         double targetX = vec.x;

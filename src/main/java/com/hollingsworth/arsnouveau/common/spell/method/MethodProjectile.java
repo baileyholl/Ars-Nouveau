@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MethodProjectile extends AbstractCastMethod {
 
@@ -31,7 +32,7 @@ public class MethodProjectile extends AbstractCastMethod {
         return 10;
     }
 
-    public void summonProjectiles(World world, LivingEntity shooter, ArrayList<AbstractAugment> augments){
+    public void summonProjectiles(World world, LivingEntity shooter, List<AbstractAugment> augments){
         ArrayList<EntityProjectileSpell> projectiles = new ArrayList<>();
         int numPierce = getBuffCount(augments, AugmentPierce.class);
         EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, shooter, this.resolver, numPierce);
@@ -57,7 +58,7 @@ public class MethodProjectile extends AbstractCastMethod {
         }
     }
     // Summons the projectiles directly above the block, facing downwards.
-    public void summonProjectiles(World world, BlockPos pos, LivingEntity shooter, ArrayList<AbstractAugment> augments){
+    public void summonProjectiles(World world, BlockPos pos, LivingEntity shooter, List<AbstractAugment> augments){
         ArrayList<EntityProjectileSpell> projectiles = new ArrayList<>();
         int numPierce = getBuffCount(augments, AugmentPierce.class);
         EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, shooter, this.resolver, numPierce);
@@ -88,13 +89,13 @@ public class MethodProjectile extends AbstractCastMethod {
     }
 
     @Override
-    public void onCast(ItemStack stack, LivingEntity shooter, World world, ArrayList<AbstractAugment> augments) {
+    public void onCast(ItemStack stack, LivingEntity shooter, World world, List<AbstractAugment> augments) {
         summonProjectiles(world, shooter, augments);
         resolver.expendMana(shooter);
     }
 
     @Override
-    public void onCastOnBlock(ItemUseContext context, ArrayList<AbstractAugment> augments) {
+    public void onCastOnBlock(ItemUseContext context, List<AbstractAugment> augments) {
         World world = context.getWorld();
         PlayerEntity shooter = context.getPlayer();
         summonProjectiles(world, shooter, augments);
@@ -106,14 +107,14 @@ public class MethodProjectile extends AbstractCastMethod {
      * Cast by entities.
      */
     @Override
-    public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, ArrayList<AbstractAugment> augments) {
+    public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments) {
         caster.lookAt(EntityAnchorArgument.Type.EYES, blockRayTraceResult.getHitVec());
         summonProjectiles(caster.getEntityWorld(), blockRayTraceResult.getPos(), caster, augments);
         resolver.expendMana(caster);
     }
 
     @Override
-    public void onCastOnEntity(ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, ArrayList<AbstractAugment> augments) {
+    public void onCastOnEntity(ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments) {
         summonProjectiles(caster.getEntityWorld(), caster, augments);
         resolver.expendMana(caster);
     }

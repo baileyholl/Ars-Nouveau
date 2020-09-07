@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 

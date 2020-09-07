@@ -11,7 +11,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.util.List;
 
 public class EffectBlink extends AbstractEffect {
 
@@ -20,7 +20,7 @@ public class EffectBlink extends AbstractEffect {
     }
     
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity().equals(shooter)) {
             Direction facing = shooter.getAdjustedHorizontalFacing();
             double distance = 8.0f + 3.0f *getAmplificationBonus(augments);

@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.block.ManaJar;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;

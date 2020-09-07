@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
-import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
@@ -17,7 +17,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.util.List;
 
 public class EffectPhantomBlock extends AbstractEffect {
 
@@ -26,7 +26,7 @@ public class EffectPhantomBlock extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         if(rayTraceResult instanceof BlockRayTraceResult){
 
             for(BlockPos pos : SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult, getBuffCount(augments, AugmentAOE.class))) {

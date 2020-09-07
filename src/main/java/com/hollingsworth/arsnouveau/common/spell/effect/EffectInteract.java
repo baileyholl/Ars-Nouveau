@@ -19,7 +19,7 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.util.List;
 
 public class EffectInteract extends AbstractEffect {
     public EffectInteract() {
@@ -27,7 +27,7 @@ public class EffectInteract extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         if(rayTraceResult instanceof BlockRayTraceResult){
             if(shooter instanceof PlayerEntity)
                 world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos()).onBlockActivated(world, (PlayerEntity)shooter, Hand.MAIN_HAND, (BlockRayTraceResult)rayTraceResult);

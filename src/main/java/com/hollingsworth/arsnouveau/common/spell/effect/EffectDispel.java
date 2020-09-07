@@ -12,8 +12,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class EffectDispel extends AbstractEffect {
     public EffectDispel() {
@@ -21,7 +21,7 @@ public class EffectDispel extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         if(rayTraceResult instanceof EntityRayTraceResult){
             if(((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
                 LivingEntity entity = (LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity();

@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.api.distmarker.Dist;
@@ -46,7 +47,7 @@ public class HUDEventHandler {
 
         final PlayerEntity player = minecraft.player;
 
-        if ((StackUtil.getHeldSpellbook(player) == null))
+        if ((StackUtil.getHeldSpellbook(player) == ItemStack.EMPTY))
             return;
 
         spellHUD.drawHUD();

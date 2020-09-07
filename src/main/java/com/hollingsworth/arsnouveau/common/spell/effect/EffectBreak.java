@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.util.List;
 
 public class EffectBreak extends AbstractEffect {
 
@@ -34,7 +34,7 @@ public class EffectBreak extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         if(!world.isRemote && rayTraceResult instanceof BlockRayTraceResult){
             BlockPos pos = new BlockPos(((BlockRayTraceResult) rayTraceResult).getPos());
             BlockState state;

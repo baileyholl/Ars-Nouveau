@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.util.List;
 
 public class EffectLightning extends AbstractEffect {
     public EffectLightning() {
@@ -22,7 +22,7 @@ public class EffectLightning extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         Vec3d pos = rayTraceResult.getHitVec();
         LightningBoltEntity lightningBoltEntity = new LightningBoltEntity(world, pos.getX(), pos.getY(), pos.getZ(), false);
         lightningBoltEntity.setCaster(shooter instanceof ServerPlayerEntity ? (ServerPlayerEntity) shooter : null);

@@ -11,6 +11,7 @@ import net.minecraft.item.Item;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractSpellPart implements ISpellTier, Comparable<AbstractSpellPart> {
 
@@ -29,7 +30,7 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
         this.name = name;
     }
 
-    public int getAdjustedManaCost(ArrayList<AbstractAugment> augmentTypes){
+    public int getAdjustedManaCost(List<AbstractAugment> augmentTypes){
         int cost = getManaCost();
         for(AbstractAugment a: augmentTypes){
             if(a instanceof AugmentDampen && !dampenIsAllowed()){
@@ -58,15 +59,15 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
 
 
 
-    public int getBuffCount(ArrayList<AbstractAugment> augments, Class spellClass){
+    public int getBuffCount(List<AbstractAugment> augments, Class spellClass){
         return (int) augments.stream().filter(spellClass::isInstance).count();
     }
 
-    public boolean hasBuff(ArrayList<AbstractAugment> augments, Class spellClass){
+    public boolean hasBuff(List<AbstractAugment> augments, Class spellClass){
         return getBuffCount(augments, spellClass) > 0;
     }
 
-    public int getAmplificationBonus(ArrayList<AbstractAugment> augmentTypes){
+    public int getAmplificationBonus(List<AbstractAugment> augmentTypes){
         return getBuffCount(augmentTypes, AugmentAmplify.class) - getBuffCount(augmentTypes, AugmentDampen.class);
     }
 
