@@ -7,8 +7,10 @@ import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -61,7 +63,18 @@ public class MethodRune extends AbstractCastMethod {
     }
 
     @Override
+    public Item getCraftingReagent() {
+        return Items.TRIPWIRE_HOOK;
+    }
+
+    @Override
     public int getManaCost() {
         return 30;
+    }
+
+    @Override
+    protected String getBookDescription() {
+        return "Places a rune on the ground that will cast the spell on targets that touch the rune. Unlike runes placed by Runic Chalk, these runes are temporary " +
+                "and cannot be recharged.";
     }
 }

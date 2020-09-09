@@ -53,12 +53,16 @@ public class Recipes extends RecipeProvider {
                     .build(consumer);
 
             ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.warpScroll).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
-                .addIngredient(ItemsRegistry.manaFiber, 4)
+                .addIngredient(ItemsRegistry.manaFiber, 4).addIngredient(Items.PAPER)
                 .build(consumer);
 
 
             ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.manaFiber, 4).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                     .addIngredient(ItemsRegistry.manaBloom)
+                    .build(consumer);
+
+            ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.runicChalk, 1).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                    .addIngredient(ItemsRegistry.magicClay).addIngredient(Items.BONE_MEAL).addIngredient(ItemsRegistry.manaFiber)
                     .build(consumer);
 
             ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.blazeFiber, 2).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))

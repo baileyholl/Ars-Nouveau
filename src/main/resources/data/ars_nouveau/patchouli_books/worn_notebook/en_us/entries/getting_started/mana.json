@@ -5,7 +5,11 @@
     "pages": [
         {
             "type": "text",
-            "text": "Spell Mana is used to cast spells with a $(thing)Spellbook$(). The maximum amount of mana, and the speed at which it regenerates, may be increased by wearing special $(item)Mage Armor$() or by applying the $(item)Mana Boost$() or $(item)Mana Regen$()enchantments on your gear. Additionally, you will gain bonus mana and regeneration for each glyph unlocked in your spellbook."       
+            "text": "Spell Mana is used to cast spells with a $(thing)Spellbook$(). The maximum amount of mana, and the speed at which it regenerates, may be increased by wearing special $(item)Mage Armor$() or by applying the $(item)Mana Boost$() or $(item)Mana Regen$() enchantments on your gear. Additionally, you will gain bonus mana and regeneration for each glyph unlocked in your spellbook."       
+        },
+		{
+            "type": "text",
+            "text": "Adding glyphs to your spell book will also increase your maximum amount of mana and mana regeneration. This bonus also scales with the tier of your spell book. "       
         }
     ]
 }

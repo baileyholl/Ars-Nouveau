@@ -13,7 +13,7 @@
         },
         {
             "type": "text",
-            "text": "If you would like to set a spell to a different tab, select the tab from the right side and repeat the above process. Several keybindings are provided for using the spellbook. $(br)Open Spellbook: $(k:ars_nouveau.selection_hud) $(br)Quick Select: $(k:ars_nouveau.selection_hud) $(br)Next Spell: $(k:ars_nouveau.selection_hud) $(br)Previous Spell: $(k:ars_nouveau.selection_hud)"       
+            "text": "If you would like to set a spell to a different tab, select the tab from the right side and repeat the above process. Several keybindings are provided for using the spellbook. $(br)Open Spellbook: $(k:ars_nouveau.open_book) $(br)Quick Select: $(k:ars_nouveau.selection_hud) $(br)Next Spell: $(k:ars_nouveau.next_slot) $(br)Previous Spell: $(k:ars_nouveau.previous_slot)"       
         },
 		{
             "type":"crafting",
