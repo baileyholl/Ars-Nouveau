@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -42,7 +43,9 @@ public class EffectHarvest extends AbstractEffect {
                 if(isTree(state)){
                     HashSet<BlockPos> list = getTree(world, ray.getPos().getX(), ray.getPos().getY(), ray.getPos().getZ(), true, new HashSet<>());
                     list.forEach(listPos -> {
-                        System.out.println(listPos);
+                        if(!BlockUtil.destroyRespectsClaim(shooter, world, listPos))
+                            return;
+
                         if (hasBuff(augments, AugmentExtract.class)) {
                             world.getBlockState(listPos).getDrops(LootUtil.getSilkContext((ServerWorld) world, listPos,  shooter)).forEach(i -> world.addEntity(new ItemEntity(world,listPos.getX(), listPos.getY(), listPos.getZ(), i )));
                             world.destroyBlock(listPos, false);
