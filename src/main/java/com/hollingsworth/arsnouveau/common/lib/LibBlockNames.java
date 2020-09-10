@@ -11,4 +11,7 @@ public class LibBlockNames {
     public static final String SCRIBES_BLOCK = "scribes_table";
     public static final String ARCANE_ROAD = "arcane_road";
     public static final String ARCANE_RELAY = "arcane_relay";
+    public static final String RUNE = "rune";
+    public static final String FORGE ="forge";
+    public static final String GROWTH = "";
 }

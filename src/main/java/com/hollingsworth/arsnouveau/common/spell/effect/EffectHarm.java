@@ -21,7 +21,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class EffectHarm extends AbstractEffect {
@@ -29,7 +28,7 @@ public class EffectHarm extends AbstractEffect {
     public EffectHarm() {super(ModConfig.EffectHarmID, "Harm" ); }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         if(rayTraceResult instanceof EntityRayTraceResult){
             float damage = 5.0f + 5.0f * getAmplificationBonus(augments);
             Entity entity = ((EntityRayTraceResult) rayTraceResult).getEntity();

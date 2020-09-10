@@ -2,27 +2,30 @@ package com.hollingsworth.arsnouveau.api.util;
 
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.armor.MagicArmor;
+import com.hollingsworth.arsnouveau.common.block.tile.ManaJarTile;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
-import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class ManaUtil {
 
-    public static int getRecipeCost(ArrayList<AbstractSpellPart> recipe) {
+    public static int getRecipeCost(List<AbstractSpellPart> recipe) {
         int cost = 0;
         for (int i = 0; i < recipe.size(); i++) {
             AbstractSpellPart spell = recipe.get(i);
@@ -48,8 +51,24 @@ public class ManaUtil {
         });
         return discounts.get();
     }
-
-    public static int getCastingCost(ArrayList<AbstractSpellPart> recipe, LivingEntity e){
+    /**
+     * Searches for nearby mana jars that have enough mana.
+     * Returns the position where the mana was taken, or null if none were found.
+     */
+    @Nullable
+    public static BlockPos takeManaNearby(BlockPos pos, World world, int range, int mana){
+        final BlockPos[] pos1 = {null};
+        BlockPos.getAllInBox(pos.add(range, range, range), pos.add(-range, -range, -range)).forEach(blockPos -> {
+            blockPos = blockPos.toImmutable();
+            if(pos1[0] == null && world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= mana) {
+                ((ManaJarTile) world.getTileEntity(blockPos)).removeMana(mana);
+                System.out.println(blockPos.toString());
+                pos1[0] = blockPos;
+            }
+        });
+        return pos1[0];
+    }
+    public static int getCastingCost(List<AbstractSpellPart> recipe, LivingEntity e){
         int cost = getRecipeCost(recipe) - getPlayerDiscounts(e);
         return Math.max(cost, 0);
     }

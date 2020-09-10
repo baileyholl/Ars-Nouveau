@@ -23,7 +23,7 @@ public class KeyHandler {
     private static final Minecraft MINECRAFT = Minecraft.getInstance();
     @SubscribeEvent
     public static void keyEvent(final InputEvent.KeyInputEvent event) {
-        if(MINECRAFT.player == null)
+        if(MINECRAFT.player == null || MINECRAFT.currentScreen != null)
             return;
         ItemStack stack = StackUtil.getHeldSpellbook(MINECRAFT.player);
 

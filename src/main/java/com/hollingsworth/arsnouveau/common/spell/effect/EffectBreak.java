@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
@@ -12,6 +13,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -19,8 +22,9 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
+
+import static com.hollingsworth.arsnouveau.api.util.BlockUtil.destroyBlockSafely;
 
 public class EffectBreak extends AbstractEffect {
 
@@ -34,7 +38,7 @@ public class EffectBreak extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         if(!world.isRemote && rayTraceResult instanceof BlockRayTraceResult){
             BlockPos pos = new BlockPos(((BlockRayTraceResult) rayTraceResult).getPos());
             BlockState state;
@@ -52,19 +56,23 @@ public class EffectBreak extends AbstractEffect {
             List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
             for(BlockPos pos1 : posList) {
                 state = world.getBlockState(pos1);
+
                 // Iron block or lower unpowered
                 if(!(state.getBlockHardness(world, pos1) <= maxHardness && state.getBlockHardness(world, pos1) >= 0)){
                     continue;
                 }
+                if(!BlockUtil.destroyRespectsClaim(shooter, world, pos1))
+                    return;
                 if (hasBuff(augments, AugmentExtract.class)) {
-                    world.destroyBlock(pos1, false);
-                    state.getDrops(LootUtil.getSilkContext((ServerWorld) world, pos1,  shooter)).forEach(i -> world.addEntity(new ItemEntity(world,pos.getX(), pos.getY(), pos.getZ(), i )));
-
+                    List<ItemStack> list = state.getDrops(LootUtil.getSilkContext((ServerWorld) world, pos1,  shooter));
+                    destroyBlockSafely(world, pos1, false, shooter);
+                    list.forEach(i -> world.addEntity(new ItemEntity(world,pos.getX(), pos.getY(), pos.getZ(), i )));
                 } else if (hasBuff(augments, AugmentFortune.class)) {
-                    world.destroyBlock(pos1, false);
-                    state.getDrops(LootUtil.getFortuneContext((ServerWorld) world, pos1, shooter, getBuffCount(augments, AugmentFortune.class))).forEach(i -> world.addEntity(new ItemEntity(world,pos.getX(), pos.getY(), pos.getZ(),i )));;
+                    List<ItemStack> drops = state.getDrops(LootUtil.getFortuneContext((ServerWorld) world, pos1, shooter, getBuffCount(augments, AugmentFortune.class)));
+                    destroyBlockSafely(world, pos1, false, shooter);
+                    drops.forEach(i -> world.addEntity(new ItemEntity(world,pos.getX(), pos.getY(), pos.getZ(),i )));
                 } else {
-                    world.destroyBlock(pos1, true);
+                    destroyBlockSafely(world, pos1, true, shooter);
                 }
                 world.notifyBlockUpdate(pos1, state, state, 3);
             }
@@ -79,7 +87,7 @@ public class EffectBreak extends AbstractEffect {
     @Nullable
     @Override
     public Item getCraftingReagent() {
-        return null;
+        return Items.IRON_PICKAXE;
     }
 
     @Override

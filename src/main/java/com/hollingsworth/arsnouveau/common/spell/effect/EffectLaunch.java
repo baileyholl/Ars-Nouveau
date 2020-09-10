@@ -12,7 +12,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.util.List;
 
 public class EffectLaunch extends AbstractEffect {
     public EffectLaunch() {
@@ -20,7 +20,7 @@ public class EffectLaunch extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         if(rayTraceResult instanceof EntityRayTraceResult){
             Entity entity = ((EntityRayTraceResult) rayTraceResult).getEntity();
             entity.setMotion(entity.getMotion().add(0, 0.8 + .25*getAmplificationBonus(augments), 0));

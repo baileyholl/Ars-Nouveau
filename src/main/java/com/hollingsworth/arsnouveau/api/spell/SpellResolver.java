@@ -1,9 +1,6 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
-import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
@@ -17,19 +14,16 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil.getAugments;
 
 public class SpellResolver {
     protected AbstractCastMethod castType;
-    protected ArrayList<AbstractSpellPart> spell_recipe;
+    public List<AbstractSpellPart> spell_recipe;
     
-    public SpellResolver(AbstractCastMethod cast, ArrayList<AbstractSpellPart> spell_recipe){
+    public SpellResolver(AbstractCastMethod cast, List<AbstractSpellPart> spell_recipe){
         this.castType = cast;
         this.spell_recipe = spell_recipe;
         if(castType != null)
@@ -41,7 +35,7 @@ public class SpellResolver {
         this(new ArrayList<>(Arrays.asList(spellParts)));
     }
 
-    public SpellResolver(ArrayList<AbstractSpellPart> spell_recipe) {
+    public SpellResolver(List<AbstractSpellPart> spell_recipe) {
         this(null, spell_recipe);
         AbstractCastMethod method = null;
         if(spell_recipe != null && !spell_recipe.isEmpty() && spell_recipe.get(0) instanceof AbstractCastMethod)
@@ -100,11 +94,10 @@ public class SpellResolver {
             castType.onCastOnBlock(context, getAugments(spell_recipe, 0, context.getPlayer()));
     }
 
-    public void onCastOnEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand){
+    public void onCastOnEntity(ItemStack stack, LivingEntity playerIn, LivingEntity target, Hand hand){
         if(canCast(playerIn) && !postEvent(playerIn))
             castType.onCastOnEntity(stack, playerIn, target, hand, getAugments(spell_recipe, 0, playerIn));
     }
-
 
 
     public void onResolveEffect(World world, LivingEntity shooter, RayTraceResult result){

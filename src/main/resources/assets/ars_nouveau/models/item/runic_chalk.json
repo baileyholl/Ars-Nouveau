@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "modtut:items/spell_04"
+        "layer0": "ars_nouveau:items/runic_chalk"
     }
 }

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropsBlock;
@@ -14,7 +15,7 @@ import net.minecraft.world.IBlockReader;
 
 public class ManaBloomCrop extends CropsBlock {
     public static final IntegerProperty AGE_0_4 = IntegerProperty.create("age", 0, 4);
-    protected ManaBloomCrop() {
+    public ManaBloomCrop() {
         super(Properties.create(Material.PLANTS).tickRandomly().hardnessAndResistance(0.0F).doesNotBlockMovement().sound(SoundType.CROP).notSolid());
         setRegistryName("mana_bloom_crop");
     }

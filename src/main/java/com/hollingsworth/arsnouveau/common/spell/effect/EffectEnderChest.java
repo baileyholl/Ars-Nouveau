@@ -16,7 +16,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.util.List;
 
 
 public class EffectEnderChest extends AbstractEffect {
@@ -27,7 +27,7 @@ public class EffectEnderChest extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         if(shooter instanceof PlayerEntity){
             EnderChestInventory chestInventory = ((PlayerEntity)shooter).getInventoryEnderChest();
 //            chestInventory.openInventory((PlayerEntity) shooter);

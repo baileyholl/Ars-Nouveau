@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.block.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.block.Blocks;
@@ -53,8 +53,11 @@ public class Recipes extends RecipeProvider {
                     .build(consumer);
 
             ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.warpScroll).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
-                .addIngredient(ItemsRegistry.manaFiber, 4)
+                .addIngredient(ItemsRegistry.manaFiber, 4).addIngredient(Items.PAPER)
                 .build(consumer);
+            ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.runicChalk, 1).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                    .addIngredient(ItemsRegistry.magicClay).addIngredient(Items.BONE_MEAL).addIngredient(ItemsRegistry.manaFiber)
+                    .build(consumer);
 
 
             ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.manaFiber, 4).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))

@@ -24,7 +24,7 @@ import static com.hollingsworth.arsnouveau.setup.InjectionUtil.Null;
 
 @ObjectHolder(ArsNouveau.MODID)
 public class ItemsRegistry {
-
+    @ObjectHolder(LibItemNames.RUNIC_CHALK)public static RunicChalk runicChalk;
     @ObjectHolder(LibItemNames.NOVICE_SPELL_BOOK) public static SpellBook noviceSpellBook;
 
     @ObjectHolder(LibItemNames.APPRENTICE_SPELL_BOOK) public static SpellBook apprenticeSpellBook;
@@ -88,6 +88,7 @@ public class ItemsRegistry {
                     new Debug(),
                     new WhelpCharm(),
                     new DominionWand(),
+                    new RunicChalk(),
                     new ModItem(LibItemNames.BLANK_GLYPH),
                     new ModItem(LibItemNames.DULL_TRINKET),
                     new ModItem(LibItemNames.MARVELOUS_CLAY),

@@ -34,7 +34,7 @@ public class GuiSpellHUD extends FocusableGui implements IGuiEventListener {
 
     public void drawHUD(MatrixStack ms) {
         ItemStack stack = StackUtil.getHeldSpellbook(minecraft.player);
-        if(stack != null && stack.getItem() instanceof SpellBook && stack.getTag() != null){
+        if(stack != ItemStack.EMPTY && stack.getItem() instanceof SpellBook && stack.getTag() != null){
             int offsetLeft = 10;
             CompoundNBT tag = stack.getTag();
             int mode = tag.getInt(SpellBook.BOOK_MODE_TAG);

@@ -9,8 +9,8 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractEffect extends AbstractSpellPart {
@@ -21,13 +21,13 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     // Apply the effect at the destination position.
-    public abstract void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments);
+    public abstract void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments);
 
-    public void applyPotion(LivingEntity entity, Effect potionEffect, ArrayList<AbstractAugment> augmentTypes){
+    public void applyPotion(LivingEntity entity, Effect potionEffect, List<AbstractAugment> augmentTypes){
         applyPotion(entity, potionEffect, augmentTypes, 30, 30);
     }
 
-    public void applyPotion(LivingEntity entity, Effect potionEffect, ArrayList<AbstractAugment> augmentTypes, int baseDuration, int durationBuffBase){
+    public void applyPotion(LivingEntity entity, Effect potionEffect, List<AbstractAugment> augmentTypes, int baseDuration, int durationBuffBase){
         int duration = baseDuration + durationBuffBase * getBuffCount(augmentTypes, AugmentExtendTime.class);
         int amp = getBuffCount(augmentTypes, AugmentAmplify.class);
         entity.addPotionEffect(new EffectInstance(potionEffect, duration * 20, amp));

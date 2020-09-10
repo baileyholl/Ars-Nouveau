@@ -43,4 +43,5 @@ public class LibItemNames {
     public static final String WHELP_CHARM = "whelp_charm";
     public static final String DOMINION_WAND = "dominion_wand";
     public static final String DULL_TRINKET = "dull_trinket";
+    public static final String RUNIC_CHALK = "runic_chalk";
 }

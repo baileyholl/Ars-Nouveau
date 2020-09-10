@@ -18,7 +18,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.util.List;
 
 public class EffectIgnite  extends AbstractEffect {
 
@@ -27,7 +27,7 @@ public class EffectIgnite  extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, ArrayList<AbstractAugment> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         if(rayTraceResult instanceof EntityRayTraceResult){
             int duration = 2 + 2*getBuffCount(augments, AugmentExtendTime.class);
             ((EntityRayTraceResult) rayTraceResult).getEntity().setFire(duration);
