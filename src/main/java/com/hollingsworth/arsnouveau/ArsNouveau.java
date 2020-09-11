@@ -59,7 +59,6 @@ public class ArsNouveau {
     public void clientSetup(final FMLClientSetupEvent event){
         proxy.init();
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientHandler::init);
-
     }
 
 

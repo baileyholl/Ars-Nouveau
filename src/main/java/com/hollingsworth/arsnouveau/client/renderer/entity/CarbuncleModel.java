@@ -5,18 +5,19 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.util.math.MathHelper;
 
 public class CarbuncleModel extends EntityModel<EntityCarbuncle> {
-    private final ModelRenderer basket;
-    private final ModelRenderer head;
-    private final ModelRenderer ear_right;
-    private final ModelRenderer ear_left;
-    private final ModelRenderer front_leg_right;
-    private final ModelRenderer front_leg_left;
-    private final ModelRenderer back_leg_left;
-    private final ModelRenderer back_leg_right;
-    private final ModelRenderer tail;
-    private final ModelRenderer body;
+    public final ModelRenderer basket;
+    public final ModelRenderer head;
+    public final ModelRenderer ear_right;
+    public final ModelRenderer ear_left;
+    public final ModelRenderer front_leg_right;
+    public final ModelRenderer front_leg_left;
+    public final ModelRenderer back_leg_left;
+    public final ModelRenderer back_leg_right;
+    public final ModelRenderer tail;
+    public final ModelRenderer body;
 
     public CarbuncleModel() {
         textureWidth = 32;
@@ -32,22 +33,21 @@ public class CarbuncleModel extends EntityModel<EntityCarbuncle> {
 
         head = new ModelRenderer(this);
         head.setRotationPoint(0.0F, 20.0F, -2.5F);
-        setRotationAngle(head, 0F, 0, 180f);
-        head.setTextureOffset(0, 10).addBox(-2.5F, -2.0F, 0.0F, 5.0F, 4.0F, 4.0F, 0.0F, false);
-        head.setTextureOffset(20, 8).addBox(-0.5F, 0.0F, 3.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
+        head.setTextureOffset(0, 10).addBox(-2.5F, -2.0F, -4.0F, 5.0F, 4.0F, 4.0F, 0.0F, false);
+        head.setTextureOffset(20, 8).addBox(-0.5F, 0.0F, -4.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
 
         ear_right = new ModelRenderer(this);
-        ear_right.setRotationPoint(1.5F, -1.0F, 1.0F);
+        ear_right.setRotationPoint(-1.5F, -1.0F, -2.0F);
         head.addChild(ear_right);
-        setRotationAngle(ear_right, 0.3927F, -0.7854F, 0.0F);
+        setRotationAngle(ear_right, -2.7489F, 0.7854F, -3.1416F);
         ear_right.setTextureOffset(20, 21).addBox(-0.5F, -6.0F, -0.5F, 1.0F, 6.0F, 1.0F, 0.0F, false);
         ear_right.setTextureOffset(24, 24).addBox(-0.5F, -7.0F, -1.5F, 1.0F, 5.0F, 1.0F, 0.0F, false);
         ear_right.setTextureOffset(0, 0).addBox(-0.5F, -6.0F, -2.5F, 1.0F, 3.0F, 1.0F, 0.0F, false);
 
         ear_left = new ModelRenderer(this);
-        ear_left.setRotationPoint(-1.5F, -1.0F, 1.0F);
+        ear_left.setRotationPoint(1.5F, -1.0F, -2.0F);
         head.addChild(ear_left);
-        setRotationAngle(ear_left, 0.3927F, 0.7854F, 0.0F);
+        setRotationAngle(ear_left, -2.7489F, -0.7854F, -3.1416F);
         ear_left.setTextureOffset(20, 21).addBox(-0.5F, -6.0F, -0.5F, 1.0F, 6.0F, 1.0F, 0.0F, true);
         ear_left.setTextureOffset(24, 24).addBox(-0.5F, -7.0F, -1.5F, 1.0F, 5.0F, 1.0F, 0.0F, true);
         ear_left.setTextureOffset(0, 0).addBox(-0.5F, -6.0F, -2.5F, 1.0F, 3.0F, 1.0F, 0.0F, true);
@@ -85,6 +85,11 @@ public class CarbuncleModel extends EntityModel<EntityCarbuncle> {
         //previously the render function, render code was moved to a method below
         this.head.rotateAngleX = headPitch * 0.017453292F;
         this.head.rotateAngleY = netHeadYaw * 0.017453292F;
+        this.back_leg_right.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+        this.back_leg_left.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
+        this.front_leg_right.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 1.4F * limbSwingAmount;
+        this.front_leg_left.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 1.4F * limbSwingAmount;
+
     }
 
     @Override
@@ -103,8 +108,5 @@ public class CarbuncleModel extends EntityModel<EntityCarbuncle> {
         modelRenderer.rotateAngleX = x;
         modelRenderer.rotateAngleY = y;
         modelRenderer.rotateAngleZ = z;
-
     }
-
-
 }
