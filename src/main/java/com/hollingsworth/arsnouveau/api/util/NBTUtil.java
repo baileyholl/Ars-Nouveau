@@ -13,6 +13,8 @@ public class NBTUtil {
     }
 
     public static BlockPos getBlockPos(CompoundNBT tag, String prefix){
+        if(!tag.contains(prefix + "_x"))
+            return null;
         return new BlockPos(tag.getDouble(prefix + "_x"), tag.getDouble(prefix + "_y"),tag.getDouble(prefix + "_z"));
     }
 

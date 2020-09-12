@@ -26,15 +26,15 @@ public class CarbuncleHeldItemLayer extends LayerRenderer<EntityCarbuncle, Carbu
 
 
         matrixStackIn.translate(((this.getEntityModel()).tail.rotationPointX / 16.0F), ((this.getEntityModel()).tail.rotationPointY / 16.0F), ((this.getEntityModel()).tail.rotationPointZ / 16.0F));
-        float f1 = 0.2f;
+       
 //        matrixStackIn.rotate(Vector3f.ZP.rotation(f1));
 //        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(netHeadYaw));
 //        matrixStackIn.rotate(Vector3f.XP.rotationDegrees(headPitch));
 
-        matrixStackIn.translate((double)0.00F, (double)-.4F, .15D);
-        matrixStackIn.scale(0.5f, 0.5f, 0.5f);
+        matrixStackIn.translate((double)0.00F, (double)-.3F, .15D);
+        matrixStackIn.scale(0.75f, 0.75f, 0.75f);
 
-        matrixStackIn.rotate(Vector3f.XP.rotationDegrees(90f));
+        matrixStackIn.rotate(Vector3f.XP.rotationDegrees(180f));
 
 
 //        ItemStack itemstack = entitylivingbaseIn.getItemStackFromSlot(EquipmentSlotType.MAINHAND);

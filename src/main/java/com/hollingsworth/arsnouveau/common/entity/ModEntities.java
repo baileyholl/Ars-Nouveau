@@ -55,7 +55,7 @@ public class ModEntities {
                    .size(0.6F, 0.63F).setTrackingRange(10)
                    .setShouldReceiveVelocityUpdates(true));
             ENTITY_CARBUNCLE_TYPE = build("carbuncle", EntityType.Builder.<EntityCarbuncle>create(EntityCarbuncle::new, EntityClassification.MISC)
-                    .size(0.6F, 0.63F));
+                    .size(0.6F, 0.63F).setTrackingRange(10));
 
             event.getRegistry().registerAll(
                     SPELL_PROJ,
