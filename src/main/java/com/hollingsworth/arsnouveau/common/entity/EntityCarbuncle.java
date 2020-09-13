@@ -14,6 +14,7 @@ public class EntityCarbuncle extends MobEntity {
 
     public EntityCarbuncle(EntityType<EntityCarbuncle> entityCarbuncleEntityType, World world) {
         super(entityCarbuncleEntityType, world);
+
     }
 
     @Override

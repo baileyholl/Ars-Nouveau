@@ -74,7 +74,7 @@ public class EffectBreak extends AbstractEffect {
                 } else {
                     destroyBlockSafely(world, pos1, true, shooter);
                 }
-                world.notifyBlockUpdate(pos1, state, state, 3);
+                BlockUtil.safelyUpdateState(world, pos);
             }
         }
     }

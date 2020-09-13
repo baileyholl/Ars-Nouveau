@@ -45,7 +45,7 @@ public class EffectGrow  extends AbstractEffect {
             IGrowable igrowable = (IGrowable)blockstate.getBlock();
             if (igrowable.canGrow(worldIn, pos, blockstate, worldIn.isRemote)) {
                 if (!worldIn.isRemote) {
-                    if (igrowable.canUseBonemeal(worldIn, worldIn.rand, pos, blockstate)) {
+                    if (igrowable.canUseBonemeal(worldIn, worldIn.rand, pos, blockstate) && !World.isOutsideBuildHeight(pos)) {
                         igrowable.grow((ServerWorld)worldIn, worldIn.rand, pos, blockstate);
                         worldIn.notifyBlockUpdate(pos, blockstate, blockstate, 3);
                     }

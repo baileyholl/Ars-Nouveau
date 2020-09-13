@@ -14,6 +14,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.FakePlayer;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -28,7 +29,7 @@ public class EffectEnderChest extends AbstractEffect {
 
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
-        if(shooter instanceof PlayerEntity){
+        if(shooter instanceof PlayerEntity && !(shooter instanceof FakePlayer)){
             EnderChestInventory chestInventory = ((PlayerEntity)shooter).getInventoryEnderChest();
 //            chestInventory.openInventory((PlayerEntity) shooter);
             ((PlayerEntity) shooter).openContainer(new SimpleNamedContainerProvider((p_226928_1_, p_226928_2_, p_226928_3_) -> {
