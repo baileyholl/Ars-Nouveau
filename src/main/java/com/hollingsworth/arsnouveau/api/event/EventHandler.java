@@ -9,9 +9,11 @@ import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.DamageSource;
+import net.minecraft.world.World;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -63,6 +65,17 @@ public class EventHandler {
             }
         }
     }
+
+    @SubscribeEvent
+    public static void worldTick(TickEvent.WorldTickEvent e){
+        World world = e.world;
+        if(world.isRemote)
+            return;
+        EventQueue.getInstance().tick();
+
+    }
+
+
 
     @SubscribeEvent
     public static void playerDamaged(LivingDamageEvent e){

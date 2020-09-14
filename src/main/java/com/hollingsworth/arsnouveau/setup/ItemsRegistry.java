@@ -68,6 +68,7 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.SPELL_PARCHMENT) public static SpellParchment spellParchment;
 
     @ObjectHolder(LibItemNames.WHELP_CHARM) public static WhelpCharm whelpCharm;
+    @ObjectHolder(LibItemNames.CARBUNCLE_CHARM) public static CarbuncleCharm carbuncleCharm;
     @ObjectHolder(LibItemNames.DOMINION_WAND) public static DominionWand DOMAIN_CONTROLLER;
 
     @ObjectHolder(LibItemNames.AMULET_OF_MANA_BOOST)public static AbstractManaCurio amuletOfManaBoost;
@@ -76,6 +77,7 @@ public class ItemsRegistry {
 
     @ObjectHolder(LibItemNames.DOMINION_WAND)public static DominionWand dominionWand;
     @ObjectHolder(LibItemNames.RUNIC_CHALK)public static RunicChalk runicChalk;
+    @ObjectHolder(LibItemNames.CARBUNCLE_SHARD)public static ModItem carbuncleShard;
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler{
@@ -86,7 +88,9 @@ public class ItemsRegistry {
 
             Item[] items = {
                     new WhelpCharm(),
+                    new ModItem(LibItemNames.CARBUNCLE_SHARD),
                     new DominionWand(),
+                    new CarbuncleCharm(),
                     new RunicChalk(),
                     new ModItem(LibItemNames.BLANK_GLYPH),
                     new ModItem(LibItemNames.DULL_TRINKET),

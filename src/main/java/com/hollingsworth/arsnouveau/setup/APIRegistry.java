@@ -46,6 +46,10 @@ public class APIRegistry {
                 ItemsRegistry.bucketOfMana,ItemsRegistry.bucketOfMana,Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT,
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
 
+        registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.carbuncleCharm, ItemsRegistry.carbuncleShard, new Item[]{
+                ItemsRegistry.bucketOfMana,ItemsRegistry.bucketOfMana,Items.DIAMOND, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET,
+        }, ArsNouveauAPI.PatchouliCategories.automation.name()));
+
 
         registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.amuletOfManaBoost, ItemsRegistry.dullTrinket, new Item[]{
                 Items.DIAMOND, Items.DIAMOND, Items.DIAMOND, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana

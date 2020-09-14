@@ -13,6 +13,7 @@
 	"enchantment.ars_nouveau.mana_regen.desc": "Increases the mana regeneration of the player.",
 	"enchantment.ars_nouveau.mana_boost.desc": "Increases the maximum mana of the player.",
 	"entity.ars_nouveau.whelp": "Whelp",
+	"entity.ars_nouveau.carbuncle": "Carbuncle",
 	"item.ars_nouveau.archmage_robes":"Archmage Robes",
 	"item.ars_nouveau.archmage_leggings":"Archmage Leggings",
 	"item.ars_nouveau.archmage_boots":"Archmage Boots",
@@ -38,6 +39,8 @@
 	"item.ars_nouveau.arcane_brick":"Arcane Brick",
 	"item.ars_nouveau.jar_of_light":"Jar of Light",
 	"item.ars_nouveau.whelp_charm":"Whelp Charm",
+	"item.ars_nouveau.carbuncle_charm":"Carbuncle Charm",
+	"item.ars_nouveau.carbuncle_shards":"Carbuncle Shards",
 	"item.ars_nouveau.creative_spell_book":"Creative Spell Book",
 	"item.ars_nouveau.dull_trinket":"Dull Trinket",
 	"item.ars_nouveau.amulet_of_mana_boost":"Amulet of Mana Boost",
@@ -81,6 +84,10 @@
 	"ars_nouveau.page3.whelp_charm": "Whelps can cast spells that begin with Touch or Projectile. You may give them a spell that is written on Spell Parchment. Currently, whelps will only target blocks surrounding their crystal. Spell casting will consume mana from jars that are in the vicinity of the Summoning Crystal.",
 	"ars_nouveau.page4.whelp_charm": "While whelps cannot pickup blocks on their own, they may store items in chests that are next to the Summoning Crystal using the Item Pickup spell. Conversely, Whelps may place blocks and interact with the world using Items. You may give an item or block to the Whelp, and it will use the item directly from the chests adjacent to the Summoning Crystal.",
 
+	"ars_nouveau.page.carbuncle_charm": "Carbuncles naturally appear in wooded areas, oddly in search of golden nuggets. While carbuncles are naturally afraid of humans, they will allow someone to approach if they are holding a gold nugget. When a carbuncle has acquired a nugget, it will vanish from this world and leave behind Carbuncle Shards.",
+	"ars_nouveau.page2.carbuncle_charm": "While wild carbuncles cannot be tamed, their shards may be used to summon a tamed carbuncle.",
+	"ars_nouveau.page3.carbuncle_charm": "To summon a tamed carbuncle, use a carbuncle charm on the ground. Tamed carbuncles will pickup nearby items and can move items between inventories such as chests. To tell a carbuncle to store items, use a Dominion Wand on a Carbuncle, and then use the wand on the inventory. To have a carbuncle remove items from an inventory, use the Dominion Wand on the inventory, and then on the carbuncle. A carbuncle may perform these tasks at the same time.",
+	
 	"ars_nouveau.page.summoning_crystal": "Automation in Ars Nouveau begins with the Summoning Crystal. Summoning Crystals provide mana, resources, and tasks to special magical creatures, like Whelps! Placing a chest next to a Summoning Crystal will provide a place for summoned creatures to store their items. The area of the Summoning Crystal may be changed by right clicking. ",
 	"ars_nouveau.page2.summoning_crystal": "Creatures like Whelps will require mana to interact with the world. Place a Mana Jar within the vicinity and begin providing it with mana. To begin your first automation, see the entry on the Whelp Charm and the Scribes Table.",
 

@@ -41,7 +41,9 @@ public class LibItemNames {
     public static final String CREATIVE_SPELL_BOOK = "creative_spell_book";
     public static final String SPELL_PARCHMENT = "spell_parchment";
     public static final String WHELP_CHARM = "whelp_charm";
+    public static final String CARBUNCLE_CHARM = "carbuncle_charm";
     public static final String DOMINION_WAND = "dominion_wand";
     public static final String DULL_TRINKET = "dull_trinket";
     public static final String RUNIC_CHALK = "runic_chalk";
+    public static final String CARBUNCLE_SHARD = "carbuncle_shards";
 }

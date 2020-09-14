@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.client.renderer;
+package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.client.renderer.entity.CarbuncleModel;
 import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
@@ -26,7 +26,7 @@ public class CarbuncleHeldItemLayer extends LayerRenderer<EntityCarbuncle, Carbu
 
 
         matrixStackIn.translate(((this.getEntityModel()).tail.rotationPointX / 16.0F), ((this.getEntityModel()).tail.rotationPointY / 16.0F), ((this.getEntityModel()).tail.rotationPointZ / 16.0F));
-       
+
 //        matrixStackIn.rotate(Vector3f.ZP.rotation(f1));
 //        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(netHeadYaw));
 //        matrixStackIn.rotate(Vector3f.XP.rotationDegrees(headPitch));

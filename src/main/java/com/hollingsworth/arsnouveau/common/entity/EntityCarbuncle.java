@@ -1,16 +1,24 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.event.EventHandler;
+import com.hollingsworth.arsnouveau.api.event.EventQueue;
+import com.hollingsworth.arsnouveau.api.event.OpenChestEvent;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.ai.goal.LookAtGoal;
+import net.minecraft.entity.ai.RandomPositionGenerator;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -18,20 +26,23 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.Path;
-import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.util.FakePlayerFactory;
+import org.apache.logging.log4j.core.jmx.Server;
 
+import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Predicate;
@@ -41,27 +52,64 @@ public class EntityCarbuncle extends CreatureEntity {
 
     public BlockPos fromPos;
     public BlockPos toPos;
-    public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.ITEMSTACK);
-    public int backOff; // Used to stop inventory store/take spam when chests are full or empty.
 
+    public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.ITEMSTACK);
+    public static final DataParameter<Boolean> TAMED = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.BOOLEAN);
+    public int backOff; // Used to stop inventory store/take spam when chests are full or empty.
+    public int tamingTime;
     public EntityCarbuncle(EntityType<EntityCarbuncle> entityCarbuncleEntityType, World world) {
         super(entityCarbuncleEntityType, world);
+    }
+
+    public EntityCarbuncle(World world, boolean tamed){
+        super(ModEntities.ENTITY_CARBUNCLE_TYPE,world);
+        this.setTamed(tamed);
+    }
+
+    public boolean isTamed(){
+        return this.dataManager.get(TAMED);
+    }
+
+    public void setTamed(boolean tamed){
+        this.dataManager.set(TAMED,tamed);
     }
 
     @Override
     public void tick() {
         super.tick();
-        if(world.isRemote)
-            return;
 
-        if(this.backOff > 0)
+
+        if(this.backOff > 0 && !world.isRemote)
             this.backOff--;
 
-        if(this.getHeldStack().isEmpty()){
+        if(this.getHeldStack().isEmpty() && !world.isRemote){
 
             for(ItemEntity itementity : this.world.getEntitiesWithinAABB(ItemEntity.class, this.getBoundingBox().grow(1.0D, 0.0D, 1.0D))) {
                 if (!itementity.removed && !itementity.getItem().isEmpty() && !itementity.cannotPickup()) {
+                    if(!isTamed() && itementity.getItem().getItem() != Items.GOLD_NUGGET)
+                        return;
                     this.updateEquipmentIfNeeded(itementity);
+                }
+            }
+        }
+
+        if(!isTamed() && this.getHeldStack().getItem() == Items.GOLD_NUGGET){
+            tamingTime++;
+            if(tamingTime % 20 == 0 && !world.isRemote())
+                Networking.sendToNearby(world, this, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, getPosition()));
+
+            if(tamingTime > 60 && !world.isRemote) {
+                ItemStack stack = new ItemStack(ItemsRegistry.carbuncleShard, 1 + world.rand.nextInt(2));
+                world.addEntity(new ItemEntity(world, getPosX(), getPosY() + 0.5, getPosZ(), stack));
+                this.remove(false);
+                world.playSound(null, getPosX(), getPosY(), getPosZ(), SoundEvents.ENTITY_ILLUSIONER_MIRROR_MOVE, SoundCategory.NEUTRAL, 1f, 1f );
+            }
+            else if (tamingTime > 55 && world.isRemote){
+                for(int i =0; i < 10; i++){
+                    double d0 = getPosX(); //+ world.rand.nextFloat();
+                    double d1 = getPosY()+0.1;//+ world.rand.nextFloat() ;
+                    double d2 = getPosZ()  ; //+ world.rand.nextFloat();
+                    world.addParticle(ParticleTypes.END_ROD, d0, d1, d2, (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3);
                 }
             }
         }
@@ -85,6 +133,12 @@ public class EntityCarbuncle extends CreatureEntity {
         }
 
     }
+
+    @Override
+    public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
+        return super.canSpawn(worldIn, spawnReasonIn);
+    }
+
     @Override
     protected void registerAttributes() {
         super.registerAttributes();
@@ -103,33 +157,62 @@ public class EntityCarbuncle extends CreatureEntity {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(5, new FindItem());
+        this.goalSelector.addGoal(10, new FindItem());
         this.goalSelector.addGoal(8, new StoreItemGoal());
         this.goalSelector.addGoal(8, new TakeItemGoal());
         this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 3.0F, 1.0F));
         this.goalSelector.addGoal(6, new LookAtGoal(this, MobEntity.class, 8.0F));
+        this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
+        this.goalSelector.addGoal(4, new AvoidPlayerUntamedGoal(this, PlayerEntity.class, 16.0F, 1.6D, 1.4D));
 //        this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
     }
 
+    public class AvoidPlayerUntamedGoal extends AvoidEntityGoal<LivingEntity>{
+
+        public AvoidPlayerUntamedGoal(CreatureEntity entityIn, Class classToAvoidIn, float avoidDistanceIn, double farSpeedIn, double nearSpeedIn) {
+            super(entityIn, classToAvoidIn, avoidDistanceIn, farSpeedIn, nearSpeedIn ,(living) -> {
+                return !(living.getHeldItemMainhand().getItem() == Items.GOLD_NUGGET);
+            });
+        }
+
+        @Override
+        public boolean shouldExecute() {
+            if(EntityCarbuncle.this.isTamed())
+                return false;
+            return super.shouldExecute();
+        }
+    }
+
     public class FindItem extends Goal{
-        private final Predicate<ItemEntity> TRUSTED_TARGET_SELECTOR = (p_213489_0_) -> {
-            return !p_213489_0_.cannotPickup() && p_213489_0_.isAlive();
+        private final Predicate<ItemEntity> TRUSTED_TARGET_SELECTOR = (itemEntity) -> {
+            return !itemEntity.cannotPickup() && itemEntity.isAlive();
         };
+
+        private final Predicate<ItemEntity> NONTAMED_TARGET_SELECTOR = (itemEntity -> {
+            return !itemEntity.cannotPickup() && itemEntity.isAlive() && itemEntity.getItem().getItem() == Items.GOLD_NUGGET;
+        });
 
         public FindItem(){
             this.setMutexFlags(EnumSet.of(Flag.MOVE));
         }
 
+        public Predicate<ItemEntity> getFinderItems(){
+            return EntityCarbuncle.this.isTamed() ? TRUSTED_TARGET_SELECTOR : NONTAMED_TARGET_SELECTOR;
+        }
+
         @Override
         public boolean shouldExecute() {
-            List<ItemEntity> list = EntityCarbuncle.this.world.getEntitiesWithinAABB(ItemEntity.class, EntityCarbuncle.this.getBoundingBox().grow(8.0D, 8.0D, 8.0D), TRUSTED_TARGET_SELECTOR);
+            List<ItemEntity> list = EntityCarbuncle.this.world.getEntitiesWithinAABB(ItemEntity.class, EntityCarbuncle.this.getBoundingBox().grow(8.0D, 8.0D, 8.0D), getFinderItems());
             return !list.isEmpty() && EntityCarbuncle.this.getHeldStack().isEmpty();
         }
+
+
 
         @Override
         public void startExecuting() {
             super.startExecuting();
-            List<ItemEntity> list = EntityCarbuncle.this.world.getEntitiesWithinAABB(ItemEntity.class, EntityCarbuncle.this.getBoundingBox().grow(8.0D, 8.0D, 8.0D), TRUSTED_TARGET_SELECTOR);
+            List<ItemEntity> list = EntityCarbuncle.this.world.getEntitiesWithinAABB(ItemEntity.class, EntityCarbuncle.this.getBoundingBox().grow(8.0D, 8.0D, 8.0D), getFinderItems());
             ItemStack itemstack = EntityCarbuncle.this.getHeldStack();
 
             if (itemstack.isEmpty() && !list.isEmpty()) {
@@ -141,7 +224,7 @@ public class EntityCarbuncle extends CreatureEntity {
         public void tick() {
             super.tick();
 
-            List<ItemEntity> list = EntityCarbuncle.this.world.getEntitiesWithinAABB(ItemEntity.class, EntityCarbuncle.this.getBoundingBox().grow(8.0D, 8.0D, 8.0D), TRUSTED_TARGET_SELECTOR);
+            List<ItemEntity> list = EntityCarbuncle.this.world.getEntitiesWithinAABB(ItemEntity.class, EntityCarbuncle.this.getBoundingBox().grow(8.0D, 8.0D, 8.0D), getFinderItems());
             ItemStack itemstack = EntityCarbuncle.this.getHeldStack();
             if (itemstack.isEmpty() && !list.isEmpty()) {
                 EntityCarbuncle.this.pathToTarget(list.get(0), 1.2f);
@@ -154,6 +237,42 @@ public class EntityCarbuncle extends CreatureEntity {
         this.getNavigator().setPath(path, speed);
     }
 
+    public class WaterAvoidingRandomWalkingGoal extends RandomWalkingGoal {
+        protected final float probability;
+
+        public WaterAvoidingRandomWalkingGoal(CreatureEntity creature, double speedIn) {
+            this(creature, speedIn, 0.001F);
+        }
+
+        public WaterAvoidingRandomWalkingGoal(CreatureEntity creature, double speedIn, float probabilityIn) {
+            super(creature, speedIn);
+            this.probability = probabilityIn;
+        }
+
+        @Nullable
+        protected Vec3d getPosition() {
+            if (this.creature.isInWaterOrBubbleColumn()) {
+                Vec3d vec3d = RandomPositionGenerator.getLandPos(this.creature, 15, 7);
+                return vec3d == null ? super.getPosition() : vec3d;
+            } else {
+                return this.creature.getRNG().nextFloat() >= this.probability ? RandomPositionGenerator.getLandPos(this.creature, 10, 7) : super.getPosition();
+            }
+        }
+
+        @Override
+        public boolean shouldContinueExecuting() {
+            if(isTamed())
+                return false;
+            return super.shouldContinueExecuting();
+        }
+
+        @Override
+        public boolean shouldExecute() {
+            if(isTamed())
+                return false;
+            return super.shouldExecute();
+        }
+    }
 
     public class StoreItemGoal extends Goal {
 
@@ -194,6 +313,11 @@ public class EntityCarbuncle extends CreatureEntity {
                     if(left.equals(oldStack)) {
                         return;
                     }
+                    if(world instanceof ServerWorld){
+                        OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), fromPos, 5);
+                        event.open();
+                        EventQueue.getInstance().addEvent(event);
+                    }
                     EntityCarbuncle.this.setHeldStack(left);
 //                    EntityCarbuncle.this.world.playSound(null, EntityCarbuncle.this.getPosX(), EntityCarbuncle.this.getPosY(), EntityCarbuncle.this.getPosZ(), SoundEvents.ENTITY_ITEM_PICKUP, EntityCarbuncle.this.getSoundCategory(),1.0F, 1.0F);
                     EntityCarbuncle.this.backOff = 20;
@@ -208,12 +332,12 @@ public class EntityCarbuncle extends CreatureEntity {
 
         @Override
         public boolean shouldContinueExecuting() {
-            return EntityCarbuncle.this.getHeldStack() != null && !EntityCarbuncle.this.getHeldStack().isEmpty() && EntityCarbuncle.this.backOff == 0;
+            return  EntityCarbuncle.this.isTamed() && EntityCarbuncle.this.getHeldStack() != null && !EntityCarbuncle.this.getHeldStack().isEmpty() && EntityCarbuncle.this.backOff == 0;
         }
 
         @Override
         public boolean shouldExecute() {
-            return EntityCarbuncle.this.getHeldStack() != null && !EntityCarbuncle.this.getHeldStack().isEmpty() && EntityCarbuncle.this.backOff == 0;
+            return  EntityCarbuncle.this.isTamed() && EntityCarbuncle.this.getHeldStack() != null && !EntityCarbuncle.this.getHeldStack().isEmpty() && EntityCarbuncle.this.backOff == 0;
         }
     }
 
@@ -227,7 +351,7 @@ public class EntityCarbuncle extends CreatureEntity {
         @Override
         public void startExecuting() {
             super.startExecuting();
-            if(EntityCarbuncle.this.fromPos != null && EntityCarbuncle.this.getHeldStack().isEmpty())
+            if( EntityCarbuncle.this.isTamed() && EntityCarbuncle.this.fromPos != null && EntityCarbuncle.this.getHeldStack().isEmpty())
                 EntityCarbuncle.this.getNavigator().tryMoveToXYZ(EntityCarbuncle.this.fromPos.getX(),EntityCarbuncle.this.fromPos.getY(),EntityCarbuncle.this.fromPos.getZ(), 1.2D);
         }
 
@@ -243,9 +367,15 @@ public class EntityCarbuncle extends CreatureEntity {
                         if(!i.getStackInSlot(j).isEmpty()){
 
                             EntityCarbuncle.this.setHeldStack(i.removeStackFromSlot(j));
+
                             EntityCarbuncle.this.world.playSound(null, EntityCarbuncle.this.getPosX(), EntityCarbuncle.this.getPosY(), EntityCarbuncle.this.getPosZ(),
                                     SoundEvents.ENTITY_ITEM_PICKUP, EntityCarbuncle.this.getSoundCategory(),1.0F, 1.0F);
 
+                            if(world instanceof ServerWorld){
+                                OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), fromPos, 5);
+                                event.open();
+                                EventQueue.getInstance().addEvent(event);
+                            }
                             break;
                         }
                     }
@@ -260,12 +390,12 @@ public class EntityCarbuncle extends CreatureEntity {
 
         @Override
         public boolean shouldContinueExecuting() {
-            return EntityCarbuncle.this.getHeldStack() != null && EntityCarbuncle.this.getHeldStack().isEmpty() && EntityCarbuncle.this.backOff == 0;
+            return EntityCarbuncle.this.getHeldStack() != null && EntityCarbuncle.this.getHeldStack().isEmpty() && EntityCarbuncle.this.backOff == 0 && EntityCarbuncle.this.isTamed();
         }
 
         @Override
         public boolean shouldExecute() {
-            return EntityCarbuncle.this.getHeldStack() != null && EntityCarbuncle.this.getHeldStack().isEmpty() && EntityCarbuncle.this.backOff == 0;
+            return EntityCarbuncle.this.getHeldStack() != null && EntityCarbuncle.this.getHeldStack().isEmpty() && EntityCarbuncle.this.backOff == 0 && EntityCarbuncle.this.isTamed();
         }
     }
 
@@ -275,6 +405,7 @@ public class EntityCarbuncle extends CreatureEntity {
         System.out.println(this.getHeldStack());
         System.out.println(this.toPos);
         System.out.println(this.fromPos);
+        System.out.println(this.isTamed());
         return false;
     }
 
@@ -287,6 +418,7 @@ public class EntityCarbuncle extends CreatureEntity {
     protected void registerData() {
         super.registerData();
         this.dataManager.register(HELD_ITEM, ItemStack.EMPTY);
+        this.dataManager.register(TAMED, false);
     }
 
     @Override
@@ -302,6 +434,8 @@ public class EntityCarbuncle extends CreatureEntity {
         toPos = NBTUtil.getBlockPos(tag, "to");
         fromPos = NBTUtil.getBlockPos(tag, "from");
         backOff = tag.getInt("backoff");
+        setTamed(tag.getBoolean("tamed"));
+        tamingTime = tag.getInt("taming_time");
     }
     public void setHeldStack(ItemStack stack){
 //        this.dataManager.set(HELD_ITEM,stack);
@@ -326,5 +460,7 @@ public class EntityCarbuncle extends CreatureEntity {
         if(fromPos != null)
             NBTUtil.storeBlockPos(tag, "from",fromPos);
         tag.putInt("backoff", backOff);
+        tag.putBoolean("tamed", isTamed());
+        tag.putInt("taming_time", tamingTime);
     }
 }
