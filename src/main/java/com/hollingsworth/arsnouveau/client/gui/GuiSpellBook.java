@@ -92,7 +92,7 @@ public class GuiSpellBook extends ModdedScreen {
         addSpellParts();
         addButton(new GuiImageButton(bookRight - 70, bookBottom - 28, 0,0,46, 18, 46, 18, "textures/gui/create_button.png", this::onCreateClick));
         spell_name = new TextFieldWidget(minecraft.fontRenderer, bookLeft + 16, bookTop + FULL_HEIGHT - 25, 115, 12, null, "Spell Name");
-        spell_name.setText(SpellBook.getSpellName(spell_book_tag, 1));
+        spell_name.setText(SpellBook.getSpellName(spell_book_tag, SpellBook.getMode(spell_book_tag)));
         if(spell_name.getText().isEmpty())
             spell_name.setSuggestion("My Spell");
 //

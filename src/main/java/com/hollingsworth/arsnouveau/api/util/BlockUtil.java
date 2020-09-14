@@ -1,12 +1,15 @@
 package com.hollingsworth.arsnouveau.api.util;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.world.BlockEvent;
 
 public class BlockUtil {
 
@@ -32,16 +35,23 @@ public class BlockUtil {
         if(!(world instanceof ServerWorld))
             return false;
 
-        if(ForgeEventFactory.doPlayerHarvestCheck(caster instanceof PlayerEntity ?
-                (PlayerEntity) caster : FakePlayerFactory.getMinecraft((ServerWorld) world), world.getBlockState(pos), true)){
-            return world.destroyBlock(pos, dropBlock);
-        }
-        return false;
+        PlayerEntity playerEntity = caster instanceof PlayerEntity ? (PlayerEntity) caster : FakePlayerFactory.getMinecraft((ServerWorld) world);
+        if(MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos),playerEntity)))
+            return false;
+
+        return world.destroyBlock(pos, dropBlock);
     }
 
     public static boolean destroyRespectsClaim(LivingEntity caster, World world, BlockPos pos){
-        return ForgeEventFactory.doPlayerHarvestCheck(caster instanceof PlayerEntity ?
-                (PlayerEntity) caster : FakePlayerFactory.getMinecraft((ServerWorld) world), world.getBlockState(pos), true);
+        PlayerEntity playerEntity = caster instanceof PlayerEntity ? (PlayerEntity) caster : FakePlayerFactory.getMinecraft((ServerWorld) world);
+        return !MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos),playerEntity));
+    }
+    public static void safelyUpdateState(World world, BlockPos pos, BlockState state){
+        if(!World.isOutsideBuildHeight(pos))
+            world.notifyBlockUpdate(pos, state, state, 3);
     }
 
+    public static void safelyUpdateState(World world, BlockPos pos){
+        safelyUpdateState(world, pos, world.getBlockState(pos));
+    }
 }

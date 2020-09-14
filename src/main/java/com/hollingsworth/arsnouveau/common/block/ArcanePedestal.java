@@ -29,6 +29,8 @@ public class ArcanePedestal extends ModBlock{
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if(handIn != Hand.MAIN_HAND)
+            return ActionResultType.PASS;
         if(!world.isRemote) {
             ArcanePedestalTile tile = (ArcanePedestalTile) world.getTileEntity(pos);
             if (tile.stack != null && player.getHeldItem(handIn).isEmpty()) {
@@ -38,6 +40,7 @@ public class ArcanePedestal extends ModBlock{
                 world.addEntity(item);
                 tile.stack = null;
             } else if (!player.inventory.getCurrentItem().isEmpty()) {
+
                 if(tile.stack != null){
                     ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.stack);
                     world.addEntity(item);

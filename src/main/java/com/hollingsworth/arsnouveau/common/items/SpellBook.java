@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.api.util.MathUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
+import com.hollingsworth.arsnouveau.common.block.ArcanePedestal;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOpenGUI;
@@ -107,8 +108,14 @@ public class SpellBook extends Item implements ISpellTier {
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
 
-        if(worldIn.getBlockState(new BlockPos(playerIn.getLookVec())).getBlock() instanceof ScribesBlock) {
-            return new ActionResult<>(ActionResultType.SUCCESS, stack);
+        RayTraceResult result = playerIn.pick(5, 0, false);
+        if(result instanceof BlockRayTraceResult){
+            System.out.println(worldIn.getBlockState(((BlockRayTraceResult) result).getPos()));
+            if(worldIn.getBlockState(new BlockPos(playerIn.getLookVec())).getBlock() instanceof ScribesBlock
+                    || worldIn.getBlockState(new BlockPos(playerIn.getLookVec())).getBlock() instanceof ArcanePedestal) {
+                System.out.println("touched block");
+                return new ActionResult<>(ActionResultType.SUCCESS, stack);
+            }
         }
 
         if(worldIn.isRemote || !stack.hasTag()){
@@ -128,7 +135,7 @@ public class SpellBook extends Item implements ISpellTier {
             resolver.onCastOnEntity(stack, playerIn, (LivingEntity) entityRes.getEntity(), handIn);
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
         }
-        RayTraceResult result =  playerIn.pick(5, 0, true);
+
         if(result.getType() == RayTraceResult.Type.BLOCK){
             ItemUseContext context = new ItemUseContext(playerIn, handIn, (BlockRayTraceResult) result);
             resolver.onCastOnBlock(context);

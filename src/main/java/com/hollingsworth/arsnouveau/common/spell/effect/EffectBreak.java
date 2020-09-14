@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
@@ -72,7 +73,7 @@ public class EffectBreak extends AbstractEffect {
                 } else {
                     destroyBlockSafely(world, pos1, true, shooter);
                 }
-                world.notifyBlockUpdate(pos1, state, state, 3);
+                BlockUtil.safelyUpdateState(world, pos);
             }
         }
     }
