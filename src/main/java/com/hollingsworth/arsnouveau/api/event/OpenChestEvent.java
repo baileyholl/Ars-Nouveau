@@ -20,10 +20,7 @@ public class OpenChestEvent implements ITimedEvent{
     public void open(){
         World world = fakePlayer.world;
         if(world.getTileEntity(pos) instanceof ChestTileEntity){
-            if(ChestTileEntity.getPlayersUsing(world, pos) < 0){
-                ((ChestTileEntity) world.getTileEntity(pos)).openInventory(fakePlayer);
-                canceled = true;
-            }
+            ((ChestTileEntity) world.getTileEntity(pos)).openInventory(fakePlayer);
 
         }
     }

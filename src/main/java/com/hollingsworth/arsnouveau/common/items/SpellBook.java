@@ -57,8 +57,6 @@ public class SpellBook extends Item implements ISpellTier {
         this.tier = tier;
     }
 
-
-
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         if(!stack.hasTag())
@@ -82,27 +80,6 @@ public class SpellBook extends Item implements ISpellTier {
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
     }
 
-        /**
-     * Returns true if the item can be used on the given entity, e.g. shears on sheep.
-     */
-    public boolean itemInteractionForEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
-//        if(!playerIn.getEntityWorld().isRemote) {
-//            SpellResolver resolver = new SpellResolver(getCurrentRecipe(stack));
-//            resolver.onCastOnEntity(stack, playerIn, target, hand);
-//
-//        }
-        return false;
-    }
-
-    @Override
-    public UseAction getUseAction(ItemStack p_77661_1_) {
-        return UseAction.NONE;
-    }
-
-    @Override
-    public int getUseDuration(ItemStack p_77626_1_) {
-        return super.getUseDuration(p_77626_1_);
-    }
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
@@ -110,10 +87,8 @@ public class SpellBook extends Item implements ISpellTier {
 
         RayTraceResult result = playerIn.pick(5, 0, false);
         if(result instanceof BlockRayTraceResult){
-            System.out.println(worldIn.getBlockState(((BlockRayTraceResult) result).getPos()));
             if(worldIn.getBlockState(new BlockPos(playerIn.getLookVec())).getBlock() instanceof ScribesBlock
                     || worldIn.getBlockState(new BlockPos(playerIn.getLookVec())).getBlock() instanceof ArcanePedestal) {
-                System.out.println("touched block");
                 return new ActionResult<>(ActionResultType.SUCCESS, stack);
             }
         }

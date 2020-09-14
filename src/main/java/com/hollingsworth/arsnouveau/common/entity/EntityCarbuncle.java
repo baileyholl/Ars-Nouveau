@@ -314,7 +314,7 @@ public class EntityCarbuncle extends CreatureEntity {
                         return;
                     }
                     if(world instanceof ServerWorld){
-                        OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), fromPos, 5);
+                        OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), toPos, 20);
                         event.open();
                         EventQueue.getInstance().addEvent(event);
                     }
@@ -372,7 +372,7 @@ public class EntityCarbuncle extends CreatureEntity {
                                     SoundEvents.ENTITY_ITEM_PICKUP, EntityCarbuncle.this.getSoundCategory(),1.0F, 1.0F);
 
                             if(world instanceof ServerWorld){
-                                OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), fromPos, 5);
+                                OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), fromPos, 20);
                                 event.open();
                                 EventQueue.getInstance().addEvent(event);
                             }

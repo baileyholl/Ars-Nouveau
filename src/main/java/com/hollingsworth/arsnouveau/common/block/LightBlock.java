@@ -33,19 +33,8 @@ public class LightBlock extends ModBlock {
     }
 
     @Override
-    public boolean ticksRandomly(BlockState state) {
-        return false;
-    }
-
-    @Override
     public BlockRenderType getRenderType(BlockState p_149645_1_) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
-    }
-
-    @Nullable
-    @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return super.getStateForPlacement(context);
     }
 
     @Override

@@ -34,7 +34,6 @@ public class ScribesBlock extends ModBlock{
     }
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 
-
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if(handIn != Hand.MAIN_HAND)

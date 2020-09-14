@@ -1,8 +1,5 @@
 package com.hollingsworth.arsnouveau.api.item;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.ISpellBonus;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.util.RomanNumber;
 import com.hollingsworth.arsnouveau.common.items.ModItem;
 import net.minecraft.client.util.ITooltipFlag;
