@@ -8,10 +8,13 @@ import com.hollingsworth.arsnouveau.common.network.PacketUpdateMana;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.potion.EffectInstance;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -34,6 +37,17 @@ public class EventHandler {
     @SubscribeEvent
     public static void playerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent e) {
         syncPlayerEvent(e.getPlayer());
+    }
+
+    @SubscribeEvent
+    public static void jumpEvent(LivingEvent.LivingJumpEvent e) {
+        if(e.getEntityLiving() == null  || e.getEntityLiving().getActivePotionEffect(Effects.SLOWNESS) == null)
+            return;
+        EffectInstance effectInstance = e.getEntityLiving().getActivePotionEffect(Effects.SLOWNESS);
+        System.out.println(effectInstance.getAmplifier());
+        if(effectInstance.getAmplifier() >= 20){
+            e.getEntityLiving().setMotion(0,0,0);
+        }
     }
 
     public static void syncPlayerEvent(PlayerEntity playerEntity){

@@ -1,12 +1,14 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.common.block.tile.ForgeTile;
+import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockReader;
 
 public class ForgeBlock extends ModBlock{
-    public ForgeBlock(Properties properties, String registry) {
-        super(properties, registry);
+    public ForgeBlock() {
+        super(defaultProperties().lightValue(8).notSolid(), LibBlockNames.FORGE);
     }
 
     @Override
@@ -16,6 +18,6 @@ public class ForgeBlock extends ModBlock{
 
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return null;
+        return new ForgeTile();
     }
 }

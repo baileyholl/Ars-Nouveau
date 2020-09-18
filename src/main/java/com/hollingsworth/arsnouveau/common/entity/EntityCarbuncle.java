@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
-import com.hollingsworth.arsnouveau.api.event.EventHandler;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.event.OpenChestEvent;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
@@ -12,7 +11,6 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.IInventory;
@@ -27,20 +25,19 @@ import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.Path;
 import net.minecraft.tileentity.HopperTileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.util.FakePlayerFactory;
-import org.apache.logging.log4j.core.jmx.Server;
+import software.bernie.geckolib.animation.builder.AnimationBuilder;
+import software.bernie.geckolib.animation.controller.EntityAnimationController;
+import software.bernie.geckolib.entity.IAnimatedEntity;
+import software.bernie.geckolib.event.AnimationTestEvent;
+import software.bernie.geckolib.manager.EntityAnimationManager;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
@@ -48,22 +45,64 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
-public class EntityCarbuncle extends CreatureEntity {
+public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity {
 
     public BlockPos fromPos;
     public BlockPos toPos;
 
     public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.ITEMSTACK);
     public static final DataParameter<Boolean> TAMED = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Boolean> HOP = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.BOOLEAN);
     public int backOff; // Used to stop inventory store/take spam when chests are full or empty.
     public int tamingTime;
+
+    EntityAnimationManager manager = new EntityAnimationManager();
+    EntityAnimationController<EntityCarbuncle> walkController = new EntityAnimationController<>(this, "walkController", 20, this::animationPredicate);
+    EntityAnimationController<EntityCarbuncle> idleController = new EntityAnimationController<>(this, "idleController", 20, this::idlePredicate);
+
     public EntityCarbuncle(EntityType<EntityCarbuncle> entityCarbuncleEntityType, World world) {
         super(entityCarbuncleEntityType, world);
+        manager.addAnimationController(walkController);
+        manager.addAnimationController(idleController);
     }
 
     public EntityCarbuncle(World world, boolean tamed){
         super(ModEntities.ENTITY_CARBUNCLE_TYPE,world);
         this.setTamed(tamed);
+        manager.addAnimationController(walkController);
+        manager.addAnimationController(idleController);
+    }
+    private <E extends Entity> boolean idlePredicate(AnimationTestEvent<E> event) {
+        if(world.getGameTime() % 20 == 0 && world.rand.nextInt(3) == 0 && !this.dataManager.get(HOP)){
+
+            System.out.println("adding idle");
+            manager.setAnimationSpeed(3f);
+            idleController.setAnimation(new AnimationBuilder().addAnimation("idle"));
+            return true;
+        }
+
+
+        return true;
+    }
+    private <E extends Entity> boolean animationPredicate(AnimationTestEvent<E> event) {
+
+
+        if(this.dataManager.get(HOP)){
+
+//            manager.setAnimationSpeed(500.0f);
+            manager.setAnimationSpeed(5f);
+
+            walkController.setAnimation(new AnimationBuilder().addAnimation("hop"));
+//            manager.setAnimationSpeed(500.0);
+
+        }else{
+            return false;
+        }
+        return true;
+    }
+    @Override
+    public EntityAnimationManager getAnimationManager() {
+        return manager;
     }
 
     public boolean isTamed(){
@@ -77,10 +116,19 @@ public class EntityCarbuncle extends CreatureEntity {
     @Override
     public void tick() {
         super.tick();
+        if(!world.isRemote){
+            if(this.navigator.noPath()){
 
+                EntityCarbuncle.this.dataManager.set(HOP, false);
+            }else{
+                EntityCarbuncle.this.dataManager.set(HOP, true);
+            }
+        }
 
         if(this.backOff > 0 && !world.isRemote)
             this.backOff--;
+        if(this.dead)
+            return;
 
         if(this.getHeldStack().isEmpty() && !world.isRemote){
 
@@ -89,6 +137,7 @@ public class EntityCarbuncle extends CreatureEntity {
                     if(!isTamed() && itementity.getItem().getItem() != Items.GOLD_NUGGET)
                         return;
                     this.updateEquipmentIfNeeded(itementity);
+                    this.dataManager.set(HOP, false);
                 }
             }
         }
@@ -135,11 +184,6 @@ public class EntityCarbuncle extends CreatureEntity {
     }
 
     @Override
-    public boolean canSpawn(IWorld worldIn, SpawnReason spawnReasonIn) {
-        return super.canSpawn(worldIn, spawnReasonIn);
-    }
-
-    @Override
     protected void registerAttributes() {
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue((double)0.2F);
@@ -167,6 +211,7 @@ public class EntityCarbuncle extends CreatureEntity {
         this.goalSelector.addGoal(4, new AvoidPlayerUntamedGoal(this, PlayerEntity.class, 16.0F, 1.6D, 1.4D));
 //        this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
     }
+
 
     public class AvoidPlayerUntamedGoal extends AvoidEntityGoal<LivingEntity>{
 
@@ -204,6 +249,8 @@ public class EntityCarbuncle extends CreatureEntity {
         @Override
         public boolean shouldExecute() {
             List<ItemEntity> list = EntityCarbuncle.this.world.getEntitiesWithinAABB(ItemEntity.class, EntityCarbuncle.this.getBoundingBox().grow(8.0D, 8.0D, 8.0D), getFinderItems());
+
+
             return !list.isEmpty() && EntityCarbuncle.this.getHeldStack().isEmpty();
         }
 
@@ -217,6 +264,7 @@ public class EntityCarbuncle extends CreatureEntity {
 
             if (itemstack.isEmpty() && !list.isEmpty()) {
                 EntityCarbuncle.this.pathToTarget(list.get(0), 1.2f);
+                EntityCarbuncle.this.dataManager.set(HOP, true);
             }
         }
 
@@ -228,6 +276,7 @@ public class EntityCarbuncle extends CreatureEntity {
             ItemStack itemstack = EntityCarbuncle.this.getHeldStack();
             if (itemstack.isEmpty() && !list.isEmpty()) {
                 EntityCarbuncle.this.pathToTarget(list.get(0), 1.2f);
+                EntityCarbuncle.this.dataManager.set(HOP, true);
             }
         }
     }
@@ -249,6 +298,11 @@ public class EntityCarbuncle extends CreatureEntity {
             this.probability = probabilityIn;
         }
 
+        @Override
+        public void tick() {
+            super.tick();
+        }
+
         @Nullable
         protected Vec3d getPosition() {
             if (this.creature.isInWaterOrBubbleColumn()) {
@@ -263,6 +317,7 @@ public class EntityCarbuncle extends CreatureEntity {
         public boolean shouldContinueExecuting() {
             if(isTamed())
                 return false;
+
             return super.shouldContinueExecuting();
         }
 
@@ -270,7 +325,12 @@ public class EntityCarbuncle extends CreatureEntity {
         public boolean shouldExecute() {
             if(isTamed())
                 return false;
-            return super.shouldExecute();
+            if( super.shouldExecute()){
+                return true;
+            }
+            return false;
+
+
         }
     }
 
@@ -321,12 +381,15 @@ public class EntityCarbuncle extends CreatureEntity {
                     EntityCarbuncle.this.setHeldStack(left);
 //                    EntityCarbuncle.this.world.playSound(null, EntityCarbuncle.this.getPosX(), EntityCarbuncle.this.getPosY(), EntityCarbuncle.this.getPosZ(), SoundEvents.ENTITY_ITEM_PICKUP, EntityCarbuncle.this.getSoundCategory(),1.0F, 1.0F);
                     EntityCarbuncle.this.backOff = 20;
+
+                    EntityCarbuncle.this.dataManager.set(HOP, false);
                     return;
                 }
             }
 
             if(EntityCarbuncle.this.toPos != null && !EntityCarbuncle.this.getHeldStack().isEmpty()) {
                 EntityCarbuncle.this.getNavigator().tryMoveToXYZ(EntityCarbuncle.this.toPos.getX(), EntityCarbuncle.this.toPos.getY(), EntityCarbuncle.this.toPos.getZ(), 1.2D);
+                EntityCarbuncle.this.dataManager.set(HOP, true);
             }
         }
 
@@ -399,6 +462,18 @@ public class EntityCarbuncle extends CreatureEntity {
         }
     }
 
+    @Override
+    public void onDeath(DamageSource source) {
+        if(!world.isRemote && isTamed()){
+            ItemStack stack = new ItemStack(ItemsRegistry.carbuncleCharm);
+            world.addEntity(new ItemEntity(world, getPosX(), getPosY(), getPosZ(), stack));
+            if(this.getHeldStack() != null)
+                world.addEntity(new ItemEntity(world, getPosX(), getPosY(), getPosZ(), this.getHeldStack()));
+
+        }
+
+        super.onDeath(source);
+    }
 
     @Override
     protected boolean processInteract(PlayerEntity player, Hand hand) {
@@ -419,6 +494,7 @@ public class EntityCarbuncle extends CreatureEntity {
         super.registerData();
         this.dataManager.register(HELD_ITEM, ItemStack.EMPTY);
         this.dataManager.register(TAMED, false);
+        this.dataManager.register(HOP, false);
     }
 
     @Override
@@ -436,6 +512,7 @@ public class EntityCarbuncle extends CreatureEntity {
         backOff = tag.getInt("backoff");
         setTamed(tag.getBoolean("tamed"));
         tamingTime = tag.getInt("taming_time");
+        this.dataManager.set(HOP, tag.getBoolean("hop"));
     }
     public void setHeldStack(ItemStack stack){
 //        this.dataManager.set(HELD_ITEM,stack);
@@ -462,5 +539,6 @@ public class EntityCarbuncle extends CreatureEntity {
         tag.putInt("backoff", backOff);
         tag.putBoolean("tamed", isTamed());
         tag.putInt("taming_time", tamingTime);
+        tag.putBoolean("hop", this.dataManager.get(HOP));
     }
 }

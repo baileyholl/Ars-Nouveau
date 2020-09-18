@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.Quaternion;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.entity.IEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
@@ -24,18 +25,26 @@ public class CarbuncleHeldItemLayer extends LayerRenderer<EntityCarbuncle, Carbu
 
         matrixStackIn.push();
 
+        matrixStackIn.translate(((this.getEntityModel()).tail.positionOffsetX)/64f, -((this.getEntityModel()).carbuncle.positionOffsetY)/10f ,
+                ((this.getEntityModel()).tail.positionOffsetZ)/64f);
 
-        matrixStackIn.translate(((this.getEntityModel()).tail.rotationPointX / 16.0F), ((this.getEntityModel()).tail.rotationPointY / 16.0F), ((this.getEntityModel()).tail.rotationPointZ / 16.0F));
-
-//        matrixStackIn.rotate(Vector3f.ZP.rotation(f1));
-//        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(netHeadYaw));
+//        matrixStackIn.rotate(Vector3f.XP.rotation((float) Math.cos(this.getEntityModel().carbuncle.positionOffsetY)));
+//        matrixStackIn.rotate(Vector3f.XP.rotationDegrees(this.getEntityModel().carbuncle.rotateAngleX));
+//        matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(this.getEntityModel().carbuncle.rotateAngleZ));
 //        matrixStackIn.rotate(Vector3f.XP.rotationDegrees(headPitch));
 
-        matrixStackIn.translate((double)0.00F, (double)-.3F, .15D);
+        matrixStackIn.translate((double)0f, (double)1.0f, .2D);
         matrixStackIn.scale(0.75f, 0.75f, 0.75f);
-
-        matrixStackIn.rotate(Vector3f.XP.rotationDegrees(180f));
-
+//        matrixStackIn.rotate(Vector3f.XP.rotationDegrees(this.getEntityModel().carbuncle.rotateAngleX));
+//        System.out.println(this.getEntityModel().carbuncle.rotateAngleX*180f);
+        Quaternion quaternion = Vector3f.XP.rotationDegrees(this.getEntityModel().carbuncle.rotateAngleX  +180f );
+//        quaternion.conjugate();
+        matrixStackIn.rotate(quaternion);
+        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180f));
+//        matrixStackIn.rotate(Vector3f.XP.rotationDegrees(this.getEntityModel().carbuncle.rotateAngleX));
+//        matrixStackIn.rotate(Vector3f.YP.rotationDegrees( (float)Math.cos(this.getEntityModel().carbuncle.rotateAngleY) *360f));
+//        matrixStackIn.rotate(Vector3f.ZP.rotationDegrees( (float)Math.cos(this.getEntityModel().carbuncle.rotateAngleZ)));
+//
 
 //        ItemStack itemstack = entitylivingbaseIn.getItemStackFromSlot(EquipmentSlotType.MAINHAND);
         ItemStack itemstack = entitylivingbaseIn.getHeldStack();

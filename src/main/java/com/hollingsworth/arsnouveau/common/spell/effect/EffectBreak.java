@@ -63,6 +63,7 @@ public class EffectBreak extends AbstractEffect {
                 if(!(state.getBlockHardness(world, pos1) <= maxHardness && state.getBlockHardness(world, pos1) >= 0)){
                     continue;
                 }
+
                 if (hasBuff(augments, AugmentExtract.class)) {
                     destroyBlockSafely(world, pos1, false, shooter);
                     state.getDrops(LootUtil.getSilkContext((ServerWorld) world, pos1,  shooter)).forEach(i -> world.addEntity(new ItemEntity(world,pos.getX(), pos.getY(), pos.getZ(), i )));

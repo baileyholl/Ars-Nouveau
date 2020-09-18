@@ -86,6 +86,7 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.SUMMONING_CRYSTAL) public static TileEntityType<SummoningCrytalTile> SUMMONING_CRYSTAL_TILE;
 
     @ObjectHolder(LibBlockNames.SCRIBES_BLOCK) public static TileEntityType<ScribesTile> SCRIBES_TABLE_TILE;
+    @ObjectHolder(LibBlockNames.FORGE) public static TileEntityType<ForgeTile> FORGE_TILE_TYPE;
 
     @ObjectHolder(LibBlockNames.ARCANE_ROAD) public static ModBlock ARCANE_ROAD;
 
@@ -93,6 +94,7 @@ public class BlockRegistry {
 
     @ObjectHolder(LibBlockNames.RUNE) public static RuneBlock RUNE_BLOCK;
 
+    @ObjectHolder(LibBlockNames.FORGE) public static ForgeBlock FORGE_BLOCK;
 
 
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
@@ -118,6 +120,7 @@ public class BlockRegistry {
             blockRegistryEvent.getRegistry().register(new ArcaneRoad());
             blockRegistryEvent.getRegistry().register(new ArcaneRelay());
             blockRegistryEvent.getRegistry().register(new RuneBlock());
+            blockRegistryEvent.getRegistry().register(new ForgeBlock());
         }
 
         @SubscribeEvent
@@ -135,6 +138,7 @@ public class BlockRegistry {
             event.getRegistry().register(TileEntityType.Builder.create(ScribesTile::new, BlockRegistry.SCRIBES_BLOCK).build(null).setRegistryName(LibBlockNames.SCRIBES_BLOCK));
             event.getRegistry().register(TileEntityType.Builder.create(ArcaneRelayTile::new, BlockRegistry.ARCANE_RELAY).build(null).setRegistryName(LibBlockNames.ARCANE_RELAY));
             event.getRegistry().register(TileEntityType.Builder.create(RuneTile::new, BlockRegistry.RUNE_BLOCK).build(null).setRegistryName(LibBlockNames.RUNE));
+            event.getRegistry().register(TileEntityType.Builder.create(ForgeTile::new, BlockRegistry.FORGE_BLOCK).build(null).setRegistryName(LibBlockNames.FORGE));
 
         }
 
@@ -160,6 +164,7 @@ public class BlockRegistry {
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.ARCANE_ROAD, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.ARCANE_ROAD));
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.ARCANE_RELAY, ItemsRegistry.defaultItemProperties().setISTER(()-> RelayRenderer.ISRender::new)).setRegistryName(LibBlockNames.ARCANE_RELAY));
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.RUNE_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.RUNE));
+            itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.FORGE_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.FORGE));
 
         }
     }

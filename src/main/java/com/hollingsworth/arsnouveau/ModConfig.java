@@ -29,6 +29,7 @@ public class ModConfig {
     public static final String EffectFangsID = "fangs";
     public static final String EffectSummonVexID = "summon_vex";
     public static final String EffectHarvestID = "harvest";
+    public static final String AugmentSmeltID = "smelt";
 
     public static final String AugmentAccelerateID = "accelerate";
     public static final String AugmentExtendTimeID = "extend_time";
@@ -44,7 +45,9 @@ public class ModConfig {
     public static final String EffectPickupID = "pickup";
     public static final String EffectInteractID = "interact";
     public static final String EffectPlaceBlockID = "place_block";
+    public static final String EffectSnareID = "snare";
 
 
     public static final String MethodRuneID = "rune";
+    public static final String EffectSmeltID = "smelt";
 }

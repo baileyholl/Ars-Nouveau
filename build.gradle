@@ -107,6 +107,7 @@ repositories {
     maven {
         url "https://maven.blamejared.com"
     }
+	maven { url 'https://repo.repsy.io/mvn/gandiber/geckolib' }
 	
 }
 
@@ -117,6 +118,7 @@ dependencies {
 	compile fg.deobf('top.theillusivec4.curios:curios:FORGE-1.15.2-+')
 	compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.15.2-1.2-32.168:api")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.15.2-1.2-32.168")
+	implementation fg.deobf('software.bernie.geckolib:forge-1.15.2-geckolib:2.0.0')
 }
 
 

@@ -132,11 +132,8 @@ public class GuiSpellBook extends ModdedScreen {
                 cell = new GlyphButton(this, bookLeft + 15 + xOffset, bookTop + 20 + yOffset, false, spell.getIcon(), spell.tag);
                 numCast++;
             }else if(spell instanceof AbstractEffect){
-//                int xOffset = numEffect % 2 == 0 ? 18 * (numEffect/2 -1) : 18*(numEffect/2);
-//                int yOffset = (numEffect % 2 == 0 ? 20 : 0);
-
                 int xOffset = 20 * (numEffect % 6 );
-                int yOffset = (numEffect / 6) * 20 ;
+                int yOffset = (numEffect / 6) * 18 ;
                 cell = new GlyphButton(this, bookLeft + 140 + xOffset, bookTop + 20 +  yOffset, false, spell.getIcon(), spell.tag);
                 numEffect ++;
             }else{
@@ -151,7 +148,6 @@ public class GuiSpellBook extends ModdedScreen {
 
     public void onDocumentationClick(Button button){
         PatchouliAPI.instance.openBookGUI(Registry.ITEM.getKey(ItemsRegistry.wornNotebook));
-
     }
 
     public void onCraftingSlotClick(Button button){
