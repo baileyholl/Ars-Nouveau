@@ -6,8 +6,8 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.generators.ExistingFileHelper;
 import net.minecraftforge.client.model.generators.ModelFile;
+import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class ItemModelGenerator extends net.minecraftforge.client.model.generators.ItemModelProvider {
     public ItemModelGenerator(DataGenerator generator, String modid, ExistingFileHelper existingFileHelper) {

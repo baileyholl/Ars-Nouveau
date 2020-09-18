@@ -7,20 +7,19 @@ import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.api.util.MathUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
+import com.hollingsworth.arsnouveau.common.block.ArcanePedestal;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOpenGUI;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.enchantment.IVanishable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.item.UseAction;
+import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.ActionResult;
@@ -42,9 +41,10 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 
-public class SpellBook extends Item implements ISpellTier {
+public class SpellBook extends ShootableItem implements ISpellTier {
     public static final String BOOK_MODE_TAG = "mode";
     public static final String UNLOCKED_SPELLS = "spells";
     public static final int SEGMENTS = 10;
@@ -57,13 +57,10 @@ public class SpellBook extends Item implements ISpellTier {
     }
 
 
-
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         if(!stack.hasTag())
             stack.setTag(new CompoundNBT());
-
-
 
         if(!worldIn.isRemote && worldIn.getGameTime() % 5 == 0 && !stack.hasTag()) {
             CompoundNBT tag = new CompoundNBT();
@@ -81,53 +78,46 @@ public class SpellBook extends Item implements ISpellTier {
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
     }
 
-        /**
-     * Returns true if the item can be used on the given entity, e.g. shears on sheep.
-         * @return
-         */
-    public ActionResultType itemInteractionForEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
-//        if(!playerIn.getEntityWorld().isRemote) {
-//            SpellResolver resolver = new SpellResolver(getCurrentRecipe(stack));
-//            resolver.onCastOnEntity(stack, playerIn, target, hand);
-//
-//        }
-        return ActionResultType.FAIL;
-    }
-
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
 
-        if(worldIn.getBlockState(new BlockPos(playerIn.getLookVec())).getBlock() instanceof ScribesBlock) {
-            return new ActionResult<>(ActionResultType.SUCCESS, stack);
+
+        RayTraceResult result = playerIn.pick(5, 0, false);
+        if (result instanceof BlockRayTraceResult) {
+            if (worldIn.getBlockState(new BlockPos(playerIn.getLookVec())).getBlock() instanceof ScribesBlock
+                    || worldIn.getBlockState(new BlockPos(playerIn.getLookVec())).getBlock() instanceof ArcanePedestal) {
+                return new ActionResult<>(ActionResultType.SUCCESS, stack);
+            }
         }
+
 
         if(worldIn.isRemote || !stack.hasTag()){
             //spawnParticles(playerIn.posX, playerIn.posY + 2, playerIn.posZ, worldIn);
-            return new ActionResult<>(ActionResultType.FAIL, stack);
+            return new ActionResult<>(ActionResultType.CONSUME, stack);
         }
         // Crafting mode
         if(getMode(stack.getTag()) == 0 && playerIn instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = (ServerPlayerEntity) playerIn;
             Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->player), new PacketOpenGUI(stack.getTag(), getTier().ordinal(), getUnlockedSpellString(player.getHeldItem(handIn).getTag())));
-            return new ActionResult<>(ActionResultType.SUCCESS, stack);
+            return new ActionResult<>(ActionResultType.CONSUME, stack);
         }
         SpellResolver resolver = new SpellResolver(getCurrentRecipe(stack));
         EntityRayTraceResult entityRes = MathUtil.getLookedAtEntity(playerIn, 25);
         if(entityRes != null && entityRes.getEntity() instanceof LivingEntity){
 
             resolver.onCastOnEntity(stack, playerIn, (LivingEntity) entityRes.getEntity(), handIn);
-            return new ActionResult<>(ActionResultType.SUCCESS, stack);
+            return new ActionResult<>(ActionResultType.CONSUME, stack);
         }
-        RayTraceResult result =  playerIn.pick(5, 0, true);
+
         if(result.getType() == RayTraceResult.Type.BLOCK){
             ItemUseContext context = new ItemUseContext(playerIn, handIn, (BlockRayTraceResult) result);
             resolver.onCastOnBlock(context);
-            return new ActionResult<>(ActionResultType.SUCCESS, stack);
+            return new ActionResult<>(ActionResultType.CONSUME, stack);
         }
 
         resolver.onCast(stack,playerIn,worldIn);
-        return new ActionResult<>(ActionResultType.SUCCESS, stack);
+        return new ActionResult<>(ActionResultType.CONSUME, stack);
     }
 
     public static void spawnParticles(double posX, double posY, double posZ, World world){
@@ -143,12 +133,27 @@ public class SpellBook extends Item implements ISpellTier {
 
         }
     }
+
+    /**
+     * How long it takes to use or consume an item
+     */
+    public int getUseDuration(ItemStack stack) {
+        return 72000;
+    }
+
+    /**
+     * returns the action that specifies what animation to play when the items is being used
+     */
+    public UseAction getUseAction(ItemStack stack) {
+        return UseAction.BOW;
+    }
+
     /*
     Called on block use. TOUCH ONLY
      */
     @Override
     public ActionResultType onItemUse(ItemUseContext context) {
-        return ActionResultType.SUCCESS;
+        return ActionResultType.PASS;
     }
 
     public ArrayList<AbstractSpellPart> getCurrentRecipe(ItemStack stack){
@@ -243,5 +248,15 @@ public class SpellBook extends Item implements ISpellTier {
     @Override
     public Tier getTier() {
         return this.tier;
+    }
+
+    @Override
+    public Predicate<ItemStack> getInventoryAmmoPredicate() {
+        return null;
+    }
+
+    @Override
+    public int func_230305_d_() {
+        return 0;
     }
 }

@@ -371,7 +371,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
          */
         public boolean shouldContinueExecuting() {
             EntityWhelp kobold = EntityWhelp.this;
-            return kobold.navigator.func_226337_n_();
+            return kobold.navigator.hasPath();
         }
 
         /**
