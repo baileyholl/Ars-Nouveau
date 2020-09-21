@@ -126,7 +126,6 @@ public class ManaUtil {
             blockPos = blockPos.toImmutable();
             if(pos1[0] == null && world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= mana) {
                 ((ManaJarTile) world.getTileEntity(blockPos)).removeMana(mana);
-                System.out.println(blockPos.toString());
                 pos1[0] = blockPos;
             }
         });

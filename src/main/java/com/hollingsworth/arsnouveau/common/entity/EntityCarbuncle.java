@@ -74,8 +74,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity {
     }
     private <E extends Entity> boolean idlePredicate(AnimationTestEvent<E> event) {
         if(world.getGameTime() % 20 == 0 && world.rand.nextInt(3) == 0 && !this.dataManager.get(HOP)){
-
-            System.out.println("adding idle");
             manager.setAnimationSpeed(3f);
             idleController.setAnimation(new AnimationBuilder().addAnimation("idle"));
             return true;

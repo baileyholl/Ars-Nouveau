@@ -9,13 +9,6 @@ public class ArcaneOre extends ModBlock{
         super("arcane_ore");
     }
 
-//    @Override
-//    public BlockRenderLayer getRenderLayer() {
-//        return BlockRenderLayer.CUTOUT;
-//    }
-//
-
-
     @Override
     public BlockRenderType getRenderType(BlockState p_149645_1_) {
         return BlockRenderType.MODEL;

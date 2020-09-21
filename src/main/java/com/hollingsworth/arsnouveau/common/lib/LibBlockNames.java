@@ -14,4 +14,5 @@ public class LibBlockNames {
     public static final String RUNE = "rune";
     public static final String FORGE ="forge";
     public static final String GROWTH = "";
+    public static final String PORTAL = "portal";
 }

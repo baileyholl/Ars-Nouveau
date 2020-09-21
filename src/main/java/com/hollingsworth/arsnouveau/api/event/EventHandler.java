@@ -41,13 +41,16 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void jumpEvent(LivingEvent.LivingJumpEvent e) {
+
         if(e.getEntityLiving() == null  || e.getEntityLiving().getActivePotionEffect(Effects.SLOWNESS) == null)
             return;
         EffectInstance effectInstance = e.getEntityLiving().getActivePotionEffect(Effects.SLOWNESS);
-        System.out.println(effectInstance.getAmplifier());
+
         if(effectInstance.getAmplifier() >= 20){
             e.getEntityLiving().setMotion(0,0,0);
         }
+
+
     }
 
     public static void syncPlayerEvent(PlayerEntity playerEntity){
@@ -61,6 +64,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void playerOnTick(TickEvent.PlayerTickEvent e) {
+
         if (e.player instanceof ServerPlayerEntity && e.player.world.getGameTime() % 5 == 0) {
             if (e.player.world.getGameTime() % 20 == 0) {
                 ManaCapability.getMana(e.player).ifPresent(mana -> {

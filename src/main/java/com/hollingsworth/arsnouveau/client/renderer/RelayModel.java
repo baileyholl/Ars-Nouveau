@@ -11,9 +11,9 @@ import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.model.ModelRenderer;
 
 public class RelayModel extends Model  {
-	private final ModelRenderer ring_inner;
-	private final ModelRenderer ring_outer;
-	private final ModelRenderer center;
+	public final ModelRenderer ring_inner;
+	public final ModelRenderer ring_outer;
+	public final ModelRenderer center;
 
 
 
@@ -85,17 +85,17 @@ public class RelayModel extends Model  {
 		center.render(ms, buffer, light, overlay, r, g, b, alpha);
 		ring_outer.render(ms, buffer, light, overlay, r, g, b, alpha);
 
-		float lvt_8_2_ = 1.3F;
-		float angle = (Minecraft.getInstance().world.getGameTime()/10.0f) % 360;
-
-		float outerAngle = (Minecraft.getInstance().world.getGameTime()/20.0f) % 360;
-//		ring_outer.rotateAngleZ =  MathHelper.cos(angle) *3.1415927F * 2;
-		ring_outer.rotateAngleX = outerAngle;
-		ring_outer.rotateAngleZ = outerAngle;
-
-		ring_inner.rotateAngleY = angle;
-		ring_inner.rotateAngleX = angle;
-		center.rotateAngleX = -angle;
-		center.rotateAngleY = angle;
+//		float lvt_8_2_ = 1.3F;
+//		float angle = (Minecraft.getInstance().world.getGameTime()/10.0f) % 360;
+//
+//		float outerAngle = (Minecraft.getInstance().world.getGameTime()/20.0f) % 360;
+////		ring_outer.rotateAngleZ =  MathHelper.cos(angle) *3.1415927F * 2;
+//		ring_outer.rotateAngleX = outerAngle;
+//		ring_outer.rotateAngleZ = outerAngle;
+//
+//		ring_inner.rotateAngleY = angle;
+//		ring_inner.rotateAngleX = angle;
+//		center.rotateAngleX = -angle;
+//		center.rotateAngleY = angle;
 	}
 }
