@@ -33,13 +33,14 @@ public class PortalBlock extends ModBlock{
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         return SHAPE;
     }
+
     public PortalBlock() {
         super(ModBlock.defaultProperties().doesNotBlockMovement().hardnessAndResistance(-1.0F, 3600000.0F).noDrops(),LibBlockNames.PORTAL);
         this.setDefaultState(this.stateContainer.getBaseState().with(AXIS, Direction.Axis.X));
     }
+
     @OnlyIn(Dist.CLIENT)
     public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
-    
         for(int i = 0; i < 4; ++i) {
             double d0 = (double)pos.getX() + (double)rand.nextFloat();
             double d1 = (double)pos.getY() + (double)rand.nextFloat();
@@ -71,11 +72,6 @@ public class PortalBlock extends ModBlock{
         if(worldIn.getTileEntity(pos) instanceof PortalTile){
             ((PortalTile) worldIn.getTileEntity(pos)).warp(entityIn);
         }
-    }
-
-    @Override
-    public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
-        super.tick(state, worldIn, pos, rand);
     }
 
     @Override

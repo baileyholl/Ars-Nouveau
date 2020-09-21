@@ -28,8 +28,6 @@ public class ManaCondenserRenderer extends TileEntityRenderer<ManaCondenserTile>
         ms.translate(0.5F, 1.5F, 0.5F);
         ms.scale(1F, -1F, -1F);
         float angle = 0;
-
-//        ms.rotate(Vector3f.YP.rotationDegrees(angle));
         IVertexBuilder buffer = buffers.getBuffer(model.getRenderType(texture));
         model.render(ms, buffer, light, overlay, 1, 1, 1, 1);
         ms.pop();
