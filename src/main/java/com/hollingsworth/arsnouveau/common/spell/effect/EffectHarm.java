@@ -11,6 +11,7 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.EntityRayTraceResult;
@@ -63,7 +64,7 @@ public class EffectHarm extends AbstractEffect {
     @Nullable
     @Override
     public Item getCraftingReagent() {
-        return null;
+        return Items.IRON_SWORD;
     }
 
     @Override

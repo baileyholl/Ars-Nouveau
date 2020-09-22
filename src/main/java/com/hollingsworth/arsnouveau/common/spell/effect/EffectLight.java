@@ -53,7 +53,7 @@ public class EffectLight extends AbstractEffect {
     @Nullable
     @Override
     public Item getCraftingReagent() {
-        return Items.GLOWSTONE;
+        return Items.REDSTONE_LAMP;
     }
 
     @Override

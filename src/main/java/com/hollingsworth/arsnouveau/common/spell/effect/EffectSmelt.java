@@ -12,7 +12,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -93,6 +95,11 @@ public class EffectSmelt extends AbstractEffect {
 
     @Override
     public int getManaCost() {
-        return 0;
+        return 40;
+    }
+
+    @Override
+    public Item getCraftingReagent() {
+        return Items.BLAST_FURNACE;
     }
 }

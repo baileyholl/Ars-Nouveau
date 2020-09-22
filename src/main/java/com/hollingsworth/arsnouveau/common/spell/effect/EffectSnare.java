@@ -3,8 +3,11 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.math.EntityRayTraceResult;
@@ -25,14 +28,19 @@ public class EffectSnare extends AbstractEffect {
             Entity livingEntity = ((EntityRayTraceResult) rayTraceResult).getEntity();
             if(!(livingEntity instanceof LivingEntity))
                 return;
-            ((LivingEntity)livingEntity).addPotionEffect(new EffectInstance(Effects.SLOWNESS,  200, 20));
+            ((LivingEntity)livingEntity).addPotionEffect(new EffectInstance(Effects.SLOWNESS,  40  + 20 * getBuffCount(augments, AugmentExtendTime.class), 20));
             livingEntity.setMotion(0,0,0);
             livingEntity.velocityChanged = true;
         }
     }
 
     @Override
+    public Item getCraftingReagent() {
+        return Items.ANVIL;
+    }
+
+    @Override
     public int getManaCost() {
-        return 0;
+        return 80;
     }
 }

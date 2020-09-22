@@ -105,6 +105,7 @@ public class APIRegistry {
         registerSpell(ModConfig.EffectPlaceBlockID, new EffectPlaceBlock());
         registerSpell(ModConfig.EffectSnareID, new EffectSnare());
         registerSpell(ModConfig.EffectSmeltID, new EffectSmelt());
+        registerSpell(ModConfig.EffectLeapID, new EffectLeap());
         addStartingSpell(ModConfig.MethodProjectileID);
         addStartingSpell(ModConfig.MethodTouchID);
         addStartingSpell(ModConfig.MethodSelfID);
