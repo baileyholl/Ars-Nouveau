@@ -1,20 +1,19 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.common.block.tile.ArcaneRelayMultiTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcaneRelayTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.state.IProperty;
-import net.minecraft.state.IntegerProperty;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockReader;
 
 import javax.annotation.Nullable;
 
-public class ArcaneRelay extends ModBlock {
+public class ArcaneRelaySplitter extends ModBlock{
 
-    public ArcaneRelay() {
-        super(defaultProperties().lightValue(8).notSolid(), LibBlockNames.ARCANE_RELAY);
+    public ArcaneRelaySplitter() {
+        super(defaultProperties().lightValue(8).notSolid(), LibBlockNames.ARCANE_RELAY_SPLITTER);
     }
 
     @Override
@@ -25,7 +24,7 @@ public class ArcaneRelay extends ModBlock {
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new ArcaneRelayTile();
+        return new ArcaneRelayMultiTile();
     }
 
     @Override

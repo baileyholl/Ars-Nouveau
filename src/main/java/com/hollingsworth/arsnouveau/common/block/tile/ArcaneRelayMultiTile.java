@@ -1,0 +1,133 @@
+package com.hollingsworth.arsnouveau.common.block.tile;
+
+import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.entity.monster.AbstractRaiderEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.math.BlockPos;
+
+import java.util.ArrayList;
+
+public class ArcaneRelayMultiTile extends ArcaneRelayTile{
+
+    ArrayList<BlockPos> toList = new ArrayList<>();
+    ArrayList<BlockPos> fromList = new ArrayList<>();
+
+    public ArcaneRelayMultiTile() {
+        super(BlockRegistry.ARCANE_RELAY_MULTI_TILE);
+    }
+
+    @Override
+    public boolean setTakeFrom(BlockPos pos) {
+        return closeEnough(pos, 10) && fromList.add(pos) && update();
+    }
+
+    @Override
+    public boolean setSendTo(BlockPos pos) {
+        return closeEnough(pos, 10) && toList.add(pos) && update();
+    }
+
+    @Override
+    public void clearPos() {
+        this.toList.clear();
+        this.fromList.clear();
+        update();
+    }
+
+    public void processFromList(){
+        if(fromList.isEmpty())
+            return;
+        ArrayList<BlockPos> stale = new ArrayList<>();
+        int ratePer = getTransferRate() / fromList.size();
+        for(BlockPos fromPos : fromList){
+            System.out.println("taking from" + fromPos);
+            if(!(world.getTileEntity(fromPos) instanceof AbstractManaTile)){
+                stale.add(fromPos);
+                continue;
+            }
+            AbstractManaTile fromTile = (AbstractManaTile) world.getTileEntity(fromPos);
+            if(fromTile.getCurrentMana() >= ratePer && this.getCurrentMana() + ratePer <= this.getMaxMana()){
+                fromTile.removeMana(ratePer);
+                this.addMana(ratePer);
+                Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW,  pos.getX(), pos.getY(), pos.getZ(),fromPos.getX(), fromPos.getY(), fromPos.getZ(), 5));
+            }
+        }
+        for(BlockPos s : stale)
+            fromList.remove(s);
+
+    }
+
+    public void processToList(){
+        if(toList.isEmpty())
+            return;
+        ArrayList<BlockPos> stale = new ArrayList<>();
+        int ratePer = getTransferRate() / toList.size();
+        for(BlockPos toPos : toList){
+            if(!(world.getTileEntity(toPos) instanceof AbstractManaTile)){
+                stale.add(toPos);
+                continue;
+            }
+            AbstractManaTile toTile = (AbstractManaTile) world.getTileEntity(toPos);
+            if(this.getCurrentMana() >= ratePer && toTile.getCurrentMana() + ratePer <= toTile.getMaxMana()){
+                this.removeMana(ratePer);
+                toTile.addMana(ratePer);
+                Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW,  toPos.getX(), toPos.getY(), toPos.getZ(),pos.getX(), pos.getY(), pos.getZ(), 5));
+            }
+        }
+        for(BlockPos s : stale)
+            toList.remove(s);
+
+    }
+
+    @Override
+    public void tick() {
+        if(world.getGameTime() % 20 != 0 || toList.isEmpty())
+            return;
+        processFromList();
+        processToList();
+        update();
+    }
+
+    @Override
+    public int getTransferRate() {
+        return 500;
+    }
+
+    @Override
+    public int getMaxMana() {
+        return 2500;
+    }
+
+    @Override
+    public void read(CompoundNBT tag) {
+        super.read(tag);
+        int counter = 0;
+        while(tag.contains("from_" + counter)){
+            this.fromList.add(NBTUtil.getBlockPos(tag, "from_" + counter));
+            counter++;
+        }
+
+        counter = 0;
+        while(tag.contains("to_" + counter)){
+            this.toList.add(NBTUtil.getBlockPos(tag, "to_" + counter));
+            counter++;
+        }
+    }
+
+    @Override
+    public CompoundNBT write(CompoundNBT tag) {
+        int counter = 0;
+        for(BlockPos p : this.fromList){
+            NBTUtil.storeBlockPos(tag, "from_" +counter, p);
+            counter++;
+        }
+        counter = 0;
+        for(BlockPos p : this.toList){
+            NBTUtil.storeBlockPos(tag, "to_" +counter, p);
+            counter ++;
+        }
+        return super.write(tag);
+    }
+}

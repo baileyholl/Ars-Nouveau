@@ -83,10 +83,12 @@ public abstract class AbstractManaTile extends AnimatedTile  implements IManaBlo
         update();
     }
 
-    public void update(){
+    public boolean update(){
         if(world != null && this.pos != null){
             world.notifyBlockUpdate(this.pos, world.getBlockState(pos),  world.getBlockState(pos), 2);
+            return true;
         }
+        return false;
     }
 
     @Override

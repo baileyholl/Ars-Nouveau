@@ -2,12 +2,14 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.common.block.ArcaneRelay;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
@@ -18,9 +20,16 @@ public class ArcaneRelayTile extends AbstractManaTile{
         super(BlockRegistry.ARCANE_RELAY_TILE);
     }
 
+    public ArcaneRelayTile(TileEntityType<?> type){
+        super(type);
+    }
+
     private BlockPos toPos;
     private BlockPos fromPos;
 
+    public boolean closeEnough(BlockPos pos, int distance){
+        return BlockUtil.distanceFrom(pos, this.pos) <= distance;
+    }
 
     public boolean setTakeFrom(BlockPos pos){
         if(BlockUtil.distanceFrom(pos, this.pos) > 10){
@@ -60,7 +69,6 @@ public class ArcaneRelayTile extends AbstractManaTile{
     public void tick() {
         if(world.isRemote){
             return;
-//            System.out.println(this.fromPos);
         }
 
         if(world.getGameTime() % 20 != 0 || toPos == null)
@@ -78,7 +86,7 @@ public class ArcaneRelayTile extends AbstractManaTile{
                 if(fromTile.getCurrentMana() >= this.getTransferRate() && this.getCurrentMana() + this.getTransferRate() <= this.getMaxMana()){
                     fromTile.removeMana(this.getTransferRate());
                     this.addMana(this.getTransferRate());
-                    Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW,  fromPos.getX(), fromPos.getY(), fromPos.getZ(),pos.getX(), pos.getY(), pos.getZ(), 5));
+                    Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW,pos.getX(), pos.getY(), pos.getZ(),  fromPos.getX(), fromPos.getY(), fromPos.getZ(), 5));
 
                 }
             }

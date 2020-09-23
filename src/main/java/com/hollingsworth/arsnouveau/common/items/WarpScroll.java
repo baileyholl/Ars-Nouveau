@@ -41,7 +41,7 @@ public class WarpScroll extends ModItem{
         if(!entity.getEntityWorld().isRemote && entity.getEntityWorld().getBlockState(entity.getPosition().down()).getBlock() == BlockRegistry.ARCANE_BRICKS){
 
             if(getPos(stack) != null && getDimension(stack) == entity.getEntityWorld().getDimension().getType().getId() &&
-                    ManaUtil.takeManaNearby(entity.getPosition(), entity.getEntityWorld(), 10, 10000) != null && BlockRegistry.PORTAL_BLOCK.trySpawnPortal(entity.getEntityWorld(), entity.getPosition(), getPos(stack), getDimension(stack))
+                    ManaUtil.takeManaNearby(entity.getPosition(), entity.getEntityWorld(), 10, 9000) != null && BlockRegistry.PORTAL_BLOCK.trySpawnPortal(entity.getEntityWorld(), entity.getPosition(), getPos(stack), getDimension(stack))
             ){
                 BlockPos pos = entity.getPosition();
                 ServerWorld world = (ServerWorld) entity.getEntityWorld();
