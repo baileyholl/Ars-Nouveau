@@ -61,7 +61,7 @@ public class GlyphButton extends Button {
                 RenderSystem.color3f(1F, 1F, 1F);
 //                Minecraft.getInstance().getTextureManager().bindTexture(new ResourceLocation(ExampleMod.MODID, "textures/gui/spells/" + this.resourceIcon));
 //                blit(x + 2, y + 2, 0, 0, 16, 16);
-                GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/spells/" + this.resourceIcon), x, y, 0, 0, 16, 16,16,16 );
+                GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + this.resourceIcon), x, y, 0, 0, 16, 16,16,16 );
             }
 //
 //            if(parent != null && parent.isMouseInRelativeRange(mouseX, mouseY,x, y,  16, 16)){
