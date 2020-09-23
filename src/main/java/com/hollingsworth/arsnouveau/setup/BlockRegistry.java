@@ -1,7 +1,8 @@
 package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.client.renderer.RelayRenderer;
+import com.hollingsworth.arsnouveau.client.renderer.tile.RelayRenderer;
+import com.hollingsworth.arsnouveau.client.renderer.tile.RelaySplitterRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.ManaCondenserRenderer;
 import com.hollingsworth.arsnouveau.common.block.*;
 import com.hollingsworth.arsnouveau.common.block.tile.*;
@@ -60,7 +61,7 @@ public class BlockRegistry {
 
     @ObjectHolder(LibBlockNames.ARCANE_RELAY) public static TileEntityType<ArcaneRelayTile> ARCANE_RELAY_TILE;
 
-    @ObjectHolder(LibBlockNames.ARCANE_RELAY_SPLITTER) public static TileEntityType<ArcaneRelayMultiTile> ARCANE_RELAY_MULTI_TILE;
+    @ObjectHolder(LibBlockNames.ARCANE_RELAY_SPLITTER) public static TileEntityType<ArcaneRelaySplitterTile> ARCANE_RELAY_SPLITTER_TILE;
 
 
     @ObjectHolder(LibBlockNames.RUNE) public static TileEntityType<RuneTile> RUNE_TILE;
@@ -154,7 +155,7 @@ public class BlockRegistry {
             event.getRegistry().register(TileEntityType.Builder.create(RuneTile::new, BlockRegistry.RUNE_BLOCK).build(null).setRegistryName(LibBlockNames.RUNE));
             event.getRegistry().register(TileEntityType.Builder.create(ForgeTile::new, BlockRegistry.FORGE_BLOCK).build(null).setRegistryName(LibBlockNames.FORGE));
             event.getRegistry().register(TileEntityType.Builder.create(PortalTile::new, BlockRegistry.PORTAL_BLOCK).build(null).setRegistryName(LibBlockNames.PORTAL));
-            event.getRegistry().register(TileEntityType.Builder.create(ArcaneRelayMultiTile::new, BlockRegistry.ARCANE_RELAY_SPLITTER).build(null).setRegistryName(LibBlockNames.ARCANE_RELAY_SPLITTER));
+            event.getRegistry().register(TileEntityType.Builder.create(ArcaneRelaySplitterTile::new, BlockRegistry.ARCANE_RELAY_SPLITTER).build(null).setRegistryName(LibBlockNames.ARCANE_RELAY_SPLITTER));
 
         }
 
@@ -182,7 +183,7 @@ public class BlockRegistry {
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.RUNE_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.RUNE));
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.FORGE_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.FORGE));
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.PORTAL_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.PORTAL));
-            itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.ARCANE_RELAY_SPLITTER, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.ARCANE_RELAY_SPLITTER));
+            itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.ARCANE_RELAY_SPLITTER, ItemsRegistry.defaultItemProperties().setISTER(()-> RelaySplitterRenderer.ISRender::new)).setRegistryName(LibBlockNames.ARCANE_RELAY_SPLITTER));
 
         }
     }

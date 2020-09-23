@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.client.renderer;// Made with Blockbench 3.6.6
+package com.hollingsworth.arsnouveau.client.renderer.tile;// Made with Blockbench 3.6.6
 // Exported for Minecraft version 1.15
 // Paste this class into your mod and generate all required imports
 
@@ -10,14 +10,14 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.model.ModelRenderer;
 
-public class RelayModel extends Model  {
+public class RelaySplitterModel extends Model  {
 	public final ModelRenderer ring_inner;
 	public final ModelRenderer ring_outer;
 	public final ModelRenderer center;
 
 
 
-	public RelayModel() {
+	public RelaySplitterModel() {
 		super(RenderType::getEntityCutout);
 		textureWidth = 32;
 		textureHeight = 32;

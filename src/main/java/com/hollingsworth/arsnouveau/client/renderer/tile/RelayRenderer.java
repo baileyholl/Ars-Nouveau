@@ -1,6 +1,7 @@
-package com.hollingsworth.arsnouveau.client.renderer;
+package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.common.block.tile.ArcaneRelaySplitterTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcaneRelayTile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -52,7 +53,7 @@ public class RelayRenderer extends TileEntityRenderer<ArcaneRelayTile> {
         return false;
     }
 
-    public static class ISRender extends ItemStackTileEntityRenderer{
+    public static class ISRender extends ItemStackTileEntityRenderer {
         public final RelayModel model = new RelayModel();
 
         public ISRender(){ }

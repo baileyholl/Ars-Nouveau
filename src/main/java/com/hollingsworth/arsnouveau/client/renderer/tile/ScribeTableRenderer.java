@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.client.renderer;
+package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.hollingsworth.arsnouveau.api.util.MappingUtil;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;

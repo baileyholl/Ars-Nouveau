@@ -4,19 +4,18 @@ import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.entity.monster.AbstractRaiderEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 
-public class ArcaneRelayMultiTile extends ArcaneRelayTile{
+public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
 
     ArrayList<BlockPos> toList = new ArrayList<>();
     ArrayList<BlockPos> fromList = new ArrayList<>();
 
-    public ArcaneRelayMultiTile() {
-        super(BlockRegistry.ARCANE_RELAY_MULTI_TILE);
+    public ArcaneRelaySplitterTile() {
+        super(BlockRegistry.ARCANE_RELAY_SPLITTER_TILE);
     }
 
     @Override
