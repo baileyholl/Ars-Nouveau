@@ -94,6 +94,11 @@ public class EffectSmelt extends AbstractEffect {
     }
 
     @Override
+    protected String getBookDescription() {
+        return "Smelts blocks and items in the world. AOE will increase the number of items and radius of blocks that can be smelted at once, while Amplify will allow Smelt to work on blocks of higher hardness.";
+    }
+
+    @Override
     public int getManaCost() {
         return 40;
     }

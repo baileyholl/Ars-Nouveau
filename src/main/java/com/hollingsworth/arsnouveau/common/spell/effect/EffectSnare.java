@@ -35,6 +35,11 @@ public class EffectSnare extends AbstractEffect {
     }
 
     @Override
+    protected String getBookDescription() {
+        return "Stops entities from moving and jumping. Extend Time will increase the duration of this effect.";
+    }
+
+    @Override
     public Item getCraftingReagent() {
         return Items.ANVIL;
     }

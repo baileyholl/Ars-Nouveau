@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Breaks blocks of an average hardness. Can be amplified to break harder blocks or can break multiple blocks with the AOE augment."
+      "text": "Breaks blocks of an average hardness. Can be amplified twice to break harder blocks or can break multiple blocks with the AOE augment."
     },
     {
       "type": "glyph_recipe",
