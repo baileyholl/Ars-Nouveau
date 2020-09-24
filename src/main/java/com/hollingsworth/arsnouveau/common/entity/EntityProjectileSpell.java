@@ -52,6 +52,11 @@ public class EntityProjectileSpell extends ArrowEntity {
     public void tick() {
         age++;
 
+        if(this.age > 6000){
+            this.remove();
+            return;
+        }
+
         this.lastTickPosX = this.getPosX();
         this.lastTickPosY = this.getPosY();
         this.lastTickPosZ = this.getPosZ();

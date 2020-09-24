@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.mana.IManaBlock;
+import com.hollingsworth.arsnouveau.api.mana.IManaTile;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 import static com.hollingsworth.arsnouveau.api.NbtTags.MANA_TAG;
 import static com.hollingsworth.arsnouveau.api.NbtTags.MAX_MANA_TAG;
 
-public abstract class AbstractManaTile extends AnimatedTile  implements IManaBlock {
+public abstract class AbstractManaTile extends AnimatedTile  implements IManaTile {
     private int mana = 0;
     private int maxMana = 0;
     public AbstractManaTile(TileEntityType<?> tileEntityTypeIn) {
@@ -98,7 +98,7 @@ public abstract class AbstractManaTile extends AnimatedTile  implements IManaBlo
 
     public boolean canAcceptMana(){ return this.getCurrentMana() < this.getMaxMana(); }
 
-    public void transferMana(IManaBlock from, IManaBlock to){
+    public void transferMana(IManaTile from, IManaTile to){
         if(from.getCurrentMana() >= from.getTransferRate()){
             from.removeMana(from.getTransferRate());
             to.addMana(from.getTransferRate());

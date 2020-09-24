@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.api.util.MathUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
+import com.hollingsworth.arsnouveau.client.renderer.items.SpellBookRenderer;
 import com.hollingsworth.arsnouveau.common.block.ArcanePedestal;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -53,7 +54,7 @@ public class SpellBook extends Item implements ISpellTier {
 
 
     public SpellBook(Tier tier){
-        super(new Item.Properties().maxStackSize(1).group(ArsNouveau.itemGroup));
+        super(new Item.Properties().maxStackSize(1).group(ArsNouveau.itemGroup).setISTER(() -> SpellBookRenderer::new));
         this.tier = tier;
     }
 

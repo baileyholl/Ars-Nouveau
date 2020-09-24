@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+/**
+ * For queuing deferred or over-time tasks. Tick refers to the World Tick event, called on the server side only.
+ */
 public class EventQueue {
     List<ITimedEvent> events;
 
@@ -25,6 +28,7 @@ public class EventQueue {
             event.tick();
         }
     }
+
     public void addEvent(ITimedEvent event){
         events.add(event);
     }

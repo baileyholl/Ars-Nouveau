@@ -1,5 +1,8 @@
 package com.hollingsworth.arsnouveau.api.mana;
 
+/**
+ * A minimum representation of a Mana holding object or entity.
+ */
 public interface IMana {
 
     int getCurrentMana();

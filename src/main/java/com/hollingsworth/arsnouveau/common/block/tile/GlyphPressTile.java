@@ -63,23 +63,6 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
         compound.putLong("spraying", timeStartedSpraying);
         return super.write(compound);
     }
-    @Override
-    @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
-
-        return new SUpdateTileEntityPacket(this.pos, 3, this.getUpdateTag());
-    }
-
-    @Override
-    public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        super.onDataPacket(net, pkt);
-        handleUpdateTag(pkt.getNbtCompound());
-    }
 
 // 5 - become template
 // 20 - spraying
