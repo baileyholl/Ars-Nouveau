@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcaneRelaySplitterTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcaneRelayTile;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -33,10 +34,10 @@ public class RelayRenderer extends TileEntityRenderer<ArcaneRelayTile> {
 //        float fract = Math.max(0.1F, 1F - (bellows == null ? 0 : bellows.movePos + bellows.moving * f + 0.1F));
         IVertexBuilder buffer = buffers.getBuffer(model.getRenderType(texture));
         model.render(ms, buffer, light, overlay, 1, 1, 1, 1, 1);
-        float lvt_8_2_ = 1.3F;
-        float angle = (Minecraft.getInstance().world.getGameTime()/10.0f) % 360;
+        int time = (int) (ClientInfo.ticksInGame + f);
+        float angle = (time/10.0f) % 360;
 
-        float outerAngle = (Minecraft.getInstance().world.getGameTime()/20.0f) % 360;
+        float outerAngle = (time/20.0f) % 360;
 //		ring_outer.rotateAngleZ =  MathHelper.cos(angle) *3.1415927F * 2;
         model.ring_outer.rotateAngleX = outerAngle;
         model.ring_outer.rotateAngleZ = outerAngle;

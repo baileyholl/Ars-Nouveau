@@ -1,11 +1,12 @@
-package com.hollingsworth.arsnouveau.api.event;
+package com.hollingsworth.arsnouveau.common.event;
 
+import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
 import net.minecraft.tileentity.ChestTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
 
-public class OpenChestEvent implements ITimedEvent{
+public class OpenChestEvent implements ITimedEvent {
     public FakePlayer fakePlayer;
     public int duration;
     public BlockPos pos;

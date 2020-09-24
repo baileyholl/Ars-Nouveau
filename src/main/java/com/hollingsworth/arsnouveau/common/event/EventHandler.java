@@ -1,7 +1,10 @@
-package com.hollingsworth.arsnouveau.api.event;
+package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.event.EventQueue;
+import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateMana;
@@ -90,7 +93,14 @@ public class EventHandler {
         if(world.isRemote)
             return;
         EventQueue.getInstance().tick();
+    }
 
+
+    @SubscribeEvent
+    public static void clientTickEnd(TickEvent.ClientTickEvent event){
+       if(event.phase == TickEvent.Phase.END){
+           ClientInfo.ticksInGame++;
+       }
     }
 
 

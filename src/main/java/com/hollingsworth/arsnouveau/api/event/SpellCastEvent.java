@@ -13,6 +13,7 @@ import java.util.List;
 public class SpellCastEvent extends LivingEvent {
 
     public List<AbstractSpellPart> spell;
+
     public SpellCastEvent(LivingEntity entity, List<AbstractSpellPart> spell){
         super(entity);
         this.spell = spell;

@@ -196,7 +196,7 @@ public class DominionWand extends ModItem{
     @Override
     public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag p_77624_4_) {
         BlockPos pos = getPos(stack);
-        tooltip.add(new StringTextComponent("Enttiy ID: " + getEntityID(stack)));
+        tooltip.add(new StringTextComponent("Entity ID: " + getEntityID(stack)));
         if(pos == null){
             tooltip.add(new StringTextComponent("No location set."));
             return;

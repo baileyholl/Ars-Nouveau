@@ -2,6 +2,8 @@ package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.client.particle.engine.ParticleEngine;
 import com.hollingsworth.arsnouveau.client.particle.engine.TimedBeam;
 import com.hollingsworth.arsnouveau.client.particle.engine.TimedHelix;
@@ -50,7 +52,13 @@ public class PacketBeam {
                 public void run() {
                     Minecraft mc = Minecraft.getInstance();
                     ClientWorld world = mc.world;
+                    BlockPos pos = message.fromPos;
                     ParticleEngine.getInstance().addEffect(new TimedBeam(message.fromPos, message.toPos, message.delay, world));
+//                    for(int i =0; i< 5; i++){
+//                        world.addParticle(ParticleLineData.createData(new ParticleColor(255,25,155)),pos.getX() +0.5 + ParticleUtil.inRange(-0.5, 0.5)  , pos.getY() +0.5  + ParticleUtil.inRange(-0.5, 0.5) , pos.getZ()  +0.5+ ParticleUtil.inRange(-0.5, 0.5),
+//                                pos.getX() +0.5 , pos.getY()  +0.5 , pos.getZ() +0.5);
+//                    }
+
                 };
             });
             ctx.get().setPacketHandled(true);

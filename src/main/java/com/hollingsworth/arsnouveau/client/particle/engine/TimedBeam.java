@@ -57,19 +57,9 @@ public class TimedBeam extends TimedEffect{
         while ((d4) < d3)
         {
             d4 += 1.8D - d5 + 0.05 * (1.5D - d5);
-//            d4 = d4/2;
-            for(int i =0; i < 3; i ++){
-                elemArrayList.add(new ParticleElem(GlowParticleData.createData(new ParticleColor(255,25,155)), x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4, 0.0D, 0.0D, 0.0D));
-            }
-//            elemArrayList.add(new ParticleElem(ParticleGlow.createData(new ParticleColor(255,25,180)), x1 + d0 * d4 + ParticleUtil.inRange(-0.1, 0.1), y1 + d1 * d4 + ParticleUtil.inRange(-0.1, 0.1), z1 + d2 * d4 + ParticleUtil.inRange(-0.1, 0.1), 0.0D, 0.0D, 0.0D));
-//            elemArrayList.add(new ParticleElem(ParticleGlow.createData(new ParticleColor(255,25,180)), x1 + d0 * d4 + ParticleUtil.inRange(-0.1, 0.1), y1 + d1 * d4 + ParticleUtil.inRange(-0.1, 0.1), z1 + d2 * d4 + ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1)));
 
-            //            elemArrayList.add(new ParticleElem(ParticleLineGlow.createData(new ParticleColor(225, 60, 60)), fromThisBlock.getX(), fromThisBlock.getY(), fromThisBlock.getZ(), toThisBlock.getX(), toThisBlock.getY(), toThisBlock.getZ()));
+            elemArrayList.add(new ParticleElem(GlowParticleData.createData(new ParticleColor(255,25,155)), x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4, 0.0D, 0.0D, 0.0D));
 
-//            return elemArrayList;
-//            if(world instanceof ServerWorld){
-//                ((ServerWorld)world).spawnParticle(ParticleTypes.WITCH,x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4,rand.nextInt(4), 0,0.0,0, 0.0);
-//            }
         }
         return elemArrayList;
     }
