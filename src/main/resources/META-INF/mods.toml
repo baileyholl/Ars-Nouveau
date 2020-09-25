@@ -29,7 +29,7 @@ credits="Vazkii, Azanor" #optional
 authors="Bailey :)" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-A mod for spell casters.
+Craft powerful spells, baubles and artifacts, and tame wild magical creatures for automation.
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.ars_nouveau]] #optional
@@ -54,5 +54,12 @@ A mod for spell casters.
     modId="curios"
     mandatory=true
     versionRange="[FORGE-1.15.2,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.ars_nouveau]]
+    modId="geckolib"
+    mandatory=true
+    versionRange="[forge-1.15.2,)"
     ordering="AFTER"
     side="BOTH"
