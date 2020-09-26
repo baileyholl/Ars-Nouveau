@@ -105,8 +105,13 @@ public class BlockRegistry {
 
     @ObjectHolder(LibBlockNames.FORGE) public static ForgeBlock FORGE_BLOCK;
 
-    @ObjectHolder(LibBlockNames.PORTAL)
-    public static PortalBlock PORTAL_BLOCK;
+    @ObjectHolder(LibBlockNames.PORTAL) public static PortalBlock PORTAL_BLOCK;
+
+    @ObjectHolder(LibBlockNames.CRYSTALLIZER) public static CrystallizerBlock CRYSTALLIZER_BLOCK;
+    @ObjectHolder(LibBlockNames.CRYSTALLIZER) public static TileEntityType<CrystallizerTile> CRYSTALLIZER_TILE;
+
+    @ObjectHolder(LibBlockNames.ARCANE_CORE) public static ArcaneCore ARCANE_CORE_BLOCK;
+    @ObjectHolder(LibBlockNames.ARCANE_CORE) public static TileEntityType<ArcaneCoreTile> ARCANE_CORE_TILE;
 
 
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
@@ -135,7 +140,8 @@ public class BlockRegistry {
             blockRegistryEvent.getRegistry().register(new RuneBlock());
             blockRegistryEvent.getRegistry().register(new ForgeBlock());
             blockRegistryEvent.getRegistry().register(new PortalBlock());
-
+            blockRegistryEvent.getRegistry().register(new CrystallizerBlock());
+            blockRegistryEvent.getRegistry().register(new ArcaneCore());
         }
 
         @SubscribeEvent
@@ -156,6 +162,8 @@ public class BlockRegistry {
             event.getRegistry().register(TileEntityType.Builder.create(ForgeTile::new, BlockRegistry.FORGE_BLOCK).build(null).setRegistryName(LibBlockNames.FORGE));
             event.getRegistry().register(TileEntityType.Builder.create(PortalTile::new, BlockRegistry.PORTAL_BLOCK).build(null).setRegistryName(LibBlockNames.PORTAL));
             event.getRegistry().register(TileEntityType.Builder.create(ArcaneRelaySplitterTile::new, BlockRegistry.ARCANE_RELAY_SPLITTER).build(null).setRegistryName(LibBlockNames.ARCANE_RELAY_SPLITTER));
+            event.getRegistry().register(TileEntityType.Builder.create(CrystallizerTile::new, BlockRegistry.CRYSTALLIZER_BLOCK).build(null).setRegistryName(LibBlockNames.CRYSTALLIZER));
+            event.getRegistry().register(TileEntityType.Builder.create(ArcaneCoreTile::new, BlockRegistry.ARCANE_CORE_BLOCK).build(null).setRegistryName(LibBlockNames.ARCANE_CORE));
 
         }
 
@@ -184,6 +192,8 @@ public class BlockRegistry {
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.FORGE_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.FORGE));
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.PORTAL_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.PORTAL));
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.ARCANE_RELAY_SPLITTER, ItemsRegistry.defaultItemProperties().setISTER(()-> RelaySplitterRenderer.ISRender::new)).setRegistryName(LibBlockNames.ARCANE_RELAY_SPLITTER));
+            itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.CRYSTALLIZER_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.CRYSTALLIZER));
+            itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.ARCANE_CORE_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.ARCANE_CORE));
 
         }
     }

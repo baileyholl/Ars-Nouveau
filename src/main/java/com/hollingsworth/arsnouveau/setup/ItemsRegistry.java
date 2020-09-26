@@ -78,6 +78,8 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.DOMINION_WAND)public static DominionWand dominionWand;
     @ObjectHolder(LibItemNames.RUNIC_CHALK)public static RunicChalk runicChalk;
     @ObjectHolder(LibItemNames.CARBUNCLE_SHARD)public static ModItem carbuncleShard;
+    @ObjectHolder(LibItemNames.EARTH_ELEMENTAL_CHARM)public static EarthElementalCharm earthElementalCharm;
+    @ObjectHolder(LibItemNames.EARTH_ELEMENTAL_SHARD)public static ModItem earthElementalShard;
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler{
@@ -104,24 +106,31 @@ public class ItemsRegistry {
                     new ModItem(LibItemNames.MUNDANE_BELT),
                     new ModItem(LibItemNames.ARCANE_BRICK),
                     new ModItem(LibItemNames.RING_OF_POTENTIAL),
+                    new ModItem(LibItemNames.EARTH_ELEMENTAL_SHARD),
+                    new EarthElementalCharm(),
                     new BeltOfUnstableGifts(LibItemNames.BELT_OF_UNSTABLE_GIFTS),
                     new ModItem(new Item.Properties().group(ArsNouveau.itemGroup).maxStackSize(1), "bucket_of_mana"),
+
                     new NoviceArmor(EquipmentSlotType.FEET).setRegistryName("novice_boots"),
                     new NoviceArmor(EquipmentSlotType.LEGS).setRegistryName("novice_leggings"),
                     new NoviceArmor(EquipmentSlotType.CHEST).setRegistryName("novice_robes"),
                     new NoviceArmor(EquipmentSlotType.HEAD).setRegistryName("novice_hood"),
+
                     new ApprenticeArmor(EquipmentSlotType.FEET).setRegistryName("apprentice_boots"),
                     new ApprenticeArmor(EquipmentSlotType.LEGS).setRegistryName("apprentice_leggings"),
                     new ApprenticeArmor(EquipmentSlotType.CHEST).setRegistryName("apprentice_robes"),
                     new ApprenticeArmor(EquipmentSlotType.HEAD).setRegistryName("apprentice_hood"),
+
                     new MasterArmor(EquipmentSlotType.FEET).setRegistryName("archmage_boots"),
                     new MasterArmor(EquipmentSlotType.LEGS).setRegistryName("archmage_leggings"),
                     new MasterArmor(EquipmentSlotType.CHEST).setRegistryName("archmage_robes"),
                     new MasterArmor(EquipmentSlotType.HEAD).setRegistryName("archmage_hood"),
+
                     new SpellBook(ISpellTier.Tier.ONE).setRegistryName(LibItemNames.NOVICE_SPELL_BOOK),
                     new SpellBook(ISpellTier.Tier.TWO).setRegistryName(LibItemNames.APPRENTICE_SPELL_BOOK),
                     new SpellBook(ISpellTier.Tier.THREE).setRegistryName(LibItemNames.ARCHMAGE_SPELL_BOOK),
                     new SpellBook(ISpellTier.Tier.THREE).setRegistryName(LibItemNames.CREATIVE_SPELL_BOOK),
+
                     new RingOfAmplify(),
                     new BeltOfLevitation(),
                     new WarpScroll(),

@@ -86,13 +86,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity {
 
 
         if(this.dataManager.get(HOP)){
-
-//            manager.setAnimationSpeed(500.0f);
             manager.setAnimationSpeed(5f);
-
             walkController.setAnimation(new AnimationBuilder().addAnimation("hop"));
-//            manager.setAnimationSpeed(500.0);
-
         }else{
             return false;
         }
@@ -116,7 +111,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity {
         super.tick();
         if(!world.isRemote){
             if(this.navigator.noPath()){
-
                 EntityCarbuncle.this.dataManager.set(HOP, false);
             }else{
                 EntityCarbuncle.this.dataManager.set(HOP, true);

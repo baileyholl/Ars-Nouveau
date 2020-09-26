@@ -182,8 +182,8 @@ public class GuiRadialMenu extends Screen {
                 RenderSystem.disableLighting();
                 RenderSystem.disableDepthTest();
                 if(!resourceIcon.isEmpty()) {
-                    GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/spells/" + resourceIcon), (int) posX, (int) posY, 0, 0, 16, 16, 16, 16);
-                    GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/spells/" + castType), (int) posX +3 , (int) posY - 10, 0, 0, 10, 10, 10, 10);
+                    GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + resourceIcon), (int) posX, (int) posY, 0, 0, 16, 16, 16, 16);
+                    GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + castType), (int) posX +3 , (int) posY - 10, 0, 0, 10, 10, 10, 10);
 
 
                 }

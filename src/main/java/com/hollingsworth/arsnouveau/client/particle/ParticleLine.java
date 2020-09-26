@@ -60,7 +60,7 @@ public class ParticleLine extends SpriteTexturedParticle {
         this.particleScale = initScale-initScale*lifeCoeff;
         this.particleAlpha = 1.0f-lifeCoeff;
         this.prevParticleAngle = particleAngle;
-        particleAngle += 1.0f;
+//        particleAngle += 1.0f;
     }
 
 

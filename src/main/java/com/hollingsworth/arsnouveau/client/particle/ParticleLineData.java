@@ -17,7 +17,9 @@ public class ParticleLineData implements IParticleFactory<ColorParticleTypeData>
     @Override
     public Particle makeParticle(ColorParticleTypeData data, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
 //            return new ParticleGlow(worldIn, x,y,z,xSpeed, ySpeed, zSpeed, worldIn.rand.nextInt(255), worldIn.rand.nextInt(255), worldIn.rand.nextInt(255), 1.0f, .25f, 36, this.spriteSet);
-        return new ParticleLine(worldIn, x,y,z,xSpeed, ySpeed, zSpeed, data.color.getRed(), data.color.getGreen(), data.color.getBlue(), (float) ParticleUtil.inRange(0.05, 0.20), 20+worldIn.rand.nextInt(60),  this.spriteSet);
+        return new ParticleLine(worldIn, x,y,z,xSpeed, ySpeed, zSpeed, data.color.getRed(), data.color.getGreen(), data.color.getBlue(),
+                (float) ParticleUtil.inRange(0.05, 0.15),
+                40+worldIn.rand.nextInt(20),  this.spriteSet);
 
     }
 

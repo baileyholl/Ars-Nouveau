@@ -10,7 +10,6 @@ public class OpenChestEvent implements ITimedEvent {
     public FakePlayer fakePlayer;
     public int duration;
     public BlockPos pos;
-    public boolean canceled;
 
     public OpenChestEvent(FakePlayer fakePlayer, BlockPos pos, int duration){
         this.fakePlayer = fakePlayer;
@@ -35,10 +34,6 @@ public class OpenChestEvent implements ITimedEvent {
 
     @Override
     public void tick() {
-        if(canceled){
-            return;
-        }
-
         duration--;
         if(duration <= 0){
             attemptClose();
@@ -47,6 +42,6 @@ public class OpenChestEvent implements ITimedEvent {
 
     @Override
     public boolean isExpired() {
-        return duration <= 0 || canceled;
+        return duration <= 0;
     }
 }

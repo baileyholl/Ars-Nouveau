@@ -19,6 +19,7 @@ public class ModRenderers {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ALLY_VEX, RenderAllyVex::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_WHELP_TYPE, WhelpRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_CARBUNCLE_TYPE, CarbuncleRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_EARTH_ELEMENTAL_TYPE, EarthElementalRenderer::new);
 
     }
 }
