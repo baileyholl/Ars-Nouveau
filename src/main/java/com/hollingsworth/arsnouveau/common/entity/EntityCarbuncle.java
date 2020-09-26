@@ -196,9 +196,9 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity {
         this.goalSelector.addGoal(10, new FindItem());
         this.goalSelector.addGoal(8, new StoreItemGoal());
         this.goalSelector.addGoal(8, new TakeItemGoal());
-        this.goalSelector.addGoal(6, new LookAtGoal(this, PlayerEntity.class, 3.0F, 1.0F));
-        this.goalSelector.addGoal(6, new LookAtGoal(this, MobEntity.class, 8.0F));
-        this.goalSelector.addGoal(6, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(3, new LookAtGoal(this, PlayerEntity.class, 3.0F, 0.02F));
+        this.goalSelector.addGoal(3, new LookAtGoal(this, MobEntity.class, 8.0F));
+        this.goalSelector.addGoal(3, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.goalSelector.addGoal(4, new AvoidPlayerUntamedGoal(this, PlayerEntity.class, 16.0F, 1.6D, 1.4D));
 //        this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 1.0D));

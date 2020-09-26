@@ -20,8 +20,9 @@ public class ProcessOreEvent implements ITimedEvent {
     public void tick() {
 
         duration--;
-        if(duration <= 0){
-            entityEarthElemental.getDataManager().set(EntityEarthElemental.HELD_ITEM,new ItemStack(Items.IRON_INGOT));
+        if(duration == 0){
+            System.out.println("setting stack");
+            entityEarthElemental.setHeldStack(new ItemStack(Items.IRON_INGOT));
             entityEarthElemental.world.addEntity(new ItemEntity(entityEarthElemental.getEntityWorld(), entityEarthElemental.getPosX(), entityEarthElemental.getPosY(),
                     entityEarthElemental.getPosZ(),
             new ItemStack(Items.IRON_INGOT)));

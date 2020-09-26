@@ -44,6 +44,7 @@ public class PacketEntityAnimationSync {
                 ctx.get().setPacketHandled(true);
                 return;
             }
+
             ctx.get().enqueueWork(new Runnable() {
                 // Use anon - lambda causes classloading issues
                 @Override
@@ -52,11 +53,8 @@ public class PacketEntityAnimationSync {
                     ClientWorld world = mc.world;
 
                     if(world.getEntityByID(message.entityID) instanceof IAnimatedEntity){
-                        System.out.println("Adding animation to entity");
-                        System.out.println(message.animationController);
-                        System.out.println(message.animation);
-                        System.out.println(((IAnimatedEntity)world.getEntityByID(message.entityID)).getAnimationManager()
-                                .get(message.animationController));
+                        System.out.println("Adding animation for " + message.entityID );
+                        ((IAnimatedEntity)world.getEntityByID(message.entityID)).getAnimationManager().setAnimationSpeed(2f);
                         ((IAnimatedEntity)world.getEntityByID(message.entityID)).getAnimationManager()
                                 .get(message.animationController).setAnimation(new AnimationBuilder().addAnimation(message.animation));
                     }
