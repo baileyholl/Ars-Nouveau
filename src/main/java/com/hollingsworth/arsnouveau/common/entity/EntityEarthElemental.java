@@ -16,9 +16,14 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.particles.ItemParticleData;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.builder.AnimationBuilder;
 import software.bernie.geckolib.animation.controller.EntityAnimationController;
@@ -41,7 +46,7 @@ public class EntityEarthElemental extends CreatureEntity implements IAnimatedEnt
 
         if(this.getHeldStack().isEmpty()){
             manager.setAnimationSpeed(1f);
-            System.out.println("idling");
+//            System.out.println("idling");
             idleController.setAnimation(new AnimationBuilder().addAnimation("idle", true));
         }else{
             return true;
@@ -54,8 +59,7 @@ public class EntityEarthElemental extends CreatureEntity implements IAnimatedEnt
         registerControllers();
     }
     public EntityEarthElemental(World world){
-        super(ModEntities.ENTITY_EARTH_ELEMENTAL_TYPE,world);
-        registerControllers();
+        this(ModEntities.ENTITY_EARTH_ELEMENTAL_TYPE,world);
     }
 
     public void registerControllers(){
@@ -71,8 +75,10 @@ public class EntityEarthElemental extends CreatureEntity implements IAnimatedEnt
 
     @Override
     protected boolean processInteract(PlayerEntity player, Hand hand) {
-        System.out.println(this.getHeldStack());
+//        System.out.println(this.getHeldStack());
         System.out.println(this.getEntityId());
+        if(player.getEntityWorld().isRemote)
+            System.out.println(this.manager.get("idleController"));
         return super.processInteract(player, hand);
     }
 
@@ -90,6 +96,26 @@ public class EntityEarthElemental extends CreatureEntity implements IAnimatedEnt
             }
         }
     }
+
+    /**
+     * Handler for {@link World#setEntityState}
+     */
+    @OnlyIn(Dist.CLIENT)
+    public void handleStatusUpdate(byte id) {
+        if (id == 45) {
+            ItemStack itemstack = this.getItemStackFromSlot(EquipmentSlotType.MAINHAND);
+            if (!itemstack.isEmpty()) {
+                for(int i = 0; i < 8; ++i) {
+                    Vec3d vec3d = (new Vec3d(((double)this.rand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D)).rotatePitch(-this.rotationPitch * ((float)Math.PI / 180F)).rotateYaw(-this.rotationYaw * ((float)Math.PI / 180F));
+                    this.world.addParticle(new ItemParticleData(ParticleTypes.ITEM, itemstack), this.getPosX() + this.getLookVec().x / 2.0D, this.getPosY(), this.getPosZ() + this.getLookVec().z / 2.0D, vec3d.x, vec3d.y + 0.05D, vec3d.z);
+                }
+            }
+        } else {
+            super.handleStatusUpdate(id);
+        }
+
+    }
+
     @Override
     protected void updateEquipmentIfNeeded(ItemEntity itemEntity) {
         if(this.getHeldStack().isEmpty()){

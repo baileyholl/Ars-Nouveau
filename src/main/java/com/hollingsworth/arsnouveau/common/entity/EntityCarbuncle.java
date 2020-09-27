@@ -240,7 +240,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity {
 
         @Override
         public boolean shouldExecute() {
-            List<ItemEntity> list = EntityCarbuncle.this.world.getEntitiesWithinAABB(ItemEntity.class, EntityCarbuncle.this.getBoundingBox().grow(8.0D, 8.0D, 8.0D), getFinderItems());
+            List<ItemEntity> list = EntityCarbuncle.this.world.getEntitiesWithinAABB(ItemEntity.class, EntityCarbuncle.this.getBoundingBox().grow(8.0D, 6.0D, 8.0D), getFinderItems());
 
 
             return !list.isEmpty() && EntityCarbuncle.this.getHeldStack().isEmpty();
@@ -321,8 +321,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity {
                 return true;
             }
             return false;
-
-
         }
     }
 

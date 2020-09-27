@@ -8,7 +8,7 @@ import net.minecraft.world.IBlockReader;
 
 public class CrystallizerBlock extends ModBlock{
     public CrystallizerBlock() {
-        super(LibBlockNames.CRYSTALLIZER);
+        super(defaultProperties().notSolid(), LibBlockNames.CRYSTALLIZER);
     }
 
     @Override
