@@ -56,7 +56,7 @@ public class ModEntities {
            ENTITY_WHELP_TYPE = build("whelp", EntityType.Builder.<EntityWhelp>create(EntityWhelp::new, EntityClassification.MISC)
                    .size(0.6F, 0.63F).setTrackingRange(10)
                    .setShouldReceiveVelocityUpdates(true));
-            ENTITY_CARBUNCLE_TYPE = build("carbuncle", EntityType.Builder.<EntityCarbuncle>create(EntityCarbuncle::new, EntityClassification.MISC)
+            ENTITY_CARBUNCLE_TYPE = build("carbuncle", EntityType.Builder.<EntityCarbuncle>create(EntityCarbuncle::new, EntityClassification.CREATURE)
                     .size(0.6F, 0.63F).setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
 

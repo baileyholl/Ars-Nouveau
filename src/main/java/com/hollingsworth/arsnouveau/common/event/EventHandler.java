@@ -5,10 +5,12 @@ import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
+import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateMana;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.potion.EffectInstance;
@@ -16,6 +18,7 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -25,6 +28,9 @@ import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class EventHandler {
@@ -61,7 +67,11 @@ public class EventHandler {
 
         e.getGeneration().withFeature( GenerationStage.Decoration.UNDERGROUND_ORES,
                 WorldGenRegistries.CONFIGURED_FEATURE.getOrDefault(BlockRegistry.ARCANE_ORE.getRegistryName())).build();
-
+        List<Biome.Category> categories = Arrays.asList(Biome.Category.FOREST, Biome.Category.EXTREME_HILLS, Biome.Category.JUNGLE,
+                Biome.Category.PLAINS, Biome.Category.SWAMP, Biome.Category.SAVANNA);
+        if(categories.contains(e.getCategory())) {
+            e.getSpawns().withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_CARBUNCLE_TYPE, 10, 1, 3));
+        }
     }
 
     @SubscribeEvent
