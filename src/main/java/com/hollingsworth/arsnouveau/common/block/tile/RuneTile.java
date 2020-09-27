@@ -25,12 +25,14 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class RuneTile extends AnimatedTile {
     public List<AbstractSpellPart> recipe;
     public boolean isTemporary;
     public boolean isCharged;
     public int ticksUntilCharge;
+    public UUID uuid;
     public RuneTile() {
         super(BlockRegistry.RUNE_TILE);
         isCharged = true;
@@ -75,6 +77,8 @@ public class RuneTile extends AnimatedTile {
         tag.putBoolean("charged", isCharged);
         tag.putBoolean("temp", isTemporary);
         tag.putInt("cooldown", ticksUntilCharge);
+        if(uuid != null)
+            tag.putUniqueId("uuid", uuid);
         return super.write(tag);
     }
 
@@ -84,6 +88,8 @@ public class RuneTile extends AnimatedTile {
         this.isCharged = tag.getBoolean("charged");
         this.isTemporary = tag.getBoolean("temp");
         this.ticksUntilCharge = tag.getInt("cooldown");
+        if(tag.contains("uuid"))
+            this.uuid = tag.getUniqueId("uuid");
         super.read(state, tag);
     }
 

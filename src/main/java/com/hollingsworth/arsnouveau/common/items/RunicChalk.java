@@ -26,6 +26,9 @@ public class RunicChalk extends ModItem{
 
         if(world.getBlockState(pos.up()).getMaterial() == Material.AIR){
             world.setBlockState(pos.up(), BlockRegistry.RUNE_BLOCK.getDefaultState());
+            if(world.getTileEntity(pos.up()) instanceof RuneTile){
+                ((RuneTile) world.getTileEntity(pos.up())).uuid = context.getPlayer().getUniqueID();
+            }
             context.getItem().damageItem(1, context.getPlayer(), (t)->{});
         }
         return ActionResultType.SUCCESS;

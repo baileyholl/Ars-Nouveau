@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -16,6 +17,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.event.world.NoteBlockEvent;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -39,6 +41,7 @@ public class MethodRune extends AbstractCastMethod {
             if(world.getTileEntity(pos.up()) instanceof RuneTile){
                 RuneTile runeTile = (RuneTile) world.getTileEntity(pos.up());
                 runeTile.isTemporary = true;
+                runeTile.uuid = context.getPlayer().getUniqueID();
                 runeTile.setParsedSpell(resolver.spell_recipe);
             }
         }
@@ -52,6 +55,9 @@ public class MethodRune extends AbstractCastMethod {
             world.setBlockState(pos.up(), BlockRegistry.RUNE_BLOCK.getDefaultState());
             if(world.getTileEntity(pos.up()) instanceof RuneTile){
                 RuneTile runeTile = (RuneTile) world.getTileEntity(pos.up());
+                if(caster instanceof PlayerEntity){
+                    runeTile.uuid = caster.getUniqueID();
+                }
                 runeTile.isTemporary = true;
                 runeTile.recipe = resolver.spell_recipe;
             }
