@@ -3,17 +3,20 @@ package com.hollingsworth.arsnouveau.common.items;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.AbstractManaTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcaneRelayTile;
+import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -41,60 +44,101 @@ public class DominionWand extends ModItem{
     }
 
     @Override
+    public ActionResultType itemInteractionForEntity(ItemStack doNotUseStack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
+        if(playerIn.world.isRemote)
+            return ActionResultType.SUCCESS;
+        //Using STACK to set the tag does NOT work. What the fuck?
+
+        // Chest to carbuncle
+        ItemStack stack = playerIn.getHeldItem(hand);
+        if(getPos(playerIn.getHeldItem(hand)) != null && playerIn.world.getTileEntity(getPos(stack)) instanceof IInventory && target instanceof EntityCarbuncle){
+            ((EntityCarbuncle) target).fromPos = getPos(stack);
+            setEntityID(playerIn.getHeldItem(hand), -1);
+            setPosTag(playerIn.getHeldItem(hand), null);
+            PortUtil.sendMessage(playerIn, new StringTextComponent("Carbuncle will take from this inventory."));
+        }else{
+            setEntityID(playerIn.getHeldItem(hand), target.getEntityId());
+            PortUtil.sendMessage(playerIn, new StringTextComponent("Entity stored."));
+        }
+        return  ActionResultType.SUCCESS;
+    }
+
+    @Override
     public ActionResultType onItemUse(ItemUseContext context) {
-        if(context.getWorld().isRemote)
+        if(context.getWorld().isRemote || context.getPlayer() == null)
             return super.onItemUse(context);
         BlockPos pos = context.getPos();
         World world = context.getWorld();
         PlayerEntity playerEntity = context.getPlayer();
         ItemStack stack = context.getItem();
         AbstractManaTile manaTile = world.getTileEntity(pos) instanceof AbstractManaTile ? (AbstractManaTile) world.getTileEntity(pos) : null;
-        if(playerEntity.isSneaking() && manaTile != null && manaTile instanceof ArcaneRelayTile){
+        if(playerEntity != null && playerEntity.isSneaking() && manaTile instanceof ArcaneRelayTile){
             ((ArcaneRelayTile) manaTile).clearPos();
-            playerEntity.sendMessage(new StringTextComponent("Connections cleared."), Util.DUMMY_UUID);
+            PortUtil.sendMessage(playerEntity, "Connections cleared.");
             return super.onItemUse(context);
         }
 
         if(pos.equals(getPos(stack))){
-            this.setPosTag(stack,null, 0);
-            playerEntity.sendMessage(new StringTextComponent("Cleared link."), Util.DUMMY_UUID);
+            this.setPosTag(stack,null);
+            PortUtil.sendMessage(playerEntity, "Cleared link.");
+            return super.onItemUse(context);
+        }
+        // Hit an inventory
+        if(world.getTileEntity(pos) instanceof IInventory){
+            int entityID = this.getEntityID(stack);
+            System.out.println(entityID);
+            if(entityID == -1 || !(world.getEntityByID(entityID) instanceof EntityCarbuncle)){
+                System.out.println(entityID);
+                System.out.println(world.getEntityByID(entityID));
+                setPosTag(stack, pos);
+                PortUtil.sendMessage(playerEntity, new StringTextComponent("Inventory set."));
+                // Carbuncle to inventory
+            }else if(world.getEntityByID(entityID) instanceof EntityCarbuncle){
+                ((EntityCarbuncle) world.getEntityByID(entityID)).toPos = pos;
+                PortUtil.sendMessage(playerEntity, new StringTextComponent("Carbuncle will move items to this inventory."));
+                setPosTag(stack, null);
+                setEntityID(stack, -1);
+            }
             return super.onItemUse(context);
         }
 
         if(manaTile == null){
             if(getPos(stack) != null) {
-                this.setPosTag(stack,null, 0);
-                playerEntity.sendMessage(new StringTextComponent("Cleared link."), Util.DUMMY_UUID);
+                this.setPosTag(stack,null);
+                PortUtil.sendMessage(playerEntity, "Cleared link.");
             }
             return super.onItemUse(context);
         }
         if(getPos(stack) == null){
-            setPosTag(stack, pos, 0);
-            playerEntity.sendMessage(new StringTextComponent("Stored position."), Util.DUMMY_UUID);
+            setPosTag(stack, pos);
+            PortUtil.sendMessage(playerEntity, "Stored position.");
             return super.onItemUse(context);
         }
         // If we are going FROM a non-relay mana tile to a relay. (Jar to relay)
-        if(manaTile instanceof ArcaneRelayTile && world.getTileEntity(getPos(stack)) instanceof AbstractManaTile && !(world.getTileEntity(getPos(stack)) instanceof ArcaneRelayTile)){
+        if(manaTile instanceof ArcaneRelayTile && world.getTileEntity(getPos(stack)) instanceof AbstractManaTile &&
+                !(world.getTileEntity(getPos(stack)) instanceof ArcaneRelayTile)){
             if(((ArcaneRelayTile) manaTile).setTakeFrom(getPos(stack))){
-                playerEntity.sendMessage(new StringTextComponent("Relay set to take from " + getPosString(getPos(stack))),Util.DUMMY_UUID);
+                PortUtil.sendMessage(playerEntity, "Relay set to take from " + getPosString(getPos(stack)));
                 drawConnection(getPos(stack),pos, (ServerWorld) world);
-                setPosTag(stack, null, 0);
+                setPosTag(stack, null);
             }else{
-                playerEntity.sendMessage(new StringTextComponent("Too far away."), Util.DUMMY_UUID);
+                PortUtil.sendMessage(playerEntity, "Too far away.");
             }
             return super.onItemUse(context);
         }
         // From relay to any other mana tile
         if(world.getTileEntity(getPos(stack)) instanceof ArcaneRelayTile){
             if(((ArcaneRelayTile) world.getTileEntity(getPos(stack))).setSendTo(pos)){
-                playerEntity.sendMessage(new StringTextComponent("Relay set to send to " + getPosString(getPos(stack))), Util.DUMMY_UUID);
+                PortUtil.sendMessage(playerEntity, "Relay set to send to " + getPosString(getPos(stack)));
                 drawConnection(getPos(stack),pos, (ServerWorld) world);
-                setPosTag(stack, null, 0);
+                setPosTag(stack, null);
             }else{
-                playerEntity.sendMessage(new StringTextComponent("Too far away."), Util.DUMMY_UUID);
+                PortUtil.sendMessage(playerEntity, "Too far away.");
             }
             return super.onItemUse(context);
         }
+
+
         return super.onItemUse(context);
     }
 
@@ -102,43 +146,53 @@ public class DominionWand extends ModItem{
         ParticleUtil.beam(pos1, pos2, world);
     }
 
-    public void setPosTag(ItemStack stack, BlockPos pos, int dim){
+    public void setPosTag(ItemStack stack, BlockPos pos){
         CompoundNBT tag = stack.getTag();
         if(pos == null && tag != null && tag.contains("to_x")){
             tag.remove("to_x");
             tag.remove("to_y");
             tag.remove("to_z");
-            tag.remove("to_dim");
         }else if(pos != null && tag != null){
             stack.getTag().putInt("to_x", pos.getX());
             stack.getTag().putInt("to_y", pos.getY());
             stack.getTag().putInt( "to_z", pos.getZ());
-
         }
     }
 
+    public void setEntityID(ItemStack stack, int id){
+        CompoundNBT tag = stack.getTag();
+        if(tag == null)
+            return;
+        System.out.println("set" + id);
+        stack.getTag().putInt("en_id", id);
+    }
+    public int getEntityID(ItemStack stack){
+        CompoundNBT tag = stack.getTag();
+        if(tag == null)
+            return -1;
+        System.out.println("getting");
+        System.out.println(tag);
+        return stack.getTag().getInt("en_id");
+    }
 
 
     public BlockPos getPos(ItemStack stack){
+
         if(!stack.hasTag())
             return null;
         CompoundNBT tag = stack.getTag();
         return new BlockPos(tag.getInt("to_x"), tag.getInt("to_y"), tag.getInt("to_z"));
     }
 
-    public int getDimension(ItemStack stack){
-        if(!stack.hasTag())
-            return -999;
-        return stack.getTag().getInt("dim");
-    }
-
     @Override
     public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag p_77624_4_) {
         BlockPos pos = getPos(stack);
+        tooltip.add(new StringTextComponent("Entity ID: " + getEntityID(stack)));
         if(pos == null){
             tooltip.add(new StringTextComponent("No location set."));
             return;
         }
+
         tooltip.add(new StringTextComponent("Stored: " + getPosString(pos)));
     }
 

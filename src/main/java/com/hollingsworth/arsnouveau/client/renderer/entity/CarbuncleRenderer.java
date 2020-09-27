@@ -10,22 +10,21 @@ import net.minecraft.util.ResourceLocation;
 
 public class CarbuncleRenderer  extends MobRenderer<EntityCarbuncle, CarbuncleModel> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_orange.png");
+    private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_wild_orange.png");
 
     public CarbuncleRenderer(EntityRendererManager manager) {
         super(manager, new CarbuncleModel(), 0.2f);
+        this.addLayer(new CarbuncleHeldItemLayer(this));
     }
 
     @Override
     public void render(EntityCarbuncle p_225623_1_, float p_225623_2_, float p_225623_3_, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int p_225623_6_) {
-/*        matrixStack.push();
-        matrixStack.translate(0, -0.5, 0);
-        matrixStack.pop();*/
         super.render(p_225623_1_, p_225623_2_, p_225623_3_, matrixStack, iRenderTypeBuffer, p_225623_6_);
     }
 
     @Override
     public ResourceLocation getEntityTexture(EntityCarbuncle entity) {
-        return TEXTURE;
+        return entity.isTamed() ? TEXTURE : WILD_TEXTURE;
     }
 
 

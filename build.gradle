@@ -106,20 +106,22 @@ repositories {
     maven {
         url "https://maven.blamejared.com"
     }
+    maven { url 'https://repo.repsy.io/mvn/gandiber/geckolib' }
 
 }
 
 dependencies {
 //    minecraft 'net.minecraftforge:forge:1.16.1-32.0.108'
     minecraft 'net.minecraftforge:forge:1.16.3-34.0.9'
-    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.16-42:api")
-    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.16-42")
+    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.2-44:api")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.2-44")
 
     compileOnly fg.deobf("mezz.jei:jei-1.16.2:7.3.2.25:api")
     runtimeOnly fg.deobf("mezz.jei:jei-1.16.2:7.3.2.25")
 
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.2-4.0.0.1:api")
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.2-4.0.0.1")
+    implementation fg.deobf('software.bernie.geckolib:forge-1.16.3-geckolib:2.1.1')
 }
 
 

@@ -73,9 +73,11 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.AMULET_OF_MANA_BOOST)public static AbstractManaCurio amuletOfManaBoost;
     @ObjectHolder(LibItemNames.AMULET_OF_MANA_REGEN)public static AbstractManaCurio amuletOfManaRegen;
     @ObjectHolder(LibItemNames.DULL_TRINKET)public static ModItem dullTrinket;
-
+    @ObjectHolder(LibItemNames.CARBUNCLE_CHARM) public static CarbuncleCharm carbuncleCharm;
     @ObjectHolder(LibItemNames.DOMINION_WAND)public static DominionWand dominionWand;
     @ObjectHolder("debug")public static Debug debug;
+
+    @ObjectHolder(LibItemNames.CARBUNCLE_SHARD)public static ModItem carbuncleShard;
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler{
@@ -124,6 +126,8 @@ public class ItemsRegistry {
                     new WarpScroll(),
                     new JarOfLight(),
                     new WornNotebook(),
+                    new CarbuncleCharm(),
+                    new ModItem(LibItemNames.CARBUNCLE_SHARD),
                     new DiscountRing(LibItemNames.RING_OF_LESSER_DISCOUNT) {
                         @Override
                         public int getManaDiscount() {

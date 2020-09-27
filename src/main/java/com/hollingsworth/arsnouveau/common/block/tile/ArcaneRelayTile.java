@@ -7,12 +7,16 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 
 public class ArcaneRelayTile extends AbstractManaTile{
 
     public ArcaneRelayTile() {
         super(BlockRegistry.ARCANE_RELAY_TILE);
+    }
+    public ArcaneRelayTile(TileEntityType<?> type){
+        super(type);
     }
 
     private BlockPos toPos;
@@ -53,6 +57,10 @@ public class ArcaneRelayTile extends AbstractManaTile{
         return 200;
     }
 
+    public boolean closeEnough(BlockPos pos, int distance){
+        return BlockUtil.distanceFrom(pos, this.pos) <= distance;
+    }
+
     @Override
     public void tick() {
         if(world.isRemote){
@@ -75,9 +83,8 @@ public class ArcaneRelayTile extends AbstractManaTile{
                 if(fromTile.getCurrentMana() >= this.getTransferRate() && this.getCurrentMana() + this.getTransferRate() <= this.getMaxMana()){
                     fromTile.removeMana(this.getTransferRate());
                     this.addMana(this.getTransferRate());
-                    Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW,
-                            pos.getX(), pos.getY(), pos.getZ(), fromPos.getX(), fromPos.getY(), fromPos.getZ(), 5));
-
+                    Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW,pos.getX(), pos.getY(), pos.getZ(),
+                            fromPos.getX(), fromPos.getY(), fromPos.getZ(), 5));
                 }
             }
         }

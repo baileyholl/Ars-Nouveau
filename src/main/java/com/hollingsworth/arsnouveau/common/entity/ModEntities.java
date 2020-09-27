@@ -69,6 +69,7 @@ public class ModEntities {
 
             GlobalEntityTypeAttributes.put(ENTITY_WHELP_TYPE, EntityWhelp.attributes().create());
             GlobalEntityTypeAttributes.put(ALLY_VEX, VexEntity.func_234321_m_().create());
+            GlobalEntityTypeAttributes.put(ENTITY_CARBUNCLE_TYPE, EntityCarbuncle.attributes().create());
 
 
         }

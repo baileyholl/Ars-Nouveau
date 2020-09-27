@@ -1,8 +1,9 @@
 package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.client.renderer.RelayRenderer;
+import com.hollingsworth.arsnouveau.client.renderer.tile.RelayRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.ManaCondenserRenderer;
+import com.hollingsworth.arsnouveau.client.renderer.tile.RelaySplitterRenderer;
 import com.hollingsworth.arsnouveau.common.block.*;
 import com.hollingsworth.arsnouveau.common.block.tile.*;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
@@ -92,6 +93,13 @@ public class BlockRegistry {
 
     @ObjectHolder(LibBlockNames.RUNE) public static TileEntityType<RuneTile> RUNE_TILE;
     @ObjectHolder(LibBlockNames.RUNE) public static RuneBlock RUNE_BLOCK;
+    @ObjectHolder(LibBlockNames.PORTAL) public static PortalBlock PORTAL_BLOCK;
+
+    @ObjectHolder(LibBlockNames.PORTAL) public static TileEntityType<PortalTile> PORTAL_TILE_TYPE;
+
+    @ObjectHolder(LibBlockNames.ARCANE_RELAY_SPLITTER) public static ArcaneRelaySplitter ARCANE_RELAY_SPLITTER;
+    @ObjectHolder(LibBlockNames.ARCANE_RELAY_SPLITTER) public static TileEntityType<ArcaneRelaySplitterTile> ARCANE_RELAY_SPLITTER_TILE;
+
 
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
@@ -116,6 +124,8 @@ public class BlockRegistry {
             blockRegistryEvent.getRegistry().register(new ArcaneRoad());
             blockRegistryEvent.getRegistry().register(new ArcaneRelay());
             blockRegistryEvent.getRegistry().register(new RuneBlock());
+            blockRegistryEvent.getRegistry().register(new PortalBlock());
+            blockRegistryEvent.getRegistry().register(new ArcaneRelaySplitter());
         }
 
         @SubscribeEvent
@@ -133,7 +143,8 @@ public class BlockRegistry {
             event.getRegistry().register(TileEntityType.Builder.create(ScribesTile::new, BlockRegistry.SCRIBES_BLOCK).build(null).setRegistryName(LibBlockNames.SCRIBES_BLOCK));
             event.getRegistry().register(TileEntityType.Builder.create(ArcaneRelayTile::new, BlockRegistry.ARCANE_RELAY).build(null).setRegistryName(LibBlockNames.ARCANE_RELAY));
             event.getRegistry().register(TileEntityType.Builder.create(RuneTile::new, BlockRegistry.RUNE_BLOCK).build(null).setRegistryName(LibBlockNames.RUNE));
-
+            event.getRegistry().register(TileEntityType.Builder.create(PortalTile::new, BlockRegistry.PORTAL_BLOCK).build(null).setRegistryName(LibBlockNames.PORTAL));
+            event.getRegistry().register(TileEntityType.Builder.create(ArcaneRelaySplitterTile::new, BlockRegistry.ARCANE_RELAY_SPLITTER).build(null).setRegistryName(LibBlockNames.ARCANE_RELAY_SPLITTER));
         }
 
         @SubscribeEvent
@@ -158,7 +169,8 @@ public class BlockRegistry {
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.ARCANE_ROAD, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.ARCANE_ROAD));
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.ARCANE_RELAY, ItemsRegistry.defaultItemProperties().setISTER(()-> RelayRenderer.ISRender::new)).setRegistryName(LibBlockNames.ARCANE_RELAY));
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.RUNE_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.RUNE));
-
+            itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.PORTAL_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.PORTAL));
+            itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.ARCANE_RELAY_SPLITTER, ItemsRegistry.defaultItemProperties().setISTER(()-> RelaySplitterRenderer.ISRender::new)).setRegistryName(LibBlockNames.ARCANE_RELAY_SPLITTER));
         }
     }
 

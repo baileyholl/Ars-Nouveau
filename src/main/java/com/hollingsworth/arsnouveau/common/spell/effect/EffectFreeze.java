@@ -35,8 +35,7 @@ public class EffectFreeze extends AbstractEffect {
             if(state.getMaterial() == Material.WATER){
                 world.setBlockState(pos.up(), Blocks.ICE.getDefaultState());
             }else if(state.getMaterial() == Material.FIRE){
-                world.destroyBlock(pos, false);
-//                world.extinguishFire( shooter instanceof PlayerEntity ? (PlayerEntity) shooter : null, pos, ((BlockRayTraceResult) rayTraceResult).getFace());
+                world.destroyBlock(pos.up(), false);
             }
         }else if(shooter instanceof PlayerEntity){
             RayTraceResult result = rayTrace(world, (PlayerEntity)shooter, RayTraceContext.FluidMode.SOURCE_ONLY);

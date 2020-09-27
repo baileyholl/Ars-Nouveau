@@ -178,9 +178,9 @@ public class GuiRadialMenu extends Screen {
                 RenderSystem.disableLighting();
                 RenderSystem.disableDepthTest();
                 if(!resourceIcon.isEmpty()) {
-                    GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/spells/" + resourceIcon),
+                    GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + resourceIcon),
                             (int) posX, (int) posY, 0, 0, 16, 16, 16, 16,ms);
-                    GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/spells/" + castType),
+                    GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + castType),
                             (int) posX +3 , (int) posY - 10, 0, 0, 10, 10, 10, 10,ms);
                 }
                 this.itemRenderer.renderItemOverlayIntoGUI(font, stack, (int) posX + 5, (int) posY, String.valueOf(i + 1));

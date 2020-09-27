@@ -92,6 +92,6 @@ public class EffectBreak extends AbstractEffect {
 
     @Override
     protected String getBookDescription() {
-        return "Breaks blocks of an average hardness. Can be amplified to break harder blocks or can break multiple blocks with the AOE augment.";
+        return "Breaks blocks of an average hardness. Can be amplified twice to break harder blocks or can break multiple blocks with the AOE augment.";
     }
 }

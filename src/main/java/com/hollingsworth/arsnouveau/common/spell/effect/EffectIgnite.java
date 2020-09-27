@@ -29,7 +29,7 @@ public class EffectIgnite  extends AbstractEffect {
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         if(rayTraceResult instanceof EntityRayTraceResult){
-            int duration = 2 + 2*getBuffCount(augments, AugmentExtendTime.class);
+            int duration = 3 + 2*getBuffCount(augments, AugmentExtendTime.class);
             ((EntityRayTraceResult) rayTraceResult).getEntity().setFire(duration);
         }else if(rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos().up()).getMaterial() == Material.AIR){
             for(BlockPos pos : SpellUtil.calcAOEBlocks( shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult, getBuffCount(augments, AugmentAOE.class))) {

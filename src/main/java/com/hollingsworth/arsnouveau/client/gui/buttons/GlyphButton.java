@@ -62,7 +62,7 @@ public class GlyphButton extends Button {
             if(this.resourceIcon != null && !this.resourceIcon.equals("")) {
                 RenderSystem.color3f(1F, 1F, 1F);
 
-                GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/spells/" + this.resourceIcon), x, y, 0, 0, 16, 16,16,16 , ms);
+                GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + this.resourceIcon), x, y, 0, 0, 16, 16,16,16 , ms);
             }
 
             if(parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)){

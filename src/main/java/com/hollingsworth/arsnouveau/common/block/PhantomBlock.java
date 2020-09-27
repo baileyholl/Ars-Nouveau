@@ -28,10 +28,6 @@ public class PhantomBlock extends ModBlock {
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState p_149645_1_) {
-        return BlockRenderType.MODEL;
-    }
-    @Override
     public boolean canDropFromExplosion(BlockState state, IBlockReader world, BlockPos pos, Explosion explosion) {
         return false;
     }

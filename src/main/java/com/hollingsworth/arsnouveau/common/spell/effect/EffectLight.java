@@ -53,9 +53,7 @@ public class EffectLight extends AbstractEffect {
 
     @Nullable
     @Override
-    public Item getCraftingReagent() {
-        return Items.GLOWSTONE;
-    }
+    public Item getCraftingReagent(){return Items.LANTERN;}
 
     @Override
     protected String getBookDescription() {

@@ -138,7 +138,7 @@ public class GuiSpellBook extends ModdedScreen {
 //                int yOffset = (numEffect % 2 == 0 ? 20 : 0);
 
                 int xOffset = 20 * (numEffect % 6 );
-                int yOffset = (numEffect / 6) * 20 ;
+                int yOffset = (numEffect / 6) * 18 ;
                 cell = new GlyphButton(this, bookLeft + 140 + xOffset, bookTop + 20 +  yOffset, false, spell.getIcon(), spell.tag);
                 numEffect ++;
             }else{

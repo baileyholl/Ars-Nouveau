@@ -25,8 +25,9 @@ public class EffectDispel extends AbstractEffect {
         if(rayTraceResult instanceof EntityRayTraceResult){
             if(((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
                 LivingEntity entity = (LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity();
-                Collection<EffectInstance> effects =  entity.getActivePotionEffects();
-                for(EffectInstance e : effects){
+                Collection<EffectInstance> effects = entity.getActivePotionEffects();
+                EffectInstance[] array = effects.toArray(new EffectInstance[effects.size()]);
+                for(EffectInstance e : array){
                     entity.removePotionEffect(e.getPotion());
                 }
             }
