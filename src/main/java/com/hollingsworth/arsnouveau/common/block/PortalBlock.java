@@ -9,6 +9,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.pattern.BlockPattern;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
@@ -133,6 +134,10 @@ public class PortalBlock extends ModBlock{
         }
     }
 
+    @Override
+    public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
+        return false;
+    }
 
     public static BlockPattern.PatternHelper createPatternHelper(IWorld world, BlockPos pos) {
         Direction.Axis direction$axis = Direction.Axis.Z;

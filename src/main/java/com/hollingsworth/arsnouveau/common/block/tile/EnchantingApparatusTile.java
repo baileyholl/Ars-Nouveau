@@ -108,7 +108,6 @@ public class EnchantingApparatusTile extends AnimatedTile {
         if(counter == 0)
             counter = 1;
         BlockState state = world.getBlockState(pos);
-        world.setBlockState(pos, world.getBlockState(pos).with(EnchantingApparatusBlock.stage, counter),3);
         world.notifyBlockUpdate(pos, state, state, 2);
     }
 

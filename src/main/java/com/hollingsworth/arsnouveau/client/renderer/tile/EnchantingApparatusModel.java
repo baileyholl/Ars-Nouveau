@@ -7,9 +7,9 @@ import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.model.ModelRenderer;
 
 public class EnchantingApparatusModel extends Model {
-    private final ModelRenderer frame_all;
-    private final ModelRenderer frame_top;
-    private final ModelRenderer frame_bot;
+    public final ModelRenderer frame_all;
+    public final ModelRenderer frame_top;
+    public final ModelRenderer frame_bot;
     public EnchantingApparatusModel() {
         super(RenderType::getEntityCutout);
         textureWidth = 32;
