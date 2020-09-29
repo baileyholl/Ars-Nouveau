@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "xxx",
+    "y y",
+    "xxx"
+  ],
+  "key": {
+    "y": {
+      "item": "minecraft:gold_ingot"
+    },
+    "x": {
+      "item": "ars_nouveau:arcane_brick"
+    }
+  },
+  "result": {
+    "item": "ars_nouveau:arcane_core"
+  }
+}

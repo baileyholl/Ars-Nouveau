@@ -72,7 +72,8 @@
 	"ars_nouveau.page.amulet_of_mana_regen": "Increases mana regeneration by a moderate amount.",
 
 	"ars_nouveau.page.arcane_relay": "Enables the transport of mana between Mana Jars and other Arcane Relays. To pull mana from jars, use the Dominion Wand on the jar, and then on the relay. To send between relays or from a relay to a jar, use the wand on the relay and then the target you wish to send mana to. Relays may only reach up to 10 blocks away. To clear connections, sneak while using the Dominion Wand on the relay.",
-
+	"ars_nouveau.page.arcane_relay_splitter": "Operates similar to the Arcane Relay, but will support taking from and transferring to multiple jars at once. The splitter has a much larger through-put than the Arcane Relay, and will split this throughput amongst all of its jars. See the instructions on the Arcane Relay for use.",
+	"ars_nouveau.page.enchanting_apparatus1": "The Enchanting Apparatus utilizes pedestals and world mana for crafting. To use the Enchanting Apparatus, place any number of Arcane Pedestals nearby with their items. Place your reagent item on the Enchanting Apparatus block, and interact with the block while sneaking to begin crafting. The Enchanting Apparatus requires an Arcane Core beneath it in order to work.",
 
 	"ars_nouveau.page.mana_bloom_crop": "A magically infused flower, Mana Blooms provide additional mana to nearby Mana Condensers as they grow and provide a source of mana fiber.",
 	"ars_nouveau.page.belt_of_levitation": "A belt that allows the user levitate a moderate distance above the ground. Useful for climbing mountains! Simply sneak in the air while falling (or jumping) to rise.",

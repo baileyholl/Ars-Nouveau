@@ -59,6 +59,11 @@ public class APIRegistry {
                 Items.DIAMOND, Items.DIAMOND, Items.GOLD_INGOT, Items.GOLD_INGOT, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana
         }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
 
+
+        registerApparatusRecipe(new EnchantingApparatusRecipe(BlockRegistry.ARCANE_RELAY_SPLITTER.asItem(), BlockRegistry.ARCANE_RELAY.asItem(), new Item[]{
+                BlockRegistry.MANA_JAR.asItem(),BlockRegistry.MANA_JAR.asItem(), BlockRegistry.MANA_JAR.asItem(), Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.DIAMOND
+        }, ArsNouveauAPI.PatchouliCategories.automation.name()));
+
     }
 
     public static void registerSpells(){
