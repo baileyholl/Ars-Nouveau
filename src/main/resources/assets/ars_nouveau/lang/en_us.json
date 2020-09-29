@@ -160,5 +160,6 @@
 	"item.ars_nouveau.glyph_snare": "Glyph: Snare",
 	"item.ars_nouveau.glyph_leap": "Glyph: Leap",
 	"item.ars_nouveau.glyph_smelt": "Glyph: Smelt",
-	"effect.ars_nouveau.shield": "Magic Shield"
+	"effect.ars_nouveau.shield": "Magic Shield",
+	"alert.core": "An Arcane Core must be placed beneath this block."
 }

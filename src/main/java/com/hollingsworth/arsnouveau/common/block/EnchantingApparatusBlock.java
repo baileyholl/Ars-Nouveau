@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.common.PortUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -14,13 +15,14 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
 public class EnchantingApparatusBlock extends ModBlock{
-    public static final IProperty stage = IntegerProperty.create("stage", 1, 47);
 
     public EnchantingApparatusBlock() {
         super(ModBlock.defaultProperties().notSolid(),"enchanting_apparatus");
@@ -35,6 +37,12 @@ public class EnchantingApparatusBlock extends ModBlock{
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if(!world.isRemote) {
+            if(!(world.getBlockState(pos.down()).getBlock() instanceof ArcaneCore)){
+                PortUtil.sendMessage(player, new TranslationTextComponent("alert.core"));
+                return ActionResultType.SUCCESS;
+            }
+
+
             EnchantingApparatusTile tile = (EnchantingApparatusTile) world.getTileEntity(pos);
             if(player.isSneaking()){
                 tile.attemptCraft();

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
+import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -52,6 +53,14 @@ public class ArcanePedestal extends ModBlock{
             world.notifyBlockUpdate(pos, state, state, 2);
         }
         return  ActionResultType.SUCCESS;
+    }
+
+    @Override
+    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.onBlockHarvested(worldIn, pos, state, player);
+        if(worldIn.getTileEntity(pos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) worldIn.getTileEntity(pos)).stack != null){
+            worldIn.addEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), ((ArcanePedestalTile) worldIn.getTileEntity(pos)).stack));
+        }
     }
 
     @Nullable

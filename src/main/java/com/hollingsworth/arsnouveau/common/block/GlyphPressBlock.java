@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.hollingsworth.arsnouveau.common.block.tile.GlyphPressTile;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.block.BlockState;
@@ -88,7 +89,17 @@ public class GlyphPressBlock extends ModBlock{
         return new GlyphPressTile();
     }
 
+    @Override
+    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.onBlockHarvested(worldIn, pos, state, player);
+        if(worldIn.getTileEntity(pos) instanceof GlyphPressTile && ((GlyphPressTile) worldIn.getTileEntity(pos)).baseMaterial != null){
+            worldIn.addEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), ((GlyphPressTile) worldIn.getTileEntity(pos)).baseMaterial));
+            if(((GlyphPressTile) worldIn.getTileEntity(pos)).reagentItem != null){
+                worldIn.addEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), ((GlyphPressTile) worldIn.getTileEntity(pos)).reagentItem));
+            }
 
+        }
+    }
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<net.minecraft.block.Block, BlockState> builder) { builder.add(stage); }
