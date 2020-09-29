@@ -1,10 +1,11 @@
 package com.hollingsworth.arsnouveau.common.capability;
 
 import com.hollingsworth.arsnouveau.api.mana.IMana;
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import net.minecraft.entity.LivingEntity;
 
 import javax.annotation.Nullable;
-
+// Living entity mana
 public class Mana implements IMana {
 
     private final LivingEntity livingEntity;
@@ -12,6 +13,10 @@ public class Mana implements IMana {
     private int mana;
 
     private int maxMana;
+
+    private int glyphBonus;
+
+    private int bookTier;
 
     public Mana(@Nullable final LivingEntity entity) {
         this.livingEntity = entity;
@@ -30,6 +35,26 @@ public class Mana implements IMana {
     @Override
     public void setMaxMana(int maxMana) {
         this.maxMana = maxMana;
+    }
+
+    @Override
+    public int getGlyphBonus(){
+        return glyphBonus;
+    }
+
+    @Override
+    public void setGlyphBonus(int glyphBonus){
+        this.glyphBonus = glyphBonus;
+    }
+
+    @Override
+    public int getBookTier(){
+        return bookTier;
+    }
+
+    @Override
+    public void setBookTier(int bookTier){
+        this.bookTier = bookTier;
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
 import com.hollingsworth.arsnouveau.client.renderer.items.SpellBookRenderer;
 import com.hollingsworth.arsnouveau.common.block.ArcanePedestal;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
+import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOpenGUI;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
@@ -85,8 +86,21 @@ public class SpellBook extends Item implements ISpellTier {
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
+        if(!stack.hasTag())
+            return new ActionResult<>(ActionResultType.SUCCESS, stack);
 
         RayTraceResult result = playerIn.pick(5, 0, false);
+
+        ManaCapability.getMana(playerIn).ifPresent(iMana -> {
+            if(iMana.getBookTier() < this.tier.ordinal()){
+
+                iMana.setBookTier(this.tier.ordinal());
+            }
+            if(iMana.getGlyphBonus() < SpellBook.getUnlockedSpells(stack.getTag()).size()){
+                iMana.setGlyphBonus(SpellBook.getUnlockedSpells(stack.getTag()).size());
+            }
+        });
+
         if(result instanceof BlockRayTraceResult){
             if(worldIn.getBlockState(new BlockPos(playerIn.getLookVec())).getBlock() instanceof ScribesBlock
                     || worldIn.getBlockState(new BlockPos(playerIn.getLookVec())).getBlock() instanceof ArcanePedestal) {

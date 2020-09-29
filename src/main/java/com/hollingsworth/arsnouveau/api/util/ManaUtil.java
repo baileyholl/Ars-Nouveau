@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.armor.MagicArmor;
 import com.hollingsworth.arsnouveau.common.block.tile.ManaJarTile;
+import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -78,12 +79,14 @@ public class ManaUtil {
                     max.addAndGet(((IManaEquipment) item).getMaxManaBoost());
             }
         });
-        if(e.getHeldItem(Hand.MAIN_HAND).getItem() instanceof SpellBook && e.getHeldItem(Hand.MAIN_HAND).hasTag()){
-            ArrayList<AbstractSpellPart> list = SpellBook.getUnlockedSpells(e.getHeldItem(Hand.MAIN_HAND).getTag());
-            int numUnlocks = list.stream().filter(p -> p instanceof AbstractAugment || p instanceof AbstractEffect).collect(Collectors.toList()).size() - 3;
-            max.addAndGet(numUnlocks * 15);
-            max.addAndGet(((SpellBook)e.getHeldItem(Hand.MAIN_HAND).getItem()).tier.ordinal() * 50);
-        }
+
+        ManaCapability.getMana(e).ifPresent(mana ->{
+            int tier = mana.getBookTier();
+            int numGlyphs = mana.getGlyphBonus() > 5 ? mana.getGlyphBonus() - 5 : 0;
+            max.addAndGet(numGlyphs * 15);
+            max.addAndGet(tier * 50);
+        });
+
         return max.get();
     }
 
