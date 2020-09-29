@@ -39,7 +39,7 @@ public class CrystallizerRenderer extends TileEntityRenderer<CrystallizerTile> {
                 particlePos = particlePos.add(ParticleUtil.pointInSphere(null));
                 world.addParticle(ParticleLineData.createData(new ParticleColor(120,80,5)),
                         particlePos.getX(), particlePos.getY(), particlePos.getZ(),
-                        pos.getX()  , pos.getY()  , pos.getZ());
+                        pos.getX() + 0.5  , pos.getY()  , pos.getZ()+ 0.5);
             }
         }
     }

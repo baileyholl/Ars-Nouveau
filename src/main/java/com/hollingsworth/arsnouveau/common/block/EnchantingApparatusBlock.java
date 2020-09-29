@@ -60,7 +60,7 @@ public class EnchantingApparatusBlock extends ModBlock{
     @Override
     public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
         super.onBlockHarvested(worldIn, pos, state, player);
-        if(worldIn.getTileEntity(pos) instanceof EnchantingApparatusTile){
+        if(worldIn.getTileEntity(pos) instanceof EnchantingApparatusTile && ((EnchantingApparatusTile) worldIn.getTileEntity(pos)).catalystItem != null){
             worldIn.addEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), ((EnchantingApparatusTile) worldIn.getTileEntity(pos)).catalystItem));
         }
     }

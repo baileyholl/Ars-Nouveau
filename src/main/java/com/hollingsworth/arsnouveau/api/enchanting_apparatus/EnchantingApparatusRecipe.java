@@ -54,8 +54,7 @@ public class EnchantingApparatusRecipe {
     public ItemStack isResultOf(ItemStack catalyst, List<ItemStack> pedestalItems){
         pedestalItems = pedestalItems.stream().filter(itemStack -> !itemStack.isEmpty()).collect(Collectors.toList());
 
-        if (this.catalyst.getItem() != catalyst.getItem() || this.pedestalItems.size() != pedestalItems.size() || !areSameSet(pedestalItems, this.pedestalItems)) {
-
+        if (this.catalyst == null || this.catalyst.getItem() != catalyst.getItem() || this.pedestalItems.size() != pedestalItems.size() || !areSameSet(pedestalItems, this.pedestalItems)) {
             return null;
         }
 

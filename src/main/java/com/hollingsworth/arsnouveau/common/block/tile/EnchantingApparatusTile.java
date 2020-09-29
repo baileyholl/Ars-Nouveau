@@ -18,6 +18,7 @@ import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class EnchantingApparatusTile extends AnimatedTile {
     public ItemStack catalystItem;
@@ -78,6 +79,16 @@ public class EnchantingApparatusTile extends AnimatedTile {
         }
         if(!world.isRemote)
             updateBlock();
+    }
+    // Used for rendering on the client
+    public List<BlockPos> pedestalList(){
+        ArrayList<BlockPos> posList = new ArrayList<>();
+        BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
+            if(world.getTileEntity(blockPos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack != null) {
+                posList.add(blockPos.toImmutable());
+            }
+        });
+        return posList;
     }
 
     public EnchantingApparatusRecipe getRecipe(){
