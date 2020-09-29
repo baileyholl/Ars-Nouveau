@@ -9,8 +9,10 @@ import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -45,5 +47,19 @@ public class ArcaneCoreRenderer extends TileEntityRenderer<ArcaneCoreTile> {
         }
     }
 
+    public static class ISRender extends ItemStackTileEntityRenderer {
+
+        public ISRender(){ }
+
+        @Override
+        public void render(ItemStack p_228364_1_, MatrixStack ms, IRenderTypeBuffer buffers, int light, int overlay) {
+            ms.push();
+            ms.scale(0.75f, 0.75f, 0.75f);
+            ms.translate(0.75, -0.40, 0.6);
+            IVertexBuilder buffer = buffers.getBuffer(model.getRenderType(texture));
+            model.render(ms, buffer, light, overlay, 1, 1, 1, 1);
+            ms.pop();
+        }
+    }
 
 }

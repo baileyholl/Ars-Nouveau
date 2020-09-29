@@ -24,13 +24,15 @@ public class EnchantingApparatusTile extends AnimatedTile {
     public ItemStack catalystItem;
     public ItemEntity entity;
     public long frames = 0;
+
+    private int craftingLength = 100;
     public boolean isCrafting;
     public long timeStartedCrafting;
+
     public EnchantingApparatusTile() {
         super(BlockRegistry.ENCHANTING_APP_TILE);
         counter = 1;
     }
-
 
     @Override
     public void tick() {
@@ -42,7 +44,7 @@ public class EnchantingApparatusTile extends AnimatedTile {
 
         }
 
-        if(counter > 47) {
+        if(counter > craftingLength) {
             if(!world.isRemote) {
                 counter = 1;
                 if (this.isCrafting) {
@@ -67,7 +69,7 @@ public class EnchantingApparatusTile extends AnimatedTile {
                     this.isCrafting = false;
                 }
             }
-        }else if(world.isRemote && counter >= 46){
+        }else if(world.isRemote && counter >= craftingLength - 1){
             if(world.isRemote){
                 for(int i =0; i < 10; i++){
                     double d0 = getPos().getX() +0.5; //+ world.rand.nextFloat();

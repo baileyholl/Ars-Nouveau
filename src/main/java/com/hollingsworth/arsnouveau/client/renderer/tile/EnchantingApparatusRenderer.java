@@ -14,6 +14,7 @@ import it.unimi.dsi.fastutil.ints.IntSortedSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.item.ItemEntity;
@@ -31,15 +32,12 @@ import java.util.Random;
 import java.util.stream.IntStream;
 
 public class EnchantingApparatusRenderer extends TileEntityRenderer<EnchantingApparatusTile> {
-    public final EnchantingApparatusModel model;
-    public final ResourceLocation texture = new ResourceLocation(ArsNouveau.MODID + ":textures/entity/enchanting_apparatus.png");
+    public static final EnchantingApparatusModel model = new EnchantingApparatusModel();
+    public static final ResourceLocation texture = new ResourceLocation(ArsNouveau.MODID + ":textures/entity/enchanting_apparatus.png");
 
     public EnchantingApparatusRenderer(TileEntityRendererDispatcher p_i226006_1_) {
         super(p_i226006_1_);
-        model = new EnchantingApparatusModel();
     }
-
-
 
     @Override
     public void render(EnchantingApparatusTile tileEntityIn, float v, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int lightIn, int overlayIn) {
@@ -54,7 +52,7 @@ public class EnchantingApparatusRenderer extends TileEntityRenderer<EnchantingAp
         }
         matrixStack.push();
         IVertexBuilder buffer = iRenderTypeBuffer.getBuffer(model.getRenderType(texture));
-        int levels = 2;
+//        int levels = 2;
 //        PerlinNoiseGenerator noiseGenerator = new PerlinNoiseGenerator(new SharedSeedRandom("NOISE_GRASS".hashCode()), 0, 1);
 //        System.out.println(noiseGenerator.noiseAt(tileEntityIn.getPos().getX() / 8, tileEntityIn.getPos().getY()/8 + ClientInfo.ticksInGame, false));
 //        double offset = noiseGenerator.noiseAt(tileEntityIn.getPos().getX(), tileEntityIn.getPos().getY() + (ClientInfo.ticksInGame + v)/40 , false) / 10;
@@ -104,5 +102,19 @@ public class EnchantingApparatusRenderer extends TileEntityRenderer<EnchantingAp
         Minecraft.getInstance().getItemRenderer().renderItem(entityItem.getItem(), ItemCameraTransforms.TransformType.FIXED, 15728880, overlayIn, matrixStack, iRenderTypeBuffer);
         matrixStack.pop();
 
+    }
+
+    public static class ISRender extends ItemStackTileEntityRenderer {
+
+        public ISRender(){ }
+
+        @Override
+        public void render(ItemStack p_228364_1_, MatrixStack ms, IRenderTypeBuffer buffers, int light, int overlay) {
+            ms.push();
+            ms.translate(0.75, 0.25, 0.2);
+            IVertexBuilder buffer = buffers.getBuffer(model.getRenderType(texture));
+            model.render(ms, buffer, light, overlay, 1, 1, 1, 1);
+            ms.pop();
+        }
     }
 }
