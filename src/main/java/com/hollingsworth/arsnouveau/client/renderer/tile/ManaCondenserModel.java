@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
+import com.hollingsworth.arsnouveau.client.ClientHandler;
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.Minecraft;
@@ -107,8 +109,8 @@ public class ManaCondenserModel extends Model {
         gem.render(matrixStack, buffer, packedLight, packedOverlay);
         bb_main.render(matrixStack, buffer, packedLight, packedOverlay);
         float lvt_8_2_ = 1.3F;
-        float angle = (Minecraft.getInstance().world.getGameTime()/5.0f) % 360;
-        float bounce = (Minecraft.getInstance().world.getGameTime()/5.0f) % 360;
+        float angle = (ClientInfo.ticksInGame /5.0f) % 360;
+        float bounce = (ClientInfo.ticksInGame/5.0f) % 360;
         bounce = (float) (Math.cos(bounce) + Math.sin(bounce));
         float outerAngle = (Minecraft.getInstance().world.getGameTime()/20.0f) % 360;
 //		ring_outer.rotateAngleZ =  MathHelper.cos(angle) *3.1415927F * 2;
