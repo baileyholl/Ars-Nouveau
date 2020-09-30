@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.api.util;
 
+import com.hollingsworth.arsnouveau.api.event.ManaRegenCalcEvent;
+import com.hollingsworth.arsnouveau.api.event.MaxManaCalcEvent;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
@@ -17,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -37,7 +40,6 @@ public class ManaUtil {
                 cost += spell.getAdjustedManaCost(augments);
             }
         }
-//        System.out.println("Cost: " + cost);
         return cost;
     }
 
@@ -86,12 +88,14 @@ public class ManaUtil {
             max.addAndGet(numGlyphs * 15);
             max.addAndGet(tier * 50);
         });
-
+        MaxManaCalcEvent event = new MaxManaCalcEvent(e, max.get());
+        MinecraftForge.EVENT_BUS.post(event);
+        max.set(event.getMax());
         return max.get();
     }
 
-    public static int getArmorRegen(PlayerEntity e) {
-        AtomicInteger regen = new AtomicInteger();
+    public static int getManaRegen(PlayerEntity e) {
+        AtomicInteger regen = new AtomicInteger(5);
         for(ItemStack i : e.getEquipmentAndArmor()){
             if(i.getItem() instanceof MagicArmor){
                 MagicArmor armor = ((MagicArmor) i.getItem());
@@ -108,13 +112,16 @@ public class ManaUtil {
             }
             regen.set(newregen);
         });
-        if(e.getHeldItem(Hand.MAIN_HAND).getItem() instanceof SpellBook && e.getHeldItem(Hand.MAIN_HAND).hasTag()){
-            ArrayList<AbstractSpellPart> list = SpellBook.getUnlockedSpells(e.getHeldItem(Hand.MAIN_HAND).getTag());
-            int numUnlocks = list.stream().filter(p -> p instanceof AbstractAugment || p instanceof AbstractEffect).collect(Collectors.toList()).size() - 3;
+        ManaCapability.getMana(e).ifPresent(mana ->{
+            int tier = mana.getBookTier();
+            int numGlyphs = mana.getGlyphBonus() > 5 ? mana.getGlyphBonus() - 5 : 0;
+            regen.addAndGet(numGlyphs / 3);
+            regen.addAndGet(tier);
+        });
+        ManaRegenCalcEvent event = new ManaRegenCalcEvent(e, regen.get());
+        MinecraftForge.EVENT_BUS.post(event);
+        regen.set(event.getRegen());
 
-            regen.addAndGet(numUnlocks/3);
-            regen.addAndGet(((SpellBook)e.getHeldItem(Hand.MAIN_HAND).getItem()).tier.ordinal());
-        }
         return regen.get();
     }
 

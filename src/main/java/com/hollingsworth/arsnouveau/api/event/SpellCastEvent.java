@@ -18,5 +18,4 @@ public class SpellCastEvent extends LivingEvent {
         super(entity);
         this.spell = spell;
     }
-
 }

@@ -19,7 +19,6 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -71,7 +70,7 @@ public class EventHandler {
         if (e.player instanceof ServerPlayerEntity && e.player.world.getGameTime() % 5 == 0) {
             if (e.player.world.getGameTime() % 20 == 0) {
                 ManaCapability.getMana(e.player).ifPresent(mana -> {
-                    double regenPerSecond = 5 + ManaUtil.getArmorRegen(e.player);
+                    double regenPerSecond = ManaUtil.getManaRegen(e.player);
                     if (mana.getCurrentMana() != mana.getMaxMana()) {
                         mana.addMana((int) regenPerSecond);
                         Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana()));
