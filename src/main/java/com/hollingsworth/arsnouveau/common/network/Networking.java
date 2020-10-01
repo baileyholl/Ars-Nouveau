@@ -63,6 +63,11 @@ public class Networking {
                 PacketEntityAnimationSync::encode,
                 PacketEntityAnimationSync::decode,
                 PacketEntityAnimationSync.Handler::handle);
+        INSTANCE.registerMessage(nextID(),
+                PacketReactiveSpell.class,
+                PacketReactiveSpell::toBytes,
+                PacketReactiveSpell::new,
+                PacketReactiveSpell::handle);
     }
 
     public static void sendToNearby(World world, BlockPos pos, Object toSend){

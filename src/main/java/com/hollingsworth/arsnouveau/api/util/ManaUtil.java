@@ -141,4 +141,20 @@ public class ManaUtil {
         });
         return pos1[0];
     }
+
+    /**
+     * Searches for nearby mana jars that have enough mana.
+     * Returns the position where the mana was taken, or null if none were found.
+     */
+    @Nullable
+    public static boolean hasManaNearby(BlockPos pos, World world, int range, int mana){
+        final boolean[] hasMana = {false};
+        BlockPos.getAllInBox(pos.add(range, range, range), pos.add(-range, -range, -range)).forEach(blockPos -> {
+            blockPos = blockPos.toImmutable();
+            if(!hasMana[0] && world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= mana) {
+                hasMana[0] = true;
+            }
+        });
+        return hasMana[0];
+    }
 }

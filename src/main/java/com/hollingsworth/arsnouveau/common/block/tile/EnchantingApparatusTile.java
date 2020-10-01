@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
+import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.block.EnchantingApparatusBlock;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -48,10 +49,11 @@ public class EnchantingApparatusTile extends AnimatedTile {
             if(!world.isRemote) {
                 counter = 1;
                 if (this.isCrafting) {
-                    EnchantingApparatusRecipe recipe = this.getRecipe();
+                    IEnchantingRecipe recipe = this.getRecipe();
+                    List<ItemStack> pedestalItems = getPedestalItems();
                     if (recipe != null) {
-                        recipe.pedestalItems.forEach(i -> i = null);
-                        this.catalystItem = recipe.result;
+                        pedestalItems.forEach(i -> i = null);
+                        this.catalystItem = recipe.getResult(pedestalItems, this.catalystItem, this);
                         BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
                             if (world.getTileEntity(blockPos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack != null) {
                                 if (((ArcanePedestalTile) world.getTileEntity(blockPos)).stack.getItem() == ItemsRegistry.bucketOfMana) {
@@ -93,17 +95,20 @@ public class EnchantingApparatusTile extends AnimatedTile {
         return posList;
     }
 
-    public EnchantingApparatusRecipe getRecipe(){
+    public List<ItemStack> getPedestalItems(){
         ArrayList<ItemStack> pedestalItems = new ArrayList<>();
         BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
             if(world.getTileEntity(blockPos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack != null) {
                 pedestalItems.add(((ArcanePedestalTile) world.getTileEntity(blockPos)).stack);
             }
         });
+        return pedestalItems;
+    }
 
-        EnchantingApparatusRecipe resultRecipe  =  ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes().stream().filter(r-> r.isResultOf(catalystItem, pedestalItems) != null).findFirst().orElse(null);
+    public IEnchantingRecipe getRecipe(){
+        List<ItemStack> pedestalItems = getPedestalItems();
+        IEnchantingRecipe resultRecipe = ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes().stream().filter(r-> r.isMatch(pedestalItems, catalystItem, this)).findFirst().orElse(null);
         return resultRecipe;
-
     }
 
 

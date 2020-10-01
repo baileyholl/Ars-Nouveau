@@ -22,7 +22,7 @@ import static com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil.getAugments;
 public class SpellResolver {
     public AbstractCastMethod castType;
     public List<AbstractSpellPart> spell_recipe;
-    
+    public boolean silent;
     public SpellResolver(AbstractCastMethod cast, List<AbstractSpellPart> spell_recipe){
         this.castType = cast;
         this.spell_recipe = spell_recipe;
@@ -44,19 +44,24 @@ public class SpellResolver {
         this.castType = method;
         if(this.castType != null)
             this.castType.resolver = this;
+    }
 
+    public SpellResolver(List<AbstractSpellPart> spell_recipe, boolean silent){
+        this(spell_recipe);
+        this.silent = silent;
     }
 
 
     public boolean canCast(LivingEntity entity){
         if(spell_recipe == null || spell_recipe.isEmpty() || castType == null) {
-            entity.sendMessage(new StringTextComponent("Invalid Spell."));
+            if(!silent)
+                entity.sendMessage(new StringTextComponent("Invalid Spell."));
             return false;
         }
         Set<AbstractSpellPart> testSet = new HashSet<>(spell_recipe.size());
         for(AbstractSpellPart part : spell_recipe){
             if(part instanceof AbstractEffect && !testSet.add(part)) {
-                if(!entity.getEntityWorld().isRemote)
+                if(!entity.getEntityWorld().isRemote && !silent)
                     entity.sendMessage(new StringTextComponent("No duplicate effects are allowed. Use Augments!"));
                 return false;
             }
@@ -70,7 +75,7 @@ public class SpellResolver {
         AtomicBoolean canCast = new AtomicBoolean(false);
         ManaCapability.getMana(entity).ifPresent(mana -> {
             canCast.set(totalCost <= mana.getCurrentMana() || (entity instanceof PlayerEntity &&  ((PlayerEntity) entity).isCreative()));
-            if(!canCast.get() && !entity.getEntityWorld().isRemote)
+            if(!canCast.get() && !entity.getEntityWorld().isRemote && !silent)
                 entity.sendMessage(new StringTextComponent("Not enough mana."));
         });
         return canCast.get();

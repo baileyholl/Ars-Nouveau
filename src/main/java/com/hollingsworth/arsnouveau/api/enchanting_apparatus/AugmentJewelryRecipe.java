@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.enchanting_apparatus;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.item.AbstractAugmentItem;
+import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.ModItem;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -20,7 +21,7 @@ public class AugmentJewelryRecipe implements IEnchantingRecipe{
     }
 
     @Override
-    public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent) {
+    public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile) {
         if(reagent.getItem() == starterItem){
             if(pedestalItems.size() != 4)
                 return false;
@@ -54,7 +55,17 @@ public class AugmentJewelryRecipe implements IEnchantingRecipe{
 
 
     @Override
-    public ItemStack getResult(List<ItemStack> pedestalItems, ItemStack reagent) {
+    public ItemStack getResult(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile) {
         return null;
+    }
+
+    @Override
+    public boolean consumesMana() {
+        return true;
+    }
+
+    @Override
+    public int manaCost() {
+        return 0;
     }
 }

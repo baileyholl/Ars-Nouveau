@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
+import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -36,7 +37,7 @@ public class ArsNouveauAPI {
      */
     private HashMap<String, Glyph> glyphMap;
 
-    private ArrayList<EnchantingApparatusRecipe> enchantingApparatusRecipes;
+    private ArrayList<IEnchantingRecipe> enchantingApparatusRecipes;
     /**
      * Spells that all spellbooks contain
      */
@@ -57,7 +58,6 @@ public class ArsNouveauAPI {
     public Item getGlyphItem(String glyphName){
         for(Item i : ItemsRegistry.RegistrationHandler.ITEMS){
             if(i.getRegistryName().equals(new ResourceLocation(ArsNouveau.MODID, getSpellRegistryName(glyphName)))){
-                System.out.println("Returning " + i.toString() );
                 return i;
             }
         }
@@ -88,7 +88,7 @@ public class ArsNouveauAPI {
         return glyphMap;
     }
 
-    public ArrayList<EnchantingApparatusRecipe> getEnchantingApparatusRecipes() { return enchantingApparatusRecipes; }
+    public ArrayList<IEnchantingRecipe> getEnchantingApparatusRecipes() { return enchantingApparatusRecipes; }
 
     private ArsNouveauAPI(){
         spell_map = new HashMap<>();

@@ -12,6 +12,7 @@
 
 	"enchantment.ars_nouveau.mana_regen.desc": "Increases the mana regeneration of the player.",
 	"enchantment.ars_nouveau.mana_boost.desc": "Increases the maximum mana of the player.",
+	"enchantment.ars_nouveau.reactive.desc": "Has a chance to cast the inscribed spell on tool use or player hurt.",
 	"entity.ars_nouveau.whelp": "Whelp",
 	"entity.ars_nouveau.carbuncle": "Carbuncle",
 	"item.ars_nouveau.archmage_robes":"Archmage Robes",
@@ -94,7 +95,12 @@
 	"ars_nouveau.page.summoning_crystal": "Automation in Ars Nouveau begins with the Summoning Crystal. Summoning Crystals provide mana, resources, and tasks to special magical creatures, like Whelps! Placing a chest next to a Summoning Crystal will provide a place for summoned creatures to store their items. The area of the Summoning Crystal may be changed by right clicking. ",
 	"ars_nouveau.page2.summoning_crystal": "Creatures like Whelps will require mana to interact with the world. Place a Mana Jar within the vicinity and begin providing it with mana. To begin your first automation, see the entry on the Whelp Charm and the Scribes Table.",
 
+	"ars_nouveau.page.reactive": "Reactive is an enchantment that can be applied to ANY item and can be applied and upgraded by the Enchanting Apparatus. Tools and armor with the Reactive enchantment have a chance to automatically cast a spell on use or when the player is hurt. The spell that the enchantment will cast is dependent on the spell inscribed in the first crafting phase, and the user must have enough mana to cast the spell.",
+	"ars_nouveau.page.reactive2": "To enchant an item with Reactive, place any item or armor in the apparatus. The spell parchment placed on the pedestal must be inscribed with a valid spell. See the Scribes Table for additional information. Reactive Enchantment also requires jars of mana near the Enchanting Apparatus. The first level enchantment requires approximately one third of a jar.",
+	"ars_nouveau.page.reactive3": "To upgrade the enchantment, replace the reagent with any item that has an existing Reactive enchantment. The Tier 2 reactive enchantment requires an item with Reactive I, and the Tier 3 Reactive enchantment requires an item with Reactive II. Higher levels will require a significantly higher amount of mana nearby.",
+	"ars_nouveau.page.reactive4": "The spell that Reactive gear casts can be changed by placing an enchanted piece of gear into the apparatus with a new inscribed spell parchment. ",
 	"enchantment.ars_nouveau.mana_boost": "Mana Boost",
+	"enchantment.ars_nouveau.reactive": "Reactive",
 	"enchantment.ars_nouveau.mana_regen": "Mana Regen",
 	"item.ars_nouveau.bucket_of_mana":"Mana Bucket",
 	"item.ars_nouveau.magic_clay":"Magic Clay",

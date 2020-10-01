@@ -89,7 +89,6 @@ public class SpellBook extends Item implements ISpellTier {
         if(!stack.hasTag())
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
 
-        RayTraceResult result = playerIn.pick(5, 0, false);
 
         ManaCapability.getMana(playerIn).ifPresent(iMana -> {
             if(iMana.getBookTier() < this.tier.ordinal()){
@@ -100,6 +99,7 @@ public class SpellBook extends Item implements ISpellTier {
                 iMana.setGlyphBonus(SpellBook.getUnlockedSpells(stack.getTag()).size());
             }
         });
+        RayTraceResult result = playerIn.pick(5, 0, false);
 
         if(result instanceof BlockRayTraceResult){
             if(worldIn.getBlockState(new BlockPos(playerIn.getLookVec())).getBlock() instanceof ScribesBlock
