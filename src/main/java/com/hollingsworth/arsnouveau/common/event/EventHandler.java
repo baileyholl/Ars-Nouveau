@@ -153,21 +153,16 @@ public class EventHandler {
 
 
     @SubscribeEvent
-    public void playerLogin(PlayerEvent.PlayerLoggedInEvent e) {
-        System.out.println("player logged in");
+    public static void playerLogin(PlayerEvent.PlayerLoggedInEvent e) {
         if(e.getEntityLiving().getEntityWorld().isRemote)
             return;
-        CompoundNBT oldTag = e.getPlayer().getPersistentData();
         CompoundNBT tag = e.getPlayer().getPersistentData().getCompound(PlayerEntity.PERSISTED_NBT_TAG);
         String book_tag = "an_book_";
-
-
         if(tag.getBoolean(book_tag))
             return;
 
         LivingEntity entity = e.getEntityLiving();
         e.getEntityLiving().getEntityWorld().addEntity(new ItemEntity(entity.world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), new ItemStack(ItemsRegistry.wornNotebook)));
-        System.out.println("adding book");
         tag.putBoolean(book_tag, true);
         e.getPlayer().getPersistentData().put(PlayerEntity.PERSISTED_NBT_TAG, tag);
     }
