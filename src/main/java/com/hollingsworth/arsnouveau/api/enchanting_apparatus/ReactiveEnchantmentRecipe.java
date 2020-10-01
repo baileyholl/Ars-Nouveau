@@ -27,14 +27,13 @@ public class ReactiveEnchantmentRecipe implements IEnchantingRecipe{
 
     public boolean isWriteSpell(List<ItemStack> pedestalItems, ItemStack reagent){
         ItemStack[] items = {ItemsRegistry.spellParchment.getDefaultInstance()};
-        System.out.println("checking");
         List<ItemStack> stacks = Arrays.asList(items);
         if(EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT, reagent) == 0)
             return false;
-        System.out.println("check set");
+
         if(!EnchantingApparatusRecipe.areSameSet(stacks, pedestalItems))
             return false;
-        System.out.println("checking parchment");
+
         for(ItemStack stack : pedestalItems){
             if(stack.getItem() instanceof SpellParchment && SpellParchment.getSpellRecipe(stack) == null){
                 return false;
