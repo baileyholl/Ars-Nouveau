@@ -5,7 +5,7 @@ public class LibItemNames {
     public static final String BLANK_GLYPH = "blank_glyph";
 
     public static final String MANA_FIBER = "mana_fiber";
-
+    public static final String MANA_GEM = "mana_gem";
     public static final String MAGIC_CLAY = "magic_clay";
 
     public static final String MARVELOUS_CLAY = "marvelous_clay";

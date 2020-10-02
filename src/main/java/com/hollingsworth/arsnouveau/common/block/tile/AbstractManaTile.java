@@ -48,7 +48,6 @@ public abstract class AbstractManaTile extends AnimatedTile  implements IManaTil
         handleUpdateTag(pkt.getNbtCompound());
     }
 
-
     @Override
     public int setMana(int mana) {
         this.mana = mana;

@@ -41,7 +41,7 @@ public class ItemsRegistry {
 
     @ObjectHolder(LibItemNames.ARCANE_BRICK) public static ModItem arcaneBrick;
     @ObjectHolder(LibItemNames.MANA_BLOOM) public static ModItem manaBloom;
-
+    @ObjectHolder(LibItemNames.MANA_GEM) public static ModItem manaGem;
 
     @ObjectHolder(LibItemNames.MANA_FIBER) public static ModItem manaFiber;
     @ObjectHolder(LibItemNames.BLAZE_FIBER) public static ModItem blazeFiber;
@@ -94,6 +94,7 @@ public class ItemsRegistry {
                     new DominionWand(),
                     new CarbuncleCharm(),
                     new RunicChalk(),
+                    new ModItem(LibItemNames.MANA_GEM),
                     new ModItem(LibItemNames.BLANK_GLYPH),
                     new ModItem(LibItemNames.DULL_TRINKET),
                     new ModItem(LibItemNames.MARVELOUS_CLAY),

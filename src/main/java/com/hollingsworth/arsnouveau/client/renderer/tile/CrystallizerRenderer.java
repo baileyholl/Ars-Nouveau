@@ -22,8 +22,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class CrystallizerRenderer extends TileEntityRenderer<CrystallizerTile> {
-    public static final ResourceLocation texture = new ResourceLocation(ArsNouveau.MODID + ":textures/blocks/relay.png");
-    public final RelayModel model = new RelayModel();
+    public static final ResourceLocation texture = new ResourceLocation(ArsNouveau.MODID + ":textures/blocks/crystallizer_final.png");
+    public final CrystallizerModel model = new CrystallizerModel();
 
     public CrystallizerRenderer(TileEntityRendererDispatcher manager) {
         super(manager);
@@ -32,16 +32,22 @@ public class CrystallizerRenderer extends TileEntityRenderer<CrystallizerTile> {
     @Override
     public void render(CrystallizerTile crystallizerTile, float f, MatrixStack ms, IRenderTypeBuffer buffers, int light, int overlay) {
         World world = crystallizerTile.getWorld();
-        BlockPos pos  = crystallizerTile.getPos().add(0, 2, 0);
-        if(world.rand.nextInt(3) == 0){
-            for(int i =0; i< 100; i++){
-                Vec3d particlePos = new Vec3d(pos.add(0, 0.5, 0)).add(0.5, 0, 0.5);
+        BlockPos pos  = crystallizerTile.getPos();
+        IVertexBuilder buffer = buffers.getBuffer(model.getRenderType(texture));
+        ms.push();
+        ms.translate(0.5, -0.5, 0.5);
+        model.render(ms, buffer, light, overlay, 1, 1, 1, 1, 1);
+
+        if(world.rand.nextInt(20) == 0){
+            for(int i =0; i< 10; i++){
+                Vec3d particlePos = new Vec3d(pos).add(0.5, 0.5, 0.5);
                 particlePos = particlePos.add(ParticleUtil.pointInSphere(null));
-                world.addParticle(ParticleLineData.createData(new ParticleColor(120,80,5)),
+                world.addParticle(ParticleLineData.createData(new ParticleColor(255,25,180)),
                         particlePos.getX(), particlePos.getY(), particlePos.getZ(),
-                        pos.getX() + 0.5  , pos.getY()  , pos.getZ()+ 0.5);
+                        pos.getX() + 0.5  , pos.getY() +0.5 , pos.getZ()+ 0.5);
             }
         }
+        ms.pop();
     }
 
     public static class ISRender extends ItemStackTileEntityRenderer {

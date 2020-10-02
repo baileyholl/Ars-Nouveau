@@ -119,29 +119,6 @@ public class EntityProjectileSpell extends ArrowEntity {
 
         this.setPosition(x,y,z);
         if(world.isRemote && this.age > 1) {
-            for (int i = 0; i < 10; i++) {
-                double minRange = -0.1;
-                double maxRange = 0.1;
-                double d0 = getPosX() + ParticleUtil.inRange(minRange, maxRange);
-                double d1 = getPosY() + ParticleUtil.inRange(minRange, maxRange);
-                double d2 = getPosZ() + ParticleUtil.inRange(minRange, maxRange);
-
-//            world.addParticle(ParticleTypes.ENCHANT, d0, d1, d2, 0.0, 0.0, 0.0);
-//                world.addParticle(ParticleSource.createData(new ParticleColor(204,51,255)), d0, d1, d2, this.getMotion().x, this.getMotion().y, this.getMotion().z);
-//                world.addParticle(ParticleSource.createData(new ParticleColor(204,51,255)), prevPosX, prevPosY, prevPosZ, this.getMotion().x, this.getMotion().y, this.getMotion().z);
-
-            }
-//            double minRange = -0.1;
-//            double maxRange = 0.1;
-//            for (float j = 0.0F; j < 1.0F; j += 0.05F) {
-//                for (int i = 0; i < 2; ++i) {
-//                    world.addParticle(ParticleSource.createData(new ParticleColor(204, 51, 255)),
-//                            this.prevPosX + (this.getMotion().x * j) +ParticleUtil.inRange(minRange, maxRange),
-//                            this.prevPosY + (this.getMotion().y * j) +ParticleUtil.inRange(minRange, maxRange),
-//                            this.prevPosZ + (this.getMotion().z * j) +ParticleUtil.inRange(minRange, maxRange),
-//                            0, 0, 0);
-//                }
-//            }
             double deltaX = getPosX() - lastTickPosX;
             double deltaY = getPosY() - lastTickPosY;
             double deltaZ = getPosZ() - lastTickPosZ;
@@ -156,8 +133,6 @@ public class EntityProjectileSpell extends ArrowEntity {
 
                     world.addParticle(GlowParticleData.createData(new ParticleColor(255,25,180)), (float) (prevPosX + deltaX * coeff), (float) (prevPosY + deltaY * coeff), (float) (prevPosZ + deltaZ * coeff), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f));
                 }
-                //                ParticleUtil.spawnParticleGlow(getEntityWorld(), (float)(prevPosX+ deltaX *coeff), (float)(prevPosY+ deltaY *coeff), (float)(prevPosZ+ deltaZ *coeff), 0.0125f*(rand.nextFloat()-0.5f), 0.0125f*(rand.nextFloat()-0.5f), 0.0125f*(rand.nextFloat()-0.5f), 255, 64, 16, 2.0f, 12);
-                //                ParticleUtil.spawnParticleGlow(getEntityWorld(), (float)(prevPosX+ deltaX *coeff), (float)(prevPosY+ deltaY *coeff), (float)(prevPosZ+ deltaZ *coeff), 0.0125f*(rand.nextFloat()-0.5f), 0.0125f*(rand.nextFloat()-0.5f), 0.0125f*(rand.nextFloat()-0.5f), 255, 64, 16, 2.0f, 12);
             }
 
         }
