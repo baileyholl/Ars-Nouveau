@@ -32,8 +32,31 @@ public class EffectHarm extends AbstractEffect {
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         if(rayTraceResult instanceof EntityRayTraceResult){
+            //Networking.sendToNearby(caster.world, caster.getPosition(), new PacketBeam(new BlockPos(MathUtil.getEntityLookHit(caster, 8f)), caster.getPosition().add(0, caster.getEyeHeight() -0.2f, 0), 0));
+
             float damage = 5.0f + 5.0f * getAmplificationBonus(augments);
             Entity entity = ((EntityRayTraceResult) rayTraceResult).getEntity();
+
+
+//            for(LivingEntity living : SpellUtil.calcAOEEntities(entity, getBuffCount(augments, AugmentAOE.class))){
+//                if(living instanceof MobEntity){
+////                   Networking.sendToNearby(shooter.world, shooter.getPosition(), new PacketBeam(entity.getPositionVector(), living.getPositionVector(), 80));
+//                    EntityAOEProjectile aoeProjectile = new EntityAOEProjectile(world, entity.getPositionVec().add(0, 1,0), living.getPositionVec().add(0, 1,0));
+//                    aoeProjectile.setPosition(entity.getPosX(), entity.getPosY() + 1, entity.getPosZ());
+//                    world.addEntity(aoeProjectile);
+//                    MobEntity mob = (MobEntity) living;
+//                    if(mob.getHealth() <= damage && mob.getHealth() > 0 && hasBuff(augments, AugmentFortune.class)){
+//                        int looting = getBuffCount(augments, AugmentFortune.class);
+//                        LootContext.Builder lootContext = LootUtil.getLootingContext((ServerWorld)world,shooter, mob, looting, DamageSource.causePlayerDamage((PlayerEntity) shooter));
+//                        ResourceLocation lootTable = mob.getLootTableResourceLocation();
+//                        LootTable loottable = world.getServer().getLootTableManager().getLootTableFromLocation(lootTable);
+//                        List<ItemStack> items = loottable.generate(lootContext.build(LootParameterSets.GENERIC));
+//                        items.forEach(mob::entityDropItem);
+//
+//                    }
+//                }
+//                living.attackEntityFrom(DamageSource.causePlayerDamage((PlayerEntity) shooter), damage);
+//            }
             if(entity instanceof MobEntity){
                 MobEntity mob = (MobEntity) entity;
                 if(mob.getHealth() <= damage && mob.getHealth() > 0 && hasBuff(augments, AugmentFortune.class)){

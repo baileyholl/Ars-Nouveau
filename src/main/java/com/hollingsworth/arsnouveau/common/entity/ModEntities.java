@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
@@ -26,6 +25,7 @@ public class ModEntities {
     public static EntityType<EntityWhelp> ENTITY_WHELP_TYPE = null;
     public static EntityType<EntityCarbuncle> ENTITY_CARBUNCLE_TYPE = null;
     public static EntityType<EntityEarthElemental> ENTITY_EARTH_ELEMENTAL_TYPE = null;
+    public static EntityType<EntityFollowProjectile> ENTITY_FOLLOW_PROJ = null;
 
 
 
@@ -46,6 +46,12 @@ public class ModEntities {
                             .setTrackingRange(10)
                             .setShouldReceiveVelocityUpdates(true)
                             .setUpdateInterval(60).setCustomClientFactory(EntityProjectileSpell::new));
+            ENTITY_FOLLOW_PROJ = build(
+                    "follow_proj",
+                    EntityType.Builder.<EntityFollowProjectile>create(EntityFollowProjectile::new, EntityClassification.MISC)
+                            .size(0.5f, 0.5f)
+                            .setTrackingRange(10)
+                            .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityFollowProjectile::new));
             ENTITY_EVOKER_FANGS_ENTITY_TYPE = build(
                     "fangs",
                     EntityType.Builder.<EntityEvokerFangs>create(EntityEvokerFangs::new, EntityClassification.MISC)
@@ -64,6 +70,7 @@ public class ModEntities {
                     .size(1.5F, 1.6F).setTrackingRange(10));
             event.getRegistry().registerAll(
                     SPELL_PROJ,
+                    ENTITY_FOLLOW_PROJ,
                     ENTITY_EVOKER_FANGS_ENTITY_TYPE,
                     ALLY_VEX, ENTITY_WHELP_TYPE,
                     ENTITY_CARBUNCLE_TYPE,

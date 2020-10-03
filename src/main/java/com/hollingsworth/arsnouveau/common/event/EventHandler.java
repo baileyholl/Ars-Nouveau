@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.client.RenderEventQueue;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
@@ -18,6 +19,8 @@ import com.hollingsworth.arsnouveau.common.network.PacketReactiveSpell;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateMana;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -35,6 +38,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -213,6 +217,11 @@ public class EventHandler {
                 e.setAmount(damage);
             }
         }
+    }
+
+    @SubscribeEvent
+    static void renderWorldLastEvent(RenderWorldLastEvent evt) {
+        RenderEventQueue.getInstance().tick(evt, Minecraft.getInstance().player,Minecraft.getInstance().getRenderPartialTicks());
     }
 
     @SubscribeEvent

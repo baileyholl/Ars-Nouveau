@@ -1,8 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
+import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
@@ -41,7 +40,6 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
         ArrayList<BlockPos> stale = new ArrayList<>();
         int ratePer = getTransferRate() / fromList.size();
         for(BlockPos fromPos : fromList){
-            System.out.println("taking from" + fromPos);
             if(!(world.getTileEntity(fromPos) instanceof AbstractManaTile)){
                 stale.add(fromPos);
                 continue;
@@ -50,7 +48,8 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
             if(fromTile.getCurrentMana() >= ratePer && this.getCurrentMana() + ratePer <= this.getMaxMana()){
                 fromTile.removeMana(ratePer);
                 this.addMana(ratePer);
-                Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW,  pos.getX(), pos.getY(), pos.getZ(),fromPos.getX(), fromPos.getY(), fromPos.getZ(), 5));
+                EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, fromPos, pos);
+                world.addEntity(aoeProjectile);
             }
         }
         for(BlockPos s : stale)
@@ -72,7 +71,8 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
             if(this.getCurrentMana() >= ratePer && toTile.getCurrentMana() + ratePer <= toTile.getMaxMana()){
                 this.removeMana(ratePer);
                 toTile.addMana(ratePer);
-                Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW,  toPos.getX(), toPos.getY(), toPos.getZ(),pos.getX(), pos.getY(), pos.getZ(), 5));
+                EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world,  pos, toPos);
+                world.addEntity(aoeProjectile);
             }
         }
         for(BlockPos s : stale)

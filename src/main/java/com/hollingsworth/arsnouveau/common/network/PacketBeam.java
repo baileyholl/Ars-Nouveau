@@ -1,16 +1,9 @@
 package com.hollingsworth.arsnouveau.common.network;
 
-import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
-import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
-import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.client.particle.engine.ParticleEngine;
-import com.hollingsworth.arsnouveau.client.particle.engine.TimedBeam;
-import com.hollingsworth.arsnouveau.client.particle.engine.TimedHelix;
+import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -18,26 +11,30 @@ import java.util.function.Supplier;
 public class PacketBeam {
 
 
-    private final BlockPos toPos;
-    private final BlockPos fromPos;
-    private final int delay;
+    private final Vec3d toPos;
+    private final Vec3d fromPos;
+    private final int duration;
 
-    public PacketBeam(BlockPos from, BlockPos to, int delay) {
+    public PacketBeam(Vec3d from, Vec3d to, int duration) {
         this.fromPos = from;
         this.toPos = to;
-        this.delay = delay;
+        this.duration = duration;
     }
 
 
 
     public static PacketBeam decode(PacketBuffer buf) {
-        return new PacketBeam(buf.readBlockPos(), buf.readBlockPos(), buf.readInt());
+        return new PacketBeam(new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble()), new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble()), buf.readInt());
     }
 
     public static void encode(PacketBeam msg, PacketBuffer buf) {
-        buf.writeBlockPos(msg.fromPos);
-        buf.writeBlockPos(msg.toPos);
-        buf.writeInt(msg.delay);
+        buf.writeDouble(msg.fromPos.x);
+        buf.writeDouble(msg.fromPos.y);
+        buf.writeDouble(msg.fromPos.z);
+        buf.writeDouble(msg.toPos.x);
+        buf.writeDouble(msg.toPos.y);
+        buf.writeDouble(msg.toPos.z);
+        buf.writeInt(msg.duration);
     }
 
     public static class Handler {
@@ -50,15 +47,9 @@ public class PacketBeam {
                 // Use anon - lambda causes classloading issues
                 @Override
                 public void run() {
-                    Minecraft mc = Minecraft.getInstance();
-                    ClientWorld world = mc.world;
-                    BlockPos pos = message.fromPos;
-                    ParticleEngine.getInstance().addEffect(new TimedBeam(message.fromPos, message.toPos, message.delay, world));
-//                    for(int i =0; i< 5; i++){
-//                        world.addParticle(ParticleLineData.createData(new ParticleColor(255,25,155)),pos.getX() +0.5 + ParticleUtil.inRange(-0.5, 0.5)  , pos.getY() +0.5  + ParticleUtil.inRange(-0.5, 0.5) , pos.getZ()  +0.5+ ParticleUtil.inRange(-0.5, 0.5),
-//                                pos.getX() +0.5 , pos.getY()  +0.5 , pos.getZ() +0.5);
-//                    }
-
+                    Minecraft.getInstance().world.addEntity(new EntityFollowProjectile(Minecraft.getInstance().world,
+                            message.fromPos, message.toPos));
+//                    RenderEventQueue.getInstance().addEvent(new BeamEvent(message.fromPos, message.toPos, message.duration));
                 };
             });
             ctx.get().setPacketHandled(true);

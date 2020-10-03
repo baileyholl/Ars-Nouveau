@@ -5,16 +5,15 @@ import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class SpellUtil {
@@ -40,6 +39,10 @@ public class SpellUtil {
             }
         }
         return true;
+    }
+
+    public static List<LivingEntity> calcAOEEntities(Entity entity, int range){
+        return entity.getEntityWorld().getEntitiesWithinAABB(LivingEntity.class, new AxisAlignedBB(entity.getPosition()).grow(range));
     }
 
     public static ImmutableList<BlockPos> calcAOEBlocks(LivingEntity caster, BlockPos origin, BlockRayTraceResult mop, int aoeBonus) {

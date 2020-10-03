@@ -2,17 +2,13 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
-import com.hollingsworth.arsnouveau.common.block.ArcaneRelay;
-import com.hollingsworth.arsnouveau.common.network.PacketBeam;
+import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 
@@ -88,25 +84,22 @@ public class ArcaneRelayTile extends AbstractManaTile{
                 if(fromTile.getCurrentMana() >= this.getTransferRate() && this.getCurrentMana() + this.getTransferRate() <= this.getMaxMana()) {
                     fromTile.removeMana(this.getTransferRate());
                     this.addMana(this.getTransferRate());
-                   Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW,pos.getX(), pos.getY(), pos.getZ(),  fromPos.getX(), fromPos.getY(), fromPos.getZ(), 5));
-//                    Networking.sendToNearby(world, pos, new PacketBeam(fromPos,pos,  0));
-
+                    EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, fromPos, pos);
+                    world.addEntity(aoeProjectile);
                 }
-                }
+            }
         }
         if(!(world.getTileEntity(toPos) instanceof AbstractManaTile)){
             toPos = null;
             update();
-
             return;
         }
         AbstractManaTile toTile = (AbstractManaTile) this.world.getTileEntity(toPos);
         if(this.getCurrentMana() >= this.getTransferRate() && toTile.getCurrentMana() + this.getTransferRate() <= toTile.getMaxMana()){
             this.removeMana(this.getTransferRate());
             toTile.addMana(this.getTransferRate());
-            Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW,  toPos.getX(), toPos.getY(), toPos.getZ(),pos.getX(), pos.getY(), pos.getZ(), 5));
-//            Networking.sendToNearby(world, pos, new PacketBeam( pos,toPos, 0));
-
+            EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, pos, toPos);
+            world.addEntity(aoeProjectile);
         }
     }
 
