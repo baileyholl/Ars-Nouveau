@@ -9,12 +9,16 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcaneRelayTile;
 import com.hollingsworth.arsnouveau.common.block.tile.CrystallizerTile;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Vector3f;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -34,31 +38,54 @@ public class CrystallizerRenderer extends TileEntityRenderer<CrystallizerTile> {
         World world = crystallizerTile.getWorld();
         BlockPos pos  = crystallizerTile.getPos();
         IVertexBuilder buffer = buffers.getBuffer(model.getRenderType(texture));
+        double x = crystallizerTile.getPos().getX();
+        double y = crystallizerTile.getPos().getY();
+        double z = crystallizerTile.getPos().getZ();
         ms.push();
         ms.translate(0.5, -0.5, 0.5);
         model.render(ms, buffer, light, overlay, 1, 1, 1, 1, 1);
-
-        if(world.rand.nextInt(20) == 0){
-            for(int i =0; i< 10; i++){
+        boolean draining = crystallizerTile.draining;
+        int baseAge = draining ? 20 : 40;
+        int randBound = draining ? 3 : 6;
+        int numParticles = draining ? 2 : 1;
+        float scaleAge = draining ?(float) ParticleUtil.inRange(0.1, 0.2) : (float) ParticleUtil.inRange(0.05, 0.15);
+        if(world.rand.nextInt( randBound)  == 0){
+            for(int i =0; i< numParticles; i++){
                 Vec3d particlePos = new Vec3d(pos).add(0.5, 0.5, 0.5);
                 particlePos = particlePos.add(ParticleUtil.pointInSphere(null));
-                world.addParticle(ParticleLineData.createData(new ParticleColor(255,25,180)),
+                world.addParticle(ParticleLineData.createData(new ParticleColor(255,25,180) ,scaleAge, baseAge+world.rand.nextInt(20)) ,
                         particlePos.getX(), particlePos.getY(), particlePos.getZ(),
                         pos.getX() + 0.5  , pos.getY() +0.5 , pos.getZ()+ 0.5);
             }
         }
+
+        if(crystallizerTile.stack == null)
+            return;
+
+        if (crystallizerTile.entity == null || !ItemStack.areItemStacksEqual(crystallizerTile.entity.getItem(), crystallizerTile.stack)) {
+            crystallizerTile.entity = new ItemEntity(crystallizerTile.getWorld(), x ,y, z, crystallizerTile.stack);
+        }
+        crystallizerTile.entity.setPosition(x,y+1,z);
+        ItemEntity entityItem = crystallizerTile.entity;
+        ms.pop();
+        ms.push();
+        RenderSystem.enableLighting();
+        ms.scale(0.5f, 0.5f, 0.5f);
+        ms.translate(1D, 1f, 1D);
+        Minecraft.getInstance().getItemRenderer().renderItem(entityItem.getItem(), ItemCameraTransforms.TransformType.FIXED, 15728880, overlay, ms, buffers);
         ms.pop();
     }
 
     public static class ISRender extends ItemStackTileEntityRenderer {
-        public final RelayModel model = new RelayModel();
+        public final CrystallizerModel model = new CrystallizerModel();
 
         public ISRender(){ }
 
         @Override
         public void render(ItemStack p_228364_1_, MatrixStack ms, IRenderTypeBuffer buffers, int light, int overlay) {
             ms.push();
-            ms.translate(0.75, -0.65, 0.2);
+            ms.translate(0.75, -0.35, 0.2);
+            ms.scale(0.6f, 0.6f, 0.6f);
             IVertexBuilder buffer = buffers.getBuffer(model.getRenderType(texture));
             model.render(ms, buffer, light, overlay, 1, 1, 1, 1, 1);
             ms.pop();

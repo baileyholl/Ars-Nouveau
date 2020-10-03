@@ -15,14 +15,14 @@ import net.minecraftforge.registries.ObjectHolder;
 public class ModParticles {
     @ObjectHolder(ArsNouveau.MODID + ":" + GlowParticleData.NAME) public static ParticleType<ColorParticleTypeData> GLOW_TYPE;
 
-    @ObjectHolder(ArsNouveau.MODID + ":" + ParticleLineData.NAME) public static ParticleType<ColorParticleTypeData> LINE_TYPE;
+    @ObjectHolder(ArsNouveau.MODID + ":" + ParticleLineData.NAME) public static ParticleType<ColoredDynamicTypeData> LINE_TYPE;
 
     @SubscribeEvent
     public static void registerParticles(RegistryEvent.Register<ParticleType<?>> event) {
         System.out.println("Rendering particles");
         IForgeRegistry<ParticleType<?>> r = event.getRegistry();
         r.register( new ParticleType<ColorParticleTypeData>(false, ColorParticleTypeData.DESERIALIZER).setRegistryName(GlowParticleData.NAME));
-        r.register(new ParticleType<>(false, ColorParticleTypeData.DESERIALIZER).setRegistryName(ParticleLineData.NAME));
+        r.register(new ParticleType<>(false, ColoredDynamicTypeData.DESERIALIZER).setRegistryName(ParticleLineData.NAME));
 
     }
 

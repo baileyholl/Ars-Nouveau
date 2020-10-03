@@ -6,6 +6,8 @@ import com.hollingsworth.arsnouveau.common.block.*;
 import com.hollingsworth.arsnouveau.common.block.tile.*;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
@@ -111,7 +113,7 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.ARCANE_CORE) public static ArcaneCore ARCANE_CORE_BLOCK;
     @ObjectHolder(LibBlockNames.ARCANE_CORE) public static TileEntityType<ArcaneCoreTile> ARCANE_CORE_TILE;
 
-
+    @ObjectHolder(LibBlockNames.MANA_GEM) public static ModBlock MANA_GEM_BLOCK;
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
         @SubscribeEvent
@@ -131,6 +133,7 @@ public class BlockRegistry {
             blockRegistryEvent.getRegistry().register(new ArcanePedestal());
             blockRegistryEvent.getRegistry().register(new SummoningCrystal());
             blockRegistryEvent.getRegistry().register(new ModBlock(LibBlockNames.ARCANE_BRICKS));
+            blockRegistryEvent.getRegistry().register(new ModBlock(Block.Properties.create(Material.ROCK).sound(SoundType.STONE).hardnessAndResistance(2.0f, 6.0f).notSolid(), LibBlockNames.MANA_GEM));
             blockRegistryEvent.getRegistry().register(new ScribesBlock());
             blockRegistryEvent.getRegistry().register(new ArcaneRoad());
             blockRegistryEvent.getRegistry().register(new ArcaneRelay());
@@ -188,8 +191,9 @@ public class BlockRegistry {
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.FORGE_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.FORGE));
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.PORTAL_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.PORTAL));
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.ARCANE_RELAY_SPLITTER, ItemsRegistry.defaultItemProperties().setISTER(()-> RelaySplitterRenderer.ISRender::new)).setRegistryName(LibBlockNames.ARCANE_RELAY_SPLITTER));
-            itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.CRYSTALLIZER_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.CRYSTALLIZER));
+            itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.CRYSTALLIZER_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(()-> CrystallizerRenderer.ISRender::new)).setRegistryName(LibBlockNames.CRYSTALLIZER));
             itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.ARCANE_CORE_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(()-> ArcaneCoreRenderer.ISRender::new)).setRegistryName(LibBlockNames.ARCANE_CORE));
+            itemRegistryEvent.getRegistry().register(new BlockItem(BlockRegistry.MANA_GEM_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.MANA_GEM));
 
         }
     }

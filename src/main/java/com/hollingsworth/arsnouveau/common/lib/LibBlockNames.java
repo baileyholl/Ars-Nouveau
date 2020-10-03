@@ -17,4 +17,7 @@ public class LibBlockNames {
     public static final String PORTAL = "portal";
     public static final String CRYSTALLIZER = "crystallizer";
     public static final String ARCANE_CORE = "arcane_core";
+
+    public static final String MANA_GEM = "mana_gem";
+
 }
