@@ -15,5 +15,6 @@ public class ModDatagen {
         event.getGenerator().addProvider(new LangDatagen(event.getGenerator(), ArsNouveau.MODID, "en_us"));
         event.getGenerator().addProvider(new SpellDocProvider(event.getGenerator()));
         event.getGenerator().addProvider(new Recipes(event.getGenerator()));
+        event.getGenerator().addProvider(new BlockTagProvider(event.getGenerator()));
     }
 }

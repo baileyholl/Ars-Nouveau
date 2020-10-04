@@ -10,7 +10,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
@@ -33,11 +35,13 @@ public class ArsNouveau {
     public static ItemGroup itemGroup = new ItemGroup("ars_nouveau") {
         @Override
         public ItemStack createIcon() {
-            return ItemsRegistry.noviceSpellBook.getDefaultInstance();
+            return ItemsRegistry.archmageSpellBook.getDefaultInstance();
         }
     };
 
     public ArsNouveau(){
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SERVER_CONFIG);
+
         APIRegistry.registerSpells();
         MappingUtil.setup();
         // modLoading setup
@@ -46,6 +50,7 @@ public class ArsNouveau {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::sendImc);
         MinecraftForge.EVENT_BUS.register(this);
+
     }
 
     public void setup (final FMLCommonSetupEvent event){

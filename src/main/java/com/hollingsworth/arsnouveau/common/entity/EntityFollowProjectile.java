@@ -26,7 +26,7 @@ public class EntityFollowProjectile extends ArrowEntity {
 
 
     public EntityFollowProjectile(World worldIn, Vec3d from, Vec3d to) {
-        this(ModEntities.ENTITY_AOE_PROJ, worldIn);
+        this(ModEntities.ENTITY_FOLLOW_PROJ, worldIn);
         this.dataManager.set(EntityFollowProjectile.to, new BlockPos(to));
         this.dataManager.set(EntityFollowProjectile.from, new BlockPos(from));
 //        this.age = 0;
@@ -142,12 +142,12 @@ public class EntityFollowProjectile extends ArrowEntity {
     }
 
     public EntityFollowProjectile(FMLPlayMessages.SpawnEntity packet, World world){
-        super(ModEntities.ENTITY_AOE_PROJ, world);
+        super(ModEntities.ENTITY_FOLLOW_PROJ, world);
     }
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_AOE_PROJ;
+        return ModEntities.ENTITY_FOLLOW_PROJ;
     }
     @Override
     public boolean hasNoGravity() {

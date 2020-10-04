@@ -15,7 +15,7 @@ public class ModRenderers {
     public static void register(final FMLClientSetupEvent event) {
         RenderingRegistry.registerEntityRenderingHandler( ModEntities.SPELL_PROJ,
                 renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
-        RenderingRegistry.registerEntityRenderingHandler( ModEntities.ENTITY_AOE_PROJ,
+        RenderingRegistry.registerEntityRenderingHandler( ModEntities.ENTITY_FOLLOW_PROJ,
                 renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_EVOKER_FANGS_ENTITY_TYPE, RenderFangs::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ALLY_VEX, RenderAllyVex::new);
