@@ -26,7 +26,7 @@ public class ReactiveEnchantmentRecipe implements IEnchantingRecipe{
     public ReactiveEnchantmentRecipe(){ }
 
     public boolean isWriteSpell(List<ItemStack> pedestalItems, ItemStack reagent){
-        ItemStack[] items = {ItemsRegistry.spellParchment.getDefaultInstance()};
+        ItemStack[] items = {ItemsRegistry.spellParchment.getStack()};
         List<ItemStack> stacks = Arrays.asList(items);
         if(EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT, reagent) == 0)
             return false;
@@ -43,10 +43,10 @@ public class ReactiveEnchantmentRecipe implements IEnchantingRecipe{
     }
 
     public boolean isLevelOne(List<ItemStack> pedestalItems, ItemStack reagent){
-        ItemStack[] items = {ItemsRegistry.spellParchment.getDefaultInstance(),
-                ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentAmplifyID).getDefaultInstance(),
-                ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentAmplifyID).getDefaultInstance(),
-                ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentAmplifyID).getDefaultInstance()};
+        ItemStack[] items = {new ItemStack(ItemsRegistry.spellParchment),
+                new ItemStack( ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentAmplifyID)),
+                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentAmplifyID)),
+                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentAmplifyID))};
         List<ItemStack> stacks = Arrays.asList(items);
         if(EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT, reagent) != 0)
             return false;
@@ -61,14 +61,14 @@ public class ReactiveEnchantmentRecipe implements IEnchantingRecipe{
     }
 
     public boolean isLevelTwo(List<ItemStack> pedestalItems, ItemStack reagent){
-        ItemStack[] items = {Items.BLAZE_POWDER.getDefaultInstance(),
-                Items.BLAZE_POWDER.getDefaultInstance(),
-                Items.BLAZE_POWDER.getDefaultInstance(),
-                Items.BLAZE_POWDER.getDefaultInstance(),
-                Items.GOLD_BLOCK.getDefaultInstance(),
-                ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentExtendTimeID).getDefaultInstance(),
-                ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentAOEID).getDefaultInstance(),
-                ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentDampenID).getDefaultInstance()};
+        ItemStack[] items = {new ItemStack(Items.BLAZE_POWDER),
+                new ItemStack(Items.BLAZE_POWDER),
+                new ItemStack(Items.BLAZE_POWDER),
+                new ItemStack(Items.BLAZE_POWDER),
+                new ItemStack(Items.GOLD_BLOCK),
+                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentExtendTimeID)),
+                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentAOEID)),
+                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentDampenID))};
         List<ItemStack> stacks = Arrays.asList(items);
         if(EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT, reagent) != 1)
             return false;
@@ -78,14 +78,14 @@ public class ReactiveEnchantmentRecipe implements IEnchantingRecipe{
     }
 
     public boolean isLevelThree(List<ItemStack> pedestalItems, ItemStack reagent){
-        ItemStack[] items = {ItemsRegistry.mythicalClay.getDefaultInstance(),
-                ItemsRegistry.mythicalClay.getDefaultInstance(),
-                ItemsRegistry.mythicalClay.getDefaultInstance(),
-                ItemsRegistry.mythicalClay.getDefaultInstance(),
-                Items.ENDER_PEARL.getDefaultInstance(),
-                ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentPierceID).getDefaultInstance(),
-                ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentExtractID).getDefaultInstance(),
-                ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentFortuneID).getDefaultInstance()};
+        ItemStack[] items = {ItemsRegistry.mythicalClay.getStack(),
+                ItemsRegistry.mythicalClay.getStack(),
+                ItemsRegistry.mythicalClay.getStack(),
+                ItemsRegistry.mythicalClay.getStack(),
+                new ItemStack(Items.ENDER_PEARL),
+                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentPierceID)),
+                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentExtractID)),
+                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentFortuneID))};
         List<ItemStack> stacks = Arrays.asList(items);
         if(EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT, reagent) != 2)
             return false;
