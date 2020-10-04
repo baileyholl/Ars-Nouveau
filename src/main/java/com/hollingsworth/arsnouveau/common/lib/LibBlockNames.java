@@ -19,5 +19,6 @@ public class LibBlockNames {
     public static final String ARCANE_CORE = "arcane_core";
 
     public static final String MANA_GEM = "mana_gem";
+    public static final String SPELL_DISPENSER = "spell_dispenser";
 
 }

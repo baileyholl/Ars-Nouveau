@@ -30,6 +30,6 @@ public class AugmentAOE extends AbstractAugment {
 
     @Override
     protected String getBookDescription() {
-        return "Spells will affect a larger area around a targetted block.";
+        return "Spells will affect a larger area around a targeted block.";
     }
 }

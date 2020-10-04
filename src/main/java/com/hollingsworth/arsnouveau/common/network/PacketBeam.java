@@ -1,7 +1,8 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
-import net.minecraft.client.Minecraft;
+
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -47,7 +48,7 @@ public class PacketBeam {
                 // Use anon - lambda causes classloading issues
                 @Override
                 public void run() {
-                    Minecraft.getInstance().world.addEntity(new EntityFollowProjectile(Minecraft.getInstance().world,
+                    ArsNouveau.proxy.getMinecraft().world.addEntity(new EntityFollowProjectile(ArsNouveau.proxy.getMinecraft().world,
                             message.fromPos, message.toPos));
 //                    RenderEventQueue.getInstance().addEvent(new BeamEvent(message.fromPos, message.toPos, message.duration));
                 };

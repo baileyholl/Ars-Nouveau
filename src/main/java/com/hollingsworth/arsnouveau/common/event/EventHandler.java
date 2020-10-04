@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.client.RenderEventQueue;
+//import com.hollingsworth.arsnouveau.api.client.RenderEventQueue;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
@@ -19,8 +19,7 @@ import com.hollingsworth.arsnouveau.common.network.PacketReactiveSpell;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateMana;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
+
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -219,10 +218,10 @@ public class EventHandler {
         }
     }
 
-    @SubscribeEvent
-    static void renderWorldLastEvent(RenderWorldLastEvent evt) {
-        RenderEventQueue.getInstance().tick(evt, Minecraft.getInstance().player,Minecraft.getInstance().getRenderPartialTicks());
-    }
+//    @SubscribeEvent
+//    static void renderWorldLastEvent(RenderWorldLastEvent evt) {
+//        RenderEventQueue.getInstance().tick(evt, Minecraft.getInstance().player,Minecraft.getInstance().getRenderPartialTicks());
+//    }
 
     @SubscribeEvent
     public static void spellCast(SpellCastEvent e){ }
