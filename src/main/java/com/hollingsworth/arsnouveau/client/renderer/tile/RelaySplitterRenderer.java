@@ -3,10 +3,8 @@ package com.hollingsworth.arsnouveau.client.renderer.tile;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcaneRelaySplitterTile;
-import com.hollingsworth.arsnouveau.common.block.tile.ArcaneRelayTile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Vector3f;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
@@ -31,18 +29,15 @@ public class RelaySplitterRenderer extends TileEntityRenderer<ArcaneRelaySplitte
         float angle1 = 0;
 
         ms.rotate(Vector3f.YP.rotationDegrees(angle1));
-//        float fract = Math.max(0.1F, 1F - (bellows == null ? 0 : bellows.movePos + bellows.moving * f + 0.1F));
         IVertexBuilder buffer = buffers.getBuffer(model.getRenderType(texture));
         model.render(ms, buffer, light, overlay, 1, 1, 1, 1, 1);
-        float lvt_8_2_ = 1.3F;
+
         int time = (int) (ClientInfo.ticksInGame + f);
         float angle = (time/10.0f) % 360;
-
         float outerAngle = (time/20.0f) % 360;
-//		ring_outer.rotateAngleZ =  MathHelper.cos(angle) *3.1415927F * 2;
+
         model.ring_outer.rotateAngleX = outerAngle;
         model.ring_outer.rotateAngleZ = outerAngle;
-
         model.ring_inner.rotateAngleY = angle;
         model.ring_inner.rotateAngleX = angle;
         model.center.rotateAngleX = -angle;
@@ -51,17 +46,15 @@ public class RelaySplitterRenderer extends TileEntityRenderer<ArcaneRelaySplitte
     }
 
     @Override
-    public boolean isGlobalRenderer(ArcaneRelaySplitterTile p_188185_1_) {
+    public boolean isGlobalRenderer(ArcaneRelaySplitterTile arcaneRelaySplitterTile) {
         return false;
     }
 
     public static class ISRender extends ItemStackTileEntityRenderer{
         public final RelaySplitterModel model = new RelaySplitterModel();
 
-        public ISRender(){ }
-
         @Override
-        public void render(ItemStack p_228364_1_, MatrixStack ms, IRenderTypeBuffer buffers, int light, int overlay) {
+        public void render(ItemStack itemStack, MatrixStack ms, IRenderTypeBuffer buffers, int light, int overlay) {
             ms.push();
             ms.translate(0.75, -0.65, 0.2);
             IVertexBuilder buffer = buffers.getBuffer(model.getRenderType(texture));

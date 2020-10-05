@@ -35,6 +35,7 @@ public class EnchantingApparatusTile extends AnimatedTile {
         counter = 1;
     }
 
+
     @Override
     public void tick() {
 
@@ -45,50 +46,51 @@ public class EnchantingApparatusTile extends AnimatedTile {
 
         }
 
-        if(counter > craftingLength) {
-            if(!world.isRemote) {
-                counter = 1;
-                if (this.isCrafting) {
-                    IEnchantingRecipe recipe = this.getRecipe();
-                    List<ItemStack> pedestalItems = getPedestalItems();
-                    if (recipe != null) {
-                        pedestalItems.forEach(i -> i = null);
-                        this.catalystItem = recipe.getResult(pedestalItems, this.catalystItem, this);
-                        BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
-                            if (world.getTileEntity(blockPos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack != null) {
-                                if (((ArcanePedestalTile) world.getTileEntity(blockPos)).stack.getItem() == ItemsRegistry.bucketOfMana) {
-                                    ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack = new ItemStack(Items.BUCKET);
-                                } else {
-                                    ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack = null;
-                                }
+        if(counter > craftingLength && !world.isRemote) {
+            counter = 1;
 
-                                BlockState state = world.getBlockState(blockPos);
-                                world.notifyBlockUpdate(blockPos, state, state, 3);
-                            }
-                        });
-                    }
+            if (this.isCrafting) {
+                IEnchantingRecipe recipe = this.getRecipe();
+                List<ItemStack> pedestalItems = getPedestalItems();
+                if (recipe != null) {
+                    pedestalItems.forEach(i -> i = null);
+                    this.catalystItem = recipe.getResult(pedestalItems, this.catalystItem, this);
+                    clearItems();
+                }
 
-                    this.isCrafting = false;
-                }
+                this.isCrafting = false;
             }
-        }else if(world.isRemote && counter >= craftingLength - 1){
-            if(world.isRemote){
-                for(int i =0; i < 10; i++){
-                    double d0 = getPos().getX() +0.5; //+ world.rand.nextFloat();
-                    double d1 = getPos().getY() +1.2;//+ world.rand.nextFloat() ;
-                    double d2 = getPos().getZ() +.5 ; //+ world.rand.nextFloat();
-                    world.addParticle(ParticleTypes.END_ROD, d0, d1, d2, (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3);
-                }
-            }
-        }
-        if(!world.isRemote)
             updateBlock();
+        }else if(world.isRemote && counter >= craftingLength - 1){
+            spawnPoofParticles();
+        }
     }
+
+    public void spawnPoofParticles(){
+        for(int i =0; i < 10; i++){
+            double d0 = getPos().getX() +0.5;
+            double d1 = getPos().getY() +1.2;
+            double d2 = getPos().getZ() +.5 ;
+            world.addParticle(ParticleTypes.END_ROD, d0, d1, d2, (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3);
+        }
+    }
+
+    public void clearItems(){
+        BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
+            if (world.getTileEntity(blockPos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack != null) {
+                ArcanePedestalTile tile = ((ArcanePedestalTile) world.getTileEntity(blockPos));
+                tile.stack = tile.stack.getItem() == ItemsRegistry.bucketOfMana ? new ItemStack(Items.BUCKET) : ItemStack.EMPTY;
+                BlockState state = world.getBlockState(blockPos);
+                world.notifyBlockUpdate(blockPos, state, state, 3);
+            }
+        });
+    }
+
     // Used for rendering on the client
     public List<BlockPos> pedestalList(){
         ArrayList<BlockPos> posList = new ArrayList<>();
         BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
-            if(world.getTileEntity(blockPos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack != null) {
+            if(world.getTileEntity(blockPos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack != null &&  !((ArcanePedestalTile) world.getTileEntity(blockPos)).stack.isEmpty()) {
                 posList.add(blockPos.toImmutable());
             }
         });
@@ -98,7 +100,7 @@ public class EnchantingApparatusTile extends AnimatedTile {
     public List<ItemStack> getPedestalItems(){
         ArrayList<ItemStack> pedestalItems = new ArrayList<>();
         BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
-            if(world.getTileEntity(blockPos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack != null) {
+            if(world.getTileEntity(blockPos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack != null && !((ArcanePedestalTile) world.getTileEntity(blockPos)).stack.isEmpty()) {
                 pedestalItems.add(((ArcanePedestalTile) world.getTileEntity(blockPos)).stack);
             }
         });
@@ -107,8 +109,7 @@ public class EnchantingApparatusTile extends AnimatedTile {
 
     public IEnchantingRecipe getRecipe(){
         List<ItemStack> pedestalItems = getPedestalItems();
-        IEnchantingRecipe resultRecipe = ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes().stream().filter(r-> r.isMatch(pedestalItems, catalystItem, this)).findFirst().orElse(null);
-        return resultRecipe;
+        return ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes().stream().filter(r-> r.isMatch(pedestalItems, catalystItem, this)).findFirst().orElse(null);
     }
 
 
@@ -118,7 +119,7 @@ public class EnchantingApparatusTile extends AnimatedTile {
             return;
         if(this.getRecipe() != null)
             this.isCrafting = true;
-//        this.catalystItem = resultRecipe.result;
+
         updateBlock();
     }
 

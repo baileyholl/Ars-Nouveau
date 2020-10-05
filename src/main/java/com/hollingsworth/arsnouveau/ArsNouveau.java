@@ -32,7 +32,7 @@ public class ArsNouveau {
     public static Logger logger;
 
 
-    public static ItemGroup itemGroup = new ItemGroup("ars_nouveau") {
+    public static ItemGroup itemGroup = new ItemGroup(MODID) {
         @Override
         public ItemStack createIcon() {
             return ItemsRegistry.archmageSpellBook.getDefaultInstance();

@@ -12,6 +12,7 @@ import net.minecraft.item.Item;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public abstract class AbstractSpellPart implements ISpellTier, Comparable<AbstractSpellPart> {
 
@@ -59,11 +60,11 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
 
 
 
-    public int getBuffCount(List<AbstractAugment> augments, Class spellClass){
+    public int getBuffCount(List<AbstractAugment> augments, Class<? extends AbstractSpellPart> spellClass){
         return (int) augments.stream().filter(spellClass::isInstance).count();
     }
 
-    public boolean hasBuff(List<AbstractAugment> augments, Class spellClass){
+    public boolean hasBuff(List<AbstractAugment> augments, Class<? extends AbstractSpellPart> spellClass){
         return getBuffCount(augments, spellClass) > 0;
     }
 
@@ -123,5 +124,19 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
 
     protected String getBookDescription(){
         return "";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AbstractSpellPart that = (AbstractSpellPart) o;
+        return getTag().equals(that.getTag()) &&
+                getName().equals(that.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getTag(), getName());
     }
 }

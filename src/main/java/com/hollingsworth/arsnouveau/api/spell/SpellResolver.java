@@ -23,6 +23,7 @@ public class SpellResolver {
     public AbstractCastMethod castType;
     public List<AbstractSpellPart> spell_recipe;
     public boolean silent;
+
     public SpellResolver(AbstractCastMethod cast, List<AbstractSpellPart> spell_recipe){
         this.castType = cast;
         this.spell_recipe = spell_recipe;
