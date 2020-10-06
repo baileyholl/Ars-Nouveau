@@ -10,20 +10,17 @@ import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtract;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.util.FakePlayerFactory;
-import net.minecraftforge.event.ForgeEventFactory;
-
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -40,20 +37,25 @@ public class EffectBreak extends AbstractEffect {
         return 10;
     }
 
+    public float getHardness(List<AbstractAugment> augments){
+        float maxHardness = 5.0f + 25 * getAmplificationBonus(augments);
+        int buff = getAmplificationBonus(augments);
+        if(buff == -1){
+            maxHardness = 2.5f;
+        }else if(buff == -2){
+            maxHardness = 1.0f;
+        }else if(buff < -2){
+            maxHardness = 0.5f;
+        }
+        return maxHardness;
+    }
+
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         if(!world.isRemote && rayTraceResult instanceof BlockRayTraceResult){
             BlockPos pos = new BlockPos(((BlockRayTraceResult) rayTraceResult).getPos());
             BlockState state;
-            float maxHardness = 5.0f + 25 * getAmplificationBonus(augments);
-            int buff = getAmplificationBonus(augments);
-            if(buff == -1){
-                maxHardness = 2.5f;
-            }else if(buff == -2){
-                maxHardness = 1.0f;
-            }else if(buff < -2){
-                maxHardness = 0.5f;
-            }
+            float maxHardness = getHardness(augments);
 
             int aoeBuff = getBuffCount(augments, AugmentAOE.class);
             ImmutableList<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
@@ -65,12 +67,15 @@ public class EffectBreak extends AbstractEffect {
                 }
 
                 if (hasBuff(augments, AugmentExtract.class)) {
+                    ItemStack stack = LootUtil.getDefaultFakeTool();
+                    stack.addEnchantment(Enchantments.SILK_TOUCH, 1);
+                    Block.spawnDrops(world.getBlockState(pos1), world, pos1, world.getTileEntity(pos1), shooter,stack);
                     destroyBlockSafely(world, pos1, false, shooter);
-                    state.getDrops(LootUtil.getSilkContext((ServerWorld) world, pos1,  shooter)).forEach(i -> world.addEntity(new ItemEntity(world,pos.getX(), pos.getY(), pos.getZ(), i )));
-
                 } else if (hasBuff(augments, AugmentFortune.class)) {
+                    ItemStack stack = LootUtil.getDefaultFakeTool();
+                    stack.addEnchantment(Enchantments.FORTUNE, getBuffCount(augments, AugmentFortune.class));
+                    Block.spawnDrops(world.getBlockState(pos1), world, pos1, world.getTileEntity(pos1), shooter,stack);
                     destroyBlockSafely(world, pos1, false, shooter);
-                    state.getDrops(LootUtil.getFortuneContext((ServerWorld) world, pos1, shooter, getBuffCount(augments, AugmentFortune.class))).forEach(i -> world.addEntity(new ItemEntity(world,pos.getX(), pos.getY(), pos.getZ(),i )));;
                 } else {
                     destroyBlockSafely(world, pos1, true, shooter);
                 }

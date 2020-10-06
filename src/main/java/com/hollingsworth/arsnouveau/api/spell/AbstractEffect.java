@@ -1,18 +1,13 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public abstract class AbstractEffect extends AbstractSpellPart {
 
@@ -34,14 +29,4 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         entity.addPotionEffect(new EffectInstance(potionEffect, duration * 20, amp));
     }
 
-    public Map<Class, Integer> getAllowedAugments(){
-        return new HashMap<>();
-    }
-
-    public Map<Class, Integer> buildAmpMap(){
-        Map<Class, Integer> map = new HashMap();
-        map.put(AugmentDampen.class, 10);
-        map.put(AugmentAmplify.class, 10);
-        return map;
-    }
 }
