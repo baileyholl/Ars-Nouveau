@@ -4,11 +4,13 @@ import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.StringTextComponent;
@@ -22,12 +24,17 @@ import static com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil.getAugments;
 public class SpellResolver {
     protected AbstractCastMethod castType;
     public List<AbstractSpellPart> spell_recipe;
-    
+    public boolean silent;
     public SpellResolver(AbstractCastMethod cast, List<AbstractSpellPart> spell_recipe){
         this.castType = cast;
         this.spell_recipe = spell_recipe;
         if(castType != null)
             this.castType.resolver = this;
+    }
+
+    public SpellResolver(List<AbstractSpellPart> spell_recipe, boolean silent){
+        this(spell_recipe);
+        this.silent = silent;
     }
 
 
@@ -50,13 +57,14 @@ public class SpellResolver {
 
     public boolean canCast(LivingEntity entity){
         if(spell_recipe == null || spell_recipe.isEmpty() || castType == null) {
-            entity.sendMessage(new StringTextComponent("Invalid Spell."), null);
+            if(!silent)
+                entity.sendMessage(new StringTextComponent("Invalid Spell."), Util.DUMMY_UUID);
             return false;
         }
         Set<AbstractSpellPart> testSet = new HashSet<>(spell_recipe.size());
         for(AbstractSpellPart part : spell_recipe){
             if(part instanceof AbstractEffect && !testSet.add(part)) {
-                if(!entity.getEntityWorld().isRemote)
+                if(!entity.getEntityWorld().isRemote && !silent)
                     entity.sendMessage(new StringTextComponent("No duplicate effects are allowed. Use Augments!"), null);
                 return false;
             }
@@ -70,7 +78,7 @@ public class SpellResolver {
         AtomicBoolean canCast = new AtomicBoolean(false);
         ManaCapability.getMana(entity).ifPresent(mana -> {
             canCast.set(totalCost <= mana.getCurrentMana() || (entity instanceof PlayerEntity &&  ((PlayerEntity) entity).isCreative()));
-            if(!canCast.get() && !entity.getEntityWorld().isRemote)
+            if(!canCast.get() && !entity.getEntityWorld().isRemote && !silent)
                 entity.sendMessage(new StringTextComponent("Not enough mana."), null);
         });
         return canCast.get();

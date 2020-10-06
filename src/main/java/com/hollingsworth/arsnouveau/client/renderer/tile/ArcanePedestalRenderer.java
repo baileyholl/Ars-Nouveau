@@ -18,7 +18,7 @@ public class ArcanePedestalRenderer extends TileEntityRenderer<ArcanePedestalTil
         super(p_i226006_1_);
     }
 
-    public void renderFloatingItem(ArcanePedestalTile tileEntityIn, ItemEntity entityItem, double x, double y, double z, MatrixStack stack, IRenderTypeBuffer iRenderTypeBuffer){
+    public void renderFloatingItem(ArcanePedestalTile tileEntityIn, ItemEntity entityItem, double x, double y, double z, MatrixStack stack, IRenderTypeBuffer iRenderTypeBuffer, float partialFrames){
         stack.push();
 
         RenderSystem.enableLighting();
@@ -29,7 +29,7 @@ public class ArcanePedestalRenderer extends TileEntityRenderer<ArcanePedestalTil
         entityItem.setRotationYawHead(tileEntityIn.frames);
         //Prevent 'jump' in the bobbing
         //Bobbing is calculated as the age plus the yaw
-        ObfuscationReflectionHelper.setPrivateValue(ItemEntity.class, entityItem, (int) (800f - tileEntityIn.frames/4f), MappingUtil.getItemEntityAge());
+        ObfuscationReflectionHelper.setPrivateValue(ItemEntity.class, entityItem, (int) (800f - (tileEntityIn.frames + partialFrames)/2f), MappingUtil.getItemEntityAge());
 
         Minecraft.getInstance().getRenderManager().renderEntityStatic(entityItem, 0.5,1,0.5, entityItem.rotationYaw, 2.0f,stack, iRenderTypeBuffer,15728880);
 
@@ -42,11 +42,10 @@ public class ArcanePedestalRenderer extends TileEntityRenderer<ArcanePedestalTil
 
     @Override
     public void render(ArcanePedestalTile tileEntityIn, float v, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int i1) {
-        //  ItemStack dirt = new ItemStack(Items.DIRT);
-        //     System.out.println("rendering");
         double x = tileEntityIn.getPos().getX();
         double y = tileEntityIn.getPos().getY();
         double z = tileEntityIn.getPos().getZ();
+
         if(tileEntityIn.stack == null)
             return;
 
@@ -54,14 +53,10 @@ public class ArcanePedestalRenderer extends TileEntityRenderer<ArcanePedestalTil
             tileEntityIn.entity = new ItemEntity(tileEntityIn.getWorld(), x, y, z, tileEntityIn.stack);
         }
 
-
         ItemEntity entityItem = tileEntityIn.entity;
-        // entityItem.getSize()
         x = x + .5;
         y = y + 0.9;
         z = z +.5;
-
-        renderFloatingItem(tileEntityIn, entityItem, x, y , z, matrixStack, iRenderTypeBuffer);
-
+        renderFloatingItem(tileEntityIn, entityItem, x, y , z, matrixStack, iRenderTypeBuffer, v);
     }
 }

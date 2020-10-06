@@ -3,14 +3,19 @@ package com.hollingsworth.arsnouveau;
 import com.hollingsworth.arsnouveau.api.util.MappingUtil;
 import com.hollingsworth.arsnouveau.client.ClientHandler;
 import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.world.FeatureGen;
 import com.hollingsworth.arsnouveau.setup.*;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.WorldGenRegistries;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.OreFeatureConfig;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
@@ -30,18 +35,19 @@ public class ArsNouveau {
     public static Logger logger;
 
 
-    public static ItemGroup itemGroup = new ItemGroup("ars_nouveau") {
+    public static ItemGroup itemGroup = new ItemGroup(MODID) {
         @Override
         public ItemStack createIcon() {
-            return ItemsRegistry.noviceSpellBook.getDefaultInstance();
+            return ItemsRegistry.archmageSpellBook.getDefaultInstance();
         }
     };
 
     public ArsNouveau(){
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SERVER_CONFIG);
         APIRegistry.registerSpells();
         MappingUtil.setup();
         // modLoading setup
-        System.out.println("Hiya");
+
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         // Register the doClientStuff method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
@@ -51,7 +57,9 @@ public class ArsNouveau {
 
     public void setup (final FMLCommonSetupEvent event){
         APIRegistry.registerApparatusRecipes();
-        FeatureGen.setupOreGen();
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.ARCANE_ORE.getRegistryName(),
+                Feature.ORE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.field_241882_a,
+                        BlockRegistry.ARCANE_ORE.getDefaultState(), 9)).func_242733_d(64).func_242728_a().func_242731_b(20));
         //Pre-init code
         proxy.init();
         Networking.registerMessages();

@@ -26,7 +26,7 @@ public abstract class ManaBlock extends ModBlock{
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(!worldIn.isRemote){
+        if(!worldIn.isRemote && handIn == Hand.MAIN_HAND){
             if(worldIn.getTileEntity(pos) instanceof AbstractManaTile){
                 AbstractManaTile tile = (AbstractManaTile) worldIn.getTileEntity(pos);
 
@@ -39,10 +39,9 @@ public abstract class ManaBlock extends ModBlock{
                     }
                     return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
                 }else if(player.getHeldItem(handIn).getItem() instanceof BucketItem && ((BucketItem)player.getHeldItem(handIn).getItem()).getFluid() == Fluids.EMPTY){
-                    if(tile.getCurrentMana() >= 1000){
+                    if(tile.getCurrentMana() >= 1000 && player.addItemStackToInventory(new ItemStack(ItemsRegistry.bucketOfMana))){
                         tile.removeMana(1000);
                         player.getHeldItem(handIn).shrink(1);
-                        player.addItemStackToInventory(new ItemStack(ItemsRegistry.bucketOfMana));
                     }
                 }
             }

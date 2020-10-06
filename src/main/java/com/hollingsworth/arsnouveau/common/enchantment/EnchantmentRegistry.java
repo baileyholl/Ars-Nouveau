@@ -16,6 +16,7 @@ public class EnchantmentRegistry {
 
     public static ManaRegenEnchantment MANA_REGEN_ENCHANTMENT = Null();
     public static ManaBoost MANA_BOOST_ENCHANTMENT = Null();
+    public static ReactiveEnchantment REACTIVE_ENCHANTMENT = Null();
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
 
@@ -23,9 +24,11 @@ public class EnchantmentRegistry {
         public static void registerEnchants(final RegistryEvent.Register<Enchantment> event) {
             MANA_REGEN_ENCHANTMENT = new ManaRegenEnchantment();
             MANA_BOOST_ENCHANTMENT = new ManaBoost();
+            REACTIVE_ENCHANTMENT = new ReactiveEnchantment();
             final IForgeRegistry<Enchantment> registry = event.getRegistry();
             registry.register(MANA_REGEN_ENCHANTMENT);
             registry.register(MANA_BOOST_ENCHANTMENT);
+            registry.register(REACTIVE_ENCHANTMENT);
         }
     }
 }

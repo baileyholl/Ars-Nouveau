@@ -16,14 +16,9 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
 
     @Override
     protected void registerModels() {
-        //getBuilder("testitem").parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", mcLoc("block/stone"));
-        getBuilder("glyph").texture("layer0",itemTexture(ItemsRegistry.noviceSpellBook));
-        //System.out.println(itemTexture(ItemsRegistry.spellBook));
 
-//        ArsNouveauAPI.getInstance().getSpell_map().values().forEach(p ->{
-//            System.out.println(spellTexture(p));
-//            getBuilder("glyph_"+p.tag.toLowerCase()).texture("layer0",spellTexture(p));
-//        });
+        getBuilder("glyph").texture("layer0",itemTexture(ItemsRegistry.noviceSpellBook));
+
         ItemsRegistry.RegistrationHandler.ITEMS.forEach(i ->{
             if(i instanceof Glyph){
                 getBuilder("glyph_" + ((Glyph) i).spellPart.getTag()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", spellTexture(i));

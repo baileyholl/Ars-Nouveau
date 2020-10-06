@@ -17,15 +17,13 @@ public class ModEntities {
 
 
     public static EntityType<EntityProjectileSpell> SPELL_PROJ = null;
-
-
     public static EntityType<EntityAllyVex> ALLY_VEX = null;
-
-
     public static EntityType<EntityEvokerFangs> ENTITY_EVOKER_FANGS_ENTITY_TYPE = null;
-
     public static EntityType<EntityWhelp> ENTITY_WHELP_TYPE = null;
     public static EntityType<EntityCarbuncle> ENTITY_CARBUNCLE_TYPE = null;
+    public static EntityType<EntityFollowProjectile> ENTITY_FOLLOW_PROJ = null;
+
+
 
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
@@ -59,12 +57,18 @@ public class ModEntities {
             ENTITY_CARBUNCLE_TYPE = build("carbuncle", EntityType.Builder.<EntityCarbuncle>create(EntityCarbuncle::new, EntityClassification.CREATURE)
                     .size(0.6F, 0.63F).setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
-
+            ENTITY_FOLLOW_PROJ = build(
+                    "follow_proj",
+                    EntityType.Builder.<EntityFollowProjectile>create(EntityFollowProjectile::new, EntityClassification.MISC)
+                            .size(0.5f, 0.5f)
+                            .setTrackingRange(10)
+                            .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityFollowProjectile::new));
             event.getRegistry().registerAll(
                     SPELL_PROJ,
                     ENTITY_EVOKER_FANGS_ENTITY_TYPE,
                     ALLY_VEX, ENTITY_WHELP_TYPE,
-                    ENTITY_CARBUNCLE_TYPE
+                    ENTITY_CARBUNCLE_TYPE,
+                    ENTITY_FOLLOW_PROJ
             );
 
             GlobalEntityTypeAttributes.put(ENTITY_WHELP_TYPE, EntityWhelp.attributes().create());

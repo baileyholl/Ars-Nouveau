@@ -58,6 +58,11 @@ public class Networking {
                 PacketBeam::encode,
                 PacketBeam::decode,
                 PacketBeam.Handler::handle);
+        INSTANCE.registerMessage(nextID(),
+                PacketReactiveSpell.class,
+                PacketReactiveSpell::toBytes,
+                PacketReactiveSpell::new,
+                PacketReactiveSpell::handle);
     }
 
     public static void sendToNearby(World world, BlockPos pos, Object toSend){

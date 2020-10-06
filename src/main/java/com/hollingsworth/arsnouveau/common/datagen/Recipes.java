@@ -135,6 +135,10 @@ public class Recipes extends RecipeProvider {
                     .patternLine("  y")
                     .patternLine(" x ")
                     .patternLine("x  ").key('x', Items.STICK).key('y', ItemsRegistry.arcaneBrick).build(consumer);
+            ShapedRecipeBuilder.shapedRecipe(BlockRegistry.ARCANE_CORE_BLOCK).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                    .patternLine("xxx")
+                    .patternLine("y y")
+                    .patternLine("xxx").key('y', Items.GOLD_INGOT).key('x', ItemsRegistry.arcaneBrick).build(consumer);
 
         }
     }

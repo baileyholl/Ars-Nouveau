@@ -193,15 +193,7 @@ public class GuiRadialMenu extends Screen {
                 adjusted = adjusted == 0 ? 10 : adjusted;
                 selectedItem = adjusted;
             }
-//                String name = "";
-//                for(AbstractSpellPart p : SpellBook.getRecipeFromTag(tag, adjusted)){
-//                    if(p instanceof AbstractCastMethod){
-//                        name = p.getTag().toUpperCase();
-//                        break;
-//                    }
-//                }
-//                renderTooltip("SLOT:" + name, mouseX, mouseY);
-//            }
+
         }
     }
 

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
@@ -9,7 +10,9 @@ import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtract;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.Item;
@@ -37,40 +40,45 @@ public class EffectBreak extends AbstractEffect {
         return 10;
     }
 
+    public float getHardness(List<AbstractAugment> augments){
+        float maxHardness = 5.0f + 25 * getAmplificationBonus(augments);
+        int buff = getAmplificationBonus(augments);
+        if(buff == -1){
+            maxHardness = 2.5f;
+        }else if(buff == -2){
+            maxHardness = 1.0f;
+        }else if(buff < -2){
+            maxHardness = 0.5f;
+        }
+        return maxHardness;
+    }
+
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         if(!world.isRemote && rayTraceResult instanceof BlockRayTraceResult){
             BlockPos pos = new BlockPos(((BlockRayTraceResult) rayTraceResult).getPos());
             BlockState state;
-            float maxHardness = 5.0f + 25 * getAmplificationBonus(augments);
-            int buff = getAmplificationBonus(augments);
-            if(buff == -1){
-                maxHardness = 2.5f;
-            }else if(buff == -2){
-                maxHardness = 1.0f;
-            }else if(buff < -2){
-                maxHardness = 0.5f;
-            }
+            float maxHardness = getHardness(augments);
 
             int aoeBuff = getBuffCount(augments, AugmentAOE.class);
             List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
             for(BlockPos pos1 : posList) {
                 state = world.getBlockState(pos1);
 
-                // Iron block or lower unpowered
                 if(!(state.getBlockHardness(world, pos1) <= maxHardness && state.getBlockHardness(world, pos1) >= 0)){
                     continue;
                 }
-                if(!BlockUtil.destroyRespectsClaim(shooter, world, pos1))
-                    return;
+
                 if (hasBuff(augments, AugmentExtract.class)) {
-                    List<ItemStack> list = state.getDrops(LootUtil.getSilkContext((ServerWorld) world, pos1,  shooter));
+                    ItemStack stack = LootUtil.getDefaultFakeTool();
+                    stack.addEnchantment(Enchantments.SILK_TOUCH, 1);
+                    Block.spawnDrops(world.getBlockState(pos1), world, pos1, world.getTileEntity(pos1), shooter,stack);
                     destroyBlockSafely(world, pos1, false, shooter);
-                    list.forEach(i -> world.addEntity(new ItemEntity(world,pos.getX(), pos.getY(), pos.getZ(), i )));
                 } else if (hasBuff(augments, AugmentFortune.class)) {
-                    List<ItemStack> drops = state.getDrops(LootUtil.getFortuneContext((ServerWorld) world, pos1, shooter, getBuffCount(augments, AugmentFortune.class)));
+                    ItemStack stack = LootUtil.getDefaultFakeTool();
+                    stack.addEnchantment(Enchantments.FORTUNE, getBuffCount(augments, AugmentFortune.class));
+                    Block.spawnDrops(world.getBlockState(pos1), world, pos1, world.getTileEntity(pos1), shooter,stack);
                     destroyBlockSafely(world, pos1, false, shooter);
-                    drops.forEach(i -> world.addEntity(new ItemEntity(world,pos.getX(), pos.getY(), pos.getZ(),i )));
                 } else {
                     destroyBlockSafely(world, pos1, true, shooter);
                 }

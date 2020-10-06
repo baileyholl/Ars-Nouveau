@@ -39,13 +39,6 @@ public class GlyphPressBlock extends ModBlock{
             GlyphPressTile tile = (GlyphPressTile) world.getTileEntity(pos);
             if(tile.isCrafting)
                 return ActionResultType.PASS;
-//
-//            if(player.isSneaking())
-//            {
-//                tile.craft();
-//
-//                return true;
-//            }
 
             if (tile.baseMaterial != null && player.getHeldItem(handIn).isEmpty()) {
                 ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.baseMaterial);
@@ -67,20 +60,28 @@ public class GlyphPressBlock extends ModBlock{
                     }
 
                     tile.reagentItem = player.inventory.decrStackSize(player.inventory.currentItem, 1);
-                    if(!tile.craft(player)) {
-                        if(player.inventory.addItemStackToInventory(tile.reagentItem)){
-                            tile.reagentItem = null;
-                        }
+                    if(!tile.craft(player) && player.inventory.addItemStackToInventory(tile.reagentItem)) {
+                        tile.reagentItem = null;
                     }
                 }
-                //    System.out.println("Set stack " +  tile.itemStack);
             }
-            // world.markBlocksDirtyVertical(pos.getX(), pos.getZ(), pos.getX(), pos.getZ());
-            //  world.markChunkDirty(pos, tile);
-            //    world.markAndNotifyBlock(pos, world.getChunkAt(pos), getDefaultState(), getDefaultState(), 2);
+
             world.notifyBlockUpdate(pos, state, state, 2);
         }
         return ActionResultType.SUCCESS;
+    }
+
+
+    @Override
+    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.onBlockHarvested(worldIn, pos, state, player);
+        if(worldIn.getTileEntity(pos) instanceof GlyphPressTile && ((GlyphPressTile) worldIn.getTileEntity(pos)).baseMaterial != null){
+            worldIn.addEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), ((GlyphPressTile) worldIn.getTileEntity(pos)).baseMaterial));
+            if(((GlyphPressTile) worldIn.getTileEntity(pos)).reagentItem != null){
+                worldIn.addEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), ((GlyphPressTile) worldIn.getTileEntity(pos)).reagentItem));
+            }
+
+        }
     }
 
     @Nullable

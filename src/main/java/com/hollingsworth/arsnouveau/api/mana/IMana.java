@@ -13,4 +13,16 @@ public interface IMana {
     int addMana(final int manaToAdd);
 
     int removeMana(final int manaToRemove);
+
+    default int getGlyphBonus(){
+        return 0;
+    }
+
+    default int getBookTier(){
+        return 0;
+    }
+
+    default void setGlyphBonus(int bonus){}
+
+    default void setBookTier(int tier){};
 }

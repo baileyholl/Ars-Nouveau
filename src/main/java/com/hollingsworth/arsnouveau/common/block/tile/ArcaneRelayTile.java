@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
@@ -65,7 +66,6 @@ public class ArcaneRelayTile extends AbstractManaTile{
     public void tick() {
         if(world.isRemote){
             return;
-//            System.out.println(this.fromPos);
         }
 
         if(world.getGameTime() % 20 != 0 || toPos == null)
@@ -83,8 +83,7 @@ public class ArcaneRelayTile extends AbstractManaTile{
                 if(fromTile.getCurrentMana() >= this.getTransferRate() && this.getCurrentMana() + this.getTransferRate() <= this.getMaxMana()){
                     fromTile.removeMana(this.getTransferRate());
                     this.addMana(this.getTransferRate());
-                    Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW,pos.getX(), pos.getY(), pos.getZ(),
-                            fromPos.getX(), fromPos.getY(), fromPos.getZ(), 5));
+                    spawnParticles(fromPos, pos);
                 }
             }
         }
@@ -98,8 +97,8 @@ public class ArcaneRelayTile extends AbstractManaTile{
         if(this.getCurrentMana() >= this.getTransferRate() && toTile.getCurrentMana() + this.getTransferRate() <= toTile.getMaxMana()){
             this.removeMana(this.getTransferRate());
             toTile.addMana(this.getTransferRate());
-            Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW,  toPos.getX(), toPos.getY(), toPos.getZ(),pos.getX(), pos.getY(), pos.getZ(), 5));
-        }
+            spawnParticles(pos, toPos);
+         }
     }
 
     @Override
@@ -111,6 +110,11 @@ public class ArcaneRelayTile extends AbstractManaTile{
             this.fromPos = NBTUtil.getBlockPos(tag, "from");
         }
         super.read(state, tag);
+    }
+
+    public void spawnParticles(BlockPos from, BlockPos to){
+        EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, from, to);
+        world.addEntity(aoeProjectile);
     }
 
     @Override

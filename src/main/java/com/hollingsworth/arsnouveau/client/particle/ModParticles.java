@@ -14,30 +14,23 @@ import net.minecraftforge.registries.ObjectHolder;
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModParticles {
     @ObjectHolder(ArsNouveau.MODID + ":" + GlowParticleData.NAME) public static ParticleType<ColorParticleTypeData> GLOW_TYPE;
-
+    @ObjectHolder(ArsNouveau.MODID + ":" + ParticleLineData.NAME) public static ParticleType<ColoredDynamicTypeData> LINE_TYPE;
     @SubscribeEvent
     public static void registerParticles(RegistryEvent.Register<ParticleType<?>> event) {
         System.out.println("Rendering particles");
         IForgeRegistry<ParticleType<?>> r = event.getRegistry();
+        r.register( new GlowParticleType().setRegistryName(GlowParticleData.NAME));
+        r.register( new LineParticleType().setRegistryName(ParticleLineData.NAME));
 
-//        r.register( new ParticleType<ColorParticleTypeData>(false, ColorParticleTypeData.DESERIALIZER).setRegistryName(ParticleSource.NAME));
-//        r.register( new ParticleType<ArcParticleTypeData>(false, ArcParticleTypeData.DESERIALIZER).setRegistryName(ParticleArc.NAME));
-
-          r.register( new GlowParticleType().setRegistryName(GlowParticleData.NAME));
-//        r.register( new ParticleType<ColorParticleTypeData>(false, ColorParticleTypeData.DESERIALIZER).setRegistryName(ParticleLineGlow.NAME));
-//        RegistryHelper.register(r, new ParticleType<ElementTypeParticleData>(false, ElementTypeParticleData.DESERIALIZER), ParticleSource.NAME);
-//        RegistryHelper.register(r, new ParticleType<ElementTypeParticleData>(false, ElementTypeParticleData.DESERIALIZER), ParticleElementFlow.NAME);
     }
 
     @SuppressWarnings("resource")
     @SubscribeEvent
     public static void registerFactories(ParticleFactoryRegisterEvent evt) {
         System.out.println("Rendering factories");
-//        Minecraft.getInstance().particles.registerFactory(ParticleSource.TYPE, ParticleSource.Factory::new);
-//        Minecraft.getInstance().particles.registerFactory(ParticleArc.TYPE, ParticleArc.Factory::new);
         Minecraft.getInstance().particles.registerFactory(GLOW_TYPE, GlowParticleData::new);
-//        Minecraft.getInstance().particles.registerFactory(ParticleLineGlow.TYPE, ParticleLineGlow.Factory::new);
-//        Minecraft.getInstance().particles.registerFactory(ParticleElementFlow.TYPE, ParticleElementFlow.Factory::new);
+        Minecraft.getInstance().particles.registerFactory(LINE_TYPE, ParticleLineData::new);
+
     }
 
 

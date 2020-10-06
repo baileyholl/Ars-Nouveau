@@ -5,12 +5,16 @@
     "pages": [
         {
             "type": "text",
-            "text": "The Enchanting Apparatus can create powerful baubles and devices by combining nearby items with mana provided by jars. To use the Enchanting Apparatus, place any number of Arcane Pedestals nearby with their items. Place your reagent item on the Enchanting Apparatus block, and interact with the block while sneaking to begin crafting.  "
+            "text": "ars_nouveau.page.enchanting_apparatus1"
         },
 		{
             "type":"crafting",
 			"recipe":"ars_nouveau:arcane_pedestal",
-			"recipe2":"ars_nouveau:enchanting_apparatus"
+			"recipe2":"ars_nouveau:arcane_core"
+		},
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:enchanting_apparatus"
 		}
     ]
 }

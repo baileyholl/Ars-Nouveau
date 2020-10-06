@@ -3,6 +3,8 @@ package com.hollingsworth.arsnouveau.setup;
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
+import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
+import com.hollingsworth.arsnouveau.api.enchanting_apparatus.ReactiveEnchantmentRecipe;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
@@ -54,6 +56,11 @@ public class APIRegistry {
         registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.amuletOfManaRegen, ItemsRegistry.dullTrinket, new Item[]{
                 Items.DIAMOND, Items.DIAMOND, Items.GOLD_INGOT, Items.GOLD_INGOT, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana
         }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
+
+        registerApparatusRecipe(new EnchantingApparatusRecipe(BlockRegistry.ARCANE_RELAY_SPLITTER.asItem(), BlockRegistry.ARCANE_RELAY.asItem(), new Item[]{
+                BlockRegistry.MANA_JAR.asItem(),BlockRegistry.MANA_JAR.asItem(), BlockRegistry.MANA_JAR.asItem(), Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.DIAMOND
+        }, ArsNouveauAPI.PatchouliCategories.automation.name()));
+        registerApparatusRecipe(new ReactiveEnchantmentRecipe());
 
     }
 
@@ -109,7 +116,7 @@ public class APIRegistry {
         addStartingSpell(ModConfig.EffectHarmID);
     }
 
-    public static void registerApparatusRecipe(EnchantingApparatusRecipe recipe){
+    public static void registerApparatusRecipe(IEnchantingRecipe recipe){
         System.out.println(recipe);
         ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes().add(recipe);
     }

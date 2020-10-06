@@ -50,7 +50,8 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
             if(fromTile.getCurrentMana() >= ratePer && this.getCurrentMana() + ratePer <= this.getMaxMana()){
                 fromTile.removeMana(ratePer);
                 this.addMana(ratePer);
-                Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW,  pos.getX(), pos.getY(), pos.getZ(),fromPos.getX(), fromPos.getY(), fromPos.getZ(), 5));
+                if(pos != null)
+                    spawnParticles(fromPos, pos);
             }
         }
         for(BlockPos s : stale)
@@ -72,7 +73,7 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
             if(this.getCurrentMana() >= ratePer && toTile.getCurrentMana() + ratePer <= toTile.getMaxMana()){
                 this.removeMana(ratePer);
                 toTile.addMana(ratePer);
-                Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW,  toPos.getX(), toPos.getY(), toPos.getZ(),pos.getX(), pos.getY(), pos.getZ(), 5));
+                spawnParticles(pos, toPos);
             }
         }
         for(BlockPos s : stale)

@@ -79,10 +79,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity {
         if(world.getGameTime() % 20 == 0 && world.rand.nextInt(3) == 0 && !this.dataManager.get(HOP)){
             manager.setAnimationSpeed(3f);
             idleController.setAnimation(new AnimationBuilder().addAnimation("idle"));
-            return true;
+
         }
-
-
         return true;
     }
     private <E extends Entity> boolean animationPredicate(AnimationTestEvent<E> event) {

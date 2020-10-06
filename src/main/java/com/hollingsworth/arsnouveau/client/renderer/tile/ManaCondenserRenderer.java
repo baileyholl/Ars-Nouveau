@@ -26,8 +26,8 @@ public class ManaCondenserRenderer extends TileEntityRenderer<ManaCondenserTile>
     @Override
     public void render(ManaCondenserTile manaCondenserTile, float v, MatrixStack ms, IRenderTypeBuffer buffers, int light, int overlay) {
         ms.push();
-        ms.translate(0.5F, 1.5F, 0.5F);
-        ms.scale(1F, -1F, -1F);
+        ms.translate(0.5F, 1.25F, 0.5F);
+        ms.scale(.75f, .75F, .75f);
         float angle = 0;
 
 //        ms.rotate(Vector3f.YP.rotationDegrees(angle));

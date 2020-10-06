@@ -1,11 +1,14 @@
 package com.hollingsworth.arsnouveau.api.util;
 
+import com.hollingsworth.arsnouveau.api.event.ManaRegenCalcEvent;
+import com.hollingsworth.arsnouveau.api.event.MaxManaCalcEvent;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.armor.MagicArmor;
 import com.hollingsworth.arsnouveau.common.block.tile.ManaJarTile;
+import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -16,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -63,6 +67,7 @@ public class ManaUtil {
             if(pos1[0] == null && world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= mana) {
                 ((ManaJarTile) world.getTileEntity(blockPos)).removeMana(mana);
                 pos1[0] = blockPos;
+                System.out.println("removed");
             }
         });
         return pos1[0];
@@ -92,17 +97,20 @@ public class ManaUtil {
                     max.addAndGet(((IManaEquipment) item).getMaxManaBoost());
             }
         });
-        if(e.getHeldItem(Hand.MAIN_HAND).getItem() instanceof SpellBook && e.getHeldItem(Hand.MAIN_HAND).hasTag()){
-            ArrayList<AbstractSpellPart> list = SpellBook.getUnlockedSpells(e.getHeldItem(Hand.MAIN_HAND).getTag());
-            int numUnlocks = list.stream().filter(p -> p instanceof AbstractAugment || p instanceof AbstractEffect).collect(Collectors.toList()).size() - 3;
-            max.addAndGet(numUnlocks * 15);
-            max.addAndGet(((SpellBook)e.getHeldItem(Hand.MAIN_HAND).getItem()).tier.ordinal() * 50);
-        }
+        ManaCapability.getMana(e).ifPresent(mana ->{
+            int tier = mana.getBookTier();
+            int numGlyphs = mana.getGlyphBonus() > 5 ? mana.getGlyphBonus() - 5 : 0;
+            max.addAndGet(numGlyphs * 15);
+            max.addAndGet(tier * 50);
+        });
+        MaxManaCalcEvent event = new MaxManaCalcEvent(e, max.get());
+        MinecraftForge.EVENT_BUS.post(event);
+        max.set(event.getMax());
         return max.get();
     }
 
-    public static int getArmorRegen(PlayerEntity e) {
-        AtomicInteger regen = new AtomicInteger();
+    public static int getManaRegen(PlayerEntity e) {
+        AtomicInteger regen = new AtomicInteger(5);
         for(ItemStack i : e.getEquipmentAndArmor()){
             if(i.getItem() instanceof MagicArmor){
                 MagicArmor armor = ((MagicArmor) i.getItem());
@@ -119,15 +127,32 @@ public class ManaUtil {
             }
             regen.set(newregen);
         });
-        if(e.getHeldItem(Hand.MAIN_HAND).getItem() instanceof SpellBook && e.getHeldItem(Hand.MAIN_HAND).hasTag()){
-            ArrayList<AbstractSpellPart> list = SpellBook.getUnlockedSpells(e.getHeldItem(Hand.MAIN_HAND).getTag());
-            int numUnlocks = list.stream().filter(p -> p instanceof AbstractAugment || p instanceof AbstractEffect).collect(Collectors.toList()).size() - 3;
-
-            regen.addAndGet(numUnlocks/3);
-            regen.addAndGet(((SpellBook)e.getHeldItem(Hand.MAIN_HAND).getItem()).tier.ordinal());
-        }
+        ManaCapability.getMana(e).ifPresent(mana ->{
+            int tier = mana.getBookTier();
+            int numGlyphs = mana.getGlyphBonus() > 5 ? mana.getGlyphBonus() - 5 : 0;
+            regen.addAndGet(numGlyphs / 3);
+            regen.addAndGet(tier);
+        });
+        ManaRegenCalcEvent event = new ManaRegenCalcEvent(e, regen.get());
+        MinecraftForge.EVENT_BUS.post(event);
+        regen.set(event.getRegen());
         return regen.get();
     }
 
+    /**
+     * Searches for nearby mana jars that have enough mana.
+     * Returns the position where the mana was taken, or null if none were found.
+     */
+    @Nullable
+    public static boolean hasManaNearby(BlockPos pos, World world, int range, int mana){
+        final boolean[] hasMana = {false};
+        BlockPos.getAllInBox(pos.add(range, range, range), pos.add(-range, -range, -range)).forEach(blockPos -> {
+            blockPos = blockPos.toImmutable();
+            if(!hasMana[0] && world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= mana) {
+                hasMana[0] = true;
+            }
+        });
+        return hasMana[0];
+    }
 
 }

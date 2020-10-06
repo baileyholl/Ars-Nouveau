@@ -43,6 +43,8 @@ public class ManaCapability {
                 CompoundNBT tag = new CompoundNBT();
                 tag.putInt("current", instance.getCurrentMana());
                 tag.putInt("max", instance.getMaxMana());
+                tag.putInt("glyph", instance.getGlyphBonus());
+                tag.putInt("book_tier", instance.getBookTier());
                 return tag;
             }
 
@@ -53,6 +55,8 @@ public class ManaCapability {
                 CompoundNBT tag = (CompoundNBT)nbt;
                 instance.setMaxMana(tag.getInt("max"));
                 instance.setMana(tag.getInt("current"));
+                instance.setBookTier(tag.getInt("book_tier"));
+                instance.setGlyphBonus(tag.getInt("glyph"));
             }
         }, () -> new Mana(null));
         System.out.println("Finished Registering ManaCapability");

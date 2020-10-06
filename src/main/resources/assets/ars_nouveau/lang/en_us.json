@@ -12,6 +12,7 @@
 
 	"enchantment.ars_nouveau.mana_regen.desc": "Increases the mana regeneration of the player.",
 	"enchantment.ars_nouveau.mana_boost.desc": "Increases the maximum mana of the player.",
+	"enchantment.ars_nouveau.reactive.desc": "Has a chance to cast the inscribed spell on tool use or player hurt.",
 	"entity.ars_nouveau.whelp": "Whelp",
 	"entity.ars_nouveau.carbuncle": "Carbuncle",
 	"item.ars_nouveau.archmage_robes":"Archmage Robes",
@@ -66,12 +67,15 @@
 	"block.ars_nouveau.portal": "Warp Portal",
 	"block.ars_nouveau.arcane_relay": "Mana Relay",
 	"block.ars_nouveau.arcane_relay_splitter": "Mana Splitter",
+	"block.ars_nouveau.arcane_core": "Arcane Core",
+	"block.ars_nouveau.crystallizer": "Crystallizer",
 	"ars_nouveau.page.jar_of_light": "Summons a light that will follow the user as they move. Can be summoned and dismissed at any time.",
 	"ars_nouveau.page.amulet_of_mana_boost": "Increases max mana by a moderate amount.",
 	"ars_nouveau.page.amulet_of_mana_regen": "Increases mana regeneration by a moderate amount.",
 
 	"ars_nouveau.page.arcane_relay": "Enables the transport of mana between Mana Jars and other Arcane Relays. To pull mana from jars, use the Dominion Wand on the jar, and then on the relay. To send between relays or from a relay to a jar, use the wand on the relay and then the target you wish to send mana to. Relays may only reach up to 10 blocks away. To clear connections, sneak while using the Dominion Wand on the relay.",
-
+	"ars_nouveau.page.arcane_relay_splitter": "Operates similar to the Arcane Relay, but will support taking from and transferring to multiple jars at once. The splitter has a much larger through-put than the Arcane Relay, and will split this throughput amongst all of its jars. See the instructions on the Arcane Relay for use.",
+	"ars_nouveau.page.enchanting_apparatus1": "The Enchanting Apparatus utilizes pedestals and world mana for crafting. To use the Enchanting Apparatus, place any number of Arcane Pedestals nearby with their items. Place your reagent item on the Enchanting Apparatus block, and interact with the block while sneaking to begin crafting. The Enchanting Apparatus requires an Arcane Core beneath it in order to work.",
 
 	"ars_nouveau.page.mana_bloom_crop": "A magically infused flower, Mana Blooms provide additional mana to nearby Mana Condensers as they grow and provide a source of mana fiber.",
 	"ars_nouveau.page.belt_of_levitation": "A belt that allows the user levitate a moderate distance above the ground. Useful for climbing mountains! Simply sneak in the air while falling (or jumping) to rise.",
@@ -92,7 +96,12 @@
 	"ars_nouveau.page.summoning_crystal": "Automation in Ars Nouveau begins with the Summoning Crystal. Summoning Crystals provide mana, resources, and tasks to special magical creatures, like Whelps! Placing a chest next to a Summoning Crystal will provide a place for summoned creatures to store their items. The area of the Summoning Crystal may be changed by right clicking. ",
 	"ars_nouveau.page2.summoning_crystal": "Creatures like Whelps will require mana to interact with the world. Place a Mana Jar within the vicinity and begin providing it with mana. To begin your first automation, see the entry on the Whelp Charm and the Scribes Table.",
 
+	"ars_nouveau.page.reactive": "Reactive is an enchantment that can be applied to ANY item and can be applied and upgraded by the Enchanting Apparatus. Tools and armor with the Reactive enchantment have a chance to automatically cast a spell on use or when the player is hurt. The spell that the enchantment will cast is dependent on the spell inscribed in the first crafting phase, and the user must have enough mana to cast the spell.",
+	"ars_nouveau.page.reactive2": "To enchant an item with Reactive, place any item or armor in the apparatus. The spell parchment placed on the pedestal must be inscribed with a valid spell. See the Scribes Table for additional information. Reactive Enchantment also requires jars of mana near the Enchanting Apparatus. The first level enchantment requires approximately one third of a jar.",
+	"ars_nouveau.page.reactive3": "To upgrade the enchantment, replace the reagent with any item that has an existing Reactive enchantment. The Tier 2 reactive enchantment requires an item with Reactive I, and the Tier 3 Reactive enchantment requires an item with Reactive II. Higher levels will require a significantly higher amount of mana nearby.",
+	"ars_nouveau.page.reactive4": "The spell that Reactive gear casts can be changed by placing an enchanted piece of gear into the apparatus with a new inscribed spell parchment. ",
 	"enchantment.ars_nouveau.mana_boost": "Mana Boost",
+	"enchantment.ars_nouveau.reactive": "Reactive",
 	"enchantment.ars_nouveau.mana_regen": "Mana Regen",
 	"item.ars_nouveau.bucket_of_mana":"Mana Bucket",
 	"item.ars_nouveau.magic_clay":"Magic Clay",
@@ -159,5 +168,6 @@
 	"item.ars_nouveau.glyph_snare": "Glyph: Snare",
 	"item.ars_nouveau.glyph_leap": "Glyph: Leap",
 	"item.ars_nouveau.glyph_smelt": "Glyph: Smelt",
-	"effect.ars_nouveau.shield": "Magic Shield"
+	"effect.ars_nouveau.shield": "Magic Shield",
+	"alert.core": "An Arcane Core must be placed beneath this block."
 }

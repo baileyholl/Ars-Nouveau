@@ -3,6 +3,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -11,7 +12,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-public class EnchantingApparatusRecipe {
+public class EnchantingApparatusRecipe implements IEnchantingRecipe{
 
     public ItemStack catalyst; // Used in the arcane pedestal
     public ItemStack result; // Result item
@@ -40,26 +41,25 @@ public class EnchantingApparatusRecipe {
         this.pedestalItems = stacks;
         this.category = category;
     }
+    @Override
+    public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile) {
+        pedestalItems = pedestalItems.stream().filter(itemStack -> !itemStack.isEmpty()).collect(Collectors.toList());
+        if (this.catalyst == null || this.catalyst.getItem() != catalyst.getItem() || this.pedestalItems.size() != pedestalItems.size() || !areSameSet(pedestalItems, this.pedestalItems)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public ItemStack getResult(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile) {
+        return result;
+    }
 
     /**
      * A utility equals implementation that ignores the order of elements in the pedestal List.
      */
     public boolean isEqualTo(EnchantingApparatusRecipe other){
         return other.result == this.result && this.catalyst == other.catalyst && this.pedestalItems.size() == other.pedestalItems.size() && areSameSet(this.pedestalItems, other.pedestalItems);
-    }
-    /**
-     * A utility method for checking if the crafting components of a recipe are the same.
-     */
-    @Nullable
-    public ItemStack isResultOf(ItemStack catalyst, List<ItemStack> pedestalItems){
-        pedestalItems = pedestalItems.stream().filter(itemStack -> !itemStack.isEmpty()).collect(Collectors.toList());
-
-        if (this.catalyst.getItem() != catalyst.getItem() || this.pedestalItems.size() != pedestalItems.size() || !areSameSet(pedestalItems, this.pedestalItems)) {
-
-            return null;
-        }
-
-        return this.result;
     }
 
     // Function to check if both arrays are same
@@ -120,25 +120,13 @@ public class EnchantingApparatusRecipe {
         infoPage.addProperty("type", "apparatus_recipe");
         infoPage.addProperty("reagent", this.catalyst.getItem().getRegistryName().toString());
 
-//        String manaCost = this.getManaCost() < 20 ? "Low" : "Medium";
-//        manaCost = this.getManaCost() > 50 ? "High" : manaCost;
-//        infoPage.addProperty("mana_cost", manaCost);
         if(this.pedestalItems != null){
             AtomicInteger count = new AtomicInteger(1);
             this.pedestalItems.forEach(i ->{
                 infoPage.addProperty("item" + count.get(), i.getItem().getRegistryName().toString());
                 count.addAndGet(1);
             });
-//            String clayType;
-//            if(this.getTier() == ISpellTier.Tier.ONE){
-//                clayType = ItemsRegistry.magicClay.getRegistryName().toString();
-//            }else if(this.getTier() == ISpellTier.Tier.TWO){
-//                clayType = ItemsRegistry.marvelousClay.getRegistryName().toString();
-//            }else{
-//                clayType = ItemsRegistry.mythicalClay.getRegistryName().toString();
-//            }
-//            infoPage.addProperty("clay_type", clayType);
-//            infoPage.addProperty("reagent", this.getCraftingReagent().getRegistryName().toString());
+
         }
 
 
@@ -148,7 +136,13 @@ public class EnchantingApparatusRecipe {
         return jsonobject;
     }
 
+    @Override
+    public boolean consumesMana() {
+        return false;
+    }
 
-
-
+    @Override
+    public int manaCost() {
+        return 0;
+    }
 }

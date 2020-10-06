@@ -13,6 +13,11 @@ public class Mana implements IMana {
 
     private int maxMana;
 
+    private int glyphBonus;
+
+    private int bookTier;
+
+
     public Mana(@Nullable final LivingEntity entity) {
         this.livingEntity = entity;
     }
@@ -56,5 +61,25 @@ public class Mana implements IMana {
             manaToRemove = 0;
         this.setMana(this.getCurrentMana() - manaToRemove);
         return this.getCurrentMana();
+    }
+
+    @Override
+    public int getGlyphBonus(){
+        return glyphBonus;
+    }
+
+    @Override
+    public void setGlyphBonus(int glyphBonus){
+        this.glyphBonus = glyphBonus;
+    }
+
+    @Override
+    public int getBookTier(){
+        return bookTier;
+    }
+
+    @Override
+    public void setBookTier(int bookTier){
+        this.bookTier = bookTier;
     }
 }

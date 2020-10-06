@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
+import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.setup.APIRegistry;
 import net.minecraft.data.DataGenerator;
@@ -15,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class SpellDocProvider implements IDataProvider {
@@ -41,7 +43,12 @@ public class SpellDocProvider implements IDataProvider {
             }
         }
 
-        ArrayList<EnchantingApparatusRecipe> apparatusRecipes = ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes();
+        List<EnchantingApparatusRecipe> apparatusRecipes = new ArrayList<>();
+        for (IEnchantingRecipe iEnchantingRecipe : ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes()) {
+            if (iEnchantingRecipe instanceof EnchantingApparatusRecipe) {
+                apparatusRecipes.add((EnchantingApparatusRecipe) iEnchantingRecipe);
+            }
+        }
         System.out.println(apparatusRecipes);
         for(EnchantingApparatusRecipe r : apparatusRecipes ){
             Path path1 = getApparatusPath(path, r);
