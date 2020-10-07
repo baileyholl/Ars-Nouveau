@@ -12,18 +12,16 @@ public class ParticleLineData implements IParticleFactory<ColoredDynamicTypeData
     private final IAnimatedSprite spriteSet;
     public static final String NAME = "line";
 
-    public static Random random = new Random();
+    public static final Random random = new Random();
     public ParticleLineData(IAnimatedSprite sprite) {
         this.spriteSet = sprite;
     }
 
     @Override
     public Particle makeParticle(ColoredDynamicTypeData data, World worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-//            return new ParticleGlow(worldIn, x,y,z,xSpeed, ySpeed, zSpeed, worldIn.rand.nextInt(255), worldIn.rand.nextInt(255), worldIn.rand.nextInt(255), 1.0f, .25f, 36, this.spriteSet);
         return new ParticleLine(worldIn, x,y,z,xSpeed, ySpeed, zSpeed, data.color.getRed(), data.color.getGreen(), data.color.getBlue(),
                 data.scale,
                 data.age,  this.spriteSet);
-
     }
 
     public static IParticleData createData(ParticleColor color) {

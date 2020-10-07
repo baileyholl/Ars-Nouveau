@@ -38,6 +38,7 @@ public class EffectBreak extends AbstractEffect {
     }
 
     public float getHardness(List<AbstractAugment> augments){
+        // Iron block or lower unpowered
         float maxHardness = 5.0f + 25 * getAmplificationBonus(augments);
         int buff = getAmplificationBonus(augments);
         if(buff == -1){
@@ -61,7 +62,7 @@ public class EffectBreak extends AbstractEffect {
             ImmutableList<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
             for(BlockPos pos1 : posList) {
                 state = world.getBlockState(pos1);
-                // Iron block or lower unpowered
+
                 if(!(state.getBlockHardness(world, pos1) <= maxHardness && state.getBlockHardness(world, pos1) >= 0)){
                     continue;
                 }
@@ -83,7 +84,6 @@ public class EffectBreak extends AbstractEffect {
             }
         }
     }
-
 
     @Override
     public boolean dampenIsAllowed() {

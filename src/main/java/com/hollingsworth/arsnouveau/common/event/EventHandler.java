@@ -118,7 +118,7 @@ public class EventHandler {
     public static void playerAttackEntity(AttackEntityEvent e){
         LivingEntity entity = e.getEntityLiving();
 
-        if(entity.getEntityWorld().isRemote || !(entity instanceof PlayerEntity))
+        if(entity == null || entity.getEntityWorld().isRemote || !(entity instanceof PlayerEntity))
             return;
         ItemStack s = e.getEntityLiving().getHeldItemMainhand();
         castSpell((PlayerEntity) entity, s);
@@ -209,20 +209,12 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void playerDamaged(LivingDamageEvent e){
-        if(e.getEntityLiving() != null && e.getEntityLiving().getActivePotionMap().containsKey(ModPotions.SHIELD_POTION)){
-            if(e.getSource() == DamageSource.MAGIC || e.getSource() == DamageSource.GENERIC ){
-                float damage = e.getAmount() - 1f * e.getEntityLiving().getActivePotionMap().get(ModPotions.SHIELD_POTION).getAmplifier();
-                if (damage < 0) damage = 0;
-                e.setAmount(damage);
-            }
+        if(e.getEntityLiving() != null && e.getEntityLiving().getActivePotionMap().containsKey(ModPotions.SHIELD_POTION)
+        && (e.getSource() == DamageSource.MAGIC || e.getSource() == DamageSource.GENERIC )){
+            float damage = e.getAmount() - 1f * e.getEntityLiving().getActivePotionMap().get(ModPotions.SHIELD_POTION).getAmplifier();
+            if (damage < 0) damage = 0;
+            e.setAmount(damage);
         }
     }
 
-//    @SubscribeEvent
-//    static void renderWorldLastEvent(RenderWorldLastEvent evt) {
-//        RenderEventQueue.getInstance().tick(evt, Minecraft.getInstance().player,Minecraft.getInstance().getRenderPartialTicks());
-//    }
-
-    @SubscribeEvent
-    public static void spellCast(SpellCastEvent e){ }
 }

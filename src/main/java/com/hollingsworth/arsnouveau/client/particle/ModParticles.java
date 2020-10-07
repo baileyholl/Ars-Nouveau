@@ -19,7 +19,6 @@ public class ModParticles {
 
     @SubscribeEvent
     public static void registerParticles(RegistryEvent.Register<ParticleType<?>> event) {
-        System.out.println("Rendering particles");
         IForgeRegistry<ParticleType<?>> r = event.getRegistry();
         r.register( new ParticleType<ColorParticleTypeData>(false, ColorParticleTypeData.DESERIALIZER).setRegistryName(GlowParticleData.NAME));
         r.register(new ParticleType<>(false, ColoredDynamicTypeData.DESERIALIZER).setRegistryName(ParticleLineData.NAME));
@@ -29,14 +28,9 @@ public class ModParticles {
     @SuppressWarnings("resource")
     @SubscribeEvent
     public static void registerFactories(ParticleFactoryRegisterEvent evt) {
-        System.out.println("Rendering factories");
-//        Minecraft.getInstance().particles.registerFactory(ParticleSource.TYPE, ParticleSource.Factory::new);
-//        Minecraft.getInstance().particles.registerFactory(ParticleArc.TYPE, ParticleArc.Factory::new);
         Minecraft.getInstance().particles.registerFactory(GLOW_TYPE, GlowParticleData::new);
         Minecraft.getInstance().particles.registerFactory(LINE_TYPE, ParticleLineData::new);
 
-//        Minecraft.getInstance().particles.registerFactory(ParticleLineGlow.TYPE, ParticleLineGlow.Factory::new);
-//        Minecraft.getInstance().particles.registerFactory(ParticleElementFlow.TYPE, ParticleElementFlow.Factory::new);
     }
 
 

@@ -76,7 +76,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity {
         if(world.getGameTime() % 20 == 0 && world.rand.nextInt(3) == 0 && !this.dataManager.get(HOP)){
             manager.setAnimationSpeed(3f);
             idleController.setAnimation(new AnimationBuilder().addAnimation("idle"));
-            return true;
         }
 
 
@@ -106,10 +105,34 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity {
         this.dataManager.set(TAMED,tamed);
     }
 
+    public void attemptTame(){
+        if(!isTamed() && this.getHeldStack().getItem() == Items.GOLD_NUGGET){
+            tamingTime++;
+            if(tamingTime % 20 == 0 && !world.isRemote())
+                Networking.sendToNearby(world, this, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, getPosition()));
+
+            if(tamingTime > 60 && !world.isRemote) {
+                ItemStack stack = new ItemStack(ItemsRegistry.carbuncleShard, 1 + world.rand.nextInt(2));
+                world.addEntity(new ItemEntity(world, getPosX(), getPosY() + 0.5, getPosZ(), stack));
+                this.remove(false);
+                world.playSound(null, getPosX(), getPosY(), getPosZ(), SoundEvents.ENTITY_ILLUSIONER_MIRROR_MOVE, SoundCategory.NEUTRAL, 1f, 1f );
+            }
+            else if (tamingTime > 55 && world.isRemote){
+                for(int i =0; i < 10; i++){
+                    double d0 = getPosX(); //+ world.rand.nextFloat();
+                    double d1 = getPosY()+0.1;//+ world.rand.nextFloat() ;
+                    double d2 = getPosZ()  ; //+ world.rand.nextFloat();
+                    world.addParticle(ParticleTypes.END_ROD, d0, d1, d2, (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3);
+                }
+            }
+        }
+    }
+
     @Override
     public void tick() {
         super.tick();
         if(!world.isRemote){
+
             if(this.navigator.noPath()){
                 EntityCarbuncle.this.dataManager.set(HOP, false);
             }else{
@@ -134,26 +157,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity {
             }
         }
 
-        if(!isTamed() && this.getHeldStack().getItem() == Items.GOLD_NUGGET){
-            tamingTime++;
-            if(tamingTime % 20 == 0 && !world.isRemote())
-                Networking.sendToNearby(world, this, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, getPosition()));
+        attemptTame();
 
-            if(tamingTime > 60 && !world.isRemote) {
-                ItemStack stack = new ItemStack(ItemsRegistry.carbuncleShard, 1 + world.rand.nextInt(2));
-                world.addEntity(new ItemEntity(world, getPosX(), getPosY() + 0.5, getPosZ(), stack));
-                this.remove(false);
-                world.playSound(null, getPosX(), getPosY(), getPosZ(), SoundEvents.ENTITY_ILLUSIONER_MIRROR_MOVE, SoundCategory.NEUTRAL, 1f, 1f );
-            }
-            else if (tamingTime > 55 && world.isRemote){
-                for(int i =0; i < 10; i++){
-                    double d0 = getPosX(); //+ world.rand.nextFloat();
-                    double d1 = getPosY()+0.1;//+ world.rand.nextFloat() ;
-                    double d2 = getPosZ()  ; //+ world.rand.nextFloat();
-                    world.addParticle(ParticleTypes.END_ROD, d0, d1, d2, (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3);
-                }
-            }
-        }
     }
 
     /**

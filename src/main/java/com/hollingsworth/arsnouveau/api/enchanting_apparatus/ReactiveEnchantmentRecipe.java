@@ -114,7 +114,6 @@ public class ReactiveEnchantmentRecipe implements IEnchantingRecipe{
                 ManaUtil.hasManaNearby(enchantingApparatusTile.getPos(), enchantingApparatusTile.getWorld(), 10, manaCost() * 3)){
             return true;
         }else if(isWriteSpell(pedestalItems, reagent)) {
-            System.out.println("is write ");
             return true;
         }
         return false;
