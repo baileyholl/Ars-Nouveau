@@ -1,0 +1,31 @@
+{
+    "name": "法力凝聚器",
+    "icon": "ars_nouveau:mana_condenser",
+    "category": "machines",
+    "pages": [
+        {
+            "type": "text",
+            "text": "法力凝聚器为放置在其下方的法力罐提供世界法力。这些法力是从它附近发生的特殊世界事件中收集的。这些事件包括农作物生长、动物繁殖和附近的怪物死亡。请注意，如果另一个法力凝聚器放置得太近，法力凝聚器就会停止工作。"
+        },
+		{
+		"type":"multiblock",
+		"multiblock":{
+			"mapping":{
+				"C":"ars_nouveau:mana_condenser",
+				"0":"ars_nouveau:mana_jar"
+			},
+			"pattern":[
+				["C"],
+				["0"],
+				[" "]
+			],
+			"symmetrical": true
+		},
+		"text":""
+		},
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:mana_condenser"
+		}
+    ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "潮湿",
+  "icon": "ars_nouveau:glyph_dampen",
+  "category": "spells",
+  "pages": [
+    {
+      "type": "text",
+      "text": "降低大多数法力的强度。略微就爱你耕地法力消耗，但法力消耗不会低于0。"
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "2",
+      "mana_cost": "低",
+      "clay_type": "ars_nouveau:marvelous_clay",
+      "reagent": "minecraft:nether_brick"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "name": "弹射物",
+  "icon": "ars_nouveau:glyph_projectile",
+  "category": "spells",
+  "pages": [
+    {
+      "type": "text",
+      "text": "向目标发射弹射物。"
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "1",
+      "mana_cost": "低"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+    "name": "主宰之杖",
+    "icon": "ars_nouveau:dominion_wand",
+    "category": "automation",
+    "pages": [
+        {
+            "type": "text",
+            "text": "一个用于配置法力中续器的工具。对你想要吸取法力的目标使用魔杖，然后在你想输送法力的区块上使用魔杖即可设置运送路径。例如，将法力罐内的法力输送至中续器，中续器至中续器或者中继至法力罐。潜行用魔杖点击中续器清空连接。"
+        },
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:dominion_wand"
+		},
+		{
+            "type": "relations",
+            "entries":["apparatus/arcane_relay", "apparatus/whelp_charm"]        
+        }
+    ]
+}

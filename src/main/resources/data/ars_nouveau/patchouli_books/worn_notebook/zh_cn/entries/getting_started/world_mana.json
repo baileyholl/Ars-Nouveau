@@ -1,0 +1,15 @@
+{
+    "name": "世界法力",
+    "icon": "ars_nouveau:mana_jar",
+    "category": "getting_started",
+    "pages": [
+        {
+            "type": "text",
+            "text": "世界法力是一种特殊的法力形式，只能通过使用装置来收集。世界法力用于给魔法机器提供法力，比如符号压制机。收集法力详见魔法机器部分。"       
+        },
+		{
+            "type": "relations",
+            "entries":["machines/mana_jar"]        
+        }
+    ]
+}

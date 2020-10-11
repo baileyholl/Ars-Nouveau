@@ -1,0 +1,16 @@
+{
+  "name": "自身",
+  "icon": "ars_nouveau:glyph_self",
+  "category": "spells",
+  "pages": [
+    {
+      "type": "text",
+      "text": "让法术对施法者生效"
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "1",
+      "mana_cost": "低"
+    }
+  ]
+}

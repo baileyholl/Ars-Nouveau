@@ -1,0 +1,57 @@
+{
+    "name": "初学者法术",
+    "icon": "ars_nouveau:glyph_break",
+    "category": "getting_started",
+    "pages": [
+        {
+            "type": "text",
+            "text": "一开始，你只能使用部分法术。当你有了符号压制器时，你就能够制作任何法术了。这里有几个法术可供你入门。"       
+        },
+		{
+            "type": "spotlight",
+			"item":"ars_nouveau:glyph_break",
+            "title":"破坏",
+			"text":"初学者效果，弹射物 -> 破坏或触摸 -> 破坏获得铁或更低级的材料。"
+        },
+		{
+            "type": "spotlight",
+			"item":"ars_nouveau:glyph_harm",
+            "title":"伤害",
+			"text":"初学者效果，弹射物 -> 伤害或触摸 -> 对目标造成小额伤害。"
+        },
+		{
+            "type": "spotlight",
+			"item":"ars_nouveau:glyph_haste",
+            "title":"疾驰",
+			"text":"1级效果，可用符号压制器制作。给予目标速度提升效果。试试 自身 -> 疾驰"
+        },{
+            "type": "spotlight",
+			"item":"ars_nouveau:glyph_light",
+            "title":"光明",
+			"text":"1级效果，可用符号压制器制作。对方块使用时创建永久光源。对实体使用时给予夜视效果。"
+        },
+		{
+            "type": "spotlight",
+			"item":"ars_nouveau:glyph_amplify",
+            "title":"倍化",
+			"text":"1级增强，可用符号压制器制作。增加大多数法术的强度。试试 弹射物 -> 破坏 -> 倍化 -> 快速破坏黑曜石，或用「伤害」造成更多伤害。"
+        },
+		{
+            "type": "spotlight",
+			"item":"ars_nouveau:glyph_ignite",
+            "title":"点燃",
+			"text":"1级效果，可用符号压制器制作。点燃实体和方块。增加伤害最简单的方法。试试 弹射物 -> 伤害 -> 点燃"
+        },
+		{
+            "type": "spotlight",
+			"item":"ars_nouveau:glyph_harvest",
+            "title":"收获",
+			"text":"1级效果，可用符号压制器制作。无损收获植物，或直接摧毁整棵树。"
+        },
+		{
+            "type": "relations",
+            "entries":["machines/glyph_press"],
+			"text":"如果你想了解如何创建新的符号，请查看符号压制器部分。"
+        }
+    ]
+}
