@@ -1,0 +1,16 @@
+{
+  "name": "触摸",
+  "icon": "ars_nouveau:glyph_touch",
+  "category": "spells",
+  "pages": [
+    {
+      "type": "text",
+      "text": "对目标方块或实体施放法术。"
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "1",
+      "mana_cost": "低"
+    }
+  ]
+}

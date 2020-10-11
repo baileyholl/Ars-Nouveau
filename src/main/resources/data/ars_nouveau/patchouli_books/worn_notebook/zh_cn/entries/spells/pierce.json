@@ -1,0 +1,18 @@
+{
+  "name": "穿透",
+  "icon": "ars_nouveau:glyph_pierce",
+  "category": "spells",
+  "pages": [
+    {
+      "type": "text",
+      "text": "应用于弹射物法术时，弹射物可穿透生物或方块。"
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "2",
+      "mana_cost": "中",
+      "clay_type": "ars_nouveau:marvelous_clay",
+      "reagent": "minecraft:arrow"
+    }
+  ]
+}

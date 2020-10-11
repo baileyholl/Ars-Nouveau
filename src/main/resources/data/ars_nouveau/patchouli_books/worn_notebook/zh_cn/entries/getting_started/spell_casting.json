@@ -1,0 +1,23 @@
+{
+    "name": "施法",
+    "icon": "ars_nouveau:novice_spell_book",
+    "category": "getting_started",
+    "pages": [
+        {
+            "type": "text",
+            "text": "你需要获得一本法术书才能开始施法。法术书可以让你消耗法力创建、存储和施放法术。高级的法术书会有可以让你制作更复杂法术的额外法术栏位。 $(br) 你必须先选择法术的$(bold)形式$()。$(bold)形式$()符号必须是第一个选择符号。"       
+        },
+        {
+            "type": "text",
+            "text": "接下来请添加任意数量的$(bold)效果$()。 效果指的是法术会$(italic)做什么$()，它们将按照其在书中的顺序依次施放。$(bold)增强$()可用于修改效果或形式 表现方式。$(bold)增强$()可以放在效果或形式后面。增强只应用于$(bold)左侧的$()符号。多个相邻的增强也可应用于同一效果或形式。"       
+        },
+        {
+            "type": "text",
+            "text": "如果你想要将法术放到其它栏位，你可以在右侧选择栏位。法术书绑定了一些按键。$(br)打开法术书：$(k:ars_nouveau.open_book) $(br)快速选择：$(k:ars_nouveau.selection_hud) $(br)下一个法术：$(k:ars_nouveau.next_slot) $(br)上一个法术：$(k:ars_nouveau.previous_slot)"       
+        },
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:novice_spell_book"
+		}
+    ]
+}
