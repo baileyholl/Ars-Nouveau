@@ -45,7 +45,6 @@ public class FollowSummonerGoal extends Goal {
      */
     public boolean shouldExecute() {
         LivingEntity livingentity = summon.getSummoner();
-        //System.out.println("Checking should exec");
         if (livingentity == null) {
             return false;
         } else if (livingentity instanceof PlayerEntity && ((PlayerEntity)livingentity).isSpectator()) {

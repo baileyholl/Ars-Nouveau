@@ -10,6 +10,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class GuiEntityInfoHUD extends AbstractGui {
@@ -17,7 +18,7 @@ public class GuiEntityInfoHUD extends AbstractGui {
 
     public void drawHUD(EntityWhelp whelp) {
 
-       int offsetLeft = 5;
+         int offsetLeft = 5;
         fill(offsetLeft, 50, (int)100+ offsetLeft, 0, 300);
         ArrayList<AbstractSpellPart> spellParts = SpellRecipeUtil.getSpellsFromTagString(whelp.getRecipeString());
         String spellString = spellParts.size() > 4 ? SpellRecipeUtil.getDisplayString(spellParts.subList(0, 4)) + "..." :SpellRecipeUtil.getDisplayString(spellParts);
@@ -27,6 +28,17 @@ public class GuiEntityInfoHUD extends AbstractGui {
         String itemString = whelp.getHeldStack() == ItemStack.EMPTY ? "Nothing." : whelp.getHeldStack().getDisplayName().getFormattedText();
         String itemAction = whelp.getHeldStack().getItem() instanceof BlockItem ? "Placing: " : "Using: ";
         minecraft.fontRenderer.drawStringWithShadow(itemAction + itemString, offsetLeft, 15, 0xFFFFFF);
+
+    }
+
+    public void drawHUD(List<String> tooltips){
+        int offsetLeft = 5;
+        fill(offsetLeft, 50, 100+ offsetLeft, 0, 300);
+        int counter = 0;
+        for(String s : tooltips){
+            minecraft.fontRenderer.drawStringWithShadow(s, offsetLeft, 5f + 10 * counter, 0xFFFFFF);
+            counter++;
+        }
 
     }
 }

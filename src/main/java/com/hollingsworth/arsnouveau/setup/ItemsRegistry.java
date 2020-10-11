@@ -80,6 +80,8 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.CARBUNCLE_SHARD)public static ModItem carbuncleShard;
     @ObjectHolder(LibItemNames.EARTH_ELEMENTAL_CHARM)public static EarthElementalCharm earthElementalCharm;
     @ObjectHolder(LibItemNames.EARTH_ELEMENTAL_SHARD)public static ModItem earthElementalShard;
+    @ObjectHolder(LibItemNames.SYLPH_CHARM)public static SylphCharm sylphCharm;
+    @ObjectHolder(LibItemNames.SYLPH_SHARD)public static ModItem sylphShard;
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler{
@@ -161,7 +163,9 @@ public class ItemsRegistry {
                         public int getManaRegenBonus() {
                             return 3;
                         }
-                    }
+                    },
+                    new ModItem(LibItemNames.SYLPH_SHARD),
+                    new SylphCharm()
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

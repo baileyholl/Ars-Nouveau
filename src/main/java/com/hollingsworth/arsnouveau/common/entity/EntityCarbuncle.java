@@ -67,10 +67,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity {
     }
 
     public EntityCarbuncle(World world, boolean tamed){
-        super(ModEntities.ENTITY_CARBUNCLE_TYPE,world);
+        this(ModEntities.ENTITY_CARBUNCLE_TYPE,world);
         this.setTamed(tamed);
-        manager.addAnimationController(walkController);
-        manager.addAnimationController(idleController);
     }
     private <E extends Entity> boolean idlePredicate(AnimationTestEvent<E> event) {
         if(world.getGameTime() % 20 == 0 && world.rand.nextInt(3) == 0 && !this.dataManager.get(HOP)){
@@ -472,10 +470,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity {
 
     @Override
     protected boolean processInteract(PlayerEntity player, Hand hand) {
-        System.out.println(this.getHeldStack());
-        System.out.println(this.toPos);
-        System.out.println(this.fromPos);
-        System.out.println(this.isTamed());
         return false;
     }
 

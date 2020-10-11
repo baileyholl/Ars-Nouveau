@@ -17,11 +17,14 @@ public class ModParticles {
 
     @ObjectHolder(ArsNouveau.MODID + ":" + ParticleLineData.NAME) public static ParticleType<ColoredDynamicTypeData> LINE_TYPE;
 
+    @ObjectHolder(ArsNouveau.MODID + ":" + ParticleSparkleData.NAME) public static ParticleType<ColoredDynamicTypeData> SPARKLE_TYPE;
+
     @SubscribeEvent
     public static void registerParticles(RegistryEvent.Register<ParticleType<?>> event) {
         IForgeRegistry<ParticleType<?>> r = event.getRegistry();
         r.register( new ParticleType<ColorParticleTypeData>(false, ColorParticleTypeData.DESERIALIZER).setRegistryName(GlowParticleData.NAME));
         r.register(new ParticleType<>(false, ColoredDynamicTypeData.DESERIALIZER).setRegistryName(ParticleLineData.NAME));
+        r.register(new ParticleType<>(false, ColoredDynamicTypeData.DESERIALIZER).setRegistryName(ParticleSparkleData.NAME));
 
     }
 
@@ -30,6 +33,7 @@ public class ModParticles {
     public static void registerFactories(ParticleFactoryRegisterEvent evt) {
         Minecraft.getInstance().particles.registerFactory(GLOW_TYPE, GlowParticleData::new);
         Minecraft.getInstance().particles.registerFactory(LINE_TYPE, ParticleLineData::new);
+        Minecraft.getInstance().particles.registerFactory(SPARKLE_TYPE, ParticleSparkleData::new);
 
     }
 

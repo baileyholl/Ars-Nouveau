@@ -108,16 +108,10 @@ public class ManaCondenserModel extends Model {
         arm4.render(matrixStack, buffer, packedLight, packedOverlay);
         gem.render(matrixStack, buffer, packedLight, packedOverlay);
         bb_main.render(matrixStack, buffer, packedLight, packedOverlay);
-        float lvt_8_2_ = 1.3F;
-        float angle = (ClientInfo.ticksInGame /5.0f) % 360;
-        float bounce = (ClientInfo.ticksInGame/5.0f) % 360;
-        bounce = (float) (Math.cos(bounce) + Math.sin(bounce));
-        float outerAngle = (Minecraft.getInstance().world.getGameTime()/20.0f) % 360;
-//		ring_outer.rotateAngleZ =  MathHelper.cos(angle) *3.1415927F * 2;
-        gem.rotateAngleY = angle;
+
+        gem.rotateAngleY = (ClientInfo.ticksInGame /5.0f) % 360;
         gem.rotateAngleX = 0;
         gem.rotateAngleZ = 0;
-
     }
 
     public void setRotationAngle(ModelRenderer modelRenderer, float x, float y, float z) {

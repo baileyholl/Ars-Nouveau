@@ -26,7 +26,7 @@ public class ModEntities {
     public static EntityType<EntityCarbuncle> ENTITY_CARBUNCLE_TYPE = null;
     public static EntityType<EntityEarthElemental> ENTITY_EARTH_ELEMENTAL_TYPE = null;
     public static EntityType<EntityFollowProjectile> ENTITY_FOLLOW_PROJ = null;
-
+    public static EntityType<EntitySylph> ENTITY_SYLPH_TYPE = null;
 
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
@@ -68,22 +68,19 @@ public class ModEntities {
                     .size(0.6F, 0.63F).setTrackingRange(10));
             ENTITY_EARTH_ELEMENTAL_TYPE = build("earth_elemental", EntityType.Builder.<EntityEarthElemental>create(EntityEarthElemental::new, EntityClassification.MISC)
                     .size(1.5F, 1.6F).setTrackingRange(10));
+
+            ENTITY_SYLPH_TYPE = build("sylph", EntityType.Builder.<EntitySylph>create(EntitySylph::new, EntityClassification.MISC)
+                    .size(0.6F, 0.98F).setTrackingRange(10)
+                    .setShouldReceiveVelocityUpdates(true));
             event.getRegistry().registerAll(
                     SPELL_PROJ,
                     ENTITY_FOLLOW_PROJ,
                     ENTITY_EVOKER_FANGS_ENTITY_TYPE,
                     ALLY_VEX, ENTITY_WHELP_TYPE,
                     ENTITY_CARBUNCLE_TYPE,
-                    ENTITY_EARTH_ELEMENTAL_TYPE
+                    ENTITY_EARTH_ELEMENTAL_TYPE,
+                    ENTITY_SYLPH_TYPE
             );
-            //ENT_PROJECTILE = registerEntity(EntityType.Builder.<EntityModProjectile>create(EntityClassification.MISC).setCustomClientFactory(EntityModProjectile::new).size(0.25F, 0.25F), "ent_projectile");
-
-//            EntityRegistry.registerModEntity(new ResourceLocation(ExampleMod.MODID, "dmlightball"),
-//                    EntityProjectileSpell.class, ExampleMod.MODID + ".dmlightball", lightballID, ExampleMod.instance,
-//                    80, 20, true);
-
-            //event.getRegistry().registerAll(entries);
-
         }
     }
     /**

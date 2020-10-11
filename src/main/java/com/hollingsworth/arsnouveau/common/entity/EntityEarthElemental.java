@@ -46,7 +46,6 @@ public class EntityEarthElemental extends CreatureEntity implements IAnimatedEnt
 
         if(this.getHeldStack().isEmpty()){
             manager.setAnimationSpeed(1f);
-//            System.out.println("idling");
             idleController.setAnimation(new AnimationBuilder().addAnimation("idle", true));
         }else{
             return true;
