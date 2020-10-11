@@ -1,0 +1,16 @@
+{
+    "name": "Mana Jar",
+    "icon": "ars_nouveau:mana_jar",
+    "category": "machines",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Mana Jars store mana from nearby mana collectors. While this mana cannot be used for casting spells, it is used in creating spells and baubles by powering devices like the Glyph Press and Enchanting Apparatus. Mana may be moved using a bucket. To use mana in a jar, simply place the jar near your desired device. "
+        },
+
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:mana_jar"
+		}
+    ]
+}

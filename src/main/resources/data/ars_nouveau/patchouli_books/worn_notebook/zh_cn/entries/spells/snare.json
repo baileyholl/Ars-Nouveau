@@ -1,0 +1,18 @@
+{
+  "name": "禁锢",
+  "icon": "ars_nouveau:glyph_snare",
+  "category": "spells",
+  "pages": [
+    {
+      "type": "text",
+      "text": "禁止实体移动和跳跃。「延长时效」可增加持续时间。"
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "1",
+      "mana_cost": "高",
+      "clay_type": "ars_nouveau:magic_clay",
+      "reagent": "minecraft:anvil"
+    }
+  ]
+}
