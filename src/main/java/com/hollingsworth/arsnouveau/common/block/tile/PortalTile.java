@@ -27,6 +27,7 @@ public class PortalTile extends TileEntity {
 
             world.playSound(null, warpPos, SoundEvents.ENTITY_ILLUSIONER_MIRROR_MOVE, SoundCategory.NEUTRAL, 1.0f, 1.0f);
             e.setPositionAndUpdate(warpPos.getX(), warpPos.getY(), warpPos.getZ());
+            e.fallDistance = 0;
             ((ServerWorld) world).spawnParticle(ParticleTypes.PORTAL, warpPos.getX(),  warpPos.getY() + 1,  warpPos.getZ(),
                     4,(this.world.rand.nextDouble() - 0.5D) * 2.0D, -this.world.rand.nextDouble(), (this.world.rand.nextDouble() - 0.5D) * 2.0D, 0.1f);
 
