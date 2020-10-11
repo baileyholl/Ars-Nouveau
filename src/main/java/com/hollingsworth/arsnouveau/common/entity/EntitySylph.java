@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
-import com.hollingsworth.arsnouveau.common.entity.goal.*;
+import com.hollingsworth.arsnouveau.common.entity.goal.sylph.*;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -116,6 +116,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
         list.add(new PrioritizedGoal(2, new LookRandomlyGoal(this)));
         list.add(new PrioritizedGoal(2, new WaterAvoidingRandomFlyingGoal(this, 1.0D)));
         list.add(new PrioritizedGoal(1, new BonemealGoal(this)));
+        list.add(new PrioritizedGoal(1, new BonemealGoal(this)));
         return list;
     }
 
@@ -175,6 +176,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
         timeUntilEvaluation = tag.getInt("eval");
         this.dataManager.set(TAMED, tag.getBoolean("tamed"));
         this.dataManager.set(EntitySylph.MOOD_SCORE, tag.getInt("score"));
+        // If we don't reset the behaviors on the first world load, tamed ones will gain untamed behaviors.
         if(!setBehaviors){
             tryResetGoals();
             setBehaviors = true;

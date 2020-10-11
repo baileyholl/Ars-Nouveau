@@ -1,12 +1,13 @@
-package com.hollingsworth.arsnouveau.common.entity.goal;
+package com.hollingsworth.arsnouveau.common.entity.goal.sylph;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.common.entity.goal.DistanceRestrictedGoal;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.function.Supplier;
 
-public class GoBackHomeGoal extends DistanceRestrictedGoal{
+public class GoBackHomeGoal extends DistanceRestrictedGoal {
     MobEntity entity;
 
     public GoBackHomeGoal(MobEntity entity, Supplier<BlockPos> pos, int maxDistance) {

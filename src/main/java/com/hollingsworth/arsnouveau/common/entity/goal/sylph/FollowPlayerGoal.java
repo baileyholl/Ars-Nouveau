@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.common.entity.goal;
+package com.hollingsworth.arsnouveau.common.entity.goal.sylph;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
