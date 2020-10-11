@@ -52,7 +52,6 @@ public class APIRegistry {
                 ItemsRegistry.bucketOfMana,ItemsRegistry.bucketOfMana,Items.DIAMOND, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET,
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
 
-
         registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.amuletOfManaBoost, ItemsRegistry.dullTrinket, new Item[]{
                 Items.DIAMOND, Items.DIAMOND, Items.DIAMOND, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana
         }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
@@ -61,12 +60,11 @@ public class APIRegistry {
                 Items.DIAMOND, Items.DIAMOND, Items.GOLD_INGOT, Items.GOLD_INGOT, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana
         }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
 
-
         registerApparatusRecipe(new EnchantingApparatusRecipe(BlockRegistry.ARCANE_RELAY_SPLITTER.asItem(), BlockRegistry.ARCANE_RELAY.asItem(), new Item[]{
                 BlockRegistry.MANA_JAR.asItem(),BlockRegistry.MANA_JAR.asItem(), BlockRegistry.MANA_JAR.asItem(), Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.DIAMOND
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
-        registerApparatusRecipe(new ReactiveEnchantmentRecipe());
 
+        registerApparatusRecipe(new ReactiveEnchantmentRecipe());
     }
 
     public static void registerSpells(){

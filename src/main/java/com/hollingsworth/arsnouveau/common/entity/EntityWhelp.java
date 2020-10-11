@@ -40,6 +40,7 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 
 public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlaceBlockResponder {
     public static final DataParameter<String> SPELL_STRING = EntityDataManager.createKey(EntityWhelp.class, DataSerializers.STRING);
@@ -48,26 +49,26 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
 
     BlockPos crystalPos;
     int ticksSinceLastSpell;
-    public ArrayList<AbstractSpellPart> spellRecipe;
+    public List<AbstractSpellPart> spellRecipe;
 
     @Override
-    public boolean canDespawn(double p_213397_1_) {
+    public boolean canDespawn(double distanceFromPlayer) {
         return false;
     }
 
-    protected EntityWhelp(EntityType<? extends FlyingEntity> p_i48568_1_, World p_i48568_2_) {
-        super(p_i48568_1_, p_i48568_2_);
+    protected EntityWhelp(EntityType<? extends FlyingEntity> p_i48568_1_, World world) {
+        super(p_i48568_1_, world);
         this.moveController =  new FlyingMovementController(this, 10, true);
 
     }
 
-    public EntityWhelp setRecipe(ArrayList<AbstractSpellPart> recipe){
+    public EntityWhelp setRecipe(List<AbstractSpellPart> recipe){
         this.spellRecipe = recipe;
         return this;
     }
 
-    public EntityWhelp(World p_i50190_2_) {
-        super(ModEntities.ENTITY_WHELP_TYPE, p_i50190_2_);
+    public EntityWhelp(World world) {
+        super(ModEntities.ENTITY_WHELP_TYPE, world);
         this.moveController = new FlyingMovementController(this, 10, true);
     }
 
@@ -90,7 +91,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
                 return false;
             }
         }else if(stack == ItemStack.EMPTY){
-            if(spellRecipe == null || spellRecipe.size() == 0){
+            if(spellRecipe == null || spellRecipe.isEmpty()){
                 player.sendMessage(new StringTextComponent("Give this whelp a spell by giving it some inscribed Spell Parchment. "));
             }else
                 player.sendMessage(new StringTextComponent("This whelp is casting " + SpellRecipeUtil.getDisplayString(spellRecipe)));
@@ -123,9 +124,9 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
                 if(world.isRemote){
 
                     for(int i =0; i < 2; i++){
-                        double d0 = getPosX(); //+ world.rand.nextFloat();
-                        double d1 = getPosY();//+ world.rand.nextFloat() ;
-                        double d2 = getPosZ(); //+ world.rand.nextFloat();
+                        double d0 = getPosX();
+                        double d1 = getPosY();
+                        double d2 = getPosZ();
 
                         world.addParticle(ParticleTypes.ENCHANTED_HIT, d0, d1, d2, 0.0, 0.0, 0.0);
                     }
@@ -147,9 +148,6 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     }
 
     protected void registerGoals() {
-
-//        this.goalSelector.addGoal(1, new PanicGoal(this, 1.25D));
-//        this.goalSelector.addGoal(1, new LevitateGoal());
         this.goalSelector.addGoal(6, new PerformTaskGoal(this));
         this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
@@ -170,9 +168,9 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         if(world.isRemote)
             return;
         if(world instanceof ServerWorld){
-            double d0 = target.getX() +0.5; //+ world.rand.nextFloat();
-            double d1 = target.getY() + 1;//+ world.rand.nextFloat() ;
-            double d2 = target.getZ() +0.5; //+ world.rand.nextFloat();
+            double d0 = target.getX() +0.5;
+            double d1 = target.getY() + 1.0;
+            double d2 = target.getZ() +0.5;
             ((ServerWorld)world).spawnParticle(ParticleTypes.ENCHANTED_HIT, d0, d1, d2,rand.nextInt(4), 0,0.3,0, 0.1);
         }
         if(!(world.getTileEntity(crystalPos) instanceof SummoningCrytalTile))
@@ -185,13 +183,9 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     }
 
     public boolean enoughManaForTask(){
-        if(!(world.getTileEntity(crystalPos) instanceof SummoningCrytalTile || spellRecipe == null || spellRecipe.size() == 0))
+        if(!(world.getTileEntity(crystalPos) instanceof SummoningCrytalTile || spellRecipe == null || spellRecipe.isEmpty()))
             return false;
         return ((SummoningCrytalTile) world.getTileEntity(crystalPos)).enoughMana(spellRecipe);
-    }
-
-    protected void updateAITasks() {
-        super.updateAITasks();
     }
 
     @Override
@@ -231,7 +225,6 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         @Override
         public void startExecuting() {
             super.startExecuting();
-//            System.out.println("Executing");
             taskLoc = this.kobold.getTaskLoc();
             timePerformingTask = 0;
             if(this.kobold != null && this.kobold.navigator != null && taskLoc != null)
@@ -256,7 +249,6 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
 
         @Override
         public boolean shouldContinueExecuting() {
-//            System.out.println("Executing shoul");
             return kobold.ticksSinceLastSpell > 60 && this.taskLoc != null && timePerformingTask < 300;
         }
 
@@ -319,18 +311,6 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     }
 
     @Override
-    public ILivingEntityData onInitialSpawn(IWorld p_213386_1_, DifficultyInstance p_213386_2_, SpawnReason p_213386_3_, @Nullable ILivingEntityData p_213386_4_, @Nullable CompoundNBT p_213386_5_) {
-        return super.onInitialSpawn(p_213386_1_, p_213386_2_, p_213386_3_, p_213386_4_, p_213386_5_);
-    }
-
-    /**
-     * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
-     * use this to react to sunlight and start to burn.
-     */
-    public void livingTick() {
-        super.livingTick();
-    }
-
     protected void registerAttributes() {
         super.registerAttributes();
         this.getAttributes().registerAttribute(SharedMonsterAttributes.FLYING_SPEED);
@@ -338,6 +318,8 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         this.getAttribute(SharedMonsterAttributes.FLYING_SPEED).setBaseValue((double)0.4F);
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue((double)0.2F);
     }
+
+    @Override
     protected void registerData() {
         super.registerData();
         this.dataManager.register(HELD_ITEM, ItemStack.EMPTY);
