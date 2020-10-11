@@ -70,10 +70,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity {
     }
 
     public EntityCarbuncle(World world, boolean tamed){
-        super(ModEntities.ENTITY_CARBUNCLE_TYPE,world);
+        this(ModEntities.ENTITY_CARBUNCLE_TYPE,world);
         this.setTamed(tamed);
-        manager.addAnimationController(walkController);
-        manager.addAnimationController(idleController);
     }
     private <E extends Entity> boolean idlePredicate(AnimationTestEvent<E> event) {
         if(world.getGameTime() % 20 == 0 && world.rand.nextInt(3) == 0 && !this.dataManager.get(HOP)){
@@ -201,7 +199,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity {
         this.goalSelector.addGoal(3, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.goalSelector.addGoal(4, new AvoidPlayerUntamedGoal(this, PlayerEntity.class, 16.0F, 1.6D, 1.4D));
-//        this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
     }
 
 
@@ -209,7 +206,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity {
 
         public AvoidPlayerUntamedGoal(CreatureEntity entityIn, Class classToAvoidIn, float avoidDistanceIn, double farSpeedIn, double nearSpeedIn) {
             super(entityIn, classToAvoidIn, avoidDistanceIn, farSpeedIn, nearSpeedIn ,(living) -> {
-                return !(living.getHeldItemMainhand().getItem() == Items.GOLD_NUGGET);
+                return (living.getHeldItemMainhand().getItem() != Items.GOLD_NUGGET);
             });
         }
 
@@ -464,6 +461,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity {
 
         super.onDeath(source);
     }
+
 
     @Override
     public EntityType<?> getType() {

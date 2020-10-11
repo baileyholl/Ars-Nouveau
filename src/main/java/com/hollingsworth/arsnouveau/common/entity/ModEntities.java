@@ -22,7 +22,9 @@ public class ModEntities {
     public static EntityType<EntityWhelp> ENTITY_WHELP_TYPE = null;
     public static EntityType<EntityCarbuncle> ENTITY_CARBUNCLE_TYPE = null;
     public static EntityType<EntityFollowProjectile> ENTITY_FOLLOW_PROJ = null;
+    public static EntityType<EntitySylph> ENTITY_SYLPH_TYPE = null;
 
+    public static EntityType<EntityEarthElemental> ENTITY_EARTH_ELEMENTAL_TYPE = null;
 
 
 
@@ -54,6 +56,7 @@ public class ModEntities {
            ENTITY_WHELP_TYPE = build("whelp", EntityType.Builder.<EntityWhelp>create(EntityWhelp::new, EntityClassification.MISC)
                    .size(0.6F, 0.63F).setTrackingRange(10)
                    .setShouldReceiveVelocityUpdates(true));
+
             ENTITY_CARBUNCLE_TYPE = build("carbuncle", EntityType.Builder.<EntityCarbuncle>create(EntityCarbuncle::new, EntityClassification.CREATURE)
                     .size(0.6F, 0.63F).setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
@@ -63,18 +66,26 @@ public class ModEntities {
                             .size(0.5f, 0.5f)
                             .setTrackingRange(10)
                             .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityFollowProjectile::new));
+
+
+            ENTITY_SYLPH_TYPE = build("sylph", EntityType.Builder.<EntitySylph>create(EntitySylph::new, EntityClassification.MISC)
+                    .size(0.6F, 0.98F).setTrackingRange(10)
+                    .setShouldReceiveVelocityUpdates(true));
+
             event.getRegistry().registerAll(
                     SPELL_PROJ,
                     ENTITY_EVOKER_FANGS_ENTITY_TYPE,
-                    ALLY_VEX, ENTITY_WHELP_TYPE,
+                    ALLY_VEX,
+                    ENTITY_WHELP_TYPE,
                     ENTITY_CARBUNCLE_TYPE,
+                    ENTITY_SYLPH_TYPE,
                     ENTITY_FOLLOW_PROJ
             );
 
             GlobalEntityTypeAttributes.put(ENTITY_WHELP_TYPE, EntityWhelp.attributes().create());
             GlobalEntityTypeAttributes.put(ALLY_VEX, VexEntity.func_234321_m_().create());
             GlobalEntityTypeAttributes.put(ENTITY_CARBUNCLE_TYPE, EntityCarbuncle.attributes().create());
-
+            GlobalEntityTypeAttributes.put(ENTITY_SYLPH_TYPE, EntitySylph.attributes().create());
 
         }
     }

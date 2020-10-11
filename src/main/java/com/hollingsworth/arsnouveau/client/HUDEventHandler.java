@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.client.gui.GuiManaHUD;
 import com.hollingsworth.arsnouveau.client.gui.GuiSpellHUD;
@@ -69,6 +70,8 @@ public class HUDEventHandler {
           if(result.getEntity() instanceof EntityWhelp)
               entityHUD.drawHUD(event.getMatrixStack(),(EntityWhelp)result.getEntity());
 
+          if(result.getEntity() instanceof ITooltipProvider)
+              entityHUD.drawHUD(event.getMatrixStack(),((ITooltipProvider) result.getEntity()).getTooltip());
 
         }
     }

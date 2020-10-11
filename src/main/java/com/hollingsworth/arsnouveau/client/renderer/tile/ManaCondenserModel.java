@@ -108,9 +108,7 @@ public class ManaCondenserModel extends Model {
         gem.render(matrixStack, buffer, packedLight, packedOverlay);
         bb_main.render(matrixStack, buffer, packedLight, packedOverlay);
 
-
-        float angle = (ClientInfo.ticksInGame /5.0f) % 360;
-        gem.rotateAngleY = angle;
+        gem.rotateAngleY = (ClientInfo.ticksInGame /5.0f) % 360;
         gem.rotateAngleX = 0;
         gem.rotateAngleZ = 0;
     }

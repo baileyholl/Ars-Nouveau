@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
@@ -48,10 +49,10 @@ public class SummoningCrytalTile extends AbstractManaTile {
         return 0;
     }
 
-    public void summon(EntityWhelp whelp){
+    public void summon(LivingEntity entity){
         if(!world.isRemote){
             numEntities +=1;
-            entityList.add(whelp.getUniqueID());
+            entityList.add(entity.getUniqueID());
         }
     }
 
@@ -133,7 +134,7 @@ public class SummoningCrytalTile extends AbstractManaTile {
         return taskPos;
     }
 
-    public boolean enoughMana(ArrayList<AbstractSpellPart> spellParts){
+    public boolean enoughMana(List<AbstractSpellPart> spellParts){
         final boolean[] enough = {false};
         int manaCost = ManaUtil.getRecipeCost(spellParts) / 4;
         BlockPos.getAllInBox(this.getPos().add(7, -3, 7), this.getPos().add(-7, 3, -7)).forEach(blockPos -> {
@@ -144,7 +145,7 @@ public class SummoningCrytalTile extends AbstractManaTile {
         return enough[0];
     }
 
-    public boolean removeMana(ArrayList<AbstractSpellPart> spellParts){
+    public boolean removeMana(List<AbstractSpellPart> spellParts){
         final boolean[] enough = {false};
         int manaCost = ManaUtil.getRecipeCost(spellParts) / 4;
         BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
@@ -180,10 +181,6 @@ public class SummoningCrytalTile extends AbstractManaTile {
         return positions;
     }
 
-    public int getRange(){
-        return 1;
-    }
-
     public void cleanupKobolds(){
         List<UUID> list = world.getEntitiesWithinAABB(EntityWhelp.class, new AxisAlignedBB(pos).grow(10)).stream().map(f -> f.getUniqueID()).collect(Collectors.toList());
         ArrayList<UUID> removed = new ArrayList<>();
@@ -202,17 +199,18 @@ public class SummoningCrytalTile extends AbstractManaTile {
     public void tick() {
         if(world.getGameTime() % 20 != 0  || world.isRemote)
             return;
-//        this.isOff = world.isBlockPowered(pos);
         cleanupKobolds();
     }
 
+
+    public final static String ENTITY_TAG = "entity";
     @Override
     public void read(BlockState state, CompoundNBT tag) {
         super.read(state,tag);
         this.numEntities = tag.getInt("entities");
         int count = 0;
-        while(tag.hasUniqueId("entity" + count)){
-            entityList.add(tag.getUniqueId("entity" + count));
+        while(tag.hasUniqueId(ENTITY_TAG + count)){
+            entityList.add(tag.getUniqueId(ENTITY_TAG + count));
             count++;
         }
         taskIndex = tag.getInt("task_index");
@@ -224,7 +222,7 @@ public class SummoningCrytalTile extends AbstractManaTile {
     public CompoundNBT write(CompoundNBT tag) {
         tag.putInt("entities", numEntities);
         for (int i = 0; i < entityList.size(); i++) {
-            tag.putUniqueId("entity" + i, entityList.get(i));
+            tag.putUniqueId(ENTITY_TAG + i, entityList.get(i));
         }
         tag.putInt("task_index", taskIndex);
         tag.putInt("tier", tier);

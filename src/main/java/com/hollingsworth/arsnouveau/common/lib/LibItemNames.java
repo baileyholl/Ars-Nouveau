@@ -46,4 +46,9 @@ public class LibItemNames {
     public static final String RUNIC_CHALK = "runic_chalk";
     public static final String CARBUNCLE_CHARM = "carbuncle_charm";
     public static final String CARBUNCLE_SHARD = "carbuncle_shards";
+    public static final String EARTH_ELEMENTAL_SHARD = "earth_elemental_shards";
+    public static final String EARTH_ELEMENTAL_CHARM = "earth_elemental_charm";
+    public static final String SYLPH_SHARD = "sylph_shards";
+    public static final String SYLPH_CHARM = "sylph_charm";
+
 }
