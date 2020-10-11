@@ -31,4 +31,9 @@ public class ReactiveEnchantment extends Enchantment {
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
         return false;
     }
+
+    @Override
+    public boolean isAllowedOnBooks() {
+        return false;
+    }
 }
