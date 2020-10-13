@@ -26,11 +26,8 @@ public class ManaCondenserRenderer extends TileEntityRenderer<ManaCondenserTile>
     @Override
     public void render(ManaCondenserTile manaCondenserTile, float v, MatrixStack ms, IRenderTypeBuffer buffers, int light, int overlay) {
         ms.push();
-        ms.translate(0.5F, 1.25F, 0.5F);
-        ms.scale(.75f, .75F, .75f);
-        float angle = 0;
-
-//        ms.rotate(Vector3f.YP.rotationDegrees(angle));
+        ms.translate(0.5F, 1.5F, 0.5F);
+        ms.scale(1F, -1F, -1F);
         IVertexBuilder buffer = buffers.getBuffer(model.getRenderType(texture));
         model.render(ms, buffer, light, overlay, 1, 1, 1, 1);
         ms.pop();
@@ -44,11 +41,9 @@ public class ManaCondenserRenderer extends TileEntityRenderer<ManaCondenserTile>
         public void func_239207_a_(ItemStack p_239207_1_, ItemCameraTransforms.TransformType p_239207_2_, MatrixStack ms, IRenderTypeBuffer buffers, int light, int overlay) {
             ms.push();
             ms.translate(0.5, 1.5, 0.5);
-//            ms.scale(0.5f,0.5f,0.5f);
             ms.rotate(Vector3f.YP.rotationDegrees(180));
             ms.rotate(Vector3f.ZP.rotationDegrees(0));
             ms.rotate(Vector3f.XP.rotationDegrees(180));
-//            ms.rotate(Vector3f.ZP.rotationDegrees(90));
             IVertexBuilder buffer = buffers.getBuffer(model.getRenderType(texture));
             model.render(ms, buffer, light, overlay, 1, 1, 1, 1);
 

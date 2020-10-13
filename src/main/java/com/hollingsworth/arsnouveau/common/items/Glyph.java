@@ -5,6 +5,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Util;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
@@ -24,12 +25,12 @@ public class Glyph extends ModItem{
         playerIn.inventory.mainInventory.forEach(itemStack -> {
             if(itemStack.getItem() instanceof SpellBook){
                 if(SpellBook.getUnlockedSpells(itemStack.getTag()).contains(spellPart)){
-                    playerIn.sendMessage(new StringTextComponent("You already know this spell!"), null);
+                    playerIn.sendMessage(new StringTextComponent("You already know this spell!"),  Util.DUMMY_UUID);
                     return;
                 }
                 SpellBook.unlockSpell(itemStack.getTag(), this.spellPart.getTag());
                 playerIn.getHeldItem(handIn).shrink(1);
-                playerIn.sendMessage(new StringTextComponent("Unlocked " + this.spellPart.getName()), null);
+                playerIn.sendMessage(new StringTextComponent("Unlocked " + this.spellPart.getName()), Util.DUMMY_UUID);
             }
         });
     return super.onItemRightClick(worldIn, playerIn, handIn);

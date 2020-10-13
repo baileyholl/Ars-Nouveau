@@ -8,7 +8,7 @@ modLoader="javafml" #mandatory
 # A version range to match for said mod loader - for regular FML @Mod it will be the forge version
 loaderVersion="[33,)" #mandatory (28 is current forge version)
 # A URL to refer people to when problems occur with this mod
-issueTrackerURL="http://my.issue.tracker/" #optional
+issueTrackerURL="https://github.com/baileyholl/Ars-Nouveau" #optional
 license="GNU GENERAL PUBLIC LICENSE"
 # A list of mods - how many allowed here is determined by the individual mod loader
 [[mods]] #mandatory
@@ -25,7 +25,7 @@ displayURL="http://example.com/" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
 logoFile="examplemod.png" #optional
 # A text field displayed in the mod UI
-credits="Vazkii, Azanor" #optional
+credits="Vazkii, Azanor, Elucent, Gigaherz" #optional
 license="GNU GENERAL PUBLIC LICENSE"
 # A text field displayed in the mod UI
 authors="Bailey Hollingsworth" #optional

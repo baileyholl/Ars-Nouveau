@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.renderer.tile;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.Model;
 import net.minecraft.client.renderer.model.ModelRenderer;
@@ -107,7 +108,9 @@ public class ManaCondenserModel extends Model {
         gem.render(matrixStack, buffer, packedLight, packedOverlay);
         bb_main.render(matrixStack, buffer, packedLight, packedOverlay);
 
-        gem.rotateAngleY = (ClientInfo.ticksInGame/5.0f) % 360;
+
+        float angle = (ClientInfo.ticksInGame /5.0f) % 360;
+        gem.rotateAngleY = angle;
         gem.rotateAngleX = 0;
         gem.rotateAngleZ = 0;
     }

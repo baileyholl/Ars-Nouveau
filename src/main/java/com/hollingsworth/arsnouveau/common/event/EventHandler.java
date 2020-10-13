@@ -119,7 +119,7 @@ public class EventHandler {
     @SubscribeEvent
     public static void playerDamaged(LivingDamageEvent e){
         if(e.getEntityLiving() != null && e.getEntityLiving().getActivePotionMap().containsKey(ModPotions.SHIELD_POTION)
-                && e.getSource() == DamageSource.MAGIC || e.getSource() == DamageSource.GENERIC ){
+                && (e.getSource() == DamageSource.MAGIC || e.getSource() == DamageSource.GENERIC )){
             float damage = e.getAmount() - 1f * e.getEntityLiving().getActivePotionMap().get(ModPotions.SHIELD_POTION).getAmplifier();
             if (damage < 0) damage = 0;
             e.setAmount(damage);

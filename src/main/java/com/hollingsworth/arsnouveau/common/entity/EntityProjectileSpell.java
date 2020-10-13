@@ -58,14 +58,14 @@ public class EntityProjectileSpell extends ArrowEntity {
         this.lastTickPosX = this.getPosX();
         this.lastTickPosY = this.getPosY();
         this.lastTickPosZ = this.getPosZ();
-        super.tick();
+
 
         if (this.inGround) {
             this.inGround = false;
-            this.setMotion(this.getMotion().mul((double)(0.2F), (double)(0.2F), (double)(0.2F)));
+            this.setMotion(this.getMotion());
         }
 
-        AxisAlignedBB axisalignedbb = this.getBoundingBox().expand(this.getMotion()).grow(1.0D);
+
         Vector3d vector3d2 = this.getPositionVec();
         Vector3d vector3d3 = vector3d2.add(vector3d);
         RayTraceResult raytraceresult = this.world.rayTraceBlocks(new RayTraceContext(vector3d2, vector3d3, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this));
@@ -82,7 +82,6 @@ public class EntityProjectileSpell extends ArrowEntity {
             Entity entity1 = this.func_234616_v_();
             if (entity instanceof PlayerEntity && entity1 instanceof PlayerEntity && !((PlayerEntity)entity1).canAttackPlayer((PlayerEntity)entity)) {
                 raytraceresult = null;
-                entityraytraceresult = null;
             }
         }
 
@@ -96,24 +95,6 @@ public class EntityProjectileSpell extends ArrowEntity {
         double x = this.getPosX() +vec3d.x;
         double y = this.getPosY() + vec3d.y;
         double z = this.getPosZ() + vec3d.getZ();
-//
-//        this.rotationYaw = (float)(MathHelper.atan2(vec3d.x, vec3d.z) * (double)(180F / (float)Math.PI));
-//
-//
-//        while(this.rotationPitch - this.prevRotationPitch >= 180.0F) {
-//            this.prevRotationPitch += 360.0F;
-//        }
-//
-//        while(this.rotationYaw - this.prevRotationYaw < -180.0F) {
-//            this.prevRotationYaw -= 360.0F;
-//        }
-//
-//        while(this.rotationYaw - this.prevRotationYaw >= 180.0F) {
-//            this.prevRotationYaw += 360.0F;
-//        }
-//
-//        this.rotationPitch = MathHelper.lerp(0.2F, this.prevRotationPitch, this.rotationPitch);
-//        this.rotationYaw = MathHelper.lerp(0.2F, this.prevRotationYaw, this.rotationYaw);
 
 
         if (!this.hasNoGravity()) {
@@ -125,24 +106,17 @@ public class EntityProjectileSpell extends ArrowEntity {
         if(world.isRemote && this.age > 1) {
 
             for (int i = 0; i < 10; i++) {
-                double minRange = -0.1;
-                double maxRange = 0.1;
-                double d0 = getPosX() + ParticleUtil.inRange(minRange, maxRange);
-                double d1 = getPosY() + ParticleUtil.inRange(minRange, maxRange);
-                double d2 = getPosZ() + ParticleUtil.inRange(minRange, maxRange);
 
                 double deltaX = getPosX() - lastTickPosX;
                 double deltaY = getPosY() - lastTickPosY;
                 double deltaZ = getPosZ() - lastTickPosZ;
-                double dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 20);
+                double dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 8);
                 int counter = 0;
 
                 for (double j = 0; j < dist; j++) {
                     double coeff = j / dist;
                     counter += world.rand.nextInt(3);
                     if (counter % (Minecraft.getInstance().gameSettings.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().gameSettings.particles.getId()) == 0) {
-
-
                         world.addParticle(GlowParticleData.createData(new ParticleColor(255, 25, 180)), (float) (prevPosX + deltaX * coeff), (float) (prevPosY + deltaY * coeff), (float) (prevPosZ + deltaZ * coeff), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f));
                     }
                 }
@@ -217,8 +191,7 @@ public class EntityProjectileSpell extends ArrowEntity {
 
     @Override
     protected void onImpact(RayTraceResult result) {
-        //super.onHit(result);
-
+        System.out.println("impact");
         if(!world.isRemote &&  result != null && result.getType() == RayTraceResult.Type.ENTITY) {
 
             if (((EntityRayTraceResult) result).getEntity().equals(this.getShooter())) return;
@@ -233,8 +206,6 @@ public class EntityProjectileSpell extends ArrowEntity {
         }
 
         if (!world.isRemote && result instanceof BlockRayTraceResult && !this.removed) {
-//           if(!world.getBlockState(((BlockRayTraceResult) result).getPos()).getMaterial().blocksMovement())
-//               return;
             BlockRayTraceResult blockraytraceresult = (BlockRayTraceResult)result;
             if(this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(this.world, (LivingEntity) this.getShooter(), blockraytraceresult);
