@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
-import com.hollingsworth.arsnouveau.common.entity.goal.*;
+import com.hollingsworth.arsnouveau.common.entity.goal.sylph.*;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
