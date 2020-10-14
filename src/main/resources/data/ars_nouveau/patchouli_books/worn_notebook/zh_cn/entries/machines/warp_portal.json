@@ -1,0 +1,30 @@
+{
+    "name": "传送门",
+    "icon": "ars_nouveau:warp_scroll",
+    "category": "machines",
+    "pages": [
+        {
+            "type": "text",
+            "text": "和传送卷轴一样，传送门可以单向传送到相同维度的任何地点。以下界传送门的结构用奥术砖块建造框架，在附近放置充满法力的法力罐，之后扔入写有地点的传送卷轴即可创建传送门。"
+        },
+		{
+		"type":"multiblock",
+		"multiblock":{
+			"mapping":{
+				"B":"ars_nouveau:arcane_bricks",
+				"P":"ars_nouveau:portal",
+				"0":"ars_nouveau:portal"
+			},
+			"pattern":[
+				[" BB "],
+				["BPPB"],
+				["B0PB"],
+				["BPPB"],
+				[" BB "]
+			],
+			"symmetrical": true
+		},
+		"text":"可传送玩家、生物和物品到相同维度的任意地点的魔法传送门。"
+		}
+    ]
+}

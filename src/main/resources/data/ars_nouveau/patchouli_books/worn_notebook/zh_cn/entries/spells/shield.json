@@ -1,0 +1,18 @@
+{
+  "name": "护盾",
+  "icon": "ars_nouveau:glyph_shield",
+  "category": "spells",
+  "pages": [
+    {
+      "type": "text",
+      "text": "给予魔法护盾效果。这个效果会降低受到的魔法和物理伤害，但不会降低环境造成的伤害。"
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "2",
+      "mana_cost": "中",
+      "clay_type": "ars_nouveau:marvelous_clay",
+      "reagent": "minecraft:shield"
+    }
+  ]
+}

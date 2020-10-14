@@ -1,0 +1,15 @@
+{
+    "name": "符文粉笔",
+    "icon": "ars_nouveau:runic_chalk",
+    "category": "equipment",
+    "pages": [
+        {
+            "type": "text",
+            "text": "符文粉笔可在地面上放置永久符文，走到符文上的实体会触发法术。使用刻印台和法术羊皮纸可将法术刻印到符文上。当符文施法后会变为未充能状态。未充能的符文将吸取附近法力罐内的法力。"
+        },
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:runic_chalk"
+		}
+    ]
+}

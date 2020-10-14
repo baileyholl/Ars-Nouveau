@@ -1,0 +1,18 @@
+{
+  "name": "尖牙",
+  "icon": "ars_nouveau:glyph_fangs",
+  "category": "spells",
+  "pages": [
+    {
+      "type": "text",
+      "text": "召唤唤魔者尖牙。"
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "3",
+      "mana_cost": "中",
+      "clay_type": "ars_nouveau:mythical_clay",
+      "reagent": "minecraft:prismarine_shard"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+    "name": "传送卷轴",
+    "icon": "ars_nouveau:warp_scroll",
+    "category": "equipment",
+    "pages": [
+        {
+            "type": "text",
+            "text": "可传送到已记录地点的一次性卷轴。不过它不能跨维度传送。"
+        },
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:warp_scroll"
+		}
+    ]
+}
