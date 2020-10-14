@@ -31,8 +31,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -175,7 +173,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         }
         if(!(world.getTileEntity(crystalPos) instanceof SummoningCrytalTile))
             return;
-        if(((SummoningCrytalTile) world.getTileEntity(crystalPos)).removeMana(spellRecipe)){
+        if(((SummoningCrytalTile) world.getTileEntity(crystalPos)).removeManaAround(spellRecipe)){
             EntitySpellResolver resolver = new EntitySpellResolver(this.spellRecipe);
             resolver.onCastOnBlock(new BlockRayTraceResult(new Vec3d(target.getX(), target.getY(), target.getZ()), Direction.UP,target, false ), this);
         }
