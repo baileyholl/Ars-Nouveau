@@ -148,9 +148,6 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     }
 
     protected void registerGoals() {
-
-//        this.goalSelector.addGoal(1, new PanicGoal(this, 1.25D));
-//        this.goalSelector.addGoal(1, new LevitateGoal());
         this.goalSelector.addGoal(6, new PerformTaskGoal(this));
         this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
@@ -178,7 +175,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         }
         if(!(world.getTileEntity(crystalPos) instanceof SummoningCrytalTile))
             return;
-        if(((SummoningCrytalTile) world.getTileEntity(crystalPos)).removeMana(spellRecipe)){
+        if(((SummoningCrytalTile) world.getTileEntity(crystalPos)).removeManaAround(spellRecipe)){
             EntitySpellResolver resolver = new EntitySpellResolver(this.spellRecipe);
             resolver.onCastOnBlock(new BlockRayTraceResult(new Vector3d(target.getX(), target.getY(), target.getZ()), Direction.UP,target, false ), this);
         }

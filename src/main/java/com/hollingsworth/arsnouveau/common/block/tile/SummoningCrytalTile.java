@@ -134,9 +134,14 @@ public class SummoningCrytalTile extends AbstractManaTile {
         return taskPos;
     }
 
+
+
     public boolean enoughMana(List<AbstractSpellPart> spellParts){
+        return enoughMana(ManaUtil.getRecipeCost(spellParts) / 4);
+    }
+
+    public boolean enoughMana(int manaCost){
         final boolean[] enough = {false};
-        int manaCost = ManaUtil.getRecipeCost(spellParts) / 4;
         BlockPos.getAllInBox(this.getPos().add(7, -3, 7), this.getPos().add(-7, 3, -7)).forEach(blockPos -> {
             if(!enough[0] && world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= manaCost ) {
                 enough[0] = true;
@@ -145,9 +150,8 @@ public class SummoningCrytalTile extends AbstractManaTile {
         return enough[0];
     }
 
-    public boolean removeMana(List<AbstractSpellPart> spellParts){
+    public boolean removeManaAround(int manaCost){
         final boolean[] enough = {false};
-        int manaCost = ManaUtil.getRecipeCost(spellParts) / 4;
         BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
             if(!enough[0] && world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= manaCost ) {
                 if(!world.isRemote){
@@ -158,6 +162,10 @@ public class SummoningCrytalTile extends AbstractManaTile {
             }
         });
         return enough[0];
+    }
+
+    public boolean removeManaAround(List<AbstractSpellPart> spellParts){
+        return removeManaAround(ManaUtil.getRecipeCost(spellParts) / 4);
     }
 
     public List<BlockPos> getTargets(){

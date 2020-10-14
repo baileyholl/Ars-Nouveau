@@ -1,0 +1,59 @@
+{
+  "name": "item.ars_nouveau.sylph_charm",
+  "icon": "ars_nouveau:sylph_charm",
+  "category": "automation",
+  "pages": [
+    {
+      "type": "text",
+      "text": "ars_nouveau.page.sylph_charm"
+    },
+    {
+      "type": "apparatus_recipe",
+      "reagent":"ars_nouveau:sylph_shards",
+      "item1": "ars_nouveau:bucket_of_mana",
+      "item2": "ars_nouveau:mana_bloom_crop",
+      "item3": "minecraft:diamond",
+      "item4": "minecraft:oak_sapling",
+      "item5": "minecraft:spruce_sapling",
+      "item6": "minecraft:birch_sapling",
+      "item7": "minecraft:wheat_seeds",
+      "item8": "ars_nouveau:mana_bloom"
+    },
+	{
+	 "type": "entity",
+      "entity": "ars_nouveau:sylph",
+	  "text":"ars_nouveau.page2.sylph_charm"
+	},
+	{
+      "type": "text",
+      "text": "ars_nouveau.page3.sylph_charm"
+    },{
+      "type": "text",
+      "text": "ars_nouveau.page4.sylph_charm"
+    },
+	{
+	"type":"multiblock",
+	"multiblock":{
+		"mapping":{
+			"C":"minecraft:chest",
+			"0":"ars_nouveau:summoning_crystal",
+			"J":"ars_nouveau:mana_jar"
+		},
+		"pattern":[
+			["   "],
+			["C0J"],
+			["   "]
+		],
+		"symmetrical": true
+	},
+	"text":""
+	},
+	{
+      "type": "text",
+      "text": "ars_nouveau.page5.sylph_charm"
+    },{
+            "type": "relations",
+            "entries":["apparatus/summoning_crystal"]        
+        }
+  ]
+}

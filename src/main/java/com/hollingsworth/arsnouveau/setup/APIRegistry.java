@@ -65,6 +65,12 @@ public class APIRegistry {
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
 
         registerApparatusRecipe(new ReactiveEnchantmentRecipe());
+
+
+        registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.sylphCharm,ItemsRegistry.sylphShard, new Item[]{
+                ItemsRegistry.bucketOfMana,BlockRegistry.MANA_BLOOM_CROP.asItem(), ItemsRegistry.manaBloom, Items.DIAMOND, Items.OAK_SAPLING, Items.SPRUCE_SAPLING, Items.BIRCH_SAPLING, Items.WHEAT_SEEDS
+        }, ArsNouveauAPI.PatchouliCategories.automation.name()));
+
     }
 
     public static void registerSpells(){

@@ -68,7 +68,7 @@ public class ModEntities {
                             .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityFollowProjectile::new));
 
 
-            ENTITY_SYLPH_TYPE = build("sylph", EntityType.Builder.<EntitySylph>create(EntitySylph::new, EntityClassification.MISC)
+            ENTITY_SYLPH_TYPE = build("sylph", EntityType.Builder.<EntitySylph>create(EntitySylph::new, EntityClassification.CREATURE)
                     .size(0.6F, 0.98F).setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
 
