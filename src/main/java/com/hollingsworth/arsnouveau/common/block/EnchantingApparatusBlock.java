@@ -35,7 +35,7 @@ public class EnchantingApparatusBlock extends ModBlock{
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(!world.isRemote) {
+        if(!world.isRemote && handIn == Hand.MAIN_HAND) {
             if(!(world.getBlockState(pos.down()).getBlock() instanceof ArcaneCore)){
                 PortUtil.sendMessage(player, new TranslationTextComponent("alert.core"));
                 return ActionResultType.SUCCESS;

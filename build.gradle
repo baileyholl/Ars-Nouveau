@@ -14,7 +14,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '0.20.7'
+version = '0.20.8'
 group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'ars_nouveau'
 
