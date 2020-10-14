@@ -1,7 +1,8 @@
-package com.hollingsworth.arsnouveau.common.entity.goal;
+package com.hollingsworth.arsnouveau.common.entity.goal.sylph;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.entity.goal.DistanceRestrictedGoal;
 import net.minecraft.block.material.Material;
 import net.minecraft.command.arguments.EntityAnchorArgument;
 import net.minecraft.entity.MobEntity;

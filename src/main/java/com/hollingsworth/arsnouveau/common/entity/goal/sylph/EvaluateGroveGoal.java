@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.common.entity.goal;
+package com.hollingsworth.arsnouveau.common.entity.goal.sylph;
 
 import com.hollingsworth.arsnouveau.common.entity.EntitySylph;
 import net.minecraft.block.*;
