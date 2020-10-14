@@ -191,12 +191,11 @@ public class EntityProjectileSpell extends ArrowEntity {
 
     @Override
     protected void onImpact(RayTraceResult result) {
-        System.out.println("impact");
         if(!world.isRemote &&  result != null && result.getType() == RayTraceResult.Type.ENTITY) {
 
             if (((EntityRayTraceResult) result).getEntity().equals(this.getShooter())) return;
             if(this.spellResolver != null) {
-                this.spellResolver.onResolveEffect(world, (LivingEntity) this.getShooter(), (EntityRayTraceResult) result);
+                this.spellResolver.onResolveEffect(world, (LivingEntity) this.getShooter(), result);
                  attemptRemoval();
             }
 

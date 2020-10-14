@@ -15,6 +15,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOpenGUI;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.IVanishable;
 import net.minecraft.entity.Entity;
@@ -41,6 +42,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import javax.annotation.Nullable;
+import javax.swing.text.JTextComponent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -253,8 +255,8 @@ public class SpellBook extends ShootableItem implements ISpellTier {
         super.addInformation(stack, world, tooltip, flag);
         if(stack != null && stack.hasTag()) {
             tooltip.add(new StringTextComponent(SpellBook.getSpellName(stack.getTag())));
-            tooltip.add(new StringTextComponent("Press " + ModKeyBindings.OPEN_SPELL_SELECTION.getKeyBinding().getKeyDescription() + " to quick select"));
-            tooltip.add(new StringTextComponent("Press " + ModKeyBindings.OPEN_BOOK.getKeyBinding().getKeyDescription() + " to quick craft"));
+            tooltip.add(new StringTextComponent("Press " + KeyBinding.getDisplayString(ModKeyBindings.OPEN_SPELL_SELECTION.getKeyBinding().getKeyDescription()).get().getString()+ " to quick select"));
+            tooltip.add(new StringTextComponent("Press " + KeyBinding.getDisplayString(ModKeyBindings.OPEN_BOOK.getKeyBinding().getKeyDescription()).get().getString() + " to quick craft"));
 
         }
     }

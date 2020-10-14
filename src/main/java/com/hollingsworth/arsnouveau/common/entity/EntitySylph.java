@@ -3,11 +3,12 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.common.PortUtil;
+
 import com.hollingsworth.arsnouveau.common.block.tile.SummoningCrytalTile;
 import com.hollingsworth.arsnouveau.common.entity.goal.sylph.*;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -31,11 +32,9 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.FlyingPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -77,10 +76,12 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
         return true;
     }
 
+
+
     @Override
-    protected boolean processInteract(PlayerEntity player, Hand hand) {
+    public ActionResultType applyPlayerInteraction(PlayerEntity player, Vector3d vec, Hand hand) {
         if(hand != Hand.MAIN_HAND || player.getEntityWorld().isRemote)
-            return true;
+            return ActionResultType.SUCCESS;
 
         ItemStack stack = player.getHeldItem(hand);
         if(stack.isEmpty()) {
@@ -107,15 +108,15 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
                 PortUtil.sendMessage(player, new TranslationTextComponent("sylph.extremely_diverse"));
             }
 
-            return true;
+            return ActionResultType.SUCCESS;
         }
         if(!(stack.getItem() instanceof BlockItem))
-            return true;
+            return ActionResultType.SUCCESS;
         BlockState state = ((BlockItem) stack.getItem()).getBlock().getDefaultState();
         int score = EvaluateGroveGoal.getScore(state);
         if(score > 0 && this.scoreMap != null && this.scoreMap.get(state) != null && this.scoreMap.get(state) >= 50){
             PortUtil.sendMessage(player, new TranslationTextComponent("sylph.toomuch"));
-            return true;
+            return ActionResultType.SUCCESS;
         }
 
         if(score == 0) {
@@ -128,7 +129,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
         if(score == 2){
             PortUtil.sendMessage(player, new TranslationTextComponent("sylph.excited"));
         }
-        return super.processInteract(player, hand);
+        return ActionResultType.SUCCESS;
     }
 
     protected EntitySylph(EntityType<? extends AbstractFlyingCreature> type, World worldIn) {
