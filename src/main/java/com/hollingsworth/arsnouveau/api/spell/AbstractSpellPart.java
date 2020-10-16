@@ -10,7 +10,6 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.item.Item;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractSpellPart implements ISpellTier, Comparable<AbstractSpellPart> {
@@ -30,7 +29,7 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
         this.name = name;
     }
 
-    public int getAdjustedManaCost(ArrayList<AbstractAugment> augmentTypes){
+    public int getAdjustedManaCost(List<AbstractAugment> augmentTypes){
         int cost = getManaCost();
         for(AbstractAugment a: augmentTypes){
             if(a instanceof AugmentDampen && !dampenIsAllowed()){
@@ -58,8 +57,7 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
     }
 
 
-
-    public int getBuffCount(List<AbstractAugment> augments, Class spellClass){
+    public int getBuffCount(List<AbstractAugment> augments, Class<? extends AbstractSpellPart> spellClass){
         return (int) augments.stream().filter(spellClass::isInstance).count();
     }
 
@@ -84,7 +82,8 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
 
         jsonobject.addProperty("name", this.getName());
         jsonobject.addProperty("icon", ArsNouveau.MODID + ":" + getItemID());
-        jsonobject.addProperty("category", "spells");
+        jsonobject.addProperty("category", "spells_"+(getTier().ordinal() + 1));
+        jsonobject.addProperty("sortnum", this instanceof AbstractCastMethod ? 1 : this instanceof AbstractEffect ? 2 : 3);
         JsonArray jsonArray = new JsonArray();
         JsonObject descPage = new JsonObject();
         descPage.addProperty("type", "text");

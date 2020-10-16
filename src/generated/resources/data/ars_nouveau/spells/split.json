@@ -1,7 +1,8 @@
 {
   "name": "Split",
   "icon": "ars_nouveau:glyph_split",
-  "category": "spells",
+  "category": "spells_3",
+  "sortnum": 3,
   "pages": [
     {
       "type": "text",

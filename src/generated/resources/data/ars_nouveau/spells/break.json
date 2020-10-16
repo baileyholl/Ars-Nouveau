@@ -1,7 +1,8 @@
 {
   "name": "Break",
   "icon": "ars_nouveau:glyph_break",
-  "category": "spells",
+  "category": "spells_1",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",

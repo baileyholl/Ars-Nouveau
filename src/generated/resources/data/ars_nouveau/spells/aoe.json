@@ -1,7 +1,8 @@
 {
   "name": "AOE",
   "icon": "ars_nouveau:glyph_aoe",
-  "category": "spells",
+  "category": "spells_2",
+  "sortnum": 3,
   "pages": [
     {
       "type": "text",

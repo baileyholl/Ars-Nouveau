@@ -1,7 +1,8 @@
 {
   "name": "Accelerate",
   "icon": "ars_nouveau:glyph_accelerate",
-  "category": "spells",
+  "category": "spells_2",
+  "sortnum": 3,
   "pages": [
     {
       "type": "text",

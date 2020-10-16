@@ -1,7 +1,8 @@
 {
   "name": "Harm",
   "icon": "ars_nouveau:glyph_harm",
-  "category": "spells",
+  "category": "spells_1",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",

@@ -1,7 +1,8 @@
 {
   "name": "Lightning",
   "icon": "ars_nouveau:glyph_lightning",
-  "category": "spells",
+  "category": "spells_3",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",

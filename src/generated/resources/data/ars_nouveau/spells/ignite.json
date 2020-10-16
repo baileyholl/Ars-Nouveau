@@ -1,7 +1,8 @@
 {
   "name": "Ignite",
   "icon": "ars_nouveau:glyph_ignite",
-  "category": "spells",
+  "category": "spells_1",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",

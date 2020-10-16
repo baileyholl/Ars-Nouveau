@@ -1,7 +1,8 @@
 {
   "name": "Item Pickup",
   "icon": "ars_nouveau:glyph_pickup",
-  "category": "spells",
+  "category": "spells_1",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",

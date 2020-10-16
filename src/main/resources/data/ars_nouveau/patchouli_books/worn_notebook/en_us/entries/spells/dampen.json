@@ -1,7 +1,8 @@
 {
   "name": "Dampen",
   "icon": "ars_nouveau:glyph_dampen",
-  "category": "spells",
+  "category": "spells_2",
+  "sortnum": 3,
   "pages": [
     {
       "type": "text",

@@ -198,6 +198,7 @@ cb89d97f033aa0565edf11f3b24e74a559d6e5e2 data\ars_nouveau\recipes\stone_2.json
 c0aef11107ba240ab371d4893d5a9d7dd149c6ac data\ars_nouveau\recipes\warding_stone.json
 15c224449c312202695777e523c4bf43cf98a73c data\ars_nouveau\recipes\warp_scroll.json
 09ae9d56d591a79225b3dad96b353dc84a086dbb data\ars_nouveau\recipes\worn_notebook.json
+<<<<<<< HEAD
 >>>>>>> fcf6bd4... Removes Arcane Bricks, adds Mana Gem. Changes all recipes, adds decorative blocks
 1d7d54a20a74a2b5508c68e1563785ae713da130 data\ars_nouveau\spells\accelerate.json
 ce3ad2b255ffea544e9576d147745892e525344e data\ars_nouveau\spells\amplify.json
@@ -240,5 +241,50 @@ d18dd57bc73cbf9c197a24def9ced6f2ddb9eae2 data\ars_nouveau\spells\slowfall.json
 0fdd1cffbdc9779372f317c1fbe359e19d9723a2 data\ars_nouveau\spells\touch.json
 <<<<<<< HEAD
 =======
+=======
+cb592b788380fa4e5c50048bb7da757d38c13894 data\ars_nouveau\spells\accelerate.json
+2ba06327edc4cefca59cf2956f8e54bc727576fe data\ars_nouveau\spells\amplify.json
+936c979a4c79582b3d1aa9c3b111b04f18c4e25b data\ars_nouveau\spells\aoe.json
+98bf217f595e7c8365676ccc451756fb8ac6dbba data\ars_nouveau\spells\aquatic.json
+531099541345720ef762695e3fe38120f919188a data\ars_nouveau\spells\blink.json
+e5cfdd8f27b484d11a3ddd56ae680ae9f48dfc89 data\ars_nouveau\spells\break.json
+dd42b149cc470af189da2f84d7492ba9067d6769 data\ars_nouveau\spells\dampen.json
+71abe448a47363267b2a4128ddaec667bbfda327 data\ars_nouveau\spells\dispel.json
+999d4c8e4b36f4bae2fdbadbff62b180f3ca0521 data\ars_nouveau\spells\ender_inventory.json
+bc4d0055097d43c5cf5aa1463d59cd76f8576245 data\ars_nouveau\spells\explosion.json
+a1cfa5c1b5bed710f1e80510723d81fcbf82dd93 data\ars_nouveau\spells\extend_time.json
+abe76f9aafcc42e1c0167d34340cb0b40da2b0f1 data\ars_nouveau\spells\extract.json
+d3d14452ed94dcc18dd382c33ba4da939c8e661b data\ars_nouveau\spells\fangs.json
+128644542a5568a3a659cdaa1220961c6faaa122 data\ars_nouveau\spells\fortune.json
+291e785bcf8d99a7ba5ecb369a37488e9574db28 data\ars_nouveau\spells\freeze.json
+e026bccb5ca6ebd0a0efc06f3dba2bc20822f39a data\ars_nouveau\spells\grow.json
+85a2004c31228d97caa615b82c0dea71b681dac6 data\ars_nouveau\spells\gust.json
+336e1229cfe6118c51e71e68af9080640948d3bd data\ars_nouveau\spells\harm.json
+091c7c20a6df89c217f0c2e3f0cde419efc5ede9 data\ars_nouveau\spells\harvest.json
+70b802fb487952f0abdd33489b3050670975acf2 data\ars_nouveau\spells\haste.json
+e256690571a0cd2b5eb7a80052935bb15dc17d80 data\ars_nouveau\spells\heal.json
+38c2d115ed2ba7b63ffafb4d919303edc7239312 data\ars_nouveau\spells\ignite.json
+79bd334537c60228a9a037cec225a1c132c03574 data\ars_nouveau\spells\interact.json
+b88705603afc1ba41db16e8f09789938ac553e73 data\ars_nouveau\spells\launch.json
+0594080364d86da77bd2ebc7f842819e1048a5af data\ars_nouveau\spells\leap.json
+2f43f7f19ce663d2d9869dfabba7c80b4388c973 data\ars_nouveau\spells\light.json
+24b48c6e4a65789275f59abccb68d789d8ff0d96 data\ars_nouveau\spells\lightning.json
+a04259e8bf6415bf68b31842250c590fb4924284 data\ars_nouveau\spells\phantom_block.json
+0f735862c892295a632bef14b5dccd1b62464cc1 data\ars_nouveau\spells\pickup.json
+c5dca01d0b14fb1fc38f81dffdb5a0bff2f37229 data\ars_nouveau\spells\pierce.json
+ceaf6061cc50564bd1c5bd1c0ea01a08a4974781 data\ars_nouveau\spells\place_block.json
+e6efe72b3dc5f58ad9870c7adde294c9c60114a0 data\ars_nouveau\spells\projectile.json
+599ac199695dce485fcc07be0674a3c546104d06 data\ars_nouveau\spells\pull.json
+d4793df16cb6b7d4e419686deb777b60f7f6b44d data\ars_nouveau\spells\rune.json
+08d80b635183d21a5cc6bf098fe23fc4855382bf data\ars_nouveau\spells\self.json
+9896beb0229a573e3dd34cdbd84500500c6ae68e data\ars_nouveau\spells\shield.json
+f5f1143b7bbb267f64ea64c97dce219f3bfb1586 data\ars_nouveau\spells\slowfall.json
+5166d188119211ac5e9f13d4c5487fabf2e0c58e data\ars_nouveau\spells\smelt.json
+bf461d896e6c1f69daa2b8ae79a21946135d94bf data\ars_nouveau\spells\snare.json
+f7a20002c2fa9ae8914baef86ba14dd4d90e3eec data\ars_nouveau\spells\split.json
+845785ea199f707f630a6e21cf63ef11fd33cb81 data\ars_nouveau\spells\strength.json
+55751d574f82f002e873be0538849452dd47905c data\ars_nouveau\spells\summon_vex.json
+9818f0be620620e363b191cbe34e0ba8083c058b data\ars_nouveau\spells\touch.json
+>>>>>>> b534aba... #21 Splits spells into tiers, and now sorted by type
 7fbc5861ff4cd6a939c3c79ebddf70a5b8fecb09 data\forge\tags\blocks\ores.json
 >>>>>>> fcf6bd4... Removes Arcane Bricks, adds Mana Gem. Changes all recipes, adds decorative blocks

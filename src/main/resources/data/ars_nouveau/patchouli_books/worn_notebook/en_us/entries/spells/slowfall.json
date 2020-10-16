@@ -1,7 +1,8 @@
 {
   "name": "Slowfall",
   "icon": "ars_nouveau:glyph_slowfall",
-  "category": "spells",
+  "category": "spells_1",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",
