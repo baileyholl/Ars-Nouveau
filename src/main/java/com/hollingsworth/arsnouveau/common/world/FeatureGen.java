@@ -25,7 +25,7 @@ public class FeatureGen {
             if(Config.SPAWN_ORE.get()) {
                 biome.addFeature(GenerationStage.Decoration.UNDERGROUND_ORES, Feature.ORE.withConfiguration(
                         new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE, BlockRegistry.ARCANE_ORE.getDefaultState(), 9)).withPlacement(Placement.COUNT_RANGE.configure(
-                        new CountRangeConfig(20, 0, 0, 64))));
+                        new CountRangeConfig(5, 0, 0, 64))));
             }
             if(categories.contains(biome.getCategory())) {
                 biome.getSpawns(EntityClassification.CREATURE).add(new Biome.SpawnListEntry(ModEntities.ENTITY_CARBUNCLE_TYPE, 10, 1, 3));

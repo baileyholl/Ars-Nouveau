@@ -6,10 +6,8 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
 
 public class CrystallizerTile extends AbstractManaTile implements IInventory {
     public ItemStack stack = ItemStack.EMPTY;
@@ -46,7 +44,7 @@ public class CrystallizerTile extends AbstractManaTile implements IInventory {
         }
 
         if(this.getCurrentMana() >= 5000 && (stack == null || stack.isEmpty())){
-            this.stack = new ItemStack(BlockRegistry.MANA_GEM_BLOCK);
+            this.stack = new ItemStack(ItemsRegistry.manaGem);
             this.setMana(0);
         }
 

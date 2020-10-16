@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.common.base.Preconditions;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
+import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.Item;
@@ -16,20 +17,20 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
 
     @Override
     protected void registerModels() {
-        //getBuilder("testitem").parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", mcLoc("block/stone"));
         getBuilder("glyph").texture("layer0",itemTexture(ItemsRegistry.noviceSpellBook));
-        //System.out.println(itemTexture(ItemsRegistry.spellBook));
-
-//        ArsNouveauAPI.getInstance().getSpell_map().values().forEach(p ->{
-//            System.out.println(spellTexture(p));
-//            getBuilder("glyph_"+p.tag.toLowerCase()).texture("layer0",spellTexture(p));
-//        });
         ItemsRegistry.RegistrationHandler.ITEMS.forEach(i ->{
             if(i instanceof Glyph){
                 getBuilder("glyph_" + ((Glyph) i).spellPart.getTag()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", spellTexture(i));
             }
         });
+        getBuilder(LibBlockNames.ARCANE_STONE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.ARCANE_STONE));
+        getBuilder(LibBlockNames.AB_ALTERNATE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_ALTERNATE));
+        getBuilder(LibBlockNames.AB_BASKET).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_BASKET));
+        getBuilder(LibBlockNames.AB_HERRING).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_HERRING));
+        getBuilder(LibBlockNames.AB_MOSAIC).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_MOSAIC));
     }
+
+
 
     @Override
     public String getName() {

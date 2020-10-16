@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
-import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -182,6 +182,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity {
     protected void registerAttributes() {
         super.registerAttributes();
         this.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue((double)0.2F);
+
     }
 
     @Override
@@ -204,6 +205,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity {
         this.goalSelector.addGoal(3, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.goalSelector.addGoal(4, new AvoidPlayerUntamedGoal(this, PlayerEntity.class, 16.0F, 1.6D, 1.4D));
+        this.goalSelector.addGoal(0, new SwimGoal(this));
 //        this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
     }
 

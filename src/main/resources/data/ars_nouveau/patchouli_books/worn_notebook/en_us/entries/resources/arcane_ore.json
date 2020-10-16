@@ -5,11 +5,15 @@
     "pages": [
         {
             "type": "text",
-            "text": "Arcane Ore can be found at the same levels as iron. Fairly common, Arcane Ore is required for building magical machines and devices."
+            "text": "Arcane Ore is slightly more common than gold and provides Mana Gems. Mana Gems are used for crafting baubles, unlocking new spells, and building devices. Mana Gems may also be created renewable through the use of the Crystallizer."
         },
 		{
             "type":"smelting",
-			"recipe":"ars_nouveau:arcane_brick"
-		}
+			"recipe":"ars_nouveau:mana_gem"
+		},
+		{
+            "type": "relations",
+            "entries":["machines/crystallizer"]        
+        }
     ]
 }

@@ -68,6 +68,7 @@ public class EffectBreak extends AbstractEffect {
                 }
 
                 if (hasBuff(augments, AugmentExtract.class)) {
+
                     ItemStack stack = LootUtil.getDefaultFakeTool();
                     stack.addEnchantment(Enchantments.SILK_TOUCH, 1);
                     Block.spawnDrops(world.getBlockState(pos1), world, pos1, world.getTileEntity(pos1), shooter,stack);

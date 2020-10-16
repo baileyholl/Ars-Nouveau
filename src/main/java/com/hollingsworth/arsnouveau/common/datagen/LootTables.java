@@ -34,4 +34,6 @@ public class LootTables extends BaseLootTableProvider{
         lootTables.put(block, createStandardTable(block.getRegistryName().toString().replace(ArsNouveau.MODID + ":", "") , block));
     }
 
+
+
 }
