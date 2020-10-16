@@ -1,4 +1,25 @@
+<<<<<<< HEAD
 deff1cdb722d34a807af2fb9f1b7fb3240e5b14e assets\ars_nouveau\lang\en_us.json
+=======
+1117737c5ef98697bd2b1686c732c70b45e82d62 assets\ars_nouveau\blockstates\ab_alternating.json
+c3ff0b344c6531ce26693505e0510a5f3fb2ca9b assets\ars_nouveau\blockstates\ab_basket.json
+b7eef87f43512893c8e7fdf2e80b51c6c17460d0 assets\ars_nouveau\blockstates\ab_herring.json
+9b813814a34875ad7ec47cfa28b192e4f1f8f224 assets\ars_nouveau\blockstates\ab_mosaic.json
+73e11cea3a45d6e9d9d43c178de66771d8dc4019 assets\ars_nouveau\blockstates\arcane_bricks.json
+8a2ddb4670a53551057620f31d6fbe18a302b814 assets\ars_nouveau\blockstates\arcane_stone.json
+8adeb6c7ddf6e9f84f0b1e9df135b19078ec604b assets\ars_nouveau\lang\en_us.json
+9aa09291081857b4ec4abd838eded13845303191 assets\ars_nouveau\models\block\ab_alternating.json
+28a4b09dafe2bcfdb24c5ce89688070344018cfb assets\ars_nouveau\models\block\ab_basket.json
+ee7db4ac6bdd4888f5389026aca3a1a14c5589cc assets\ars_nouveau\models\block\ab_herring.json
+570c4a02397499eefb1e887a8b57011a505501a6 assets\ars_nouveau\models\block\ab_mosaic.json
+04487c853bd496b20abe519d15515b12b2a67624 assets\ars_nouveau\models\block\arcane_bricks.json
+3ae19f2b23bad58d6bd8abf9fc8936fcc589b573 assets\ars_nouveau\models\block\arcane_stone.json
+5bdd661dae6daa303237c77eb72cc9d2253f4b47 assets\ars_nouveau\models\item\ab_alternating.json
+845480a1f39c24d7b84aa851936f4de3cc1918e7 assets\ars_nouveau\models\item\ab_basket.json
+0fbf4b40c2c80b5cb576c3d584ed1b45e2ec051a assets\ars_nouveau\models\item\ab_herring.json
+86ffec10756e6472f08d467743273a442feddadf assets\ars_nouveau\models\item\ab_mosaic.json
+1ac4349a65ee2aa8b672ef82ffc60a2510d6fcf5 assets\ars_nouveau\models\item\arcane_stone.json
+>>>>>>> fcf6bd4... Removes Arcane Bricks, adds Mana Gem. Changes all recipes, adds decorative blocks
 8df6c776919a3f8047c16ec1b257660578194494 assets\ars_nouveau\models\item\glyph.json
 ada35ee4e7a0441a74aaf1d4427e84dcd780bfa6 assets\ars_nouveau\models\item\glyph_accelerate.json
 a77a190382a8fffc42302abbf30f21375f94ce57 assets\ars_nouveau\models\item\glyph_amplify.json
@@ -43,14 +64,20 @@ b751452f93f586b8b01b7dd426a8e98e0fe56aba assets\ars_nouveau\models\item\glyph_to
 973417b67a36ec7243248b69d79b92c6a7dd9ffc data\ars_nouveau\advancements\recipes\ars_nouveau\apprentice_hood.json
 b97f3679de2a6d45ce50ec16037e972aac4b2bf5 data\ars_nouveau\advancements\recipes\ars_nouveau\apprentice_leggings.json
 f9fb40e41387f7d5895fce7bdb3d0018bd8b8be1 data\ars_nouveau\advancements\recipes\ars_nouveau\apprentice_robes.json
-832074a44da88f193b07d8a41847782ff6a37cbd data\ars_nouveau\advancements\recipes\ars_nouveau\arcane_brick.json
 9d4370bbad5a313d9d2e0a97b658ed73dab3ed7b data\ars_nouveau\advancements\recipes\ars_nouveau\arcane_bricks.json
 15c70c2c71a054c677114fc2520c7327ab9e3f06 data\ars_nouveau\advancements\recipes\ars_nouveau\arcane_pedestal.json
+b2f032052bccb657ec6b1bd545aca11481a703d9 data\ars_nouveau\advancements\recipes\ars_nouveau\arcane_stone.json
+6e03bf23727ae53076a3764a9a0c1df655f7aa1a data\ars_nouveau\advancements\recipes\ars_nouveau\arcane_stone_0.json
+1f3335520efc1c087a32912c60f139b4f38af170 data\ars_nouveau\advancements\recipes\ars_nouveau\arcane_stone_1.json
+64f9dd0dc8bc063a8374394c60c8f6b2d078cbf4 data\ars_nouveau\advancements\recipes\ars_nouveau\arcane_stone_2.json
+12d525d987a89060c6b1712809505d842df4d772 data\ars_nouveau\advancements\recipes\ars_nouveau\arcane_stone_3.json
+d660fdabd03fd19e3cb635c1e4667cbc5ac57b16 data\ars_nouveau\advancements\recipes\ars_nouveau\arcane_stone_4.json
 8eb8db7548130dcf58f51c33405b72649e1d6e82 data\ars_nouveau\advancements\recipes\ars_nouveau\archmage_boots.json
 e95bc1a1fc95b4c135a6b7933c2e579c0f156b59 data\ars_nouveau\advancements\recipes\ars_nouveau\archmage_hood.json
 2504cdca95e865fa1ce0d30a7b710c4fa19905c1 data\ars_nouveau\advancements\recipes\ars_nouveau\archmage_leggings.json
 2d02c609a5fd586dadb744ec50f471e308da626c data\ars_nouveau\advancements\recipes\ars_nouveau\archmage_robes.json
 85aa7414e6d40a4ea16bc2078258fb298653e4b8 data\ars_nouveau\advancements\recipes\ars_nouveau\blaze_fiber.json
+256dd9bafe8f66575ba5465c2f8de339e2534784 data\ars_nouveau\advancements\recipes\ars_nouveau\crystallizer.json
 352de2b0e7bd2f733b39e619d9ca0c5da31d9414 data\ars_nouveau\advancements\recipes\ars_nouveau\dominion_wand.json
 a0c9891484d7717183b7047dd7e273cdfdf19a91 data\ars_nouveau\advancements\recipes\ars_nouveau\dull_trinket.json
 a8f8baa00a461b6e84161f6fc8ad4e758cee013e data\ars_nouveau\advancements\recipes\ars_nouveau\enchanting_apparatus.json
@@ -59,6 +86,8 @@ a8f8baa00a461b6e84161f6fc8ad4e758cee013e data\ars_nouveau\advancements\recipes\a
 f81a66b3fda49836df1558ab8a1608cb8bca83ef data\ars_nouveau\advancements\recipes\ars_nouveau\magic_clay.json
 1c003f83f3c959ef4decc4efd2c57e29af8399b0 data\ars_nouveau\advancements\recipes\ars_nouveau\mana_condenser.json
 67424f9561feff665ed8b47a9fc66b1e1b332701 data\ars_nouveau\advancements\recipes\ars_nouveau\mana_fiber.json
+9a82fc8d1363cbd84aac326f4e563a49262a2e58 data\ars_nouveau\advancements\recipes\ars_nouveau\mana_gem.json
+3486616e3175c2ec304709da28c202b9f210d767 data\ars_nouveau\advancements\recipes\ars_nouveau\mana_gem2.json
 8c5910af8f437d300a3c4ec10ebd14f59f50fd52 data\ars_nouveau\advancements\recipes\ars_nouveau\mana_jar.json
 b1b31c6c36257d75a32f2d486f87cf1305a2948f data\ars_nouveau\advancements\recipes\ars_nouveau\marvelous_clay.json
 a0ada10978d64b1a1c9c82fd74894fb0b9bfd161 data\ars_nouveau\advancements\recipes\ars_nouveau\mundane_belt.json
@@ -70,9 +99,10 @@ db17b9798ca5f74770cf70f4f04778ebc7d11656 data\ars_nouveau\advancements\recipes\a
 a8b041ad4a77cecb5ac5376c1d9b881526f500e3 data\ars_nouveau\advancements\recipes\ars_nouveau\ring_of_potential.json
 1217fa596539a2ab4f4a45420a58de70b0e45794 data\ars_nouveau\advancements\recipes\ars_nouveau\scribes_table.json
 0aea55e1fccc90514eaaab7cd28e89aba79c51f8 data\ars_nouveau\advancements\recipes\ars_nouveau\spell_parchment.json
+d4a7c586dba17505d659894d3312b29af8ec532c data\ars_nouveau\advancements\recipes\ars_nouveau\stone_2.json
 cb9348787e748266b6b9ae83dde424d8dd1558a9 data\ars_nouveau\advancements\recipes\ars_nouveau\warding_stone.json
 30c5c4eda1ff173c55fe232ca69ac596581f8e5a data\ars_nouveau\advancements\recipes\ars_nouveau\warp_scroll.json
-7242b9e4f15947ed5705267e8997a06f43441b5c data\ars_nouveau\advancements\recipes\ars_nouveau\worn_notebook.json
+cacafc1a98dc415b84770ce6dc0fee2f8fff9e32 data\ars_nouveau\advancements\recipes\ars_nouveau\worn_notebook.json
 276ec0976ee8401408618bb25b517206a6828ef4 data\ars_nouveau\apparatus\amulet_of_mana_boost.json
 611069be5e7faae4f79930c292921ace892047f7 data\ars_nouveau\apparatus\amulet_of_mana_regen.json
 bb37474aab105762ae43fd972f1afcbc01056711 data\ars_nouveau\apparatus\arcane_relay.json
@@ -80,15 +110,32 @@ bb37474aab105762ae43fd972f1afcbc01056711 data\ars_nouveau\apparatus\arcane_relay
 3eb11b179861a281aaa889b9f88693853acd88d4 data\ars_nouveau\apparatus\belt_of_unstable_gifts.json
 949f820d4d4689ddc66d9a6f163db3cf7010eb10 data\ars_nouveau\apparatus\jar_of_light.json
 3b7c28983f698a9857d97af877e0405094d00cd3 data\ars_nouveau\apparatus\mana_bloom_crop.json
-ee5fbb0752a81df9b026877bde4bb05d23aaef58 data\ars_nouveau\apparatus\ring_of_greater_discount.json
-be601be05d88532ae398b61ee62d321b356b4ffe data\ars_nouveau\apparatus\ring_of_lesser_discount.json
-24a114a0931123d2b0c2ae0ea51ab8f8b7e3d1de data\ars_nouveau\apparatus\summoning_crystal.json
+125ab422480771f032993ea903df318fbc74ae0a data\ars_nouveau\apparatus\ring_of_greater_discount.json
+386047cf031c54f21164a24b23116ce14f4d1dc9 data\ars_nouveau\apparatus\ring_of_lesser_discount.json
+41ead81f6d19c7f31029e90438fa68f6695c7934 data\ars_nouveau\apparatus\summoning_crystal.json
+c3bf27d9d6d228f635edb989be60c31de0559071 data\ars_nouveau\apparatus\sylph_charm.json
 f528a3e969efe849792cd69ab16ce7cb3fb423b3 data\ars_nouveau\apparatus\whelp_charm.json
+<<<<<<< HEAD
 9d41727998138e47054af4071b57e3f00c6a897d data\ars_nouveau\loot_tables\blocks\arcane_bricks.json
 0b8d1606267d9cce0f75e4fb24ba98d9ace94128 data\ars_nouveau\loot_tables\blocks\arcane_ore.json
 20777e6304a7c14d013219e9f87998e3feb83c0b data\ars_nouveau\loot_tables\blocks\arcane_pedestal.json
+=======
+3cf67f3a10ae10106e197e31e1de7dde63aedc0e data\ars_nouveau\loot_tables\blocks\ab_alternating.json
+952dd4171d8e13ab9e2c7cdab6aafb82ebbe5e8e data\ars_nouveau\loot_tables\blocks\ab_basket.json
+b3383dc8fc3338314fbbe35ae2094e81f681dbe0 data\ars_nouveau\loot_tables\blocks\ab_herring.json
+60d5f7b79e3e62a02ecce3f7073aee9a1bb93c27 data\ars_nouveau\loot_tables\blocks\ab_mosaic.json
+9a352ae569b93ecb63bd61fbf4df5ec145dfce8a data\ars_nouveau\loot_tables\blocks\arcane_bricks.json
+ba4efce2b9b909834ede691e8e226049467ceb3e data\ars_nouveau\loot_tables\blocks\arcane_core.json
+2d51fa5c7740e38298b10d3190a1e94418f57b0e data\ars_nouveau\loot_tables\blocks\arcane_ore.json
+fa3ae5be3f042ed94f1072fc33634a212b5d64e3 data\ars_nouveau\loot_tables\blocks\arcane_pedestal.json
+>>>>>>> fcf6bd4... Removes Arcane Bricks, adds Mana Gem. Changes all recipes, adds decorative blocks
 a67ec348b28f41a1a553bbac7647124d4b1504d3 data\ars_nouveau\loot_tables\blocks\arcane_relay.json
 12ff857cb42da74b5a6fbe0214a533a5e2434971 data\ars_nouveau\loot_tables\blocks\arcane_road.json
+<<<<<<< HEAD
+=======
+833cb8603719e6c11b72a0e648e257d578e36624 data\ars_nouveau\loot_tables\blocks\arcane_stone.json
+a6ee18ae439873ee9e694b9b47cd5447ce985b2a data\ars_nouveau\loot_tables\blocks\crystallizer.json
+>>>>>>> fcf6bd4... Removes Arcane Bricks, adds Mana Gem. Changes all recipes, adds decorative blocks
 7cb6e17cf3f98527a9bbd64f770dbb3c4fd09b82 data\ars_nouveau\loot_tables\blocks\enchanting_apparatus.json
 36134c22066c4384e7ee100f5956a0f384eacf96 data\ars_nouveau\loot_tables\blocks\glyph_press.json
 44f71594bc23feacb2ecf438ba4be7b5b00dfa85 data\ars_nouveau\loot_tables\blocks\mana_condenser.json
@@ -100,24 +147,39 @@ e6a9f0a5523d90f2012721e07b24095b71f7cc0f data\ars_nouveau\loot_tables\blocks\war
 8aadf9a9cc8a2be512a04b2b2936028f3368bd6e data\ars_nouveau\recipes\apprentice_hood.json
 23203abcb9f396ab818f06f01b344d3ae0ba45d4 data\ars_nouveau\recipes\apprentice_leggings.json
 3afe6cc7d6d8756ebaeae63adfe95616043b6cb5 data\ars_nouveau\recipes\apprentice_robes.json
+<<<<<<< HEAD
 29df948a563f2894a78ad7c09d1074fc1e1efe41 data\ars_nouveau\recipes\arcane_brick.json
 e830b557b2971bcde1d0ebc8ee0ba92c93b5609a data\ars_nouveau\recipes\arcane_bricks.json
 85bf6f57951253079f1057336c342fce0427b0ba data\ars_nouveau\recipes\arcane_pedestal.json
+=======
+9151894a3c147454c2465b9947ae6ef2d256e27e data\ars_nouveau\recipes\arcane_bricks.json
+4bb358937e53059e448821878f36904dafbd1fc4 data\ars_nouveau\recipes\arcane_core.json
+a5f37a85d2977e040ff2466524ffa25b97e7a07e data\ars_nouveau\recipes\arcane_pedestal.json
+b7859681cb17f0aa72a758c7f549dc2aff102f4e data\ars_nouveau\recipes\arcane_stone.json
+2c50a547ee61ab0c83e4daa8c898c1f6938594ed data\ars_nouveau\recipes\arcane_stone_0.json
+5cff8fcf79cf299239ee2baad70828cb5ab35e1c data\ars_nouveau\recipes\arcane_stone_1.json
+d2197540d70b5c0318ba472055a80413bce2c6fa data\ars_nouveau\recipes\arcane_stone_2.json
+7dc8c664764c4ba727a5f72341eea7f73841b4d0 data\ars_nouveau\recipes\arcane_stone_3.json
+f12d5cb59d386647335613d7470c26da000e39c1 data\ars_nouveau\recipes\arcane_stone_4.json
+>>>>>>> fcf6bd4... Removes Arcane Bricks, adds Mana Gem. Changes all recipes, adds decorative blocks
 de2c957800790f0a22f448082b548bf0b7e4eeeb data\ars_nouveau\recipes\archmage_boots.json
 d61541e134ebfa81e45dbd94ded92fdf557fca2a data\ars_nouveau\recipes\archmage_hood.json
 792e71b7fe4c204f6745bb57d87fb3eb690108ae data\ars_nouveau\recipes\archmage_leggings.json
 a36258908f12247281e76bf1f73a1249bb7b5ed3 data\ars_nouveau\recipes\archmage_robes.json
 5421e45ea3bf2c5a95816d791d3d955294a0f8e7 data\ars_nouveau\recipes\blaze_fiber.json
-b07056ab67a6edbfa40045f5eb0f9a1698ffc2e9 data\ars_nouveau\recipes\dominion_wand.json
-3dce7fcf7445eb93baf9c29e3c7694a4350695c0 data\ars_nouveau\recipes\dull_trinket.json
-d7799aa5d616b81c51859abe4a3f3b62851c8d86 data\ars_nouveau\recipes\enchanting_apparatus.json
+3fb3832098673685524c1e201ea1739c6b11877a data\ars_nouveau\recipes\crystallizer.json
+08de52f8a163823371cf7cc48e3fea811cbab0f0 data\ars_nouveau\recipes\dominion_wand.json
+7567b1b9e23dde39f0c237e41e84538bf8fdfc3a data\ars_nouveau\recipes\dull_trinket.json
+bbbd3b468a6639f929dc9e11246bc18ed66aadc4 data\ars_nouveau\recipes\enchanting_apparatus.json
 ff65ab7d0ff7ccff35833758181854ccaa58ed58 data\ars_nouveau\recipes\end_fiber.json
-d87e35703b4ea4a36b8587243453f9c089dd480d data\ars_nouveau\recipes\glyph_press.json
-ba77da5e745fee067fc40e5515caee13e12e80c5 data\ars_nouveau\recipes\magic_clay.json
-2b38d7960e7f220afc6c25d428ede21a9828629b data\ars_nouveau\recipes\mana_condenser.json
+0ebda21232e21fb07898dcee7e9d58335af9e966 data\ars_nouveau\recipes\glyph_press.json
+6b210b3742602c4ab8d05050671ea583a4e1e292 data\ars_nouveau\recipes\magic_clay.json
+b33150141ec682a75abe32b141f5a18d1d80b80c data\ars_nouveau\recipes\mana_condenser.json
 3dfa1206b610acdd720530fa474134c09f0d59b5 data\ars_nouveau\recipes\mana_fiber.json
-7d10de50dec919bef9c4b9e3baab4d3e0c4e0778 data\ars_nouveau\recipes\mana_jar.json
-f4a8062bbf0fe42426f94908ce2f42938c2d1da0 data\ars_nouveau\recipes\marvelous_clay.json
+f336cfbbfaae4913264abe6eaf09962bc84c2d7b data\ars_nouveau\recipes\mana_gem.json
+3685268c8c6bda92fb8fb6935ce4614557637f10 data\ars_nouveau\recipes\mana_gem2.json
+d0818fe700b44fb94a03bdff4add25aac335ccd3 data\ars_nouveau\recipes\mana_jar.json
+3b1ad3c65577172c0396215e7dd10388e7111477 data\ars_nouveau\recipes\marvelous_clay.json
 ea86e3c0f455f6faec42040e7fea3bd1bdd79d54 data\ars_nouveau\recipes\mundane_belt.json
 3f7b717d6c94a2e33de0771813d89273594b8a92 data\ars_nouveau\recipes\mythical_clay.json
 a48865ad0c17595b78b4fceae8c4b04aa593ecf0 data\ars_nouveau\recipes\novice_boots.json
@@ -127,12 +189,19 @@ e3fead8ca408d325e082704141d7fc2aa7898cc5 data\ars_nouveau\recipes\novice_robes.j
 afafdb960323f989e7bda7f527d5457f42fd3e84 data\ars_nouveau\recipes\ring_of_potential.json
 45a3b0b5494cd29b99d3dee1a84938d45d00849f data\ars_nouveau\recipes\scribes_table.json
 a1d7cb3ede72d748a826a1c8f3250d38be465f11 data\ars_nouveau\recipes\spell_parchment.json
+<<<<<<< HEAD
 de86e911c57967d2b14679bc2bd05b66d939afe6 data\ars_nouveau\recipes\warding_stone.json
 d99de13a3b579e1e65458d16b323dc47cea63539 data\ars_nouveau\recipes\warp_scroll.json
 c75ade904292b80cdcc782fdd3839440b71420b9 data\ars_nouveau\recipes\worn_notebook.json
+=======
+cb89d97f033aa0565edf11f3b24e74a559d6e5e2 data\ars_nouveau\recipes\stone_2.json
+c0aef11107ba240ab371d4893d5a9d7dd149c6ac data\ars_nouveau\recipes\warding_stone.json
+15c224449c312202695777e523c4bf43cf98a73c data\ars_nouveau\recipes\warp_scroll.json
+09ae9d56d591a79225b3dad96b353dc84a086dbb data\ars_nouveau\recipes\worn_notebook.json
+>>>>>>> fcf6bd4... Removes Arcane Bricks, adds Mana Gem. Changes all recipes, adds decorative blocks
 1d7d54a20a74a2b5508c68e1563785ae713da130 data\ars_nouveau\spells\accelerate.json
 ce3ad2b255ffea544e9576d147745892e525344e data\ars_nouveau\spells\amplify.json
-4c452a15ab9fff8bfe81d579c56bfcbb39553a49 data\ars_nouveau\spells\aoe.json
+6ecb44aa4d181a60dcdc0f765f1988d5fce96be1 data\ars_nouveau\spells\aoe.json
 abd8cd60c93ae9ea3d83bbcade2d5ded87f19c1f data\ars_nouveau\spells\aquatic.json
 936524115689ddac048fc78c2482a957e5d6ea8c data\ars_nouveau\spells\blink.json
 801aba8fa77cd6a5393eb03a2059c14865c14550 data\ars_nouveau\spells\break.json
@@ -169,3 +238,7 @@ d18dd57bc73cbf9c197a24def9ced6f2ddb9eae2 data\ars_nouveau\spells\slowfall.json
 91d1f899063a3048f17ef1a12639d4a1579e6824 data\ars_nouveau\spells\strength.json
 81d572fe5dbeb8335eab95e5e4074d9dfd88efdc data\ars_nouveau\spells\summon_vex.json
 0fdd1cffbdc9779372f317c1fbe359e19d9723a2 data\ars_nouveau\spells\touch.json
+<<<<<<< HEAD
+=======
+7fbc5861ff4cd6a939c3c79ebddf70a5b8fecb09 data\forge\tags\blocks\ores.json
+>>>>>>> fcf6bd4... Removes Arcane Bricks, adds Mana Gem. Changes all recipes, adds decorative blocks

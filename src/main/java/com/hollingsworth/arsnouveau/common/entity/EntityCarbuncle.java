@@ -174,10 +174,12 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity {
 
     }
 
+
     public static AttributeModifierMap.MutableAttribute attributes() {
         return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 6.0D)
                 .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.2d);
     }
+
 
     @Override
     protected void updateEquipmentIfNeeded(ItemEntity itemEntity) {
@@ -199,6 +201,9 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity {
         this.goalSelector.addGoal(3, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(5, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.goalSelector.addGoal(4, new AvoidPlayerUntamedGoal(this, PlayerEntity.class, 16.0F, 1.6D, 1.4D));
+
+        this.goalSelector.addGoal(0, new SwimGoal(this));
+
     }
 
 

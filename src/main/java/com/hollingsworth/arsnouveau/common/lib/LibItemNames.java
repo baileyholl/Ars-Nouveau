@@ -50,5 +50,5 @@ public class LibItemNames {
     public static final String EARTH_ELEMENTAL_CHARM = "earth_elemental_charm";
     public static final String SYLPH_SHARD = "sylph_shards";
     public static final String SYLPH_CHARM = "sylph_charm";
-
+    public static final String MANA_GEM = "mana_gem";
 }

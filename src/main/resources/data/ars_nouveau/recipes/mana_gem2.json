@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "xxx",
+    "xxx",
+    "xxx"
+  ],
+  "key": {
+    "x": {
+      "item": "ars_nouveau:arcane_brick"
+    }
+  },
+  "result": {
+    "item": "ars_nouveau:mana_gem"
+  }
+}

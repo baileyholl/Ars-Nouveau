@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.items.curios.*;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Item;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -83,6 +84,7 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.EARTH_ELEMENTAL_SHARD)public static ModItem earthElementalShard;
     @ObjectHolder(LibItemNames.SYLPH_CHARM)public static SylphCharm sylphCharm;
     @ObjectHolder(LibItemNames.SYLPH_SHARD)public static ModItem sylphShard;
+    @ObjectHolder(LibItemNames.MANA_GEM)public static ModItem manaGem;
 
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -107,10 +109,12 @@ public class ItemsRegistry {
                     new ModItem(LibItemNames.MANA_BLOOM),
                     new ModItem(LibItemNames.MANA_FIBER),
                     new ModItem(LibItemNames.MUNDANE_BELT),
-                    new ModItem(LibItemNames.ARCANE_BRICK),
+                    new ModItem(LibItemNames.ARCANE_BRICK).withTooltip(new TranslationTextComponent("tooltip.arcane_brick")),
                     new ModItem(LibItemNames.RING_OF_POTENTIAL),
                     new BeltOfUnstableGifts(LibItemNames.BELT_OF_UNSTABLE_GIFTS),
-                    new ModItem(new Item.Properties().group(ArsNouveau.itemGroup).maxStackSize(1), "bucket_of_mana"),
+
+                    new ModItem(defaultItemProperties().maxStackSize(1), "bucket_of_mana"),
+
                     new NoviceArmor(EquipmentSlotType.FEET).setRegistryName("novice_boots"),
                     new NoviceArmor(EquipmentSlotType.LEGS).setRegistryName("novice_leggings"),
                     new NoviceArmor(EquipmentSlotType.CHEST).setRegistryName("novice_robes"),
@@ -160,7 +164,8 @@ public class ItemsRegistry {
                         }
                     },
                     new ModItem(LibItemNames.SYLPH_SHARD),
-                    new SylphCharm()
+                    new SylphCharm(),
+                    new ModItem(LibItemNames.MANA_GEM).withTooltip(new TranslationTextComponent("tooltip.mana_gem"))
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

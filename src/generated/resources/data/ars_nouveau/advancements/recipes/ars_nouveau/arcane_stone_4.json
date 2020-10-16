@@ -2,16 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "ars_nouveau:arcane_brick"
+      "ars_nouveau:arcane_stone_4"
     ]
   },
   "criteria": {
-    "has_ore": {
+    "has_journal": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "ars_nouveau:arcane_ore"
+            "item": "ars_nouveau:worn_notebook"
           }
         ]
       }
@@ -19,13 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "ars_nouveau:arcane_brick"
+        "recipe": "ars_nouveau:arcane_stone_4"
       }
     }
   },
   "requirements": [
     [
-      "has_ore",
+      "has_journal",
       "has_the_recipe"
     ]
   ]

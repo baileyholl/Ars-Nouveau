@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:arcane_brick"
+    }
+  ],
+  "result": {
+    "item": "ars_nouveau:arcane_stone"
+  }
+}
