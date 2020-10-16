@@ -1,7 +1,8 @@
 {
   "name": "Freeze",
   "icon": "ars_nouveau:glyph_freeze",
-  "category": "spells",
+  "category": "spells_1",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",

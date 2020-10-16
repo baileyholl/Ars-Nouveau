@@ -1,7 +1,8 @@
 {
   "name": "Launch",
   "icon": "ars_nouveau:glyph_launch",
-  "category": "spells",
+  "category": "spells_1",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",

@@ -1,7 +1,8 @@
 {
   "name": "Self",
   "icon": "ars_nouveau:glyph_self",
-  "category": "spells",
+  "category": "spells_1",
+  "sortnum": 1,
   "pages": [
     {
       "type": "text",

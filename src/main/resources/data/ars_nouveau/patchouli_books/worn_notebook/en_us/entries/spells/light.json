@@ -1,7 +1,8 @@
 {
   "name": "Light",
   "icon": "ars_nouveau:glyph_light",
-  "category": "spells",
+  "category": "spells_1",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",

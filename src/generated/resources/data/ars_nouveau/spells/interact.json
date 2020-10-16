@@ -1,7 +1,8 @@
 {
   "name": "Interact",
   "icon": "ars_nouveau:glyph_interact",
-  "category": "spells",
+  "category": "spells_1",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",

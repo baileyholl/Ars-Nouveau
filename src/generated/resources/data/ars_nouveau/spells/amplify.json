@@ -1,7 +1,8 @@
 {
   "name": "Amplify",
   "icon": "ars_nouveau:glyph_amplify",
-  "category": "spells",
+  "category": "spells_1",
+  "sortnum": 3,
   "pages": [
     {
       "type": "text",

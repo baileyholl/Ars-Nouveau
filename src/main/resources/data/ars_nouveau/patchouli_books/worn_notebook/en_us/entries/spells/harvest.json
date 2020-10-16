@@ -1,7 +1,8 @@
 {
   "name": "Harvest",
   "icon": "ars_nouveau:glyph_harvest",
-  "category": "spells",
+  "category": "spells_1",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",

@@ -10,7 +10,6 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.item.Item;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -58,8 +57,6 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
         return ISpellTier.Tier.ONE;
     }
 
-
-
     public int getBuffCount(List<AbstractAugment> augments, Class<? extends AbstractSpellPart> spellClass){
         return (int) augments.stream().filter(spellClass::isInstance).count();
     }
@@ -85,7 +82,8 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
 
         jsonobject.addProperty("name", this.getName());
         jsonobject.addProperty("icon", ArsNouveau.MODID + ":" + getItemID());
-        jsonobject.addProperty("category", "spells");
+        jsonobject.addProperty("category", "spells_"+(getTier().ordinal() + 1));
+        jsonobject.addProperty("sortnum", this instanceof AbstractCastMethod ? 1 : this instanceof AbstractEffect ? 2 : 3);
         JsonArray jsonArray = new JsonArray();
         JsonObject descPage = new JsonObject();
         descPage.addProperty("type", "text");

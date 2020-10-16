@@ -1,7 +1,8 @@
 {
   "name": "Smelt",
   "icon": "ars_nouveau:glyph_smelt",
-  "category": "spells",
+  "category": "spells_1",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",

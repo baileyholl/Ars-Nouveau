@@ -1,7 +1,8 @@
 {
   "name": "Rune",
   "icon": "ars_nouveau:glyph_rune",
-  "category": "spells",
+  "category": "spells_1",
+  "sortnum": 1,
   "pages": [
     {
       "type": "text",

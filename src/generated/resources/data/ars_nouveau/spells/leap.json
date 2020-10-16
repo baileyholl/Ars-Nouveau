@@ -1,7 +1,8 @@
 {
   "name": "Leap",
   "icon": "ars_nouveau:glyph_leap",
-  "category": "spells",
+  "category": "spells_1",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",

@@ -1,7 +1,8 @@
 {
   "name": "Access Ender Inventory",
   "icon": "ars_nouveau:glyph_ender_inventory",
-  "category": "spells",
+  "category": "spells_2",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",

@@ -1,7 +1,8 @@
 {
   "name": "Phantom",
   "icon": "ars_nouveau:glyph_phantom_block",
-  "category": "spells",
+  "category": "spells_1",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",

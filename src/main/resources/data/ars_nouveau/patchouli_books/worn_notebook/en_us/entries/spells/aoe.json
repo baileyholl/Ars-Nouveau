@@ -1,11 +1,12 @@
 {
   "name": "AOE",
   "icon": "ars_nouveau:glyph_aoe",
-  "category": "spells",
+  "category": "spells_2",
+  "sortnum": 3,
   "pages": [
     {
       "type": "text",
-      "text": "Spells will affect a larger area around a targetted block."
+      "text": "Spells will affect a larger area around a targeted block."
     },
     {
       "type": "glyph_recipe",
