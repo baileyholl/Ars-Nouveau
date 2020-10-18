@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Applies spells on the caster."
+      "text": "A spell you start with. Applies spells on the caster."
     },
     {
       "type": "glyph_recipe",

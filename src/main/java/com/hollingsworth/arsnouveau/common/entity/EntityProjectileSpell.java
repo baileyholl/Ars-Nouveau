@@ -1,10 +1,9 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
-import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -52,7 +51,7 @@ public class EntityProjectileSpell extends ArrowEntity {
     public void tick() {
         age++;
 
-        if(this.age > 6000){
+        if(this.age > 60*60){
             this.remove();
             return;
         }

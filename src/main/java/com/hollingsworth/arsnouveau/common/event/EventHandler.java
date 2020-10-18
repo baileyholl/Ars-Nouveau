@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-//import com.hollingsworth.arsnouveau.api.client.RenderEventQueue;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
-import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
@@ -11,15 +9,12 @@ import com.hollingsworth.arsnouveau.api.util.MathUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
-import com.hollingsworth.arsnouveau.common.enchantment.ReactiveEnchantment;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketOpenGUI;
 import com.hollingsworth.arsnouveau.common.network.PacketReactiveSpell;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateMana;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -30,14 +25,12 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
-
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -45,18 +38,36 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.List;
 
+//import com.hollingsworth.arsnouveau.api.client.RenderEventQueue;
+
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class EventHandler {
 
     @SubscribeEvent
-    public static void playerClone(PlayerEvent.PlayerRespawnEvent e) {
+    public static void playerRespawn(PlayerEvent.PlayerRespawnEvent e) {
         syncPlayerEvent(e.getPlayer());
+    }
+
+    @SubscribeEvent
+    public static void playerClone(PlayerEvent.Clone e) {
+        if(e.getOriginal().world.isRemote)
+            return;
+
+        ManaCapability.getMana((LivingEntity) e.getEntity()).ifPresent(newMana -> {
+            ManaCapability.getMana(e.getOriginal()).ifPresent(origMana -> {
+                newMana.setMaxMana(origMana.getMaxMana());
+                newMana.setGlyphBonus(origMana.getGlyphBonus());
+                newMana.setBookTier(origMana.getBookTier());
+                Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity)  e.getEntity()), new PacketUpdateMana(newMana.getCurrentMana(), newMana.getMaxMana(), newMana.getGlyphBonus(), newMana.getBookTier()));
+            });
+        });
     }
 
     @SubscribeEvent
@@ -136,7 +147,6 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void jumpEvent(LivingEvent.LivingJumpEvent e) {
-
         if(e.getEntityLiving() == null  || e.getEntityLiving().getActivePotionEffect(Effects.SLOWNESS) == null)
             return;
         EffectInstance effectInstance = e.getEntityLiving().getActivePotionEffect(Effects.SLOWNESS);
@@ -149,7 +159,8 @@ public class EventHandler {
         if (playerEntity instanceof ServerPlayerEntity) {
             ManaCapability.getMana(playerEntity).ifPresent(mana -> {
                 mana.setMaxMana(ManaUtil.getMaxMana(playerEntity));
-                Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerEntity), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana()));
+                mana.setGlyphBonus(mana.getGlyphBonus());
+                Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerEntity), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
             });
         }
     }
@@ -172,21 +183,20 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void playerOnTick(TickEvent.PlayerTickEvent e) {
-
         if (e.player instanceof ServerPlayerEntity && e.player.world.getGameTime() % 5 == 0) {
             if (e.player.world.getGameTime() % 20 == 0) {
                 ManaCapability.getMana(e.player).ifPresent(mana -> {
                     double regenPerSecond = ManaUtil.getManaRegen(e.player);
                     if (mana.getCurrentMana() != mana.getMaxMana()) {
                         mana.addMana((int) regenPerSecond);
-                        Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana()));
+                        Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
                     }
                 });
             }
             if (e.player.world.getGameTime() % 10 == 0) {
                 ManaCapability.getMana(e.player).ifPresent(mana -> {
                     mana.setMaxMana(ManaUtil.getMaxMana(e.player));
-                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana()));
+                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
                 });
             }
         }
@@ -217,4 +227,8 @@ public class EventHandler {
         }
     }
 
+    @SubscribeEvent
+    public static void worldUnload(WorldEvent.Unload e){
+        EventQueue.getInstance().clear();
+    }
 }

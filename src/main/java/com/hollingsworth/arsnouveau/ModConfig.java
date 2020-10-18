@@ -46,7 +46,7 @@ public class ModConfig {
     public static final String EffectInteractID = "interact";
     public static final String EffectPlaceBlockID = "place_block";
     public static final String EffectSnareID = "snare";
-
+    public static final String EffectDelayID = "delay";
 
     public static final String MethodRuneID = "rune";
     public static final String EffectSmeltID = "smelt";

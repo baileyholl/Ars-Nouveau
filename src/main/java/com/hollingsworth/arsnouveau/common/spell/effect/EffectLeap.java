@@ -3,15 +3,13 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import net.minecraft.entity.Entity;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.living.LivingEvent;
 
 import java.util.List;
 
@@ -21,12 +19,13 @@ public class EffectLeap extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
             EntityRayTraceResult rayTraceResult1 = (EntityRayTraceResult) rayTraceResult;
             LivingEntity e = (LivingEntity) rayTraceResult1.getEntity();
-            e.knockBack(e,2 + getAmplificationBonus(augments), -e.getLookVec().x,-e.getLookVec().z);
-            e.setMotion(e.getMotion().add(0, 0.1+ 0.1 * getAmplificationBonus(augments), 0));
+            double bonus = 3 + getAmplificationBonus(augments);
+            e.setMotion(e.getLookVec().x * bonus, e.getLookVec().y * bonus, e.getLookVec().z * bonus);
+            e.fallDistance = 0;
             e.velocityChanged = true;
         }
     }
@@ -43,6 +42,6 @@ public class EffectLeap extends AbstractEffect {
 
     @Override
     public int getManaCost() {
-        return 30;
+        return 20;
     }
 }

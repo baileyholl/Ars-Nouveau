@@ -121,6 +121,6 @@ public class MethodProjectile extends AbstractCastMethod {
 
     @Override
     protected String getBookDescription() {
-        return "Summons a projectile that applies spell effects when this projectile hits a target or block.";
+        return "A spell you start with. Summons a projectile that applies spell effects when this projectile hits a target or block.";
     }
 }

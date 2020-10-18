@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
@@ -52,7 +53,7 @@ public class EffectBreak extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(!world.isRemote && rayTraceResult instanceof BlockRayTraceResult){
             BlockPos pos = new BlockPos(((BlockRayTraceResult) rayTraceResult).getPos());
             BlockState state;
@@ -99,6 +100,6 @@ public class EffectBreak extends AbstractEffect {
 
     @Override
     protected String getBookDescription() {
-        return "Breaks blocks of an average hardness. Can be amplified twice to break harder blocks or can break multiple blocks with the AOE augment.";
+        return "A spell you start with. Breaks blocks of an average hardness. Can be amplified twice to break harder blocks or can break multiple blocks with the AOE augment.";
     }
 }

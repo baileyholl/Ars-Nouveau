@@ -58,6 +58,6 @@ public class MethodSelf extends AbstractCastMethod {
 
     @Override
     protected String getBookDescription() {
-        return "Applies spells on the caster.";
+        return "A spell you start with. Applies spells on the caster.";
     }
 }

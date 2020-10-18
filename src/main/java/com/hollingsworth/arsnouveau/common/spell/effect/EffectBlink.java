@@ -3,10 +3,10 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
@@ -20,12 +20,9 @@ public class EffectBlink extends AbstractEffect {
     }
     
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity().equals(shooter)) {
-            Direction facing = shooter.getAdjustedHorizontalFacing();
             double distance = 8.0f + 3.0f *getAmplificationBonus(augments);
-            //BlockPos pos = shooter.getPosition().offset(shooter.getHorizontalFacing(), 3);
-
             Vec3d lookVec = new Vec3d(shooter.getLookVec().getX(), 0, shooter.getLookVec().getZ());
             Vec3d vec = shooter.getPositionVec().add(lookVec.scale(distance));
             BlockPos pos = new BlockPos(vec);
@@ -44,6 +41,9 @@ public class EffectBlink extends AbstractEffect {
                 }
 
             }
+            shooter.setPositionAndUpdate(vec.getX(), vec.getY(), vec.getZ());
+        }else if(rayTraceResult instanceof EntityRayTraceResult) {
+            Vec3d vec = safelyGetHitPos(rayTraceResult);
             shooter.setPositionAndUpdate(vec.getX(), vec.getY(), vec.getZ());
         }else if(rayTraceResult instanceof BlockRayTraceResult){
             Vec3d vec = rayTraceResult.getHitVec();

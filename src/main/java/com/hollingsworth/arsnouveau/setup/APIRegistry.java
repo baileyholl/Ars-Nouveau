@@ -118,6 +118,7 @@ public class APIRegistry {
         registerSpell(ModConfig.EffectSnareID, new EffectSnare());
         registerSpell(ModConfig.EffectSmeltID, new EffectSmelt());
         registerSpell(ModConfig.EffectLeapID, new EffectLeap());
+        registerSpell(ModConfig.EffectDelayID, new EffectDelay());
         addStartingSpell(ModConfig.MethodProjectileID);
         addStartingSpell(ModConfig.MethodTouchID);
         addStartingSpell(ModConfig.MethodSelfID);

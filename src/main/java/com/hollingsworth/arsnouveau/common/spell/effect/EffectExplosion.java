@@ -3,12 +3,14 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtract;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Explosion;
@@ -24,10 +26,10 @@ public class EffectExplosion extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult == null)
             return;
-        Vec3d vec = rayTraceResult.getHitVec();
+        Vec3d vec = rayTraceResult instanceof EntityRayTraceResult ? ((EntityRayTraceResult) rayTraceResult).getEntity().getPositionVec() : rayTraceResult.getHitVec();
         float intensity = 0.75f + getBuffCount(augments, AugmentAmplify.class);
         int dampen = getBuffCount(augments, AugmentDampen.class);
         intensity -= 0.5 * dampen;

@@ -118,7 +118,7 @@ public class Recipes extends RecipeProvider {
                     .addIngredient(BlockRegistry.ARCANE_STONE, 9)
                     .build(consumer);
 
-            ShapedRecipeBuilder.shapedRecipe(BlockRegistry.ARCANE_BRICKS).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+            ShapedRecipeBuilder.shapedRecipe(BlockRegistry.ARCANE_BRICKS, 4).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                     .patternLine("xx ")
                     .patternLine("xx ")
                     .patternLine("   ").key('x', BlockRegistry.ARCANE_STONE).build(consumer);;

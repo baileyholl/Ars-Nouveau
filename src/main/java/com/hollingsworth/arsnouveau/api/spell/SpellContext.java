@@ -15,7 +15,7 @@ public class SpellContext {
 
     public final @Nullable LivingEntity caster;
 
-    int currentIndex;
+    private int currentIndex;
 
     public SpellContext(List<AbstractSpellPart> recipe, @Nullable LivingEntity caster){
         this.recipe = recipe;
@@ -26,8 +26,10 @@ public class SpellContext {
 
     public AbstractSpellPart nextSpell(){
         this.currentIndex++;
-        return this.recipe.size() < (this.currentIndex - 1) ? this.recipe.get(this.currentIndex - 1) : null;
+        return recipe.get(currentIndex - 1);
     }
+
+    public int getCurrentIndex(){return currentIndex;}
 
     public int getManaCost() {
         return manaCost;

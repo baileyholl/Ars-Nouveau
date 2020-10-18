@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -24,7 +25,7 @@ public class EffectPickup extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         BlockPos pos = new BlockPos(rayTraceResult.getHitVec());
         int expansion = getBuffCount(augments, AugmentAOE.class);
         List<ItemEntity> entityList = world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos.east(3 + expansion).north(3 + expansion).up(3 + expansion),

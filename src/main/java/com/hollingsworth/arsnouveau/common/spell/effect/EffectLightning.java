@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -22,7 +23,7 @@ public class EffectLightning extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         Vec3d pos = rayTraceResult.getHitVec();
         LightningBoltEntity lightningBoltEntity = new LightningBoltEntity(world, pos.getX(), pos.getY(), pos.getZ(), false);
         lightningBoltEntity.setCaster(shooter instanceof ServerPlayerEntity ? (ServerPlayerEntity) shooter : null);
@@ -38,7 +39,6 @@ public class EffectLightning extends AbstractEffect {
     public Tier getTier() {
         return Tier.THREE;
     }
-
 
     @Nullable
     @Override
