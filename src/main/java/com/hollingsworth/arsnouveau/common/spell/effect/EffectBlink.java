@@ -23,8 +23,10 @@ public class EffectBlink extends AbstractEffect {
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity().equals(shooter)) {
             double distance = 8.0f + 3.0f *getAmplificationBonus(augments);
+
             Vec3d lookVec = new Vec3d(shooter.getLookVec().getX(), 0, shooter.getLookVec().getZ());
             Vec3d vec = shooter.getPositionVec().add(lookVec.scale(distance));
+
             BlockPos pos = new BlockPos(vec);
             if (!isValidTeleport(world, pos)){
                 for(double i = distance; i >= 0; i--){

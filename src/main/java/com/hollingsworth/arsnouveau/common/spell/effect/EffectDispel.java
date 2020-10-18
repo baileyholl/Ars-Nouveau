@@ -36,6 +36,11 @@ public class EffectDispel extends AbstractEffect {
     }
 
     @Override
+    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        return rayTraceResult instanceof EntityRayTraceResult;
+    }
+
+    @Override
     public int getManaCost() {
         return 30;
     }

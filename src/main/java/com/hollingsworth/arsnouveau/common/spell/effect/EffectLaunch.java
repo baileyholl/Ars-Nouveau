@@ -31,6 +31,11 @@ public class EffectLaunch extends AbstractEffect {
     }
 
     @Override
+    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        return livingEntityHitSuccess(rayTraceResult);
+    }
+
+    @Override
     public boolean dampenIsAllowed() {
         return true;
     }

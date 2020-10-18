@@ -88,10 +88,12 @@ public class EffectSmelt extends AbstractEffect {
                     }
                 }
             }
-
-
         }
+    }
 
+    @Override
+    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        return rayTraceResult instanceof BlockRayTraceResult;
     }
 
     @Override

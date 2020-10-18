@@ -50,6 +50,11 @@ public class EffectInteract extends AbstractEffect {
         }
     }
 
+    @Override
+    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        return nonAirAnythingSuccess(rayTraceResult, world);
+    }
+
     @Nullable
     @Override
     public Item getCraftingReagent() {

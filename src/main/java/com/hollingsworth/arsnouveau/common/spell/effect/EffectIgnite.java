@@ -41,6 +41,11 @@ public class EffectIgnite  extends AbstractEffect {
     }
 
     @Override
+    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        return livingEntityHitSuccess(rayTraceResult) || rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos().up()).getMaterial() == Material.AIR;
+    }
+
+    @Override
     public int getManaCost() {
         return 15;
     }

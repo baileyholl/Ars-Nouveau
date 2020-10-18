@@ -58,6 +58,11 @@ public class EffectPlaceBlock extends AbstractEffect {
         }
     }
 
+    @Override
+    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        return nonAirBlockSuccess(rayTraceResult, world);
+    }
+
     public ActionResultType attemptPlace(World world, ItemStack stack, BlockItem item, BlockRayTraceResult result){
         FakePlayer fakePlayer = FakePlayerFactory.getMinecraft((ServerWorld)world);
         fakePlayer.setHeldItem(Hand.MAIN_HAND, stack);
