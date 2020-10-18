@@ -67,7 +67,7 @@ public class ManaUtil {
             if(pos1[0] == null && world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= mana) {
                 ((ManaJarTile) world.getTileEntity(blockPos)).removeMana(mana);
                 pos1[0] = blockPos;
-                System.out.println("removed");
+
             }
         });
         return pos1[0];
