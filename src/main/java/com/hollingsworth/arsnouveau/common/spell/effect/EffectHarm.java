@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
 import net.minecraft.entity.Entity;
@@ -29,7 +30,7 @@ public class EffectHarm extends AbstractEffect {
     public EffectHarm() {super(ModConfig.EffectHarmID, "Harm" ); }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof EntityRayTraceResult){
             float damage = 5.0f + 5.0f * getAmplificationBonus(augments);
             Entity entity = ((EntityRayTraceResult) rayTraceResult).getEntity();
@@ -68,6 +69,6 @@ public class EffectHarm extends AbstractEffect {
 
     @Override
     protected String getBookDescription() {
-        return "Damages a target.";
+        return "A spell you start with. Damages a target. May be increased by Amplify. Note, multiple Harms without a delay will not apply due to invincibility on hit.";
     }
 }

@@ -11,6 +11,7 @@
     }
   },
   "result": {
-    "item": "ars_nouveau:arcane_bricks"
+    "item": "ars_nouveau:arcane_bricks",
+    "count": 4
   }
 }

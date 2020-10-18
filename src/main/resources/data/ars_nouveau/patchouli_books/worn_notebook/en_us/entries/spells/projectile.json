@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Summons a projectile that applies spell effects when this projectile hits a target or block."
+      "text": "A spell you start with. Summons a projectile that applies spell effects when this projectile hits a target or block."
     },
     {
       "type": "glyph_recipe",

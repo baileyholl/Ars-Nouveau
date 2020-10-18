@@ -24,6 +24,7 @@ import static com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil.getAugments;
 public class SpellResolver {
     protected AbstractCastMethod castType;
     public List<AbstractSpellPart> spell_recipe;
+    public SpellContext spellContext;
     public boolean silent;
     public SpellResolver(AbstractCastMethod cast, List<AbstractSpellPart> spell_recipe){
         this.castType = cast;
@@ -61,14 +62,16 @@ public class SpellResolver {
                 entity.sendMessage(new StringTextComponent("Invalid Spell."), Util.DUMMY_UUID);
             return false;
         }
-        Set<AbstractSpellPart> testSet = new HashSet<>(spell_recipe.size());
-        for(AbstractSpellPart part : spell_recipe){
-            if(part instanceof AbstractEffect && !testSet.add(part)) {
-                if(!entity.getEntityWorld().isRemote && !silent)
-                    entity.sendMessage(new StringTextComponent("No duplicate effects are allowed. Use Augments!"), null);
-                return false;
-            }
-        }
+
+//        Set<AbstractSpellPart> testSet = new HashSet<>(spell_recipe.size());
+//        for(AbstractSpellPart part : spell_recipe){
+//            if(part instanceof AbstractEffect && !testSet.add(part) && !(part instanceof EffectDelay)) {
+//                if(!entity.getEntityWorld().isRemote && !silent)
+//                    entity.sendMessage(new StringTextComponent("No duplicate effects are allowed. Use Augments!"));
+//                return false;
+//            }
+//        }
+
 
         return enoughMana(entity);
     }
@@ -109,10 +112,13 @@ public class SpellResolver {
 
 
     public void onResolveEffect(World world, LivingEntity shooter, RayTraceResult result){
+        spellContext = new SpellContext(spell_recipe, shooter);
         for(int i = 0; i < spell_recipe.size(); i++){
-            AbstractSpellPart spell = spell_recipe.get(i);
+            if(spellContext.isCanceled())
+                break;
+            AbstractSpellPart spell = spellContext.nextSpell();
             if(spell instanceof AbstractEffect){
-                ((AbstractEffect) spell).onResolve(result, world, shooter, getAugments(spell_recipe, i, shooter));
+                ((AbstractEffect) spell).onResolve(result, world, shooter, getAugments(spell_recipe, i, shooter), spellContext);
             }
         }
     }

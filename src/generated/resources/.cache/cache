@@ -7,7 +7,7 @@ b7eef87f43512893c8e7fdf2e80b51c6c17460d0 assets\ars_nouveau\blockstates\ab_herri
 9b813814a34875ad7ec47cfa28b192e4f1f8f224 assets\ars_nouveau\blockstates\ab_mosaic.json
 73e11cea3a45d6e9d9d43c178de66771d8dc4019 assets\ars_nouveau\blockstates\arcane_bricks.json
 8a2ddb4670a53551057620f31d6fbe18a302b814 assets\ars_nouveau\blockstates\arcane_stone.json
-8adeb6c7ddf6e9f84f0b1e9df135b19078ec604b assets\ars_nouveau\lang\en_us.json
+0808ee44ec4e93c8c2ac543c6306832504924672 assets\ars_nouveau\lang\en_us.json
 9aa09291081857b4ec4abd838eded13845303191 assets\ars_nouveau\models\block\ab_alternating.json
 28a4b09dafe2bcfdb24c5ce89688070344018cfb assets\ars_nouveau\models\block\ab_basket.json
 ee7db4ac6bdd4888f5389026aca3a1a14c5589cc assets\ars_nouveau\models\block\ab_herring.json
@@ -28,6 +28,7 @@ a77a190382a8fffc42302abbf30f21375f94ce57 assets\ars_nouveau\models\item\glyph_am
 e18da5dbd146ec8803d2d554bb5394882b19d235 assets\ars_nouveau\models\item\glyph_blink.json
 2de64f9297198d770f66303be4d548a12cf16754 assets\ars_nouveau\models\item\glyph_break.json
 89b428c076d0f523b4ffbdf3dc9f448ec24f82e5 assets\ars_nouveau\models\item\glyph_dampen.json
+77edf4834cd184155a6dc0ce15e318e24dabdcce assets\ars_nouveau\models\item\glyph_delay.json
 6fb9e1cb71ba50a1b341f81f1440ecebe6a4db3c assets\ars_nouveau\models\item\glyph_dispel.json
 db528059a4232ccef882ac40569f529e71d831ef assets\ars_nouveau\models\item\glyph_ender_inventory.json
 f139bf563f8fd3ae2ba0dc3912d5d1e4addbeafb assets\ars_nouveau\models\item\glyph_explosion.json
@@ -148,11 +149,15 @@ e6a9f0a5523d90f2012721e07b24095b71f7cc0f data\ars_nouveau\loot_tables\blocks\war
 23203abcb9f396ab818f06f01b344d3ae0ba45d4 data\ars_nouveau\recipes\apprentice_leggings.json
 3afe6cc7d6d8756ebaeae63adfe95616043b6cb5 data\ars_nouveau\recipes\apprentice_robes.json
 <<<<<<< HEAD
+<<<<<<< HEAD
 29df948a563f2894a78ad7c09d1074fc1e1efe41 data\ars_nouveau\recipes\arcane_brick.json
 e830b557b2971bcde1d0ebc8ee0ba92c93b5609a data\ars_nouveau\recipes\arcane_bricks.json
 85bf6f57951253079f1057336c342fce0427b0ba data\ars_nouveau\recipes\arcane_pedestal.json
 =======
 9151894a3c147454c2465b9947ae6ef2d256e27e data\ars_nouveau\recipes\arcane_bricks.json
+=======
+91d156d4e14b0059472c62766308c9d69338f239 data\ars_nouveau\recipes\arcane_bricks.json
+>>>>>>> ac6d910... Adds Delay, Leap now uses the look vector, fixed bricks recipe, fix client sync on death
 4bb358937e53059e448821878f36904dafbd1fc4 data\ars_nouveau\recipes\arcane_core.json
 a5f37a85d2977e040ff2466524ffa25b97e7a07e data\ars_nouveau\recipes\arcane_pedestal.json
 b7859681cb17f0aa72a758c7f549dc2aff102f4e data\ars_nouveau\recipes\arcane_stone.json
@@ -247,8 +252,9 @@ cb592b788380fa4e5c50048bb7da757d38c13894 data\ars_nouveau\spells\accelerate.json
 936c979a4c79582b3d1aa9c3b111b04f18c4e25b data\ars_nouveau\spells\aoe.json
 98bf217f595e7c8365676ccc451756fb8ac6dbba data\ars_nouveau\spells\aquatic.json
 531099541345720ef762695e3fe38120f919188a data\ars_nouveau\spells\blink.json
-e5cfdd8f27b484d11a3ddd56ae680ae9f48dfc89 data\ars_nouveau\spells\break.json
+47393937b65af2f5ce62b0a8cc16b3d371ce9b0f data\ars_nouveau\spells\break.json
 dd42b149cc470af189da2f84d7492ba9067d6769 data\ars_nouveau\spells\dampen.json
+25409cba2ad0670f0fb7b066ed46ac7507804ad6 data\ars_nouveau\spells\delay.json
 71abe448a47363267b2a4128ddaec667bbfda327 data\ars_nouveau\spells\dispel.json
 999d4c8e4b36f4bae2fdbadbff62b180f3ca0521 data\ars_nouveau\spells\ender_inventory.json
 bc4d0055097d43c5cf5aa1463d59cd76f8576245 data\ars_nouveau\spells\explosion.json
@@ -259,7 +265,7 @@ d3d14452ed94dcc18dd382c33ba4da939c8e661b data\ars_nouveau\spells\fangs.json
 291e785bcf8d99a7ba5ecb369a37488e9574db28 data\ars_nouveau\spells\freeze.json
 e026bccb5ca6ebd0a0efc06f3dba2bc20822f39a data\ars_nouveau\spells\grow.json
 85a2004c31228d97caa615b82c0dea71b681dac6 data\ars_nouveau\spells\gust.json
-336e1229cfe6118c51e71e68af9080640948d3bd data\ars_nouveau\spells\harm.json
+d607e419370d4688381f70d797b6126d7fc3ab01 data\ars_nouveau\spells\harm.json
 091c7c20a6df89c217f0c2e3f0cde419efc5ede9 data\ars_nouveau\spells\harvest.json
 70b802fb487952f0abdd33489b3050670975acf2 data\ars_nouveau\spells\haste.json
 e256690571a0cd2b5eb7a80052935bb15dc17d80 data\ars_nouveau\spells\heal.json
@@ -273,10 +279,10 @@ a04259e8bf6415bf68b31842250c590fb4924284 data\ars_nouveau\spells\phantom_block.j
 0f735862c892295a632bef14b5dccd1b62464cc1 data\ars_nouveau\spells\pickup.json
 c5dca01d0b14fb1fc38f81dffdb5a0bff2f37229 data\ars_nouveau\spells\pierce.json
 ceaf6061cc50564bd1c5bd1c0ea01a08a4974781 data\ars_nouveau\spells\place_block.json
-e6efe72b3dc5f58ad9870c7adde294c9c60114a0 data\ars_nouveau\spells\projectile.json
+9a626d72837291ae351fff34ffa550c0154db81e data\ars_nouveau\spells\projectile.json
 599ac199695dce485fcc07be0674a3c546104d06 data\ars_nouveau\spells\pull.json
 d4793df16cb6b7d4e419686deb777b60f7f6b44d data\ars_nouveau\spells\rune.json
-08d80b635183d21a5cc6bf098fe23fc4855382bf data\ars_nouveau\spells\self.json
+de32fc485aea070f255a3bad8ce571fc1342b648 data\ars_nouveau\spells\self.json
 9896beb0229a573e3dd34cdbd84500500c6ae68e data\ars_nouveau\spells\shield.json
 f5f1143b7bbb267f64ea64c97dce219f3bfb1586 data\ars_nouveau\spells\slowfall.json
 5166d188119211ac5e9f13d4c5487fabf2e0c58e data\ars_nouveau\spells\smelt.json

@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+
+import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
@@ -8,7 +10,9 @@ import com.hollingsworth.arsnouveau.api.util.MathUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
+
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketReactiveSpell;
@@ -33,10 +37,14 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
+
 import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.gen.GenerationStage;
+
+import net.minecraft.world.World;
+
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -44,44 +52,22 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
 
+
 import java.util.Arrays;
 import java.util.List;
+
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class EventHandler {
 
     @SubscribeEvent
-    public static void playerClone(PlayerEvent.PlayerRespawnEvent e) {
-        syncPlayerEvent(e.getPlayer());
-    }
-
-    @SubscribeEvent
-    public static void playerLoggedIn(PlayerEvent.StartTracking e) {
-        syncPlayerEvent(e.getPlayer());
-    }
-
-    @SubscribeEvent
-    public static void playerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent e) {
-        syncPlayerEvent(e.getPlayer());
-    }
-
-    public static void syncPlayerEvent(PlayerEntity playerEntity){
-        if (playerEntity instanceof ServerPlayerEntity) {
-            ManaCapability.getMana(playerEntity).ifPresent(mana -> {
-                mana.setMaxMana(ManaUtil.getMaxMana(playerEntity));
-                Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerEntity), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana()));
-            });
-        }
-    }
-    @SubscribeEvent
     public static void biomeLoad(BiomeLoadingEvent e) {
-
-
         if(e.getCategory() == Biome.Category.NETHER || e.getCategory() == Biome.Category.THEEND)
             return;
         if(Config.SPAWN_ORE.get()){
@@ -94,56 +80,38 @@ public class EventHandler {
             e.getSpawns().withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_CARBUNCLE_TYPE, 10, 1, 3));
             e.getSpawns().withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_SYLPH_TYPE, 10, 1, 3));
         }
+    };
+
+
+    @SubscribeEvent
+    public static void playerRespawn(PlayerEvent.PlayerRespawnEvent e) {
+        syncPlayerEvent(e.getPlayer());
     }
 
     @SubscribeEvent
-    public static void playerOnTick(TickEvent.PlayerTickEvent e) {
-        if (e.player instanceof ServerPlayerEntity && e.player.world.getGameTime() % 5 == 0) {
-            if (e.player.world.getGameTime() % 20 == 0) {
-                ManaCapability.getMana(e.player).ifPresent(mana -> {
-                    double regenPerSecond = ManaUtil.getManaRegen(e.player);
-                    if (mana.getCurrentMana() != mana.getMaxMana()) {
-                        mana.addMana((int) regenPerSecond);
-                        Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana()));
-                    }
-                });
-            }
-            if (e.player.world.getGameTime() % 10 == 0) {
-                ManaCapability.getMana(e.player).ifPresent(mana -> {
-                    mana.setMaxMana(ManaUtil.getMaxMana(e.player));
-                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana()));
-                });
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public static void playerDamaged(LivingDamageEvent e){
-        if(e.getEntityLiving() != null && e.getEntityLiving().getActivePotionMap().containsKey(ModPotions.SHIELD_POTION)
-                && (e.getSource() == DamageSource.MAGIC || e.getSource() == DamageSource.GENERIC )){
-            float damage = e.getAmount() - 1f * e.getEntityLiving().getActivePotionMap().get(ModPotions.SHIELD_POTION).getAmplifier();
-            if (damage < 0) damage = 0;
-            e.setAmount(damage);
-
-        }
-    }
-    @SubscribeEvent
-    public static void jumpEvent(LivingEvent.LivingJumpEvent e) {
-        if(e.getEntityLiving() == null  || e.getEntityLiving().getActivePotionEffect(Effects.SLOWNESS) == null)
+    public static void playerClone(PlayerEvent.Clone e) {
+        if(e.getOriginal().world.isRemote)
             return;
-        EffectInstance effectInstance = e.getEntityLiving().getActivePotionEffect(Effects.SLOWNESS);
-        if(effectInstance.getAmplifier() >= 20){
-            e.getEntityLiving().setMotion(0,0,0);
-        }
+
+        ManaCapability.getMana((LivingEntity) e.getEntity()).ifPresent(newMana -> {
+            ManaCapability.getMana(e.getOriginal()).ifPresent(origMana -> {
+                newMana.setMaxMana(origMana.getMaxMana());
+                newMana.setGlyphBonus(origMana.getGlyphBonus());
+                newMana.setBookTier(origMana.getBookTier());
+                Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity)  e.getEntity()), new PacketUpdateMana(newMana.getCurrentMana(), newMana.getMaxMana(), newMana.getGlyphBonus(), newMana.getBookTier()));
+            });
+        });
     }
+
     @SubscribeEvent
-    public static void clientTickEnd(TickEvent.ClientTickEvent event){
-        if(event.phase == TickEvent.Phase.END){
-            ClientInfo.ticksInGame++;
-        }
+    public static void playerLoggedIn(PlayerEvent.StartTracking e) {
+        syncPlayerEvent(e.getPlayer());
     }
 
-
+    @SubscribeEvent
+    public static void playerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent e) {
+        syncPlayerEvent(e.getPlayer());
+    }
 
     @SubscribeEvent
     public static void livingHitEvent(LivingHurtEvent e){
@@ -194,7 +162,7 @@ public class EventHandler {
     public static void playerAttackEntity(AttackEntityEvent e){
         LivingEntity entity = e.getEntityLiving();
 
-        if(entity.getEntityWorld().isRemote || !(entity instanceof PlayerEntity))
+        if(entity == null || entity.getEntityWorld().isRemote || !(entity instanceof PlayerEntity))
             return;
         ItemStack s = e.getEntityLiving().getHeldItemMainhand();
         castSpell((PlayerEntity) entity, s);
@@ -211,6 +179,27 @@ public class EventHandler {
     }
 
     @SubscribeEvent
+    public static void jumpEvent(LivingEvent.LivingJumpEvent e) {
+        if(e.getEntityLiving() == null  || e.getEntityLiving().getActivePotionEffect(Effects.SLOWNESS) == null)
+            return;
+        EffectInstance effectInstance = e.getEntityLiving().getActivePotionEffect(Effects.SLOWNESS);
+        if(effectInstance.getAmplifier() >= 20){
+            e.getEntityLiving().setMotion(0,0,0);
+        }
+    }
+
+    public static void syncPlayerEvent(PlayerEntity playerEntity){
+        if (playerEntity instanceof ServerPlayerEntity) {
+            ManaCapability.getMana(playerEntity).ifPresent(mana -> {
+                mana.setMaxMana(ManaUtil.getMaxMana(playerEntity));
+                mana.setGlyphBonus(mana.getGlyphBonus());
+                Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerEntity), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
+            });
+        }
+    }
+
+
+    @SubscribeEvent
     public static void playerLogin(PlayerEvent.PlayerLoggedInEvent e) {
         if(e.getEntityLiving().getEntityWorld().isRemote)
             return;
@@ -224,5 +213,53 @@ public class EventHandler {
         tag.putBoolean(book_tag, true);
         e.getPlayer().getPersistentData().put(PlayerEntity.PERSISTED_NBT_TAG, tag);
     }
+
+    @SubscribeEvent
+    public static void playerOnTick(TickEvent.PlayerTickEvent e) {
+        if (e.player instanceof ServerPlayerEntity && e.player.world.getGameTime() % 5 == 0) {
+            if (e.player.world.getGameTime() % 20 == 0) {
+                ManaCapability.getMana(e.player).ifPresent(mana -> {
+                    double regenPerSecond = ManaUtil.getManaRegen(e.player);
+                    if (mana.getCurrentMana() != mana.getMaxMana()) {
+                        mana.addMana((int) regenPerSecond);
+                        Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
+                    }
+                });
+            }
+            if (e.player.world.getGameTime() % 10 == 0) {
+                ManaCapability.getMana(e.player).ifPresent(mana -> {
+                    mana.setMaxMana(ManaUtil.getMaxMana(e.player));
+                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
+                });
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void worldTick(TickEvent.WorldTickEvent e){
+        World world = e.world;
+        if(world.isRemote)
+            return;
+        EventQueue.getInstance().tick();
+    }
+
+    @SubscribeEvent
+    public static void clientTickEnd(TickEvent.ClientTickEvent event){
+        if(event.phase == TickEvent.Phase.END){
+            ClientInfo.ticksInGame++;
+        }
+    }
+
+    @SubscribeEvent
+    public static void playerDamaged(LivingDamageEvent e){
+        if(e.getEntityLiving() != null && e.getEntityLiving().getActivePotionMap().containsKey(ModPotions.SHIELD_POTION)
+                && (e.getSource() == DamageSource.MAGIC || e.getSource() == DamageSource.GENERIC )){
+            float damage = e.getAmount() - 1f * e.getEntityLiving().getActivePotionMap().get(ModPotions.SHIELD_POTION).getAmplifier();
+            if (damage < 0) damage = 0;
+            e.setAmount(damage);
+        }
+    }
+
     private EventHandler(){}
+
 }

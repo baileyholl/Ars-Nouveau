@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.api.event;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 /**
  * For queuing deferred or over-time tasks. Tick refers to the World Tick event, called on the server side only.
@@ -11,23 +10,26 @@ public class EventQueue {
     List<ITimedEvent> events;
 
     public void tick(){
-        if(events == null || events.size() == 0) {
+        if(events == null || events.isEmpty()) {
             return;
         }
 
-        ListIterator<ITimedEvent> eventListIterator = events.listIterator();
+        List<ITimedEvent> stale = new ArrayList<>();
         ITimedEvent event;
-        while(eventListIterator.hasNext()){
-            event = eventListIterator.next();
-            if(event.isExpired()) {
-                eventListIterator.remove();
-                continue;
+        for(int i = 0; i < events.size(); i++){
+            event = events.get(i);
+            if(event.isExpired()){
+                stale.add(event);
+            }else{
+                event.tick();
             }
-            event.tick();
         }
+        this.events.removeAll(stale);
     }
 
     public void addEvent(ITimedEvent event){
+        if(events == null)
+            events = new ArrayList<>();
         events.add(event);
     }
 
@@ -35,6 +37,11 @@ public class EventQueue {
         if(eventQueue == null)
             eventQueue = new EventQueue();
         return eventQueue;
+    }
+
+    // Tear down on world unload
+    public void clear(){
+        this.events = null;
     }
 
     private static EventQueue eventQueue;

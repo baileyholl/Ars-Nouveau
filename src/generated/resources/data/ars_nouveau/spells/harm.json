@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Damages a target."
+      "text": "A spell you start with. Damages a target. May be increased by Amplify. Note, multiple Harms without a delay will not apply due to invincibility on hit."
     },
     {
       "type": "glyph_recipe",
