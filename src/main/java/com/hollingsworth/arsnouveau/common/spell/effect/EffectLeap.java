@@ -33,6 +33,11 @@ public class EffectLeap extends AbstractEffect {
     }
 
     @Override
+    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        return livingEntityHitSuccess(rayTraceResult);
+    }
+
+    @Override
     protected String getBookDescription() {
         return "Launches the target in the direction they are looking. Amplification will increase the distance moved.";
     }

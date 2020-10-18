@@ -16,7 +16,7 @@ apply plugin: 'maven-publish'
 
 version = '1.1.0'
 group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'ars_nouveau'
+archivesBaseName = 'ars_nouveau-1.16.2'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 

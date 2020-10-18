@@ -32,7 +32,6 @@ public class EffectEnderChest extends AbstractEffect {
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(shooter instanceof PlayerEntity && !(shooter instanceof FakePlayer)){
             EnderChestInventory chestInventory = ((PlayerEntity)shooter).getInventoryEnderChest();
-//            chestInventory.openInventory((PlayerEntity) shooter);
             ((PlayerEntity) shooter).openContainer(new SimpleNamedContainerProvider((p_226928_1_, p_226928_2_, p_226928_3_) -> {
                 return ChestContainer.createGeneric9X3(p_226928_1_, p_226928_2_, chestInventory);
             }, CONTAINER_NAME));

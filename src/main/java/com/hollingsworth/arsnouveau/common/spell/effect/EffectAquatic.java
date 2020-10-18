@@ -28,6 +28,11 @@ public class EffectAquatic extends AbstractEffect {
     }
 
     @Override
+    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        return livingEntityHitSuccess(rayTraceResult);
+    }
+
+    @Override
     public int getManaCost() {
         return 25;
     }

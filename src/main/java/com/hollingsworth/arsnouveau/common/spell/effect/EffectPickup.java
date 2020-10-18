@@ -41,6 +41,14 @@ public class EffectPickup extends AbstractEffect {
     }
 
     @Override
+    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        BlockPos pos = new BlockPos(rayTraceResult.getHitVec());
+        int expansion = getBuffCount(augments, AugmentAOE.class);
+        return !world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos.east(3 + expansion).north(3 + expansion).up(3 + expansion),
+                pos.west(3 +expansion).south(3+expansion).down(3+expansion))).isEmpty();
+    }
+
+    @Override
     protected String getBookDescription() {
         return "Picks up nearby items in a medium radius where this spell is activated. The range may be expanded with AOE.";
     }

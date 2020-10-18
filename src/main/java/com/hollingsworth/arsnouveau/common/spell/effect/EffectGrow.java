@@ -40,6 +40,16 @@ public class EffectGrow  extends AbstractEffect {
             }
         }
     }
+
+    @Override
+    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        if(!(rayTraceResult instanceof BlockRayTraceResult))
+            return false;
+        BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getPos();
+        return world.getBlockState(pos) instanceof IGrowable
+                && ((IGrowable) world.getBlockState(pos)).canGrow(world, pos, world.getBlockState(pos), world.isRemote);
+    }
+
     public static boolean applyBonemeal(World worldIn, BlockPos pos) {
         BlockState blockstate = worldIn.getBlockState(pos);
         if (blockstate.getBlock() instanceof IGrowable) {

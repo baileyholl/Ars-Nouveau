@@ -52,6 +52,11 @@ public class EffectHarm extends AbstractEffect {
     }
 
     @Override
+    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        return rayTraceResult instanceof EntityRayTraceResult;
+    }
+
+    @Override
     public boolean dampenIsAllowed() {
         return true;
     }

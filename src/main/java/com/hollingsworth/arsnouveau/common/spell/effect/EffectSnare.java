@@ -36,6 +36,11 @@ public class EffectSnare extends AbstractEffect {
     }
 
     @Override
+    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        return livingEntityHitSuccess(rayTraceResult);
+    }
+
+    @Override
     protected String getBookDescription() {
         return "Stops entities from moving and jumping. Extend Time will increase the duration of this effect.";
     }

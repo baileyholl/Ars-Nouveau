@@ -2,9 +2,11 @@ package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
@@ -39,4 +41,20 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         return result.getHitVec();
     }
 
+    // If the spell would actually do anything. Can be used for logic checks for things like the whelp.
+    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext){
+        return true;
+    }
+
+    public boolean nonAirBlockSuccess(RayTraceResult rayTraceResult, World world){
+        return rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos()).getMaterial() != Material.AIR;
+    }
+
+    public boolean livingEntityHitSuccess(RayTraceResult rayTraceResult){
+        return rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity;
+    }
+
+    public boolean nonAirAnythingSuccess(RayTraceResult result, World world){
+        return nonAirBlockSuccess(result, world) || livingEntityHitSuccess(result);
+    }
 }

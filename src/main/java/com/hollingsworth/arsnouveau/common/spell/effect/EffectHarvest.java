@@ -27,6 +27,7 @@ import net.minecraft.world.server.ServerWorld;
 import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class EffectHarvest extends AbstractEffect {
 
@@ -43,7 +44,7 @@ public class EffectHarvest extends AbstractEffect {
             for(BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter, ray.getPos(), ray, getBuffCount(augments, AugmentAOE.class))){
                 BlockState state = world.getBlockState(blockpos);
                 if(isTree(state)){
-                    HashSet<BlockPos> list = getTree(world, ray.getPos().getX(), ray.getPos().getY(), ray.getPos().getZ(), true, new HashSet<>());
+                    Set<BlockPos> list = getTree(world, ray.getPos().getX(), ray.getPos().getY(), ray.getPos().getZ(), true, new HashSet<>());
                     list.forEach(listPos -> {
                         if(!BlockUtil.destroyRespectsClaim(shooter, world, listPos))
                             return;
@@ -51,13 +52,14 @@ public class EffectHarvest extends AbstractEffect {
                             world.getBlockState(listPos).getDrops(LootUtil.getSilkContext((ServerWorld) world, listPos,  shooter)).forEach(i -> world.addEntity(new ItemEntity(world,listPos.getX(), listPos.getY(), listPos.getZ(), i )));
                             world.destroyBlock(listPos, false);
                         } else if (hasBuff(augments, AugmentFortune.class)) {
-                            world.getBlockState(listPos).getDrops(LootUtil.getFortuneContext((ServerWorld) world, listPos, shooter, getBuffCount(augments, AugmentFortune.class))).forEach(i -> world.addEntity(new ItemEntity(world,listPos.getX(), listPos.getY(), listPos.getZ(),i )));;
+                            world.getBlockState(listPos).getDrops(LootUtil.getFortuneContext((ServerWorld) world, listPos, shooter, getBuffCount(augments, AugmentFortune.class))).forEach(i -> world.addEntity(new ItemEntity(world,listPos.getX(), listPos.getY(), listPos.getZ(),i )));
                             world.destroyBlock(listPos, false);
                         } else {
                             world.destroyBlock(listPos, true);
                         }
                         world.notifyBlockUpdate(listPos, world.getBlockState(listPos), world.getBlockState(listPos), 3);
                     });
+                    return;
                 }
 
                 if(state.getBlock() instanceof FarmlandBlock || world.getBlockState(blockpos.up()).getBlock() instanceof CropsBlock){
@@ -72,13 +74,12 @@ public class EffectHarvest extends AbstractEffect {
                 if(!cropsBlock.isMaxAge(state) || !(world instanceof ServerWorld))
                     continue;
 
-                List<ItemStack> cropDrops = CropsBlock.getDrops(state, (ServerWorld)world, blockpos, world.getTileEntity(blockpos));
+                List<ItemStack> cropDrops = Block.getDrops(state, (ServerWorld)world, blockpos, world.getTileEntity(blockpos));
 
                 if(hasBuff(augments, AugmentFortune.class)){
                     cropDrops = state.getDrops(LootUtil.getFortuneContext((ServerWorld) world, blockpos, shooter, getBuffCount(augments, AugmentFortune.class)));
                 }
                 BlockPos finalBlockpos = blockpos;
-                boolean noSeed = false;
                 cropDrops.forEach(d -> {
                     if(d.getItem() == BlockRegistry.MANA_BLOOM_CROP.asItem()){
                         return;
@@ -90,11 +91,33 @@ public class EffectHarvest extends AbstractEffect {
         }
     }
 
+    @Override
+    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        if(!(rayTraceResult instanceof BlockRayTraceResult))
+            return false;
+
+        BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getPos();
+        BlockState state = world.getBlockState(pos);
+        if(isTree(state))
+            return true;
+        if(state.getBlock() instanceof FarmlandBlock || world.getBlockState(pos.up()).getBlock() instanceof CropsBlock){
+            pos = pos.up();
+            state = world.getBlockState(pos);
+        }
+        if(!(state.getBlock() instanceof CropsBlock))
+            return false;
+
+
+        CropsBlock cropsBlock = (CropsBlock)world.getBlockState(pos).getBlock();
+
+        return cropsBlock.isMaxAge(state) && world instanceof ServerWorld;
+    }
+
     public boolean isTree(BlockState blockstate){
         return blockstate.getBlock().isIn(BlockTags.LOGS)  || blockstate.getBlock().isIn(BlockTags.LEAVES);
     }
 
-    public HashSet<BlockPos> getTree(World world, int x, int y, int z, boolean fromTree, HashSet<BlockPos> blocks){
+    public Set<BlockPos> getTree(World world, int x, int y, int z, boolean fromTree, Set<BlockPos> blocks){
         if(blocks.size() > 500)
             return blocks;
         BlockPos pos = new BlockPos(x, y, z);

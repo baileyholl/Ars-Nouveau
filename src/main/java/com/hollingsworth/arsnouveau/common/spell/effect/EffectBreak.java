@@ -13,6 +13,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtract;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -71,7 +72,6 @@ public class EffectBreak extends AbstractEffect {
                 }
 
                 if (hasBuff(augments, AugmentExtract.class)) {
-
                     ItemStack stack = LootUtil.getDefaultFakeTool();
                     stack.addEnchantment(Enchantments.SILK_TOUCH, 1);
                     Block.spawnDrops(world.getBlockState(pos1), world, pos1, world.getTileEntity(pos1), shooter,stack);
@@ -87,6 +87,11 @@ public class EffectBreak extends AbstractEffect {
                 BlockUtil.safelyUpdateState(world, pos);
             }
         }
+    }
+
+    @Override
+    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        return rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos()).getMaterial() != Material.AIR;
     }
 
     @Override

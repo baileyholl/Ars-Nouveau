@@ -49,7 +49,11 @@ public class EffectFreeze extends AbstractEffect {
                 }
             }
         }
+    }
 
+    @Override
+    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        return nonAirAnythingSuccess(rayTraceResult, world);
     }
 
     protected static RayTraceResult rayTrace(World worldIn, PlayerEntity player, RayTraceContext.FluidMode fluidMode) {
