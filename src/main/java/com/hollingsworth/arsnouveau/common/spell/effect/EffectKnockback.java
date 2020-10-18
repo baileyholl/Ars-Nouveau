@@ -35,6 +35,7 @@ public class EffectKnockback extends AbstractEffect {
         target.applyKnockback(strength,MathHelper.sin(entityKnockingAway.rotationYaw * ((float)Math.PI / 180F)), (double)(-MathHelper.cos(entityKnockingAway.rotationYaw * ((float)Math.PI / 180F))));
     }
 
+
     @Override
     public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         return livingEntityHitSuccess(rayTraceResult);

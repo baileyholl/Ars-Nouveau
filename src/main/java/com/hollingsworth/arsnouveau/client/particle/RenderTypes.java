@@ -38,7 +38,7 @@ public class RenderTypes {
         @Override
         public void beginRender(BufferBuilder buffer, TextureManager textureManager) {
 
-            RenderSystem.enableAlphaTest();
+            RenderSystem.disableAlphaTest();
             RenderSystem.enableBlend();
             RenderSystem.alphaFunc(516, 0.3f);
             RenderSystem.enableCull();
@@ -52,8 +52,8 @@ public class RenderTypes {
         public void finishRender(Tessellator tessellator) {
             tessellator.draw();
             RenderSystem.enableDepthTest();
-//
-//            RenderSystem.enableCull();
+            RenderSystem.enableAlphaTest();
+
             RenderSystem.depthMask(true);
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.param, GlStateManager.DestFactor.ONE.param);
             RenderSystem.disableCull();

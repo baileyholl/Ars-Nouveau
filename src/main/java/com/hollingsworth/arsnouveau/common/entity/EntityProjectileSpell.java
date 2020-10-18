@@ -56,7 +56,7 @@ public class EntityProjectileSpell extends ArrowEntity {
 
         Vector3d vector3d = this.getMotion();
 
-        if(this.age > 60*60){
+        if(this.age > 60*20){
             this.remove();
             return;
         }
@@ -154,8 +154,8 @@ public class EntityProjectileSpell extends ArrowEntity {
         float f1 = -MathHelper.sin((rotationPitchIn + pitchOffset) * ((float)Math.PI / 180F));
         float f2 = MathHelper.cos(rotationYawIn * ((float)Math.PI / 180F)) * MathHelper.cos(rotationPitchIn * ((float)Math.PI / 180F));
         this.shoot((double)f, (double)f1, (double)f2, velocity, inaccuracy);
-        Vector3d vec3d = entityThrower.getMotion();
-        this.setMotion(this.getMotion().add(vec3d.x, entityThrower.isOnGround() ? 0.0D : vec3d.y, vec3d.z));
+        Vector3d vec3d = entityThrower.getLookVec();
+        this.setMotion(this.getMotion().add(vec3d.x, vec3d.y, vec3d.z));
     }
 
     /**
