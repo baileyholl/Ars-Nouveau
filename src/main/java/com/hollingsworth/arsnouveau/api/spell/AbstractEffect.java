@@ -40,7 +40,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     // If the spell would actually do anything. Can be used for logic checks for things like the whelp.
-    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext){
+    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments){
         return true;
     }
 

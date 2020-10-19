@@ -1,13 +1,14 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
-import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.block.ManaBlock;
 import com.hollingsworth.arsnouveau.common.block.SummoningCrystal;
 import com.hollingsworth.arsnouveau.common.entity.EntityWhelp;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.LeavesBlock;
@@ -23,6 +24,8 @@ import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.StringTextComponent;
 
 import javax.annotation.Nullable;
@@ -69,7 +72,7 @@ public class SummoningCrytalTile extends AbstractManaTile {
         }
     }
 
-    public ArrayList<IInventory> inventories(){
+    public List<IInventory> inventories(){
         if(world == null)return new ArrayList<>();
         ArrayList<IInventory> iInventories = new ArrayList<>();
         for(Direction d : Direction.values()){
@@ -106,12 +109,13 @@ public class SummoningCrytalTile extends AbstractManaTile {
     public boolean isTree(Block block){
         return block instanceof LogBlock || block instanceof LeavesBlock;
     }
-    public @Nullable BlockPos getNextTaskLoc(){
+
+    public @Nullable BlockPos getNextTaskLoc(@Nullable List<AbstractSpellPart> recipe, LivingEntity caster){
         if(isOff)
             return null;
 
         List<BlockPos> posList = getTargets();
-        if(posList == null || posList.size() == 0) {
+        if(posList == null || posList.isEmpty()) {
             return null;
         }
         if(taskIndex + 1 > posList.size()){
@@ -135,6 +139,11 @@ public class SummoningCrytalTile extends AbstractManaTile {
         if(block instanceof SummoningCrystal || block instanceof ContainerBlock || block instanceof ManaBlock || block instanceof IInventory)
             return null;
 
+            if(recipe != null){
+                SpellResolver resolver = new SpellResolver(recipe);
+                if(!resolver.wouldCastOnBlockSuccessfully(new BlockRayTraceResult(new Vec3d(taskPos.getX(), taskPos.getY(), taskPos.getZ()), Direction.UP,taskPos, false ), caster))
+                    return null;
+            }
             return taskPos;
     }
 
@@ -157,12 +166,10 @@ public class SummoningCrytalTile extends AbstractManaTile {
     public boolean removeManaAround(int manaCost){
         final boolean[] enough = {false};
         BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
-            if(!enough[0] && world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= manaCost ) {
-                if(!world.isRemote){
-                    ((ManaJarTile) world.getTileEntity(blockPos)).removeMana(manaCost);
-                    enough[0] = true;
-                    Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW, pos.getX(), pos.getY(), pos.getZ(), blockPos.getX(), blockPos.getY(), blockPos.getZ(),5));
-                }
+            if(!enough[0] && world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= manaCost && !world.isRemote) {
+                ((ManaJarTile) world.getTileEntity(blockPos)).removeMana(manaCost);
+                enough[0] = true;
+                Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW, pos.getX(), pos.getY(), pos.getZ(), blockPos.getX(), blockPos.getY(), blockPos.getZ(),5));
             }
         });
         return enough[0];
@@ -181,14 +188,10 @@ public class SummoningCrytalTile extends AbstractManaTile {
             positions.add(getPos().west().down());
         }
         if(tier == 2){
-            BlockPos.getAllInBox(getPos().north(2).east(2).down(1), getPos().south(2).west(2).down()).forEach(t -> {
-                positions.add(new BlockPos(t));
-            });
+            BlockPos.getAllInBox(getPos().north(2).east(2).down(1), getPos().south(2).west(2).down()).forEach(t -> positions.add(new BlockPos(t)));
         }
         if(tier == 3){
-            BlockPos.getAllInBox(getPos().north(4).east(4).down(1), getPos().south(4).west(4).down()).forEach(t -> {
-                positions.add(new BlockPos(t));
-            });
+            BlockPos.getAllInBox(getPos().north(4).east(4).down(1), getPos().south(4).west(4).down()).forEach(t -> positions.add(new BlockPos(t)));
         }
         return positions;
     }

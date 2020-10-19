@@ -63,6 +63,26 @@ public class MethodRune extends AbstractCastMethod {
     }
 
     @Override
+    public boolean wouldCastSuccessfully(@Nullable ItemStack stack, LivingEntity playerEntity, World world, List<AbstractAugment> augments) {
+        return false;
+    }
+
+    @Override
+    public boolean wouldCastOnBlockSuccessfully(ItemUseContext context, List<AbstractAugment> augments) {
+        return true;
+    }
+
+    @Override
+    public boolean wouldCastOnBlockSuccessfully(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments) {
+        return true;
+    }
+
+    @Override
+    public boolean wouldCastOnEntitySuccessfully(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments) {
+        return false;
+    }
+
+    @Override
     public Item getCraftingReagent() {
         return Items.TRIPWIRE_HOOK;
     }

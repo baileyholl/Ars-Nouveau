@@ -13,6 +13,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class MethodSelf extends AbstractCastMethod {
@@ -49,6 +50,26 @@ public class MethodSelf extends AbstractCastMethod {
         resolver.onResolveEffect(world, playerIn,  new EntityRayTraceResult(playerIn));
         resolver.expendMana(playerIn);
         Networking.sendToNearby(playerIn.world, playerIn, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, playerIn.getPosition()));
+    }
+
+    @Override
+    public boolean wouldCastSuccessfully(@Nullable ItemStack stack, LivingEntity playerEntity, World world, List<AbstractAugment> augments) {
+        return true;
+    }
+
+    @Override
+    public boolean wouldCastOnBlockSuccessfully(ItemUseContext context, List<AbstractAugment> augments) {
+        return true;
+    }
+
+    @Override
+    public boolean wouldCastOnBlockSuccessfully(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments) {
+        return true;
+    }
+
+    @Override
+    public boolean wouldCastOnEntitySuccessfully(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments) {
+        return true;
     }
 
     @Override

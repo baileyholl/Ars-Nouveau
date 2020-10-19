@@ -14,6 +14,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -60,15 +61,6 @@ public class SpellResolver {
                 entity.sendMessage(new StringTextComponent("Invalid Spell."));
             return false;
         }
-//        Set<AbstractSpellPart> testSet = new HashSet<>(spell_recipe.size());
-//        for(AbstractSpellPart part : spell_recipe){
-//            if(part instanceof AbstractEffect && !testSet.add(part) && !(part instanceof EffectDelay)) {
-//                if(!entity.getEntityWorld().isRemote && !silent)
-//                    entity.sendMessage(new StringTextComponent("No duplicate effects are allowed. Use Augments!"));
-//                return false;
-//            }
-//        }
-
         return enoughMana(entity);
     }
 
@@ -82,6 +74,7 @@ public class SpellResolver {
         });
         return canCast.get();
     }
+
     public boolean postEvent(LivingEntity entity){
         return SpellUtil.postEvent(new SpellCastEvent(entity, spell_recipe));
     }
@@ -118,11 +111,38 @@ public class SpellResolver {
         }
     }
 
-    public void expendMana(LivingEntity entity){
-        int totalCost = ManaUtil.getCastingCost(spell_recipe, entity);
-        ManaCapability.getMana(entity).ifPresent(mana -> {
-            mana.removeMana(totalCost);
-        });
+    public boolean wouldAllEffectsDoWork(RayTraceResult result, World world, LivingEntity entity, List<AbstractAugment> augments){
+        for(AbstractSpellPart spellPart : spell_recipe){
+            if(spellPart instanceof AbstractEffect){
+                if(!((AbstractEffect) spellPart).wouldSucceed(result, world, entity, augments)){
+                    System.out.println("no work");
+                    return false;
+                }
+            }
+        }
+        System.out.println("all do work");
+        return true;
     }
 
+    public boolean wouldCastSuccessfully(@Nullable ItemStack stack, LivingEntity caster, World world, List<AbstractAugment> augments){
+        return castType.wouldCastSuccessfully(stack, caster, world, augments);
+    }
+
+    public boolean wouldCastOnBlockSuccessfully(ItemUseContext context, List<AbstractAugment> augments){
+        return castType.wouldCastOnBlockSuccessfully(context, augments);
+    }
+
+    public boolean wouldCastOnBlockSuccessfully(BlockRayTraceResult blockRayTraceResult, LivingEntity caster){
+        return castType.wouldCastOnBlockSuccessfully(blockRayTraceResult, caster,  getAugments(spell_recipe, 0, caster));
+    }
+
+    public boolean wouldCastOnEntitySuccessfully(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments){
+        return castType.wouldCastOnEntitySuccessfully(stack, caster, target, hand, augments);
+    }
+
+
+    public void expendMana(LivingEntity entity){
+        int totalCost = ManaUtil.getCastingCost(spell_recipe, entity);
+        ManaCapability.getMana(entity).ifPresent(mana -> mana.removeMana(totalCost));
+    }
 }
