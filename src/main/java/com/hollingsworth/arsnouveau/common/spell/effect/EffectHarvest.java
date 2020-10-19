@@ -92,7 +92,7 @@ public class EffectHarvest extends AbstractEffect {
     }
 
     @Override
-    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         if(!(rayTraceResult instanceof BlockRayTraceResult))
             return false;
 
@@ -109,7 +109,6 @@ public class EffectHarvest extends AbstractEffect {
 
 
         CropsBlock cropsBlock = (CropsBlock)world.getBlockState(pos).getBlock();
-
         return cropsBlock.isMaxAge(state) && world instanceof ServerWorld;
     }
 

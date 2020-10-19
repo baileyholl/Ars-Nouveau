@@ -21,6 +21,15 @@ public abstract class AbstractCastMethod extends AbstractSpellPart {
 
     public abstract void onCastOnEntity(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments);
 
+    public abstract boolean wouldCastSuccessfully(@Nullable ItemStack stack, LivingEntity playerEntity, World world, List<AbstractAugment> augments);
+
+    public abstract boolean wouldCastOnBlockSuccessfully(ItemUseContext context, List<AbstractAugment> augments);
+
+    public abstract boolean wouldCastOnBlockSuccessfully(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments);
+
+    public abstract boolean wouldCastOnEntitySuccessfully(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments);
+
+
     public AbstractCastMethod(String tag, String description){
         super(tag,description);
     }

@@ -33,7 +33,7 @@ public class EffectLeap extends AbstractEffect {
     }
 
     @Override
-    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         return livingEntityHitSuccess(rayTraceResult);
     }
 

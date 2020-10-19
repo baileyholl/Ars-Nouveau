@@ -14,6 +14,7 @@ import net.minecraft.util.math.EntityRayTraceResult;
 
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class MethodTouch extends AbstractCastMethod {
@@ -51,6 +52,29 @@ public class MethodTouch extends AbstractCastMethod {
         resolver.onResolveEffect(caster.getEntityWorld(), caster, new EntityRayTraceResult(target));
         resolver.expendMana(caster);
         Networking.sendToNearby(caster.world, caster, new PacketANEffect(PacketANEffect.EffectType.BURST, target.getPosition()));
+    }
+
+    @Override
+    public boolean wouldCastSuccessfully(@Nullable ItemStack stack, LivingEntity playerEntity, World world, List<AbstractAugment> augments) {
+
+        return false;
+    }
+
+    @Override
+    public boolean wouldCastOnBlockSuccessfully(ItemUseContext context, List<AbstractAugment> augments) {
+        World world = context.getWorld();
+        BlockRayTraceResult res = new BlockRayTraceResult(context.getHitVec(), context.getFace(), context.getPos(), false);
+        return resolver.wouldAllEffectsDoWork(res, world, context.getPlayer(), augments);
+    }
+
+    @Override
+    public boolean wouldCastOnBlockSuccessfully(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments) {
+        return resolver.wouldAllEffectsDoWork(blockRayTraceResult, caster.getEntityWorld(), caster, augments);
+    }
+
+    @Override
+    public boolean wouldCastOnEntitySuccessfully(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments) {
+        return resolver.wouldAllEffectsDoWork(new EntityRayTraceResult(target), caster.getEntityWorld(), caster, augments);
     }
 
     @Override

@@ -19,6 +19,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,7 +103,6 @@ public class MethodProjectile extends AbstractCastMethod {
         PlayerEntity shooter = context.getPlayer();
         summonProjectiles(world, shooter, augments);
         resolver.expendMana(shooter);
-
     }
 
     /**
@@ -119,6 +119,26 @@ public class MethodProjectile extends AbstractCastMethod {
     public void onCastOnEntity(ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments) {
         summonProjectiles(caster.getEntityWorld(), caster, augments);
         resolver.expendMana(caster);
+    }
+
+    @Override
+    public boolean wouldCastSuccessfully(@Nullable ItemStack stack, LivingEntity playerEntity, World world, List<AbstractAugment> augments) {
+        return true;
+    }
+
+    @Override
+    public boolean wouldCastOnBlockSuccessfully(ItemUseContext context, List<AbstractAugment> augments) {
+        return true;
+    }
+
+    @Override
+    public boolean wouldCastOnBlockSuccessfully(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments) {
+        return true;
+    }
+
+    @Override
+    public boolean wouldCastOnEntitySuccessfully(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments) {
+        return true;
     }
 
     @Override

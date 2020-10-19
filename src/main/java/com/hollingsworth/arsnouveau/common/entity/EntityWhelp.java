@@ -47,7 +47,6 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     public static final DataParameter<String> SPELL_STRING = EntityDataManager.createKey(EntityWhelp.class, DataSerializers.STRING);
     public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.createKey(EntityWhelp.class, DataSerializers.ITEMSTACK);
 
-
     BlockPos crystalPos;
     int ticksSinceLastSpell;
     public ArrayList<AbstractSpellPart> spellRecipe;
@@ -60,7 +59,6 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     protected EntityWhelp(EntityType<? extends FlyingEntity> p_i48568_1_, World p_i48568_2_) {
         super(p_i48568_1_, p_i48568_2_);
         this.moveController =  new FlyingMovementController(this, 10, true);
-
     }
 
     public EntityWhelp setRecipe(ArrayList<AbstractSpellPart> recipe){
@@ -98,11 +96,13 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
                 player.sendMessage(new StringTextComponent("This whelp is casting " + SpellRecipeUtil.getDisplayString(spellRecipe)), Util.DUMMY_UUID);
             return ActionResultType.SUCCESS;
         }
+
         if(stack != ItemStack.EMPTY){
             setHeldStack(new ItemStack(stack.getItem()));
             player.sendMessage(new StringTextComponent("This whelp will use " + stack.getItem().getDisplayName(stack).getString() +  " in spells if this item is in a Summoning Crystal chest."), Util.DUMMY_UUID);
         }
         return super.applyPlayerInteraction(player, vec, hand);
+
     }
 
     public EntityWhelp(World world, BlockPos crystalPos){
@@ -116,25 +116,23 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         if(world == null || this.dead || crystalPos == null)
             return;
         ticksSinceLastSpell += 1;
-        if(world.getGameTime() % 20 == 0){
-            if(!(world.getTileEntity(crystalPos) instanceof SummoningCrytalTile)){
-                if(!world.isRemote){
-                    this.attackEntityFrom(DamageSource.causePlayerDamage(FakePlayerFactory.getMinecraft((ServerWorld)world)), 99);
-                }
-                if(world.isRemote){
 
-                    for(int i =0; i < 2; i++){
+        if(world.getGameTime() % 20 == 0) {
+            if (!(world.getTileEntity(crystalPos) instanceof SummoningCrytalTile)) {
+                if (!world.isRemote) {
+                    this.attackEntityFrom(DamageSource.causePlayerDamage(FakePlayerFactory.getMinecraft((ServerWorld) world)), 99);
+                }
+                if (world.isRemote) {
+
+                    for (int i = 0; i < 2; i++) {
                         double d0 = getPosX(); //+ world.rand.nextFloat();
                         double d1 = getPosY();//+ world.rand.nextFloat() ;
                         double d2 = getPosZ(); //+ world.rand.nextFloat();
 
                         world.addParticle(ParticleTypes.ENCHANTED_HIT, d0, d1, d2, 0.0, 0.0, 0.0);
                     }
-
                 }
-
             }
-
         }
     }
 
@@ -147,6 +145,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         return flyingpathnavigator;
     }
 
+    @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(6, new PerformTaskGoal(this));
         this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 6.0F));
@@ -154,12 +153,12 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     }
 
     public boolean canPerformAnotherTask(){
-        return  ticksSinceLastSpell > 60 && new EntitySpellResolver(spellRecipe).canCast(this);
+        return ticksSinceLastSpell > 60 && new EntitySpellResolver(spellRecipe).canCast(this);
     }
 
     public @Nullable BlockPos getTaskLoc(){
         if(world.getTileEntity(crystalPos) instanceof SummoningCrytalTile){
-            return ((SummoningCrytalTile) world.getTileEntity(crystalPos)).getNextTaskLoc();
+            return ((SummoningCrytalTile) world.getTileEntity(crystalPos)).getNextTaskLoc(spellRecipe, this);
         }
         return null;
     }
@@ -168,9 +167,9 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         if(world.isRemote)
             return;
         if(world instanceof ServerWorld){
-            double d0 = target.getX() +0.5; //+ world.rand.nextFloat();
-            double d1 = target.getY() + 1;//+ world.rand.nextFloat() ;
-            double d2 = target.getZ() +0.5; //+ world.rand.nextFloat();
+            double d0 = target.getX() +0.5;
+            double d1 = target.getY() + 1;
+            double d2 = target.getZ() +0.5;
             ((ServerWorld)world).spawnParticle(ParticleTypes.ENCHANTED_HIT, d0, d1, d2,rand.nextInt(4), 0,0.3,0, 0.1);
         }
         if(!(world.getTileEntity(crystalPos) instanceof SummoningCrytalTile))
@@ -232,7 +231,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
 //            System.out.println("Executing");
             taskLoc = this.kobold.getTaskLoc();
             timePerformingTask = 0;
-            if(this.kobold != null && this.kobold.navigator != null && taskLoc != null)
+            if(this.kobold.navigator != null && taskLoc != null)
                  this.kobold.navigator.setPath(this.kobold.navigator.getPathToPos(taskLoc, 1), 1.0f);
         }
 
@@ -247,7 +246,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
                 kobold.castSpell(taskLoc);
                 kobold.navigator.clearPath();
                 timePerformingTask = 0;
-            }else if(this.kobold != null && kobold.navigator != null && taskLoc != null){
+            }else if(kobold.navigator != null){
                 this.kobold.navigator.setPath(this.kobold.navigator.getPathToPos(taskLoc.up(2), 0), 1f);
             }
         }
