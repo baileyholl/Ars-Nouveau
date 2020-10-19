@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -41,13 +40,11 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         this.pedestalItems = stacks;
         this.category = category;
     }
+
     @Override
     public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile) {
         pedestalItems = pedestalItems.stream().filter(itemStack -> !itemStack.isEmpty()).collect(Collectors.toList());
-        if (this.catalyst == null || this.catalyst.getItem() != catalyst.getItem() || this.pedestalItems.size() != pedestalItems.size() || !areSameSet(pedestalItems, this.pedestalItems)) {
-            return false;
-        }
-        return true;
+        return this.catalyst != null && reagent.getItem() == catalyst.getItem() && this.pedestalItems.size() == pedestalItems.size() && areSameSet(pedestalItems, this.pedestalItems);
     }
 
     @Override
