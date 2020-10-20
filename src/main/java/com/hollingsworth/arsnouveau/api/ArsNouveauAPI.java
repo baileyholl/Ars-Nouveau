@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.api;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
@@ -64,6 +63,10 @@ public class ArsNouveauAPI {
             }
         }
         return null;
+    }
+
+    public Item getGlyphItem(AbstractSpellPart spell){
+        return getGlyphItem(spell.tag);
     }
 
     /**
