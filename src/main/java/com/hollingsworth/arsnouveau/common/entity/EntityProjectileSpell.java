@@ -159,8 +159,8 @@ public class EntityProjectileSpell extends ArrowEntity {
         float f1 = -MathHelper.sin((rotationPitchIn + pitchOffset) * ((float)Math.PI / 180F));
         float f2 = MathHelper.cos(rotationYawIn * ((float)Math.PI / 180F)) * MathHelper.cos(rotationPitchIn * ((float)Math.PI / 180F));
         this.shoot((double)f, (double)f1, (double)f2, velocity, inaccuracy);
-        Vec3d vec3d = entityThrower.getMotion();
-        this.setMotion(this.getMotion().add(vec3d.x, entityThrower.onGround ? 0.0D : vec3d.y, vec3d.z));
+        Vec3d vec3d = entityThrower.getLookVec();
+        this.setMotion(this.getMotion().add(vec3d.x, vec3d.y, vec3d.z));
     }
 
     /**

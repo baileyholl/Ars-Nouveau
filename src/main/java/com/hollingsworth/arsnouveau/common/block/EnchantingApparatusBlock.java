@@ -6,16 +6,11 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.IProperty;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
@@ -41,7 +36,6 @@ public class EnchantingApparatusBlock extends ModBlock{
                 PortUtil.sendMessage(player, new TranslationTextComponent("alert.core"));
                 return ActionResultType.SUCCESS;
             }
-
 
             EnchantingApparatusTile tile = (EnchantingApparatusTile) world.getTileEntity(pos);
             if(player.isSneaking()){

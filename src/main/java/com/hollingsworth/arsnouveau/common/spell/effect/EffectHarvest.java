@@ -109,7 +109,6 @@ public class EffectHarvest extends AbstractEffect {
 
 
         CropsBlock cropsBlock = (CropsBlock)world.getBlockState(pos).getBlock();
-        System.out.println("returning success");
         return cropsBlock.isMaxAge(state) && world instanceof ServerWorld;
     }
 
