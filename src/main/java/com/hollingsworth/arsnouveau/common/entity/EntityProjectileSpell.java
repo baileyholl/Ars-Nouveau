@@ -13,6 +13,7 @@ import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.FMLPlayMessages;
@@ -200,7 +201,12 @@ public class EntityProjectileSpell extends ArrowEntity {
     protected void onHit(RayTraceResult result) {
         //super.onHit(result);
 
-        if(!world.isRemote &&  result != null && result.getType() == RayTraceResult.Type.ENTITY) {
+        if(this.world.getBlockState(((BlockRayTraceResult) result).getPos()).allowsMovement(this.world,((BlockRayTraceResult) result).getPos(), PathType.AIR) ){
+            return;
+        }
+
+
+        if(!world.isRemote && result.getType() == RayTraceResult.Type.ENTITY) {
             if (((EntityRayTraceResult) result).getEntity().equals(this.getShooter())) return;
             if(this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(world, (LivingEntity) this.getShooter(), (EntityRayTraceResult) result);
