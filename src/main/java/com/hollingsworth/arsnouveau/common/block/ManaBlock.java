@@ -39,9 +39,16 @@ public abstract class ManaBlock extends ModBlock{
                     }
                     return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
                 }else if(player.getHeldItem(handIn).getItem() instanceof BucketItem && ((BucketItem)player.getHeldItem(handIn).getItem()).getFluid() == Fluids.EMPTY){
+
+
                     if(tile.getCurrentMana() >= 1000 && player.addItemStackToInventory(new ItemStack(ItemsRegistry.bucketOfMana))){
                         tile.removeMana(1000);
                         player.getHeldItem(handIn).shrink(1);
+                    }else {
+                        if(player.getHeldItem(handIn).getCount() == 1){ //Checks if the count of buckets is one so it doesn't over writhe the count of the buckets if the inv is full
+                            tile.removeMana(1000);
+                            player.setHeldItem(player.getActiveHand(),new ItemStack(ItemsRegistry.bucketOfMana));
+                        }
                     }
                 }
             }
