@@ -1,10 +1,12 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
 import com.hollingsworth.arsnouveau.api.spell.IPlaceBlockResponder;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.SummoningCrytalTile;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
@@ -43,7 +45,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.EnumSet;
 
-public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlaceBlockResponder {
+public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlaceBlockResponder, IDispellable {
     public static final DataParameter<String> SPELL_STRING = EntityDataManager.createKey(EntityWhelp.class, DataSerializers.STRING);
     public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.createKey(EntityWhelp.class, DataSerializers.ITEMSTACK);
 
@@ -302,6 +304,21 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
 
     public void setHeldStack(ItemStack stack){
         this.dataManager.set(HELD_ITEM,stack);
+    }
+
+
+    @Override
+    public boolean onDispel(@Nullable LivingEntity caster) {
+        if(this.removed)
+            return false;
+
+        if(!world.isRemote){
+            ItemStack stack = new ItemStack(ItemsRegistry.whelpCharm);
+            world.addEntity(new ItemEntity(world, getPosX(), getPosY(), getPosZ(), stack));
+            ParticleUtil.spawnPoof((ServerWorld)world, getPosition());
+            this.remove();
+        }
+        return true;
     }
 
     @Override

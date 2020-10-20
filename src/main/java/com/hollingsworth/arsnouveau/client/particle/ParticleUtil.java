@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.client.particle;
 
 
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.particles.RedstoneParticleData;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -10,8 +9,6 @@ import net.minecraft.world.server.ServerWorld;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-
-import static java.lang.Math.*;
 
 /**
  * Created by Bailey on 12/26/2016.
@@ -73,4 +70,15 @@ public class ParticleUtil {
             }
         }
     }
+
+
+    public static void spawnPoof(ServerWorld world, BlockPos pos){
+        for(int i =0; i < 10; i++){
+            double d0 = pos.getX() +0.5;
+            double d1 = pos.getY() +1.2;
+            double d2 = pos.getZ() +.5 ;
+            (world).spawnParticle(ParticleTypes.END_ROD, d0, d1, d2, 2,(world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3, 0.1f);
+        }
+    }
+
 }

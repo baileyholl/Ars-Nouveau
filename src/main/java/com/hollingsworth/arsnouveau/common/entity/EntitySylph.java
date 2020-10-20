@@ -1,9 +1,11 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.SummoningCrytalTile;
 import com.hollingsworth.arsnouveau.common.entity.goal.sylph.*;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -16,6 +18,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.controller.FlyingMovementController;
 import net.minecraft.entity.ai.goal.FollowMobGoal;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
@@ -37,6 +40,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.SaplingGrowTreeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -46,11 +50,12 @@ import software.bernie.geckolib.entity.IAnimatedEntity;
 import software.bernie.geckolib.event.AnimationTestEvent;
 import software.bernie.geckolib.manager.EntityAnimationManager;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class EntitySylph extends AbstractFlyingCreature implements IPickupResponder, IAnimatedEntity, ITooltipProvider {
+public class EntitySylph extends AbstractFlyingCreature implements IPickupResponder, IAnimatedEntity, ITooltipProvider, IDispellable {
     EntityAnimationManager manager = new EntityAnimationManager();
 
     EntityAnimationController<EntitySylph> idleController = new EntityAnimationController<>(this, "idleController", 20, this::idlePredicate);
@@ -356,5 +361,19 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
         super.registerData();
         this.dataManager.register(MOOD_SCORE, 0);
         this.dataManager.register(TAMED, false);
+    }
+
+    @Override
+    public boolean onDispel(@Nullable LivingEntity caster) {
+        if(this.removed)
+            return false;
+
+        if(!world.isRemote && isTamed()){
+            ItemStack stack = new ItemStack(ItemsRegistry.sylphCharm);
+            world.addEntity(new ItemEntity(world, getPosX(), getPosY(), getPosZ(), stack));
+            ParticleUtil.spawnPoof((ServerWorld)world, getPosition());
+            this.remove();
+        }
+        return this.isTamed();
     }
 }
