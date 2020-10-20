@@ -1,8 +1,10 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
@@ -45,7 +47,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
-public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity {
+public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity, IDispellable {
 
     public BlockPos fromPos;
     public BlockPos toPos;
@@ -513,6 +515,21 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity {
     public ItemStack getHeldStack(){
         return this.getHeldItemMainhand();
 //        return this.dataManager.get(HELD_ITEM);
+    }
+
+
+    @Override
+    public boolean onDispel(@Nullable LivingEntity caster) {
+        if(this.removed)
+            return false;
+
+        if(!world.isRemote && isTamed()){
+            ItemStack stack = new ItemStack(ItemsRegistry.carbuncleCharm);
+            world.addEntity(new ItemEntity(world, getPosX(), getPosY(), getPosZ(), stack));
+            ParticleUtil.spawnPoof((ServerWorld)world, getPosition());
+            this.remove();
+        }
+        return this.isTamed();
     }
 
     @Override

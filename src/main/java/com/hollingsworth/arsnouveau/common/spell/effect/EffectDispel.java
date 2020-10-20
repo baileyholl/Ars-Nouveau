@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
@@ -8,6 +9,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -31,13 +33,20 @@ public class EffectDispel extends AbstractEffect {
                 for(EffectInstance e : array){
                     entity.removePotionEffect(e.getPotion());
                 }
+                if(entity instanceof IDispellable){
+                    ((IDispellable) entity).onDispel(shooter);
+                }
             }
+            return;
+        }
+        if(rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos()) instanceof IDispellable){
+            ((IDispellable) world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos())).onDispel(shooter);
         }
     }
 
     @Override
     public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
-        return rayTraceResult instanceof EntityRayTraceResult;
+        return rayTraceResult instanceof EntityRayTraceResult || (rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos()).getBlock() instanceof IDispellable);
     }
 
     @Override
@@ -53,6 +62,6 @@ public class EffectDispel extends AbstractEffect {
 
     @Override
     protected String getBookDescription() {
-        return "Removes any potion effects on the target.";
+        return "Removes any potion effects on the target. Will also dispel tamed Whelps, Carbuncles, and Sylphs back into their charm.";
     }
 }
