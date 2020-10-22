@@ -9,10 +9,18 @@ import java.util.function.Supplier;
 
 public class GoBackHomeGoal extends DistanceRestrictedGoal {
     MobEntity entity;
+    Supplier<Boolean> shouldGo;
 
     public GoBackHomeGoal(MobEntity entity, Supplier<BlockPos> pos, int maxDistance) {
         super(pos, maxDistance);
         this.entity = entity;
+        this.shouldGo = () -> true;
+    }
+
+    public GoBackHomeGoal(MobEntity entity, Supplier<BlockPos> pos, int maxDistance, Supplier<Boolean> shouldGo) {
+        super(pos, maxDistance);
+        this.entity = entity;
+        this.shouldGo = shouldGo;
     }
 
     @Override
@@ -24,11 +32,11 @@ public class GoBackHomeGoal extends DistanceRestrictedGoal {
 
     @Override
     public boolean shouldContinueExecuting() {
-        return BlockUtil.distanceFrom(entity.getPosition(), this.positionFrom) > 5;
+        return BlockUtil.distanceFrom(entity.getPosition(), this.positionFrom) > 5 && shouldGo.get();
     }
 
     @Override
     public boolean shouldExecute() {
-        return !this.isInRange(entity.getPosition());
+        return !this.isInRange(entity.getPosition()) && shouldGo.get();
     }
 }
