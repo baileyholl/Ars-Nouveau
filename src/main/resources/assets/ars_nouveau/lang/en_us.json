@@ -201,5 +201,9 @@
 	"tooltip.arcane_brick":"This item has been deprecated. See the section on Mana Gems and the Crystallizer. You may craft this into gems!",
 	"ars_nouveau.page.crystallizer1": "The crystallizer provides a renewable source of Mana Gems by condensing world mana over time. The Crystallizer can work passively at a very slow rate, or it may be given Mana from adjacent jars and create Mana Gems as a much faster rate. The Crystallizer may also be accessed by Hoppers and Carbuncles.",
 	"tooltip.mana_gem":"Found within Arcane Ore.",
-	"tooltip.mana_bloom":"Crafted using the Enchanting Apparatus"
+	"tooltip.mana_bloom":"Crafted using the Enchanting Apparatus",
+	"ars_nouveau.alert.turret_type": "Turrets can only use Touch or Projectile.",
+	"ars_nouveau.alert.spell_set": "Spell set.",
+	"item.ars_nouveau.glyph_redstone_signal": "Glyph: Redstone Signal",
+	"block.ars_nouveau.spell_turret":"Spell Turret"
 }

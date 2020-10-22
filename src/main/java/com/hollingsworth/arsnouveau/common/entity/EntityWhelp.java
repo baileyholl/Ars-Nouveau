@@ -1,15 +1,12 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
-import com.hollingsworth.arsnouveau.api.spell.IPlaceBlockResponder;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.SummoningCrytalTile;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
-import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierManager;
@@ -82,7 +79,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
 
         if(stack != ItemStack.EMPTY && stack.getItem() instanceof SpellParchment){
             ArrayList<AbstractSpellPart> spellParts = SpellParchment.getSpellRecipe(stack);
-            if(new EntitySpellResolver(spellParts).canCast(this)) {
+            if(new EntitySpellResolver(spellParts, new SpellContext(spellParts, this)).canCast(this)) {
                 this.spellRecipe = SpellParchment.getSpellRecipe(stack);
                 setRecipeString(SpellRecipeUtil.serializeForNBT(spellRecipe));
                 player.sendMessage(new StringTextComponent("Spell set."), Util.DUMMY_UUID);
@@ -155,7 +152,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     }
 
     public boolean canPerformAnotherTask(){
-        return ticksSinceLastSpell > 60 && new EntitySpellResolver(spellRecipe).canCast(this);
+        return ticksSinceLastSpell > 60 && new EntitySpellResolver(spellRecipe, new SpellContext(spellRecipe, this)).canCast(this);
     }
 
     public @Nullable BlockPos getTaskLoc(){
@@ -177,7 +174,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         if(!(world.getTileEntity(crystalPos) instanceof SummoningCrytalTile))
             return;
         if(((SummoningCrytalTile) world.getTileEntity(crystalPos)).removeManaAround(spellRecipe)){
-            EntitySpellResolver resolver = new EntitySpellResolver(this.spellRecipe);
+            EntitySpellResolver resolver = new EntitySpellResolver(this.spellRecipe, new SpellContext(spellRecipe, this));
             resolver.onCastOnBlock(new BlockRayTraceResult(new Vector3d(target.getX(), target.getY(), target.getZ()), Direction.UP,target, false ), this);
         }
         this.ticksSinceLastSpell = 0;

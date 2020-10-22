@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.tileentity.TileEntity;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -17,6 +18,8 @@ public class SpellContext {
 
     private int currentIndex;
 
+    public @Nullable TileEntity castingTile;
+
     public SpellContext(List<AbstractSpellPart> recipe, @Nullable LivingEntity caster){
         this.recipe = recipe;
         this.caster = caster;
@@ -27,6 +30,15 @@ public class SpellContext {
     public AbstractSpellPart nextSpell(){
         this.currentIndex++;
         return recipe.get(currentIndex - 1);
+    }
+
+    public void resetSpells(){
+        this.currentIndex = 0;
+    }
+
+    public SpellContext withCastingTile(TileEntity tile){
+        this.castingTile = tile;
+        return this;
     }
 
     public int getCurrentIndex(){return currentIndex;}

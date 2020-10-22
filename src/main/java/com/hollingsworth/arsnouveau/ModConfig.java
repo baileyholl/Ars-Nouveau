@@ -48,6 +48,5 @@ public class ModConfig {
     public static final String EffectInteractID = "interact";
     public static final String EffectPlaceBlockID = "place_block";
     public static final String EffectDelayID = "delay";
-
-
+    public static final String EffectRedstoneID = "redstone_signal";
 }

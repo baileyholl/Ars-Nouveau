@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.common.block.ManaBlock;
@@ -25,6 +26,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 
 import javax.annotation.Nullable;
@@ -86,7 +88,6 @@ public class SummoningCrytalTile extends AbstractManaTile {
     }
 
     public ItemStack insertItem(ItemStack stack){
-
         for(IInventory i : inventories()){
             if(stack == ItemStack.EMPTY || stack == null)
                 break;
@@ -136,6 +137,12 @@ public class SummoningCrytalTile extends AbstractManaTile {
         Block block = world.getBlockState(taskPos).getBlock();
         if(block instanceof SummoningCrystal || block instanceof ContainerBlock || block instanceof ManaBlock || block instanceof IInventory)
             return null;
+
+        if(recipe != null){
+            SpellResolver resolver = new SpellResolver(recipe, new SpellContext(recipe, null));
+            if(!resolver.wouldCastOnBlockSuccessfully(new BlockRayTraceResult(new Vector3d(taskPos.getX(), taskPos.getY(), taskPos.getZ()), Direction.UP,taskPos, false ), caster))
+                return null;
+        }
         return taskPos;
     }
 

@@ -71,6 +71,12 @@ public class APIRegistry {
                 ItemsRegistry.bucketOfMana,BlockRegistry.MANA_BLOOM_CROP.asItem(), ItemsRegistry.manaBloom, Items.DIAMOND, Items.OAK_SAPLING, Items.SPRUCE_SAPLING, Items.BIRCH_SAPLING, Items.WHEAT_SEEDS
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
 
+        registerApparatusRecipe(new EnchantingApparatusRecipe(BlockRegistry.SPELL_TURRET.asItem(),Items.DISPENSER, new Item[]{
+                Items.BLAZE_ROD, Items.BLAZE_ROD, Items.GOLD_BLOCK,
+                ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.EffectRedstoneID),ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.EffectRedstoneID), ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.EffectRedstoneID),
+                Items.DIAMOND, Items.REDSTONE_BLOCK
+        }, ArsNouveauAPI.PatchouliCategories.automation.name()));
+
     }
 
     public static void registerSpells(){
@@ -119,6 +125,7 @@ public class APIRegistry {
         registerSpell(ModConfig.EffectSmeltID, new EffectSmelt());
         registerSpell(ModConfig.EffectLeapID, new EffectLeap());
         registerSpell(ModConfig.EffectDelayID, new EffectDelay());
+        registerSpell(ModConfig.EffectRedstoneID, new EffectRedstone());
         addStartingSpell(ModConfig.MethodProjectileID);
         addStartingSpell(ModConfig.MethodTouchID);
         addStartingSpell(ModConfig.MethodSelfID);

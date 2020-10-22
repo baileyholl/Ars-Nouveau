@@ -2,11 +2,10 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
-import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.common.block.RuneBlock;
-import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
@@ -16,8 +15,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
@@ -49,7 +46,7 @@ public class RuneTile extends AnimatedTile {
         if(!this.isCharged || recipe == null || recipe.size() == 0 || !(entity instanceof LivingEntity) || !(world instanceof ServerWorld))
             return;
 
-        EntitySpellResolver resolver = new EntitySpellResolver(recipe);
+        EntitySpellResolver resolver = new EntitySpellResolver(recipe, new SpellContext(recipe, FakePlayerFactory.getMinecraft((ServerWorld) world)).withCastingTile(this));
         resolver.onCastOnEntity(ItemStack.EMPTY, FakePlayerFactory.getMinecraft((ServerWorld) world),(LivingEntity)entity, Hand.MAIN_HAND);
         if(this.isTemporary){
             world.destroyBlock(pos, false);

@@ -23,29 +23,31 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil.getAugments;
 
 public class SpellResolver {
-    protected AbstractCastMethod castType;
+    public AbstractCastMethod castType;
     public List<AbstractSpellPart> spell_recipe;
-    public SpellContext spellContext;
+    public final SpellContext spellContext;
     public boolean silent;
-    public SpellResolver(AbstractCastMethod cast, List<AbstractSpellPart> spell_recipe){
+
+
+    public SpellResolver(AbstractCastMethod cast, List<AbstractSpellPart> spell_recipe, SpellContext context){
+
         this.castType = cast;
         this.spell_recipe = spell_recipe;
+        this.spellContext = context;
         if(castType != null)
             this.castType.resolver = this;
     }
 
-    public SpellResolver(List<AbstractSpellPart> spell_recipe, boolean silent){
-        this(spell_recipe);
-        this.silent = silent;
+
+
+
+    public SpellResolver(AbstractSpellPart[] spellParts, SpellContext context){
+        this(new ArrayList<>(Arrays.asList(spellParts)), context);
+
     }
 
-
-    public SpellResolver(AbstractSpellPart[] spellParts){
-        this(new ArrayList<>(Arrays.asList(spellParts)));
-    }
-
-    public SpellResolver(List<AbstractSpellPart> spell_recipe) {
-        this(null, spell_recipe);
+    public SpellResolver(List<AbstractSpellPart> spell_recipe, SpellContext context) {
+        this(null, spell_recipe, context);
         AbstractCastMethod method = null;
         if(spell_recipe != null && !spell_recipe.isEmpty() && spell_recipe.get(0) instanceof AbstractCastMethod)
             method = (AbstractCastMethod) spell_recipe.get(0);
@@ -53,6 +55,11 @@ public class SpellResolver {
         this.castType = method;
         if(this.castType != null)
             this.castType.resolver = this;
+
+}
+    public SpellResolver(List<AbstractSpellPart> spell_recipe, boolean silent, SpellContext context){
+        this(spell_recipe, context);
+        this.silent = silent;
 
     }
 
@@ -103,7 +110,7 @@ public class SpellResolver {
 
 
     public void onResolveEffect(World world, LivingEntity shooter, RayTraceResult result){
-        spellContext = new SpellContext(spell_recipe, shooter);
+        spellContext.resetSpells();
         for(int i = 0; i < spell_recipe.size(); i++){
             if(spellContext.isCanceled())
                 break;

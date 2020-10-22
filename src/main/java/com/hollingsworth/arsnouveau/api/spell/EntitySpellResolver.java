@@ -9,16 +9,17 @@ import java.util.List;
  */
 public class EntitySpellResolver extends SpellResolver {
 
-    public EntitySpellResolver(AbstractCastMethod cast, List<AbstractSpellPart> spell_recipe) {
-        super(cast, spell_recipe);
+
+    public EntitySpellResolver(AbstractCastMethod cast, List<AbstractSpellPart> spell_recipe, SpellContext context) {
+        super(cast, spell_recipe, context);
     }
 
-    public EntitySpellResolver(AbstractSpellPart[] spellParts) {
-        super(spellParts);
+    public EntitySpellResolver(AbstractSpellPart[] spellParts, SpellContext context) {
+        super(spellParts, context);
     }
 
-    public EntitySpellResolver(List<AbstractSpellPart> spell_recipe) {
-        super(spell_recipe);
+    public EntitySpellResolver(List<AbstractSpellPart> spell_recipe, SpellContext context) {
+        super(spell_recipe, context);
     }
 
     @Override

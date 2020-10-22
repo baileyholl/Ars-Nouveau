@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.api.util.MathUtil;
@@ -127,7 +128,7 @@ public class EventHandler {
     public static void castSpell(PlayerEntity playerIn, ItemStack s){
         if(EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT, s) * .25 >= Math.random() && s.hasTag() && s.getTag().contains("spell")){
             List<AbstractSpellPart> list = SpellParchment.getSpellRecipe(s);
-            SpellResolver resolver = new SpellResolver(list, true);
+            SpellResolver resolver = new SpellResolver(list, true, new SpellContext(list, playerIn));
             RayTraceResult result = playerIn.pick(5, 0, false);
 
             EntityRayTraceResult entityRes = MathUtil.getLookedAtEntity(playerIn, 25);
