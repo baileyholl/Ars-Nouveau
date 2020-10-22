@@ -7,8 +7,11 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.pattern.BlockPattern;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Items;
 import net.minecraft.particles.ParticleTypes;
@@ -20,10 +23,9 @@ import net.minecraft.util.CachedBlockInfo;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.IBooleanFunction;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -34,13 +36,13 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 public class PortalBlock extends ModBlock{
-    protected static final VoxelShape SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 12.0D, 16.0D);
+    protected static final VoxelShape SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 14.0D, 12.0D, 14.0D);
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         return SHAPE;
     }
 
     public PortalBlock() {
-        super(ModBlock.defaultProperties().doesNotBlockMovement().hardnessAndResistance(-1.0F, 3600000.0F).noDrops(),LibBlockNames.PORTAL);
+        super(Block.Properties.create(Material.PORTAL).doesNotBlockMovement().hardnessAndResistance(-1.0F, 3600000.0F).noDrops(),LibBlockNames.PORTAL);
         this.setDefaultState(this.stateContainer.getBaseState().with(AXIS, Direction.Axis.X));
     }
 
@@ -66,6 +68,14 @@ public class PortalBlock extends ModBlock{
         }
 
     }
+
+    @Override
+    public void onProjectileCollision(World worldIn, BlockState state, BlockRayTraceResult hit, ProjectileEntity projectile) {
+        if(worldIn.getTileEntity(hit.getPos()) instanceof PortalTile){
+            ((PortalTile) worldIn.getTileEntity(hit.getPos())).warp(projectile);
+        }
+    }
+
     @Override
     public boolean hasTileEntity(BlockState state) {
         return true;
@@ -73,8 +83,7 @@ public class PortalBlock extends ModBlock{
 
     @Override
     public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-        super.onEntityCollision(state, worldIn, pos, entityIn);
-        if(worldIn.getTileEntity(pos) instanceof PortalTile && !entityIn.isPassenger() && !entityIn.isBeingRidden() && entityIn.isNonBoss() && VoxelShapes.compare(VoxelShapes.create(entityIn.getBoundingBox().offset((double)(-pos.getX()), (double)(-pos.getY()), (double)(-pos.getZ()))), state.getShape(worldIn, pos), IBooleanFunction.AND)){
+        if(worldIn.getTileEntity(pos) instanceof PortalTile && !(entityIn instanceof PlayerEntity)){
             ((PortalTile) worldIn.getTileEntity(pos)).warp(entityIn);
             entityIn.fallDistance = 0;
         }
@@ -111,10 +120,7 @@ public class PortalBlock extends ModBlock{
                 return state;
         }
     }
-    @Override
-    public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
-        return false;
-    }
+
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
     /**
      * Update the provided state given the provided neighbor facing and neighbor state, returning a new state.
@@ -141,6 +147,11 @@ public class PortalBlock extends ModBlock{
             Size portalblock$size1 = new Size(worldIn, pos, Direction.Axis.Z);
             return portalblock$size1.isValid() && portalblock$size1.portalBlockCount == 0 ? portalblock$size1 : null;
         }
+    }
+
+    @Override
+    public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
+        return false;
     }
 
 

@@ -37,9 +37,11 @@ public class WarpScroll extends ModItem{
     public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
         if(!entity.getEntityWorld().isRemote && entity.getEntityWorld().getBlockState(entity.getPosition().down()).getBlock() == BlockRegistry.ARCANE_BRICKS){
 
-            if(getPos(stack) != null && getDimension(stack).equals(entity.getEntityWorld().getDimensionKey().getRegistryName().toString()) &&
-                    ManaUtil.takeManaNearby(entity.getPosition(), entity.getEntityWorld(), 10, 9000) != null && BlockRegistry.PORTAL_BLOCK.trySpawnPortal(entity.getEntityWorld(), entity.getPosition(), getPos(stack), getDimension(stack))
-            ){
+            if(getPos(stack) != null
+                    && getDimension(stack).equals(entity.getEntityWorld().getDimensionKey().getRegistryName().toString())
+                    && ManaUtil.hasManaNearby(entity.getPosition(), entity.getEntityWorld(), 10, 9000)
+                    && BlockRegistry.PORTAL_BLOCK.trySpawnPortal(entity.getEntityWorld(), entity.getPosition(), getPos(stack), getDimension(stack))
+                    && ManaUtil.takeManaNearby(entity.getPosition(), entity.getEntityWorld(), 10, 9000) != null){
                 BlockPos pos = entity.getPosition();
                 ServerWorld world = (ServerWorld) entity.getEntityWorld();
                 world.spawnParticle(ParticleTypes.PORTAL, pos.getX(),  pos.getY() + 1,  pos.getZ(),
