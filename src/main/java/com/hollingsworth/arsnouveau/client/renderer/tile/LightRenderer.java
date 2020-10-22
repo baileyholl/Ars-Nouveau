@@ -25,8 +25,8 @@ public class LightRenderer extends TileEntityRenderer<LightTile> {
         BlockPos pos = lightTile.getPos();
         Random rand = world.rand;
         world.addParticle(
-                GlowParticleData.createData(new ParticleColor(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255))),
-                pos.getX() +0.5 + ParticleUtil.inRange(-0.05, 0.05)  , pos.getY() +0.5  + ParticleUtil.inRange(-0.05, 0.05) , pos.getZ() +0.5 + ParticleUtil.inRange(-0.05, 0.05),
-                0,0,0);
+                GlowParticleData.createData(new ParticleColor(rand.nextInt(255),rand.nextInt(125),rand.nextInt(255))),
+                pos.getX() +0.5 + ParticleUtil.inRange(-0.1, 0.1)  , pos.getY() +0.5  + ParticleUtil.inRange(-0.1, 0.1) , pos.getZ() +0.5 + ParticleUtil.inRange(-0.1, 0.1),
+                0,0,0);;
     }
 }
