@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -15,7 +16,6 @@ import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import mezz.jei.config.Constants;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
@@ -40,7 +40,7 @@ public class GlyphPressRecipeCategory implements IRecipeCategory<GlyphPressRecip
                 .build(new CacheLoader<Integer, IDrawableAnimated>() {
                     @Override
                     public IDrawableAnimated load(Integer cookTime) {
-                        return helper.drawableBuilder(Constants.RECIPE_GUI_VANILLA, 82, 128, 24, 17)
+                        return helper.drawableBuilder(JEIConstants.RECIPE_GUI_VANILLA, 82, 128, 24, 17)
                                 .buildAnimated(cookTime, IDrawableAnimated.StartDirection.LEFT, false);
                     }
                 });
@@ -72,10 +72,11 @@ public class GlyphPressRecipeCategory implements IRecipeCategory<GlyphPressRecip
     }
 
     @Override
-    public void draw(GlyphPressRecipe recipe, double mouseX, double mouseY) {
+    public void draw(GlyphPressRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
         IDrawableAnimated arrow = this.cachedArrows.getUnchecked(40);
-        arrow.draw( 38, 6);
+        arrow.draw( matrixStack,38, 6);
     }
+
 
     @Override
     public void setIngredients(GlyphPressRecipe glyphPressRecipe, IIngredients iIngredients) {

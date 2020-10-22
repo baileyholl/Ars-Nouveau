@@ -64,7 +64,7 @@ public class MethodProjectile extends AbstractCastMethod {
         ArrayList<EntityProjectileSpell> projectiles = new ArrayList<>();
         int numPierce = getBuffCount(augments, AugmentPierce.class);
         EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, shooter, this.resolver, numPierce);
-        projectileSpell.setPosition(pos.getX(), pos.getY() +1, pos.getZ());
+        projectileSpell.setPosition(pos.getX(), pos.getY() + 1, pos.getZ());
         projectiles.add(projectileSpell);
 
         int numSplits = getBuffCount(augments, AugmentSplit.class);
