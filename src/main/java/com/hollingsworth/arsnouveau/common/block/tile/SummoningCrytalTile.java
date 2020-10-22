@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.common.block.ManaBlock;
@@ -85,7 +86,6 @@ public class SummoningCrytalTile extends AbstractManaTile {
     }
 
     public ItemStack insertItem(ItemStack stack){
-
         for(IInventory i : inventories()){
             if(stack == ItemStack.EMPTY || stack == null)
                 break;
@@ -140,7 +140,7 @@ public class SummoningCrytalTile extends AbstractManaTile {
             return null;
 
             if(recipe != null){
-                SpellResolver resolver = new SpellResolver(recipe);
+                SpellResolver resolver = new SpellResolver(recipe, new SpellContext(recipe, null));
                 if(!resolver.wouldCastOnBlockSuccessfully(new BlockRayTraceResult(new Vec3d(taskPos.getX(), taskPos.getY(), taskPos.getZ()), Direction.UP,taskPos, false ), caster))
                     return null;
             }

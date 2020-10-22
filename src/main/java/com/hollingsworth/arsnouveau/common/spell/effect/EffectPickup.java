@@ -31,11 +31,14 @@ public class EffectPickup extends AbstractEffect {
         List<ItemEntity> entityList = world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos.east(3 + expansion).north(3 + expansion).up(3 + expansion),
                 pos.west(3 +expansion).south(3+expansion).down(3+expansion)));
         for(ItemEntity i : entityList){
-            i.setPosition(shooter.getPosX(), shooter.getPosY(), shooter.getPosZ());
+            if(shooter != null)
+                i.setPosition(shooter.getPosX(), shooter.getPosY(), shooter.getPosZ());
             if(shooter instanceof PlayerEntity){
                 i.onCollideWithPlayer((PlayerEntity) shooter);
             }else if(shooter instanceof IPickupResponder){
                 i.setItem(((IPickupResponder) shooter).onPickup(i.getItem()));
+            }else if(spellContext.castingTile instanceof IPickupResponder){
+                i.setItem(((IPickupResponder) spellContext.castingTile).onPickup(i.getItem()));
             }
         }
     }

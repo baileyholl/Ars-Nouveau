@@ -3,8 +3,11 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.common.items.SpellBook;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -40,6 +43,13 @@ public class EntityProjectileSpell extends ArrowEntity {
 
     public EntityProjectileSpell(final World world, final double x, final double y, final double z) {
         super(world, x, y, z);
+    }
+
+    public EntityProjectileSpell(World world, LivingEntity shooter, SpellResolver spellResolver, int maxPierce) {
+        super(world, shooter);
+        this.spellResolver = spellResolver;
+        age = 0;
+        pierceLeft = maxPierce;
     }
 
     public EntityProjectileSpell(final World world, final LivingEntity shooter) {
@@ -117,6 +127,7 @@ public class EntityProjectileSpell extends ArrowEntity {
         }
 
         this.setPosition(x,y,z);
+
         if(world.isRemote && this.age > 1) {
             double deltaX = getPosX() - lastTickPosX;
             double deltaY = getPosY() - lastTickPosY;
@@ -131,6 +142,7 @@ public class EntityProjectileSpell extends ArrowEntity {
 
 
                     world.addParticle(GlowParticleData.createData(new ParticleColor(255,25,180)), (float) (prevPosX + deltaX * coeff), (float) (prevPosY + deltaY * coeff), (float) (prevPosZ + deltaZ * coeff), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f));
+
                 }
             }
 
@@ -142,12 +154,6 @@ public class EntityProjectileSpell extends ArrowEntity {
         super.baseTick();
     }
 
-    public EntityProjectileSpell(World world, LivingEntity shooter, SpellResolver spellResolver, int maxPierce) {
-        super(world, shooter);
-        this.spellResolver = spellResolver;
-        age = 0;
-        pierceLeft = maxPierce;
-    }
 
 
     /**
@@ -198,27 +204,31 @@ public class EntityProjectileSpell extends ArrowEntity {
 
     @Override
     protected void onHit(RayTraceResult result) {
-        //super.onHit(result);
+        if(this.removed)
+            return;
 
         if(!world.isRemote &&  result != null && result.getType() == RayTraceResult.Type.ENTITY) {
             if (((EntityRayTraceResult) result).getEntity().equals(this.getShooter())) return;
             if(this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(world, (LivingEntity) this.getShooter(), (EntityRayTraceResult) result);
+                Networking.sendToNearby(world, new BlockPos(result.getHitVec()), new PacketANEffect(PacketANEffect.EffectType.BURST, new BlockPos(result.getHitVec())));
                  attemptRemoval();
+
             }
 
         }
-        if(world.isRemote && result instanceof BlockRayTraceResult){
-            SpellBook.spawnParticles(result.getHitVec().x, result.getHitVec().y, result.getHitVec().z, world);
-        }
-
         if (!world.isRemote && result instanceof BlockRayTraceResult) {
-//           if(!world.getBlockState(((BlockRayTraceResult) result).getPos()).getMaterial().blocksMovement())
-//               return;
             BlockRayTraceResult blockraytraceresult = (BlockRayTraceResult)result;
+            BlockState state = world.getBlockState(((BlockRayTraceResult) result).getPos());
+            if(state.getMaterial() == Material.PORTAL){
+                state.getBlock().onEntityCollision(state, world, ((BlockRayTraceResult) result).getPos(),this);
+                return;
+            }
+
             if(this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(this.world, (LivingEntity) this.getShooter(), blockraytraceresult);
             }
+            Networking.sendToNearby(world, ((BlockRayTraceResult) result).getPos(), new PacketANEffect(PacketANEffect.EffectType.BURST, new BlockPos(result.getHitVec()).down()));
            attemptRemoval();
         }
     }

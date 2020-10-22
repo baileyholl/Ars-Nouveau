@@ -13,6 +13,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -30,30 +31,38 @@ public class EffectPlaceBlock extends AbstractEffect {
 
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+
         if(rayTraceResult instanceof BlockRayTraceResult){
             BlockRayTraceResult result = (BlockRayTraceResult) rayTraceResult;
-            if(shooter instanceof PlayerEntity){
+            BlockPos hitPos = result.getPos().offset(result.getFace());
+
+
+            if(spellContext.castingTile instanceof IPlaceBlockResponder){
+                ItemStack stack = ((IPlaceBlockResponder) spellContext.castingTile).onPlaceBlock();
+                if(stack == null || !(stack.getItem() instanceof BlockItem))
+                    return;
+                BlockItem item = (BlockItem) stack.getItem();
+                attemptPlace(world, stack, item, result);
+            }else if(shooter instanceof IPlaceBlockResponder){
+                ItemStack stack = ((IPlaceBlockResponder) shooter).onPlaceBlock();
+                if(stack == null || !(stack.getItem() instanceof BlockItem))
+                    return;
+                BlockItem item = (BlockItem) stack.getItem();
+                if(world.getBlockState(hitPos).getMaterial() != Material.AIR){
+                    result = new BlockRayTraceResult(result.getHitVec().add(0, 1, 0), Direction.UP, result.getPos(),false);
+                }
+                attemptPlace(world, stack, item, result);
+            }else if(shooter instanceof PlayerEntity){
                 PlayerEntity playerEntity = (PlayerEntity) shooter;
                 NonNullList<ItemStack> list =  playerEntity.inventory.mainInventory;
                 for(int i = 0; i < 9; i++){
                     ItemStack stack = list.get(i);
-
                     if(stack.getItem() instanceof BlockItem && world instanceof ServerWorld){
                         BlockItem item = (BlockItem)stack.getItem();
-                        if( ActionResultType.SUCCESS == attemptPlace(world, stack, item, result))
+                        if(ActionResultType.SUCCESS == attemptPlace(world, stack, item, result))
                             break;
                     }
-//                    System.out.println(list.get(i));
                 }
-            }else if(shooter instanceof IPlaceBlockResponder){
-                ItemStack stack = ((IPlaceBlockResponder) shooter).onPlaceBlock();
-                if(!(stack.getItem() instanceof BlockItem))
-                    return;
-                BlockItem item = (BlockItem) stack.getItem();
-                if(world.getBlockState(result.getPos()).getMaterial() != Material.AIR){
-                    result = new BlockRayTraceResult(result.getHitVec().add(0, 1, 0), Direction.UP, result.getPos(),false);
-                }
-                attemptPlace(world, stack, item, result);
             }
         }
     }

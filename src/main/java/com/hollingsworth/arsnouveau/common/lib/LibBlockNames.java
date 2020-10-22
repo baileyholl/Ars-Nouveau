@@ -19,10 +19,13 @@ public class LibBlockNames {
     public static final String ARCANE_CORE = "arcane_core";
 
     public static final String MANA_GEM = "mana_gem";
-    public static final String SPELL_DISPENSER = "spell_dispenser";
     public final static String ARCANE_STONE = "arcane_stone";
     public final static String AB_MOSAIC = "ab_mosaic";
     public final static String AB_HERRING = "ab_herring";
     public final static String AB_BASKET = "ab_basket";
     public final static String AB_ALTERNATE = "ab_alternating";
+
+    public static final String SPELL_TURRET = "spell_turret";
+
+    public static final String REDSTONE_AIR = "redstone_air";
 }

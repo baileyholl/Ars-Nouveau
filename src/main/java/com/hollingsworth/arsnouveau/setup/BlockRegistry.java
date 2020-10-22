@@ -120,6 +120,10 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.AB_MOSAIC) public static ModBlock AB_MOSAIC;
     @ObjectHolder(LibBlockNames.ARCANE_STONE) public static ModBlock ARCANE_STONE;
 
+    @ObjectHolder(LibBlockNames.SPELL_TURRET) public static SpellTurret SPELL_TURRET;
+    @ObjectHolder(LibBlockNames.SPELL_TURRET) public static TileEntityType<SpellTurretTile> SPELL_TURRET_TYPE;
+    @ObjectHolder(LibBlockNames.REDSTONE_AIR) public static RedstoneAir REDSTONE_AIR;
+
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
         @SubscribeEvent
@@ -154,6 +158,8 @@ public class BlockRegistry {
             blockRegistryEvent.getRegistry().register(new ModBlock(LibBlockNames.AB_BASKET));
             blockRegistryEvent.getRegistry().register(new ModBlock(LibBlockNames.AB_HERRING));
             blockRegistryEvent.getRegistry().register(new ModBlock(LibBlockNames.AB_MOSAIC));
+            blockRegistryEvent.getRegistry().register(new SpellTurret());
+            blockRegistryEvent.getRegistry().register(new RedstoneAir());
         }
 
         @SubscribeEvent
@@ -176,6 +182,7 @@ public class BlockRegistry {
             event.getRegistry().register(TileEntityType.Builder.create(ArcaneRelaySplitterTile::new, BlockRegistry.ARCANE_RELAY_SPLITTER).build(null).setRegistryName(LibBlockNames.ARCANE_RELAY_SPLITTER));
             event.getRegistry().register(TileEntityType.Builder.create(CrystallizerTile::new, BlockRegistry.CRYSTALLIZER_BLOCK).build(null).setRegistryName(LibBlockNames.CRYSTALLIZER));
             event.getRegistry().register(TileEntityType.Builder.create(ArcaneCoreTile::new, BlockRegistry.ARCANE_CORE_BLOCK).build(null).setRegistryName(LibBlockNames.ARCANE_CORE));
+            event.getRegistry().register(TileEntityType.Builder.create(SpellTurretTile::new, BlockRegistry.SPELL_TURRET).build(null).setRegistryName(LibBlockNames.SPELL_TURRET));
 
         }
 
@@ -209,6 +216,7 @@ public class BlockRegistry {
             registry.register(getDefaultBlockItem(BlockRegistry.AB_HERRING, LibBlockNames.AB_HERRING));
             registry.register(getDefaultBlockItem(BlockRegistry.AB_MOSAIC, LibBlockNames.AB_MOSAIC));
             registry.register(getDefaultBlockItem(BlockRegistry.ARCANE_STONE, LibBlockNames.ARCANE_STONE));
+            registry.register(new BlockItem(BlockRegistry.SPELL_TURRET, ItemsRegistry.defaultItemProperties().setISTER(()-> SpellTurretRenderer.ISRender::new)).setRegistryName(LibBlockNames.SPELL_TURRET));
         }
 
         public static Item getDefaultBlockItem(Block block, String registry){

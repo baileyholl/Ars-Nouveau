@@ -51,4 +51,7 @@ public class ModConfig {
     public static final String MethodRuneID = "rune";
     public static final String EffectSmeltID = "smelt";
     public static final String EffectLeapID = "leap";
+    public static final String EffectRedstoneID = "redstone_signal";
+
+
 }

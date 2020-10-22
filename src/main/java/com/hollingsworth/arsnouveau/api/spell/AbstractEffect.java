@@ -11,6 +11,8 @@ import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class AbstractEffect extends AbstractSpellPart {
@@ -21,7 +23,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     // Apply the effect at the destination position.
-    public abstract void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext);
+    public abstract void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext);
 
     public void applyPotion(LivingEntity entity, Effect potionEffect, List<AbstractAugment> augmentTypes){
         applyPotion(entity, potionEffect, augmentTypes, 30, 30);
