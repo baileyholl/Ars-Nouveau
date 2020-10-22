@@ -24,7 +24,14 @@ public class ManaJarTile extends AbstractManaTile implements ITickableTileEntity
             return;
         }
         BlockState state = world.getBlockState(pos);
-        world.setBlockState(pos, state.with(ManaJar.fill, this.getCurrentMana() < 1000 ? 0 : this.getCurrentMana() / 1000),3);
+        int fillState = 0;
+        if(this.getCurrentMana() > 0 && this.getCurrentMana() < 1000)
+            fillState = 1;
+        else if(this.getCurrentMana() != 0){
+            fillState = (this.getCurrentMana() / 1000) + 1;
+        }
+
+        world.setBlockState(pos, state.with(ManaJar.fill, fillState),3);
     }
 
 

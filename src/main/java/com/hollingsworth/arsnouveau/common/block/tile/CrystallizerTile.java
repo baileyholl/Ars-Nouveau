@@ -29,14 +29,14 @@ public class CrystallizerTile extends AbstractManaTile implements IInventory {
             return;
 
 
-        if(this.stack.isEmpty() && this.world.getGameTime() % 20 == 0 && ManaUtil.takeManaNearby(pos, world, 1, 500) != null){
+        if(this.stack.isEmpty() && this.world.getGameTime() % 20 == 0 && ManaUtil.takeManaNearby(pos, world, 1, 200) != null){
             this.addMana(500);
             if(!draining) {
                 draining = true;
                 update();
             }
         }else if(this.world.getGameTime() % 20 == 0){
-            this.addMana(15);
+            this.addMana(5);
             if(draining){
                 draining = false;
                 update();

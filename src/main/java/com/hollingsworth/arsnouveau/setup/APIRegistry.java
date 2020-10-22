@@ -23,7 +23,7 @@ public class APIRegistry {
                 {Items.GLOWSTONE, Items.GLOWSTONE, Items.GLOWSTONE, Items.GLOWSTONE, Items.REDSTONE_LAMP, Items.GLASS, Items.GLASS, Items.REDSTONE_LAMP}, ArsNouveauAPI.PatchouliCategories.equipment.name()));
 
         registerApparatusRecipe(new EnchantingApparatusRecipe( BlockRegistry.MANA_BLOOM_CROP.asItem(), Items.WHEAT_SEEDS, new Item[]
-                {ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana},  ArsNouveauAPI.PatchouliCategories.resources.name()));
+                {ItemsRegistry.manaGem, ItemsRegistry.manaGem, ItemsRegistry.manaGem, ItemsRegistry.manaGem},  ArsNouveauAPI.PatchouliCategories.resources.name()));
 
         registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.ringOfLesserDiscount, ItemsRegistry.ringOfPotential, new Item[]{
                 Items.DIAMOND, Items.ENDER_PEARL, Items.DIAMOND, ItemsRegistry.manaGem, ItemsRegistry.manaGem, Items.DIAMOND, Items.ENDER_PEARL, Items.DIAMOND
@@ -41,23 +41,23 @@ public class APIRegistry {
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
 
         registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.whelpCharm, Items.EGG, new Item[]{
-                ItemsRegistry.bucketOfMana,ItemsRegistry.bucketOfMana,Items.DIAMOND, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, ItemsRegistry.noviceSpellBook,
+                ItemsRegistry.manaGem,ItemsRegistry.manaGem,Items.DIAMOND, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, ItemsRegistry.noviceSpellBook,
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
 
         registerApparatusRecipe(new EnchantingApparatusRecipe(BlockRegistry.ARCANE_RELAY.asItem(), BlockRegistry.MANA_JAR.asItem(), new Item[]{
-                ItemsRegistry.bucketOfMana,ItemsRegistry.bucketOfMana,Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT,
+                ItemsRegistry.manaGem,ItemsRegistry.manaGem,Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT,
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
 
         registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.carbuncleCharm, ItemsRegistry.carbuncleShard, new Item[]{
-                ItemsRegistry.bucketOfMana,ItemsRegistry.bucketOfMana,Items.DIAMOND, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET,
+                ItemsRegistry.manaGem,ItemsRegistry.manaGem,Items.DIAMOND, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET,
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
 
         registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.amuletOfManaBoost, ItemsRegistry.dullTrinket, new Item[]{
-                Items.DIAMOND, Items.DIAMOND, Items.DIAMOND, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana
+                Items.DIAMOND, Items.DIAMOND, Items.DIAMOND, ItemsRegistry.manaGem, ItemsRegistry.manaGem, ItemsRegistry.manaGem, ItemsRegistry.manaGem, ItemsRegistry.manaGem
         }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
 
         registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.amuletOfManaRegen, ItemsRegistry.dullTrinket, new Item[]{
-                Items.DIAMOND, Items.DIAMOND, Items.GOLD_INGOT, Items.GOLD_INGOT, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana, ItemsRegistry.bucketOfMana
+                Items.DIAMOND, Items.DIAMOND, Items.GOLD_INGOT, Items.GOLD_INGOT, ItemsRegistry.manaGem, ItemsRegistry.manaGem, ItemsRegistry.manaGem, ItemsRegistry.manaGem
         }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
 
         registerApparatusRecipe(new EnchantingApparatusRecipe(BlockRegistry.ARCANE_RELAY_SPLITTER.asItem(), BlockRegistry.ARCANE_RELAY.asItem(), new Item[]{
@@ -68,7 +68,7 @@ public class APIRegistry {
 
 
         registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.sylphCharm,ItemsRegistry.sylphShard, new Item[]{
-                ItemsRegistry.bucketOfMana,BlockRegistry.MANA_BLOOM_CROP.asItem(), ItemsRegistry.manaBloom, Items.DIAMOND, Items.OAK_SAPLING, Items.SPRUCE_SAPLING, Items.BIRCH_SAPLING, Items.WHEAT_SEEDS
+                ItemsRegistry.manaGem,BlockRegistry.MANA_BLOOM_CROP.asItem(), ItemsRegistry.manaBloom, Items.DIAMOND, Items.OAK_SAPLING, Items.SPRUCE_SAPLING, Items.BIRCH_SAPLING, Items.WHEAT_SEEDS
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
 
         registerApparatusRecipe(new EnchantingApparatusRecipe(BlockRegistry.SPELL_TURRET.asItem(),Items.DISPENSER, new Item[]{

@@ -10,8 +10,8 @@
     {
       "type": "apparatus_recipe",
       "reagent": "ars_nouveau:carbuncle_shards",
-      "item1": "ars_nouveau:bucket_of_mana",
-      "item2": "ars_nouveau:bucket_of_mana",
+      "item1": "ars_nouveau:mana_gem",
+      "item2": "ars_nouveau:mana_gem",
       "item3": "minecraft:diamond",
       "item4": "minecraft:gold_nugget",
       "item5": "minecraft:gold_nugget",

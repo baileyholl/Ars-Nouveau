@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 
 public class ManaJar extends ManaBlock {
 
-    public static final IProperty fill = IntegerProperty.create("fill", 0, 10);
+    public static final IProperty fill = IntegerProperty.create("fill", 0, 11);
 
     public ManaJar() {
         super(ModBlock.defaultProperties().notSolid(),"mana_jar");
@@ -52,11 +52,19 @@ public class ManaJar extends ManaBlock {
     }
 
     @Override
+    public boolean hasComparatorInputOverride(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
+        ManaJarTile tile = (ManaJarTile) worldIn.getTileEntity(pos);
+        int step = tile.getMaxMana() / 15;
+        return tile.getCurrentMana() / step;
+    }
+
+    @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         return super.onBlockActivated(state,worldIn,pos,player,handIn,hit);
-//        if(worldIn.isRemote)
-//            return ActionResultType.SUCCESS;
-//
-//        return ActionResultType.SUCCESS;
     }
 }

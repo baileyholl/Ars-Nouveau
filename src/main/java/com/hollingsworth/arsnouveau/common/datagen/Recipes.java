@@ -60,9 +60,8 @@ public class Recipes extends RecipeProvider {
                     .build(consumer);
 
             ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.warpScroll).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
-                .addIngredient(ItemsRegistry.manaFiber, 4).addIngredient(Items.PAPER)
+                .addIngredient(ItemsRegistry.manaFiber, 4).addIngredient(Items.PAPER).addIngredient(ItemsRegistry.manaGem, 4)
                 .build(consumer);
-
 
             ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.manaFiber, 4).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                     .addIngredient(ItemsRegistry.manaBloom)

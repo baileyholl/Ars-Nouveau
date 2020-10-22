@@ -12,6 +12,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -56,9 +57,18 @@ public class SpellResolver {
 
 
     public boolean canCast(LivingEntity entity){
+        int numMethods = 0;
         if(spell_recipe == null || spell_recipe.isEmpty() || castType == null) {
             if(!silent)
                 entity.sendMessage(new StringTextComponent("Invalid Spell."));
+            return false;
+        }
+        for(AbstractSpellPart spellPart : spell_recipe){
+            if(spellPart instanceof AbstractCastMethod)
+                numMethods++;
+        }
+        if(numMethods > 1 && !silent) {
+            entity.sendMessage(new TranslationTextComponent("ars_nouveau.alert.duplicate_method"));
             return false;
         }
         return enoughMana(entity);
