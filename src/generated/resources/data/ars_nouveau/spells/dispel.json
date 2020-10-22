@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Removes any potion effects on the target."
+      "text": "Removes any potion effects on the target. Will also dispel tamed Whelps, Carbuncles, and Sylphs back into their charm."
     },
     {
       "type": "glyph_recipe",

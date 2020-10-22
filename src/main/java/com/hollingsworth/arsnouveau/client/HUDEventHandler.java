@@ -6,24 +6,17 @@ import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.client.gui.GuiManaHUD;
 import com.hollingsworth.arsnouveau.client.gui.GuiSpellHUD;
 import com.hollingsworth.arsnouveau.common.entity.EntityWhelp;
-import com.hollingsworth.arsnouveau.common.items.SpellBook;
-import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.lwjgl.opengl.GL11;
-
-import java.util.List;
 
 
 /**
@@ -57,7 +50,7 @@ public class HUDEventHandler {
     }
 
     /**
-     * Render the current spell when the SpellBook is held in the players hand
+     *
      *
      * @param event The event
      */
@@ -73,6 +66,13 @@ public class HUDEventHandler {
           if(result.getEntity() instanceof ITooltipProvider)
               entityHUD.drawHUD(event.getMatrixStack(),((ITooltipProvider) result.getEntity()).getTooltip());
 
+        }
+        if (mouseOver != null && mouseOver.getType() == RayTraceResult.Type.BLOCK) {
+            BlockRayTraceResult result = (BlockRayTraceResult) mouseOver;
+            BlockPos pos = result.getPos();
+            if(Minecraft.getInstance().world != null && Minecraft.getInstance().world.getTileEntity(pos) instanceof ITooltipProvider){
+                entityHUD.drawHUD(event.getMatrixStack(), ((ITooltipProvider) Minecraft.getInstance().world.getTileEntity(pos)).getTooltip());
+            }
         }
     }
 }

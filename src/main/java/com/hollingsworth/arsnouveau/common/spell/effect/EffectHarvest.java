@@ -50,15 +50,16 @@ public class EffectHarvest extends AbstractEffect {
                             return;
                         if (hasBuff(augments, AugmentExtract.class)) {
                             world.getBlockState(listPos).getDrops(LootUtil.getSilkContext((ServerWorld) world, listPos,  shooter)).forEach(i -> world.addEntity(new ItemEntity(world,listPos.getX(), listPos.getY(), listPos.getZ(), i )));
-                            world.destroyBlock(listPos, false);
+                            BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, false);
                         } else if (hasBuff(augments, AugmentFortune.class)) {
                             world.getBlockState(listPos).getDrops(LootUtil.getFortuneContext((ServerWorld) world, listPos, shooter, getBuffCount(augments, AugmentFortune.class))).forEach(i -> world.addEntity(new ItemEntity(world,listPos.getX(), listPos.getY(), listPos.getZ(),i )));
-                            world.destroyBlock(listPos, false);
+                            BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, false);
                         } else {
-                            world.destroyBlock(listPos, true);
+                            BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, true);
                         }
-                        world.notifyBlockUpdate(listPos, world.getBlockState(listPos), world.getBlockState(listPos), 3);
+//                        world.notifyBlockUpdate(listPos, world.getBlockState(listPos), world.getBlockState(listPos), 3);
                     });
+                    world.playEvent(2001, blockpos, Block.getStateId(state));
                     return;
                 }
 

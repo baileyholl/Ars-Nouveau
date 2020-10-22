@@ -14,10 +14,10 @@
       "item2": "minecraft:diamond",
       "item3": "minecraft:gold_ingot",
       "item4": "minecraft:gold_ingot",
-      "item5": "ars_nouveau:bucket_of_mana",
-      "item6": "ars_nouveau:bucket_of_mana",
-      "item7": "ars_nouveau:bucket_of_mana",
-      "item8": "ars_nouveau:bucket_of_mana"
+      "item5": "ars_nouveau:mana_gem",
+      "item6": "ars_nouveau:mana_gem",
+      "item7": "ars_nouveau:mana_gem",
+      "item8": "ars_nouveau:mana_gem"
     }
   ]
 }

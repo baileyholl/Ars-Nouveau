@@ -1,8 +1,8 @@
 {
-    "name": "What is new?",
+    "name": "Changelog 1.1.0",
     "icon": "ars_nouveau:spell_parchment",
-    "category": "getting_started",
-	"sortnum":9,
+    "category": "release_notes",
+	"sortnum":99,
     "pages": [
         {
             "type": "text",

@@ -10,7 +10,7 @@
     {
       "type": "apparatus_recipe",
       "reagent": "ars_nouveau:sylph_shards",
-      "item1": "ars_nouveau:bucket_of_mana",
+      "item1": "ars_nouveau:mana_gem",
       "item2": "ars_nouveau:mana_bloom_crop",
       "item3": "ars_nouveau:mana_bloom",
       "item4": "minecraft:diamond",
