@@ -208,15 +208,13 @@ public class EntityProjectileSpell extends ArrowEntity {
         if(this.removed)
             return;
 
-        if(this.world.getBlockState(((BlockRayTraceResult) result).getPos()).allowsMovement(this.world,((BlockRayTraceResult) result).getPos(), PathType.AIR) ){
-            return;
-        }
+
 
 
         if(!world.isRemote && result.getType() == RayTraceResult.Type.ENTITY) {
             if (((EntityRayTraceResult) result).getEntity().equals(this.getShooter())) return;
             if(this.spellResolver != null) {
-                this.spellResolver.onResolveEffect(world, (LivingEntity) this.getShooter(), (EntityRayTraceResult) result);
+                this.spellResolver.onResolveEffect(world, (LivingEntity) this.getShooter(), result);
                 Networking.sendToNearby(world, new BlockPos(result.getHitVec()), new PacketANEffect(PacketANEffect.EffectType.BURST, new BlockPos(result.getHitVec())));
                  attemptRemoval();
 
@@ -226,6 +224,10 @@ public class EntityProjectileSpell extends ArrowEntity {
         if (!world.isRemote && result instanceof BlockRayTraceResult) {
             BlockRayTraceResult blockraytraceresult = (BlockRayTraceResult)result;
             BlockState state = world.getBlockState(((BlockRayTraceResult) result).getPos());
+
+            if(state.allowsMovement(this.world, blockraytraceresult.getPos(), PathType.AIR))
+                return;
+
             if(state.getMaterial() == Material.PORTAL){
                 state.getBlock().onEntityCollision(state, world, ((BlockRayTraceResult) result).getPos(),this);
                 return;
@@ -235,7 +237,7 @@ public class EntityProjectileSpell extends ArrowEntity {
                 this.spellResolver.onResolveEffect(this.world, (LivingEntity) this.getShooter(), blockraytraceresult);
             }
             Networking.sendToNearby(world, ((BlockRayTraceResult) result).getPos(), new PacketANEffect(PacketANEffect.EffectType.BURST, new BlockPos(result.getHitVec()).down()));
-           attemptRemoval();
+            attemptRemoval();
         }
     }
 
