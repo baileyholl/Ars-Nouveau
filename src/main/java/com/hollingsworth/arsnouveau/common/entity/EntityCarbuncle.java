@@ -244,18 +244,16 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity, 
 
         @Override
         public boolean shouldExecute() {
-            List<ItemEntity> list = EntityCarbuncle.this.world.getEntitiesWithinAABB(ItemEntity.class, EntityCarbuncle.this.getBoundingBox().grow(8.0D, 6.0D, 8.0D), getFinderItems());
-
-
+            List<ItemEntity> list = EntityCarbuncle.this.world.getEntitiesWithinAABB(ItemEntity.class, EntityCarbuncle.this.getBoundingBox().grow(8.0D, 2, 8.0D), getFinderItems());
             return !list.isEmpty() && EntityCarbuncle.this.getHeldStack().isEmpty();
         }
-
-
 
         @Override
         public void startExecuting() {
             super.startExecuting();
-            List<ItemEntity> list = EntityCarbuncle.this.world.getEntitiesWithinAABB(ItemEntity.class, EntityCarbuncle.this.getBoundingBox().grow(8.0D, 4.0D, 8.0D), getFinderItems());
+
+            List<ItemEntity> list = EntityCarbuncle.this.world.getEntitiesWithinAABB(ItemEntity.class, EntityCarbuncle.this.getBoundingBox().grow(8.0D, 2, 8.0D), getFinderItems());
+
             ItemStack itemstack = EntityCarbuncle.this.getHeldStack();
 
             if (itemstack.isEmpty() && !list.isEmpty()) {
@@ -268,7 +266,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity, 
         public void tick() {
             super.tick();
 
-            List<ItemEntity> list = EntityCarbuncle.this.world.getEntitiesWithinAABB(ItemEntity.class, EntityCarbuncle.this.getBoundingBox().grow(8.0D, 4.0D, 8.0D), getFinderItems());
+            List<ItemEntity> list = EntityCarbuncle.this.world.getEntitiesWithinAABB(ItemEntity.class, EntityCarbuncle.this.getBoundingBox().grow(8.0D, 2, 8.0D), getFinderItems());
             ItemStack itemstack = EntityCarbuncle.this.getHeldStack();
             if (itemstack.isEmpty() && !list.isEmpty()) {
                 EntityCarbuncle.this.pathToTarget(list.get(0), 1.2f);
