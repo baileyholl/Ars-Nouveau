@@ -3,8 +3,10 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.common.block.PortalBlock;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
@@ -17,6 +19,7 @@ import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -106,6 +109,12 @@ public class EntityProjectileSpell extends ArrowEntity {
             this.onImpact(raytraceresult);
             this.isAirBorne = true;
         }
+        if(raytraceresult.getType() == RayTraceResult.Type.MISS ){
+            BlockRegistry.PORTAL_BLOCK.onProjectileCollision(world,world.getBlockState(new BlockPos(raytraceresult.getHitVec())),
+                    (BlockRayTraceResult)raytraceresult, this );
+
+        }
+
 
 
         Vector3d vec3d = this.getMotion();
@@ -221,6 +230,7 @@ public class EntityProjectileSpell extends ArrowEntity {
             BlockState state = world.getBlockState(((BlockRayTraceResult) result).getPos());
             if(state.getMaterial() == Material.PORTAL){
                 state.getBlock().onEntityCollision(state, world, ((BlockRayTraceResult) result).getPos(),this);
+                System.out.println("warping");
                 return;
             }
 

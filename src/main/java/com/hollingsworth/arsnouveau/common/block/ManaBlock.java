@@ -45,7 +45,7 @@ public abstract class ManaBlock extends ModBlock{
                         tile.removeMana(1000);
                         player.getHeldItem(handIn).shrink(1);
                     }else {
-                        if(player.getHeldItem(handIn).getCount() == 1){ //Checks if the count of buckets is one so it doesn't over writhe the count of the buckets if the inv is full
+                        if(player.getHeldItem(handIn).getCount() == 1){
                             tile.removeMana(1000);
                             player.setHeldItem(player.getActiveHand(),new ItemStack(ItemsRegistry.bucketOfMana));
                         }
