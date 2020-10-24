@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.event;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -16,7 +17,7 @@ public class DelayedSpellEvent implements ITimedEvent{
     private final List<AbstractSpellPart> recipe;
     private final RayTraceResult result;
     private final World world;
-    private final LivingEntity shooter;
+    private LivingEntity shooter;
 
     public DelayedSpellEvent(int delay, List<AbstractSpellPart> recipe, RayTraceResult result, World world, LivingEntity shooter){
         this.duration = delay;
@@ -38,6 +39,7 @@ public class DelayedSpellEvent implements ITimedEvent{
         if(world == null)
             return;
         SpellContext context = new SpellContext(recipe, shooter);
+        shooter = SpellResolver.getUnwrappedCaster(world, shooter, context);
         for(int i = 0; i < recipe.size(); i++){
             if(context.isCanceled())
                 break;
