@@ -77,8 +77,9 @@ public class SpellTurret extends ModBlock {
             return;
         }
         if(resolver.castType instanceof MethodTouch){
-            resolver.onCastOnBlock(new BlockRayTraceResult(new Vector3d(iposition.getX(), iposition.getY(), iposition.getZ()),
-                    direction.getOpposite(), new BlockPos(iposition.getX(), iposition.getY(), iposition.getZ()), false),
+            BlockPos touchPos = new BlockPos(iposition.getX(), iposition.getY(), iposition.getZ()).offset(direction);
+            resolver.onCastOnBlock(new BlockRayTraceResult(new Vector3d(touchPos.getX(), touchPos.getY(), touchPos.getZ()),
+                    direction.getOpposite(), new BlockPos(touchPos.getX(), touchPos.getY(), touchPos.getZ()), false),
                    fakePlayer);
         }
     }
@@ -160,6 +161,7 @@ public class SpellTurret extends ModBlock {
 
             ((SpellTurretTile)worldIn.getTileEntity(pos)).recipe = recipe;
             PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.alert.spell_set"));
+            worldIn.notifyBlockUpdate(pos, state, state, 2);
         }
         return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
     }
