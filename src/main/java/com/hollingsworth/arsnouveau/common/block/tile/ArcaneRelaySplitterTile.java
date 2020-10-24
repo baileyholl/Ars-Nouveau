@@ -5,8 +5,10 @@ import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
 
@@ -103,14 +105,18 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
     public void read(CompoundNBT tag) {
         super.read(tag);
         int counter = 0;
-        while(tag.contains("from_" + counter)){
-            this.fromList.add(NBTUtil.getBlockPos(tag, "from_" + counter));
+        while(NBTUtil.hasBlockPos(tag, "from_" + counter)){
+            BlockPos pos = NBTUtil.getBlockPos(tag, "from_" + counter);
+            if(!fromList.contains(pos))
+                this.fromList.add(pos);
             counter++;
         }
 
         counter = 0;
-        while(tag.contains("to_" + counter)){
-            this.toList.add(NBTUtil.getBlockPos(tag, "to_" + counter));
+        while(NBTUtil.hasBlockPos(tag, "to_" + counter)){
+            BlockPos pos = NBTUtil.getBlockPos(tag, "to_" + counter);
+            if(!toList.contains(pos))
+                this.toList.add(pos);
             counter++;
         }
     }
@@ -128,5 +134,21 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
             counter ++;
         }
         return super.write(tag);
+    }
+
+    @Override
+    public List<String> getTooltip() {
+        List<String> list = new ArrayList<>();
+        if(toList == null || toList.isEmpty()){
+            list.add(new TranslationTextComponent("ars_nouveau.relay.no_to").getString());
+        }else{
+            list.add(new TranslationTextComponent("ars_nouveau.relay.one_to", toList.size()).getString());
+        }
+        if(fromList == null || fromList.isEmpty()){
+            list.add(new TranslationTextComponent("ars_nouveau.relay.no_from").getString());
+        }else{
+            list.add(new TranslationTextComponent("ars_nouveau.relay.one_from", fromList.size()).getString());
+        }
+        return list;
     }
 }

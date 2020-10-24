@@ -208,5 +208,9 @@
 	"block.ars_nouveau.spell_turret":"Spell Turret",
 	"ars_nouveau.page.spell_turret":"Turrets can be used to cast spells when given a redstone signal, functioning like a dispenser. Turrets will accept spells that use Touch and Projectile. Spells may be set using an inscribed piece of Spell Parchment. In order to cast spells, turrets will draw mana from nearby Mana Jars. Turrets may use Item Pickup and Place Block as long as an inventory is placed adjacent to this block.",
 	"ars_nouveau.page.spell_turret2":"Turrets can provide compact and efficient automation. Examples include: configurable redstone clocks, one block tree or crop farms, rapid smelting with fortune, or mob farms with looting.",
-	"ars_nouveau.alert.duplicate_method": "No duplicate cast methods are allowed."
+	"ars_nouveau.alert.duplicate_method": "No duplicate cast methods are allowed.",
+	"ars_nouveau.relay.no_to": "No send location set.",
+	"ars_nouveau.relay.one_to": "Sending to %d location(s).",
+	"ars_nouveau.relay.no_from": "No take location set.",
+	"ars_nouveau.relay.one_from": "Taking from %d location(s)."
 }

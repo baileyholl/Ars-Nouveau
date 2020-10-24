@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "ars_nouveau:warding_stone"
+          "name": "ars_nouveau:spell_turret"
         }
       ],
       "conditions": [

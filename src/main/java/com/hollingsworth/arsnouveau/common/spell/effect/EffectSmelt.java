@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
@@ -33,59 +32,79 @@ public class EffectSmelt extends AbstractEffect {
         super(ModConfig.EffectSmeltID, "Smelt");
     }
 
+
+    public float getHardness(List<AbstractAugment> augments){
+        float maxHardness = 5.0f + 25 * getAmplificationBonus(augments);
+        int buff = getAmplificationBonus(augments);
+        if(buff == -1){
+            maxHardness = 2.5f;
+        }else if(buff == -2){
+            maxHardness = 1.0f;
+        }else if(buff < -2){
+            maxHardness = 0.5f;
+        }
+        return maxHardness;
+    }
+
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof BlockRayTraceResult){
+        if(!(rayTraceResult instanceof BlockRayTraceResult))
+            return;
 
-            float maxHardness = 5.0f + 25 * getAmplificationBonus(augments);
-            int buff = getAmplificationBonus(augments);
-            if(buff == -1){
-                maxHardness = 2.5f;
-            }else if(buff == -2){
-                maxHardness = 1.0f;
-            }else if(buff < -2){
-                maxHardness = 0.5f;
-            }
+        float maxHardness = getHardness(augments);
 
-            int aoeBuff = getBuffCount(augments, AugmentAOE.class);
-            int maxItemSmelt = 8*buff;
-            int numSmelted = 0;
-            ImmutableList<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
-            List<ItemEntity> itemEntities = world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(((BlockRayTraceResult) rayTraceResult).getPos()).grow(aoeBuff + 1));
-            for(int i = 0; i < itemEntities.size(); i++){
-                if( numSmelted > maxItemSmelt)
-                    break;
-                ItemEntity entity = itemEntities.get(i);
-                Optional<FurnaceRecipe> optional = world.getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory(entity.getItem()),
-                        world);
-                if(optional.isPresent()){
-                    ItemStack result = optional.get().getRecipeOutput().copy();
-                    if(result.isEmpty())
-                        continue;
-                    entity.getItem().shrink(1);
-                    world.addEntity(new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), result));
-                    numSmelted++;
+        int aoeBuff = getBuffCount(augments, AugmentAOE.class);
+        int maxItemSmelt = 3 + 8*aoeBuff;
+
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
+        List<ItemEntity> itemEntities = world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(((BlockRayTraceResult) rayTraceResult).getPos()).grow(aoeBuff + 1.0));
+        smeltItems(world, itemEntities, maxItemSmelt);
+
+        for(BlockPos pos : posList) {
+            smeltBlock(world, pos, maxHardness, shooter);
+        }
+
+    }
+
+
+
+    public void smeltBlock(World world, BlockPos pos, float maxHardness, LivingEntity shooter){
+        BlockState state = world.getBlockState(pos);
+        Optional<FurnaceRecipe> optional = world.getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory(new ItemStack(state.getBlock().asItem(), 1)),
+                world);
+        if (optional.isPresent()) {
+            ItemStack itemstack = optional.get().getRecipeOutput();
+            if (!itemstack.isEmpty()) {
+                if(itemstack.getItem() instanceof BlockItem){
+                    world.setBlockState(pos, ((BlockItem)itemstack.getItem()).getBlock().getDefaultState());
+                }else{
+                    if(!(state.getBlockHardness(world, pos) <= maxHardness && state.getBlockHardness(world, pos) >= 0)){
+                        return;
+                    }
+                    BlockUtil.destroyBlockSafely(world, pos, false, shooter);
+                    world.addEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(),itemstack.copy()));
+                    BlockUtil.safelyUpdateState(world, pos);
                 }
             }
+        }
+    }
 
-            for(BlockPos pos : posList) {
-                BlockState state = world.getBlockState(pos);
-                Optional<FurnaceRecipe> optional = world.getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory(new ItemStack(state.getBlock().asItem(), 1)),
-                        world);
-                if (optional.isPresent()) {
-                    ItemStack itemstack = optional.get().getRecipeOutput();
-                    if (!itemstack.isEmpty()) {
-                        if(itemstack.getItem() instanceof BlockItem){
-                            world.setBlockState(pos, ((BlockItem)itemstack.getItem()).getBlock().getDefaultState());
-                        }else{
-                            if(!(state.getBlockHardness(world, pos) <= maxHardness && state.getBlockHardness(world, pos) >= 0)){
-                                continue;
-                            }
-                            BlockUtil.destroyBlockSafely(world, pos, false, shooter);
-                            world.addEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(),itemstack.copy()));
-                            BlockUtil.safelyUpdateState(world, pos);
-                        }
-                    }
+    public void smeltItems(World world, List<ItemEntity> itemEntities, int maxItemSmelt) {
+        int numSmelted = 0;
+        for (int i = 0; i < itemEntities.size(); i++) {
+            if (numSmelted > maxItemSmelt)
+                break;
+            ItemEntity entity = itemEntities.get(i);
+            Optional<FurnaceRecipe> optional = world.getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory(entity.getItem()),
+                    world);
+            if (optional.isPresent()) {
+                ItemStack result = optional.get().getRecipeOutput().copy();
+                if (result.isEmpty())
+                    continue;
+                while (numSmelted < maxItemSmelt && !entity.getItem().isEmpty()) {
+                    entity.getItem().shrink(1);
+                    world.addEntity(new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), result.copy()));
+                    numSmelted++;
                 }
             }
         }

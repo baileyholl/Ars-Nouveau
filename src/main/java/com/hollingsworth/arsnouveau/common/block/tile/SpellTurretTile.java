@@ -82,6 +82,7 @@ public class SpellTurretTile extends TileEntity  implements IPickupResponder, IP
         list.add("Casting: " + SpellRecipeUtil.getDisplayString(recipe));
         return list;
     }
+
     @Override
     public CompoundNBT getUpdateTag() {
         return this.write(new CompoundNBT());

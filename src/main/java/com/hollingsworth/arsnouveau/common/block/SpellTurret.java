@@ -162,6 +162,7 @@ public class SpellTurret extends ModBlock {
 
             ((SpellTurretTile)worldIn.getTileEntity(pos)).recipe = recipe;
             PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.alert.spell_set"));
+            worldIn.notifyBlockUpdate(pos, state, state, 2);
         }
         return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
     }

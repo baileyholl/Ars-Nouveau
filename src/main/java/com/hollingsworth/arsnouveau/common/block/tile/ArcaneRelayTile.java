@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
@@ -9,10 +10,13 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ArcaneRelayTile extends AbstractManaTile{
+public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvider {
 
     public ArcaneRelayTile() {
         super(BlockRegistry.ARCANE_RELAY_TILE);
@@ -139,4 +143,19 @@ public class ArcaneRelayTile extends AbstractManaTile{
         handleUpdateTag(pkt.getNbtCompound());
     }
 
+    @Override
+    public List<String> getTooltip() {
+        List<String> list = new ArrayList<>();
+        if(toPos == null){
+            list.add(new TranslationTextComponent("ars_nouveau.relay.no_to").getString());
+        }else{
+            list.add(new TranslationTextComponent("ars_nouveau.relay.one_to", 1).getString());
+        }
+        if(fromPos == null){
+            list.add(new TranslationTextComponent("ars_nouveau.relay.no_from").getString());
+        }else{
+            list.add(new TranslationTextComponent("ars_nouveau.relay.one_from", 1).getString());
+        }
+        return list;
+    }
 }

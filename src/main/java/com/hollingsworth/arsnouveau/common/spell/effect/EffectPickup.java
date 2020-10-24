@@ -15,6 +15,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.FakePlayer;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -33,7 +34,7 @@ public class EffectPickup extends AbstractEffect {
         for(ItemEntity i : entityList){
             if(shooter != null)
                 i.setPosition(shooter.getPosX(), shooter.getPosY(), shooter.getPosZ());
-            if(shooter instanceof PlayerEntity){
+            if(shooter instanceof PlayerEntity && !(shooter instanceof FakePlayer)){
                 i.onCollideWithPlayer((PlayerEntity) shooter);
             }else if(shooter instanceof IPickupResponder){
                 i.setItem(((IPickupResponder) shooter).onPickup(i.getItem()));
