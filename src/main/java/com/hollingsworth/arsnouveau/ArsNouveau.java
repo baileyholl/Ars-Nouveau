@@ -59,7 +59,7 @@ public class ArsNouveau {
         APIRegistry.registerApparatusRecipes();
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.ARCANE_ORE.getRegistryName(),
                 Feature.ORE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.field_241882_a,
-                        BlockRegistry.ARCANE_ORE.getDefaultState(), 9)).func_242733_d(64).func_242728_a().func_242731_b(20));
+                        BlockRegistry.ARCANE_ORE.getDefaultState(), 5)).func_242733_d(60).func_242728_a().func_242731_b(5));
         //Pre-init code
         proxy.init();
         Networking.registerMessages();

@@ -78,10 +78,10 @@ public class EventHandler {
         List<Biome.Category> categories = Arrays.asList(Biome.Category.FOREST, Biome.Category.EXTREME_HILLS, Biome.Category.JUNGLE,
                 Biome.Category.PLAINS, Biome.Category.SWAMP, Biome.Category.SAVANNA);
         if(categories.contains(e.getCategory())) {
-            e.getSpawns().withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_CARBUNCLE_TYPE, 10, 1, 3));
-            e.getSpawns().withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_SYLPH_TYPE, 10, 1, 3));
+            e.getSpawns().withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_CARBUNCLE_TYPE, 5, 1, 1));
+            e.getSpawns().withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_SYLPH_TYPE, 5, 1, 1));
         }
-    };
+    }
 
 
     @SubscribeEvent
