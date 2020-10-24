@@ -90,7 +90,7 @@ public class SpellResolver {
         ManaCapability.getMana(entity).ifPresent(mana -> {
             canCast.set(totalCost <= mana.getCurrentMana() || (entity instanceof PlayerEntity &&  ((PlayerEntity) entity).isCreative()));
             if(!canCast.get() && !entity.getEntityWorld().isRemote && !silent)
-                entity.sendMessage(new StringTextComponent("Not enough mana."), null);
+                PortUtil.sendMessage(entity,new StringTextComponent("Not enough mana."));
         });
         return canCast.get();
     }
