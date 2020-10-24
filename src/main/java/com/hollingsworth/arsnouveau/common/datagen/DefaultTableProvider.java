@@ -36,6 +36,8 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.AB_BASKET);
             registerDropSelf(BlockRegistry.AB_HERRING);
             registerDropSelf(BlockRegistry.AB_MOSAIC);
+            registerDropSelf(BlockRegistry.WARD_BLOCK);
+            registerDropSelf(BlockRegistry.SPELL_TURRET);
             registerDrop(BlockRegistry.ARCANE_ORE, ItemsRegistry.manaGem);
         }
 

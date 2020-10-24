@@ -86,10 +86,7 @@ public class DominionWand extends ModItem{
         // Hit an inventory
         if(world.getTileEntity(pos) instanceof IInventory){
             int entityID = this.getEntityID(stack);
-            System.out.println(entityID);
             if(entityID == -1 || !(world.getEntityByID(entityID) instanceof EntityCarbuncle)){
-                System.out.println(entityID);
-                System.out.println(world.getEntityByID(entityID));
                 setPosTag(stack, pos);
                 PortUtil.sendMessage(playerEntity, new StringTextComponent("Inventory set."));
                 // Carbuncle to inventory
