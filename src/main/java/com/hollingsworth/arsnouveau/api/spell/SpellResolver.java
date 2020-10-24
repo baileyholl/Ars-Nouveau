@@ -11,11 +11,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -119,9 +122,13 @@ public class SpellResolver {
             castType.onCastOnEntity(stack, playerIn, target, hand, getAugments(spell_recipe, 0, playerIn));
     }
 
-
     public void onResolveEffect(World world, LivingEntity shooter, RayTraceResult result){
+        SpellResolver.resolveEffects(world, shooter, result, spell_recipe, spellContext);
+    }
+
+    public static void resolveEffects(World world, LivingEntity shooter, RayTraceResult result, List<AbstractSpellPart> spell_recipe, SpellContext spellContext){
         spellContext.resetSpells();
+        shooter = getUnwrappedCaster(world, shooter, spellContext);
         for(int i = 0; i < spell_recipe.size(); i++){
             if(spellContext.isCanceled())
                 break;
@@ -130,6 +137,17 @@ public class SpellResolver {
                 ((AbstractEffect) spell).onResolve(result, world, shooter, getAugments(spell_recipe, i, shooter), spellContext);
             }
         }
+    }
+
+    // Safely unwrap the living entity in the case that the caster is null, aka being cast by a non-player.
+    public static LivingEntity getUnwrappedCaster(World world, LivingEntity shooter, SpellContext spellContext){
+        if(shooter == null && spellContext.castingTile != null) {
+            shooter = FakePlayerFactory.getMinecraft((ServerWorld) world);
+            BlockPos pos = spellContext.castingTile.getPos();
+            shooter.setPosition(pos.getX(), pos.getY(), pos.getZ());
+        }
+        shooter = shooter == null ? FakePlayerFactory.getMinecraft((ServerWorld) world) : shooter;
+        return shooter;
     }
 
     public boolean wouldAllEffectsDoWork(RayTraceResult result, World world, LivingEntity entity, List<AbstractAugment> augments){
