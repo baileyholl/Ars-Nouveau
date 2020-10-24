@@ -113,6 +113,10 @@ public class SpellResolver {
     }
 
     public void onResolveEffect(World world, LivingEntity shooter, RayTraceResult result){
+        SpellResolver.resolveEffects(world, shooter, result, spell_recipe, spellContext);
+    }
+
+    public static void resolveEffects(World world, LivingEntity shooter, RayTraceResult result, List<AbstractSpellPart> spell_recipe, SpellContext spellContext){
         spellContext.resetSpells();
         shooter = getUnwrappedCaster(world, shooter, spellContext);
         for(int i = 0; i < spell_recipe.size(); i++){

@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.api.event;
 
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
@@ -9,8 +8,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 import java.util.List;
-
-import static com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil.getAugments;
 
 public class DelayedSpellEvent implements ITimedEvent{
     private int duration;
@@ -39,15 +36,7 @@ public class DelayedSpellEvent implements ITimedEvent{
         if(world == null)
             return;
         SpellContext context = new SpellContext(recipe, shooter);
-        shooter = SpellResolver.getUnwrappedCaster(world, shooter, context);
-        for(int i = 0; i < recipe.size(); i++){
-            if(context.isCanceled())
-                break;
-            AbstractSpellPart spell = context.nextSpell();
-            if(spell instanceof AbstractEffect){
-                ((AbstractEffect) spell).onResolve(result, world, shooter, getAugments(recipe, i, shooter), context);
-            }
-        }
+        SpellResolver.resolveEffects(world, shooter, result, recipe, context);
     }
 
     @Override
