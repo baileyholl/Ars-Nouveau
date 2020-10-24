@@ -4,6 +4,8 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -21,6 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
@@ -43,8 +46,13 @@ public class RuneBlock extends ModBlock{
         if(!(stack.getItem() instanceof SpellParchment) || worldIn.isRemote)
             return ActionResultType.SUCCESS;
         ArrayList<AbstractSpellPart> recipe = SpellParchment.getSpellRecipe(stack);
-        if(recipe == null)
+        if(recipe == null || recipe.isEmpty())
             return ActionResultType.SUCCESS;
+
+        if(!(recipe.get(0) instanceof MethodTouch)){
+            PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.rune.touch"));
+            return ActionResultType.SUCCESS;
+        }
         ((RuneTile)worldIn.getTileEntity(pos)).setRecipe(recipe);
         PortUtil.sendMessage(player, "Spell set.");
         return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
