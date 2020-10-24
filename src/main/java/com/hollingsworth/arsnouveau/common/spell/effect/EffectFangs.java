@@ -18,6 +18,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -30,6 +32,14 @@ public class EffectFangs extends AbstractEffect {
 
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        if(shooter == null && spellContext.castingTile != null) {
+            shooter = FakePlayerFactory.getMinecraft((ServerWorld) world);
+            BlockPos pos = spellContext.castingTile.getPos();
+            shooter.setPosition(pos.getX(), pos.getY(), pos.getZ());
+        }
+
+        if(shooter == null)
+            return;
         Vec3d vec = rayTraceResult.getHitVec();
         float bonusDamage = 2.5f * getAmplificationBonus(augments);
         double targetX = vec.x;
