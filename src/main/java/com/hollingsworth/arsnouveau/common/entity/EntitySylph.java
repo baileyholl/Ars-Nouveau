@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.SummoningCrytalTile;
+import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.sylph.*;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
@@ -52,6 +53,7 @@ import software.bernie.geckolib.manager.EntityAnimationManager;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -221,6 +223,14 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
         return this.dataManager.get(TAMED);
     }
 
+
+    @Override
+    public boolean attackEntityFrom(DamageSource source, float amount) {
+        if(source == DamageSource.CACTUS || source == DamageSource.SWEET_BERRY_BUSH)
+            return false;
+        return super.attackEntityFrom(source, amount);
+    }
+
     @Override
     public void onDeath(DamageSource source) {
         if(!world.isRemote && isTamed()){
@@ -334,10 +344,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
     }
     // A workaround for goals not registering correctly for a dynamic variable on reload as read() is called after constructor.
     public void tryResetGoals(){
-        List<PrioritizedGoal> goals = getGoals();
-        for(PrioritizedGoal g : goals){
-            this.goalSelector.removeGoal(g.getGoal());
-        }
+        this.goalSelector.goals = new LinkedHashSet<>();
         this.addGoalsAfterConstructor();
     }
 

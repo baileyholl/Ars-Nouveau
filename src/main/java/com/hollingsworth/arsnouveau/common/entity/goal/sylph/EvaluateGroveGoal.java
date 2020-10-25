@@ -36,17 +36,24 @@ public class EvaluateGroveGoal extends Goal {
         if(state.getBlock() instanceof BushBlock)
             return 2;
 
+
+        if(state.getBlock() instanceof StemGrownBlock)
+            return 2;
+
         if(state.getBlock().isIn(BlockTags.LOGS))
             return 2;
 
         if(state.getBlock().isIn(BlockTags.LEAVES) || state.getBlock() instanceof LeavesBlock)
             return 1;
+
         if(state.getMaterial() == Material.PLANTS || state.getMaterial() == Material.TALL_PLANTS)
             return 1;
+
+        if(state.getBlock() instanceof IGrowable)
+            return 1;
+
         return 0;
     }
-
-
 
     @Override
     public void startExecuting() {

@@ -1,23 +1,28 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.spell.*;
-import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.SummoningCrytalTile;
+import com.hollingsworth.arsnouveau.common.entity.goal.whelp.PerformTaskGoal;
+import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierManager;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.FlyingEntity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.FlyingMovementController;
-import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.LookAtGoal;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
@@ -31,24 +36,25 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IServerWorld;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayerFactory;
-import org.w3c.dom.Attr;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.EnumSet;
+import java.util.List;
 
-public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlaceBlockResponder, IDispellable {
+
+public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlaceBlockResponder, IDispellable, ITooltipProvider {
     public static final DataParameter<String> SPELL_STRING = EntityDataManager.createKey(EntityWhelp.class, DataSerializers.STRING);
     public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.createKey(EntityWhelp.class, DataSerializers.ITEMSTACK);
+    public static final DataParameter<Boolean> STRICT_MODE = EntityDataManager.createKey(EntityWhelp.class, DataSerializers.BOOLEAN);
 
-    BlockPos crystalPos;
-    int ticksSinceLastSpell;
-    public ArrayList<AbstractSpellPart> spellRecipe;
+
+    public BlockPos crystalPos;
+    public int ticksSinceLastSpell;
+    public List<AbstractSpellPart> spellRecipe;
 
     @Override
     public boolean canDespawn(double p_213397_1_) {
@@ -72,10 +78,15 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
 
     @Override
     public ActionResultType applyPlayerInteraction(PlayerEntity player, Vector3d vec, Hand hand) {
-        if(world.isRemote)
+        if(world.isRemote || hand != Hand.MAIN_HAND)
             return ActionResultType.SUCCESS;
-        ItemStack stack = player.getHeldItem(hand);
 
+        ItemStack stack = player.getHeldItem(hand);
+        if(stack.getItem() instanceof DominionWand){
+            this.dataManager.set(STRICT_MODE, !this.dataManager.get(STRICT_MODE));
+            PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.whelp.strict_mode", this.dataManager.get(STRICT_MODE)));
+            return ActionResultType.SUCCESS;
+        }
 
         if(stack != ItemStack.EMPTY && stack.getItem() instanceof SpellParchment){
             ArrayList<AbstractSpellPart> spellParts = SpellParchment.getSpellRecipe(stack);
@@ -156,23 +167,13 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     }
 
     public @Nullable BlockPos getTaskLoc(){
-        if(world.getTileEntity(crystalPos) instanceof SummoningCrytalTile){
-            return ((SummoningCrytalTile) world.getTileEntity(crystalPos)).getNextTaskLoc(spellRecipe, this);
-        }
-        return null;
+        return world.getTileEntity(crystalPos) instanceof SummoningCrytalTile ? ((SummoningCrytalTile) world.getTileEntity(crystalPos)).getNextTaskLoc(spellRecipe, this) : null;
     }
 
     public void castSpell(BlockPos target){
-        if(world.isRemote)
+        if(world.isRemote || !(world.getTileEntity(crystalPos) instanceof SummoningCrytalTile))
             return;
-        if(world instanceof ServerWorld){
-            double d0 = target.getX() +0.5;
-            double d1 = target.getY() + 1;
-            double d2 = target.getZ() +0.5;
-            ((ServerWorld)world).spawnParticle(ParticleTypes.ENCHANTED_HIT, d0, d1, d2,rand.nextInt(4), 0,0.3,0, 0.1);
-        }
-        if(!(world.getTileEntity(crystalPos) instanceof SummoningCrytalTile))
-            return;
+
         if(((SummoningCrytalTile) world.getTileEntity(crystalPos)).removeManaAround(spellRecipe)){
             EntitySpellResolver resolver = new EntitySpellResolver(this.spellRecipe, new SpellContext(spellRecipe, this));
             resolver.onCastOnBlock(new BlockRayTraceResult(new Vector3d(target.getX(), target.getY(), target.getZ()), Direction.UP,target, false ), this);
@@ -215,51 +216,17 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         return tile == null ? heldStack : tile.getItem(heldStack.getItem());
     }
 
-    public static class PerformTaskGoal extends Goal {
-        EntityWhelp kobold;
-        BlockPos taskLoc;
-        int timePerformingTask;
-        public PerformTaskGoal(EntityWhelp kobold){
-            this.kobold = kobold;
-            this.setMutexFlags(EnumSet.of(Flag.MOVE));
-        }
-
-        @Override
-        public void startExecuting() {
-            super.startExecuting();
-//            System.out.println("Executing");
-            taskLoc = this.kobold.getTaskLoc();
-            timePerformingTask = 0;
-            if(this.kobold.navigator != null && taskLoc != null)
-                 this.kobold.navigator.setPath(this.kobold.navigator.getPathToPos(taskLoc, 1), 1.0f);
-        }
-
-        @Override
-        public void tick() {
-            super.tick();
-            timePerformingTask++;
-            if(kobold == null  || taskLoc == null)
-                return;
-
-            if(BlockUtil.distanceFrom(kobold.getPosition(), taskLoc) <= 2){
-                kobold.castSpell(taskLoc);
-                kobold.navigator.clearPath();
-                timePerformingTask = 0;
-            }else if(kobold.navigator != null){
-                this.kobold.navigator.setPath(this.kobold.navigator.getPathToPos(taskLoc.up(2), 0), 1f);
-            }
-        }
-
-        @Override
-        public boolean shouldContinueExecuting() {
-//            System.out.println("Executing shoul");
-            return kobold.ticksSinceLastSpell > 60 && this.taskLoc != null && timePerformingTask < 300;
-        }
-
-        @Override
-        public boolean shouldExecute() {
-            return kobold.canPerformAnotherTask() && kobold.enoughManaForTask();
-        }
+    @Override
+    public List<String> getTooltip() {
+        List<String> list = new ArrayList<>();
+        ArrayList<AbstractSpellPart> spellParts = SpellRecipeUtil.getSpellsFromTagString(this.getRecipeString());
+        String spellString = spellParts.size() > 4 ? SpellRecipeUtil.getDisplayString(spellParts.subList(0, 4)) + "..." :SpellRecipeUtil.getDisplayString(spellParts);
+        String itemString = this.getHeldStack() == ItemStack.EMPTY ? "Nothing." : this.getHeldStack().getDisplayName().getString();
+        String itemAction = this.getHeldStack().getItem() instanceof BlockItem ? "Placing: " : "Using: ";
+        list.add("Casting: " + spellString);
+        list.add(itemAction + itemString);
+        list.add("Strict mode: " + this.dataManager.get(STRICT_MODE));
+        return list;
     }
 
     @Override
@@ -285,6 +252,8 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
             getHeldStack().write(itemTag);
             tag.put("held", itemTag);
         }
+
+        tag.putBoolean("strict", this.dataManager.get(STRICT_MODE));
     }
 
     public String getRecipeString(){
@@ -327,11 +296,8 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         ticksSinceLastSpell = tag.getInt("last_spell");
         if(tag.contains("held"))
             setHeldStack(ItemStack.read((CompoundNBT)tag.get("held")));
-    }
 
-    @Override
-    public ILivingEntityData onInitialSpawn(IServerWorld p_213386_1_, DifficultyInstance p_213386_2_, SpawnReason p_213386_3_, @Nullable ILivingEntityData p_213386_4_, @Nullable CompoundNBT p_213386_5_) {
-        return super.onInitialSpawn(p_213386_1_, p_213386_2_, p_213386_3_, p_213386_4_, p_213386_5_);
+        this.dataManager.set(STRICT_MODE, tag.getBoolean("strict"));
     }
 
     /**
@@ -352,5 +318,6 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         super.registerData();
         this.dataManager.register(HELD_ITEM, ItemStack.EMPTY);
         this.dataManager.register(SPELL_STRING, "");
+        this.dataManager.register(STRICT_MODE, true);
     }
 }

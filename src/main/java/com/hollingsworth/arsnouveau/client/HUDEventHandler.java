@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.client.gui.GuiManaHUD;
 import com.hollingsworth.arsnouveau.client.gui.GuiSpellHUD;
-import com.hollingsworth.arsnouveau.common.entity.EntityWhelp;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -60,9 +59,6 @@ public class HUDEventHandler {
         if (mouseOver != null && mouseOver.getType() == RayTraceResult.Type.ENTITY) {
 
           EntityRayTraceResult result = (EntityRayTraceResult) mouseOver;
-          if(result.getEntity() instanceof EntityWhelp)
-              entityHUD.drawHUD(event.getMatrixStack(),(EntityWhelp)result.getEntity());
-
           if(result.getEntity() instanceof ITooltipProvider)
               entityHUD.drawHUD(event.getMatrixStack(),((ITooltipProvider) result.getEntity()).getTooltip());
 
