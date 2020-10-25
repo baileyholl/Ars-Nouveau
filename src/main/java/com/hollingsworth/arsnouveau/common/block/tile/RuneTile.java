@@ -40,7 +40,7 @@ public class RuneTile extends AnimatedTile {
 
     public void castSpell(Entity entity){
 
-        if(!this.isCharged || recipe == null || recipe.size() == 0 || !(entity instanceof LivingEntity) || !(world instanceof ServerWorld))
+        if(!this.isCharged || recipe == null || recipe.isEmpty() || !(entity instanceof LivingEntity) || !(world instanceof ServerWorld) || !(recipe.get(0) instanceof MethodTouch))
             return;
 
         EntitySpellResolver resolver = new EntitySpellResolver(recipe, new SpellContext(recipe, FakePlayerFactory.getMinecraft((ServerWorld) world)).withCastingTile(this));

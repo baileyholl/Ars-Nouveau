@@ -30,6 +30,8 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public void applyPotion(LivingEntity entity, Effect potionEffect, List<AbstractAugment> augmentTypes, int baseDuration, int durationBuffBase){
+        if(entity == null)
+            return;
         int duration = baseDuration + durationBuffBase * getBuffCount(augmentTypes, AugmentExtendTime.class);
         int amp = getBuffCount(augmentTypes, AugmentAmplify.class);
         entity.addPotionEffect(new EffectInstance(potionEffect, duration * 20, amp));

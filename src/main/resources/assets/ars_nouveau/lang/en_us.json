@@ -212,5 +212,6 @@
 	"ars_nouveau.relay.no_to": "No send location set.",
 	"ars_nouveau.relay.one_to": "Sending to %d location(s).",
 	"ars_nouveau.relay.no_from": "No take location set.",
-	"ars_nouveau.relay.one_from": "Taking from %d location(s)."
+	"ars_nouveau.relay.one_from": "Taking from %d location(s).",
+	"ars_nouveau.rune.touch":"Runes must have Touch as their first glyph."
 }
