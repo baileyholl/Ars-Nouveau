@@ -48,8 +48,10 @@ public class EffectPickup extends AbstractEffect {
     public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         BlockPos pos = new BlockPos(rayTraceResult.getHitVec());
         int expansion = getBuffCount(augments, AugmentAOE.class);
-        return !world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos.east(3 + expansion).north(3 + expansion).up(3 + expansion),
-                pos.west(3 +expansion).south(3+expansion).down(3+expansion))).isEmpty();
+        return true;
+//
+//        return !world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos.east(3 + expansion).north(3 + expansion).up(3 + expansion),
+//                pos.west(3 +expansion).south(3+expansion).down(3+expansion))).isEmpty();
     }
 
     @Override

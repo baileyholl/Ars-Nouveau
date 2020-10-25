@@ -1,7 +1,6 @@
-package com.hollingsworth.arsnouveau.common.entity.goal.sylph;
+package com.hollingsworth.arsnouveau.common.entity.goal;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.common.entity.goal.DistanceRestrictedGoal;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.util.math.BlockPos;
 
@@ -25,18 +24,18 @@ public class GoBackHomeGoal extends DistanceRestrictedGoal {
 
     @Override
     public void tick() {
-        if(BlockUtil.distanceFrom(entity.getPosition(), this.positionFrom) > 5){
+        if(positionFrom != null && BlockUtil.distanceFrom(entity.getPosition(), this.positionFrom) > 5){
             entity.getNavigator().tryMoveToXYZ(this.positionFrom.getX(), this.positionFrom.getY(), this.positionFrom.getZ(), 1.5);
         }
     }
 
     @Override
     public boolean shouldContinueExecuting() {
-        return BlockUtil.distanceFrom(entity.getPosition(), this.positionFrom) > 5 && shouldGo.get();
+        return positionFrom != null && BlockUtil.distanceFrom(entity.getPosition(), this.positionFrom) > 5 && shouldGo.get();
     }
 
     @Override
     public boolean shouldExecute() {
-        return !this.isInRange(entity.getPosition()) && shouldGo.get();
+        return positionFrom != null && !this.isInRange(entity.getPosition()) && shouldGo.get();
     }
 }

@@ -110,7 +110,7 @@ public class SummoningCrytalTile extends AbstractManaTile {
         return block instanceof LogBlock || block instanceof LeavesBlock;
     }
 
-    public @Nullable BlockPos getNextTaskLoc(@Nullable List<AbstractSpellPart> recipe, LivingEntity caster){
+    public @Nullable BlockPos getNextTaskLoc(@Nullable List<AbstractSpellPart> recipe, EntityWhelp caster){
         if(isOff)
             return null;
 
@@ -139,12 +139,12 @@ public class SummoningCrytalTile extends AbstractManaTile {
         if(block instanceof SummoningCrystal || block instanceof ContainerBlock || block instanceof ManaBlock || block instanceof IInventory)
             return null;
 
-            if(recipe != null){
-                SpellResolver resolver = new SpellResolver(recipe, new SpellContext(recipe, null));
-                if(!resolver.wouldCastOnBlockSuccessfully(new BlockRayTraceResult(new Vec3d(taskPos.getX(), taskPos.getY(), taskPos.getZ()), Direction.UP,taskPos, false ), caster))
-                    return null;
-            }
-            return taskPos;
+        if(recipe != null && caster.getDataManager().get(EntityWhelp.STRICT_MODE)){
+            SpellResolver resolver = new SpellResolver(recipe, new SpellContext(recipe, caster));
+            if(!resolver.wouldCastOnBlockSuccessfully(new BlockRayTraceResult(new Vec3d(taskPos.getX(), taskPos.getY(), taskPos.getZ()), Direction.UP,taskPos, false ), caster))
+                return null;
+        }
+        return taskPos;
     }
 
 
