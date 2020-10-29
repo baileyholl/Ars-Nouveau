@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.item.IScribeable;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
@@ -10,8 +11,6 @@ import com.hollingsworth.arsnouveau.api.util.MathUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
 import com.hollingsworth.arsnouveau.client.renderer.items.SpellBookRenderer;
-import com.hollingsworth.arsnouveau.common.block.ArcanePedestal;
-import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOpenGUI;
@@ -25,7 +24,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -33,7 +31,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.IWorldReader;
@@ -47,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class SpellBook extends Item implements ISpellTier {
+public class SpellBook extends Item implements ISpellTier, IScribeable {
     public static final String BOOK_MODE_TAG = "mode";
     public static final String UNLOCKED_SPELLS = "spells";
     public static final int SEGMENTS = 10;
@@ -102,8 +99,7 @@ public class SpellBook extends Item implements ISpellTier {
         RayTraceResult result = playerIn.pick(5, 0, false);
 
         if(result instanceof BlockRayTraceResult){
-            if(worldIn.getBlockState(new BlockPos(playerIn.getLookVec())).getBlock() instanceof ScribesBlock
-                    || worldIn.getBlockState(new BlockPos(playerIn.getLookVec())).getBlock() instanceof ArcanePedestal) {
+            if(worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) != null) {
                 return new ActionResult<>(ActionResultType.SUCCESS, stack);
             }
         }
@@ -136,19 +132,22 @@ public class SpellBook extends Item implements ISpellTier {
         return new ActionResult<>(ActionResultType.SUCCESS, stack);
     }
 
-    public static void spawnParticles(double posX, double posY, double posZ, World world){
-        BlockPos pos = new BlockPos(posX, posY, posZ);
-        VoxelShape shape = world.getBlockState(pos).getShape(world, pos);
-        double yOffset = 0.0;
-        yOffset = shape.isEmpty() ? yOffset : shape.getBoundingBox().maxY/2;
-        for(int i =0; i < 5; i++) {
-            double d0 = posX + world.rand.nextFloat();
-            double d1 = posY + world.rand.nextFloat() + yOffset;
-            double d2 = posZ + world.rand.nextFloat();
-            world.addParticle(ParticleTypes.POOF, d0, d1, d2, 0.0, 0.1, 0.0);
 
+    @Override
+    public boolean onScribe(World world, BlockPos pos, PlayerEntity player, Hand handIn, ItemStack stack) {
+        if(!(player.getHeldItem(handIn).getItem() instanceof SpellBook))
+            return false;
+
+        ArrayList<AbstractSpellPart> spellParts = SpellBook.getUnlockedSpells(player.getHeldItem(handIn).getTag());
+        int unlocked = 0;
+        for(AbstractSpellPart spellPart : spellParts){
+            if(SpellBook.unlockSpell(stack.getTag(), spellPart))
+                unlocked++;
         }
+        player.sendMessage(new StringTextComponent("Copied " + unlocked + " new spells to the book."));
+        return true;
     }
+
     /*
     Called on block use. TOUCH ONLY
      */
@@ -247,7 +246,6 @@ public class SpellBook extends Item implements ISpellTier {
             tooltip.add(new StringTextComponent(SpellBook.getSpellName(stack.getTag())));
             tooltip.add(new StringTextComponent("Press " + ModKeyBindings.OPEN_SPELL_SELECTION.getKeyBinding().getLocalizedName() + " to quick select"));
             tooltip.add(new StringTextComponent("Press " + ModKeyBindings.OPEN_BOOK.getKeyBinding().getLocalizedName() + " to quick craft"));
-
         }
     }
 
@@ -255,4 +253,5 @@ public class SpellBook extends Item implements ISpellTier {
     public Tier getTier() {
         return this.tier;
     }
+
 }

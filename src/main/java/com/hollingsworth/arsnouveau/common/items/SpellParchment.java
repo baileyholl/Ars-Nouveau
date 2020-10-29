@@ -1,12 +1,16 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.item.IScribeable;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
@@ -15,7 +19,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpellParchment extends ModItem{
+public class SpellParchment extends ModItem implements IScribeable {
     public SpellParchment() {
         super(LibItemNames.SPELL_PARCHMENT);
     }
@@ -51,5 +55,21 @@ public class SpellParchment extends ModItem{
             }
         }
         tooltip.add(new StringTextComponent(tip.toString()));
+    }
+
+    @Override
+    public boolean onScribe(World world, BlockPos pos, PlayerEntity player, Hand handIn, ItemStack thisStack) {
+
+        if(!(player.getHeldItem(handIn).getItem() instanceof SpellBook))
+            return false;
+
+        if(SpellBook.getMode(player.getHeldItem(handIn).getTag()) == 0){
+            player.sendMessage(new StringTextComponent("Set your spell book to a spell."));
+            return false;
+        }
+
+        SpellParchment.setSpell(thisStack, SpellBook.getRecipeString(player.getHeldItem(handIn).getTag(), SpellBook.getMode(player.getHeldItem(handIn).getTag())));
+        player.sendMessage(new StringTextComponent("Spell inscribed."));
+        return false;
     }
 }
