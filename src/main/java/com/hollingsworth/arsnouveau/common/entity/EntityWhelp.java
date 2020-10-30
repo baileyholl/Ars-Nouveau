@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
+import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -11,7 +12,10 @@ import com.hollingsworth.arsnouveau.common.entity.goal.whelp.PerformTaskGoal;
 import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.entity.*;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.FlyingEntity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.controller.FlyingMovementController;
 import net.minecraft.entity.ai.goal.LookAtGoal;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
@@ -42,7 +46,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlaceBlockResponder, IDispellable, ITooltipProvider {
+public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlaceBlockResponder, IDispellable, ITooltipProvider, IWandable {
     public static final DataParameter<String> SPELL_STRING = EntityDataManager.createKey(EntityWhelp.class, DataSerializers.STRING);
     public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.createKey(EntityWhelp.class, DataSerializers.ITEMSTACK);
     public static final DataParameter<Boolean> STRICT_MODE = EntityDataManager.createKey(EntityWhelp.class, DataSerializers.BOOLEAN);
@@ -76,12 +80,8 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         if(world.isRemote || hand != Hand.MAIN_HAND)
             return true;
         ItemStack stack = player.getHeldItem(hand);
-        if(stack.getItem() instanceof DominionWand){
-            this.dataManager.set(STRICT_MODE, !this.dataManager.get(STRICT_MODE));
-            PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.whelp.strict_mode", this.dataManager.get(STRICT_MODE)));
-            return true;
-        }
-
+        if(stack.getItem() instanceof DominionWand)
+            return false;
         if(stack != ItemStack.EMPTY && stack.getItem() instanceof SpellParchment){
             ArrayList<AbstractSpellPart> spellParts = SpellParchment.getSpellRecipe(stack);
             if(new EntitySpellResolver(spellParts, new SpellContext(spellParts, this)).canCast(this)) {
@@ -103,6 +103,13 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         setHeldStack(new ItemStack(stack.getItem()));
         player.sendMessage(new StringTextComponent("This whelp will use " + stack.getItem().getDisplayName(stack).getFormattedText() +  " in spells if this item is in a Summoning Crystal chest."));
         return true;
+    }
+
+    @Override
+    public void onWanded(PlayerEntity playerEntity) {
+        System.out.println("wanding");
+        this.dataManager.set(STRICT_MODE, !this.dataManager.get(STRICT_MODE));
+        PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.whelp.strict_mode", this.dataManager.get(STRICT_MODE)));
     }
 
     public EntityWhelp(World world, BlockPos crystalPos){

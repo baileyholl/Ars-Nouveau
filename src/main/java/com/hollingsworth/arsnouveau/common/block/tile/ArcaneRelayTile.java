@@ -1,22 +1,29 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
+import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvider {
+public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvider, IWandable {
 
     public ArcaneRelayTile() {
         super(BlockRegistry.ARCANE_RELAY_TILE);
@@ -54,7 +61,7 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
     public void clearPos(){
         this.toPos = null;
         this.fromPos = null;
-          update();
+        update();
     }
 
     @Override
@@ -65,6 +72,30 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
     @Override
     public int getMaxMana() {
         return 200;
+    }
+
+    @Override
+    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, PlayerEntity playerEntity) {
+        if(storedPos == null || world.isRemote)
+            return;
+        // Let relays take from us, no action needed.
+
+        this.setSendTo(storedPos.toImmutable());
+
+        playerEntity.sendMessage(new StringTextComponent("Relay set to send to " + DominionWand.getPosString(storedPos)));
+        ParticleUtil.beam(storedPos,pos, (ServerWorld) world);
+
+
+    }
+
+    @Override
+    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, PlayerEntity playerEntity) {
+        if(storedPos == null)
+            return;
+        if(world.getTileEntity(storedPos) instanceof ArcaneRelayTile)
+            return;
+        this.setTakeFrom(storedPos.toImmutable());
+        playerEntity.sendMessage(new StringTextComponent("Relay set to take from " + DominionWand.getPosString(storedPos)));
     }
 
     @Override
