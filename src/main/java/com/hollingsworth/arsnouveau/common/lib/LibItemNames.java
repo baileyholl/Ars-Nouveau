@@ -51,4 +51,11 @@ public class LibItemNames {
     public static final String SYLPH_SHARD = "sylph_shards";
     public static final String SYLPH_CHARM = "sylph_charm";
     public static final String MANA_GEM = "mana_gem";
+
+    public static final String WIXIE_SHARD = "wixie_shards";
+    public static final String WIXIE_CHARM = "wixie_charm";
+
+    public static final String ALLOW_ITEM_SCROLL = "allow_scroll";
+    public static final String DENY_ITEM_SCROLL = "deny_scroll";
+    public static final String BLANK_PARCHMENT = "blank_parchment";
 }

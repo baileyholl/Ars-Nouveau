@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
+import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
@@ -8,24 +10,22 @@ import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.AvoidPlayerUnta
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.FindItem;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StoreItemGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.TakeItemGoal;
+import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.entity.*;
-
-import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.*;
-
 import net.minecraft.entity.ai.goal.LookAtGoal;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
-
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
@@ -34,12 +34,10 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
@@ -56,11 +54,15 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 
-public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity, IDispellable {
+public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity, IDispellable, ITooltipProvider, IWandable {
+
 
     public BlockPos fromPos;
     public BlockPos toPos;
-
+    public List<ItemStack> allowedItems; // Items the carbuncle is allowed to take
+    public List<ItemStack> ignoreItems; // Items the carbuncle will not take
+    public boolean whitelist;
+    public boolean blacklist;
     public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.ITEMSTACK);
     public static final DataParameter<Boolean> TAMED = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.BOOLEAN);
     public static final DataParameter<Boolean> HOP = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.BOOLEAN);
@@ -171,6 +173,33 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity, 
         attemptTame();
     }
 
+
+    @Override
+    public void onWanded(PlayerEntity playerEntity) {
+
+    }
+
+    @Override
+    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, PlayerEntity playerEntity) {
+        if(storedPos == null)
+            return;
+        if(world.getTileEntity(storedPos) instanceof IInventory){
+            PortUtil.sendMessage(playerEntity, "Carbuncle will store items here.");
+            toPos = storedPos;
+        }
+    }
+
+    @Override
+    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, PlayerEntity playerEntity) {
+        if(storedPos == null)
+            return;
+
+        if(world.getTileEntity(storedPos)  instanceof IInventory){
+            PortUtil.sendMessage(playerEntity, "Carbuncle take from this inventory.");
+            fromPos = storedPos;
+        }
+    }
+
     /**
      * Handler for {@link World#setEntityState}
      */
@@ -201,7 +230,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity, 
 
     @Override
     protected void updateEquipmentIfNeeded(ItemEntity itemEntity) {
-        if(this.getHeldStack().isEmpty()){
+        if(this.getHeldStack().isEmpty() && TakeItemGoal.isValidItem(this, itemEntity.getItem())){
             setHeldStack(itemEntity.getItem());
             itemEntity.remove();
             this.world.playSound(null, this.getPosX(), this.getPosY(), this.getPosZ(), SoundEvents.ENTITY_ITEM_PICKUP, this.getSoundCategory(),1.0F, 1.0F);
@@ -273,6 +302,36 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity, 
         super.onDeath(source);
     }
 
+    @Override
+    public ActionResultType applyPlayerInteraction(PlayerEntity player, Vector3d vec, Hand hand)  {
+        if(hand != Hand.MAIN_HAND)
+            return ActionResultType.SUCCESS;
+        ItemStack stack = player.getHeldItem(hand);
+        if(!(stack.getItem() instanceof ItemScroll) || !stack.hasTag())
+            return ActionResultType.SUCCESS;
+        if(stack.getItem() == ItemsRegistry.ALLOW_ITEM_SCROLL){
+            List<ItemStack>  items = ItemsRegistry.ALLOW_ITEM_SCROLL.getItems(stack);
+            if(!items.isEmpty()) {
+                this.allowedItems = ItemsRegistry.ALLOW_ITEM_SCROLL.getItems(stack);
+                whitelist = true;
+                blacklist = false;
+                PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.allow_set"));
+            }
+            return ActionResultType.SUCCESS;
+        }
+
+        if(stack.getItem() == ItemsRegistry.DENY_ITEM_SCROLL){
+            List<ItemStack>  items = ItemsRegistry.DENY_ITEM_SCROLL.getItems(stack);
+            if(!items.isEmpty()) {
+                this.ignoreItems = ItemsRegistry.DENY_ITEM_SCROLL.getItems(stack);
+                whitelist = false;
+                blacklist = true;
+                PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.ignore_set"));
+            }
+        }
+        return ActionResultType.SUCCESS;
+    }
+
 
     @Override
     public EntityType<?> getType() {
@@ -292,12 +351,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity, 
         return false;
     }
 
-    @Override
-    public void read(CompoundNBT tag) {
-        super.read(tag);
-
-
-    }
     private boolean setBehaviors;
     @Override
     public void readAdditional(CompoundNBT tag) {
@@ -308,9 +361,11 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity, 
         fromPos = NBTUtil.getBlockPos(tag, "from");
         backOff = tag.getInt("backoff");
         tamingTime = tag.getInt("taming_time");
+        whitelist = tag.getBoolean("whitelist");
+        blacklist = tag.getBoolean("blacklist");
         this.dataManager.set(HOP, tag.getBoolean("hop"));
 
-        // Remove goals and readd them AFTER our tamed param is set because we can't ACCESS THEM OTHERWISE
+        // Remove goals and read them AFTER our tamed param is set because we can't ACCESS THEM OTHERWISE
         if(!setBehaviors)
             this.removeGoals();
         this.dataManager.set(TAMED, tag.getBoolean("tamed"));
@@ -318,6 +373,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity, 
             this.addGoalsAfterConstructor();
             setBehaviors = true;
         }
+        allowedItems = NBTUtil.readItems(tag, "allowed_");
+        ignoreItems = NBTUtil.readItems(tag, "ignored_");
     }
 
     public void setHeldStack(ItemStack stack){
@@ -335,6 +392,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity, 
 
         if(!world.isRemote && isTamed()){
             ItemStack stack = new ItemStack(ItemsRegistry.carbuncleCharm);
+            world.addEntity(new ItemEntity(world, getPosX(), getPosY(), getPosZ(), stack.copy()));
+            stack = getHeldStack();
             world.addEntity(new ItemEntity(world, getPosX(), getPosY(), getPosZ(), stack));
             ParticleUtil.spawnPoof((ServerWorld)world, getPosition());
             this.remove();
@@ -358,9 +417,23 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity, 
         tag.putBoolean("tamed",  this.dataManager.get(TAMED));
         tag.putInt("taming_time", tamingTime);
         tag.putBoolean("hop", this.dataManager.get(HOP));
+        tag.putBoolean("whitelist",whitelist);
+        tag.putBoolean("blacklist", blacklist);
+        if(allowedItems != null && !allowedItems.isEmpty())
+            NBTUtil.writeItems(tag,  "allowed_", allowedItems);
+
+        if(ignoreItems != null && !ignoreItems.isEmpty())
+            NBTUtil.writeItems(tag,  "ignored_", ignoreItems);
+
     }
 
     public void removeGoals(){
         this.goalSelector.goals = new LinkedHashSet<>();
+    }
+
+    @Override
+    public List<String> getTooltip() {
+
+        return new ArrayList<>();
     }
 }

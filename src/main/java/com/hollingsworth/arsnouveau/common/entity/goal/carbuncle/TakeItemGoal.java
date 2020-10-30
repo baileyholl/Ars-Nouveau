@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
 import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -18,6 +19,22 @@ public class TakeItemGoal extends Goal {
     public TakeItemGoal(EntityCarbuncle carbuncle){
         this.setMutexFlags(EnumSet.of(Flag.MOVE));
         this.carbuncle = carbuncle;
+    }
+
+    public static boolean isValidItem(EntityCarbuncle carbuncle, ItemStack stack){
+        if(!carbuncle.whitelist && !carbuncle.blacklist)
+            return true;
+        if(carbuncle.whitelist){
+            for(ItemStack s : carbuncle.allowedItems)
+                if(s.isItemEqual(stack))
+                    return true;
+        }
+        if(carbuncle.blacklist){
+            for(ItemStack s : carbuncle.ignoreItems)
+                if(!s.isItemEqual(stack))
+                    return true;
+        }
+        return false;
     }
 
     @Override

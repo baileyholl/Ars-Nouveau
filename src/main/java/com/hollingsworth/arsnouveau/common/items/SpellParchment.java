@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.item.IScribeable;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -64,12 +65,12 @@ public class SpellParchment extends ModItem implements IScribeable {
             return false;
 
         if(SpellBook.getMode(player.getHeldItem(handIn).getTag()) == 0){
-            player.sendMessage(new StringTextComponent("Set your spell book to a spell."));
+            PortUtil.sendMessage(player, new StringTextComponent("Set your spell book to a spell."));
             return false;
         }
 
         SpellParchment.setSpell(thisStack, SpellBook.getRecipeString(player.getHeldItem(handIn).getTag(), SpellBook.getMode(player.getHeldItem(handIn).getTag())));
-        player.sendMessage(new StringTextComponent("Spell inscribed."));
+        PortUtil.sendMessage(player,new StringTextComponent("Spell inscribed."));
         return false;
     }
 }

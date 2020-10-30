@@ -85,6 +85,11 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.SYLPH_CHARM)public static SylphCharm sylphCharm;
     @ObjectHolder(LibItemNames.SYLPH_SHARD)public static ModItem sylphShard;
     @ObjectHolder(LibItemNames.MANA_GEM)public static ModItem manaGem;
+    @ObjectHolder(LibItemNames.WIXIE_CHARM)public static WhelpCharm WIXIE_CHARM;
+    @ObjectHolder(LibItemNames.WIXIE_SHARD)public static ModItem WIXIE_SHARD;
+    @ObjectHolder(LibItemNames.ALLOW_ITEM_SCROLL)public static ItemScroll ALLOW_ITEM_SCROLL;
+    @ObjectHolder(LibItemNames.DENY_ITEM_SCROLL)public static ItemScroll DENY_ITEM_SCROLL;
+    @ObjectHolder(LibItemNames.BLANK_PARCHMENT)public static ModItem BLANK_PARCHMENT;
 
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -165,7 +170,10 @@ public class ItemsRegistry {
                     },
                     new ModItem(LibItemNames.SYLPH_SHARD),
                     new SylphCharm(),
-                    new ModItem(LibItemNames.MANA_GEM).withTooltip(new TranslationTextComponent("tooltip.mana_gem"))
+                    new ModItem(LibItemNames.MANA_GEM).withTooltip(new TranslationTextComponent("tooltip.mana_gem")),
+                    new ItemScroll(LibItemNames.ALLOW_ITEM_SCROLL),
+                    new ItemScroll(LibItemNames.DENY_ITEM_SCROLL),
+                    new ModItem(LibItemNames.BLANK_PARCHMENT)
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();
