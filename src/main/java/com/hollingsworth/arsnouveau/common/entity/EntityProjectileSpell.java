@@ -224,14 +224,12 @@ public class EntityProjectileSpell extends ArrowEntity {
         if (!world.isRemote && result instanceof BlockRayTraceResult) {
             BlockRayTraceResult blockraytraceresult = (BlockRayTraceResult)result;
             BlockState state = world.getBlockState(((BlockRayTraceResult) result).getPos());
-
-            if(state.allowsMovement(this.world, blockraytraceresult.getPos(), PathType.AIR))
-                return;
-
             if(state.getMaterial() == Material.PORTAL){
                 state.getBlock().onEntityCollision(state, world, ((BlockRayTraceResult) result).getPos(),this);
                 return;
             }
+            if(state.allowsMovement(this.world, blockraytraceresult.getPos(), PathType.AIR))
+                return;
 
             if(this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(this.world, (LivingEntity) this.getShooter(), blockraytraceresult);

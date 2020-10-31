@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.common.block.PortalBlock;
+import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketWarpPosition;
 import net.minecraft.entity.Entity;
@@ -30,8 +31,9 @@ public class PortalTile extends TileEntity implements ITickableTileEntity {
 
     public void warp(Entity e){
         if(!world.isRemote && warpPos != null && !(world.getBlockState(warpPos).getBlock() instanceof PortalBlock)) {
+            System.out.println("warping");
             e.setLocationAndAngles(warpPos.getX(), warpPos.getY(), warpPos.getZ(), e.rotationYaw, e.rotationPitch);
-            Networking.sendToNearby(world, e, new PacketWarpPosition(e.getEntityId(), e.getPosX(), e.getPosY(), e.getPosZ()));
+            Networking.sendToNearby(world, e, new PacketWarpPosition(e.getEntityId(), e.getPosX(), e.getPosY(), e.getPosZ(), true));
             ((ServerWorld) world).spawnParticle(ParticleTypes.PORTAL, warpPos.getX(),  warpPos.getY() + 1,  warpPos.getZ(),
                     4,(this.world.rand.nextDouble() - 0.5D) * 2.0D, -this.world.rand.nextDouble(), (this.world.rand.nextDouble() - 0.5D) * 2.0D, 0.1f);
 
@@ -62,8 +64,13 @@ public class PortalTile extends TileEntity implements ITickableTileEntity {
             List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos));
             for(Entity e : entities){
                 world.playSound(null, warpPos, SoundEvents.ENTITY_ILLUSIONER_MIRROR_MOVE, SoundCategory.NEUTRAL, 1.0f, 1.0f);
-                e.setPositionAndUpdate(warpPos.getX(), warpPos.getY(), warpPos.getZ());
-                            ((ServerWorld) world).spawnParticle(ParticleTypes.PORTAL, warpPos.getX(),  warpPos.getY() + 1,  warpPos.getZ(),
+                if(e instanceof EntityProjectileSpell) {
+                    e.setLocationAndAngles(warpPos.getX(), warpPos.getY(), warpPos.getZ(), e.rotationYaw, e.rotationPitch);
+                }else {
+                    e.setPositionAndUpdate(warpPos.getX(), warpPos.getY(), warpPos.getZ());
+                }
+                Networking.sendToNearby(world, e, new PacketWarpPosition(e.getEntityId(),warpPos.getX(), warpPos.getY(), warpPos.getZ(), true));
+                ((ServerWorld) world).spawnParticle(ParticleTypes.PORTAL, warpPos.getX(),  warpPos.getY() + 1,  warpPos.getZ(),
                     4,(this.world.rand.nextDouble() - 0.5D) * 2.0D, -this.world.rand.nextDouble(), (this.world.rand.nextDouble() - 0.5D) * 2.0D, 0.1f);
 
             }
