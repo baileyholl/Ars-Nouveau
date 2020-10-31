@@ -18,12 +18,14 @@ import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class EntityFollowProjectile extends ArrowEntity {
-    private static final DataParameter<BlockPos> to = EntityDataManager.createKey(ArrowEntity.class, DataSerializers.BLOCK_POS);
-    private static final DataParameter<BlockPos> from = EntityDataManager.createKey(ArrowEntity.class, DataSerializers.BLOCK_POS);
+    public static final DataParameter<BlockPos> to = EntityDataManager.createKey(ArrowEntity.class, DataSerializers.BLOCK_POS);
+    public static final DataParameter<BlockPos> from = EntityDataManager.createKey(ArrowEntity.class, DataSerializers.BLOCK_POS);
     private int age;
 //    int age;
     int maxAge;
-
+    public static final DataParameter<Integer> RED = EntityDataManager.createKey(EntityFollowProjectile.class, DataSerializers.VARINT);
+    public static final DataParameter<Integer> GREEN = EntityDataManager.createKey(EntityFollowProjectile.class, DataSerializers.VARINT);
+    public static final DataParameter<Integer> BLUE = EntityDataManager.createKey(EntityFollowProjectile.class, DataSerializers.VARINT);
 
     public EntityFollowProjectile(World worldIn, Vec3d from, Vec3d to) {
         this(ModEntities.ENTITY_FOLLOW_PROJ, worldIn);
@@ -32,25 +34,38 @@ public class EntityFollowProjectile extends ArrowEntity {
 //        this.age = 0;
         this.maxAge = (int) Math.floor(from.subtract(to).length() * 5);
         setPosition(from.x + 0.5, from.y+ 0.5, from.z+ 0.5);
+        this.dataManager.set(RED, 255);
+        this.dataManager.set(GREEN, 25);
+        this.dataManager.set(BLUE, 180);
     }
     public EntityFollowProjectile(World worldIn, BlockPos from, BlockPos to) {
         this(worldIn, new Vec3d(from.getX(), from.getY(), from.getZ()), new Vec3d(to.getX(), to.getY(), to.getZ()));
     }
+    public EntityFollowProjectile(World worldIn, BlockPos from, BlockPos to, int r, int g, int b) {
+        this(worldIn, new Vec3d(from.getX(), from.getY(), from.getZ()), new Vec3d(to.getX(), to.getY(), to.getZ()));
+        this.dataManager.set(RED, r);
+        this.dataManager.set(GREEN, g);
+        this.dataManager.set(BLUE, b);
+    }
 
-    public EntityFollowProjectile(EntityType<EntityFollowProjectile> entityAOEProjectileEntityType, World world) {
+    public EntityFollowProjectile(EntityType<? extends EntityFollowProjectile> entityAOEProjectileEntityType, World world) {
         super(entityAOEProjectileEntityType, world);
     }
+
 
     protected void registerData() {
         super.registerData();
         this.dataManager.register(to,new BlockPos(0,0,0));
         this.dataManager.register(from,new BlockPos(0,0,0));
+        this.dataManager.register(RED, 0);
+        this.dataManager.register(GREEN, 0);
+        this.dataManager.register(BLUE, 0);
     }
 
     @Override
     public void tick() {
         this.age++;
-        Vec3d vec3d2 = this.getMotion();
+
         BlockPos dest = this.dataManager.get(EntityFollowProjectile.to);
         if(BlockUtil.distanceFrom(this.getPosition(), dest) < 1 || this.age > 1000 || BlockUtil.distanceFrom(this.getPosition(), dest) > 10){
             this.remove();
@@ -86,17 +101,6 @@ public class EntityFollowProjectile extends ArrowEntity {
         this.setPosition(posX, posY, posZ);
         this.setMotion(motionX, motionY, motionZ);
 
-//        if (getEntityWorld().isRemote){
-//            double deltaX = posX - prevPosX;
-//            double deltaY = posY - prevPosY;
-//            double deltaZ = posZ - prevPosZ;
-//            double dist = Math.ceil(Math.sqrt(deltaX*deltaX+deltaY*deltaY+deltaZ*deltaZ) * 20);
-//            for (double i = 0; i < dist; i ++){
-//                double coeff = i/dist;
-//                ParticleUtil.spawnParticleGlow(getEntityWorld(), (float)(prevPosX+ deltaX *coeff), (float)(prevPosY+ deltaY *coeff), (float)(prevPosZ+ deltaZ *coeff), 0.0125f*(rand.nextFloat()-0.5f), 0.0125f*(rand.nextFloat()-0.5f), 0.0125f*(rand.nextFloat()-0.5f), 255, 64, 16, 2.0f, 12);
-//            }
-//        }
-
         if(world.isRemote && this.age > 1) {
             double deltaX = getPosX() - lastTickPosX;
             double deltaY = getPosY() - lastTickPosY;
@@ -108,14 +112,14 @@ public class EntityFollowProjectile extends ArrowEntity {
                 double coeff = i/dist;
                 counter += world.rand.nextInt(3);
                 if (counter % (Minecraft.getInstance().gameSettings.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().gameSettings.particles.getId()) == 0) {
-                    world.addParticle(GlowParticleData.createData(new ParticleColor(255,25,180)),
+                    world.addParticle(GlowParticleData.createData(
+                            new ParticleColor(this.dataManager.get(RED),this.dataManager.get(GREEN),this.dataManager.get(BLUE))),
                             (float) (prevPosX + deltaX * coeff), (float) (prevPosY + deltaY * coeff), (float) (prevPosZ + deltaZ * coeff), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f));
                 }
             }
 
         }
     }
-
 
     @Override
     public void readAdditional(CompoundNBT compound) {

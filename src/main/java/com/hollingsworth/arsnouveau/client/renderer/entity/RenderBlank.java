@@ -6,7 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
 public class RenderBlank extends EntityRenderer {
-    private final ResourceLocation entityTexture; // new ResourceLocation(ExampleMod.MODID, "textures/entity/spell_proj.png");
+    private final ResourceLocation entityTexture;
 
     protected RenderBlank(EntityRendererManager renderManager, ResourceLocation entityTexture) {
         super(renderManager);

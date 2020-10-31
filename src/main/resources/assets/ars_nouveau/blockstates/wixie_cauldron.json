@@ -1,0 +1,8 @@
+{
+  "variants": {
+  "converted=false,filled=false":{"model":"block/cauldron"},
+  "converted=false,filled=true":{"model":"block/cauldron"},
+  "converted=true,filled=false": { "model": "ars_nouveau:block/wixie_cauldron_empty" },
+    "converted=true,filled=true": { "model": "ars_nouveau:block/wixie_cauldron_full" }
+  }
+}

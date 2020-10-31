@@ -155,7 +155,7 @@ public class SummoningCrytalTile extends AbstractManaTile {
 
     public boolean enoughMana(int manaCost){
         final boolean[] enough = {false};
-        BlockPos.getAllInBox(this.getPos().add(7, -3, 7), this.getPos().add(-7, 3, -7)).forEach(blockPos -> {
+        BlockPos.getAllInBox(this.getPos().add(9, -3, 9), this.getPos().add(-9, 3, -9)).forEach(blockPos -> {
             if(!enough[0] && world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= manaCost ) {
                 enough[0] = true;
             }
@@ -165,7 +165,7 @@ public class SummoningCrytalTile extends AbstractManaTile {
 
     public boolean removeManaAround(int manaCost){
         final boolean[] enough = {false};
-        BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
+        BlockPos.getAllInBox(this.getPos().add(9, -3, 9), this.getPos().add(-9, 3, -9)).forEach(blockPos -> {
             if(!enough[0] && world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= manaCost && !world.isRemote) {
                 ((ManaJarTile) world.getTileEntity(blockPos)).removeMana(manaCost);
                 enough[0] = true;

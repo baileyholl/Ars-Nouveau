@@ -27,8 +27,9 @@ public class ModEntities {
     public static EntityType<EntityEarthElemental> ENTITY_EARTH_ELEMENTAL_TYPE = null;
     public static EntityType<EntityFollowProjectile> ENTITY_FOLLOW_PROJ = null;
     public static EntityType<EntitySylph> ENTITY_SYLPH_TYPE = null;
+    public static EntityType<EntityWixie> ENTITY_WIXIE_TYPE = null;
 
-
+    public static EntityType<EntityFlyingItem> ENTITY_FLYING_ITEM = null;
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
 
@@ -49,9 +50,15 @@ public class ModEntities {
             ENTITY_FOLLOW_PROJ = build(
                     "follow_proj",
                     EntityType.Builder.<EntityFollowProjectile>create(EntityFollowProjectile::new, EntityClassification.MISC)
-                            .size(0.5f, 0.5f)
+                            .size(0.0f, 0.0f)
                             .setTrackingRange(10)
                             .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityFollowProjectile::new));
+            ENTITY_FLYING_ITEM = build(
+                    "flying_item",
+                    EntityType.Builder.<EntityFlyingItem>create(EntityFlyingItem::new, EntityClassification.MISC)
+                            .size(0.5f, 0.5f)
+                            .setTrackingRange(10).setUpdateInterval(60)
+                            .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityFlyingItem::new));
             ENTITY_EVOKER_FANGS_ENTITY_TYPE = build(
                     "fangs",
                     EntityType.Builder.<EntityEvokerFangs>create(EntityEvokerFangs::new, EntityClassification.MISC)
@@ -72,6 +79,11 @@ public class ModEntities {
             ENTITY_SYLPH_TYPE = build("sylph", EntityType.Builder.<EntitySylph>create(EntitySylph::new, EntityClassification.MISC)
                     .size(0.6F, 0.98F).setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
+
+            ENTITY_WIXIE_TYPE = build("wixie", EntityType.Builder.<EntityWixie>create(EntityWixie::new, EntityClassification.MISC)
+                    .size(0.6F, 0.98F).setTrackingRange(10)
+                    .setShouldReceiveVelocityUpdates(true));
+
             event.getRegistry().registerAll(
                     SPELL_PROJ,
                     ENTITY_FOLLOW_PROJ,
@@ -79,7 +91,9 @@ public class ModEntities {
                     ALLY_VEX, ENTITY_WHELP_TYPE,
                     ENTITY_CARBUNCLE_TYPE,
                     ENTITY_EARTH_ELEMENTAL_TYPE,
-                    ENTITY_SYLPH_TYPE
+                    ENTITY_SYLPH_TYPE,
+                    ENTITY_WIXIE_TYPE,
+                    ENTITY_FLYING_ITEM
             );
         }
     }
