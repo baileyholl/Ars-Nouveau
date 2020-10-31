@@ -13,12 +13,12 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class FindItem extends Goal {
-    private final EntityCarbuncle entityCarbuncle;
+    private EntityCarbuncle entityCarbuncle;
     int travelTime;
     Entity pathingEntity;
 
     private final Predicate<ItemEntity> TRUSTED_TARGET_SELECTOR = (itemEntity) -> {
-        return !itemEntity.cannotPickup() && itemEntity.isAlive();
+        return !itemEntity.cannotPickup() && itemEntity.isAlive() && TakeItemGoal.isValidItem(entityCarbuncle, itemEntity.getItem());
     };
 
     private final Predicate<ItemEntity> NONTAMED_TARGET_SELECTOR = (itemEntity -> {
@@ -55,6 +55,8 @@ public class FindItem extends Goal {
         List<ItemEntity> list = nearbyItems();
         if (itemstack.isEmpty() && !list.isEmpty()) {
             for(ItemEntity entity : list){
+                if(!TakeItemGoal.isValidItem(entityCarbuncle, entity.getItem()))
+                    continue;
                 Path path = entityCarbuncle.getNavigator().getPathToEntity(entity, 0);
                 if(path != null && path.reachesTarget()) {
                     this.pathingEntity = entity;
@@ -80,7 +82,7 @@ public class FindItem extends Goal {
     }
     public void pathToTarget(Entity entity, double speed){
         Path path = entityCarbuncle.getNavigator().getPathToEntity(entity, 0);
-        if(entity != null && path != null && path.reachesTarget())
+        if(path != null && path.reachesTarget())
             entityCarbuncle.getNavigator().setPath(path, speed);
     }
 }

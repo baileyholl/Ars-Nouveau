@@ -1,18 +1,22 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "xxx",
-    "xyx",
-    "xxx"
-  ],
-  "key": {
-    "x": {
-      "item": "ars_nouveau:mana_fiber"
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:blank_parchment"
     },
-    "y": {
-      "item": "minecraft:paper"
+    {
+      "item": "ars_nouveau:mana_gem"
+    },
+    {
+      "item": "ars_nouveau:mana_gem"
+    },
+    {
+      "item": "ars_nouveau:mana_gem"
+    },
+    {
+      "item": "ars_nouveau:mana_gem"
     }
-  },
+  ],
   "result": {
     "item": "ars_nouveau:spell_parchment"
   }

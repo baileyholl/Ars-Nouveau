@@ -59,9 +59,7 @@ public class Recipes extends RecipeProvider {
                     .addIngredient(Items.BLAZE_POWDER, 2)
                     .build(consumer);
 
-            ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.warpScroll).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
-                .addIngredient(ItemsRegistry.manaFiber, 4).addIngredient(Items.PAPER).addIngredient(ItemsRegistry.manaGem, 4)
-                .build(consumer);
+
 
             ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.manaFiber, 4).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                     .addIngredient(ItemsRegistry.manaBloom)
@@ -128,11 +126,6 @@ public class Recipes extends RecipeProvider {
                     .patternLine("yzy")
                     .patternLine("y y").key('x', Blocks.OAK_SLAB).key('y', Items.STICK).key('z', Items.OAK_LOG).build(consumer);
 
-            ShapedRecipeBuilder.shapedRecipe(ItemsRegistry.spellParchment).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
-                    .patternLine("xxx")
-                    .patternLine("xyx")
-                    .patternLine("xxx").key('x', ItemsRegistry.manaFiber).key('y', Items.PAPER).build(consumer);
-
             ShapedRecipeBuilder.shapedRecipe(ItemsRegistry.dullTrinket).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                     .patternLine(" x ")
                     .patternLine("xyx")
@@ -168,6 +161,30 @@ public class Recipes extends RecipeProvider {
             makeStonecutter(consumer, BlockRegistry.ARCANE_STONE, BlockRegistry.AB_HERRING, LibBlockNames.ARCANE_STONE);
             makeStonecutter(consumer, BlockRegistry.ARCANE_STONE, BlockRegistry.AB_BASKET, LibBlockNames.ARCANE_STONE);
             makeStonecutter(consumer, BlockRegistry.ARCANE_STONE, BlockRegistry.AB_MOSAIC, LibBlockNames.ARCANE_STONE);
+
+            ShapedRecipeBuilder.shapedRecipe(ItemsRegistry.BLANK_PARCHMENT, 1).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                    .patternLine("yyy")
+                    .patternLine("yxy")
+                    .patternLine("yyy").key('x', Items.PAPER).key('y', ItemsRegistry.manaFiber).build(consumer);
+
+            ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.spellParchment, 1).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                    .addIngredient(ItemsRegistry.BLANK_PARCHMENT, 1)
+                    .addIngredient(ItemsRegistry.manaGem, 4)
+                    .build(consumer);
+
+            ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.ALLOW_ITEM_SCROLL, 1).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                    .addIngredient(ItemsRegistry.BLANK_PARCHMENT, 1)
+                    .addIngredient(Items.CHEST, 1)
+                    .build(consumer);
+
+            ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.DENY_ITEM_SCROLL, 1).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                    .addIngredient(ItemsRegistry.BLANK_PARCHMENT, 1)
+                    .addIngredient(Items.COBBLESTONE, 1)
+                    .build(consumer);
+
+            ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.warpScroll).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                    .addIngredient(Items.LAPIS_LAZULI, 4).addIngredient(ItemsRegistry.BLANK_PARCHMENT).addIngredient(ItemsRegistry.manaGem, 4)
+                    .build(consumer);
         }
     }
     private static int STONECUTTER_COUNTER = 0;
