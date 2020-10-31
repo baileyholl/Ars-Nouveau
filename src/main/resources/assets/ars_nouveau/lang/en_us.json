@@ -214,5 +214,16 @@
 	"ars_nouveau.relay.no_from": "No take location set.",
 	"ars_nouveau.relay.one_from": "Taking from %d location(s).",
 	"ars_nouveau.rune.touch":"Runes must have Touch as their first glyph.",
-	"ars_nouveau.whelp.strict_mode":"Strict mode set to %s"
+	"ars_nouveau.whelp.strict_mode":"Strict mode set to %s",
+	"item.ars_nouveau.allow_scroll":"Item Scroll: Allow",
+	"item.ars_nouveau.deny_scroll":"Item Scroll: Deny",
+	"item.ars_nouveau.wixie_shards":"Wixie Shards",
+	"item.ars_nouveau.wixie_charm":"Wixie Charm",
+	"block.ars_nouveau.wixie_cauldron":"Wixie Cauldron",
+	"ars_nouveau.rune.error": "Rune threw an error. Please report this! Bye rune!",
+	"item.ars_nouveau.blank_parchment":"Blank Parchment",
+	"ars_nouveau.scribe.item_added":"Item added.",
+	"ars_nouveau.scribe.item_removed":"Item removed.",
+	"ars_nouveau.allow_set": "Carbuncle will only take these items.",
+	"ars_nouveau.ignore_set": "Carbuncle will ignore these items."
 }

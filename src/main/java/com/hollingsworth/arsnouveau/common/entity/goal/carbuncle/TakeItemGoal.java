@@ -21,7 +21,15 @@ public class TakeItemGoal extends Goal {
         this.carbuncle = carbuncle;
     }
 
-    public static boolean isValidItem(EntityCarbuncle carbuncle, ItemStack stack){
+
+    @Override
+    public void startExecuting() {
+        super.startExecuting();
+        if(carbuncle.isTamed() && carbuncle.fromPos != null && carbuncle.getHeldStack().isEmpty())
+            setPath(carbuncle.fromPos.getX(),carbuncle.fromPos.getY(),carbuncle.fromPos.getZ(), 1.2D);
+    }
+
+    public static boolean isValidItem(EntityCarbuncle carbuncle,ItemStack stack){
         if(!carbuncle.whitelist && !carbuncle.blacklist)
             return true;
         if(carbuncle.whitelist){
@@ -37,43 +45,44 @@ public class TakeItemGoal extends Goal {
         return false;
     }
 
-    @Override
-    public void startExecuting() {
-        super.startExecuting();
-        if(carbuncle.isTamed() && carbuncle.fromPos != null && carbuncle.getHeldStack().isEmpty())
-            carbuncle.getNavigator().tryMoveToXYZ(carbuncle.fromPos.getX(),carbuncle.fromPos.getY(),carbuncle.fromPos.getZ(), 1.2D);
+    public void getItem(){
+        World world = carbuncle.world;
+        IInventory i = (IInventory) world.getTileEntity(carbuncle.fromPos);
+        for(int j = 0; j < i.getSizeInventory(); j++){
+            if(!i.getStackInSlot(j).isEmpty() && isValidItem(carbuncle, i.getStackInSlot(j))){
+
+                carbuncle.setHeldStack(i.removeStackFromSlot(j));
+
+                carbuncle.world.playSound(null, carbuncle.getPosX(),carbuncle.getPosY(), carbuncle.getPosZ(),
+                        SoundEvents.ENTITY_ITEM_PICKUP, carbuncle.getSoundCategory(),1.0F, 1.0F);
+
+                if(world instanceof ServerWorld){
+                    OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), carbuncle.fromPos, 20);
+                    event.open();
+                    EventQueue.getInstance().addEvent(event);
+                }
+                break;
+            }
+        }
+    }
+    public void setPath(double x, double y, double z, double speedIn){
+        carbuncle.getNavigator().setPath( carbuncle.getNavigator().getPathToPos(x+0.5, y+0.5, z+0.5, 0), speedIn);
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        if(carbuncle.getHeldStack().isEmpty() && carbuncle.fromPos != null && BlockUtil.distanceFrom(carbuncle.getPosition(), carbuncle.fromPos) < 1.25D){
+        if(carbuncle.getHeldStack().isEmpty() && carbuncle.fromPos != null && BlockUtil.distanceFrom(carbuncle.getPosition(), carbuncle.fromPos) < 1.5D){
             World world = carbuncle.world;
             if(world.getTileEntity(carbuncle.fromPos) instanceof IInventory){
-                IInventory i = (IInventory) world.getTileEntity(carbuncle.fromPos);
-                for(int j = 0; j < i.getSizeInventory(); j++){
-                    if(!i.getStackInSlot(j).isEmpty()){
-
-                        carbuncle.setHeldStack(i.removeStackFromSlot(j));
-
-                        carbuncle.world.playSound(null, carbuncle.getPosX(),carbuncle.getPosY(), carbuncle.getPosZ(),
-                                SoundEvents.ENTITY_ITEM_PICKUP, carbuncle.getSoundCategory(),1.0F, 1.0F);
-
-                        if(world instanceof ServerWorld){
-                            OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), carbuncle.fromPos, 20);
-                            event.open();
-                            EventQueue.getInstance().addEvent(event);
-                        }
-                        break;
-                    }
-                }
+                getItem();
                 return;
             }
         }
 
         if(carbuncle.fromPos != null && carbuncle.getHeldStack().isEmpty()) {
-            carbuncle.getNavigator().tryMoveToXYZ(carbuncle.fromPos.getX(), carbuncle.fromPos.getY(), carbuncle.fromPos.getZ(), 1.2D);
+            setPath(carbuncle.fromPos.getX(), carbuncle.fromPos.getY(), carbuncle.fromPos.getZ(), 1.2D);
         }
     }
 

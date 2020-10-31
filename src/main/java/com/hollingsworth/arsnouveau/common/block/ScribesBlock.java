@@ -3,7 +3,9 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.api.item.IScribeable;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
-import com.hollingsworth.arsnouveau.common.util.PortUtil;
+
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
@@ -24,22 +26,29 @@ import net.minecraft.util.text.StringTextComponent;
 
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import javax.annotation.Nullable;
 
 public class ScribesBlock extends ModBlock{
     public ScribesBlock() {
         super(Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(2.0f, 3.0f).notSolid(), LibBlockNames.SCRIBES_BLOCK);
+        MinecraftForge.EVENT_BUS.register(this);
     }
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (world.isRemote) {
+            return ActionResultType.SUCCESS;
+        }
         if(handIn != Hand.MAIN_HAND)
             return ActionResultType.PASS;
 
-        if(!world.isRemote && world.getTileEntity(pos) instanceof ScribesTile && !player.isSneaking()) {
+        if(world.getTileEntity(pos) instanceof ScribesTile && !player.isSneaking()) {
             ScribesTile tile = (ScribesTile) world.getTileEntity(pos);
             if (tile.stack != null && player.getHeldItem(handIn).isEmpty()) {
                 ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.stack);
@@ -56,8 +65,11 @@ public class ScribesBlock extends ModBlock{
             }
             world.notifyBlockUpdate(pos, state, state, 2);
         }
-        if(!world.isRemote &&  world.getTileEntity(pos) instanceof ScribesTile && player.isSneaking()){
+        if(world.getTileEntity(pos) instanceof ScribesTile && player.isSneaking()){
             ItemStack stack = ((ScribesTile) world.getTileEntity(pos)).stack;
+
+            if(stack == null || stack.isEmpty())
+                return ActionResultType.SUCCESS;
 
             if(stack.getItem() instanceof IScribeable){
                 ((IScribeable) stack.getItem()).onScribe(world,pos,player,handIn, stack);
@@ -89,6 +101,18 @@ public class ScribesBlock extends ModBlock{
         if(direction == Direction.UP || direction == Direction.DOWN)
             direction = Direction.NORTH;
         return direction;
+    }
+
+    @SubscribeEvent
+    public void rightClick(PlayerInteractEvent.RightClickBlock event) {
+        if(!(event.getWorld().getTileEntity(event.getPos()) instanceof ScribesTile))
+            return;
+        World world = event.getWorld();
+        BlockPos pos = event.getPos();
+        if(world.getBlockState(pos).getBlock() instanceof ScribesBlock){
+            BlockRegistry.SCRIBES_BLOCK.onBlockActivated(world.getBlockState(pos), world, pos, event.getPlayer(), event.getHand(), null);
+            event.setCanceled(true);
+        }
     }
 
     @Override

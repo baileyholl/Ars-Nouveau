@@ -304,9 +304,11 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity, 
 
     @Override
     public ActionResultType applyPlayerInteraction(PlayerEntity player, Vector3d vec, Hand hand)  {
-        if(hand != Hand.MAIN_HAND)
+        if(hand != Hand.MAIN_HAND || player.getEntityWorld().isRemote)
             return ActionResultType.SUCCESS;
+
         ItemStack stack = player.getHeldItem(hand);
+
         if(!(stack.getItem() instanceof ItemScroll) || !stack.hasTag())
             return ActionResultType.SUCCESS;
         if(stack.getItem() == ItemsRegistry.ALLOW_ITEM_SCROLL){

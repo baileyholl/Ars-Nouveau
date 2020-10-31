@@ -171,6 +171,8 @@ public class ItemsRegistry {
                     new ModItem(LibItemNames.SYLPH_SHARD),
                     new SylphCharm(),
                     new ModItem(LibItemNames.MANA_GEM).withTooltip(new TranslationTextComponent("tooltip.mana_gem")),
+                    new ModItem(LibItemNames.WIXIE_SHARD),
+
                     new ItemScroll(LibItemNames.ALLOW_ITEM_SCROLL),
                     new ItemScroll(LibItemNames.DENY_ITEM_SCROLL),
                     new ModItem(LibItemNames.BLANK_PARCHMENT)

@@ -2,6 +2,18 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
+      "item": "minecraft:lapis_lazuli"
+    },
+    {
+      "item": "minecraft:lapis_lazuli"
+    },
+    {
+      "item": "minecraft:lapis_lazuli"
+    },
+    {
+      "item": "minecraft:lapis_lazuli"
+    },
+    {
       "item": "ars_nouveau:blank_parchment"
     },
     {
@@ -18,6 +30,6 @@
     }
   ],
   "result": {
-    "item": "ars_nouveau:spell_parchment"
+    "item": "ars_nouveau:warp_scroll"
   }
-}
+} 
