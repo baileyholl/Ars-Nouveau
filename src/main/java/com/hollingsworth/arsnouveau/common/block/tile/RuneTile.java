@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
@@ -42,17 +43,23 @@ public class RuneTile extends AnimatedTile {
 
         if(!this.isCharged || recipe == null || recipe.isEmpty() || !(entity instanceof LivingEntity) || !(world instanceof ServerWorld) || !(recipe.get(0) instanceof MethodTouch))
             return;
+        try {
 
-        EntitySpellResolver resolver = new EntitySpellResolver(recipe, new SpellContext(recipe, FakePlayerFactory.getMinecraft((ServerWorld) world)).withCastingTile(this));
-        resolver.onCastOnEntity(ItemStack.EMPTY, FakePlayerFactory.getMinecraft((ServerWorld) world),(LivingEntity)entity, Hand.MAIN_HAND);
-        if(this.isTemporary){
+            EntitySpellResolver resolver = new EntitySpellResolver(recipe, new SpellContext(recipe, FakePlayerFactory.getMinecraft((ServerWorld) world)).withCastingTile(this));
+            resolver.onCastOnEntity(ItemStack.EMPTY, FakePlayerFactory.getMinecraft((ServerWorld) world), (LivingEntity) entity, Hand.MAIN_HAND);
+            if (this.isTemporary) {
+                world.destroyBlock(pos, false);
+                return;
+            }
+            this.isCharged = false;
+
+            world.setBlockState(pos, world.getBlockState(pos).cycle(RuneBlock.POWERED));
+            ticksUntilCharge = 20 * 2;
+        }catch (Exception e){
+            entity.sendMessage(new TranslationTextComponent("ars_nouveau.rune.error"));
+            e.printStackTrace();
             world.destroyBlock(pos, false);
-            return;
         }
-        this.isCharged = false;
-
-        world.setBlockState(pos, world.getBlockState(pos).cycle(RuneBlock.POWERED));
-        ticksUntilCharge = 20 * 2;
     }
 
     public void setParsedSpell(List<AbstractSpellPart> spell){
