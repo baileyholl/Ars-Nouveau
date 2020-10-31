@@ -5,17 +5,12 @@ import com.hollingsworth.arsnouveau.common.event.ProcessOreEvent;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketEntityAnimationSync;
 import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Hand;
@@ -24,34 +19,28 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.builder.AnimationBuilder;
-import software.bernie.geckolib.animation.controller.EntityAnimationController;
-import software.bernie.geckolib.entity.IAnimatedEntity;
-import software.bernie.geckolib.event.AnimationTestEvent;
-import software.bernie.geckolib.manager.EntityAnimationManager;
 
-public class EntityEarthElemental extends CreatureEntity implements IAnimatedEntity {
-    EntityAnimationManager manager = new EntityAnimationManager();
-
-    EntityAnimationController<EntityEarthElemental> smeltController = new EntityAnimationController<>(this, "smeltController", 20, this::smeltPredicate);
-
-    EntityAnimationController<EntityEarthElemental> idleController = new EntityAnimationController<>(this, "idleController", 20, this::idlePredicate);
-
-
-    private <E extends Entity> boolean smeltPredicate(AnimationTestEvent<E> event) {
-        return true;
-    }
-    private <E extends Entity> boolean idlePredicate(AnimationTestEvent<E> event) {
-
-        if(this.getHeldStack().isEmpty()){
-            manager.setAnimationSpeed(1f);
-            idleController.setAnimation(new AnimationBuilder().addAnimation("idle", true));
-        }else{
-            return true;
-        }
-        return true;
-    }
+public class EntityEarthElemental extends CreatureEntity  {
+//    EntityAnimationManager manager = new EntityAnimationManager();
+//
+//    EntityAnimationController<EntityEarthElemental> smeltController = new EntityAnimationController<>(this, "smeltController", 20, this::smeltPredicate);
+//
+//    EntityAnimationController<EntityEarthElemental> idleController = new EntityAnimationController<>(this, "idleController", 20, this::idlePredicate);
+//
+//
+//    private <E extends Entity> boolean smeltPredicate(AnimationTestEvent<E> event) {
+//        return true;
+//    }
+//    private <E extends Entity> boolean idlePredicate(AnimationTestEvent<E> event) {
+//
+//        if(this.getHeldStack().isEmpty()){
+//            manager.setAnimationSpeed(1f);
+//            idleController.setAnimation(new AnimationBuilder().addAnimation("idle", true));
+//        }else{
+//            return true;
+//        }
+//        return true;
+//    }
 
     protected EntityEarthElemental(EntityType<? extends CreatureEntity> type, World worldIn) {
         super(type, worldIn);
@@ -62,8 +51,8 @@ public class EntityEarthElemental extends CreatureEntity implements IAnimatedEnt
     }
 
     public void registerControllers(){
-        manager.addAnimationController(smeltController);
-        manager.addAnimationController(idleController);
+//        manager.addAnimationController(smeltController);
+//        manager.addAnimationController(idleController);
     }
 
     @Override
@@ -76,8 +65,8 @@ public class EntityEarthElemental extends CreatureEntity implements IAnimatedEnt
     protected boolean processInteract(PlayerEntity player, Hand hand) {
 //        System.out.println(this.getHeldStack());
         System.out.println(this.getEntityId());
-        if(player.getEntityWorld().isRemote)
-            System.out.println(this.manager.get("idleController"));
+  //      if(player.getEntityWorld().isRemote)
+          //  System.out.println(this.manager.get("idleController"));
         return super.processInteract(player, hand);
     }
 
@@ -134,10 +123,10 @@ public class EntityEarthElemental extends CreatureEntity implements IAnimatedEnt
     }
 
 
-    @Override
-    public EntityAnimationManager getAnimationManager() {
-        return manager;
-    }
+//    @Override
+//    public EntityAnimationManager getAnimationManager() {
+//        return manager;
+//    }
 
     @Override
     public void writeAdditional(CompoundNBT tag) {

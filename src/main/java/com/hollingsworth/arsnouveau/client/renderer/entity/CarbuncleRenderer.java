@@ -5,16 +5,16 @@ import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
+import software.bernie.geckolib.renderers.geo.GeoEntityRenderer;
 
-public class CarbuncleRenderer  extends MobRenderer<EntityCarbuncle, CarbuncleModel> {
+public class CarbuncleRenderer  extends GeoEntityRenderer<EntityCarbuncle> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_orange.png");
     private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_wild_orange.png");
 
     public CarbuncleRenderer(EntityRendererManager manager) {
-        super(manager, new CarbuncleModel(), 0.2f);
-        this.addLayer(new CarbuncleHeldItemLayer(this));
+        super(manager, new CarbuncleModel());
+       // this.addLayer(new CarbuncleHeldItemLayer(this));
     }
 
     @Override

@@ -18,6 +18,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.Logger;
+import software.bernie.geckolib.GeckoLib;
 import top.theillusivec4.curios.api.CuriosAPI;
 import top.theillusivec4.curios.api.imc.CurioIMCMessage;
 
@@ -50,7 +51,7 @@ public class ArsNouveau {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::sendImc);
         MinecraftForge.EVENT_BUS.register(this);
-
+        GeckoLib.initialize();
     }
 
     public void setup (final FMLCommonSetupEvent event){

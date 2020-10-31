@@ -48,13 +48,13 @@ public class DominionWand extends ModItem{
 
     @Override
     public boolean itemInteractionForEntity(ItemStack doNotUseStack, PlayerEntity playerEntity, LivingEntity target, Hand hand) {
-        System.out.println("wanded");
+
         if(playerEntity.world.isRemote || hand != Hand.MAIN_HAND)
             return true;
 
         ItemStack stack = playerEntity.getHeldItem(hand);
         if(playerEntity.isSneaking() && target instanceof IWandable){
-            System.out.println("wanding");
+
             ((IWandable) target).onWanded(playerEntity);
             clear(stack, playerEntity);
             return true;

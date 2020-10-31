@@ -43,18 +43,20 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import software.bernie.geckolib.animation.builder.AnimationBuilder;
-import software.bernie.geckolib.animation.controller.EntityAnimationController;
-import software.bernie.geckolib.entity.IAnimatedEntity;
-import software.bernie.geckolib.event.AnimationTestEvent;
-import software.bernie.geckolib.manager.EntityAnimationManager;
+import software.bernie.geckolib.core.IAnimatable;
+import software.bernie.geckolib.core.PlayState;
+import software.bernie.geckolib.core.builder.AnimationBuilder;
+import software.bernie.geckolib.core.controller.AnimationController;
+import software.bernie.geckolib.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib.core.manager.AnimationData;
+import software.bernie.geckolib.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity, IDispellable, ITooltipProvider, IWandable {
+public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDispellable, ITooltipProvider, IWandable {
 
     public BlockPos fromPos;
     public BlockPos toPos;
@@ -68,47 +70,48 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity, 
     public int backOff; // Used to stop inventory store/take spam when chests are full or empty.
     public int tamingTime;
 
-    EntityAnimationManager manager = new EntityAnimationManager();
-    EntityAnimationController<EntityCarbuncle> walkController = new EntityAnimationController<>(this, "walkController", 20, this::animationPredicate);
-    EntityAnimationController<EntityCarbuncle> idleController = new EntityAnimationController<>(this, "idleController", 20, this::idlePredicate);
+    AnimationFactory manager = new AnimationFactory(this);
 
     public EntityCarbuncle(EntityType<EntityCarbuncle> entityCarbuncleEntityType, World world) {
         super(entityCarbuncleEntityType, world);
-        setupAnimations();
         addGoalsAfterConstructor();
     }
 
     public EntityCarbuncle(World world, boolean tamed){
         super(ModEntities.ENTITY_CARBUNCLE_TYPE,world);
         this.setTamed(tamed);
-        setupAnimations();
         addGoalsAfterConstructor();
     }
-    public void setupAnimations(){
-        manager.addAnimationController(walkController);
-        manager.addAnimationController(idleController);
-    }
-
-    private <E extends Entity> boolean idlePredicate(AnimationTestEvent<E> event) {
-        if(world.getGameTime() % 20 == 0 && world.rand.nextInt(3) == 0 && !this.dataManager.get(HOP)){
-            manager.setAnimationSpeed(3f);
-            idleController.setAnimation(new AnimationBuilder().addAnimation("idle"));
-        }
-
-
-        return true;
-    }
-    private <E extends Entity> boolean animationPredicate(AnimationTestEvent<E> event) {
-        if(this.dataManager.get(HOP)){
-            manager.setAnimationSpeed(5f);
-            walkController.setAnimation(new AnimationBuilder().addAnimation("hop"));
-            return true;
-        }
-        return false;
-    }
     @Override
-    public EntityAnimationManager getAnimationManager() {
+    public void registerControllers(AnimationData animationData) {
+        animationData.addAnimationController(new AnimationController<EntityCarbuncle>(this, "walkController", 20, this::animationPredicate));
+        animationData.addAnimationController(new AnimationController<EntityCarbuncle>(this, "idleController", 20, this::idlePredicate));
+    }
+
+    @Override
+    public AnimationFactory getFactory() {
         return manager;
+    }
+
+
+    private <E extends Entity> PlayState idlePredicate(AnimationEvent event) {
+        if(world.getGameTime() % 20 == 0 && world.rand.nextInt(3) == 0 && !this.dataManager.get(HOP)){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
+           // manager.(3f);
+           // idleController.setAnimation(new AnimationBuilder().addAnimation("idle"));
+        }
+
+
+        return PlayState.CONTINUE;
+    }
+    private <E extends Entity> PlayState animationPredicate(AnimationEvent event) {
+        if(this.dataManager.get(HOP)){
+
+         //   manager.setAnimationSpeed(5f);
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("hop"));
+            return  PlayState.CONTINUE;
+        }
+        return  PlayState.STOP;
     }
 
     public boolean isTamed(){
@@ -355,6 +358,10 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity, 
             setHeldStack(ItemStack.read((CompoundNBT)tag.get("held")));
         toPos = NBTUtil.getBlockPos(tag, "to");
         fromPos = NBTUtil.getBlockPos(tag, "from");
+        if(toPos.equals(new BlockPos(0,0,0)))
+            toPos = null;
+        if(fromPos.equals(new BlockPos(0,0,0)))
+            fromPos = null;
         backOff = tag.getInt("backoff");
         tamingTime = tag.getInt("taming_time");
         whitelist = tag.getBoolean("whitelist");

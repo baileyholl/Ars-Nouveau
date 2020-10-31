@@ -107,7 +107,6 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
 
     @Override
     public void onWanded(PlayerEntity playerEntity) {
-        System.out.println("wanding");
         this.dataManager.set(STRICT_MODE, !this.dataManager.get(STRICT_MODE));
         PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.whelp.strict_mode", this.dataManager.get(STRICT_MODE)));
     }
@@ -286,6 +285,8 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
             setHeldStack(ItemStack.read((CompoundNBT)tag.get("held")));
 
         this.dataManager.set(STRICT_MODE, tag.getBoolean("strict"));
+        if(spellRecipe != null)
+           setRecipeString(SpellRecipeUtil.serializeForNBT(spellRecipe));
     }
 
     @Override
