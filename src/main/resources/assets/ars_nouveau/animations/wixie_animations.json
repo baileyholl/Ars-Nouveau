@@ -3,124 +3,14 @@
 	"animations": {
 		"idle": {
 			"loop": true,
-			"animation_length": 6.24,
+			"animation_length": 6,
 			"bones": {
 				"wixie": {
 					"rotation": {
-						"0.0": {
-							"vector": [0, 0, -5]
-						},
-						"3.12": {
-							"vector": [0, 0, 5]
-						},
-						"6.24": {
-							"vector": [0, 0, -5]
-						}
+						"vector": [0, 0, "math.sin(query.anim_time*60)*5"]
 					},
 					"position": {
-						"0.0": {
-							"vector": [1, 1, 0]
-						},
-						"1.56": {
-							"vector": [0, -0.5, 0]
-						},
-						"3.12": {
-							"vector": [-1, 1, 0]
-						},
-						"4.68": {
-							"vector": [0, -0.5, 0]
-						},
-						"6.24": {
-							"vector": [1, 1, 0]
-						}
-					}
-				}
-			}
-		},
-		"item_interact": {
-			"loop": true,
-			"animation_length": 1.36,
-			"bones": {
-				"head": {
-					"rotation": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"0.68": {
-							"vector": [0, -40, 0]
-						},
-						"1.12": {
-							"vector": [0, 0, 0]
-						}
-					}
-				},
-				"arm_right": {
-					"rotation": {
-						"0.32": {
-							"vector": [0, 0, 0]
-						},
-						"0.6": {
-							"vector": [0, -90, 0]
-						},
-						"1.12": {
-							"vector": [0, 0, 0]
-						}
-					}
-				}
-			}
-		},
-		"cast": {
-			"loop": true,
-			"animation_length": 2.96,
-			"bones": {
-				"head": {
-					"rotation": {
-						"0.0": {
-							"vector": [0, 0, 0]
-						},
-						"1.68": {
-							"vector": [27.5, 0, 0],
-							"easing": "linear"
-						},
-						"1.88": {
-							"vector": [-17.5, 0, 0],
-							"easing": "linear"
-						},
-						"2.12": {
-							"vector": [-17.5, 0, 0],
-							"easing": "easeInExpo"
-						},
-						"2.96": {
-							"vector": [0, 0, 0]
-						}
-					}
-				},
-				"arm_left": {
-					"rotation": {
-						"1.72": {
-							"vector": [0, 0, 0]
-						},
-						"1.96": {
-							"vector": [0, 120, 50],
-							"easing": "easeInQuad"
-						},
-						"2.96": {
-							"vector": [0, 0, 0]
-						}
-					}
-				},
-				"arm_right": {
-					"rotation": {
-						"1.72": {
-							"vector": [0, 0, 0]
-						},
-						"1.96": {
-							"vector": [0, -120, -50],
-							"easing": "easeInQuad"
-						},
-						"2.96": {
-							"vector": [0, 0, 0]
-						}
+						"vector": ["math.cos(query.anim_time*60)*-1", "math.sin(query.anim_time*120)*1", 0]
 					}
 				}
 			}

@@ -6,7 +6,9 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -30,13 +32,16 @@ public class WixieCauldron extends ModBlock{
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if(worldIn.isRemote || handIn != Hand.MAIN_HAND)
+            return ActionResultType.SUCCESS;
+
         if(player.getHeldItemMainhand().getItem() == ItemsRegistry.bucketOfMana && !state.get(FILLED)){
             player.setHeldItem(Hand.MAIN_HAND, Items.BUCKET.getDefaultInstance());
             worldIn.setBlockState(pos, state.with(FILLED, true));
         }
-        System.out.println("activated");
-        if(worldIn.getTileEntity(pos) instanceof WixieCauldronTile){
-            ((WixieCauldronTile) worldIn.getTileEntity(pos)).getRecipes(player.getHeldItemMainhand());
+
+        if(worldIn.getTileEntity(pos) instanceof WixieCauldronTile && player.getHeldItem(handIn).getItem() == ItemsRegistry.ALLOW_ITEM_SCROLL){
+            ((WixieCauldronTile) worldIn.getTileEntity(pos)).setRecipes(player.getHeldItemMainhand());
         }
         return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
     }
@@ -44,6 +49,21 @@ public class WixieCauldron extends ModBlock{
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FILLED, CONVERTED);
+    }
+
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        BlockState state = super.getStateForPlacement(context);
+        CompoundNBT tag = context.getItem().getTag();
+        if(tag != null && tag.contains("BlockEntityTag")){
+            tag = tag.getCompound("BlockEntityTag");
+            if(tag.contains("converted") && tag.getBoolean("converted")){
+                state = state.with(CONVERTED, true);
+            }
+        }
+        return state;
+
     }
 
     @Override

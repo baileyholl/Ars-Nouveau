@@ -96,11 +96,11 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
     private <E extends Entity> PlayState idlePredicate(AnimationEvent event) {
         if(world.getGameTime() % 20 == 0 && world.rand.nextInt(3) == 0 && !this.dataManager.get(HOP)){
+
             event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
            // manager.(3f);
            // idleController.setAnimation(new AnimationBuilder().addAnimation("idle"));
         }
-
 
         return PlayState.CONTINUE;
     }
@@ -358,9 +358,9 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             setHeldStack(ItemStack.read((CompoundNBT)tag.get("held")));
         toPos = NBTUtil.getBlockPos(tag, "to");
         fromPos = NBTUtil.getBlockPos(tag, "from");
-        if(toPos.equals(new BlockPos(0,0,0)))
+        if(toPos != null && toPos.equals(new BlockPos(0,0,0)))
             toPos = null;
-        if(fromPos.equals(new BlockPos(0,0,0)))
+        if(fromPos != null && fromPos.equals(new BlockPos(0,0,0)))
             fromPos = null;
         backOff = tag.getInt("backoff");
         tamingTime = tag.getInt("taming_time");
