@@ -10,6 +10,7 @@ public class ModDatagen {
 
     @SubscribeEvent
     public static void datagen(GatherDataEvent event){
+        System.out.println("calling datagen");
         event.getGenerator().addProvider(new LootTables(event.getGenerator()));
         event.getGenerator().addProvider(new DefaultTableProvider(event.getGenerator()));
         event.getGenerator().addProvider(new ItemModelGenerator(event.getGenerator(), ArsNouveau.MODID, event.getExistingFileHelper()));

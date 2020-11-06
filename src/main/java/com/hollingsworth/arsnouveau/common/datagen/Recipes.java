@@ -31,9 +31,9 @@ public class Recipes extends RecipeProvider {
             CookingRecipeBuilder.smeltingRecipe(Ingredient.fromItems(BlockRegistry.ARCANE_ORE), ItemsRegistry.manaGem,0.5f, 200)
                     .addCriterion("has_ore", InventoryChangeTrigger.Instance.forItems(BlockRegistry.ARCANE_ORE)).build(consumer);
 
-            ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.wornNotebook).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
-                    .addIngredient(ItemsRegistry.manaGem, 1)
-                    .addIngredient(Items.BOOK).build(consumer);
+           ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.wornNotebook).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                   .addIngredient(ItemsRegistry.manaGem, 1)
+                   .addIngredient(Items.BOOK).build(consumer);
 
 
             ShapelessRecipeBuilder.shapelessRecipe(BlockRegistry.ARCANE_STONE).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))

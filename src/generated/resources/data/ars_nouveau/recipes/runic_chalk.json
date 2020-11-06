@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:magic_clay"
+    },
+    {
+      "item": "minecraft:bone_meal"
+    },
+    {
+      "item": "ars_nouveau:mana_fiber"
+    }
+  ],
+  "result": {
+    "item": "ars_nouveau:runic_chalk"
+  }
+}

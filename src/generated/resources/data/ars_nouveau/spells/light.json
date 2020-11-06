@@ -13,7 +13,7 @@
       "tier": "ONE",
       "mana_cost": "Medium",
       "clay_type": "ars_nouveau:magic_clay",
-      "reagent": "minecraft:glowstone"
+      "reagent": "minecraft:lantern"
     }
   ]
 }

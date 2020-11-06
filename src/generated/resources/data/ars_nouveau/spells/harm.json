@@ -11,7 +11,9 @@
     {
       "type": "glyph_recipe",
       "tier": "ONE",
-      "mana_cost": "Medium"
+      "mana_cost": "Medium",
+      "clay_type": "ars_nouveau:magic_clay",
+      "reagent": "minecraft:iron_sword"
     }
   ]
 }

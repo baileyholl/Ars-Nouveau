@@ -17,7 +17,6 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
 
     @Override
     protected void registerModels() {
-
         getBuilder("glyph").texture("layer0",itemTexture(ItemsRegistry.noviceSpellBook));
         ItemsRegistry.RegistrationHandler.ITEMS.forEach(i ->{
             if(i instanceof Glyph){

@@ -27,6 +27,7 @@ public class LootTables extends BaseLootTableProvider{
         putStandardLoot(BlockRegistry.ARCANE_RELAY);
         putStandardLoot(BlockRegistry.ARCANE_RELAY_SPLITTER);
         putStandardLoot(BlockRegistry.ARCANE_CORE_BLOCK);
+        putStandardLoot(BlockRegistry.CRYSTALLIZER_BLOCK);
     }
 
     public void putStandardLoot(Block block){

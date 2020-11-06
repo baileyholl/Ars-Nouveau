@@ -11,7 +11,7 @@
     {
       "type": "glyph_recipe",
       "tier": "TWO",
-      "mana_cost": "Medium",
+      "mana_cost": "High",
       "clay_type": "ars_nouveau:marvelous_clay",
       "reagent": "minecraft:rabbit_foot"
     }

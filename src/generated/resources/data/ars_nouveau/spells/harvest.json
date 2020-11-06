@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Harvests grown crops and trees. When used on grown crops, this spell will obtain the fully grown product without destroying the plant, but will not grant any additional seeds."
+      "text": "Harvests grown crops and trees. When used on grown crops, this spell will obtain the fully grown product without destroying the plant."
     },
     {
       "type": "glyph_recipe",

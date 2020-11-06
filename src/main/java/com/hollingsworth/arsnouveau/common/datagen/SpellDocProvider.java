@@ -43,6 +43,7 @@ public class SpellDocProvider implements IDataProvider {
             }
         }
 
+
         List<EnchantingApparatusRecipe> apparatusRecipes = new ArrayList<>();
         for (IEnchantingRecipe iEnchantingRecipe : ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes()) {
             if (iEnchantingRecipe instanceof EnchantingApparatusRecipe) {
