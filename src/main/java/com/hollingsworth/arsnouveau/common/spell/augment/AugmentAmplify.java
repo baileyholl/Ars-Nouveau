@@ -14,7 +14,7 @@ public class AugmentAmplify extends AbstractAugment {
 
     @Override
     public int getManaCost() {
-        return 20;
+        return 30;
     }
 
     @Nullable
@@ -30,6 +30,6 @@ public class AugmentAmplify extends AbstractAugment {
 
     @Override
     protected String getBookDescription() {
-        return "Additively increases the power of most spell effects. Can empower Break to harvest Obsidian, and increases the damage of spells.";
+        return "Additively increases the power of most spell effects. Can empower Break (requires 2 amplifies) to harvest Obsidian, and increases the damage of spells.";
     }
 }

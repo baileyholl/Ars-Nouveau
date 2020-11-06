@@ -29,7 +29,7 @@ public class EffectDelay extends AbstractEffect {
             return;
 
         EventQueue.getInstance().addEvent(
-                new DelayedSpellEvent(10 + getBuffCount(augments, AugmentExtendTime.class) * 10,
+                new DelayedSpellEvent(10 + getBuffCount(augments, AugmentExtendTime.class) * 15,
                         spellContext.recipe.subList(spellContext.getCurrentIndex(), spellContext.recipe.size()),
                         rayTraceResult, world, shooter));
 

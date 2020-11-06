@@ -14,7 +14,7 @@ public class AugmentAOE extends AbstractAugment {
 
     @Override
     public int getManaCost() {
-        return 40;
+        return 35;
     }
 
     @Nullable

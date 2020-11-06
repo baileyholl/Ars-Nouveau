@@ -51,7 +51,8 @@ public class ManaCondenserTile extends AbstractManaTile implements ITickableTile
     }
     @SubscribeEvent
     public void cropGrow(BlockEvent.CropGrowEvent.Post event) {
-
+        if(isDisabled)
+            return;
         if(BlockUtil.distanceFrom(pos, event.getPos()) <= 15) {
             int mana = 200;
             if(world.getBlockState(event.getPos()).getBlock() instanceof ManaBloomCrop) {
@@ -66,6 +67,8 @@ public class ManaCondenserTile extends AbstractManaTile implements ITickableTile
 
     @SubscribeEvent
     public void babySpawnEvent(BabyEntitySpawnEvent event) {
+        if(isDisabled)
+            return;
         if(event.getChild() == null)
             return;
         if(BlockUtil.distanceFrom(pos, event.getChild().getPosition()) <= 10)
@@ -74,7 +77,7 @@ public class ManaCondenserTile extends AbstractManaTile implements ITickableTile
 
     @SubscribeEvent
     public void livingDeath(LivingDeathEvent e) {
-        if(e.getEntityLiving().world.isRemote)
+        if(e.getEntityLiving().world.isRemote || isDisabled)
             return;
 
         if(e.getEntity() instanceof EntityWhelp)

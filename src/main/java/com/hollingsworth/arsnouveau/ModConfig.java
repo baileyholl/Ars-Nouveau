@@ -49,4 +49,11 @@ public class ModConfig {
     public static final String EffectPlaceBlockID = "place_block";
     public static final String EffectDelayID = "delay";
     public static final String EffectRedstoneID = "redstone_signal";
+
+    public static final String EffectIntangibleID = "intangible";
+
+    public static final String EffectInvisibilityID = "invisibility";
+    public static final String AugmentDurationDown = "duration_down";
+
+    public static final String EffectWitherID = "wither";
 }

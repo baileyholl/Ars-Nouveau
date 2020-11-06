@@ -34,7 +34,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayer;
@@ -68,7 +67,7 @@ public class SpellTurret extends ModBlock {
         if(ManaUtil.takeManaNearbyWithParticles(pos, world, 10, manaCost) == null)
             return;
         IPosition iposition = getDispensePosition(new ProxyBlockSource(world, pos));
-        Direction direction = world.getBlockState(pos).get(DispenserBlock.FACING);
+        Direction direction = world.getBlockState(pos).get(FACING);
         FakePlayer fakePlayer = FakePlayerFactory.getMinecraft(world);
         fakePlayer.setPosition(pos.getX(), pos.getY(), pos.getZ());
         EntitySpellResolver resolver = new EntitySpellResolver(tile.recipe,new SpellContext(tile.recipe, fakePlayer).withCastingTile(world.getTileEntity(pos)));
@@ -77,7 +76,10 @@ public class SpellTurret extends ModBlock {
             return;
         }
         if(resolver.castType instanceof MethodTouch){
-            BlockPos touchPos = new BlockPos(iposition.getX(), iposition.getY(), iposition.getZ()).offset(direction);
+            BlockPos touchPos = new BlockPos(iposition.getX(), iposition.getY(), iposition.getZ());
+            if(direction == Direction.WEST || direction == Direction.NORTH){
+                touchPos = touchPos.offset(direction);
+            }
             resolver.onCastOnBlock(new BlockRayTraceResult(new Vector3d(touchPos.getX(), touchPos.getY(), touchPos.getZ()),
                     direction.getOpposite(), new BlockPos(touchPos.getX(), touchPos.getY(), touchPos.getZ()), false),
                    fakePlayer);

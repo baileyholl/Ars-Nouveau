@@ -20,7 +20,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
@@ -94,7 +93,9 @@ public class GuiSpellBook extends ModdedScreen {
         addButton(new GuiImageButton(bookRight - 70, bookBottom - 28, 0,0,46, 18, 46, 18, "textures/gui/create_button.png", this::onCreateClick));
         spell_name = new TextFieldWidget(minecraft.fontRenderer, bookLeft + 16, bookTop + FULL_HEIGHT - 25,
                 115, 12, null, new StringTextComponent("Spell Name"));
-        spell_name.setText(SpellBook.getSpellName(spell_book_tag, SpellBook.getMode(spell_book_tag)));
+        int mode = SpellBook.getMode(spell_book_tag);
+        mode = mode == 0 ? 1 : mode;
+        spell_name.setText(SpellBook.getSpellName(spell_book_tag, mode));
         if(spell_name.getText().isEmpty())
             spell_name.setSuggestion("My Spell");
 //

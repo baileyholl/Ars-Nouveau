@@ -32,19 +32,6 @@ public class EffectSmelt extends AbstractEffect {
         super(ModConfig.EffectSmeltID, "Smelt");
     }
 
-    public float getHardness(List<AbstractAugment> augments){
-        float maxHardness = 5.0f + 25 * getAmplificationBonus(augments);
-        int buff = getAmplificationBonus(augments);
-        if(buff == -1){
-            maxHardness = 2.5f;
-        }else if(buff == -2){
-            maxHardness = 1.0f;
-        }else if(buff < -2){
-            maxHardness = 0.5f;
-        }
-        return maxHardness;
-    }
-
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(!(rayTraceResult instanceof BlockRayTraceResult))

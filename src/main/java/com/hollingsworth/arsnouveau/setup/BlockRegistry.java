@@ -112,6 +112,8 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.SPELL_TURRET) public static SpellTurret SPELL_TURRET;
     @ObjectHolder(LibBlockNames.SPELL_TURRET) public static TileEntityType<SpellTurretTile> SPELL_TURRET_TYPE;
     @ObjectHolder(LibBlockNames.REDSTONE_AIR) public static RedstoneAir REDSTONE_AIR;
+    @ObjectHolder(LibBlockNames.INTANGIBLE_AIR) public static IntangibleAirBlock INTANGIBLE_AIR;
+    @ObjectHolder(LibBlockNames.INTANGIBLE_AIR) public static  TileEntityType<IntangibleAirTile> INTANGIBLE_AIR_TYPE;
 
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
@@ -147,6 +149,7 @@ public class BlockRegistry {
             blockRegistryEvent.getRegistry().register(new CrystallizerBlock());
             blockRegistryEvent.getRegistry().register(new SpellTurret());
             blockRegistryEvent.getRegistry().register(new RedstoneAir());
+            blockRegistryEvent.getRegistry().register(new IntangibleAirBlock());
 
         }
 
@@ -170,6 +173,8 @@ public class BlockRegistry {
             event.getRegistry().register(TileEntityType.Builder.create(ArcaneCoreTile::new, BlockRegistry.ARCANE_CORE_BLOCK).build(null).setRegistryName(LibBlockNames.ARCANE_CORE));
             event.getRegistry().register(TileEntityType.Builder.create(CrystallizerTile::new, BlockRegistry.CRYSTALLIZER_BLOCK).build(null).setRegistryName(LibBlockNames.CRYSTALLIZER));
             event.getRegistry().register(TileEntityType.Builder.create(SpellTurretTile::new, BlockRegistry.SPELL_TURRET).build(null).setRegistryName(LibBlockNames.SPELL_TURRET));
+            event.getRegistry().register(TileEntityType.Builder.create(IntangibleAirTile::new, BlockRegistry.INTANGIBLE_AIR).build(null).setRegistryName(LibBlockNames.INTANGIBLE_AIR));
+
         }
 
         @SubscribeEvent

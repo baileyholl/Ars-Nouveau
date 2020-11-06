@@ -32,7 +32,7 @@ public class EffectHarm extends AbstractEffect {
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof EntityRayTraceResult){
-            float damage = 5.0f + 5.0f * getAmplificationBonus(augments);
+            float damage = 5.0f +3.0f * getAmplificationBonus(augments);
             Entity entity = ((EntityRayTraceResult) rayTraceResult).getEntity();
             if(entity instanceof MobEntity){
                 MobEntity mob = (MobEntity) entity;
@@ -63,7 +63,7 @@ public class EffectHarm extends AbstractEffect {
 
     @Override
     public int getManaCost() {
-        return 20;
+        return 30;
     }
 
     @Nullable

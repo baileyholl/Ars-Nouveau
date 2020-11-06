@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
@@ -16,7 +15,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -24,7 +22,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -42,18 +39,7 @@ public class EffectBreak extends AbstractEffect {
         return 10;
     }
 
-    public float getHardness(List<AbstractAugment> augments){
-        float maxHardness = 5.0f + 25 * getAmplificationBonus(augments);
-        int buff = getAmplificationBonus(augments);
-        if(buff == -1){
-            maxHardness = 2.5f;
-        }else if(buff == -2){
-            maxHardness = 1.0f;
-        }else if(buff < -2){
-            maxHardness = 0.5f;
-        }
-        return maxHardness;
-    }
+
 
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {

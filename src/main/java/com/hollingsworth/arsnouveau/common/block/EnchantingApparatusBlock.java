@@ -6,10 +6,6 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.Property;
-import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -34,32 +30,44 @@ public class EnchantingApparatusBlock extends ModBlock{
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(!world.isRemote && handIn == Hand.MAIN_HAND) {
-            if(!(world.getBlockState(pos.down()).getBlock() instanceof ArcaneCore)){
-                PortUtil.sendMessage(player, new TranslationTextComponent("alert.core"));
-                return ActionResultType.SUCCESS;
-            }
+    public void onBlockClicked(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
+        super.onBlockClicked(state, worldIn, pos, player);
 
-            EnchantingApparatusTile tile = (EnchantingApparatusTile) world.getTileEntity(pos);
-            if(player.isSneaking()){
-                tile.attemptCraft();
-                return ActionResultType.SUCCESS;
-            }
-            if (tile.catalystItem != null && player.getHeldItem(handIn).isEmpty()) {
+    }
+
+    @Override
+    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if(world.isRemote || handIn != Hand.MAIN_HAND)
+            return ActionResultType.SUCCESS;
+        EnchantingApparatusTile tile = (EnchantingApparatusTile) world.getTileEntity(pos);
+        if(!player.getHeldItemOffhand().isEmpty() && tile.catalystItem != null && !tile.catalystItem.isEmpty()){
+            tile.attemptCraft();
+            return ActionResultType.SUCCESS;
+        }
+
+
+        if(!(world.getBlockState(pos.down()).getBlock() instanceof ArcaneCore)){
+            PortUtil.sendMessage(player, new TranslationTextComponent("alert.core"));
+            return ActionResultType.SUCCESS;
+        }
+
+        if(player.isSneaking()){
+            tile.attemptCraft();
+            return ActionResultType.SUCCESS;
+        }
+        if (tile.catalystItem != null && player.getHeldItem(handIn).isEmpty()) {
+            ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.catalystItem);
+            world.addEntity(item);
+            tile.catalystItem = null;
+        } else if (!player.inventory.getCurrentItem().isEmpty()) {
+            if(tile.catalystItem != null){
                 ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.catalystItem);
                 world.addEntity(item);
-                tile.catalystItem = null;
-            } else if (!player.inventory.getCurrentItem().isEmpty()) {
-                if(tile.catalystItem != null){
-                    ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.catalystItem);
-                    world.addEntity(item);
-                }
-                tile.catalystItem = player.inventory.decrStackSize(player.inventory.currentItem, 1);;
-
             }
-            world.notifyBlockUpdate(pos, state, state, 2);
+            tile.catalystItem = player.inventory.decrStackSize(player.inventory.currentItem, 1);;
         }
+        world.notifyBlockUpdate(pos, state, state, 2);
+
         return ActionResultType.SUCCESS;
     }
 

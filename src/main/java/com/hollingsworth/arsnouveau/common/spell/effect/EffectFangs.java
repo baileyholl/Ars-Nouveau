@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.common.entity.EntityEvokerFangs;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
@@ -20,7 +19,6 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayerFactory;
-import org.lwjgl.system.CallbackI;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -43,7 +41,7 @@ public class EffectFangs extends AbstractEffect {
             return;
         Vector3d vec = rayTraceResult.getHitVec();
 
-        float bonusDamage = 2.5f * getAmplificationBonus(augments);
+        float bonusDamage = 6f * getAmplificationBonus(augments);
         double targetX = vec.x;
         double targetY = vec.y;
         double targetZ = vec.z;
@@ -54,7 +52,7 @@ public class EffectFangs extends AbstractEffect {
 
         for(int l = 0; l < 16; ++l) {
             double d2 = 1.25D * (double)(l + 1);
-            int j =  ( l + getBuffCount(augments, AugmentExtendTime.class)) / (1 + getBuffCount(augments, AugmentAccelerate.class));
+            int j =  ( l + getDurationModifier(augments)) / (1 + getBuffCount(augments, AugmentAccelerate.class));
             this.spawnFangs(world, shooter.getPosX() + (double)MathHelper.cos(f) * d2, shooter.getPosZ() + (double)MathHelper.sin(f) * d2, d0, d1, f, j, shooter, bonusDamage);
         }
     }

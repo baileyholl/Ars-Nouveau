@@ -83,7 +83,7 @@ public class APIRegistry {
         registerSpell(ModConfig.MethodProjectileID, new MethodProjectile());
         registerSpell(ModConfig.MethodTouchID, new MethodTouch());
         registerSpell(ModConfig.MethodSelfID, new MethodSelf());
-        registerSpell(ModConfig.MethodBeamID, new MethodBeam());
+//        registerSpell(ModConfig.MethodBeamID, new MethodBeam());
         registerSpell(ModConfig.EffectBreakID, new EffectBreak());
         registerSpell(ModConfig.EffectHarmID, new EffectHarm());
         registerSpell(ModConfig.EffectIgniteID, new EffectIgnite());
@@ -126,6 +126,10 @@ public class APIRegistry {
         registerSpell(ModConfig.EffectLeapID, new EffectLeap());
         registerSpell(ModConfig.EffectDelayID, new EffectDelay());
         registerSpell(ModConfig.EffectRedstoneID, new EffectRedstone());
+        registerSpell(ModConfig.EffectIntangibleID, new EffectIntangible());
+        registerSpell(ModConfig.EffectInvisibilityID, new EffectInvisiblity());
+        registerSpell(ModConfig.AugmentDurationDown, new AugmentDurationDown());
+        registerSpell(ModConfig.EffectWitherID, new EffectWither());
         addStartingSpell(ModConfig.MethodProjectileID);
         addStartingSpell(ModConfig.MethodTouchID);
         addStartingSpell(ModConfig.MethodSelfID);

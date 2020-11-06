@@ -28,9 +28,10 @@ public class EffectPickup extends AbstractEffect {
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         BlockPos pos = new BlockPos(rayTraceResult.getHitVec());
-        int expansion = getBuffCount(augments, AugmentAOE.class);
-        List<ItemEntity> entityList = world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos.east(3 + expansion).north(3 + expansion).up(3 + expansion),
-                pos.west(3 +expansion).south(3+expansion).down(3+expansion)));
+        int expansion = 5 + getBuffCount(augments, AugmentAOE.class);
+
+        List<ItemEntity> entityList = world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos.east(expansion).north(expansion).up(expansion),
+                pos.west(expansion).south(expansion).down(expansion)));
         for(ItemEntity i : entityList){
             if(shooter != null)
                 i.setPosition(shooter.getPosX(), shooter.getPosY(), shooter.getPosZ());

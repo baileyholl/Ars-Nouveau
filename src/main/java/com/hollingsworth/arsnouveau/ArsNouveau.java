@@ -58,8 +58,8 @@ public class ArsNouveau {
     public void setup (final FMLCommonSetupEvent event){
         APIRegistry.registerApparatusRecipes();
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.ARCANE_ORE.getRegistryName(),
-                Feature.ORE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.field_241882_a,
-                        BlockRegistry.ARCANE_ORE.getDefaultState(), 5)).func_242733_d(60).func_242728_a().func_242731_b(5));
+                Feature.ORE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD,
+                        BlockRegistry.ARCANE_ORE.getDefaultState(), 5)).range(60).square().func_242731_b(5));
         //Pre-init code
         proxy.init();
         Networking.registerMessages();
