@@ -303,14 +303,14 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity, 
     }
 
     @Override
-    public ActionResultType applyPlayerInteraction(PlayerEntity player, Vector3d vec, Hand hand)  {
+    protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
         if(hand != Hand.MAIN_HAND || player.getEntityWorld().isRemote)
             return ActionResultType.SUCCESS;
 
         ItemStack stack = player.getHeldItem(hand);
 
         if(!(stack.getItem() instanceof ItemScroll) || !stack.hasTag())
-            return ActionResultType.SUCCESS;
+            return ActionResultType.FAIL;
         if(stack.getItem() == ItemsRegistry.ALLOW_ITEM_SCROLL){
             List<ItemStack>  items = ItemsRegistry.ALLOW_ITEM_SCROLL.getItems(stack);
             if(!items.isEmpty()) {
@@ -361,6 +361,10 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatedEntity, 
             setHeldStack(ItemStack.read((CompoundNBT)tag.get("held")));
         toPos = NBTUtil.getBlockPos(tag, "to");
         fromPos = NBTUtil.getBlockPos(tag, "from");
+        if(toPos.equals(new BlockPos(0,0,0)))
+            toPos = null;
+        if(fromPos.equals(new BlockPos(0,0,0)))
+            fromPos = null;
         backOff = tag.getInt("backoff");
         tamingTime = tag.getInt("taming_time");
         whitelist = tag.getBoolean("whitelist");

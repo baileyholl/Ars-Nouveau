@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.client.util.ITooltipFlag;
@@ -12,7 +11,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -36,26 +34,20 @@ public class DominionWand extends ModItem{
         if(!stack.hasTag())
             stack.setTag(new CompoundNBT());
     }
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-        ItemStack stack = player.getHeldItem(hand);
-        return new ActionResult<>(ActionResultType.SUCCESS, stack);
-    }
 
     @Override
     public ActionResultType itemInteractionForEntity(ItemStack doNotUseStack, PlayerEntity playerEntity, LivingEntity target, Hand hand) {
 
         if(playerEntity.world.isRemote || hand != Hand.MAIN_HAND)
-            return ActionResultType.SUCCESS;;
+            return ActionResultType.PASS;
 
         ItemStack stack = playerEntity.getHeldItem(hand);
         if(playerEntity.isSneaking() && target instanceof IWandable){
-
             ((IWandable) target).onWanded(playerEntity);
             clear(stack, playerEntity);
             return  ActionResultType.SUCCESS;
         }
-
+        System.out.println(getPos(stack));
         if((getPos(stack) == null || getPos(stack).equals(new BlockPos(0,0,0))) && getEntityID(stack) == -1){
             setEntityID(stack, target.getEntityId());
             PortUtil.sendMessage(playerEntity, "Stored entity");

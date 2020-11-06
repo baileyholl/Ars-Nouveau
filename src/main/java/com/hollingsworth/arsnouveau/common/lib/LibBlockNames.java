@@ -21,4 +21,5 @@ public class LibBlockNames {
     public static final String SPELL_TURRET = "spell_turret";
     public static final String REDSTONE_AIR = "redstone_air";
 
+    public static final String INTANGIBLE_AIR = "intangible_air";
 }

@@ -81,7 +81,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     }
 
     @Override
-    public ActionResultType applyPlayerInteraction(PlayerEntity player, Vector3d vec, Hand hand) {
+    public ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
         if(world.isRemote || hand != Hand.MAIN_HAND)
             return ActionResultType.SUCCESS;
 
@@ -113,7 +113,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
             setHeldStack(new ItemStack(stack.getItem()));
             player.sendMessage(new StringTextComponent("This whelp will use " + stack.getItem().getDisplayName(stack).getString() +  " in spells if this item is in a Summoning Crystal chest."), Util.DUMMY_UUID);
         }
-        return super.applyPlayerInteraction(player, vec, hand);
+        return super.func_230254_b_(player,  hand);
 
     }
 
