@@ -154,12 +154,10 @@ public class SpellResolver {
         for(AbstractSpellPart spellPart : spell_recipe){
             if(spellPart instanceof AbstractEffect){
                 if(!((AbstractEffect) spellPart).wouldSucceed(result, world, entity, augments)){
-                    System.out.println("no work");
                     return false;
                 }
             }
         }
-        System.out.println("all do work");
         return true;
     }
 
