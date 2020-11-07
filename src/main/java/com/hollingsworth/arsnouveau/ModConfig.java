@@ -56,4 +56,5 @@ public class ModConfig {
     public static final String AugmentDurationDown = "duration_down";
 
     public static final String EffectWitherID = "wither";
+    public static String EffectExchangeID = "exchange";
 }

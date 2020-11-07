@@ -5,6 +5,8 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.IPlaceBlockResponder;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,6 +18,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayer;
@@ -31,12 +34,14 @@ public class EffectPlaceBlock extends AbstractEffect {
 
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        if(!(rayTraceResult instanceof BlockRayTraceResult))
+            return;
+        int aoeBuff = getBuffCount(augments, AugmentAOE.class);
 
-        if(rayTraceResult instanceof BlockRayTraceResult){
-            BlockRayTraceResult result = (BlockRayTraceResult) rayTraceResult;
-            BlockPos hitPos = result.getPos().offset(result.getFace());
-
-
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
+        BlockRayTraceResult result = (BlockRayTraceResult) rayTraceResult;
+        for(BlockPos pos1 : posList) {
+            BlockPos hitPos = pos1.offset(result.getFace());
             if(spellContext.castingTile instanceof IPlaceBlockResponder){
                 ItemStack stack = ((IPlaceBlockResponder) spellContext.castingTile).onPlaceBlock();
                 if(stack == null || !(stack.getItem() instanceof BlockItem))
@@ -55,11 +60,16 @@ public class EffectPlaceBlock extends AbstractEffect {
             }else if(shooter instanceof PlayerEntity){
                 PlayerEntity playerEntity = (PlayerEntity) shooter;
                 NonNullList<ItemStack> list =  playerEntity.inventory.mainInventory;
+                if(world.getBlockState(hitPos).getMaterial() != Material.AIR)
+                    continue;
                 for(int i = 0; i < 9; i++){
                     ItemStack stack = list.get(i);
                     if(stack.getItem() instanceof BlockItem && world instanceof ServerWorld){
                         BlockItem item = (BlockItem)stack.getItem();
-                        if(ActionResultType.SUCCESS == attemptPlace(world, stack, item, result))
+
+                        BlockRayTraceResult resolveResult = new BlockRayTraceResult(new Vector3d(hitPos.getX(), hitPos.getY(), hitPos.getZ()), result.getFace(), hitPos, false);
+                        ActionResultType resultType = attemptPlace(world, stack, item, resolveResult);
+                        if(ActionResultType.FAIL != resultType)
                             break;
                     }
                 }
@@ -72,7 +82,7 @@ public class EffectPlaceBlock extends AbstractEffect {
         return nonAirBlockSuccess(rayTraceResult, world);
     }
 
-    public ActionResultType attemptPlace(World world, ItemStack stack, BlockItem item, BlockRayTraceResult result){
+    public static ActionResultType attemptPlace(World world, ItemStack stack, BlockItem item, BlockRayTraceResult result){
         FakePlayer fakePlayer = FakePlayerFactory.getMinecraft((ServerWorld)world);
         fakePlayer.setHeldItem(Hand.MAIN_HAND, stack);
         BlockItemUseContext context = BlockItemUseContext.func_221536_a(new BlockItemUseContext(new ItemUseContext(fakePlayer, Hand.MAIN_HAND, result)), result.getPos(), result.getFace());

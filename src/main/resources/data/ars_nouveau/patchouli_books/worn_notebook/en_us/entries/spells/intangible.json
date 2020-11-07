@@ -1,0 +1,19 @@
+{
+  "name": "Intangible",
+  "icon": "ars_nouveau:glyph_intangible",
+  "category": "spells_3",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "text",
+      "text": "Causes blocks to temporarily turn into air. Can be modified with Amplify for blocks of higher hardness, AOE, Duration Down, and Extend Time."
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "THREE",
+      "mana_cost": "Medium",
+      "clay_type": "ars_nouveau:mythical_clay",
+      "reagent": "minecraft:phantom_membrane"
+    }
+  ]
+}

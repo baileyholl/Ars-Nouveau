@@ -10,8 +10,10 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
 import net.minecraft.command.arguments.EntityAnchorArgument;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.item.Items;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -144,5 +146,10 @@ public class MethodProjectile extends AbstractCastMethod {
     @Override
     protected String getBookDescription() {
         return "A spell you start with. Summons a projectile that applies spell effects when this projectile hits a target or block.";
+    }
+
+    @Override
+    public Item getCraftingReagent() {
+        return Items.BOW;
     }
 }

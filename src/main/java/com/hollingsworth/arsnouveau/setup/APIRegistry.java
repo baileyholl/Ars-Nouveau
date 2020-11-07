@@ -130,6 +130,7 @@ public class APIRegistry {
         registerSpell(ModConfig.EffectInvisibilityID, new EffectInvisiblity());
         registerSpell(ModConfig.AugmentDurationDown, new AugmentDurationDown());
         registerSpell(ModConfig.EffectWitherID, new EffectWither());
+        registerSpell(ModConfig.EffectExchangeID, new EffectExchange());
         addStartingSpell(ModConfig.MethodProjectileID);
         addStartingSpell(ModConfig.MethodTouchID);
         addStartingSpell(ModConfig.MethodSelfID);

@@ -6,8 +6,10 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
@@ -80,5 +82,11 @@ public class MethodTouch extends AbstractCastMethod {
     @Override
     protected String getBookDescription() {
         return "Applies spells at the block or entity that is targeted.";
+    }
+
+
+    @Override
+    public Item getCraftingReagent() {
+        return Items.STONE_BUTTON;
     }
 }
