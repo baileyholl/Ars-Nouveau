@@ -190,7 +190,6 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
         reagentItem = stack;
-        System.out.println("Setting slot");
     }
 
     @Override
@@ -200,7 +199,7 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
 
     @Override
     public void clear() {
-        reagentItem = null;
+        reagentItem = ItemStack.EMPTY;
     }
 
     public boolean craft(PlayerEntity playerEntity) {

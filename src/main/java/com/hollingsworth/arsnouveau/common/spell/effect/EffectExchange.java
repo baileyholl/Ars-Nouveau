@@ -23,6 +23,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayer;
@@ -50,15 +51,19 @@ public class EffectExchange extends AbstractEffect {
     public void resolveEntityHit(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext){
         EntityRayTraceResult entityRayTraceResult = (EntityRayTraceResult) rayTraceResult;
         Entity entity = entityRayTraceResult.getEntity();
-        if(shooter instanceof PlayerEntity){
-            BlockPos origLoc = shooter.getPosition();
-            shooter.setPositionAndUpdate(entity.getPosX(), entity.getPosY(), entity.getPosZ());
-            entity.setPositionAndUpdate(origLoc.getX(), origLoc.getY(), origLoc.getZ());
+        if(shooter != null){
+            Vector3d origLoc = shooter.positionVec;
+            if(isNotFakePlayer(shooter)) {
+                shooter.setPositionAndUpdate(entity.getPosX(), entity.getPosY(), entity.getPosZ());
+            }
+            if(entity instanceof LivingEntity && isNotFakePlayer((LivingEntity)entity)) {
+                entity.setPositionAndUpdate(origLoc.getX(), origLoc.getY(), origLoc.getZ());
+            }
         }
     }
 
     public void resolveBlockHit(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext){
-        if(shooter instanceof PlayerEntity){
+        if(isRealPlayer(shooter)){
             int aoeBuff = getBuffCount(augments, AugmentAOE.class);
             List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
             BlockRayTraceResult result = (BlockRayTraceResult) rayTraceResult;

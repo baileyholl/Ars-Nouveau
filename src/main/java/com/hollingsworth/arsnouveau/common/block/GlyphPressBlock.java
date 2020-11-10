@@ -6,8 +6,8 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer;
@@ -40,28 +40,28 @@ public class GlyphPressBlock extends ModBlock{
             if(tile.isCrafting)
                 return ActionResultType.PASS;
 
-            if (tile.baseMaterial != null && player.getHeldItem(handIn).isEmpty()) {
+            if (tile.baseMaterial != null && !tile.baseMaterial.isEmpty() && player.getHeldItem(handIn).isEmpty()) {
                 ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.baseMaterial);
                 world.addEntity(item);
-                tile.baseMaterial = null;
+                tile.baseMaterial = ItemStack.EMPTY;
             }
             else if (!player.inventory.getCurrentItem().isEmpty()) {
                 if(player.getHeldItem(handIn).getItem() == Items.CLAY_BALL || player.getHeldItem(handIn).getItem() == ItemsRegistry.magicClay ||
                         player.getHeldItem(handIn).getItem() == ItemsRegistry.marvelousClay || player.getHeldItem(handIn).getItem() == ItemsRegistry.mythicalClay) {
-                    if(tile.baseMaterial != null){
+                    if(tile.baseMaterial != null && !tile.baseMaterial.isEmpty()){
                         ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.baseMaterial);
                         world.addEntity(item);
                     }
                     tile.baseMaterial = player.inventory.decrStackSize(player.inventory.currentItem, 1);
-                }else if(ArsNouveauAPI.getInstance().hasCraftingReagent(player.getHeldItem(handIn).getItem()) != null && tile.baseMaterial != null){
-                    if(tile.reagentItem != null){
+                }else if(ArsNouveauAPI.getInstance().hasCraftingReagent(player.getHeldItem(handIn).getItem()) != null && tile.baseMaterial != null && !tile.baseMaterial.isEmpty()){
+                    if(tile.reagentItem != null && !tile.reagentItem.isEmpty()){
                         ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.reagentItem);
                         world.addEntity(item);
                     }
 
                     tile.reagentItem = player.inventory.decrStackSize(player.inventory.currentItem, 1);
                     if(!tile.craft(player) && player.inventory.addItemStackToInventory(tile.reagentItem)) {
-                        tile.reagentItem = null;
+                        tile.reagentItem = ItemStack.EMPTY;
                     }
                 }
             }
@@ -75,10 +75,13 @@ public class GlyphPressBlock extends ModBlock{
     @Override
     public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
         super.onBlockHarvested(worldIn, pos, state, player);
-        if(worldIn.getTileEntity(pos) instanceof GlyphPressTile && ((GlyphPressTile) worldIn.getTileEntity(pos)).baseMaterial != null){
-            worldIn.addEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), ((GlyphPressTile) worldIn.getTileEntity(pos)).baseMaterial));
-            if(((GlyphPressTile) worldIn.getTileEntity(pos)).reagentItem != null){
-                worldIn.addEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), ((GlyphPressTile) worldIn.getTileEntity(pos)).reagentItem));
+        if(!(worldIn.getTileEntity(pos) instanceof GlyphPressTile) || worldIn.isRemote)
+            return;
+        GlyphPressTile tile = ((GlyphPressTile) worldIn.getTileEntity(pos));
+        if(tile.baseMaterial != null && !tile.baseMaterial.isEmpty()){
+            worldIn.addEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.baseMaterial));
+            if(tile.reagentItem != null && !tile.reagentItem.isEmpty()){
+                worldIn.addEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.reagentItem));
             }
 
         }
