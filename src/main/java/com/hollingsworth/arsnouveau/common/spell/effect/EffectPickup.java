@@ -10,6 +10,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -36,7 +37,12 @@ public class EffectPickup extends AbstractEffect {
             if(shooter != null)
                 i.setPosition(shooter.getPosX(), shooter.getPosY(), shooter.getPosZ());
             if(shooter instanceof PlayerEntity && !(shooter instanceof FakePlayer)){
-                i.onCollideWithPlayer((PlayerEntity) shooter);
+                ItemStack stack = i.getItem();
+                PlayerEntity player = (PlayerEntity) shooter;
+                if(!player.addItemStackToInventory(stack)){
+                    i.setPosition(player.getPosX(), player.getPosY(), player.getPosZ());
+                }
+//                i.onCollideWithPlayer((PlayerEntity) shooter);
             }else if(shooter instanceof IPickupResponder){
                 i.setItem(((IPickupResponder) shooter).onPickup(i.getItem()));
             }else if(spellContext.castingTile instanceof IPickupResponder){
