@@ -13,13 +13,13 @@ import java.util.List;
 public abstract class AbstractCastMethod extends AbstractSpellPart {
     public SpellResolver resolver;
 
-    public abstract void onCast(@Nullable ItemStack stack, LivingEntity playerEntity, World world, List<AbstractAugment> augments);
+    public abstract void onCast(@Nullable ItemStack stack, LivingEntity playerEntity, World world, List<AbstractAugment> augments, SpellContext context);
 
-    public abstract void onCastOnBlock(ItemUseContext context, List<AbstractAugment> augments);
+    public abstract void onCastOnBlock(ItemUseContext context, List<AbstractAugment> augments, SpellContext spellContext);
 
-    public abstract void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments);
+    public abstract void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments, SpellContext spellContext);
 
-    public abstract void onCastOnEntity(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments);
+    public abstract void onCastOnEntity(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments, SpellContext spellContext);
 
     public abstract boolean wouldCastSuccessfully(@Nullable ItemStack stack, LivingEntity playerEntity, World world, List<AbstractAugment> augments);
 

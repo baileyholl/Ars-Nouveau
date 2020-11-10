@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.common.block.tile.LightTile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
@@ -37,6 +38,12 @@ public class EffectLight extends AbstractEffect {
             //placedBlockWouldCollide
             if (world.getBlockState(pos).getMaterial() == Material.AIR && world.placedBlockCollides(BlockRegistry.LIGHT_BLOCK.getDefaultState(), pos, ISelectionContext.dummy())) {
                 world.setBlockState(pos, BlockRegistry.LIGHT_BLOCK.getDefaultState());
+                LightTile tile = ((LightTile)world.getTileEntity(pos));
+                tile.red = spellContext.colors.r;
+                tile.green = spellContext.colors.g;
+                tile.blue = spellContext.colors.b;
+                System.out.println(tile.red);
+                world.notifyBlockUpdate(pos, world.getBlockState(pos),world.getBlockState(pos), 2);
             }
 
         }

@@ -4,6 +4,7 @@ package com.hollingsworth.arsnouveau.common.spell.method;
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.material.Material;
@@ -17,7 +18,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
-import net.minecraftforge.event.world.NoteBlockEvent;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -28,12 +28,12 @@ public class MethodRune extends AbstractCastMethod {
     }
 
     @Override
-    public void onCast(@Nullable ItemStack stack, LivingEntity playerEntity, World world, List<AbstractAugment> augments) {
+    public void onCast(@Nullable ItemStack stack, LivingEntity playerEntity, World world, List<AbstractAugment> augments, SpellContext context) {
 
     }
 
     @Override
-    public void onCastOnBlock(ItemUseContext context, List<AbstractAugment> augments) {
+    public void onCastOnBlock(ItemUseContext context, List<AbstractAugment> augments, SpellContext spellContext) {
         BlockPos pos = context.getPos();
         World world = context.getWorld();
         if(world.getBlockState(pos.up()).getMaterial() == Material.AIR){
@@ -48,7 +48,7 @@ public class MethodRune extends AbstractCastMethod {
     }
 
     @Override
-    public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments) {
+    public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments, SpellContext spellContext) {
         BlockPos pos = blockRayTraceResult.getPos();
         World world = caster.world;
         if(world.getBlockState(pos.up()).getMaterial() == Material.AIR){
@@ -65,7 +65,7 @@ public class MethodRune extends AbstractCastMethod {
     }
 
     @Override
-    public void onCastOnEntity(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments) {
+    public void onCastOnEntity(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments, SpellContext spellContext) {
 
     }
 

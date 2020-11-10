@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -12,6 +13,7 @@ import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.FakePlayer;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -62,7 +64,13 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         return result.getHitVec();
     }
 
+    public boolean isRealPlayer(LivingEntity entity){
+        return entity instanceof PlayerEntity && isNotFakePlayer(entity);
+    }
 
+    public boolean isNotFakePlayer(LivingEntity entity){
+        return !(entity instanceof FakePlayer);
+    }
 
     // If the spell would actually do anything. Can be used for logic checks for things like the whelp.
     public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments){

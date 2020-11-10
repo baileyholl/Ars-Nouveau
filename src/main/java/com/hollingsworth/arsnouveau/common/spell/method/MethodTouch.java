@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.method;
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import net.minecraft.entity.LivingEntity;
@@ -31,29 +32,30 @@ public class MethodTouch extends AbstractCastMethod {
     }
 
     @Override
-    public void onCast(ItemStack stack, LivingEntity caster, World world, List<AbstractAugment> augments) { }
+    public void onCast(ItemStack stack, LivingEntity caster, World world, List<AbstractAugment> augments, SpellContext context) { }
 
     @Override
-    public void onCastOnBlock(ItemUseContext context, List<AbstractAugment> augments) {
+    public void onCastOnBlock(ItemUseContext context, List<AbstractAugment> augments, SpellContext spellContext) {
         World world = context.getWorld();
         BlockRayTraceResult res = new BlockRayTraceResult(context.getHitVec(), context.getFace(), context.getPos(), false);
         resolver.onResolveEffect(world, context.getPlayer(), res);
         resolver.expendMana(context.getPlayer());
-        Networking.sendToNearby(context.getWorld(), context.getPlayer(), new PacketANEffect(PacketANEffect.EffectType.BURST, res.getPos()));
+        Networking.sendToNearby(context.getWorld(), context.getPlayer(),
+                new PacketANEffect(PacketANEffect.EffectType.BURST, res.getPos(), spellContext.colors));
     }
 
     @Override
-    public void onCastOnBlock(BlockRayTraceResult res, LivingEntity caster, List<AbstractAugment> augments) {
+    public void onCastOnBlock(BlockRayTraceResult res, LivingEntity caster, List<AbstractAugment> augments, SpellContext spellContext) {
         resolver.onResolveEffect(caster.getEntityWorld(),caster, res);
         resolver.expendMana(caster);
-        Networking.sendToNearby(caster.world, caster, new PacketANEffect(PacketANEffect.EffectType.BURST, res.getPos()));
+        Networking.sendToNearby(caster.world, caster, new PacketANEffect(PacketANEffect.EffectType.BURST, res.getPos(), spellContext.colors));
     }
 
     @Override
-    public void onCastOnEntity(ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments) {
+    public void onCastOnEntity(ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments, SpellContext spellContext) {
         resolver.onResolveEffect(caster.getEntityWorld(), caster, new EntityRayTraceResult(target));
         resolver.expendMana(caster);
-        Networking.sendToNearby(caster.world, caster, new PacketANEffect(PacketANEffect.EffectType.BURST, target.getPosition()));
+        Networking.sendToNearby(caster.world, caster, new PacketANEffect(PacketANEffect.EffectType.BURST, target.getPosition(), spellContext.colors));
     }
 
     @Override

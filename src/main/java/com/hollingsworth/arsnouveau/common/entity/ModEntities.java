@@ -41,9 +41,9 @@ public class ModEntities {
                     "spell_proj",
                     EntityType.Builder.<EntityProjectileSpell>create(EntityProjectileSpell::new, EntityClassification.MISC)
                             .size(0.5f, 0.5f)
-                            .setTrackingRange(10)
+                            .setTrackingRange(20)
                             .setShouldReceiveVelocityUpdates(true)
-                            .setUpdateInterval(60).setCustomClientFactory(EntityProjectileSpell::new));
+                            .setUpdateInterval(120).setCustomClientFactory(EntityProjectileSpell::new));
             ENTITY_EVOKER_FANGS_ENTITY_TYPE = build(
                     "fangs",
                     EntityType.Builder.<EntityEvokerFangs>create(EntityEvokerFangs::new, EntityClassification.MISC)

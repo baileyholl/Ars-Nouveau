@@ -3,6 +3,8 @@ package com.hollingsworth.arsnouveau.common.spell.method;
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
@@ -36,7 +38,7 @@ public class MethodProjectile extends AbstractCastMethod {
         return 10;
     }
 
-    public void summonProjectiles(World world, LivingEntity shooter, List<AbstractAugment> augments){
+    public void summonProjectiles(World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext context){
         ArrayList<EntityProjectileSpell> projectiles = new ArrayList<>();
         int numPierce = getBuffCount(augments, AugmentPierce.class);
         EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, shooter, this.resolver, numPierce);
@@ -58,9 +60,13 @@ public class MethodProjectile extends AbstractCastMethod {
 
         for(EntityProjectileSpell proj : projectiles) {
             proj.shoot(shooter, shooter.rotationPitch, shooter.rotationYaw, 0.0F, velocity, .80F);
+            ParticleColor.IntWrapper wrapper = context.colors;
+            wrapper.makeVisible();
+            proj.setColor(wrapper);
             world.addEntity(proj);
         }
     }
+
     // Summons the projectiles directly above the block, facing downwards.
     public void summonProjectiles(World world, BlockPos pos, LivingEntity shooter, List<AbstractAugment> augments){
         ArrayList<EntityProjectileSpell> projectiles = new ArrayList<>();
@@ -81,29 +87,23 @@ public class MethodProjectile extends AbstractCastMethod {
             spell.setPosition(projPos.getX(), projPos.getY(), projPos.getZ());
             projectiles.add(spell);
         }
-
-        float velocity = 1.0f + getBuffCount(augments, AugmentAccelerate.class);
-
-
         for(EntityProjectileSpell proj : projectiles) {
-
-//            proj.shoot(shooter, 90.0f, 90.0f, 0.0F, velocity, .00F);
             proj.setMotion(new Vector3d(0, -0.1, 0));
             world.addEntity(proj);
         }
     }
 
     @Override
-    public void onCast(ItemStack stack, LivingEntity shooter, World world, List<AbstractAugment> augments) {
-        summonProjectiles(world, shooter, augments);
+    public void onCast(ItemStack stack, LivingEntity shooter, World world, List<AbstractAugment> augments, SpellContext context) {
+        summonProjectiles(world, shooter, augments, context);
         resolver.expendMana(shooter);
     }
 
     @Override
-    public void onCastOnBlock(ItemUseContext context, List<AbstractAugment> augments) {
+    public void onCastOnBlock(ItemUseContext context, List<AbstractAugment> augments, SpellContext spellContext) {
         World world = context.getWorld();
         PlayerEntity shooter = context.getPlayer();
-        summonProjectiles(world, shooter, augments);
+        summonProjectiles(world, shooter, augments, spellContext);
         resolver.expendMana(shooter);
     }
 
@@ -111,15 +111,15 @@ public class MethodProjectile extends AbstractCastMethod {
      * Cast by entities.
      */
     @Override
-    public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments) {
+    public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments, SpellContext spellContext) {
         caster.lookAt(EntityAnchorArgument.Type.EYES, blockRayTraceResult.getHitVec().add(0, 0, 0));
         summonProjectiles(caster.getEntityWorld(), blockRayTraceResult.getPos(), caster, augments);
         resolver.expendMana(caster);
     }
 
     @Override
-    public void onCastOnEntity(ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments) {
-        summonProjectiles(caster.getEntityWorld(), caster, augments);
+    public void onCastOnEntity(ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments, SpellContext spellContext) {
+        summonProjectiles(caster.getEntityWorld(), caster, augments, spellContext);
         resolver.expendMana(caster);
     }
 

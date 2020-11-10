@@ -67,6 +67,11 @@ public class Networking {
                 PacketWarpPosition::encode,
                 PacketWarpPosition::decode,
                 PacketWarpPosition.Handler::handle);
+        INSTANCE.registerMessage(nextID(),
+                PacketUpdateSpellColors.class,
+                PacketUpdateSpellColors::toBytes,
+                PacketUpdateSpellColors::new,
+                PacketUpdateSpellColors::handle);
     }
 
     public static void sendToNearby(World world, BlockPos pos, Object toSend){

@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.api.util.MathUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
 
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellBookRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.IntangibleAirTile;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
@@ -91,7 +92,6 @@ public class SpellBook extends Item implements ISpellTier, IScribeable {
 
         ManaCapability.getMana(playerIn).ifPresent(iMana -> {
             if(iMana.getBookTier() < this.tier.ordinal()){
-
                 iMana.setBookTier(this.tier.ordinal());
             }
             if(iMana.getGlyphBonus() < SpellBook.getUnlockedSpells(stack.getTag()).size()){
@@ -119,10 +119,11 @@ public class SpellBook extends Item implements ISpellTier, IScribeable {
             Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->player), new PacketOpenGUI(stack.getTag(), getTier().ordinal(), getUnlockedSpellString(player.getHeldItem(handIn).getTag())));
             return new ActionResult<>(ActionResultType.CONSUME, stack);
         }
-        SpellResolver resolver = new SpellResolver(getCurrentRecipe(stack), new SpellContext(getCurrentRecipe(stack), playerIn));
+        SpellResolver resolver = new SpellResolver(getCurrentRecipe(stack), new SpellContext(getCurrentRecipe(stack), playerIn)
+                .withColors(SpellBook.getSpellColor(stack.getTag(), SpellBook.getMode(stack.getTag()))));
         EntityRayTraceResult entityRes = MathUtil.getLookedAtEntity(playerIn, 25);
-        if(entityRes != null && entityRes.getEntity() instanceof LivingEntity){
 
+        if(entityRes != null && entityRes.getEntity() instanceof LivingEntity){
             resolver.onCastOnEntity(stack, playerIn, (LivingEntity) entityRes.getEntity(), handIn);
             return new ActionResult<>(ActionResultType.CONSUME, stack);
         }
@@ -207,6 +208,18 @@ public class SpellBook extends Item implements ISpellTier, IScribeable {
         if(slot == 0)
             return "Create Mode";
         return tag.getString( slot+ "_name");
+    }
+
+    public static void setSpellColor(CompoundNBT tag, ParticleColor.IntWrapper color, int slot){
+        tag.putString(slot + "_color", color.serialize());
+    }
+
+    public static ParticleColor.IntWrapper getSpellColor(CompoundNBT tag, int slot){
+        String key = slot+ "_color";
+        if(!tag.contains(key))
+            return new ParticleColor.IntWrapper(255, 25, 180);
+
+        return ParticleColor.IntWrapper.deserialize(tag.getString(key));
     }
 
     public static String getSpellName(CompoundNBT tag){

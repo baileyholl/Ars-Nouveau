@@ -43,4 +43,37 @@ public class ParticleColor {
         String[] arr = string.split(",");
         return new ParticleColor(Integer.parseInt(arr[0].trim()), Integer.parseInt(arr[1].trim()), Integer.parseInt(arr[2].trim()));
     }
+
+    public static class IntWrapper{
+        public int r;
+        public int g;
+        public int b;
+
+        public IntWrapper(int r, int g, int b){
+            this.r = r;
+            this.g = g;
+            this.b = b;
+        }
+
+        public ParticleColor toParticleColor(){
+            return new ParticleColor(r,g,b);
+        }
+
+        public String serialize(){
+            return "" + this.r + "," + this.g +","+this.b;
+        }
+
+        public void makeVisible(){
+            if(r + g + b < 20){
+                b += 10;
+                g += 10;
+                r += 10;
+            }
+        }
+
+        public static ParticleColor.IntWrapper deserialize(String string){
+            String[] arr = string.split(",");
+            return new ParticleColor.IntWrapper(Integer.parseInt(arr[0].trim()), Integer.parseInt(arr[1].trim()), Integer.parseInt(arr[2].trim()));
+        }
+    }
 }

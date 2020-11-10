@@ -2,13 +2,10 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
-import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.common.block.PortalBlock;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -16,22 +13,18 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
-import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public class EntityProjectileSpell extends ArrowEntity {
+public class EntityProjectileSpell extends ColoredProjectile {
 
-    private int age;
+    public int age;
     private SpellResolver spellResolver;
-    public int xpColor;
-
     public int pierceLeft;
 
     public EntityProjectileSpell(EntityType<? extends ArrowEntity> type, World worldIn, SpellResolver spellResolver, int pierceLeft) {
@@ -60,7 +53,6 @@ public class EntityProjectileSpell extends ArrowEntity {
     public EntityProjectileSpell(final World world, final LivingEntity shooter) {
         super(world, shooter);
     }
-
 
     @Override
     public void tick() {
@@ -118,9 +110,9 @@ public class EntityProjectileSpell extends ArrowEntity {
 
 
         Vector3d vec3d = this.getMotion();
-        double x = this.getPosX() +vec3d.x;
+        double x = this.getPosX() + vec3d.x;
         double y = this.getPosY() + vec3d.y;
-        double z = this.getPosZ() + vec3d.getZ();
+        double z = this.getPosZ() + vec3d.z;
 
 
         if (!this.hasNoGravity()) {
@@ -129,9 +121,10 @@ public class EntityProjectileSpell extends ArrowEntity {
         }
 
         this.setPosition(x,y,z);
-
+//        if(true)
+//            return;
         if(world.isRemote && this.age > 1) {
-
+//
             for (int i = 0; i < 10; i++) {
 
                 double deltaX = getPosX() - lastTickPosX;
@@ -144,7 +137,7 @@ public class EntityProjectileSpell extends ArrowEntity {
                     double coeff = j / dist;
                     counter += world.rand.nextInt(3);
                     if (counter % (Minecraft.getInstance().gameSettings.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().gameSettings.particles.getId()) == 0) {
-                        world.addParticle(GlowParticleData.createData(new ParticleColor(255, 25, 180)), (float) (prevPosX + deltaX * coeff), (float) (prevPosY + deltaY * coeff), (float) (prevPosZ + deltaZ * coeff), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f));
+                        world.addParticle(GlowParticleData.createData(getParticleColor()), (float) (prevPosX + deltaX * coeff), (float) (prevPosY + deltaY * coeff), (float) (prevPosZ + deltaZ * coeff), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f));
                     }
                 }
             }
@@ -217,12 +210,11 @@ public class EntityProjectileSpell extends ArrowEntity {
             if (((EntityRayTraceResult) result).getEntity().equals(this.getShooter())) return;
             if(this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(world, (LivingEntity) this.getShooter(), result);
-                Networking.sendToNearby(world, new BlockPos(result.getHitVec()), new PacketANEffect(PacketANEffect.EffectType.BURST, new BlockPos(result.getHitVec())));
+                Networking.sendToNearby(world, new BlockPos(result.getHitVec()), new PacketANEffect(PacketANEffect.EffectType.BURST,
+                        new BlockPos(result.getHitVec()),getParticleColorWrapper()));
                 attemptRemoval();
             }
         }
-
-
 
         if (!world.isRemote && result instanceof BlockRayTraceResult  && !this.removed) {
 
@@ -230,14 +222,14 @@ public class EntityProjectileSpell extends ArrowEntity {
             BlockState state = world.getBlockState(((BlockRayTraceResult) result).getPos());
             if(state.getMaterial() == Material.PORTAL){
                 state.getBlock().onEntityCollision(state, world, ((BlockRayTraceResult) result).getPos(),this);
-                System.out.println("warping");
                 return;
             }
 
             if(this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(this.world, (LivingEntity) this.getShooter(), blockraytraceresult);
             }
-            Networking.sendToNearby(world, ((BlockRayTraceResult) result).getPos(), new PacketANEffect(PacketANEffect.EffectType.BURST, new BlockPos(result.getHitVec()).down()));
+            Networking.sendToNearby(world, ((BlockRayTraceResult) result).getPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
+                    new BlockPos(result.getHitVec()).down(), getParticleColorWrapper()));
            attemptRemoval();
         }
     }
@@ -267,5 +259,10 @@ public class EntityProjectileSpell extends ArrowEntity {
     public void writeAdditional(CompoundNBT tag) {
         super.writeAdditional(tag);
         tag.putInt("pierce", this.pierceLeft);
+    }
+
+    @Override
+    protected void registerData() {
+        super.registerData();
     }
 }

@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.tileentity.TileEntity;
 
@@ -20,11 +22,14 @@ public class SpellContext {
 
     public @Nullable TileEntity castingTile;
 
+    public ParticleColor.IntWrapper colors;
+
     public SpellContext(List<AbstractSpellPart> recipe, @Nullable LivingEntity caster){
         this.recipe = recipe;
         this.caster = caster;
         this.isCanceled = false;
         this.currentIndex = 0;
+        this.colors = ParticleUtil.defaultParticleColorWrapper();
     }
 
     public AbstractSpellPart nextSpell(){
@@ -38,6 +43,11 @@ public class SpellContext {
 
     public SpellContext withCastingTile(TileEntity tile){
         this.castingTile = tile;
+        return this;
+    }
+
+    public SpellContext withColors(ParticleColor.IntWrapper colors){
+        this.colors = colors;
         return this;
     }
 

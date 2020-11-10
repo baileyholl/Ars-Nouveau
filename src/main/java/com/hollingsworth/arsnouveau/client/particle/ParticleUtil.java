@@ -71,6 +71,13 @@ public class ParticleUtil {
         }
     }
 
+    public static ParticleColor defaultParticleColor(){
+        return new ParticleColor(255, 25, 180);
+    }
+
+    public static ParticleColor.IntWrapper defaultParticleColorWrapper(){
+        return new ParticleColor.IntWrapper(255, 25, 180);
+    }
 
     public static void spawnPoof(ServerWorld world, BlockPos pos){
         for(int i =0; i < 10; i++){

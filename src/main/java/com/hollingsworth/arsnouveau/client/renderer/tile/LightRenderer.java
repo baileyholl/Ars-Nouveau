@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.LightTile;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -25,7 +24,11 @@ public class LightRenderer extends TileEntityRenderer<LightTile> {
         BlockPos pos = lightTile.getPos();
         Random rand = world.rand;
         world.addParticle(
-                GlowParticleData.createData(new ParticleColor(rand.nextInt(255),rand.nextInt(125),rand.nextInt(255))),
+                GlowParticleData.createData(new ParticleColor(
+                        rand.nextInt(lightTile.red),
+                        rand.nextInt(lightTile.green),
+                        rand.nextInt(lightTile.blue)
+                )),
                 pos.getX() +0.5 + ParticleUtil.inRange(-0.1, 0.1)  , pos.getY() +0.5  + ParticleUtil.inRange(-0.1, 0.1) , pos.getZ() +0.5 + ParticleUtil.inRange(-0.1, 0.1),
                 0,0,0);;
     }

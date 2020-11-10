@@ -21,6 +21,10 @@ import net.minecraftforge.fml.network.NetworkHooks;
 public class EntityFollowProjectile extends ArrowEntity {
     private static final DataParameter<BlockPos> to = EntityDataManager.createKey(ArrowEntity.class, DataSerializers.BLOCK_POS);
     private static final DataParameter<BlockPos> from = EntityDataManager.createKey(ArrowEntity.class, DataSerializers.BLOCK_POS);
+    public static final DataParameter<Integer> RED = EntityDataManager.createKey(EntityFollowProjectile.class, DataSerializers.VARINT);
+    public static final DataParameter<Integer> GREEN = EntityDataManager.createKey(EntityFollowProjectile.class, DataSerializers.VARINT);
+    public static final DataParameter<Integer> BLUE = EntityDataManager.createKey(EntityFollowProjectile.class, DataSerializers.VARINT);
+
     private int age;
 //    int age;
     int maxAge;
@@ -33,6 +37,9 @@ public class EntityFollowProjectile extends ArrowEntity {
 //        this.age = 0;
         this.maxAge = (int) Math.floor(from.subtract(to).length() * 5);
         setPosition(from.x + 0.5, from.y+ 0.5, from.z+ 0.5);
+        this.dataManager.set(RED, 255);
+        this.dataManager.set(GREEN, 25);
+        this.dataManager.set(BLUE, 180);
     }
     public EntityFollowProjectile(World worldIn, BlockPos from, BlockPos to) {
         this(worldIn, new Vector3d(from.getX(), from.getY(), from.getZ()), new Vector3d(to.getX(), to.getY(), to.getZ()));
@@ -46,6 +53,9 @@ public class EntityFollowProjectile extends ArrowEntity {
         super.registerData();
         this.dataManager.register(to,new BlockPos(0,0,0));
         this.dataManager.register(from,new BlockPos(0,0,0));
+        this.dataManager.register(RED, 0);
+        this.dataManager.register(GREEN, 0);
+        this.dataManager.register(BLUE, 0);
     }
 
     @Override

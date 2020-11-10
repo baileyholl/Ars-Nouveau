@@ -7,7 +7,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.fml.client.gui.GuiUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,14 +18,12 @@ public class ModdedScreen extends Screen {
     public float scaleFactor;
     public List<String> tooltip;
 
-
-    protected ModdedScreen(ITextComponent titleIn) {
+    public ModdedScreen(ITextComponent titleIn) {
         super(titleIn);
     }
 
-
     @Override
-    protected void init() {
+    public void init() {
         super.init();
         MainWindow res = getMinecraft().getMainWindow();
         double oldGuiScale = res.calcGuiScale(minecraft.gameSettings.guiScale, minecraft.getForceUnicodeFont());
@@ -48,7 +45,7 @@ public class ModdedScreen extends Screen {
 
         return mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h;
     }
-    final void drawTooltip(MatrixStack stack, int mouseX, int mouseY) {
+    public final void drawTooltip(MatrixStack stack, int mouseX, int mouseY) {
         if(tooltip != null) {
             FontRenderer font = Minecraft.getInstance().fontRenderer;
             this.renderTooltip(stack,new StringTextComponent(tooltip.get(0)), mouseX, mouseY);
@@ -57,16 +54,18 @@ public class ModdedScreen extends Screen {
             List<String> wrappedTooltip = new ArrayList<>();
             for (String s : tooltip)
                 Collections.addAll(wrappedTooltip, s.split("\n"));
-//            GuiUtils.drawHoveringText(wrappedTooltip, mouseX, mouseY, width, height, -1, this.font);
-
-
         }
     }
 
-    final void resetTooltip() {
-        tooltip = null;
+
+    @Override
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        super.render(matrixStack, mouseX, mouseY,partialTicks);
     }
 
+    public final void resetTooltip() {
+        tooltip = null;
+    }
 
     @Override
     public boolean isPauseScreen() {

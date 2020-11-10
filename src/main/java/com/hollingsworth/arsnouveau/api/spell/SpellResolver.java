@@ -67,7 +67,6 @@ public class SpellResolver {
 
     }
 
-
     public boolean canCast(LivingEntity entity){
         int numMethods = 0;
         if(spell_recipe == null || spell_recipe.isEmpty() || castType == null) {
@@ -104,22 +103,22 @@ public class SpellResolver {
 
     public void onCast(ItemStack stack, LivingEntity livingEntity, World world){
         if(canCast(livingEntity) && !postEvent(livingEntity))
-            castType.onCast(stack, livingEntity, world, getAugments(spell_recipe, 0, livingEntity));
+            castType.onCast(stack, livingEntity, world, getAugments(spell_recipe, 0, livingEntity), spellContext);
     }
 
     public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster){
         if(canCast(caster) && !postEvent(caster))
-            castType.onCastOnBlock(blockRayTraceResult, caster, getAugments(spell_recipe, 0, caster));
+            castType.onCastOnBlock(blockRayTraceResult, caster, getAugments(spell_recipe, 0, caster), spellContext);
     }
 
     public void onCastOnBlock(ItemUseContext context){
         if(canCast(context.getPlayer()) && !postEvent(context.getPlayer()))
-            castType.onCastOnBlock(context, getAugments(spell_recipe, 0, context.getPlayer()));
+            castType.onCastOnBlock(context, getAugments(spell_recipe, 0, context.getPlayer()), spellContext);
     }
 
     public void onCastOnEntity(ItemStack stack, LivingEntity playerIn, LivingEntity target, Hand hand){
         if(canCast(playerIn) && !postEvent(playerIn))
-            castType.onCastOnEntity(stack, playerIn, target, hand, getAugments(spell_recipe, 0, playerIn));
+            castType.onCastOnEntity(stack, playerIn, target, hand, getAugments(spell_recipe, 0, playerIn), spellContext);
     }
 
     public void onResolveEffect(World world, LivingEntity shooter, RayTraceResult result){

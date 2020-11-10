@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.method;
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import net.minecraft.entity.LivingEntity;
@@ -25,14 +26,14 @@ public class MethodSelf extends AbstractCastMethod {
     }
 
     @Override
-    public void onCast(ItemStack stack, LivingEntity caster, World world, List<AbstractAugment> augments) {
+    public void onCast(ItemStack stack, LivingEntity caster, World world, List<AbstractAugment> augments, SpellContext context) {
         resolver.onResolveEffect(caster.getEntityWorld(), caster, new EntityRayTraceResult(caster));
         resolver.expendMana(caster);
         Networking.sendToNearby(caster.world, caster, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, caster.getPosition()));
     }
 
     @Override
-    public void onCastOnBlock(ItemUseContext context, List<AbstractAugment> augments) {
+    public void onCastOnBlock(ItemUseContext context, List<AbstractAugment> augments, SpellContext spellContext) {
         World world = context.getWorld();
         resolver.onResolveEffect(world, context.getPlayer(),  new EntityRayTraceResult(context.getPlayer()));
         resolver.expendMana(context.getPlayer());
@@ -40,7 +41,7 @@ public class MethodSelf extends AbstractCastMethod {
     }
 
     @Override
-    public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments) {
+    public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments, SpellContext spellContext) {
         World world = caster.world;
         resolver.onResolveEffect(world, caster,  new EntityRayTraceResult(caster));
         resolver.expendMana(caster);
@@ -48,7 +49,7 @@ public class MethodSelf extends AbstractCastMethod {
     }
 
     @Override
-    public void onCastOnEntity(ItemStack stack, LivingEntity playerIn, LivingEntity target, Hand hand, List<AbstractAugment> augments) {
+    public void onCastOnEntity(ItemStack stack, LivingEntity playerIn, LivingEntity target, Hand hand, List<AbstractAugment> augments, SpellContext spellContext) {
         World world = playerIn.world;
         resolver.onResolveEffect(world, playerIn,  new EntityRayTraceResult(playerIn));
         resolver.expendMana(playerIn);

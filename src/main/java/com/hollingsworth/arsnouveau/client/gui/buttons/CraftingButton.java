@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui.buttons;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.client.gui.GuiSpellBook;
+import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
@@ -16,7 +16,7 @@ public class CraftingButton extends GuiImageButton{
     public String resourceIcon;
 
     public CraftingButton(GuiSpellBook parent, int x, int y, int slotNum, Button.IPressable onPress) {
-        super( x, y, 0, 0, 20, 20, 20, 20, "textures/gui/glyph_slot.png", onPress);
+        super( x, y, 0, 0, 22, 22, 22, 22, "textures/gui/glyph_slot.png", onPress);
         this.slotNum = slotNum;
         this.spellTag = "";
         this.resourceIcon = "";
@@ -30,7 +30,7 @@ public class CraftingButton extends GuiImageButton{
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             //GuiSpellBook.drawFromTexture(new ResourceLocation(ExampleMod.MODID, this.resourceIcon), x, y, 0, 0, 20, 20, 20, 20);
             if(!this.resourceIcon.equals("")){
-                GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + resourceIcon), x + 2, y + 2, u, v, 16, 16, 16, 16,ms);
+                GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + resourceIcon), x + 3, y + 3, u, v, 16, 16, 16, 16,ms);
             }
             if(parent.isMouseInRelativeRange(parX, parY, x, y, width, height)){
 

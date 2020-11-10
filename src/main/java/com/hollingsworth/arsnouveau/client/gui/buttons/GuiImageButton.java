@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.client.gui.GuiSpellBook;
+import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;

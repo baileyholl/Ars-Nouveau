@@ -1,14 +1,16 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 
+import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.entity.TippedArrowRenderer;
-import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.util.ResourceLocation;
 
-public class RenderSpell extends TippedArrowRenderer {
+public class RenderSpell extends EntityRenderer<EntityProjectileSpell> {
     private final ResourceLocation entityTexture; // new ResourceLocation(ExampleMod.MODID, "textures/entity/spell_proj.png");
 
 
@@ -20,8 +22,50 @@ public class RenderSpell extends TippedArrowRenderer {
     }
 
     @Override
-    public void render(ArrowEntity p_225623_1_, float p_225623_2_, float p_225623_3_, MatrixStack p_225623_4_, IRenderTypeBuffer p_225623_5_, int p_225623_6_) {
+    public void render(EntityProjectileSpell proj, float entityYaw, float partialTicks, MatrixStack p_225623_4_, IRenderTypeBuffer p_225623_5_, int p_225623_6_) {
 //        super.render(p_225623_1_, p_225623_2_, p_225623_3_, p_225623_4_, p_225623_5_, p_225623_6_);
+        if(proj.age < 1 || true)
+            return;
+
+        double deltaX = proj.getPosX() - proj.lastTickPosX;
+        double deltaY = proj.getPosY() - proj.lastTickPosY;
+        double deltaZ = proj.getPosZ() - proj.lastTickPosZ;
+        deltaX = deltaX + proj.getMotion().getX() * partialTicks%20;
+        deltaY = deltaY + proj.getMotion().getY() *partialTicks%20;
+        deltaZ = deltaZ + proj.getMotion().getZ() *partialTicks%20;
+        double dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 10);
+        int counter = 0;
+
+        for (double j = 0; j < dist; j++) {
+            double coeff = j / dist;
+
+            proj.world.addParticle(GlowParticleData.createData(proj.getParticleColor()), (float) (proj.lastTickPosX + deltaX * coeff),
+                    (float) (proj.lastTickPosY + deltaY * coeff),
+                    (float) (proj.lastTickPosZ  + deltaZ * coeff),
+                    0.0125f * ParticleUtil.inRange(-0.5, 0.5), 0.0125f * ParticleUtil.inRange(-0.5, 0.5), 0.0125f * ParticleUtil.inRange(-0.5, 0.5));
+
+
+         }
+
+//        proj.world.addParticle(GlowParticleData.createData(proj.getParticleColor()), (float) (proj.getPosX()), (float) (proj.getPosY()) ,
+//                (proj.getPosZ()),
+//                0.0125f * ParticleUtil.inRange(-0.3, 0.3), 0.0125f * ParticleUtil.inRange(-0.3, 0.3), 0.0125f * ParticleUtil.inRange(-0.3, 0.3));
+////
+//        double nextX = proj.getPosX() + deltaX;
+//        double nextY = proj.getPosY() + deltaY;
+//        double nextZ = proj.getPosZ() + deltaZ;
+//        dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 20);
+//        counter = 0;
+//
+//        for (double j = 0; j < dist; j++) {
+//            double coeff = j / dist;
+//            counter += proj.world.rand.nextInt(3);
+//            if (counter % (Minecraft.getInstance().gameSettings.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().gameSettings.particles.getId()) == 0) {
+//                proj.world.addParticle(GlowParticleData.createData(proj.getParticleColor()), (float) (nextX + deltaX * coeff), (float) (nextY + deltaY * coeff), (float) (nextZ + deltaZ * coeff),
+//                        0.0125f * ParticleUtil.inRange(-0.3, 0.3), 0.0125f * ParticleUtil.inRange(-0.3, 0.3), 0.0125f * ParticleUtil.inRange(-0.3, 0.3));
+//            }
+//
+//        }
     }
 //
 //    @Override
@@ -42,7 +86,7 @@ public class RenderSpell extends TippedArrowRenderer {
 //    }
 
     @Override
-    public ResourceLocation getEntityTexture(ArrowEntity entity) {
+    public ResourceLocation getEntityTexture(EntityProjectileSpell entity) {
         return this.entityTexture;
     }
 }
