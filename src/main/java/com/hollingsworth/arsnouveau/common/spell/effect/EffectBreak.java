@@ -22,6 +22,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -64,11 +65,14 @@ public class EffectBreak extends AbstractEffect {
                     destroyBlockSafely(world, pos1, false, shooter);
                 } else if (hasBuff(augments, AugmentFortune.class)) {
                     ItemStack stack = LootUtil.getDefaultFakeTool();
-                    stack.addEnchantment(Enchantments.FORTUNE, getBuffCount(augments, AugmentFortune.class));
+                    int bonus = getBuffCount(augments, AugmentFortune.class);
+                    stack.addEnchantment(Enchantments.FORTUNE, bonus);
                     Block.spawnDrops(world.getBlockState(pos1), world, pos1, world.getTileEntity(pos1), shooter,stack);
+                    state.getBlock().dropXpOnBlockBreak((ServerWorld) world, pos1, state.getExpDrop(world, pos1, bonus, 0));
                     destroyBlockSafely(world, pos1, false, shooter);
                 } else {
                     destroyBlockSafely(world, pos1, true, shooter);
+                    state.getBlock().dropXpOnBlockBreak((ServerWorld) world, pos1, state.getExpDrop(world, pos1, 0, 0));
                 }
                 BlockUtil.safelyUpdateState(world, pos1);
             }
