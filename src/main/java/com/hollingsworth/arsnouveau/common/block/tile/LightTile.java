@@ -41,8 +41,11 @@ public class LightTile extends TileEntity {
     public void read(BlockState state, CompoundNBT nbt) {
         super.read(state, nbt);
         this.red = nbt.getInt("red");
+        this.red = red > 0 ? red : 255;
         this.green = nbt.getInt("green");
+        green = this.green > 0 ? green : 125;
         this.blue = nbt.getInt("blue");
+        blue = this.blue > 0 ? blue : 255;
     }
 
     @Override

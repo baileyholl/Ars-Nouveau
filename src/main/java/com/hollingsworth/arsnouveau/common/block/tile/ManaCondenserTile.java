@@ -51,10 +51,10 @@ public class ManaCondenserTile extends AbstractManaTile implements ITickableTile
     }
     @SubscribeEvent
     public void cropGrow(BlockEvent.CropGrowEvent.Post event) {
-        if(!world.isRemote && world.getTileEntity(pos) == null){
-            MinecraftForge.EVENT_BUS.unregister(this);
-            return;
-        }
+//        if(!world.isRemote && world.getTileEntity(pos) == null){
+//            MinecraftForge.EVENT_BUS.unregister(this);
+//            return;
+//        }
         if(isDisabled)
             return;
         if(BlockUtil.distanceFrom(pos, event.getPos()) <= 15) {
@@ -71,10 +71,10 @@ public class ManaCondenserTile extends AbstractManaTile implements ITickableTile
 
     @SubscribeEvent
     public void babySpawnEvent(BabyEntitySpawnEvent event) {
-        if(!world.isRemote && world.getTileEntity(pos) == null){
-            MinecraftForge.EVENT_BUS.unregister(this);
-            return;
-        }
+//        if(!world.isRemote && world.getTileEntity(pos) == null){
+//            MinecraftForge.EVENT_BUS.unregister(this);
+//            return;
+//        }
         if(isDisabled)
             return;
 
@@ -86,10 +86,10 @@ public class ManaCondenserTile extends AbstractManaTile implements ITickableTile
 
     @SubscribeEvent
     public void livingDeath(LivingDeathEvent e) {
-        if(!world.isRemote && world.getTileEntity(pos) == null){
-            MinecraftForge.EVENT_BUS.unregister(this);
-            return;
-        }
+//        if(!world.isRemote && world.getTileEntity(pos) == null){
+//            MinecraftForge.EVENT_BUS.unregister(this);
+//            return;
+//        }
         if(e.getEntityLiving().world.isRemote || isDisabled)
             return;
 
