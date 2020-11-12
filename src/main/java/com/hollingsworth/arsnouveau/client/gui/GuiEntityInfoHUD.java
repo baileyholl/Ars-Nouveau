@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.client;
+package com.hollingsworth.arsnouveau.client.gui;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;

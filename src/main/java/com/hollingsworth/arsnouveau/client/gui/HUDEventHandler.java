@@ -1,10 +1,8 @@
-package com.hollingsworth.arsnouveau.client;
+package com.hollingsworth.arsnouveau.client.gui;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
-import com.hollingsworth.arsnouveau.client.gui.GuiManaHUD;
-import com.hollingsworth.arsnouveau.client.gui.GuiSpellHUD;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -55,6 +53,7 @@ public class HUDEventHandler {
      */
     @SubscribeEvent
     public static void renderEntityHUD(final RenderGameOverlayEvent.Post event) {
+        if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) return;
         RayTraceResult mouseOver = Minecraft.getInstance().objectMouseOver;
         if (mouseOver != null && mouseOver.getType() == RayTraceResult.Type.ENTITY) {
 

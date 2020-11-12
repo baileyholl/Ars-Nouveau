@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.api.util.MappingUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.GlyphPressTile;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
@@ -28,7 +27,6 @@ public class GlyphPressRenderer extends TileEntityRenderer<GlyphPressTile> {
     public void renderFloatingItem(GlyphPressTile tileEntityIn, ItemEntity entityItem, double x, double y, double z, MatrixStack stack, IRenderTypeBuffer iRenderTypeBuffer){
         stack.push();
 
-        RenderSystem.enableLighting();
 
         tileEntityIn.frames++;
 //        Minecraft.getInstance().gameRenderer.getLightTexture().disableLightmap();
@@ -41,10 +39,7 @@ public class GlyphPressRenderer extends TileEntityRenderer<GlyphPressTile> {
         Minecraft.getInstance().getRenderManager().renderEntityStatic(entityItem, 0.5,1,0.5, entityItem.rotationYaw, 2.0f,stack, iRenderTypeBuffer,15728880);
 
         Minecraft.getInstance().getRenderManager().getRenderer(entityItem);
-        RenderSystem.disableLighting();
         stack.pop();
-        Minecraft.getInstance().gameRenderer.getLightTexture().enableLightmap();
-
     }
 
     public void renderPressedItem(double x, double y, double z, Item itemToRender, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int il){
