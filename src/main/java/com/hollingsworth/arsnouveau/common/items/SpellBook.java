@@ -101,7 +101,7 @@ public class SpellBook extends Item implements ISpellTier, IScribeable {
 
         RayTraceResult result = playerIn.pick(5, 0, false);
 
-        if(result instanceof BlockRayTraceResult){
+        if(result instanceof BlockRayTraceResult && !playerIn.isSneaking()){
             if(worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) != null &&
                     !((worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) instanceof IntangibleAirTile
                     ||(worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) instanceof PhantomBlockTile)))) {
