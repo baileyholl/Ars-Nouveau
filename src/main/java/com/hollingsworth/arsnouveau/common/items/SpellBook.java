@@ -103,8 +103,8 @@ public class SpellBook extends Item implements ISpellTier, IScribeable {
 
         if(result instanceof BlockRayTraceResult && !playerIn.isSneaking()){
             if(worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) != null &&
-                    !((worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) instanceof IntangibleAirTile
-                    ||(worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) instanceof PhantomBlockTile)))) {
+                    !(worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) instanceof IntangibleAirTile
+                    ||(worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) instanceof PhantomBlockTile))) {
                 return new ActionResult<>(ActionResultType.SUCCESS, stack);
             }
         }

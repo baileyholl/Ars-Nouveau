@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 
 public class LightBlock extends ModBlock {
 
-    protected static final VoxelShape SHAPE = Block.makeCuboidShape(6.0D, 6.0D, 6.0D, 12.0D, 12.0D, 12.0D);
+    protected static final VoxelShape SHAPE = Block.makeCuboidShape(4.0D, 4.0D, 4.0D, 12.0D, 12.0D, 12.0D);
 
     public LightBlock() {
         super(defaultProperties().setLightLevel((bs)->14).doesNotBlockMovement().notSolid().variableOpacity().hardnessAndResistance(0f,0f), "light_block");
