@@ -19,24 +19,12 @@ public class ArcanePedestalRenderer extends TileEntityRenderer<ArcanePedestalTil
 
     public void renderFloatingItem(ArcanePedestalTile tileEntityIn, ItemEntity entityItem, double x, double y, double z, MatrixStack stack, IRenderTypeBuffer iRenderTypeBuffer, float partialFrames){
         stack.push();
-
-//        RenderSystem.enableLighting();
-
         tileEntityIn.frames++;
-//        Minecraft.getInstance().gameRenderer.getLightTexture().disableLightmap();
-
         entityItem.setRotationYawHead(tileEntityIn.frames);
-        //Prevent 'jump' in the bobbing
-        //Bobbing is calculated as the age plus the yaw
         ObfuscationReflectionHelper.setPrivateValue(ItemEntity.class, entityItem, (int) (800f - (tileEntityIn.frames + partialFrames)/2f), MappingUtil.getItemEntityAge());
-
         Minecraft.getInstance().getRenderManager().renderEntityStatic(entityItem, 0.5,1,0.5, entityItem.rotationYaw, 2.0f,stack, iRenderTypeBuffer,15728880);
-
         Minecraft.getInstance().getRenderManager().getRenderer(entityItem);
-//        RenderSystem.disableLighting();
         stack.pop();
-//        Minecraft.getInstance().gameRenderer.getLightTexture().enableLightmap();
-
     }
 
     @Override
