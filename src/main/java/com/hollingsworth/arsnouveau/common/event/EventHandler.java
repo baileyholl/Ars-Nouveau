@@ -72,8 +72,8 @@ public class EventHandler {
         List<Biome.Category> categories = Arrays.asList(Biome.Category.FOREST, Biome.Category.EXTREME_HILLS, Biome.Category.JUNGLE,
                 Biome.Category.PLAINS, Biome.Category.SWAMP, Biome.Category.SAVANNA);
         if(categories.contains(e.getCategory())) {
-            e.getSpawns().withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_CARBUNCLE_TYPE, 5, 1, 1));
-            e.getSpawns().withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_SYLPH_TYPE, 5, 1, 1));
+            e.getSpawns().withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_CARBUNCLE_TYPE, Config.CARBUNCLE_WEIGHT.get(), 1, 1));
+            e.getSpawns().withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_SYLPH_TYPE, Config.SYLPH_WEIGHT.get(), 1, 1));
         }
     }
 
@@ -196,7 +196,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void playerLogin(PlayerEvent.PlayerLoggedInEvent e) {
-        if(e.getEntityLiving().getEntityWorld().isRemote)
+        if(e.getEntityLiving().getEntityWorld().isRemote || !Config.SPAWN_BOOK.get())
             return;
         CompoundNBT tag = e.getPlayer().getPersistentData().getCompound(PlayerEntity.PERSISTED_NBT_TAG);
         String book_tag = "an_book_";
