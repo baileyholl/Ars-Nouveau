@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellBookRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.IntangibleAirTile;
+import com.hollingsworth.arsnouveau.common.block.tile.PhantomBlockTile;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOpenGUI;
@@ -60,7 +61,6 @@ public class SpellBook extends Item implements ISpellTier, IScribeable {
         this.tier = tier;
     }
 
-
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         if(!stack.hasTag())
@@ -103,7 +103,8 @@ public class SpellBook extends Item implements ISpellTier, IScribeable {
 
         if(result instanceof BlockRayTraceResult){
             if(worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) != null &&
-                    !(worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) instanceof IntangibleAirTile)) {
+                    !((worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) instanceof IntangibleAirTile
+                    ||(worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) instanceof PhantomBlockTile)))) {
                 return new ActionResult<>(ActionResultType.SUCCESS, stack);
             }
         }
