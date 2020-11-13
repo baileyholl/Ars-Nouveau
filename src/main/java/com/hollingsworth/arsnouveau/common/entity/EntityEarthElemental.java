@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -11,46 +10,18 @@ import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import software.bernie.geckolib.animation.builder.AnimationBuilder;
-import software.bernie.geckolib.animation.controller.EntityAnimationController;
-import software.bernie.geckolib.entity.IAnimatedEntity;
-import software.bernie.geckolib.event.AnimationTestEvent;
-import software.bernie.geckolib.manager.EntityAnimationManager;
-
-public class EntityEarthElemental extends CreatureEntity implements IAnimatedEntity {
-    EntityAnimationManager manager = new EntityAnimationManager();
-
-    EntityAnimationController<EntityEarthElemental> smeltController = new EntityAnimationController<>(this, "smeltController", 20, this::smeltPredicate);
-
-    EntityAnimationController<EntityEarthElemental> idleController = new EntityAnimationController<>(this, "idleController", 20, this::idlePredicate);
 
 
-    private <E extends Entity> boolean smeltPredicate(AnimationTestEvent<E> event) {
-        return true;
-    }
-    private <E extends Entity> boolean idlePredicate(AnimationTestEvent<E> event) {
-
-        if(this.getHeldStack().isEmpty()){
-            manager.setAnimationSpeed(1f);
-            idleController.setAnimation(new AnimationBuilder().addAnimation("idle", true));
-        }else{
-            return true;
-        }
-        return true;
-    }
+public class EntityEarthElemental extends CreatureEntity  {
 
     protected EntityEarthElemental(EntityType<? extends CreatureEntity> type, World worldIn) {
         super(type, worldIn);
-        registerControllers();
     }
     public EntityEarthElemental(World world){
         this(ModEntities.ENTITY_EARTH_ELEMENTAL_TYPE,world);
     }
 
-    public void registerControllers(){
-        manager.addAnimationController(smeltController);
-        manager.addAnimationController(idleController);
-    }
+
 
     @Override
     protected void registerData() {
@@ -119,11 +90,6 @@ public class EntityEarthElemental extends CreatureEntity implements IAnimatedEnt
 //        return this.dataManager.get(HELD_ITEM);
     }
 
-
-    @Override
-    public EntityAnimationManager getAnimationManager() {
-        return manager;
-    }
 
     @Override
     public void writeAdditional(CompoundNBT tag) {
