@@ -34,9 +34,6 @@ public class BlockRegistry {
     @ObjectHolder(ArsNouveau.MODID + ":mana_condenser")
     public static TileEntityType<ManaCondenserTile> MANA_CONDENSER_TILE;
 
-    @ObjectHolder(ArsNouveau.MODID + ":mana_siphon")
-    public static TileEntityType<ManaSiphonTile> MANA_SIPHON_TILE;
-
     @ObjectHolder(ArsNouveau.MODID + ":enchanting_apparatus")
     public static TileEntityType<EnchantingApparatusTile> ENCHANTING_APP_TILE;
 
@@ -63,9 +60,6 @@ public class BlockRegistry {
     public static TileEntityType<ArcaneRelayTile> ARCANE_RELAY_TILE;
 
     @ObjectHolder(ArsNouveau.MODID + ":warding_stone") public static WardBlock WARD_BLOCK;
-
-    @ObjectHolder(ArsNouveau.MODID + ":mana_siphon") public static ManaSiphonBlock MANA_SIPHON_BLOCK;
-
 
     @ObjectHolder(ArsNouveau.MODID + ":glyph_press") public static GlyphPressBlock GLYPH_PRESS_BLOCK;
 
@@ -115,6 +109,10 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.INTANGIBLE_AIR) public static IntangibleAirBlock INTANGIBLE_AIR;
     @ObjectHolder(LibBlockNames.INTANGIBLE_AIR) public static  TileEntityType<IntangibleAirTile> INTANGIBLE_AIR_TYPE;
 
+
+    @ObjectHolder(LibBlockNames.VOLCANIC_ACCUMULATOR) public static VolcanicAccumulator VOLCANIC_BLOCK;
+    @ObjectHolder(LibBlockNames.VOLCANIC_ACCUMULATOR) public static  TileEntityType<VolcanicTile> VOLCANIC_TILE;
+
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
         @SubscribeEvent
@@ -126,7 +124,6 @@ public class BlockRegistry {
             blockRegistryEvent.getRegistry().register(new ManaCondenserBlock());
             blockRegistryEvent.getRegistry().register(new ManaJar());
             blockRegistryEvent.getRegistry().register(new WardBlock());
-            blockRegistryEvent.getRegistry().register(new ManaSiphonBlock());
             blockRegistryEvent.getRegistry().register(new GlyphPressBlock());
             blockRegistryEvent.getRegistry().register(new ArcaneOre());
             blockRegistryEvent.getRegistry().register(new ManaBloomCrop());
@@ -150,6 +147,7 @@ public class BlockRegistry {
             blockRegistryEvent.getRegistry().register(new SpellTurret());
             blockRegistryEvent.getRegistry().register(new RedstoneAir());
             blockRegistryEvent.getRegistry().register(new IntangibleAirBlock());
+            blockRegistryEvent.getRegistry().register(new VolcanicAccumulator());
 
         }
 
@@ -159,9 +157,7 @@ public class BlockRegistry {
             event.getRegistry().register(TileEntityType.Builder.create(ManaCondenserTile::new, BlockRegistry.MANA_CONDENSER).build(null).setRegistryName("mana_condenser"));
             event.getRegistry().register(TileEntityType.Builder.create(ManaJarTile::new, BlockRegistry.MANA_JAR).build(null).setRegistryName("mana_jar"));
             event.getRegistry().register(TileEntityType.Builder.create(LightTile::new, BlockRegistry.LIGHT_BLOCK).build(null).setRegistryName("light_block"));
-            event.getRegistry().register(TileEntityType.Builder.create(ManaSiphonTile::new, BlockRegistry.MANA_SIPHON_BLOCK).build(null).setRegistryName("mana_siphon"));
-
-            event.getRegistry().register(TileEntityType.Builder.create(GlyphPressTile::new, BlockRegistry.GLYPH_PRESS_BLOCK).build(null).setRegistryName("glyph_press"));
+           event.getRegistry().register(TileEntityType.Builder.create(GlyphPressTile::new, BlockRegistry.GLYPH_PRESS_BLOCK).build(null).setRegistryName("glyph_press"));
             event.getRegistry().register(TileEntityType.Builder.create(EnchantingApparatusTile::new, BlockRegistry.ENCHANTING_APP_BLOCK).build(null).setRegistryName("enchanting_apparatus"));
             event.getRegistry().register(TileEntityType.Builder.create(ArcanePedestalTile::new, BlockRegistry.ARCANE_PEDESTAL).build(null).setRegistryName(LibBlockNames.ARCANE_PEDESTAL));
             event.getRegistry().register(TileEntityType.Builder.create(SummoningCrytalTile::new, BlockRegistry.SUMMONING_CRYSTAL).build(null).setRegistryName(LibBlockNames.SUMMONING_CRYSTAL));
@@ -174,6 +170,7 @@ public class BlockRegistry {
             event.getRegistry().register(TileEntityType.Builder.create(CrystallizerTile::new, BlockRegistry.CRYSTALLIZER_BLOCK).build(null).setRegistryName(LibBlockNames.CRYSTALLIZER));
             event.getRegistry().register(TileEntityType.Builder.create(SpellTurretTile::new, BlockRegistry.SPELL_TURRET).build(null).setRegistryName(LibBlockNames.SPELL_TURRET));
             event.getRegistry().register(TileEntityType.Builder.create(IntangibleAirTile::new, BlockRegistry.INTANGIBLE_AIR).build(null).setRegistryName(LibBlockNames.INTANGIBLE_AIR));
+            event.getRegistry().register(TileEntityType.Builder.create(VolcanicTile::new, BlockRegistry.VOLCANIC_BLOCK).build(null).setRegistryName(LibBlockNames.VOLCANIC_ACCUMULATOR));
 
         }
 
@@ -182,11 +179,10 @@ public class BlockRegistry {
 
             IForgeRegistry<Item> registry = itemRegistryEvent.getRegistry();
             registry.register(new BlockItem(BlockRegistry.PHANTOM_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName("phantom_block"));
-            registry.register(new BlockItem(BlockRegistry.LIGHT_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName("light_block"));
+            registry.register(new BlockItem(BlockRegistry.LIGHT_BLOCK, new Item.Properties()).setRegistryName("light_block"));
             registry.register(new BlockItem(BlockRegistry.MANA_CONDENSER, ItemsRegistry.defaultItemProperties().setISTER(()-> ManaCondenserRenderer.ISRender::new)).setRegistryName("mana_condenser"));
             registry.register(new BlockItem(BlockRegistry.MANA_JAR, ItemsRegistry.defaultItemProperties()).setRegistryName("mana_jar"));
             registry.register(new BlockItem(BlockRegistry.WARD_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName("warding_stone"));
-            registry.register(new BlockItem(BlockRegistry.MANA_SIPHON_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName("mana_siphon"));
             registry.register(new BlockItem(BlockRegistry.GLYPH_PRESS_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName("glyph_press"));
             registry.register(new BlockItem(BlockRegistry.ARCANE_ORE, ItemsRegistry.defaultItemProperties()).setRegistryName("arcane_ore"));
             registry.register(new BlockItem(BlockRegistry.MANA_BLOOM_CROP, ItemsRegistry.defaultItemProperties()).setRegistryName("mana_bloom_crop"));
@@ -199,7 +195,7 @@ public class BlockRegistry {
             registry.register(new BlockItem(BlockRegistry.ARCANE_RELAY, ItemsRegistry.defaultItemProperties().setISTER(()-> RelayRenderer.ISRender::new)).setRegistryName(LibBlockNames.ARCANE_RELAY));
             registry.register(new BlockItem(BlockRegistry.RUNE_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.RUNE));
 
-            registry.register(new BlockItem(BlockRegistry.PORTAL_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.PORTAL));
+            registry.register(new BlockItem(BlockRegistry.PORTAL_BLOCK, new Item.Properties()).setRegistryName(LibBlockNames.PORTAL));
             registry.register(new BlockItem(BlockRegistry.ARCANE_RELAY_SPLITTER, ItemsRegistry.defaultItemProperties().setISTER(()-> RelaySplitterRenderer.ISRender::new)).setRegistryName(LibBlockNames.ARCANE_RELAY_SPLITTER));
             registry.register(new BlockItem(BlockRegistry.CRYSTALLIZER_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(()-> CrystallizerRenderer.ISRender::new)).setRegistryName(LibBlockNames.CRYSTALLIZER));
             registry.register(new BlockItem(BlockRegistry.ARCANE_CORE_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(()-> ArcaneCoreRenderer.ISRender::new)).setRegistryName(LibBlockNames.ARCANE_CORE));
@@ -209,6 +205,8 @@ public class BlockRegistry {
             registry.register(getDefaultBlockItem(BlockRegistry.AB_MOSAIC, LibBlockNames.AB_MOSAIC));
             registry.register(getDefaultBlockItem(BlockRegistry.ARCANE_STONE, LibBlockNames.ARCANE_STONE));
             registry.register(new BlockItem(BlockRegistry.SPELL_TURRET, ItemsRegistry.defaultItemProperties().setISTER(()-> SpellTurretRenderer.ISRender::new)).setRegistryName(LibBlockNames.SPELL_TURRET));
+            registry.register(new BlockItem(BlockRegistry.VOLCANIC_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.VOLCANIC_ACCUMULATOR));
+
         }
 
         public static Item getDefaultBlockItem(Block block, String registry){

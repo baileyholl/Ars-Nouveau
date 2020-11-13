@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.CrystallizerTile;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -66,7 +65,6 @@ public class CrystallizerRenderer extends TileEntityRenderer<CrystallizerTile> {
         ItemEntity entityItem = crystallizerTile.entity;
         ms.pop();
         ms.push();
-        RenderSystem.enableLighting();
         ms.scale(0.5f, 0.5f, 0.5f);
         ms.translate(1D, 1f, 1D);
         Minecraft.getInstance().getItemRenderer().renderItem(entityItem.getItem(), ItemCameraTransforms.TransformType.FIXED, 15728880, overlay, ms, buffers);

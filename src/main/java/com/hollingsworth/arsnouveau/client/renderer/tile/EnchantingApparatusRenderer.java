@@ -8,7 +8,6 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -18,11 +17,9 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
 
 import java.util.Random;
@@ -48,10 +45,6 @@ public class EnchantingApparatusRenderer extends TileEntityRenderer<EnchantingAp
         }
         matrixStack.push();
         IVertexBuilder buffer = iRenderTypeBuffer.getBuffer(model.getRenderType(texture));
-//        int levels = 2;
-//        PerlinNoiseGenerator noiseGenerator = new PerlinNoiseGenerator(new SharedSeedRandom("NOISE_GRASS".hashCode()), 0, 1);
-//        System.out.println(noiseGenerator.noiseAt(tileEntityIn.getPos().getX() / 8, tileEntityIn.getPos().getY()/8 + ClientInfo.ticksInGame, false));
-//        double offset = noiseGenerator.noiseAt(tileEntityIn.getPos().getX(), tileEntityIn.getPos().getY() + (ClientInfo.ticksInGame + v)/40 , false) / 10;
         double sinOffset = Math.pow(Math.cos((ClientInfo.ticksInGame + v)  /10)/4, 2);
         matrixStack.translate(0.5D,  0.5 + sinOffset, 0.5D);
         float angle = ((ClientInfo.ticksInGame + v)/5.0f) % 360;
@@ -91,10 +84,8 @@ public class EnchantingApparatusRenderer extends TileEntityRenderer<EnchantingAp
 
         ItemEntity entityItem = tileEntityIn.entity;
         matrixStack.push();
-        RenderSystem.enableLighting();
         matrixStack.translate(0.5D, 0.55f +sinOffset, 0.5D);
         matrixStack.scale(0.35f, 0.35f, 0.35F);
-
         Minecraft.getInstance().getItemRenderer().renderItem(entityItem.getItem(), ItemCameraTransforms.TransformType.FIXED, 15728880, overlayIn, matrixStack, iRenderTypeBuffer);
         matrixStack.pop();
 
