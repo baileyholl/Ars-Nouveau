@@ -49,19 +49,20 @@ Craft spells, create powerful baubles, and summon magical creatures!
 [[dependencies.ars_nouveau]]
     modId="patchouli"
     mandatory=true
-    versionRange="[1.16,)"
+    versionRange="[1.16-42,)"
+    ordering="AFTER"
     side="BOTH"
 
 [[dependencies.ars_nouveau]]
     modId="curios"
     mandatory=true
-    versionRange="[FORGE-1.16.2,)"
+    versionRange="[1.16.3-4.0.1.0,)"
     ordering="AFTER"
     side="BOTH"
 
 [[dependencies.ars_nouveau]]
     modId="geckolib3"
     mandatory=true
-    versionRange="[forge-1.16.2,)"
+    versionRange="[3.0.0-beta.8,)"
     ordering="AFTER"
     side="BOTH"
