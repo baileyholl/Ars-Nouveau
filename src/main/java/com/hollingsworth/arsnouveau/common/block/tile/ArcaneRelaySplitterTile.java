@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
@@ -49,12 +49,15 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
                 continue;
             }
             AbstractManaTile fromTile = (AbstractManaTile) world.getTileEntity(fromPos);
-            if(fromTile.getCurrentMana() >= ratePer && this.getCurrentMana() + ratePer <= this.getMaxMana()){
-                fromTile.removeMana(ratePer);
-                this.addMana(ratePer);
-                if(pos != null)
-                    spawnParticles(fromPos, pos);
+            if(transferMana(fromTile, this, ratePer) > 0){
+                ParticleUtil.spawnFollowProjectile(world, fromPos, pos);
             }
+//            if(fromTile.getCurrentMana() >= ratePer && this.getCurrentMana() + ratePer <= this.getMaxMana()){
+//                fromTile.removeMana(ratePer);
+//                this.addMana(ratePer);
+//                if(pos != null)
+//                    spawnParticles(fromPos, pos);
+//            }
         }
         for(BlockPos s : stale)
             fromList.remove(s);
@@ -72,10 +75,9 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
                 continue;
             }
             AbstractManaTile toTile = (AbstractManaTile) world.getTileEntity(toPos);
-            if(this.getCurrentMana() >= ratePer && toTile.getCurrentMana() + ratePer <= toTile.getMaxMana()){
-                this.removeMana(ratePer);
-                toTile.addMana(ratePer);
-                spawnParticles(pos, toPos);
+            int transfer = transferMana(this, toTile, ratePer);
+            if(transfer > 0){
+                ParticleUtil.spawnFollowProjectile(world, pos, toPos);
             }
         }
         for(BlockPos s : stale)
@@ -85,7 +87,7 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
 
     @Override
     public void tick() {
-        if(world.getGameTime() % 20 != 0 || toList.isEmpty())
+        if(world.getGameTime() % 20 != 0 || toList.isEmpty() || world.isRemote)
             return;
 
         processFromList();

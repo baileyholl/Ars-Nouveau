@@ -160,5 +160,4 @@ public class ManaUtil {
         });
         return hasMana[0];
     }
-
 }

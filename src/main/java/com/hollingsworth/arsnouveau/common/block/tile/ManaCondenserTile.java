@@ -1,11 +1,11 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.entity.IDispellable;
+import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ManaBloomCrop;
-import com.hollingsworth.arsnouveau.common.entity.EntityWhelp;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -24,6 +24,10 @@ public class ManaCondenserTile extends AbstractManaTile implements ITickableTile
         setMaxMana(500);
     }
 
+    @Override
+    public int getMaxMana() {
+        return 500;
+    }
 
     @Override
     public void tick() {
@@ -63,9 +67,7 @@ public class ManaCondenserTile extends AbstractManaTile implements ITickableTile
                 mana += 100;
             }
             this.addMana(mana);
-
-            Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW, pos.getX(), pos.getY(), pos.getZ(), event.getPos().getX(),
-                    event.getPos().getY(), event.getPos().getZ(),5));
+            ParticleUtil.spawnFollowProjectile(world, event.getPos(), pos);
         }
     }
 
@@ -75,11 +77,9 @@ public class ManaCondenserTile extends AbstractManaTile implements ITickableTile
 //            MinecraftForge.EVENT_BUS.unregister(this);
 //            return;
 //        }
-        if(isDisabled)
+        if(isDisabled || event.getChild() == null)
             return;
 
-        if(event.getChild() == null)
-            return;
         if(BlockUtil.distanceFrom(pos, event.getChild().getPosition()) <= 10)
             this.addMana(100);
     }
@@ -90,15 +90,11 @@ public class ManaCondenserTile extends AbstractManaTile implements ITickableTile
 //            MinecraftForge.EVENT_BUS.unregister(this);
 //            return;
 //        }
-        if(e.getEntityLiving().world.isRemote || isDisabled)
+        if(e.getEntityLiving().world.isRemote || isDisabled || e.getEntity() instanceof IDispellable)
             return;
 
-
-        if(e.getEntity() instanceof EntityWhelp)
-            return;
         if(BlockUtil.distanceFrom(pos, e.getEntity().getPosition()) <= 15) {
-            Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW, pos.getX(), pos.getY(), pos.getZ(), e.getEntity().getPosition().getX(),
-                    e.getEntity().getPosition().getY(), e.getEntity().getPosition().getZ(),10));
+            ParticleUtil.spawnFollowProjectile(world, e.getEntity().getPosition(), pos);
             this.addMana(150);
 
         }
@@ -106,6 +102,6 @@ public class ManaCondenserTile extends AbstractManaTile implements ITickableTile
 
     @Override
     public int getTransferRate() {
-        return 20;
+        return 500;
     }
 }

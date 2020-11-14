@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -48,8 +49,6 @@ public class CrystallizerTile extends AbstractManaTile implements IInventory {
             this.stack = new ItemStack(ItemsRegistry.manaGem);
             this.setMana(0);
         }
-
-
     }
 
     @Override

@@ -51,8 +51,6 @@ public class ManaCondenserBlock extends ModBlock {
     @Override
     public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
         super.onBlockHarvested(worldIn, pos, state, player);
-        if(worldIn.isRemote)
-            return;
         ManaCondenserTile tile = (ManaCondenserTile) worldIn.getTileEntity(pos);
         if(tile != null)
             MinecraftForge.EVENT_BUS.unregister(tile);

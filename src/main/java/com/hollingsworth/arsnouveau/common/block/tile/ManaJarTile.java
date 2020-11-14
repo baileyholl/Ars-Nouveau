@@ -1,15 +1,24 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
+import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.block.ManaJar;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.ITickableTileEntity;
 
-public class ManaJarTile extends AbstractManaTile implements ITickableTileEntity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ManaJarTile extends AbstractManaTile implements ITickableTileEntity, ITooltipProvider {
 
     public ManaJarTile() {
         super(BlockRegistry.MANA_JAR_TILE);
-        this.setMaxMana(10000);
+    }
+
+    @Override
+    public int getMaxMana() {
+        return 10000;
     }
 
     @Override
@@ -32,7 +41,13 @@ public class ManaJarTile extends AbstractManaTile implements ITickableTileEntity
 
     @Override
     public int getTransferRate() {
-        return 100;
+        return getMaxMana();
     }
 
+    @Override
+    public List<String> getTooltip() {
+        List<String> list = new ArrayList<>();
+        list.add( (getCurrentMana()*100) / this.getMaxMana() + "% full");
+        return list;
+    }
 }

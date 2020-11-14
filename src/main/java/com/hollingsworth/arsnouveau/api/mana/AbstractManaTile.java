@@ -1,11 +1,11 @@
-package com.hollingsworth.arsnouveau.common.block.tile;
+package com.hollingsworth.arsnouveau.api.mana;
 
-import com.hollingsworth.arsnouveau.api.mana.IManaBlock;
-import com.hollingsworth.arsnouveau.api.mana.IManaTile;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 
 import javax.annotation.Nullable;
@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 import static com.hollingsworth.arsnouveau.api.NbtTags.MANA_TAG;
 import static com.hollingsworth.arsnouveau.api.NbtTags.MAX_MANA_TAG;
 
-public abstract class AbstractManaTile extends AnimatedTile  implements IManaTile {
+public abstract class AbstractManaTile extends TileEntity implements IManaTile, ITickableTileEntity {
     private int mana = 0;
     private int maxMana = 0;
     public AbstractManaTile(TileEntityType<?> tileEntityTypeIn) {
@@ -29,12 +29,10 @@ public abstract class AbstractManaTile extends AnimatedTile  implements IManaTil
 
     @Override
     public CompoundNBT write(CompoundNBT tag) {
-        tag.putInt(MANA_TAG, mana);
-        tag.putInt(MAX_MANA_TAG, maxMana);
+        tag.putInt(MANA_TAG, getCurrentMana());
+        tag.putInt(MAX_MANA_TAG, getMaxMana());
         return super.write(tag);
     }
-
-
 
     @Override
     public int setMana(int mana) {
@@ -85,11 +83,45 @@ public abstract class AbstractManaTile extends AnimatedTile  implements IManaTil
 
     public boolean canAcceptMana(){ return this.getCurrentMana() < this.getMaxMana(); }
 
-    public void transferMana(IManaTile from, IManaTile to){
-        if(from.getCurrentMana() >= from.getTransferRate()){
-            from.removeMana(from.getTransferRate());
-            to.addMana(from.getTransferRate());
-            update();
-        }
+    public int manaCanAccept(IManaTile tile){return tile.getMaxMana() - tile.getCurrentMana();}
+
+    public int transferMana(IManaTile from, IManaTile to){
+        int transferRate = getTransferRate(from, to);
+        from.removeMana(transferRate);
+        to.addMana(transferRate);
+        return transferRate;
+    }
+
+    public int getTransferRate(IManaTile from, IManaTile to){
+        return Math.min(Math.min(from.getTransferRate(), from.getCurrentMana()), to.getMaxMana() - to.getCurrentMana());
+    }
+
+    public int transferMana(IManaTile from, IManaTile to, int fromTransferRate){
+        int transferRate = getTransferRate(from, to, fromTransferRate);
+        from.removeMana(transferRate);
+        to.addMana(transferRate);
+        return transferRate;
+    }
+
+    public int getTransferRate(IManaTile from, IManaTile to, int fromTransferRate){
+        return Math.min(Math.min(fromTransferRate, from.getCurrentMana()), to.getMaxMana() - to.getCurrentMana());
+    }
+
+    @Override
+    @Nullable
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(this.pos, 3, this.getUpdateTag());
+    }
+
+    @Override
+    public CompoundNBT getUpdateTag() {
+        return this.write(new CompoundNBT());
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        super.onDataPacket(net, pkt);
+        handleUpdateTag(world.getBlockState(pos),pkt.getNbtCompound());
     }
 }
+

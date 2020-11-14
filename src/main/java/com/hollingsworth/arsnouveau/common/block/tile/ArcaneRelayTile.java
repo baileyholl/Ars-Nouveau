@@ -2,10 +2,10 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
+import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -62,12 +62,12 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
 
     @Override
     public int getTransferRate() {
-        return 100;
+        return 500;
     }
 
     @Override
     public int getMaxMana() {
-        return 200;
+        return 1000;
     }
 
     public boolean closeEnough(BlockPos pos, int distance){
@@ -79,13 +79,9 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
         if(storedPos == null || world.isRemote)
             return;
         // Let relays take from us, no action needed.
-
         this.setSendTo(storedPos.toImmutable());
-
         PortUtil.sendMessage(playerEntity,new StringTextComponent("Relay set to send to " + DominionWand.getPosString(storedPos)));
         ParticleUtil.beam(storedPos,pos, (ServerWorld) world);
-
-
     }
 
     @Override
@@ -111,30 +107,26 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
             // Block has been removed
             if(!(world.getTileEntity(fromPos) instanceof AbstractManaTile)){
                 fromPos = null;
-                world.notifyBlockUpdate(this.pos, world.getBlockState(pos),  world.getBlockState(pos), 2);
+                update();
                 return;
             }else if(world.getTileEntity(fromPos) instanceof AbstractManaTile){
                 // Transfer mana fromPos to this
                 AbstractManaTile fromTile = (AbstractManaTile) world.getTileEntity(fromPos);
-                if(fromTile.getCurrentMana() >= this.getTransferRate() && this.getCurrentMana() + this.getTransferRate() <= this.getMaxMana()){
-                    fromTile.removeMana(this.getTransferRate());
-                    this.addMana(this.getTransferRate());
-                    spawnParticles(fromPos, pos);
+                if(transferMana(fromTile, this) > 0){
+                    update();
+                    ParticleUtil.spawnFollowProjectile(world, fromPos, pos);
                 }
             }
         }
         if(!(world.getTileEntity(toPos) instanceof AbstractManaTile)){
             toPos = null;
             update();
-
             return;
         }
         AbstractManaTile toTile = (AbstractManaTile) this.world.getTileEntity(toPos);
-        if(this.getCurrentMana() >= this.getTransferRate() && toTile.getCurrentMana() + this.getTransferRate() <= toTile.getMaxMana()){
-            this.removeMana(this.getTransferRate());
-            toTile.addMana(this.getTransferRate());
-            spawnParticles(pos, toPos);
-         }
+        if(transferMana(this, toTile) > 0){
+            ParticleUtil.spawnFollowProjectile(world, pos, toPos);
+        }
     }
 
     @Override
@@ -146,11 +138,6 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
             this.fromPos = NBTUtil.getBlockPos(tag, "from");
         }
         super.read(state, tag);
-    }
-
-    public void spawnParticles(BlockPos from, BlockPos to){
-        EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, from, to);
-        world.addEntity(aoeProjectile);
     }
 
     @Override
