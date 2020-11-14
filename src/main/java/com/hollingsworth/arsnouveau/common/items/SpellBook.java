@@ -10,11 +10,11 @@ import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.util.MathUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
-
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellBookRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.IntangibleAirTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PhantomBlockTile;
+import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOpenGUI;
@@ -22,12 +22,14 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.client.util.ITooltipFlag;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
+import net.minecraft.item.UseAction;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
@@ -88,8 +90,6 @@ public class SpellBook extends Item implements ISpellTier, IScribeable {
         if(!stack.hasTag())
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
 
-
-
         ManaCapability.getMana(playerIn).ifPresent(iMana -> {
             if(iMana.getBookTier() < this.tier.ordinal()){
                 iMana.setBookTier(this.tier.ordinal());
@@ -100,8 +100,11 @@ public class SpellBook extends Item implements ISpellTier, IScribeable {
         });
 
         RayTraceResult result = playerIn.pick(5, 0, false);
-
+        if(result instanceof BlockRayTraceResult && worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) instanceof ScribesTile)
+            return new ActionResult<>(ActionResultType.SUCCESS, stack);
         if(result instanceof BlockRayTraceResult && !playerIn.isSneaking()){
+
+
             if(worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) != null &&
                     !(worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) instanceof IntangibleAirTile
                     ||(worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) instanceof PhantomBlockTile))) {
