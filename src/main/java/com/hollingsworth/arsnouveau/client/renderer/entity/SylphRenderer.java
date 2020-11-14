@@ -8,24 +8,23 @@ import com.hollingsworth.arsnouveau.common.entity.EntitySylph;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import software.bernie.geckolib3.core.processor.IBone;
+import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import java.util.Random;
 
-public class SylphRenderer extends MobRenderer<EntitySylph, SylphModel> {
+public class SylphRenderer extends GeoEntityRenderer<EntitySylph> {
     private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph.png");
 
     private static SylphModel model = new SylphModel();
+
     public SylphRenderer(EntityRendererManager manager) {
-        super(manager, new SylphModel(), 0.2f);
+        super(manager, new SylphModel());
     }
 
-    public SylphRenderer(EntityRendererManager renderManagerIn, SylphModel entityModelIn, float shadowSizeIn) {
-        super(renderManagerIn, entityModelIn, shadowSizeIn);
-    }
 
     @Override
     public void render(EntitySylph entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
@@ -34,9 +33,11 @@ public class SylphRenderer extends MobRenderer<EntitySylph, SylphModel> {
         Random rand = ParticleUtil.r;
         Vector3d particlePos = entityIn.getPositionVec();
 
+        IBone sylph = ((SylphModel)getGeoModelProvider()).getBone("sylph");
+        IBone propellers = ((SylphModel)getGeoModelProvider()).getBone("propellers");
 
-        float offsetY = this.getEntityModel().sylph.positionOffsetY/9f;
-        float roteAngle = this.getEntityModel().propellers.rotateAngleY / 4;
+        float offsetY = sylph.getPositionY()/9f;
+        float roteAngle = propellers.getRotationY() / 4;
 
         if(rand.nextInt(5) == 0){
             for(int i =0; i < 5; i++){

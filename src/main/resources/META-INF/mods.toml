@@ -60,7 +60,7 @@ Craft spells, create powerful baubles, and summon magical creatures!
     side="BOTH"
 
 [[dependencies.ars_nouveau]]
-    modId="geckolib"
+    modId="geckolib3"
     mandatory=true
     versionRange="[forge-1.16.2,)"
     ordering="AFTER"

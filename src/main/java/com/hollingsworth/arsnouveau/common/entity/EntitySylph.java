@@ -45,11 +45,13 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.SaplingGrowTreeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import software.bernie.geckolib.animation.builder.AnimationBuilder;
-import software.bernie.geckolib.animation.controller.EntityAnimationController;
-import software.bernie.geckolib.entity.IAnimatedEntity;
-import software.bernie.geckolib.event.AnimationTestEvent;
-import software.bernie.geckolib.manager.EntityAnimationManager;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -57,10 +59,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
-public class EntitySylph extends AbstractFlyingCreature implements IPickupResponder, IAnimatedEntity, ITooltipProvider, IDispellable {
-    EntityAnimationManager manager = new EntityAnimationManager();
-
-    EntityAnimationController<EntitySylph> idleController = new EntityAnimationController<>(this, "idleController", 20, this::idlePredicate);
+public class EntitySylph extends AbstractFlyingCreature implements IPickupResponder, IAnimatable, ITooltipProvider, IDispellable {
+    AnimationFactory manager = new AnimationFactory(this);
 
     public int timeSinceBonemeal = 0;
     public static final DataParameter<Boolean> TAMED = EntityDataManager.createKey(EntitySylph.class, DataSerializers.BOOLEAN);
@@ -77,12 +77,21 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
     public BlockPos crystalPos;
     public List<ItemStack> drops;
     private boolean setBehaviors;
-    private <E extends Entity> boolean idlePredicate(AnimationTestEvent<E> event) {
-        manager.setAnimationSpeed(1.0f);
-        idleController.setAnimation(new AnimationBuilder().addAnimation("idle"));
-        return true;
+    private <E extends Entity> PlayState idlePredicate(AnimationEvent event) {
+        //   manager.setAnimationSpeed(1.0f);
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
+        return PlayState.CONTINUE;
     }
 
+    @Override
+    public void registerControllers(AnimationData animationData) {
+        animationData.addAnimationController(new AnimationController(this, "idleController", 20, this::idlePredicate));
+    }
+
+    @Override
+    public AnimationFactory getFactory() {
+        return manager;
+    }
 
 
     @Override
@@ -143,7 +152,6 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
         super(type, worldIn);
         MinecraftForge.EVENT_BUS.register(this);
         this.moveController =  new FlyingMovementController(this, 10, true);
-        setupAnimations();
         addGoalsAfterConstructor();
     }
 
@@ -153,13 +161,10 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
         this.moveController =  new FlyingMovementController(this, 10, true);
         this.dataManager.set(TAMED, isTamed);
         this.crystalPos = pos;
-        setupAnimations();
         addGoalsAfterConstructor();
     }
 
-    public void setupAnimations(){
-        manager.addAnimationController(idleController);
-    }
+
 
     @Override
     public void tick() {
@@ -300,10 +305,6 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
         return tile == null ? stack : tile.insertItem(stack);
     }
 
-    @Override
-    public EntityAnimationManager getAnimationManager() {
-        return manager;
-    }
 
     @Override
     public boolean canDespawn(double p_213397_1_) {
