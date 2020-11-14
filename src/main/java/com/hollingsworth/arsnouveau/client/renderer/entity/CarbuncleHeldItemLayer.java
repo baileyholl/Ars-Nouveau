@@ -30,13 +30,13 @@ public class CarbuncleHeldItemLayer extends GeoLayerRenderer<EntityCarbuncle> {
         IBone tail = model.getBone("tail");
         IBone carbuncle = ((CarbuncleModel)getEntityModel()).getBone("carbuncle");
 
-        matrixStackIn.translate((tail.getPositionX())/64f, -(tail.getPositionY())/64f ,
+        matrixStackIn.translate((tail.getPositionX())/64f, (carbuncle.getPositionY())/32f ,
                 (tail.getPositionZ())/64f);
 
-        matrixStackIn.translate((double)0f, (double)0.8f, .2D);
+        matrixStackIn.translate((double)0f, (double)0.5f, .2D);
         matrixStackIn.scale(0.75f, 0.75f, 0.75f);
 
-        Quaternion quaternion = Vector3f.XP.rotationDegrees(carbuncle.getRotationX()  +180f );
+        Quaternion quaternion = Vector3f.XP.rotationDegrees(carbuncle.getRotationX() );
 
         matrixStackIn.rotate(quaternion);
         matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180f));
