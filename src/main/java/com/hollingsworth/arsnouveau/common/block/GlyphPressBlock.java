@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.common.block.tile.GlyphPressTile;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.block.BlockState;
@@ -53,7 +52,7 @@ public class GlyphPressBlock extends ModBlock{
                         world.addEntity(item);
                     }
                     tile.baseMaterial = player.inventory.decrStackSize(player.inventory.currentItem, 1);
-                }else if(ArsNouveauAPI.getInstance().hasCraftingReagent(player.getHeldItem(handIn).getItem()) != null && tile.baseMaterial != null && !tile.baseMaterial.isEmpty()){
+                }else if(tile.baseMaterial != null && !tile.baseMaterial.isEmpty()){
                     if(tile.reagentItem != null && !tile.reagentItem.isEmpty()){
                         ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.reagentItem);
                         world.addEntity(item);

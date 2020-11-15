@@ -2,11 +2,17 @@ package com.hollingsworth.arsnouveau.api;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
+import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,13 +44,13 @@ public class ArsNouveauAPI {
      */
     private HashMap<String, Glyph> glyphMap;
 
-    private ArrayList<IEnchantingRecipe> enchantingApparatusRecipes;
+    private List<IEnchantingRecipe> enchantingApparatusRecipes;
     /**
      * Spells that all spellbooks contain
      */
-    private ArrayList<AbstractSpellPart> startingSpells;
+    private List<AbstractSpellPart> startingSpells;
 
-    public ArrayList<AbstractSpellPart> getStartingSpells(){
+    public List<AbstractSpellPart> getStartingSpells(){
         return startingSpells;
     }
 
@@ -94,6 +100,21 @@ public class ArsNouveauAPI {
     }
 
     public List<IEnchantingRecipe> getEnchantingApparatusRecipes() { return enchantingApparatusRecipes; }
+
+    public GlyphPressRecipe getGlyphPressRecipe(World world, Item reagent, ISpellTier.Tier tier){
+        Glyph glyph = hasCraftingReagent(reagent);
+        if(glyph != null && glyph.spellPart.getTier() == tier)
+            return new GlyphPressRecipe(null,  glyph.spellPart.getTier(), new ItemStack(glyph.spellPart.getCraftingReagent()), glyph.getStack());
+
+        RecipeManager manager = world.getRecipeManager();
+        for(IRecipe i : manager.getRecipes()){
+            if(i instanceof GlyphPressRecipe){
+                if(((GlyphPressRecipe) i).reagent.getItem() == reagent && ((GlyphPressRecipe) i).tier == tier)
+                    return (GlyphPressRecipe) i;
+            }
+        }
+        return null;
+    }
 
     private ArsNouveauAPI(){
         spell_map = new HashMap<>();

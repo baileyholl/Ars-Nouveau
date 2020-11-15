@@ -28,7 +28,7 @@ public class GlyphPressRecipeCategory implements IRecipeCategory<GlyphPressRecip
     public IDrawable background;
     public IDrawable icon;
     IGuiHelper helper;
-    public final static ResourceLocation UID = new ResourceLocation(ArsNouveau.MODID, "glyph_press");
+    public final static ResourceLocation UID = new ResourceLocation(ArsNouveau.MODID, "glyph_recipe");
     private final LoadingCache<Integer, IDrawableAnimated> cachedArrows;
 
     public GlyphPressRecipeCategory(IGuiHelper helper){
