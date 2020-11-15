@@ -99,7 +99,7 @@ public class EnchantingApparatusTile extends AnimatedTile {
 
     public IEnchantingRecipe getRecipe(){
         List<ItemStack> pedestalItems = getPedestalItems();
-        return ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes().stream().filter(r-> r.isMatch(pedestalItems, catalystItem, this)).findFirst().orElse(null);
+        return ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes(world).stream().filter(r-> r.isMatch(pedestalItems, catalystItem, this)).findFirst().orElse(null);
     }
 
     public void attemptCraft(){

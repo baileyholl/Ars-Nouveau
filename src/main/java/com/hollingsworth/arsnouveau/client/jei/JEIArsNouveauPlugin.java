@@ -43,11 +43,14 @@ public class JEIArsNouveauPlugin implements IModPlugin {
 
 
         List<GlyphPressRecipe> recipeList = new ArrayList<>();
-
+        List<ApparatusRecipe> apparatus = new ArrayList<>();
         RecipeManager manager = Minecraft.getInstance().world.getRecipeManager();
         for(IRecipe i : manager.getRecipes()){
             if(i instanceof GlyphPressRecipe){
                 recipeList.add((GlyphPressRecipe) i);
+            }
+            if(i instanceof ApparatusRecipe){
+                apparatus.add((ApparatusRecipe) i);
             }
         }
 
@@ -56,7 +59,6 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         }
         registry.addRecipes(recipeList, GlyphPressRecipeCategory.UID);
 
-        List<ApparatusRecipe> apparatus = new ArrayList<>();
         int i = 0;
         for(IEnchantingRecipe r : ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes()){
             if(!(r instanceof EnchantingApparatusRecipe))

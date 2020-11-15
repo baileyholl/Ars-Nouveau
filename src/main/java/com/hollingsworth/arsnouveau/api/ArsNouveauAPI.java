@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.api;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
+import com.hollingsworth.arsnouveau.api.recipe.ApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
@@ -99,7 +101,22 @@ public class ArsNouveauAPI {
         return glyphMap;
     }
 
-    public List<IEnchantingRecipe> getEnchantingApparatusRecipes() { return enchantingApparatusRecipes; }
+
+    public List<IEnchantingRecipe> getEnchantingApparatusRecipes() {
+        return enchantingApparatusRecipes;
+    }
+
+    public List<IEnchantingRecipe> getEnchantingApparatusRecipes(World world) {
+        List<IEnchantingRecipe> recipes = new ArrayList<>(enchantingApparatusRecipes);
+        RecipeManager manager = world.getRecipeManager();
+        for(IRecipe i : manager.getRecipes()){
+            if(i instanceof ApparatusRecipe){
+                ApparatusRecipe recipe = (ApparatusRecipe) i;
+                recipes.add(new EnchantingApparatusRecipe(recipe.output.copy(), recipe.reagent.copy(), recipe.pedestalItems, "custom"));
+            }
+        }
+        return recipes;
+    }
 
     public GlyphPressRecipe getGlyphPressRecipe(World world, Item reagent, ISpellTier.Tier tier){
         Glyph glyph = hasCraftingReagent(reagent);
