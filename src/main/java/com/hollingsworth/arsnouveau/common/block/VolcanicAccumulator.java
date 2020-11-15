@@ -1,7 +1,8 @@
-package com.hollingsworth.arsnouveau.common.block.tile;
+package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.common.block.ModBlock;
+import com.hollingsworth.arsnouveau.common.block.tile.VolcanicTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -11,8 +12,9 @@ import net.minecraft.world.server.ServerWorld;
 import java.util.Random;
 
 public class VolcanicAccumulator extends ModBlock {
+
     public VolcanicAccumulator() {
-        super(LibBlockNames.VOLCANIC_ACCUMULATOR);
+        super(defaultProperties().notSolid().setLightLevel(state -> 15), LibBlockNames.VOLCANIC_ACCUMULATOR);
     }
 
     @Override
@@ -32,5 +34,10 @@ public class VolcanicAccumulator extends ModBlock {
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new VolcanicTile();
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 }

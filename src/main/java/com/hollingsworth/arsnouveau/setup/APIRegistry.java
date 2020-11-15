@@ -83,7 +83,6 @@ public class APIRegistry {
         registerSpell(ModConfig.MethodProjectileID, new MethodProjectile());
         registerSpell(ModConfig.MethodTouchID, new MethodTouch());
         registerSpell(ModConfig.MethodSelfID, new MethodSelf());
-//        registerSpell(ModConfig.MethodBeamID, new MethodBeam());
         registerSpell(ModConfig.EffectBreakID, new EffectBreak());
         registerSpell(ModConfig.EffectHarmID, new EffectHarm());
         registerSpell(ModConfig.EffectIgniteID, new EffectIgnite());

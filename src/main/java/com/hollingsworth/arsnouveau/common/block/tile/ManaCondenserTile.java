@@ -8,7 +8,6 @@ import com.hollingsworth.arsnouveau.common.block.ManaBloomCrop;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -16,7 +15,7 @@ import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 
-public class ManaCondenserTile extends AbstractManaTile implements ITickableTileEntity {
+public class ManaCondenserTile extends AbstractManaTile {
     public boolean isDisabled = false;
     public ManaCondenserTile() {
         super(BlockRegistry.MANA_CONDENSER_TILE);

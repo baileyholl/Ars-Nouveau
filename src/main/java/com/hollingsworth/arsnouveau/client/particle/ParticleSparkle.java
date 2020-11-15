@@ -4,9 +4,6 @@ import net.minecraft.client.particle.IAnimatedSprite;
 import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.SpriteTexturedParticle;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.world.World;
-
-import java.util.Random;
 
 public class ParticleSparkle extends SpriteTexturedParticle {
     public float colorR = 0;
@@ -32,7 +29,7 @@ public class ParticleSparkle extends SpriteTexturedParticle {
         this.setColor(colorR, colorG, colorB);
         this.maxAge = lifetime;
         this.particleScale = scale;
-
+        this.canCollide = false;
         this.initScale = scale;
         this.motionX = ParticleUtil.inRange(-0.01, 0.01);
         this.motionY = -0.02;
