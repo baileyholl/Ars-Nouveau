@@ -1,23 +1,19 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
+import net.minecraft.block.OreBlock;
+import net.minecraft.util.math.MathHelper;
+import javax.annotation.Nonnull;
+import java.util.Random;
 
 
-public class ArcaneOre extends ModBlock{
+public class ArcaneOre extends OreBlock {
     public ArcaneOre() {
-        super("arcane_ore");
+        super(ModBlock.defaultProperties());
+        setRegistryName("arcane_ore");
     }
 
-//    @Override
-//    public BlockRenderLayer getRenderLayer() {
-//        return BlockRenderLayer.CUTOUT;
-//    }
-//
-
-
     @Override
-    public BlockRenderType getRenderType(BlockState p_149645_1_) {
-        return BlockRenderType.MODEL;
+    protected int getExperience(@Nonnull Random rand) {
+        return MathHelper.nextInt(rand, 2, 5); // same as lapis or redstone
     }
 }
