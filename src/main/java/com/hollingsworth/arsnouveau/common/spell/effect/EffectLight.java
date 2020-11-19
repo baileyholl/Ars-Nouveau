@@ -42,7 +42,6 @@ public class EffectLight extends AbstractEffect {
                 tile.red = spellContext.colors.r;
                 tile.green = spellContext.colors.g;
                 tile.blue = spellContext.colors.b;
-                System.out.println(tile.red);
                 world.notifyBlockUpdate(pos, world.getBlockState(pos),world.getBlockState(pos), 2);
             }
 
