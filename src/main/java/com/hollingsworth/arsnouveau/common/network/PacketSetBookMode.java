@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -32,13 +33,7 @@ public class PacketSetBookMode {
                 ServerPlayerEntity sender = ctx.get().getSender();
                 if (sender == null) return;
 
-                ItemStack stack = sender.getHeldItemMainhand();
-                if (stack.getItem() instanceof SpellBook) {
-                    stack.setTag(tag);
-                    return;
-                }
-
-                stack = sender.getHeldItemOffhand();
+                ItemStack stack = StackUtil.getHeldSpellbook(ctx.get().getSender());
                 if (stack.getItem() instanceof SpellBook) {
                     stack.setTag(tag);
                 }
