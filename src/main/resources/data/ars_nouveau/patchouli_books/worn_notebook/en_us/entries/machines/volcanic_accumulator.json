@@ -5,7 +5,7 @@
     "pages": [
         {
             "type": "text",
-            "text": "The Volcanic Accumulator can passively provide World Mana, create lava source blocks, and spread Lava Lilies around it. To generate mana, the accumulator requires Lava Source blocks beneath it in up to a 3x3 area around it. Each source block will generate additional mana. As the accumulator produces mana, it will also generate its own internal mana, used for creating Lava."
+            "text": "The Volcanic Accumulator can passively provide World Mana, create lava source blocks, and spread Lava Lilies around it. To generate mana, the accumulator requires Lava Source blocks beneath it in up to a 3x3 area around it. Each source block will generate additional mana. Mana is transferred automatically to jars around it."
         },
 		{
             "type": "text",
