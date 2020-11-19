@@ -185,6 +185,15 @@ public class Recipes extends RecipeProvider {
             ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.warpScroll).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                     .addIngredient(Items.LAPIS_LAZULI, 4).addIngredient(ItemsRegistry.BLANK_PARCHMENT).addIngredient(ItemsRegistry.manaGem, 4)
                     .build(consumer);
+
+            ShapedRecipeBuilder.shapedRecipe(BlockRegistry.VOLCANIC_BLOCK).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                    .patternLine("vxv")
+                    .patternLine("xyx")
+                    .patternLine("zzz").key('v', ItemsRegistry.manaGem).key('x', Items.LAVA_BUCKET).key('y', BlockRegistry.MANA_JAR).key('z', Items.GOLD_INGOT).build(consumer);
+            ShapelessRecipeBuilder.shapelessRecipe(BlockRegistry.LAVA_LILY, 8).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                    .addIngredient(Items.LILY_PAD, 1).addIngredient(ItemsRegistry.manaGem, 8)
+                    .build(consumer);
+
         }
     }
     private static int STONECUTTER_COUNTER = 0;

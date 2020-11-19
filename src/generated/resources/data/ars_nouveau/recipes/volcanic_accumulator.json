@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "vxv",
+    "xyx",
+    "zzz"
+  ],
+  "key": {
+    "v": {
+      "item": "ars_nouveau:mana_gem"
+    },
+    "x": {
+      "item": "minecraft:lava_bucket"
+    },
+    "y": {
+      "item": "ars_nouveau:mana_jar"
+    },
+    "z": {
+      "item": "minecraft:gold_ingot"
+    }
+  },
+  "result": {
+    "item": "ars_nouveau:volcanic_accumulator"
+  }
+}

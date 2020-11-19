@@ -25,10 +25,16 @@ public class VolcanicAccumulator extends ModBlock {
     @Override
     public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
         super.randomTick(state, worldIn, pos, random);
+
         VolcanicTile tile = (VolcanicTile) worldIn.getTileEntity(pos);
         if(tile == null)
             return;
         tile.doRandomAction();
+    }
+
+    @Override
+    public boolean ticksRandomly(BlockState state) {
+        return true;
     }
 
     @Override

@@ -171,6 +171,7 @@
 	"item.ars_nouveau.glyph_smelt": "Glyph: Smelt",
 	"item.ars_nouveau.glyph_delay": "Glyph: Delay",
 	"item.ars_nouveau.glyph_wither": "Glyph: Wither",
+	"item.ars_nouveau.glyph_exchange": "Glyph: Exchange",
 	"item.ars_nouveau.glyph_duration_down": "Glyph: Duration Down",
 	"item.ars_nouveau.glyph_invisibility": "Glyph: Invisibility",
 	"item.ars_nouveau.glyph_intangible": "Glyph: Intangible",
@@ -230,5 +231,7 @@
 	"ars_nouveau.scribe.item_added":"Item added.",
 	"ars_nouveau.scribe.item_removed":"Item removed.",
 	"ars_nouveau.allow_set": "Carbuncle will only take these items.",
-	"ars_nouveau.ignore_set": "Carbuncle will ignore these items."
+	"ars_nouveau.ignore_set": "Carbuncle will ignore these items.",
+	"block.ars_nouveau.lava_lily": "Lava Lily",
+	"block.ars_nouveau.volcanic_accumulator": "Volcanic Accumulator"
 }

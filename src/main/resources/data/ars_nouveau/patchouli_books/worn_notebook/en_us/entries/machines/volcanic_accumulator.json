@@ -1,0 +1,23 @@
+{
+    "name": "Volcanic Accumulator",
+    "icon": "ars_nouveau:volcanic_accumulator",
+    "category": "machines",
+    "pages": [
+        {
+            "type": "text",
+            "text": "The Volcanic Accumulator can passively provide World Mana, create lava source blocks, and spread Lava Lilies around it. To generate mana, the accumulator requires Lava Source blocks beneath it in up to a 3x3 area around it. Each source block will generate additional mana. As the accumulator produces mana, it will also generate its own internal mana, used for creating Lava."
+        },
+		{
+            "type": "text",
+            "text": "The Volcanic Accumulator will occasionally convert Stone into Magma Blocks, and Magma Blocks into Lava, given that these blocks exist beneath it in its 3x3 area. This conversion is dependent on the amount of mana it has produced over time. The Volcanic Accumulator will also spawn a Lava Lily around it, given that there is nothing covering the lava. Lava Lilys may be harvested and used for decoration."
+        },
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:volcanic_accumulator"
+		},
+		{
+            "type": "text",
+            "text": "The color of a Lava Lily changes if it is placed above lava, magma, or other blocks."
+        }
+    ]
+}

@@ -1,8 +1,13 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
+import com.hollingsworth.arsnouveau.api.mana.IManaTile;
+import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.LavaFluid;
 import net.minecraft.nbt.CompoundNBT;
@@ -15,6 +20,9 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class VolcanicTile extends AbstractManaTile implements IAnimatable {
     public VolcanicTile() {
@@ -46,15 +54,73 @@ public class VolcanicTile extends AbstractManaTile implements IAnimatable {
     public void tick() {
         if(world.isRemote)
             return;
-        if(world.getGameTime() % 20 == 0){
+        if(world.getGameTime() % 40 == 0){
             int numSource = (int) BlockPos.getAllInBox(this.getPos().down().add(1, 0, 1), this.getPos().down().add(-1, 0, -1))
                     .filter(b -> world.getFluidState(b).getFluid() instanceof LavaFluid).map(b -> world.getFluidState(b))
                     .filter(FluidState::isSource).count();
             this.addMana(numSource);
+            progress += 1 + numSource/2;
+        }
+
+        if(world.getGameTime() % 100 == 0){
+            BlockPos jarPos = ManaUtil.canGiveMana(pos, world, 5);
+            if(jarPos != null){
+                transferMana(this, (IManaTile) world.getTileEntity(jarPos));
+                ParticleUtil.spawnFollowProjectile(world, this.pos, jarPos);
+            }
         }
     }
 
     public void doRandomAction(){
+        if(world.isRemote)
+            return;
+        AtomicBoolean set = new AtomicBoolean(false);
+        BlockPos.getProximitySortedBoxPositions(pos, 1, 0,1).forEach(p ->{
+            if(!set.get() && world.getBlockState(p).isAir()){
+                world.setBlockState(p, BlockRegistry.LAVA_LILY.getState(world, p));
+                set.set(true);
+            }
+        });
+
+
+        BlockPos magmaPos = getBlockInArea(Blocks.MAGMA_BLOCK, 1);
+        if(magmaPos != null && progress >= 500){
+            world.setBlockState(magmaPos, Blocks.LAVA.getDefaultState());
+            progress -= 500;
+            return;
+        }
+
+        BlockPos stonePos = getBlockInArea(Blocks.STONE, 1);
+        if(stonePos != null && progress >= 300){
+            world.setBlockState(stonePos, Blocks.MAGMA_BLOCK.getDefaultState());
+            progress -= 300;
+            return;
+        }
+
+        magmaPos = getBlockInArea(Blocks.MAGMA_BLOCK, 2);
+        if(magmaPos != null && progress >= 500){
+            world.setBlockState(magmaPos, Blocks.LAVA.getDefaultState());
+            progress -= 500;
+            return;
+        }
+
+        stonePos = getBlockInArea(Blocks.STONE, 2);
+        if(stonePos != null && progress >= 300){
+            world.setBlockState(stonePos, Blocks.MAGMA_BLOCK.getDefaultState());
+            progress -= 300;
+            return;
+        }
+    }
+
+    public BlockPos getBlockInArea(Block block, int range){
+        AtomicReference<BlockPos> posFound = new AtomicReference<>();
+        BlockPos.getAllInBox(pos.add(range, -1, range), pos.add(-range, -1, -range)).forEach(blockPos -> {
+            blockPos = blockPos.toImmutable();
+            if(posFound.get() == null && world.getBlockState(blockPos).getBlock() == block)
+                posFound.set(blockPos);
+        });
+
+        return posFound.get();
 
     }
 

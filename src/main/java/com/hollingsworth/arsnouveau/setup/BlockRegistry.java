@@ -1,9 +1,12 @@
 package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.*;
 import com.hollingsworth.arsnouveau.common.block.*;
 import com.hollingsworth.arsnouveau.common.block.tile.*;
+import com.hollingsworth.arsnouveau.common.items.AnimBlockItem;
+import com.hollingsworth.arsnouveau.common.items.FluidBlockItem;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
@@ -112,6 +115,7 @@ public class BlockRegistry {
 
     @ObjectHolder(LibBlockNames.VOLCANIC_ACCUMULATOR) public static VolcanicAccumulator VOLCANIC_BLOCK;
     @ObjectHolder(LibBlockNames.VOLCANIC_ACCUMULATOR) public static  TileEntityType<VolcanicTile> VOLCANIC_TILE;
+    @ObjectHolder(LibBlockNames.LAVA_LILY) public static  LavaLily LAVA_LILY;
 
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
@@ -148,7 +152,7 @@ public class BlockRegistry {
             blockRegistryEvent.getRegistry().register(new RedstoneAir());
             blockRegistryEvent.getRegistry().register(new IntangibleAirBlock());
             blockRegistryEvent.getRegistry().register(new VolcanicAccumulator());
-
+            blockRegistryEvent.getRegistry().register(new LavaLily());
         }
 
         @SubscribeEvent
@@ -183,7 +187,7 @@ public class BlockRegistry {
             registry.register(new BlockItem(BlockRegistry.MANA_CONDENSER, ItemsRegistry.defaultItemProperties().setISTER(()-> ManaCondenserRenderer.ISRender::new)).setRegistryName("mana_condenser"));
             registry.register(new BlockItem(BlockRegistry.MANA_JAR, ItemsRegistry.defaultItemProperties()).setRegistryName("mana_jar"));
             registry.register(new BlockItem(BlockRegistry.WARD_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName("warding_stone"));
-            registry.register(new BlockItem(BlockRegistry.GLYPH_PRESS_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName("glyph_press"));
+            registry.register(new AnimBlockItem(BlockRegistry.GLYPH_PRESS_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(() -> () ->new GenericItemRenderer(new PressModel()))).setRegistryName("glyph_press"));
             registry.register(new BlockItem(BlockRegistry.ARCANE_ORE, ItemsRegistry.defaultItemProperties()).setRegistryName("arcane_ore"));
             registry.register(new BlockItem(BlockRegistry.MANA_BLOOM_CROP, ItemsRegistry.defaultItemProperties()).setRegistryName("mana_bloom_crop"));
             registry.register(new BlockItem(BlockRegistry.ENCHANTING_APP_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(()-> EnchantingApparatusRenderer.ISRender::new)).setRegistryName("enchanting_apparatus"));
@@ -194,7 +198,6 @@ public class BlockRegistry {
             registry.register(new BlockItem(BlockRegistry.ARCANE_ROAD, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.ARCANE_ROAD));
             registry.register(new BlockItem(BlockRegistry.ARCANE_RELAY, ItemsRegistry.defaultItemProperties().setISTER(()-> RelayRenderer.ISRender::new)).setRegistryName(LibBlockNames.ARCANE_RELAY));
             registry.register(new BlockItem(BlockRegistry.RUNE_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.RUNE));
-
             registry.register(new BlockItem(BlockRegistry.PORTAL_BLOCK, new Item.Properties()).setRegistryName(LibBlockNames.PORTAL));
             registry.register(new BlockItem(BlockRegistry.ARCANE_RELAY_SPLITTER, ItemsRegistry.defaultItemProperties().setISTER(()-> RelaySplitterRenderer.ISRender::new)).setRegistryName(LibBlockNames.ARCANE_RELAY_SPLITTER));
             registry.register(new BlockItem(BlockRegistry.CRYSTALLIZER_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(()-> CrystallizerRenderer.ISRender::new)).setRegistryName(LibBlockNames.CRYSTALLIZER));
@@ -205,7 +208,8 @@ public class BlockRegistry {
             registry.register(getDefaultBlockItem(BlockRegistry.AB_MOSAIC, LibBlockNames.AB_MOSAIC));
             registry.register(getDefaultBlockItem(BlockRegistry.ARCANE_STONE, LibBlockNames.ARCANE_STONE));
             registry.register(new BlockItem(BlockRegistry.SPELL_TURRET, ItemsRegistry.defaultItemProperties().setISTER(()-> SpellTurretRenderer.ISRender::new)).setRegistryName(LibBlockNames.SPELL_TURRET));
-            registry.register(new BlockItem(BlockRegistry.VOLCANIC_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.VOLCANIC_ACCUMULATOR));
+            registry.register(new AnimBlockItem(BlockRegistry.VOLCANIC_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(() -> () -> new GenericItemRenderer(new VolcanicModel()))).setRegistryName(LibBlockNames.VOLCANIC_ACCUMULATOR));
+            registry.register(new FluidBlockItem(BlockRegistry.LAVA_LILY, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.LAVA_LILY));
 
         }
 
