@@ -160,4 +160,18 @@ public class ManaUtil {
         });
         return hasMana[0];
     }
+
+    @Nullable
+    public static BlockPos canGiveMana(BlockPos pos, World world, int range){
+        final boolean[] hasMana = {false};
+        final BlockPos[] loc = {null};
+        BlockPos.getAllInBox(pos.add(range, range, range), pos.add(-range, -range, -range)).forEach(blockPos -> {
+            blockPos = blockPos.toImmutable();
+            if(!hasMana[0] && world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).canAcceptMana()) {
+                hasMana[0] = true;
+                loc[0] = blockPos;
+            }
+        });
+        return  loc[0];
+    }
 }

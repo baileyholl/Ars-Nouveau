@@ -16,6 +16,7 @@ import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -118,7 +119,7 @@ public class ArsNouveauAPI {
         return recipes;
     }
 
-    public GlyphPressRecipe getGlyphPressRecipe(World world, Item reagent, ISpellTier.Tier tier){
+    public GlyphPressRecipe getGlyphPressRecipe(World world, Item reagent, @Nullable ISpellTier.Tier tier){
         Glyph glyph = hasCraftingReagent(reagent);
         if(glyph != null && glyph.spellPart.getTier() == tier)
             return new GlyphPressRecipe(null,  glyph.spellPart.getTier(), new ItemStack(glyph.spellPart.getCraftingReagent()), glyph.getStack());
