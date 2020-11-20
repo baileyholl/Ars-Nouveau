@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleSparkleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.VolcanicTile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -45,9 +46,8 @@ public class VolcanicRenderer extends GeoBlockRenderer<VolcanicTile> {
                     pos.getX()  +Math.cos(time)/2 +0.5 , pos.getY() +1.0 , pos.getZ() + Math.sin(time)/2 +0.5,
                     ParticleUtil.inRange(-0.01, 0.01),  ParticleUtil.inRange(-0.01, 0.01), ParticleUtil.inRange(-0.01, 0.01));
         }
-
-
-
-
+    }
+    public static GenericItemRenderer getISTER(){
+        return new GenericItemRenderer(new VolcanicModel());
     }
 }

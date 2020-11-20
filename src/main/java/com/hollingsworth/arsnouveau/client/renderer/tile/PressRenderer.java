@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.hollingsworth.arsnouveau.api.util.MappingUtil;
+import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.GlyphPressTile;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -93,5 +94,9 @@ public class PressRenderer extends GeoBlockRenderer<GlyphPressTile> {
                 world.addParticle(ParticleTypes.ENCHANTED_HIT, d0, d1, d2,  spdX * 0.05, 0.0,  spdZ * 0.05);
             }
         }
+    }
+
+    public static GenericItemRenderer getISTER(){
+        return new GenericItemRenderer(new PressModel());
     }
 }
