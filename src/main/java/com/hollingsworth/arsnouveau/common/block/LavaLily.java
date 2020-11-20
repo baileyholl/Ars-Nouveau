@@ -43,6 +43,7 @@ public class LavaLily extends BushBlock {
         return state;
     }
 
+
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         return getState(context.getWorld(), context.getPos());

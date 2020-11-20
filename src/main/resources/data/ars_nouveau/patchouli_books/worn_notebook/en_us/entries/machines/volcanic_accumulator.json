@@ -13,7 +13,8 @@
         },
 		{
             "type":"crafting",
-			"recipe":"ars_nouveau:volcanic_accumulator"
+			"recipe":"ars_nouveau:volcanic_accumulator",
+			"recipe2":"ars_nouveau:lava_lily"
 		},
 		{
             "type": "text",
