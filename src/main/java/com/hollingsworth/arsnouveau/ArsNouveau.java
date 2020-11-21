@@ -28,7 +28,7 @@ public class ArsNouveau {
     public static final String MODNAME = "Ars Nouveau";
     public static final String MODVERSION = "0.0.1";
 
-    public static IProxy proxy = DistExecutor.runForDist(()-> () -> new ClientProxy(), () -> ()-> new ServerProxy());
+    public static IProxy proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> ServerProxy::new);
     public static Logger logger;
 
 
