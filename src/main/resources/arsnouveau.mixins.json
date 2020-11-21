@@ -1,0 +1,13 @@
+{
+  "package": "com.hollingsworth.arsnouveau.mixin",
+  "required": true,
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "arsnouveau.mixins.refmap.json",
+  "minVersion": "0.8",
+  "mixins": [
+    "block.MagmaBlockMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

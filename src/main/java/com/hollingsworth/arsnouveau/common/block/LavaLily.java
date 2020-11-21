@@ -55,9 +55,10 @@ public class LavaLily extends BushBlock {
     }
 
     private static BlockState setNeighborBasedProperties(@Nonnull IWorld world, @Nonnull BlockPos pos, @Nonnull BlockState state) {
-        if(world.getBlockState(pos.down()).getBlock() == Blocks.MAGMA_BLOCK)
+        Block below = world.getBlockState(pos.down()).getBlock();
+        if(below == Blocks.MAGMA_BLOCK)
             state = state.with(LOC, 1);
-        if(world.getBlockState(pos.down()).getBlock() == Blocks.LAVA)
+        else if(below == Blocks.LAVA)
             state = state.with(LOC, 2);
         else
             state = state.with(LOC, 0);
@@ -80,8 +81,7 @@ public class LavaLily extends BushBlock {
 
     @Override
     protected boolean isValidGround(BlockState state, IBlockReader worldIn, BlockPos pos) {
-        FluidState fluidstate = worldIn.getFluidState(pos);
-        FluidState fluidstate1 = worldIn.getFluidState(pos.up());
-        return fluidstate1.getFluid() == Fluids.EMPTY;
+        FluidState fluidState = worldIn.getFluidState(pos.up());
+        return fluidState.getFluid() == Fluids.EMPTY;
     }
 }
