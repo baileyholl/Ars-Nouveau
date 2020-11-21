@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 
 import static com.hollingsworth.arsnouveau.api.util.BlockUtil.isTreeBlock;
 
-public class SummoningCrytalTile extends AbstractManaTile {
+public class SummoningCrystalTile extends AbstractManaTile {
 
     ArrayList<UUID> entityList = new ArrayList<>();
     int numEntities = 0;
@@ -46,7 +46,7 @@ public class SummoningCrytalTile extends AbstractManaTile {
     int tier;
     int taskIndex;
     public boolean isOff;
-    public SummoningCrytalTile() {
+    public SummoningCrystalTile() {
         super(BlockRegistry.SUMMONING_CRYSTAL_TILE);
         tier = 1;
     }

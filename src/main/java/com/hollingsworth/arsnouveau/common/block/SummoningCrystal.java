@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.common.block.tile.SummoningCrytalTile;
+import com.hollingsworth.arsnouveau.common.block.tile.SummoningCrystalTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -28,8 +28,8 @@ public class SummoningCrystal extends ModBlock{
     @Override
     public ActionResultType onBlockActivated(BlockState p_225533_1_, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult p_225533_6_) {
         if(!world.isRemote && hand == Hand.MAIN_HAND && player.getHeldItem(hand).isEmpty()){
-            if(world.getTileEntity(pos) instanceof SummoningCrytalTile)
-                ((SummoningCrytalTile) world.getTileEntity(pos)).changeTier(player);
+            if(world.getTileEntity(pos) instanceof SummoningCrystalTile)
+                ((SummoningCrystalTile) world.getTileEntity(pos)).changeTier(player);
         }
         return super.onBlockActivated(p_225533_1_, world, pos, player, hand, p_225533_6_);
 
@@ -39,11 +39,11 @@ public class SummoningCrystal extends ModBlock{
     @Override
     public void neighborChanged(BlockState p_220069_1_, World world, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_, boolean p_220069_6_) {
         super.neighborChanged(p_220069_1_, world, pos, p_220069_4_, p_220069_5_, p_220069_6_);
-        if(!world.isRemote() && world.getTileEntity(pos) instanceof SummoningCrytalTile){
+        if(!world.isRemote() && world.getTileEntity(pos) instanceof SummoningCrystalTile){
             if(world.isBlockPowered(pos)){
-                ((SummoningCrytalTile) world.getTileEntity(pos)).isOff = true;
+                ((SummoningCrystalTile) world.getTileEntity(pos)).isOff = true;
             }else{
-                ((SummoningCrytalTile) world.getTileEntity(pos)).isOff = false;
+                ((SummoningCrystalTile) world.getTileEntity(pos)).isOff = false;
             }
 
         }
@@ -52,6 +52,6 @@ public class SummoningCrystal extends ModBlock{
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new SummoningCrytalTile();
+        return new SummoningCrystalTile();
     }
 }

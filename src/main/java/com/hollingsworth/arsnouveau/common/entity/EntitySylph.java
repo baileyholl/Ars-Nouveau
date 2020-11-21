@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.block.tile.SummoningCrytalTile;
+import com.hollingsworth.arsnouveau.common.block.tile.SummoningCrystalTile;
 import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.sylph.*;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -213,15 +213,15 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
     }
 
     public boolean enoughManaForTask(){
-        if(!(world.getTileEntity(crystalPos) instanceof SummoningCrytalTile))
+        if(!(world.getTileEntity(crystalPos) instanceof SummoningCrystalTile))
             return false;
-        return ((SummoningCrytalTile) world.getTileEntity(crystalPos)).enoughMana(250);
+        return ((SummoningCrystalTile) world.getTileEntity(crystalPos)).enoughMana(250);
     }
 
     public boolean removeManaForDrops(){
-        if(!(world.getTileEntity(crystalPos) instanceof SummoningCrytalTile))
+        if(!(world.getTileEntity(crystalPos) instanceof SummoningCrystalTile))
             return false;
-        return ((SummoningCrytalTile) world.getTileEntity(crystalPos)).removeManaAround(250);
+        return ((SummoningCrystalTile) world.getTileEntity(crystalPos)).removeManaAround(250);
     }
 
     public boolean isTamed(){
@@ -301,7 +301,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
 
     @Override
     public ItemStack onPickup(ItemStack stack) {
-        SummoningCrytalTile tile = world.getTileEntity(crystalPos) instanceof SummoningCrytalTile ? (SummoningCrytalTile) world.getTileEntity(crystalPos) : null;
+        SummoningCrystalTile tile = world.getTileEntity(crystalPos) instanceof SummoningCrystalTile ? (SummoningCrystalTile) world.getTileEntity(crystalPos) : null;
         return tile == null ? stack : tile.insertItem(stack);
     }
 
