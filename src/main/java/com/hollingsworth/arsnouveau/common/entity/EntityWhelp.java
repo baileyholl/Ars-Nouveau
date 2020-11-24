@@ -91,7 +91,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
             return ActionResultType.FAIL;
 
         if(stack != ItemStack.EMPTY && stack.getItem() instanceof SpellParchment){
-            ArrayList<AbstractSpellPart> spellParts = SpellParchment.getSpellRecipe(stack);
+            List<AbstractSpellPart> spellParts = SpellParchment.getSpellRecipe(stack);
             if(new EntitySpellResolver(spellParts, new SpellContext(spellParts, this)).canCast(this)) {
                 this.spellRecipe = SpellParchment.getSpellRecipe(stack);
                 setRecipeString(SpellRecipeUtil.serializeForNBT(spellRecipe));
@@ -228,7 +228,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     @Override
     public List<String> getTooltip() {
         List<String> list = new ArrayList<>();
-        ArrayList<AbstractSpellPart> spellParts = SpellRecipeUtil.getSpellsFromTagString(this.getRecipeString());
+        List<AbstractSpellPart> spellParts = SpellRecipeUtil.getSpellsFromTagString(this.getRecipeString());
         String spellString = spellParts.size() > 4 ? SpellRecipeUtil.getDisplayString(spellParts.subList(0, 4)) + "..." :SpellRecipeUtil.getDisplayString(spellParts);
         String itemString = this.getHeldStack() == ItemStack.EMPTY ? "Nothing." : this.getHeldStack().getDisplayName().getString();
         String itemAction = this.getHeldStack().getItem() instanceof BlockItem ? "Placing: " : "Using: ";

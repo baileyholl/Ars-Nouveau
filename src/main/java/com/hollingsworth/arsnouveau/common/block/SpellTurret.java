@@ -40,7 +40,7 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class SpellTurret extends ModBlock {
@@ -153,7 +153,7 @@ public class SpellTurret extends ModBlock {
             ItemStack stack = player.getHeldItem(handIn);
             if(!(stack.getItem() instanceof SpellParchment) || worldIn.isRemote)
                 return ActionResultType.SUCCESS;
-            ArrayList<AbstractSpellPart> recipe = SpellParchment.getSpellRecipe(stack);
+            List<AbstractSpellPart> recipe = SpellParchment.getSpellRecipe(stack);
             if(recipe == null || recipe.isEmpty())
                 return ActionResultType.SUCCESS;
             if(!(recipe.get(0) instanceof MethodTouch || recipe.get(0) instanceof MethodProjectile)){

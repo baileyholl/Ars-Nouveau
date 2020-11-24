@@ -17,7 +17,6 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class SpellParchment extends ModItem implements IScribeable {
@@ -35,7 +34,7 @@ public class SpellParchment extends ModItem implements IScribeable {
         stack.getTag().putString("spell", spellRecipe);
     }
 
-    public static ArrayList<AbstractSpellPart> getSpellRecipe(ItemStack stack){
+    public static List<AbstractSpellPart> getSpellRecipe(ItemStack stack){
         if(!stack.hasTag())
             return null;
         return SpellRecipeUtil.getSpellsFromTagString(stack.getTag().getString("spell"));
@@ -47,7 +46,7 @@ public class SpellParchment extends ModItem implements IScribeable {
             return;
 
         StringBuilder tip = new StringBuilder();
-        ArrayList<AbstractSpellPart> spellsFromTagString = SpellRecipeUtil.getSpellsFromTagString(stack.getTag().getString("spell"));
+        List<AbstractSpellPart> spellsFromTagString = SpellRecipeUtil.getSpellsFromTagString(stack.getTag().getString("spell"));
         for (int i = 0; i < spellsFromTagString.size(); i++) {
             AbstractSpellPart spellPart = spellsFromTagString.get(i);
             tip.append(spellPart.name);

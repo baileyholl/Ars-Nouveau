@@ -182,21 +182,13 @@ public class SpellBook extends Item implements ISpellTier, IScribeable {
         return ActionResultType.PASS;
     }
 
-    public ArrayList<AbstractSpellPart> getCurrentRecipe(ItemStack stack){
+    public List<AbstractSpellPart> getCurrentRecipe(ItemStack stack){
         return SpellBook.getRecipeFromTag(stack.getTag(), getMode(stack.getTag()));
     }
 
-    public static ArrayList<AbstractSpellPart> getRecipeFromTag(CompoundNBT tag, int r_slot){
-        ArrayList<AbstractSpellPart> recipe = new ArrayList<>();
+    public static List<AbstractSpellPart> getRecipeFromTag(CompoundNBT tag, int r_slot){
         String recipeStr = getRecipeString(tag, r_slot);
-        if (recipeStr.length() <= 3) // Account for empty strings and '[,]'
-            return recipe;
-        String[] recipeList = recipeStr.substring(1, recipeStr.length() - 1).split(",");
-        for(String id : recipeList){
-            if (ArsNouveauAPI.getInstance().getSpell_map().containsKey(id.trim()))
-                recipe.add(ArsNouveauAPI.getInstance().getSpell_map().get(id.trim()));
-        }
-        return recipe;
+        return SpellRecipeUtil.getSpellsFromTagString(recipeStr);
     }
 
     @Override

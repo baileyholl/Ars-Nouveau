@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.block.Block;
@@ -28,7 +27,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.util.List;
 
 public class RuneBlock extends ModBlock{
     public RuneBlock() {
@@ -45,7 +44,7 @@ public class RuneBlock extends ModBlock{
         ItemStack stack = player.getHeldItem(handIn);
         if(!(stack.getItem() instanceof SpellParchment) || worldIn.isRemote)
             return ActionResultType.SUCCESS;
-        ArrayList<AbstractSpellPart> recipe = SpellParchment.getSpellRecipe(stack);
+        List<AbstractSpellPart> recipe = SpellParchment.getSpellRecipe(stack);
         if(recipe == null || recipe.isEmpty())
             return ActionResultType.SUCCESS;
 

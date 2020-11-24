@@ -22,7 +22,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,7 +38,7 @@ public class RuneTile extends AnimatedTile {
         ticksUntilCharge = 0;
     }
 
-    public void setRecipe(ArrayList<AbstractSpellPart> recipe) {
+    public void setRecipe(List<AbstractSpellPart> recipe) {
         this.recipe = recipe;
     }
 

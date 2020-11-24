@@ -66,7 +66,7 @@ public class SpellRecipeUtil {
     /**
      * Parses the NBT stored string, which is stored as an array of spell IDs. ex: [touch, harm, , , ,]
      */
-    public static ArrayList<AbstractSpellPart> getSpellsFromTagString(String recipeStr){
+    public static List<AbstractSpellPart> getSpellsFromTagString(String recipeStr){
         ArrayList<AbstractSpellPart> recipe = new ArrayList<>();
         if (recipeStr.length() <= 3) // Account for empty strings and '[,]'
             return recipe;
