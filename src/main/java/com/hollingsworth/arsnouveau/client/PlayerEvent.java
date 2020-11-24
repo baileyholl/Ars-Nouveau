@@ -27,26 +27,6 @@ public class PlayerEvent {
         ParticleEngine.getInstance().tick();
     }
 
-
-    @SubscribeEvent
-    public static void onTick(final TickEvent.PlayerTickEvent evt) {
-
-//        if(evt.side == LogicalSide.CLIENT){
-//            World world = evt.player.getEntityWorld();
-//            Random rand = evt.player.getRNG();
-//            Vec3d particlePos = evt.player.getPositionVec();
-//            int roteAngle = ClientInfo.ticksInGame;
-//            if(rand.nextInt(5) == 0){
-//                for(int i =0; i < 10; i++){
-//                    world.addParticle(ParticleSparkleData.createData(new ParticleColor(52,36,255), 0.1f, 120),
-//                            particlePos.getX()  + Math.cos(roteAngle)/2 + ParticleUtil.inRange(-0.1, 0.1), particlePos.getY()   +1 + ParticleUtil.inRange(-0.1, 0.1), particlePos.getZ()
-//                                    + Math.sin(roteAngle)/2 + ParticleUtil.inRange(-0.1, 0.1),
-//                            0, 0,0);
-//                }
-//
-//            }
-//        }
-    }
     @SubscribeEvent
     public static void onBlock(final PlayerInteractEvent.RightClickBlock event) {
         PlayerEntity entity = event.getPlayer();

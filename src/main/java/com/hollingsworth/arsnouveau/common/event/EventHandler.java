@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
@@ -11,17 +10,14 @@ import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.block.tile.IntangibleAirTile;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
-import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketReactiveSpell;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateMana;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
-import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -37,11 +33,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.MobSpawnInfo;
-import net.minecraft.world.gen.GenerationStage;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -49,34 +40,17 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
 
-import java.util.Arrays;
 import java.util.List;
 
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class EventHandler {
 
-    @SubscribeEvent
-    public static void biomeLoad(BiomeLoadingEvent e) {
-        if(e.getCategory() == Biome.Category.NETHER || e.getCategory() == Biome.Category.THEEND)
-            return;
-        if(Config.SPAWN_ORE.get()){
-            e.getGeneration().withFeature( GenerationStage.Decoration.UNDERGROUND_ORES,
-                    WorldGenRegistries.CONFIGURED_FEATURE.getOrDefault(BlockRegistry.ARCANE_ORE.getRegistryName())).build();
-        }
-        List<Biome.Category> categories = Arrays.asList(Biome.Category.FOREST, Biome.Category.EXTREME_HILLS, Biome.Category.JUNGLE,
-                Biome.Category.PLAINS, Biome.Category.SWAMP, Biome.Category.SAVANNA);
-        if(categories.contains(e.getCategory())) {
-            e.getSpawns().withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_CARBUNCLE_TYPE, Config.CARBUNCLE_WEIGHT.get(), 1, 1));
-            e.getSpawns().withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_SYLPH_TYPE, Config.SYLPH_WEIGHT.get(), 1, 1));
-        }
-    }
 
 
     @SubscribeEvent
@@ -229,14 +203,6 @@ public class EventHandler {
                 });
             }
         }
-    }
-
-    @SubscribeEvent
-    public static void worldTick(TickEvent.WorldTickEvent e){
-        World world = e.world;
-        if(world.isRemote)
-            return;
-        EventQueue.getInstance().tick();
     }
 
     @SubscribeEvent
