@@ -24,7 +24,16 @@ public class Config {
     public static ForgeConfigSpec.IntValue CARBUNCLE_WEIGHT;
     public static ForgeConfigSpec.IntValue SYLPH_WEIGHT;
 
-    public static Map<String, ForgeConfigSpec.BooleanValue> enabledSpells = new HashMap<>();
+    private static Map<String, ForgeConfigSpec.BooleanValue> enabledSpells = new HashMap<>();
+    private static Map<String, ForgeConfigSpec.IntValue> spellCost = new HashMap<>();
+
+    public static boolean isSpellEnabled(String tag){
+        return enabledSpells.get(tag).get();
+    }
+
+    public static int getSpellCost(String tag){
+        return spellCost.get(tag+"_cost").get();
+    }
     static {
         ForgeConfigSpec.Builder SERVER_BUILDER = new ForgeConfigSpec.Builder();
         ForgeConfigSpec.Builder CLIENT_BUILDER = new ForgeConfigSpec.Builder();
@@ -39,6 +48,7 @@ public class Config {
         SERVER_BUILDER.comment("Spells").push(CATEGORY_SPELLS);
         for(AbstractSpellPart spellPart : ArsNouveauAPI.getInstance().getSpell_map().values()){
             enabledSpells.put(spellPart.tag, SERVER_BUILDER.comment(spellPart.name + " enabled?").define(spellPart.tag, true));
+            spellCost.put(spellPart.tag + "_cost", SERVER_BUILDER.comment(spellPart.name + " cost").defineInRange(spellPart.tag+ "_cost", spellPart.getManaCost(), Integer.MIN_VALUE, Integer.MAX_VALUE));
         }
         SERVER_BUILDER.pop();
         SERVER_CONFIG = SERVER_BUILDER.build();

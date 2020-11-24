@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
+import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.item.Item;
 
@@ -30,14 +31,18 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
     }
 
     public int getAdjustedManaCost(List<AbstractAugment> augmentTypes){
-        int cost = getManaCost();
+        int cost = getConfigCost();
         for(AbstractAugment a: augmentTypes){
             if(a instanceof AugmentDampen && !dampenIsAllowed()){
                 continue;
             }
-            cost += a.getManaCost();
+            cost += a.getConfigCost();
         }
         return Math.max(cost, 0);
+    }
+
+    public int getConfigCost(){
+        return Config.getSpellCost(this.tag);
     }
 
     @Nullable

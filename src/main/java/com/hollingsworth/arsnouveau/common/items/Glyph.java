@@ -28,7 +28,7 @@ public class Glyph extends ModItem{
         if(worldIn.isRemote)
             return super.onItemRightClick(worldIn, playerIn, handIn);
 
-        if(!Config.enabledSpells.get(spellPart.tag).get()){
+        if(!Config.isSpellEnabled(this.spellPart.tag)){
             playerIn.sendMessage(new TranslationTextComponent("ars_nouveau.spell.disabled"), Util.DUMMY_UUID);
             return super.onItemRightClick(worldIn, playerIn, handIn);
         }
@@ -50,7 +50,7 @@ public class Glyph extends ModItem{
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
         if(spellPart != null){
-            if(!Config.enabledSpells.get(spellPart.tag).get()){
+            if(!Config.isSpellEnabled(this.spellPart.tag)){
                 tooltip2.add(new StringTextComponent("Disabled. Cannot be used."));
             }
         }

@@ -157,7 +157,7 @@ public class GuiSpellBook extends BaseBook {
         }
         for(AbstractSpellPart s : displayedEffects){
             AbstractEffect spell = (AbstractEffect)s;
-            if(!Config.enabledSpells.get(spell.tag).get())
+            if(!Config.isSpellEnabled(s.tag))
                 continue;
             GlyphButton cell;
             int xOffset = 20 * (numEffect % 6 );
