@@ -175,6 +175,11 @@
 	"item.ars_nouveau.glyph_duration_down": "Glyph: Duration Down",
 	"item.ars_nouveau.glyph_invisibility": "Glyph: Invisibility",
 	"item.ars_nouveau.glyph_intangible": "Glyph: Intangible",
+	"item.ars_nouveau.glyph_cold_snap": "Glyph: Cold Snap",
+	"item.ars_nouveau.glyph_flare": "Glyph: Flare",
+	"item.ars_nouveau.glyph_conjure_water": "Glyph: Conjure Water",
+	"item.ars_nouveau.glyph_craft": "Glyph: Craft",
+	"item.ars_nouveau.glyph_gravity": "Glyph: Gravity",
 	"effect.ars_nouveau.shield": "Magic Shield",
 	"alert.core": "An Arcane Core must be placed beneath this block.",
 	"sylph.unhappy": "The sylph seems very unhappy in her home. Try sprucing it up!",
@@ -233,5 +238,6 @@
 	"ars_nouveau.allow_set": "Carbuncle will only take these items.",
 	"ars_nouveau.ignore_set": "Carbuncle will ignore these items.",
 	"block.ars_nouveau.lava_lily": "Lava Lily",
-	"block.ars_nouveau.volcanic_accumulator": "Volcanic Accumulator"
+	"block.ars_nouveau.volcanic_accumulator": "Volcanic Accumulator",
+	"ars_nouveau.spell.disabled": "This spell has been disabled in the config."
 }

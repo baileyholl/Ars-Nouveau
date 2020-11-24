@@ -1,13 +1,20 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.setup.Config;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Util;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class Glyph extends ModItem{
     public AbstractSpellPart spellPart;
@@ -21,6 +28,10 @@ public class Glyph extends ModItem{
         if(worldIn.isRemote)
             return super.onItemRightClick(worldIn, playerIn, handIn);
 
+        if(!Config.enabledSpells.get(spellPart.tag).get()){
+            playerIn.sendMessage(new TranslationTextComponent("ars_nouveau.spell.disabled"), Util.DUMMY_UUID);
+            return super.onItemRightClick(worldIn, playerIn, handIn);
+        }
 
         playerIn.inventory.mainInventory.forEach(itemStack -> {
             if(itemStack.getItem() instanceof SpellBook){
@@ -33,6 +44,15 @@ public class Glyph extends ModItem{
                 playerIn.sendMessage(new StringTextComponent("Unlocked " + this.spellPart.getName()), Util.DUMMY_UUID);
             }
         });
-    return super.onItemRightClick(worldIn, playerIn, handIn);
+        return super.onItemRightClick(worldIn, playerIn, handIn);
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
+        if(spellPart != null){
+            if(!Config.enabledSpells.get(spellPart.tag).get()){
+                tooltip2.add(new StringTextComponent("Disabled. Cannot be used."));
+            }
+        }
     }
 }

@@ -40,9 +40,9 @@ public class ArsNouveau {
     };
 
     public ArsNouveau(){
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SERVER_CONFIG);
         APIRegistry.registerSpells();
         MappingUtil.setup();
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SERVER_CONFIG);
         // modLoading setup
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
