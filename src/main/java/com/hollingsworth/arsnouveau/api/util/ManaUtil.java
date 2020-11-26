@@ -35,7 +35,6 @@ public class ManaUtil {
                 cost += spell.getAdjustedManaCost(augments);
             }
         }
-//        System.out.println("Cost: " + cost);
         return cost;
     }
 

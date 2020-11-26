@@ -14,7 +14,7 @@ public class SpellContext {
 
     private boolean isCanceled;
 
-    public final List<AbstractSpellPart> recipe;
+    public final Spell spell;
 
     public final @Nullable LivingEntity caster;
 
@@ -24,8 +24,16 @@ public class SpellContext {
 
     public ParticleColor.IntWrapper colors;
 
-    public SpellContext(List<AbstractSpellPart> recipe, @Nullable LivingEntity caster){
-        this.recipe = recipe;
+    public SpellContext(List<AbstractSpellPart> spell, @Nullable LivingEntity caster){
+        this.spell = new Spell(spell);
+        this.caster = caster;
+        this.isCanceled = false;
+        this.currentIndex = 0;
+        this.colors = ParticleUtil.defaultParticleColorWrapper();
+    }
+
+    public SpellContext(Spell spell, @Nullable LivingEntity caster){
+        this.spell = spell;
         this.caster = caster;
         this.isCanceled = false;
         this.currentIndex = 0;
@@ -34,7 +42,7 @@ public class SpellContext {
 
     public AbstractSpellPart nextSpell(){
         this.currentIndex++;
-        return recipe.get(currentIndex - 1);
+        return spell.recipe.get(currentIndex - 1);
     }
 
     public void resetSpells(){
@@ -69,8 +77,8 @@ public class SpellContext {
         isCanceled = canceled;
     }
 
-    public List<AbstractSpellPart> getRecipe() {
-        return recipe;
+    public Spell getSpell() {
+        return spell;
     }
 
     @Nullable
