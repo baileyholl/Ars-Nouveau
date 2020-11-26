@@ -30,6 +30,9 @@ public class EffectLight extends AbstractEffect {
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
+            if (shooter == null || !shooter.equals(((EntityRayTraceResult) rayTraceResult).getEntity())) {
+                applyPotion((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity(), Effects.GLOWING, augments);
+            }
             applyPotion((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity(), Effects.NIGHT_VISION, augments);
         }
 
@@ -64,6 +67,6 @@ public class EffectLight extends AbstractEffect {
 
     @Override
     protected String getBookDescription() {
-        return "If cast on a block, a permanent light source is created. When cast on an entity, the target will receive Night Vision.";
+        return "If cast on a block, a permanent light source is created. When cast on yourself, you will receive night vision. When cast on other entities, they will receive Night Vision and Glowing.";
     }
 }

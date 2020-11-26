@@ -41,7 +41,7 @@ public class EffectSmelt extends AbstractEffect {
         float maxHardness = getHardness(augments);
 
         int aoeBuff = getBuffCount(augments, AugmentAOE.class);
-        int maxItemSmelt = 3 + 8*aoeBuff;
+        int maxItemSmelt = 3 + 4*aoeBuff;
 
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
         List<ItemEntity> itemEntities = world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(((BlockRayTraceResult) rayTraceResult).getPos()).grow(aoeBuff + 1.0));
@@ -107,8 +107,13 @@ public class EffectSmelt extends AbstractEffect {
     }
 
     @Override
+    public Tier getTier() {
+        return Tier.TWO;
+    }
+
+    @Override
     public int getManaCost() {
-        return 40;
+        return 100;
     }
 
     @Override

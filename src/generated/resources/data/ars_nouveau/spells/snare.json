@@ -13,7 +13,7 @@
       "tier": "ONE",
       "mana_cost": "High",
       "clay_type": "ars_nouveau:magic_clay",
-      "reagent": "minecraft:anvil"
+      "reagent": "minecraft:cobweb"
     }
   ]
 }

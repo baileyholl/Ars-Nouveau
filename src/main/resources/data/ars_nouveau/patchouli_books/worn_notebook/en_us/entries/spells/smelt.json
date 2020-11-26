@@ -1,7 +1,7 @@
 {
   "name": "Smelt",
   "icon": "ars_nouveau:glyph_smelt",
-  "category": "spells_1",
+  "category": "spells_2",
   "sortnum": 2,
   "pages": [
     {
@@ -10,9 +10,9 @@
     },
     {
       "type": "glyph_recipe",
-      "tier": "ONE",
-      "mana_cost": "Medium",
-      "clay_type": "ars_nouveau:magic_clay",
+      "tier": "TWO",
+      "mana_cost": "High",
+      "clay_type": "ars_nouveau:marvelous_clay",
       "reagent": "minecraft:blast_furnace"
     }
   ]

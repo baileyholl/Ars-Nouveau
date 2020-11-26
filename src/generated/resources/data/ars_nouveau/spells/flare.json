@@ -1,0 +1,19 @@
+{
+  "name": "Flare",
+  "icon": "ars_nouveau:glyph_flare",
+  "category": "spells_2",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "text",
+      "text": "When used on entities that are on fire, Flare causes a burst of damage and will spread fire and deal damage to other nearby entities. Does significantly more damage than Harm. Can be augmented with Extend Time, Amplify, and AOE."
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "TWO",
+      "mana_cost": "Medium",
+      "clay_type": "ars_nouveau:marvelous_clay",
+      "reagent": "ars_nouveau:glyph_ignite"
+    }
+  ]
+}

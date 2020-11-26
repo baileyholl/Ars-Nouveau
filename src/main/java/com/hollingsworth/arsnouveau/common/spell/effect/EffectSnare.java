@@ -47,7 +47,7 @@ public class EffectSnare extends AbstractEffect {
 
     @Override
     public Item getCraftingReagent() {
-        return Items.ANVIL;
+        return Items.COBWEB;
     }
 
     @Override

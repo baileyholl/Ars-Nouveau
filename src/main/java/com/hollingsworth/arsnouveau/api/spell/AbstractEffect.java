@@ -1,19 +1,30 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext;
+import net.minecraft.loot.LootParameterSets;
+import net.minecraft.loot.LootTable;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -56,6 +67,20 @@ public abstract class AbstractEffect extends AbstractSpellPart {
             maxHardness = 0.5f;
         }
         return maxHardness;
+    }
+
+    public void dealDamage(World world, LivingEntity shooter, float damage, List<AbstractAugment> augments, Entity entity, DamageSource source){
+        LivingEntity mob = (LivingEntity) entity;
+        shooter = shooter == null ? FakePlayerFactory.getMinecraft((ServerWorld) world) : shooter;
+        entity.attackEntityFrom(source, damage);
+        if(mob.getHealth() <= 0 && !mob.removed && hasBuff(augments, AugmentFortune.class)){
+            int looting = getBuffCount(augments, AugmentFortune.class);
+            LootContext.Builder lootContext = LootUtil.getLootingContext((ServerWorld)world,shooter, mob, looting, DamageSource.causePlayerDamage((PlayerEntity) shooter));
+            ResourceLocation lootTable = mob.getLootTableResourceLocation();
+            LootTable loottable = world.getServer().getLootTableManager().getLootTableFromLocation(lootTable);
+            List<ItemStack> items = loottable.generate(lootContext.build(LootParameterSets.GENERIC));
+            items.forEach(mob::entityDropItem);
+        }
     }
 
     public Vector3d safelyGetHitPos(RayTraceResult result){

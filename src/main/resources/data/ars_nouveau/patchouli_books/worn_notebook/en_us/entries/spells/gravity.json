@@ -1,0 +1,19 @@
+{
+  "name": "Gravity",
+  "icon": "ars_nouveau:glyph_gravity",
+  "category": "spells_2",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "text",
+      "text": "Causes blocks and entities to fall."
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "TWO",
+      "mana_cost": "Low",
+      "clay_type": "ars_nouveau:marvelous_clay",
+      "reagent": "minecraft:anvil"
+    }
+  ]
+}

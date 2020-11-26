@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
-import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
@@ -40,8 +39,6 @@ public class EffectBreak extends AbstractEffect {
         return 10;
     }
 
-
-
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(!world.isRemote && rayTraceResult instanceof BlockRayTraceResult){
@@ -74,7 +71,6 @@ public class EffectBreak extends AbstractEffect {
                     destroyBlockSafely(world, pos1, true, shooter);
                     state.getBlock().dropXpOnBlockBreak((ServerWorld) world, pos1, state.getExpDrop(world, pos1, 0, 0));
                 }
-                BlockUtil.safelyUpdateState(world, pos1);
             }
         }
     }

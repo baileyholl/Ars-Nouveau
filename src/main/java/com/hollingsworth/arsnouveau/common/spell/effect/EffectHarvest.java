@@ -57,7 +57,6 @@ public class EffectHarvest extends AbstractEffect {
                         } else {
                             BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, true);
                         }
-//                        world.notifyBlockUpdate(listPos, world.getBlockState(listPos), world.getBlockState(listPos), 3);
                     });
                     world.playEvent(2001, blockpos, Block.getStateId(state));
                     return;

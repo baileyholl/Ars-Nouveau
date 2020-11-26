@@ -5,9 +5,11 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -22,22 +24,20 @@ public class EffectHeal extends AbstractEffect {
 
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof EntityRayTraceResult){
+        if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
+            LivingEntity entity = ((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity());
+            if(entity.removed || entity.getHealth() <= 0)
+                return;
 
-            if(((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
-                LivingEntity entity = ((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity());
-                if(entity.removed || entity.getHealth() <= 0)
-                    return;
-
-                float maxHealth = entity.getMaxHealth();
-                float healVal = 3.0f + 3 * getBuffCount(augments, AugmentAmplify.class);
-                if(entity.getHealth() + healVal > maxHealth){
-                    entity.setHealth(entity.getMaxHealth());
-                }else{
-                    entity.setHealth(entity.getHealth() + healVal);
-                }
+            float maxHealth = entity.getMaxHealth();
+            float healVal = 3.0f + 3 * getBuffCount(augments, AugmentAmplify.class);
+            if(getBuffCount(augments, AugmentExtendTime.class) > 0){
+                applyPotion(entity, Effects.REGENERATION, augments, 5, 5);
+            }else{
+                entity.setHealth(entity.getHealth() + healVal > maxHealth ? entity.getMaxHealth() : entity.getHealth() + healVal);
             }
         }
+
     }
 
     @Override
@@ -63,6 +63,6 @@ public class EffectHeal extends AbstractEffect {
 
     @Override
     protected String getBookDescription() {
-        return "Heals a small amount of health for the target";
+        return "Heals a small amount of health for the target. When used with Extend Time, the Regeneration buff is applied instead.";
     }
 }

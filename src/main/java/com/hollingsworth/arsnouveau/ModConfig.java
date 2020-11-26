@@ -56,5 +56,10 @@ public class ModConfig {
     public static final String AugmentDurationDown = "duration_down";
 
     public static final String EffectWitherID = "wither";
-    public static String EffectExchangeID = "exchange";
+    public static final String EffectExchangeID = "exchange";
+    public static final String EffectCraftID = "craft";
+    public static String EffectColdSnapID = "cold_snap";
+    public static String EffectFlareID = "flare";
+    public static String EffectGravityID = "gravity";
+    public static String EffectConjureWaterID = "conjure_water";
 }

@@ -107,7 +107,6 @@ public class GuiSpellBook extends BaseBook {
         addButton(new GuiImageButton(bookLeft - 15, bookTop + 15, 0, 0, 16, 16, 16,16, "textures/gui/color_wheel.png",this::onColorClick));
         this.nextButton = addButton(new ChangePageButton(bookRight -20, bookBottom -10, true, this::onPageIncrease, true));
         this.previousButton = addButton(new ChangePageButton(bookLeft - 5 , bookBottom -10, false, this::onPageDec, true));
-        System.out.println(effects.size());
         if(effects.size() < 36){
             nextButton.visible = false;
             nextButton.active = false;
@@ -120,7 +119,6 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void addSpellParts(int page){
-        System.out.println("adding");
         for(Widget w : effectButtons) {
             buttons.remove(w);
             children.remove(w);
@@ -129,7 +127,6 @@ public class GuiSpellBook extends BaseBook {
         Collections.sort(unlockedSpells);
 
         List<AbstractSpellPart> displayedEffects = effects.subList(36 * page, Math.min(effects.size(), 36 * (page + 1)));
-        System.out.println(effects.size());
         //Adding spell parts
         int numCast = 0;
         int numEffect = 0;

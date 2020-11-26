@@ -14,7 +14,7 @@ public class AugmentAmplify extends AbstractAugment {
 
     @Override
     public int getManaCost() {
-        return 30;
+        return 20;
     }
 
     @Nullable
