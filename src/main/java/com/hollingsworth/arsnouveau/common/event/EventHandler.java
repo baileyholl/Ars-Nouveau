@@ -234,7 +234,7 @@ public class EventHandler {
     @SubscribeEvent
     public static void worldTick(TickEvent.WorldTickEvent e){
         World world = e.world;
-        if(world.isRemote)
+        if(world.isRemote || e.phase != TickEvent.Phase.END)
             return;
         EventQueue.getInstance().tick();
     }
