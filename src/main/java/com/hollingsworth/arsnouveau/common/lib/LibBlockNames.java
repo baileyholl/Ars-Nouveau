@@ -24,4 +24,5 @@ public class LibBlockNames {
     public static final String INTANGIBLE_AIR = "intangible_air";
     public static final String VOLCANIC_ACCUMULATOR = "volcanic_accumulator";
     public static final String LAVA_LILY = "lava_lily";
+    public static final String MANA_BERRY_BUSH = "mana_berry_bush";
 }

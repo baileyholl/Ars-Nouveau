@@ -12,12 +12,15 @@ import net.minecraftforge.registries.ObjectHolder;
 public class ModPotions {
 
     public static final ShieldPotion SHIELD_POTION = new ShieldPotion();
+    public static final ManaRegenPotion REGEN_POTION = new ManaRegenPotion();
+
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
         @SubscribeEvent
         public static void registerPotions(final RegistryEvent.Register<Effect> event) {
             final IForgeRegistry<Effect> registry = event.getRegistry();
             registry.register(SHIELD_POTION);
+            registry.register(REGEN_POTION);
         }
     }
 }

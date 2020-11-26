@@ -7,7 +7,11 @@ import com.hollingsworth.arsnouveau.common.block.tile.*;
 import com.hollingsworth.arsnouveau.common.items.AnimBlockItem;
 import com.hollingsworth.arsnouveau.common.items.FluidBlockItem;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
@@ -114,7 +118,8 @@ public class BlockRegistry {
 
     @ObjectHolder(LibBlockNames.VOLCANIC_ACCUMULATOR) public static VolcanicAccumulator VOLCANIC_BLOCK;
     @ObjectHolder(LibBlockNames.VOLCANIC_ACCUMULATOR) public static  TileEntityType<VolcanicTile> VOLCANIC_TILE;
-    @ObjectHolder(LibBlockNames.LAVA_LILY) public static  LavaLily LAVA_LILY;
+    @ObjectHolder(LibBlockNames.LAVA_LILY) public static LavaLily LAVA_LILY;
+    @ObjectHolder(LibBlockNames.MANA_BERRY_BUSH) public static ManaBerryBush MANA_BERRY_BUSH;
 
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
@@ -152,6 +157,7 @@ public class BlockRegistry {
             blockRegistryEvent.getRegistry().register(new IntangibleAirBlock());
             blockRegistryEvent.getRegistry().register(new VolcanicAccumulator());
             blockRegistryEvent.getRegistry().register(new LavaLily());
+            blockRegistryEvent.getRegistry().register(new ManaBerryBush(AbstractBlock.Properties.create(Material.PLANTS).tickRandomly().doesNotBlockMovement().sound(SoundType.SWEET_BERRY_BUSH)));
         }
 
         @SubscribeEvent
@@ -160,7 +166,7 @@ public class BlockRegistry {
             event.getRegistry().register(TileEntityType.Builder.create(ManaCondenserTile::new, BlockRegistry.MANA_CONDENSER).build(null).setRegistryName("mana_condenser"));
             event.getRegistry().register(TileEntityType.Builder.create(ManaJarTile::new, BlockRegistry.MANA_JAR).build(null).setRegistryName("mana_jar"));
             event.getRegistry().register(TileEntityType.Builder.create(LightTile::new, BlockRegistry.LIGHT_BLOCK).build(null).setRegistryName("light_block"));
-           event.getRegistry().register(TileEntityType.Builder.create(GlyphPressTile::new, BlockRegistry.GLYPH_PRESS_BLOCK).build(null).setRegistryName("glyph_press"));
+            event.getRegistry().register(TileEntityType.Builder.create(GlyphPressTile::new, BlockRegistry.GLYPH_PRESS_BLOCK).build(null).setRegistryName("glyph_press"));
             event.getRegistry().register(TileEntityType.Builder.create(EnchantingApparatusTile::new, BlockRegistry.ENCHANTING_APP_BLOCK).build(null).setRegistryName("enchanting_apparatus"));
             event.getRegistry().register(TileEntityType.Builder.create(ArcanePedestalTile::new, BlockRegistry.ARCANE_PEDESTAL).build(null).setRegistryName(LibBlockNames.ARCANE_PEDESTAL));
             event.getRegistry().register(TileEntityType.Builder.create(SummoningCrytalTile::new, BlockRegistry.SUMMONING_CRYSTAL).build(null).setRegistryName(LibBlockNames.SUMMONING_CRYSTAL));
@@ -209,7 +215,7 @@ public class BlockRegistry {
             registry.register(new BlockItem(BlockRegistry.SPELL_TURRET, ItemsRegistry.defaultItemProperties().setISTER(()-> SpellTurretRenderer.ISRender::new)).setRegistryName(LibBlockNames.SPELL_TURRET));
             registry.register(new AnimBlockItem(BlockRegistry.VOLCANIC_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(() -> VolcanicRenderer::getISTER)).setRegistryName(LibBlockNames.VOLCANIC_ACCUMULATOR));
             registry.register(new FluidBlockItem(BlockRegistry.LAVA_LILY, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.LAVA_LILY));
-
+            registry.register(new BlockItem(BlockRegistry.MANA_BERRY_BUSH, ItemsRegistry.defaultItemProperties().food(ItemsRegistry.MANA_BERRY)).setRegistryName(LibItemNames.MANA_BERRY));
         }
 
         public static Item getDefaultBlockItem(Block block, String registry){

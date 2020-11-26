@@ -1,0 +1,19 @@
+{
+    "name": "Changelog 1.7.0",
+    "icon": "ars_nouveau:glyph_flare",
+    "category": "release_notes",
+	"sortnum":92,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Ars Nouveau 1.7.0, More Spells! $(li)Adds Flare $(li)Adds Cold Snap$(li)Adds Gravity$(li)Adds Craft$(li)Adds Conjure Water$(li)Harm now applies poison with Extend Time $(li)Heal now applies Regen with Extend Time$(li)Light now applies Glowing to other entities."       
+        },{
+            "type": "text",
+            "text": "$(li)Adds Configs to disable spells and adjust mana costs.$(li)Harm now does less damage.$(li)Smelt is now T2 and costs more mana.$(li)Fixes Delay activating too soon."       
+        },
+		{
+            "type": "relations",
+            "entries":["machines/volcanic_accumulator", "machines/glyph_press","resources/lava_lily"]        
+        }
+    ]
+}

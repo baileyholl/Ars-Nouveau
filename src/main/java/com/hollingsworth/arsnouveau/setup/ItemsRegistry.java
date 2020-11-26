@@ -9,8 +9,11 @@ import com.hollingsworth.arsnouveau.common.armor.NoviceArmor;
 import com.hollingsworth.arsnouveau.common.items.*;
 import com.hollingsworth.arsnouveau.common.items.curios.*;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
+import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.Food;
 import net.minecraft.item.Item;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -85,12 +88,12 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.SYLPH_CHARM)public static SylphCharm sylphCharm;
     @ObjectHolder(LibItemNames.SYLPH_SHARD)public static ModItem sylphShard;
     @ObjectHolder(LibItemNames.MANA_GEM)public static ModItem manaGem;
-   // @ObjectHolder(LibItemNames.WIXIE_CHARM)public static WhelpCharm WIXIE_CHARM;
- //   @ObjectHolder(LibItemNames.WIXIE_SHARD)public static ModItem WIXIE_SHARD;
     @ObjectHolder(LibItemNames.ALLOW_ITEM_SCROLL)public static ItemScroll ALLOW_ITEM_SCROLL;
     @ObjectHolder(LibItemNames.DENY_ITEM_SCROLL)public static ItemScroll DENY_ITEM_SCROLL;
     @ObjectHolder(LibItemNames.BLANK_PARCHMENT)public static ModItem BLANK_PARCHMENT;
 
+
+    public static Food MANA_BERRY = (new Food.Builder()).hunger(2).saturation(0.1F).effect(() -> new EffectInstance(ModPotions.REGEN_POTION, 100), 1.0f).setAlwaysEdible().build();
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler{
