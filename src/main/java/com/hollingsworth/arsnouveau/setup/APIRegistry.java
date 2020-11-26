@@ -130,6 +130,11 @@ public class APIRegistry {
         registerSpell(ModConfig.AugmentDurationDown, new AugmentDurationDown());
         registerSpell(ModConfig.EffectWitherID, new EffectWither());
         registerSpell(ModConfig.EffectExchangeID, new EffectExchange());
+        registerSpell(ModConfig.EffectCraftID, new EffectCraft());
+        registerSpell(ModConfig.EffectFlareID, new EffectFlare());
+        registerSpell(ModConfig.EffectColdSnapID, new EffectColdSnap());
+        registerSpell(ModConfig.EffectConjureWaterID, new EffectConjureWater());
+        registerSpell(ModConfig.EffectGravityID, new EffectGravity());
         addStartingSpell(ModConfig.MethodProjectileID);
         addStartingSpell(ModConfig.MethodTouchID);
         addStartingSpell(ModConfig.MethodSelfID);
