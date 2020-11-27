@@ -240,5 +240,8 @@
 	"block.ars_nouveau.lava_lily": "Lava Lily",
 	"block.ars_nouveau.volcanic_accumulator": "Volcanic Accumulator",
 	"ars_nouveau.spell.disabled": "This spell has been disabled in the config.",
-	"block.ars_nouveau.mana_berry_bush": "Mana Berry"
+	"block.ars_nouveau.mana_berry_bush": "Mana Berry",
+	"ars_nouveau.connections.cleared": "Connections cleared.",
+	"ars_nouveau.connections.take": "Relay set to take from %s",
+	"ars_nouveau.connections.send": "Relay set to send to %s"
 }

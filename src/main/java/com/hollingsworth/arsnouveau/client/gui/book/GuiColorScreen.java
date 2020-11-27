@@ -43,7 +43,6 @@ public class GuiColorScreen extends BaseBook {
         addButton(redW);
         addButton(greenW);
         addButton(blueW);
-        addButton(new GuiImageButton(bookLeft - 15, bookTop + 15, 0, 0, 16, 16, 16,16, "textures/items/worn_notebook.png",(b) -> { }));
         addButton(new GuiImageButton(bookLeft+ 50, bookBottom - 35, 0,0,46, 18, 46, 18, "textures/gui/create_button.png", this::onSaveClick));
         addPresets();
     }

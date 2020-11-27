@@ -15,7 +15,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
 
@@ -80,7 +79,7 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
             return;
         // Let relays take from us, no action needed.
         this.setSendTo(storedPos.toImmutable());
-        PortUtil.sendMessage(playerEntity,new StringTextComponent("Relay set to send to " + DominionWand.getPosString(storedPos)));
+        PortUtil.sendMessage(playerEntity,new TranslationTextComponent("ars_nouveau.connections.send", DominionWand.getPosString(storedPos)));
         ParticleUtil.beam(storedPos,pos, (ServerWorld) world);
     }
 
@@ -91,7 +90,13 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
         if(world.getTileEntity(storedPos) instanceof ArcaneRelayTile)
             return;
         this.setTakeFrom(storedPos.toImmutable());
-        PortUtil.sendMessage(playerEntity,new StringTextComponent("Relay set to take from " + DominionWand.getPosString(storedPos)));
+        PortUtil.sendMessage(playerEntity,new TranslationTextComponent("ars_nouveau.connections.take", DominionWand.getPosString(storedPos)));
+    }
+
+    @Override
+    public void onWanded(PlayerEntity playerEntity) {
+        this.clearPos();
+        PortUtil.sendMessage(playerEntity,new TranslationTextComponent("ars_nouveau.connections.cleared"));
     }
 
     @Override
@@ -133,19 +138,29 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
     public void read(BlockState state, CompoundNBT tag) {
         if(NBTUtil.hasBlockPos(tag, "to")){
             this.toPos = NBTUtil.getBlockPos(tag, "to");
+        }else{
+            toPos = null;
         }
         if(NBTUtil.hasBlockPos(tag, "from")){
             this.fromPos = NBTUtil.getBlockPos(tag, "from");
+        }else{
+            fromPos = null;
         }
         super.read(state, tag);
     }
 
     @Override
     public CompoundNBT write(CompoundNBT tag) {
-        if(toPos != null)
+        if(toPos != null) {
             NBTUtil.storeBlockPos(tag, "to", toPos);
-        if(fromPos != null)
+        }else{
+            NBTUtil.removeBlockPos(tag, "to");
+        }
+        if(fromPos != null) {
             NBTUtil.storeBlockPos(tag, "from", fromPos);
+        }else{
+            NBTUtil.removeBlockPos(tag, "from");
+        }
         return super.write(tag);
     }
 

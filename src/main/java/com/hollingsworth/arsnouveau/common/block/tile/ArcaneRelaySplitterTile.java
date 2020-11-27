@@ -33,8 +33,16 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
 
     @Override
     public void clearPos() {
+//        CompoundNBT tag = getTileData();
+//        for(int i = 0; i < this.toList.size(); i++){
+//            NBTUtil.removeBlockPos(tag,"to_" + i);
+//        }
+//        for(int i = 0; i < this.fromList.size(); i++){
+//            NBTUtil.removeBlockPos(tag,"from_" + i);
+//        }
         this.toList.clear();
         this.fromList.clear();
+
         update();
     }
 
@@ -52,12 +60,6 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
             if(transferMana(fromTile, this, ratePer) > 0){
                 ParticleUtil.spawnFollowProjectile(world, fromPos, pos);
             }
-//            if(fromTile.getCurrentMana() >= ratePer && this.getCurrentMana() + ratePer <= this.getMaxMana()){
-//                fromTile.removeMana(ratePer);
-//                this.addMana(ratePer);
-//                if(pos != null)
-//                    spawnParticles(fromPos, pos);
-//            }
         }
         for(BlockPos s : stale)
             fromList.remove(s);
@@ -108,6 +110,8 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
     @Override
     public void read(BlockState state, CompoundNBT tag) {
         super.read(state, tag);
+        fromList = new ArrayList<>();
+        toList = new ArrayList<>();
         int counter = 0;
 
         while(NBTUtil.hasBlockPos(tag, "from_" + counter)){

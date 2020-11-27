@@ -16,6 +16,13 @@ public class NBTUtil {
         return tag;
     }
 
+    public static CompoundNBT removeBlockPos(CompoundNBT tag, String prefix){
+        tag.remove(prefix + "_x");
+        tag.remove(prefix + "_y");
+        tag.remove(prefix + "_z");
+        return tag;
+    }
+
     public static BlockPos getBlockPos(CompoundNBT tag, String prefix){
         return new BlockPos(tag.getDouble(prefix + "_x"), tag.getDouble(prefix + "_y"),tag.getDouble(prefix + "_z"));
     }
