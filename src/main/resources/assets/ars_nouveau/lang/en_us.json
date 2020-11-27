@@ -239,5 +239,6 @@
 	"ars_nouveau.ignore_set": "Carbuncle will ignore these items.",
 	"block.ars_nouveau.lava_lily": "Lava Lily",
 	"block.ars_nouveau.volcanic_accumulator": "Volcanic Accumulator",
-	"ars_nouveau.spell.disabled": "This spell has been disabled in the config."
+	"ars_nouveau.spell.disabled": "This spell has been disabled in the config.",
+	"block.ars_nouveau.mana_berry_bush": "Mana Berry"
 }
