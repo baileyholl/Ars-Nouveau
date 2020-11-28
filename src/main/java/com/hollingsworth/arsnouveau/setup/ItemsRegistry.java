@@ -91,6 +91,7 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.ALLOW_ITEM_SCROLL)public static ItemScroll ALLOW_ITEM_SCROLL;
     @ObjectHolder(LibItemNames.DENY_ITEM_SCROLL)public static ItemScroll DENY_ITEM_SCROLL;
     @ObjectHolder(LibItemNames.BLANK_PARCHMENT)public static ModItem BLANK_PARCHMENT;
+    @ObjectHolder(LibItemNames.WAND)public static Wand wand;
 
 
     public static Food MANA_BERRY = (new Food.Builder()).hunger(2).saturation(0.1F).effect(() -> new EffectInstance(ModPotions.REGEN_POTION, 100), 1.0f).setAlwaysEdible().build();
@@ -121,7 +122,7 @@ public class ItemsRegistry {
                     new ModItem(LibItemNames.RING_OF_POTENTIAL),
                     new BeltOfUnstableGifts(LibItemNames.BELT_OF_UNSTABLE_GIFTS),
 
-                    new ModItem(defaultItemProperties().maxStackSize(1), "bucket_of_mana"),
+                    new ModItem(defaultItemProperties().maxStackSize(1), LibItemNames.BUCKET_OF_MANA),
 
                     new NoviceArmor(EquipmentSlotType.FEET).setRegistryName("novice_boots"),
                     new NoviceArmor(EquipmentSlotType.LEGS).setRegistryName("novice_leggings"),
@@ -178,7 +179,8 @@ public class ItemsRegistry {
 
                     new ItemScroll(LibItemNames.ALLOW_ITEM_SCROLL),
                     new ItemScroll(LibItemNames.DENY_ITEM_SCROLL),
-                    new ModItem(LibItemNames.BLANK_PARCHMENT)
+                    new ModItem(LibItemNames.BLANK_PARCHMENT),
+                    new Wand()
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();
