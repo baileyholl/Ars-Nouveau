@@ -57,4 +57,6 @@ public class LibItemNames {
     public static final String DENY_ITEM_SCROLL = "deny_scroll";
     public static final String BLANK_PARCHMENT = "blank_parchment";
     public static final String MANA_BERRY = "mana_berry";
+
+    public static final String WAND = "wand";
 }

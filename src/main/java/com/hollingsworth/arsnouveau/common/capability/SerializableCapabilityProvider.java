@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.capability;
 
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
@@ -45,7 +46,8 @@ public class SerializableCapabilityProvider<HANDLER> extends SimpleCapabilityPro
         if (instance == null) {
             return null;
         }
-
+        if(getCapability() == null)
+            return new CompoundNBT();
         return getCapability().writeNBT(instance, getFacing());
     }
 

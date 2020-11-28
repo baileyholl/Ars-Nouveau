@@ -10,8 +10,6 @@ public class SpellCaster implements ISpellCaster{
 
     private int slot;
 
-    private int maxSlots;
-
     public final ItemStack stack;
 
     public SpellCaster(ItemStack stack){
@@ -30,12 +28,7 @@ public class SpellCaster implements ISpellCaster{
 
     @Override
     public int getMaxSlots() {
-        return maxSlots;
-    }
-
-    @Override
-    public void setMaxSlots(int slots) {
-        this.maxSlots = slots;
+        return 1;
     }
 
     @Override

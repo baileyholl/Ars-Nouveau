@@ -10,8 +10,6 @@ public interface ISpellCaster {
 
     int getMaxSlots();
 
-    void setMaxSlots(int slots);
-
     int getCurrentSlot();
 
     void setCurrentSlot(int slot);

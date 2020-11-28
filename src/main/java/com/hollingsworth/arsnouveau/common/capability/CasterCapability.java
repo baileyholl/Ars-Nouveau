@@ -47,16 +47,14 @@ public class CasterCapability {
                     tag.putString("spell_" + i, instance.getSpells().get(s).serialize());
                     i++;
                 }
+              //  System.out.println("writing");
                 return tag;
             }
 
             @Override
             public void readNBT(Capability<ISpellCaster> capability, ISpellCaster instance, Direction side, INBT nbt) {
-                if(!(nbt instanceof CompoundNBT))
-                    return;
                 CompoundNBT tag = (CompoundNBT)nbt;
                 instance.setCurrentSlot(tag.getInt("current_slot"));
-                instance.setMaxSlots(tag.getInt("max_slot"));
                 for(int i = 0; i < instance.getMaxSlots(); i++){
                     if(tag.contains("spell_" + i)){
                         instance.getSpells().put(i, Spell.deserialize(tag.getString("spell_" + i)));
