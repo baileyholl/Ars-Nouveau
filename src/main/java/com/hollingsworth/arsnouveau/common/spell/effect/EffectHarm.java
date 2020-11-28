@@ -14,6 +14,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -32,7 +33,7 @@ public class EffectHarm extends AbstractEffect {
                 if(time > 0){
                     applyPotion((LivingEntity) entity, Effects.POISON, augments, 5, 5);
                 }else{
-                    dealDamage(world, shooter, damage, augments, entity, DamageSource.causeMobDamage(shooter));
+                    dealDamage(world, shooter, damage, augments, entity, DamageSource.causePlayerDamage(getPlayer(shooter, (ServerWorld) world)));
                 }
             }
         }

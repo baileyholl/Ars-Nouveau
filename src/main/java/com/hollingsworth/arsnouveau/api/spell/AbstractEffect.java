@@ -55,6 +55,10 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         return getBuffCount(augmentTypes, AugmentExtendTime.class) - getBuffCount(augmentTypes, AugmentDurationDown.class);
     }
 
+    public PlayerEntity getPlayer(LivingEntity entity, ServerWorld world){
+        return entity instanceof PlayerEntity ? (PlayerEntity) entity : FakePlayerFactory.getMinecraft(world);
+    }
+
     public float getHardness(List<AbstractAugment> augments){
         float maxHardness = 5.0f + 25 * getAmplificationBonus(augments);
         int buff = getAmplificationBonus(augments);
