@@ -69,8 +69,11 @@ public abstract class AbstractManaTile extends TileEntity implements IManaTile, 
     }
 
     public boolean update(){
-        world.notifyBlockUpdate(this.pos, world.getBlockState(pos),  world.getBlockState(pos), 2);
-        return true;
+        if(this.pos != null && this.world != null){
+            world.notifyBlockUpdate(this.pos, world.getBlockState(pos),  world.getBlockState(pos), 2);
+            return true;
+        }
+        return false;
     }
 
     @Override
