@@ -17,7 +17,7 @@ public abstract class ArsNouveauCurio extends ModItem {
     }
 
     public ArsNouveauCurio(String registryName){
-        super(registryName);
+        super(new Item.Properties().maxStackSize(1).group(ArsNouveau.itemGroup), registryName);
     }
 
     abstract public void wearableTick(LivingEntity wearer);
