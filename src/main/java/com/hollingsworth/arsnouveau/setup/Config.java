@@ -20,7 +20,11 @@ public class Config {
     public static ForgeConfigSpec CLIENT_CONFIG;
 
     public static ForgeConfigSpec.BooleanValue SPAWN_ORE;
+    public static ForgeConfigSpec.BooleanValue SPAWN_BERRIES;
     public static ForgeConfigSpec.BooleanValue SPAWN_BOOK;
+    public static ForgeConfigSpec.IntValue INIT_MAX_MANA;
+    public static ForgeConfigSpec.IntValue INIT_MANA_REGEN;
+    public static ForgeConfigSpec.IntValue REGEN_INTERVAL;
     public static ForgeConfigSpec.IntValue CARBUNCLE_WEIGHT;
     public static ForgeConfigSpec.IntValue SYLPH_WEIGHT;
 
@@ -41,9 +45,16 @@ public class Config {
         SERVER_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
 
         SPAWN_ORE = SERVER_BUILDER.comment("Spawn Arcane Ore in the world").define("genOre", true);
+        SPAWN_BERRIES = SERVER_BUILDER.comment("Spawn Mana Berry Bushes in the world").define("genBerries", true);
         SPAWN_BOOK = SERVER_BUILDER.comment("Spawn a book in the players inventory on login").define("spawnBook", true);
         CARBUNCLE_WEIGHT = SERVER_BUILDER.comment("How often Carbuncles spawn").defineInRange("carbuncleWeight",5,0,100);
         SYLPH_WEIGHT = SERVER_BUILDER.comment("How often Sylphs spawn").defineInRange("sylphWeight",5,0,100);
+        SERVER_BUILDER.pop();
+        SERVER_BUILDER.comment("Mana").push("mana");
+        INIT_MANA_REGEN = SERVER_BUILDER.comment("Base mana regen in seconds").defineInRange("baseRegen", 5, 0, Integer.MAX_VALUE);
+        INIT_MAX_MANA = SERVER_BUILDER.comment("Base max mana").defineInRange("baseMax", 100, 0, Integer.MAX_VALUE);
+        REGEN_INTERVAL = SERVER_BUILDER.comment("How often max and regen will be calculated, in ticks. NOTE: Having the base mana regen AT LEAST this value is recommended.")
+                .defineInRange("updateInterval", 5, 1, 20);
         SERVER_BUILDER.pop();
         SERVER_BUILDER.comment("Spells").push(CATEGORY_SPELLS);
         for(AbstractSpellPart spellPart : ArsNouveauAPI.getInstance().getSpell_map().values()){

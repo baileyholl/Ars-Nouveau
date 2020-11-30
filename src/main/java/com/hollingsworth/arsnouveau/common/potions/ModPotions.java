@@ -1,7 +1,13 @@
 package com.hollingsworth.arsnouveau.common.potions;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraft.potion.Effect;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.potion.*;
+import net.minecraftforge.common.brewing.BrewingRecipe;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -12,15 +18,41 @@ import net.minecraftforge.registries.ObjectHolder;
 public class ModPotions {
 
     public static final ShieldPotion SHIELD_POTION = new ShieldPotion();
-    public static final ManaRegenPotion REGEN_POTION = new ManaRegenPotion();
+    public static final ManaRegenPotion MANA_REGEN_EFFECT = new ManaRegenPotion();
+
+    @ObjectHolder("mana_regen_potion")
+    public static Potion MANA_REGEN_POTION;
+    @ObjectHolder("mana_regen_potion_long")
+    public static Potion LONG_MANA_REGEN_POTION;
+
+    @ObjectHolder("mana_regen_potion_strong")
+    public static Potion STRONG_MANA_REGEN_POTION;
+    public static void addRecipes() {
+        ItemStack AWKWARD = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.AWKWARD);
+        ItemStack manaPot = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), ModPotions.MANA_REGEN_POTION);
+        ItemStack manaPotLong = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), ModPotions.LONG_MANA_REGEN_POTION);
+        ItemStack manaPotStrong = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), ModPotions.STRONG_MANA_REGEN_POTION);
+        BrewingRecipeRegistry.addRecipe(new SimpleBrewingRecipe(Ingredient.fromItems(BlockRegistry.MANA_BERRY_BUSH),  manaPot));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.fromStacks(manaPot), Ingredient.fromItems(Items.GLOWSTONE_DUST),  manaPotStrong));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.fromStacks(manaPot), Ingredient.fromItems(Items.REDSTONE),  manaPotLong));
+    }
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
         @SubscribeEvent
-        public static void registerPotions(final RegistryEvent.Register<Effect> event) {
+        public static void registerEffects(final RegistryEvent.Register<Effect> event) {
             final IForgeRegistry<Effect> registry = event.getRegistry();
             registry.register(SHIELD_POTION);
-            registry.register(REGEN_POTION);
+            registry.register(MANA_REGEN_EFFECT);
+        }
+
+        @SubscribeEvent
+        public static void registerPotions(final RegistryEvent.Register<Potion> event) {
+            final IForgeRegistry<Potion> registry = event.getRegistry();
+
+            registry.register(new Potion(new EffectInstance(MANA_REGEN_EFFECT, 3600)).setRegistryName("mana_regen_potion"));
+            registry.register(new Potion(new EffectInstance(MANA_REGEN_EFFECT, 9600)).setRegistryName("mana_regen_potion_long"));
+            registry.register(new Potion(new EffectInstance(MANA_REGEN_EFFECT, 3600, 1)).setRegistryName("mana_regen_potion_strong"));
         }
     }
 }

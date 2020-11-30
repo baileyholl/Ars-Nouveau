@@ -2,14 +2,12 @@ package com.hollingsworth.arsnouveau;
 
 import com.hollingsworth.arsnouveau.api.util.MappingUtil;
 import com.hollingsworth.arsnouveau.client.ClientHandler;
+import com.hollingsworth.arsnouveau.common.event.WorldEvent;
 import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.setup.*;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.OreFeatureConfig;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -55,12 +53,11 @@ public class ArsNouveau {
 
     public void setup (final FMLCommonSetupEvent event){
         APIRegistry.registerApparatusRecipes();
-        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.ARCANE_ORE.getRegistryName(),
-                Feature.ORE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD,
-                        BlockRegistry.ARCANE_ORE.getDefaultState(), 5)).range(60).square().func_242731_b(5));
+        WorldEvent.registerFeatures();
         //Pre-init code
         proxy.init();
         Networking.registerMessages();
+        event.enqueueWork(ModPotions::addRecipes);
     }
 
     public void clientSetup(final FMLClientSetupEvent event){

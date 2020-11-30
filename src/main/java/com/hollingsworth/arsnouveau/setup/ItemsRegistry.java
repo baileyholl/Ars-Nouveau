@@ -94,7 +94,7 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.WAND)public static Wand wand;
 
 
-    public static Food MANA_BERRY = (new Food.Builder()).hunger(2).saturation(0.1F).effect(() -> new EffectInstance(ModPotions.REGEN_POTION, 100), 1.0f).setAlwaysEdible().build();
+    public static Food MANA_BERRY_FOOD = (new Food.Builder()).hunger(2).saturation(0.1F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).setAlwaysEdible().build();
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler{
@@ -121,9 +121,7 @@ public class ItemsRegistry {
                     new ModItem(LibItemNames.ARCANE_BRICK).withTooltip(new TranslationTextComponent("tooltip.arcane_brick")),
                     new ModItem(LibItemNames.RING_OF_POTENTIAL),
                     new BeltOfUnstableGifts(LibItemNames.BELT_OF_UNSTABLE_GIFTS),
-
                     new ModItem(defaultItemProperties().maxStackSize(1), LibItemNames.BUCKET_OF_MANA),
-
                     new NoviceArmor(EquipmentSlotType.FEET).setRegistryName("novice_boots"),
                     new NoviceArmor(EquipmentSlotType.LEGS).setRegistryName("novice_leggings"),
                     new NoviceArmor(EquipmentSlotType.CHEST).setRegistryName("novice_robes"),
