@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Hand;
@@ -48,8 +49,10 @@ public class RuneTile extends AnimatedTile {
             return;
         try {
 
-            EntitySpellResolver resolver = new EntitySpellResolver(recipe, new SpellContext(recipe, FakePlayerFactory.getMinecraft((ServerWorld) world)).withCastingTile(this));
-            resolver.onCastOnEntity(ItemStack.EMPTY, FakePlayerFactory.getMinecraft((ServerWorld) world), (LivingEntity) entity, Hand.MAIN_HAND);
+            PlayerEntity playerEntity = uuid != null ? world.getPlayerByUuid(uuid) : FakePlayerFactory.getMinecraft((ServerWorld) world);
+            EntitySpellResolver resolver = new EntitySpellResolver(recipe, new SpellContext(recipe, playerEntity).withCastingTile(this));
+
+            resolver.onCastOnEntity(ItemStack.EMPTY, playerEntity, (LivingEntity) entity, Hand.MAIN_HAND);
             if (this.isTemporary) {
                 world.destroyBlock(pos, false);
                 return;
