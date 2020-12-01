@@ -49,7 +49,8 @@ public class EffectBlink extends AbstractEffect {
             shooter.setPositionAndUpdate(vec.getX(), vec.getY(), vec.getZ());
         }else if(rayTraceResult instanceof EntityRayTraceResult) {
             Vector3d vec = safelyGetHitPos(rayTraceResult);
-            shooter.setPositionAndUpdate(vec.getX(), vec.getY(), vec.getZ());
+            if(isRealPlayer(shooter))
+                shooter.setPositionAndUpdate(vec.getX(), vec.getY(), vec.getZ());
         }else if(rayTraceResult instanceof BlockRayTraceResult){
             Vector3d vec = rayTraceResult.getHitVec();
             if(isValidTeleport(world, new BlockPos(vec))){
