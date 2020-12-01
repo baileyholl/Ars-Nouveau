@@ -22,6 +22,8 @@ public class DropDistribution<T>{
 
     @Nullable
     public T nextDrop(){
+        if(totalNum <= 0)
+            return null;
         int gen = DropDistribution.rand.nextInt(totalNum);
         int counter = 0;
         for(Map.Entry<T,Integer> entry : this.map.entrySet()){
