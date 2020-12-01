@@ -2,17 +2,17 @@ package com.hollingsworth.arsnouveau.api.mana;
 
 public interface IMana {
 
-    int getCurrentMana();
+    double getCurrentMana();
 
     int getMaxMana();
 
     void setMaxMana(int max);
 
-    int setMana(final int mana);
+    double setMana(final double mana);
 
-    int addMana(final int manaToAdd);
+    double addMana(final double manaToAdd);
 
-    int removeMana(final int manaToRemove);
+    double removeMana(final double manaToRemove);
 
     default int getGlyphBonus(){
         return 0;

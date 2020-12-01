@@ -56,9 +56,13 @@ public class Config {
         REGEN_INTERVAL = SERVER_BUILDER.comment("How often max and regen will be calculated, in ticks. NOTE: Having the base mana regen AT LEAST this value is recommended.")
                 .defineInRange("updateInterval", 5, 1, 20);
         SERVER_BUILDER.pop();
-        SERVER_BUILDER.comment("Spells").push(CATEGORY_SPELLS);
+        SERVER_BUILDER.comment("Enabled Spells").push(CATEGORY_SPELLS);
         for(AbstractSpellPart spellPart : ArsNouveauAPI.getInstance().getSpell_map().values()){
             enabledSpells.put(spellPart.tag, SERVER_BUILDER.comment(spellPart.name + " enabled?").define(spellPart.tag, true));
+        }
+        SERVER_BUILDER.pop();
+        SERVER_BUILDER.comment("Spell Cost").push("spell_cost");
+        for(AbstractSpellPart spellPart : ArsNouveauAPI.getInstance().getSpell_map().values()){
             spellCost.put(spellPart.tag + "_cost", SERVER_BUILDER.comment(spellPart.name + " cost").defineInRange(spellPart.tag+ "_cost", spellPart.getManaCost(), Integer.MIN_VALUE, Integer.MAX_VALUE));
         }
         SERVER_BUILDER.pop();

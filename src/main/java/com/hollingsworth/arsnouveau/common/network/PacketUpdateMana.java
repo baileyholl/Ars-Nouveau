@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 
 public class PacketUpdateMana {
 
-    public int mana;
+    public double mana;
 
     public int maxMana;
 
@@ -18,7 +18,7 @@ public class PacketUpdateMana {
     public int tierBonus;
     //Decoder
     public PacketUpdateMana(PacketBuffer buf){
-        mana = buf.readInt();
+        mana = buf.readDouble();
         maxMana = buf.readInt();
         glyphBonus = buf.readInt();
         tierBonus = buf.readInt();
@@ -26,13 +26,13 @@ public class PacketUpdateMana {
 
     //Encoder
     public void toBytes(PacketBuffer buf){
-        buf.writeInt(mana);
+        buf.writeDouble(mana);
         buf.writeInt(maxMana);
         buf.writeInt(glyphBonus);
         buf.writeInt(tierBonus);
     }
 
-    public PacketUpdateMana(int mana, int maxMana, int glyphBonus, int tierBonus){
+    public PacketUpdateMana(double mana, int maxMana, int glyphBonus, int tierBonus){
         this.mana = mana;
         this.maxMana = maxMana;
         this.glyphBonus = glyphBonus;

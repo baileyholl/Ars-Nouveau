@@ -5,8 +5,8 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 
 public class ManaRegenCalcEvent extends LivingEvent {
 
-    private int regen;
-    public ManaRegenCalcEvent(LivingEntity entity, int regen) {
+    private double regen;
+    public ManaRegenCalcEvent(LivingEntity entity, double regen) {
         super(entity);
         this.regen = regen;
     }
@@ -16,7 +16,7 @@ public class ManaRegenCalcEvent extends LivingEvent {
         this.regen = Math.max(newRegen, 0);
     }
 
-    public int getRegen(){
+    public double getRegen(){
         return this.regen;
     }
 

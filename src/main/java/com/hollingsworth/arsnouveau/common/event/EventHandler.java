@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.mana.IMana;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
@@ -186,22 +187,22 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void playerOnTick(TickEvent.PlayerTickEvent e) {
-        if (e.player instanceof ServerPlayerEntity && e.player.world.getGameTime() % 5 == 0) {
-            if (e.player.world.getGameTime() % 20 == 0) {
-                ManaCapability.getMana(e.player).ifPresent(mana -> {
-                    double regenPerSecond = ManaUtil.getManaRegen(e.player);
-                    if (mana.getCurrentMana() != mana.getMaxMana()) {
-                        mana.addMana((int) regenPerSecond);
-                        Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
-                    }
-                });
-            }
-            if (e.player.world.getGameTime() % 10 == 0) {
-                ManaCapability.getMana(e.player).ifPresent(mana -> {
-                    mana.setMaxMana(ManaUtil.getMaxMana(e.player));
-                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
-                });
-            }
+        if(e.player.getEntityWorld().isRemote || e.player.getEntityWorld().getGameTime() % Config.REGEN_INTERVAL.get() != 0)
+            return;
+
+        IMana mana = ManaCapability.getMana(e.player).orElse(null);
+        if(mana == null)
+            return;
+
+        if (mana.getCurrentMana() != mana.getMaxMana()) {
+            double regenPerSecond = ManaUtil.getManaRegen(e.player) / (20.0 / Config.REGEN_INTERVAL.get());
+            mana.addMana(regenPerSecond);
+            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
+        }
+        int max = ManaUtil.getMaxMana(e.player);
+        if(mana.getMaxMana() != max) {
+            mana.setMaxMana(max);
+            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
         }
     }
 

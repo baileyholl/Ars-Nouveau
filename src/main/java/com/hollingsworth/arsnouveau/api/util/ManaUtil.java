@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.util;
 
 import com.hollingsworth.arsnouveau.api.event.ManaRegenCalcEvent;
 import com.hollingsworth.arsnouveau.api.event.MaxManaCalcEvent;
+import com.hollingsworth.arsnouveau.api.mana.IMana;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
@@ -10,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.ManaJarTile;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
+import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,6 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -58,64 +61,67 @@ public class ManaUtil {
 
 
     public static int getMaxMana(PlayerEntity e){
-        AtomicInteger max = new AtomicInteger(100);
-        e.getEquipmentAndArmor().forEach(i->{
+        IMana mana = ManaCapability.getMana(e).orElse(null);
+        if(mana == null)
+            return 0;
+        int max = Config.INIT_MAX_MANA.get();
+        for(ItemStack i : e.getEquipmentAndArmor()){
             if(i.getItem() instanceof IManaEquipment){
-                //max.addAndGet(((MagicArmor) i.getItem()).getMaxManaBonus());
-                max.addAndGet(((IManaEquipment) i.getItem()).getMaxManaBoost());
-
+                max += (((IManaEquipment) i.getItem()).getMaxManaBoost());
             }
-            max.addAndGet( 25 * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, i));
-        });
+            max += ( 25 * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, i));
+        }
 
-        CuriosUtil.getAllWornItems(e).ifPresent(items ->{
-
+        IItemHandlerModifiable items = CuriosUtil.getAllWornItems(e).orElse(null);
+        if(items != null){
             for(int i = 0; i < items.getSlots(); i++){
                 Item item = items.getStackInSlot(i).getItem();
                 if(item instanceof IManaEquipment)
-                    max.addAndGet(((IManaEquipment) item).getMaxManaBoost());
+                    max += (((IManaEquipment) item).getMaxManaBoost());
             }
-        });
-        ManaCapability.getMana(e).ifPresent(mana ->{
-            int tier = mana.getBookTier();
-            int numGlyphs = mana.getGlyphBonus() > 5 ? mana.getGlyphBonus() - 5 : 0;
-            max.addAndGet(numGlyphs * 15);
-            max.addAndGet(tier * 50);
-        });
-        MaxManaCalcEvent event = new MaxManaCalcEvent(e, max.get());
+        }
+
+        int tier = mana.getBookTier();
+        int numGlyphs = mana.getGlyphBonus() > 5 ? mana.getGlyphBonus() - 5 : 0;
+        max += numGlyphs * 15;
+        max += tier * 50;
+
+        MaxManaCalcEvent event = new MaxManaCalcEvent(e, max);
         MinecraftForge.EVENT_BUS.post(event);
-        max.set(event.getMax());
-        return max.get();
+        max = event.getMax();
+        return max;
     }
 
-    public static int getManaRegen(PlayerEntity e) {
-        AtomicInteger regen = new AtomicInteger(5);
+    public static double getManaRegen(PlayerEntity e) {
+        IMana mana = ManaCapability.getMana(e).orElse(null);
+        if(mana == null)
+            return 0;
+        double regen = Config.INIT_MANA_REGEN.get();
         for(ItemStack i : e.getEquipmentAndArmor()){
             if(i.getItem() instanceof MagicArmor){
                 MagicArmor armor = ((MagicArmor) i.getItem());
-                regen.addAndGet(armor.getManaRegenBonus());
+                regen += armor.getManaRegenBonus();
             }
-            regen.addAndGet(2 * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, i));
+            regen += 2 * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, i);
         }
-        CuriosUtil.getAllWornItems(e).ifPresent(items ->{
-            int newregen = regen.get();
+        IItemHandlerModifiable items = CuriosUtil.getAllWornItems(e).orElse(null);
+        if(items != null){
             for(int i = 0; i < items.getSlots(); i++){
                 Item item = items.getStackInSlot(i).getItem();
                 if(item instanceof IManaEquipment)
-                    newregen += ((IManaEquipment) item).getManaRegenBonus();
+                    regen += ((IManaEquipment) item).getManaRegenBonus();
             }
-            regen.set(newregen);
-        });
-        ManaCapability.getMana(e).ifPresent(mana ->{
-            int tier = mana.getBookTier();
-            int numGlyphs = mana.getGlyphBonus() > 5 ? mana.getGlyphBonus() - 5 : 0;
-            regen.addAndGet(numGlyphs / 3);
-            regen.addAndGet(tier);
-        });
-        ManaRegenCalcEvent event = new ManaRegenCalcEvent(e, regen.get());
+        }
+
+        int tier = mana.getBookTier();
+        double numGlyphs = mana.getGlyphBonus() > 5 ? mana.getGlyphBonus() - 5 : 0;
+        regen += numGlyphs / 3.0;
+        regen += tier;
+
+        ManaRegenCalcEvent event = new ManaRegenCalcEvent(e, regen);
         MinecraftForge.EVENT_BUS.post(event);
-        regen.set(event.getRegen());
-        return regen.get();
+        regen = event.getRegen();
+        return regen;
     }
 
     /**

@@ -9,7 +9,7 @@ public class Mana implements IMana {
 
     private final LivingEntity livingEntity;
 
-    private int mana;
+    private double mana;
 
     private int maxMana;
 
@@ -23,7 +23,7 @@ public class Mana implements IMana {
     }
 
     @Override
-    public int getCurrentMana() {
+    public double getCurrentMana() {
         return mana;
     }
 
@@ -38,7 +38,7 @@ public class Mana implements IMana {
     }
 
     @Override
-    public int setMana(int mana) {
+    public double setMana(double mana) {
         if(mana > getMaxMana()){
             this.mana = getMaxMana();
         }else if(mana < 0){
@@ -50,13 +50,13 @@ public class Mana implements IMana {
     }
 
     @Override
-    public int addMana(int manaToAdd) {
+    public double addMana(double manaToAdd) {
         this.setMana(this.getCurrentMana() + manaToAdd);
         return this.getCurrentMana();
     }
 
     @Override
-    public int removeMana(int manaToRemove) {
+    public double removeMana(double manaToRemove) {
         if(manaToRemove < 0)
             manaToRemove = 0;
         this.setMana(this.getCurrentMana() - manaToRemove);

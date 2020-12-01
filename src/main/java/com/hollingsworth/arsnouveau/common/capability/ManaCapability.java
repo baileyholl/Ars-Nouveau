@@ -41,7 +41,7 @@ public class ManaCapability {
             @Override
             public INBT writeNBT(Capability<IMana> capability, IMana instance, Direction side) {
                 CompoundNBT tag = new CompoundNBT();
-                tag.putInt("current", instance.getCurrentMana());
+                tag.putDouble("current", instance.getCurrentMana());
                 tag.putInt("max", instance.getMaxMana());
                 tag.putInt("glyph", instance.getGlyphBonus());
                 tag.putInt("book_tier", instance.getBookTier());
@@ -54,7 +54,7 @@ public class ManaCapability {
                     return;
                 CompoundNBT tag = (CompoundNBT)nbt;
                 instance.setMaxMana(tag.getInt("max"));
-                instance.setMana(tag.getInt("current"));
+                instance.setMana(tag.getDouble("current"));
                 instance.setBookTier(tag.getInt("book_tier"));
                 instance.setGlyphBonus(tag.getInt("glyph"));
             }
