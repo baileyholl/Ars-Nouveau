@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.api.util.MathUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.arsnouveau.common.block.LavaLily;
 import com.hollingsworth.arsnouveau.common.block.tile.IntangibleAirTile;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
@@ -34,7 +35,9 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.World;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -128,6 +131,15 @@ public class EventHandler {
         castSpell((PlayerEntity) entity, s);
     }
 
+    @SubscribeEvent
+    public static void livingAttackEvent(LivingAttackEvent e){
+        if(e.getSource() == DamageSource.HOT_FLOOR && e.getEntityLiving() != null && !e.getEntity().getEntityWorld().isRemote){
+            World world = e.getEntity().world;
+            if(world.getBlockState(e.getEntityLiving().getPosition()).getBlock() instanceof LavaLily){
+                e.setCanceled(true);
+            }
+        }
+    }
 
     @SubscribeEvent
     public static void playerAttackEntity(AttackEntityEvent e){

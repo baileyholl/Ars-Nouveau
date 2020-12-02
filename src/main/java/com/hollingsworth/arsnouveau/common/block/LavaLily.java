@@ -1,10 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.BushBlock;
+import net.minecraft.block.*;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
@@ -18,10 +15,10 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 public class LavaLily extends BushBlock {
-    protected static final VoxelShape LILY_PAD_AABB = Block.makeCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 1.5D, 15.0D);
+    protected static final VoxelShape LILY_PAD_AABB = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 1.5D, 16.0D);
 
     public LavaLily() {
-        super(ModBlock.defaultProperties());
+        super(ModBlock.defaultProperties().notSolid());
         setRegistryName(LibBlockNames.LAVA_LILY);
     }
 
@@ -56,6 +53,11 @@ public class LavaLily extends BushBlock {
     @Override
     public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
         return super.isValidPosition(state, worldIn, pos);
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState p_149645_1_) {
+        return BlockRenderType.MODEL;
     }
 
     @Override

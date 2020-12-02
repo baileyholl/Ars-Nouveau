@@ -97,14 +97,14 @@ public class VolcanicTile extends AbstractManaTile implements IAnimatable {
             return;
         }
 
-        magmaPos = getBlockInArea(Blocks.MAGMA_BLOCK, 2);
+        magmaPos = getBlockInArea(Blocks.MAGMA_BLOCK, 1);
         if(magmaPos != null && progress >= 500){
             world.setBlockState(magmaPos, Blocks.LAVA.getDefaultState());
             progress -= 500;
             return;
         }
 
-        stonePos = getBlockInArea(Blocks.STONE, 2);
+        stonePos = getBlockInArea(Blocks.STONE, 1);
         if(stonePos != null && progress >= 300){
             world.setBlockState(stonePos, Blocks.MAGMA_BLOCK.getDefaultState());
             progress -= 300;
