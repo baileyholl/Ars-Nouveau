@@ -14,12 +14,12 @@ public class ReactiveEnchantment extends Enchantment {
 
     @Override
     public int getMinEnchantability(int enchantmentLevel) {
-        return 20;
+        return 0;
     }
 
     @Override
     public int getMaxEnchantability(int enchantmentLevel) {
-        return 100;
+        return 0;
     }
 
     @Override

@@ -17,11 +17,12 @@ public class ManaBoost extends Enchantment {
 
     @Override
     public int getMaxEnchantability(int enchantmentLevel) {
-        return 100;
+        return 50;
     }
 
     @Override
     public int getMaxLevel() {
         return 3;
     }
+
 }
