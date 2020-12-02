@@ -6,10 +6,7 @@ import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
-import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.AvoidPlayerUntamedGoal;
-import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.FindItem;
-import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.StoreItemGoal;
-import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.TakeItemGoal;
+import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.*;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
@@ -91,6 +88,13 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     @Override
     public AnimationFactory getFactory() {
         return manager;
+    }
+
+    @Override
+    public boolean attackEntityFrom(DamageSource source, float amount) {
+        if(source == DamageSource.CACTUS || source == DamageSource.SWEET_BERRY_BUSH)
+            return false;
+        return super.attackEntityFrom(source, amount);
     }
 
 
@@ -272,6 +276,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     public List<PrioritizedGoal> getTamedGoals(){
         List<PrioritizedGoal> list = new ArrayList<>();
         list.add(new PrioritizedGoal(2, new FindItem(this)));
+        list.add(new PrioritizedGoal(2, new ForageManaBerries(this)));
         list.add(new PrioritizedGoal(3, new StoreItemGoal(this)));
         list.add(new PrioritizedGoal(3, new TakeItemGoal(this)));
         list.add(new PrioritizedGoal(5, new LookAtGoal(this, PlayerEntity.class, 3.0F, 0.02F)));

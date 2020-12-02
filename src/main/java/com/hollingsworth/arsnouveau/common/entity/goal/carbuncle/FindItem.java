@@ -45,6 +45,8 @@ public class FindItem extends Goal {
 
     @Override
     public boolean shouldExecute() {
+        if(entityCarbuncle.world.rand.nextDouble() > 0.02)
+            return false;
         return !nearbyItems().isEmpty() && entityCarbuncle.getHeldStack().isEmpty();
     }
 

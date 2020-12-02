@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.ManaJarTile;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
+import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
@@ -117,7 +118,8 @@ public class ManaUtil {
         double numGlyphs = mana.getGlyphBonus() > 5 ? mana.getGlyphBonus() - 5 : 0;
         regen += numGlyphs / 3.0;
         regen += tier;
-
+        if(e.getActivePotionEffect(ModPotions.MANA_REGEN_EFFECT) != null)
+            regen += 10 * (1 + e.getActivePotionEffect(ModPotions.MANA_REGEN_EFFECT).getAmplifier());
         ManaRegenCalcEvent event = new ManaRegenCalcEvent(e, regen);
         MinecraftForge.EVENT_BUS.post(event);
         regen = event.getRegen();
