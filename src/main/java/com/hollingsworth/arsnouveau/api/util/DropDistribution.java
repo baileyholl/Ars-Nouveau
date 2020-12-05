@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Random;
 /**
- * Gets the next randomly weighted T in a map of Integers where the integer denotes their occurance in the set.
+ * Gets the next randomly weighted T in a map of Integers where the integer denotes their occurrence in the set.
  * @param <T>
  */
 public class DropDistribution<T>{

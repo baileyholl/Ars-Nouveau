@@ -9,7 +9,6 @@ import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.api.util.MathUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.block.LavaLily;
-import com.hollingsworth.arsnouveau.common.block.tile.IntangibleAirTile;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
@@ -44,7 +43,6 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.network.PacketDistributor;
@@ -234,13 +232,8 @@ public class EventHandler {
             e.setAmount(damage);
         }
     }
-    @SubscribeEvent
-    public static void fireFluidPlaceBlockEvent( BlockEvent.FluidPlaceBlockEvent event)
-    {
-       if(event.getWorld().getTileEntity(event.getPos()) instanceof IntangibleAirTile){
-           event.setCanceled(true);
-       }
-    }
+
+
 
     private EventHandler(){}
 
