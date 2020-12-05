@@ -21,6 +21,9 @@ public class ItemScroll extends ModItem implements IScribeable {
     public ItemScroll(String reg) {
         super(reg);
     }
+    public ItemScroll(Properties properties, String reg) {
+        super(properties, reg);
+    }
 
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
@@ -56,11 +59,11 @@ public class ItemScroll extends ModItem implements IScribeable {
         return true;
     }
 
-    public boolean containsItem(ItemStack stack, CompoundNBT tag){
+    public static boolean containsItem(ItemStack stack, CompoundNBT tag){
         return tag.contains(getItemKey(stack));
     }
 
-    public String getItemKey(ItemStack stack){
+    public static String getItemKey(ItemStack stack){
         return ITEM_PREFIX + stack.getItem().getRegistryName().toString();
     }
 

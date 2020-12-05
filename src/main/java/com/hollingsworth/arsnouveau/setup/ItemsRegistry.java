@@ -91,7 +91,8 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.ALLOW_ITEM_SCROLL)public static ItemScroll ALLOW_ITEM_SCROLL;
     @ObjectHolder(LibItemNames.DENY_ITEM_SCROLL)public static ItemScroll DENY_ITEM_SCROLL;
     @ObjectHolder(LibItemNames.BLANK_PARCHMENT)public static ModItem BLANK_PARCHMENT;
-    @ObjectHolder(LibItemNames.WAND)public static Wand wand;
+    @ObjectHolder(LibItemNames.WAND)public static Wand WAND;
+    @ObjectHolder(LibItemNames.VOID_JAR)public static VoidJar VOID_JAR;
 
 
     public static Food MANA_BERRY_FOOD = (new Food.Builder()).hunger(2).saturation(0.1F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).setAlwaysEdible().build();
@@ -178,7 +179,8 @@ public class ItemsRegistry {
                     new ItemScroll(LibItemNames.ALLOW_ITEM_SCROLL),
                     new ItemScroll(LibItemNames.DENY_ITEM_SCROLL),
                     new ModItem(LibItemNames.BLANK_PARCHMENT),
-                    new Wand()
+                    new Wand(),
+                    new VoidJar()
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

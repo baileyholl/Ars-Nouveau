@@ -59,4 +59,5 @@ public class LibItemNames {
     public static final String MANA_BERRY = "mana_berry";
 
     public static final String WAND = "wand";
+    public static final String VOID_JAR = "void_jar";
 }

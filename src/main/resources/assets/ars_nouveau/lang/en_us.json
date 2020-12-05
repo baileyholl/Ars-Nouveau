@@ -256,5 +256,8 @@
 	"item.minecraft.tipped_arrow.effect.mana_regen_potion_strong": "Arrow of Mana Regeneration",
 	"item.minecraft.tipped_arrow.effect.mana_regen_potion": "Arrow of Mana Regeneration",
 	"item.minecraft.tipped_arrow.effect.mana_regen_potion_long": "Arrow of Mana Regeneration",
-	"effect.ars_nouveau.mana_regen": "Mana Regeneration"
+	"effect.ars_nouveau.mana_regen": "Mana Regeneration",
+	"ars_nouveau.on": "Active: Yes",
+	"ars_nouveau.off": "Active: No",
+	"item.ars_nouveau.void_jar": "Jar of Voiding"
 }
