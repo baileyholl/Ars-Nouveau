@@ -70,7 +70,7 @@ public class ManaUtil {
             if(i.getItem() instanceof IManaEquipment){
                 max += (((IManaEquipment) i.getItem()).getMaxManaBoost());
             }
-            max += ( 25 * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, i));
+            max += ( Config.MANA_BOOST_BONUS.get() * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, i));
         }
 
         IItemHandlerModifiable items = CuriosUtil.getAllWornItems(e).orElse(null);
@@ -84,8 +84,8 @@ public class ManaUtil {
 
         int tier = mana.getBookTier();
         int numGlyphs = mana.getGlyphBonus() > 5 ? mana.getGlyphBonus() - 5 : 0;
-        max += numGlyphs * 15;
-        max += tier * 50;
+        max += numGlyphs * Config.GLYPH_MAX_BONUS.get();
+        max += tier * Config.TIER_MAX_BONUS.get();
 
         MaxManaCalcEvent event = new MaxManaCalcEvent(e, max);
         MinecraftForge.EVENT_BUS.post(event);
@@ -103,7 +103,7 @@ public class ManaUtil {
                 MagicArmor armor = ((MagicArmor) i.getItem());
                 regen += armor.getManaRegenBonus();
             }
-            regen += 2 * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, i);
+            regen += Config.MANA_REGEN_ENCHANT_BONUS.get() * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, i);
         }
         IItemHandlerModifiable items = CuriosUtil.getAllWornItems(e).orElse(null);
         if(items != null){
@@ -116,10 +116,10 @@ public class ManaUtil {
 
         int tier = mana.getBookTier();
         double numGlyphs = mana.getGlyphBonus() > 5 ? mana.getGlyphBonus() - 5 : 0;
-        regen += numGlyphs / 3.0;
+        regen += numGlyphs * Config.GLYPH_REGEN_BONUS.get();
         regen += tier;
         if(e.getActivePotionEffect(ModPotions.MANA_REGEN_EFFECT) != null)
-            regen += 10 * (1 + e.getActivePotionEffect(ModPotions.MANA_REGEN_EFFECT).getAmplifier());
+            regen += Config.MANA_REGEN_POTION.get() * (1 + e.getActivePotionEffect(ModPotions.MANA_REGEN_EFFECT).getAmplifier());
         ManaRegenCalcEvent event = new ManaRegenCalcEvent(e, regen);
         MinecraftForge.EVENT_BUS.post(event);
         regen = event.getRegen();

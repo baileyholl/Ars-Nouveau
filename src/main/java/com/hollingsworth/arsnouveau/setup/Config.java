@@ -24,6 +24,15 @@ public class Config {
     public static ForgeConfigSpec.BooleanValue SPAWN_BOOK;
     public static ForgeConfigSpec.IntValue INIT_MAX_MANA;
     public static ForgeConfigSpec.IntValue INIT_MANA_REGEN;
+
+    public static ForgeConfigSpec.IntValue GLYPH_MAX_BONUS;
+    public static ForgeConfigSpec.DoubleValue GLYPH_REGEN_BONUS;
+    public static ForgeConfigSpec.IntValue TIER_MAX_BONUS;
+    public static ForgeConfigSpec.IntValue MANA_BOOST_BONUS;
+    public static ForgeConfigSpec.IntValue MANA_REGEN_ENCHANT_BONUS;
+    public static ForgeConfigSpec.IntValue MANA_REGEN_POTION;
+
+
     public static ForgeConfigSpec.IntValue REGEN_INTERVAL;
     public static ForgeConfigSpec.IntValue CARBUNCLE_WEIGHT;
     public static ForgeConfigSpec.IntValue SYLPH_WEIGHT;
@@ -55,6 +64,12 @@ public class Config {
         INIT_MAX_MANA = SERVER_BUILDER.comment("Base max mana").defineInRange("baseMax", 100, 0, Integer.MAX_VALUE);
         REGEN_INTERVAL = SERVER_BUILDER.comment("How often max and regen will be calculated, in ticks. NOTE: Having the base mana regen AT LEAST this value is recommended.")
                 .defineInRange("updateInterval", 5, 1, 20);
+        GLYPH_MAX_BONUS = SERVER_BUILDER.comment("Max mana bonus per glyph").defineInRange("glyphmax", 15, 0, Integer.MAX_VALUE);
+        TIER_MAX_BONUS = SERVER_BUILDER.comment("Max mana bonus for tier of book").defineInRange("tierMax", 50, 0, Integer.MAX_VALUE);
+        MANA_BOOST_BONUS = SERVER_BUILDER.comment("Mana Boost value per level").defineInRange("manaBoost", 25, 0, Integer.MAX_VALUE);
+        MANA_REGEN_ENCHANT_BONUS = SERVER_BUILDER.comment("(enchantment) Mana regen per second per level").defineInRange("manaRegenEnchantment", 2, 0, Integer.MAX_VALUE);
+        GLYPH_REGEN_BONUS = SERVER_BUILDER.comment("Regen bonus per glyph").defineInRange("glyphRegen", 0.33, 0.0, Integer.MAX_VALUE);
+        MANA_REGEN_POTION = SERVER_BUILDER.comment("Regen bonus per potion level").defineInRange("potionRegen", 10, 0, Integer.MAX_VALUE);
         SERVER_BUILDER.pop();
         SERVER_BUILDER.comment("Enabled Spells").push(CATEGORY_SPELLS);
         for(AbstractSpellPart spellPart : ArsNouveauAPI.getInstance().getSpell_map().values()){
