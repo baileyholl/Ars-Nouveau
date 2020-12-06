@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
 import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
+import com.hollingsworth.arsnouveau.common.entity.goal.CheckStuckGoal;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -12,7 +12,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class FindItem extends Goal {
+public class FindItem extends CheckStuckGoal {
     private EntityCarbuncle entityCarbuncle;
     int travelTime;
     Entity pathingEntity;
@@ -26,6 +26,7 @@ public class FindItem extends Goal {
     });
 
     public FindItem(EntityCarbuncle entityCarbuncle) {
+        super(entityCarbuncle::getPosition, 4, entityCarbuncle::setStuck);
         this.entityCarbuncle = entityCarbuncle;
         this.setMutexFlags(EnumSet.of(Flag.MOVE));
     }
@@ -40,14 +41,14 @@ public class FindItem extends Goal {
 
     @Override
     public boolean shouldContinueExecuting() {
-        return super.shouldContinueExecuting() && !(pathingEntity == null || pathingEntity.removed) && travelTime < 15 * 20;
+        return !entityCarbuncle.isStuck && !(pathingEntity == null || pathingEntity.removed) && travelTime < 15 * 20;
     }
 
     @Override
     public boolean shouldExecute() {
         if(entityCarbuncle.world.rand.nextDouble() > 0.02)
             return false;
-        return !nearbyItems().isEmpty() && entityCarbuncle.getHeldStack().isEmpty();
+        return !entityCarbuncle.isStuck && !nearbyItems().isEmpty() && entityCarbuncle.getHeldStack().isEmpty();
     }
 
     @Override
@@ -84,7 +85,9 @@ public class FindItem extends Goal {
     }
     public void pathToTarget(Entity entity, double speed){
         Path path = entityCarbuncle.getNavigator().getPathToEntity(entity, 0);
-        if(path != null && path.reachesTarget())
+        if(path != null && path.reachesTarget()) {
             entityCarbuncle.getNavigator().setPath(path, speed);
+          //  entityCarbuncle.setMotion(entityCarbuncle.getMotion().add(ParticleUtil.inRange(-0.1, 0.1),0,ParticleUtil.inRange(-0.1, 0.1)));
+        }
     }
 }

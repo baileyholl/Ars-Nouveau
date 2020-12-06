@@ -3,10 +3,9 @@ package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.ManaBerryBush;
 import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
+import com.hollingsworth.arsnouveau.common.entity.goal.CheckStuckGoal;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.command.arguments.EntityAnchorArgument;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -19,12 +18,13 @@ import java.util.Optional;
 
 import static com.hollingsworth.arsnouveau.common.block.ManaBerryBush.AGE;
 
-public class ForageManaBerries extends Goal {
+public class ForageManaBerries extends CheckStuckGoal {
     private final EntityCarbuncle entity;
     private final World world;
     BlockPos pos;
 
     public ForageManaBerries(EntityCarbuncle entityCarbuncle) {
+        super(entityCarbuncle::getPosition, 1, entityCarbuncle::setStuck);
         this.entity = entityCarbuncle;
         this.world = entity.world;
         this.setMutexFlags(EnumSet.of(Flag.MOVE));
@@ -32,15 +32,16 @@ public class ForageManaBerries extends Goal {
 
     @Override
     public boolean shouldExecute() {
-        if(world.rand.nextDouble() > 0.02)
+        if(entity.isStuck || world.rand.nextDouble() > 0.02)
             return false;
         this.pos = getNearbyManaBerry();
-        return pos != null;
+        return  pos != null;
     }
 
     @Override
     public void tick() {
-        if(this.pos == null) {
+        super.tick();
+        if(this.pos == null || entity.isStuck) {
             return;
         }
 
@@ -52,7 +53,7 @@ public class ForageManaBerries extends Goal {
             entity.lookAt(EntityAnchorArgument.Type.EYES,new Vector3d(this.pos.getX(), this.pos.getY(), this.pos.getZ()));
             int j = 1 + world.rand.nextInt(2);
             ManaBerryBush.spawnAsEntity(world, pos, new ItemStack(BlockRegistry.MANA_BERRY_BUSH, j + (flag ? 1 : 0)));
-            world.playSound((PlayerEntity)null, pos, SoundEvents.ITEM_SWEET_BERRIES_PICK_FROM_BUSH, SoundCategory.BLOCKS, 1.0F, 0.8F + world.rand.nextFloat() * 0.4F);
+            world.playSound(null, pos, SoundEvents.ITEM_SWEET_BERRIES_PICK_FROM_BUSH, SoundCategory.BLOCKS, 1.0F, 0.8F + world.rand.nextFloat() * 0.4F);
             world.setBlockState(pos, world.getBlockState(pos).with(AGE, Integer.valueOf(1)), 2);
             pos = null;
         }
@@ -60,7 +61,7 @@ public class ForageManaBerries extends Goal {
 
     @Override
     public boolean shouldContinueExecuting() {
-        return pos != null;
+        return !entity.isStuck && pos != null;
     }
 
     public BlockPos getNearbyManaBerry(){

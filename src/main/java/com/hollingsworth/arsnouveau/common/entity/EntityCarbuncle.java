@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.entity.goal.GetUnstuckGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.*;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
@@ -67,6 +68,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     public static final DataParameter<Boolean> HOP = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.BOOLEAN);
     public int backOff; // Used to stop inventory store/take spam when chests are full or empty.
     public int tamingTime;
+    public boolean isStuck;
 
     AnimationFactory manager = new AnimationFactory(this);
     public EntityCarbuncle(EntityType<EntityCarbuncle> entityCarbuncleEntityType, World world) {
@@ -153,6 +155,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     @Override
     public void tick() {
         super.tick();
+
         if(!world.isRemote){
             if(this.navigator.noPath()){
                 EntityCarbuncle.this.dataManager.set(HOP, false);
@@ -275,6 +278,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     //MOJANG MAKES THIS SO CURSED WHAT THE HECK
     public List<PrioritizedGoal> getTamedGoals(){
         List<PrioritizedGoal> list = new ArrayList<>();
+        list.add(new PrioritizedGoal(1, new GetUnstuckGoal(this, () -> this.isStuck, stuck ->{this.isStuck = stuck; return null;})));
         list.add(new PrioritizedGoal(2, new FindItem(this)));
         list.add(new PrioritizedGoal(2, new ForageManaBerries(this)));
         list.add(new PrioritizedGoal(3, new StoreItemGoal(this)));
@@ -361,6 +365,11 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         return false;
     }
 
+    public Void setStuck(boolean isStuck){
+        this.isStuck = isStuck;
+        return null;
+    }
+
     private boolean setBehaviors;
     @Override
     public void readAdditional(CompoundNBT tag) {
@@ -389,6 +398,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         }
         allowedItems = NBTUtil.readItems(tag, "allowed_");
         ignoreItems = NBTUtil.readItems(tag, "ignored_");
+        isStuck = tag.getBoolean("stuck");
     }
 
     public void setHeldStack(ItemStack stack){
@@ -438,7 +448,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
         if(ignoreItems != null && !ignoreItems.isEmpty())
             NBTUtil.writeItems(tag,  "ignored_", ignoreItems);
-
+        tag.putBoolean("stuck", isStuck);
     }
 
     public void removeGoals(){

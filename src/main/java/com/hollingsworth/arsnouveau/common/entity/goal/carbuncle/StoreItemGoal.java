@@ -3,11 +3,12 @@ package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
+import com.hollingsworth.arsnouveau.common.entity.goal.CheckStuckGoal;
 import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
-import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.pathfinding.Path;
 import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.world.World;
@@ -17,11 +18,12 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 import java.util.EnumSet;
 import java.util.stream.IntStream;
 
-public class StoreItemGoal extends Goal {
+public class StoreItemGoal extends CheckStuckGoal {
 
     private final EntityCarbuncle entityCarbuncle;
 
     public StoreItemGoal(EntityCarbuncle entityCarbuncle) {
+        super(entityCarbuncle::getPosition, 3, entityCarbuncle::setStuck);
         this.entityCarbuncle = entityCarbuncle;
 
         this.setMutexFlags(EnumSet.of(Flag.MOVE));
@@ -30,8 +32,11 @@ public class StoreItemGoal extends Goal {
     @Override
     public void startExecuting() {
         super.startExecuting();
-        if (entityCarbuncle.toPos != null && !entityCarbuncle.getHeldStack().isEmpty())
-            entityCarbuncle.getNavigator().tryMoveToXYZ(entityCarbuncle.toPos.getX(), entityCarbuncle.toPos.getY(), entityCarbuncle.toPos.getZ(), 1.2D);
+        if (entityCarbuncle.toPos != null && !entityCarbuncle.getHeldStack().isEmpty()) {
+            Path path = entityCarbuncle.getNavigator().getPathToPos(entityCarbuncle.toPos, 0);
+            entityCarbuncle.getNavigator().setPath(path, 1.2D);
+            //entityCarbuncle.getNavigator().tryMoveToXYZ(entityCarbuncle.toPos.getX(), entityCarbuncle.toPos.getY(), entityCarbuncle.toPos.getZ(), 1.2D);
+        }
     }
 
     private IntStream func_213972_a(IInventory p_213972_0_, Direction p_213972_1_) {
