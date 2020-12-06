@@ -62,16 +62,13 @@ public class GetUnstuckGoal extends CheckStuckGoal {
             return;
 
         if(BlockUtil.distanceFrom(entity.getPosition(), targetPos) > 0.5){
-            Path path = entity.getNavigator().getPathToPos(targetPos.getX(), targetPos.getY(), targetPos.getZ(), 0);
-            entity.getNavigator().setPath(path, 1.2D);
-
-
+            entity.getNavigator().setPath(getPath(targetPos), 1.2D);
         }else{
             setUnstuck.apply(false);
             targetPos = null;
+            return;
         }
         if (isStuckTrying) {
-            numUnstucks++;
             targetPos = getNextTarget();
             resetStuckCheck();
         }
@@ -83,12 +80,11 @@ public class GetUnstuckGoal extends CheckStuckGoal {
             return null;
         Direction direction = directions[numUnstucks];
         if(entity.getAdjustedHorizontalFacing() == direction){
-            numUnstucks++;
             return getNextTarget();
         }
         for(int i = 3; i > 1; i--){
-            BlockPos posToMove = entity.getPosition().offset(direction, 2);
-            Path path = entity.getNavigator().getPathToPos(posToMove, 0);
+            BlockPos posToMove = entity.getPosition().offset(direction, i);
+            Path path = getPath(posToMove);
             if(path != null && path.reachesTarget()){
                 return posToMove;
             }else if(getPath(posToMove.down()) != null && getPath(posToMove.down()).reachesTarget()){
