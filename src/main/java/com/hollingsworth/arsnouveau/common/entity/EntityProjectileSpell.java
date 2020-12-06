@@ -101,7 +101,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
             this.onImpact(raytraceresult);
             this.isAirBorne = true;
         }
-        if(raytraceresult.getType() == RayTraceResult.Type.MISS ){
+        if(raytraceresult != null && raytraceresult.getType() == RayTraceResult.Type.MISS && raytraceresult instanceof BlockRayTraceResult){
             BlockRegistry.PORTAL_BLOCK.onProjectileCollision(world,world.getBlockState(new BlockPos(raytraceresult.getHitVec())),
                     (BlockRayTraceResult)raytraceresult, this );
 

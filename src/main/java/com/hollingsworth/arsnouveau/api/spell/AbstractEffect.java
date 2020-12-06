@@ -86,6 +86,11 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         }
     }
 
+    public DamageSource buildDamageSource(World world, LivingEntity shooter){
+        shooter = shooter == null ? FakePlayerFactory.getMinecraft((ServerWorld) world) : shooter;
+        return DamageSource.causePlayerDamage((PlayerEntity) shooter);
+    }
+
     public Vector3d safelyGetHitPos(RayTraceResult result){
         if(result instanceof EntityRayTraceResult)
             return ((EntityRayTraceResult) result).getEntity() != null ? ((EntityRayTraceResult) result).getEntity().getPositionVec() : result.getHitVec();

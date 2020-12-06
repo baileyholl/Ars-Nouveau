@@ -11,7 +11,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -39,14 +38,14 @@ public class EffectFlare extends AbstractEffect {
             int range = 3 + getBuffCount(augments, AugmentAOE.class);
             int fireSec = 5 + getDurationModifier(augments);
             if(livingEntity.isBurning()){
-                dealDamage(world, shooter, damage, augments, livingEntity, DamageSource.ON_FIRE);
+                dealDamage(world, shooter, damage, augments, livingEntity, buildDamageSource(world, shooter).setFireDamage().setDamageBypassesArmor());
                 ((ServerWorld)world).spawnParticle(ParticleTypes.FLAME, vec.x, vec.y +0.5, vec.z,50,
                         ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1),ParticleUtil.inRange(-0.1, 0.1), 0.3);
                 for(Entity e : world.getEntitiesWithinAABBExcludingEntity(shooter, new AxisAlignedBB(
                         livingEntity.getPosition().north(range).east(range).up(range),  livingEntity.getPosition().south(range).west(range).down(range)))){
                     if(e.equals(livingEntity) || !(e instanceof LivingEntity))
                         continue;
-                    dealDamage(world, shooter, damage, augments, e, DamageSource.ON_FIRE);
+                    dealDamage(world, shooter, damage, augments, e, buildDamageSource(world, shooter).setFireDamage().setDamageBypassesArmor());
                     e.setFire(fireSec);
                     vec = e.getPositionVec();
                     ((ServerWorld)world).spawnParticle(ParticleTypes.FLAME, vec.x, vec.y +0.5, vec.z,50,
