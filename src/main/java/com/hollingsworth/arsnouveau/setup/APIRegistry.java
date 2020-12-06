@@ -77,6 +77,10 @@ public class APIRegistry {
                 Items.DIAMOND, Items.REDSTONE_BLOCK
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
 
+        registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.VOID_JAR, Items.GLASS_BOTTLE, new Item[]{
+                Items.LAVA_BUCKET, Items.BUCKET, Items.ENDER_PEARL,ItemsRegistry.ALLOW_ITEM_SCROLL
+        }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
+
     }
 
     public static void registerSpells(){

@@ -73,8 +73,8 @@
 	"ars_nouveau.page.amulet_of_mana_boost": "Increases max mana by a moderate amount.",
 	"ars_nouveau.page.amulet_of_mana_regen": "Increases mana regeneration by a moderate amount.",
 
-	"ars_nouveau.page.arcane_relay": "Enables the transport of mana between Mana Jars and other Arcane Relays. To pull mana from jars, use the Dominion Wand on the jar, and then on the relay. To send between relays or from a relay to a jar, use the wand on the relay and then the target you wish to send mana to. Relays may only reach up to 10 blocks away. To clear connections, sneak while using the Dominion Wand on the relay.",
-	"ars_nouveau.page.arcane_relay_splitter": "Operates similar to the Arcane Relay, but will support taking from and transferring to multiple jars at once. The splitter has a much larger through-put than the Arcane Relay, and will split this throughput amongst all of its jars. See the instructions on the Arcane Relay for use.",
+	"ars_nouveau.page.arcane_relay": "Enables the transport of mana between Mana Jars and other Mana Relays. To pull mana from jars, use the Dominion Wand on the jar, and then on the relay. To send between relays or from a relay to a jar, use the wand on the relay and then the target you wish to send mana to. Relays may only reach up to 10 blocks away. To clear connections, sneak while using the Dominion Wand on the relay.",
+	"ars_nouveau.page.arcane_relay_splitter": "Operates similar to the Mana Relay, but will support taking from and transferring to multiple jars at once. The splitter has a much larger through-put than the Mana Relay, and will split this throughput amongst all of its jars. See the instructions on the Mana Relay for use.",
 	"ars_nouveau.page.enchanting_apparatus1": "The Enchanting Apparatus utilizes pedestals and world mana for crafting. To use the Enchanting Apparatus, place any number of Arcane Pedestals nearby with their items. Place your reagent item on the Enchanting Apparatus block, and interact with the block while sneaking to begin crafting. The Enchanting Apparatus requires an Arcane Core beneath it in order to work.",
 
 	"ars_nouveau.page.mana_bloom_crop": "A magically infused flower, Mana Blooms provide additional mana to nearby Mana Condensers as they grow and provide a source of mana fiber.",
@@ -92,7 +92,7 @@
 	"ars_nouveau.page.carbuncle_charm": "Carbuncles naturally appear in wooded areas, oddly in search of golden nuggets. While carbuncles are naturally afraid of humans, they will allow someone to approach if they are holding a gold nugget. When a carbuncle has acquired a nugget, it will vanish from this world and leave behind Carbuncle Shards.",
 	"ars_nouveau.page2.carbuncle_charm": "While wild carbuncles cannot be tamed, their shards may be used to summon a carbuncle.",
 	"ars_nouveau.page3.carbuncle_charm": "To summon a carbuncle, use a carbuncle charm on the ground. Summoned carbuncles will pickup nearby items and can move items between inventories such as chests. To tell a carbuncle to store items, use a Dominion Wand on a Carbuncle, and then use the wand on the inventory. To have a carbuncle remove items from an inventory, use the Dominion Wand on the inventory, and then on the carbuncle. A carbuncle may perform these tasks at the same time. Use Dispel to get your charm back!",
-	"ars_nouveau.page4.carbuncle_charm": "Carbuncles can be given filters by giving them an Item Scroll: Allow or Item Scroll: Deny. These filters will apply to both their pickup behavior and item extraction.",
+	"ars_nouveau.page4.carbuncle_charm": "Carbuncles can be given filters by giving them an Item Scroll: Allow or Item Scroll: Deny. These filters will apply to both their pickup behavior and item extraction. Carbuncles will also automatically harvest fully grown Mana Berry Bushes nearby.",
 
 	"ars_nouveau.page.summoning_crystal": "Automation in Ars Nouveau begins with the Summoning Crystal. Summoning Crystals provide mana, resources, and tasks to special magical creatures, like Whelps! Placing a chest next to a Summoning Crystal will provide a place for summoned creatures to store their items. The area of the Summoning Crystal may be changed by right clicking. ",
 	"ars_nouveau.page2.summoning_crystal": "Creatures like Whelps will require mana to interact with the world. Place a Mana Jar within the vicinity and begin providing it with mana. To begin your first automation, see the entry on the Whelp Charm and the Scribes Table.",
@@ -259,5 +259,7 @@
 	"effect.ars_nouveau.mana_regen": "Mana Regeneration",
 	"ars_nouveau.on": "Active: Yes",
 	"ars_nouveau.off": "Active: No",
-	"item.ars_nouveau.void_jar": "Jar of Voiding"
+	"item.ars_nouveau.void_jar": "Jar of Voiding",
+	"ars_nouveau.rune.setperm": "This rune is now permanent.",
+	"ars_nouveau.page.void_jar": "A jar that can destroy items on pickup in exchange for a small amount of mana. To turn the jar on and off, use the jar while sneaking. To add or remove an item to be destroyed by the jar, use the jar with an item in the off hand, or use an item on the Scribes Table with the jar placed on it. The jar must be in your hotbar to function."
 }

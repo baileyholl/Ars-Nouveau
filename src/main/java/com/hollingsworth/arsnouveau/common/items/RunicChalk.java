@@ -4,11 +4,8 @@ import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 

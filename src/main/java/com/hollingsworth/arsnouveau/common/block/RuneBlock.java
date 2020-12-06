@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
+import com.hollingsworth.arsnouveau.common.items.RunicChalk;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
@@ -42,6 +43,14 @@ public class RuneBlock extends ModBlock{
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         ItemStack stack = player.getHeldItem(handIn);
+
+        if(!worldIn.isRemote && stack.getItem() instanceof RunicChalk){
+            if(((RuneTile)worldIn.getTileEntity(pos)).isTemporary){
+                ((RuneTile)worldIn.getTileEntity(pos)).isTemporary = false;
+                PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.rune.setperm"));
+                return ActionResultType.SUCCESS;
+            }
+        }
         if(!(stack.getItem() instanceof SpellParchment) || worldIn.isRemote)
             return ActionResultType.SUCCESS;
         List<AbstractSpellPart> recipe = SpellParchment.getSpellRecipe(stack);
