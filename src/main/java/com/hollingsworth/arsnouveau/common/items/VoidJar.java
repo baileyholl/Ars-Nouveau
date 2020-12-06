@@ -1,7 +1,5 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -11,20 +9,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class VoidJar extends ItemScroll{
 
     public VoidJar() {
@@ -91,25 +82,5 @@ public class VoidJar extends ItemScroll{
         }
 
         super.addInformation(stack, worldIn, tooltip2, flagIn);
-    }
-
-    @SubscribeEvent(priority= EventPriority.LOWEST)
-    public static void itemPickupEvent( EntityItemPickupEvent event) {
-        PlayerEntity player = event.getPlayer();
-        NonNullList<ItemStack> list =  player.inventory.mainInventory;
-        for(int i = 0; i < 9; i++){
-
-            ItemStack stack = list.get(i);
-            if(stack.getItem() == ItemsRegistry.VOID_JAR){
-                if(VoidJar.isActive(stack) && VoidJar.containsItem(event.getItem().getItem(), stack.getTag())){
-                    ManaCapability.getMana(event.getEntityLiving()).ifPresent(iMana -> {
-                        iMana.addMana(5 * event.getItem().getItem().getCount());
-                    });
-                    event.getItem().getItem().setCount(0);
-                    event.setResult(Event.Result.ALLOW);
-                    return;
-                }
-            }
-        }
     }
 }
