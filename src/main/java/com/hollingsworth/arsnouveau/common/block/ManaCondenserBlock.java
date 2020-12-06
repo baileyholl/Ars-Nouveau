@@ -45,7 +45,7 @@ public class ManaCondenserBlock extends ModBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return Block.makeCuboidShape(1D, 0.0D, 1.0D, 15, 16, 15);
+        return Block.makeCuboidShape(0D, 0.0D, 0.0D, 16, 16, 16);
     }
 
     @Override
