@@ -42,7 +42,7 @@ public class HUDEventHandler {
             return;
 
         spellHUD.drawHUD(event.getMatrixStack());
-        manaHUD.drawHUD(event.getMatrixStack());
+        manaHUD.drawHUD(event.getMatrixStack(), event.getPartialTicks());
 
     }
 

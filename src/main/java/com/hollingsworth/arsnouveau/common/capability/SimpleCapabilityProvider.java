@@ -59,6 +59,8 @@ public class SimpleCapabilityProvider<HANDLER> implements ICapabilityProvider {
      */
     @Override
     public <T> LazyOptional<T> getCapability(final Capability<T> capability, @Nullable final Direction facing) {
+        if(getCapability() == null)
+            return LazyOptional.empty();
         return getCapability().orEmpty(capability, lazyOptional);
     }
 

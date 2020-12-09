@@ -9,8 +9,10 @@ import com.hollingsworth.arsnouveau.common.items.FluidBlockItem;
 import com.hollingsworth.arsnouveau.common.items.VolcanicAccumulatorBI;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
+import com.hollingsworth.arsnouveau.common.world.tree.MagicTree;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.SaplingBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItem;
@@ -121,6 +123,7 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.VOLCANIC_ACCUMULATOR) public static  TileEntityType<VolcanicTile> VOLCANIC_TILE;
     @ObjectHolder(LibBlockNames.LAVA_LILY) public static LavaLily LAVA_LILY;
     @ObjectHolder(LibBlockNames.MANA_BERRY_BUSH) public static ManaBerryBush MANA_BERRY_BUSH;
+    @ObjectHolder("magic_sapling") public static SaplingBlock MAGIC_SAPLING;
 
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
@@ -159,6 +162,7 @@ public class BlockRegistry {
             blockRegistryEvent.getRegistry().register(new VolcanicAccumulator());
             blockRegistryEvent.getRegistry().register(new LavaLily());
             blockRegistryEvent.getRegistry().register(new ManaBerryBush(AbstractBlock.Properties.create(Material.PLANTS).tickRandomly().doesNotBlockMovement().sound(SoundType.SWEET_BERRY_BUSH)));
+            blockRegistryEvent.getRegistry().register(new SaplingBlock(new MagicTree(),ModBlock.defaultProperties()).setRegistryName("magic_sapling"));
         }
 
         @SubscribeEvent
@@ -217,6 +221,7 @@ public class BlockRegistry {
             registry.register(new VolcanicAccumulatorBI(BlockRegistry.VOLCANIC_BLOCK, ItemsRegistry.defaultItemProperties().isImmuneToFire().setISTER(() -> VolcanicRenderer::getISTER)).setRegistryName(LibBlockNames.VOLCANIC_ACCUMULATOR));
             registry.register(new FluidBlockItem(BlockRegistry.LAVA_LILY, ItemsRegistry.defaultItemProperties().isImmuneToFire()).setRegistryName(LibBlockNames.LAVA_LILY));
             registry.register(new BlockItem(BlockRegistry.MANA_BERRY_BUSH, ItemsRegistry.defaultItemProperties().food(ItemsRegistry.MANA_BERRY_FOOD)).setRegistryName(LibItemNames.MANA_BERRY));
+            registry.register(getDefaultBlockItem(BlockRegistry.MAGIC_SAPLING, "magic_sapling"));
         }
 
         public static Item getDefaultBlockItem(Block block, String registry){

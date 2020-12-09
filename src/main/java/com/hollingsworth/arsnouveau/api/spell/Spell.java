@@ -8,10 +8,14 @@ import java.util.List;
 
 public class Spell {
 
-    public final List<AbstractSpellPart> recipe;
+    public List<AbstractSpellPart> recipe;
 
     public Spell(List<AbstractSpellPart> recipe){
         this.recipe = recipe;
+    }
+
+    public Spell(){
+        this.recipe = new ArrayList<>();
     }
 
     public int getSpellSize(){
@@ -53,13 +57,50 @@ public class Spell {
 
     public String getDisplayString(){
         StringBuilder str = new StringBuilder();
-        for (int i = 0; i < recipe.size(); i++) {
+        String lastStr = "";
+
+        for(int i = 0; i < recipe.size(); i++){
             AbstractSpellPart spellPart = recipe.get(i);
-            str.append(spellPart.name);
+            int num = 1;
+            for(int j = i + 1; j < recipe.size(); j++){
+                if(spellPart.name.equals(recipe.get(j).name))
+                    num++;
+                else
+                    break;
+            }
+            if(num > 1){
+                str.append(spellPart.name).append(" x").append(num);
+                i += num - 1;
+            }else{
+                str.append(spellPart.name);
+            }
             if(i < recipe.size() - 1){
                 str.append(" -> ");
             }
         }
+
+//        for (int i = 0; i < recipe.size(); i++) {
+//            AbstractSpellPart spellPart = recipe.get(i);
+//            if(lastStr.equals(spellPart.name)){
+//                numCount++;
+//                if(i == recipe.size() - 1){
+//                    str.append(spellPart.name).append(" x").append(numCount);
+//                }
+//            }else{
+//                lastStr = spellPart.name;
+//
+//                if (numCount < 2) {
+//                    str.append(spellPart.name);
+//                } else {
+//                    str.append(spellPart.name).append(" x").append(numCount);
+//
+//                }
+//                if(i < recipe.size() - 1){
+//                    str.append(" -> ");
+//                }
+//                numCount = 1;
+//            }
+//        }
         return str.toString();
     }
 

@@ -1,0 +1,21 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"wand_gem_spin": {
+			"loop": true,
+			"animation_length": 5.2,
+			"bones": {
+				"gem": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"5.2": {
+							"vector": [0, 0, 360]
+						}
+					}
+				}
+			}
+		}
+	}
+}

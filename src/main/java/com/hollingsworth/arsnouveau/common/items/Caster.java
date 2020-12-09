@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.PhantomBlockTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.capability.CasterCapability;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -16,10 +17,12 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -52,25 +55,37 @@ public abstract class Caster extends ModItem implements IScribeable {
 
         if(!((heldStack.getItem() instanceof SpellBook) || (heldStack.getItem() instanceof SpellParchment)) || heldStack.getTag() == null)
             return false;
-
+        boolean success = false;
+        Spell spell = new Spell();
         if(heldStack.getItem() instanceof SpellBook) {
-            List<AbstractSpellPart> spellParts = SpellBook.getRecipeFromTag(heldStack.getTag(), SpellBook.getMode(heldStack.getTag()));
-            CasterCapability.getCaster(stack).ifPresent(cas ->{
-                cas.setSpell(new Spell(spellParts));
-            });
-            PortUtil.sendMessage(player, new StringTextComponent("Set spell"));
-            return true;
+            spell = new Spell(SpellBook.getRecipeFromTag(heldStack.getTag(), SpellBook.getMode(heldStack.getTag())));
         }else if(heldStack.getItem() instanceof SpellParchment){
-            caster.setSpell(new Spell(SpellParchment.getSpellRecipe(heldStack)));
-            return true;
+            spell = new Spell(SpellParchment.getSpellRecipe(heldStack));
         }
-        return false;
+        if(isScribedSpellValid(caster, player, handIn, stack, spell)){
+            success = setSpell(caster, player, handIn, stack, spell);
+            if(success){
+                PortUtil.sendMessage(player, new StringTextComponent("Set spell."));
+                return success;
+            }
+        }else{
+            PortUtil.sendMessage(player, new StringTextComponent("Invalid spell."));
+        }
+        return success;
     }
 
     public ISpellCaster getCaster(ItemStack stack){
         return CasterCapability.getCaster(stack).orElse(null);
     }
 
+    public boolean setSpell(ISpellCaster caster, PlayerEntity player, Hand hand, ItemStack stack, Spell spell){
+        caster.setSpell(spell);
+        return true;
+    }
+
+    public boolean isScribedSpellValid(ISpellCaster caster, PlayerEntity player, Hand hand, ItemStack stack, Spell spell){
+        return spell.isValid();
+    }
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
@@ -91,6 +106,10 @@ public abstract class Caster extends ModItem implements IScribeable {
             }
         }
 
+        if(caster.getSpell() == null) {
+            playerIn.sendMessage(new StringTextComponent("Invalid Spell."), Util.DUMMY_UUID);
+            return new ActionResult<>(ActionResultType.CONSUME, stack);
+        }
         SpellResolver resolver = new SpellResolver(caster.getSpell().recipe, new SpellContext(caster.getSpell(), playerIn));
         EntityRayTraceResult entityRes = MathUtil.getLookedAtEntity(playerIn, 25);
 
@@ -107,5 +126,18 @@ public abstract class Caster extends ModItem implements IScribeable {
 
         resolver.onCast(stack,playerIn,worldIn);
         return new ActionResult<>(ActionResultType.CONSUME, stack);
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
+        ISpellCaster caster = getCaster(stack);
+        if(caster == null)
+            return;
+        if(caster.getSpell() == null)
+            return;
+
+        Spell spell = caster.getSpell();
+        tooltip2.add(new StringTextComponent(spell.getDisplayString()));
+        super.addInformation(stack, worldIn, tooltip2, flagIn);
     }
 }
