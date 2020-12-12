@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.client.IDisplayMana;
 import com.hollingsworth.arsnouveau.api.item.IScribeable;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.MathUtil;
@@ -30,7 +31,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public abstract class Caster extends ModItem implements IScribeable {
+public abstract class Caster extends ModItem implements IScribeable, IDisplayMana {
 
     public Caster(Properties properties, String registry){
         super(properties, registry);
@@ -65,13 +66,21 @@ public abstract class Caster extends ModItem implements IScribeable {
         if(isScribedSpellValid(caster, player, handIn, stack, spell)){
             success = setSpell(caster, player, handIn, stack, spell);
             if(success){
-                PortUtil.sendMessage(player, new StringTextComponent("Set spell."));
+                sendSetMessage(player);
                 return success;
             }
         }else{
-            PortUtil.sendMessage(player, new StringTextComponent("Invalid spell."));
+            sendInvalidMessage(player);
         }
         return success;
+    }
+
+    public void sendSetMessage(PlayerEntity player){
+        PortUtil.sendMessage(player, new StringTextComponent("Set spell."));
+    }
+
+    public void sendInvalidMessage(PlayerEntity player){
+        PortUtil.sendMessage(player, new StringTextComponent("Invalid spell."));
     }
 
     public ISpellCaster getCaster(ItemStack stack){

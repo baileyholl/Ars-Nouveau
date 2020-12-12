@@ -9,10 +9,12 @@ import com.hollingsworth.arsnouveau.client.renderer.item.WandRenderer;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
+import net.minecraft.util.text.TranslationTextComponent;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -51,6 +53,11 @@ public class Wand extends Caster  implements IAnimatable {
     @Override
     public boolean isScribedSpellValid(ISpellCaster caster, PlayerEntity player, Hand hand, ItemStack stack, Spell spell) {
         return spell.recipe.stream().noneMatch(s -> s instanceof AbstractCastMethod);
+    }
+
+    @Override
+    public void sendInvalidMessage(PlayerEntity player) {
+        PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.wand.invalid"));
     }
 
     @Override

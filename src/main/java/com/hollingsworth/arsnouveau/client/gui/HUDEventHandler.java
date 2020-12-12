@@ -2,10 +2,8 @@ package com.hollingsworth.arsnouveau.client.gui;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
-import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
@@ -37,9 +35,6 @@ public class HUDEventHandler {
         if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) return;
 
         final PlayerEntity player = minecraft.player;
-
-        if ((StackUtil.getHeldSpellbook(player) == ItemStack.EMPTY))
-            return;
 
         spellHUD.drawHUD(event.getMatrixStack());
         manaHUD.drawHUD(event.getMatrixStack(), event.getPartialTicks());

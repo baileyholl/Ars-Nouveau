@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.client.IDisplayMana;
 import com.hollingsworth.arsnouveau.api.item.IScribeable;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
@@ -50,7 +51,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SpellBook extends Item implements ISpellTier, IScribeable {
+public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplayMana {
 
     public static final String BOOK_MODE_TAG = "mode";
     public static final String UNLOCKED_SPELLS = "spells";
