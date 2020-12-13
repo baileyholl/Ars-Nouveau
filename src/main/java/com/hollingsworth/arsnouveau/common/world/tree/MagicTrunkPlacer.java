@@ -106,19 +106,6 @@ public class MagicTrunkPlacer extends AbstractTrunkPlacer {
                 }
 
             }
-            // Add branch
-//            if(i == 4)
-//                addBranch(world, pos.offset(Direction.EAST).south(), posSet, boundingBox, 4, Direction.EAST);
-//
-//            if(i == 3)
-//                addBranch(world, pos.offset(Direction.SOUTH), posSet, boundingBox, 3, Direction.SOUTH);
-//
-//            if(i == 2)
-//                addBranch(world, pos, posSet, boundingBox, 2, Direction.NORTH);
-//
-//            if(i == 4)
-//                addBranch(world, pos, posSet, boundingBox, 4, Direction.WEST);
-
 
             if(i == foliageHeight - 2){
                 //Bell top

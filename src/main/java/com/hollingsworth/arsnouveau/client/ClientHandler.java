@@ -51,6 +51,8 @@ public class ClientHandler {
         RenderTypeLookup.setRenderLayer(BlockRegistry.VOLCANIC_BLOCK, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_BERRY_BUSH, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.LAVA_LILY, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.WIXIE_CAULDRON, RenderType.getCutout());
+
     }
 
 }
