@@ -7,19 +7,26 @@ import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.ApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.constants.ModIds;
+import mezz.jei.api.recipe.vanilla.IJeiBrewingRecipe;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.RecipeManager;
+import net.minecraft.potion.PotionUtils;
+import net.minecraft.potion.Potions;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @JeiPlugin
@@ -69,8 +76,10 @@ public class JEIArsNouveauPlugin implements IModPlugin {
                             recipe.pedestalItems, recipe.catalyst, recipe.result, recipe.manaCost()));
         }
         registry.addRecipes(apparatus, EnchantingApparatusRecipeCategory.UID);
-
-
+        ItemStack manaPot = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), ModPotions.MANA_REGEN_POTION);
+        IJeiBrewingRecipe manaPotionRecipe = registry.getVanillaRecipeFactory().createBrewingRecipe(Collections.singletonList(new ItemStack(BlockRegistry.MANA_BERRY_BUSH)),
+                PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.AWKWARD), manaPot );
+        registry.addRecipes(Collections.singletonList(manaPotionRecipe), new ResourceLocation(ModIds.MINECRAFT_ID, "brewing"));
     }
 
     @Override
