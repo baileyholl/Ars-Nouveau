@@ -23,8 +23,6 @@ public class CarbuncleHeldItemLayer extends GeoLayerRenderer<EntityCarbuncle> {
 
     @Override
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, EntityCarbuncle entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-
-
         matrixStackIn.push();
         CarbuncleModel model = ((CarbuncleModel)getEntityModel());
         IBone tail = model.getBone("tail");

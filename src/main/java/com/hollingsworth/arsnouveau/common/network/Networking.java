@@ -77,6 +77,12 @@ public class Networking {
                 PacketOneShotAnimation::encode,
                 PacketOneShotAnimation::decode,
                 PacketOneShotAnimation.Handler::handle);
+
+        INSTANCE.registerMessage(nextID(),
+                PacketAnimEntity.class,
+                PacketAnimEntity::encode,
+                PacketAnimEntity::decode,
+                PacketAnimEntity.Handler::handle);
     }
 
     public static void sendToNearby(World world, BlockPos pos, Object toSend){
