@@ -42,7 +42,7 @@ public class WixieCauldron extends ModBlock{
             worldIn.setBlockState(pos, state.with(FILLED, true));
         }
 
-        if(worldIn.getTileEntity(pos) instanceof WixieCauldronTile && player.getHeldItem(handIn).getItem() == ItemsRegistry.ALLOW_ITEM_SCROLL){
+        if(worldIn.getTileEntity(pos) instanceof WixieCauldronTile){
             ((WixieCauldronTile) worldIn.getTileEntity(pos)).setRecipes(player.getHeldItemMainhand());
         }
         return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);

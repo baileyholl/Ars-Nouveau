@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
+import com.hollingsworth.arsnouveau.common.entity.goal.wixie.CompleteCraftingGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.wixie.FindNextItemGoal;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
@@ -32,21 +34,34 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityWixie extends AbstractFlyingCreature implements IAnimatable {
+public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, IAnimationListener {
     AnimationFactory manager = new AnimationFactory(this);
 
     public static final DataParameter<Boolean> TAMED = EntityDataManager.createKey(EntityWixie.class, DataSerializers.BOOLEAN);
 
     public BlockPos cauldronPos;
     public int inventoryBackoff;
+
     private <P extends IAnimatable> PlayState idlePredicate(AnimationEvent<P> event) {
+        if(getNavigator().hasPath())
+            return PlayState.STOP;
         event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
+        return PlayState.CONTINUE;
+    }
+
+    private <P extends IAnimatable> PlayState castPredicate(AnimationEvent<P> event) {
+        return PlayState.CONTINUE;
+    }
+
+    private <P extends IAnimatable> PlayState summonPredicate(AnimationEvent<P> event) {
         return PlayState.CONTINUE;
     }
 
     @Override
     public void registerControllers(AnimationData animationData) {
         animationData.addAnimationController(new AnimationController<EntityWixie>(this, "idleController", 20, this::idlePredicate));
+        animationData.addAnimationController(new AnimationController<EntityWixie>(this, "castController", 1, this::castPredicate));
+        animationData.addAnimationController(new AnimationController<EntityWixie>(this, "summonController", 1, this::summonPredicate));
     }
 
     @Override
@@ -85,14 +100,16 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable {
     public List<PrioritizedGoal> getTamedGoals(){
         List<PrioritizedGoal> list = new ArrayList<>();
         list.add(new PrioritizedGoal(3, new LookRandomlyGoal(this)));
-        list.add(new PrioritizedGoal(1, new FindNextItemGoal(this)));
+        list.add(new PrioritizedGoal(2, new FindNextItemGoal(this)));
+        list.add(new PrioritizedGoal(1, new CompleteCraftingGoal(this)));
         return list;
     }
 
     public List<PrioritizedGoal> getUntamedGoals(){
         List<PrioritizedGoal> list = new ArrayList<>();
         list.add(new PrioritizedGoal(3, new LookRandomlyGoal(this)));
-        list.add(new PrioritizedGoal(1, new FindNextItemGoal(this)));
+        list.add(new PrioritizedGoal(2, new FindNextItemGoal(this)));
+        list.add(new PrioritizedGoal(1, new CompleteCraftingGoal(this)));
         return list;
     }
 
@@ -154,5 +171,23 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable {
             tag.putInt("summoner_z", cauldronPos.getZ());
         }
         tag.putBoolean("tamed", this.dataManager.get(TAMED));
+    }
+
+    @Override
+    public void startAnimation(int arg) {
+        if(arg == Animations.CAST.ordinal()){
+            AnimationController controller = this.manager.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("castController");
+            controller.markNeedsReload();
+            controller.setAnimation(new AnimationBuilder().addAnimation("cast", false));
+        }else if(arg == Animations.SUMMON_ITEM.ordinal()){
+            AnimationController controller = this.manager.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("summonController");
+            controller.markNeedsReload();
+            controller.setAnimation(new AnimationBuilder().addAnimation("summon_item", false));
+        }
+    }
+
+    public enum Animations{
+        CAST,
+        SUMMON_ITEM
     }
 }

@@ -11,15 +11,19 @@ public class ShapedHelper {
     int recipeWidth;
     int recipeHeight;
     NonNullList<Ingredient> recipeItems;
+    public List<List<Ingredient>> possibleRecipes;
     public ShapedHelper(ShapedRecipe recipe){
         recipeHeight = recipe.getRecipeHeight();
         recipeWidth = recipe.getRecipeWidth();
         recipeItems = recipe.getIngredients();
+        possibleRecipes = getPossibleRecipes();
     }
+
+
     /**
      * Used to check if a recipe matches current crafting inventory
      */
-    public List<List<Ingredient>> matches() {
+    public List<List<Ingredient>> getPossibleRecipes() {
         List<List<Ingredient>> ingredients = new ArrayList<>();
         for(int i = 0; i <= 3 - this.recipeWidth; ++i) {
             for(int j = 0; j <= 3 - this.recipeHeight; ++j) {

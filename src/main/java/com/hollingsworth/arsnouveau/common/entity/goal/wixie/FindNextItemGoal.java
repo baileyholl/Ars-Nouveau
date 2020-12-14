@@ -3,10 +3,13 @@ package com.hollingsworth.arsnouveau.common.entity.goal.wixie;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -19,7 +22,8 @@ public class FindNextItemGoal extends Goal {
     BlockPos movePos;
     ItemStack getStack;
     boolean found;
-
+    int ticksSinceCast;
+    boolean hasCast;
 
     public FindNextItemGoal(EntityWixie wixie){
         this.wixie = wixie;
@@ -30,13 +34,12 @@ public class FindNextItemGoal extends Goal {
     public void startExecuting() {
         World world = wixie.getEntityWorld();
         WixieCauldronTile tile = (WixieCauldronTile) world.getTileEntity(wixie.cauldronPos);
-
         if(tile == null || tile.inventories == null) {
             found = true;
             return;
         }
-        getStack = tile.getNextRequiredItem();
-        if(getStack == null || getStack.isEmpty()){
+        getStack = tile.craftManager.getNextItem();//tile.getNextRequiredItem();
+        if(getStack.isEmpty()){
             found = true;
             return;
         }
@@ -56,7 +59,11 @@ public class FindNextItemGoal extends Goal {
 
     @Override
     public boolean shouldExecute() {
-        return wixie.inventoryBackoff == 0;
+        if(wixie.cauldronPos == null)
+            return false;
+
+        TileEntity tileEntity = wixie.world.getTileEntity(wixie.cauldronPos);
+        return wixie.inventoryBackoff == 0 && tileEntity instanceof WixieCauldronTile && !((WixieCauldronTile) tileEntity).isCraftingDone();
     }
 
     @Override
@@ -82,13 +89,13 @@ public class FindNextItemGoal extends Goal {
                 for(int j = 0; j < i.getSizeInventory(); j++) {
                     if (i.getStackInSlot(j).getItem() == getStack.getItem()) {
                         found = true;
-                        System.out.println("item found");
                         ItemStack stackToGive = i.getStackInSlot(j).copy();
                         tile.spawnFlyingItem(b,stackToGive);
                         stackToGive.setCount(1);
                         tile.giveItem(stackToGive);
                         i.getStackInSlot(j).shrink(1);
-                        wixie.inventoryBackoff = 40;
+                        Networking.sendToNearby(world, wixie, new PacketAnimEntity(wixie.getEntityId(), EntityWixie.Animations.SUMMON_ITEM.ordinal()));
+                        wixie.inventoryBackoff = 60;
                         break;
                     }
                 }
