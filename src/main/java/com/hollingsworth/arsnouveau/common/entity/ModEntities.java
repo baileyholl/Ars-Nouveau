@@ -25,7 +25,9 @@ public class ModEntities {
     public static EntityType<EntitySylph> ENTITY_SYLPH_TYPE = null;
 
     public static EntityType<EntityEarthElemental> ENTITY_EARTH_ELEMENTAL_TYPE = null;
+    public static EntityType<EntityWixie> ENTITY_WIXIE_TYPE = null;
 
+    public static EntityType<EntityFlyingItem> ENTITY_FLYING_ITEM = null;
 
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
@@ -72,6 +74,16 @@ public class ModEntities {
                     .size(0.6F, 0.98F).setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
 
+            ENTITY_WIXIE_TYPE = build("wixie", EntityType.Builder.<EntityWixie>create(EntityWixie::new, EntityClassification.MISC)
+                    .size(0.6F, 0.98F).setTrackingRange(10)
+                    .setShouldReceiveVelocityUpdates(true));
+
+            ENTITY_FLYING_ITEM = build(
+                    "flying_item",
+                    EntityType.Builder.<EntityFlyingItem>create(EntityFlyingItem::new, EntityClassification.MISC)
+                            .size(0.5f, 0.5f)
+                            .setTrackingRange(10).setUpdateInterval(60)
+                            .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityFlyingItem::new));
             event.getRegistry().registerAll(
                     SPELL_PROJ,
                     ENTITY_EVOKER_FANGS_ENTITY_TYPE,
@@ -79,13 +91,15 @@ public class ModEntities {
                     ENTITY_WHELP_TYPE,
                     ENTITY_CARBUNCLE_TYPE,
                     ENTITY_SYLPH_TYPE,
-                    ENTITY_FOLLOW_PROJ
+                    ENTITY_FOLLOW_PROJ,
+                    ENTITY_WIXIE_TYPE, ENTITY_FLYING_ITEM
             );
 
             GlobalEntityTypeAttributes.put(ENTITY_WHELP_TYPE, EntityWhelp.attributes().create());
             GlobalEntityTypeAttributes.put(ALLY_VEX, VexEntity.func_234321_m_().create());
             GlobalEntityTypeAttributes.put(ENTITY_CARBUNCLE_TYPE, EntityCarbuncle.attributes().create());
             GlobalEntityTypeAttributes.put(ENTITY_SYLPH_TYPE, EntitySylph.attributes().create());
+            GlobalEntityTypeAttributes.put(ENTITY_WIXIE_TYPE, EntityWixie.attributes().create());
 
         }
     }

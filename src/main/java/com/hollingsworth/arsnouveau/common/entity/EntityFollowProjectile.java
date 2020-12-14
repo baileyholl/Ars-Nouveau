@@ -19,8 +19,8 @@ import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class EntityFollowProjectile extends ArrowEntity {
-    private static final DataParameter<BlockPos> to = EntityDataManager.createKey(ArrowEntity.class, DataSerializers.BLOCK_POS);
-    private static final DataParameter<BlockPos> from = EntityDataManager.createKey(ArrowEntity.class, DataSerializers.BLOCK_POS);
+    public static final DataParameter<BlockPos> to = EntityDataManager.createKey(ArrowEntity.class, DataSerializers.BLOCK_POS);
+    public static final DataParameter<BlockPos> from = EntityDataManager.createKey(ArrowEntity.class, DataSerializers.BLOCK_POS);
     public static final DataParameter<Integer> RED = EntityDataManager.createKey(EntityFollowProjectile.class, DataSerializers.VARINT);
     public static final DataParameter<Integer> GREEN = EntityDataManager.createKey(EntityFollowProjectile.class, DataSerializers.VARINT);
     public static final DataParameter<Integer> BLUE = EntityDataManager.createKey(EntityFollowProjectile.class, DataSerializers.VARINT);
@@ -41,11 +41,19 @@ public class EntityFollowProjectile extends ArrowEntity {
         this.dataManager.set(GREEN, 25);
         this.dataManager.set(BLUE, 180);
     }
+
+    public EntityFollowProjectile(World worldIn, BlockPos from, BlockPos to, int r, int g, int b) {
+        this(worldIn, new Vector3d(from.getX(), from.getY(), from.getZ()), new Vector3d(to.getX(), to.getY(), to.getZ()));
+        this.dataManager.set(RED, r);
+        this.dataManager.set(GREEN, g);
+        this.dataManager.set(BLUE, b);
+    }
+
     public EntityFollowProjectile(World worldIn, BlockPos from, BlockPos to) {
         this(worldIn, new Vector3d(from.getX(), from.getY(), from.getZ()), new Vector3d(to.getX(), to.getY(), to.getZ()));
     }
 
-    public EntityFollowProjectile(EntityType<EntityFollowProjectile> entityAOEProjectileEntityType, World world) {
+    public EntityFollowProjectile(EntityType<? extends EntityFollowProjectile> entityAOEProjectileEntityType, World world) {
         super(entityAOEProjectileEntityType, world);
     }
 
@@ -117,9 +125,9 @@ public class EntityFollowProjectile extends ArrowEntity {
 
             for (double i = 0; i < dist; i ++){
                 double coeff = i/dist;
-                counter += world.rand.nextInt(3);
+                counter += world.rand.nextInt(2);
                 if (counter % (Minecraft.getInstance().gameSettings.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().gameSettings.particles.getId()) == 0) {
-                    world.addParticle(GlowParticleData.createData(new ParticleColor(255,25,180)),
+                    world.addParticle(GlowParticleData.createData(new ParticleColor(this.dataManager.get(RED),this.dataManager.get(GREEN),this.dataManager.get(BLUE))),
                             (float) (prevPosX + deltaX * coeff), (float) (prevPosY + deltaY * coeff), (float) (prevPosZ + deltaZ * coeff), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f));
                 }
             }

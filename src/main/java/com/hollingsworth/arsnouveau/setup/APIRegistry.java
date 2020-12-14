@@ -147,7 +147,6 @@ public class APIRegistry {
     }
 
     public static void registerApparatusRecipe(IEnchantingRecipe recipe){
-        System.out.println(recipe);
         ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes().add(recipe);
     }
 

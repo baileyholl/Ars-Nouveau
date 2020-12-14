@@ -93,7 +93,8 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.BLANK_PARCHMENT)public static ModItem BLANK_PARCHMENT;
     @ObjectHolder(LibItemNames.WAND)public static Wand WAND;
     @ObjectHolder(LibItemNames.VOID_JAR)public static VoidJar VOID_JAR;
-
+    @ObjectHolder(LibItemNames.WIXIE_CHARM)public static WhelpCharm WIXIE_CHARM;
+    @ObjectHolder(LibItemNames.WIXIE_SHARD)public static ModItem WIXIE_SHARD;
 
     public static Food MANA_BERRY_FOOD = (new Food.Builder()).hunger(2).saturation(0.1F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).setAlwaysEdible().build();
 
@@ -146,6 +147,7 @@ public class ItemsRegistry {
                     new WornNotebook(),
                     new CarbuncleCharm(),
                     new ModItem(LibItemNames.CARBUNCLE_SHARD),
+                    new WixieCharm(),
                     new DiscountRing(LibItemNames.RING_OF_LESSER_DISCOUNT) {
                         @Override
                         public int getManaDiscount() {
@@ -179,6 +181,7 @@ public class ItemsRegistry {
                     new ItemScroll(LibItemNames.ALLOW_ITEM_SCROLL),
                     new ItemScroll(LibItemNames.DENY_ITEM_SCROLL),
                     new ModItem(LibItemNames.BLANK_PARCHMENT),
+                    new ModItem(LibItemNames.WIXIE_SHARD),
                     new Wand(),
                     new VoidJar()
             };
