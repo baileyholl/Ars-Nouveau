@@ -264,5 +264,15 @@
 	"ars_nouveau.page.void_jar": "A jar that can destroy items on pickup in exchange for a small amount of mana. To turn the jar on and off, use the jar while sneaking. To add or remove an item to be destroyed by the jar, use the jar with an item in the off hand, or use an item on the Scribes Table with the jar placed on it. The jar must be in your hotbar to function.",
 	"ars_nouveau.page.runic_chalk": "Runic chalk can be used to place permanent Runes on the ground that will cast spells on entities that walk over them. To give a rune a spell, inscribe spell parchment using the scribes table. Once the rune has cast the spell, it will become uncharged. An uncharged rune will charge itself from nearby mana jars. Using Runic Chalk on a temporary rune will convert it to a permanent one.",
 	"ars_nouveau.wand.invalid": "Invalid spell. Wands accept Effects and Augments only.",
-	"item.ars_nouveau.wand":"Wand"
+	"item.ars_nouveau.wand":"Wand",
+	"ars_nouveau.wixie.has_wixie": "This cauldron already has a wixie.",
+	"ars_nouveau.wixie.no_recipe": "No recipes found.",
+	"ars_nouveau.wixie.recipe_set": "Recipe set.",
+	"tooltip.wixie_shard": "Obtained by using Dispel on a witch while it is less than half health.",
+	"tooltip.carbuncle_shard": "Obtained by giving a wild Carbuncle a Gold Nugget.",
+	"tooltip.sylph_shard": "Obtained by growing a tree near a wild Sylph.",
+	"ars_nouveau.page.wixie_charm": "A Wixie can automatically craft items for you at the expense of mana. To obtain a Wixie Shard, cast Dispel on a Witch while it is half health or less. Once you have obtained a Wixie Charm, use it on a Cauldron to summon your Wixie.",
+	"entity.ars_nouveau.wixie": "Wixie",
+	"ars_nouveau.page2.wixie_charm": "To select an item for crafting, use your item or block on the Wixie Cauldron.",
+	"ars_nouveau.page3.wixie_charm": "The Wixie will automatically select the recipe for crafting based on the inventories nearby, you need not specify the exact materials for the recipe. For example, if you want to craft Sticks, the Wixie will mix and match planks from nearby chests in order to fulfill the recipe. Each craft requires a small amount of mana and will be automatically drained from nearby mana jars."
 }
