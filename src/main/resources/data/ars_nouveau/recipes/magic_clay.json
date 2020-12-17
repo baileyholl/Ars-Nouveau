@@ -5,7 +5,7 @@
       "item": "minecraft:clay_ball"
     },
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     },
     {
       "item": "minecraft:redstone"

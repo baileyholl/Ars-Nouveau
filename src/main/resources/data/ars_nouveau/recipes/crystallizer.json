@@ -13,7 +13,7 @@
       "item": "minecraft:gold_ingot"
     },
     "z": {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     }
   },
   "result": {

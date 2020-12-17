@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     },
     {
       "item": "minecraft:book"

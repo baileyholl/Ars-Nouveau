@@ -7,13 +7,13 @@
   ],
   "key": {
     "x": {
-      "item": "minecraft:oak_slab"
+      "tag": "minecraft:wooden_slabs"
     },
     "y": {
       "item": "minecraft:stick"
     },
     "z": {
-      "item": "minecraft:oak_log"
+      "tag": "minecraft:logs"
     }
   },
   "result": {
