@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.recipe;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 
 import java.util.*;
@@ -19,8 +20,8 @@ public class RecipeWrapper {
         return recipes.add(recipe);
     }
 
-    public boolean addRecipe(List<Ingredient> recipe, ItemStack outputStack){
-        return recipes.add(new SingleRecipe(recipe, outputStack));
+    public boolean addRecipe(List<Ingredient> recipe, ItemStack outputStack, IRecipe iRecipe){
+        return recipes.add(new SingleRecipe(recipe, outputStack, iRecipe));
     }
 
     public SingleRecipe canCraftFromInventory(Map<Item, Integer> inventory){
@@ -35,10 +36,13 @@ public class RecipeWrapper {
     public static class SingleRecipe{
         public List<Ingredient> recipe;
         public ItemStack outputStack;
+        public IRecipe iRecipe;
 
-        public SingleRecipe(List<Ingredient> ingredients, ItemStack outputStack){
+
+        public SingleRecipe(List<Ingredient> ingredients, ItemStack outputStack, IRecipe iRecipe){
             this.recipe = ingredients;
             this.outputStack = outputStack;
+            this.iRecipe = iRecipe;
         }
 
         public List<ItemStack> canCraftFromInventory(Map<Item, Integer> inventory){

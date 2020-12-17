@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
+import com.hollingsworth.arsnouveau.api.event.DispelEvent;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
@@ -13,6 +14,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -36,6 +38,7 @@ public class EffectDispel extends AbstractEffect {
                 if(entity instanceof IDispellable){
                     ((IDispellable) entity).onDispel(shooter);
                 }
+                MinecraftForge.EVENT_BUS.post(new DispelEvent(rayTraceResult, world, shooter, augments, spellContext));
             }
             return;
         }
@@ -62,6 +65,6 @@ public class EffectDispel extends AbstractEffect {
 
     @Override
     protected String getBookDescription() {
-        return "Removes any potion effects on the target. Will also dispel tamed Whelps, Carbuncles, and Sylphs back into their charm.";
+        return "Removes any potion effects on the target. When used on a witch at half health, the witch will vanish in return for a Wixie shard. Will also dispel tamed Whelps, Carbuncles, and Sylphs back into their charm.";
     }
 }

@@ -7,7 +7,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
@@ -37,15 +36,12 @@ public class WixieCauldron extends ModBlock{
         if(worldIn.isRemote || handIn != Hand.MAIN_HAND)
             return ActionResultType.SUCCESS;
 
-        if(player.getHeldItemMainhand().getItem() == ItemsRegistry.bucketOfMana && !state.get(FILLED)){
-            player.setHeldItem(Hand.MAIN_HAND, Items.BUCKET.getDefaultInstance());
-            worldIn.setBlockState(pos, state.with(FILLED, true));
+        if(worldIn.getTileEntity(pos) instanceof WixieCauldronTile && player.getHeldItemMainhand().getItem() != ItemsRegistry.WIXIE_CHARM){
+            ((WixieCauldronTile) worldIn.getTileEntity(pos)).setRecipes(player, player.getHeldItemMainhand());
+            worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 3);
+            return ActionResultType.CONSUME;
         }
-
-        if(worldIn.getTileEntity(pos) instanceof WixieCauldronTile){
-            ((WixieCauldronTile) worldIn.getTileEntity(pos)).setRecipes(player.getHeldItemMainhand());
-        }
-        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+        return ActionResultType.PASS;
     }
 
     @Override

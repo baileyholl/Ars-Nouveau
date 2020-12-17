@@ -81,6 +81,13 @@ public class APIRegistry {
                 Items.LAVA_BUCKET, Items.BUCKET, Items.ENDER_PEARL,ItemsRegistry.ALLOW_ITEM_SCROLL
         }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
 
+        registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.DOMINION_ROD, Items.STICK, new Item[]{
+                ItemsRegistry.manaGem,  ItemsRegistry.manaGem, Items.GOLD_INGOT
+        }, ArsNouveauAPI.PatchouliCategories.automation.name()));
+
+        registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.WIXIE_CHARM, ItemsRegistry.WIXIE_SHARD, new Item[]{
+                Items.DARK_OAK_SAPLING, Items.CRAFTING_TABLE, Items.EMERALD, Items.BREWING_STAND
+        }, ArsNouveauAPI.PatchouliCategories.automation.name()));
     }
 
     public static void registerSpells(){
@@ -157,4 +164,6 @@ public class APIRegistry {
     public static void registerSpell(String id, AbstractSpellPart spellPart){
         ArsNouveauAPI.getInstance().registerSpell(id, spellPart);
     }
+
+    private APIRegistry(){}
 }

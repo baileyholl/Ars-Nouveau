@@ -63,7 +63,8 @@ public class FindNextItemGoal extends Goal {
             return false;
 
         TileEntity tileEntity = wixie.world.getTileEntity(wixie.cauldronPos);
-        return wixie.inventoryBackoff == 0 && tileEntity instanceof WixieCauldronTile && !((WixieCauldronTile) tileEntity).isCraftingDone();
+        return wixie.inventoryBackoff == 0 && tileEntity instanceof WixieCauldronTile
+                && ((WixieCauldronTile) tileEntity).hasMana && !((WixieCauldronTile) tileEntity).isCraftingDone();
     }
 
     @Override

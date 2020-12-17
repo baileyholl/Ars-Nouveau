@@ -72,7 +72,7 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.SPELL_PARCHMENT) public static SpellParchment spellParchment;
 
     @ObjectHolder(LibItemNames.WHELP_CHARM) public static WhelpCharm whelpCharm;
-    @ObjectHolder(LibItemNames.DOMINION_WAND) public static DominionWand DOMAIN_CONTROLLER;
+    @ObjectHolder(LibItemNames.DOMINION_WAND) public static DominionWand DOMINION_ROD;
 
     @ObjectHolder(LibItemNames.AMULET_OF_MANA_BOOST)public static AbstractManaCurio amuletOfManaBoost;
     @ObjectHolder(LibItemNames.AMULET_OF_MANA_REGEN)public static AbstractManaCurio amuletOfManaRegen;
@@ -93,7 +93,7 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.BLANK_PARCHMENT)public static ModItem BLANK_PARCHMENT;
     @ObjectHolder(LibItemNames.WAND)public static Wand WAND;
     @ObjectHolder(LibItemNames.VOID_JAR)public static VoidJar VOID_JAR;
-    @ObjectHolder(LibItemNames.WIXIE_CHARM)public static WhelpCharm WIXIE_CHARM;
+    @ObjectHolder(LibItemNames.WIXIE_CHARM)public static WixieCharm WIXIE_CHARM;
     @ObjectHolder(LibItemNames.WIXIE_SHARD)public static ModItem WIXIE_SHARD;
 
     public static Food MANA_BERRY_FOOD = (new Food.Builder()).hunger(2).saturation(0.1F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).setAlwaysEdible().build();
@@ -146,7 +146,7 @@ public class ItemsRegistry {
                     new JarOfLight(),
                     new WornNotebook(),
                     new CarbuncleCharm(),
-                    new ModItem(LibItemNames.CARBUNCLE_SHARD),
+                    new ModItem(LibItemNames.CARBUNCLE_SHARD).withTooltip(new TranslationTextComponent("tooltip.carbuncle_shard")),
                     new WixieCharm(),
                     new DiscountRing(LibItemNames.RING_OF_LESSER_DISCOUNT) {
                         @Override
@@ -173,7 +173,7 @@ public class ItemsRegistry {
                             return 3;
                         }
                     },
-                    new ModItem(LibItemNames.SYLPH_SHARD),
+                    new ModItem(LibItemNames.SYLPH_SHARD).withTooltip(new TranslationTextComponent("tooltip.sylph_shard")),
                     new SylphCharm(),
                     new ModItem(LibItemNames.MANA_GEM).withTooltip(new TranslationTextComponent("tooltip.mana_gem")),
              //       new ModItem(LibItemNames.WIXIE_SHARD),
@@ -181,7 +181,7 @@ public class ItemsRegistry {
                     new ItemScroll(LibItemNames.ALLOW_ITEM_SCROLL),
                     new ItemScroll(LibItemNames.DENY_ITEM_SCROLL),
                     new ModItem(LibItemNames.BLANK_PARCHMENT),
-                    new ModItem(LibItemNames.WIXIE_SHARD),
+                    new ModItem(LibItemNames.WIXIE_SHARD).withTooltip(new TranslationTextComponent("tooltip.wixie_shard")),
                     new Wand(),
                     new VoidJar()
             };

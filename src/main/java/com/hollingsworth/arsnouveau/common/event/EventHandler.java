@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.event.DispelEvent;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.LavaLily;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.items.VoidJar;
@@ -10,6 +12,7 @@ import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.monster.WitchEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -18,7 +21,9 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -110,6 +115,22 @@ public class EventHandler {
             if (damage < 0) damage = 0;
             e.setAmount(damage);
         }
+    }
+
+    @SubscribeEvent
+    public static void dispelEvent(DispelEvent event){
+        if(event.rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) event.rayTraceResult).getEntity() instanceof LivingEntity){
+            LivingEntity entity = (LivingEntity) ((EntityRayTraceResult) event.rayTraceResult).getEntity();
+            if(entity instanceof WitchEntity){
+                if(entity.getHealth() <= entity.getMaxHealth()/2){
+                    entity.remove();
+                    ParticleUtil.spawnPoof((ServerWorld) event.world, entity.getPosition());
+                    event.world.addEntity(new ItemEntity(event.world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), new ItemStack(ItemsRegistry.WIXIE_SHARD)));
+                }
+            }
+
+        }
+
     }
 
 
