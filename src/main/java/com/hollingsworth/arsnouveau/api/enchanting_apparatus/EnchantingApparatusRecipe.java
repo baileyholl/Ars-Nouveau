@@ -6,37 +6,37 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.item.crafting.RecipeItemHelper;
 
-import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class EnchantingApparatusRecipe implements IEnchantingRecipe{
 
-    public ItemStack catalyst; // Used in the arcane pedestal
+    public Ingredient catalyst; // Used in the arcane pedestal
     public ItemStack result; // Result item
-    public List<ItemStack> pedestalItems; // Items part of the recipe
+    public List<Ingredient> pedestalItems; // Items part of the recipe
     public String description;
     private String category;
 
-    public EnchantingApparatusRecipe(ItemStack result, ItemStack catalyst, List<ItemStack> pedestalItems, String category){
+    public EnchantingApparatusRecipe(ItemStack result, Ingredient catalyst, List<Ingredient> pedestalItems, String category){
         this.catalyst = catalyst;
         this.pedestalItems = pedestalItems;
         this.result = result;
         this.category = category;
     }
 
-    public EnchantingApparatusRecipe(ItemStack result, ItemStack catalyst, ItemStack pedestalItems,  String category){
-        this(result, catalyst, Collections.singletonList(pedestalItems), category);
-    }
 
     public EnchantingApparatusRecipe(Item result, Item catalyst, Item[] pedestalItems, String category){
-        ArrayList<ItemStack> stacks = new ArrayList<>();
+        ArrayList<Ingredient> stacks = new ArrayList<>();
         for(Item i : pedestalItems){
-            stacks.add(new ItemStack(i));
+            stacks.add(Ingredient.fromItems(i));
         }
-        this.catalyst = new ItemStack(catalyst);
+        this.catalyst = Ingredient.fromItems(catalyst);
         this.result = new ItemStack(result);
         this.pedestalItems = stacks;
         this.category = category;
@@ -45,7 +45,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
     @Override
     public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile) {
         pedestalItems = pedestalItems.stream().filter(itemStack -> !itemStack.isEmpty()).collect(Collectors.toList());
-        if (this.catalyst == null || reagent.getItem() != catalyst.getItem() || this.pedestalItems.size() != pedestalItems.size() || !areSameSet(pedestalItems, this.pedestalItems)) {
+        if (!catalyst.test(reagent)|| this.pedestalItems.size() != pedestalItems.size() || !doItemsMatch(pedestalItems, this.pedestalItems)) {
             return false;
         }
         return true;
@@ -56,29 +56,15 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         return result;
     }
 
-    /**
-     * A utility equals implementation that ignores the order of elements in the pedestal List.
-     */
-    public boolean isEqualTo(EnchantingApparatusRecipe other){
-        return other.result == this.result && this.catalyst == other.catalyst && this.pedestalItems.size() == other.pedestalItems.size() && areSameSet(this.pedestalItems, other.pedestalItems);
-    }
 
     // Function to check if both arrays are same
-    static boolean areSameSet(List<ItemStack> A, List<ItemStack> B)
-    {
-        if(A.size() != B.size()) {
-            return false;
-        }
-        A.sort(Comparator.comparing(a -> a.getItem().getRegistryName().toString()));
-        B.sort(Comparator.comparing(a -> a.getItem().getRegistryName().toString()));
+    static boolean doItemsMatch(List<ItemStack> inputs, List<Ingredient> recipeItems) {
+        RecipeItemHelper recipeitemhelper = new RecipeItemHelper();
+        for(ItemStack i : inputs)
+            recipeitemhelper.func_221264_a(i, 1);
 
-        for(int i = 0; i < A.size(); i++){
-            if(A.get(i).getItem() != B.get(i).getItem()) {
-                return false;
-            }
-        }
 
-        return true;
+        return inputs.size() == recipeItems.size() && (net.minecraftforge.common.util.RecipeMatcher.findMatches(inputs,  recipeItems) != null);
     }
 
     @Override
@@ -119,12 +105,13 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         descPage.addProperty("text",ArsNouveau.MODID + ".page." + this.result.getItem().getRegistryName().toString().replace(ArsNouveau.MODID + ":", ""));
         JsonObject infoPage = new JsonObject();
         infoPage.addProperty("type", "apparatus_recipe");
-        infoPage.addProperty("reagent", this.catalyst.getItem().getRegistryName().toString());
+        infoPage.addProperty("reagent", this.catalyst.getMatchingStacks()[0].getItem().getRegistryName().toString());
+
 
         if(this.pedestalItems != null){
             AtomicInteger count = new AtomicInteger(1);
             this.pedestalItems.forEach(i ->{
-                infoPage.addProperty("item" + count.get(), i.getItem().getRegistryName().toString());
+                infoPage.addProperty("item" + count.get(), i.getMatchingStacks()[0].getItem().getRegistryName().toString());
                 count.addAndGet(1);
             });
 
