@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.renderer.tile.*;
 import com.hollingsworth.arsnouveau.common.block.*;
 import com.hollingsworth.arsnouveau.common.block.tile.*;
+import com.hollingsworth.arsnouveau.common.event.WorldEvent;
 import com.hollingsworth.arsnouveau.common.items.AnimBlockItem;
 import com.hollingsworth.arsnouveau.common.items.FluidBlockItem;
 import com.hollingsworth.arsnouveau.common.items.VolcanicAccumulatorBI;
@@ -124,6 +125,7 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.LAVA_LILY) public static LavaLily LAVA_LILY;
     @ObjectHolder(LibBlockNames.MANA_BERRY_BUSH) public static ManaBerryBush MANA_BERRY_BUSH;
     @ObjectHolder("magic_sapling") public static SaplingBlock MAGIC_SAPLING;
+    @ObjectHolder("magic_sapling_two") public static SaplingBlock MAGIC_SAPLING2;
     @ObjectHolder(LibBlockNames.WIXIE_CAULDRON) public static WixieCauldron WIXIE_CAULDRON;
     @ObjectHolder(LibBlockNames.WIXIE_CAULDRON) public static TileEntityType<WixieCauldronTile> WIXIE_CAULDRON_TYPE;
 
@@ -164,7 +166,8 @@ public class BlockRegistry {
             blockRegistryEvent.getRegistry().register(new VolcanicAccumulator());
             blockRegistryEvent.getRegistry().register(new LavaLily());
             blockRegistryEvent.getRegistry().register(new ManaBerryBush(AbstractBlock.Properties.create(Material.PLANTS).tickRandomly().doesNotBlockMovement().sound(SoundType.SWEET_BERRY_BUSH)));
-            blockRegistryEvent.getRegistry().register(new SaplingBlock(new MagicTree(),ModBlock.defaultProperties()).setRegistryName("magic_sapling"));
+            blockRegistryEvent.getRegistry().register(new SaplingBlock(new MagicTree(WorldEvent.MAGIC_TREE_CONFIG),ModBlock.defaultProperties()).setRegistryName("magic_sapling"));
+            blockRegistryEvent.getRegistry().register(new SaplingBlock(new MagicTree(WorldEvent.MAGIC_TREE_CONFIG2),ModBlock.defaultProperties()).setRegistryName("magic_sapling_two"));
             blockRegistryEvent.getRegistry().register(new WixieCauldron());
         }
 
@@ -226,6 +229,7 @@ public class BlockRegistry {
             registry.register(new FluidBlockItem(BlockRegistry.LAVA_LILY, ItemsRegistry.defaultItemProperties().isImmuneToFire()).setRegistryName(LibBlockNames.LAVA_LILY));
             registry.register(new BlockItem(BlockRegistry.MANA_BERRY_BUSH, ItemsRegistry.defaultItemProperties().food(ItemsRegistry.MANA_BERRY_FOOD)).setRegistryName(LibItemNames.MANA_BERRY));
             registry.register(getDefaultBlockItem(BlockRegistry.MAGIC_SAPLING, "magic_sapling"));
+            registry.register(getDefaultBlockItem(BlockRegistry.MAGIC_SAPLING2, "magic_sapling_two"));
             registry.register(new BlockItem(BlockRegistry.WIXIE_CAULDRON, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.WIXIE_CAULDRON));
 
         }
