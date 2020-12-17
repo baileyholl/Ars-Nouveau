@@ -1,7 +1,7 @@
 {
   "name": "Strength",
   "icon": "ars_nouveau:glyph_strength",
-  "category": "spells_1",
+  "category": "spells_3",
   "sortnum": 2,
   "pages": [
     {
@@ -10,9 +10,9 @@
     },
     {
       "type": "glyph_recipe",
-      "tier": "ONE",
-      "mana_cost": "Low",
-      "clay_type": "ars_nouveau:magic_clay",
+      "tier": "THREE",
+      "mana_cost": "High",
+      "clay_type": "ars_nouveau:mythical_clay",
       "reagent": "minecraft:blaze_powder"
     }
   ]

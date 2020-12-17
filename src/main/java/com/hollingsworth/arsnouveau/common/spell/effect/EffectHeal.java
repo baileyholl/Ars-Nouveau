@@ -32,7 +32,7 @@ public class EffectHeal extends AbstractEffect {
             float maxHealth = entity.getMaxHealth();
             float healVal = 3.0f + 3 * getBuffCount(augments, AugmentAmplify.class);
             if(getBuffCount(augments, AugmentExtendTime.class) > 0){
-                applyPotion(entity, Effects.REGENERATION, augments, 5, 5);
+                applyPotionWithCap(entity, Effects.REGENERATION, augments, 5, 5, 5);
             }else{
                 entity.setHealth(entity.getHealth() + healVal > maxHealth ? entity.getMaxHealth() : entity.getHealth() + healVal);
             }
@@ -63,6 +63,6 @@ public class EffectHeal extends AbstractEffect {
 
     @Override
     protected String getBookDescription() {
-        return "Heals a small amount of health for the target. When used with Extend Time, the Regeneration buff is applied instead.";
+        return "Heals a small amount of health for the target. When used with Extend Time, the Regeneration buff is applied instead, up to level 5.";
     }
 }

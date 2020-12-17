@@ -43,6 +43,14 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         applyPotion(entity, potionEffect, augmentTypes, 30, 8);
     }
 
+    public void applyPotionWithCap(LivingEntity entity, Effect potionEffect, List<AbstractAugment> augmentTypes, int baseDuration, int durationBuffBase, int cap){
+        if(entity == null)
+            return;
+        int duration = baseDuration + durationBuffBase * getDurationModifier(augmentTypes);
+        int amp = Math.min(cap, getAmplificationBonus(augmentTypes));
+        entity.addPotionEffect(new EffectInstance(potionEffect, duration * 20, amp));
+    }
+
     public void applyPotion(LivingEntity entity, Effect potionEffect, List<AbstractAugment> augmentTypes, int baseDuration, int durationBuffBase){
         if(entity == null)
             return;
