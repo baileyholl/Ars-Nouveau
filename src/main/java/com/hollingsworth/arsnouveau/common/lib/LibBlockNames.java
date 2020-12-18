@@ -26,4 +26,8 @@ public class LibBlockNames {
     public static final String LAVA_LILY = "lava_lily";
     public static final String MANA_BERRY_BUSH = "mana_berry_bush";
     public static final String WIXIE_CAULDRON = "wixie_cauldron";
+    public static final String CREATIVE_MANA_JAR = "creative_mana_jar";
+    public final static String AB_SMOOTH = "ab_smooth";
+    public final static String AB_CLOVER = "ab_clover";
+    public final static String AB_SMOOTH_SLAB = "ab_smooth_slab";
 }

@@ -50,6 +50,7 @@ public class ClientHandler {
         RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_BERRY_BUSH, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.LAVA_LILY, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.WIXIE_CAULDRON, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.CREATIVE_MANA_JAR, RenderType.getCutout());
 
     }
 

@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.block.ManaJar;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.tileentity.TileEntityType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,10 @@ public class ManaJarTile extends AbstractManaTile implements ITickableTileEntity
 
     public ManaJarTile() {
         super(BlockRegistry.MANA_JAR_TILE);
+    }
+
+    public ManaJarTile(TileEntityType<? extends ManaJarTile> tileTileEntityType){
+        super(tileTileEntityType);
     }
 
     @Override

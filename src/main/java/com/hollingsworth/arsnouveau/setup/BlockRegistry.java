@@ -112,6 +112,9 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.AB_HERRING) public static ModBlock AB_HERRING;
     @ObjectHolder(LibBlockNames.AB_MOSAIC) public static ModBlock AB_MOSAIC;
     @ObjectHolder(LibBlockNames.ARCANE_STONE) public static ModBlock ARCANE_STONE;
+    @ObjectHolder(LibBlockNames.AB_SMOOTH) public static ModBlock AB_SMOOTH;
+    @ObjectHolder(LibBlockNames.AB_SMOOTH_SLAB) public static ModBlock AB_SMOOTH_SLAB;
+    @ObjectHolder(LibBlockNames.AB_CLOVER) public static ModBlock AB_CLOVER;
 
     @ObjectHolder(LibBlockNames.SPELL_TURRET) public static SpellTurret SPELL_TURRET;
     @ObjectHolder(LibBlockNames.SPELL_TURRET) public static TileEntityType<SpellTurretTile> SPELL_TURRET_TYPE;
@@ -128,6 +131,11 @@ public class BlockRegistry {
     @ObjectHolder("magic_sapling_two") public static SaplingBlock MAGIC_SAPLING2;
     @ObjectHolder(LibBlockNames.WIXIE_CAULDRON) public static WixieCauldron WIXIE_CAULDRON;
     @ObjectHolder(LibBlockNames.WIXIE_CAULDRON) public static TileEntityType<WixieCauldronTile> WIXIE_CAULDRON_TYPE;
+
+
+    @ObjectHolder(LibBlockNames.CREATIVE_MANA_JAR) public static CreativeManaJar CREATIVE_MANA_JAR;
+    @ObjectHolder(LibBlockNames.CREATIVE_MANA_JAR) public static TileEntityType<CreativeManaJarTile> CREATIVE_JAR_TILE;
+
 
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
@@ -169,6 +177,10 @@ public class BlockRegistry {
             blockRegistryEvent.getRegistry().register(new SaplingBlock(new MagicTree(WorldEvent.MAGIC_TREE_CONFIG),ModBlock.defaultProperties()).setRegistryName("magic_sapling"));
             blockRegistryEvent.getRegistry().register(new SaplingBlock(new MagicTree(WorldEvent.MAGIC_TREE_CONFIG2),ModBlock.defaultProperties()).setRegistryName("magic_sapling_two"));
             blockRegistryEvent.getRegistry().register(new WixieCauldron());
+            blockRegistryEvent.getRegistry().register(new CreativeManaJar());
+            blockRegistryEvent.getRegistry().register(new ModBlock(LibBlockNames.AB_SMOOTH));
+            blockRegistryEvent.getRegistry().register(new ModBlock(LibBlockNames.AB_SMOOTH_SLAB));
+            blockRegistryEvent.getRegistry().register(new ModBlock(LibBlockNames.AB_CLOVER));
         }
 
         @SubscribeEvent
@@ -192,6 +204,7 @@ public class BlockRegistry {
             event.getRegistry().register(TileEntityType.Builder.create(IntangibleAirTile::new, BlockRegistry.INTANGIBLE_AIR).build(null).setRegistryName(LibBlockNames.INTANGIBLE_AIR));
             event.getRegistry().register(TileEntityType.Builder.create(VolcanicTile::new, BlockRegistry.VOLCANIC_BLOCK).build(null).setRegistryName(LibBlockNames.VOLCANIC_ACCUMULATOR));
             event.getRegistry().register(TileEntityType.Builder.create(WixieCauldronTile::new, BlockRegistry.WIXIE_CAULDRON).build(null).setRegistryName(LibBlockNames.WIXIE_CAULDRON));
+            event.getRegistry().register(TileEntityType.Builder.create(CreativeManaJarTile::new, BlockRegistry.CREATIVE_MANA_JAR).build(null).setRegistryName(LibBlockNames.CREATIVE_MANA_JAR));
 
         }
 
@@ -231,6 +244,11 @@ public class BlockRegistry {
             registry.register(getDefaultBlockItem(BlockRegistry.MAGIC_SAPLING, "magic_sapling"));
             registry.register(getDefaultBlockItem(BlockRegistry.MAGIC_SAPLING2, "magic_sapling_two"));
             registry.register(new BlockItem(BlockRegistry.WIXIE_CAULDRON, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.WIXIE_CAULDRON));
+            registry.register(new BlockItem(BlockRegistry.CREATIVE_MANA_JAR, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.CREATIVE_MANA_JAR));
+
+            registry.register(getDefaultBlockItem(BlockRegistry.AB_SMOOTH_SLAB, LibBlockNames.AB_SMOOTH_SLAB));
+            registry.register(getDefaultBlockItem(BlockRegistry.AB_SMOOTH, LibBlockNames.AB_SMOOTH));
+            registry.register(getDefaultBlockItem(BlockRegistry.AB_CLOVER, LibBlockNames.AB_CLOVER));
 
         }
 

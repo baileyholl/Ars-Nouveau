@@ -274,5 +274,9 @@
 	"ars_nouveau.page.wixie_charm": "A Wixie can automatically craft items for you at the expense of mana. To obtain a Wixie Shard, cast Dispel on a Witch while it is half health or less. Once you have obtained a Wixie Charm, use it on a Cauldron to summon your Wixie.",
 	"entity.ars_nouveau.wixie": "Wixie",
 	"ars_nouveau.page2.wixie_charm": "To select an item for crafting, use your item or block on the Wixie Cauldron.",
-	"ars_nouveau.page3.wixie_charm": "The Wixie will automatically select the recipe for crafting based on the inventories nearby, you need not specify the exact materials for the recipe. For example, if you want to craft Sticks, the Wixie will mix and match planks from nearby chests in order to fulfill the recipe. Each craft requires a small amount of mana and will be automatically drained from nearby mana jars."
+	"ars_nouveau.page3.wixie_charm": "The Wixie will automatically select the recipe for crafting based on the inventories nearby, you need not specify the exact materials for the recipe. For example, if you want to craft Sticks, the Wixie will mix and match planks from nearby chests in order to fulfill the recipe. Each craft requires a small amount of mana and will be automatically drained from nearby mana jars.",
+	"block.ars_nouveau.ab_smooth":"Arcane Brick: Smooth",
+	"block.ars_nouveau.ab_clover":"Arcane Brick: Clover",
+	"block.ars_nouveau.ab_smooth_slab":"Arcane Brick: Smooth Slab",
+	"block.ars_nouveau.creative_mana_jar":"Creative Mana Jar"
 }

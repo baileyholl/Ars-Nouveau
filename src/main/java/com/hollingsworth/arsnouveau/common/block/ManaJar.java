@@ -31,6 +31,10 @@ public class ManaJar extends ManaBlock {
         super(ModBlock.defaultProperties().notSolid(),"mana_jar");
     }
 
+    public ManaJar(Properties properties, String registryName){
+        super(properties, registryName);
+    }
+
     @Override
     public boolean hasTileEntity(BlockState state) {
         return true;
