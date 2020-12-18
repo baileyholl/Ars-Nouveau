@@ -192,7 +192,15 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
             controller.setAnimation(new AnimationBuilder().addAnimation("summon_item", false));
         }
     }
+    @Override
+    public void onDeath(DamageSource source) {
+        if(!world.isRemote ){
+            ItemStack stack = new ItemStack(ItemsRegistry.WIXIE_CHARM);
+            world.addEntity(new ItemEntity(world, getPosX(), getPosY(), getPosZ(), stack));
 
+        }
+        super.onDeath(source);
+    }
     @Override
     public boolean onDispel(@Nullable LivingEntity caster) {
         if(this.removed)
