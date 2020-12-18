@@ -25,6 +25,7 @@ import net.minecraft.entity.ai.goal.LookAtGoal;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -49,7 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlaceBlockResponder, IDispellable, ITooltipProvider, IWandable {
+public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlaceBlockResponder, IDispellable, ITooltipProvider, IWandable, IInteractResponder {
 
     public static final DataParameter<String> SPELL_STRING = EntityDataManager.createKey(EntityWhelp.class, DataSerializers.STRING);
     public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.createKey(EntityWhelp.class, DataSerializers.ITEMSTACK);
@@ -119,7 +120,6 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
 
     @Override
     public void onWanded(PlayerEntity playerEntity) {
-
         this.dataManager.set(STRICT_MODE, !this.dataManager.get(STRICT_MODE));
         PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.whelp.strict_mode", this.dataManager.get(STRICT_MODE)));
     }
@@ -328,5 +328,20 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         this.dataManager.register(HELD_ITEM, ItemStack.EMPTY);
         this.dataManager.register(SPELL_STRING, "");
         this.dataManager.register(STRICT_MODE, true);
+    }
+
+    @Override
+    public ItemStack getHeldItem() {
+        if(crystalPos != null && world.getTileEntity(crystalPos) instanceof SummoningCrytalTile){
+            SummoningCrytalTile tile = (SummoningCrytalTile) world.getTileEntity(crystalPos);
+            for(IInventory inv : tile.inventories()){
+                for(int i = 0; i < inv.getSizeInventory(); i++){
+                    if(inv.getStackInSlot(i).isItemEqual(this.dataManager.get(HELD_ITEM)))
+                        return inv.getStackInSlot(i).split(1);
+                }
+            }
+
+        }
+        return ItemStack.EMPTY;
     }
 }
