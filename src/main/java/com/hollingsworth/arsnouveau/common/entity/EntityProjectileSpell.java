@@ -81,7 +81,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
         Vector3d vector3d2 = this.getPositionVec();
         Vector3d vector3d3 = vector3d2.add(vector3d);
         RayTraceResult raytraceresult = this.world.rayTraceBlocks(new RayTraceContext(vector3d2, vector3d3, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this));
-        if (raytraceresult.getType() != RayTraceResult.Type.MISS) {
+        if (raytraceresult != null && raytraceresult.getType() != RayTraceResult.Type.MISS) {
             vector3d3 = raytraceresult.getHitVec();
         }
         EntityRayTraceResult entityraytraceresult = this.rayTraceEntities(vector3d2, vector3d3);

@@ -26,7 +26,7 @@ import java.util.Random;
 
 public class EnchantingApparatusRenderer extends TileEntityRenderer<EnchantingApparatusTile> {
     public static final EnchantingApparatusModel model = new EnchantingApparatusModel();
-    public static final ResourceLocation texture = new ResourceLocation(ArsNouveau.MODID + ":textures/entity/enchanting_apparatus.png");
+    public static final ResourceLocation texture = new ResourceLocation(ArsNouveau.MODID + ":textures/blocks/enchanting_apparatus.png");
 
     public EnchantingApparatusRenderer(TileEntityRendererDispatcher p_i226006_1_) {
         super(p_i226006_1_);

@@ -35,6 +35,7 @@ public class WixieCharm extends ModItem{
                 wixie.setPosition(pos.getX()+0.5, pos.getY() + 1.0, pos.getZ() +0.5);
                 world.addEntity(wixie);
                 tile.entityID = wixie.getEntityId();
+                context.getItem().shrink(1);
             }else{
                 PortUtil.sendMessage(context.getPlayer(), new TranslationTextComponent("ars_nouveau.wixie.has_wixie"));
             }
