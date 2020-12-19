@@ -31,9 +31,23 @@ public class LibBlockNames {
     public final static String AB_CLOVER = "ab_clover";
     public final static String AB_SMOOTH_SLAB = "ab_smooth_slab";
 
-    public final static String AW_PLANKS = "archwood_planks";
-    public final static String BAW_LEAVES = "blue_archwood_leaves";
-    public final static String BAW_LOG = "blue_archwood_log";
-    public final static String BAW_SAPLING = "blue_archwood_sapling";
-    public final static String BAW_WOOD = "blue_archwood_wood";
+    public final static String BLAZING_LEAVES = "red_archwood_leaves";
+    public final static String BLAZING_LOG = "red_archwood_log";
+    public final static String BLAZING_SAPLING = "red_archwood_sapling";
+    public final static String BLAZING_WOOD = "red_archwood_wood";
+
+    public final static String CASCADING_LEAVES = "blue_archwood_leaves";
+    public final static String CASCADING_LOG = "blue_archwood_log";
+    public final static String CASCADING_SAPLING = "blue_archwood_sapling";
+    public final static String CASCADING_WOOD = "blue_archwood_wood";
+
+    public final static String FLOURISHING_LEAVES = "green_archwood_leaves";
+    public final static String FLOURISHING_LOG = "green_archwood_log";
+    public final static String FLOURISHING_SAPLING = "green_archwood_sapling";
+    public final static String FLOURISHING_WOOD = "green_archwood_wood";
+
+    public final static String VEXING_LEAVES = "purple_archwood_leaves";
+    public final static String VEXING_LOG = "purple_archwood_log";
+    public final static String VEXING_SAPLING = "purple_archwood_sapling";
+    public final static String VEXING_WOOD = "purple_archwood_wood";
 }

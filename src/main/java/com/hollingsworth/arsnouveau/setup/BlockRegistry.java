@@ -141,8 +141,25 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.CREATIVE_MANA_JAR) public static CreativeManaJar CREATIVE_MANA_JAR;
     @ObjectHolder(LibBlockNames.CREATIVE_MANA_JAR) public static TileEntityType<CreativeManaJarTile> CREATIVE_JAR_TILE;
 
-    @ObjectHolder(LibBlockNames.BAW_LOG) public static RotatedPillarBlock BAW_LOG;
-    @ObjectHolder(LibBlockNames.BAW_LEAVES) public static LeavesBlock BAW_LEAVES;
+    @ObjectHolder(LibBlockNames.CASCADING_LOG) public static RotatedPillarBlock CASCADING_LOG;
+    @ObjectHolder(LibBlockNames.CASCADING_LEAVES) public static MagicLeaves CASCADING_LEAVE;
+    @ObjectHolder(LibBlockNames.CASCADING_SAPLING) public static SaplingBlock CASCADING_SAPLING;
+    @ObjectHolder(LibBlockNames.CASCADING_WOOD) public static MagicLeaves CASCADING_WOOD;
+
+    @ObjectHolder(LibBlockNames.BLAZING_LOG) public static RotatedPillarBlock BLAZING_LOG;
+    @ObjectHolder(LibBlockNames.BLAZING_LEAVES) public static MagicLeaves BLAZING_LEAVES;
+    @ObjectHolder(LibBlockNames.BLAZING_SAPLING) public static SaplingBlock BLAZING_SAPLING;
+    @ObjectHolder(LibBlockNames.BLAZING_WOOD) public static MagicLeaves BLAZING_WOOD;
+
+    @ObjectHolder(LibBlockNames.VEXING_LOG) public static RotatedPillarBlock VEXING_LOG;
+    @ObjectHolder(LibBlockNames.VEXING_LEAVES) public static MagicLeaves VEXING_LEAVES;
+    @ObjectHolder(LibBlockNames.VEXING_SAPLING) public static SaplingBlock VEXING_SAPLING;
+    @ObjectHolder(LibBlockNames.VEXING_WOOD) public static MagicLeaves VEXING_WOOD;
+
+    @ObjectHolder(LibBlockNames.FLOURISHING_LOG) public static RotatedPillarBlock FLOURISHING_LOG;
+    @ObjectHolder(LibBlockNames.FLOURISHING_LEAVES) public static MagicLeaves FLOURISHING_LEAVES;
+    @ObjectHolder(LibBlockNames.FLOURISHING_SAPLING) public static SaplingBlock FLOURISHING_SAPLING;
+    @ObjectHolder(LibBlockNames.FLOURISHING_WOOD) public static MagicLeaves FLOURISHING_WOOD;
 
     @ObjectHolder("an_stateprovider")
     public static BlockStateProviderType stateProviderType;
@@ -156,50 +173,60 @@ public class BlockRegistry {
         public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
             // register a new block here
             LOGGER.info("HELLO from Register Block");
-            blockRegistryEvent.getRegistry().register(new PhantomBlock());
-            blockRegistryEvent.getRegistry().register(new LightBlock());
-            blockRegistryEvent.getRegistry().register(new ManaCondenserBlock());
-            blockRegistryEvent.getRegistry().register(new ManaJar());
-            blockRegistryEvent.getRegistry().register(new WardBlock());
-            blockRegistryEvent.getRegistry().register(new GlyphPressBlock());
-            blockRegistryEvent.getRegistry().register(new ArcaneOre());
-            blockRegistryEvent.getRegistry().register(new ManaBloomCrop());
-            blockRegistryEvent.getRegistry().register(new EnchantingApparatusBlock());
-            blockRegistryEvent.getRegistry().register(new ArcanePedestal());
-            blockRegistryEvent.getRegistry().register(new SummoningCrystal());
-            blockRegistryEvent.getRegistry().register(new ModBlock(LibBlockNames.ARCANE_BRICKS));
-            blockRegistryEvent.getRegistry().register(new ScribesBlock());
-            blockRegistryEvent.getRegistry().register(new ArcaneRoad());
-            blockRegistryEvent.getRegistry().register(new ArcaneRelay());
-            blockRegistryEvent.getRegistry().register(new RuneBlock());
-            blockRegistryEvent.getRegistry().register(new PortalBlock());
-            blockRegistryEvent.getRegistry().register(new ArcaneRelaySplitter());
-            blockRegistryEvent.getRegistry().register(new ArcaneCore());
-            blockRegistryEvent.getRegistry().register(new ModBlock(LibBlockNames.AB_ALTERNATE));
-            blockRegistryEvent.getRegistry().register(new ModBlock(LibBlockNames.ARCANE_STONE));
-            blockRegistryEvent.getRegistry().register(new ModBlock(LibBlockNames.AB_BASKET));
-            blockRegistryEvent.getRegistry().register(new ModBlock(LibBlockNames.AB_HERRING));
-            blockRegistryEvent.getRegistry().register(new ModBlock(LibBlockNames.AB_MOSAIC));
-            blockRegistryEvent.getRegistry().register(new CrystallizerBlock());
-            blockRegistryEvent.getRegistry().register(new SpellTurret());
-            blockRegistryEvent.getRegistry().register(new RedstoneAir());
-            blockRegistryEvent.getRegistry().register(new IntangibleAirBlock());
-            blockRegistryEvent.getRegistry().register(new VolcanicAccumulator());
-            blockRegistryEvent.getRegistry().register(new LavaLily());
-            blockRegistryEvent.getRegistry().register(new ManaBerryBush(AbstractBlock.Properties.create(Material.PLANTS).tickRandomly().doesNotBlockMovement().sound(SoundType.SWEET_BERRY_BUSH)));
-            blockRegistryEvent.getRegistry().register(new SaplingBlock(new MagicTree(WorldEvent.MAGIC_TREE_CONFIG),ModBlock.defaultProperties()).setRegistryName("magic_sapling"));
-            blockRegistryEvent.getRegistry().register(new SaplingBlock(new MagicTree(WorldEvent.MAGIC_TREE_CONFIG2),ModBlock.defaultProperties()).setRegistryName("magic_sapling_two"));
-            blockRegistryEvent.getRegistry().register(new WixieCauldron());
-            blockRegistryEvent.getRegistry().register(new CreativeManaJar());
-            blockRegistryEvent.getRegistry().register(new ModBlock(LibBlockNames.AB_SMOOTH));
-            blockRegistryEvent.getRegistry().register(new ModBlock(LibBlockNames.AB_SMOOTH_SLAB));
-            blockRegistryEvent.getRegistry().register(new ModBlock(LibBlockNames.AB_CLOVER));
-            blockRegistryEvent.getRegistry().register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.BAW_LOG));
-            blockRegistryEvent.getRegistry().register(createLeavesBlock().setRegistryName(LibBlockNames.BAW_LEAVES));
+            IForgeRegistry<Block> registry = blockRegistryEvent.getRegistry();
+            registry.register(new PhantomBlock());
+            registry.register(new LightBlock());
+            registry.register(new ManaCondenserBlock());
+            registry.register(new ManaJar());
+            registry.register(new WardBlock());
+            registry.register(new GlyphPressBlock());
+            registry.register(new ArcaneOre());
+            registry.register(new ManaBloomCrop());
+            registry.register(new EnchantingApparatusBlock());
+            registry.register(new ArcanePedestal());
+            registry.register(new SummoningCrystal());
+            registry.register(new ModBlock(LibBlockNames.ARCANE_BRICKS));
+            registry.register(new ScribesBlock());
+            registry.register(new ArcaneRoad());
+            registry.register(new ArcaneRelay());
+            registry.register(new RuneBlock());
+            registry.register(new PortalBlock());
+            registry.register(new ArcaneRelaySplitter());
+            registry.register(new ArcaneCore());
+            registry.register(new ModBlock(LibBlockNames.AB_ALTERNATE));
+            registry.register(new ModBlock(LibBlockNames.ARCANE_STONE));
+            registry.register(new ModBlock(LibBlockNames.AB_BASKET));
+            registry.register(new ModBlock(LibBlockNames.AB_HERRING));
+            registry.register(new ModBlock(LibBlockNames.AB_MOSAIC));
+            registry.register(new CrystallizerBlock());
+            registry.register(new SpellTurret());
+            registry.register(new RedstoneAir());
+            registry.register(new IntangibleAirBlock());
+            registry.register(new VolcanicAccumulator());
+            registry.register(new LavaLily());
+            registry.register(new ManaBerryBush(AbstractBlock.Properties.create(Material.PLANTS).tickRandomly().doesNotBlockMovement().sound(SoundType.SWEET_BERRY_BUSH)));
+            registry.register(new SaplingBlock(new MagicTree(WorldEvent.CASCADING_TREE),ModBlock.defaultProperties()).setRegistryName(LibBlockNames.CASCADING_SAPLING));
+            registry.register(new SaplingBlock(new MagicTree(WorldEvent.BLAZING_TREE),ModBlock.defaultProperties()).setRegistryName(LibBlockNames.BLAZING_SAPLING));
+            registry.register(new SaplingBlock(new MagicTree(WorldEvent.VEXING_TREE),ModBlock.defaultProperties()).setRegistryName(LibBlockNames.VEXING_SAPLING));
+            registry.register(new SaplingBlock(new MagicTree(WorldEvent.FLOURISHING_TREE),ModBlock.defaultProperties()).setRegistryName(LibBlockNames.FLOURISHING_SAPLING));
+            registry.register(new WixieCauldron());
+            registry.register(new CreativeManaJar());
+            registry.register(new ModBlock(LibBlockNames.AB_SMOOTH));
+            registry.register(new ModBlock(LibBlockNames.AB_SMOOTH_SLAB));
+            registry.register(new ModBlock(LibBlockNames.AB_CLOVER));
+            registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.CASCADING_LOG));
+            registry.register(createLeavesBlock().setRegistryName(LibBlockNames.CASCADING_LEAVES));
+
+            registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.BLAZING_LOG));
+            registry.register(createLeavesBlock().setRegistryName(LibBlockNames.BLAZING_LEAVES));
+            registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.FLOURISHING_LOG));
+            registry.register(createLeavesBlock().setRegistryName(LibBlockNames.FLOURISHING_LEAVES));
+            registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.VEXING_LOG));
+            registry.register(createLeavesBlock().setRegistryName(LibBlockNames.VEXING_LEAVES));
         }
 
-        public static LeavesBlock createLeavesBlock() {
-            return new LeavesBlock(AbstractBlock.Properties.create(Material.LEAVES).hardnessAndResistance(0.2F).tickRandomly().sound(SoundType.PLANT).notSolid().setAllowsSpawn(
+        public static MagicLeaves createLeavesBlock() {
+            return new MagicLeaves(AbstractBlock.Properties.create(Material.LEAVES).hardnessAndResistance(0.2F).tickRandomly().sound(SoundType.PLANT).notSolid().setAllowsSpawn(
                     BlockRegistry::allowsSpawnOnLeaves).setSuffocates(BlockRegistry::isntSolid).setBlocksVision(BlockRegistry::isntSolid));
         }
 
@@ -262,18 +289,24 @@ public class BlockRegistry {
             registry.register(new VolcanicAccumulatorBI(BlockRegistry.VOLCANIC_BLOCK, ItemsRegistry.defaultItemProperties().isImmuneToFire().setISTER(() -> VolcanicRenderer::getISTER)).setRegistryName(LibBlockNames.VOLCANIC_ACCUMULATOR));
             registry.register(new FluidBlockItem(BlockRegistry.LAVA_LILY, ItemsRegistry.defaultItemProperties().isImmuneToFire()).setRegistryName(LibBlockNames.LAVA_LILY));
             registry.register(new BlockItem(BlockRegistry.MANA_BERRY_BUSH, ItemsRegistry.defaultItemProperties().food(ItemsRegistry.MANA_BERRY_FOOD)).setRegistryName(LibItemNames.MANA_BERRY));
-            registry.register(getDefaultBlockItem(BlockRegistry.MAGIC_SAPLING, "magic_sapling"));
-            registry.register(getDefaultBlockItem(BlockRegistry.MAGIC_SAPLING2, "magic_sapling_two"));
             registry.register(new BlockItem(BlockRegistry.WIXIE_CAULDRON, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.WIXIE_CAULDRON));
             registry.register(new BlockItem(BlockRegistry.CREATIVE_MANA_JAR, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.CREATIVE_MANA_JAR));
 
             registry.register(getDefaultBlockItem(BlockRegistry.AB_SMOOTH_SLAB, LibBlockNames.AB_SMOOTH_SLAB));
             registry.register(getDefaultBlockItem(BlockRegistry.AB_SMOOTH, LibBlockNames.AB_SMOOTH));
             registry.register(getDefaultBlockItem(BlockRegistry.AB_CLOVER, LibBlockNames.AB_CLOVER));
-            registry.register(getDefaultBlockItem(BlockRegistry.BAW_LEAVES, LibBlockNames.BAW_LEAVES));
-
-            registry.register(getDefaultBlockItem(BlockRegistry.BAW_LOG, LibBlockNames.BAW_LOG));
-
+            registry.register(getDefaultBlockItem(BlockRegistry.CASCADING_LEAVE, LibBlockNames.CASCADING_LEAVES));
+            registry.register(getDefaultBlockItem(BlockRegistry.CASCADING_LOG, LibBlockNames.CASCADING_LOG));
+            registry.register(getDefaultBlockItem(BlockRegistry.CASCADING_SAPLING, LibBlockNames.CASCADING_SAPLING));
+            registry.register(getDefaultBlockItem(BlockRegistry.VEXING_LEAVES, LibBlockNames.VEXING_LEAVES));
+            registry.register(getDefaultBlockItem(BlockRegistry.VEXING_LOG, LibBlockNames.VEXING_LOG));
+            registry.register(getDefaultBlockItem(BlockRegistry.VEXING_SAPLING, LibBlockNames.VEXING_SAPLING));
+            registry.register(getDefaultBlockItem(BlockRegistry.FLOURISHING_LEAVES, LibBlockNames.FLOURISHING_LEAVES));
+            registry.register(getDefaultBlockItem(BlockRegistry.FLOURISHING_LOG, LibBlockNames.FLOURISHING_LOG));
+            registry.register(getDefaultBlockItem(BlockRegistry.FLOURISHING_SAPLING, LibBlockNames.FLOURISHING_SAPLING));
+            registry.register(getDefaultBlockItem(BlockRegistry.BLAZING_LEAVES, LibBlockNames.BLAZING_LEAVES));
+            registry.register(getDefaultBlockItem(BlockRegistry.BLAZING_LOG, LibBlockNames.BLAZING_LOG));
+            registry.register(getDefaultBlockItem(BlockRegistry.BLAZING_SAPLING, LibBlockNames.BLAZING_SAPLING));
         }
 
         public static Item getDefaultBlockItem(Block block, String registry){

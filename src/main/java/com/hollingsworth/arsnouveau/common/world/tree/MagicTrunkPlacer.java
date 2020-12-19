@@ -107,7 +107,7 @@ public class MagicTrunkPlacer extends AbstractTrunkPlacer {
             }
 
             if(i == foliageHeight - 2){
-                float leafChance = 0.2f;
+                float leafChance = .1f;
                 //Bell top
                 addLineLeaves(world, pos.north(4).up(i), posSet, boundingBox, Direction.NORTH, 6,rand, baseTreeFeatureConfig, leafChance);
                 addLineLeaves(world, pos.north(4).up(i + 1), posSet, boundingBox, Direction.NORTH, 6,rand, baseTreeFeatureConfig, leafChance);
