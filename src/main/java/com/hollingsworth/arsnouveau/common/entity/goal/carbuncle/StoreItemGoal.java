@@ -53,7 +53,6 @@ public class StoreItemGoal extends CheckStuckGoal {
 
     @Override
     public void tick() {
-        super.tick();
         if (!entityCarbuncle.getHeldStack().isEmpty() && entityCarbuncle.toPos != null && BlockUtil.distanceFrom(entityCarbuncle.getPosition(), entityCarbuncle.toPos) < 1.5D) {
             World world = entityCarbuncle.world;
             if (world.getTileEntity(entityCarbuncle.toPos) instanceof IInventory) {
@@ -81,7 +80,9 @@ public class StoreItemGoal extends CheckStuckGoal {
         if (entityCarbuncle.toPos != null && !entityCarbuncle.getHeldStack().isEmpty()) {
             setPath(entityCarbuncle.toPos.getX(), entityCarbuncle.toPos.getY(), entityCarbuncle.toPos.getZ(), 1.2D);
             entityCarbuncle.getDataManager().set(EntityCarbuncle.HOP, true);
+            super.tick();
         }
+
     }
 
     public void setPath(double x, double y, double z, double speedIn){

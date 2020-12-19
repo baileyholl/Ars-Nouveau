@@ -25,6 +25,10 @@ public class BlockStatesDatagen extends BlockStateProvider {
         registerNormalCube(BlockRegistry.AB_BASKET, LibBlockNames.AB_BASKET);
         registerNormalCube(BlockRegistry.AB_HERRING, LibBlockNames.AB_HERRING);
         registerNormalCube(BlockRegistry.AB_MOSAIC, LibBlockNames.AB_MOSAIC);
+
+        registerNormalCube(BlockRegistry.AB_CLOVER, LibBlockNames.AB_CLOVER);
+        registerNormalCube(BlockRegistry.AB_SMOOTH, LibBlockNames.AB_SMOOTH);
+        registerNormalCube(BlockRegistry.AB_SMOOTH_SLAB, LibBlockNames.AB_SMOOTH_SLAB);
     }
 
     public void registerNormalCube(Block block, String registry){
@@ -34,16 +38,6 @@ public class BlockStatesDatagen extends BlockStateProvider {
 
     public static ModelFile getUncheckedModel(String registry){
         return new ModelFile.UncheckedModelFile("ars_nouveau:block/" + registry);
-    }
-
-
-    protected void registerModels() {
-        buildNormalCube(LibBlockNames.ARCANE_BRICKS);
-        buildNormalCube(LibBlockNames.ARCANE_STONE);
-        buildNormalCube(LibBlockNames.AB_ALTERNATE);
-        buildNormalCube(LibBlockNames.AB_BASKET);
-        buildNormalCube(LibBlockNames.AB_HERRING);
-        buildNormalCube(LibBlockNames.AB_MOSAIC);
     }
 
     public void buildNormalCube(String registryName){

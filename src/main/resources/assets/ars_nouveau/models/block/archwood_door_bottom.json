@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/door_bottom",
+  "textures": {
+    "top": "ars_nouveau:blocks/archwood_door_top",
+    "bottom": "ars_nouveau:blocks/archwood_door_bottom"
+  }
+}

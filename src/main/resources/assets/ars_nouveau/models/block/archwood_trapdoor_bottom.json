@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/template_trapdoor_bottom",
+  "textures": {
+    "texture": "ars_nouveau:blocks/archwood_trapdoor"
+  }
+}

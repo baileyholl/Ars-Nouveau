@@ -7,7 +7,7 @@
   ],
   "key": {
     "v": {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     },
     "x": {
       "item": "minecraft:lava_bucket"

@@ -28,9 +28,11 @@ public class VolcanicAccumulatorBI extends AnimBlockItem{
      * {@link #onItemUse}.
      */
     public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        BlockRayTraceResult blockraytraceresult = rayTrace(worldIn, playerIn, RayTraceContext.FluidMode.SOURCE_ONLY);
+        BlockRayTraceResult blockraytraceresult = rayTrace(worldIn, playerIn, RayTraceContext.FluidMode.ANY);
         BlockRayTraceResult blockraytraceresult1 = blockraytraceresult.withPosition(blockraytraceresult.getPos().up());
-        ActionResultType actionresulttype = super.onItemUse(new ItemUseContext(playerIn, handIn, blockraytraceresult1));
-        return new ActionResult<>(actionresulttype, playerIn.getHeldItem(handIn));
+        if(worldIn.getBlockState(blockraytraceresult.getPos()).isAir())
+            return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
+        super.onItemUse(new ItemUseContext(playerIn, handIn, blockraytraceresult1));
+        return new ActionResult<>(ActionResultType.FAIL, playerIn.getHeldItem(handIn));
     }
 }

@@ -1,13 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "xxx",
-    "x x",
-    "xxx"
+    "   ",
+    "xyx",
+    " x "
   ],
   "key": {
     "x": {
       "item": "minecraft:leather"
+    },
+    "y": {
+      "tag": "forge:gems/mana"
     }
   },
   "result": {

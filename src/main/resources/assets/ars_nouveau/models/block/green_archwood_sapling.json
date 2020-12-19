@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "ars_nouveau:blocks/green_archwood_sapling"
+  }
+}

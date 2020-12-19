@@ -7,10 +7,13 @@
             "type": "text",
             "text": "A tool for configuring Arcane Relays and automation entities. To set a transfer path, use the wand on the object that you would like to take mana from, and then use it on the block you would like to send mana to. For example: Mana Jar to Arcane Relay, Arcane Relay to Arcane Relay, or Arcane Relay to Mana Jar. To clear connections, sneak and use this wand on a relay."
         },
-		{
-            "type":"crafting",
-			"recipe":"ars_nouveau:dominion_wand"
-		},
+    {
+      "type": "apparatus_recipe",
+      "reagent": "minecraft:stick",
+      "item1": "ars_nouveau:mana_gem",
+      "item2": "ars_nouveau:mana_gem",
+      "item3": "minecraft:gold_ingot"
+    },
 		{
             "type": "relations",
             "entries":["apparatus/arcane_relay", "apparatus/whelp_charm"]        

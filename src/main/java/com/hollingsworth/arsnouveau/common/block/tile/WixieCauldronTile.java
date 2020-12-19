@@ -3,16 +3,22 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.recipe.RecipeWrapper;
 import com.hollingsworth.arsnouveau.api.recipe.ShapedHelper;
+import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.WixieCauldron;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -38,6 +44,9 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
 
     int tickCounter;
     boolean converted;
+    public int entityID;
+
+    public boolean hasMana;
 
     RecipeWrapper recipeWrapper;
     public CraftingProgress craftManager = new CraftingProgress();
@@ -49,18 +58,35 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
     public void tick() {
         if(world.isRemote)
             return;
-        if(this.recipeWrapper == null && craftingItem != null)
-            setRecipes(new ItemStack(craftingItem));
+
         if (!converted) {
             convertedEffect();
             return;
         }
+
+        if(!hasMana && world.getGameTime() % 5 == 0){
+            if(ManaUtil.takeManaNearbyWithParticles(pos, world, 6, 50) != null) {
+                this.hasMana = true;
+                world.setBlockState(pos, world.getBlockState(pos).with(WixieCauldron.FILLED, true));
+            }
+        }
+
+        if(!hasMana)
+            return;
+
+        if(this.recipeWrapper == null && craftingItem != null)
+            setRecipes(null, new ItemStack(craftingItem));
+
         if (world.getGameTime() % 100 == 0) {
             updateInventories(); // Update the inventories available to use
 
            // attemptFinish();
         }
 
+    }
+
+    public boolean hasWixie(){
+        return !this.converted || world.getEntityByID(entityID) != null;
     }
 
     public boolean isCraftingDone(){
@@ -73,10 +99,19 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
 
     public void attemptFinish(){
         if(craftManager.isDone()){
-            if(!craftManager.outputStack.isEmpty())
-                world.addEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(),  craftManager.outputStack.copy()));
+            if(!craftManager.outputStack.isEmpty()) {
+                world.addEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), craftManager.outputStack.copy()));
+                this.hasMana = false;
+                world.setBlockState(pos, world.getBlockState(pos).with(WixieCauldron.FILLED, false));
+            }
+            for(ItemStack i : craftManager.remainingItems){
+                world.addEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(),  i.copy()));
+
+            }
+
             craftManager = new CraftingProgress();
             setNewCraft();
+
         }
 
     }
@@ -87,33 +122,35 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
         Map<Item, Integer> count = getInventoryCount();
         RecipeWrapper.SingleRecipe recipe = recipeWrapper.canCraftFromInventory(count);
         if(recipe != null) {
-            craftManager = new CraftingProgress(recipe.outputStack.copy(), recipe.canCraftFromInventory(count));
+            craftManager = new CraftingProgress(recipe.outputStack.copy(), recipe.canCraftFromInventory(count), recipe.iRecipe);
         }
     }
 
-    public void setRecipes(ItemStack stack){
+    public void setRecipes(PlayerEntity playerEntity, ItemStack stack){
         this.craftingItem = stack.getItem();
         RecipeWrapper recipes = new RecipeWrapper();
         for(IRecipe r : world.getServer().getRecipeManager().getRecipes()){
             if(r.getRecipeOutput().getItem() != craftingItem)
                 continue;
+
             if(r instanceof ShapedRecipe){
                 ShapedHelper helper = new ShapedHelper((ShapedRecipe) r);
                 for (List<Ingredient> iList : helper.getPossibleRecipes()) {
-                    recipes.addRecipe(iList, r.getRecipeOutput());
+                    recipes.addRecipe(iList, r.getRecipeOutput(), r);
                 }
             }
 
             if(r instanceof ShapelessRecipe)
-                recipes.addRecipe(r.getIngredients(), r.getRecipeOutput());
+                recipes.addRecipe(r.getIngredients(), r.getRecipeOutput(), r);
+
         }
         this.recipeWrapper = recipes;
-//        for(RecipeWrapper.SingleRecipe i : recipeWrapper.recipes){
-//            System.out.println(i.recipe);
-//            for(Ingredient ingred : i.recipe){
-//                System.out.println(Arrays.toString(ingred.getMatchingStacks()));
-//            }
-//        }
+        if(recipeWrapper.recipes.isEmpty() && playerEntity != null){
+            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.wixie.no_recipe"));
+            this.craftingItem = null;
+        }else if(playerEntity != null){
+            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.wixie.recipe_set"));
+        }
     }
 
     public void updateInventories() {
@@ -132,7 +169,6 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
 
 
     public void convertedEffect() {
-
         tickCounter++;
         if (tickCounter >= 120 && !world.isRemote) {
             converted = true;
@@ -141,6 +177,7 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
             wixie.setPosition(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
             world.addEntity(wixie);
             ParticleUtil.spawnPoof((ServerWorld) world, pos.up());
+            entityID = wixie.getEntityId();
             tickCounter = 0;
             return;
         }
@@ -189,7 +226,8 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
         this.converted = compound.getBoolean("converted");
 
         craftManager = CraftingProgress.read(compound);
-
+        this.entityID = compound.getInt("entityid");
+        this.hasMana = compound.getBoolean("hasmana");
     }
 
     @Override
@@ -203,6 +241,9 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
         }
         if(craftManager != null)
             craftManager.write(compound);
+
+        compound.putInt("entityid", entityID);
+        compound.putBoolean("hasmana",hasMana);
         return super.write(compound);
     }
 
@@ -212,19 +253,35 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
             return new ArrayList<>();
         List<String> strings = new ArrayList<>();
         strings.add("Crafting: " +new TranslationTextComponent(craftingItem.getTranslationKey()).getString());
+        if(!hasMana){
+            strings.add("Mana needed.");
+        }
+        if(this.craftManager != null && !this.craftManager.neededItems.isEmpty())
+            strings.add("Needs: " + new TranslationTextComponent(this.craftManager.neededItems.get(0).getTranslationKey()).getString());
         return strings;
     }
 
     public static class CraftingProgress{
         public ItemStack outputStack;
         public List<ItemStack> neededItems;
-
+        public List<ItemStack> remainingItems;
         public CraftingProgress(){
             outputStack = ItemStack.EMPTY;
             neededItems = new ArrayList<>();
+            remainingItems = new ArrayList<>();
         }
 
-        public CraftingProgress(ItemStack outputStack, List<ItemStack> neededItems){
+        public CraftingProgress(ItemStack outputStack, List<ItemStack> neededItems, IRecipe recipe){
+            CraftingInventory inventory = new CraftingInventory(new Container((ContainerType)null, -1) {
+                public boolean canInteractWith(PlayerEntity playerIn) {
+                    return false;
+                }
+            }, 3, 3);
+            for(int i = 0; i < neededItems.size(); i++) {
+                inventory.setInventorySlotContents(i, neededItems.get(i).copy());
+            }
+            this.remainingItems = recipe.getRemainingItems(inventory);
+
             this.outputStack = outputStack;
             this.neededItems = neededItems;
         }
@@ -256,12 +313,14 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
             outputStack.write(stack);
             tag.put("output_stack", stack);
             NBTUtil.writeItems(tag, "progress", neededItems);
+            NBTUtil.writeItems(tag, "refund", remainingItems);
         }
 
         public static CraftingProgress read(CompoundNBT tag){
             CraftingProgress progress = new CraftingProgress();
             progress.outputStack = ItemStack.read(tag.getCompound("output_stack"));
             progress.neededItems = NBTUtil.readItems(tag,"progress");
+            progress.remainingItems = NBTUtil.readItems(tag, "refund");
             return progress;
         }
 

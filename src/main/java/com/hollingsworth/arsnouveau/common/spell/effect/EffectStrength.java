@@ -34,7 +34,7 @@ public class EffectStrength extends AbstractEffect {
 
     @Override
     public int getManaCost() {
-        return 0;
+        return 200;
     }
 
     @Nullable
@@ -46,5 +46,10 @@ public class EffectStrength extends AbstractEffect {
     @Override
     protected String getBookDescription() {
         return "Applies the Strength buff.";
+    }
+
+    @Override
+    public Tier getTier() {
+        return Tier.THREE;
     }
 }

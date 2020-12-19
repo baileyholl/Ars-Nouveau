@@ -25,7 +25,7 @@ public class ArcaneCore extends ModBlock{
 
     @Override
     public BlockRenderType getRenderType(BlockState p_149645_1_) {
-        return BlockRenderType.ENTITYBLOCK_ANIMATED;
+        return BlockRenderType.MODEL;
     }
 
 }

@@ -1,9 +1,9 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"3": "ars_nouveau:blocks/mana16",
+		"3": "ars_nouveau:blocks/mana_still",
 		"4": "ars_nouveau:blocks/mana_jar",
-		"particle": "ars_nouveau:blocks/mana16"
+		"particle": "ars_nouveau:blocks/mana_still"
 	},
 	"elements": [
 		{

@@ -29,9 +29,7 @@ public abstract class ManaBlock extends ModBlock{
         if(!worldIn.isRemote && handIn == Hand.MAIN_HAND){
             if(worldIn.getTileEntity(pos) instanceof AbstractManaTile){
                 AbstractManaTile tile = (AbstractManaTile) worldIn.getTileEntity(pos);
-
                 if(player.getHeldItem(handIn).getItem() == ItemsRegistry.bucketOfMana){
-
                     if(tile.getMaxMana() - tile.getCurrentMana() >= 1000){
                         tile.addMana(1000);
                         if(!player.isCreative())
@@ -39,16 +37,12 @@ public abstract class ManaBlock extends ModBlock{
                     }
                     return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
                 }else if(player.getHeldItem(handIn).getItem() instanceof BucketItem && ((BucketItem)player.getHeldItem(handIn).getItem()).getFluid() == Fluids.EMPTY){
-
-
                     if(tile.getCurrentMana() >= 1000 && player.addItemStackToInventory(new ItemStack(ItemsRegistry.bucketOfMana))){
                         tile.removeMana(1000);
                         player.getHeldItem(handIn).shrink(1);
-                    }else {
-                        if(player.getHeldItem(handIn).getCount() == 1){
-                            tile.removeMana(1000);
-                            player.setHeldItem(player.getActiveHand(),new ItemStack(ItemsRegistry.bucketOfMana));
-                        }
+                    }else if(tile.getCurrentMana() >= 1000 && player.getHeldItem(handIn).getCount() == 1){
+                        tile.removeMana(1000);
+                        player.setHeldItem(player.getActiveHand(),new ItemStack(ItemsRegistry.bucketOfMana));
                     }
                 }
             }

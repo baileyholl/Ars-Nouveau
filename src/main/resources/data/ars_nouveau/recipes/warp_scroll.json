@@ -17,16 +17,16 @@
       "item": "ars_nouveau:blank_parchment"
     },
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     },
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     },
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     },
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     }
   ],
   "result": {

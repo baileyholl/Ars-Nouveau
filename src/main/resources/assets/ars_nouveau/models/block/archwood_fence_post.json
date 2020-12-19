@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/fence_post",
+  "textures": {
+    "texture": "ars_nouveau:blocks/archwood_planks"
+  }
+}

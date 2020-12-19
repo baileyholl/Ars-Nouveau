@@ -1,16 +1,22 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.entity.IDispellable;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
 import com.hollingsworth.arsnouveau.common.entity.goal.wixie.CompleteCraftingGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.wixie.FindNextItemGoal;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.FlyingMovementController;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -31,10 +37,11 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, IAnimationListener {
+public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, IAnimationListener, IDispellable {
     AnimationFactory manager = new AnimationFactory(this);
 
     public static final DataParameter<Boolean> TAMED = EntityDataManager.createKey(EntityWixie.class, DataSerializers.BOOLEAN);
@@ -184,6 +191,28 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
             controller.markNeedsReload();
             controller.setAnimation(new AnimationBuilder().addAnimation("summon_item", false));
         }
+    }
+    @Override
+    public void onDeath(DamageSource source) {
+        if(!world.isRemote ){
+            ItemStack stack = new ItemStack(ItemsRegistry.WIXIE_CHARM);
+            world.addEntity(new ItemEntity(world, getPosX(), getPosY(), getPosZ(), stack));
+
+        }
+        super.onDeath(source);
+    }
+    @Override
+    public boolean onDispel(@Nullable LivingEntity caster) {
+        if(this.removed)
+            return false;
+
+        if(!world.isRemote ){
+            ItemStack stack = new ItemStack(ItemsRegistry.WIXIE_CHARM);
+            world.addEntity(new ItemEntity(world, getPosX(), getPosY(), getPosZ(), stack.copy()));
+            ParticleUtil.spawnPoof((ServerWorld)world, getPosition());
+            this.remove();
+        }
+        return true;
     }
 
     public enum Animations{

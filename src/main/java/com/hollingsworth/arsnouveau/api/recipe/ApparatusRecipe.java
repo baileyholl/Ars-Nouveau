@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
@@ -21,13 +22,13 @@ import java.util.List;
 
 public class ApparatusRecipe implements IRecipe<IInventory> {
     private final ResourceLocation id;
-    public final ItemStack reagent;
+    public final Ingredient reagent;
 
     public final ItemStack output;
-    public final List<ItemStack> pedestalItems;
+    public final List<Ingredient> pedestalItems;
     public final int manaCost;
 
-    public ApparatusRecipe(ResourceLocation id, List<ItemStack> pedestalItems, ItemStack reagent, ItemStack output, int manaCost){
+    public ApparatusRecipe(ResourceLocation id, List<Ingredient> pedestalItems, Ingredient reagent, ItemStack output, int manaCost){
         this.manaCost = manaCost;
         this.id = id;
         this.reagent = reagent;
@@ -74,12 +75,12 @@ public class ApparatusRecipe implements IRecipe<IInventory> {
 
         @Override
         public ApparatusRecipe read(ResourceLocation recipeId, JsonObject json) {
-            ItemStack reagent = new ItemStack(JSONUtils.getItem(json, "reagent"));
+            Ingredient reagent = Ingredient.deserialize(JSONUtils.getJsonArray(json, "reagent"));
             ItemStack output = new ItemStack(JSONUtils.getItem(json, "output"));
-            List<ItemStack> stacks = new ArrayList<>();
+            List<Ingredient> stacks = new ArrayList<>();
             for(int i =1; i < 9; i++){
                 if(json.has("item_"+i))
-                    stacks.add(new ItemStack(JSONUtils.getItem(json, "item_" + i)));
+                    stacks.add(Ingredient.deserialize(JSONUtils.getJsonArray(json, "item_" + i)));
             }
             return new ApparatusRecipe(recipeId, stacks, reagent, output, 0);
         }
@@ -87,22 +88,22 @@ public class ApparatusRecipe implements IRecipe<IInventory> {
         @Nullable
         @Override
         public ApparatusRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-            ItemStack reagent = buffer.readItemStack();
+            Ingredient reagent = Ingredient.read(buffer);
             ItemStack output = buffer.readItemStack();
-            List<ItemStack> stacks = new ArrayList<>();
+            List<Ingredient> stacks = new ArrayList<>();
 
             for(int i =1; i < 9; i++){
-                try{ stacks.add(buffer.readItemStack()); }catch (Exception e){break;}
+                try{ Ingredient.read(buffer); }catch (Exception e){break;}
             }
             return new ApparatusRecipe(recipeId, stacks, reagent, output, 0);
         }
 
         @Override
         public void write(PacketBuffer buf, ApparatusRecipe recipe) {
-            buf.writeItemStack(recipe.reagent);
+            recipe.reagent.write(buf);
             buf.writeItemStack(recipe.output);
-            for(ItemStack i : recipe.pedestalItems){
-                buf.writeItemStack(i);
+            for(Ingredient i : recipe.pedestalItems){
+                i.write(buf);
             }
         }
     }

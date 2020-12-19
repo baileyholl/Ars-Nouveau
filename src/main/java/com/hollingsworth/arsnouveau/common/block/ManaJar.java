@@ -31,6 +31,10 @@ public class ManaJar extends ManaBlock {
         super(ModBlock.defaultProperties().notSolid(),"mana_jar");
     }
 
+    public ManaJar(Properties properties, String registryName){
+        super(properties, registryName);
+    }
+
     @Override
     public boolean hasTileEntity(BlockState state) {
         return true;
@@ -64,8 +68,9 @@ public class ManaJar extends ManaBlock {
     @Override
     public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
         ManaJarTile tile = (ManaJarTile) worldIn.getTileEntity(pos);
-        int step = tile.getMaxMana() / 15;
-        return tile.getCurrentMana() / step;
+        if (tile == null || tile.getCurrentMana() <= 0) return 0;
+        int step = (tile.getMaxMana() - 1) / 14;
+        return (tile.getCurrentMana() - 1) / step + 1;
     }
 
     @Override

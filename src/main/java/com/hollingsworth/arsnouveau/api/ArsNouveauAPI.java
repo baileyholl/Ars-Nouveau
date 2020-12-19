@@ -113,7 +113,7 @@ public class ArsNouveauAPI {
         for(IRecipe i : manager.getRecipes()){
             if(i instanceof ApparatusRecipe){
                 ApparatusRecipe recipe = (ApparatusRecipe) i;
-                recipes.add(new EnchantingApparatusRecipe(recipe.output.copy(), recipe.reagent.copy(), recipe.pedestalItems, "custom"));
+                recipes.add(new EnchantingApparatusRecipe(recipe.output.copy(), recipe.reagent, recipe.pedestalItems, "custom"));
             }
         }
         return recipes;

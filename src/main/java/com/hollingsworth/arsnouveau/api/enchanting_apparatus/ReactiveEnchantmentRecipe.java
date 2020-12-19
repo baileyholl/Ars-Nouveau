@@ -11,11 +11,14 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ReactiveEnchantmentRecipe implements IEnchantingRecipe{
 
@@ -25,7 +28,7 @@ public class ReactiveEnchantmentRecipe implements IEnchantingRecipe{
         if(EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT, reagent) == 0)
             return false;
 
-        if(!EnchantingApparatusRecipe.areSameSet(stacks, pedestalItems))
+        if(!EnchantingApparatusRecipe.doItemsMatch(pedestalItems, toIngredients(items)))
             return false;
 
         for(ItemStack stack : pedestalItems){
@@ -41,10 +44,10 @@ public class ReactiveEnchantmentRecipe implements IEnchantingRecipe{
                 new ItemStack( ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentAmplifyID)),
                 new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentAmplifyID)),
                 new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentAmplifyID))};
-        List<ItemStack> stacks = Arrays.asList(items);
+
         if(EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT, reagent) != 0)
             return false;
-        if(!EnchantingApparatusRecipe.areSameSet(stacks, pedestalItems))
+        if(!EnchantingApparatusRecipe.doItemsMatch(pedestalItems, toIngredients(items)))
             return false;
         for(ItemStack stack : pedestalItems){
             if(stack.getItem() instanceof SpellParchment && SpellParchment.getSpellRecipe(stack) == null){
@@ -52,6 +55,10 @@ public class ReactiveEnchantmentRecipe implements IEnchantingRecipe{
             }
         }
         return true;
+    }
+
+    public List<Ingredient> toIngredients(ItemStack[] items){
+        return Stream.of(items).map(is -> Ingredient.fromItems(is.getItem())).collect(Collectors.toList());
     }
 
     public boolean isLevelTwo(List<ItemStack> pedestalItems, ItemStack reagent){
@@ -63,12 +70,10 @@ public class ReactiveEnchantmentRecipe implements IEnchantingRecipe{
                 new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentExtendTimeID)),
                 new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentAOEID)),
                 new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentDampenID))};
-        List<ItemStack> stacks = Arrays.asList(items);
+
         if(EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT, reagent) != 1)
             return false;
-        if(!EnchantingApparatusRecipe.areSameSet(stacks, pedestalItems))
-            return false;
-       return true;
+        return EnchantingApparatusRecipe.doItemsMatch(pedestalItems, toIngredients(items));
     }
 
     public boolean isLevelThree(List<ItemStack> pedestalItems, ItemStack reagent){
@@ -80,12 +85,10 @@ public class ReactiveEnchantmentRecipe implements IEnchantingRecipe{
                 new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentPierceID)),
                 new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentExtractID)),
                 new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentFortuneID))};
-        List<ItemStack> stacks = Arrays.asList(items);
+
         if(EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT, reagent) != 2)
             return false;
-        if(!EnchantingApparatusRecipe.areSameSet(stacks, pedestalItems))
-            return false;
-        return true;
+        return EnchantingApparatusRecipe.doItemsMatch(pedestalItems, toIngredients(items));
     }
 
     public ItemStack getParchment(List<ItemStack> pedestalItems){

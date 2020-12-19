@@ -28,6 +28,10 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
         getBuilder(LibBlockNames.AB_BASKET).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_BASKET));
         getBuilder(LibBlockNames.AB_HERRING).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_HERRING));
         getBuilder(LibBlockNames.AB_MOSAIC).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_MOSAIC));
+        getBuilder(LibBlockNames.AB_SMOOTH).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_SMOOTH));
+        getBuilder(LibBlockNames.AB_SMOOTH_SLAB).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_SMOOTH_SLAB));
+        getBuilder(LibBlockNames.AB_CLOVER).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AB_CLOVER));
+
     }
 
 

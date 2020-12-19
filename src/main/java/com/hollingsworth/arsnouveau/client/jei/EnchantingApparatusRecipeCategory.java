@@ -15,9 +15,11 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -77,10 +79,12 @@ public class EnchantingApparatusRecipeCategory implements IRecipeCategory<Appara
     @Override
     public void setIngredients(ApparatusRecipe o, IIngredients iIngredients) {
         List<List<ItemStack>> itemStacks = new ArrayList<>();
-        itemStacks.add(Collections.singletonList( o.reagent));
+
+        itemStacks.add(Arrays.asList(o.reagent.getMatchingStacks()));
         itemStacks.add(Collections.singletonList(o.output));
-        for(ItemStack i : o.pedestalItems){
-            itemStacks.add(Collections.singletonList(i));
+        for(Ingredient i : o.pedestalItems){
+
+           itemStacks.add(Arrays.asList(i.getMatchingStacks()));
         }
         iIngredients.setInputLists(VanillaTypes.ITEM, itemStacks);
         //   iIngredients.setInput(VanillaTypes.ITEM, glyphPressRecipe.reagent);

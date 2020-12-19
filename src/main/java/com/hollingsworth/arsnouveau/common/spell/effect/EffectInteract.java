@@ -1,25 +1,29 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.ModConfig;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
-import net.minecraft.entity.AgeableEntity;
+import com.hollingsworth.arsnouveau.api.spell.*;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.ShearsItem;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.IForgeShearable;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EffectInteract extends AbstractEffect {
@@ -38,14 +42,40 @@ public class EffectInteract extends AbstractEffect {
         }
         if(rayTraceResult instanceof EntityRayTraceResult){
             Entity e = ((EntityRayTraceResult) rayTraceResult).getEntity();
-            if(e instanceof AgeableEntity){
+
+            if(e instanceof AnimalEntity){
                 if(shooter instanceof PlayerEntity){
-                    e.applyPlayerInteraction((PlayerEntity) shooter, rayTraceResult.getHitVec(), Hand.MAIN_HAND);
-                }else{
+                    ((AnimalEntity) e).func_230254_b_((PlayerEntity) shooter, Hand.MAIN_HAND);
+
+                }else if (shooter instanceof IInteractResponder){
                     FakePlayer fakePlayer = FakePlayerFactory.getMinecraft((ServerWorld)world);
-                    fakePlayer.setHeldItem(Hand.MAIN_HAND, shooter.getHeldItemMainhand());
-                    e.applyPlayerInteraction( fakePlayer, rayTraceResult.getHitVec(), Hand.MAIN_HAND);
+                    fakePlayer.inventory.clear();
+                    fakePlayer.setPosition(e.getPosX(), e.getPosY(), e.getPosZ());
+                    ItemStack stack = ((IInteractResponder) shooter).getHeldItem().copy();
+                    fakePlayer.setHeldItem(Hand.MAIN_HAND, stack);
+                    e.processInitialInteract( fakePlayer, Hand.MAIN_HAND);
+                    List<ItemStack> items = new ArrayList<>();
+                    if(e instanceof IForgeShearable && fakePlayer.getHeldItemMainhand().getItem() instanceof ShearsItem && ((IForgeShearable) e).isShearable(fakePlayer.getHeldItemMainhand(), world, e.getPosition())){
+                        items.addAll(((IForgeShearable) e).onSheared(fakePlayer, fakePlayer.getHeldItemMainhand(), world, e.getPosition(),
+                                EnchantmentHelper.getEnchantmentLevel(net.minecraft.enchantment.Enchantments.FORTUNE,fakePlayer.getHeldItemMainhand())));
+                    }
+                    items.addAll(fakePlayer.inventory.mainInventory);
+                    items.addAll(fakePlayer.inventory.armorInventory);
+                    items.addAll(fakePlayer.inventory.offHandInventory);
+                    returnItems(rayTraceResult, world, shooter, augments, spellContext, items);
                 }
+            }
+        }
+    }
+
+    public void returnItems(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext, List<ItemStack> items){
+        for(ItemStack i : items){
+            if(shooter instanceof IPickupResponder){
+                ItemStack leftOver = ((IPickupResponder) shooter).onPickup(i);
+                if(!leftOver.isEmpty())
+                    world.addEntity(new ItemEntity(world, rayTraceResult.getHitVec().x, rayTraceResult.getHitVec().y, rayTraceResult.getHitVec().z, leftOver));
+            }else{
+                world.addEntity(new ItemEntity(world, rayTraceResult.getHitVec().x, rayTraceResult.getHitVec().y, rayTraceResult.getHitVec().z, i));
             }
         }
     }

@@ -5,28 +5,28 @@
       "item": "minecraft:lily_pad"
     },
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     },
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     },
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     },
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     },
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     },
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     },
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     },
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     }
   ],
   "result": {

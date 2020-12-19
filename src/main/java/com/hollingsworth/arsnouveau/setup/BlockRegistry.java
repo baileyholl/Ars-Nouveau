@@ -4,20 +4,21 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.renderer.tile.*;
 import com.hollingsworth.arsnouveau.common.block.*;
 import com.hollingsworth.arsnouveau.common.block.tile.*;
+import com.hollingsworth.arsnouveau.common.event.WorldEvent;
 import com.hollingsworth.arsnouveau.common.items.AnimBlockItem;
 import com.hollingsworth.arsnouveau.common.items.FluidBlockItem;
 import com.hollingsworth.arsnouveau.common.items.VolcanicAccumulatorBI;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTree;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.SaplingBlock;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -27,6 +28,9 @@ import net.minecraftforge.registries.ObjectHolder;
 import static net.minecraft.world.biome.Biome.LOGGER;
 @ObjectHolder(ArsNouveau.MODID)
 public class BlockRegistry {
+
+    public static AbstractBlock.Properties LOG_PROP = AbstractBlock.Properties.create(Material.WOOD).hardnessAndResistance(2.0F).sound(SoundType.WOOD);
+
 
     @ObjectHolder(ArsNouveau.MODID + ":phantom_block")
     public static PhantomBlock PHANTOM_BLOCK;
@@ -111,6 +115,9 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.AB_HERRING) public static ModBlock AB_HERRING;
     @ObjectHolder(LibBlockNames.AB_MOSAIC) public static ModBlock AB_MOSAIC;
     @ObjectHolder(LibBlockNames.ARCANE_STONE) public static ModBlock ARCANE_STONE;
+    @ObjectHolder(LibBlockNames.AB_SMOOTH) public static ModBlock AB_SMOOTH;
+    @ObjectHolder(LibBlockNames.AB_SMOOTH_SLAB) public static ModBlock AB_SMOOTH_SLAB;
+    @ObjectHolder(LibBlockNames.AB_CLOVER) public static ModBlock AB_CLOVER;
 
     @ObjectHolder(LibBlockNames.SPELL_TURRET) public static SpellTurret SPELL_TURRET;
     @ObjectHolder(LibBlockNames.SPELL_TURRET) public static TileEntityType<SpellTurretTile> SPELL_TURRET_TYPE;
@@ -124,8 +131,19 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.LAVA_LILY) public static LavaLily LAVA_LILY;
     @ObjectHolder(LibBlockNames.MANA_BERRY_BUSH) public static ManaBerryBush MANA_BERRY_BUSH;
     @ObjectHolder("magic_sapling") public static SaplingBlock MAGIC_SAPLING;
+    @ObjectHolder("magic_sapling_two") public static SaplingBlock MAGIC_SAPLING2;
     @ObjectHolder(LibBlockNames.WIXIE_CAULDRON) public static WixieCauldron WIXIE_CAULDRON;
     @ObjectHolder(LibBlockNames.WIXIE_CAULDRON) public static TileEntityType<WixieCauldronTile> WIXIE_CAULDRON_TYPE;
+
+
+    @ObjectHolder(LibBlockNames.CREATIVE_MANA_JAR) public static CreativeManaJar CREATIVE_MANA_JAR;
+    @ObjectHolder(LibBlockNames.CREATIVE_MANA_JAR) public static TileEntityType<CreativeManaJarTile> CREATIVE_JAR_TILE;
+
+    @ObjectHolder(LibBlockNames.BAW_LOG) public static RotatedPillarBlock BAW_LOG;
+    @ObjectHolder(LibBlockNames.BAW_LEAVES) public static LeavesBlock BAW_LEAVES;
+//    @ObjectHolder(LibBlockNames.AB_SMOOTH) public static ModBlock AB_SMOOTH;
+//    @ObjectHolder(LibBlockNames.AB_SMOOTH_SLAB) public static ModBlock AB_SMOOTH_SLAB;
+//    @ObjectHolder(LibBlockNames.AB_CLOVER) public static ModBlock AB_CLOVER;
 
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
@@ -164,9 +182,22 @@ public class BlockRegistry {
             blockRegistryEvent.getRegistry().register(new VolcanicAccumulator());
             blockRegistryEvent.getRegistry().register(new LavaLily());
             blockRegistryEvent.getRegistry().register(new ManaBerryBush(AbstractBlock.Properties.create(Material.PLANTS).tickRandomly().doesNotBlockMovement().sound(SoundType.SWEET_BERRY_BUSH)));
-            blockRegistryEvent.getRegistry().register(new SaplingBlock(new MagicTree(),ModBlock.defaultProperties()).setRegistryName("magic_sapling"));
+            blockRegistryEvent.getRegistry().register(new SaplingBlock(new MagicTree(WorldEvent.MAGIC_TREE_CONFIG),ModBlock.defaultProperties()).setRegistryName("magic_sapling"));
+            blockRegistryEvent.getRegistry().register(new SaplingBlock(new MagicTree(WorldEvent.MAGIC_TREE_CONFIG2),ModBlock.defaultProperties()).setRegistryName("magic_sapling_two"));
             blockRegistryEvent.getRegistry().register(new WixieCauldron());
+            blockRegistryEvent.getRegistry().register(new CreativeManaJar());
+            blockRegistryEvent.getRegistry().register(new ModBlock(LibBlockNames.AB_SMOOTH));
+            blockRegistryEvent.getRegistry().register(new ModBlock(LibBlockNames.AB_SMOOTH_SLAB));
+            blockRegistryEvent.getRegistry().register(new ModBlock(LibBlockNames.AB_CLOVER));
+            blockRegistryEvent.getRegistry().register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.BAW_LOG));
+            blockRegistryEvent.getRegistry().register(createLeavesBlock().setRegistryName(LibBlockNames.BAW_LEAVES));
         }
+
+        public static LeavesBlock createLeavesBlock() {
+            return new LeavesBlock(AbstractBlock.Properties.create(Material.LEAVES).hardnessAndResistance(0.2F).tickRandomly().sound(SoundType.PLANT).notSolid().setAllowsSpawn(
+                    BlockRegistry::allowsSpawnOnLeaves).setSuffocates(BlockRegistry::isntSolid).setBlocksVision(BlockRegistry::isntSolid));
+        }
+
 
         @SubscribeEvent
         public static void onTileEntityRegistry(final RegistryEvent.Register<TileEntityType<?>> event){
@@ -189,6 +220,7 @@ public class BlockRegistry {
             event.getRegistry().register(TileEntityType.Builder.create(IntangibleAirTile::new, BlockRegistry.INTANGIBLE_AIR).build(null).setRegistryName(LibBlockNames.INTANGIBLE_AIR));
             event.getRegistry().register(TileEntityType.Builder.create(VolcanicTile::new, BlockRegistry.VOLCANIC_BLOCK).build(null).setRegistryName(LibBlockNames.VOLCANIC_ACCUMULATOR));
             event.getRegistry().register(TileEntityType.Builder.create(WixieCauldronTile::new, BlockRegistry.WIXIE_CAULDRON).build(null).setRegistryName(LibBlockNames.WIXIE_CAULDRON));
+            event.getRegistry().register(TileEntityType.Builder.create(CreativeManaJarTile::new, BlockRegistry.CREATIVE_MANA_JAR).build(null).setRegistryName(LibBlockNames.CREATIVE_MANA_JAR));
 
         }
 
@@ -214,8 +246,8 @@ public class BlockRegistry {
             registry.register(new BlockItem(BlockRegistry.RUNE_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.RUNE));
             registry.register(new BlockItem(BlockRegistry.PORTAL_BLOCK, new Item.Properties()).setRegistryName(LibBlockNames.PORTAL));
             registry.register(new BlockItem(BlockRegistry.ARCANE_RELAY_SPLITTER, ItemsRegistry.defaultItemProperties().setISTER(()-> RelaySplitterRenderer.ISRender::new)).setRegistryName(LibBlockNames.ARCANE_RELAY_SPLITTER));
-            registry.register(new BlockItem(BlockRegistry.CRYSTALLIZER_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(()-> CrystallizerRenderer.ISRender::new)).setRegistryName(LibBlockNames.CRYSTALLIZER));
-            registry.register(new BlockItem(BlockRegistry.ARCANE_CORE_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(()-> ArcaneCoreRenderer.ISRender::new)).setRegistryName(LibBlockNames.ARCANE_CORE));
+            registry.register(new BlockItem(BlockRegistry.CRYSTALLIZER_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.CRYSTALLIZER));
+            registry.register(new BlockItem(BlockRegistry.ARCANE_CORE_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.ARCANE_CORE));
             registry.register(getDefaultBlockItem(BlockRegistry.AB_ALTERNATE, LibBlockNames.AB_ALTERNATE));
             registry.register(getDefaultBlockItem(BlockRegistry.AB_BASKET, LibBlockNames.AB_BASKET));
             registry.register(getDefaultBlockItem(BlockRegistry.AB_HERRING, LibBlockNames.AB_HERRING));
@@ -226,13 +258,30 @@ public class BlockRegistry {
             registry.register(new FluidBlockItem(BlockRegistry.LAVA_LILY, ItemsRegistry.defaultItemProperties().isImmuneToFire()).setRegistryName(LibBlockNames.LAVA_LILY));
             registry.register(new BlockItem(BlockRegistry.MANA_BERRY_BUSH, ItemsRegistry.defaultItemProperties().food(ItemsRegistry.MANA_BERRY_FOOD)).setRegistryName(LibItemNames.MANA_BERRY));
             registry.register(getDefaultBlockItem(BlockRegistry.MAGIC_SAPLING, "magic_sapling"));
+            registry.register(getDefaultBlockItem(BlockRegistry.MAGIC_SAPLING2, "magic_sapling_two"));
             registry.register(new BlockItem(BlockRegistry.WIXIE_CAULDRON, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.WIXIE_CAULDRON));
+            registry.register(new BlockItem(BlockRegistry.CREATIVE_MANA_JAR, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.CREATIVE_MANA_JAR));
+
+            registry.register(getDefaultBlockItem(BlockRegistry.AB_SMOOTH_SLAB, LibBlockNames.AB_SMOOTH_SLAB));
+            registry.register(getDefaultBlockItem(BlockRegistry.AB_SMOOTH, LibBlockNames.AB_SMOOTH));
+            registry.register(getDefaultBlockItem(BlockRegistry.AB_CLOVER, LibBlockNames.AB_CLOVER));
+            registry.register(getDefaultBlockItem(BlockRegistry.BAW_LEAVES, LibBlockNames.BAW_LEAVES));
+
+            registry.register(getDefaultBlockItem(BlockRegistry.BAW_LOG, LibBlockNames.BAW_LOG));
 
         }
 
         public static Item getDefaultBlockItem(Block block, String registry){
             return new BlockItem(block, ItemsRegistry.defaultItemProperties()).setRegistryName(registry);
         }
+    }
+
+    private static Boolean allowsSpawnOnLeaves(BlockState state, IBlockReader reader, BlockPos pos, EntityType<?> entity) {
+        return entity == EntityType.OCELOT || entity == EntityType.PARROT;
+    }
+
+    private static boolean isntSolid(BlockState state, IBlockReader reader, BlockPos pos) {
+        return false;
     }
 
 }

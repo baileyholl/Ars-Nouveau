@@ -30,6 +30,9 @@ public class LootTables extends BaseLootTableProvider{
         putStandardLoot(BlockRegistry.CRYSTALLIZER_BLOCK);
         putStandardLoot(BlockRegistry.VOLCANIC_BLOCK);
         putStandardLoot(BlockRegistry.LAVA_LILY);
+
+
+       // putStandardLoot(BlockRegistry.ARCANE_BRICKS);
     }
 
     public void putStandardLoot(Block block){

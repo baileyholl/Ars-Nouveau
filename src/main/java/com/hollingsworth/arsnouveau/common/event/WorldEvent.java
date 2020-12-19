@@ -19,6 +19,8 @@ import net.minecraft.world.gen.blockplacer.SimpleBlockPlacer;
 import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
 import net.minecraft.world.gen.feature.*;
 import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
+import net.minecraft.world.gen.placement.AtSurfaceWithExtraConfig;
+import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -37,6 +39,18 @@ public class WorldEvent {
                     new MagicTrunkPlacer(9, 3, 0),
                     new TwoLayerFeature(2, 0, 2))).setIgnoreVines().build());
 
+    public static ConfiguredFeature<BaseTreeFeatureConfig, ?> MAGIC_TREE_CONFIG2 = Feature.TREE.withConfiguration((
+            new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.DARK_OAK_LOG.getDefaultState()),
+                    new SimpleBlockStateProvider(Blocks.DARK_OAK_LEAVES.getDefaultState()),
+                    new BlobFoliagePlacer(FeatureSpread.func_242252_a(0), FeatureSpread.func_242252_a(0), 0),
+                    new MagicTrunkPlacer(9, 3, 0),
+                    new TwoLayerFeature(2, 0, 2))).setIgnoreVines().build());
+
+    public static ConfiguredFeature<?, ?> CONFIGUREDSPAWN = MAGIC_TREE_CONFIG
+            .withPlacement(Features.Placements.HEIGHTMAP_PLACEMENT)
+            .withPlacement(Placement.COUNT_EXTRA.configure(new AtSurfaceWithExtraConfig(0, 0.01F, 1)));
+
+
     public static void registerFeatures() {
         BlockClusterFeatureConfig BERRY_BUSH_PATCH_CONFIG = (new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(BlockRegistry.MANA_BERRY_BUSH.getDefaultState()), SimpleBlockPlacer.PLACER)).tries(64).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK)).func_227317_b_().build();
 
@@ -44,8 +58,10 @@ public class WorldEvent {
                 Feature.ORE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD,
                         BlockRegistry.ARCANE_ORE.getDefaultState(), 5)).range(60).square().func_242731_b(5));
 
-        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.MANA_BERRY_BUSH.getRegistryName(), Feature.RANDOM_PATCH.withConfiguration(BERRY_BUSH_PATCH_CONFIG).withPlacement(Features.Placements.PATCH_PLACEMENT).chance(12));
-        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, "magic_tree", WorldEvent.MAGIC_TREE_CONFIG);
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.MANA_BERRY_BUSH.getRegistryName(),
+                Feature.RANDOM_PATCH.withConfiguration(BERRY_BUSH_PATCH_CONFIG).withPlacement(Features.Placements.PATCH_PLACEMENT).chance(12));
+      //  Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, "magic_tree", WorldEvent.MAGIC_TREE_CONFIG);
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.MAGIC_SAPLING.getRegistryName(), WorldEvent.CONFIGUREDSPAWN);
 
     }
 
@@ -67,6 +83,9 @@ public class WorldEvent {
         if (e.getCategory().equals(Biome.Category.TAIGA) && Config.SPAWN_BERRIES.get()) {
             e.getGeneration().withFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Objects.requireNonNull(WorldGenRegistries.CONFIGURED_FEATURE.getOrDefault(BlockRegistry.MANA_BERRY_BUSH.getRegistryName()))).build();
         }
+        //Feature.RANDOM_SELECTOR.withConfiguration(new MultipleRandomFeatureConfig(ImmutableList.of(MAGIC_TREE_CONFIG.withChance(0.2F)), MAGIC_TREE_CONFIG)),
+        e.getGeneration().withFeature(GenerationStage.Decoration.VEGETAL_DECORATION,
+                WorldGenRegistries.CONFIGURED_FEATURE.getOrDefault(BlockRegistry.MAGIC_SAPLING.getRegistryName())).build();
 
     }
 
