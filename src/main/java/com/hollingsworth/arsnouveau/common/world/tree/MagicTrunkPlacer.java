@@ -95,7 +95,10 @@ public class MagicTrunkPlacer extends AbstractTrunkPlacer {
                     addBranch(world, pos, posSet, boundingBox, i, Direction.NORTH, rand, baseTreeFeatureConfig);
                     lastBranch = i;
                     numBranches++;
-                    northB = false;
+
+                    addBranch(world, pos, posSet, boundingBox, i, Direction.SOUTH, rand, baseTreeFeatureConfig);
+                    numBranches++;
+
                 }
 
             }

@@ -8,9 +8,18 @@ import com.hollingsworth.arsnouveau.api.enchanting_apparatus.ReactiveEnchantment
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
-import com.hollingsworth.arsnouveau.common.spell.method.*;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodRune;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.crafting.Ingredient;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class APIRegistry {
 
@@ -88,6 +97,17 @@ public class APIRegistry {
         registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.WIXIE_CHARM, ItemsRegistry.WIXIE_SHARD, new Item[]{
                 Items.DARK_OAK_SAPLING, Items.CRAFTING_TABLE, Items.EMERALD, Items.BREWING_STAND
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
+
+        registerApparatusRecipe(new EnchantingApparatusRecipe(new ItemStack(ItemsRegistry.WAND), Ingredient.fromItems(BlockRegistry.ARCHWOOD_PLANK.asItem()),
+                listOfIngred(new Item[]{
+                ItemsRegistry.manaGem, ItemsRegistry.manaGem,ItemsRegistry.manaGem, Items.GOLD_INGOT,Items.GOLD_INGOT,
+                        ItemsRegistry.spellParchment, ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile()),
+                        ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAccelerate())
+        }), ArsNouveauAPI.PatchouliCategories.equipment.name()));
+    }
+
+    public static List<Ingredient> listOfIngred(Item[] items) {
+        return Arrays.stream(items).map(Ingredient::fromItems).collect(Collectors.toList());
     }
 
     public static void registerSpells(){
