@@ -278,5 +278,17 @@
 	"block.ars_nouveau.ab_smooth":"Arcane Brick: Smooth",
 	"block.ars_nouveau.ab_clover":"Arcane Brick: Clover",
 	"block.ars_nouveau.ab_smooth_slab":"Arcane Brick: Smooth Slab",
-	"block.ars_nouveau.creative_mana_jar":"Creative Mana Jar"
+	"block.ars_nouveau.creative_mana_jar":"Creative Mana Jar",
+	"block.ars_nouveau.purple_archwood_log":"Vexing Log",
+	"block.ars_nouveau.blue_archwood_log":"Cascading Log",
+	"block.ars_nouveau.green_archwood_log":"Flourishing Log",
+	"block.ars_nouveau.red_archwood_log":"Blazing Log",
+	"block.ars_nouveau.purple_archwood_sapling":"Vexing Sapling",
+	"block.ars_nouveau.blue_archwood_sapling":"Cascading Sapling",
+	"block.ars_nouveau.green_archwood_sapling":"Flourishing Sapling",
+	"block.ars_nouveau.red_archwood_sapling":"Blazing Sapling",
+	"block.ars_nouveau.purple_archwood_leaves":"Vexing Leaves",
+	"block.ars_nouveau.blue_archwood_leaves":"Cascading Leaves",
+	"block.ars_nouveau.green_archwood_leaves":"Flourishing Leaves",
+	"block.ars_nouveau.red_archwood_leaves":"Blazing Leaves"
 }

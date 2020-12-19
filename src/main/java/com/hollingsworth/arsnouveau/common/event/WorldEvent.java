@@ -38,28 +38,28 @@ public class WorldEvent {
             new BaseTreeFeatureConfig.Builder(new SupplierBlockStateProvider(LibBlockNames.CASCADING_LOG),
                     new SupplierBlockStateProvider(LibBlockNames.CASCADING_LEAVES),
                     new BlobFoliagePlacer(FeatureSpread.func_242252_a(0), FeatureSpread.func_242252_a(0), 0),
-                    new MagicTrunkPlacer(9, 3, 0),
+                    new MagicTrunkPlacer(9, 1, 0),
                     new TwoLayerFeature(2, 0, 2))).setIgnoreVines().build());
 
     public static ConfiguredFeature<BaseTreeFeatureConfig, ?> BLAZING_TREE =  Feature.TREE.withConfiguration((
             new BaseTreeFeatureConfig.Builder(new SupplierBlockStateProvider(LibBlockNames.BLAZING_LOG),
                     new SupplierBlockStateProvider(LibBlockNames.BLAZING_LEAVES),
                     new BlobFoliagePlacer(FeatureSpread.func_242252_a(0), FeatureSpread.func_242252_a(0), 0),
-                    new MagicTrunkPlacer(9, 3, 0),
+                    new MagicTrunkPlacer(9, 1, 0),
                     new TwoLayerFeature(2, 0, 2))).setIgnoreVines().build());
 
     public static ConfiguredFeature<BaseTreeFeatureConfig, ?> FLOURISHING_TREE =  Feature.TREE.withConfiguration((
             new BaseTreeFeatureConfig.Builder(new SupplierBlockStateProvider(LibBlockNames.FLOURISHING_LOG),
                     new SupplierBlockStateProvider(LibBlockNames.FLOURISHING_LEAVES),
                     new BlobFoliagePlacer(FeatureSpread.func_242252_a(0), FeatureSpread.func_242252_a(0), 0),
-                    new MagicTrunkPlacer(9, 3, 0),
+                    new MagicTrunkPlacer(9, 1, 0),
                     new TwoLayerFeature(2, 0, 2))).setIgnoreVines().build());
 
     public static ConfiguredFeature<BaseTreeFeatureConfig, ?> VEXING_TREE =  Feature.TREE.withConfiguration((
             new BaseTreeFeatureConfig.Builder(new SupplierBlockStateProvider(LibBlockNames.VEXING_LOG),
                     new SupplierBlockStateProvider(LibBlockNames.VEXING_LEAVES),
                     new BlobFoliagePlacer(FeatureSpread.func_242252_a(0), FeatureSpread.func_242252_a(0), 0),
-                    new MagicTrunkPlacer(9, 3, 0),
+                    new MagicTrunkPlacer(9, 1, 0),
                     new TwoLayerFeature(2, 0, 2))).setIgnoreVines().build());
 
 
@@ -67,7 +67,7 @@ public class WorldEvent {
             new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.DARK_OAK_LOG.getDefaultState()),
                     new SimpleBlockStateProvider(Blocks.DARK_OAK_LEAVES.getDefaultState()),
                     new BlobFoliagePlacer(FeatureSpread.func_242252_a(0), FeatureSpread.func_242252_a(0), 0),
-                    new MagicTrunkPlacer(9, 3, 0),
+                    new MagicTrunkPlacer(9, 1, 0),
                     new TwoLayerFeature(2, 0, 2))).setIgnoreVines().build());
 
 

@@ -68,12 +68,6 @@ public class MagicTrunkPlacer extends AbstractTrunkPlacer {
                 addRoots(world, rand, pos.east().east().south().up(i), posSet, boundingBox, baseTreeFeatureConfig);
                 addRoots(world, rand, pos.east().north().up(i), posSet, boundingBox, baseTreeFeatureConfig);
                 addRoots(world, rand, pos.north().up(i), posSet, boundingBox, baseTreeFeatureConfig);
-                addRoots(world, rand, pos.west().north(), posSet, boundingBox, baseTreeFeatureConfig);
-                addRoots(world, rand, pos.east().east().north(), posSet, boundingBox, baseTreeFeatureConfig);
-                addRoots(world, rand, pos.south().south().west(), posSet, boundingBox, baseTreeFeatureConfig);
-                addRoots(world, rand, pos.south().south().east().east(), posSet, boundingBox, baseTreeFeatureConfig);
-
-                //addRoots(world, rand, pos.north().west(), posSet, boundingBox, Blocks.DARK_OAK_LOG.getDefaultState());
             }
 
             if(i > 1 && i > lastBranch){

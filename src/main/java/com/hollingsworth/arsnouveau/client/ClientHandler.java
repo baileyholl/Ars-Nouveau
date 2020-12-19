@@ -51,6 +51,10 @@ public class ClientHandler {
         RenderTypeLookup.setRenderLayer(BlockRegistry.LAVA_LILY, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.WIXIE_CAULDRON, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.CREATIVE_MANA_JAR, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.VEXING_SAPLING, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.FLOURISHING_SAPLING, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.BLAZING_SAPLING, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.CASCADING_SAPLING, RenderType.getCutout());
 
     }
 

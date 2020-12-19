@@ -144,22 +144,22 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.CASCADING_LOG) public static RotatedPillarBlock CASCADING_LOG;
     @ObjectHolder(LibBlockNames.CASCADING_LEAVES) public static MagicLeaves CASCADING_LEAVE;
     @ObjectHolder(LibBlockNames.CASCADING_SAPLING) public static SaplingBlock CASCADING_SAPLING;
-    @ObjectHolder(LibBlockNames.CASCADING_WOOD) public static MagicLeaves CASCADING_WOOD;
+    @ObjectHolder(LibBlockNames.CASCADING_WOOD) public static RotatedPillarBlock CASCADING_WOOD;
 
     @ObjectHolder(LibBlockNames.BLAZING_LOG) public static RotatedPillarBlock BLAZING_LOG;
     @ObjectHolder(LibBlockNames.BLAZING_LEAVES) public static MagicLeaves BLAZING_LEAVES;
     @ObjectHolder(LibBlockNames.BLAZING_SAPLING) public static SaplingBlock BLAZING_SAPLING;
-    @ObjectHolder(LibBlockNames.BLAZING_WOOD) public static MagicLeaves BLAZING_WOOD;
+    @ObjectHolder(LibBlockNames.BLAZING_WOOD) public static RotatedPillarBlock BLAZING_WOOD;
 
     @ObjectHolder(LibBlockNames.VEXING_LOG) public static RotatedPillarBlock VEXING_LOG;
     @ObjectHolder(LibBlockNames.VEXING_LEAVES) public static MagicLeaves VEXING_LEAVES;
     @ObjectHolder(LibBlockNames.VEXING_SAPLING) public static SaplingBlock VEXING_SAPLING;
-    @ObjectHolder(LibBlockNames.VEXING_WOOD) public static MagicLeaves VEXING_WOOD;
+    @ObjectHolder(LibBlockNames.VEXING_WOOD) public static RotatedPillarBlock VEXING_WOOD;
 
     @ObjectHolder(LibBlockNames.FLOURISHING_LOG) public static RotatedPillarBlock FLOURISHING_LOG;
     @ObjectHolder(LibBlockNames.FLOURISHING_LEAVES) public static MagicLeaves FLOURISHING_LEAVES;
     @ObjectHolder(LibBlockNames.FLOURISHING_SAPLING) public static SaplingBlock FLOURISHING_SAPLING;
-    @ObjectHolder(LibBlockNames.FLOURISHING_WOOD) public static MagicLeaves FLOURISHING_WOOD;
+    @ObjectHolder(LibBlockNames.FLOURISHING_WOOD) public static RotatedPillarBlock FLOURISHING_WOOD;
 
     @ObjectHolder("an_stateprovider")
     public static BlockStateProviderType stateProviderType;
@@ -223,6 +223,11 @@ public class BlockRegistry {
             registry.register(createLeavesBlock().setRegistryName(LibBlockNames.FLOURISHING_LEAVES));
             registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.VEXING_LOG));
             registry.register(createLeavesBlock().setRegistryName(LibBlockNames.VEXING_LEAVES));
+
+            registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.VEXING_WOOD));
+            registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.BLAZING_WOOD));
+            registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.FLOURISHING_WOOD));
+            registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.CASCADING_WOOD));
         }
 
         public static MagicLeaves createLeavesBlock() {
@@ -298,15 +303,19 @@ public class BlockRegistry {
             registry.register(getDefaultBlockItem(BlockRegistry.CASCADING_LEAVE, LibBlockNames.CASCADING_LEAVES));
             registry.register(getDefaultBlockItem(BlockRegistry.CASCADING_LOG, LibBlockNames.CASCADING_LOG));
             registry.register(getDefaultBlockItem(BlockRegistry.CASCADING_SAPLING, LibBlockNames.CASCADING_SAPLING));
+            registry.register(getDefaultBlockItem(BlockRegistry.CASCADING_WOOD, LibBlockNames.CASCADING_WOOD));
             registry.register(getDefaultBlockItem(BlockRegistry.VEXING_LEAVES, LibBlockNames.VEXING_LEAVES));
             registry.register(getDefaultBlockItem(BlockRegistry.VEXING_LOG, LibBlockNames.VEXING_LOG));
             registry.register(getDefaultBlockItem(BlockRegistry.VEXING_SAPLING, LibBlockNames.VEXING_SAPLING));
+            registry.register(getDefaultBlockItem(BlockRegistry.VEXING_WOOD, LibBlockNames.VEXING_WOOD));
             registry.register(getDefaultBlockItem(BlockRegistry.FLOURISHING_LEAVES, LibBlockNames.FLOURISHING_LEAVES));
             registry.register(getDefaultBlockItem(BlockRegistry.FLOURISHING_LOG, LibBlockNames.FLOURISHING_LOG));
             registry.register(getDefaultBlockItem(BlockRegistry.FLOURISHING_SAPLING, LibBlockNames.FLOURISHING_SAPLING));
+            registry.register(getDefaultBlockItem(BlockRegistry.FLOURISHING_WOOD, LibBlockNames.FLOURISHING_WOOD));
             registry.register(getDefaultBlockItem(BlockRegistry.BLAZING_LEAVES, LibBlockNames.BLAZING_LEAVES));
             registry.register(getDefaultBlockItem(BlockRegistry.BLAZING_LOG, LibBlockNames.BLAZING_LOG));
             registry.register(getDefaultBlockItem(BlockRegistry.BLAZING_SAPLING, LibBlockNames.BLAZING_SAPLING));
+            registry.register(getDefaultBlockItem(BlockRegistry.BLAZING_WOOD, LibBlockNames.BLAZING_WOOD));
         }
 
         public static Item getDefaultBlockItem(Block block, String registry){
