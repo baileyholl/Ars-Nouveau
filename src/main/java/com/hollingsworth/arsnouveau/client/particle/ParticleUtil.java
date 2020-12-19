@@ -4,6 +4,7 @@ package com.hollingsworth.arsnouveau.client.particle;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -43,8 +44,10 @@ public class ParticleUtil {
     }
 
     public static void spawnFollowProjectile(World world, BlockPos from, BlockPos to){
-        EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, from, to);
-        world.addEntity(aoeProjectile);
+        if(world.getChunkProvider().isChunkLoaded(new ChunkPos(from)) && world.getChunkProvider().isChunkLoaded(new ChunkPos(to))){
+            EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, from, to);
+            world.addEntity(aoeProjectile);
+        }
     }
 
     public static void beam(BlockPos toThisBlock, BlockPos fromThisBlock, World world){

@@ -27,7 +27,11 @@ public class EntityFollowProjectile extends ArrowEntity {
 
     private int age;
 //    int age;
-    int maxAge;
+    int maxAge = 500;
+
+    public EntityFollowProjectile(World world){
+        super(world, 0, 0,0);
+    }
 
 
     public EntityFollowProjectile(World worldIn, Vector3d from, Vector3d to) {
@@ -35,7 +39,6 @@ public class EntityFollowProjectile extends ArrowEntity {
         this.dataManager.set(EntityFollowProjectile.to, new BlockPos(to));
         this.dataManager.set(EntityFollowProjectile.from, new BlockPos(from));
 //        this.age = 0;
-        this.maxAge = (int) Math.floor(from.subtract(to).length() * 5);
         setPosition(from.x + 0.5, from.y+ 0.5, from.z+ 0.5);
         this.dataManager.set(RED, 255);
         this.dataManager.set(GREEN, 25);
@@ -66,9 +69,14 @@ public class EntityFollowProjectile extends ArrowEntity {
         this.dataManager.register(BLUE, 0);
     }
 
+
     @Override
     public void tick() {
         this.age++;
+        if(age > maxAge) {
+            this.remove();
+            return;
+        }
         Vector3d vec3d2 = this.getMotion();
         BlockPos dest = this.dataManager.get(EntityFollowProjectile.to);
         if(BlockUtil.distanceFrom(this.getPosition(), dest) < 1 || this.age > 1000 || BlockUtil.distanceFrom(this.getPosition(), dest) > 10){
