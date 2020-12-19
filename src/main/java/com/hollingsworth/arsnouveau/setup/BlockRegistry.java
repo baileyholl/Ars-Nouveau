@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.items.VolcanicAccumulatorBI;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTree;
+import com.hollingsworth.arsnouveau.common.world.tree.SupplierBlockStateProvider;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityType;
@@ -19,6 +20,7 @@ import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.gen.blockstateprovider.BlockStateProviderType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -141,6 +143,9 @@ public class BlockRegistry {
 
     @ObjectHolder(LibBlockNames.BAW_LOG) public static RotatedPillarBlock BAW_LOG;
     @ObjectHolder(LibBlockNames.BAW_LEAVES) public static LeavesBlock BAW_LEAVES;
+
+    @ObjectHolder("an_stateprovider")
+    public static BlockStateProviderType stateProviderType;
 //    @ObjectHolder(LibBlockNames.AB_SMOOTH) public static ModBlock AB_SMOOTH;
 //    @ObjectHolder(LibBlockNames.AB_SMOOTH_SLAB) public static ModBlock AB_SMOOTH_SLAB;
 //    @ObjectHolder(LibBlockNames.AB_CLOVER) public static ModBlock AB_CLOVER;
@@ -274,6 +279,13 @@ public class BlockRegistry {
         public static Item getDefaultBlockItem(Block block, String registry){
             return new BlockItem(block, ItemsRegistry.defaultItemProperties()).setRegistryName(registry);
         }
+
+        @SubscribeEvent
+        public static void registerBlockProvider(final RegistryEvent.Register<BlockStateProviderType<?>> e) {
+            e.getRegistry().register(new BlockStateProviderType<>(SupplierBlockStateProvider.CODEC).setRegistryName(ArsNouveau.MODID, "an_stateprovider"));
+        }
+
+
     }
 
     private static Boolean allowsSpawnOnLeaves(BlockState state, IBlockReader reader, BlockPos pos, EntityType<?> entity) {

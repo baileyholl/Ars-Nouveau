@@ -4,7 +4,9 @@ import com.google.common.collect.ImmutableSet;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
+import com.hollingsworth.arsnouveau.common.world.tree.SupplierBlockStateProvider;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.block.Blocks;
@@ -32,27 +34,31 @@ import java.util.Objects;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class WorldEvent {
-    public static ConfiguredFeature<BaseTreeFeatureConfig, ?> MAGIC_TREE_CONFIG = Feature.TREE.withConfiguration((
-            new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.OAK_LOG.getDefaultState()),
-                    new SimpleBlockStateProvider(Blocks.OAK_LEAVES.getDefaultState()),
+    public static ConfiguredFeature<BaseTreeFeatureConfig, ?> MAGIC_TREE_CONFIG =  Feature.TREE.withConfiguration((
+            new BaseTreeFeatureConfig.Builder(new SupplierBlockStateProvider(LibBlockNames.BAW_LOG),
+                    new SupplierBlockStateProvider(LibBlockNames.BAW_LEAVES),
                     new BlobFoliagePlacer(FeatureSpread.func_242252_a(0), FeatureSpread.func_242252_a(0), 0),
                     new MagicTrunkPlacer(9, 3, 0),
                     new TwoLayerFeature(2, 0, 2))).setIgnoreVines().build());
-
     public static ConfiguredFeature<BaseTreeFeatureConfig, ?> MAGIC_TREE_CONFIG2 = Feature.TREE.withConfiguration((
             new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.DARK_OAK_LOG.getDefaultState()),
                     new SimpleBlockStateProvider(Blocks.DARK_OAK_LEAVES.getDefaultState()),
                     new BlobFoliagePlacer(FeatureSpread.func_242252_a(0), FeatureSpread.func_242252_a(0), 0),
                     new MagicTrunkPlacer(9, 3, 0),
                     new TwoLayerFeature(2, 0, 2))).setIgnoreVines().build());
-
-    public static ConfiguredFeature<?, ?> CONFIGUREDSPAWN = MAGIC_TREE_CONFIG
-            .withPlacement(Features.Placements.HEIGHTMAP_PLACEMENT)
-            .withPlacement(Placement.COUNT_EXTRA.configure(new AtSurfaceWithExtraConfig(0, 0.01F, 1)));
-
-
     public static void registerFeatures() {
         BlockClusterFeatureConfig BERRY_BUSH_PATCH_CONFIG = (new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(BlockRegistry.MANA_BERRY_BUSH.getDefaultState()), SimpleBlockPlacer.PLACER)).tries(64).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK)).func_227317_b_().build();
+
+//       MAGIC_TREE_CONFIG2 = Feature.TREE.withConfiguration((
+//                new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.DARK_OAK_LOG.getDefaultState()),
+//                        new SimpleBlockStateProvider(Blocks.DARK_OAK_LEAVES.getDefaultState()),
+//                        new BlobFoliagePlacer(FeatureSpread.func_242252_a(0), FeatureSpread.func_242252_a(0), 0),
+//                        new MagicTrunkPlacer(9, 3, 0),
+//                        new TwoLayerFeature(2, 0, 2))).setIgnoreVines().build());
+
+        ConfiguredFeature<?, ?> CONFIGUREDSPAWN = MAGIC_TREE_CONFIG
+                .withPlacement(Features.Placements.HEIGHTMAP_PLACEMENT)
+                .withPlacement(Placement.COUNT_EXTRA.configure(new AtSurfaceWithExtraConfig(0, 0.01F, 1)));
 
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.ARCANE_ORE.getRegistryName(),
                 Feature.ORE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD,
@@ -61,7 +67,7 @@ public class WorldEvent {
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.MANA_BERRY_BUSH.getRegistryName(),
                 Feature.RANDOM_PATCH.withConfiguration(BERRY_BUSH_PATCH_CONFIG).withPlacement(Features.Placements.PATCH_PLACEMENT).chance(12));
       //  Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, "magic_tree", WorldEvent.MAGIC_TREE_CONFIG);
-        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.MAGIC_SAPLING.getRegistryName(), WorldEvent.CONFIGUREDSPAWN);
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.MAGIC_SAPLING.getRegistryName(), CONFIGUREDSPAWN);
 
     }
 
@@ -96,4 +102,6 @@ public class WorldEvent {
             return;
         EventQueue.getInstance().tick();
     }
+
+
 }
