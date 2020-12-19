@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "ars_nouveau:block/stripped_archwood_wood",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "ars_nouveau:block/stripped_archwood_wood"
+    },
+    "axis=z": {
+      "model": "ars_nouveau:block/stripped_archwood_wood",
+      "x": 90
+    }
+  }
+}

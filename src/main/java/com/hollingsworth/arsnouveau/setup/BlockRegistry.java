@@ -11,14 +11,14 @@ import com.hollingsworth.arsnouveau.common.items.VolcanicAccumulatorBI;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTree;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.SaplingBlock;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -28,6 +28,9 @@ import net.minecraftforge.registries.ObjectHolder;
 import static net.minecraft.world.biome.Biome.LOGGER;
 @ObjectHolder(ArsNouveau.MODID)
 public class BlockRegistry {
+
+    public static AbstractBlock.Properties LOG_PROP = AbstractBlock.Properties.create(Material.WOOD).hardnessAndResistance(2.0F).sound(SoundType.WOOD);
+
 
     @ObjectHolder(ArsNouveau.MODID + ":phantom_block")
     public static PhantomBlock PHANTOM_BLOCK;
@@ -136,6 +139,11 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.CREATIVE_MANA_JAR) public static CreativeManaJar CREATIVE_MANA_JAR;
     @ObjectHolder(LibBlockNames.CREATIVE_MANA_JAR) public static TileEntityType<CreativeManaJarTile> CREATIVE_JAR_TILE;
 
+    @ObjectHolder(LibBlockNames.BAW_LOG) public static RotatedPillarBlock BAW_LOG;
+    @ObjectHolder(LibBlockNames.BAW_LEAVES) public static LeavesBlock BAW_LEAVES;
+//    @ObjectHolder(LibBlockNames.AB_SMOOTH) public static ModBlock AB_SMOOTH;
+//    @ObjectHolder(LibBlockNames.AB_SMOOTH_SLAB) public static ModBlock AB_SMOOTH_SLAB;
+//    @ObjectHolder(LibBlockNames.AB_CLOVER) public static ModBlock AB_CLOVER;
 
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
@@ -181,7 +189,15 @@ public class BlockRegistry {
             blockRegistryEvent.getRegistry().register(new ModBlock(LibBlockNames.AB_SMOOTH));
             blockRegistryEvent.getRegistry().register(new ModBlock(LibBlockNames.AB_SMOOTH_SLAB));
             blockRegistryEvent.getRegistry().register(new ModBlock(LibBlockNames.AB_CLOVER));
+            blockRegistryEvent.getRegistry().register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.BAW_LOG));
+            blockRegistryEvent.getRegistry().register(createLeavesBlock().setRegistryName(LibBlockNames.BAW_LEAVES));
         }
+
+        public static LeavesBlock createLeavesBlock() {
+            return new LeavesBlock(AbstractBlock.Properties.create(Material.LEAVES).hardnessAndResistance(0.2F).tickRandomly().sound(SoundType.PLANT).notSolid().setAllowsSpawn(
+                    BlockRegistry::allowsSpawnOnLeaves).setSuffocates(BlockRegistry::isntSolid).setBlocksVision(BlockRegistry::isntSolid));
+        }
+
 
         @SubscribeEvent
         public static void onTileEntityRegistry(final RegistryEvent.Register<TileEntityType<?>> event){
@@ -249,12 +265,23 @@ public class BlockRegistry {
             registry.register(getDefaultBlockItem(BlockRegistry.AB_SMOOTH_SLAB, LibBlockNames.AB_SMOOTH_SLAB));
             registry.register(getDefaultBlockItem(BlockRegistry.AB_SMOOTH, LibBlockNames.AB_SMOOTH));
             registry.register(getDefaultBlockItem(BlockRegistry.AB_CLOVER, LibBlockNames.AB_CLOVER));
+            registry.register(getDefaultBlockItem(BlockRegistry.BAW_LEAVES, LibBlockNames.BAW_LEAVES));
+
+            registry.register(getDefaultBlockItem(BlockRegistry.BAW_LOG, LibBlockNames.BAW_LOG));
 
         }
 
         public static Item getDefaultBlockItem(Block block, String registry){
             return new BlockItem(block, ItemsRegistry.defaultItemProperties()).setRegistryName(registry);
         }
+    }
+
+    private static Boolean allowsSpawnOnLeaves(BlockState state, IBlockReader reader, BlockPos pos, EntityType<?> entity) {
+        return entity == EntityType.OCELOT || entity == EntityType.PARROT;
+    }
+
+    private static boolean isntSolid(BlockState state, IBlockReader reader, BlockPos pos) {
+        return false;
     }
 
 }

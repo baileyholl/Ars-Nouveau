@@ -1,0 +1,22 @@
+{
+  "variants": {
+    "axis=x": [
+    		{"model": "ars_nouveau:block/red_archwood_log_horizontal", "x": 90, "y": 90},
+    		{"model": "ars_nouveau:block/red_archwood_log_horizontal_1", "x": 90, "y": 90},
+    		{"model": "ars_nouveau:block/red_archwood_log_horizontal_2", "x": 90, "y": 90},
+    		{"model": "ars_nouveau:block/red_archwood_log_horizontal_3", "x": 90, "y": 90}
+    	],
+    "axis=y": [
+    		{"model": "ars_nouveau:block/red_archwood_log"},
+    		{"model": "ars_nouveau:block/red_archwood_log_1"},
+    		{"model": "ars_nouveau:block/red_archwood_log_2"},
+    		{"model": "ars_nouveau:block/red_archwood_log_3"}
+    	],
+    "axis=z": [
+    		{"model": "ars_nouveau:block/red_archwood_log_horizontal", "x": 90},
+    		{"model": "ars_nouveau:block/red_archwood_log_horizontal_1", "x": 90},
+    		{"model": "ars_nouveau:block/red_archwood_log_horizontal_2", "x": 90},
+    		{"model": "ars_nouveau:block/red_archwood_log_horizontal_3", "x": 90}
+    	]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "ars_nouveau:block/archwood_slab"
+    },
+    "type=double": {
+      "model": "ars_nouveau:block/archwood_planks"
+    },
+    "type=top": {
+      "model": "ars_nouveau:block/archwood_slab_top"
+    }
+  }
+}

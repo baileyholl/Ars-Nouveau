@@ -1,0 +1,9 @@
+{
+	"variants":{
+		"":[
+			{"model":"ars_nouveau:block/green_archwood_leaves"},
+			{"model":"ars_nouveau:block/green_archwood_leaves_1"},
+			{"model":"ars_nouveau:block/green_archwood_leaves_2"}
+		]
+	}
+}

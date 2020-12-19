@@ -30,4 +30,10 @@ public class LibBlockNames {
     public final static String AB_SMOOTH = "ab_smooth";
     public final static String AB_CLOVER = "ab_clover";
     public final static String AB_SMOOTH_SLAB = "ab_smooth_slab";
+
+    public final static String AW_PLANKS = "archwood_planks";
+    public final static String BAW_LEAVES = "blue_archwood_leaves";
+    public final static String BAW_LOG = "blue_archwood_log";
+    public final static String BAW_SAPLING = "blue_archwood_sapling";
+    public final static String BAW_WOOD = "blue_archwood_wood";
 }
