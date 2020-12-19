@@ -50,4 +50,6 @@ public class LibBlockNames {
     public final static String VEXING_LOG = "purple_archwood_log";
     public final static String VEXING_SAPLING = "purple_archwood_sapling";
     public final static String VEXING_WOOD = "purple_archwood_wood";
+
+    public final static String ARCHWOOD_PLANK = "archwood_planks";
 }

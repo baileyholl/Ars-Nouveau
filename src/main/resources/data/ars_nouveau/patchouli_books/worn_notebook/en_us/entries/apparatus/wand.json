@@ -1,0 +1,23 @@
+{
+  "name": "item.ars_nouveau.wand",
+  "icon": "ars_nouveau:wand",
+  "category": "equipment",
+  "pages": [
+    {
+      "type": "text",
+      "text": "ars_nouveau.page.wand"
+    },
+    {
+      "type": "apparatus_recipe",
+      "reagent": "ars_nouveau:archwood_planks",
+      "item1": "ars_nouveau:mana_gem",
+      "item2": "ars_nouveau:mana_gem",
+      "item3": "ars_nouveau:mana_gem",
+      "item4": "minecraft:gold_ingot",
+      "item5": "minecraft:gold_ingot",
+      "item6": "ars_nouveau:spell_parchment",
+      "item7": "ars_nouveau:glyph_projectile",
+      "item8": "ars_nouveau:glyph_accelerate"
+    }
+  ]
+}

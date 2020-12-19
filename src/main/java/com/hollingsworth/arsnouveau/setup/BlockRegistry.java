@@ -33,6 +33,7 @@ public class BlockRegistry {
 
     public static AbstractBlock.Properties LOG_PROP = AbstractBlock.Properties.create(Material.WOOD).hardnessAndResistance(2.0F).sound(SoundType.WOOD);
 
+    public static AbstractBlock.Properties SAP_PROP = AbstractBlock.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().zeroHardnessAndResistance().sound(SoundType.PLANT);
 
     @ObjectHolder(ArsNouveau.MODID + ":phantom_block")
     public static PhantomBlock PHANTOM_BLOCK;
@@ -160,6 +161,7 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.FLOURISHING_LEAVES) public static MagicLeaves FLOURISHING_LEAVES;
     @ObjectHolder(LibBlockNames.FLOURISHING_SAPLING) public static SaplingBlock FLOURISHING_SAPLING;
     @ObjectHolder(LibBlockNames.FLOURISHING_WOOD) public static RotatedPillarBlock FLOURISHING_WOOD;
+    @ObjectHolder(LibBlockNames.ARCHWOOD_PLANK) public static ModBlock ARCHWOOD_PLANK;
 
     @ObjectHolder("an_stateprovider")
     public static BlockStateProviderType stateProviderType;
@@ -205,10 +207,10 @@ public class BlockRegistry {
             registry.register(new VolcanicAccumulator());
             registry.register(new LavaLily());
             registry.register(new ManaBerryBush(AbstractBlock.Properties.create(Material.PLANTS).tickRandomly().doesNotBlockMovement().sound(SoundType.SWEET_BERRY_BUSH)));
-            registry.register(new SaplingBlock(new MagicTree(WorldEvent.CASCADING_TREE),ModBlock.defaultProperties()).setRegistryName(LibBlockNames.CASCADING_SAPLING));
-            registry.register(new SaplingBlock(new MagicTree(WorldEvent.BLAZING_TREE),ModBlock.defaultProperties()).setRegistryName(LibBlockNames.BLAZING_SAPLING));
-            registry.register(new SaplingBlock(new MagicTree(WorldEvent.VEXING_TREE),ModBlock.defaultProperties()).setRegistryName(LibBlockNames.VEXING_SAPLING));
-            registry.register(new SaplingBlock(new MagicTree(WorldEvent.FLOURISHING_TREE),ModBlock.defaultProperties()).setRegistryName(LibBlockNames.FLOURISHING_SAPLING));
+            registry.register(new SaplingBlock(new MagicTree(WorldEvent.CASCADING_TREE),SAP_PROP).setRegistryName(LibBlockNames.CASCADING_SAPLING));
+            registry.register(new SaplingBlock(new MagicTree(WorldEvent.BLAZING_TREE),SAP_PROP).setRegistryName(LibBlockNames.BLAZING_SAPLING));
+            registry.register(new SaplingBlock(new MagicTree(WorldEvent.VEXING_TREE), SAP_PROP).setRegistryName(LibBlockNames.VEXING_SAPLING));
+            registry.register(new SaplingBlock(new MagicTree(WorldEvent.FLOURISHING_TREE),SAP_PROP).setRegistryName(LibBlockNames.FLOURISHING_SAPLING));
             registry.register(new WixieCauldron());
             registry.register(new CreativeManaJar());
             registry.register(new ModBlock(LibBlockNames.AB_SMOOTH));
@@ -228,6 +230,7 @@ public class BlockRegistry {
             registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.BLAZING_WOOD));
             registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.FLOURISHING_WOOD));
             registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.CASCADING_WOOD));
+            registry.register(new ModBlock(LOG_PROP, LibBlockNames.ARCHWOOD_PLANK));
         }
 
         public static MagicLeaves createLeavesBlock() {
@@ -316,6 +319,8 @@ public class BlockRegistry {
             registry.register(getDefaultBlockItem(BlockRegistry.BLAZING_LOG, LibBlockNames.BLAZING_LOG));
             registry.register(getDefaultBlockItem(BlockRegistry.BLAZING_SAPLING, LibBlockNames.BLAZING_SAPLING));
             registry.register(getDefaultBlockItem(BlockRegistry.BLAZING_WOOD, LibBlockNames.BLAZING_WOOD));
+
+            registry.register(getDefaultBlockItem(BlockRegistry.ARCHWOOD_PLANK, LibBlockNames.ARCHWOOD_PLANK));
         }
 
         public static Item getDefaultBlockItem(Block block, String registry){

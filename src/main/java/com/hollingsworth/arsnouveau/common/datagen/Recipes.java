@@ -23,9 +23,11 @@ public class Recipes extends RecipeProvider {
         super(generatorIn);
     }
 
-    ITag.INamedTag<Item> MANA_GEM_TAG = ItemTags.makeWrapperTag("forge:gems/mana");
+    public static ITag.INamedTag<Item> MANA_GEM_TAG = ItemTags.makeWrapperTag("forge:gems/mana");
+    public static ITag.INamedTag<Item> ARCHWOOD_LOG_TAG = ItemTags.makeWrapperTag("forge:logs/archwood");
 
-    Ingredient MANA_GEM = Ingredient.fromTag(MANA_GEM_TAG);
+    public static Ingredient MANA_GEM = Ingredient.fromTag(MANA_GEM_TAG);
+    public static Ingredient ARCHWOOD_LOG = Ingredient.fromTag(ARCHWOOD_LOG_TAG);
     @Override
     protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
         {
@@ -202,8 +204,14 @@ public class Recipes extends RecipeProvider {
                     .addIngredient(Items.LILY_PAD, 1).addIngredient(MANA_GEM, 8)
                     .build(consumer);
 
+            shapelessBuilder(BlockRegistry.ARCHWOOD_PLANK, 4).addIngredient(ARCHWOOD_LOG).build(consumer);
+
         }
     }
+    public ShapelessRecipeBuilder shapelessBuilder(IItemProvider result, int resultCount){
+        return ShapelessRecipeBuilder.shapelessRecipe(result, resultCount).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook));
+    }
+
     private static int STONECUTTER_COUNTER = 0;
     public static void makeStonecutter(Consumer<IFinishedRecipe> consumer, IItemProvider input, IItemProvider output, String reg){
         SingleItemRecipeBuilder.stonecuttingRecipe(Ingredient.fromItems(input), output).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook)).build(consumer, new ResourceLocation(ArsNouveau.MODID, reg + "_"+STONECUTTER_COUNTER));

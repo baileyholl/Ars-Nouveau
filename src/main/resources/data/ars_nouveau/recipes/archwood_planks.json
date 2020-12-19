@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "forge:logs/archwood"
+    }
+  ],
+  "result": {
+    "item": "ars_nouveau:archwood_planks",
+    "count": 4
+  }
+}
