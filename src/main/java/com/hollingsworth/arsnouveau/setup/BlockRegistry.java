@@ -133,8 +133,7 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.VOLCANIC_ACCUMULATOR) public static  TileEntityType<VolcanicTile> VOLCANIC_TILE;
     @ObjectHolder(LibBlockNames.LAVA_LILY) public static LavaLily LAVA_LILY;
     @ObjectHolder(LibBlockNames.MANA_BERRY_BUSH) public static ManaBerryBush MANA_BERRY_BUSH;
-    @ObjectHolder("magic_sapling") public static SaplingBlock MAGIC_SAPLING;
-    @ObjectHolder("magic_sapling_two") public static SaplingBlock MAGIC_SAPLING2;
+
     @ObjectHolder(LibBlockNames.WIXIE_CAULDRON) public static WixieCauldron WIXIE_CAULDRON;
     @ObjectHolder(LibBlockNames.WIXIE_CAULDRON) public static TileEntityType<WixieCauldronTile> WIXIE_CAULDRON_TYPE;
 
