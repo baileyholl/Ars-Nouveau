@@ -88,18 +88,23 @@ public class ApparatusRecipe implements IRecipe<IInventory> {
         @Nullable
         @Override
         public ApparatusRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+            int length = buffer.readInt();
             Ingredient reagent = Ingredient.read(buffer);
             ItemStack output = buffer.readItemStack();
             List<Ingredient> stacks = new ArrayList<>();
 
-            for(int i =1; i < 9; i++){
-                try{ Ingredient.read(buffer); }catch (Exception e){break;}
+            for(int i =0; i < length; i++){
+                try{ stacks.add(Ingredient.read(buffer)); }catch (Exception e){
+                    e.printStackTrace();
+                    break;
+                }
             }
             return new ApparatusRecipe(recipeId, stacks, reagent, output, 0);
         }
 
         @Override
         public void write(PacketBuffer buf, ApparatusRecipe recipe) {
+            buf.writeInt(recipe.pedestalItems.size());
             recipe.reagent.write(buf);
             buf.writeItemStack(recipe.output);
             for(Ingredient i : recipe.pedestalItems){
