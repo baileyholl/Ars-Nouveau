@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.event.DispelEvent;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.LavaLily;
-import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.items.VoidJar;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.setup.Config;
@@ -20,7 +19,6 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -43,21 +41,10 @@ public class EventHandler {
     @SubscribeEvent(priority= EventPriority.LOWEST)
     public static void itemPickupEvent( EntityItemPickupEvent event) {
         PlayerEntity player = event.getPlayer();
-        NonNullList<ItemStack> list =  player.inventory.mainInventory;
-        for(int i = 0; i < 9; i++){
-
-            ItemStack stack = list.get(i);
-            if(stack.getItem() == ItemsRegistry.VOID_JAR){
-                if(VoidJar.isActive(stack) && VoidJar.containsItem(event.getItem().getItem(), stack.getTag())){
-                    ManaCapability.getMana(event.getEntityLiving()).ifPresent(iMana -> iMana.addMana(5.0 * event.getItem().getItem().getCount()));
-                    event.getItem().getItem().setCount(0);
-                    event.setResult(Event.Result.ALLOW);
-                    return;
-                }
-            }
-        }
+        ItemStack pickingUp = event.getItem().getItem();
+        boolean voided = VoidJar.tryVoiding(player, pickingUp);
+        if (voided) event.setResult(Event.Result.ALLOW);
     }
-
 
 
     @SubscribeEvent
