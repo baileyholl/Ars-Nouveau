@@ -67,12 +67,12 @@ public class EffectExchange extends AbstractEffect {
             int aoeBuff = getBuffCount(augments, AugmentAOE.class);
             List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
             BlockRayTraceResult result = (BlockRayTraceResult) rayTraceResult;
-            double maxHardness = getHardness(augments);
             BlockState origState = world.getBlockState(result.getPos());
             Block firstBlock = null;
             for(BlockPos pos1 : posList) {
                 BlockState state = world.getBlockState(pos1);
-                if(!(state.getBlockHardness(world, pos1) <= maxHardness && state.getBlockHardness(world, pos1) >= 0) || origState.getBlock() != state.getBlock()){
+
+                if(!canBlockBeHarvested(augments, world, pos1) || origState.getBlock() != state.getBlock()){
                     continue;
                 }
 

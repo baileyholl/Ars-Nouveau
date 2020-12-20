@@ -16,6 +16,7 @@ import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -67,17 +68,12 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         return entity instanceof PlayerEntity ? (PlayerEntity) entity : FakePlayerFactory.getMinecraft(world);
     }
 
-    public float getHardness(List<AbstractAugment> augments){
-        float maxHardness = 5.0f + 25 * getAmplificationBonus(augments);
-        int buff = getAmplificationBonus(augments);
-        if(buff == -1){
-            maxHardness = 2.5f;
-        }else if(buff == -2){
-            maxHardness = 1.0f;
-        }else if(buff < -2){
-            maxHardness = 0.5f;
-        }
-        return maxHardness;
+    public int getBaseHarvestLevel(List<AbstractAugment> augments){
+        return 2 + getAmplificationBonus(augments);
+    }
+
+    public boolean canBlockBeHarvested(List<AbstractAugment> augments, World world, BlockPos pos){
+        return world.getBlockState(pos).getBlockHardness(world, pos) >= 0 && getBaseHarvestLevel(augments) >= world.getBlockState(pos).getHarvestLevel();
     }
 
     public void dealDamage(World world, LivingEntity shooter, float damage, List<AbstractAugment> augments, Entity entity, DamageSource source){

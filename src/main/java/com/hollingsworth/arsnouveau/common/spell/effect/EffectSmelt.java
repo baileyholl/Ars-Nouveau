@@ -38,8 +38,6 @@ public class EffectSmelt extends AbstractEffect {
             return;
 
 
-        float maxHardness = getHardness(augments);
-
         int aoeBuff = getBuffCount(augments, AugmentAOE.class);
         int maxItemSmelt = 3 + 4*aoeBuff;
 
@@ -48,12 +46,14 @@ public class EffectSmelt extends AbstractEffect {
         smeltItems(world, itemEntities, maxItemSmelt);
 
         for(BlockPos pos : posList) {
-            smeltBlock(world, pos, maxHardness, shooter);
+            if(!canBlockBeHarvested(augments, world, pos))
+                continue;
+            smeltBlock(world, pos, shooter);
         }
 
     }
 
-    public void smeltBlock(World world, BlockPos pos, float maxHardness, LivingEntity shooter){
+    public void smeltBlock(World world, BlockPos pos, LivingEntity shooter){
         BlockState state = world.getBlockState(pos);
         Optional<FurnaceRecipe> optional = world.getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory(new ItemStack(state.getBlock().asItem(), 1)),
                 world);
@@ -63,9 +63,6 @@ public class EffectSmelt extends AbstractEffect {
                 if(itemstack.getItem() instanceof BlockItem){
                     world.setBlockState(pos, ((BlockItem)itemstack.getItem()).getBlock().getDefaultState());
                 }else{
-                    if(!(state.getBlockHardness(world, pos) <= maxHardness && state.getBlockHardness(world, pos) >= 0)){
-                        return;
-                    }
                     BlockUtil.destroyBlockSafely(world, pos, false, shooter);
                     world.addEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(),itemstack.copy()));
                     BlockUtil.safelyUpdateState(world, pos);
