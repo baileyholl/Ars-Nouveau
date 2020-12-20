@@ -75,7 +75,7 @@ public class RuneBlock extends ModBlock{
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return Block.makeCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 0.5D, 15.0D);
+        return Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16D, 0.5D, 16D);
     }
 
     @Override

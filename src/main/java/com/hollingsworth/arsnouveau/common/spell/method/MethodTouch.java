@@ -54,7 +54,8 @@ public class MethodTouch extends AbstractCastMethod {
     @Override
     public void onCastOnEntity(ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments, SpellContext spellContext) {
         resolver.onResolveEffect(caster.getEntityWorld(), caster, new EntityRayTraceResult(target));
-        resolver.expendMana(caster);
+        if(spellContext.getType() != SpellContext.CasterType.RUNE)
+            resolver.expendMana(caster);
         Networking.sendToNearby(caster.world, caster, new PacketANEffect(PacketANEffect.EffectType.BURST, target.getPosition(), spellContext.colors));
     }
 
