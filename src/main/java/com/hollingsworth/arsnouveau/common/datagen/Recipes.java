@@ -5,11 +5,13 @@ import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.advancements.criterion.InventoryChangeTrigger;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.IItemProvider;
@@ -25,6 +27,7 @@ public class Recipes extends RecipeProvider {
 
     public static ITag.INamedTag<Item> MANA_GEM_TAG = ItemTags.makeWrapperTag("forge:gems/mana");
     public static ITag.INamedTag<Item> ARCHWOOD_LOG_TAG = ItemTags.makeWrapperTag("forge:logs/archwood");
+    public static ITag.INamedTag<Block> DECORATIVE_AN =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "an_decorative"));
 
     public static Ingredient MANA_GEM = Ingredient.fromTag(MANA_GEM_TAG);
     public static Ingredient ARCHWOOD_LOG = Ingredient.fromTag(ARCHWOOD_LOG_TAG);

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.common.datagen.Recipes;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -35,7 +36,7 @@ public class WarpScroll extends ModItem{
 
     @Override
     public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
-        if(!entity.getEntityWorld().isRemote && entity.getEntityWorld().getBlockState(entity.getPosition().down()).getBlock() == BlockRegistry.ARCANE_BRICKS){
+        if(!entity.getEntityWorld().isRemote && entity.getEntityWorld().getBlockState(entity.getPosition().down()).getBlock().isIn(Recipes.DECORATIVE_AN)){
 
             if(getPos(stack) != null
                     && getDimension(stack).equals(entity.getEntityWorld().getDimensionKey().getRegistryName().toString())

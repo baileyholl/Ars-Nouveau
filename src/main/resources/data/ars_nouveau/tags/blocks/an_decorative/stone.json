@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "ars_nouveau:ab_smooth",
+	"ars_nouveau:ab_clover",
+	"ars_nouveau:arcane_stone",
+	"ars_nouveau:ab_mosaic",
+	"ars_nouveau:ab_herring",
+	"ars_nouveau:ab_basket",
+	"ars_nouveau:ab_alternating",
+	"ars_nouveau:ab_smooth_slab"
+  ]
+}
