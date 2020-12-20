@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.common.items.VoidJar;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -37,6 +38,7 @@ public class EffectPickup extends AbstractEffect {
             if(isRealPlayer(shooter)){
                 ItemStack stack = i.getItem();
                 PlayerEntity player = (PlayerEntity) shooter;
+                VoidJar.tryVoiding(player, stack);
                 if(!player.addItemStackToInventory(stack)){
                     i.setPosition(player.getPosX(), player.getPosY(), player.getPosZ());
                 }
