@@ -82,6 +82,7 @@ public class GuiSpellBook extends BaseBook {
 
         addSpellParts(0);
         addButton(new GuiImageButton(bookRight - 70, bookBottom - 28, 0,0,46, 18, 46, 18, "textures/gui/create_button.png", this::onCreateClick));
+        addButton(new GuiImageButton(bookRight - 130, bookBottom - 28, 0,0,46, 18, 46, 18, "textures/gui/create_button.png", this::clear));
 
         spell_name = new TextFieldWidget(minecraft.fontRenderer, bookLeft + 16, bookTop + FULL_HEIGHT - 25,
                 115, 12, null, new StringTextComponent("Spell Name"));
@@ -154,7 +155,7 @@ public class GuiSpellBook extends BaseBook {
         }
         for(AbstractSpellPart s : displayedEffects){
             AbstractEffect spell = (AbstractEffect)s;
-            if(!Config.isSpellEnabled(s.tag))
+            if(!Config.isSpellEnabled(s.tag) || spell.getTier().ordinal() > max_spell_tier)
                 continue;
             GlyphButton cell;
             int xOffset = 20 * (numEffect % 6 );
@@ -238,6 +239,14 @@ public class GuiSpellBook extends BaseBook {
         }
     }
 
+    public void clear(Button button){
+        for (int i = 0; i < craftingCells.size(); i++) {
+            CraftingButton slot = craftingCells.get(i);
+            slot.spellTag = "";
+            slot.resourceIcon = "";
+        }
+    }
+
     public void onCreateClick(Button button){
         List<String> ids = new ArrayList<>();
         for(CraftingButton slot : craftingCells){
@@ -256,6 +265,7 @@ public class GuiSpellBook extends BaseBook {
         minecraft.fontRenderer.drawString(stack,"Effect", 140, 10,  0);
         minecraft.fontRenderer.drawString(stack,"Augment", 15, 60,  0);
         minecraft.fontRenderer.drawString(stack,"Create", 208, 157,  0);
+        minecraft.fontRenderer.drawString(stack,"Clear", 153, 157,  0);
     }
 
     /**

@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.gui;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.client.IDisplayMana;
 import com.hollingsworth.arsnouveau.api.mana.IMana;
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
@@ -32,7 +33,7 @@ public class GuiManaHUD extends AbstractGui {
 
         Minecraft.getInstance().textureManager.bindTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_border.png"));
         blit(ms,offsetLeft, height - 18, 0, 0, 108, 18, 256, 256);
-        int manaOffset = (int) (((minecraft.world.getGameTime() + pt) / 3 % (33))) * 6;
+        int manaOffset = (int) (((ClientInfo.ticksInGame + pt) / 3 % (33))) * 6;
 
         // 96
         Minecraft.getInstance().textureManager.bindTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_mana.png"));
