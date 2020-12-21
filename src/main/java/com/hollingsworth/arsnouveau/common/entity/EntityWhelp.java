@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.block.tile.SummoningCrytalTile;
+import com.hollingsworth.arsnouveau.common.block.tile.SummoningCrystalTile;
 import com.hollingsworth.arsnouveau.common.entity.goal.whelp.PerformTaskGoal;
 import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
@@ -137,7 +137,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         ticksSinceLastSpell += 1;
 
         if(world.getGameTime() % 20 == 0) {
-            if (!(world.getTileEntity(crystalPos) instanceof SummoningCrytalTile)) {
+            if (!(world.getTileEntity(crystalPos) instanceof SummoningCrystalTile)) {
                 if (!world.isRemote) {
                     this.attackEntityFrom(DamageSource.causePlayerDamage(FakePlayerFactory.getMinecraft((ServerWorld) world)), 99);
                 }
@@ -176,14 +176,14 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     }
 
     public @Nullable BlockPos getTaskLoc(){
-        return world.getTileEntity(crystalPos) instanceof SummoningCrytalTile ? ((SummoningCrytalTile) world.getTileEntity(crystalPos)).getNextTaskLoc(spellRecipe, this) : null;
+        return world.getTileEntity(crystalPos) instanceof SummoningCrystalTile ? ((SummoningCrystalTile) world.getTileEntity(crystalPos)).getNextTaskLoc(spellRecipe, this) : null;
     }
 
     public void castSpell(BlockPos target){
-        if(world.isRemote || !(world.getTileEntity(crystalPos) instanceof SummoningCrytalTile))
+        if(world.isRemote || !(world.getTileEntity(crystalPos) instanceof SummoningCrystalTile))
             return;
 
-        if(((SummoningCrytalTile) world.getTileEntity(crystalPos)).removeManaAround(spellRecipe)){
+        if(((SummoningCrystalTile) world.getTileEntity(crystalPos)).removeManaAround(spellRecipe)){
             EntitySpellResolver resolver = new EntitySpellResolver(this.spellRecipe, new SpellContext(spellRecipe, this));
             resolver.onCastOnBlock(new BlockRayTraceResult(new Vector3d(target.getX(), target.getY(), target.getZ()), Direction.UP,target, false ), this);
         }
@@ -191,9 +191,9 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     }
 
     public boolean enoughManaForTask(){
-        if(!(world.getTileEntity(crystalPos) instanceof SummoningCrytalTile || spellRecipe == null || spellRecipe.size() == 0))
+        if(!(world.getTileEntity(crystalPos) instanceof SummoningCrystalTile || spellRecipe == null || spellRecipe.size() == 0))
             return false;
-        return ((SummoningCrytalTile) world.getTileEntity(crystalPos)).enoughMana(spellRecipe);
+        return ((SummoningCrystalTile) world.getTileEntity(crystalPos)).enoughMana(spellRecipe);
     }
 
     protected void updateAITasks() {
@@ -212,7 +212,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
 
     @Override
     public ItemStack onPickup(ItemStack stack) {
-        SummoningCrytalTile tile = world.getTileEntity(crystalPos) instanceof SummoningCrytalTile ? (SummoningCrytalTile) world.getTileEntity(crystalPos) : null;
+        SummoningCrystalTile tile = world.getTileEntity(crystalPos) instanceof SummoningCrystalTile ? (SummoningCrystalTile) world.getTileEntity(crystalPos) : null;
         return tile == null ? stack : tile.insertItem(stack);
     }
 
@@ -221,7 +221,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         ItemStack heldStack = getHeldStack();
         if(heldStack == null )
             return  ItemStack.EMPTY;
-        SummoningCrytalTile tile = world.getTileEntity(crystalPos) instanceof SummoningCrytalTile ? (SummoningCrytalTile) world.getTileEntity(crystalPos) : null;
+        SummoningCrystalTile tile = world.getTileEntity(crystalPos) instanceof SummoningCrystalTile ? (SummoningCrystalTile) world.getTileEntity(crystalPos) : null;
         return tile == null ? heldStack : tile.getItem(heldStack.getItem());
     }
 
@@ -332,8 +332,8 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
 
     @Override
     public ItemStack getHeldItem() {
-        if(crystalPos != null && world.getTileEntity(crystalPos) instanceof SummoningCrytalTile){
-            SummoningCrytalTile tile = (SummoningCrytalTile) world.getTileEntity(crystalPos);
+        if(crystalPos != null && world.getTileEntity(crystalPos) instanceof SummoningCrystalTile){
+            SummoningCrystalTile tile = (SummoningCrystalTile) world.getTileEntity(crystalPos);
             for(IInventory inv : tile.inventories()){
                 for(int i = 0; i < inv.getSizeInventory(); i++){
                     if(inv.getStackInSlot(i).isItemEqual(this.dataManager.get(HELD_ITEM)))
