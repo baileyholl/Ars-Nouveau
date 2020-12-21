@@ -27,6 +27,9 @@ public class Config {
 
     public static ForgeConfigSpec.IntValue GLYPH_MAX_BONUS;
     public static ForgeConfigSpec.DoubleValue GLYPH_REGEN_BONUS;
+    public static ForgeConfigSpec.DoubleValue TREE_SPAWN_RATE;
+
+
     public static ForgeConfigSpec.IntValue TIER_MAX_BONUS;
     public static ForgeConfigSpec.IntValue MANA_BOOST_BONUS;
     public static ForgeConfigSpec.IntValue MANA_REGEN_ENCHANT_BONUS;
@@ -38,6 +41,7 @@ public class Config {
     public static ForgeConfigSpec.IntValue SYLPH_WEIGHT;
 
     private static Map<String, ForgeConfigSpec.BooleanValue> enabledSpells = new HashMap<>();
+    private static Map<String, ForgeConfigSpec.BooleanValue> startingSpells = new HashMap<>();
     private static Map<String, ForgeConfigSpec.IntValue> spellCost = new HashMap<>();
 
     public static boolean isSpellEnabled(String tag){
@@ -81,16 +85,45 @@ public class Config {
             spellCost.put(spellPart.tag + "_cost", SERVER_BUILDER.comment(spellPart.name + " cost").defineInRange(spellPart.tag+ "_cost", spellPart.getManaCost(), Integer.MIN_VALUE, Integer.MAX_VALUE));
         }
         SERVER_BUILDER.pop();
+        SERVER_BUILDER.comment("Starting Spells").push("Starter Spells");
+        for(AbstractSpellPart spellPart : ArsNouveauAPI.getInstance().getDefaultStartingSpells()){
+            startingSpells.put(spellPart.tag + "_starter", SERVER_BUILDER.define(spellPart.tag+ "_starter", true));
+        }
+        SERVER_BUILDER.pop();
         SERVER_CONFIG = SERVER_BUILDER.build();
     }
+
+    public static boolean isStarterEnabled(AbstractSpellPart e){
+        return startingSpells.entrySet().stream().noneMatch(entry -> entry.getValue().get() == false && entry.getKey().replace("_starter", "").equals(e.tag));
+    }
+
+//    public static List<AbstractSpellPart> getStarterSpells(){
+//        return startingSpells.entrySet().stream()
+//                .filter(entry -> entry.getValue().get())
+//                .map(entry -> ArsNouveauAPI.getInstance().getSpell_map().get(entry.getKey().replace("_starter", "")))
+//                .collect(Collectors.toList());
+//    }
 
 
     @SubscribeEvent
     public static void onLoad(final ModConfig.Loading configEvent) {
-
+//        startingSpells.entrySet().forEach(entry -> {
+//            System.out.println(entry);
+//            if(!entry.getValue().get()){
+//                ArsNouveauAPI.getInstance().getDefaultStartingSpells().removeIf(a -> a.tag.equals(entry.getKey().replace("_starter", "")));
+//            }
+//        });
+//        ArsNouveauAPI.getInstance().getDefaultStartingSpells() = ArsNouveauAPI.getInstance().getDefaultStartingSpells().stream().filter(a -> startingSpells.get(a.tag));
     }
 
     @SubscribeEvent
     public static void onReload(final ModConfig.Reloading configEvent) {
+//        startingSpells.entrySet().forEach(entry -> {
+//            System.out.println(entry);
+//            if(!entry.getValue().get()){
+//                System.out.println(entry.getKey());
+//                ArsNouveauAPI.getInstance().getDefaultStartingSpells().removeIf(a -> a.tag.equals(entry.getKey().replace("_starter", "")));
+//            }
+//        });
     }
 }

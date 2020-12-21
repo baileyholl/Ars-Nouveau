@@ -166,6 +166,10 @@ public class APIRegistry {
         registerSpell(ModConfig.EffectColdSnapID, new EffectColdSnap());
         registerSpell(ModConfig.EffectConjureWaterID, new EffectConjureWater());
         registerSpell(ModConfig.EffectGravityID, new EffectGravity());
+        registerStartingSpells();
+    }
+
+    public static void registerStartingSpells(){
         addStartingSpell(ModConfig.MethodProjectileID);
         addStartingSpell(ModConfig.MethodTouchID);
         addStartingSpell(ModConfig.MethodSelfID);
