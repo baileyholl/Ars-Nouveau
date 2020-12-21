@@ -32,8 +32,8 @@ public class StoreItemGoal extends CheckStuckGoal {
     @Override
     public void startExecuting() {
         super.startExecuting();
-        if (entityCarbuncle.toPos != null && !entityCarbuncle.getHeldStack().isEmpty()) {
-            Path path = entityCarbuncle.getNavigator().getPathToPos(entityCarbuncle.toPos, 0);
+        if (entityCarbuncle.getToPos() != null && !entityCarbuncle.getHeldStack().isEmpty()) {
+            Path path = entityCarbuncle.getNavigator().getPathToPos(entityCarbuncle.getToPos(), 0);
             entityCarbuncle.getNavigator().setPath(path, 1.2D);
             //entityCarbuncle.getNavigator().tryMoveToXYZ(entityCarbuncle.toPos.getX(), entityCarbuncle.toPos.getY(), entityCarbuncle.toPos.getZ(), 1.2D);
         }
@@ -53,18 +53,18 @@ public class StoreItemGoal extends CheckStuckGoal {
 
     @Override
     public void tick() {
-        if (!entityCarbuncle.getHeldStack().isEmpty() && entityCarbuncle.toPos != null && BlockUtil.distanceFrom(entityCarbuncle.getPosition(), entityCarbuncle.toPos) < 1.5D) {
+        if (!entityCarbuncle.getHeldStack().isEmpty() && entityCarbuncle.getToPos() != null && BlockUtil.distanceFrom(entityCarbuncle.getPosition(), entityCarbuncle.getToPos()) < 1.5D) {
             World world = entityCarbuncle.world;
-            if (world.getTileEntity(entityCarbuncle.toPos) instanceof IInventory) {
+            if (world.getTileEntity(entityCarbuncle.getToPos()) instanceof IInventory) {
                 ItemStack oldStack = new ItemStack(entityCarbuncle.getHeldStack().getItem(), entityCarbuncle.getHeldStack().getCount());
 
-                IInventory i = (IInventory) world.getTileEntity(entityCarbuncle.toPos);
+                IInventory i = (IInventory) world.getTileEntity(entityCarbuncle.getToPos());
                 ItemStack left = HopperTileEntity.putStackInInventoryAllSlots(null, i, entityCarbuncle.getHeldStack(), null);
                 if (left.equals(oldStack)) {
                     return;
                 }
                 if (world instanceof ServerWorld) {
-                    OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), entityCarbuncle.toPos, 20);
+                    OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), entityCarbuncle.getToPos(), 20);
                     event.open();
                     EventQueue.getInstance().addEvent(event);
                 }
@@ -77,8 +77,8 @@ public class StoreItemGoal extends CheckStuckGoal {
             }
         }
 
-        if (entityCarbuncle.toPos != null && !entityCarbuncle.getHeldStack().isEmpty()) {
-            setPath(entityCarbuncle.toPos.getX(), entityCarbuncle.toPos.getY(), entityCarbuncle.toPos.getZ(), 1.2D);
+        if (entityCarbuncle.getToPos() != null && !entityCarbuncle.getHeldStack().isEmpty()) {
+            setPath(entityCarbuncle.getToPos().getX(), entityCarbuncle.getToPos().getY(), entityCarbuncle.getToPos().getZ(), 1.2D);
             entityCarbuncle.getDataManager().set(EntityCarbuncle.HOP, true);
             super.tick();
         }

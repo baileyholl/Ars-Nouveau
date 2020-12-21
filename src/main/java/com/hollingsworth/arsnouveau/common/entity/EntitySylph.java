@@ -96,9 +96,9 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
 
     @Override
     public ActionResultType applyPlayerInteraction(PlayerEntity player, Vector3d vec, Hand hand) {
-        if(hand != Hand.MAIN_HAND || player.getEntityWorld().isRemote)
+        if(hand != Hand.MAIN_HAND || player.getEntityWorld().isRemote || !this.dataManager.get(TAMED))
             return ActionResultType.SUCCESS;
-
+        
         ItemStack stack = player.getHeldItem(hand);
         if(stack.isEmpty()) {
             int moodScore = dataManager.get(MOOD_SCORE);
