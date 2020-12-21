@@ -157,7 +157,7 @@ public class APIRegistry {
         registerSpell(ModConfig.EffectDelayID, new EffectDelay());
         registerSpell(ModConfig.EffectRedstoneID, new EffectRedstone());
         registerSpell(ModConfig.EffectIntangibleID, new EffectIntangible());
-        registerSpell(ModConfig.EffectInvisibilityID, new EffectInvisiblity());
+        registerSpell(ModConfig.EffectInvisibilityID, new EffectInvisibility());
         registerSpell(ModConfig.AugmentDurationDown, new AugmentDurationDown());
         registerSpell(ModConfig.EffectWitherID, new EffectWither());
         registerSpell(ModConfig.EffectExchangeID, new EffectExchange());
