@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
+import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ArsNouveauAPI {
 
@@ -53,15 +55,15 @@ public class ArsNouveauAPI {
      */
     private List<AbstractSpellPart> startingSpells;
 
-    public List<AbstractSpellPart> getStartingSpells(){
-        return startingSpells;
+    public List<AbstractSpellPart> getDefaultStartingSpells(){
+        return startingSpells.stream().filter(Config::isStarterEnabled).collect(Collectors.toList());
     }
 
     public boolean addStartingSpell(String tag){
         if(ArsNouveauAPI.getInstance().getSpell_map().containsKey(tag)){
             return startingSpells.add(ArsNouveauAPI.getInstance().getSpell_map().get(tag));
         }else{
-            throw new RuntimeException("Attempted to add a starting spell for an unregistered spell. Spells must be added to the Spell Map first!");
+            throw new IllegalStateException("Attempted to add a starting spell for an unregistered spell. Spells must be added to the Spell Map first!");
         }
     }
 

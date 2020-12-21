@@ -45,6 +45,7 @@ public class ReactiveEnchantmentRecipe implements IEnchantingRecipe{
                 new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentAmplifyID)),
                 new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentAmplifyID))};
 
+
         if(EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT, reagent) != 0)
             return false;
         if(!EnchantingApparatusRecipe.doItemsMatch(pedestalItems, toIngredients(items)))
@@ -102,6 +103,9 @@ public class ReactiveEnchantmentRecipe implements IEnchantingRecipe{
 
     @Override
     public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile) {
+        if(reagent == null)
+            return false;
+
         if(isLevelOne(pedestalItems, reagent) && ManaUtil.hasManaNearby(enchantingApparatusTile.getPos(), enchantingApparatusTile.getWorld(), 10, manaCost())){
             return true;
         }else if(isLevelTwo(pedestalItems, reagent) &&

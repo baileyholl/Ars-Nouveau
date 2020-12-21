@@ -43,6 +43,9 @@ public class EnchantingApparatusBlock extends ModBlock{
         if(world.isRemote || handIn != Hand.MAIN_HAND)
             return ActionResultType.SUCCESS;
         EnchantingApparatusTile tile = (EnchantingApparatusTile) world.getTileEntity(pos);
+        if(tile.isCrafting)
+            return ActionResultType.SUCCESS;
+
         if(!player.getHeldItemOffhand().isEmpty() && tile.catalystItem != null && !tile.catalystItem.isEmpty()){
             tile.attemptCraft();
             return ActionResultType.SUCCESS;
@@ -58,7 +61,7 @@ public class EnchantingApparatusBlock extends ModBlock{
             tile.attemptCraft();
             return ActionResultType.SUCCESS;
         }
-        if (tile.catalystItem != null && player.getHeldItem(handIn).isEmpty()) {
+        if (tile.catalystItem != null && !tile.catalystItem.isEmpty() && player.getHeldItem(handIn).isEmpty()) {
             ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.catalystItem);
             world.addEntity(item);
             tile.catalystItem = null;
