@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.common.block.tile.SummoningCrytalTile;
+
+import com.hollingsworth.arsnouveau.common.block.tile.SummoningCrystalTile;
 import com.hollingsworth.arsnouveau.common.entity.EntitySylph;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import net.minecraft.item.ItemUseContext;
@@ -21,11 +22,11 @@ public class SylphCharm extends ModItem{
     public ActionResultType onItemUse(ItemUseContext context) {
         World world = context.getWorld();
         BlockPos blockpos = context.getPos();
-        if(world.getTileEntity(blockpos) instanceof SummoningCrytalTile){
+        if(world.getTileEntity(blockpos) instanceof SummoningCrystalTile){
             EntitySylph sylph = new EntitySylph(world, true, blockpos);
             sylph.setPosition(blockpos.getX(), blockpos.getY() + 1.0, blockpos.getZ());
             world.addEntity(sylph);
-            ((SummoningCrytalTile) world.getTileEntity(blockpos)).summon(sylph);
+            ((SummoningCrystalTile) world.getTileEntity(blockpos)).summon(sylph);
             context.getItem().shrink(1);
         }
         return ActionResultType.SUCCESS;

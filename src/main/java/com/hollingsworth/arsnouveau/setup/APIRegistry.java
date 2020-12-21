@@ -58,7 +58,7 @@ public class APIRegistry {
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
 
         registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.carbuncleCharm, ItemsRegistry.carbuncleShard, new Item[]{
-                ItemsRegistry.manaGem,ItemsRegistry.manaGem,Items.DIAMOND, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET,
+                ItemsRegistry.manaGem,ItemsRegistry.manaGem,ItemsRegistry.manaGem, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET,
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
 
         registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.amuletOfManaBoost, ItemsRegistry.dullTrinket, new Item[]{
@@ -70,7 +70,7 @@ public class APIRegistry {
         }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
 
         registerApparatusRecipe(new EnchantingApparatusRecipe(BlockRegistry.ARCANE_RELAY_SPLITTER.asItem(), BlockRegistry.ARCANE_RELAY.asItem(), new Item[]{
-                BlockRegistry.MANA_JAR.asItem(),BlockRegistry.MANA_JAR.asItem(), BlockRegistry.MANA_JAR.asItem(), Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.DIAMOND
+                Items.QUARTZ,Items.QUARTZ, Items.QUARTZ, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.QUARTZ
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
 
         registerApparatusRecipe(new ReactiveEnchantmentRecipe());
@@ -81,9 +81,9 @@ public class APIRegistry {
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
 
         registerApparatusRecipe(new EnchantingApparatusRecipe(BlockRegistry.SPELL_TURRET.asItem(),Items.DISPENSER, new Item[]{
-                Items.BLAZE_ROD, Items.BLAZE_ROD, Items.GOLD_BLOCK,
-                ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.EffectRedstoneID),ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.EffectRedstoneID), ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.EffectRedstoneID),
-                Items.DIAMOND, Items.REDSTONE_BLOCK
+                Items.BLAZE_ROD, Items.GOLD_INGOT, Items.GOLD_INGOT,Items.GOLD_INGOT,
+               ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.EffectRedstoneID),
+                Items.QUARTZ_BLOCK, Items.REDSTONE_BLOCK, ItemsRegistry.spellParchment
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
 
         registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.VOID_JAR, Items.GLASS_BOTTLE, new Item[]{

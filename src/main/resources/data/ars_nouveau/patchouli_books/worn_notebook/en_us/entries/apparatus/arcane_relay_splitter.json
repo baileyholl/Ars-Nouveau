@@ -10,14 +10,14 @@
     {
       "type": "apparatus_recipe",
       "reagent": "ars_nouveau:arcane_relay",
-      "item1": "ars_nouveau:mana_jar",
-      "item2": "ars_nouveau:mana_jar",
-      "item3": "ars_nouveau:mana_jar",
+      "item1": "minecraft:quartz",
+      "item2": "minecraft:quartz",
+      "item3": "minecraft:quartz",
       "item4": "minecraft:gold_ingot",
       "item5": "minecraft:gold_ingot",
       "item6": "minecraft:gold_ingot",
       "item7": "minecraft:gold_ingot",
-      "item8": "minecraft:diamond"
+      "item8": "minecraft:quartz"
     }
   ]
 }
