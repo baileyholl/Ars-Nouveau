@@ -162,6 +162,10 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.FLOURISHING_WOOD) public static RotatedPillarBlock FLOURISHING_WOOD;
     @ObjectHolder(LibBlockNames.ARCHWOOD_PLANK) public static ModBlock ARCHWOOD_PLANK;
 
+    @ObjectHolder(LibBlockNames.RITUAL_CIRCLE) public static ModBlock RITUAL_BLOCK;
+    @ObjectHolder(LibBlockNames.RITUAL_CIRCLE) public static TileEntityType<RitualTile> RITUAL_TILE;
+
+
     @ObjectHolder("an_stateprovider")
     public static BlockStateProviderType stateProviderType;
 //    @ObjectHolder(LibBlockNames.AB_SMOOTH) public static ModBlock AB_SMOOTH;
@@ -230,6 +234,7 @@ public class BlockRegistry {
             registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.FLOURISHING_WOOD));
             registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.CASCADING_WOOD));
             registry.register(new ModBlock(LOG_PROP, LibBlockNames.ARCHWOOD_PLANK));
+            registry.register(new ModBlock(LibBlockNames.RITUAL_CIRCLE));
         }
 
         public static MagicLeaves createLeavesBlock() {

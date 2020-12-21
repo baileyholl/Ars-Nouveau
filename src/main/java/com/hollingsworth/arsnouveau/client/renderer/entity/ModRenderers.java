@@ -26,5 +26,8 @@ public class ModRenderers {
 
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_FLYING_ITEM,
                 RenderFlyingItem::new);
+
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_RITUAL,
+                renderManager -> new RenderRitualProjectile(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
     }
 }
