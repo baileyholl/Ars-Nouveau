@@ -58,12 +58,15 @@ public class VolcanicTile extends AbstractManaTile implements IAnimatable {
             int numSource = (int) BlockPos.getAllInBox(this.getPos().down().add(1, 0, 1), this.getPos().down().add(-1, 0, -1))
                     .filter(b -> world.getFluidState(b).getFluid() instanceof LavaFluid).map(b -> world.getFluidState(b))
                     .filter(FluidState::isSource).count();
-            this.addMana(numSource);
-            progress += 1 + numSource/2;
+
+            if(numSource > 0){
+                this.addMana(numSource);
+                progress += 1 + numSource/2;
+            }
         }
 
-        if(world.getGameTime() % 100 == 0){
-            BlockPos jarPos = ManaUtil.canGiveMana(pos, world, 5);
+        if(world.getGameTime() % 100 == 0 && getCurrentMana() > 0){
+            BlockPos jarPos = ManaUtil.canGiveManaClosest(pos, world, 5);
             if(jarPos != null){
                 transferMana(this, (IManaTile) world.getTileEntity(jarPos));
                 ParticleUtil.spawnFollowProjectile(world, this.pos, jarPos);

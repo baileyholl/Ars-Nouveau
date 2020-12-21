@@ -40,6 +40,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.Tags;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -68,6 +69,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.ITEMSTACK);
     public static final DataParameter<Boolean> TAMED = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.BOOLEAN);
     public static final DataParameter<Boolean> HOP = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<String> COLOR = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.STRING);
     public int backOff; // Used to stop inventory store/take spam when chests are full or empty.
     public int tamingTime;
     public boolean isStuck;
@@ -341,6 +343,24 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
         ItemStack stack = player.getHeldItem(hand);
 
+        if(player.getHeldItemMainhand().getItem().isIn(Tags.Items.DYES_GREEN) && !this.dataManager.get(COLOR).equals(COLORS.GREEN.name())){
+            this.dataManager.set(COLOR, COLORS.GREEN.name());
+            player.getHeldItemMainhand().shrink(1);
+            return ActionResultType.SUCCESS;
+        }
+
+        if(player.getHeldItemMainhand().getItem().isIn(Tags.Items.DYES_PURPLE) && !this.dataManager.get(COLOR).equals(COLORS.PURPLE.name())){
+            this.dataManager.set(COLOR, COLORS.PURPLE.name());
+            player.getHeldItemMainhand().shrink(1);
+            return ActionResultType.SUCCESS;
+        }
+
+        if(player.getHeldItemMainhand().getItem().isIn(Tags.Items.DYES_ORANGE) && !this.dataManager.get(COLOR).equals(COLORS.ORANGE.name())){
+            this.dataManager.set(COLOR, COLORS.ORANGE.name());
+            player.getHeldItemMainhand().shrink(1);
+            return ActionResultType.SUCCESS;
+        }
+
         if(player.getHeldItemMainhand().isEmpty() && this.isTamed()){
             StringBuilder status = new StringBuilder();
             if(whitelist && allowedItems != null){
@@ -398,6 +418,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         this.dataManager.register(HOP, false);
         this.dataManager.register(TO_POS, BlockPos.ZERO);
         this.dataManager.register(FROM_POS, BlockPos.ZERO);
+        this.dataManager.register(COLOR, COLORS.ORANGE.name());
     }
 
     @Override
@@ -439,6 +460,9 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         allowedItems = NBTUtil.readItems(tag, "allowed_");
         ignoreItems = NBTUtil.readItems(tag, "ignored_");
         isStuck = tag.getBoolean("stuck");
+
+        if(tag.contains("color"))
+            this.dataManager.set(COLOR, tag.getString("color"));
     }
 
     public void setHeldStack(ItemStack stack){
@@ -489,6 +513,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         if(ignoreItems != null && !ignoreItems.isEmpty())
             NBTUtil.writeItems(tag,  "ignored_", ignoreItems);
         tag.putBoolean("stuck", isStuck);
+        tag.putString("color", this.dataManager.get(COLOR));
     }
 
     public void removeGoals(){
@@ -524,5 +549,11 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     public void setToPos(BlockPos toPos) {
         this.toPos = toPos;
         this.dataManager.set(TO_POS, toPos == null ? BlockPos.ZERO : toPos);
+    }
+
+    public enum COLORS{
+        ORANGE,
+        PURPLE,
+        GREEN
     }
 }

@@ -9,7 +9,9 @@ import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 public class CarbuncleRenderer extends GeoEntityRenderer<EntityCarbuncle> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_orange.png");
+    private static final ResourceLocation ORANGE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_orange.png");
+    private static final ResourceLocation PURPLE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_purple.png");
+    private static final ResourceLocation GREEN = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_green.png");
     private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_wild_orange.png");
 
     public CarbuncleRenderer(EntityRendererManager manager) {
@@ -28,8 +30,18 @@ public class CarbuncleRenderer extends GeoEntityRenderer<EntityCarbuncle> {
     }
 
 
+    public ResourceLocation getColor(EntityCarbuncle e){
+        String color = e.getDataManager().get(EntityCarbuncle.COLOR);
+        if(color.equals(EntityCarbuncle.COLORS.PURPLE.name()))
+            return PURPLE;
+        if(color.equals(EntityCarbuncle.COLORS.GREEN.name()))
+            return GREEN;
+
+        return ORANGE;
+    }
+
     @Override
     public ResourceLocation getEntityTexture(EntityCarbuncle entity) {
-        return entity.isTamed() ? TEXTURE : WILD_TEXTURE;
+        return entity.isTamed() ? getColor(entity) : WILD_TEXTURE;
     }
 }
