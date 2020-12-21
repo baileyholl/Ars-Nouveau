@@ -73,12 +73,14 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     AnimationFactory manager = new AnimationFactory(this);
     public EntityCarbuncle(EntityType<EntityCarbuncle> entityCarbuncleEntityType, World world) {
         super(entityCarbuncleEntityType, world);
+        stepHeight = 1.2f;
         addGoalsAfterConstructor();
     }
 
     public EntityCarbuncle(World world, boolean tamed){
         super(ModEntities.ENTITY_CARBUNCLE_TYPE,world);
         this.setTamed(tamed);
+        stepHeight = 1.2f;
         addGoalsAfterConstructor();
     }
     @Override
@@ -199,6 +201,14 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         }
     }
 
+
+//    @Override
+//    public float getBlockPathWeight(BlockPos pos, IWorldReader worldIn) {
+//        worldIn.getBlockState(pos).getShape(worldIn, pos).
+//
+//        return super.getBlockPathWeight(pos, worldIn);
+//    }
+
     @Override
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, PlayerEntity playerEntity) {
         if(storedPos == null)
@@ -237,7 +247,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
                 .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.2d);
     }
 
-
     @Override
     protected void updateEquipmentIfNeeded(ItemEntity itemEntity) {
         if(this.getHeldStack().isEmpty() && TakeItemGoal.isValidItem(this, itemEntity.getItem())){
@@ -275,11 +284,21 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         return null;
     }
 
+    @Override
+    protected float getWaterSlowDown() {
+        return 0.875f;
+    }
+
+    @Override
+    protected float getJumpFactor() {
+        return super.getJumpFactor();
+    }
+
     //MOJANG MAKES THIS SO CURSED WHAT THE HECK
     public List<PrioritizedGoal> getTamedGoals(){
         List<PrioritizedGoal> list = new ArrayList<>();
         list.add(new PrioritizedGoal(1, new GetUnstuckGoal(this, () -> this.isStuck, stuck ->{this.isStuck = stuck; return null;})));
-        list.add(new PrioritizedGoal(2, new FindItem(this)));
+        list.add(new PrioritizedGoal(1, new FindItem(this)));
         list.add(new PrioritizedGoal(2, new ForageManaBerries(this)));
         list.add(new PrioritizedGoal(3, new StoreItemGoal(this)));
         list.add(new PrioritizedGoal(3, new TakeItemGoal(this)));
@@ -287,7 +306,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         list.add(new PrioritizedGoal(5, new LookAtGoal(this, MobEntity.class, 8.0F)));
         list.add(new PrioritizedGoal(0, new SwimGoal(this)));
         // Roam back in case we have no item and are far from home.
-        list.add(new PrioritizedGoal(1, new GoBackHomeGoal(this, this::getHome, 25, ()->(this.getHeldStack() == null || this.getHeldStack().isEmpty()))));
+        list.add(new PrioritizedGoal(2, new GoBackHomeGoal(this, this::getHome, 25, ()->(this.getHeldStack() == null || this.getHeldStack().isEmpty()))));
         return list;
     }
 

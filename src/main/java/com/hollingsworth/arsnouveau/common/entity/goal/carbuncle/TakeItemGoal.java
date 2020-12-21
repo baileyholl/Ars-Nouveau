@@ -17,7 +17,7 @@ import java.util.EnumSet;
 public class TakeItemGoal extends CheckStuckGoal {
     EntityCarbuncle carbuncle;
     public TakeItemGoal(EntityCarbuncle carbuncle){
-        super(carbuncle::getPosition, 1, carbuncle::setStuck);
+        super(carbuncle::getPosition, 3, carbuncle::setStuck);
         this.setMutexFlags(EnumSet.of(Flag.MOVE));
         this.carbuncle = carbuncle;
     }
