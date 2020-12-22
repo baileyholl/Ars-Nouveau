@@ -23,7 +23,7 @@ public class DefaultTableProvider extends LootTableProvider {
     public DefaultTableProvider(DataGenerator dataGeneratorIn) {
         super(dataGeneratorIn);
     }
-
+    private static final float[] DEFAULT_SAPLING_DROP_RATES = new float[]{0.05F, 0.0625F, 0.083333336F, 0.1F};
     public static class BlockLootTable extends BlockLootTables {
         public List<Block> list = new ArrayList<>();
         @Override
@@ -42,6 +42,30 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.AB_CLOVER);
             registerDropSelf(BlockRegistry.AB_SMOOTH_SLAB);
             registerDropSelf(BlockRegistry.AB_SMOOTH);
+
+            registerDropSelf(BlockRegistry.BLAZING_LOG);
+            registerDropSelf(BlockRegistry.VEXING_LOG);
+            registerDropSelf(BlockRegistry.CASCADING_LOG);
+            registerDropSelf(BlockRegistry.FLOURISHING_LOG);
+
+            registerDropSelf(BlockRegistry.BLAZING_SAPLING);
+            registerDropSelf(BlockRegistry.VEXING_SAPLING);
+            registerDropSelf(BlockRegistry.CASCADING_SAPLING);
+            registerDropSelf(BlockRegistry.FLOURISHING_SAPLING);
+            registerDropSelf(BlockRegistry.ARCHWOOD_PLANK);
+
+            registerLeavesAndSticks(BlockRegistry.BLAZING_LEAVES, BlockRegistry.BLAZING_SAPLING);
+            registerLeavesAndSticks(BlockRegistry.CASCADING_LEAVE, BlockRegistry.CASCADING_SAPLING);
+            registerLeavesAndSticks(BlockRegistry.FLOURISHING_LEAVES, BlockRegistry.FLOURISHING_SAPLING);
+            registerLeavesAndSticks(BlockRegistry.VEXING_LEAVES, BlockRegistry.VEXING_SAPLING);
+
+        }
+
+        public void registerLeavesAndSticks(Block leaves, Block sapling){
+            list.add(leaves);
+            this.registerLootTable(leaves, (l_state) -> {
+                return droppingWithChancesAndSticks(l_state, sapling, DEFAULT_SAPLING_DROP_RATES);
+            });
         }
 
         public void registerDropSelf(Block block){

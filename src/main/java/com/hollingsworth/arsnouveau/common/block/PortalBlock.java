@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.google.common.cache.LoadingCache;
 import com.hollingsworth.arsnouveau.common.block.tile.PortalTile;
+import com.hollingsworth.arsnouveau.common.datagen.Recipes;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.Block;
@@ -13,7 +14,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.Items;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
@@ -253,7 +253,7 @@ public class PortalBlock extends ModBlock{
         }
 
         public boolean isPortalFrame(IWorld world, BlockPos pos){
-            return world.getBlockState(pos).getBlock() == BlockRegistry.ARCANE_BRICKS;
+            return world.getBlockState(pos).getBlock().isIn(Recipes.DECORATIVE_AN);
         }
 
         public int getHeight() {

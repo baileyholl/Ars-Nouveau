@@ -16,8 +16,9 @@
       "item4": "minecraft:brewing_stand"
     },{
 	 "type": "entity",
+	 "offset":-0.25,
       "entity": "ars_nouveau:wixie",
-	  "text":"ars_nouveau.page2.whelp_charm"
+	  "text":"ars_nouveau.page2.wixie_charm"
 	},
 	{
       "type": "text",

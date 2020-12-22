@@ -1,11 +1,11 @@
 {
-    "name": "Mana Berry Bush",
+    "name": "Source Berry Bush",
     "icon": "ars_nouveau:mana_berry",
     "category": "resources",
     "pages": [
         {
             "type": "text",
-            "text": "A Mana Berry Bush can be found in Taiga biomes, and produces Mana Berries. A Mana Berry can be used to craft a Potion of Mana Regeneration or consumed as food. Carbuncles will automatically harvest fully grown Mana Berry Bushes, making them useful for early automation of the Mana Condenser."
+            "text": "A Source Berry Bush can be found in Taiga biomes, and produces Source Berries. A Source Berry can be used to craft a Potion of Mana Regeneration or consumed as food. Carbuncles will automatically harvest fully grown Source Berry Bushes, making them useful for early automation of the Mana Condenser."
         },
 		{
             "type": "relations",

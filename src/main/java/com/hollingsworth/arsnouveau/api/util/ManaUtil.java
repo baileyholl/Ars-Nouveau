@@ -25,6 +25,7 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ManaUtil {
@@ -180,5 +181,11 @@ public class ManaUtil {
             }
         });
         return  loc[0];
+    }
+
+    @Nullable
+    public static BlockPos canGiveManaClosest(BlockPos pos, World world, int range){
+        Optional<BlockPos> loc = BlockPos.getClosestMatchingPosition(pos, range, range, (b) ->  world.getTileEntity(b) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(b)).canAcceptMana());
+        return loc.orElse(null);
     }
 }

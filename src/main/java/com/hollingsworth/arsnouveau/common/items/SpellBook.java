@@ -77,7 +77,7 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
             if(stack.getItem() == ItemsRegistry.creativeSpellBook){
                 ArsNouveauAPI.getInstance().getSpell_map().values().forEach(s -> starting_spells.append(",").append(s.getTag().trim()));
             }else{
-                ArsNouveauAPI.getInstance().getStartingSpells().forEach(s-> starting_spells.append(",").append(s.getTag().trim()));
+                ArsNouveauAPI.getInstance().getDefaultStartingSpells().forEach(s-> starting_spells.append(",").append(s.getTag().trim()));
             }
             tag.putString(SpellBook.UNLOCKED_SPELLS, starting_spells.toString());
             stack.setTag(tag);

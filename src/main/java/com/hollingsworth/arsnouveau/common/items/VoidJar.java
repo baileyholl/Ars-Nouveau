@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -9,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
@@ -31,6 +33,23 @@ public class VoidJar extends ItemScroll{
             tag.putBoolean("on", true);
             PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.on"));
         }
+    }
+
+    public static boolean tryVoiding(PlayerEntity player, ItemStack pickingUp) {
+        NonNullList<ItemStack> list =  player.inventory.mainInventory;
+        boolean voided = false;
+        for(int i = 0; i < 9; i++){
+            ItemStack jar = list.get(i);
+            if(jar.getItem() == ItemsRegistry.VOID_JAR){
+                if(isActive(jar) && containsItem(pickingUp, jar.getTag())){
+                    ManaCapability.getMana(player).ifPresent(iMana -> iMana.addMana(5.0 * pickingUp.getCount()));
+                    pickingUp.setCount(0);
+                    voided = true;
+                    break;
+                }
+            }
+        }
+        return voided;
     }
 
     public static boolean isActive(ItemStack stack){

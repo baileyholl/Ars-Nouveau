@@ -28,6 +28,7 @@ public class ModEntities {
     public static EntityType<EntityWixie> ENTITY_WIXIE_TYPE = null;
 
     public static EntityType<EntityFlyingItem> ENTITY_FLYING_ITEM = null;
+    public static EntityType<EntityRitualProjectile> ENTITY_RITUAL = null;
 
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
@@ -60,7 +61,7 @@ public class ModEntities {
                    .setShouldReceiveVelocityUpdates(true));
 
             ENTITY_CARBUNCLE_TYPE = build("carbuncle", EntityType.Builder.<EntityCarbuncle>create(EntityCarbuncle::new, EntityClassification.CREATURE)
-                    .size(0.6F, 0.63F).setTrackingRange(10)
+                    .size(0.7F, 0.63F).setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
             ENTITY_FOLLOW_PROJ = build(
                     "follow_proj",
@@ -84,6 +85,13 @@ public class ModEntities {
                             .size(0.5f, 0.5f)
                             .setTrackingRange(10).setUpdateInterval(60)
                             .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityFlyingItem::new));
+            ENTITY_RITUAL = build(
+                    "ritual",
+                    EntityType.Builder.<EntityRitualProjectile>create(EntityRitualProjectile::new, EntityClassification.MISC)
+                            .size(0.5f, 0.5f)
+                            .setTrackingRange(10).setUpdateInterval(60)
+                            .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityRitualProjectile::new));
+
             event.getRegistry().registerAll(
                     SPELL_PROJ,
                     ENTITY_EVOKER_FANGS_ENTITY_TYPE,
@@ -92,7 +100,9 @@ public class ModEntities {
                     ENTITY_CARBUNCLE_TYPE,
                     ENTITY_SYLPH_TYPE,
                     ENTITY_FOLLOW_PROJ,
-                    ENTITY_WIXIE_TYPE, ENTITY_FLYING_ITEM
+                    ENTITY_WIXIE_TYPE,
+                    ENTITY_FLYING_ITEM,
+                    ENTITY_RITUAL
             );
 
             GlobalEntityTypeAttributes.put(ENTITY_WHELP_TYPE, EntityWhelp.attributes().create());

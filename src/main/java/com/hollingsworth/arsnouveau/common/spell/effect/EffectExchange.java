@@ -67,12 +67,12 @@ public class EffectExchange extends AbstractEffect {
             int aoeBuff = getBuffCount(augments, AugmentAOE.class);
             List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
             BlockRayTraceResult result = (BlockRayTraceResult) rayTraceResult;
-            double maxHardness = getHardness(augments);
             BlockState origState = world.getBlockState(result.getPos());
             Block firstBlock = null;
             for(BlockPos pos1 : posList) {
                 BlockState state = world.getBlockState(pos1);
-                if(!(state.getBlockHardness(world, pos1) <= maxHardness && state.getBlockHardness(world, pos1) >= 0) || origState.getBlock() != state.getBlock()){
+
+                if(!canBlockBeHarvested(augments, world, pos1) || origState.getBlock() != state.getBlock()){
                     continue;
                 }
 
@@ -82,6 +82,7 @@ public class EffectExchange extends AbstractEffect {
 
                 PlayerEntity playerEntity = (PlayerEntity) shooter;
                 NonNullList<ItemStack> list =  playerEntity.inventory.mainInventory;
+
                 for(int i = 0; i < 9; i++){
                     ItemStack stack = list.get(i);
                     if(stack.getItem() instanceof BlockItem && world instanceof ServerWorld){
@@ -100,7 +101,6 @@ public class EffectExchange extends AbstractEffect {
                         destroyBlockSafelyWithoutSound(world, pos1, false, shooter);
 
                         if(placeState != null && world.getBlockState(pos1).getMaterial() == Material.AIR && world.getBlockState(pos1).getBlock() != BlockRegistry.INTANGIBLE_AIR){
-
                             world.setBlockState(pos1, placeState, 2);
                             stack.shrink(1);
                             break;
@@ -112,6 +112,38 @@ public class EffectExchange extends AbstractEffect {
             return;
         }
     }
+
+    public void getBlockFromPlayer(List<ItemStack> list,BlockState origState, World world, BlockPos pos1, BlockRayTraceResult result, LivingEntity shooter){
+        Block firstBlock = null;
+        ItemStack tool = LootUtil.getDefaultFakeTool();
+        tool.addEnchantment(Enchantments.SILK_TOUCH, 1);
+        for(int i = 0; i < 9; i++){
+            ItemStack stack = list.get(i);
+            if(stack.getItem() instanceof BlockItem && world instanceof ServerWorld){
+                BlockItem item = (BlockItem)stack.getItem();
+                if(item.getBlock() == origState.getBlock())
+                    continue;
+                if(firstBlock == null){
+                    firstBlock = item.getBlock();
+                }else if(item.getBlock() != firstBlock)
+                    continue;
+                FakePlayer fakePlayer = FakePlayerFactory.getMinecraft((ServerWorld)world);
+                fakePlayer.setHeldItem(Hand.MAIN_HAND, stack);
+                BlockItemUseContext context = BlockItemUseContext.func_221536_a(new BlockItemUseContext(new ItemUseContext(fakePlayer, Hand.MAIN_HAND, result)), pos1, result.getFace());
+                BlockState placeState = item.getBlock().getStateForPlacement(context);
+                Block.spawnDrops(world.getBlockState(pos1), world, pos1, world.getTileEntity(pos1), shooter,tool);
+                destroyBlockSafelyWithoutSound(world, pos1, false, shooter);
+
+                if(placeState != null && world.getBlockState(pos1).getMaterial() == Material.AIR && world.getBlockState(pos1).getBlock() != BlockRegistry.INTANGIBLE_AIR){
+                    world.setBlockState(pos1, placeState, 2);
+                    stack.shrink(1);
+                    break;
+                }
+            }
+        }
+    }
+
+
 
     @Override
     public Tier getTier() {

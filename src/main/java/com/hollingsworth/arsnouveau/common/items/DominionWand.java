@@ -47,7 +47,7 @@ public class DominionWand extends ModItem{
             clear(stack, playerEntity);
             return  ActionResultType.SUCCESS;
         }
-        System.out.println(getPos(stack));
+
         if((getPos(stack) == null || getPos(stack).equals(new BlockPos(0,0,0))) && getEntityID(stack) == -1){
             setEntityID(stack, target.getEntityId());
             PortUtil.sendMessage(playerEntity, "Stored entity");
@@ -72,8 +72,6 @@ public class DominionWand extends ModItem{
         return false;
     }
 
-
-
     public void clear(ItemStack stack, PlayerEntity playerEntity){
         setPosTag(stack, null);
         setEntityID(stack, -1);
@@ -88,6 +86,8 @@ public class DominionWand extends ModItem{
         World world = context.getWorld();
         PlayerEntity playerEntity = context.getPlayer();
         ItemStack stack = context.getItem();
+        
+
         if(playerEntity.isSneaking() && world.getTileEntity(pos) instanceof IWandable){
             ((IWandable) world.getTileEntity(pos)).onWanded(playerEntity);
             clear(stack, playerEntity);
@@ -111,6 +111,8 @@ public class DominionWand extends ModItem{
         if(getEntityID(stack) != -1 && world.getEntityByID(getEntityID(stack)) instanceof  IWandable){
             ((IWandable)world.getEntityByID(getEntityID(stack))).onFinishedConnectionFirst(pos, null, playerEntity);
         }
+
+
         clear(stack, playerEntity);
         return super.onItemUse(context);
     }
@@ -140,14 +142,13 @@ public class DominionWand extends ModItem{
     }
     public int getEntityID(ItemStack stack){
         CompoundNBT tag = stack.getTag();
-        if(tag == null)
+        if(tag == null || !tag.contains("en_id"))
             return -1;
         return stack.getTag().getInt("en_id");
     }
 
 
     public BlockPos getPos(ItemStack stack){
-
         if(!stack.hasTag())
             return null;
         CompoundNBT tag = stack.getTag();

@@ -31,6 +31,7 @@ public class ClientHandler {
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.SPELL_TURRET_TYPE, SpellTurretRenderer::new);
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.INTANGIBLE_AIR_TYPE, IntangibleAirRenderer::new);
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.VOLCANIC_TILE, VolcanicRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(BlockRegistry.CRYSTALLIZER_TILE, CrystallizerRenderer::new);
 
         RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_JAR, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.GLYPH_PRESS_BLOCK, RenderType.getCutout());
@@ -51,6 +52,10 @@ public class ClientHandler {
         RenderTypeLookup.setRenderLayer(BlockRegistry.LAVA_LILY, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.WIXIE_CAULDRON, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.CREATIVE_MANA_JAR, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.VEXING_SAPLING, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.FLOURISHING_SAPLING, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.BLAZING_SAPLING, RenderType.getCutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.CASCADING_SAPLING, RenderType.getCutout());
 
     }
 

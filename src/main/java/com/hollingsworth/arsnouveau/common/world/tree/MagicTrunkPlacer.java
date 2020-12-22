@@ -68,12 +68,6 @@ public class MagicTrunkPlacer extends AbstractTrunkPlacer {
                 addRoots(world, rand, pos.east().east().south().up(i), posSet, boundingBox, baseTreeFeatureConfig);
                 addRoots(world, rand, pos.east().north().up(i), posSet, boundingBox, baseTreeFeatureConfig);
                 addRoots(world, rand, pos.north().up(i), posSet, boundingBox, baseTreeFeatureConfig);
-                addRoots(world, rand, pos.west().north(), posSet, boundingBox, baseTreeFeatureConfig);
-                addRoots(world, rand, pos.east().east().north(), posSet, boundingBox, baseTreeFeatureConfig);
-                addRoots(world, rand, pos.south().south().west(), posSet, boundingBox, baseTreeFeatureConfig);
-                addRoots(world, rand, pos.south().south().east().east(), posSet, boundingBox, baseTreeFeatureConfig);
-
-                //addRoots(world, rand, pos.north().west(), posSet, boundingBox, Blocks.DARK_OAK_LOG.getDefaultState());
             }
 
             if(i > 1 && i > lastBranch){
@@ -101,13 +95,16 @@ public class MagicTrunkPlacer extends AbstractTrunkPlacer {
                     addBranch(world, pos, posSet, boundingBox, i, Direction.NORTH, rand, baseTreeFeatureConfig);
                     lastBranch = i;
                     numBranches++;
-                    northB = false;
+
+                    addBranch(world, pos, posSet, boundingBox, i, Direction.SOUTH, rand, baseTreeFeatureConfig);
+                    numBranches++;
+
                 }
 
             }
 
             if(i == foliageHeight - 2){
-                float leafChance = 0.2f;
+                float leafChance = .1f;
                 //Bell top
                 addLineLeaves(world, pos.north(4).up(i), posSet, boundingBox, Direction.NORTH, 6,rand, baseTreeFeatureConfig, leafChance);
                 addLineLeaves(world, pos.north(4).up(i + 1), posSet, boundingBox, Direction.NORTH, 6,rand, baseTreeFeatureConfig, leafChance);

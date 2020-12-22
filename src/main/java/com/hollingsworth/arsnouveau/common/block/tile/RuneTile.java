@@ -50,8 +50,7 @@ public class RuneTile extends AnimatedTile {
         try {
 
             PlayerEntity playerEntity = uuid != null ? world.getPlayerByUuid(uuid) : FakePlayerFactory.getMinecraft((ServerWorld) world);
-            EntitySpellResolver resolver = new EntitySpellResolver(recipe, new SpellContext(recipe, playerEntity).withCastingTile(this));
-
+            EntitySpellResolver resolver = new EntitySpellResolver(recipe, new SpellContext(recipe, playerEntity).withCastingTile(this).withType(SpellContext.CasterType.RUNE));
             resolver.onCastOnEntity(ItemStack.EMPTY, playerEntity, (LivingEntity) entity, Hand.MAIN_HAND);
             if (this.isTemporary) {
                 world.destroyBlock(pos, false);

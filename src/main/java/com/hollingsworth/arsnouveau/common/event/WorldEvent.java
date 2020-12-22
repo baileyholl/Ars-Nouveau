@@ -4,7 +4,9 @@ import com.google.common.collect.ImmutableSet;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
+import com.hollingsworth.arsnouveau.common.world.tree.SupplierBlockStateProvider;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.block.Blocks;
@@ -32,27 +34,65 @@ import java.util.Objects;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class WorldEvent {
-    public static ConfiguredFeature<BaseTreeFeatureConfig, ?> MAGIC_TREE_CONFIG = Feature.TREE.withConfiguration((
-            new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.OAK_LOG.getDefaultState()),
-                    new SimpleBlockStateProvider(Blocks.OAK_LEAVES.getDefaultState()),
+    public static ConfiguredFeature<BaseTreeFeatureConfig, ?> CASCADING_TREE =  Feature.TREE.withConfiguration((
+            new BaseTreeFeatureConfig.Builder(new SupplierBlockStateProvider(LibBlockNames.CASCADING_LOG),
+                    new SupplierBlockStateProvider(LibBlockNames.CASCADING_LEAVES),
                     new BlobFoliagePlacer(FeatureSpread.func_242252_a(0), FeatureSpread.func_242252_a(0), 0),
-                    new MagicTrunkPlacer(9, 3, 0),
+                    new MagicTrunkPlacer(9, 1, 0),
                     new TwoLayerFeature(2, 0, 2))).setIgnoreVines().build());
+
+    public static ConfiguredFeature<BaseTreeFeatureConfig, ?> BLAZING_TREE =  Feature.TREE.withConfiguration((
+            new BaseTreeFeatureConfig.Builder(new SupplierBlockStateProvider(LibBlockNames.BLAZING_LOG),
+                    new SupplierBlockStateProvider(LibBlockNames.BLAZING_LEAVES),
+                    new BlobFoliagePlacer(FeatureSpread.func_242252_a(0), FeatureSpread.func_242252_a(0), 0),
+                    new MagicTrunkPlacer(9, 1, 0),
+                    new TwoLayerFeature(2, 0, 2))).setIgnoreVines().build());
+
+    public static ConfiguredFeature<BaseTreeFeatureConfig, ?> FLOURISHING_TREE =  Feature.TREE.withConfiguration((
+            new BaseTreeFeatureConfig.Builder(new SupplierBlockStateProvider(LibBlockNames.FLOURISHING_LOG),
+                    new SupplierBlockStateProvider(LibBlockNames.FLOURISHING_LEAVES),
+                    new BlobFoliagePlacer(FeatureSpread.func_242252_a(0), FeatureSpread.func_242252_a(0), 0),
+                    new MagicTrunkPlacer(9, 1, 0),
+                    new TwoLayerFeature(2, 0, 2))).setIgnoreVines().build());
+
+    public static ConfiguredFeature<BaseTreeFeatureConfig, ?> VEXING_TREE =  Feature.TREE.withConfiguration((
+            new BaseTreeFeatureConfig.Builder(new SupplierBlockStateProvider(LibBlockNames.VEXING_LOG),
+                    new SupplierBlockStateProvider(LibBlockNames.VEXING_LEAVES),
+                    new BlobFoliagePlacer(FeatureSpread.func_242252_a(0), FeatureSpread.func_242252_a(0), 0),
+                    new MagicTrunkPlacer(9, 1, 0),
+                    new TwoLayerFeature(2, 0, 2))).setIgnoreVines().build());
+
 
     public static ConfiguredFeature<BaseTreeFeatureConfig, ?> MAGIC_TREE_CONFIG2 = Feature.TREE.withConfiguration((
             new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.DARK_OAK_LOG.getDefaultState()),
                     new SimpleBlockStateProvider(Blocks.DARK_OAK_LEAVES.getDefaultState()),
                     new BlobFoliagePlacer(FeatureSpread.func_242252_a(0), FeatureSpread.func_242252_a(0), 0),
-                    new MagicTrunkPlacer(9, 3, 0),
+                    new MagicTrunkPlacer(9, 1, 0),
                     new TwoLayerFeature(2, 0, 2))).setIgnoreVines().build());
-
-    public static ConfiguredFeature<?, ?> CONFIGUREDSPAWN = MAGIC_TREE_CONFIG
-            .withPlacement(Features.Placements.HEIGHTMAP_PLACEMENT)
-            .withPlacement(Placement.COUNT_EXTRA.configure(new AtSurfaceWithExtraConfig(0, 0.01F, 1)));
 
 
     public static void registerFeatures() {
         BlockClusterFeatureConfig BERRY_BUSH_PATCH_CONFIG = (new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(BlockRegistry.MANA_BERRY_BUSH.getDefaultState()), SimpleBlockPlacer.PLACER)).tries(64).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK)).func_227317_b_().build();
+
+//       MAGIC_TREE_CONFIG2 = Feature.TREE.withConfiguration((
+//                new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.DARK_OAK_LOG.getDefaultState()),
+//                        new SimpleBlockStateProvider(Blocks.DARK_OAK_LEAVES.getDefaultState()),
+//                        new BlobFoliagePlacer(FeatureSpread.func_242252_a(0), FeatureSpread.func_242252_a(0), 0),
+//                        new MagicTrunkPlacer(9, 3, 0),
+//                        new TwoLayerFeature(2, 0, 2))).setIgnoreVines().build());
+        float treeChance = 0.002f;
+        ConfiguredFeature<?, ?> CASCADE = CASCADING_TREE
+                .withPlacement(Features.Placements.HEIGHTMAP_PLACEMENT)
+                .withPlacement(Placement.COUNT_EXTRA.configure(new AtSurfaceWithExtraConfig(0, treeChance, 1)));
+        ConfiguredFeature<?, ?> BLAZE = BLAZING_TREE
+                .withPlacement(Features.Placements.HEIGHTMAP_PLACEMENT)
+                .withPlacement(Placement.COUNT_EXTRA.configure(new AtSurfaceWithExtraConfig(0, treeChance, 1)));
+        ConfiguredFeature<?, ?> VEX = VEXING_TREE
+                .withPlacement(Features.Placements.HEIGHTMAP_PLACEMENT)
+                .withPlacement(Placement.COUNT_EXTRA.configure(new AtSurfaceWithExtraConfig(0, treeChance, 1)));
+        ConfiguredFeature<?, ?> FLOURISHING = FLOURISHING_TREE
+                .withPlacement(Features.Placements.HEIGHTMAP_PLACEMENT)
+                .withPlacement(Placement.COUNT_EXTRA.configure(new AtSurfaceWithExtraConfig(0, treeChance, 1)));
 
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.ARCANE_ORE.getRegistryName(),
                 Feature.ORE.withConfiguration(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.BASE_STONE_OVERWORLD,
@@ -60,9 +100,11 @@ public class WorldEvent {
 
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.MANA_BERRY_BUSH.getRegistryName(),
                 Feature.RANDOM_PATCH.withConfiguration(BERRY_BUSH_PATCH_CONFIG).withPlacement(Features.Placements.PATCH_PLACEMENT).chance(12));
-      //  Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, "magic_tree", WorldEvent.MAGIC_TREE_CONFIG);
-        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.MAGIC_SAPLING.getRegistryName(), WorldEvent.CONFIGUREDSPAWN);
 
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.VEXING_SAPLING.getRegistryName(), VEX);
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.BLAZING_SAPLING.getRegistryName(), BLAZE);
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.CASCADING_SAPLING.getRegistryName(), CASCADE);
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.FLOURISHING_SAPLING.getRegistryName(), FLOURISHING);
     }
 
     @SubscribeEvent
@@ -85,7 +127,16 @@ public class WorldEvent {
         }
         //Feature.RANDOM_SELECTOR.withConfiguration(new MultipleRandomFeatureConfig(ImmutableList.of(MAGIC_TREE_CONFIG.withChance(0.2F)), MAGIC_TREE_CONFIG)),
         e.getGeneration().withFeature(GenerationStage.Decoration.VEGETAL_DECORATION,
-                WorldGenRegistries.CONFIGURED_FEATURE.getOrDefault(BlockRegistry.MAGIC_SAPLING.getRegistryName())).build();
+                WorldGenRegistries.CONFIGURED_FEATURE.getOrDefault(BlockRegistry.VEXING_SAPLING.getRegistryName())).build();
+
+        e.getGeneration().withFeature(GenerationStage.Decoration.VEGETAL_DECORATION,
+                WorldGenRegistries.CONFIGURED_FEATURE.getOrDefault(BlockRegistry.CASCADING_SAPLING.getRegistryName())).build();
+
+        e.getGeneration().withFeature(GenerationStage.Decoration.VEGETAL_DECORATION,
+                WorldGenRegistries.CONFIGURED_FEATURE.getOrDefault(BlockRegistry.BLAZING_SAPLING.getRegistryName())).build();
+
+        e.getGeneration().withFeature(GenerationStage.Decoration.VEGETAL_DECORATION,
+                WorldGenRegistries.CONFIGURED_FEATURE.getOrDefault(BlockRegistry.FLOURISHING_SAPLING.getRegistryName())).build();
 
     }
 
@@ -96,4 +147,6 @@ public class WorldEvent {
             return;
         EventQueue.getInstance().tick();
     }
+
+
 }

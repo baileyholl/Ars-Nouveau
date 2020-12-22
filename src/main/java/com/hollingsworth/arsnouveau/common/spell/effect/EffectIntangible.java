@@ -34,10 +34,11 @@ public class EffectIntangible extends AbstractEffect {
             BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getPos();
             int aoeBuff = getBuffCount(augments, AugmentAOE.class);
             int duration = 60 + 20 * getDurationModifier(augments);
+
             List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
             for(BlockPos pos1 : posList) {
                 if(world.getTileEntity(pos1) != null || world.getBlockState(pos1).getMaterial() == Material.AIR
-                        || world.getBlockState(pos1).getBlock() == Blocks.BEDROCK || world.getBlockState(pos1).getBlockHardness(world, pos1) > getHardness(augments) )
+                        || world.getBlockState(pos1).getBlock() == Blocks.BEDROCK || !canBlockBeHarvested(augments, world, pos))
                     continue;
 
                 BlockState state = world.getBlockState(pos1);

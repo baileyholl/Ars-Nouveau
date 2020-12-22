@@ -15,9 +15,9 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class EffectInvisiblity extends AbstractEffect {
+public class EffectInvisibility extends AbstractEffect {
 
-    public EffectInvisiblity() {
+    public EffectInvisibility() {
         super(ModConfig.EffectInvisibilityID, "Invisibility");
     }
 

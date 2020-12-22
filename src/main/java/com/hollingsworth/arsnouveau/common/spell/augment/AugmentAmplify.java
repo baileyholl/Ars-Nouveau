@@ -30,6 +30,6 @@ public class AugmentAmplify extends AbstractAugment {
 
     @Override
     protected String getBookDescription() {
-        return "Additively increases the power of most spell effects. Can empower Break (requires 2 amplifies) to harvest Obsidian, and increases the damage of spells.";
+        return "Additively increases the power of most spell effects. Can increase the harvest level of Break and increases the damage of spells.";
     }
 }

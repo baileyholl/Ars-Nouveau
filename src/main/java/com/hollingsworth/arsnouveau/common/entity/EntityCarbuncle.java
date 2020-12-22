@@ -40,6 +40,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.Tags;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -57,15 +58,18 @@ import java.util.List;
 public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDispellable, ITooltipProvider, IWandable {
 
 
-    public BlockPos fromPos;
-    public BlockPos toPos;
+    private BlockPos fromPos;
+    private BlockPos toPos;
     public List<ItemStack> allowedItems; // Items the carbuncle is allowed to take
     public List<ItemStack> ignoreItems; // Items the carbuncle will not take
     public boolean whitelist;
     public boolean blacklist;
+    public static final DataParameter<BlockPos> TO_POS = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.BLOCK_POS);
+    public static final DataParameter<BlockPos> FROM_POS = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.BLOCK_POS);
     public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.ITEMSTACK);
     public static final DataParameter<Boolean> TAMED = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.BOOLEAN);
     public static final DataParameter<Boolean> HOP = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<String> COLOR = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.STRING);
     public int backOff; // Used to stop inventory store/take spam when chests are full or empty.
     public int tamingTime;
     public boolean isStuck;
@@ -73,12 +77,14 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     AnimationFactory manager = new AnimationFactory(this);
     public EntityCarbuncle(EntityType<EntityCarbuncle> entityCarbuncleEntityType, World world) {
         super(entityCarbuncleEntityType, world);
+        stepHeight = 1.2f;
         addGoalsAfterConstructor();
     }
 
     public EntityCarbuncle(World world, boolean tamed){
         super(ModEntities.ENTITY_CARBUNCLE_TYPE,world);
         this.setTamed(tamed);
+        stepHeight = 1.2f;
         addGoalsAfterConstructor();
     }
     @Override
@@ -102,10 +108,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
     private <E extends Entity> PlayState idlePredicate(AnimationEvent event) {
         if(world.getGameTime() % 20 == 0 && world.rand.nextInt(3) == 0 && !this.dataManager.get(HOP)){
-
             event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
-            // manager.(3f);
-            // idleController.setAnimation(new AnimationBuilder().addAnimation("idle"));
         }
 
         return PlayState.CONTINUE;
@@ -152,6 +155,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         }
     }
 
+
+
     @Override
     public void tick() {
         super.tick();
@@ -186,7 +191,11 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
     @Override
     public void onWanded(PlayerEntity playerEntity) {
-
+        this.setToPos(null);
+        this.setFromPos(null);
+        this.whitelist = false;
+        this.blacklist = false;
+        PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.carbuncle.cleared"));
     }
 
     @Override
@@ -195,9 +204,17 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             return;
         if(world.getTileEntity(storedPos) instanceof IInventory){
             PortUtil.sendMessage(playerEntity, "Carbuncle will store items here.");
-            toPos = storedPos;
+            setToPos(storedPos);
         }
     }
+
+
+//    @Override
+//    public float getBlockPathWeight(BlockPos pos, IWorldReader worldIn) {
+//        worldIn.getBlockState(pos).getShape(worldIn, pos).
+//
+//        return super.getBlockPathWeight(pos, worldIn);
+//    }
 
     @Override
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, PlayerEntity playerEntity) {
@@ -206,7 +223,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
         if(world.getTileEntity(storedPos)  instanceof IInventory){
             PortUtil.sendMessage(playerEntity, "Carbuncle take from this inventory.");
-            fromPos = storedPos;
+            setFromPos(storedPos);
         }
     }
 
@@ -237,7 +254,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
                 .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.2d);
     }
 
-
     @Override
     protected void updateEquipmentIfNeeded(ItemEntity itemEntity) {
         if(this.getHeldStack().isEmpty() && TakeItemGoal.isValidItem(this, itemEntity.getItem())){
@@ -246,10 +262,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             this.world.playSound(null, this.getPosX(), this.getPosY(), this.getPosZ(), SoundEvents.ENTITY_ITEM_PICKUP, this.getSoundCategory(),1.0F, 1.0F);
         }
     }
-
-
-
-
 
     // Cannot add conditional goals in RegisterGoals as it is final and called during the MobEntity super.
     protected void addGoalsAfterConstructor(){
@@ -266,20 +278,30 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
 
     public BlockPos getHome(){
-        if(this.fromPos == null && toPos != null)
-            return toPos;
-        if(this.toPos == null && this.fromPos != null)
-            return fromPos;
-        if(toPos != null)
-            return fromPos;
+        if(this.getFromPos() == null && getToPos() != null)
+            return getToPos();
+        if(this.getToPos() == null && this.getFromPos() != null)
+            return getFromPos();
+        if(getToPos() != null)
+            return getFromPos();
         return null;
+    }
+
+    @Override
+    protected float getWaterSlowDown() {
+        return 0.875f;
+    }
+
+    @Override
+    protected float getJumpFactor() {
+        return super.getJumpFactor();
     }
 
     //MOJANG MAKES THIS SO CURSED WHAT THE HECK
     public List<PrioritizedGoal> getTamedGoals(){
         List<PrioritizedGoal> list = new ArrayList<>();
         list.add(new PrioritizedGoal(1, new GetUnstuckGoal(this, () -> this.isStuck, stuck ->{this.isStuck = stuck; return null;})));
-        list.add(new PrioritizedGoal(2, new FindItem(this)));
+        list.add(new PrioritizedGoal(1, new FindItem(this)));
         list.add(new PrioritizedGoal(2, new ForageManaBerries(this)));
         list.add(new PrioritizedGoal(3, new StoreItemGoal(this)));
         list.add(new PrioritizedGoal(3, new TakeItemGoal(this)));
@@ -287,7 +309,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         list.add(new PrioritizedGoal(5, new LookAtGoal(this, MobEntity.class, 8.0F)));
         list.add(new PrioritizedGoal(0, new SwimGoal(this)));
         // Roam back in case we have no item and are far from home.
-        list.add(new PrioritizedGoal(1, new GoBackHomeGoal(this, this::getHome, 25, ()->(this.getHeldStack() == null || this.getHeldStack().isEmpty()))));
+        list.add(new PrioritizedGoal(2, new GoBackHomeGoal(this, this::getHome, 25, ()->(this.getHeldStack() == null || this.getHeldStack().isEmpty()))));
         return list;
     }
 
@@ -316,10 +338,45 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
     @Override
     protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
-        if(hand != Hand.MAIN_HAND || player.getEntityWorld().isRemote)
+        if(hand != Hand.MAIN_HAND || player.getEntityWorld().isRemote || !isTamed())
             return ActionResultType.SUCCESS;
 
         ItemStack stack = player.getHeldItem(hand);
+
+        if(player.getHeldItemMainhand().getItem().isIn(Tags.Items.DYES_GREEN) && !this.dataManager.get(COLOR).equals(COLORS.GREEN.name())){
+            this.dataManager.set(COLOR, COLORS.GREEN.name());
+            player.getHeldItemMainhand().shrink(1);
+            return ActionResultType.SUCCESS;
+        }
+
+        if(player.getHeldItemMainhand().getItem().isIn(Tags.Items.DYES_PURPLE) && !this.dataManager.get(COLOR).equals(COLORS.PURPLE.name())){
+            this.dataManager.set(COLOR, COLORS.PURPLE.name());
+            player.getHeldItemMainhand().shrink(1);
+            return ActionResultType.SUCCESS;
+        }
+
+        if(player.getHeldItemMainhand().getItem().isIn(Tags.Items.DYES_ORANGE) && !this.dataManager.get(COLOR).equals(COLORS.ORANGE.name())){
+            this.dataManager.set(COLOR, COLORS.ORANGE.name());
+            player.getHeldItemMainhand().shrink(1);
+            return ActionResultType.SUCCESS;
+        }
+
+        if(player.getHeldItemMainhand().isEmpty() && this.isTamed()){
+            StringBuilder status = new StringBuilder();
+            if(whitelist && allowedItems != null){
+                status.append("Whitelisted: ");
+                for(ItemStack i : allowedItems){
+                    status.append(i.getDisplayName().getString());
+                }
+            }else if(blacklist && allowedItems != null){
+                status.append("Ignoring: ");
+                for(ItemStack i : ignoreItems){
+                    status.append(i.getDisplayName().getString());
+                }
+            }
+            if(!status.toString().isEmpty())
+                PortUtil.sendMessage(player, status.toString());
+        }
 
         if(!(stack.getItem() instanceof ItemScroll) || !stack.hasTag())
             return ActionResultType.FAIL;
@@ -343,6 +400,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
                 PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.ignore_set"));
             }
         }
+
         return ActionResultType.SUCCESS;
     }
 
@@ -358,6 +416,9 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         this.dataManager.register(HELD_ITEM, ItemStack.EMPTY);
         this.dataManager.register(TAMED, false);
         this.dataManager.register(HOP, false);
+        this.dataManager.register(TO_POS, BlockPos.ZERO);
+        this.dataManager.register(FROM_POS, BlockPos.ZERO);
+        this.dataManager.register(COLOR, COLORS.ORANGE.name());
     }
 
     @Override
@@ -376,12 +437,12 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         super.readAdditional(tag);
         if(tag.contains("held"))
             setHeldStack(ItemStack.read((CompoundNBT)tag.get("held")));
-        toPos = NBTUtil.getBlockPos(tag, "to");
-        fromPos = NBTUtil.getBlockPos(tag, "from");
-        if(toPos.equals(new BlockPos(0,0,0)))
-            toPos = null;
-        if(fromPos.equals(new BlockPos(0,0,0)))
-            fromPos = null;
+        setToPos(NBTUtil.getBlockPos(tag, "to"));
+        setFromPos(NBTUtil.getBlockPos(tag, "from"));
+        if(getToPos().equals(new BlockPos(0,0,0)))
+            setToPos(null);
+        if(getFromPos().equals(new BlockPos(0,0,0)))
+            setFromPos(null);
         backOff = tag.getInt("backoff");
         tamingTime = tag.getInt("taming_time");
         whitelist = tag.getBoolean("whitelist");
@@ -399,6 +460,9 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         allowedItems = NBTUtil.readItems(tag, "allowed_");
         ignoreItems = NBTUtil.readItems(tag, "ignored_");
         isStuck = tag.getBoolean("stuck");
+
+        if(tag.contains("color"))
+            this.dataManager.set(COLOR, tag.getString("color"));
     }
 
     public void setHeldStack(ItemStack stack){
@@ -433,10 +497,10 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             getHeldStack().write(itemTag);
             tag.put("held", itemTag);
         }
-        if(toPos != null)
-            NBTUtil.storeBlockPos(tag, "to",toPos);
-        if(fromPos != null)
-            NBTUtil.storeBlockPos(tag, "from",fromPos);
+        if(getToPos() != null)
+            NBTUtil.storeBlockPos(tag, "to", getToPos());
+        if(getFromPos() != null)
+            NBTUtil.storeBlockPos(tag, "from", getFromPos());
         tag.putInt("backoff", backOff);
         tag.putBoolean("tamed",  this.dataManager.get(TAMED));
         tag.putInt("taming_time", tamingTime);
@@ -449,6 +513,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         if(ignoreItems != null && !ignoreItems.isEmpty())
             NBTUtil.writeItems(tag,  "ignored_", ignoreItems);
         tag.putBoolean("stuck", isStuck);
+        tag.putString("color", this.dataManager.get(COLOR));
     }
 
     public void removeGoals(){
@@ -457,7 +522,38 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
     @Override
     public List<String> getTooltip() {
+        List<String> toolTip = new ArrayList<>();
+        if(!this.dataManager.get(TO_POS).equals(BlockPos.ZERO))
+            toolTip.add("Storing items at " + this.dataManager.get(TO_POS).getCoordinatesAsString());
 
-        return new ArrayList<>();
+        if(!this.dataManager.get(FROM_POS).equals(BlockPos.ZERO))
+            toolTip.add("Taking items from " + this.dataManager.get(FROM_POS).getCoordinatesAsString());
+
+
+        return toolTip;
+    }
+
+    public BlockPos getFromPos() {
+        return fromPos;
+    }
+
+    public void setFromPos(BlockPos fromPos) {
+        this.fromPos = fromPos;
+        this.dataManager.set(FROM_POS, fromPos == null ? BlockPos.ZERO : fromPos);
+    }
+
+    public BlockPos getToPos() {
+        return toPos;
+    }
+
+    public void setToPos(BlockPos toPos) {
+        this.toPos = toPos;
+        this.dataManager.set(TO_POS, toPos == null ? BlockPos.ZERO : toPos);
+    }
+
+    public enum COLORS{
+        ORANGE,
+        PURPLE,
+        GREEN
     }
 }

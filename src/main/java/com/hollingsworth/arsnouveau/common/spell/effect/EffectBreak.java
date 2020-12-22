@@ -44,14 +44,13 @@ public class EffectBreak extends AbstractEffect {
         if(!world.isRemote && rayTraceResult instanceof BlockRayTraceResult){
             BlockPos pos = new BlockPos(((BlockRayTraceResult) rayTraceResult).getPos());
             BlockState state;
-            float maxHardness = getHardness(augments);
 
             int aoeBuff = getBuffCount(augments, AugmentAOE.class);
             List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
             for(BlockPos pos1 : posList) {
                 state = world.getBlockState(pos1);
 
-                if(!(state.getBlockHardness(world, pos1) <= maxHardness && state.getBlockHardness(world, pos1) >= 0)){
+                if(!canBlockBeHarvested(augments, world, pos1)){
                     continue;
                 }
 
@@ -93,6 +92,6 @@ public class EffectBreak extends AbstractEffect {
 
     @Override
     protected String getBookDescription() {
-        return "A spell you start with. Breaks blocks of an average hardness. Can be amplified twice to break harder blocks or can break multiple blocks with the AOE augment.";
+        return "A spell you start with. Breaks blocks of an average hardness. Can be amplified to increase the harvest level.";
     }
 }

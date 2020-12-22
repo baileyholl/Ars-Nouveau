@@ -17,7 +17,7 @@ import java.util.EnumSet;
 public class TakeItemGoal extends CheckStuckGoal {
     EntityCarbuncle carbuncle;
     public TakeItemGoal(EntityCarbuncle carbuncle){
-        super(carbuncle::getPosition, 1, carbuncle::setStuck);
+        super(carbuncle::getPosition, 3, carbuncle::setStuck);
         this.setMutexFlags(EnumSet.of(Flag.MOVE));
         this.carbuncle = carbuncle;
     }
@@ -26,8 +26,8 @@ public class TakeItemGoal extends CheckStuckGoal {
     @Override
     public void startExecuting() {
         super.startExecuting();
-        if(carbuncle.isTamed() && carbuncle.fromPos != null && carbuncle.getHeldStack().isEmpty())
-            setPath(carbuncle.fromPos.getX(),carbuncle.fromPos.getY(),carbuncle.fromPos.getZ(), 1.2D);
+        if(carbuncle.isTamed() && carbuncle.getFromPos() != null && carbuncle.getHeldStack().isEmpty())
+            setPath(carbuncle.getFromPos().getX(), carbuncle.getFromPos().getY(), carbuncle.getFromPos().getZ(), 1.2D);
     }
 
     public static boolean isValidItem(EntityCarbuncle carbuncle,ItemStack stack){
@@ -48,7 +48,7 @@ public class TakeItemGoal extends CheckStuckGoal {
 
     public void getItem(){
         World world = carbuncle.world;
-        IInventory i = (IInventory) world.getTileEntity(carbuncle.fromPos);
+        IInventory i = (IInventory) world.getTileEntity(carbuncle.getFromPos());
         for(int j = 0; j < i.getSizeInventory(); j++){
             if(!i.getStackInSlot(j).isEmpty() && isValidItem(carbuncle, i.getStackInSlot(j))){
 
@@ -58,7 +58,7 @@ public class TakeItemGoal extends CheckStuckGoal {
                         SoundEvents.ENTITY_ITEM_PICKUP, carbuncle.getSoundCategory(),1.0F, 1.0F);
 
                 if(world instanceof ServerWorld){
-                    OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), carbuncle.fromPos, 20);
+                    OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), carbuncle.getFromPos(), 20);
                     event.open();
                     EventQueue.getInstance().addEvent(event);
                 }
@@ -72,16 +72,16 @@ public class TakeItemGoal extends CheckStuckGoal {
 
     @Override
     public void tick() {
-        if(carbuncle.getHeldStack().isEmpty() && carbuncle.fromPos != null && BlockUtil.distanceFrom(carbuncle.getPosition(), carbuncle.fromPos) < 1.5D){
+        if(carbuncle.getHeldStack().isEmpty() && carbuncle.getFromPos() != null && BlockUtil.distanceFrom(carbuncle.getPosition(), carbuncle.getFromPos()) < 1.5D){
             World world = carbuncle.world;
-            if(world.getTileEntity(carbuncle.fromPos) instanceof IInventory){
+            if(world.getTileEntity(carbuncle.getFromPos()) instanceof IInventory){
                 getItem();
                 return;
             }
         }
 
-        if(carbuncle.fromPos != null && carbuncle.getHeldStack().isEmpty()) {
-            setPath(carbuncle.fromPos.getX(), carbuncle.fromPos.getY(), carbuncle.fromPos.getZ(), 1.2D);
+        if(carbuncle.getFromPos() != null && carbuncle.getHeldStack().isEmpty()) {
+            setPath(carbuncle.getFromPos().getX(), carbuncle.getFromPos().getY(), carbuncle.getFromPos().getZ(), 1.2D);
             super.tick();
         }
     }
@@ -93,6 +93,6 @@ public class TakeItemGoal extends CheckStuckGoal {
 
     @Override
     public boolean shouldExecute() {
-        return !carbuncle.isStuck && carbuncle.getHeldStack() != null &&carbuncle.getHeldStack().isEmpty() && carbuncle.backOff == 0 && carbuncle.isTamed()  &&carbuncle.fromPos != null;
+        return !carbuncle.isStuck && carbuncle.getHeldStack() != null &&carbuncle.getHeldStack().isEmpty() && carbuncle.backOff == 0 && carbuncle.isTamed()  && carbuncle.getFromPos() != null;
     }
 }

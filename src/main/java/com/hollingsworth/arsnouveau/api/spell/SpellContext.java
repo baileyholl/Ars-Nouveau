@@ -24,6 +24,8 @@ public class SpellContext {
 
     public ParticleColor.IntWrapper colors;
 
+    private CasterType type;
+
     public SpellContext(List<AbstractSpellPart> spell, @Nullable LivingEntity caster){
         this.spell = new Spell(spell);
         this.caster = caster;
@@ -59,6 +61,15 @@ public class SpellContext {
         return this;
     }
 
+    public SpellContext withType(CasterType type){
+        this.type = type;
+        return this;
+    }
+
+    public CasterType getType(){
+        return this.type == null ? CasterType.OTHER : type;
+    }
+
     public int getCurrentIndex(){return currentIndex;}
 
     public int getManaCost() {
@@ -84,5 +95,12 @@ public class SpellContext {
     @Nullable
     public LivingEntity getCaster() {
         return caster;
+    }
+
+    public enum CasterType{
+        ENTITY,
+        RUNE,
+        TURRET,
+        OTHER
     }
 }

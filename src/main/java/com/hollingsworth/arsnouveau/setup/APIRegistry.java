@@ -8,9 +8,18 @@ import com.hollingsworth.arsnouveau.api.enchanting_apparatus.ReactiveEnchantment
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
-import com.hollingsworth.arsnouveau.common.spell.method.*;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodRune;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.crafting.Ingredient;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class APIRegistry {
 
@@ -49,7 +58,7 @@ public class APIRegistry {
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
 
         registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.carbuncleCharm, ItemsRegistry.carbuncleShard, new Item[]{
-                ItemsRegistry.manaGem,ItemsRegistry.manaGem,Items.DIAMOND, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET,
+                ItemsRegistry.manaGem,ItemsRegistry.manaGem,ItemsRegistry.manaGem, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET,
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
 
         registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.amuletOfManaBoost, ItemsRegistry.dullTrinket, new Item[]{
@@ -61,7 +70,7 @@ public class APIRegistry {
         }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
 
         registerApparatusRecipe(new EnchantingApparatusRecipe(BlockRegistry.ARCANE_RELAY_SPLITTER.asItem(), BlockRegistry.ARCANE_RELAY.asItem(), new Item[]{
-                BlockRegistry.MANA_JAR.asItem(),BlockRegistry.MANA_JAR.asItem(), BlockRegistry.MANA_JAR.asItem(), Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.DIAMOND
+                Items.QUARTZ,Items.QUARTZ, Items.QUARTZ, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.QUARTZ
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
 
         registerApparatusRecipe(new ReactiveEnchantmentRecipe());
@@ -72,9 +81,9 @@ public class APIRegistry {
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
 
         registerApparatusRecipe(new EnchantingApparatusRecipe(BlockRegistry.SPELL_TURRET.asItem(),Items.DISPENSER, new Item[]{
-                Items.BLAZE_ROD, Items.BLAZE_ROD, Items.GOLD_BLOCK,
-                ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.EffectRedstoneID),ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.EffectRedstoneID), ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.EffectRedstoneID),
-                Items.DIAMOND, Items.REDSTONE_BLOCK
+                Items.BLAZE_ROD, Items.GOLD_INGOT, Items.GOLD_INGOT,Items.GOLD_INGOT,
+               ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.EffectRedstoneID),
+                Items.QUARTZ_BLOCK, Items.REDSTONE_BLOCK, ItemsRegistry.spellParchment
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
 
         registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.VOID_JAR, Items.GLASS_BOTTLE, new Item[]{
@@ -88,6 +97,17 @@ public class APIRegistry {
         registerApparatusRecipe(new EnchantingApparatusRecipe(ItemsRegistry.WIXIE_CHARM, ItemsRegistry.WIXIE_SHARD, new Item[]{
                 Items.DARK_OAK_SAPLING, Items.CRAFTING_TABLE, Items.EMERALD, Items.BREWING_STAND
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
+
+        registerApparatusRecipe(new EnchantingApparatusRecipe(new ItemStack(ItemsRegistry.WAND), Ingredient.fromItems(BlockRegistry.ARCHWOOD_PLANK.asItem()),
+                listOfIngred(new Item[]{
+                ItemsRegistry.manaGem, ItemsRegistry.manaGem,ItemsRegistry.manaGem, Items.GOLD_INGOT,Items.GOLD_INGOT,
+                        ItemsRegistry.spellParchment, ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile()),
+                        ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAccelerate())
+        }), ArsNouveauAPI.PatchouliCategories.equipment.name()));
+    }
+
+    public static List<Ingredient> listOfIngred(Item[] items) {
+        return Arrays.stream(items).map(Ingredient::fromItems).collect(Collectors.toList());
     }
 
     public static void registerSpells(){
@@ -137,7 +157,7 @@ public class APIRegistry {
         registerSpell(ModConfig.EffectDelayID, new EffectDelay());
         registerSpell(ModConfig.EffectRedstoneID, new EffectRedstone());
         registerSpell(ModConfig.EffectIntangibleID, new EffectIntangible());
-        registerSpell(ModConfig.EffectInvisibilityID, new EffectInvisiblity());
+        registerSpell(ModConfig.EffectInvisibilityID, new EffectInvisibility());
         registerSpell(ModConfig.AugmentDurationDown, new AugmentDurationDown());
         registerSpell(ModConfig.EffectWitherID, new EffectWither());
         registerSpell(ModConfig.EffectExchangeID, new EffectExchange());
@@ -146,6 +166,10 @@ public class APIRegistry {
         registerSpell(ModConfig.EffectColdSnapID, new EffectColdSnap());
         registerSpell(ModConfig.EffectConjureWaterID, new EffectConjureWater());
         registerSpell(ModConfig.EffectGravityID, new EffectGravity());
+        registerStartingSpells();
+    }
+
+    public static void registerStartingSpells(){
         addStartingSpell(ModConfig.MethodProjectileID);
         addStartingSpell(ModConfig.MethodTouchID);
         addStartingSpell(ModConfig.MethodSelfID);
