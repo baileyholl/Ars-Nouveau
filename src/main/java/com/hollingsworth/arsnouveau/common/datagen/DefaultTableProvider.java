@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.LootTableProvider;
 import net.minecraft.data.loot.BlockLootTables;
+import net.minecraft.item.Items;
 import net.minecraft.loot.*;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
@@ -53,6 +54,8 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.CASCADING_SAPLING);
             registerDropSelf(BlockRegistry.FLOURISHING_SAPLING);
             registerDropSelf(BlockRegistry.ARCHWOOD_PLANK);
+
+            registerDrop(BlockRegistry.WIXIE_CAULDRON, Items.CAULDRON);
 
             registerLeavesAndSticks(BlockRegistry.BLAZING_LEAVES, BlockRegistry.BLAZING_SAPLING);
             registerLeavesAndSticks(BlockRegistry.CASCADING_LEAVE, BlockRegistry.CASCADING_SAPLING);
