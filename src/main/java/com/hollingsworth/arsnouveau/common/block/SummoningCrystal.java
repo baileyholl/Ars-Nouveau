@@ -40,12 +40,7 @@ public class SummoningCrystal extends ModBlock{
     public void neighborChanged(BlockState p_220069_1_, World world, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_, boolean p_220069_6_) {
         super.neighborChanged(p_220069_1_, world, pos, p_220069_4_, p_220069_5_, p_220069_6_);
         if(!world.isRemote() && world.getTileEntity(pos) instanceof SummoningCrystalTile){
-            if(world.isBlockPowered(pos)){
-                ((SummoningCrystalTile) world.getTileEntity(pos)).isOff = true;
-            }else{
-                ((SummoningCrystalTile) world.getTileEntity(pos)).isOff = false;
-            }
-
+            ((SummoningCrystalTile) world.getTileEntity(pos)).isOff = world.isBlockPowered(pos);
         }
     }
 

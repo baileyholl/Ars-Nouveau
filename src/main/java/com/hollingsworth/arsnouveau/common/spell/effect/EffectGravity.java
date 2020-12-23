@@ -34,8 +34,8 @@ public class EffectGravity extends AbstractEffect {
             int aoeBuff = getBuffCount(augments, AugmentAOE.class);
             List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
             for(BlockPos pos1 : posList) {
-                if(world.getTileEntity(pos1) != null)
-                    return;
+                if(world.getTileEntity(pos1) != null || !canBlockBeHarvested(augments, world, pos1))
+                    continue;
                 FallingBlockEntity blockEntity = new FallingBlockEntity(world,pos1.getX() +0.5, pos1.getY(), pos1.getZ() +0.5, world.getBlockState(pos1));
                 world.addEntity(blockEntity);
             }
