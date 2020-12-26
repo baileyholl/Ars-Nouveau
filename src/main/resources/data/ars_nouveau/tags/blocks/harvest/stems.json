@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#minecraft:logs",
+    "minecraft:mushroom_stem",
+    "minecraft:bamboo",
+    "minecraft:sugar_cane",
+    "minecraft:cactus"
+  ]
+}
