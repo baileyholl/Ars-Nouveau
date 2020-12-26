@@ -99,7 +99,7 @@ public class WorldEvent {
                         BlockRegistry.ARCANE_ORE.getDefaultState(), 5)).range(60).square().func_242731_b(5));
 
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.MANA_BERRY_BUSH.getRegistryName(),
-                Feature.RANDOM_PATCH.withConfiguration(BERRY_BUSH_PATCH_CONFIG).withPlacement(Features.Placements.PATCH_PLACEMENT).chance(12));
+                Feature.RANDOM_PATCH.withConfiguration(BERRY_BUSH_PATCH_CONFIG).withPlacement(Features.Placements.PATCH_PLACEMENT));
 
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.VEXING_SAPLING.getRegistryName(), VEX);
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.BLAZING_SAPLING.getRegistryName(), BLAZE);

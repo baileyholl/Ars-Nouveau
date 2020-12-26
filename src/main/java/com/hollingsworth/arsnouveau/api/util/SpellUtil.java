@@ -2,9 +2,11 @@ package com.hollingsworth.arsnouveau.api.util;
 
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -20,8 +22,16 @@ public class SpellUtil {
     public static List<BlockPos> calcAOEBlocks(LivingEntity caster, BlockPos origin, BlockRayTraceResult mop, int aoeBonus) {
         return calcAOEBlocks(caster, origin, mop, 1 + aoeBonus, 1 + aoeBonus, 1, -1);
     }
-    // https://github.com/SlimeKnights/TinkersConstruct/blob/1.12/src/main/java/slimeknights/tconstruct/library/utils/ToolHelper.java
+
     public static List<BlockPos> calcAOEBlocks(LivingEntity caster, BlockPos origin, BlockRayTraceResult mop, int width, int height, int depth, int distance) {
+        return calcAOEBlocks(caster.getHorizontalFacing().getDirectionVec(), origin, mop, width, height, depth, distance);
+    }
+
+    public static List<BlockPos> calcAOEBlocks(Vector3d hitVec, BlockPos origin, BlockRayTraceResult mop, int width, int height, int depth, int distance) {
+        return calcAOEBlocks(Direction.getFacingFromVector(hitVec.x, hitVec.y, hitVec.z).getOpposite().getDirectionVec(), origin, mop, width, height, depth, distance);
+    }
+    // https://github.com/SlimeKnights/TinkersConstruct/blob/1.12/src/main/java/slimeknights/tconstruct/library/utils/ToolHelper.java
+    public static List<BlockPos> calcAOEBlocks(Vector3i facingVec, BlockPos origin, BlockRayTraceResult mop, int width, int height, int depth, int distance) {
         // we know the block and we know which side of the block we're hitting. time to calculate the depth along the different axes
         int x, y, z;
         BlockPos start = origin;
@@ -29,10 +39,9 @@ public class SpellUtil {
             case DOWN:
             case UP:
                 // x y depends on the angle we look?
-                Vector3i vec = caster.getHorizontalFacing().getDirectionVec();
-                x = vec.getX() * height + vec.getZ() * width;
+                x = facingVec.getX() * height + facingVec.getZ() * width;
                 y = mop.getFace().getAxisDirection().getOffset() * -depth;
-                z = vec.getX() * width + vec.getZ() * height;
+                z = facingVec.getX() * width + facingVec.getZ() * height;
                 start = start.add(-x / 2, 0, -z / 2);
                 if(x % 2 == 0) {
                     if(x > 0 && mop.getHitVec().x - mop.getPos().getX() > 0.5d) {
