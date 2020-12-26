@@ -3,21 +3,23 @@ package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
-import com.hollingsworth.arsnouveau.common.entity.goal.CheckStuckGoal;
 import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 import java.util.EnumSet;
 
-public class TakeItemGoal extends CheckStuckGoal {
+public class TakeItemGoal extends Goal {
     EntityCarbuncle carbuncle;
     public TakeItemGoal(EntityCarbuncle carbuncle){
-        super(carbuncle::getPosition, 3, carbuncle::setStuck);
+      //  super(carbuncle::getPosition, 3, carbuncle::setStuck);
         this.setMutexFlags(EnumSet.of(Flag.MOVE));
         this.carbuncle = carbuncle;
     }
@@ -48,11 +50,13 @@ public class TakeItemGoal extends CheckStuckGoal {
 
     public void getItem(){
         World world = carbuncle.world;
-        IInventory i = (IInventory) world.getTileEntity(carbuncle.getFromPos());
-        for(int j = 0; j < i.getSizeInventory(); j++){
-            if(!i.getStackInSlot(j).isEmpty() && isValidItem(carbuncle, i.getStackInSlot(j))){
+        IItemHandler iItemHandler = world.getTileEntity(carbuncle.getFromPos()).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+        if(iItemHandler == null)
+            return;
+        for(int j = 0; j < iItemHandler.getSlots(); j++){
+            if(!iItemHandler.getStackInSlot(j).isEmpty() && isValidItem(carbuncle, iItemHandler.getStackInSlot(j))){
 
-                carbuncle.setHeldStack(i.removeStackFromSlot(j));
+                carbuncle.setHeldStack(iItemHandler.extractItem(j, 64, false));
 
                 carbuncle.world.playSound(null, carbuncle.getPosX(),carbuncle.getPosY(), carbuncle.getPosZ(),
                         SoundEvents.ENTITY_ITEM_PICKUP, carbuncle.getSoundCategory(),1.0F, 1.0F);
@@ -74,7 +78,11 @@ public class TakeItemGoal extends CheckStuckGoal {
     public void tick() {
         if(carbuncle.getHeldStack().isEmpty() && carbuncle.getFromPos() != null && BlockUtil.distanceFrom(carbuncle.getPosition(), carbuncle.getFromPos()) < 1.5D){
             World world = carbuncle.world;
-            if(world.getTileEntity(carbuncle.getFromPos()) instanceof IInventory){
+            TileEntity tileEntity = world.getTileEntity(carbuncle.getFromPos());
+            if(tileEntity == null)
+                return;
+            IItemHandler iItemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+            if(iItemHandler != null){
                 getItem();
                 return;
             }

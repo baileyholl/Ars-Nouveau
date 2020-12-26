@@ -4,15 +4,15 @@ import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.common.block.ManaBlock;
 import com.hollingsworth.arsnouveau.common.block.SummoningCrystal;
 import com.hollingsworth.arsnouveau.common.entity.EntityWhelp;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
-
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,13 +20,11 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 
@@ -76,36 +74,13 @@ public class SummoningCrystalTile extends AbstractManaTile {
         }
     }
 
-    public List<IInventory> inventories(){
-        if(world == null)return new ArrayList<>();
-        ArrayList<IInventory> iInventories = new ArrayList<>();
-        for(Direction d : Direction.values()){
-            IInventory iInventory =  HopperTileEntity.getInventoryAtPosition(world, pos.offset(d));
-            if(iInventory != null)
-                iInventories.add(iInventory);
-        }
-
-        return iInventories;
-    }
 
     public ItemStack insertItem(ItemStack stack){
-        for(IInventory i : inventories()){
-            if(stack == ItemStack.EMPTY || stack == null)
-                break;
-            stack = HopperTileEntity.putStackInInventoryAllSlots(null, i, stack, null);
-        }
-        return stack;
+       return BlockUtil.insertItemAdjacent(world, pos, stack);
     }
 
     public ItemStack getItem(Item item){
-        ItemStack stack = ItemStack.EMPTY;
-        for(IInventory inv : inventories()){
-            for(int i = 0; i < inv.getSizeInventory(); ++i) {
-                if(inv.getStackInSlot(i).getItem() == item)
-                    return inv.getStackInSlot(i);
-            }
-        }
-        return stack;
+        return BlockUtil.getItemAdjacent(world, pos, stack -> stack.getItem() == item);
     }
 
 
@@ -155,25 +130,11 @@ public class SummoningCrystalTile extends AbstractManaTile {
     }
 
     public boolean enoughMana(int manaCost){
-        final boolean[] enough = {false};
-        BlockPos.getAllInBox(this.getPos().add(7, -3, 7), this.getPos().add(-7, 3, -7)).forEach(blockPos -> {
-            if(!enough[0] && world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= manaCost ) {
-                enough[0] = true;
-            }
-        });
-        return enough[0];
+        return ManaUtil.hasManaNearby(pos, world, 7, manaCost);
     }
 
     public boolean removeManaAround(int manaCost){
-        final boolean[] enough = {false};
-        BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
-            if(!enough[0] && world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= manaCost && !world.isRemote) {
-                ((ManaJarTile) world.getTileEntity(blockPos)).removeMana(manaCost);
-                enough[0] = true;
-                Networking.sendToNearby(world, pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW, pos.getX(), pos.getY(), pos.getZ(), blockPos.getX(), blockPos.getY(), blockPos.getZ(),5));
-            }
-        });
-        return enough[0];
+        return ManaUtil.takeManaNearbyWithParticles(pos, world, 7, manaCost) != null;
     }
 
     public boolean removeManaAround(List<AbstractSpellPart> spellParts){

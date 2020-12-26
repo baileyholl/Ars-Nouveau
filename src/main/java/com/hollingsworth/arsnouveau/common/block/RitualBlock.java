@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.api.ritual.RitualContext;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
-import com.hollingsworth.arsnouveau.ritual.RitualDig;
+import com.hollingsworth.arsnouveau.common.ritual.RitualDig;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;

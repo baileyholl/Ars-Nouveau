@@ -46,7 +46,7 @@ public class FindItem extends CheckStuckGoal {
 
     @Override
     public boolean shouldExecute() {
-        if(entityCarbuncle.world.rand.nextDouble() > 0.02)
+        if(entityCarbuncle.world.rand.nextDouble() > 0.05)
             return false;
         return !entityCarbuncle.isStuck && !nearbyItems().isEmpty() && entityCarbuncle.getHeldStack().isEmpty();
     }

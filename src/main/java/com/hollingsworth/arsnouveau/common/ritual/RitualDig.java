@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.ritual;
+package com.hollingsworth.arsnouveau.common.ritual;
 
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.ritual.RitualContext;

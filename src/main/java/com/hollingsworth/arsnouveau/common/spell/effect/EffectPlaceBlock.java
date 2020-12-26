@@ -50,7 +50,7 @@ public class EffectPlaceBlock extends AbstractEffect {
                 attemptPlace(world, stack, item, result);
             }else if(shooter instanceof IPlaceBlockResponder){
                 ItemStack stack = ((IPlaceBlockResponder) shooter).onPlaceBlock();
-                if(stack == null || !(stack.getItem() instanceof BlockItem))
+                if(stack.isEmpty() || !(stack.getItem() instanceof BlockItem))
                     return;
                 BlockItem item = (BlockItem) stack.getItem();
                 if(world.getBlockState(hitPos).getMaterial() != Material.AIR){

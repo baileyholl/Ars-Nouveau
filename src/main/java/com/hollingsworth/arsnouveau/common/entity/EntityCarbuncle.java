@@ -23,7 +23,6 @@ import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
@@ -41,6 +40,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.items.CapabilityItemHandler;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -202,7 +202,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, PlayerEntity playerEntity) {
         if(storedPos == null)
             return;
-        if(world.getTileEntity(storedPos) instanceof IInventory){
+        if(world.getTileEntity(storedPos) != null && world.getTileEntity(storedPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()){
             PortUtil.sendMessage(playerEntity, "Carbuncle will store items here.");
             setToPos(storedPos);
         }
@@ -221,7 +221,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         if(storedPos == null)
             return;
 
-        if(world.getTileEntity(storedPos)  instanceof IInventory){
+        if(world.getTileEntity(storedPos) != null && world.getTileEntity(storedPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()){
             PortUtil.sendMessage(playerEntity, "Carbuncle take from this inventory.");
             setFromPos(storedPos);
         }
