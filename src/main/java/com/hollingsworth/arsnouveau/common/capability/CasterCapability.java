@@ -22,12 +22,10 @@ import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nullable;
 
-import static com.hollingsworth.arsnouveau.setup.InjectionUtil.Null;
-
 public class CasterCapability {
 
     @CapabilityInject(ISpellCaster.class)
-    public static final Capability<ISpellCaster> CASTER_CAPABILITY = Null();
+    public static final Capability<ISpellCaster> CASTER_CAPABILITY = null;
 
     public static final Direction DEFAULT_FACING = null;
 

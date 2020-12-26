@@ -1,14 +1,18 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleSparkleData;
+import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
 import net.minecraft.network.IPacket;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class EntityRitualProjectile extends ColoredProjectile{
+
+    public BlockPos tilePos;
 
     public EntityRitualProjectile(World worldIn, double x, double y, double z) {
         super(worldIn, x, y, z);
@@ -19,23 +23,35 @@ public class EntityRitualProjectile extends ColoredProjectile{
     }
     @Override
     public void tick() {
+        if(!world.isRemote() && (tilePos == null || !(world.getTileEntity(tilePos) instanceof RitualTile) || ((RitualTile) world.getTileEntity(tilePos)).ritual == null )) {
+            this.remove();
+            System.out.println("removing");
+            return;
+        }
+
 
         lastTickPosX = getPosX();
         lastTickPosY = getPosY();
         lastTickPosZ = getPosZ();
-        this.setPosition(Math.sin(world.getGameTime()/10D)/9d + getPosX(), getPosY(), Math.cos(world.getGameTime()/10D)/9d + getPosZ());
+      //  this.setPosition(Math.sin(world.getGameTime()/10D)/9d+ getPosX(), getPosY(), Math.cos(world.getGameTime()/10D)/9d + getPosZ());
+       // this.setPosition(getpost);
+        this.setPosition(getPosX(), getPosY() + Math.sin(world.getGameTime()/10D)/10, getPosZ());
         prevPosX = getPosX();
         prevPosY = getPosY();
         prevPosZ = getPosZ();
 
+        System.out.println(this.getPositionVec());
         if(world.isRemote) {
             int counter = 0;
-            for (double j = 0; j < 5; j++) {
+            for (double j = 0; j < 3; j++) {
 
                 counter += world.rand.nextInt(3);
                 if (counter % (Minecraft.getInstance().gameSettings.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().gameSettings.particles.getId()) == 0) {
-                    world.addParticle(ParticleSparkleData.createData(getParticleColor()), (float) (getPositionVec().getX()), (float) (getPositionVec().getY()),
-                            (float) (getPositionVec().getZ()), 0.0125f * (rand.nextFloat() ), 0.0125f * (rand.nextFloat()), 0.0125f * (rand.nextFloat() ));
+                    world.addParticle(ParticleSparkleData.createData(getParticleColor()),
+                            (float) (getPositionVec().getX()) + Math.sin(world.getGameTime()/3D),
+                            (float) (getPositionVec().getY()),
+                            (float) (getPositionVec().getZ()) + Math.cos(world.getGameTime()/3D),
+                            0.0225f * (rand.nextFloat() ), 0.0225f * (rand.nextFloat()), 0.0225f * (rand.nextFloat() ));
                 }
             }
 //

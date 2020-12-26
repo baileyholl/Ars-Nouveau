@@ -162,15 +162,12 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.FLOURISHING_WOOD) public static RotatedPillarBlock FLOURISHING_WOOD;
     @ObjectHolder(LibBlockNames.ARCHWOOD_PLANK) public static ModBlock ARCHWOOD_PLANK;
 
-    @ObjectHolder(LibBlockNames.RITUAL_CIRCLE) public static ModBlock RITUAL_BLOCK;
+    @ObjectHolder(LibBlockNames.RITUAL_CIRCLE) public static RitualBlock RITUAL_BLOCK;
     @ObjectHolder(LibBlockNames.RITUAL_CIRCLE) public static TileEntityType<RitualTile> RITUAL_TILE;
 
 
     @ObjectHolder("an_stateprovider")
     public static BlockStateProviderType stateProviderType;
-//    @ObjectHolder(LibBlockNames.AB_SMOOTH) public static ModBlock AB_SMOOTH;
-//    @ObjectHolder(LibBlockNames.AB_SMOOTH_SLAB) public static ModBlock AB_SMOOTH_SLAB;
-//    @ObjectHolder(LibBlockNames.AB_CLOVER) public static ModBlock AB_CLOVER;
 
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
@@ -234,7 +231,7 @@ public class BlockRegistry {
             registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.FLOURISHING_WOOD));
             registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.CASCADING_WOOD));
             registry.register(new ModBlock(LOG_PROP, LibBlockNames.ARCHWOOD_PLANK));
-            registry.register(new ModBlock(LibBlockNames.RITUAL_CIRCLE));
+            registry.register(new RitualBlock(LibBlockNames.RITUAL_CIRCLE));
         }
 
         public static MagicLeaves createLeavesBlock() {
@@ -265,6 +262,7 @@ public class BlockRegistry {
             event.getRegistry().register(TileEntityType.Builder.create(VolcanicTile::new, BlockRegistry.VOLCANIC_BLOCK).build(null).setRegistryName(LibBlockNames.VOLCANIC_ACCUMULATOR));
             event.getRegistry().register(TileEntityType.Builder.create(WixieCauldronTile::new, BlockRegistry.WIXIE_CAULDRON).build(null).setRegistryName(LibBlockNames.WIXIE_CAULDRON));
             event.getRegistry().register(TileEntityType.Builder.create(CreativeManaJarTile::new, BlockRegistry.CREATIVE_MANA_JAR).build(null).setRegistryName(LibBlockNames.CREATIVE_MANA_JAR));
+            event.getRegistry().register(TileEntityType.Builder.create(RitualTile::new, BlockRegistry.RITUAL_BLOCK).build(null).setRegistryName(LibBlockNames.RITUAL_CIRCLE));
 
         }
 
@@ -325,6 +323,7 @@ public class BlockRegistry {
             registry.register(getDefaultBlockItem(BlockRegistry.BLAZING_WOOD, LibBlockNames.BLAZING_WOOD));
 
             registry.register(getDefaultBlockItem(BlockRegistry.ARCHWOOD_PLANK, LibBlockNames.ARCHWOOD_PLANK));
+            registry.register(getDefaultBlockItem(BlockRegistry.RITUAL_BLOCK, LibBlockNames.RITUAL_CIRCLE));
         }
 
         public static Item getDefaultBlockItem(Block block, String registry){

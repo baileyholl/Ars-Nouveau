@@ -20,12 +20,11 @@ public class ManaCondenserTile extends AbstractManaTile {
     public ManaCondenserTile() {
         super(BlockRegistry.MANA_CONDENSER_TILE);
         MinecraftForge.EVENT_BUS.register(this);
-        setMaxMana(500);
     }
 
     @Override
     public int getMaxMana() {
-        return 500;
+        return 1000;
     }
 
     @Override
@@ -39,6 +38,11 @@ public class ManaCondenserTile extends AbstractManaTile {
                 transferMana(this, jar);
             }
         }
+    }
+
+    @Override
+    public int getCurrentMana() {
+        return super.getCurrentMana();
     }
 
     @Override
@@ -61,9 +65,9 @@ public class ManaCondenserTile extends AbstractManaTile {
         if(isDisabled)
             return;
         if(BlockUtil.distanceFrom(pos, event.getPos()) <= 15) {
-            int mana = 200;
+            int mana = 50;
             if(world.getBlockState(event.getPos()).getBlock() instanceof ManaBloomCrop) {
-                mana += 100;
+                mana += 25;
             }
             this.addMana(mana);
             ParticleUtil.spawnFollowProjectile(world, event.getPos(), pos);
@@ -80,7 +84,7 @@ public class ManaCondenserTile extends AbstractManaTile {
             return;
 
         if(BlockUtil.distanceFrom(pos, event.getChild().getPosition()) <= 10)
-            this.addMana(100);
+            this.addMana(1000);
     }
 
     @SubscribeEvent
@@ -94,7 +98,7 @@ public class ManaCondenserTile extends AbstractManaTile {
 
         if(BlockUtil.distanceFrom(pos, e.getEntity().getPosition()) <= 15) {
             ParticleUtil.spawnFollowProjectile(world, e.getEntity().getPosition(), pos);
-            this.addMana(150);
+            this.addMana(200);
 
         }
     }

@@ -21,10 +21,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.controller.FlyingMovementController;
-import net.minecraft.entity.ai.goal.FollowMobGoal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.PrioritizedGoal;
-import net.minecraft.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
@@ -255,6 +252,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
         list.add(new PrioritizedGoal(2, new InspectPlantGoal(this, () -> this.crystalPos,15)));
         list.add(new PrioritizedGoal(1, new GoBackHomeGoal(this, () -> this.crystalPos,20)));
         list.add(new PrioritizedGoal(1, new GenerateDropsGoal(this)));
+        list.add(new PrioritizedGoal(0, new SwimGoal(this)));
         return list;
     }
 
@@ -265,6 +263,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
         list.add(new PrioritizedGoal(2, new LookRandomlyGoal(this)));
         list.add(new PrioritizedGoal(2, new WaterAvoidingRandomFlyingGoal(this, 1.0D)));
         list.add(new PrioritizedGoal(1, new BonemealGoal(this)));
+        list.add(new PrioritizedGoal(0, new SwimGoal(this)));
         return list;
     }
 
