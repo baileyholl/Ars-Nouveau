@@ -145,6 +145,6 @@ public class BlockUtil {
         return stack;
     }
 
-
+    private BlockUtil(){};
 
 }
