@@ -2,12 +2,12 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
+import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.common.block.RuneBlock;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -26,7 +26,7 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 import java.util.List;
 import java.util.UUID;
 
-public class RuneTile extends AnimatedTile {
+public class RuneTile extends AnimatedTile implements IPickupResponder {
     public List<AbstractSpellPart> recipe;
     public boolean isTemporary;
     public boolean isCharged;
@@ -114,15 +114,18 @@ public class RuneTile extends AnimatedTile {
         if(!world.isRemote && this.isTemporary){
             world.destroyBlock(this.pos, false);
         }
-        if(!world.isRemote && !this.isCharged){
-            BlockPos fromPos = ManaUtil.takeManaNearby(pos, world, 10, 100);
+        if(!world.isRemote){
+            BlockPos fromPos = ManaUtil.takeManaNearbyWithParticles(pos, world, 10, 100);
             if(fromPos != null) {
                 this.isCharged = true;
-                Networking.sendToNearby(world, this.pos, new PacketANEffect(PacketANEffect.EffectType.TIMED_GLOW,
-                        pos.getX(), pos.getY(), pos.getZ(),fromPos.getX(), fromPos.getY(), fromPos.getZ(), 5));
                 world.setBlockState(pos, world.getBlockState(pos).func_235896_a_(RuneBlock.POWERED));
             }else
                 ticksUntilCharge = 20 * 3;
         }
+    }
+
+    @Override
+    public ItemStack onPickup(ItemStack stack) {
+        return BlockUtil.insertItemAdjacent(world, pos, stack);
     }
 }
