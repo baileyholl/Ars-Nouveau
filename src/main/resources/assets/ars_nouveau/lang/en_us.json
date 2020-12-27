@@ -261,7 +261,7 @@
 	"ars_nouveau.off": "Active: No",
 	"item.ars_nouveau.void_jar": "Jar of Voiding",
 	"ars_nouveau.rune.setperm": "This rune is now permanent.",
-	"ars_nouveau.page.void_jar": "A jar that can destroy items on pickup in exchange for a small amount of mana. To turn the jar on and off, use the jar while sneaking. To add or remove an item to be destroyed by the jar, use the jar with an item in the off hand, or use an item on the Scribes Table with the jar placed on it. The jar must be in your hotbar to function.",
+	"ars_nouveau.page.void_jar": "A jar that can destroy items on pickup and grants a small amount of mana in return. To turn the jar on and off, use the jar while sneaking. To add or remove an item to be destroyed by the jar, use the jar with an item in the off hand, or use an item on the Scribes Table with the jar placed on it. The jar must be in your hotbar to function.",
 	"ars_nouveau.page.runic_chalk": "Runic chalk can be used to place permanent Runes on the ground that will cast spells on entities that walk over them. To give a rune a spell, inscribe spell parchment using the scribes table. Once the rune has cast the spell, it will become uncharged. An uncharged rune will charge itself from nearby mana jars. Using Runic Chalk on a temporary rune will convert it to a permanent one.",
 	"ars_nouveau.wand.invalid": "Invalid spell. Wands accept Effects and Augments only.",
 	"item.ars_nouveau.wand":"Casting Wand",
@@ -293,5 +293,9 @@
 	"block.ars_nouveau.red_archwood_leaves":"Blazing Archwood Leaves",
 	"block.ars_nouveau.archwood_planks":"Archwood Planks",
 	"ars_nouveau.page.wand": "Wands accept only a single spell, and are inscribed using the Scribes Table. A Wand always starts with Projectile -> Accelerate, and MUST be inscribed with a spell that does not have another method. This allows you to cast spells beyond the 10 spell cap. If you want a wand that casts Break, inscribe the wand with JUST break, and your result will be a wand with Projectile -> Acclerate -> Break.",
-	"ars_nouveau.carbuncle.cleared": "Tasks cleared."
+	"ars_nouveau.carbuncle.cleared": "Tasks cleared.",
+	"block.ars_nouveau.red_archwood_wood":"Blazing Archwood Wood",
+	"block.ars_nouveau.green_archwood_wood":"Flourishing Archwood Wood",
+	"block.ars_nouveau.purple_archwood_wood":"Vexing Archwood Wood",
+	"block.ars_nouveau.blue_archwood_wood":"Cascading Archwood Wood"
 }
