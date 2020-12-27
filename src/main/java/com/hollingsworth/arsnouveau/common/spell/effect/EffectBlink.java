@@ -123,6 +123,6 @@ public class EffectBlink extends AbstractEffect {
 
     @Override
     protected String getBookDescription() {
-        return "If the spell hits a block, the caster will be teleported to that location. If using Self, the caster will teleport a short distance in that direction.";
+        return "Teleports the caster to a location. If an entity is hit and the caster is holding a Warp Scroll in the offhand, the entity will be warped to the location on the Warp Scroll. When used on Self, the caster blinks forward.";
     }
 }
