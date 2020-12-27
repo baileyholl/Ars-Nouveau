@@ -77,6 +77,9 @@ public class EffectExchange extends AbstractEffect {
             handlers = ((IPlaceBlockResponder) spellContext.castingTile).getInventory();
         }
 
+        if(shooter instanceof IPlaceBlockResponder && shooter instanceof IPickupResponder)
+            handlers = ((IPlaceBlockResponder) shooter).getInventory();
+
         Block firstBlock = null;
         for(BlockPos pos1 : posList) {
             BlockState state = world.getBlockState(pos1);
@@ -86,7 +89,7 @@ public class EffectExchange extends AbstractEffect {
             }
             if(isRealPlayer(shooter) && spellContext.castingTile == null) {
                 firstBlock = swapFromInv(list, origState, world, pos1, result, shooter, 9, firstBlock);
-            }else if(spellContext.castingTile instanceof IPlaceBlockResponder && spellContext.castingTile instanceof IPickupResponder){
+            } else if((spellContext.castingTile instanceof IPlaceBlockResponder && spellContext.castingTile instanceof IPickupResponder) || (shooter instanceof IPlaceBlockResponder && shooter instanceof IPickupResponder)){
                 boolean shouldBreak = false;
                 for(IItemHandler i : handlers){
                     for(int slot = 0; slot < i.getSlots(); slot++){
@@ -113,6 +116,7 @@ public class EffectExchange extends AbstractEffect {
         }
 
     }
+
 
 
 

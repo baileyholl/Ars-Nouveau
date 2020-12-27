@@ -111,7 +111,7 @@ public class BlockUtil {
     }
 
     public static List<IItemHandler> getAdjacentInventories(World world, BlockPos pos){
-        if(world == null)return new ArrayList<>();
+        if(world == null || pos == null)return new ArrayList<>();
         ArrayList<IItemHandler> iInventories = new ArrayList<>();
         for(Direction d : Direction.values()){
             TileEntity tileEntity = world.getTileEntity(pos.offset(d));
