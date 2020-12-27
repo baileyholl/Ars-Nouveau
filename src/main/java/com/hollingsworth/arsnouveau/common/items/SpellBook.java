@@ -18,7 +18,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.PhantomBlockTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketOpenGUI;
+import com.hollingsworth.arsnouveau.common.network.PacketOpenSpellBook;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.client.settings.KeyBinding;
@@ -121,7 +121,7 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
         // Crafting mode
         if(getMode(stack.getTag()) == 0 && playerIn instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = (ServerPlayerEntity) playerIn;
-            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->player), new PacketOpenGUI(stack.getTag(), getTier().ordinal(), getUnlockedSpellString(player.getHeldItem(handIn).getTag())));
+            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->player), new PacketOpenSpellBook(stack.getTag(), getTier().ordinal(), getUnlockedSpellString(player.getHeldItem(handIn).getTag())));
             return new ActionResult<>(ActionResultType.CONSUME, stack);
         }
         SpellResolver resolver = new SpellResolver(getCurrentRecipe(stack), new SpellContext(getCurrentRecipe(stack), playerIn)
