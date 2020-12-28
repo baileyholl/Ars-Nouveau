@@ -297,5 +297,6 @@
 	"block.ars_nouveau.red_archwood_wood":"Blazing Archwood Wood",
 	"block.ars_nouveau.green_archwood_wood":"Flourishing Archwood Wood",
 	"block.ars_nouveau.purple_archwood_wood":"Vexing Archwood Wood",
-	"block.ars_nouveau.blue_archwood_wood":"Cascading Archwood Wood"
+	"block.ars_nouveau.blue_archwood_wood":"Cascading Archwood Wood",
+	"ars_nouveau.connections.fail": "Too far away."
 }

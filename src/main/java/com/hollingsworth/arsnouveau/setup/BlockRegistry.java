@@ -284,10 +284,10 @@ public class BlockRegistry {
             registry.register(new BlockItem(BlockRegistry.ARCANE_BRICKS, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.ARCANE_BRICKS));
             registry.register(new BlockItem(BlockRegistry.SCRIBES_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.SCRIBES_BLOCK));
             registry.register(new BlockItem(BlockRegistry.ARCANE_ROAD, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.ARCANE_ROAD));
-            registry.register(new BlockItem(BlockRegistry.ARCANE_RELAY, ItemsRegistry.defaultItemProperties().setISTER(()-> RelayRenderer.ISRender::new)).setRegistryName(LibBlockNames.ARCANE_RELAY));
+            registry.register(new AnimBlockItem(BlockRegistry.ARCANE_RELAY, ItemsRegistry.defaultItemProperties().setISTER(()-> RelayRenderer::getISTER)).setRegistryName(LibBlockNames.ARCANE_RELAY));
             registry.register(new BlockItem(BlockRegistry.RUNE_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.RUNE));
             registry.register(new BlockItem(BlockRegistry.PORTAL_BLOCK, new Item.Properties()).setRegistryName(LibBlockNames.PORTAL));
-            registry.register(new BlockItem(BlockRegistry.ARCANE_RELAY_SPLITTER, ItemsRegistry.defaultItemProperties().setISTER(()-> RelaySplitterRenderer.ISRender::new)).setRegistryName(LibBlockNames.ARCANE_RELAY_SPLITTER));
+            registry.register(new AnimBlockItem(BlockRegistry.ARCANE_RELAY_SPLITTER, ItemsRegistry.defaultItemProperties().setISTER(()-> RelaySplitterRenderer::getISTER)).setRegistryName(LibBlockNames.ARCANE_RELAY_SPLITTER));
             registry.register(new BlockItem(BlockRegistry.CRYSTALLIZER_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.CRYSTALLIZER));
             registry.register(new BlockItem(BlockRegistry.ARCANE_CORE_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.ARCANE_CORE));
             registry.register(getDefaultBlockItem(BlockRegistry.AB_ALTERNATE, LibBlockNames.AB_ALTERNATE));
