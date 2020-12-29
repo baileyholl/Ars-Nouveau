@@ -9,12 +9,13 @@ import net.minecraft.util.text.StringTextComponent;
 
 public class GuiRitualBook extends BaseBook{
     public String ritualDesc = "";
-
+    public Minecraft mc;
     @Override
     public void init() {
         super.init();
-        addButton(new RitualButton(this, bookLeft + 15, bookTop +20, (b)->ritualDesc = ((RitualButton)b).desc, "This is a ritual that does super cool stuff"));
+        addButton(new RitualButton(this, bookLeft + 15, bookTop +15, b->ritualDesc = ((RitualButton)b).desc, "Digging the Well", "Digs a vertical shaft down to bedrock, filling in liquid blocks on the sides."));
         addButton(new GuiImageButton(bookRight - 95, bookBottom - 28, 0,0,46, 18, 46, 18, "textures/gui/create_button.png", (n)->{}));
+        this.mc = this.minecraft;
     }
 
     public static void open(){
@@ -25,8 +26,12 @@ public class GuiRitualBook extends BaseBook{
     public void drawBackgroundElements(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
         ITextProperties itextproperties = new StringTextComponent(ritualDesc);
-        minecraft.fontRenderer.func_238418_a_(itextproperties, bookLeft +145, bookTop +15, 120, 100);
+        minecraft.fontRenderer.func_238418_a_(itextproperties, bookLeft +145, bookTop +15, 120, 0);
         minecraft.fontRenderer.drawString(stack,"Select", 185, 157,  0);
+        minecraft.fontRenderer.drawString(stack,"Earth: 123", 145, 137,  10053171);
+        minecraft.fontRenderer.drawString(stack,"Water: 123", 145, 127,  26367);
+        minecraft.fontRenderer.drawString(stack,"Fire: 123", 205, 127,  16724736);
+        //10053171
     }
 
     @Override
