@@ -21,7 +21,7 @@ public class AugmentExtract extends AbstractAugment {
     @Nullable
     @Override
     public Item getCraftingReagent() {
-        return Items.SHEARS;
+        return Items.NETHERITE_PICKAXE;
     }
 
     @Override

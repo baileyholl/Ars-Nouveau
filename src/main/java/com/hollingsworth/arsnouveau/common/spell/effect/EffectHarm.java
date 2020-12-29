@@ -26,7 +26,7 @@ public class EffectHarm extends AbstractEffect {
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof EntityRayTraceResult){
-            float damage = 5.0f +1.0f * getAmplificationBonus(augments);
+            float damage = 5.0f +2.0f * getAmplificationBonus(augments);
             Entity entity = ((EntityRayTraceResult) rayTraceResult).getEntity();
             if(entity instanceof LivingEntity){
                 int time = getBuffCount(augments, AugmentExtendTime.class);

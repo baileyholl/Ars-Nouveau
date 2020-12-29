@@ -3,8 +3,10 @@ package com.hollingsworth.arsnouveau.api.spell;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtract;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
 import net.minecraft.block.material.Material;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -38,7 +40,18 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     // Apply the effect at the destination position.
-    public abstract void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext);
+    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext){
+        if(rayTraceResult instanceof BlockRayTraceResult)
+            onResolveBlock((BlockRayTraceResult) rayTraceResult, world, shooter, augments, spellContext);
+
+        if(rayTraceResult instanceof EntityRayTraceResult)
+            onResolveEntity((EntityRayTraceResult) rayTraceResult, world, shooter, augments, spellContext);
+    }
+
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext){}
+
+
+    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext){}
 
     public void applyPotion(LivingEntity entity, Effect potionEffect, List<AbstractAugment> augmentTypes){
         applyPotion(entity, potionEffect, augmentTypes, 30, 8);
@@ -124,5 +137,14 @@ public abstract class AbstractEffect extends AbstractSpellPart {
 
     public boolean nonAirAnythingSuccess(RayTraceResult result, World world){
         return nonAirBlockSuccess(result, world) || livingEntityHitSuccess(result);
+    }
+
+    public void applyEnchantments(List<AbstractAugment> augments, ItemStack stack){
+        if(hasBuff(augments, AugmentExtract.class)){
+            stack.addEnchantment(Enchantments.SILK_TOUCH, 1);
+        }
+        if(hasBuff(augments, AugmentFortune.class)){
+            stack.addEnchantment(Enchantments.FORTUNE, getBuffCount(augments, AugmentExtract.class));
+        }
     }
 }
