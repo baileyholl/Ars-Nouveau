@@ -1,6 +1,7 @@
 {
   "parent": "minecraft:block/fence_side",
   "textures": {
-    "texture": "ars_nouveau:blocks/archwood_planks"
+    "texture": "ars_nouveau:blocks/archwood_planks",
+    "particle": "ars_nouveau:blocks/archwood_planks"
   }
 }
