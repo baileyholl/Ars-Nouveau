@@ -211,7 +211,6 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
 
     @Override
     public void registerControllers(AnimationData data) {
-
         data.addAnimationController(new AnimationController(this, "rotate_controller", 0, this::idlePredicate));
     }
 

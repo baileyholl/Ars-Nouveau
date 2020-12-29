@@ -298,5 +298,19 @@
 	"block.ars_nouveau.green_archwood_wood":"Flourishing Archwood Wood",
 	"block.ars_nouveau.purple_archwood_wood":"Vexing Archwood Wood",
 	"block.ars_nouveau.blue_archwood_wood":"Cascading Archwood Wood",
-	"ars_nouveau.connections.fail": "Too far away."
+	"ars_nouveau.connections.fail": "Too far away.",
+	"block.ars_nouveau.archwood_slab":"Archwood Slab",
+	"block.ars_nouveau.archwood_fence":"Archwood Fence",
+	"block.ars_nouveau.archwood_fence_gate":"Archwood Fence Gate",
+	"block.ars_nouveau.archwood_trapdoor":"Archwood Trapdoor",
+	"block.ars_nouveau.archwood_pressure_plate":"Archwood Pressure Plate",
+	"block.ars_nouveau.archwood_door":"Archwood Door",
+	"block.ars_nouveau.stripped_blue_archwood_log":"Stripped Cascading Archwood Wood",
+	"block.ars_nouveau.stripped_blue_archwood_wood":"Stripped Cascading Archwood Wood",
+	"block.ars_nouveau.stripped_red_archwood_log":"Stripped Blazing Archwood Wood",
+	"block.ars_nouveau.stripped_red_archwood_wood":"Stripped Blazing Archwood Wood",
+	"block.ars_nouveau.stripped_green_archwood_log":"Stripped Flourishing Archwood Wood",
+	"block.ars_nouveau.stripped_green_archwood_wood":"Stripped Flourishing Archwood Wood",
+	"block.ars_nouveau.stripped_purple_archwood_log":"Stripped Vexing Archwood Wood",
+	"block.ars_nouveau.stripped_purple_archwood_wood":"Stripped Vexing Archwood Wood"
 }
