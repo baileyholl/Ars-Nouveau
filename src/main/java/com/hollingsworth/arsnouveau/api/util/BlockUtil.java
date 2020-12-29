@@ -11,14 +11,21 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
 
 public class BlockUtil {
 
@@ -102,5 +109,42 @@ public class BlockUtil {
             return world.setBlockState(pos, ifluidstate.getBlockState(), 3);
         }
     }
+
+    public static List<IItemHandler> getAdjacentInventories(World world, BlockPos pos){
+        if(world == null || pos == null)return new ArrayList<>();
+        ArrayList<IItemHandler> iInventories = new ArrayList<>();
+        for(Direction d : Direction.values()){
+            TileEntity tileEntity = world.getTileEntity(pos.offset(d));
+            if(tileEntity == null)
+                continue;
+
+            if(tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent())
+                iInventories.add(tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null));
+        }
+
+        return iInventories;
+    }
+
+    public static ItemStack insertItemAdjacent(World world, BlockPos pos, ItemStack stack){
+        for(IItemHandler i : BlockUtil.getAdjacentInventories(world, pos)){
+            if(stack == ItemStack.EMPTY || stack == null)
+                break;
+            stack = ItemHandlerHelper.insertItemStacked(i, stack, false);
+        }
+        return stack;
+    }
+
+    public static ItemStack getItemAdjacent(World world, BlockPos pos, Predicate<ItemStack> matchPredicate){
+        ItemStack stack = ItemStack.EMPTY;
+        for(IItemHandler inv : BlockUtil.getAdjacentInventories(world, pos)){
+            for(int i = 0; i < inv.getSlots(); ++i) {
+                if(matchPredicate.test(inv.getStackInSlot(i)))
+                    return inv.getStackInSlot(i);
+            }
+        }
+        return stack;
+    }
+
+    private BlockUtil(){};
 
 }

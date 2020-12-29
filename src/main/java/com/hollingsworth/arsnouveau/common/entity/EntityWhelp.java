@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.SummoningCrystalTile;
@@ -15,17 +16,14 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.FlyingEntity;
 import net.minecraft.entity.LivingEntity;
-
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-
 import net.minecraft.entity.ai.controller.FlyingMovementController;
 import net.minecraft.entity.ai.goal.LookAtGoal;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -44,6 +42,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -334,8 +333,8 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     public ItemStack getHeldItem() {
         if(crystalPos != null && world.getTileEntity(crystalPos) instanceof SummoningCrystalTile){
             SummoningCrystalTile tile = (SummoningCrystalTile) world.getTileEntity(crystalPos);
-            for(IInventory inv : tile.inventories()){
-                for(int i = 0; i < inv.getSizeInventory(); i++){
+            for(IItemHandler inv : BlockUtil.getAdjacentInventories(world, tile.getPos())){
+                for(int i = 0; i < inv.getSlots(); i++){
                     if(inv.getStackInSlot(i).isItemEqual(this.dataManager.get(HELD_ITEM)))
                         return inv.getStackInSlot(i).split(1);
                 }
@@ -343,5 +342,10 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
 
         }
         return ItemStack.EMPTY;
+    }
+
+    @Override
+    public List<IItemHandler> getInventory() {
+        return BlockUtil.getAdjacentInventories(world, crystalPos);
     }
 }

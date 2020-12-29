@@ -4,18 +4,17 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
 import com.hollingsworth.arsnouveau.api.spell.IPlaceBlockResponder;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.BlockState;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -30,35 +29,17 @@ public class SpellTurretTile extends TileEntity  implements IPickupResponder, IP
 
     @Override
     public ItemStack onPickup(ItemStack stack) {
-        for(IInventory i : inventories()){
-            if(stack == ItemStack.EMPTY || stack == null)
-                break;
-            stack = HopperTileEntity.putStackInInventoryAllSlots(null, i, stack, null);
-        }
-        return stack;
+        return BlockUtil.insertItemAdjacent(world, pos, stack);
     }
 
     @Override
     public ItemStack onPlaceBlock() {
-        for(IInventory inv : inventories()){
-            for(int i = 0; i < inv.getSizeInventory(); ++i) {
-                if(inv.getStackInSlot(i).getItem() instanceof BlockItem)
-                    return inv.getStackInSlot(i);
-            }
-        }
-        return null;
+        return BlockUtil.getItemAdjacent(world, pos, (stack) -> stack.getItem() instanceof BlockItem);
     }
 
-    public List<IInventory> inventories(){
-        if(world == null)return new ArrayList<>();
-        ArrayList<IInventory> iInventories = new ArrayList<>();
-        for(Direction d : Direction.values()){
-            IInventory iInventory =  HopperTileEntity.getInventoryAtPosition(world, pos.offset(d));
-            if(iInventory != null)
-                iInventories.add(iInventory);
-        }
-
-        return iInventories;
+    @Override
+    public List<IItemHandler> getInventory() {
+        return BlockUtil.getAdjacentInventories(world, pos);
     }
 
     @Override

@@ -47,6 +47,7 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
     public int entityID;
 
     public boolean hasMana;
+    public boolean isOff;
 
     RecipeWrapper recipeWrapper;
     public CraftingProgress craftManager = new CraftingProgress();
@@ -228,6 +229,7 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
         craftManager = CraftingProgress.read(compound);
         this.entityID = compound.getInt("entityid");
         this.hasMana = compound.getBoolean("hasmana");
+        this.isOff = compound.getBoolean("off");
     }
 
     @Override
@@ -244,6 +246,7 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
 
         compound.putInt("entityid", entityID);
         compound.putBoolean("hasmana",hasMana);
+        compound.putBoolean("off", isOff);
         return super.write(compound);
     }
 

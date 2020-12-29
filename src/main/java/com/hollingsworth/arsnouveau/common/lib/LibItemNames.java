@@ -60,4 +60,5 @@ public class LibItemNames {
 
     public static final String WAND = "wand";
     public static final String VOID_JAR = "void_jar";
+    public static final String RITUAL_BOOK = "ritual_book";
 }

@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.LootTableProvider;
 import net.minecraft.data.loot.BlockLootTables;
+import net.minecraft.item.Items;
 import net.minecraft.loot.*;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
@@ -54,18 +55,23 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.FLOURISHING_SAPLING);
             registerDropSelf(BlockRegistry.ARCHWOOD_PLANK);
 
+            registerDrop(BlockRegistry.WIXIE_CAULDRON, Items.CAULDRON);
+
             registerLeavesAndSticks(BlockRegistry.BLAZING_LEAVES, BlockRegistry.BLAZING_SAPLING);
             registerLeavesAndSticks(BlockRegistry.CASCADING_LEAVE, BlockRegistry.CASCADING_SAPLING);
             registerLeavesAndSticks(BlockRegistry.FLOURISHING_LEAVES, BlockRegistry.FLOURISHING_SAPLING);
             registerLeavesAndSticks(BlockRegistry.VEXING_LEAVES, BlockRegistry.VEXING_SAPLING);
 
+
+            registerDropSelf(BlockRegistry.BLAZING_WOOD);
+            registerDropSelf(BlockRegistry.VEXING_WOOD);
+            registerDropSelf(BlockRegistry.CASCADING_WOOD);
+            registerDropSelf(BlockRegistry.FLOURISHING_WOOD);
         }
 
         public void registerLeavesAndSticks(Block leaves, Block sapling){
             list.add(leaves);
-            this.registerLootTable(leaves, (l_state) -> {
-                return droppingWithChancesAndSticks(l_state, sapling, DEFAULT_SAPLING_DROP_RATES);
-            });
+            this.registerLootTable(leaves, l_state -> droppingWithChancesAndSticks(l_state, sapling, DEFAULT_SAPLING_DROP_RATES));
         }
 
         public void registerDropSelf(Block block){

@@ -60,7 +60,7 @@ public class PacketUpdateSpellColors {
                     SpellBook.setMode(tag, castSlot);
                     Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->ctx.get().getSender()), new PacketUpdateBookGUI(tag));
                     Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->ctx.get().getSender()),
-                            new PacketOpenGUI(stack.getTag(), ((SpellBook) stack.getItem()).tier.ordinal(), SpellBook.getUnlockedSpellString(tag)));
+                            new PacketOpenSpellBook(stack.getTag(), ((SpellBook) stack.getItem()).tier.ordinal(), SpellBook.getUnlockedSpellString(tag)));
 
                 }
             }

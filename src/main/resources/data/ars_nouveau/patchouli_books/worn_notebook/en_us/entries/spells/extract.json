@@ -13,7 +13,7 @@
       "tier": "TWO",
       "mana_cost": "Medium",
       "clay_type": "ars_nouveau:marvelous_clay",
-      "reagent": "minecraft:shears"
+      "reagent": "minecraft:netherite_pickaxe"
     }
   ]
 }

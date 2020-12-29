@@ -49,6 +49,14 @@ public class WixieCauldron extends ModBlock{
         builder.add(FILLED, CONVERTED);
     }
 
+    @Override
+    public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
+        if(!world.isRemote() && world.getTileEntity(pos) instanceof WixieCauldronTile){
+            ((WixieCauldronTile) world.getTileEntity(pos)).isOff = world.isBlockPowered(pos);
+        }
+    }
+
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {

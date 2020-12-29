@@ -43,4 +43,10 @@ public abstract class AnimatedTile extends TileEntity implements ITickableTileEn
         super.onDataPacket(net, pkt);
         handleUpdateTag(world.getBlockState(pos),pkt.getNbtCompound());
     }
+
+
+    public void updateBlock(){
+        BlockState state = world.getBlockState(pos);
+        world.notifyBlockUpdate(pos, state, state, 2);
+    }
 }

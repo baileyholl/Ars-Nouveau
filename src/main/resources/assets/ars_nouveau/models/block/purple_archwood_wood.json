@@ -1,7 +1,7 @@
 {
-  "parent": "minecraft:block/cube_column",
-  "textures": {
-    "end": "ars_nouveau:blocks/purple_archwood_log",
-    "side": "ars_nouveau:block/purple_archwood_log"
-  }
+	"parent":"block/cube_all",
+	"textures":{
+		"all":"ars_nouveau:blocks/purple_archwood_log",
+		"particle":"ars_nouveau:blocks/purple_archwood_log"
+	}
 }

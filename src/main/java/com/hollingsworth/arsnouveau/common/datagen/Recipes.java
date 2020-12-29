@@ -208,9 +208,21 @@ public class Recipes extends RecipeProvider {
                     .build(consumer);
 
             shapelessBuilder(BlockRegistry.ARCHWOOD_PLANK, 4).addIngredient(ARCHWOOD_LOG).build(consumer);
+            makeWood(BlockRegistry.VEXING_LOG, BlockRegistry.VEXING_WOOD, 3).build(consumer);
+            makeWood(BlockRegistry.CASCADING_LOG, BlockRegistry.CASCADING_WOOD, 3).build(consumer);
+            makeWood(BlockRegistry.BLAZING_LOG, BlockRegistry.BLAZING_WOOD, 3).build(consumer);
+            makeWood(BlockRegistry.FLOURISHING_LOG, BlockRegistry.FLOURISHING_WOOD, 3).build(consumer);
 
         }
     }
+
+
+    public static ShapedRecipeBuilder makeWood(IItemProvider logs, IItemProvider wood, int count){
+        return ShapedRecipeBuilder.shapedRecipe(wood, count).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                .patternLine("xx ")
+                .patternLine("xx ").key('x', logs);
+    }
+
     public ShapelessRecipeBuilder shapelessBuilder(IItemProvider result, int resultCount){
         return ShapelessRecipeBuilder.shapelessRecipe(result, resultCount).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook));
     }

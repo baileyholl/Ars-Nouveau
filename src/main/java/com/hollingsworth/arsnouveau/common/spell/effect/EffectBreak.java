@@ -4,14 +4,15 @@ import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
-import com.hollingsworth.arsnouveau.api.util.LootUtil;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtract;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
@@ -25,6 +26,7 @@ import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
 
 import static com.hollingsworth.arsnouveau.api.util.BlockUtil.destroyBlockSafely;
 
@@ -47,36 +49,47 @@ public class EffectBreak extends AbstractEffect {
 
             int aoeBuff = getBuffCount(augments, AugmentAOE.class);
             List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
+
             for(BlockPos pos1 : posList) {
                 state = world.getBlockState(pos1);
 
-                if(!canBlockBeHarvested(augments, world, pos1)){
+                if(!canBlockBeHarvested(augments, world, pos1) || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, pos1)){
                     continue;
                 }
+                ItemStack stack = getPlayer(shooter, (ServerWorld)world).getHeldItemMainhand();
+                Map<Enchantment, Integer> map =  EnchantmentHelper.getEnchantments(stack);
+                int numFortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack);
+                int numSilk = EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stack);
+
+
 
                 if (hasBuff(augments, AugmentExtract.class)) {
-                    ItemStack stack = LootUtil.getDefaultFakeTool();
                     stack.addEnchantment(Enchantments.SILK_TOUCH, 1);
-                    Block.spawnDrops(world.getBlockState(pos1), world, pos1, world.getTileEntity(pos1), shooter,stack);
+                    state.getBlock().harvestBlock(world, getPlayer(shooter, (ServerWorld) world), pos1, world.getBlockState(pos1), world.getTileEntity(pos1), stack);
+
                     destroyBlockSafely(world, pos1, false, shooter);
+
                 } else if (hasBuff(augments, AugmentFortune.class)) {
-                    ItemStack stack = LootUtil.getDefaultFakeTool();
                     int bonus = getBuffCount(augments, AugmentFortune.class);
                     stack.addEnchantment(Enchantments.FORTUNE, bonus);
-                    Block.spawnDrops(world.getBlockState(pos1), world, pos1, world.getTileEntity(pos1), shooter,stack);
+                    //Block.spawnDrops(world.getBlockState(pos1), world, pos1, world.getTileEntity(pos1), shooter,stack);
                     state.getBlock().dropXpOnBlockBreak((ServerWorld) world, pos1, state.getExpDrop(world, pos1, bonus, 0));
+                    state.getBlock().harvestBlock(world, getPlayer(shooter, (ServerWorld) world), pos1, world.getBlockState(pos1), world.getTileEntity(pos1), stack);
                     destroyBlockSafely(world, pos1, false, shooter);
                 } else {
-                    destroyBlockSafely(world, pos1, true, shooter);
+                    state.getBlock().harvestBlock(world, getPlayer(shooter, (ServerWorld) world), pos1, world.getBlockState(pos1), world.getTileEntity(pos1), stack);
+                    destroyBlockSafely(world, pos1, false, shooter);
                     state.getBlock().dropXpOnBlockBreak((ServerWorld) world, pos1, state.getExpDrop(world, pos1, 0, 0));
                 }
+
+                EnchantmentHelper.setEnchantments(map, stack);
             }
         }
     }
 
     @Override
     public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
-        return rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos()).getMaterial() != Material.AIR;
+        return rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos()).getMaterial() != Material.AIR && canBlockBeHarvested(augments, world, ((BlockRayTraceResult) rayTraceResult).getPos());
     }
 
     @Override

@@ -60,6 +60,9 @@ public class WarpScroll extends ModItem{
     public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
         ItemStack stack = player.getHeldItem(hand);
         BlockPos pos = getPos(stack);
+        if(hand == Hand.OFF_HAND && player.getHeldItemMainhand().getItem() instanceof SpellBook)
+            return new ActionResult<>(ActionResultType.SUCCESS, stack);
+
         if(world.isRemote())
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
 
@@ -94,7 +97,7 @@ public class WarpScroll extends ModItem{
         stack.getTag().putString("dim_2", dimension); //dim refers to the old int value on old scrolls, no crash please!
     }
 
-    public BlockPos getPos(ItemStack stack){
+    public static BlockPos getPos(ItemStack stack){
         if(!stack.hasTag())
             return null;
         CompoundNBT tag = stack.getTag();

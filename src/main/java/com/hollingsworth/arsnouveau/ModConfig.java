@@ -63,4 +63,6 @@ public class ModConfig {
     public static String EffectGravityID = "gravity";
     public static String EffectConjureWaterID = "conjure_water";
     public static String EffectLeashID = "leash";
+    public static String EffectCutID = "cut";
+    public static String EffectCrushID = "crush";
 }

@@ -3,27 +3,26 @@ package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
-import com.hollingsworth.arsnouveau.common.entity.goal.CheckStuckGoal;
 import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.Path;
-import net.minecraft.tileentity.HopperTileEntity;
-import net.minecraft.util.Direction;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.EnumSet;
-import java.util.stream.IntStream;
 
-public class StoreItemGoal extends CheckStuckGoal {
+public class StoreItemGoal extends Goal {
 
     private final EntityCarbuncle entityCarbuncle;
 
     public StoreItemGoal(EntityCarbuncle entityCarbuncle) {
-        super(entityCarbuncle::getPosition, 3, entityCarbuncle::setStuck);
+        //super(entityCarbuncle::getPosition, 3, entityCarbuncle::setStuck);
         this.entityCarbuncle = entityCarbuncle;
 
         this.setMutexFlags(EnumSet.of(Flag.MOVE));
@@ -39,27 +38,18 @@ public class StoreItemGoal extends CheckStuckGoal {
         }
     }
 
-    private IntStream func_213972_a(IInventory p_213972_0_, Direction p_213972_1_) {
-        return p_213972_0_ instanceof ISidedInventory ? IntStream.of(((ISidedInventory) p_213972_0_).getSlotsForFace(p_213972_1_)) : IntStream.range(0, p_213972_0_.getSizeInventory());
-    }
-
-    private boolean isInventoryFull(IInventory inventoryIn, Direction side) {
-        return func_213972_a(inventoryIn, side).allMatch((p_213970_1_) -> {
-            ItemStack itemstack = inventoryIn.getStackInSlot(p_213970_1_);
-            return itemstack.getCount() >= itemstack.getMaxStackSize();
-        });
-    }
-
-
     @Override
     public void tick() {
         if (!entityCarbuncle.getHeldStack().isEmpty() && entityCarbuncle.getToPos() != null && BlockUtil.distanceFrom(entityCarbuncle.getPosition(), entityCarbuncle.getToPos()) < 1.5D) {
             World world = entityCarbuncle.world;
-            if (world.getTileEntity(entityCarbuncle.getToPos()) instanceof IInventory) {
+            TileEntity tileEntity = world.getTileEntity(entityCarbuncle.getToPos());
+            if(tileEntity == null)
+                return;
+            IItemHandler iItemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+            if (iItemHandler != null) {
                 ItemStack oldStack = new ItemStack(entityCarbuncle.getHeldStack().getItem(), entityCarbuncle.getHeldStack().getCount());
 
-                IInventory i = (IInventory) world.getTileEntity(entityCarbuncle.getToPos());
-                ItemStack left = HopperTileEntity.putStackInInventoryAllSlots(null, i, entityCarbuncle.getHeldStack(), null);
+                ItemStack left = ItemHandlerHelper.insertItemStacked(iItemHandler, entityCarbuncle.getHeldStack(), false);
                 if (left.equals(oldStack)) {
                     return;
                 }

@@ -3,6 +3,7 @@ buildscript {
         maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
         mavenCentral()
+        maven { url 'https://modmaven.dev/' }
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
@@ -15,7 +16,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 
-version = '1.9.4'
+version = '1.9.6'
 group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'ars_nouveau-1.16.4'
 
@@ -113,7 +114,8 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.16.4-35.1.0'
+
+    minecraft 'net.minecraftforge:forge:1.16.4-35.1.13'
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.2-45:api")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.2-45")
 
@@ -123,6 +125,7 @@ dependencies {
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.1.0:api")
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.1.0")
     implementation fg.deobf('software.bernie.geckolib:forge-1.16.4-geckolib:3.0.0')
+
 }
 
 
