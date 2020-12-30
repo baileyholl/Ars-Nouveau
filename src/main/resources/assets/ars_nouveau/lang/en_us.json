@@ -312,5 +312,8 @@
 	"block.ars_nouveau.stripped_green_archwood_log":"Stripped Flourishing Archwood Log",
 	"block.ars_nouveau.stripped_green_archwood_wood":"Stripped Flourishing Archwood Wood",
 	"block.ars_nouveau.stripped_purple_archwood_log":"Stripped Vexing Archwood Log",
-	"block.ars_nouveau.stripped_purple_archwood_wood":"Stripped Vexing Archwood Wood"
+	"block.ars_nouveau.stripped_purple_archwood_wood":"Stripped Vexing Archwood Wood",
+	"block.ars_nouveau.mana_gem_block":"Mana Gem Block",
+	"item.ars_nouveau.glyph_crush":"Glyph: Crush",
+	"item.ars_nouveau.glyph_cut":"Glyph: Cut"
 }

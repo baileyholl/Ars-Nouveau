@@ -50,6 +50,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder {
         try {
 
             PlayerEntity playerEntity = uuid != null ? world.getPlayerByUuid(uuid) : FakePlayerFactory.getMinecraft((ServerWorld) world);
+            playerEntity = playerEntity == null ?  FakePlayerFactory.getMinecraft((ServerWorld) world) : playerEntity;
             EntitySpellResolver resolver = new EntitySpellResolver(recipe, new SpellContext(recipe, playerEntity).withCastingTile(this).withType(SpellContext.CasterType.RUNE));
             resolver.onCastOnEntity(ItemStack.EMPTY, playerEntity, (LivingEntity) entity, Hand.MAIN_HAND);
             if (this.isTemporary) {
