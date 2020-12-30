@@ -142,25 +142,25 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.CREATIVE_MANA_JAR) public static CreativeManaJar CREATIVE_MANA_JAR;
     @ObjectHolder(LibBlockNames.CREATIVE_MANA_JAR) public static TileEntityType<CreativeManaJarTile> CREATIVE_JAR_TILE;
 
-    @ObjectHolder(LibBlockNames.CASCADING_LOG) public static RotatedPillarBlock CASCADING_LOG;
+    @ObjectHolder(LibBlockNames.CASCADING_LOG) public static StrippableLog CASCADING_LOG;
     @ObjectHolder(LibBlockNames.CASCADING_LEAVES) public static MagicLeaves CASCADING_LEAVE;
     @ObjectHolder(LibBlockNames.CASCADING_SAPLING) public static SaplingBlock CASCADING_SAPLING;
-    @ObjectHolder(LibBlockNames.CASCADING_WOOD) public static RotatedPillarBlock CASCADING_WOOD;
+    @ObjectHolder(LibBlockNames.CASCADING_WOOD) public static StrippableLog CASCADING_WOOD;
 
-    @ObjectHolder(LibBlockNames.BLAZING_LOG) public static RotatedPillarBlock BLAZING_LOG;
+    @ObjectHolder(LibBlockNames.BLAZING_LOG) public static StrippableLog BLAZING_LOG;
     @ObjectHolder(LibBlockNames.BLAZING_LEAVES) public static MagicLeaves BLAZING_LEAVES;
     @ObjectHolder(LibBlockNames.BLAZING_SAPLING) public static SaplingBlock BLAZING_SAPLING;
-    @ObjectHolder(LibBlockNames.BLAZING_WOOD) public static RotatedPillarBlock BLAZING_WOOD;
+    @ObjectHolder(LibBlockNames.BLAZING_WOOD) public static StrippableLog BLAZING_WOOD;
 
-    @ObjectHolder(LibBlockNames.VEXING_LOG) public static RotatedPillarBlock VEXING_LOG;
+    @ObjectHolder(LibBlockNames.VEXING_LOG) public static StrippableLog VEXING_LOG;
     @ObjectHolder(LibBlockNames.VEXING_LEAVES) public static MagicLeaves VEXING_LEAVES;
     @ObjectHolder(LibBlockNames.VEXING_SAPLING) public static SaplingBlock VEXING_SAPLING;
-    @ObjectHolder(LibBlockNames.VEXING_WOOD) public static RotatedPillarBlock VEXING_WOOD;
+    @ObjectHolder(LibBlockNames.VEXING_WOOD) public static StrippableLog VEXING_WOOD;
 
-    @ObjectHolder(LibBlockNames.FLOURISHING_LOG) public static RotatedPillarBlock FLOURISHING_LOG;
+    @ObjectHolder(LibBlockNames.FLOURISHING_LOG) public static StrippableLog FLOURISHING_LOG;
     @ObjectHolder(LibBlockNames.FLOURISHING_LEAVES) public static MagicLeaves FLOURISHING_LEAVES;
     @ObjectHolder(LibBlockNames.FLOURISHING_SAPLING) public static SaplingBlock FLOURISHING_SAPLING;
-    @ObjectHolder(LibBlockNames.FLOURISHING_WOOD) public static RotatedPillarBlock FLOURISHING_WOOD;
+    @ObjectHolder(LibBlockNames.FLOURISHING_WOOD) public static StrippableLog FLOURISHING_WOOD;
     @ObjectHolder(LibBlockNames.ARCHWOOD_PLANK) public static ModBlock ARCHWOOD_PLANK;
 
     @ObjectHolder(LibBlockNames.RITUAL_CIRCLE) public static RitualBlock RITUAL_BLOCK;
@@ -169,7 +169,7 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.ARCHWOOD_BUTTON) public static WoodButtonBlock ARCHWOOD_BUTTON;
     @ObjectHolder(LibBlockNames.ARCHWOOD_STAIRS) public static StairsBlock ARCHWOOD_STAIRS;
     @ObjectHolder(LibBlockNames.ARCHWOOD_SLABS) public static SlabBlock ARCHWOOD_SLABS;
-    @ObjectHolder(LibBlockNames.ARCHWOOD_SIGN) public static WallSignBlock ARCHWOOD_SIGN;
+   // @ObjectHolder(LibBlockNames.ARCHWOOD_SIGN) public static WallSignBlock ARCHWOOD_SIGN;
     @ObjectHolder(LibBlockNames.ARCHWOOD_FENCE_GATE) public static FenceGateBlock ARCHWOOD_FENCE_GATE;
     @ObjectHolder(LibBlockNames.ARCHWOOD_TRAPDOOR) public static TrapDoorBlock ARCHWOOD_TRAPDOOR;
     @ObjectHolder(LibBlockNames.ARCHWOOD_PPlate) public static PressurePlateBlock ARCHWOOD_PPlate;
@@ -183,7 +183,7 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.STRIPPED_AWLOG_RED) public static RotatedPillarBlock STRIPPED_AWLOG_RED;
     @ObjectHolder(LibBlockNames.STRIPPED_AWWOOD_RED) public static RotatedPillarBlock STRIPPED_AWWOOD_RED;
     @ObjectHolder(LibBlockNames.STRIPPED_AWLOG_PURPLE) public static RotatedPillarBlock STRIPPED_AWLOG_PURPLE;
-    @ObjectHolder(LibBlockNames.STRIPPED_AWWOOD_PURPLE) public static RotatedPillarBlock STRIPPED_AWWOOD_PURPLE;
+    @ObjectHolder(LibBlockNames.STRIPPED_AWLOG_PURPLE) public static RotatedPillarBlock STRIPPED_AWWOOD_PURPLE;
 
     @ObjectHolder("an_stateprovider") public static BlockStateProviderType stateProviderType;
 
@@ -234,20 +234,20 @@ public class BlockRegistry {
             registry.register(new ModBlock(LibBlockNames.AB_SMOOTH));
             registry.register(new ModBlock(LibBlockNames.AB_SMOOTH_SLAB));
             registry.register(new ModBlock(LibBlockNames.AB_CLOVER));
-            registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.CASCADING_LOG));
+            registry.register(new StrippableLog(LOG_PROP, LibBlockNames.CASCADING_LOG, () ->BlockRegistry.STRIPPED_AWLOG_BLUE));
             registry.register(createLeavesBlock().setRegistryName(LibBlockNames.CASCADING_LEAVES));
 
-            registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.BLAZING_LOG));
+            registry.register(new StrippableLog(LOG_PROP, LibBlockNames.BLAZING_LOG, () ->BlockRegistry.STRIPPED_AWLOG_RED));
             registry.register(createLeavesBlock().setRegistryName(LibBlockNames.BLAZING_LEAVES));
-            registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.FLOURISHING_LOG));
+            registry.register(new StrippableLog(LOG_PROP, LibBlockNames.FLOURISHING_LOG, () ->BlockRegistry.STRIPPED_AWLOG_GREEN));
             registry.register(createLeavesBlock().setRegistryName(LibBlockNames.FLOURISHING_LEAVES));
-            registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.VEXING_LOG));
+            registry.register(new StrippableLog(LOG_PROP, LibBlockNames.VEXING_LOG, () ->BlockRegistry.STRIPPED_AWLOG_PURPLE));
             registry.register(createLeavesBlock().setRegistryName(LibBlockNames.VEXING_LEAVES));
 
-            registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.VEXING_WOOD));
-            registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.BLAZING_WOOD));
-            registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.FLOURISHING_WOOD));
-            registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.CASCADING_WOOD));
+            registry.register(new StrippableLog(LOG_PROP, LibBlockNames.VEXING_WOOD, () ->BlockRegistry.STRIPPED_AWWOOD_PURPLE));
+            registry.register(new StrippableLog(LOG_PROP, LibBlockNames.CASCADING_WOOD, () ->BlockRegistry.STRIPPED_AWWOOD_BLUE));
+            registry.register(new StrippableLog(LOG_PROP, LibBlockNames.FLOURISHING_WOOD, () ->BlockRegistry.STRIPPED_AWWOOD_GREEN));
+            registry.register(new StrippableLog(LOG_PROP, LibBlockNames.BLAZING_WOOD, () ->BlockRegistry.STRIPPED_AWWOOD_RED));
             registry.register(new ModBlock(LOG_PROP, LibBlockNames.ARCHWOOD_PLANK));
             registry.register(new RitualBlock(LibBlockNames.RITUAL_CIRCLE));
             registry.register(new WoodButtonBlock(AbstractBlock.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().hardnessAndResistance(0.5F).sound(SoundType.WOOD)).setRegistryName(LibBlockNames.ARCHWOOD_BUTTON));
@@ -268,6 +268,8 @@ public class BlockRegistry {
             registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.STRIPPED_AWWOOD_RED));
             registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.STRIPPED_AWLOG_PURPLE));
             registry.register(new RotatedPillarBlock(LOG_PROP).setRegistryName(LibBlockNames.STRIPPED_AWWOOD_PURPLE));
+    //        registry.register(new WallSignBlock(AbstractBlock.Properties.create(Material.WOOD, JUNGLE_LOG.getMaterialColor()).doesNotBlockMovement().hardnessAndResistance(1.0F).sound(SoundType.WOOD).lootFrom(JUNGLE_SIGN), WoodType.ACACIA).setRegistryName(LibBlockNames.ARCHWOOD_SIGN));
+
         }
         static Block.Properties woodProp = AbstractBlock.Properties.create(Material.WOOD, MaterialColor.WOOD).hardnessAndResistance(2.0F, 3.0F).sound(SoundType.WOOD);
         public static MagicLeaves createLeavesBlock() {
@@ -379,6 +381,7 @@ public class BlockRegistry {
             registry.register(getDefaultBlockItem(BlockRegistry.STRIPPED_AWWOOD_RED, LibBlockNames.STRIPPED_AWWOOD_RED));
             registry.register(getDefaultBlockItem(BlockRegistry.STRIPPED_AWLOG_PURPLE, LibBlockNames.STRIPPED_AWLOG_PURPLE));
             registry.register(getDefaultBlockItem(BlockRegistry.STRIPPED_AWWOOD_PURPLE, LibBlockNames.STRIPPED_AWWOOD_PURPLE));
+          //  registry.register(new SignItem((new Item.Properties()).maxStackSize(16).group(ItemGroup.DECORATIONS), BlockRegistry.ARCHWOOD_SIGN, BlockRegistry.ARCHWOOD_SIGN).setRegistryName(LibBlockNames.ARCHWOOD_SIGN));
 
         }
 
