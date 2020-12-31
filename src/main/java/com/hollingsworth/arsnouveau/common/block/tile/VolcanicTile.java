@@ -3,15 +3,20 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
 import com.hollingsworth.arsnouveau.api.mana.IManaTile;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.LavaFluid;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -54,10 +59,23 @@ public class VolcanicTile extends AbstractManaTile implements IAnimatable {
     public void tick() {
         if(world.isRemote)
             return;
-        if(world.getGameTime() % 40 == 0){
+        if(world.getGameTime() % 40 == 0 && this.canAcceptMana()){
             int numSource = (int) BlockPos.getAllInBox(this.getPos().down().add(1, 0, 1), this.getPos().down().add(-1, 0, -1))
                     .filter(b -> world.getFluidState(b).getFluid() instanceof LavaFluid).map(b -> world.getFluidState(b))
                     .filter(FluidState::isSource).count();
+
+            for(ItemEntity i : world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos).grow(1.0))){
+                if(i.getItem().getItem() == BlockRegistry.BLAZING_LOG.asItem()){
+                    int mana = 100;
+                    this.addMana(mana);
+                    this.progress += 5;
+                    i.getItem().shrink(1);
+                    Networking.sendToNearby(world, getPos(),
+                            new PacketANEffect(PacketANEffect.EffectType.BURST, i.getPosition(), new ParticleColor.IntWrapper(255, 0, 0)));
+                    break;
+                }
+
+            }
 
             if(numSource > 0){
                 this.addMana(numSource);
