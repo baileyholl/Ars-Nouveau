@@ -167,6 +167,11 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
     public void tick() {
         super.tick();
         if(!this.world.isRemote){
+            if(world.getGameTime() % 20 == 0 && this.getPosition().getY() < 0) {
+                this.remove();
+                return;
+            }
+
             if(Boolean.TRUE.equals(this.dataManager.get(TAMED))){
                 this.timeUntilEvaluation--;
                 this.timeUntilGather--;

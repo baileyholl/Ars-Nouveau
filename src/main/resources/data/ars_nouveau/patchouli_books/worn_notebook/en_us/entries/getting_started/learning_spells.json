@@ -1,6 +1,7 @@
 {
     "name": "New Spells",
     "icon": "ars_nouveau:blank_glyph",
+	"sortnum":4,
     "category": "getting_started",
     "pages": [
         {
@@ -9,7 +10,7 @@
         },
 		{
             "type": "relations",
-            "entries":["machines/glyph_press"],
+            "entries":["machines/glyph_press", "getting_started/world_mana"],
 			"text":"To learn about creating new glyphs, see the section on the Glyph Press."
         }
     ]

@@ -1,6 +1,7 @@
 {
     "name": "Spell Mana",
     "icon": "ars_nouveau:novice_spell_book",
+	"sortnum":2,
     "category": "getting_started",
     "pages": [
         {
