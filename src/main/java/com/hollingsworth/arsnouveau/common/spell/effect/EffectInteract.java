@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -34,10 +35,13 @@ public class EffectInteract extends AbstractEffect {
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof BlockRayTraceResult){
-            if(shooter instanceof PlayerEntity)
+            if(isRealPlayer(shooter))
                 world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos()).onBlockActivated(world, (PlayerEntity)shooter, Hand.MAIN_HAND, (BlockRayTraceResult)rayTraceResult);
             else if(world instanceof ServerWorld){
-                world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos()).onBlockActivated(world, FakePlayerFactory.getMinecraft((ServerWorld)world), Hand.MAIN_HAND, (BlockRayTraceResult)rayTraceResult);
+                FakePlayer player = new ANFakePlayer((ServerWorld) world);
+                ItemStack stack = shooter instanceof IInteractResponder ? shooter.getHeldItemOffhand().copy() : ItemStack.EMPTY;
+                player.setHeldItem(Hand.MAIN_HAND, stack);
+                world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos()).onBlockActivated(world, player, Hand.MAIN_HAND, (BlockRayTraceResult)rayTraceResult);
             }
         }
         if(rayTraceResult instanceof EntityRayTraceResult){
