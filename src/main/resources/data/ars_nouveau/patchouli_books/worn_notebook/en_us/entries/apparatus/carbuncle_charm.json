@@ -26,11 +26,19 @@
 	},
 	{
       "type": "text",
+	  "title":"Summoning",
       "text": "ars_nouveau.page3.carbuncle_charm"
-    },{
+    },
+	{
       "type": "text",
+	  "title":"Item Transport",
       "text": "ars_nouveau.page4.carbuncle_charm"
     },{
+      "type": "text",
+	  "title":"Filtering",
+      "text": "ars_nouveau.page5.carbuncle_charm"
+    },
+	{
             "type": "relations",
             "entries":["machines/scribes_table", "automation/dominion_wand", "automation/allow_scroll","automation/deny_scroll"]        
         }
