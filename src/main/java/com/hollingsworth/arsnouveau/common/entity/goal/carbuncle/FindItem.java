@@ -41,13 +41,11 @@ public class FindItem extends Goal {
 
     @Override
     public boolean shouldContinueExecuting() {
-        return !entityCarbuncle.isStuck && !(pathingEntity == null || pathingEntity.removed) && travelTime < 15 * 20;
+        return !entityCarbuncle.isStuck && !(pathingEntity == null || pathingEntity.removed) && travelTime < 15 * 20 && entityCarbuncle.getHeldStack().isEmpty();
     }
 
     @Override
     public boolean shouldExecute() {
-        if(entityCarbuncle.world.rand.nextDouble() > 0.05)
-            return false;
         return !entityCarbuncle.isStuck && !nearbyItems().isEmpty() && entityCarbuncle.getHeldStack().isEmpty();
     }
 

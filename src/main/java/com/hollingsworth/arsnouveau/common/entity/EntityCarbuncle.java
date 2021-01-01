@@ -301,8 +301,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         list.add(new PrioritizedGoal(2, new ForageManaBerries(this)));
         list.add(new PrioritizedGoal(3, new StoreItemGoal(this)));
         list.add(new PrioritizedGoal(3, new TakeItemGoal(this)));
-        list.add(new PrioritizedGoal(5, new LookAtGoal(this, PlayerEntity.class, 3.0F, 0.02F)));
-        list.add(new PrioritizedGoal(5, new LookAtGoal(this, MobEntity.class, 8.0F)));
+        list.add(new PrioritizedGoal(8, new LookAtGoal(this, PlayerEntity.class, 3.0F, 0.01F)));
+        list.add(new PrioritizedGoal(8, new LookAtGoal(this, MobEntity.class, 8.0F)));
         list.add(new PrioritizedGoal(0, new SwimGoal(this)));
         // Roam back in case we have no item and are far from home.
         list.add(new PrioritizedGoal(2, new GoBackHomeGoal(this, this::getHome, 25, () -> (this.getHeldStack() == null || this.getHeldStack().isEmpty()))));

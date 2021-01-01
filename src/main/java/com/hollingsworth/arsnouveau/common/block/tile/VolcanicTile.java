@@ -15,9 +15,11 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.LavaFluid;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tags.ITag;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.Tags;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -125,12 +127,24 @@ public class VolcanicTile extends AbstractManaTile implements IAnimatable {
             return;
         }
 
-        stonePos = getBlockInArea(Blocks.STONE, 1);
+        stonePos = getTagInArea(Tags.Blocks.STONE, 1);
         if(stonePos != null && progress >= 300){
             world.setBlockState(stonePos, Blocks.MAGMA_BLOCK.getDefaultState());
             progress -= 300;
             return;
         }
+    }
+
+    public BlockPos getTagInArea(ITag<Block> block, int range){
+        AtomicReference<BlockPos> posFound = new AtomicReference<>();
+        BlockPos.getAllInBox(pos.add(range, -1, range), pos.add(-range, -1, -range)).forEach(blockPos -> {
+            blockPos = blockPos.toImmutable();
+            if(posFound.get() == null && world.getBlockState(blockPos).getBlock().isIn(block))
+                posFound.set(blockPos);
+        });
+
+        return posFound.get();
+
     }
 
     public BlockPos getBlockInArea(Block block, int range){

@@ -3,9 +3,9 @@ package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.ManaBerryBush;
 import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
-import com.hollingsworth.arsnouveau.common.entity.goal.CheckStuckGoal;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.command.arguments.EntityAnchorArgument;
+import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
@@ -18,13 +18,12 @@ import java.util.Optional;
 
 import static com.hollingsworth.arsnouveau.common.block.ManaBerryBush.AGE;
 
-public class ForageManaBerries extends CheckStuckGoal {
+public class ForageManaBerries extends Goal {
     private final EntityCarbuncle entity;
     private final World world;
     BlockPos pos;
 
     public ForageManaBerries(EntityCarbuncle entityCarbuncle) {
-        super(entityCarbuncle::getPosition, 1, entityCarbuncle::setStuck);
         this.entity = entityCarbuncle;
         this.world = entity.world;
         this.setMutexFlags(EnumSet.of(Flag.MOVE));

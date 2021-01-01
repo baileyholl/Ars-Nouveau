@@ -32,6 +32,7 @@ public class StoreItemGoal extends Goal {
     @Override
     public void resetTask() {
         storePos = null;
+
     }
 
     @Override
@@ -68,7 +69,7 @@ public class StoreItemGoal extends Goal {
                 }
                 entityCarbuncle.setHeldStack(left);
 //                    EntityCarbuncle.this.world.playSound(null, EntityCarbuncle.this.getPosX(), EntityCarbuncle.this.getPosY(), EntityCarbuncle.this.getPosZ(), SoundEvents.ENTITY_ITEM_PICKUP, EntityCarbuncle.this.getSoundCategory(),1.0F, 1.0F);
-                entityCarbuncle.backOff = 20;
+                entityCarbuncle.backOff = 5;
 
                 entityCarbuncle.getDataManager().set(EntityCarbuncle.HOP, false);
                 return;
