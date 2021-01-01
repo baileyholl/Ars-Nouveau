@@ -38,7 +38,6 @@ public class StoreItemGoal extends Goal {
     public void startExecuting() {
         super.startExecuting();
         storePos = entityCarbuncle.getValidStorePos(entityCarbuncle.getHeldStack());
-        System.out.println(storePos);
         if (storePos!= null && !entityCarbuncle.getHeldStack().isEmpty()) {
             Path path = entityCarbuncle.getNavigator().getPathToPos(storePos, 0);
             entityCarbuncle.getNavigator().setPath(path, 1.2D);

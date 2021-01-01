@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
 import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
-import com.hollingsworth.arsnouveau.common.entity.goal.CheckStuckGoal;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -12,7 +12,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class FindItem extends CheckStuckGoal {
+public class FindItem extends Goal {
     private EntityCarbuncle entityCarbuncle;
     int travelTime;
     Entity pathingEntity;
@@ -26,7 +26,7 @@ public class FindItem extends CheckStuckGoal {
     });
 
     public FindItem(EntityCarbuncle entityCarbuncle) {
-        super(entityCarbuncle::getPosition, 4, entityCarbuncle::setStuck);
+      //  super(entityCarbuncle::getPosition, 4, entityCarbuncle::setStuck);
         this.entityCarbuncle = entityCarbuncle;
         this.setMutexFlags(EnumSet.of(Flag.MOVE));
     }

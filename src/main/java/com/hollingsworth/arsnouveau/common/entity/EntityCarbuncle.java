@@ -71,8 +71,9 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     public boolean blacklist;
     public List<BlockPos> TO_LIST = new ArrayList<>();
     public List<BlockPos> FROM_LIST = new ArrayList<>();
-    public static final DataParameter<BlockPos> TO_POS = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.BLOCK_POS);
-    public static final DataParameter<BlockPos> FROM_POS = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.BLOCK_POS);
+    public static final DataParameter<Integer> TO_POS = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.VARINT);
+    public static final DataParameter<Integer> FROM_POS = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.VARINT);
+
     public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.ITEMSTACK);
     public static final DataParameter<Boolean> TAMED = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.BOOLEAN);
     public static final DataParameter<Boolean> HOP = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.BOOLEAN);
@@ -197,8 +198,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
     @Override
     public void onWanded(PlayerEntity playerEntity) {
-        this.setToPos(null);
-        this.setFromPos(null);
         this.whitelist = false;
         this.blacklist = false;
         this.FROM_LIST = new ArrayList<>();
@@ -414,8 +413,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         this.dataManager.register(HELD_ITEM, ItemStack.EMPTY);
         this.dataManager.register(TAMED, false);
         this.dataManager.register(HOP, false);
-        this.dataManager.register(TO_POS, BlockPos.ZERO);
-        this.dataManager.register(FROM_POS, BlockPos.ZERO);
+        this.dataManager.register(TO_POS, 0);
+        this.dataManager.register(FROM_POS, 0);
         this.dataManager.register(COLOR, COLORS.ORANGE.name());
     }
 
@@ -514,6 +513,9 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
         if (tag.contains("color"))
             this.dataManager.set(COLOR, tag.getString("color"));
+
+        this.dataManager.set(TO_POS, TO_LIST.size());
+       this.dataManager.set(FROM_POS, FROM_LIST.size());
     }
 
 
@@ -563,13 +565,10 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     @Override
     public List<String> getTooltip() {
         List<String> toolTip = new ArrayList<>();
-        if (!this.dataManager.get(TO_POS).equals(BlockPos.ZERO))
-            toolTip.add("Storing items at " + this.dataManager.get(TO_POS).getCoordinatesAsString());
-
-        if (!this.dataManager.get(FROM_POS).equals(BlockPos.ZERO))
-            toolTip.add("Taking items from " + this.dataManager.get(FROM_POS).getCoordinatesAsString());
-
-
+        if(!isTamed())
+            return toolTip;
+        toolTip.add("Storing items at " + this.dataManager.get(TO_POS) + " locations");
+        toolTip.add("Taking items from " + this.dataManager.get(FROM_POS) + " locations");
         return toolTip;
     }
 
@@ -653,13 +652,13 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     public void setFromPos(BlockPos fromPos) {
         if(!this.FROM_LIST.contains(fromPos))
             this.FROM_LIST.add(fromPos.toImmutable());
-        this.dataManager.set(FROM_POS, fromPos == null ? BlockPos.ZERO : fromPos);
+        this.dataManager.set(FROM_POS, FROM_LIST.size());
     }
 
     public void setToPos(BlockPos toPos) {
         if(!this.TO_LIST.contains(toPos))
             this.TO_LIST.add(toPos.toImmutable());
-        this.dataManager.set(TO_POS, toPos == null ? BlockPos.ZERO : toPos);
+        this.dataManager.set(TO_POS, TO_LIST.size());
     }
 
     public enum COLORS {
