@@ -8,6 +8,7 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.Path;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -20,7 +21,7 @@ import java.util.EnumSet;
 public class StoreItemGoal extends Goal {
 
     private final EntityCarbuncle entityCarbuncle;
-
+    BlockPos storePos;
     public StoreItemGoal(EntityCarbuncle entityCarbuncle) {
         //super(entityCarbuncle::getPosition, 3, entityCarbuncle::setStuck);
         this.entityCarbuncle = entityCarbuncle;
@@ -29,10 +30,17 @@ public class StoreItemGoal extends Goal {
     }
 
     @Override
+    public void resetTask() {
+        storePos = null;
+    }
+
+    @Override
     public void startExecuting() {
         super.startExecuting();
-        if (entityCarbuncle.getToPos() != null && !entityCarbuncle.getHeldStack().isEmpty()) {
-            Path path = entityCarbuncle.getNavigator().getPathToPos(entityCarbuncle.getToPos(), 0);
+        storePos = entityCarbuncle.getValidStorePos(entityCarbuncle.getHeldStack());
+        System.out.println(storePos);
+        if (storePos!= null && !entityCarbuncle.getHeldStack().isEmpty()) {
+            Path path = entityCarbuncle.getNavigator().getPathToPos(storePos, 0);
             entityCarbuncle.getNavigator().setPath(path, 1.2D);
             //entityCarbuncle.getNavigator().tryMoveToXYZ(entityCarbuncle.toPos.getX(), entityCarbuncle.toPos.getY(), entityCarbuncle.toPos.getZ(), 1.2D);
         }
@@ -40,11 +48,12 @@ public class StoreItemGoal extends Goal {
 
     @Override
     public void tick() {
-        if (!entityCarbuncle.getHeldStack().isEmpty() && entityCarbuncle.getToPos() != null && BlockUtil.distanceFrom(entityCarbuncle.getPosition(), entityCarbuncle.getToPos()) < 1.5D) {
+        if (!entityCarbuncle.getHeldStack().isEmpty() && storePos != null && BlockUtil.distanceFrom(entityCarbuncle.getPosition(), storePos) < 1.5D) {
             World world = entityCarbuncle.world;
-            TileEntity tileEntity = world.getTileEntity(entityCarbuncle.getToPos());
+            TileEntity tileEntity = world.getTileEntity(storePos);
             if(tileEntity == null)
                 return;
+
             IItemHandler iItemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
             if (iItemHandler != null) {
                 ItemStack oldStack = new ItemStack(entityCarbuncle.getHeldStack().getItem(), entityCarbuncle.getHeldStack().getCount());
@@ -54,7 +63,7 @@ public class StoreItemGoal extends Goal {
                     return;
                 }
                 if (world instanceof ServerWorld) {
-                    OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), entityCarbuncle.getToPos(), 20);
+                    OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), storePos, 20);
                     event.open();
                     EventQueue.getInstance().addEvent(event);
                 }
@@ -67,8 +76,8 @@ public class StoreItemGoal extends Goal {
             }
         }
 
-        if (entityCarbuncle.getToPos() != null && !entityCarbuncle.getHeldStack().isEmpty()) {
-            setPath(entityCarbuncle.getToPos().getX(), entityCarbuncle.getToPos().getY(), entityCarbuncle.getToPos().getZ(), 1.2D);
+        if (storePos != null && !entityCarbuncle.getHeldStack().isEmpty()) {
+            setPath(storePos.getX(), storePos.getY(), storePos.getZ(), 1.2D);
             entityCarbuncle.getDataManager().set(EntityCarbuncle.HOP, true);
             super.tick();
         }
@@ -81,7 +90,7 @@ public class StoreItemGoal extends Goal {
 
     @Override
     public boolean shouldContinueExecuting() {
-        return entityCarbuncle.isTamed() && entityCarbuncle.getHeldStack() != null && !entityCarbuncle.getHeldStack().isEmpty() && entityCarbuncle.backOff == 0;
+        return entityCarbuncle.isTamed() && entityCarbuncle.getHeldStack() != null && !entityCarbuncle.getHeldStack().isEmpty() && entityCarbuncle.backOff == 0 && storePos != null;
     }
 
     @Override

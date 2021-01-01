@@ -18,7 +18,7 @@ public class FindItem extends CheckStuckGoal {
     Entity pathingEntity;
 
     private final Predicate<ItemEntity> TRUSTED_TARGET_SELECTOR = (itemEntity) -> {
-        return !itemEntity.cannotPickup() && itemEntity.isAlive() && TakeItemGoal.isValidItem(entityCarbuncle, itemEntity.getItem());
+        return !itemEntity.cannotPickup() && itemEntity.isAlive() && entityCarbuncle.isValidItem(itemEntity.getItem());
     };
 
     private final Predicate<ItemEntity> NONTAMED_TARGET_SELECTOR = (itemEntity -> {
@@ -58,7 +58,7 @@ public class FindItem extends CheckStuckGoal {
         List<ItemEntity> list = nearbyItems();
         if (itemstack.isEmpty() && !list.isEmpty()) {
             for(ItemEntity entity : list){
-                if(!TakeItemGoal.isValidItem(entityCarbuncle, entity.getItem()))
+                if(!entityCarbuncle.isValidItem(entity.getItem()))
                     continue;
                 Path path = entityCarbuncle.getNavigator().getPathToEntity(entity, 0);
                 if(path != null && path.reachesTarget()) {
