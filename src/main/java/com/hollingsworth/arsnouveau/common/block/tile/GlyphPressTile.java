@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
+import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -35,7 +36,6 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity, IAnimatable, IAnimationListener, ISidedInventory {
     public long frames;
@@ -105,19 +105,9 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
         if(counter ==150) {
             isCrafting = false;
             GlyphPressRecipe recipe = ArsNouveauAPI.getInstance().getGlyphPressRecipe(world, reagentItem.getItem(), getTier(oldBaseMat.getItem()));
-            AtomicBoolean canContinue = new AtomicBoolean(false);
-
             if(recipe == null)
                 return;
-            int manaCost = recipe.tier == ISpellTier.Tier.ONE ? 2000 : (recipe.tier == ISpellTier.Tier.TWO ? 4000 : 6000);
-            BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
-                if(world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= manaCost && !canContinue.get()) {
-                    ((ManaJarTile) world.getTileEntity(blockPos)).removeMana(manaCost);
-                    canContinue.set(true);
-                    return;
-                }
-            });
-            counter = 1;
+
             ItemStack stack = recipe.output.copy();
             stack = depositItem(stack);
             if(!stack.isEmpty())
@@ -125,6 +115,8 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
             reagentItem = new ItemStack(null);
             this.baseMaterial = new ItemStack(null);
             this.oldBaseMat = new ItemStack(null);
+            counter = 1;
+
         }
         updateBlock();
     }
@@ -213,27 +205,15 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
         if(recipe == null)
             return false;
 
-        int manaCost = recipe.tier == ISpellTier.Tier.ONE ? 2000 : (recipe.tier == ISpellTier.Tier.TWO ? 4000 : 6000);
-        AtomicBoolean valid = new AtomicBoolean(false);
-        AtomicReference<BlockPos> jar = new AtomicReference<>();
-        BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
-            if(world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= manaCost) {
-                valid.set(true);
-                jar.set(new BlockPos(blockPos));
-
-            }
-        });
-        if(!valid.get()) {
-            playerEntity.sendMessage(new StringTextComponent("There does not appear to be enough mana nearby. "), Util.DUMMY_UUID);
-            return false;
-        }
-        if(world.getTileEntity(jar.get()) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(jar.get())).getCurrentMana() >= manaCost){
-            ((ManaJarTile) world.getTileEntity(jar.get())).removeMana(manaCost);
+        int manaCost = recipe.tier == ISpellTier.Tier.ONE ? 1500 : (recipe.tier == ISpellTier.Tier.TWO ? 2500 : 5000);
+        BlockPos jar = ManaUtil.takeManaNearbyWithParticles(pos, world, 5, manaCost);
+        if(jar != null){
             isCrafting = true;
             Networking.sendToNearby(world, pos, new PacketOneShotAnimation(pos));
             return true;
         }
 
+        playerEntity.sendMessage(new StringTextComponent("There does not appear to be enough mana nearby. "), Util.DUMMY_UUID);
         return false;
     }
 

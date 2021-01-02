@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.IPlaceBlockResponder;
@@ -22,7 +23,6 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -83,7 +83,7 @@ public class EffectPlaceBlock extends AbstractEffect {
     }
 
     public static ActionResultType attemptPlace(World world, ItemStack stack, BlockItem item, BlockRayTraceResult result){
-        FakePlayer fakePlayer = FakePlayerFactory.getMinecraft((ServerWorld)world);
+        FakePlayer fakePlayer = new ANFakePlayer((ServerWorld) world);
         fakePlayer.setHeldItem(Hand.MAIN_HAND, stack);
         BlockItemUseContext context = BlockItemUseContext.func_221536_a(new BlockItemUseContext(new ItemUseContext(fakePlayer, Hand.MAIN_HAND, result)), result.getPos(), result.getFace());
 
