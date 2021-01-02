@@ -182,17 +182,20 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             this.backOff--;
         if (this.dead)
             return;
-
+        Direction[] directions = Direction.values();
         if (this.getHeldStack().isEmpty() && !world.isRemote) {
-
-            for (ItemEntity itementity : this.world.getEntitiesWithinAABB(ItemEntity.class, this.getBoundingBox().grow(1.0D, 0.0D, 1.0D))) {
-                if (!itementity.removed && !itementity.getItem().isEmpty() && !itementity.cannotPickup()) {
-                    if (!isTamed() && itementity.getItem().getItem() != Items.GOLD_NUGGET)
-                        return;
-                    this.updateEquipmentIfNeeded(itementity);
-                    this.dataManager.set(HOP, false);
+            for (Direction d : directions){
+                // Cannot use a single expanded bounding box because we don't want this to overlap with an adjacentt inventory that also has a frame.
+                for (ItemEntity itementity : this.world.getEntitiesWithinAABB(ItemEntity.class, this.getBoundingBox().grow(d.getXOffset(), d.getYOffset(), d.getZOffset()))) {
+                    if (!itementity.removed && !itementity.getItem().isEmpty() && !itementity.cannotPickup()) {
+                        if (!isTamed() && itementity.getItem().getItem() != Items.GOLD_NUGGET)
+                            return;
+                        this.updateEquipmentIfNeeded(itementity);
+                        this.dataManager.set(HOP, false);
+                    }
                 }
             }
+
         }
         attemptTame();
     }
@@ -647,10 +650,10 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         }
         if(blacklist){
             for(ItemStack s : ignoreItems)
-                if(!s.isItemEqual(stack))
-                    return true;
+                if(s.isItemEqual(stack))
+                    return false;
         }
-        return false;
+        return true;
     }
 
     public void setFromPos(BlockPos fromPos) {
