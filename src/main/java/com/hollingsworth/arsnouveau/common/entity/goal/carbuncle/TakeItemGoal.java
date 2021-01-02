@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
 import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -65,12 +64,12 @@ public class TakeItemGoal extends Goal {
         }
     }
     public void setPath(double x, double y, double z, double speedIn){
-        carbuncle.getNavigator().setPath( carbuncle.getNavigator().getPathToPos(x+0.5, y+0.5, z+0.5, 0), speedIn);
+        carbuncle.getNavigator().setPath( carbuncle.getNavigator().getPathToPos(x+0.5, y+1, z+0.5, 1), speedIn);
     }
 
     @Override
     public void tick() {
-        if(carbuncle.getHeldStack().isEmpty() && takePos != null && BlockUtil.distanceFrom(carbuncle.getPosition(), takePos) < 1.5D){
+        if(carbuncle.getHeldStack().isEmpty() && takePos != null && BlockUtil.distanceFrom(carbuncle.getPosition(), takePos) < 2d){
             World world = carbuncle.world;
             TileEntity tileEntity = world.getTileEntity(takePos);
             if(tileEntity == null)

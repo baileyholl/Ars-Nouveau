@@ -6,14 +6,16 @@ import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.goal.GetUnstuckGoal;
-import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.*;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.entity.*;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.LookAtGoal;
@@ -202,6 +204,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         this.blacklist = false;
         this.FROM_LIST = new ArrayList<>();
         this.TO_LIST = new ArrayList<>();
+        this.dataManager.set(TO_POS, 0);
+        this.dataManager.set(FROM_POS, 0);
         PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.carbuncle.cleared"));
     }
 
@@ -302,10 +306,10 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         list.add(new PrioritizedGoal(3, new StoreItemGoal(this)));
         list.add(new PrioritizedGoal(3, new TakeItemGoal(this)));
         list.add(new PrioritizedGoal(8, new LookAtGoal(this, PlayerEntity.class, 3.0F, 0.01F)));
-        list.add(new PrioritizedGoal(8, new LookAtGoal(this, MobEntity.class, 8.0F)));
+        list.add(new PrioritizedGoal(8, new NonHoggingLook(this, MobEntity.class, 3.0F, 0.01f)));
         list.add(new PrioritizedGoal(0, new SwimGoal(this)));
         // Roam back in case we have no item and are far from home.
-        list.add(new PrioritizedGoal(2, new GoBackHomeGoal(this, this::getHome, 25, () -> (this.getHeldStack() == null || this.getHeldStack().isEmpty()))));
+       // list.add(new PrioritizedGoal(2, new GoBackHomeGoal(this, this::getHome, 25, () -> (this.getHeldStack() == null || this.getHeldStack().isEmpty()))));
         return list;
     }
 
@@ -475,7 +479,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         while(NBTUtil.hasBlockPos(tag, "to_" + counter)){
             BlockPos pos = NBTUtil.getBlockPos(tag, "to_" + counter);
             if(!this.TO_LIST.contains(pos))
-                this.TO_LIST.add(NBTUtil.getBlockPos(tag, "to_" + counter));
+                this.TO_LIST.add(pos);
             counter++;
         }
 

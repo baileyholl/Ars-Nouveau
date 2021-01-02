@@ -40,7 +40,7 @@ public class StoreItemGoal extends Goal {
         super.startExecuting();
         storePos = entityCarbuncle.getValidStorePos(entityCarbuncle.getHeldStack());
         if (storePos!= null && !entityCarbuncle.getHeldStack().isEmpty()) {
-            Path path = entityCarbuncle.getNavigator().getPathToPos(storePos, 0);
+            Path path = entityCarbuncle.getNavigator().getPathToPos(storePos, 1);
             entityCarbuncle.getNavigator().setPath(path, 1.2D);
             //entityCarbuncle.getNavigator().tryMoveToXYZ(entityCarbuncle.toPos.getX(), entityCarbuncle.toPos.getY(), entityCarbuncle.toPos.getZ(), 1.2D);
         }
@@ -48,7 +48,7 @@ public class StoreItemGoal extends Goal {
 
     @Override
     public void tick() {
-        if (!entityCarbuncle.getHeldStack().isEmpty() && storePos != null && BlockUtil.distanceFrom(entityCarbuncle.getPosition(), storePos) < 1.5D) {
+        if (!entityCarbuncle.getHeldStack().isEmpty() && storePos != null && BlockUtil.distanceFrom(entityCarbuncle.getPosition(), storePos) < 2D) {
             World world = entityCarbuncle.world;
             TileEntity tileEntity = world.getTileEntity(storePos);
             if(tileEntity == null)
@@ -85,7 +85,7 @@ public class StoreItemGoal extends Goal {
     }
 
     public void setPath(double x, double y, double z, double speedIn){
-        entityCarbuncle.getNavigator().setPath( entityCarbuncle.getNavigator().getPathToPos(x+0.5, y+0.5, z+0.5, 0), speedIn);
+        entityCarbuncle.getNavigator().setPath( entityCarbuncle.getNavigator().getPathToPos(x+0.5, y+1, z+0.5, 1), speedIn);
     }
 
     @Override

@@ -31,7 +31,7 @@ public class ForageManaBerries extends Goal {
 
     @Override
     public boolean shouldExecute() {
-        if(entity.isStuck || world.rand.nextDouble() > 0.02)
+        if(entity.isStuck || world.rand.nextDouble() > 0.02 || entity.getValidStorePos(new ItemStack(BlockRegistry.MANA_BERRY_BUSH.asItem())) == null)
             return false;
         this.pos = getNearbyManaBerry();
         return  pos != null;
