@@ -14,7 +14,7 @@ import java.util.function.Predicate;
 
 public class FindItem extends Goal {
     private EntityCarbuncle entityCarbuncle;
-    int travelTime;
+
     Entity pathingEntity;
 
     private final Predicate<ItemEntity> TRUSTED_TARGET_SELECTOR = (itemEntity) -> {
@@ -26,7 +26,6 @@ public class FindItem extends Goal {
     });
 
     public FindItem(EntityCarbuncle entityCarbuncle) {
-      //  super(entityCarbuncle::getPosition, 4, entityCarbuncle::setStuck);
         this.entityCarbuncle = entityCarbuncle;
         this.setMutexFlags(EnumSet.of(Flag.MOVE));
     }
@@ -41,7 +40,7 @@ public class FindItem extends Goal {
 
     @Override
     public boolean shouldContinueExecuting() {
-        return !entityCarbuncle.isStuck && !(pathingEntity == null || pathingEntity.removed) && travelTime < 15 * 20 && entityCarbuncle.getHeldStack().isEmpty();
+        return !entityCarbuncle.isStuck && !(pathingEntity == null || pathingEntity.removed) && entityCarbuncle.getHeldStack().isEmpty();
     }
 
     @Override
@@ -66,13 +65,12 @@ public class FindItem extends Goal {
                 }
             }
         }
-        travelTime = 0;
+
     }
 
     @Override
     public void tick() {
         super.tick();
-        travelTime++;
         if(pathingEntity == null || pathingEntity.removed)
             return;
         ItemStack itemstack = entityCarbuncle.getHeldStack();
