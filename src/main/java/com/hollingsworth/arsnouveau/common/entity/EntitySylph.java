@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 
+import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.SummoningCrystalTile;
 import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
@@ -36,6 +37,7 @@ import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -65,7 +67,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
     public int tamingTime = 0;
     public boolean droppingShards; // Stricly used by non-tamed spawns for giving shards
     public static final DataParameter<Integer> MOOD_SCORE = EntityDataManager.createKey(EntitySylph.class, DataSerializers.VARINT);
-
+    public List<ItemStack> ignoreItems;
     public int timeUntilGather = 0;
     public int timeUntilEvaluation = 0;
     public int diversityScore;
@@ -92,9 +94,24 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
 
 
     @Override
+    protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
+        if(player.getEntityWorld().isRemote)
+            return super.func_230254_b_(player,hand);
+        ItemStack stack = player.getHeldItem(hand);
+        if (stack.getItem() == ItemsRegistry.DENY_ITEM_SCROLL) {
+            List<ItemStack> items = ItemsRegistry.DENY_ITEM_SCROLL.getItems(stack);
+            if (!items.isEmpty()) {
+                this.ignoreItems = ItemsRegistry.DENY_ITEM_SCROLL.getItems(stack);
+                PortUtil.sendMessage(player, new StringTextComponent("Sylph will ignore these items"));
+            }
+        }
+        return super.func_230254_b_(player,hand);
+    }
+
+    @Override
     public ActionResultType applyPlayerInteraction(PlayerEntity player, Vector3d vec, Hand hand) {
         if(hand != Hand.MAIN_HAND || player.getEntityWorld().isRemote || !this.dataManager.get(TAMED))
-            return ActionResultType.SUCCESS;
+            return ActionResultType.PASS;
         
         ItemStack stack = player.getHeldItem(hand);
         if(stack.isEmpty()) {
@@ -120,11 +137,19 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
             }else{
                 PortUtil.sendMessage(player, new TranslationTextComponent("sylph.extremely_diverse"));
             }
+            if(ignoreItems != null && !ignoreItems.isEmpty()) {
+                StringBuilder status = new StringBuilder();
+                status.append("Ignoring: ");
+                for (ItemStack i : ignoreItems) {
+                    status.append(i.getDisplayName().getString()).append(" ");
+                }
+                PortUtil.sendMessage(player, status.toString());
+            }
 
             return ActionResultType.SUCCESS;
         }
         if(!(stack.getItem() instanceof BlockItem))
-            return ActionResultType.SUCCESS;
+            return ActionResultType.PASS;
         BlockState state = ((BlockItem) stack.getItem()).getBlock().getDefaultState();
         int score = EvaluateGroveGoal.getScore(state);
         if(score > 0 && this.scoreMap != null && this.scoreMap.get(state) != null && this.scoreMap.get(state) >= 50){
@@ -302,9 +327,17 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
         return tooltip;
     }
 
+    public boolean isValidReward(ItemStack stack){
+        if(ignoreItems == null || ignoreItems.isEmpty())
+            return true;
+        return ignoreItems.stream().noneMatch(i -> i.isItemEqual(stack));
+    }
+
 
     @Override
     public ItemStack onPickup(ItemStack stack) {
+        if(!isValidReward(stack))
+            return stack;
         SummoningCrystalTile tile = world.getTileEntity(crystalPos) instanceof SummoningCrystalTile ? (SummoningCrystalTile) world.getTileEntity(crystalPos) : null;
         return tile == null ? stack : tile.insertItem(stack);
     }
@@ -345,7 +378,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
             tryResetGoals();
             setBehaviors = true;
         }
-
+        ignoreItems = NBTUtil.readItems(tag, "ignored_");
     }
     // A workaround for goals not registering correctly for a dynamic variable on reload as read() is called after constructor.
     public void tryResetGoals(){
@@ -366,6 +399,8 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
         tag.putInt("gather", timeUntilGather);
         tag.putBoolean("tamed", this.dataManager.get(TAMED));
         tag.putInt("score", this.dataManager.get(EntitySylph.MOOD_SCORE));
+        if (ignoreItems != null && !ignoreItems.isEmpty())
+            NBTUtil.writeItems(tag, "ignored_", ignoreItems);
     }
 
     @Override

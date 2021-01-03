@@ -136,7 +136,7 @@ public class GuiSpellBook extends BaseBook {
 
         for(Widget w : buttons){
             if(w instanceof GlyphButton ){
-                w.visible = api.getSpell_map().get(((GlyphButton) w).spell_id).name.contains(str);
+                w.visible = api.getSpell_map().get(((GlyphButton) w).spell_id).name.toLowerCase().contains(str.toLowerCase());
             }
         }
     }
