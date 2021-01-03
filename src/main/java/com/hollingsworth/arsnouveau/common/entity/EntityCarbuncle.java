@@ -260,7 +260,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
     @Override
     protected void updateEquipmentIfNeeded(ItemEntity itemEntity) {
-        if (this.getHeldStack().isEmpty() && isValidItem(itemEntity.getItem())) {
+        if (this.getHeldStack().isEmpty() && (!isTamed() || isValidItem(itemEntity.getItem()))) {
             setHeldStack(itemEntity.getItem());
             itemEntity.remove();
             this.world.playSound(null, this.getPosX(), this.getPosY(), this.getPosZ(), SoundEvents.ENTITY_ITEM_PICKUP, this.getSoundCategory(), 1.0F, 1.0F);

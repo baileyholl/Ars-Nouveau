@@ -40,6 +40,7 @@ public class GuiSpellBook extends BaseBook {
 
     private int selected_cast_slot;
     public TextFieldWidget spell_name;
+    public TextFieldWidget searchBar;
     public CompoundNBT spell_book_tag;
     public GuiSpellSlot selected_slot;
     public int max_spell_tier; // Used to load spells that are appropriate tier
@@ -86,13 +87,21 @@ public class GuiSpellBook extends BaseBook {
 
         spell_name = new TextFieldWidget(minecraft.fontRenderer, bookLeft + 16, bookTop + FULL_HEIGHT - 25,
                 115, 12, null, new StringTextComponent("Spell Name"));
+
+        searchBar = new TextFieldWidget(minecraft.fontRenderer, bookRight - 80, bookTop -6,
+                70, 12, null, new StringTextComponent("Spell Name"));
         int mode = SpellBook.getMode(spell_book_tag);
         mode = mode == 0 ? 1 : mode;
         spell_name.setText(SpellBook.getSpellName(spell_book_tag, mode));
         if(spell_name.getText().isEmpty())
             spell_name.setSuggestion("My Spell");
+
+        if(searchBar.getText().isEmpty())
+            searchBar.setSuggestion("Search");
+        searchBar.setResponder(this::onSearchChanged);
 //
         addButton(spell_name);
+        addButton(searchBar);
         // Add spell slots
         for(int i = 1; i <= 10; i++){
             GuiSpellSlot slot = new GuiSpellSlot(this,bookLeft + 261, bookTop - 3 + 15 * i, i);
@@ -117,6 +126,19 @@ public class GuiSpellBook extends BaseBook {
         }
         previousButton.active = false;
         previousButton.visible = false;
+    }
+
+    public void onSearchChanged(String str){
+        if(!str.isEmpty()){
+            searchBar.setSuggestion("");
+        }else
+            searchBar.setSuggestion("Search");
+
+        for(Widget w : buttons){
+            if(w instanceof GlyphButton ){
+                w.visible = api.getSpell_map().get(((GlyphButton) w).spell_id).name.contains(str);
+            }
+        }
     }
 
     public void addSpellParts(int page){
