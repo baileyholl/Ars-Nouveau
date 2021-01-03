@@ -18,7 +18,7 @@ import java.util.List;
 public class EffectHaste extends AbstractEffect {
 
     public EffectHaste() {
-        super(ModConfig.EffectHasteID, "Haste");
+        super(ModConfig.EffectHasteID, "Speed");
     }
 
     @Override

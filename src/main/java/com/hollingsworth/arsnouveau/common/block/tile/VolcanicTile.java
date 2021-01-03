@@ -61,7 +61,7 @@ public class VolcanicTile extends AbstractManaTile implements IAnimatable {
     public void tick() {
         if(world.isRemote)
             return;
-        if(world.getGameTime() % 40 == 0 && this.canAcceptMana()){
+        if(world.getGameTime() % 20 == 0 && this.canAcceptMana()){
             int numSource = (int) BlockPos.getAllInBox(this.getPos().down().add(1, 0, 1), this.getPos().down().add(-1, 0, -1))
                     .filter(b -> world.getFluidState(b).getFluid() instanceof LavaFluid).map(b -> world.getFluidState(b))
                     .filter(FluidState::isSource).count();
@@ -80,7 +80,7 @@ public class VolcanicTile extends AbstractManaTile implements IAnimatable {
             }
 
             if(numSource > 0){
-                this.addMana(numSource);
+                this.addMana(numSource*2);
                 progress += 1 + numSource/2;
             }
         }

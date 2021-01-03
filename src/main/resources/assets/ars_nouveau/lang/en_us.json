@@ -7,7 +7,7 @@
 
 	"itemGroup.ars_nouveau":"Ars Nouveau",
 	"item.ars_nouveau.novice_spell_book":"Novice Spell Book",
-	"item.ars_nouveau.apprentice_spell_book":"Apprentice Spell Book",
+	"item.ars_nouveau.apprentice_spell_book":"Mage's Spell Book",
 	"item.ars_nouveau.archmage_spell_book":"Archmage Spell Book",
 
 	"enchantment.ars_nouveau.mana_regen.desc": "Increases the mana regeneration of the player.",
@@ -25,10 +25,10 @@
 	"item.ars_nouveau.novice_robes":"Novice Robes",
 	"item.ars_nouveau.novice_hood":"Novice Hood",
 
-	"item.ars_nouveau.apprentice_robes":"Apprentice Robes",
-	"item.ars_nouveau.apprentice_leggings":"Apprentice Leggings",
-	"item.ars_nouveau.apprentice_boots":"Apprentice Boots",
-	"item.ars_nouveau.apprentice_hood":"Apprentice Hood",
+	"item.ars_nouveau.apprentice_robes":"Mage Robes",
+	"item.ars_nouveau.apprentice_leggings":"Mage Leggings",
+	"item.ars_nouveau.apprentice_boots":"Mage Boots",
+	"item.ars_nouveau.apprentice_hood":"Mage Hood",
 
 	"item.ars_nouveau.ring_of_amplify": "Ring of Amplify",
 	"item.ars_nouveau.lesser_discount_ring": "Ring of Lesser Discount",
@@ -145,7 +145,7 @@
 	"item.ars_nouveau.glyph_grow": "Glyph: Grow",
 	"item.ars_nouveau.glyph_gust": "Glyph: Knockback",
 	"item.ars_nouveau.glyph_harm": "Glyph: Harm",
-	"item.ars_nouveau.glyph_haste": "Glyph: Haste",
+	"item.ars_nouveau.glyph_haste": "Glyph: Speed",
 	"item.ars_nouveau.glyph_heal": "Glyph: Heal",
 	"item.ars_nouveau.glyph_rune": "Glyph: Rune",
 	"item.ars_nouveau.glyph_ignite": "Glyph: Ignite",
