@@ -161,7 +161,7 @@ public class GuiRadialMenu extends Screen {
 
                 String resourceIcon = "";
                 String castType = "";
-                for(AbstractSpellPart p : SpellBook.getRecipeFromTag(tag, i +1)){
+                for(AbstractSpellPart p : SpellBook.getRecipeFromTag(tag, i +1).recipe){
                     if(p instanceof AbstractCastMethod)
                         castType = p.getIcon();
 
