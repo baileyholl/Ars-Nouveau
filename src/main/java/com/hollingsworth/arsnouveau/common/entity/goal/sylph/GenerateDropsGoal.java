@@ -95,9 +95,9 @@ public class GenerateDropsGoal extends Goal {
         List<ItemStack> drops = getDrops.get();
         int numRerolls = 0;
         boolean bonusReroll = false;
-        while(numRerolls < (bonusReroll ? 7 : 4) && (drops.isEmpty() || drops.get(0).getItem() ==  Blocks.DIRT.asItem() || !sylph.isValidReward(drops.get(0)))){
+        while(numRerolls < (bonusReroll ? 7 : 4) && (drops.isEmpty() || drops.get(0).getItem() ==  Blocks.DIRT.asItem() || (!drops.isEmpty() && !sylph.isValidReward(drops.get(0))))){
             drops = getDrops.get();
-            if(!sylph.isValidReward(drops.get(0)))
+            if(!drops.isEmpty() && !sylph.isValidReward(drops.get(0)))
                 bonusReroll = true;
             numRerolls++;
         }

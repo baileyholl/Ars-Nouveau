@@ -45,7 +45,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplayMana {
@@ -146,7 +145,7 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
         if(!(player.getHeldItem(handIn).getItem() instanceof SpellBook))
             return false;
 
-        ArrayList<AbstractSpellPart> spellParts = SpellBook.getUnlockedSpells(player.getHeldItem(handIn).getTag());
+        List<AbstractSpellPart> spellParts = SpellBook.getUnlockedSpells(player.getHeldItem(handIn).getTag());
         int unlocked = 0;
         for(AbstractSpellPart spellPart : spellParts){
             if(SpellBook.unlockSpell(stack.getTag(), spellPart))
@@ -228,7 +227,7 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
         tag.putInt(SpellBook.BOOK_MODE_TAG, mode);
     }
 
-    public static ArrayList<AbstractSpellPart> getUnlockedSpells(CompoundNBT tag){
+    public static List<AbstractSpellPart> getUnlockedSpells(CompoundNBT tag){
         return SpellRecipeUtil.getSpellsFromString(tag.getString(SpellBook.UNLOCKED_SPELLS));
     }
 
