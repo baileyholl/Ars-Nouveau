@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatus
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.ApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import mezz.jei.api.IModPlugin;
@@ -59,10 +58,6 @@ public class JEIArsNouveauPlugin implements IModPlugin {
             if(i instanceof ApparatusRecipe){
                 apparatus.add((ApparatusRecipe) i);
             }
-        }
-
-        for(AbstractSpellPart spellPart : ArsNouveauAPI.getInstance().getSpell_map().values()){
-            recipeList.add(new GlyphPressRecipe(new ResourceLocation(ArsNouveau.MODID,"glyph_" + spellPart.tag), spellPart.getTier(), new ItemStack(spellPart.getCraftingReagent()), ArsNouveauAPI.getInstance().getGlyphItem(spellPart).getDefaultInstance()));
         }
         registry.addRecipes(recipeList, GlyphPressRecipeCategory.UID);
 

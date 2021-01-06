@@ -19,5 +19,6 @@ public class ModDatagen {
         event.getGenerator().addProvider(new Recipes(event.getGenerator()));
         event.getGenerator().addProvider(new BlockTagProvider(event.getGenerator()));
         event.getGenerator().addProvider(new BlockStatesDatagen(event.getGenerator(), ArsNouveau.MODID, event.getExistingFileHelper()));
+        event.getGenerator().addProvider(new GlyphRecipeProvider(event.getGenerator()));
     }
 }

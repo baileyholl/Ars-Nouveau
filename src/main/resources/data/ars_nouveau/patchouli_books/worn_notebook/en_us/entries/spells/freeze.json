@@ -10,6 +10,7 @@
     },
     {
       "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_freeze",
       "tier": "ONE",
       "mana_cost": "Low",
       "clay_type": "ars_nouveau:magic_clay",

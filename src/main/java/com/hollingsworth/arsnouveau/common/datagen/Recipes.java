@@ -230,7 +230,6 @@ public class Recipes extends RecipeProvider {
         }
     }
 
-
     public static ShapedRecipeBuilder makeWood(IItemProvider logs, IItemProvider wood, int count){
         return ShapedRecipeBuilder.shapedRecipe(wood, count).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                 .patternLine("xx ")

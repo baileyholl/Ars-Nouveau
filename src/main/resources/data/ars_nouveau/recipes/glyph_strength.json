@@ -1,0 +1,6 @@
+{
+  "type": "ars_nouveau:glyph_recipe",
+  "tier": "THREE",
+  "input": "minecraft:blaze_powder",
+  "output": "ars_nouveau:glyph_strength"
+}
