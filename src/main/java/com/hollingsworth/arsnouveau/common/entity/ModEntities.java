@@ -97,12 +97,12 @@ public class ModEntities {
                             .size(0.5f, 0.5f)
                             .setTrackingRange(10).setUpdateInterval(60)
                             .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityRitualProjectile::new));
-//            ENTITY_WILDEN = build(
-//                    "ritual",
-//                    EntityType.Builder.<WildenHunter>create(WildenHunter::new, EntityClassification.CREATURE)
-//                            .size(1.0f, 2.0f)
-//                            .setTrackingRange(10)
-//                            .setShouldReceiveVelocityUpdates(true));
+            ENTITY_WILDEN = build(
+                    "wilden_hunter",
+                    EntityType.Builder.<WildenHunter>create(WildenHunter::new, EntityClassification.CREATURE)
+                            .size(1.0f, 2.0f)
+                            .setTrackingRange(10)
+                            .setShouldReceiveVelocityUpdates(true));
 
             event.getRegistry().registerAll(
                     SPELL_PROJ,
@@ -114,8 +114,8 @@ public class ModEntities {
                     ENTITY_FOLLOW_PROJ,
                     ENTITY_WIXIE_TYPE,
                     ENTITY_FLYING_ITEM,
-                    ENTITY_RITUAL
-                   // ENTITY_WILDEN
+                    ENTITY_RITUAL,
+                    ENTITY_WILDEN
             );
 
             GlobalEntityTypeAttributes.put(ENTITY_WHELP_TYPE, EntityWhelp.attributes().create());
@@ -123,7 +123,7 @@ public class ModEntities {
             GlobalEntityTypeAttributes.put(ENTITY_CARBUNCLE_TYPE, EntityCarbuncle.attributes().create());
             GlobalEntityTypeAttributes.put(ENTITY_SYLPH_TYPE, EntitySylph.attributes().create());
             GlobalEntityTypeAttributes.put(ENTITY_WIXIE_TYPE, EntityWixie.attributes().create());
-           // GlobalEntityTypeAttributes.put(ENTITY_WILDEN, WildenHunter.getAttributes().create());
+            GlobalEntityTypeAttributes.put(ENTITY_WILDEN, WildenHunter.getAttributes().create());
 
             EntitySpawnPlacementRegistry.register(ENTITY_CARBUNCLE_TYPE, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
             EntitySpawnPlacementRegistry.register(ENTITY_SYLPH_TYPE, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
