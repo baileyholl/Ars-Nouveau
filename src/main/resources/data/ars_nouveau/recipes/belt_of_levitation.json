@@ -1,0 +1,49 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "item_1": [
+    {
+      "item": "minecraft:gold_ingot"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "minecraft:gold_ingot"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "minecraft:gold_ingot"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "minecraft:gold_ingot"
+    }
+  ],
+  "item_5": [
+    {
+      "item": "minecraft:feather"
+    }
+  ],
+  "item_6": [
+    {
+      "item": "minecraft:feather"
+    }
+  ],
+  "item_7": [
+    {
+      "item": "minecraft:feather"
+    }
+  ],
+  "item_8": [
+    {
+      "item": "ars_nouveau:glyph_launch"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "ars_nouveau:mundane_belt"
+    }
+  ],
+  "output": "ars_nouveau:belt_of_levitation"
+}

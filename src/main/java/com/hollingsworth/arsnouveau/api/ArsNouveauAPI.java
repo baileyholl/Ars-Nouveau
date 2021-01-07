@@ -121,10 +121,6 @@ public class ArsNouveauAPI {
     }
 
     public GlyphPressRecipe getGlyphPressRecipe(World world, Item reagent, @Nullable ISpellTier.Tier tier){
-//        Glyph glyph = hasCraftingReagent(reagent);
-//        if(glyph != null && glyph.spellPart.getTier() == tier)
-//            return new GlyphPressRecipe(null,  glyph.spellPart.getTier(), new ItemStack(glyph.spellPart.getCraftingReagent()), glyph.getStack());
-
         RecipeManager manager = world.getRecipeManager();
         for(IRecipe i : manager.getRecipes()){
             if(i instanceof GlyphPressRecipe){

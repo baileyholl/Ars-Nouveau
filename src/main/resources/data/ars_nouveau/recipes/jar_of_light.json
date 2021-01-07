@@ -1,0 +1,49 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "item_1": [
+    {
+      "item": "minecraft:glowstone"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "minecraft:glowstone"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "minecraft:glowstone"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "minecraft:glowstone"
+    }
+  ],
+  "item_5": [
+    {
+      "item": "minecraft:redstone_lamp"
+    }
+  ],
+  "item_6": [
+    {
+      "item": "minecraft:glass"
+    }
+  ],
+  "item_7": [
+    {
+      "item": "minecraft:glass"
+    }
+  ],
+  "item_8": [
+    {
+      "item": "minecraft:redstone_lamp"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "minecraft:glass_bottle"
+    }
+  ],
+  "output": "ars_nouveau:jar_of_light"
+}

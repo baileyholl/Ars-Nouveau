@@ -9,11 +9,7 @@
     },
     {
       "type": "apparatus_recipe",
-      "reagent": "minecraft:wheat_seeds",
-      "item1": "ars_nouveau:mana_gem",
-      "item2": "ars_nouveau:mana_gem",
-      "item3": "ars_nouveau:mana_gem",
-      "item4": "ars_nouveau:mana_gem"
+      "recipe": "ars_nouveau:mana_bloom_crop"
     }
   ]
 }

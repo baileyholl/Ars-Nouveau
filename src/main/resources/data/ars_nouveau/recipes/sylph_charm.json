@@ -1,0 +1,49 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "item_1": [
+    {
+      "item": "ars_nouveau:mana_gem"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:mana_bloom_crop"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "ars_nouveau:mana_bloom"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "minecraft:diamond"
+    }
+  ],
+  "item_5": [
+    {
+      "item": "minecraft:oak_sapling"
+    }
+  ],
+  "item_6": [
+    {
+      "item": "minecraft:spruce_sapling"
+    }
+  ],
+  "item_7": [
+    {
+      "item": "minecraft:birch_sapling"
+    }
+  ],
+  "item_8": [
+    {
+      "item": "minecraft:wheat_seeds"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "ars_nouveau:sylph_shards"
+    }
+  ],
+  "output": "ars_nouveau:sylph_charm"
+}

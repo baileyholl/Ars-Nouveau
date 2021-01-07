@@ -7,17 +7,9 @@
       "type": "text",
       "text": "ars_nouveau.page.carbuncle_charm"
     },
-    {
+     {
       "type": "apparatus_recipe",
-      "reagent": "ars_nouveau:carbuncle_shards",
-      "item1": "ars_nouveau:mana_gem",
-      "item2": "ars_nouveau:mana_gem",
-      "item3": "ars_nouveau:mana_gem",
-      "item4": "minecraft:gold_nugget",
-      "item5": "minecraft:gold_nugget",
-      "item6": "minecraft:gold_nugget",
-      "item7": "minecraft:gold_nugget",
-      "item8": "minecraft:gold_nugget"
+      "recipe": "ars_nouveau:carbuncle_charm"
     },
 	{
 	 "type": "entity",

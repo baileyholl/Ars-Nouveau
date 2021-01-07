@@ -1,0 +1,49 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "item_1": [
+    {
+      "item": "minecraft:diamond"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "minecraft:ender_pearl"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "minecraft:diamond"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "ars_nouveau:mana_gem"
+    }
+  ],
+  "item_5": [
+    {
+      "item": "ars_nouveau:mana_gem"
+    }
+  ],
+  "item_6": [
+    {
+      "item": "minecraft:diamond"
+    }
+  ],
+  "item_7": [
+    {
+      "item": "minecraft:ender_pearl"
+    }
+  ],
+  "item_8": [
+    {
+      "item": "minecraft:diamond"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "ars_nouveau:ring_of_potential"
+    }
+  ],
+  "output": "ars_nouveau:ring_of_lesser_discount"
+}

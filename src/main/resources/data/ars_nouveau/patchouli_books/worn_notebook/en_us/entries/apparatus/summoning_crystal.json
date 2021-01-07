@@ -7,17 +7,9 @@
       "type": "text",
       "text": "ars_nouveau.page.summoning_crystal"
     },
-    {
+   {
       "type": "apparatus_recipe",
-      "reagent": "ars_nouveau:mana_gem_block",
-      "item1": "minecraft:gold_ingot",
-      "item2": "minecraft:diamond",
-      "item3": "minecraft:diamond",
-      "item4": "minecraft:gold_ingot",
-      "item5": "ars_nouveau:arcane_stone",
-      "item6": "ars_nouveau:arcane_stone",
-      "item7": "ars_nouveau:arcane_stone",
-      "item8": "ars_nouveau:arcane_stone"
+      "recipe": "ars_nouveau:summoning_crystal"
     },
 	{
       "type": "text",

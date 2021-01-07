@@ -9,15 +9,7 @@
     },
     {
       "type": "apparatus_recipe",
-      "reagent": "ars_nouveau:mundane_belt",
-      "item1": "minecraft:sugar",
-      "item2": "minecraft:nether_wart",
-      "item3": "minecraft:blaze_powder",
-      "item4": "minecraft:glowstone_dust",
-      "item5": "minecraft:fermented_spider_eye",
-      "item6": "minecraft:redstone",
-      "item7": "minecraft:brewing_stand",
-      "item8": "minecraft:feather"
+      "recipe": "ars_nouveau:belt_of_unstable_gifts"
     }
   ]
 }

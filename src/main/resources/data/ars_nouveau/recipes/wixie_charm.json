@@ -1,0 +1,29 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "item_1": [
+    {
+      "item": "minecraft:dark_oak_sapling"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "minecraft:crafting_table"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "minecraft:emerald"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "minecraft:brewing_stand"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "ars_nouveau:wixie_shards"
+    }
+  ],
+  "output": "ars_nouveau:wixie_charm"
+}

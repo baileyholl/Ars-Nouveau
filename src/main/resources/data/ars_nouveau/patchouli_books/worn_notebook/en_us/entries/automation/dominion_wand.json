@@ -9,10 +9,7 @@
         },
     {
       "type": "apparatus_recipe",
-      "reagent": "minecraft:stick",
-      "item1": "ars_nouveau:mana_gem",
-      "item2": "ars_nouveau:mana_gem",
-      "item3": "minecraft:gold_ingot"
+      "recipe": "ars_nouveau:dominion_wand"
     },
 		{
             "type": "relations",

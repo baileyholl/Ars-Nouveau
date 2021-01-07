@@ -21,7 +21,6 @@ public class GlyphPressProcessor implements IComponentProcessor {
 
     @Override
     public IVariable process(String s) {
-        System.out.println(s);
         if(s.equals("clay_type"))
             return IVariable.from(recipe.getClay());
         if(s.equals("reagent"))
@@ -44,9 +43,6 @@ public class GlyphPressProcessor implements IComponentProcessor {
             }
             return IVariable.wrap("");
         }
-
-
-
         return null;
     }
 }

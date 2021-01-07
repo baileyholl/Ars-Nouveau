@@ -12,31 +12,36 @@ import net.minecraft.item.crafting.RecipeItemHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class EnchantingApparatusRecipe implements IEnchantingRecipe{
 
-    public Ingredient catalyst; // Used in the arcane pedestal
+    public Ingredient reagent; // Used in the arcane pedestal
     public ItemStack result; // Result item
     public List<Ingredient> pedestalItems; // Items part of the recipe
-    public String description;
-    private String category;
+    public String category;
 
-    public EnchantingApparatusRecipe(ItemStack result, Ingredient catalyst, List<Ingredient> pedestalItems, String category){
-        this.catalyst = catalyst;
+    public EnchantingApparatusRecipe(ItemStack result, Ingredient reagent, List<Ingredient> pedestalItems, String category){
+        this.reagent = reagent;
         this.pedestalItems = pedestalItems;
         this.result = result;
         this.category = category;
     }
 
+    public EnchantingApparatusRecipe(){
+        reagent = Ingredient.EMPTY;
+        result = ItemStack.EMPTY;
+        pedestalItems = new ArrayList<>();
 
-    public EnchantingApparatusRecipe(Item result, Item catalyst, Item[] pedestalItems, String category){
+    }
+
+
+    public EnchantingApparatusRecipe(Item result, Item reagent, Item[] pedestalItems, String category){
         ArrayList<Ingredient> stacks = new ArrayList<>();
         for(Item i : pedestalItems){
             stacks.add(Ingredient.fromItems(i));
         }
-        this.catalyst = Ingredient.fromItems(catalyst);
+        this.reagent = Ingredient.fromItems(reagent);
         this.result = new ItemStack(result);
         this.pedestalItems = stacks;
         this.category = category;
@@ -45,7 +50,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
     @Override
     public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile) {
         pedestalItems = pedestalItems.stream().filter(itemStack -> !itemStack.isEmpty()).collect(Collectors.toList());
-        if (!catalyst.test(reagent)|| this.pedestalItems.size() != pedestalItems.size() || !doItemsMatch(pedestalItems, this.pedestalItems)) {
+        if (!this.reagent.test(reagent)|| this.pedestalItems.size() != pedestalItems.size() || !doItemsMatch(pedestalItems, this.pedestalItems)) {
             return false;
         }
         return true;
@@ -72,22 +77,39 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EnchantingApparatusRecipe that = (EnchantingApparatusRecipe) o;
-        return Objects.equals(catalyst, that.catalyst) &&
+        return Objects.equals(reagent, that.reagent) &&
                 Objects.equals(pedestalItems, that.pedestalItems);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(catalyst, pedestalItems);
+        return Objects.hash(reagent, pedestalItems);
     }
 
     @Override
     public String toString() {
         return "EnchantingApparatusRecipe{" +
-                "catalyst=" + catalyst +
+                "catalyst=" + reagent +
                 ", result=" + result +
                 ", pedestalItems=" + pedestalItems +
                 '}';
+    }
+
+    public JsonElement asRecipe(){
+        JsonObject jsonobject = new JsonObject();
+        jsonobject.addProperty("type", "ars_nouveau:enchanting_apparatus");
+        int counter = 1;
+        for(Ingredient i : pedestalItems){
+            JsonArray item = new JsonArray();
+            item.add(i.serialize());
+            jsonobject.add("item_"+counter, item);
+            counter++;
+        }
+        JsonArray reagent =  new JsonArray();
+        reagent.add(this.reagent.serialize());
+        jsonobject.add("reagent", reagent);
+        jsonobject.addProperty("output", this.result.getItem().getRegistryName().toString());
+        return jsonobject;
     }
 
     /**
@@ -105,17 +127,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         descPage.addProperty("text",ArsNouveau.MODID + ".page." + this.result.getItem().getRegistryName().toString().replace(ArsNouveau.MODID + ":", ""));
         JsonObject infoPage = new JsonObject();
         infoPage.addProperty("type", "apparatus_recipe");
-        infoPage.addProperty("reagent", this.catalyst.getMatchingStacks()[0].getItem().getRegistryName().toString());
-
-
-        if(this.pedestalItems != null){
-            AtomicInteger count = new AtomicInteger(1);
-            this.pedestalItems.forEach(i ->{
-                infoPage.addProperty("item" + count.get(), i.getMatchingStacks()[0].getItem().getRegistryName().toString());
-                count.addAndGet(1);
-            });
-
-        }
+        infoPage.addProperty("recipe", this.result.getItem().getRegistryName().toString());
 
 
         jsonArray.add(descPage);

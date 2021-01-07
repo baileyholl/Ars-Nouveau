@@ -1,0 +1,49 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "item_1": [
+    {
+      "item": "minecraft:blaze_rod"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "minecraft:gold_ingot"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "minecraft:gold_ingot"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "minecraft:gold_ingot"
+    }
+  ],
+  "item_5": [
+    {
+      "item": "ars_nouveau:glyph_redstone_signal"
+    }
+  ],
+  "item_6": [
+    {
+      "item": "minecraft:quartz_block"
+    }
+  ],
+  "item_7": [
+    {
+      "item": "minecraft:redstone_block"
+    }
+  ],
+  "item_8": [
+    {
+      "item": "ars_nouveau:spell_parchment"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "minecraft:dispenser"
+    }
+  ],
+  "output": "ars_nouveau:spell_turret"
+}

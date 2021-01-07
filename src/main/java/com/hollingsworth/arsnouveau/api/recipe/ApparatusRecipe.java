@@ -78,7 +78,7 @@ public class ApparatusRecipe implements IRecipe<IInventory> {
             Ingredient reagent = Ingredient.deserialize(JSONUtils.getJsonArray(json, "reagent"));
             ItemStack output = new ItemStack(JSONUtils.getItem(json, "output"));
             List<Ingredient> stacks = new ArrayList<>();
-            for(int i =1; i < 9; i++){
+            for(int i = 1; i < 9; i++){
                 if(json.has("item_"+i))
                     stacks.add(Ingredient.deserialize(JSONUtils.getJsonArray(json, "item_" + i)));
             }
@@ -93,7 +93,7 @@ public class ApparatusRecipe implements IRecipe<IInventory> {
             ItemStack output = buffer.readItemStack();
             List<Ingredient> stacks = new ArrayList<>();
 
-            for(int i =0; i < length; i++){
+            for(int i = 0; i < length; i++){
                 try{ stacks.add(Ingredient.read(buffer)); }catch (Exception e){
                     e.printStackTrace();
                     break;

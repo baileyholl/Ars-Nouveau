@@ -7,17 +7,9 @@
       "type": "text",
       "text": "ars_nouveau.page.sylph_charm"
     },
-   {
+    {
       "type": "apparatus_recipe",
-      "reagent": "ars_nouveau:sylph_shards",
-      "item1": "ars_nouveau:mana_gem",
-      "item2": "ars_nouveau:mana_bloom_crop",
-      "item3": "ars_nouveau:mana_bloom",
-      "item4": "minecraft:diamond",
-      "item5": "minecraft:oak_sapling",
-      "item6": "minecraft:spruce_sapling",
-      "item7": "minecraft:birch_sapling",
-      "item8": "minecraft:wheat_seeds"
+      "recipe": "ars_nouveau:sylph_charm"
     },
 	{
 	 "type": "entity",

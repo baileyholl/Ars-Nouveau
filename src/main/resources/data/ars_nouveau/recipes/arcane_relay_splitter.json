@@ -1,0 +1,49 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "item_1": [
+    {
+      "item": "minecraft:quartz"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "minecraft:quartz"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "minecraft:quartz"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "minecraft:gold_ingot"
+    }
+  ],
+  "item_5": [
+    {
+      "item": "minecraft:gold_ingot"
+    }
+  ],
+  "item_6": [
+    {
+      "item": "minecraft:gold_ingot"
+    }
+  ],
+  "item_7": [
+    {
+      "item": "minecraft:gold_ingot"
+    }
+  ],
+  "item_8": [
+    {
+      "item": "minecraft:quartz"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "ars_nouveau:arcane_relay"
+    }
+  ],
+  "output": "ars_nouveau:arcane_relay_splitter"
+}

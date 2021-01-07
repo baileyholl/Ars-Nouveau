@@ -9,11 +9,7 @@
     },
     {
       "type": "apparatus_recipe",
-      "reagent": "minecraft:glass_bottle",
-      "item1": "minecraft:lava_bucket",
-      "item2": "minecraft:bucket",
-      "item3": "minecraft:ender_pearl",
-      "item4": "ars_nouveau:allow_scroll"
+      "recipe": "ars_nouveau:void_jar"
     }
   ]
 }

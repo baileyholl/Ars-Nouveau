@@ -1,0 +1,29 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "item_1": [
+    {
+      "item": "minecraft:lava_bucket"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "minecraft:bucket"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "minecraft:ender_pearl"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "ars_nouveau:allow_scroll"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "minecraft:glass_bottle"
+    }
+  ],
+  "output": "ars_nouveau:void_jar"
+}

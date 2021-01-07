@@ -1,0 +1,24 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "item_1": [
+    {
+      "item": "ars_nouveau:mana_gem"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:mana_gem"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "minecraft:gold_ingot"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "minecraft:stick"
+    }
+  ],
+  "output": "ars_nouveau:dominion_wand"
+}

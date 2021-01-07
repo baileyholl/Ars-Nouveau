@@ -1,0 +1,49 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "item_1": [
+    {
+      "item": "ars_nouveau:mana_gem"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:mana_gem"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "ars_nouveau:mana_gem"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "minecraft:gold_nugget"
+    }
+  ],
+  "item_5": [
+    {
+      "item": "minecraft:gold_nugget"
+    }
+  ],
+  "item_6": [
+    {
+      "item": "minecraft:gold_nugget"
+    }
+  ],
+  "item_7": [
+    {
+      "item": "minecraft:gold_nugget"
+    }
+  ],
+  "item_8": [
+    {
+      "item": "minecraft:gold_nugget"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "ars_nouveau:carbuncle_shards"
+    }
+  ],
+  "output": "ars_nouveau:carbuncle_charm"
+}
