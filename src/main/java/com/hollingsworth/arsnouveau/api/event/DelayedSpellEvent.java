@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.event;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import net.minecraft.entity.LivingEntity;
@@ -37,7 +38,7 @@ public class DelayedSpellEvent implements ITimedEvent{
         if(world == null)
             return;
         SpellContext context = new SpellContext(recipe, shooter);
-        SpellResolver.resolveEffects(world, shooter, result, recipe, context);
+        SpellResolver.resolveEffects(world, shooter, result, new Spell(recipe), context);
     }
 
     @Override

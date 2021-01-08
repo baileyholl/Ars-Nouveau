@@ -1,38 +1,67 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
+import net.minecraft.entity.LivingEntity;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil.getEquippedAugments;
 
 public class Spell {
 
     public List<AbstractSpellPart> recipe;
+    private int cost;
 
     public Spell(List<AbstractSpellPart> recipe){
         this.recipe = recipe;
+        this.cost = getInitialCost();
     }
 
     public Spell(){
         this.recipe = new ArrayList<>();
+        this.cost = 0;
     }
 
     public int getSpellSize(){
         return recipe.size();
     }
 
-    public int getCost(){
+    public List<AbstractAugment> getAugments(int startPosition, @Nullable LivingEntity caster){
+        ArrayList<AbstractAugment> augments = new ArrayList<>();
+        for(int j = startPosition + 1; j < recipe.size(); j++){
+            AbstractSpellPart next_spell = recipe.get(j);
+            if(next_spell instanceof AbstractAugment){
+                augments.add((AbstractAugment) next_spell);
+            }else{
+                break;
+            }
+        }
+        // Add augment bonuses from equipment
+        if(caster != null)
+            augments.addAll(getEquippedAugments(caster));
+        return augments;
+    }
+
+    private int getInitialCost(){
         int cost = 0;
         for (int i = 0; i < recipe.size(); i++) {
             AbstractSpellPart spell = recipe.get(i);
             if (!(spell instanceof AbstractAugment)) {
-
-                List<AbstractAugment> augments = SpellRecipeUtil.getAugments(recipe, i, null);
+                List<AbstractAugment> augments = getAugments(i, null);
                 cost += spell.getAdjustedManaCost(augments);
             }
         }
         return cost;
+    }
+
+    public int getCastingCost(){
+        return Math.max(0, cost);
+    }
+
+    public void setCost(int cost){
+        this.cost = cost;
     }
 
     public String serialize(){
@@ -78,29 +107,6 @@ public class Spell {
                 str.append(" -> ");
             }
         }
-
-//        for (int i = 0; i < recipe.size(); i++) {
-//            AbstractSpellPart spellPart = recipe.get(i);
-//            if(lastStr.equals(spellPart.name)){
-//                numCount++;
-//                if(i == recipe.size() - 1){
-//                    str.append(spellPart.name).append(" x").append(numCount);
-//                }
-//            }else{
-//                lastStr = spellPart.name;
-//
-//                if (numCount < 2) {
-//                    str.append(spellPart.name);
-//                } else {
-//                    str.append(spellPart.name).append(" x").append(numCount);
-//
-//                }
-//                if(i < recipe.size() - 1){
-//                    str.append(" -> ");
-//                }
-//                numCount = 1;
-//            }
-//        }
         return str.toString();
     }
 

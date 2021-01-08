@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
@@ -152,7 +153,7 @@ public class SummoningCrystalTile extends AbstractManaTile implements IAnimatabl
 
 
     public boolean enoughMana(List<AbstractSpellPart> spellParts){
-        return enoughMana(ManaUtil.getRecipeCost(spellParts) / 4);
+        return enoughMana(new Spell(spellParts).getCastingCost() / 4);
     }
 
     public boolean enoughMana(int manaCost){
@@ -164,7 +165,7 @@ public class SummoningCrystalTile extends AbstractManaTile implements IAnimatabl
     }
 
     public boolean removeManaAround(List<AbstractSpellPart> spellParts){
-        return removeManaAround(ManaUtil.getRecipeCost(spellParts) / 4);
+        return removeManaAround(new Spell(spellParts).getCastingCost() / 4);
     }
 
     public List<BlockPos> getTargets(){

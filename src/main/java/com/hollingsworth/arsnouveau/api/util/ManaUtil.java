@@ -4,8 +4,6 @@ import com.hollingsworth.arsnouveau.api.event.ManaRegenCalcEvent;
 import com.hollingsworth.arsnouveau.api.event.MaxManaCalcEvent;
 import com.hollingsworth.arsnouveau.api.mana.IMana;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.armor.MagicArmor;
 import com.hollingsworth.arsnouveau.common.block.tile.ManaJarTile;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
@@ -24,24 +22,10 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ManaUtil {
-
-    public static int getRecipeCost(List<AbstractSpellPart> recipe) {
-        int cost = 0;
-        for (int i = 0; i < recipe.size(); i++) {
-            AbstractSpellPart spell = recipe.get(i);
-            if (!(spell instanceof AbstractAugment)) {
-
-                List<AbstractAugment> augments = SpellRecipeUtil.getAugments(recipe, i, null);
-                cost += spell.getAdjustedManaCost(augments);
-            }
-        }
-        return cost;
-    }
 
     public static int getPlayerDiscounts(LivingEntity e){
         AtomicInteger discounts = new AtomicInteger();
@@ -54,11 +38,6 @@ public class ManaUtil {
             }
         });
         return discounts.get();
-    }
-
-    public static int getCastingCost(List<AbstractSpellPart> recipe, LivingEntity e){
-        int cost = getRecipeCost(recipe) - getPlayerDiscounts(e);
-        return Math.max(cost, 0);
     }
 
 

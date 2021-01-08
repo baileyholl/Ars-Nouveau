@@ -1,11 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
-import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
-import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.SpellTurretTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
@@ -63,7 +59,7 @@ public class SpellTurret extends ModBlock {
         SpellTurretTile tile = (SpellTurretTile) world.getTileEntity(pos);
         if(tile == null || tile.recipe == null || tile.recipe.isEmpty())
             return;
-        int manaCost = ManaUtil.getRecipeCost(tile.recipe)/2;
+        int manaCost = new Spell(tile.recipe).getCastingCost()/2;
         if(ManaUtil.takeManaNearbyWithParticles(pos, world, 10, manaCost) == null)
             return;
         IPosition iposition = getDispensePosition(new ProxyBlockSource(world, pos));
@@ -92,7 +88,7 @@ public class SpellTurret extends ModBlock {
         FakePlayer fakePlayer = FakePlayerFactory.getMinecraft(world);
         fakePlayer.setPosition(pos.getX(), pos.getY(), pos.getZ());
         EntityProjectileSpell spell = new EntityProjectileSpell(world, fakePlayer,resolver,
-                AbstractSpellPart.getBuffCount(SpellRecipeUtil.getAugments(tile.recipe,  0, null), AugmentPierce.class));
+                AbstractSpellPart.getBuffCount(new Spell(tile.recipe).getAugments(0, null), AugmentPierce.class));
         spell.setShooter(fakePlayer);
         spell.setPosition(iposition.getX(), iposition.getY(), iposition.getZ());
         spell.shoot(direction.getXOffset(), ((float)direction.getYOffset()), direction.getZOffset(), 0.5f, 0);

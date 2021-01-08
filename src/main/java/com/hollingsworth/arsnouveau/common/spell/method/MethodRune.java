@@ -42,7 +42,7 @@ public class MethodRune extends AbstractCastMethod {
                 RuneTile runeTile = (RuneTile) world.getTileEntity(pos.up());
                 runeTile.isTemporary = true;
                 runeTile.uuid = context.getPlayer().getUniqueID();
-                runeTile.setParsedSpell(resolver.spell_recipe);
+                runeTile.setParsedSpell(resolver.spell.recipe);
             }
             resolver.expendMana(context.getPlayer());
         }
@@ -60,7 +60,7 @@ public class MethodRune extends AbstractCastMethod {
                     runeTile.uuid = caster.getUniqueID();
                 }
                 runeTile.isTemporary = true;
-                runeTile.recipe = resolver.spell_recipe;
+                runeTile.recipe = resolver.spell.recipe;
             }
             resolver.expendMana(caster);
         }

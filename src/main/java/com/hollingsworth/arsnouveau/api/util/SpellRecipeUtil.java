@@ -8,29 +8,12 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 public class SpellRecipeUtil {
-
-    public static ArrayList<AbstractAugment> getAugments(List<AbstractSpellPart> spell_recipe, int startPosition, @Nullable LivingEntity caster){
-        ArrayList<AbstractAugment> augments = new ArrayList<>();
-        for(int j = startPosition + 1; j < spell_recipe.size(); j++){
-            AbstractSpellPart next_spell = spell_recipe.get(j);
-            if(next_spell instanceof AbstractAugment){
-                augments.add((AbstractAugment) next_spell);
-            }else{
-                break;
-            }
-        }
-        // Add augment bonuses from equipment
-        if(caster != null)
-            augments.addAll(getEquippedAugments(caster));
-        return augments;
-    }
 
     /**
      * Returns the list of augments that come from equipment
