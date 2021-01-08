@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.client.patchouli;
 
-import com.hollingsworth.arsnouveau.api.recipe.ApparatusRecipe;
+import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -14,12 +14,12 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class ApparatusProcessor implements IComponentProcessor {
-    ApparatusRecipe recipe;
+    EnchantingApparatusRecipe recipe;
     @Override
     public void setup(IVariableProvider variables) {
         RecipeManager manager = Minecraft.getInstance().world.getRecipeManager();
         String recipeID = variables.get("recipe").asString();
-        recipe = (ApparatusRecipe) manager.getRecipe(new ResourceLocation(recipeID)).orElseThrow(IllegalArgumentException::new);
+        recipe = (EnchantingApparatusRecipe) manager.getRecipe(new ResourceLocation(recipeID)).orElseThrow(IllegalArgumentException::new);
     }
 
     @Override

@@ -11,6 +11,6 @@ public class ModCapabilities {
     @SubscribeEvent
     public static void registerCapabilities(final FMLCommonSetupEvent event){
         ManaCapability.register();
-        CasterCapability.register();
+        //CasterItemCapability.register();
     }
 }

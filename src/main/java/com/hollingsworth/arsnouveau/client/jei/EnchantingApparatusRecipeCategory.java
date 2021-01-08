@@ -4,7 +4,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.recipe.ApparatusRecipe;
+import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import mezz.jei.api.constants.VanillaTypes;
@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class EnchantingApparatusRecipeCategory implements IRecipeCategory<ApparatusRecipe> {
+public class EnchantingApparatusRecipeCategory implements IRecipeCategory<EnchantingApparatusRecipe> {
     public final static ResourceLocation UID = new ResourceLocation(ArsNouveau.MODID, "apparatus");
 
     IGuiHelper helper;
@@ -52,7 +52,7 @@ public class EnchantingApparatusRecipeCategory implements IRecipeCategory<Appara
 
     @Override
     public Class getRecipeClass() {
-        return ApparatusRecipe.class;
+        return EnchantingApparatusRecipe.class;
     }
 
     @Override
@@ -71,28 +71,28 @@ public class EnchantingApparatusRecipeCategory implements IRecipeCategory<Appara
     }
 
     @Override
-    public void draw(ApparatusRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+    public void draw(EnchantingApparatusRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
         IDrawableAnimated arrow = this.cachedArrows.getUnchecked(40);
         arrow.draw( matrixStack,55, 22);
     }
 
     @Override
-    public void setIngredients(ApparatusRecipe o, IIngredients iIngredients) {
+    public void setIngredients(EnchantingApparatusRecipe o, IIngredients iIngredients) {
         List<List<ItemStack>> itemStacks = new ArrayList<>();
 
         itemStacks.add(Arrays.asList(o.reagent.getMatchingStacks()));
-        itemStacks.add(Collections.singletonList(o.output));
+        itemStacks.add(Collections.singletonList(o.result));
         for(Ingredient i : o.pedestalItems){
 
            itemStacks.add(Arrays.asList(i.getMatchingStacks()));
         }
         iIngredients.setInputLists(VanillaTypes.ITEM, itemStacks);
         //   iIngredients.setInput(VanillaTypes.ITEM, glyphPressRecipe.reagent);
-        iIngredients.setOutput(VanillaTypes.ITEM, o.output);
+        iIngredients.setOutput(VanillaTypes.ITEM, o.result);
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, ApparatusRecipe o, IIngredients ingredients) {
+    public void setRecipe(IRecipeLayout recipeLayout, EnchantingApparatusRecipe o, IIngredients ingredients) {
         int index = 0;
         recipeLayout.getItemStacks().init(index, true, 18, 22);
 

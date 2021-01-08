@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.jei;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.recipe.ApparatusRecipe;
+import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -46,14 +46,14 @@ public class JEIArsNouveauPlugin implements IModPlugin {
 
 
         List<GlyphPressRecipe> recipeList = new ArrayList<>();
-        List<ApparatusRecipe> apparatus = new ArrayList<>();
+        List<EnchantingApparatusRecipe> apparatus = new ArrayList<>();
         RecipeManager manager = Minecraft.getInstance().world.getRecipeManager();
         for(IRecipe i : manager.getRecipes()){
             if(i instanceof GlyphPressRecipe){
                 recipeList.add((GlyphPressRecipe) i);
             }
-            if(i instanceof ApparatusRecipe){
-                apparatus.add((ApparatusRecipe) i);
+            if(i instanceof EnchantingApparatusRecipe){
+                apparatus.add((EnchantingApparatusRecipe) i);
             }
         }
         registry.addRecipes(recipeList, GlyphPressRecipeCategory.UID);

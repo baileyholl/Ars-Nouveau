@@ -7,14 +7,12 @@ import com.hollingsworth.arsnouveau.api.util.MathUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.IntangibleAirTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PhantomBlockTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
-import com.hollingsworth.arsnouveau.common.capability.CasterCapability;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -26,7 +24,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -39,11 +36,6 @@ public abstract class Caster extends ModItem implements IScribeable, IDisplayMan
 
     public Caster(Properties properties) {
         super(properties);
-    }
-
-    @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-        return CasterCapability.createProvider(new SpellCaster(stack));
     }
 
     @Override
@@ -84,7 +76,7 @@ public abstract class Caster extends ModItem implements IScribeable, IDisplayMan
     }
 
     public ISpellCaster getCaster(ItemStack stack){
-        return CasterCapability.getCaster(stack).orElse(null);
+        return SpellCaster.deserialize(stack);
     }
 
     public boolean setSpell(ISpellCaster caster, PlayerEntity player, Hand hand, ItemStack stack, Spell spell){
@@ -139,6 +131,9 @@ public abstract class Caster extends ModItem implements IScribeable, IDisplayMan
 
     @Override
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
+
+        if(worldIn == null)
+            return;
         ISpellCaster caster = getCaster(stack);
         if(caster == null)
             return;

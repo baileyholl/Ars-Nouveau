@@ -7,6 +7,8 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
@@ -19,7 +21,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnchantingApparatusTile extends AnimatedTile {
+public class EnchantingApparatusTile extends AnimatedTile implements IInventory {
     public ItemStack catalystItem;
     public ItemEntity entity;
     public long frames = 0;
@@ -156,5 +158,45 @@ public class EnchantingApparatusTile extends AnimatedTile {
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         super.onDataPacket(net, pkt);
         handleUpdateTag(world.getBlockState(pos), pkt.getNbtCompound());
+    }
+
+    @Override
+    public int getSizeInventory() {
+        return 0;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return false;
+    }
+
+    @Override
+    public ItemStack getStackInSlot(int index) {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public ItemStack decrStackSize(int index, int count) {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public ItemStack removeStackFromSlot(int index) {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public void setInventorySlotContents(int index, ItemStack stack) {
+
+    }
+
+    @Override
+    public boolean isUsableByPlayer(PlayerEntity player) {
+        return false;
+    }
+
+    @Override
+    public void clear() {
+
     }
 }

@@ -100,8 +100,6 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
         if(result instanceof BlockRayTraceResult && worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) instanceof ScribesTile)
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
         if(result instanceof BlockRayTraceResult && !playerIn.isSneaking()){
-
-
             if(worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) != null &&
                     !(worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) instanceof IntangibleAirTile
                     ||(worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) instanceof PhantomBlockTile))) {
@@ -111,7 +109,6 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
 
 
         if(worldIn.isRemote || !stack.hasTag()){
-            //spawnParticles(playerIn.posX, playerIn.posY + 2, playerIn.posZ, worldIn);
             return new ActionResult<>(ActionResultType.CONSUME, stack);
         }
         // Crafting mode

@@ -8,13 +8,17 @@ import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiManaHUD extends AbstractGui {
     private static final Minecraft minecraft = Minecraft.getInstance();
 
     public boolean shouldDisplayBar(){
-        return minecraft.player.getHeldItemMainhand().getItem() instanceof IDisplayMana || minecraft.player.getHeldItemOffhand().getItem() instanceof IDisplayMana;
+        ItemStack mainHand = minecraft.player.getHeldItemMainhand();
+        ItemStack offHand = minecraft.player.getHeldItemOffhand();
+        return (mainHand.getItem() instanceof IDisplayMana && ((IDisplayMana) mainHand.getItem()).shouldDisplay(mainHand))
+                || (offHand.getItem() instanceof IDisplayMana && ((IDisplayMana) offHand.getItem()).shouldDisplay(offHand));
     }
 
     public void drawHUD(MatrixStack ms, float pt) {

@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.api;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
-import com.hollingsworth.arsnouveau.api.recipe.ApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
@@ -112,9 +111,9 @@ public class ArsNouveauAPI {
         List<IEnchantingRecipe> recipes = new ArrayList<>(enchantingApparatusRecipes);
         RecipeManager manager = world.getRecipeManager();
         for(IRecipe i : manager.getRecipes()){
-            if(i instanceof ApparatusRecipe){
-                ApparatusRecipe recipe = (ApparatusRecipe) i;
-                recipes.add(new EnchantingApparatusRecipe(recipe.output.copy(), recipe.reagent, recipe.pedestalItems, "custom"));
+            if(i instanceof EnchantingApparatusRecipe){
+                EnchantingApparatusRecipe recipe = (EnchantingApparatusRecipe) i;
+                recipes.add(new EnchantingApparatusRecipe(recipe.result.copy(), recipe.reagent, recipe.pedestalItems, "custom"));
             }
         }
         return recipes;
