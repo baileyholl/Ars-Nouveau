@@ -35,7 +35,7 @@ public class EffectDispel extends AbstractEffect {
                 for(EffectInstance e : array){
                     entity.removePotionEffect(e.getPotion());
                 }
-                if(entity instanceof IDispellable){
+                if(entity instanceof IDispellable && entity.isAlive() && entity.getHealth() > 0 && !entity.removed){
                     ((IDispellable) entity).onDispel(shooter);
                 }
                 MinecraftForge.EVENT_BUS.post(new DispelEvent(rayTraceResult, world, shooter, augments, spellContext));
