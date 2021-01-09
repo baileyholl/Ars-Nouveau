@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.item.ICaster;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
@@ -25,7 +26,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.ArrayList;
 
-public class Wand extends Caster  implements IAnimatable {
+public class Wand extends ModItem  implements IAnimatable, ICaster {
     public AnimationFactory factory = new AnimationFactory(this);
     public Wand() {
         super(new Item.Properties().maxStackSize(1).group(ArsNouveau.itemGroup).setISTER(() -> WandRenderer::new), LibItemNames.WAND);
@@ -67,6 +68,6 @@ public class Wand extends Caster  implements IAnimatable {
         recipe.add(new AugmentAccelerate());
         recipe.addAll(spell.recipe);
         spell.recipe = recipe;
-        return super.setSpell(caster, player, hand, stack, spell);
+        return ICaster.super.setSpell(caster, player, hand, stack, spell);
     }
 }

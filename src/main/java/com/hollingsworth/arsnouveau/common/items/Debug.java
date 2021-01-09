@@ -8,7 +8,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
-public class Debug extends Caster{
+public class Debug extends ModItem{
     public Debug() {
         super(new Item.Properties());
         setRegistryName("debug");
