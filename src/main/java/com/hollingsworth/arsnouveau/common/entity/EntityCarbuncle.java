@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.goal.GetUnstuckGoal;
+import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.*;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -312,7 +313,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         list.add(new PrioritizedGoal(8, new NonHoggingLook(this, MobEntity.class, 3.0F, 0.01f)));
         list.add(new PrioritizedGoal(0, new SwimGoal(this)));
         // Roam back in case we have no item and are far from home.
-       // list.add(new PrioritizedGoal(2, new GoBackHomeGoal(this, this::getHome, 25, () -> (this.getHeldStack() == null || this.getHeldStack().isEmpty()))));
+        list.add(new PrioritizedGoal(2, new GoBackHomeGoal(this, this::getHome, 25, () -> (this.getHeldStack() == null || this.getHeldStack().isEmpty()))));
         return list;
     }
 

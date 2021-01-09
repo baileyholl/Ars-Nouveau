@@ -61,6 +61,11 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
     }
 
     @Override
+    public boolean isDamageable() {
+        return false;
+    }
+
+    @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         if(!stack.hasTag())
             stack.setTag(new CompoundNBT());
