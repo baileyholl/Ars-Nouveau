@@ -9,15 +9,7 @@
     },
     {
       "type": "apparatus_recipe",
-      "reagent": "ars_nouveau:arcane_relay",
-      "item1": "minecraft:quartz",
-      "item2": "minecraft:quartz",
-      "item3": "minecraft:quartz",
-      "item4": "minecraft:gold_ingot",
-      "item5": "minecraft:gold_ingot",
-      "item6": "minecraft:gold_ingot",
-      "item7": "minecraft:gold_ingot",
-      "item8": "minecraft:quartz"
+      "recipe": "ars_nouveau:arcane_relay_splitter"
     }
   ]
 }

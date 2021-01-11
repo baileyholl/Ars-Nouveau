@@ -75,7 +75,8 @@ public class EvaluateGroveGoal extends Goal {
             if(!dropMap.containsKey(state)){
                 dropMap.put(state, 0);
             }
-            dropMap.put(state, dropMap.get(state) + 1);
+            if(!state.hasTileEntity())
+                dropMap.put(state, dropMap.get(state) + 1);
             defaultMap.put(defaultState, defaultMap.get(defaultState) + 1);
             score += defaultMap.get(defaultState) <= 50 ? getScore(defaultState) : 0;
         }

@@ -1,0 +1,6 @@
+{
+  "type": "ars_nouveau:glyph_recipe",
+  "tier": "TWO",
+  "input": "ars_nouveau:glyph_ignite",
+  "output": "ars_nouveau:glyph_flare"
+}

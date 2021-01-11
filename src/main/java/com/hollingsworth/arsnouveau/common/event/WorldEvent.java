@@ -80,7 +80,7 @@ public class WorldEvent {
 //                        new BlobFoliagePlacer(FeatureSpread.func_242252_a(0), FeatureSpread.func_242252_a(0), 0),
 //                        new MagicTrunkPlacer(9, 3, 0),
 //                        new TwoLayerFeature(2, 0, 2))).setIgnoreVines().build());
-        float treeChance = 0.002f;
+        float treeChance = Config.TREE_SPAWN_RATE.get().floatValue();
         ConfiguredFeature<?, ?> CASCADE = CASCADING_TREE
                 .withPlacement(Features.Placements.HEIGHTMAP_PLACEMENT)
                 .withPlacement(Placement.COUNT_EXTRA.configure(new AtSurfaceWithExtraConfig(0, treeChance, 1)));

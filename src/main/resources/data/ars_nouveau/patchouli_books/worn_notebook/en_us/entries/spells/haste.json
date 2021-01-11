@@ -1,5 +1,5 @@
 {
-  "name": "Haste",
+  "name": "Speed",
   "icon": "ars_nouveau:glyph_haste",
   "category": "spells_1",
   "sortnum": 2,
@@ -10,6 +10,7 @@
     },
     {
       "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_haste",
       "tier": "ONE",
       "mana_cost": "Medium",
       "clay_type": "ars_nouveau:magic_clay",

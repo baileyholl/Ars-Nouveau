@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.recipe.ApparatusRecipe;
+import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
@@ -15,9 +15,9 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
 public class RecipeRegistry {
     public static final IRecipeType<GlyphPressRecipe> GLYPH_TYPE = new RecipeType();
-    public static final IRecipeType<ApparatusRecipe> APPARATUS_TYPE = new RecipeType();
+    public static final IRecipeType<EnchantingApparatusRecipe> APPARATUS_TYPE = new RecipeType();
     public static final IRecipeSerializer<GlyphPressRecipe> PRESS_SERIALIZER = new GlyphPressRecipe.Serializer();
-    public static final IRecipeSerializer<ApparatusRecipe> APPARATUS_SERIALIZER = new ApparatusRecipe.Serializer();
+    public static final IRecipeSerializer<EnchantingApparatusRecipe> APPARATUS_SERIALIZER = new EnchantingApparatusRecipe.Serializer();
     @SubscribeEvent
     public static void register(final RegistryEvent.Register<IRecipeSerializer<?>> evt) {
         Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, "glyph_recipe"), GLYPH_TYPE);

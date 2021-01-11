@@ -1,12 +1,8 @@
 package com.hollingsworth.arsnouveau.client.jei;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
-import com.hollingsworth.arsnouveau.api.recipe.ApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import mezz.jei.api.IModPlugin;
@@ -50,31 +46,27 @@ public class JEIArsNouveauPlugin implements IModPlugin {
 
 
         List<GlyphPressRecipe> recipeList = new ArrayList<>();
-        List<ApparatusRecipe> apparatus = new ArrayList<>();
+        List<EnchantingApparatusRecipe> apparatus = new ArrayList<>();
         RecipeManager manager = Minecraft.getInstance().world.getRecipeManager();
         for(IRecipe i : manager.getRecipes()){
             if(i instanceof GlyphPressRecipe){
                 recipeList.add((GlyphPressRecipe) i);
             }
-            if(i instanceof ApparatusRecipe){
-                apparatus.add((ApparatusRecipe) i);
+            if(i instanceof EnchantingApparatusRecipe){
+                apparatus.add((EnchantingApparatusRecipe) i);
             }
-        }
-
-        for(AbstractSpellPart spellPart : ArsNouveauAPI.getInstance().getSpell_map().values()){
-            recipeList.add(new GlyphPressRecipe(new ResourceLocation(ArsNouveau.MODID,"glyph_" + spellPart.tag), spellPart.getTier(), new ItemStack(spellPart.getCraftingReagent()), ArsNouveauAPI.getInstance().getGlyphItem(spellPart).getDefaultInstance()));
         }
         registry.addRecipes(recipeList, GlyphPressRecipeCategory.UID);
 
-        int i = 0;
-        for(IEnchantingRecipe r : ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes()){
-            if(!(r instanceof EnchantingApparatusRecipe))
-                continue;
-            EnchantingApparatusRecipe recipe = (EnchantingApparatusRecipe)r;
-            apparatus.add(new ApparatusRecipe(
-                    new ResourceLocation(ArsNouveau.MODID,"apparatus_" + i++),
-                            recipe.pedestalItems, recipe.catalyst, recipe.result, recipe.manaCost()));
-        }
+//        int i = 0;
+//        for(IEnchantingRecipe r : ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes()){
+//            if(!(r instanceof EnchantingApparatusRecipe))
+//                continue;
+//            EnchantingApparatusRecipe recipe = (EnchantingApparatusRecipe)r;
+//            apparatus.add(new ApparatusRecipe(
+//                    new ResourceLocation(ArsNouveau.MODID,"apparatus_" + i++),
+//                            recipe.pedestalItems, recipe.catalyst, recipe.result, recipe.manaCost()));
+//        }
         registry.addRecipes(apparatus, EnchantingApparatusRecipeCategory.UID);
         ItemStack manaPot = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), ModPotions.MANA_REGEN_POTION);
         IJeiBrewingRecipe manaPotionRecipe = registry.getVanillaRecipeFactory().createBrewingRecipe(Collections.singletonList(new ItemStack(BlockRegistry.MANA_BERRY_BUSH)),

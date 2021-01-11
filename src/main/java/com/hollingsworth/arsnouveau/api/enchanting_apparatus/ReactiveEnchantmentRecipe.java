@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.enchanting_apparatus;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
@@ -13,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +22,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ReactiveEnchantmentRecipe implements IEnchantingRecipe{
+public class ReactiveEnchantmentRecipe extends EnchantingApparatusRecipe{
 
     public boolean isWriteSpell(List<ItemStack> pedestalItems, ItemStack reagent){
         ItemStack[] items = {ItemsRegistry.spellParchment.getStack()};
@@ -144,6 +146,11 @@ public class ReactiveEnchantmentRecipe implements IEnchantingRecipe{
         }
 
         return reagent;
+    }
+
+    @Override
+    public ResourceLocation getId() {
+        return new ResourceLocation(ArsNouveau.MODID, "reactive");
     }
 
     @Override

@@ -10,6 +10,7 @@
     },
     {
       "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_snare",
       "tier": "ONE",
       "mana_cost": "High",
       "clay_type": "ars_nouveau:magic_clay",

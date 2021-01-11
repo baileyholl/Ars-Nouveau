@@ -1,0 +1,29 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "item_1": [
+    {
+      "item": "ars_nouveau:mana_gem"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:mana_gem"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "ars_nouveau:mana_gem"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "ars_nouveau:mana_gem"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "minecraft:wheat_seeds"
+    }
+  ],
+  "output": "ars_nouveau:mana_bloom_crop"
+}

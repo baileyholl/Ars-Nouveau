@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
 import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
-import com.hollingsworth.arsnouveau.common.entity.goal.CheckStuckGoal;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -12,13 +12,13 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class FindItem extends CheckStuckGoal {
+public class FindItem extends Goal {
     private EntityCarbuncle entityCarbuncle;
-    int travelTime;
+
     Entity pathingEntity;
 
     private final Predicate<ItemEntity> TRUSTED_TARGET_SELECTOR = (itemEntity) -> {
-        return !itemEntity.cannotPickup() && itemEntity.isAlive() && TakeItemGoal.isValidItem(entityCarbuncle, itemEntity.getItem());
+        return !itemEntity.cannotPickup() && itemEntity.isAlive() && entityCarbuncle.isValidItem(itemEntity.getItem());
     };
 
     private final Predicate<ItemEntity> NONTAMED_TARGET_SELECTOR = (itemEntity -> {
@@ -26,7 +26,6 @@ public class FindItem extends CheckStuckGoal {
     });
 
     public FindItem(EntityCarbuncle entityCarbuncle) {
-        super(entityCarbuncle::getPosition, 4, entityCarbuncle::setStuck);
         this.entityCarbuncle = entityCarbuncle;
         this.setMutexFlags(EnumSet.of(Flag.MOVE));
     }
@@ -41,13 +40,11 @@ public class FindItem extends CheckStuckGoal {
 
     @Override
     public boolean shouldContinueExecuting() {
-        return !entityCarbuncle.isStuck && !(pathingEntity == null || pathingEntity.removed) && travelTime < 15 * 20;
+        return !entityCarbuncle.isStuck && !(pathingEntity == null || pathingEntity.removed) && entityCarbuncle.getHeldStack().isEmpty();
     }
 
     @Override
     public boolean shouldExecute() {
-        if(entityCarbuncle.world.rand.nextDouble() > 0.05)
-            return false;
         return !entityCarbuncle.isStuck && !nearbyItems().isEmpty() && entityCarbuncle.getHeldStack().isEmpty();
     }
 
@@ -58,7 +55,7 @@ public class FindItem extends CheckStuckGoal {
         List<ItemEntity> list = nearbyItems();
         if (itemstack.isEmpty() && !list.isEmpty()) {
             for(ItemEntity entity : list){
-                if(!TakeItemGoal.isValidItem(entityCarbuncle, entity.getItem()))
+                if(!entityCarbuncle.isValidItem(entity.getItem()))
                     continue;
                 Path path = entityCarbuncle.getNavigator().getPathToEntity(entity, 0);
                 if(path != null && path.reachesTarget()) {
@@ -68,13 +65,12 @@ public class FindItem extends CheckStuckGoal {
                 }
             }
         }
-        travelTime = 0;
+
     }
 
     @Override
     public void tick() {
         super.tick();
-        travelTime++;
         if(pathingEntity == null || pathingEntity.removed)
             return;
         ItemStack itemstack = entityCarbuncle.getHeldStack();

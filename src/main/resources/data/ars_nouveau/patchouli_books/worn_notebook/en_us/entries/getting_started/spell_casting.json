@@ -1,6 +1,7 @@
 {
     "name": "Spell Casting",
     "icon": "ars_nouveau:novice_spell_book",
+	"sortnum":1,
     "category": "getting_started",
     "pages": [
         {

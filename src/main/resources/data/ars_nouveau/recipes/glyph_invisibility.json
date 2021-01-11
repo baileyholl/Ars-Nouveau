@@ -1,0 +1,6 @@
+{
+  "type": "ars_nouveau:glyph_recipe",
+  "tier": "TWO",
+  "input": "ars_nouveau:glyph_phantom_block",
+  "output": "ars_nouveau:glyph_invisibility"
+}

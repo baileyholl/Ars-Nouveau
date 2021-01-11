@@ -4,14 +4,12 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.item.AbstractAugmentItem;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
-import com.hollingsworth.arsnouveau.common.items.ModItem;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import java.util.List;
 
-public class AugmentJewelryRecipe implements IEnchantingRecipe{
+public class AugmentJewelryRecipe extends EnchantingApparatusRecipe{
     public final Item starterItem; // Item for crafting from a plain old item to the first tier augment (dull trinket, ring, etc).
     public final AbstractAugmentItem augmentedItem; // Item that holds the augment data (augment ring, necklace, etc.)
 

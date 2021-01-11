@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau;
 
 import com.hollingsworth.arsnouveau.api.util.MappingUtil;
 import com.hollingsworth.arsnouveau.client.ClientHandler;
+import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.event.WorldEvent;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
@@ -52,6 +53,7 @@ public class ArsNouveau {
     }
 
     public void setup (final FMLCommonSetupEvent event){
+        ManaCapability.register();
         APIRegistry.registerApparatusRecipes();
         WorldEvent.registerFeatures();
         //Pre-init code

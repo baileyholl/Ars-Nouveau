@@ -1,19 +1,24 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "  y",
-    " x ",
-    "x  "
-  ],
-  "key": {
-    "x": {
-      "item": "minecraft:stick"
-    },
-    "y": {
+  "type": "ars_nouveau:enchanting_apparatus",
+  "item_1": [
+    {
       "item": "ars_nouveau:mana_gem"
     }
-  },
-  "result": {
-    "item": "ars_nouveau:dominion_wand"
-  }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:mana_gem"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "minecraft:gold_ingot"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "minecraft:stick"
+    }
+  ],
+  "output": "ars_nouveau:dominion_wand"
 }

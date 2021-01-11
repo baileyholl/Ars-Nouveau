@@ -9,15 +9,7 @@
     },
     {
       "type": "apparatus_recipe",
-      "reagent": "minecraft:dispenser",
-      "item1": "minecraft:blaze_rod",
-      "item2": "minecraft:gold_ingot",
-      "item3": "minecraft:gold_ingot",
-      "item4": "minecraft:gold_ingot",
-      "item5": "ars_nouveau:glyph_redstone_signal",
-      "item6": "minecraft:quartz_block",
-      "item7": "minecraft:redstone_block",
-      "item8": "ars_nouveau:spell_parchment"
+      "recipe": "ars_nouveau:spell_turret"
     },{
       "type": "text",
       "text": "ars_nouveau.page.spell_turret2"

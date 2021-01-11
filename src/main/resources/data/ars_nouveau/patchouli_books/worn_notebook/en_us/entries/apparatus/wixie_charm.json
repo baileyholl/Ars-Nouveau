@@ -7,13 +7,9 @@
       "type": "text",
       "text": "ars_nouveau.page.wixie_charm"
     },
-    {
+     {
       "type": "apparatus_recipe",
-      "reagent": "ars_nouveau:wixie_shards",
-      "item1": "minecraft:dark_oak_sapling",
-      "item2": "minecraft:crafting_table",
-      "item3": "minecraft:emerald",
-      "item4": "minecraft:brewing_stand"
+      "recipe": "ars_nouveau:wixie_charm"
     },{
 	 "type": "entity",
 	 "offset":-0.25,

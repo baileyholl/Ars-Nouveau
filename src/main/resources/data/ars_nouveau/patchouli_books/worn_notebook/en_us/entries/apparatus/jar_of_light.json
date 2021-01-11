@@ -9,15 +9,7 @@
     },
     {
       "type": "apparatus_recipe",
-      "reagent": "minecraft:glass_bottle",
-      "item1": "minecraft:glowstone",
-      "item2": "minecraft:glowstone",
-      "item3": "minecraft:glowstone",
-      "item4": "minecraft:glowstone",
-      "item5": "minecraft:redstone_lamp",
-      "item6": "minecraft:glass",
-      "item7": "minecraft:glass",
-      "item8": "minecraft:redstone_lamp"
+      "recipe": "ars_nouveau:jar_of_light"
     }
   ]
 }

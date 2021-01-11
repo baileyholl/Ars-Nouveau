@@ -10,6 +10,7 @@
     },
     {
       "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_wither",
       "tier": "THREE",
       "mana_cost": "Medium",
       "clay_type": "ars_nouveau:mythical_clay",

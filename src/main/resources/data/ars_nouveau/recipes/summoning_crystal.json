@@ -1,0 +1,49 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "item_1": [
+    {
+      "item": "minecraft:gold_ingot"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "minecraft:diamond"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "minecraft:diamond"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "minecraft:gold_ingot"
+    }
+  ],
+  "item_5": [
+    {
+      "item": "ars_nouveau:arcane_stone"
+    }
+  ],
+  "item_6": [
+    {
+      "item": "ars_nouveau:arcane_stone"
+    }
+  ],
+  "item_7": [
+    {
+      "item": "ars_nouveau:arcane_stone"
+    }
+  ],
+  "item_8": [
+    {
+      "item": "ars_nouveau:arcane_stone"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "ars_nouveau:mana_gem_block"
+    }
+  ],
+  "output": "ars_nouveau:summoning_crystal"
+}

@@ -23,19 +23,12 @@ public class BookUpgradeRecipe extends ShapelessRecipe {
 
     @Override
     public ItemStack getCraftingResult(final CraftingInventory inv) {
-        System.out.println("Book recipe");
         final ItemStack output = super.getCraftingResult(inv); // Get the default output
 
         if (!output.isEmpty()) {
             for (int i = 0; i < inv.getSizeInventory(); i++) { // For each slot in the crafting inventory,
                 final ItemStack ingredient = inv.getStackInSlot(i); // Get the ingredient in the slot
-
-                if (!ingredient.isEmpty() && ingredient.getItem() instanceof SpellBook) { // If it's an armour item,
-                    // Clone its item damage, clamping it to the output's damage range
-//                    final int newDamage = MathHelper.clamp(ingredient.getDamage(), 0, output.getMaxDamage());
-//                    output.setDamage(newDamage);
-//                    break; // Break now
-                    System.out.println(output);
+                if (!ingredient.isEmpty() && ingredient.getItem() instanceof SpellBook) {
                     output.setTag(ingredient.getTag());
                 }
             }

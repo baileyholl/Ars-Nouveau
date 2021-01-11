@@ -1,0 +1,49 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "item_1": [
+    {
+      "item": "minecraft:diamond"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "minecraft:diamond"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "minecraft:gold_ingot"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "minecraft:gold_ingot"
+    }
+  ],
+  "item_5": [
+    {
+      "item": "ars_nouveau:mana_gem"
+    }
+  ],
+  "item_6": [
+    {
+      "item": "ars_nouveau:mana_gem"
+    }
+  ],
+  "item_7": [
+    {
+      "item": "ars_nouveau:mana_gem"
+    }
+  ],
+  "item_8": [
+    {
+      "item": "ars_nouveau:mana_gem"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "ars_nouveau:dull_trinket"
+    }
+  ],
+  "output": "ars_nouveau:amulet_of_mana_regen"
+}

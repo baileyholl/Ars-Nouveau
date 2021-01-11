@@ -67,11 +67,35 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.VEXING_WOOD);
             registerDropSelf(BlockRegistry.CASCADING_WOOD);
             registerDropSelf(BlockRegistry.FLOURISHING_WOOD);
+
+            registerDropSelf(BlockRegistry.ARCHWOOD_BUTTON);
+            registerDropSelf(BlockRegistry.ARCHWOOD_STAIRS);
+            registerDropSelf(BlockRegistry.ARCHWOOD_SLABS);
+           // registerDropSelf(BlockRegistry.ARCHWOOD_SIGN);
+            registerDropSelf(BlockRegistry.ARCHWOOD_FENCE_GATE);
+            registerDropSelf(BlockRegistry.ARCHWOOD_TRAPDOOR);
+            registerDropSelf(BlockRegistry.ARCHWOOD_PPlate);
+            registerDropSelf(BlockRegistry.ARCHWOOD_FENCE);
+            registerDropSelf(BlockRegistry.STRIPPED_AWLOG_BLUE);
+            registerDropSelf(BlockRegistry.STRIPPED_AWWOOD_BLUE);
+            registerDropSelf(BlockRegistry.STRIPPED_AWLOG_GREEN);
+            registerDropSelf(BlockRegistry.STRIPPED_AWWOOD_GREEN);
+            registerDropSelf(BlockRegistry.STRIPPED_AWLOG_RED);
+            registerDropSelf(BlockRegistry.STRIPPED_AWWOOD_RED);
+            registerDropSelf(BlockRegistry.STRIPPED_AWLOG_PURPLE);
+            registerDropSelf(BlockRegistry.STRIPPED_AWWOOD_PURPLE);
+            registerDropDoor(BlockRegistry.ARCHWOOD_DOOR);
+            registerDropSelf(BlockRegistry.MANA_GEM_BLOCK);
         }
 
         public void registerLeavesAndSticks(Block leaves, Block sapling){
             list.add(leaves);
             this.registerLootTable(leaves, l_state -> droppingWithChancesAndSticks(l_state, sapling, DEFAULT_SAPLING_DROP_RATES));
+        }
+
+        public void registerDropDoor(Block block){
+            list.add(block);
+            this.registerLootTable(block, BlockLootTables::registerDoor);
         }
 
         public void registerDropSelf(Block block){

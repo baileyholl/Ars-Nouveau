@@ -1,0 +1,6 @@
+{
+  "type": "ars_nouveau:glyph_recipe",
+  "tier": "ONE",
+  "input": "minecraft:slime_ball",
+  "output": "ars_nouveau:glyph_launch"
+}

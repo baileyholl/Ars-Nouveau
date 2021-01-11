@@ -1,0 +1,49 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "item_1": [
+    {
+      "item": "minecraft:sugar"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "minecraft:nether_wart"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "minecraft:blaze_powder"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "minecraft:glowstone_dust"
+    }
+  ],
+  "item_5": [
+    {
+      "item": "minecraft:fermented_spider_eye"
+    }
+  ],
+  "item_6": [
+    {
+      "item": "minecraft:redstone"
+    }
+  ],
+  "item_7": [
+    {
+      "item": "minecraft:brewing_stand"
+    }
+  ],
+  "item_8": [
+    {
+      "item": "minecraft:feather"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "ars_nouveau:mundane_belt"
+    }
+  ],
+  "output": "ars_nouveau:belt_of_unstable_gifts"
+}

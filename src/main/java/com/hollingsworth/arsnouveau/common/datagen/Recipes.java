@@ -212,17 +212,84 @@ public class Recipes extends RecipeProvider {
             makeWood(BlockRegistry.CASCADING_LOG, BlockRegistry.CASCADING_WOOD, 3).build(consumer);
             makeWood(BlockRegistry.BLAZING_LOG, BlockRegistry.BLAZING_WOOD, 3).build(consumer);
             makeWood(BlockRegistry.FLOURISHING_LOG, BlockRegistry.FLOURISHING_WOOD, 3).build(consumer);
+            shapedWoodenStairs(consumer, BlockRegistry.ARCHWOOD_STAIRS, BlockRegistry.ARCHWOOD_PLANK);
+            shapelessWoodenButton(consumer, BlockRegistry.ARCHWOOD_BUTTON, BlockRegistry.ARCHWOOD_PLANK);
+            shapedWoodenDoor(consumer, BlockRegistry.ARCHWOOD_DOOR, BlockRegistry.ARCHWOOD_PLANK);
+            shapedWoodenFence(consumer, BlockRegistry.ARCHWOOD_FENCE, BlockRegistry.ARCHWOOD_PLANK);
+            shapedWoodenFenceGate(consumer, BlockRegistry.ARCHWOOD_FENCE_GATE, BlockRegistry.ARCHWOOD_PLANK);
+            shapedWoodenPressurePlate(consumer, BlockRegistry.ARCHWOOD_PPlate, BlockRegistry.ARCHWOOD_PLANK);
+            shapedWoodenSlab(consumer, BlockRegistry.ARCHWOOD_SLABS, BlockRegistry.ARCHWOOD_PLANK);
 
+            strippedLogToWood(consumer, BlockRegistry.STRIPPED_AWLOG_BLUE, BlockRegistry.STRIPPED_AWWOOD_BLUE);
+            strippedLogToWood(consumer, BlockRegistry.STRIPPED_AWLOG_GREEN, BlockRegistry.STRIPPED_AWWOOD_GREEN);
+            strippedLogToWood(consumer, BlockRegistry.STRIPPED_AWLOG_RED, BlockRegistry.STRIPPED_AWWOOD_RED);
+            strippedLogToWood(consumer, BlockRegistry.STRIPPED_AWLOG_PURPLE, BlockRegistry.STRIPPED_AWWOOD_PURPLE);
+            shapedWoodenTrapdoor(consumer, BlockRegistry.ARCHWOOD_TRAPDOOR, BlockRegistry.ARCHWOOD_PLANK);
+            shapelessBuilder(BlockRegistry.MANA_GEM_BLOCK,1).addIngredient(MANA_GEM, 9).build(consumer);
+            shapelessBuilder(ItemsRegistry.manaGem, 9).addIngredient(BlockRegistry.MANA_GEM_BLOCK,1).build(consumer, new ResourceLocation(ArsNouveau.MODID, "mana_gem_2"));
         }
     }
-
 
     public static ShapedRecipeBuilder makeWood(IItemProvider logs, IItemProvider wood, int count){
         return ShapedRecipeBuilder.shapedRecipe(wood, count).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                 .patternLine("xx ")
                 .patternLine("xx ").key('x', logs);
     }
+    private static void shapedWoodenTrapdoor(Consumer<IFinishedRecipe> recipeConsumer, IItemProvider trapdoor, IItemProvider input) {
+        ShapedRecipeBuilder.shapedRecipe(trapdoor, 2).key('#', input).patternLine("###").patternLine("###").setGroup("wooden_trapdoor")
+                .addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook)).build(recipeConsumer);
+    }
 
+    public static void shapedWoodenStairs(Consumer<IFinishedRecipe> recipeConsumer, IItemProvider stairs, IItemProvider input) {
+        ShapedRecipeBuilder.shapedRecipe(stairs, 4)
+                .key('#', input)
+                .patternLine("#  ")
+                .patternLine("## ")
+                .patternLine("###").addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                .build(recipeConsumer);
+
+    }
+
+    private static void shapelessWoodenButton(Consumer<IFinishedRecipe> recipeConsumer, IItemProvider button, IItemProvider input) {
+        ShapelessRecipeBuilder.shapelessRecipe(button).addIngredient(input)
+                .addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                .build(recipeConsumer);
+    }
+
+    private static void strippedLogToWood(Consumer<IFinishedRecipe> recipeConsumer, IItemProvider stripped, IItemProvider output) {
+        ShapedRecipeBuilder.shapedRecipe(output, 3).key('#', stripped).patternLine("##").patternLine("##").setGroup("bark")
+                .addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                .build(recipeConsumer);
+    }
+    private static void shapedWoodenDoor(Consumer<IFinishedRecipe> recipeConsumer, IItemProvider door, IItemProvider input) {
+        ShapedRecipeBuilder.shapedRecipe(door, 3).key('#', input).patternLine("##").patternLine("##").patternLine("##").setGroup("wooden_door")
+                .addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                .build(recipeConsumer);
+    }
+
+    private static void shapedWoodenFence(Consumer<IFinishedRecipe> recipeConsumer, IItemProvider fence, IItemProvider input) {
+        ShapedRecipeBuilder.shapedRecipe(fence, 3).key('#', Items.STICK).key('W', input).patternLine("W#W").patternLine("W#W").setGroup("wooden_fence")
+                .addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                .build(recipeConsumer);
+    }
+
+    private static void shapedWoodenFenceGate(Consumer<IFinishedRecipe> recipeConsumer, IItemProvider fenceGate, IItemProvider input) {
+        ShapedRecipeBuilder.shapedRecipe(fenceGate).key('#', Items.STICK).key('W', input).patternLine("#W#").patternLine("#W#").setGroup("wooden_fence_gate")
+                .addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                .build(recipeConsumer);
+    }
+
+    private static void shapedWoodenPressurePlate(Consumer<IFinishedRecipe> recipeConsumer, IItemProvider pressurePlate, IItemProvider input) {
+        ShapedRecipeBuilder.shapedRecipe(pressurePlate).key('#', input).patternLine("##").setGroup("wooden_pressure_plate")
+                .addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                .build(recipeConsumer);
+    }
+
+    private static void shapedWoodenSlab(Consumer<IFinishedRecipe> recipeConsumer, IItemProvider slab, IItemProvider input) {
+        ShapedRecipeBuilder.shapedRecipe(slab, 6).key('#', input).patternLine("###").setGroup("wooden_slab")
+                .addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                .build(recipeConsumer);
+    }
     public ShapelessRecipeBuilder shapelessBuilder(IItemProvider result, int resultCount){
         return ShapelessRecipeBuilder.shapelessRecipe(result, resultCount).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook));
     }
@@ -232,7 +299,6 @@ public class Recipes extends RecipeProvider {
         SingleItemRecipeBuilder.stonecuttingRecipe(Ingredient.fromItems(input), output).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook)).build(consumer, new ResourceLocation(ArsNouveau.MODID, reg + "_"+STONECUTTER_COUNTER));
         STONECUTTER_COUNTER++;
     }
-
 
     public static void makeArmor(String prefix, Consumer<IFinishedRecipe> consumer, Item material){
         ShapedRecipeBuilder.shapedRecipe(ForgeRegistries.ITEMS.getValue(new ResourceLocation(ArsNouveau.MODID, prefix + "_boots")))

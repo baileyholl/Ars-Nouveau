@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "forge:gems/mana"
+    },
+    {
+      "tag": "forge:gems/mana"
+    },
+    {
+      "tag": "forge:gems/mana"
+    },
+    {
+      "tag": "forge:gems/mana"
+    },
+    {
+      "tag": "forge:gems/mana"
+    },
+    {
+      "tag": "forge:gems/mana"
+    },
+    {
+      "tag": "forge:gems/mana"
+    },
+    {
+      "tag": "forge:gems/mana"
+    },
+    {
+      "tag": "forge:gems/mana"
+    }
+  ],
+  "result": {
+    "item": "ars_nouveau:mana_gem_block"
+  }
+}

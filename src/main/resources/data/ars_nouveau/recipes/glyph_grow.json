@@ -1,0 +1,6 @@
+{
+  "type": "ars_nouveau:glyph_recipe",
+  "tier": "TWO",
+  "input": "minecraft:bone_block",
+  "output": "ars_nouveau:glyph_grow"
+}

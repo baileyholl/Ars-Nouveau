@@ -24,7 +24,7 @@ public class PerformTaskGoal extends Goal {
         taskLoc = this.kobold.getTaskLoc();
         timePerformingTask = 0;
         if (this.kobold.getNavigator() != null && taskLoc != null)
-            this.kobold.getNavigator().setPath(this.kobold.getNavigator().getPathToPos(taskLoc, 1), 1.0f);
+            this.kobold.getNavigator().setPath(this.kobold.getNavigator().getPathToPos(taskLoc, 1), 1.2f);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class PerformTaskGoal extends Goal {
             kobold.getNavigator().clearPath();
             timePerformingTask = 0;
         } else if (kobold.getNavigator() != null) {
-            this.kobold.getNavigator().setPath(this.kobold.getNavigator().getPathToPos(taskLoc.up(2), 0), 1f);
+            this.kobold.getNavigator().setPath(this.kobold.getNavigator().getPathToPos(taskLoc.up(2), 0), 1.2f);
         }
     }
 

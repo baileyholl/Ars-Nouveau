@@ -5,7 +5,7 @@
     "pages": [
         {
             "type": "text",
-            "text": "Warp portals, like warp scrolls, provide a one-way teleport to any location, provided it is in the same dimension. To construct a Warp Portal, build a frame from Arcane Bricks in the shape of a nether portal, and provide a full mana jar nearby. Then, throw a warp scroll with a written location into the frame. Given there is enough mana nearby, the portal will be created."
+            "text": "Warp portals, like warp scrolls, provide a one-way teleport to any location, provided it is in the same dimension. To construct a Warp Portal, build a frame from Arcane Bricks or its variants in the shape of a nether portal and provide a full mana jar nearby. Then, throw a warp scroll with a written location into the frame. Given there is enough mana nearby, the portal will be created."
         },
 		{
 		"type":"multiblock",
@@ -24,7 +24,10 @@
 			],
 			"symmetrical": true
 		},
-		"text":"A magical portal that can send players, mobs, and items to any location in the same dimension."
-		}
+		"text":"A magical portal that can send players, mobs, spells, and items to any location in the same dimension."
+		},{
+            "type": "relations",
+            "entries":["items/warp_scroll"]        
+        }
     ]
 }

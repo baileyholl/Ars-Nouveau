@@ -1,0 +1,6 @@
+{
+  "type": "ars_nouveau:glyph_recipe",
+  "tier": "TWO",
+  "input": "minecraft:shield",
+  "output": "ars_nouveau:glyph_shield"
+}

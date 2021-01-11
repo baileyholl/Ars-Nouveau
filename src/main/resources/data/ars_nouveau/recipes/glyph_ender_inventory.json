@@ -1,0 +1,6 @@
+{
+  "type": "ars_nouveau:glyph_recipe",
+  "tier": "TWO",
+  "input": "minecraft:ender_chest",
+  "output": "ars_nouveau:glyph_ender_inventory"
+}

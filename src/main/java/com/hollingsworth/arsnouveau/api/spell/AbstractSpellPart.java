@@ -95,6 +95,7 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
 
         JsonObject infoPage = new JsonObject();
         infoPage.addProperty("type", "glyph_recipe");
+        infoPage.addProperty("recipe", ArsNouveau.MODID + ":" + "glyph_" + this.tag);
         infoPage.addProperty("tier",this.getTier().name());
 
         String manaCost = this.getManaCost() < 20 ? "Low" : "Medium";

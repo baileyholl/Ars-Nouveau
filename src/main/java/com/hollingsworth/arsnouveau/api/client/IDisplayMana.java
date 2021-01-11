@@ -1,5 +1,10 @@
 package com.hollingsworth.arsnouveau.api.client;
 
-//Empty interface to display mana when the item is held
+import net.minecraft.item.ItemStack;
+
 public interface IDisplayMana {
+
+    default boolean shouldDisplay(ItemStack stack){
+        return true;
+    }
 }

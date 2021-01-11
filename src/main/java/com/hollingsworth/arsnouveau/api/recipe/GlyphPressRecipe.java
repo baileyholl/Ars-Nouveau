@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.recipe;
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -70,6 +71,20 @@ public class GlyphPressRecipe implements IRecipe<IInventory> {
         return Registry.RECIPE_TYPE.getOrDefault(new ResourceLocation(ArsNouveau.MODID, "glyph_recipe"));
     }
 
+    public ItemStack getClay(){
+        return getClayFromTier(tier);
+    }
+
+    public static ItemStack getClayFromTier(ISpellTier.Tier tier){
+        switch (tier) {
+            case ONE:
+                return new ItemStack(ItemsRegistry.magicClay);
+            case TWO:
+                return new ItemStack(ItemsRegistry.marvelousClay);
+            default:
+                return new ItemStack(ItemsRegistry.mythicalClay);
+        }
+    }
 
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<GlyphPressRecipe> {
 

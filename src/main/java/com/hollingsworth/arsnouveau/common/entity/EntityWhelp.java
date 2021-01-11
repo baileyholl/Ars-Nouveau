@@ -305,6 +305,8 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         if(tag.contains("held"))
             setHeldStack(ItemStack.read((CompoundNBT)tag.get("held")));
 
+
+        setRecipeString(SpellRecipeUtil.serializeForNBT(spellRecipe));
         this.dataManager.set(STRICT_MODE, tag.getBoolean("strict"));
     }
 
@@ -319,7 +321,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     public static AttributeModifierMap.MutableAttribute attributes() {
         return MobEntity.func_233666_p_().createMutableAttribute(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.getDefaultValue())
                 .createMutableAttribute(Attributes.MAX_HEALTH, 6.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.2D);
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.3D);
     }
 
     protected void registerData() {

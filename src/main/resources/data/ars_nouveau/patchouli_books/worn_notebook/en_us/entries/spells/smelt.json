@@ -10,6 +10,7 @@
     },
     {
       "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_smelt",
       "tier": "TWO",
       "mana_cost": "High",
       "clay_type": "ars_nouveau:marvelous_clay",

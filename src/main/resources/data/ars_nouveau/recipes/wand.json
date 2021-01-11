@@ -1,0 +1,49 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "item_1": [
+    {
+      "item": "ars_nouveau:mana_gem"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:mana_gem"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "ars_nouveau:mana_gem"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "minecraft:gold_ingot"
+    }
+  ],
+  "item_5": [
+    {
+      "item": "minecraft:gold_ingot"
+    }
+  ],
+  "item_6": [
+    {
+      "item": "ars_nouveau:spell_parchment"
+    }
+  ],
+  "item_7": [
+    {
+      "item": "ars_nouveau:glyph_projectile"
+    }
+  ],
+  "item_8": [
+    {
+      "item": "ars_nouveau:glyph_accelerate"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "ars_nouveau:archwood_planks"
+    }
+  ],
+  "output": "ars_nouveau:wand"
+}

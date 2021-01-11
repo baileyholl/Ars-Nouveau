@@ -8,6 +8,7 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.Path;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -20,7 +21,7 @@ import java.util.EnumSet;
 public class StoreItemGoal extends Goal {
 
     private final EntityCarbuncle entityCarbuncle;
-
+    BlockPos storePos;
     public StoreItemGoal(EntityCarbuncle entityCarbuncle) {
         //super(entityCarbuncle::getPosition, 3, entityCarbuncle::setStuck);
         this.entityCarbuncle = entityCarbuncle;
@@ -29,10 +30,17 @@ public class StoreItemGoal extends Goal {
     }
 
     @Override
+    public void resetTask() {
+        storePos = null;
+
+    }
+
+    @Override
     public void startExecuting() {
         super.startExecuting();
-        if (entityCarbuncle.getToPos() != null && !entityCarbuncle.getHeldStack().isEmpty()) {
-            Path path = entityCarbuncle.getNavigator().getPathToPos(entityCarbuncle.getToPos(), 0);
+        storePos = entityCarbuncle.getValidStorePos(entityCarbuncle.getHeldStack());
+        if (storePos!= null && !entityCarbuncle.getHeldStack().isEmpty()) {
+            Path path = entityCarbuncle.getNavigator().getPathToPos(storePos, 1);
             entityCarbuncle.getNavigator().setPath(path, 1.2D);
             //entityCarbuncle.getNavigator().tryMoveToXYZ(entityCarbuncle.toPos.getX(), entityCarbuncle.toPos.getY(), entityCarbuncle.toPos.getZ(), 1.2D);
         }
@@ -40,11 +48,12 @@ public class StoreItemGoal extends Goal {
 
     @Override
     public void tick() {
-        if (!entityCarbuncle.getHeldStack().isEmpty() && entityCarbuncle.getToPos() != null && BlockUtil.distanceFrom(entityCarbuncle.getPosition(), entityCarbuncle.getToPos()) < 1.5D) {
+        if (!entityCarbuncle.getHeldStack().isEmpty() && storePos != null && BlockUtil.distanceFrom(entityCarbuncle.getPosition(), storePos) < 2D) {
             World world = entityCarbuncle.world;
-            TileEntity tileEntity = world.getTileEntity(entityCarbuncle.getToPos());
+            TileEntity tileEntity = world.getTileEntity(storePos);
             if(tileEntity == null)
                 return;
+
             IItemHandler iItemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
             if (iItemHandler != null) {
                 ItemStack oldStack = new ItemStack(entityCarbuncle.getHeldStack().getItem(), entityCarbuncle.getHeldStack().getCount());
@@ -54,21 +63,21 @@ public class StoreItemGoal extends Goal {
                     return;
                 }
                 if (world instanceof ServerWorld) {
-                    OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), entityCarbuncle.getToPos(), 20);
+                    OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), storePos, 20);
                     event.open();
                     EventQueue.getInstance().addEvent(event);
                 }
                 entityCarbuncle.setHeldStack(left);
 //                    EntityCarbuncle.this.world.playSound(null, EntityCarbuncle.this.getPosX(), EntityCarbuncle.this.getPosY(), EntityCarbuncle.this.getPosZ(), SoundEvents.ENTITY_ITEM_PICKUP, EntityCarbuncle.this.getSoundCategory(),1.0F, 1.0F);
-                entityCarbuncle.backOff = 20;
+                entityCarbuncle.backOff = 5;
 
                 entityCarbuncle.getDataManager().set(EntityCarbuncle.HOP, false);
                 return;
             }
         }
 
-        if (entityCarbuncle.getToPos() != null && !entityCarbuncle.getHeldStack().isEmpty()) {
-            setPath(entityCarbuncle.getToPos().getX(), entityCarbuncle.getToPos().getY(), entityCarbuncle.getToPos().getZ(), 1.2D);
+        if (storePos != null && !entityCarbuncle.getHeldStack().isEmpty()) {
+            setPath(storePos.getX(), storePos.getY(), storePos.getZ(), 1.2D);
             entityCarbuncle.getDataManager().set(EntityCarbuncle.HOP, true);
             super.tick();
         }
@@ -76,12 +85,12 @@ public class StoreItemGoal extends Goal {
     }
 
     public void setPath(double x, double y, double z, double speedIn){
-        entityCarbuncle.getNavigator().setPath( entityCarbuncle.getNavigator().getPathToPos(x+0.5, y+0.5, z+0.5, 0), speedIn);
+        entityCarbuncle.getNavigator().setPath( entityCarbuncle.getNavigator().getPathToPos(x+0.5, y+1, z+0.5, 1), speedIn);
     }
 
     @Override
     public boolean shouldContinueExecuting() {
-        return entityCarbuncle.isTamed() && entityCarbuncle.getHeldStack() != null && !entityCarbuncle.getHeldStack().isEmpty() && entityCarbuncle.backOff == 0;
+        return entityCarbuncle.isTamed() && entityCarbuncle.getHeldStack() != null && !entityCarbuncle.getHeldStack().isEmpty() && entityCarbuncle.backOff == 0 && storePos != null;
     }
 
     @Override

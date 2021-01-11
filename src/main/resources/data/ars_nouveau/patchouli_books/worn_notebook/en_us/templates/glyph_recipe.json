@@ -1,16 +1,17 @@
 {
+	"processor": "com.hollingsworth.arsnouveau.client.patchouli.GlyphPressProcessor",
     "components": [
 
         {
             "type":"item",
-            "item":"#clay_type#",
+            "item":"#clay_type",
             "framed":true,
             "x":20,
             "y":20
         },
         {
             "type":"item",
-            "item":"#reagent#",
+            "item":"#reagent",
             "framed":true,
             "x":80,
             "y":20
@@ -29,7 +30,7 @@
 		},
         {
 			"type": "text",
-			"text": "Mana Cost: #mana_cost#",
+			"text": "Casting Cost: #mana_cost#",
 			"x": 0,
 			"y": 60
 		}

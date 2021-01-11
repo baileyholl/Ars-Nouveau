@@ -1,0 +1,6 @@
+{
+  "type": "ars_nouveau:glyph_recipe",
+  "tier": "ONE",
+  "input": "minecraft:stone_pressure_plate",
+  "output": "ars_nouveau:glyph_self"
+}

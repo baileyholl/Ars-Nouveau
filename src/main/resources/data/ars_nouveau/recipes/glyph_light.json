@@ -1,0 +1,6 @@
+{
+  "type": "ars_nouveau:glyph_recipe",
+  "tier": "ONE",
+  "input": "minecraft:lantern",
+  "output": "ars_nouveau:glyph_light"
+}

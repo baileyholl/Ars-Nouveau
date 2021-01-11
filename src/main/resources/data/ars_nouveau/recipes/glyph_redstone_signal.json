@@ -1,0 +1,6 @@
+{
+  "type": "ars_nouveau:glyph_recipe",
+  "tier": "ONE",
+  "input": "minecraft:redstone_block",
+  "output": "ars_nouveau:glyph_redstone_signal"
+}

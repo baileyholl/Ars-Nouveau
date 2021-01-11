@@ -9,15 +9,7 @@
     },
     {
       "type": "apparatus_recipe",
-      "reagent": "ars_nouveau:mundane_belt",
-      "item1": "minecraft:gold_ingot",
-      "item2": "minecraft:gold_ingot",
-      "item3": "minecraft:gold_ingot",
-      "item4": "minecraft:gold_ingot",
-      "item5": "minecraft:feather",
-      "item6": "minecraft:feather",
-      "item7": "minecraft:feather",
-      "item8": "ars_nouveau:glyph_launch"
+      "recipe": "ars_nouveau:belt_of_levitation"
     }
   ]
 }
