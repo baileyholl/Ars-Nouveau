@@ -21,7 +21,7 @@ public class GuiSpellSlot extends GuiImageButton {
     public boolean isSelected;
 
     public GuiSpellSlot(GuiSpellBook parent, int x, int y,  int slotNum) {
-        super(x, y, 0, 0, 20, 12, 20, 12,"textures/gui/tab.png", parent::onSlotChange);
+        super(x, y, 0, 0, 18, 13, 18, 13,"textures/gui/spell_tab.png", parent::onSlotChange);
         this.parent = parent;
         this.slotNum = slotNum;
         this.isSelected = false;
@@ -41,11 +41,11 @@ public class GuiSpellSlot extends GuiImageButton {
             }
 
             ResourceLocation image;
-            image = this.isSelected ? new ResourceLocation(ArsNouveau.MODID, "textures/gui/tab_selected.png") : new ResourceLocation(ArsNouveau.MODID,"textures/gui/tab.png");
+            image = this.isSelected ? new ResourceLocation(ArsNouveau.MODID, "textures/gui/spell_tab_selected.png") : new ResourceLocation(ArsNouveau.MODID,"textures/gui/spell_tab.png");
             //GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, width, height);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, image_width, image_height, stack);
-            drawCenteredString(stack,Minecraft.getInstance().fontRenderer, String.valueOf(this.slotNum), x + 8, y + 2,  16777215); // White
+            drawCenteredString(stack,Minecraft.getInstance().fontRenderer, String.valueOf(this.slotNum), x + 8, y + 3,  16777215); // White
 
         }
     }
