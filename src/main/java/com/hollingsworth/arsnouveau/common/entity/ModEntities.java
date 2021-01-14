@@ -35,6 +35,7 @@ public class ModEntities {
     public static EntityType<EntityRitualProjectile> ENTITY_RITUAL = null;
 
     public static EntityType<WildenHunter> ENTITY_WILDEN = null;
+    public static EntityType<EntitySpellArrow> ENTITY_SPELL_ARROW = null;
 
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
@@ -103,7 +104,10 @@ public class ModEntities {
                             .size(1.0f, 2.0f)
                             .setTrackingRange(10)
                             .setShouldReceiveVelocityUpdates(true));
-
+            ENTITY_SPELL_ARROW = build(
+                    "spell_arrow",
+                    EntityType.Builder.<EntitySpellArrow>create(EntitySpellArrow::new, EntityClassification.MISC)
+                            .trackingRange(20).func_233608_b_(20).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntitySpellArrow::new));
             event.getRegistry().registerAll(
                     SPELL_PROJ,
                     ENTITY_EVOKER_FANGS_ENTITY_TYPE,
@@ -115,7 +119,8 @@ public class ModEntities {
                     ENTITY_WIXIE_TYPE,
                     ENTITY_FLYING_ITEM,
                     ENTITY_RITUAL,
-                    ENTITY_WILDEN
+                    ENTITY_WILDEN,
+                    ENTITY_SPELL_ARROW
             );
 
             GlobalEntityTypeAttributes.put(ENTITY_WHELP_TYPE, EntityWhelp.attributes().create());

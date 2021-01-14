@@ -61,4 +61,8 @@ public class LibItemNames {
     public static final String WAND = "wand";
     public static final String VOID_JAR = "void_jar";
     public static final String RITUAL_BOOK = "ritual_book";
+
+    public static final String SPELL_BOW = "spell_bow";
+    public static final String PIERCE_ARROW = "pierce_arrow";
+    public static final String AMPLIFY_ARROW = "amplify_arrow";
 }
