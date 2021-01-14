@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.gui.book;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellColors;
@@ -9,14 +10,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.OptionSlider;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.settings.SliderPercentageOption;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class GuiColorScreen extends BaseBook {
-    private final int FULL_WIDTH = 272;
-    private final int FULL_HEIGHT = 180;
+    private final int FULL_WIDTH = 290;
+    private final int FULL_HEIGHT = 194;
 
     double red;
     double blue;
@@ -37,50 +39,50 @@ public class GuiColorScreen extends BaseBook {
     @Override
     public void init() {
         super.init();
-        redW = (OptionSlider)buildSlider("Red: ", s -> red, (settings, d) -> red = d).createWidget(Minecraft.getInstance().gameSettings, bookLeft + 25, bookTop + 40, 100);
-        greenW = (OptionSlider)buildSlider("Green: ", s -> green, (settings, d) -> green = d).createWidget(Minecraft.getInstance().gameSettings, bookLeft+ 25, bookTop +80, 100);
-        blueW = (OptionSlider)buildSlider("Blue: ", s -> blue, (settings, d) -> blue = d).createWidget(Minecraft.getInstance().gameSettings, bookLeft+ 25, bookTop +120, 100);
+        redW = (OptionSlider)buildSlider("Red: ", s -> red, (settings, d) -> red = d).createWidget(Minecraft.getInstance().gameSettings, bookLeft + 28, bookTop + 49, 100);
+        greenW = (OptionSlider)buildSlider("Green: ", s -> green, (settings, d) -> green = d).createWidget(Minecraft.getInstance().gameSettings, bookLeft + 28, bookTop + 89, 100);
+        blueW = (OptionSlider)buildSlider("Blue: ", s -> blue, (settings, d) -> blue = d).createWidget(Minecraft.getInstance().gameSettings, bookLeft + 28, bookTop + 129, 100);
         addButton(redW);
         addButton(greenW);
         addButton(blueW);
-        addButton(new GuiImageButton(bookLeft+ 50, bookBottom - 35, 0,0,46, 18, 46, 18, "textures/gui/create_button.png", this::onSaveClick));
+        addButton(new GuiImageButton(bookLeft+ 55, bookBottom - 36, 0,0,37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveClick));
         addPresets();
     }
 
     public void addPresets(){
         // Default
-        addButton(new GuiImageButton(bookRight - 125, bookTop + 35, 0,0,46, 18, 46, 18,
-                "textures/gui/create_button.png", (_2) -> {setFromPreset(255, 25, 180);}));
+        addButton(new GuiImageButton(bookRight - 131, bookTop + 44, 0,0,48, 11, 48, 11,
+                "textures/gui/default_color_icon.png", (_2) -> {setFromPreset(255, 25, 180);}));
         // Purple
-        addButton(new GuiImageButton(bookRight - 125, bookTop + 60, 0,0,46, 18, 46, 18,
-                "textures/gui/create_button.png", (_2) -> {setFromPreset(80, 25, 255);}));
+        addButton(new GuiImageButton(bookRight - 131, bookTop + 68, 0,0,48, 11, 48, 11,
+                "textures/gui/purple_color_icon.png", (_2) -> {setFromPreset(80, 25, 255);}));
 
-        // blue
-        addButton(new GuiImageButton(bookRight - 125, bookTop + 85, 0,0,46, 18, 46, 18,
-                "textures/gui/create_button.png", (_2) -> {setFromPreset(30, 25, 255);}));
+        // Blue
+        addButton(new GuiImageButton(bookRight - 131, bookTop + 92, 0,0,48, 11, 48, 11,
+                "textures/gui/blue_color_icon.png", (_2) -> {setFromPreset(30, 25, 255);}));
 
         // Red
-        addButton(new GuiImageButton(bookRight - 125, bookTop + 110, 0,0,46, 18, 46, 18,
-                "textures/gui/create_button.png", (_2) -> {setFromPreset(255, 25, 25);}));
+        addButton(new GuiImageButton(bookRight - 131, bookTop + 116, 0,0,48, 11, 48, 11,
+                "textures/gui/red_color_icon.png", (_2) -> {setFromPreset(255, 25, 25);}));
 
         // Green
-        addButton(new GuiImageButton(bookRight - 125, bookTop + 135, 0,0,46, 18, 46, 18,
-                "textures/gui/create_button.png", (_2) -> {setFromPreset(25, 255, 25);}));
+        addButton(new GuiImageButton(bookRight - 131, bookTop + 140, 0,0,48, 11, 48, 11,
+                "textures/gui/green_color_icon.png", (_2) -> {setFromPreset(25, 255, 25);}));
 
         // Yellow
-        addButton(new GuiImageButton(bookRight - 65, bookTop + 35, 0,0,46, 18, 46, 18,
-                "textures/gui/create_button.png", (_2) -> {setFromPreset(255, 255, 25);}));
+        addButton(new GuiImageButton(bookRight - 73, bookTop + 44, 0,0,48, 11, 48, 11,
+                "textures/gui/yellow_color_icon.png", (_2) -> {setFromPreset(255, 255, 25);}));
         // White
-        addButton(new GuiImageButton(bookRight - 65, bookTop + 60, 0,0,46, 18, 46, 18,
-                "textures/gui/create_button.png", (_2) -> {setFromPreset(255, 255, 255);}));
+        addButton(new GuiImageButton(bookRight - 73, bookTop + 68, 0,0,48, 11, 48, 11,
+                "textures/gui/white_color_icon.png", (_2) -> {setFromPreset(255, 255, 255);}));
 
         // Orange
-        addButton(new GuiImageButton(bookRight - 65, bookTop + 85, 0,0,46, 18, 46, 18,
-                "textures/gui/create_button.png", (_2) -> {setFromPreset(255, 90, 1);}));
+        addButton(new GuiImageButton(bookRight - 73, bookTop + 92, 0,0,48, 11, 48, 11,
+                "textures/gui/orange_color_icon.png", (_2) -> {setFromPreset(255, 90, 1);}));
 
         // Cyan
-        addButton(new GuiImageButton(bookRight - 65, bookTop + 110, 0,0,46, 18, 46, 18,
-                "textures/gui/create_button.png", (_2) -> {setFromPreset(25, 255, 255);}));
+        addButton(new GuiImageButton(bookRight - 73, bookTop + 116, 0,0,48, 11, 48, 11,
+                "textures/gui/cyan_color_icon.png", (_2) -> {setFromPreset(25, 255, 255);}));
 
 
     }
@@ -105,19 +107,20 @@ public class GuiColorScreen extends BaseBook {
     @Override
     public void drawBackgroundElements(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
-        minecraft.fontRenderer.drawString(stack, "Spell Color", 50, 20,  0);
-        minecraft.fontRenderer.drawString(stack, "Presets", 150, 20,  0);
-        minecraft.fontRenderer.drawString(stack, "Default", 153, 40,  0);
-        minecraft.fontRenderer.drawString(stack, "Purple", 154, 65,  0);
-        minecraft.fontRenderer.drawString(stack, "Blue", 160, 90,  0);
-        minecraft.fontRenderer.drawString(stack, "Red", 160, 115,  0);
-        minecraft.fontRenderer.drawString(stack, "Green", 155, 140,  0);
-        minecraft.fontRenderer.drawString(stack, "Yellow", 215, 40,  0);
-        minecraft.fontRenderer.drawString(stack, "White", 220, 65,  0);
-        minecraft.fontRenderer.drawString(stack, "Orange", 212, 90,  0);
-        minecraft.fontRenderer.drawString(stack, "Cyan", 218, 115,  0);
+        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/slider_gilding.png"), 22, 47, 0, 0, 112, 104,112,104, stack);
+        minecraft.fontRenderer.drawString(stack, "Spell Color", 51, 24,  12694931);
+        minecraft.fontRenderer.drawString(stack, "Presets", 159, 24,  12694931);
+        minecraft.fontRenderer.drawString(stack, "Default", 170, 46,  12694931);
+        minecraft.fontRenderer.drawString(stack, "Purple", 170, 70,  12694931);
+        minecraft.fontRenderer.drawString(stack, "Blue", 170, 94,  12694931);
+        minecraft.fontRenderer.drawString(stack, "Red", 170, 118,  12694931);
+        minecraft.fontRenderer.drawString(stack, "Green", 170, 142,  12694931);
+        minecraft.fontRenderer.drawString(stack, "Yellow", 228, 46,  12694931);
+        minecraft.fontRenderer.drawString(stack, "White", 228, 70,  12694931);
+        minecraft.fontRenderer.drawString(stack, "Orange", 228, 94,  12694931);
+        minecraft.fontRenderer.drawString(stack, "Cyan", 228, 118,  12694931);
        // minecraft.fontRenderer.drawString(stack, "Ice", 218, 115,  0);
-        minecraft.fontRenderer.drawString(stack, "Save", 60, 150,  0);
+        minecraft.fontRenderer.drawString(stack, "Save", 67, 160,  12694931);
     }
 
     protected SliderPercentageOption buildSlider(String key, Function<GameSettings, Double> getter, BiConsumer<GameSettings, Double> setter){

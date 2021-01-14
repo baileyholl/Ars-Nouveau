@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.gui.book;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
@@ -23,6 +24,7 @@ import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.ChangePageButton;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.StringTextComponent;
 import vazkii.patchouli.api.PatchouliAPI;
@@ -73,8 +75,8 @@ public class GuiSpellBook extends BaseBook {
         for (int i = 0; i < numLinks; i++) {
             String icon = null;
             String spell_id = "";
-            int offset = i >= 5 ? 5 : 0;
-            CraftingButton cell = new CraftingButton(this,bookLeft +14 + 24 * i + offset, bookTop + FULL_HEIGHT - 52, i, this::onCraftingSlotClick);
+            int offset = i >= 5 ? 14 : 0;
+            CraftingButton cell = new CraftingButton(this,bookLeft + 19 + 24 * i + offset, bookTop + FULL_HEIGHT - 47, i, this::onCraftingSlotClick);
             //GlyphButton glyphButton = new GlyphButton(this,bookLeft + 10 + 28 * i, bookTop + FULL_HEIGHT - 24, )
             addButton(cell);
             craftingCells.add(cell);
@@ -82,14 +84,20 @@ public class GuiSpellBook extends BaseBook {
         updateCraftingSlots(selected_slot_ind);
 
         addSpellParts(0);
-        addButton(new GuiImageButton(bookRight - 70, bookBottom - 28, 0,0,46, 18, 46, 18, "textures/gui/create_button.png", this::onCreateClick));
-        addButton(new GuiImageButton(bookRight - 130, bookBottom - 28, 0,0,46, 18, 46, 18, "textures/gui/create_button.png", this::clear));
+        addButton(new GuiImageButton(bookRight - 71, bookBottom - 13, 0,0,50, 12, 50, 12, "textures/gui/create_icon.png", this::onCreateClick));
+        addButton(new GuiImageButton(bookRight - 126, bookBottom - 13, 0,0,41, 12, 41, 12, "textures/gui/clear_icon.png", this::clear));
 
-        spell_name = new TextFieldWidget(minecraft.fontRenderer, bookLeft + 16, bookTop + FULL_HEIGHT - 25,
-                115, 12, null, new StringTextComponent("Spell Name"));
+        spell_name = new TextFieldWidget(minecraft.fontRenderer, bookLeft + 32, bookTop + FULL_HEIGHT - 11,
+                88, 12, null, new StringTextComponent("Spell Name"));
+        spell_name.setEnableBackgroundDrawing(false);
+        spell_name.setTextColor(12694931);
 
-        searchBar = new TextFieldWidget(minecraft.fontRenderer, bookRight - 80, bookTop -6,
-                70, 12, null, new StringTextComponent("Spell Name"));
+        searchBar = new TextFieldWidget(minecraft.fontRenderer, bookRight - 73, bookTop +2,
+                54, 12, null, new StringTextComponent("Search"));
+        searchBar.setEnableBackgroundDrawing(false);
+        searchBar.setTextColor(12694931);
+
+
         int mode = SpellBook.getMode(spell_book_tag);
         mode = mode == 0 ? 1 : mode;
         spell_name.setText(SpellBook.getSpellName(spell_book_tag, mode));
@@ -104,7 +112,7 @@ public class GuiSpellBook extends BaseBook {
         addButton(searchBar);
         // Add spell slots
         for(int i = 1; i <= 10; i++){
-            GuiSpellSlot slot = new GuiSpellSlot(this,bookLeft + 261, bookTop - 3 + 15 * i, i);
+            GuiSpellSlot slot = new GuiSpellSlot(this,bookLeft + 281, bookTop +1 + 15 * i, i);
             if(i == selected_slot_ind) {
                 selected_slot = slot;
                 selected_cast_slot = i;
@@ -113,8 +121,8 @@ public class GuiSpellBook extends BaseBook {
             addButton(slot);
         }
 
-        addButton(new GuiImageButton(bookLeft - 15, bookTop, 0, 0, 16, 16, 16,16, "textures/items/worn_notebook.png",this::onDocumentationClick));
-        addButton(new GuiImageButton(bookLeft - 15, bookTop + 15, 0, 0, 16, 16, 16,16, "textures/gui/color_wheel.png",this::onColorClick));
+        addButton(new GuiImageButton(bookLeft - 15, bookTop + 22, 0, 0, 23, 20, 23,20, "textures/gui/worn_book_bookmark.png",this::onDocumentationClick));
+        addButton(new GuiImageButton(bookLeft - 15, bookTop + 46, 0, 0, 23, 20, 23,20, "textures/gui/color_wheel_bookmark.png",this::onColorClick));
         this.nextButton = addButton(new ChangePageButton(bookRight -20, bookBottom -10, true, this::onPageIncrease, true));
         this.previousButton = addButton(new ChangePageButton(bookLeft - 5 , bookBottom -10, false, this::onPageDec, true));
         if(effects.size() < 36){
@@ -161,14 +169,14 @@ public class GuiSpellBook extends BaseBook {
                 continue; //Skip spells too high of a tier
 
             if(spell instanceof AbstractCastMethod) {
-                int xOffset = 18 * (numCast % 6 );
-                int yOffset = (numCast / 6) * 20 ;
-                cell = new GlyphButton(this, bookLeft + 15 + xOffset, bookTop + 20 + yOffset, false, spell.getIcon(), spell.tag);
+                int xOffset = 20 * (numCast % 6 );
+                int yOffset = (numCast / 6) * 18 ;
+                cell = new GlyphButton(this, bookLeft + 20 + xOffset, bookTop + 34 + yOffset, false, spell.getIcon(), spell.tag);
                 numCast++;
             }else if(spell instanceof AbstractAugment){
                 int xOffset = 20 * (numAugment % 6 );
-                int yOffset = (numAugment / 6) * 20 ;
-                cell = new GlyphButton(this, bookLeft + 15 + xOffset, bookTop + 70 +  yOffset, false, spell.getIcon(), spell.tag);
+                int yOffset = (numAugment / 6) * 18 ;
+                cell = new GlyphButton(this, bookLeft + 20 + xOffset, bookTop + 88 +  yOffset, false, spell.getIcon(), spell.tag);
                 numAugment++;
             }else{
                 continue;
@@ -182,7 +190,7 @@ public class GuiSpellBook extends BaseBook {
             GlyphButton cell;
             int xOffset = 20 * (numEffect % 6 );
             int yOffset = (numEffect / 6) * 18 ;
-            cell = new GlyphButton(this, bookLeft + 140 + xOffset, bookTop + 20 +  yOffset, false, spell.getIcon(), spell.tag);
+            cell = new GlyphButton(this, bookLeft + 154 + xOffset, bookTop + 34 +  yOffset, false, spell.getIcon(), spell.tag);
             numEffect ++;
             effectButtons.add(addButton(cell));
         }
@@ -283,11 +291,15 @@ public class GuiSpellBook extends BaseBook {
 
     public void drawBackgroundElements(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
-        minecraft.fontRenderer.drawString(stack, "Form", 15, 10,  0);
-        minecraft.fontRenderer.drawString(stack,"Effect", 140, 10,  0);
-        minecraft.fontRenderer.drawString(stack,"Augment", 15, 60,  0);
-        minecraft.fontRenderer.drawString(stack,"Create", 208, 157,  0);
-        minecraft.fontRenderer.drawString(stack,"Clear", 153, 157,  0);
+        minecraft.fontRenderer.drawString(stack,"Form", 20, 24, 12694931);
+        minecraft.fontRenderer.drawString(stack,"Effect", 154, 24, 12694931);
+        minecraft.fontRenderer.drawString(stack,"Augment", 20, 78, 12694931);
+        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/spell_name_paper.png"), 16, 179, 0, 0, 109, 15,109,15, stack);
+        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15,72,15, stack);
+        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/clear_paper.png"), 161, 179, 0, 0, 47, 15,47,15, stack);
+        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15,56,15, stack);
+        minecraft.fontRenderer.drawString(stack,"Create", 233, 183, 12694931);
+        minecraft.fontRenderer.drawString(stack,"Clear", 177, 183, 12694931);
     }
 
     /**
