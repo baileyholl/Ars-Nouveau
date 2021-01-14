@@ -56,12 +56,8 @@ public class EffectBreak extends AbstractEffect {
                 if(!canBlockBeHarvested(augments, world, pos1) || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, pos1)){
                     continue;
                 }
-                ItemStack stack = getPlayer(shooter, (ServerWorld)world).getHeldItemMainhand();
+                ItemStack stack = isRealPlayer(shooter) ? getPlayer(shooter, (ServerWorld)world).getHeldItemMainhand() : new ItemStack(Items.DIAMOND_PICKAXE);
                 Map<Enchantment, Integer> map =  EnchantmentHelper.getEnchantments(stack);
-                int numFortune = EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack);
-                int numSilk = EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stack);
-
-
 
                 if (hasBuff(augments, AugmentExtract.class)) {
                     stack.addEnchantment(Enchantments.SILK_TOUCH, 1);
