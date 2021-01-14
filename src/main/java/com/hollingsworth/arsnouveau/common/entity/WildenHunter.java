@@ -8,7 +8,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.LeapAtTargetGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.player.PlayerEntity;
@@ -31,7 +30,7 @@ public class  WildenHunter extends CreatureEntity implements IAnimatable, IAnima
     protected void registerGoals() {
         super.registerGoals();
 
-        this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F));
+       // this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F));
         this.goalSelector.addGoal(5, new WildenMeleeAttack(this, 1.0D, true));
         this.goalSelector.addGoal(1, new SwimGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
@@ -48,23 +47,31 @@ public class  WildenHunter extends CreatureEntity implements IAnimatable, IAnima
     public void startAnimation(int arg) {
         System.out.println("got arg" + arg);
         if(arg == Animations.ATTACK.ordinal()){
-            AnimationController controller = this.manager.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("attackController");
-            if(controller.getCurrentAnimation().animationName == "attack")
-                return;
-            controller.markNeedsReload();
-            controller.setAnimation(new AnimationBuilder().addAnimation("attack"));
-            System.out.println("playing anim");
+//            AnimationController controller = this.manager.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("attackController");
+//            if(controller.getCurrentAnimation().animationName == "attack")
+//                return;
+//            controller.markNeedsReload();
+//            controller.setAnimation(new AnimationBuilder().addAnimation("attack"));
+//            System.out.println("playing anim");
         }
     }
 
     private <E extends Entity> PlayState attackPredicate(AnimationEvent event) {
-
+        if (limbSwingAmount > 0.1) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("running", true));
+            return PlayState.CONTINUE;
+        }
+         if(this.isAggressive()){
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("attack").addAnimation("attack"));
+             return PlayState.CONTINUE;
+        }
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("idle", false));
         return PlayState.CONTINUE;
     }
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController(this, "attackController", 1, this::attackPredicate));
+        animationData.addAnimationController(new AnimationController(this, "attackController", 0, this::attackPredicate));
     }
 
     @Override
