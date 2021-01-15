@@ -80,7 +80,7 @@ public class WorldEvent {
 //                        new BlobFoliagePlacer(FeatureSpread.func_242252_a(0), FeatureSpread.func_242252_a(0), 0),
 //                        new MagicTrunkPlacer(9, 3, 0),
 //                        new TwoLayerFeature(2, 0, 2))).setIgnoreVines().build());
-        float treeChance = 0.002f;
+        float treeChance = Config.TREE_SPAWN_RATE.get().floatValue();
         ConfiguredFeature<?, ?> CASCADE = CASCADING_TREE
                 .withPlacement(Features.Placements.HEIGHTMAP_PLACEMENT)
                 .withPlacement(Placement.COUNT_EXTRA.configure(new AtSurfaceWithExtraConfig(0, treeChance, 1)));
@@ -99,7 +99,7 @@ public class WorldEvent {
                         BlockRegistry.ARCANE_ORE.getDefaultState(), 5)).range(60).square().func_242731_b(5));
 
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.MANA_BERRY_BUSH.getRegistryName(),
-                Feature.RANDOM_PATCH.withConfiguration(BERRY_BUSH_PATCH_CONFIG).withPlacement(Features.Placements.PATCH_PLACEMENT).chance(12));
+                Feature.RANDOM_PATCH.withConfiguration(BERRY_BUSH_PATCH_CONFIG).withPlacement(Features.Placements.PATCH_PLACEMENT));
 
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.VEXING_SAPLING.getRegistryName(), VEX);
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.BLAZING_SAPLING.getRegistryName(), BLAZE);

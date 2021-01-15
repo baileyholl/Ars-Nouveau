@@ -58,10 +58,6 @@ public class ManaCondenserTile extends AbstractManaTile {
     }
     @SubscribeEvent
     public void cropGrow(BlockEvent.CropGrowEvent.Post event) {
-//        if(!world.isRemote && world.getTileEntity(pos) == null){
-//            MinecraftForge.EVENT_BUS.unregister(this);
-//            return;
-//        }
         if(isDisabled)
             return;
         if(BlockUtil.distanceFrom(pos, event.getPos()) <= 15) {
@@ -76,23 +72,17 @@ public class ManaCondenserTile extends AbstractManaTile {
 
     @SubscribeEvent
     public void babySpawnEvent(BabyEntitySpawnEvent event) {
-//        if(!world.isRemote && world.getTileEntity(pos) == null){
-//            MinecraftForge.EVENT_BUS.unregister(this);
-//            return;
-//        }
         if(isDisabled || event.getChild() == null)
             return;
 
-        if(BlockUtil.distanceFrom(pos, event.getChild().getPosition()) <= 10)
+        if(BlockUtil.distanceFrom(pos, event.getParentA().getPosition()) <= 15) {
             this.addMana(1000);
+            ParticleUtil.spawnFollowProjectile(world, event.getParentA().getPosition(), pos);
+        }
     }
 
     @SubscribeEvent
     public void livingDeath(LivingDeathEvent e) {
-//        if(!world.isRemote && world.getTileEntity(pos) == null){
-//            MinecraftForge.EVENT_BUS.unregister(this);
-//            return;
-//        }
         if(e.getEntityLiving().world.isRemote || isDisabled || e.getEntity() instanceof IDispellable)
             return;
 

@@ -9,7 +9,7 @@
     },
     {
       "type": "apparatus_recipe",
-      "reagent": "ars_nouveau:mana_gem",
+      "reagent": "ars_nouveau:mana_gem_block",
       "item1": "minecraft:gold_ingot",
       "item2": "minecraft:diamond",
       "item3": "minecraft:diamond",

@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.gui;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.item.ItemFrameEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -25,6 +26,7 @@ public class HUDEventHandler {
     private static final GuiSpellHUD spellHUD = new GuiSpellHUD();
     private static final GuiManaHUD manaHUD = new GuiManaHUD();
     private static final GuiEntityInfoHUD entityHUD = new GuiEntityInfoHUD();
+    private static final GuiScrollHUD scrollHUD = new GuiScrollHUD();
     /**
      * Render the current spell when the SpellBook is held in the players hand
      *
@@ -55,6 +57,10 @@ public class HUDEventHandler {
           EntityRayTraceResult result = (EntityRayTraceResult) mouseOver;
           if(result.getEntity() instanceof ITooltipProvider)
               entityHUD.drawHUD(event.getMatrixStack(),((ITooltipProvider) result.getEntity()).getTooltip());
+
+          if(result.getEntity() instanceof ItemFrameEntity){
+              scrollHUD.drawHUD(event.getMatrixStack(), (ItemFrameEntity) result.getEntity());
+          }
 
         }
         if (mouseOver != null && mouseOver.getType() == RayTraceResult.Type.BLOCK) {

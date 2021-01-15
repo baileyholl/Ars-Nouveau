@@ -60,7 +60,7 @@ public class ItemScroll extends ModItem implements IScribeable {
     }
 
     public static boolean containsItem(ItemStack stack, CompoundNBT tag){
-        return tag.contains(getItemKey(stack));
+        return tag != null && tag.contains(getItemKey(stack));
     }
 
     public static String getItemKey(ItemStack stack){

@@ -1,6 +1,7 @@
 {
     "name": "Starter Spells",
     "icon": "ars_nouveau:glyph_break",
+	"sortnum":3,
     "category": "getting_started",
     "pages": [
         {

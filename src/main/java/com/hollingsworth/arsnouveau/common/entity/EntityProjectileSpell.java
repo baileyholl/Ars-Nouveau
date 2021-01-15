@@ -123,7 +123,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
         this.setPosition(x,y,z);
 //        if(true)
 //            return;
-        if(world.isRemote && this.age > 1) {
+        if(world.isRemote && this.age > 2) {
 //
             for (int i = 0; i < 10; i++) {
 

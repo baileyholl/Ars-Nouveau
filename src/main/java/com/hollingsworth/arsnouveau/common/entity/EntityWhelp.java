@@ -343,4 +343,9 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         }
         return ItemStack.EMPTY;
     }
+
+    @Override
+    public List<IItemHandler> getInventory() {
+        return BlockUtil.getAdjacentInventories(world, crystalPos);
+    }
 }

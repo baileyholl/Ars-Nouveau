@@ -21,10 +21,10 @@ public class Networking {
         INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(ArsNouveau.MODID, "network"), () -> "1.0", s->true, s->true);
 
         INSTANCE.registerMessage(nextID(),
-                PacketOpenGUI.class,
-                PacketOpenGUI::toBytes,
-                PacketOpenGUI::new,
-                PacketOpenGUI::handle);
+                PacketOpenSpellBook.class,
+                PacketOpenSpellBook::toBytes,
+                PacketOpenSpellBook::new,
+                PacketOpenSpellBook::handle);
         INSTANCE.registerMessage(nextID(),
                 PacketUpdateSpellbook.class,
                 PacketUpdateSpellbook::toBytes,
@@ -83,6 +83,12 @@ public class Networking {
                 PacketAnimEntity::encode,
                 PacketAnimEntity::decode,
                 PacketAnimEntity.Handler::handle);
+
+        INSTANCE.registerMessage(nextID(),
+                PacketOpenRitualBook.class,
+                PacketOpenRitualBook::toBytes,
+                PacketOpenRitualBook::new,
+                PacketOpenRitualBook::handle);
     }
 
     public static void sendToNearby(World world, BlockPos pos, Object toSend){

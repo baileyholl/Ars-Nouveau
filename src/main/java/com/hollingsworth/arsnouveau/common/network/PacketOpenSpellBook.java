@@ -8,13 +8,13 @@ import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class PacketOpenGUI{
+public class PacketOpenSpellBook {
     public CompoundNBT tag;
     public int tier;
     public String unlockedSpells;
 
     //Decoder
-    public PacketOpenGUI(PacketBuffer buf){
+    public PacketOpenSpellBook(PacketBuffer buf){
         tag = buf.readCompoundTag();
         tier = buf.readInt();
         unlockedSpells = buf.readString(32767);
@@ -27,7 +27,7 @@ public class PacketOpenGUI{
         buf.writeString(unlockedSpells);
     }
 
-    public PacketOpenGUI(CompoundNBT tag, int tier, String unlockedSpells){
+    public PacketOpenSpellBook(CompoundNBT tag, int tier, String unlockedSpells){
         this.tag = tag;
         this.tier = tier;
         this.unlockedSpells = unlockedSpells;

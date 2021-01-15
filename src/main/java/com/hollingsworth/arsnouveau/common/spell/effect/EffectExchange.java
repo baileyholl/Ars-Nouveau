@@ -2,9 +2,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
@@ -18,7 +16,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
@@ -28,8 +25,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.hollingsworth.arsnouveau.api.util.BlockUtil.destroyBlockSafelyWithoutSound;
@@ -42,7 +41,10 @@ public class EffectExchange extends AbstractEffect {
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof BlockRayTraceResult){
+
             resolveBlockHit(rayTraceResult, world, shooter, augments,spellContext);
+
+
         }else if(rayTraceResult instanceof EntityRayTraceResult){
             resolveEntityHit(rayTraceResult, world, shooter, augments, spellContext);
         }
@@ -63,62 +65,64 @@ public class EffectExchange extends AbstractEffect {
     }
 
     public void resolveBlockHit(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext){
-        if(isRealPlayer(shooter)){
-            int aoeBuff = getBuffCount(augments, AugmentAOE.class);
-            List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
-            BlockRayTraceResult result = (BlockRayTraceResult) rayTraceResult;
-            BlockState origState = world.getBlockState(result.getPos());
-            Block firstBlock = null;
-            for(BlockPos pos1 : posList) {
-                BlockState state = world.getBlockState(pos1);
+        int aoeBuff = getBuffCount(augments, AugmentAOE.class);
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(rayTraceResult.getHitVec(), ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
+        BlockRayTraceResult result = (BlockRayTraceResult) rayTraceResult;
+        BlockState origState = world.getBlockState(result.getPos());
+        PlayerEntity playerEntity = getPlayer(shooter, (ServerWorld) world);
+        List<ItemStack> list = playerEntity.inventory.mainInventory;
+        List<IItemHandler> handlers = new ArrayList<>();
 
-                if(!canBlockBeHarvested(augments, world, pos1) || origState.getBlock() != state.getBlock()){
-                    continue;
-                }
+        if(spellContext.castingTile instanceof IPlaceBlockResponder && spellContext.castingTile instanceof IPickupResponder) {
+            handlers = ((IPlaceBlockResponder) spellContext.castingTile).getInventory();
+        }
 
-                // Break block
-                ItemStack tool = LootUtil.getDefaultFakeTool();
-                tool.addEnchantment(Enchantments.SILK_TOUCH, 1);
+        if(shooter instanceof IPlaceBlockResponder && shooter instanceof IPickupResponder)
+            handlers = ((IPlaceBlockResponder) shooter).getInventory();
 
-                PlayerEntity playerEntity = (PlayerEntity) shooter;
-                NonNullList<ItemStack> list =  playerEntity.inventory.mainInventory;
+        Block firstBlock = null;
+        for(BlockPos pos1 : posList) {
+            BlockState state = world.getBlockState(pos1);
 
-                for(int i = 0; i < 9; i++){
-                    ItemStack stack = list.get(i);
-                    if(stack.getItem() instanceof BlockItem && world instanceof ServerWorld){
-                        BlockItem item = (BlockItem)stack.getItem();
-                        if(item.getBlock() == origState.getBlock())
-                            continue;
-                        if(firstBlock == null){
-                            firstBlock = item.getBlock();
-                        }else if(item.getBlock() != firstBlock)
-                            continue;
-                        FakePlayer fakePlayer = FakePlayerFactory.getMinecraft((ServerWorld)world);
-                        fakePlayer.setHeldItem(Hand.MAIN_HAND, stack);
-                        BlockItemUseContext context = BlockItemUseContext.func_221536_a(new BlockItemUseContext(new ItemUseContext(fakePlayer, Hand.MAIN_HAND, result)), pos1, result.getFace());
-                        BlockState placeState = item.getBlock().getStateForPlacement(context);
-                        Block.spawnDrops(world.getBlockState(pos1), world, pos1, world.getTileEntity(pos1), shooter,tool);
-                        destroyBlockSafelyWithoutSound(world, pos1, false, shooter);
-
-                        if(placeState != null && world.getBlockState(pos1).getMaterial() == Material.AIR && world.getBlockState(pos1).getBlock() != BlockRegistry.INTANGIBLE_AIR){
-                            world.setBlockState(pos1, placeState, 2);
-                            stack.shrink(1);
-                            break;
+            if(!canBlockBeHarvested(augments, world, pos1) || origState.getBlock() != state.getBlock() || world.getBlockState(pos1).getMaterial() != Material.AIR && world.getBlockState(pos1).getBlock() == BlockRegistry.INTANGIBLE_AIR){
+                continue;
+            }
+            if(isRealPlayer(shooter) && spellContext.castingTile == null) {
+                firstBlock = swapFromInv(list, origState, world, pos1, result, shooter, 9, firstBlock);
+            } else if((spellContext.castingTile instanceof IPlaceBlockResponder && spellContext.castingTile instanceof IPickupResponder) || (shooter instanceof IPlaceBlockResponder && shooter instanceof IPickupResponder)){
+                boolean shouldBreak = false;
+                for(IItemHandler i : handlers){
+                    for(int slot = 0; slot < i.getSlots(); slot++){
+                        ItemStack stack = i.getStackInSlot(slot);
+                        if(stack.getItem() instanceof BlockItem && world instanceof ServerWorld){
+                            BlockItem item = (BlockItem)stack.getItem();
+                            if(item.getBlock() == origState.getBlock())
+                                continue;
+                            if(firstBlock == null){
+                                firstBlock = item.getBlock();
+                            }else if(item.getBlock() != firstBlock)
+                                continue;
+                            if(attemptPlace(stack, world, pos1, result, shooter)) {
+                                shouldBreak = true;
+                                break;
+                            }
                         }
                     }
+                    if(shouldBreak)
+                        break;
                 }
 
             }
-            return;
         }
+
     }
 
-    public void getBlockFromPlayer(List<ItemStack> list,BlockState origState, World world, BlockPos pos1, BlockRayTraceResult result, LivingEntity shooter){
-        Block firstBlock = null;
-        ItemStack tool = LootUtil.getDefaultFakeTool();
-        tool.addEnchantment(Enchantments.SILK_TOUCH, 1);
-        for(int i = 0; i < 9; i++){
-            ItemStack stack = list.get(i);
+
+
+
+    public Block swapFromInv(List<ItemStack> inventory, BlockState origState, World world, BlockPos pos1, BlockRayTraceResult result, LivingEntity shooter, int slots, Block firstBlock){
+        for(int i = 0; i < slots; i++){
+            ItemStack stack = inventory.get(i);
             if(stack.getItem() instanceof BlockItem && world instanceof ServerWorld){
                 BlockItem item = (BlockItem)stack.getItem();
                 if(item.getBlock() == origState.getBlock())
@@ -127,22 +131,31 @@ public class EffectExchange extends AbstractEffect {
                     firstBlock = item.getBlock();
                 }else if(item.getBlock() != firstBlock)
                     continue;
-                FakePlayer fakePlayer = FakePlayerFactory.getMinecraft((ServerWorld)world);
-                fakePlayer.setHeldItem(Hand.MAIN_HAND, stack);
-                BlockItemUseContext context = BlockItemUseContext.func_221536_a(new BlockItemUseContext(new ItemUseContext(fakePlayer, Hand.MAIN_HAND, result)), pos1, result.getFace());
-                BlockState placeState = item.getBlock().getStateForPlacement(context);
-                Block.spawnDrops(world.getBlockState(pos1), world, pos1, world.getTileEntity(pos1), shooter,tool);
-                destroyBlockSafelyWithoutSound(world, pos1, false, shooter);
-
-                if(placeState != null && world.getBlockState(pos1).getMaterial() == Material.AIR && world.getBlockState(pos1).getBlock() != BlockRegistry.INTANGIBLE_AIR){
-                    world.setBlockState(pos1, placeState, 2);
-                    stack.shrink(1);
+                if(attemptPlace(stack, world, pos1, result, shooter))
                     break;
-                }
             }
         }
+        return firstBlock;
     }
 
+    public boolean attemptPlace(ItemStack stack, World world, BlockPos pos1, BlockRayTraceResult result, LivingEntity shooter){
+        BlockItem item = (BlockItem)stack.getItem();
+        ItemStack tool = LootUtil.getDefaultFakeTool();
+        tool.addEnchantment(Enchantments.SILK_TOUCH, 1);
+        FakePlayer fakePlayer = FakePlayerFactory.getMinecraft((ServerWorld)world);
+        fakePlayer.setHeldItem(Hand.MAIN_HAND, stack);
+        BlockItemUseContext context = BlockItemUseContext.func_221536_a(new BlockItemUseContext(new ItemUseContext(fakePlayer, Hand.MAIN_HAND, result)), pos1, result.getFace());
+        BlockState placeState = item.getBlock().getStateForPlacement(context);
+        Block.spawnDrops(world.getBlockState(pos1), world, pos1, world.getTileEntity(pos1), shooter,tool);
+        destroyBlockSafelyWithoutSound(world, pos1, false, shooter);
+
+        if(placeState != null){
+            world.setBlockState(pos1, placeState, 2);
+            stack.shrink(1);
+            return true;
+        }
+        return false;
+    }
 
 
     @Override

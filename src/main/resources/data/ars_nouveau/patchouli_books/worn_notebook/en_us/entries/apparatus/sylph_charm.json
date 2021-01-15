@@ -26,12 +26,22 @@
 	},
 	{
       "type": "text",
+	  "title":"Summoning",
       "text": "ars_nouveau.page3.sylph_charm"
     },{
       "type": "text",
+	  "title":"Happiness",
       "text": "ars_nouveau.page4.sylph_charm"
     },
 	{
+      "type": "text",
+	  "title":"Important",
+      "text": "ars_nouveau.page5.sylph_charm"
+    },{
+      "type": "text",
+	  "title":"Production",
+      "text": "ars_nouveau.page6.sylph_charm"
+    },{
 	"type":"multiblock",
 	"multiblock":{
 		"mapping":{
@@ -47,11 +57,7 @@
 		"symmetrical": true
 	},
 	"text":""
-	},
-	{
-      "type": "text",
-      "text": "ars_nouveau.page5.sylph_charm"
-    },{
+	},{
             "type": "relations",
             "entries":["apparatus/summoning_crystal"]        
         }

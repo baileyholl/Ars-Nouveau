@@ -5,6 +5,8 @@ import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -17,12 +19,19 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvider, IWandable {
+public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvider, IWandable, IAnimatable {
 
     public ArcaneRelayTile() {
         super(BlockRegistry.ARCANE_RELAY_TILE);
@@ -78,9 +87,12 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
         if(storedPos == null || world.isRemote)
             return;
         // Let relays take from us, no action needed.
-        this.setSendTo(storedPos.toImmutable());
-        PortUtil.sendMessage(playerEntity,new TranslationTextComponent("ars_nouveau.connections.send", DominionWand.getPosString(storedPos)));
-        ParticleUtil.beam(storedPos,pos, (ServerWorld) world);
+        if(this.setSendTo(storedPos.toImmutable())) {
+            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.connections.send", DominionWand.getPosString(storedPos)));
+            ParticleUtil.beam(storedPos, pos, (ServerWorld) world);
+        }else{
+            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.connections.fail"));
+        }
     }
 
     @Override
@@ -89,8 +101,11 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
             return;
         if(world.getTileEntity(storedPos) instanceof ArcaneRelayTile)
             return;
-        this.setTakeFrom(storedPos.toImmutable());
-        PortUtil.sendMessage(playerEntity,new TranslationTextComponent("ars_nouveau.connections.take", DominionWand.getPosString(storedPos)));
+        if(this.setTakeFrom(storedPos.toImmutable())) {
+            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.connections.take", DominionWand.getPosString(storedPos)));
+        }else{
+            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.connections.fail"));
+        }
     }
 
     @Override
@@ -99,9 +114,22 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
         PortUtil.sendMessage(playerEntity,new TranslationTextComponent("ars_nouveau.connections.cleared"));
     }
 
+    public void spawnParticles(){
+        if(world.isRemote){
+            ParticleColor randColor = new ParticleColor(255,55,255);
+            for (int i = 0; i < 6; i++) {
+                world.addParticle(
+                        GlowParticleData.createData(randColor),
+                        pos.getX() + 0.5 + ParticleUtil.inRange(-0.3, 0.3), pos.getY() + 0.5 + ParticleUtil.inRange(-0.3, 0.3), pos.getZ() + 0.5 + ParticleUtil.inRange(-0.3, 0.3),
+                        0, 0, 0);
+            }
+        }
+    }
+
     @Override
     public void tick() {
         if(world.isRemote){
+            spawnParticles();
             return;
         }
 
@@ -178,5 +206,21 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
             list.add(new TranslationTextComponent("ars_nouveau.relay.one_from", 1).getString());
         }
         return list;
+    }
+    AnimationFactory factory = new AnimationFactory(this);
+
+    @Override
+    public void registerControllers(AnimationData data) {
+        data.addAnimationController(new AnimationController(this, "rotate_controller", 0, this::idlePredicate));
+    }
+
+    private <P extends IAnimatable> PlayState idlePredicate(AnimationEvent<P> event) {
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("rotation", true));
+        return PlayState.CONTINUE;
+    }
+
+    @Override
+    public AnimationFactory getFactory() {
+        return factory;
     }
 }

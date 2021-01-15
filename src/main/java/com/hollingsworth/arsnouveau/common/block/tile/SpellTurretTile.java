@@ -14,6 +14,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -36,6 +37,10 @@ public class SpellTurretTile extends TileEntity  implements IPickupResponder, IP
         return BlockUtil.getItemAdjacent(world, pos, (stack) -> stack.getItem() instanceof BlockItem);
     }
 
+    @Override
+    public List<IItemHandler> getInventory() {
+        return BlockUtil.getAdjacentInventories(world, pos);
+    }
 
     @Override
     public CompoundNBT write(CompoundNBT tag) {

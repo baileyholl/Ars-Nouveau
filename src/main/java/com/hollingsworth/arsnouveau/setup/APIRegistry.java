@@ -45,7 +45,7 @@ public class APIRegistry {
                 Items.SUGAR, Items.NETHER_WART, Items.BLAZE_POWDER, Items.GLOWSTONE_DUST, Items.FERMENTED_SPIDER_EYE, Items.REDSTONE, Items.BREWING_STAND, Items.FEATHER
         }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
 
-        registerApparatusRecipe(new EnchantingApparatusRecipe(BlockRegistry.SUMMONING_CRYSTAL.asItem(), ItemsRegistry.manaGem, new Item[]{
+        registerApparatusRecipe(new EnchantingApparatusRecipe(BlockRegistry.SUMMONING_CRYSTAL.asItem(), BlockRegistry.MANA_GEM_BLOCK.asItem(), new Item[]{
                 Items.GOLD_INGOT, Items.DIAMOND, Items.DIAMOND, Items.GOLD_INGOT, BlockRegistry.ARCANE_STONE.asItem(),BlockRegistry.ARCANE_STONE.asItem(), BlockRegistry.ARCANE_STONE.asItem(), BlockRegistry.ARCANE_STONE.asItem()
         }, ArsNouveauAPI.PatchouliCategories.automation.name()));
 
@@ -166,6 +166,8 @@ public class APIRegistry {
         registerSpell(ModConfig.EffectColdSnapID, new EffectColdSnap());
         registerSpell(ModConfig.EffectConjureWaterID, new EffectConjureWater());
         registerSpell(ModConfig.EffectGravityID, new EffectGravity());
+        registerSpell(ModConfig.EffectCutID, new EffectCut());
+        registerSpell(ModConfig.EffectCrushID, new EffectCrush());
         registerStartingSpells();
     }
 

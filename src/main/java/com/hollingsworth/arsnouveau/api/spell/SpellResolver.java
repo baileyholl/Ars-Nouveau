@@ -32,7 +32,6 @@ public class SpellResolver {
     public final SpellContext spellContext;
     public boolean silent;
 
-
     public SpellResolver(AbstractCastMethod cast, List<AbstractSpellPart> spell_recipe, SpellContext context){
 
         this.castType = cast;
@@ -43,7 +42,9 @@ public class SpellResolver {
     }
 
 
-
+    public SpellResolver(SpellContext spellContext){
+        this(spellContext.getSpell().recipe, spellContext);
+    }
 
     public SpellResolver(AbstractSpellPart[] spellParts, SpellContext context){
         this(new ArrayList<>(Arrays.asList(spellParts)), context);

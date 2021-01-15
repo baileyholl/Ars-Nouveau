@@ -95,6 +95,7 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.VOID_JAR)public static VoidJar VOID_JAR;
     @ObjectHolder(LibItemNames.WIXIE_CHARM)public static WixieCharm WIXIE_CHARM;
     @ObjectHolder(LibItemNames.WIXIE_SHARD)public static ModItem WIXIE_SHARD;
+    @ObjectHolder(LibItemNames.RITUAL_BOOK)public static RitualBook RITUAL_BOOK;
 
     public static Food MANA_BERRY_FOOD = (new Food.Builder()).hunger(2).saturation(0.1F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).setAlwaysEdible().build();
 
@@ -183,7 +184,8 @@ public class ItemsRegistry {
                     new ModItem(LibItemNames.BLANK_PARCHMENT),
                     new ModItem(LibItemNames.WIXIE_SHARD).withTooltip(new TranslationTextComponent("tooltip.wixie_shard")),
                     new Wand(),
-                    new VoidJar()
+                    new VoidJar(),
+                    new RitualBook().setRegistryName(LibItemNames.RITUAL_BOOK)
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

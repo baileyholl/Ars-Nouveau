@@ -127,7 +127,8 @@ public class EffectHarvest extends AbstractEffect {
         LinkedList<BlockPos> searchQueue = new LinkedList<>(start);
         HashSet<BlockPos> searched = new HashSet<>(start);
         HashSet<BlockPos> found = new HashSet<>();
-        while(!searchQueue.isEmpty() || found.size() >= maxBlocks) {
+
+        while(!searchQueue.isEmpty() && found.size() < maxBlocks) {
             BlockPos current = searchQueue.removeFirst();
             BlockState state = world.getBlockState(current);
             if (isTree(state)) {

@@ -6,6 +6,8 @@ import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleSparkleData;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ManaBlock;
 import com.hollingsworth.arsnouveau.common.block.SummoningCrystal;
 import com.hollingsworth.arsnouveau.common.entity.EntityWhelp;
@@ -20,6 +22,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -27,16 +30,24 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.hollingsworth.arsnouveau.api.util.BlockUtil.isTreeBlock;
 
-public class SummoningCrystalTile extends AbstractManaTile {
+public class SummoningCrystalTile extends AbstractManaTile implements IAnimatable {
 
     ArrayList<UUID> entityList = new ArrayList<>();
     int numEntities = 0;
@@ -47,6 +58,21 @@ public class SummoningCrystalTile extends AbstractManaTile {
     public SummoningCrystalTile() {
         super(BlockRegistry.SUMMONING_CRYSTAL_TILE);
         tier = 1;
+    }
+    AnimationFactory manager = new AnimationFactory(this);
+    @Override
+    public void registerControllers(AnimationData animationData) {
+        animationData.addAnimationController(new AnimationController(this, "rotate_controller", 0, this::idlePredicate));
+    }
+
+    private <E extends TileEntity & IAnimatable > PlayState idlePredicate(AnimationEvent<E> event) {
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("summoning_crystal", true));
+        return PlayState.CONTINUE;
+    }
+
+    @Override
+    public AnimationFactory getFactory() {
+        return manager;
     }
 
     @Override
@@ -174,6 +200,14 @@ public class SummoningCrystalTile extends AbstractManaTile {
 
     @Override
     public void tick() {
+        Random rand = world.getRandom();
+        if(world.isRemote && rand.nextInt(6) == 0){
+            for(int i = 0; i < 10; i++){
+                world.addParticle(ParticleSparkleData.createData(ParticleUtil.defaultParticleColor(), 0.05f, 60),
+                        pos.getX()  +ParticleUtil.inRange(-0.5, 0.5) +0.5 , pos.getY() +ParticleUtil.inRange(-1, 1) , pos.getZ() +ParticleUtil.inRange(-0.5, 0.5) +0.5,
+                        ParticleUtil.inRange(-0.03, 0.03),  ParticleUtil.inRange(0.01, 0.5), ParticleUtil.inRange(-0.03, 0.03));
+            }
+        }
         if(world.getGameTime() % 20 != 0  || world.isRemote)
             return;
         cleanupKobolds();

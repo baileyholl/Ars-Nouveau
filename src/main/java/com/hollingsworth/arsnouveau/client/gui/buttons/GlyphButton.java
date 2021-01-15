@@ -53,10 +53,6 @@ public class GlyphButton extends Button {
 
     @Override
     public void render(MatrixStack ms,int mouseX, int mouseY, float partialTicks) {
-//        System.out.println(mouseX);
-//        System.out.println(mouseY);
-
-
         if (visible)
         {
             if(this.resourceIcon != null && !this.resourceIcon.equals("")) {

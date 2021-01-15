@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.common.block.tile.SummoningCrystalTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -42,6 +43,11 @@ public class SummoningCrystal extends ModBlock{
         if(!world.isRemote() && world.getTileEntity(pos) instanceof SummoningCrystalTile){
             ((SummoningCrystalTile) world.getTileEntity(pos)).isOff = world.isBlockPowered(pos);
         }
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
     @Nullable

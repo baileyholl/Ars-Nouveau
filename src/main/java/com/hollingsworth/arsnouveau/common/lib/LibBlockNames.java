@@ -54,4 +54,24 @@ public class LibBlockNames {
     public final static String ARCHWOOD_PLANK = "archwood_planks";
 
     public final static String RITUAL_CIRCLE = "ritual";
+    public final static String ARCHWOOD_STAIRS = "archwood_stairs";
+    public final static String ARCHWOOD_SLABS = "archwood_slab";
+    public final static String ARCHWOOD_SIGN = "archwood_wall_sign";
+    public final static String ARCHWOOD_TRAPDOOR = "archwood_trapdoor";
+    public final static String ARCHWOOD_PPlate = "archwood_pressure_plate";
+    public final static String ARCHWOOD_FENCE_GATE = "archwood_fence_gate";
+    public final static String ARCHWOOD_FENCE = "archwood_fence";
+    public final static String ARCHWOOD_DOOR = "archwood_door";
+    public final static String ARCHWOOD_BUTTON = "archwood_button";
+
+    public final static String STRIPPED_AWLOG_BLUE = "stripped_blue_archwood_log";
+    public final static String STRIPPED_AWWOOD_BLUE = "stripped_blue_archwood_wood";
+    public final static String STRIPPED_AWLOG_GREEN = "stripped_green_archwood_log";
+    public final static String STRIPPED_AWWOOD_GREEN = "stripped_green_archwood_wood";
+    public final static String STRIPPED_AWLOG_RED = "stripped_red_archwood_log";
+    public final static String STRIPPED_AWWOOD_RED = "stripped_red_archwood_wood";
+    public final static String STRIPPED_AWLOG_PURPLE = "stripped_purple_archwood_log";
+    public final static String STRIPPED_AWWOOD_PURPLE = "stripped_purple_archwood_wood";
+    public final static String MANA_GEM_BLOCK = "mana_gem_block";
+
 }

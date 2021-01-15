@@ -1,0 +1,19 @@
+{
+  "name": "Crush",
+  "icon": "ars_nouveau:glyph_crush",
+  "category": "spells_2",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "text",
+      "text": "Turns stone into gravel, and gravel into sand. Will also harm entities and deals bonus damage to entities that are swimming."
+    },
+    {
+      "type": "glyph_recipe",
+      "tier": "TWO",
+      "mana_cost": "Medium",
+      "clay_type": "ars_nouveau:marvelous_clay",
+      "reagent": "minecraft:grindstone"
+    }
+  ]
+}

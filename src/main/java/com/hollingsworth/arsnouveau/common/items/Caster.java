@@ -59,7 +59,7 @@ public abstract class Caster extends ModItem implements IScribeable, IDisplayMan
         boolean success = false;
         Spell spell = new Spell();
         if(heldStack.getItem() instanceof SpellBook) {
-            spell = new Spell(SpellBook.getRecipeFromTag(heldStack.getTag(), SpellBook.getMode(heldStack.getTag())));
+            spell = SpellBook.getRecipeFromTag(heldStack.getTag(), SpellBook.getMode(heldStack.getTag()));
         }else if(heldStack.getItem() instanceof SpellParchment){
             spell = new Spell(SpellParchment.getSpellRecipe(heldStack));
         }

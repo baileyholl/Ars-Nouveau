@@ -4,10 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.client.IDisplayMana;
 import com.hollingsworth.arsnouveau.api.item.IScribeable;
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
-import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.MathUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
@@ -18,7 +15,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.PhantomBlockTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketOpenGUI;
+import com.hollingsworth.arsnouveau.common.network.PacketOpenSpellBook;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.client.settings.KeyBinding;
@@ -48,7 +45,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
 public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplayMana {
@@ -121,10 +117,10 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
         // Crafting mode
         if(getMode(stack.getTag()) == 0 && playerIn instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = (ServerPlayerEntity) playerIn;
-            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->player), new PacketOpenGUI(stack.getTag(), getTier().ordinal(), getUnlockedSpellString(player.getHeldItem(handIn).getTag())));
+            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->player), new PacketOpenSpellBook(stack.getTag(), getTier().ordinal(), getUnlockedSpellString(player.getHeldItem(handIn).getTag())));
             return new ActionResult<>(ActionResultType.CONSUME, stack);
         }
-        SpellResolver resolver = new SpellResolver(getCurrentRecipe(stack), new SpellContext(getCurrentRecipe(stack), playerIn)
+        SpellResolver resolver = new SpellResolver(new SpellContext(getCurrentRecipe(stack), playerIn)
                 .withColors(SpellBook.getSpellColor(stack.getTag(), SpellBook.getMode(stack.getTag()))));
         EntityRayTraceResult entityRes = MathUtil.getLookedAtEntity(playerIn, 25);
 
@@ -149,7 +145,7 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
         if(!(player.getHeldItem(handIn).getItem() instanceof SpellBook))
             return false;
 
-        ArrayList<AbstractSpellPart> spellParts = SpellBook.getUnlockedSpells(player.getHeldItem(handIn).getTag());
+        List<AbstractSpellPart> spellParts = SpellBook.getUnlockedSpells(player.getHeldItem(handIn).getTag());
         int unlocked = 0;
         for(AbstractSpellPart spellPart : spellParts){
             if(SpellBook.unlockSpell(stack.getTag(), spellPart))
@@ -175,21 +171,13 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
     }
 
 
-    /*
-    Called on block use. TOUCH ONLY
-     */
-    @Override
-    public ActionResultType onItemUse(ItemUseContext context) {
-        return ActionResultType.PASS;
-    }
-
-    public List<AbstractSpellPart> getCurrentRecipe(ItemStack stack){
+    public Spell getCurrentRecipe(ItemStack stack){
         return SpellBook.getRecipeFromTag(stack.getTag(), getMode(stack.getTag()));
     }
 
-    public static List<AbstractSpellPart> getRecipeFromTag(CompoundNBT tag, int r_slot){
+    public static Spell getRecipeFromTag(CompoundNBT tag, int r_slot){
         String recipeStr = getRecipeString(tag, r_slot);
-        return SpellRecipeUtil.getSpellsFromTagString(recipeStr);
+        return Spell.deserialize(recipeStr);
     }
 
     @Override
@@ -239,7 +227,7 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
         tag.putInt(SpellBook.BOOK_MODE_TAG, mode);
     }
 
-    public static ArrayList<AbstractSpellPart> getUnlockedSpells(CompoundNBT tag){
+    public static List<AbstractSpellPart> getUnlockedSpells(CompoundNBT tag){
         return SpellRecipeUtil.getSpellsFromString(tag.getString(SpellBook.UNLOCKED_SPELLS));
     }
 

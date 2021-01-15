@@ -35,7 +35,7 @@ public class EffectPickup extends AbstractEffect {
                 pos.west(expansion).south(expansion).down(expansion)));
         for(ItemEntity i : entityList){
 
-            if(isRealPlayer(shooter)){
+            if(isRealPlayer(shooter) && spellContext.castingTile == null){
                 ItemStack stack = i.getItem();
                 PlayerEntity player = (PlayerEntity) shooter;
                 VoidJar.tryVoiding(player, stack);
@@ -53,12 +53,7 @@ public class EffectPickup extends AbstractEffect {
 
     @Override
     public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
-        BlockPos pos = new BlockPos(rayTraceResult.getHitVec());
-        int expansion = getBuffCount(augments, AugmentAOE.class);
         return true;
-//
-//        return !world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos.east(3 + expansion).north(3 + expansion).up(3 + expansion),
-//                pos.west(3 +expansion).south(3+expansion).down(3+expansion))).isEmpty();
     }
 
     @Override
