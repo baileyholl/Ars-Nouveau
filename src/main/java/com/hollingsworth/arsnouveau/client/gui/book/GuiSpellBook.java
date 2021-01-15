@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
+import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.buttons.CraftingButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GlyphButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
@@ -87,12 +88,12 @@ public class GuiSpellBook extends BaseBook {
         addButton(new GuiImageButton(bookRight - 71, bookBottom - 13, 0,0,50, 12, 50, 12, "textures/gui/create_icon.png", this::onCreateClick));
         addButton(new GuiImageButton(bookRight - 126, bookBottom - 13, 0,0,41, 12, 41, 12, "textures/gui/clear_icon.png", this::clear));
 
-        spell_name = new TextFieldWidget(minecraft.fontRenderer, bookLeft + 32, bookTop + FULL_HEIGHT - 11,
+        spell_name = new NoShadowTextField(minecraft.fontRenderer, bookLeft + 32, bookTop + FULL_HEIGHT - 11,
                 88, 12, null, new StringTextComponent("Spell Name"));
         spell_name.setEnableBackgroundDrawing(false);
         spell_name.setTextColor(12694931);
 
-        searchBar = new TextFieldWidget(minecraft.fontRenderer, bookRight - 73, bookTop +2,
+        searchBar = new NoShadowTextField(minecraft.fontRenderer, bookRight - 73, bookTop +2,
                 54, 12, null, new StringTextComponent("Search"));
         searchBar.setEnableBackgroundDrawing(false);
         searchBar.setTextColor(12694931);
@@ -291,15 +292,15 @@ public class GuiSpellBook extends BaseBook {
 
     public void drawBackgroundElements(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
-        minecraft.fontRenderer.drawString(stack,"Form", 20, 24, 12694931);
-        minecraft.fontRenderer.drawString(stack,"Effect", 154, 24, 12694931);
-        minecraft.fontRenderer.drawString(stack,"Augment", 20, 78, 12694931);
+        minecraft.fontRenderer.drawString(stack,"Form", 20, 24, -8355712);
+        minecraft.fontRenderer.drawString(stack,"Effect", 154, 24, -8355712);
+        minecraft.fontRenderer.drawString(stack,"Augment", 20, 78, -8355712);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/spell_name_paper.png"), 16, 179, 0, 0, 109, 15,109,15, stack);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15,72,15, stack);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/clear_paper.png"), 161, 179, 0, 0, 47, 15,47,15, stack);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15,56,15, stack);
-        minecraft.fontRenderer.drawString(stack,"Create", 233, 183, 12694931);
-        minecraft.fontRenderer.drawString(stack,"Clear", 177, 183, 12694931);
+        minecraft.fontRenderer.drawString(stack,"Create", 233, 183, -8355712);
+        minecraft.fontRenderer.drawString(stack,"Clear", 177, 183, -8355712);
     }
 
     /**
