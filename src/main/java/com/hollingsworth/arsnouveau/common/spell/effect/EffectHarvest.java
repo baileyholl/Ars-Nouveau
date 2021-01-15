@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.ModConfig;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
@@ -18,6 +19,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ITag;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -25,11 +28,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class EffectHarvest extends AbstractEffect {
+
+    public static ITag.INamedTag<Block> FELLABLE =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "harvest/fellable"));
 
     public EffectHarvest() {
         super(ModConfig.EffectHarvestID, "Harvest");
@@ -44,7 +47,7 @@ public class EffectHarvest extends AbstractEffect {
             for(BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter, ray.getPos(), ray, getBuffCount(augments, AugmentAOE.class))){
                 BlockState state = world.getBlockState(blockpos);
                 if(isTree(state)){
-                    Set<BlockPos> list = getTree(world, ray.getPos().getX(), ray.getPos().getY(), ray.getPos().getZ(), true, new HashSet<>());
+                    Set<BlockPos> list = getTree(world, ray.getPos(), 500);
                     list.forEach(listPos -> {
                         if(!BlockUtil.destroyRespectsClaim(shooter, world, listPos))
                             return;
@@ -113,26 +116,32 @@ public class EffectHarvest extends AbstractEffect {
     }
 
     public boolean isTree(BlockState blockstate){
-        return blockstate.getBlock().isIn(BlockTags.LOGS)  || blockstate.getBlock().isIn(BlockTags.LEAVES);
+        return blockstate.getBlock().isIn(FELLABLE);
     }
 
-    public Set<BlockPos> getTree(World world, int x, int y, int z, boolean fromTree, Set<BlockPos> blocks){
-        if(blocks.size() > 500)
-            return blocks;
-        BlockPos pos = new BlockPos(x, y, z);
-        boolean isTree = isTree(world.getBlockState(pos));
-        if(isTree && !blocks.contains(pos)){
-            blocks.add(pos);
-        }else if(fromTree){
-            return blocks;
+    public Set<BlockPos> getTree(World world, BlockPos start, int maxBlocks) {
+        return getTree(world, Collections.singleton(start), maxBlocks);
+    }
+
+    public Set<BlockPos> getTree(World world, Collection<BlockPos> start, int maxBlocks) {
+        LinkedList<BlockPos> searchQueue = new LinkedList<>(start);
+        HashSet<BlockPos> searched = new HashSet<>(start);
+        HashSet<BlockPos> found = new HashSet<>();
+
+        while(!searchQueue.isEmpty() && found.size() < maxBlocks) {
+            BlockPos current = searchQueue.removeFirst();
+            BlockState state = world.getBlockState(current);
+            if (isTree(state)) {
+                found.add(current);
+                BlockPos.getAllInBox(current.add(1, 1, 1), current.add(-1, -1, -1)).forEach(neighborMutable -> {
+                    if (searched.contains(neighborMutable)) return;
+                    BlockPos neighbor = neighborMutable.toImmutable();
+                    searched.add(neighbor);
+                    searchQueue.add(neighbor);
+                });
+            }
         }
-        getTree(world, pos.getX() +1, pos.getY(), pos.getZ(), isTree, blocks);
-        getTree(world, pos.getX() - 1, pos.getY(), pos.getZ(), isTree, blocks);
-        getTree(world, pos.getX(), pos.getY() + 1, pos.getZ(), isTree, blocks);
-        getTree(world, pos.getX(), pos.getY() - 1, pos.getZ(), isTree, blocks);
-        getTree(world, pos.getX(), pos.getY(), pos.getZ() + 1, isTree, blocks);
-        getTree(world, pos.getX(), pos.getY(), pos.getZ() - 1, isTree, blocks);
-        return blocks;
+        return found;
     }
 
     @Nullable
