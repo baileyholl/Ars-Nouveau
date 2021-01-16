@@ -9,6 +9,8 @@
     "minecraft:shroomlight",
     "minecraft:vine",
     "minecraft:weeping_vines",
-    "minecraft:twisting_vines"
+    "minecraft:twisting_vines",
+	"minecraft:pumpkin",
+	"minecraft:melon"
   ]
 }
