@@ -319,5 +319,10 @@
 	"block.ars_nouveau.archwood_stairs":"Archwood Stairs",
 	"block.ars_nouveau.mana_gem_block":"Mana Gem Block",
 	"item.ars_nouveau.glyph_crush":"Glyph: Crush",
-	"item.ars_nouveau.glyph_cut":"Glyph: Cut"
+	"item.ars_nouveau.glyph_cut":"Glyph: Cut",
+	"item.ars_nouveau.spell_bow": "Enchanter's Bow",
+	"item.ars_nouveau.split_arrow": "Augment Arrow: Split",
+	"item.ars_nouveau.amplify_arrow": "Augment Arrow: Amplify",
+	"item.ars_nouveau.pierce_arrow": "Augment Arrow: Pierce"
+
 }

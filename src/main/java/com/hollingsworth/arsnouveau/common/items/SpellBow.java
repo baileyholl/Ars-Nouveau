@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellBowRenderer;
 import com.hollingsworth.arsnouveau.common.entity.EntitySpellArrow;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -124,6 +125,8 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
                     spellArrow.spellResolver = new SpellResolver(new SpellContext(caster.getSpell(), playerentity)).withSilent(true);
                     abstractarrowentity = spellArrow;
                     spellArrow.spellResolver.expendMana(playerentity);
+                    if(!caster.getSpell().recipe.isEmpty())
+                        spellArrow.pierceLeft = caster.getSpell().getBuffsAtIndex(0, playerentity, AugmentPierce.class);
                     if(isSpellArrow)
                         spellArrow.setDamage(0);
                 }else if(arrowitem instanceof SpellArrow){
