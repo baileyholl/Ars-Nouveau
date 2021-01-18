@@ -6,4 +6,6 @@ public class SpellBookRenderer extends FixedGeoItemRenderer<Wand> {
     public SpellBookRenderer(){
         super(new SpellBookModel());
     }
+
+
 }
