@@ -45,33 +45,53 @@ public class  WildenHunter extends CreatureEntity implements IAnimatable, IAnima
 
     @Override
     public void startAnimation(int arg) {
+        try{
+                        AnimationController controller = this.manager.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("attackController");
+
+//            if(controller.getCurrentAnimation() != null && controller.getCurrentAnimation().animationName.equals("attack")) {
+//                System.out.println("cancalling");
+//                return;
+//            }
+            controller.markNeedsReload();
+            controller.setAnimation(new AnimationBuilder().addAnimation("attack"));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         System.out.println("got arg" + arg);
         if(arg == Animations.ATTACK.ordinal()){
 //            AnimationController controller = this.manager.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("attackController");
-//            if(controller.getCurrentAnimation().animationName == "attack")
+//
+//            if(controller.getCurrentAnimation() != null && controller.getCurrentAnimation().animationName.equals("attack")) {
+//                System.out.println("cancalling");
 //                return;
+//            }
 //            controller.markNeedsReload();
 //            controller.setAnimation(new AnimationBuilder().addAnimation("attack"));
-//            System.out.println("playing anim");
+            System.out.println("playing anim");
         }
     }
 
     private <E extends Entity> PlayState attackPredicate(AnimationEvent event) {
-        if (limbSwingAmount > 0.1) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("running", true));
-            return PlayState.CONTINUE;
+        try{
+            if (limbSwingAmount > 0.1) {
+                //event.getController().setAnimation(new AnimationBuilder().addAnimation("running_legs", true));
+                return PlayState.CONTINUE;
+            }else if(this.isAggressive()){
+                // event.getController().setAnimation(new AnimationBuilder().addAnimation("attack"));
+                return PlayState.CONTINUE;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
-         if(this.isAggressive()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("attack").addAnimation("attack"));
-             return PlayState.CONTINUE;
-        }
-        event.getController().setAnimation(new AnimationBuilder().addAnimation("idle", false));
+
+        //event.getController().setAnimation(new AnimationBuilder().addAnimation("idle", false));
+
         return PlayState.CONTINUE;
     }
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController(this, "attackController", 0, this::attackPredicate));
+        animationData.addAnimationController(new AnimationController(this, "attackController", 1, this::attackPredicate));
     }
 
     @Override
