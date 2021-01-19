@@ -1,12 +1,12 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
-import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellBowRenderer;
 import com.hollingsworth.arsnouveau.common.entity.EntitySpellArrow;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -18,6 +18,7 @@ import net.minecraft.item.*;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
@@ -212,8 +213,6 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
         return ARROWS.or(i -> i.getItem() instanceof SpellArrow);
     }
 
-
-
     @Override
     public void registerControllers(AnimationData data) {
 
@@ -234,5 +233,24 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
         getInformation(stack, worldIn, tooltip2, flagIn);
         super.addInformation(stack, worldIn, tooltip2, flagIn);
+    }
+
+    @Override
+    public boolean isScribedSpellValid(ISpellCaster caster, PlayerEntity player, Hand hand, ItemStack stack, Spell spell) {
+        return spell.recipe.stream().noneMatch(s -> s instanceof AbstractCastMethod);
+    }
+
+    @Override
+    public void sendInvalidMessage(PlayerEntity player) {
+        PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.bow.invalid"));
+    }
+
+    @Override
+    public boolean setSpell(ISpellCaster caster, PlayerEntity player, Hand hand, ItemStack stack, Spell spell) {
+        ArrayList<AbstractSpellPart> recipe = new ArrayList<>();
+        recipe.add(new MethodProjectile());
+        recipe.addAll(spell.recipe);
+        spell.recipe = recipe;
+        return ICasterTool.super.setSpell(caster, player, hand, stack, spell);
     }
 }
