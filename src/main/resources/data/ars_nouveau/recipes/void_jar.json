@@ -25,5 +25,7 @@
       "item": "minecraft:glass_bottle"
     }
   ],
-  "output": "ars_nouveau:void_jar"
+  "output": {
+    "item": "ars_nouveau:void_jar"
+  }
 }

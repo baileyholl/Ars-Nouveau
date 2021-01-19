@@ -2,25 +2,25 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "item_1": [
     {
-      "item": "ars_nouveau:mana_gem"
+      "item": "ars_nouveau:mana_gem_block"
     }
   ],
   "item_2": [
     {
-      "item": "ars_nouveau:mana_gem"
+      "item": "minecraft:gold_block"
     }
   ],
   "item_3": [
     {
-      "item": "minecraft:gold_ingot"
+      "item": "ars_nouveau:glyph_projectile"
     }
   ],
   "reagent": [
     {
-      "item": "minecraft:stick"
+      "item": "minecraft:bow"
     }
   ],
   "output": {
-    "item": "ars_nouveau:dominion_wand"
+    "item": "ars_nouveau:spell_bow"
   }
 }

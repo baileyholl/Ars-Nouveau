@@ -45,5 +45,7 @@
       "item": "ars_nouveau:dull_trinket"
     }
   ],
-  "output": "ars_nouveau:amulet_of_mana_boost"
+  "output": {
+    "item": "ars_nouveau:amulet_of_mana_boost"
+  }
 }

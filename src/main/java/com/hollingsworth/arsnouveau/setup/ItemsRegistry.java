@@ -99,6 +99,11 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.WIXIE_CHARM)public static WixieCharm WIXIE_CHARM;
     @ObjectHolder(LibItemNames.WIXIE_SHARD)public static ModItem WIXIE_SHARD;
     @ObjectHolder(LibItemNames.RITUAL_BOOK)public static RitualBook RITUAL_BOOK;
+    @ObjectHolder(LibItemNames.SPELL_BOW)public static SpellBow SPELL_BOW;
+
+    @ObjectHolder(LibItemNames.AMPLIFY_ARROW)public static SpellArrow AMPLIFY_ARROW;
+    @ObjectHolder(LibItemNames.SPLIT_ARROW)public static SpellArrow SPLIT_ARROW;
+    @ObjectHolder(LibItemNames.PIERCE_ARROW)public static SpellArrow PIERCE_ARROW;
 
 
     public static Food MANA_BERRY_FOOD = (new Food.Builder()).hunger(2).saturation(0.1F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).setAlwaysEdible().build();

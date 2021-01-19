@@ -45,5 +45,7 @@
       "item": "minecraft:dispenser"
     }
   ],
-  "output": "ars_nouveau:spell_turret"
+  "output": {
+    "item": "ars_nouveau:spell_turret"
+  }
 }

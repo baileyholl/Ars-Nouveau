@@ -45,5 +45,7 @@
       "item": "ars_nouveau:ring_of_lesser_discount"
     }
   ],
-  "output": "ars_nouveau:ring_of_greater_discount"
+  "output": {
+    "item": "ars_nouveau:ring_of_greater_discount"
+  }
 }

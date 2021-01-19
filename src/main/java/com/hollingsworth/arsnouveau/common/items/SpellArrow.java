@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.mana.IMana;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.entity.EntitySpellArrow;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
@@ -53,6 +54,7 @@ public class SpellArrow extends ArrowItem {
         modifySpell(spell);
         spell.setCost(spell.getCastingCost() - part.getManaCost() * numParts);
         spellArrow.spellResolver = new SpellResolver(new SpellContext(spell, entity)).withSilent(true);
+        spellArrow.pierceLeft = spell.getBuffsAtIndex(0, shooter, AugmentPierce.class);
         return spellArrow;
     }
 
