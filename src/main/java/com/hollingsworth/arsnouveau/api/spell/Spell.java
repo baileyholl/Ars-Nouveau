@@ -15,7 +15,7 @@ public class Spell {
     private int cost;
 
     public Spell(List<AbstractSpellPart> recipe){
-        this.recipe = recipe;
+        this.recipe = recipe == null ? new ArrayList<>() : recipe; // Safe check for tiles initializing a null
         this.cost = getInitialCost();
     }
 
@@ -52,6 +52,8 @@ public class Spell {
 
     private int getInitialCost(){
         int cost = 0;
+        if(recipe == null)
+            return cost;
         for (int i = 0; i < recipe.size(); i++) {
             AbstractSpellPart spell = recipe.get(i);
             if (!(spell instanceof AbstractAugment)) {
