@@ -18,7 +18,8 @@ public class SpellCaster implements ISpellCaster{
 
     @Override
     public Spell getSpell() {
-        return spells.get(getCurrentSlot());
+
+        return spells.getOrDefault(getCurrentSlot(), new Spell());
     }
 
     @Override

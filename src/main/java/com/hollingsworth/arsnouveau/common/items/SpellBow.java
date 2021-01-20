@@ -253,4 +253,9 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
         spell.recipe = recipe;
         return ICasterTool.super.setSpell(caster, player, hand, stack, spell);
     }
+
+    @Override
+    public int getItemEnchantability() {
+        return super.getItemEnchantability();
+    }
 }
