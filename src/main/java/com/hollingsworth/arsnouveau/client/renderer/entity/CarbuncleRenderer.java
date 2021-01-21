@@ -17,6 +17,7 @@ public class CarbuncleRenderer extends GeoEntityRenderer<EntityCarbuncle> {
     public CarbuncleRenderer(EntityRendererManager manager) {
         super(manager,new CarbuncleModel());
         this.addLayer(new CarbuncleHeldItemLayer(this));
+        this.addLayer(new ModelLayerRenderer(this, new CarbuncleShadesModel()));
     }
 
     @Override
