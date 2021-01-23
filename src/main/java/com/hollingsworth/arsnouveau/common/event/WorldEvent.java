@@ -26,6 +26,7 @@ import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.Arrays;
@@ -143,8 +144,12 @@ public class WorldEvent {
     @SubscribeEvent
     public static void worldTick(TickEvent.WorldTickEvent e) {
         World world = e.world;
-        if (world.isRemote || e.phase != TickEvent.Phase.END)
+        if (e.side != LogicalSide.SERVER || world.isRemote || e.phase != TickEvent.Phase.END)
             return;
+        System.out.println(e.phase);
+        System.out.println(e.type);
+        System.out.println(e.side);
+        System.out.println(world.getGameTime());
         EventQueue.getInstance().tick();
     }
 
