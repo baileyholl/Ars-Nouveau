@@ -190,7 +190,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     }
 
     public boolean enoughManaForTask(){
-        if(!(world.getTileEntity(crystalPos) instanceof SummoningCrystalTile || spellRecipe == null || spellRecipe.size() == 0))
+        if(!(world.getTileEntity(crystalPos) instanceof SummoningCrystalTile) || spellRecipe == null || spellRecipe.isEmpty())
             return false;
         return ((SummoningCrystalTile) world.getTileEntity(crystalPos)).enoughMana(spellRecipe);
     }
