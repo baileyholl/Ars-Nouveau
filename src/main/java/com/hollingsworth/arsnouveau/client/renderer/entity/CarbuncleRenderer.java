@@ -6,6 +6,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
+import software.bernie.geckolib3.geo.exception.GeoModelException;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 public class CarbuncleRenderer extends GeoEntityRenderer<EntityCarbuncle> {
@@ -27,7 +28,12 @@ public class CarbuncleRenderer extends GeoEntityRenderer<EntityCarbuncle> {
 
     @Override
     public void render(EntityCarbuncle entity, float entityYaw, float p_225623_3_, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int p_225623_6_) {
-        super.render(entity, entityYaw, p_225623_3_, matrixStack, iRenderTypeBuffer, p_225623_6_);
+        try {
+            super.render(entity, entityYaw, p_225623_3_, matrixStack, iRenderTypeBuffer, p_225623_6_);
+        }catch (GeoModelException e){
+            System.out.println("Missing model detected, restart client.");
+            e.printStackTrace();
+        }
     }
 
 
