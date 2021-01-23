@@ -7,7 +7,7 @@
   ],
   "key": {
     "x": {
-      "item": "minecraft:glass"
+      "tag": "forge:glass"
     },
     "y": {
       "item": "ars_nouveau:arcane_stone"

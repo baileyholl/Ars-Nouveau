@@ -7,10 +7,10 @@
   ],
   "key": {
     "x": {
-      "item": "minecraft:iron_ingot"
+      "tag": "forge:ingots/iron"
     },
     "y": {
-      "item": "minecraft:diamond"
+      "tag": "forge:gems/diamond"
     },
     "z": {
       "item": "ars_nouveau:arcane_stone"

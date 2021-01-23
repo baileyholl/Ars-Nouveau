@@ -10,7 +10,7 @@
       "item": "ars_nouveau:arcane_stone"
     },
     "y": {
-      "item": "minecraft:gold_ingot"
+      "tag": "forge:ingots/gold"
     },
     "z": {
       "tag": "forge:gems/mana"
