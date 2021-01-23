@@ -13,7 +13,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.gen.GenerationStage;
@@ -142,14 +141,11 @@ public class WorldEvent {
     }
 
     @SubscribeEvent
-    public static void worldTick(TickEvent.WorldTickEvent e) {
-        World world = e.world;
-        if (e.side != LogicalSide.SERVER || world.isRemote || e.phase != TickEvent.Phase.END)
+    public static void worldTick(TickEvent.ServerTickEvent e) {
+
+        if (e.side != LogicalSide.SERVER || e.phase != TickEvent.Phase.END)
             return;
-        System.out.println(e.phase);
-        System.out.println(e.type);
-        System.out.println(e.side);
-        System.out.println(world.getGameTime());
+
         EventQueue.getInstance().tick();
     }
 

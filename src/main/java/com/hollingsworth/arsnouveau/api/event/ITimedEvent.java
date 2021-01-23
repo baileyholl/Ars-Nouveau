@@ -11,4 +11,5 @@ public interface ITimedEvent {
      * If this event should be removed from the queue
      */
     boolean isExpired();
+
 }
