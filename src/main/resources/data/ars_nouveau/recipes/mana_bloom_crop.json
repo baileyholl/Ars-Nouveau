@@ -25,5 +25,7 @@
       "item": "minecraft:wheat_seeds"
     }
   ],
-  "output": "ars_nouveau:mana_bloom_crop"
+  "output": {
+    "item": "ars_nouveau:mana_bloom_crop"
+  }
 }

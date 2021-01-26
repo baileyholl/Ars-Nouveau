@@ -65,4 +65,5 @@ public class LibItemNames {
     public static final String SPELL_BOW = "spell_bow";
     public static final String PIERCE_ARROW = "pierce_arrow";
     public static final String AMPLIFY_ARROW = "amplify_arrow";
+    public static final String SPLIT_ARROW = "split_arrow";
 }

@@ -45,5 +45,7 @@
       "item": "ars_nouveau:mundane_belt"
     }
   ],
-  "output": "ars_nouveau:belt_of_levitation"
+  "output": {
+    "item": "ars_nouveau:belt_of_levitation"
+  }
 }

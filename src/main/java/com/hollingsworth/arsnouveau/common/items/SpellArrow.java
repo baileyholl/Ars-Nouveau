@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.mana.IMana;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.entity.EntitySpellArrow;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.LivingEntity;
@@ -24,11 +25,18 @@ public class SpellArrow extends ArrowItem {
 
     public AbstractSpellPart part;
     public int numParts;
+
     public SpellArrow(String registryName, AbstractAugment augment, int numParts) {
         super(ItemsRegistry.defaultItemProperties());
         setRegistryName(ArsNouveau.MODID, registryName);
         this.part = augment;
         this.numParts = numParts;
+    }
+
+    public void modifySpell(Spell spell){
+        for(int i = 0; i < numParts; i++){
+            spell.recipe.add(part);
+        }
     }
 
     @Override
@@ -43,10 +51,10 @@ public class SpellArrow extends ArrowItem {
         ICasterTool caster = (ICasterTool) entity.getHeldItemMainhand().getItem();
         ISpellCaster spellCaster = caster.getSpellCaster(entity.getHeldItemMainhand());
         Spell spell = spellCaster.getSpell();
-        for(int i = 0; i < numParts; i++){
-            spell.recipe.add(part);
-        }
+        modifySpell(spell);
+        spell.setCost(spell.getCastingCost() - part.getManaCost() * numParts);
         spellArrow.spellResolver = new SpellResolver(new SpellContext(spell, entity)).withSilent(true);
+        spellArrow.pierceLeft = spell.getBuffsAtIndex(0, shooter, AugmentPierce.class);
         return spellArrow;
     }
 
@@ -54,6 +62,7 @@ public class SpellArrow extends ArrowItem {
 
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        tooltip.add(new StringTextComponent("Augments spells when used with an Enchanter's Bow."));
         Spell spell = new Spell();
         for(int i = 0; i < numParts; i++){
             spell.recipe.add(part);

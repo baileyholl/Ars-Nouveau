@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.data.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -16,6 +15,7 @@ import net.minecraft.tags.ITag;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.IItemProvider;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Consumer;
@@ -46,11 +46,6 @@ public class Recipes extends RecipeProvider {
                    .addIngredient(Items.BOOK).build(consumer);
 
 
-            ShapelessRecipeBuilder.shapelessRecipe(BlockRegistry.ARCANE_STONE).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
-                    .addIngredient(ItemsRegistry.arcaneBrick, 1)
-                    .build(consumer, new ResourceLocation(ArsNouveau.MODID, "stone_2"));
-
-
             ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.magicClay).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                     .addIngredient(Items.CLAY_BALL)
                     .addIngredient(MANA_GEM, 1)
@@ -58,7 +53,7 @@ public class Recipes extends RecipeProvider {
                     .build(consumer);
             ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.marvelousClay).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                     .addIngredient(ItemsRegistry.magicClay)
-                    .addIngredient(Items.GOLD_INGOT, 1)
+                    .addIngredient(Tags.Items.INGOTS_GOLD)
                     .addIngredient(MANA_GEM, 1)
                     .addIngredient(Items.LAPIS_LAZULI, 2)
                     .build(consumer);
@@ -92,12 +87,14 @@ public class Recipes extends RecipeProvider {
             ShapedRecipeBuilder.shapedRecipe(BlockRegistry.MANA_JAR).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                     .patternLine("xyx")
                     .patternLine("x x")
-                    .patternLine("xxx").key('x', Blocks.GLASS).key('y', BlockRegistry.ARCANE_STONE).build(consumer);;
+                    .patternLine("xxx").key('x', Tags.Items.GLASS).key('y', BlockRegistry.ARCANE_STONE).build(consumer);
 
             ShapedRecipeBuilder.shapedRecipe(BlockRegistry.GLYPH_PRESS_BLOCK).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                     .patternLine("xxx")
                     .patternLine("xyx")
-                    .patternLine("aba").key('x', BlockRegistry.ARCANE_STONE).key('y', Items.PISTON).key('a', Items.STONE).key('b', Items.IRON_BLOCK).build(consumer);;
+                    .patternLine("aba").key('x', BlockRegistry.ARCANE_STONE).key('y', Items.PISTON)
+                    .key('a', Tags.Items.STONE).key('b', Tags.Items.STORAGE_BLOCKS_IRON).build(consumer);
+
             ShapedRecipeBuilder.shapedRecipe(BlockRegistry.ARCANE_PEDESTAL).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                     .patternLine("xxx")
                     .patternLine(" x ")
@@ -106,22 +103,28 @@ public class Recipes extends RecipeProvider {
             ShapedRecipeBuilder.shapedRecipe(BlockRegistry.ENCHANTING_APP_BLOCK).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                     .patternLine("xyx")
                     .patternLine("x x")
-                    .patternLine("zzz").key('x', Items.IRON_INGOT).key('y', Items.DIAMOND).key('z', BlockRegistry.ARCANE_STONE).build(consumer);;
+                    .patternLine("zzz").key('x', Tags.Items.INGOTS_IRON)
+                    .key('y', Tags.Items.GEMS_DIAMOND)
+                    .key('z', BlockRegistry.ARCANE_STONE).build(consumer);;
+
             ShapedRecipeBuilder.shapedRecipe(ItemsRegistry.mundaneBelt).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                     .patternLine("   ")
                     .patternLine("xyx")
-                    .patternLine(" x ").key('x', Items.LEATHER).key('y', MANA_GEM).build(consumer);;
+                    .patternLine(" x ")
+                    .key('x', Tags.Items.LEATHER)
+                    .key('y', MANA_GEM).build(consumer);;
+
             ShapedRecipeBuilder.shapedRecipe(ItemsRegistry.ringOfPotential).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                     .patternLine("xxx")
                     .patternLine("xyx")
-                    .patternLine("xxx").key('x', Items.IRON_NUGGET).key('y', MANA_GEM).build(consumer);;
+                    .patternLine("xxx").key('x', Tags.Items.NUGGETS_IRON).key('y', MANA_GEM).build(consumer);;
 
             ShapedRecipeBuilder.shapedRecipe(BlockRegistry.MANA_CONDENSER).addCriterion("has_journal",
                     InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                     .patternLine("xxx")
                     .patternLine(" y ")
                     .patternLine("zzz")
-                    .key('x', Items.IRON_INGOT)
+                    .key('x',  Tags.Items.INGOTS_IRON)
                     .key('y', Items.HOPPER)
                     .key('z', BlockRegistry.ARCANE_STONE).build(consumer);;
 
@@ -139,32 +142,32 @@ public class Recipes extends RecipeProvider {
             ShapedRecipeBuilder.shapedRecipe(BlockRegistry.SCRIBES_BLOCK).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                     .patternLine("xxx")
                     .patternLine("yzy")
-                    .patternLine("y y").key('x',Ingredient.fromTag(ItemTags.WOODEN_SLABS)).key('y', Items.STICK).key('z', Ingredient.fromTag(ItemTags.LOGS)).build(consumer);
+                    .patternLine("y y").key('x',Ingredient.fromTag(ItemTags.WOODEN_SLABS))
+                    .key('y', Items.STICK)
+                    .key('z', Ingredient.fromTag(ItemTags.LOGS)).build(consumer);
 
             ShapedRecipeBuilder.shapedRecipe(ItemsRegistry.dullTrinket).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                     .patternLine(" x ")
                     .patternLine("xyx")
-                    .patternLine(" x ").key('x', Items.IRON_NUGGET).key('y',MANA_GEM).build(consumer);
+                    .patternLine(" x ").key('x',  Tags.Items.NUGGETS_IRON).key('y',MANA_GEM).build(consumer);
 
             ShapedRecipeBuilder.shapedRecipe(BlockRegistry.ARCANE_CORE_BLOCK).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                     .patternLine("xxx")
                     .patternLine("y y")
-                    .patternLine("xxx").key('y', Items.GOLD_INGOT).key('x', BlockRegistry.ARCANE_STONE).build(consumer);
+                    .patternLine("xxx").key('y',  Tags.Items.INGOTS_GOLD).key('x', BlockRegistry.ARCANE_STONE).build(consumer);
 
 
             ShapedRecipeBuilder.shapedRecipe(BlockRegistry.ARCANE_STONE, 8).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                     .patternLine("xxx")
                     .patternLine("xyx")
-                    .patternLine("xxx").key('y',MANA_GEM).key('x', Items.STONE).build(consumer);
+                    .patternLine("xxx").key('y',MANA_GEM).key('x',  Tags.Items.STONE).build(consumer);
 
-            ShapedRecipeBuilder.shapedRecipe(ItemsRegistry.manaGem, 1).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
-                    .patternLine("xxx")
-                    .patternLine("xxx")
-                    .patternLine("xxx").key('x', ItemsRegistry.arcaneBrick).build(consumer, new ResourceLocation(ArsNouveau.MODID, "mana_gem2"));
             ShapedRecipeBuilder.shapedRecipe(BlockRegistry.CRYSTALLIZER_BLOCK.asItem(), 1).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                     .patternLine("yxy")
                     .patternLine("yzy")
-                    .patternLine("yxy").key('x', BlockRegistry.ARCANE_STONE).key('y', Items.GOLD_INGOT).key('z', MANA_GEM).build(consumer);
+                    .patternLine("yxy").key('x', BlockRegistry.ARCANE_STONE)
+                    .key('y', Tags.Items.INGOTS_GOLD)
+                    .key('z', MANA_GEM).build(consumer);
 
             makeStonecutter(consumer, BlockRegistry.ARCANE_STONE, BlockRegistry.AB_ALTERNATE, LibBlockNames.ARCANE_STONE);
             makeStonecutter(consumer, BlockRegistry.ARCANE_STONE, BlockRegistry.ARCANE_BRICKS, LibBlockNames.ARCANE_STONE);

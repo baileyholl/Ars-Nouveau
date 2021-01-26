@@ -16,7 +16,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 
-version = '1.10.6'
+version = '1.11.1'
 group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'ars_nouveau-1.16.4'
 
@@ -112,7 +112,6 @@ repositories {
     maven { url 'https://repo.repsy.io/mvn/gandiber/geckolib' }
 
 }
-
 dependencies {
 
     minecraft 'net.minecraftforge:forge:1.16.4-35.1.13'
@@ -125,6 +124,8 @@ dependencies {
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.1.0:api")
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.1.0")
     implementation fg.deobf('software.bernie.geckolib:forge-1.16.4-geckolib:3.0.0')
+    
+    compileOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.4:7.1.0.84")
 
 }
 

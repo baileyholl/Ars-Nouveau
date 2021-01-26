@@ -45,5 +45,7 @@
       "item": "ars_nouveau:mana_gem_block"
     }
   ],
-  "output": "ars_nouveau:summoning_crystal"
+  "output": {
+    "item": "ars_nouveau:summoning_crystal"
+  }
 }

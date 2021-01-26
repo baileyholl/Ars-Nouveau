@@ -20,5 +20,7 @@
       "item": "minecraft:stick"
     }
   ],
-  "output": "ars_nouveau:dominion_wand"
+  "output": {
+    "item": "ars_nouveau:dominion_wand"
+  }
 }

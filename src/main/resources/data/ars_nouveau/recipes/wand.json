@@ -45,5 +45,7 @@
       "item": "ars_nouveau:archwood_planks"
     }
   ],
-  "output": "ars_nouveau:wand"
+  "output": {
+    "item": "ars_nouveau:wand"
+  }
 }

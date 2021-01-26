@@ -59,7 +59,7 @@ public class MethodProjectile extends AbstractCastMethod {
         float velocity = 1.0f + getBuffCount(augments, AugmentAccelerate.class);
 
         for(EntityProjectileSpell proj : projectiles) {
-            proj.shoot(shooter, shooter.rotationPitch, shooter.rotationYaw, 0.0F, velocity, .80F);
+            proj.shoot(shooter, shooter.rotationPitch, shooter.rotationYaw, 0.0F, velocity, 0.8f);
             ParticleColor.IntWrapper wrapper = context.colors;
             wrapper.makeVisible();
             proj.setColor(wrapper);

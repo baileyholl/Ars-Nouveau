@@ -1,0 +1,27 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "item_1": [
+    {
+      "item": "ars_nouveau:mana_gem_block"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:mana_gem_block"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "ars_nouveau:glyph_pierce"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "minecraft:arrow"
+    }
+  ],
+  "output": {
+    "item": "ars_nouveau:pierce_arrow",
+    "count": 32
+  }
+}

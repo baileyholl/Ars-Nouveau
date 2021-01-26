@@ -1,0 +1,27 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "item_1": [
+    {
+      "item": "ars_nouveau:mana_gem_block"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:mana_gem_block"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "ars_nouveau:glyph_split"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "minecraft:arrow"
+    }
+  ],
+  "output": {
+    "item": "ars_nouveau:split_arrow",
+    "count": 32
+  }
+}

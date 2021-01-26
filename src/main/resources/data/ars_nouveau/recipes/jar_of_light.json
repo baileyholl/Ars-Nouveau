@@ -45,5 +45,7 @@
       "item": "minecraft:glass_bottle"
     }
   ],
-  "output": "ars_nouveau:jar_of_light"
+  "output": {
+    "item": "ars_nouveau:jar_of_light"
+  }
 }

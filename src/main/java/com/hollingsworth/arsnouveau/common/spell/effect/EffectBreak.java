@@ -41,6 +41,15 @@ public class EffectBreak extends AbstractEffect {
         return 10;
     }
 
+    public ItemStack getStack(LivingEntity shooter){
+        if(isRealPlayer(shooter)){
+            ItemStack mainHand = getPlayer(shooter, (ServerWorld)shooter.world).getHeldItemMainhand();
+            return mainHand.isEmpty() ? getPlayer(shooter, (ServerWorld)shooter.world).getHeldItemOffhand() : mainHand;
+        }
+
+        return new ItemStack(Items.DIAMOND_PICKAXE);
+    }
+
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(!world.isRemote && rayTraceResult instanceof BlockRayTraceResult){
@@ -56,7 +65,8 @@ public class EffectBreak extends AbstractEffect {
                 if(!canBlockBeHarvested(augments, world, pos1) || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, pos1)){
                     continue;
                 }
-                ItemStack stack = isRealPlayer(shooter) ? getPlayer(shooter, (ServerWorld)world).getHeldItemMainhand() : new ItemStack(Items.DIAMOND_PICKAXE);
+                ItemStack stack = getStack(shooter);
+
                 Map<Enchantment, Integer> map =  EnchantmentHelper.getEnchantments(stack);
 
                 if (hasBuff(augments, AugmentExtract.class)) {

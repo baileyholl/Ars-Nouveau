@@ -45,5 +45,7 @@
       "item": "ars_nouveau:mana_jar"
     }
   ],
-  "output": "ars_nouveau:arcane_relay"
+  "output": {
+    "item": "ars_nouveau:arcane_relay"
+  }
 }

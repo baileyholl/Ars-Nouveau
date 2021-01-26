@@ -45,5 +45,7 @@
       "item": "ars_nouveau:sylph_shards"
     }
   ],
-  "output": "ars_nouveau:sylph_charm"
+  "output": {
+    "item": "ars_nouveau:sylph_charm"
+  }
 }

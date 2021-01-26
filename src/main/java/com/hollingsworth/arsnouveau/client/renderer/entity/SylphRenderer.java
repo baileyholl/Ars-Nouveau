@@ -12,6 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import software.bernie.geckolib3.core.processor.IBone;
+import software.bernie.geckolib3.geo.exception.GeoModelException;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import java.util.Random;
@@ -28,24 +29,29 @@ public class SylphRenderer extends GeoEntityRenderer<EntitySylph> {
 
     @Override
     public void render(EntitySylph entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
-        super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-        World world = entityIn.getEntityWorld();
-        Random rand = ParticleUtil.r;
-        Vector3d particlePos = entityIn.getPositionVec();
+        try {
+            super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
+            World world = entityIn.getEntityWorld();
+            Random rand = ParticleUtil.r;
+            Vector3d particlePos = entityIn.getPositionVec();
 
-        IBone sylph = ((SylphModel)getGeoModelProvider()).getBone("sylph");
-        IBone propellers = ((SylphModel)getGeoModelProvider()).getBone("propellers");
+            IBone sylph = ((SylphModel) getGeoModelProvider()).getBone("sylph");
+            IBone propellers = ((SylphModel) getGeoModelProvider()).getBone("propellers");
 
-        float offsetY = sylph.getPositionY()/9f;
-        float roteAngle = propellers.getRotationY() / 4;
+            float offsetY = sylph.getPositionY() / 9f;
+            float roteAngle = propellers.getRotationY() / 4;
 
-        if(rand.nextInt(5) == 0){
-            for(int i =0; i < 5; i++){
-                world.addParticle(ParticleSparkleData.createData(new ParticleColor(52,255,36), 0.05f, 60),
-                        particlePos.getX()  + Math.cos(roteAngle)/2 , particlePos.getY() +0.5+ offsetY , particlePos.getZ()  + Math.sin(roteAngle)/2,
-                        0, 0,0);
+            if (rand.nextInt(5) == 0) {
+                for (int i = 0; i < 5; i++) {
+                    world.addParticle(ParticleSparkleData.createData(new ParticleColor(52, 255, 36), 0.05f, 60),
+                            particlePos.getX() + Math.cos(roteAngle) / 2, particlePos.getY() + 0.5 + offsetY, particlePos.getZ() + Math.sin(roteAngle) / 2,
+                            0, 0, 0);
+                }
+
             }
-
+        }catch (GeoModelException e){
+            System.out.println("Missing model detected, restart client.");
+            e.printStackTrace();
         }
 
     }

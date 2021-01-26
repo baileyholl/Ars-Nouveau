@@ -153,6 +153,9 @@ public class SummoningCrystalTile extends AbstractManaTile implements IAnimatabl
 
 
     public boolean enoughMana(List<AbstractSpellPart> spellParts){
+        if(spellParts == null)
+            return false;
+
         return enoughMana(new Spell(spellParts).getCastingCost() / 4);
     }
 
