@@ -1,0 +1,20 @@
+{
+  "name": "피해",
+  "icon": "ars_nouveau:glyph_harm",
+  "category": "spells_1",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "text",
+      "text": "기본 주문입니다. 목표물에 피해를 입힙니다. 증폭으로 피해를 늘리거나 시간 연장으로 독 디버프를 줄 수 있습니다.  각주: 지연없이 중첩된 피해 주문들은 피격 시 무적시간으로 인해 적용되지 않습니다."
+    },
+    {
+      "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_harm",
+      "tier": "1",
+      "mana_cost": "낮음",
+      "clay_type": "ars_nouveau:magic_clay",
+      "reagent": "minecraft:iron_sword"
+    }
+  ]
+}

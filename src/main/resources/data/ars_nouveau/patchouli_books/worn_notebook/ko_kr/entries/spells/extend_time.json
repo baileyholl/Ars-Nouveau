@@ -1,0 +1,20 @@
+{
+  "name": "시간 연장",
+  "icon": "ars_nouveau:glyph_extend_time",
+  "category": "spells_2",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "text",
+      "text": "버프, 송곳니, 소환술을 포함한 주문의 지속 시간을 늘립니다."
+    },
+    {
+      "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_extend_time",
+      "tier": "2",
+      "mana_cost": "낮음",
+      "clay_type": "ars_nouveau:marvelous_clay",
+      "reagent": "minecraft:clock"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "분쇄",
+  "icon": "ars_nouveau:glyph_crush",
+  "category": "spells_2",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "text",
+      "text": "돌을 자갈로, 자갈을 모래로 만듭니다. 또한 수영 중인 개체에게 추가적인 피해를 입힙니다."
+    },
+    {
+      "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_crush",
+      "tier": "2",
+      "mana_cost": "중간",
+      "clay_type": "ars_nouveau:marvelous_clay",
+      "reagent": "minecraft:grindstone"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "name": "블록 설치",
+  "icon": "ars_nouveau:glyph_place_block",
+  "category": "spells_1",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "text",
+      "text": "발동자의 인벤토리에 있는 블록을 설치합니다. 플레이어가 발동할 시, 핫바에 있는 블록이 우선적으로 설치됩니다."
+    },
+    {
+      "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_place_block",
+      "tier": "1",
+      "mana_cost": "낮음",
+      "clay_type": "ars_nouveau:magic_clay",
+      "reagent": "minecraft:dispenser"
+    }
+  ]
+}

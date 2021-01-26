@@ -1,0 +1,20 @@
+{
+  "name": "송곳니",
+  "icon": "ars_nouveau:glyph_fangs",
+  "category": "spells_3",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "text",
+      "text": "주문이 목표한 방향으로 소환사 송곳니를 소환합니다."
+    },
+    {
+      "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_fangs",
+      "tier": "3",
+      "mana_cost": "중간",
+      "clay_type": "ars_nouveau:mythical_clay",
+      "reagent": "minecraft:prismarine_shard"
+    }
+  ]
+}

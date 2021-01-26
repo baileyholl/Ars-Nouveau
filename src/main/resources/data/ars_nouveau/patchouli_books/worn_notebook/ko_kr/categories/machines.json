@@ -1,0 +1,6 @@
+{
+	"name": "기계",
+	"description": "마법 기계들.",
+	"icon": "ars_nouveau:glyph_press",
+	"sortnum":5
+}

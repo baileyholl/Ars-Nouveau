@@ -1,0 +1,20 @@
+{
+  "name": "불꽃",
+  "icon": "ars_nouveau:glyph_flare",
+  "category": "spells_2",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "text",
+      "text": "불타는 개체에 사용 시, 추가 피해를 입히며 주변의 개체에 불을 붙이고 피해를 줍니다. 피해 주문보다 상당히 더 많은 피해를 줍니다. 시간 연장, 증폭, 광역으로 보강될 수 있습니다."
+    },
+    {
+      "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_flare",
+      "tier": "2",
+      "mana_cost": "중간",
+      "clay_type": "ars_nouveau:marvelous_clay",
+      "reagent": "ars_nouveau:glyph_ignite"
+    }
+  ]
+}

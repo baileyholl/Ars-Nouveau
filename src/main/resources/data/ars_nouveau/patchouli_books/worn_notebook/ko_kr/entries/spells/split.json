@@ -1,0 +1,20 @@
+{
+  "name": "분열",
+  "icon": "ars_nouveau:glyph_split",
+  "category": "spells_3",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "text",
+      "text": "여러 개의 투사체를 한 번에 발사합니다. 각 투사체는 모두 주문을 발동할 수 있습니다."
+    },
+    {
+      "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_split",
+      "tier": "3",
+      "mana_cost": "중간",
+      "clay_type": "ars_nouveau:mythical_clay",
+      "reagent": "minecraft:stonecutter"
+    }
+  ]
+}

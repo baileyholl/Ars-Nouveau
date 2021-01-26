@@ -1,0 +1,20 @@
+{
+  "name": "벡스 소환",
+  "icon": "ars_nouveau:glyph_summon_vex",
+  "category": "spells_3",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "text",
+      "text": "주위의 적대적인 대상을 공격하는 벡스 3마리를 소환합니다. 벡스는 짧은 시간 동안만 존재하고 사라지지만, 시간 연장을 통해 지속 시간을 늘릴 수 있습니다."
+    },
+    {
+      "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_summon_vex",
+      "tier": "3",
+      "mana_cost": "높음",
+      "clay_type": "ars_nouveau:mythical_clay",
+      "reagent": "minecraft:totem_of_undying"
+    }
+  ]
+}

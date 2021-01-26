@@ -1,0 +1,20 @@
+{
+  "name": "엔더 인벤토리 접근",
+  "icon": "ars_nouveau:glyph_ender_inventory",
+  "category": "spells_2",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "text",
+      "text": "어디서나 엔더 상자를 열 수 있습니다."
+    },
+    {
+      "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_ender_inventory",
+      "tier": "2",
+      "mana_cost": "중간",
+      "clay_type": "ars_nouveau:marvelous_clay",
+      "reagent": "minecraft:ender_chest"
+    }
+  ]
+}

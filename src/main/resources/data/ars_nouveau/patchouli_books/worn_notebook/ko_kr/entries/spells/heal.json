@@ -1,0 +1,20 @@
+{
+  "name": "치유",
+  "icon": "ars_nouveau:glyph_heal",
+  "category": "spells_2",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "text",
+      "text": "대상의 체력을 약간 치유합니다. 시간 연장과 함께 사용 시, 재생 버프가 최대 5단계까지 적용됩니다."
+    },
+    {
+      "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_heal",
+      "tier": "2",
+      "mana_cost": "중간",
+      "clay_type": "ars_nouveau:marvelous_clay",
+      "reagent": "minecraft:glistering_melon_slice"
+    }
+  ]
+}

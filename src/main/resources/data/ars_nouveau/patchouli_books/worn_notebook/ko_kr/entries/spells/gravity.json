@@ -1,0 +1,20 @@
+{
+  "name": "중력",
+  "icon": "ars_nouveau:glyph_gravity",
+  "category": "spells_2",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "text",
+      "text": "블록과 개체가 떨어지게 합니다."
+    },
+    {
+      "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_gravity",
+      "tier": "2",
+      "mana_cost": "낮음",
+      "clay_type": "ars_nouveau:marvelous_clay",
+      "reagent": "minecraft:anvil"
+    }
+  ]
+}

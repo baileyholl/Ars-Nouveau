@@ -1,0 +1,20 @@
+{
+  "name": "번개",
+  "icon": "ars_nouveau:glyph_lightning",
+  "category": "spells_3",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "text",
+      "text": "해당 위치에 번개를 내리칩니다."
+    },
+    {
+      "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_lightning",
+      "tier": "3",
+      "mana_cost": "중간",
+      "clay_type": "ars_nouveau:mythical_clay",
+      "reagent": "minecraft:conduit"
+    }
+  ]
+}

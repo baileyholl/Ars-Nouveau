@@ -1,0 +1,20 @@
+{
+  "name": "수확",
+  "icon": "ars_nouveau:glyph_harvest",
+  "category": "spells_1",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "text",
+      "text": "다 자란 작물에 사용 시, 작물을 부수지 않고 생산물을 얻을 수 있습니다."
+    },
+    {
+      "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_harvest",
+      "tier": "1",
+      "mana_cost": "중간",
+      "clay_type": "ars_nouveau:magic_clay",
+      "reagent": "minecraft:iron_hoe"
+    }
+  ]
+}

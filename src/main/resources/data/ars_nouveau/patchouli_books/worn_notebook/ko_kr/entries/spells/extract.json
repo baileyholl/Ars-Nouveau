@@ -1,0 +1,20 @@
+{
+  "name": "추출",
+  "icon": "ars_nouveau:glyph_extract",
+  "category": "spells_2",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "text",
+      "text": "파괴 주문에 섬세한 손길 효과를 부여하고 폭발 주문이 부순 블록을 온전히 떨구게 합니다. 행운 주문과 결합될 수 없습니다."
+    },
+    {
+      "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_extract",
+      "tier": "2",
+      "mana_cost": "중간",
+      "clay_type": "ars_nouveau:marvelous_clay",
+      "reagent": "minecraft:emerald_block"
+    }
+  ]
+}

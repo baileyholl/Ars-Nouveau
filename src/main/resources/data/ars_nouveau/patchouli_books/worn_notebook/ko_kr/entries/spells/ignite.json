@@ -1,0 +1,20 @@
+{
+  "name": "점화",
+  "icon": "ars_nouveau:glyph_ignite",
+  "category": "spells_1",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "text",
+      "text": "블록과 몹에 잠깐 동안 불을 붙입니다."
+    },
+    {
+      "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_ignite",
+      "tier": "1",
+      "mana_cost": "낮음",
+      "clay_type": "ars_nouveau:magic_clay",
+      "reagent": "minecraft:flint_and_steel"
+    }
+  ]
+}

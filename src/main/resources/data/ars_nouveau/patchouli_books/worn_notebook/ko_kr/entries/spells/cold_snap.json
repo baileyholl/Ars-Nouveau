@@ -1,0 +1,20 @@
+{
+  "name": "한파",
+  "icon": "ars_nouveau:glyph_cold_snap",
+  "category": "spells_2",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "text",
+      "text": "속도 감소 효과에 걸리거나 젖은 개체를 구속하고 피해를 입힙니다. 주위에 감속에 걸리지 않은 개체가 있을 시 감속시킵니다. 주위의 감속에 걸렸거나 젖은 개체 역시 한파를 적용 받습니다. 증폭, 시간 연장, 광역을 통해 보강될 수 있습니다."
+    },
+    {
+      "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_cold_snap",
+      "tier": "2",
+      "mana_cost": "중간",
+      "clay_type": "ars_nouveau:marvelous_clay",
+      "reagent": "ars_nouveau:glyph_freeze"
+    }
+  ]
+}

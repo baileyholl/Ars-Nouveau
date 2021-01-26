@@ -1,0 +1,20 @@
+{
+  "name": "점멸",
+  "icon": "ars_nouveau:glyph_blink",
+  "category": "spells_3",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "text",
+      "text": "발동자를 해당 위치로 순간이동시킵니다. 다른 손에 워프 두루마리를 든 채로 개체를 맞출 시 두루마기에 적힌 장소로 개체를 워프시킵니다. 자기 자신에게 사용 시 앞 쪽으로 이동합니다."
+    },
+    {
+      "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_blink",
+      "tier": "3",
+      "mana_cost": "중간",
+      "clay_type": "ars_nouveau:mythical_clay",
+      "reagent": "minecraft:ender_pearl"
+    }
+  ]
+}

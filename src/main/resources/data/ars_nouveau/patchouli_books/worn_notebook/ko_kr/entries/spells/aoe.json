@@ -1,0 +1,20 @@
+{
+  "name": "광역",
+  "icon": "ars_nouveau:glyph_aoe",
+  "category": "spells_2",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "text",
+      "text": "주문이 목표 블록을 중심으로 더 넓게 작용합니다."
+    },
+    {
+      "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_aoe",
+      "tier": "2",
+      "mana_cost": "중간",
+      "clay_type": "ars_nouveau:marvelous_clay",
+      "reagent": "minecraft:firework_star"
+    }
+  ]
+}

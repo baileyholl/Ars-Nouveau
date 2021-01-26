@@ -1,0 +1,20 @@
+{
+  "name": "지속 감소",
+  "icon": "ars_nouveau:glyph_duration_down",
+  "category": "spells_2",
+  "sortnum": 3,
+  "pages": [
+    {
+      "type": "text",
+      "text": "물약 효과, 지연, 레드스톤 신호 및 그 외 주문들의 지속 시간을 줄입니다."
+    },
+    {
+      "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_duration_down",
+      "tier": "2",
+      "mana_cost": "낮음",
+      "clay_type": "ars_nouveau:marvelous_clay",
+      "reagent": "ars_nouveau:glyph_extend_time"
+    }
+  ]
+}

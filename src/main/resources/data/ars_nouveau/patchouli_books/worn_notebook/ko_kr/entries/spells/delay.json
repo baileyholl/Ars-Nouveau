@@ -1,0 +1,20 @@
+{
+  "name": "지연",
+  "icon": "ars_nouveau:glyph_delay",
+  "category": "spells_1",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "text",
+      "text": "오른쪽에 놓인 주문의 발동을 조금 지연시킵니다. 시간 연장 보강으로 지연 시간을 늘릴 수 있습니다."
+    },
+    {
+      "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_delay",
+      "tier": "1",
+      "mana_cost": "중간",
+      "clay_type": "ars_nouveau:magic_clay",
+      "reagent": "minecraft:repeater"
+    }
+  ]
+}
