@@ -6,15 +6,15 @@
   "pages": [
     {
       "type": "text",
-      "text": "Harvests grown crops and trees. When used on grown crops, this spell will obtain the fully grown product without destroying the plant."
+      "text": "When used on grown crops, this spell will obtain the fully grown product without destroying the plant."
     },
     {
       "type": "glyph_recipe",
       "recipe": "ars_nouveau:glyph_harvest",
       "tier": "ONE",
-      "mana_cost": "Medium",
+      "mana_cost": "Low",
       "clay_type": "ars_nouveau:magic_clay",
-      "reagent": "minecraft:diamond_axe"
+      "reagent": "minecraft:iron_hoe"
     }
   ]
 }

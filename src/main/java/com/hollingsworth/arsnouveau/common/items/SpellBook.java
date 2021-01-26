@@ -43,11 +43,14 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fml.network.PacketDistributor;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplayMana {
+public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplayMana, IAnimatable {
 
     public static final String BOOK_MODE_TAG = "mode";
     public static final String UNLOCKED_SPELLS = "spells";
@@ -271,4 +274,13 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
         return this.tier;
     }
 
+    @Override
+    public void registerControllers(AnimationData data) {
+
+    }
+    AnimationFactory factory = new AnimationFactory(this);
+    @Override
+    public AnimationFactory getFactory() {
+        return factory;
+    }
 }

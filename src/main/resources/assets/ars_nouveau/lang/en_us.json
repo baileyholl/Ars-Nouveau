@@ -181,6 +181,7 @@
 	"item.ars_nouveau.glyph_conjure_water": "Glyph: Conjure Water",
 	"item.ars_nouveau.glyph_craft": "Glyph: Craft",
 	"item.ars_nouveau.glyph_gravity": "Glyph: Gravity",
+	"item.ars_nouveau.glyph_fell": "Glyph: Fell",
 	"effect.ars_nouveau.shield": "Magic Shield",
 	"alert.core": "An Arcane Core must be placed beneath this block.",
 	"sylph.unhappy": "The sylph seems very unhappy in her home. Try sprucing it up!",
@@ -318,5 +319,14 @@
 	"block.ars_nouveau.archwood_stairs":"Archwood Stairs",
 	"block.ars_nouveau.mana_gem_block":"Mana Gem Block",
 	"item.ars_nouveau.glyph_crush":"Glyph: Crush",
-	"item.ars_nouveau.glyph_cut":"Glyph: Cut"
+	"item.ars_nouveau.glyph_cut":"Glyph: Cut",
+	"item.ars_nouveau.spell_bow": "Enchanter's Bow",
+	"item.ars_nouveau.split_arrow": "Augment Arrow: Split",
+	"item.ars_nouveau.amplify_arrow": "Augment Arrow: Amplify",
+	"item.ars_nouveau.pierce_arrow": "Augment Arrow: Pierce",
+	"ars_nouveau.page.spell_bow": "A bow that can be inscribed with a spell using the Scribes Table. If the player has enough mana, arrows will become Spell Arrows and will apply the spell on their target. If no arrows are in the inventory, a spell arrow that deals 0 damage will be cast. If there is not enough mana, regular arrows will be fired. Enchanter's Bows may use special Augment Arrows for empowering the inscribed spell.",
+	"ars_nouveau.page.amplify_arrow": "Adds two amplifies to the end of the inscribed spell when used. Each recipe makes 32.",
+	"ars_nouveau.page.pierce_arrow": "Adds two pierce to the beginning of the chain. Each recipe makes 32.",
+	"ars_nouveau.page.split_arrow": "Adds two split to the beginning of the chain. If a spell arrow will deal damage, each split arrow will as well. Each recipe makes 32.",
+	"ars_nouveau.bow.invalid": "Bows may only accept spells that do not contain a form."
 }

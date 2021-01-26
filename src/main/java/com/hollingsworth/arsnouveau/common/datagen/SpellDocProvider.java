@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.setup.APIRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
 import net.minecraft.data.IDataProvider;
+import net.minecraft.item.Items;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,6 +48,8 @@ public class SpellDocProvider implements IDataProvider {
         List<EnchantingApparatusRecipe> apparatusRecipes = new ArrayList<>();
         for (IEnchantingRecipe iEnchantingRecipe : ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes()) {
             if (iEnchantingRecipe instanceof EnchantingApparatusRecipe) {
+                if(((EnchantingApparatusRecipe) iEnchantingRecipe).result.getItem() == Items.AIR)
+                    continue;
                 apparatusRecipes.add((EnchantingApparatusRecipe) iEnchantingRecipe);
             }
         }
@@ -65,6 +68,7 @@ public class SpellDocProvider implements IDataProvider {
         return pathIn.resolve("data/ars_nouveau/spells/" + spell.getTag() + ".json");
     }
     private static Path getApparatusPath(Path pathIn, EnchantingApparatusRecipe e) {
+        System.out.println(e.result.getItem().toString());
         return pathIn.resolve("data/ars_nouveau/apparatus/" + e.result.getItem().getRegistryName().toString().replace(ArsNouveau.MODID + ":", "") + ".json");
     }
 

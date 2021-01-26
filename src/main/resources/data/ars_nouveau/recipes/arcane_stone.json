@@ -10,7 +10,7 @@
       "tag": "forge:gems/mana"
     },
     "x": {
-      "item": "minecraft:stone"
+      "tag": "forge:stone"
     }
   },
   "result": {

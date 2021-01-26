@@ -45,5 +45,7 @@
       "item": "ars_nouveau:carbuncle_shards"
     }
   ],
-  "output": "ars_nouveau:carbuncle_charm"
+  "output": {
+    "item": "ars_nouveau:carbuncle_charm"
+  }
 }

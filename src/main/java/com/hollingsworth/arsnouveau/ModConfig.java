@@ -51,6 +51,7 @@ public class ModConfig {
     public static final String EffectRedstoneID = "redstone_signal";
 
     public static final String EffectIntangibleID = "intangible";
+    public static final String EffectFellID = "fell";
 
     public static final String EffectInvisibilityID = "invisibility";
     public static final String AugmentDurationDown = "duration_down";

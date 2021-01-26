@@ -45,5 +45,7 @@
       "item": "ars_nouveau:arcane_relay"
     }
   ],
-  "output": "ars_nouveau:arcane_relay_splitter"
+  "output": {
+    "item": "ars_nouveau:arcane_relay_splitter"
+  }
 }

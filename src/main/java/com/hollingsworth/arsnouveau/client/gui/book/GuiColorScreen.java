@@ -17,8 +17,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class GuiColorScreen extends BaseBook {
-    private final int FULL_WIDTH = 290;
-    private final int FULL_HEIGHT = 194;
 
     double red;
     double blue;
@@ -97,10 +95,6 @@ public class GuiColorScreen extends BaseBook {
     }
 
     public void onSaveClick(Button button){
-//        List<String> ids = new ArrayList<>();
-//        for(CraftingButton slot : craftingCells){
-//            ids.add(slot.spellTag);
-//        }
         Networking.INSTANCE.sendToServer(new PacketUpdateSpellColors(slot, red, green, blue));
     }
 
@@ -108,19 +102,20 @@ public class GuiColorScreen extends BaseBook {
     public void drawBackgroundElements(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/slider_gilding.png"), 22, 47, 0, 0, 112, 104,112,104, stack);
-        minecraft.fontRenderer.drawString(stack, "Spell Color", 51, 24,  12694931);
-        minecraft.fontRenderer.drawString(stack, "Presets", 159, 24,  12694931);
-        minecraft.fontRenderer.drawString(stack, "Default", 170, 46,  12694931);
-        minecraft.fontRenderer.drawString(stack, "Purple", 170, 70,  12694931);
-        minecraft.fontRenderer.drawString(stack, "Blue", 170, 94,  12694931);
-        minecraft.fontRenderer.drawString(stack, "Red", 170, 118,  12694931);
-        minecraft.fontRenderer.drawString(stack, "Green", 170, 142,  12694931);
-        minecraft.fontRenderer.drawString(stack, "Yellow", 228, 46,  12694931);
-        minecraft.fontRenderer.drawString(stack, "White", 228, 70,  12694931);
-        minecraft.fontRenderer.drawString(stack, "Orange", 228, 94,  12694931);
-        minecraft.fontRenderer.drawString(stack, "Cyan", 228, 118,  12694931);
+        int color = -8355712;
+        minecraft.fontRenderer.drawString(stack, "Spell Color", 51, 24,  color);
+        minecraft.fontRenderer.drawString(stack, "Presets", 159, 24,  color);
+        minecraft.fontRenderer.drawString(stack, "Default", 170, 46,  color);
+        minecraft.fontRenderer.drawString(stack, "Purple", 170, 70,  color);
+        minecraft.fontRenderer.drawString(stack, "Blue", 170, 94,  color);
+        minecraft.fontRenderer.drawString(stack, "Red", 170, 118,  color);
+        minecraft.fontRenderer.drawString(stack, "Green", 170, 142,  color);
+        minecraft.fontRenderer.drawString(stack, "Yellow", 228, 46,  color);
+        minecraft.fontRenderer.drawString(stack, "White", 228, 70,  color);
+        minecraft.fontRenderer.drawString(stack, "Orange", 228, 94,  color);
+        minecraft.fontRenderer.drawString(stack, "Cyan", 228, 118,  color);
        // minecraft.fontRenderer.drawString(stack, "Ice", 218, 115,  0);
-        minecraft.fontRenderer.drawString(stack, "Save", 67, 160,  12694931);
+        minecraft.fontRenderer.drawString(stack, "Save", 67, 160,  color);
     }
 
     protected SliderPercentageOption buildSlider(String key, Function<GameSettings, Double> getter, BiConsumer<GameSettings, Double> setter){

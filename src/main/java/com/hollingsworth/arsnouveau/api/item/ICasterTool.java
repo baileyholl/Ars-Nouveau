@@ -7,18 +7,23 @@ import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 
-public interface ICaster extends IScribeable, IDisplayMana {
+import javax.annotation.Nullable;
+import java.util.List;
+
+public interface ICasterTool extends IScribeable, IDisplayMana {
     @Override
     default boolean onScribe(World world, BlockPos pos, PlayerEntity player, Hand handIn, ItemStack stack) {
         ItemStack heldStack = player.getHeldItem(handIn);
-        ISpellCaster caster = getCaster(stack);
+        ISpellCaster caster = getSpellCaster(stack);
 
         if(caster == null)
             return false;
@@ -52,7 +57,7 @@ public interface ICaster extends IScribeable, IDisplayMana {
         PortUtil.sendMessage(player, new StringTextComponent("Invalid spell."));
     }
 
-    default ISpellCaster getCaster(ItemStack stack){
+    default ISpellCaster getSpellCaster(ItemStack stack){
         return SpellCaster.deserialize(stack);
     }
 
@@ -68,5 +73,20 @@ public interface ICaster extends IScribeable, IDisplayMana {
     @Override
     default boolean shouldDisplay(ItemStack stack) {
         return true;
+    }
+
+
+    default void getInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
+        if(worldIn == null)
+            return;
+        ISpellCaster caster = getSpellCaster(stack);
+        if(caster == null)
+            return;
+        if(caster.getSpell() == null)
+            return;
+
+        Spell spell = caster.getSpell();
+        tooltip2.add(new StringTextComponent(spell.getDisplayString()));
+
     }
 }

@@ -7,10 +7,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.RecipeItemHelper;
+import net.minecraft.item.crafting.*;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
@@ -134,7 +131,15 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         JsonArray reagent =  new JsonArray();
         reagent.add(this.reagent.serialize());
         jsonobject.add("reagent", reagent);
-        jsonobject.addProperty("output", this.result.getItem().getRegistryName().toString());
+
+        JsonObject resultObj = new JsonObject();
+        resultObj.addProperty("item", this.result.getItem().getRegistryName().toString());
+        int count = this.result.getCount();
+        if (count > 1) {
+            resultObj.addProperty("count", count);
+        }
+
+        jsonobject.add("output", resultObj);
         return jsonobject;
     }
 
@@ -212,7 +217,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         @Override
         public EnchantingApparatusRecipe read(ResourceLocation recipeId, JsonObject json) {
             Ingredient reagent = Ingredient.deserialize(JSONUtils.getJsonArray(json, "reagent"));
-            ItemStack output = new ItemStack(JSONUtils.getItem(json, "output"));
+            ItemStack output = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "output"));
             List<Ingredient> stacks = new ArrayList<>();
             for(int i = 1; i < 9; i++){
                 if(json.has("item_"+i))

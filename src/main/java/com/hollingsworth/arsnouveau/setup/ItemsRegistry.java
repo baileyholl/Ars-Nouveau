@@ -10,6 +10,9 @@ import com.hollingsworth.arsnouveau.common.items.*;
 import com.hollingsworth.arsnouveau.common.items.curios.*;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
@@ -96,6 +99,12 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.WIXIE_CHARM)public static WixieCharm WIXIE_CHARM;
     @ObjectHolder(LibItemNames.WIXIE_SHARD)public static ModItem WIXIE_SHARD;
     @ObjectHolder(LibItemNames.RITUAL_BOOK)public static RitualBook RITUAL_BOOK;
+    @ObjectHolder(LibItemNames.SPELL_BOW)public static SpellBow SPELL_BOW;
+
+    @ObjectHolder(LibItemNames.AMPLIFY_ARROW)public static SpellArrow AMPLIFY_ARROW;
+    @ObjectHolder(LibItemNames.SPLIT_ARROW)public static SpellArrow SPLIT_ARROW;
+    @ObjectHolder(LibItemNames.PIERCE_ARROW)public static SpellArrow PIERCE_ARROW;
+
 
     public static Food MANA_BERRY_FOOD = (new Food.Builder()).hunger(2).saturation(0.1F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).setAlwaysEdible().build();
 
@@ -185,7 +194,11 @@ public class ItemsRegistry {
                     new ModItem(LibItemNames.WIXIE_SHARD).withTooltip(new TranslationTextComponent("tooltip.wixie_shard")),
                     new Wand(),
                     new VoidJar(),
-                    new RitualBook().setRegistryName(LibItemNames.RITUAL_BOOK)
+                    new RitualBook().setRegistryName(LibItemNames.RITUAL_BOOK),
+                    new SpellBow().setRegistryName(LibItemNames.SPELL_BOW),
+                    new FormSpellArrow(LibItemNames.PIERCE_ARROW, new AugmentPierce(), 2),
+                    new FormSpellArrow(LibItemNames.SPLIT_ARROW, new AugmentSplit(), 2),
+                    new SpellArrow(LibItemNames.AMPLIFY_ARROW, new AugmentAmplify(), 2)
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

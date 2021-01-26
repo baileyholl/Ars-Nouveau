@@ -45,5 +45,7 @@
       "item": "minecraft:egg"
     }
   ],
-  "output": "ars_nouveau:whelp_charm"
+  "output": {
+    "item": "ars_nouveau:whelp_charm"
+  }
 }

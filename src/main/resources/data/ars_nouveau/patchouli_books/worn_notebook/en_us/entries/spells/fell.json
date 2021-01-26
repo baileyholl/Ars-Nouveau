@@ -1,0 +1,20 @@
+{
+  "name": "Fell",
+  "icon": "ars_nouveau:glyph_fell",
+  "category": "spells_2",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "text",
+      "text": "Harvests entire trees, mushrooms, cactus, and other vegetation. Can be amplified with Amplify to break materials of higher hardness. AOE will increase the number of blocks that may be broken at one time."
+    },
+    {
+      "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_fell",
+      "tier": "TWO",
+      "mana_cost": "High",
+      "clay_type": "ars_nouveau:marvelous_clay",
+      "reagent": "minecraft:diamond_axe"
+    }
+  ]
+}

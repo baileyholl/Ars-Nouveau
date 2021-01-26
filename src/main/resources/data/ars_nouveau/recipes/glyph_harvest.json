@@ -1,6 +1,6 @@
 {
   "type": "ars_nouveau:glyph_recipe",
   "tier": "ONE",
-  "input": "minecraft:diamond_axe",
+  "input": "minecraft:iron_hoe",
   "output": "ars_nouveau:glyph_harvest"
 }

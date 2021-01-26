@@ -13,10 +13,10 @@
       "item": "minecraft:piston"
     },
     "a": {
-      "item": "minecraft:stone"
+      "tag": "forge:stone"
     },
     "b": {
-      "item": "minecraft:iron_block"
+      "tag": "forge:storage_blocks/iron"
     }
   },
   "result": {

@@ -58,6 +58,7 @@ public class APIRegistry {
         registerSpell(ModConfig.AugmentFortuneID, new AugmentFortune());
         registerSpell(ModConfig.EffectEnderChestID, new EffectEnderChest());
         registerSpell(ModConfig.EffectHarvestID, new EffectHarvest());
+        registerSpell(ModConfig.EffectFellID, new EffectFell());
         registerSpell(ModConfig.EffectPickupID, new EffectPickup());
         registerSpell(ModConfig.EffectInteractID, new EffectInteract());
         registerSpell(ModConfig.EffectPlaceBlockID, new EffectPlaceBlock());

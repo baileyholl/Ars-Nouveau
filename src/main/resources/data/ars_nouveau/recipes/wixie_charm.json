@@ -25,5 +25,7 @@
       "item": "ars_nouveau:wixie_shards"
     }
   ],
-  "output": "ars_nouveau:wixie_charm"
+  "output": {
+    "item": "ars_nouveau:wixie_charm"
+  }
 }

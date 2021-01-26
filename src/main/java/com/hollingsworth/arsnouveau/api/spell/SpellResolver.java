@@ -50,6 +50,11 @@ public class SpellResolver {
         this(new ArrayList<>(Arrays.asList(spellParts)), context);
     }
 
+    public SpellResolver withSilent(boolean isSilent){
+        this.silent = isSilent;
+        return this;
+    }
+
     public SpellResolver(List<AbstractSpellPart> spell, SpellContext context) {
         this(null, spell, context);
         AbstractCastMethod method = null;

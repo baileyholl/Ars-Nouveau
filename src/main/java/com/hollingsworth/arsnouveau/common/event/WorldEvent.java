@@ -13,7 +13,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.gen.GenerationStage;
@@ -26,6 +25,7 @@ import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.Arrays;
@@ -141,10 +141,11 @@ public class WorldEvent {
     }
 
     @SubscribeEvent
-    public static void worldTick(TickEvent.WorldTickEvent e) {
-        World world = e.world;
-        if (world.isRemote || e.phase != TickEvent.Phase.END)
+    public static void worldTick(TickEvent.ServerTickEvent e) {
+
+        if (e.side != LogicalSide.SERVER || e.phase != TickEvent.Phase.END)
             return;
+
         EventQueue.getInstance().tick();
     }
 

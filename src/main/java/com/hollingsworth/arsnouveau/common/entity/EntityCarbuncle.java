@@ -613,6 +613,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
     public BlockPos getValidStorePos(ItemStack stack){
         BlockPos returnPos = null;
+        if(TO_LIST == null)
+            return returnPos;
         for(BlockPos b : TO_LIST){
             SortPref pref = canDepositItem(world.getTileEntity(b), stack);
             if (pref == SortPref.HIGH)
@@ -624,6 +626,9 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     }
 
     public BlockPos getValidTakePos(){
+        if(FROM_LIST == null)
+            return null;
+
         for(BlockPos p : FROM_LIST){
             IItemHandler iItemHandler = world.getTileEntity(p).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
             if(iItemHandler == null)

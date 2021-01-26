@@ -7,6 +7,9 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -137,6 +140,26 @@ public class ApparatusRecipeProvider implements IDataProvider {
                         ItemsRegistry.spellParchment, ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile()),
                         ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAccelerate())
         }), ArsNouveauAPI.PatchouliCategories.equipment.name()));
+
+        addRecipe(new EnchantingApparatusRecipe(new ItemStack(ItemsRegistry.SPELL_BOW), Ingredient.fromItems(Items.BOW),
+                listOfIngred(new Item[]{
+                        BlockRegistry.MANA_GEM_BLOCK.asItem(), Items.GOLD_BLOCK, ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile())
+                }), ArsNouveauAPI.PatchouliCategories.equipment.name()));
+
+        addRecipe(new EnchantingApparatusRecipe(new ItemStack(ItemsRegistry.AMPLIFY_ARROW, 32), Ingredient.fromItems(Items.ARROW),
+                listOfIngred(new Item[]{
+                        BlockRegistry.MANA_GEM_BLOCK.asItem(),BlockRegistry.MANA_GEM_BLOCK.asItem(), ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify())
+                }), ArsNouveauAPI.PatchouliCategories.equipment.name()));
+
+        addRecipe(new EnchantingApparatusRecipe(new ItemStack(ItemsRegistry.SPLIT_ARROW, 32), Ingredient.fromItems(Items.ARROW),
+                listOfIngred(new Item[]{
+                        BlockRegistry.MANA_GEM_BLOCK.asItem(),BlockRegistry.MANA_GEM_BLOCK.asItem(), ArsNouveauAPI.getInstance().getGlyphItem(new AugmentSplit())
+                }), ArsNouveauAPI.PatchouliCategories.equipment.name()));
+
+        addRecipe(new EnchantingApparatusRecipe(new ItemStack(ItemsRegistry.PIERCE_ARROW, 32), Ingredient.fromItems(Items.ARROW),
+                listOfIngred(new Item[]{
+                        BlockRegistry.MANA_GEM_BLOCK.asItem(),BlockRegistry.MANA_GEM_BLOCK.asItem(), ArsNouveauAPI.getInstance().getGlyphItem(new AugmentPierce())
+                }), ArsNouveauAPI.PatchouliCategories.equipment.name()));
 
 
     }
