@@ -18,20 +18,20 @@
 	},
 	{
       "type": "text",
-	  "title":"Summoning",
+	  "title":"소환",
       "text": "ars_nouveau.page3.sylph_charm"
     },{
       "type": "text",
-	  "title":"Happiness",
+	  "title":"행복도",
       "text": "ars_nouveau.page4.sylph_charm"
     },
 	{
       "type": "text",
-	  "title":"Important",
+	  "title":"중요 사항",
       "text": "ars_nouveau.page5.sylph_charm"
     },{
       "type": "text",
-	  "title":"Production",
+	  "title":"생산",
       "text": "ars_nouveau.page6.sylph_charm"
     },{
 	"type":"multiblock",

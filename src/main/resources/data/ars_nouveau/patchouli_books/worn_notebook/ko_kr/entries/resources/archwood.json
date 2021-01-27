@@ -5,7 +5,7 @@
     "pages": [
         {
             "type": "text",
-            "text": "Archwood Trees have a small chance to spawn in any biome, and come in four types. Required for crafting Casting Wands."
+            "text": "아크우드 나무는 어느 생물 군계에서든 작은 확률로 생성되며, 4 종류가 있습니다. 주문 지팡이를 만드는 데 필요합니다."
         },
 		{
             "type":"crafting",

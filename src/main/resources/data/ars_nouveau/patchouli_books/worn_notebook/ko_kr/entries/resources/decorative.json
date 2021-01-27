@@ -1,11 +1,11 @@
 {
-    "name": "Decorative Blocks",
+    "name": "장식 블록",
     "icon": "ars_nouveau:arcane_bricks",
     "category": "resources",
     "pages": [
         {
             "type": "text",
-            "text": "Purely decorative blocks. To see the full list, place Arcane Stone in a Stonecutter."
+            "text": "순수하게 장식용인 블록들입니다. 전체 목록을 보려면, 불가사의한 돌을 석재 절단기에 넣어 보세요.place Arcane Stone in a Stonecutter."
         },
 		{
             "type":"crafting",

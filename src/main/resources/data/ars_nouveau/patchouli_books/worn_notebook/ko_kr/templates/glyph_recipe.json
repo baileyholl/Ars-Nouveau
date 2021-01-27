@@ -18,19 +18,19 @@
         },
 		{
 			"type": "header",
-			"text": "Glyph Press Reagents",
+			"text": "상형 문자 인쇄기 시약",
 			"x": -1,
 			"y": -1
         },
         {
 			"type": "text",
-			"text": "Tier: #tier#",
+			"text": "단계: #tier#",
 			"x": 0,
 			"y": 50
 		},
         {
 			"type": "text",
-			"text": "Casting Cost: #mana_cost#",
+			"text": "발동 비용: #mana_cost#",
 			"x": 0,
 			"y": 60
 		}

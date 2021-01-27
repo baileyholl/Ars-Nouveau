@@ -2,19 +2,19 @@
     "components": [
 		{
 			"type": "header",
-			"text": "Enchanting Apparatus",
+			"text": "마법 부여 장치",
 			"x": -1,
 			"y": -1
         },
 		 {
             "type":"text",
-            "text":"Reagent:",
+            "text":"시약:",
             "x":5,
             "y":25
         },
 		 {
             "type":"text",
-            "text":"ANY ITEM",
+            "text":"아무 아이템이나",
             "x":45,
             "y":25
         },
@@ -76,7 +76,7 @@
         },
         {
             "type":"text",
-            "text":"Mana Cost:",
+            "text":"마나 비용:",
             "x":5,
             "y":130
         },

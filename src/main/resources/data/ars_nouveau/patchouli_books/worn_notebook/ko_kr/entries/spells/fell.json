@@ -1,18 +1,18 @@
 {
-  "name": "Fell",
+  "name": "벌채",
   "icon": "ars_nouveau:glyph_fell",
   "category": "spells_2",
   "sortnum": 2,
   "pages": [
     {
       "type": "text",
-      "text": ""
+      "text": "나무, 버섯, 선인장 및 다른 초목을 수확합니다. 증폭을 통해 더 높은 경도의 블록을 부술 수 있습니다. 광역을 통해 한 번에 더 많은 블록을 부술 수 있습니다."
     },
     {
       "type": "glyph_recipe",
       "recipe": "ars_nouveau:glyph_fell",
       "tier": "2",
-      "mana_cost": "낮음",
+      "mana_cost": "높음",
       "clay_type": "ars_nouveau:marvelous_clay",
       "reagent": "minecraft:diamond_axe"
     }

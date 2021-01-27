@@ -1,11 +1,11 @@
 {
-    "name": "Warding Stone",
+    "name": "액막이 돌",
     "icon": "ars_nouveau:warding_stone",
     "category": "machines",
     "pages": [
         {
             "type": "text",
-            "text": "A block that can act as a fence for monsters. Placed on the ground, monsters will avoid walking over the stone while players are free to pass."
+            "text": "몬스터에게 울타리처럼 사용할 수 있는 블록입니다. 땅에 설치할 시, 몬스터들은 돌 위를 지나가지 않으려 할 것입니다."
         },
 		{
             "type":"crafting",

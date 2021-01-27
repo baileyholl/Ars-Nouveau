@@ -1,11 +1,11 @@
 {
-    "name": "Mana Condenser",
+    "name": "마나 축전기",
     "icon": "ars_nouveau:mana_condenser",
     "category": "machines",
     "pages": [
         {
             "type": "text",
-            "text": "The Mana Condenser provides World Mana to Mana Jars that are placed beneath it. This mana is collected from special world events that occur near it. These events include crop growth, animal breeding, and monsters that die nearby. Note, Mana Condensers will stop working in the event that another Mana Condenser is placed too close."
+            "text": "마나 축전기는 밑에 부착된 마나 항아리에 세계 마나를 공급합니다. 이 마나는 주위에서 일어나는 특수한 현상에서 모아집니다. 이러한 현상에는 작물의 성장, 동물 교배, 몬스터의 죽음이 포함되어 있습니다. 다만, 마나 축전기는 다른 마나 축전기가 너무 가까이 있을 시 작동하지 않기에 주의해야 합니다."
         },
 		{
 		"type":"multiblock",
