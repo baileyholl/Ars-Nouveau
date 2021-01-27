@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.SpellTurretTile;
@@ -64,7 +65,7 @@ public class SpellTurret extends ModBlock {
             return;
         IPosition iposition = getDispensePosition(new ProxyBlockSource(world, pos));
         Direction direction = world.getBlockState(pos).get(FACING);
-        FakePlayer fakePlayer = FakePlayerFactory.getMinecraft(world);
+        FakePlayer fakePlayer = new ANFakePlayer(world);
         fakePlayer.setPosition(pos.getX(), pos.getY(), pos.getZ());
         EntitySpellResolver resolver = new EntitySpellResolver(tile.recipe,new SpellContext(tile.recipe, fakePlayer).withCastingTile(world.getTileEntity(pos)));
         if(resolver.castType instanceof MethodProjectile){
