@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import net.minecraft.client.renderer.entity.TippedArrowRenderer;
+import net.minecraft.client.renderer.entity.WolfRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -25,6 +26,7 @@ public class ModRenderers {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_SYLPH_TYPE, SylphRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_WIXIE_TYPE, WixieRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_WILDEN, WildenRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.SUMMON_WOLF, WolfRenderer::new);
 
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_FLYING_ITEM,
                 RenderFlyingItem::new);

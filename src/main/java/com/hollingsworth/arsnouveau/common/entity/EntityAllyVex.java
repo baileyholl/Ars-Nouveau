@@ -21,7 +21,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -184,6 +183,10 @@ public class EntityAllyVex extends VexEntity implements ISummon {
     }
 
 
+    @Override
+    protected int getExperiencePoints(PlayerEntity player) {
+        return 0;
+    }
 
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.

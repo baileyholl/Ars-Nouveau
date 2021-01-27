@@ -22,10 +22,20 @@ public class WildenHunterModel extends AnimatedGeoModel<WildenHunter> {
         head.setRotationX(extraData.headPitch * 0.017453292F);
         head.setRotationY(extraData.netHeadYaw * 0.017453292F);
 
-        IBone frontLeft = this.getAnimationProcessor().getBone("left_leg");
-        IBone frontRight = this.getAnimationProcessor().getBone("right_leg");
-        frontLeft.setRotationX(MathHelper.cos(entity.limbSwing * 0.6662F) * 1.4F * entity.limbSwingAmount);
-        frontRight.setRotationX(MathHelper.cos(entity.limbSwing * 0.6662F + (float)Math.PI) * 1.4F * entity.limbSwingAmount);
+        IBone frontLeftLeg = this.getAnimationProcessor().getBone("left_leg");
+        IBone frontRightLeg = this.getAnimationProcessor().getBone("right_leg");
+        IBone frontLeftArm = this.getAnimationProcessor().getBone("left_arm");
+        IBone frontRightArm = this.getAnimationProcessor().getBone("right_arm");
+
+
+//        this.bipedRightArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F + (float)Math.PI) * 2.0F * limbSwingAmount * 0.5F / f;
+//        this.bipedLeftArm.rotateAngleX = MathHelper.cos(limbSwing * 0.6662F) * 2.0F * limbSwingAmount * 0.5F / f;
+//        frontLeftArm.setRotationX(MathHelper.cos(entity.limbSwing * 0.6662F) * 1.4F * entity.limbSwingAmount);
+//        frontRightArm.setRotationX(MathHelper.cos(entity.limbSwing * 0.6662F + (float)Math.PI) * 1.4F * entity.limbSwingAmount);
+
+        frontLeftLeg.setRotationX(MathHelper.cos(entity.limbSwing * 0.6662F) * 1.4F * entity.limbSwingAmount);
+        frontRightLeg.setRotationX(MathHelper.cos(entity.limbSwing * 0.6662F + (float)Math.PI) * 1.4F * entity.limbSwingAmount);
+
     }
 
     @Override

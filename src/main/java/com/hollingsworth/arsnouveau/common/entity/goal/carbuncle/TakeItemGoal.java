@@ -63,6 +63,7 @@ public class TakeItemGoal extends Goal {
             }
         }
     }
+
     public void setPath(double x, double y, double z, double speedIn){
         carbuncle.getNavigator().setPath( carbuncle.getNavigator().getPathToPos(x+0.5, y+1, z+0.5, 1), speedIn);
     }
