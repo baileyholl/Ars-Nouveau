@@ -71,7 +71,7 @@ public class WarpScroll extends ModItem{
                 player.sendMessage(new StringTextComponent("Using this scroll from a different dimension would be a bad idea."), Util.DUMMY_UUID);
                 return ActionResult.resultFail(stack);
             }
-            player.teleportKeepLoaded(pos.getX(), pos.getY(), pos.getZ());
+            player.teleportKeepLoaded(pos.getX() +0.5, pos.getY(), pos.getZ() +0.5);
             stack.shrink(1);
             return ActionResult.resultPass(stack);
         }
