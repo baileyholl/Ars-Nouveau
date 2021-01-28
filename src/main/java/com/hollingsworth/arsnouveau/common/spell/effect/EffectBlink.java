@@ -1,12 +1,13 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.ModConfig;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.items.WarpScroll;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.SoundCategory;
@@ -24,39 +25,65 @@ public class EffectBlink extends AbstractEffect {
     public EffectBlink() {
         super(ModConfig.EffectBlinkID, "Blink");
     }
-    
+
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(shooter == null)
-            return;
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        Vector3d vec = safelyGetHitPos(rayTraceResult);
         double distance = 8.0f + 3.0f *getAmplificationBonus(augments);
-        if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity().equals(shooter)) {
+
+        if(spellContext.castingTile instanceof IInventoryResponder){
+            ItemStack scroll = ((IInventoryResponder) spellContext.castingTile).getItem(new ItemStack(ItemsRegistry.warpScroll));
+            if(!scroll.isEmpty()){
+                BlockPos pos = WarpScroll.getPos(scroll);
+                if(pos != null){
+                    warpEntity(rayTraceResult.getEntity(), pos);
+                    return;
+                }
+            }
+        }
+
+        if((rayTraceResult).getEntity().equals(shooter)) {
             blinkForward(world, shooter, distance);
-        }else if(rayTraceResult instanceof EntityRayTraceResult) {
-            Vector3d vec = safelyGetHitPos(rayTraceResult);
-            if(isRealPlayer(shooter) && spellContext.castingTile == null) {
-                if(shooter.getHeldItemOffhand().getItem() instanceof WarpScroll){
-                    BlockPos warpPos = WarpScroll.getPos(shooter.getHeldItemOffhand());
-                    if(warpPos != null && !warpPos.equals(BlockPos.ZERO)){
-                        BlockPos hitPos = ((EntityRayTraceResult) rayTraceResult).getEntity().getPosition();
-                        ((EntityRayTraceResult) rayTraceResult).getEntity().setPositionAndUpdate(warpPos.getX(), warpPos.getY(), warpPos.getZ());
-                        world.playSound(null, hitPos, SoundEvents.ENTITY_ILLUSIONER_MIRROR_MOVE, SoundCategory.NEUTRAL, 1.0f, 1.0f);
-                        ((ServerWorld) world).spawnParticle(ParticleTypes.PORTAL, hitPos.getX(),  hitPos.getY() + 1,  hitPos.getZ(),
-                                4,(world.rand.nextDouble() - 0.5D) * 2.0D, -world.rand.nextDouble(), (world.rand.nextDouble() - 0.5D) * 2.0D, 0.1f);
-                    }
-
-                }else
-                    shooter.setPositionAndUpdate(vec.getX(), vec.getY(), vec.getZ());
+            return;
+        }
 
 
-            }else if(spellContext.getType() == SpellContext.CasterType.RUNE && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
-                blinkForward(world, (LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity(), distance);
-            }
-        }else if(rayTraceResult instanceof BlockRayTraceResult){
-            Vector3d vec = rayTraceResult.getHitVec();
-            if(isValidTeleport(world, ((BlockRayTraceResult) rayTraceResult).getPos().offset(((BlockRayTraceResult) rayTraceResult).getFace()))){
+
+        if(isRealPlayer(shooter) && spellContext.castingTile == null && shooter != null) {
+            if(shooter.getHeldItemOffhand().getItem() instanceof WarpScroll){
+                BlockPos warpPos = WarpScroll.getPos(shooter.getHeldItemOffhand());
+                if(warpPos != null && !warpPos.equals(BlockPos.ZERO)){
+                    warpEntity(rayTraceResult.getEntity(), warpPos);
+                }
+
+            }else
                 shooter.setPositionAndUpdate(vec.getX(), vec.getY(), vec.getZ());
-            }
+
+
+        }else if(spellContext.getType() == SpellContext.CasterType.RUNE && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
+            blinkForward(world, (LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity(), distance);
+        }
+    }
+
+    public static void warpEntity(Entity entity, BlockPos warpPos){
+        if(entity == null)
+            return;
+        World world = entity.world;
+        ((ServerWorld) entity.world).spawnParticle(ParticleTypes.PORTAL, entity.getPosX(),  entity.getPosY() + 1,  entity.getPosZ(),
+                4,(world.rand.nextDouble() - 0.5D) * 2.0D, -world.rand.nextDouble(), (world.rand.nextDouble() - 0.5D) * 2.0D, 0.1f);
+
+        entity.setPositionAndUpdate(warpPos.getX() +0.5, warpPos.getY(), warpPos.getZ() +0.5);
+
+        entity.world.playSound(null, warpPos, SoundEvents.ENTITY_ILLUSIONER_MIRROR_MOVE, SoundCategory.NEUTRAL, 1.0f, 1.0f);
+        ((ServerWorld) entity.world).spawnParticle(ParticleTypes.PORTAL, warpPos.getX() +0.5,  warpPos.getY() + 1.0,  warpPos.getZ() +0.5,
+                4,(world.rand.nextDouble() - 0.5D) * 2.0D, -world.rand.nextDouble(), (world.rand.nextDouble() - 0.5D) * 2.0D, 0.1f);
+    }
+
+    @Override
+    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        Vector3d vec = rayTraceResult.getHitVec();
+        if(isRealPlayer(shooter) && isValidTeleport(world, (rayTraceResult).getPos().offset((rayTraceResult).getFace()))){
+            warpEntity(shooter, new BlockPos(vec));
         }
     }
 
@@ -70,7 +97,7 @@ public class EffectBlink extends AbstractEffect {
         }
         if(pos == null)
             return;
-        shooter.setPositionAndUpdate(pos.getX(), pos.getY(), pos.getZ());
+        warpEntity(shooter, pos);
     }
 
     public static BlockPos getForward(World world, BlockPos pos,LivingEntity shooter, double distance){

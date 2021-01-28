@@ -328,5 +328,7 @@
 	"ars_nouveau.page.amplify_arrow": "Adds two amplifies to the end of the inscribed spell when used. Each recipe makes 32.",
 	"ars_nouveau.page.pierce_arrow": "Adds two pierce to the beginning of the chain. Each recipe makes 32.",
 	"ars_nouveau.page.split_arrow": "Adds two split to the beginning of the chain. If a spell arrow will deal damage, each split arrow will as well. Each recipe makes 32.",
-	"ars_nouveau.bow.invalid": "Bows may only accept spells that do not contain a form."
+	"ars_nouveau.bow.invalid": "Bows may only accept spells that do not contain a form.",
+	"ars_nouveau.apparatus.norecipe": "No recipe found.",
+	"ars_nouveau.apparatus.nomana": "Not enough mana nearby."
 }

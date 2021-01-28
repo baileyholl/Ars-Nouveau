@@ -73,7 +73,7 @@ public class SpellCaster implements ISpellCaster{
     }
 
     public void write(ItemStack stack){
-        CompoundNBT tag = new CompoundNBT();
+        CompoundNBT tag = stack.hasTag() ? stack.getTag() : new CompoundNBT();
         tag.putInt("current_slot", getCurrentSlot());
         tag.putInt("max_slot", getMaxSlots());
         int i = 0;

@@ -27,8 +27,8 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
     public ItemStack result; // Result item
     public List<Ingredient> pedestalItems; // Items part of the recipe
     public String category;
-    public final ResourceLocation id;
-    public final int manaCost;
+    public ResourceLocation id;
+    public int manaCost;
 
     public EnchantingApparatusRecipe(ItemStack result, Ingredient reagent, List<Ingredient> pedestalItems, String category){
         this.reagent = reagent;
@@ -73,10 +73,11 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
     @Override
     public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile) {
         pedestalItems = pedestalItems.stream().filter(itemStack -> !itemStack.isEmpty()).collect(Collectors.toList());
-        if (!this.reagent.test(reagent)|| this.pedestalItems.size() != pedestalItems.size() || !doItemsMatch(pedestalItems, this.pedestalItems)) {
-            return false;
-        }
-        return true;
+        return doesReagentMatch(reagent) && this.pedestalItems.size() == pedestalItems.size() && doItemsMatch(pedestalItems, this.pedestalItems);
+    }
+
+    public boolean doesReagentMatch(ItemStack reag){
+        return this.reagent.test(reag);
     }
 
     @Override
@@ -91,7 +92,6 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         for(ItemStack i : inputs)
             recipeitemhelper.func_221264_a(i, 1);
 
-
         return inputs.size() == recipeItems.size() && (net.minecraftforge.common.util.RecipeMatcher.findMatches(inputs,  recipeItems) != null);
     }
 
@@ -103,6 +103,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         return Objects.equals(reagent, that.reagent) &&
                 Objects.equals(pedestalItems, that.pedestalItems);
     }
+
 
     @Override
     public int hashCode() {
