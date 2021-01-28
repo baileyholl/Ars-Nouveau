@@ -2,15 +2,14 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
+import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -28,7 +27,6 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
 
     private int craftingLength = 100;
     public boolean isCrafting;
-    public long timeStartedCrafting;
 
     public EnchantingApparatusTile() {
         super(BlockRegistry.ENCHANTING_APP_TILE);
@@ -42,7 +40,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
             return;
 
         if(isCrafting){
-            if(this.getRecipe() == null)
+            if(this.getRecipe(catalystItem) == null)
                 this.isCrafting = false;
             counter += 1;
         }
@@ -51,7 +49,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
             counter = 1;
 
             if (this.isCrafting) {
-                IEnchantingRecipe recipe = this.getRecipe();
+                IEnchantingRecipe recipe = this.getRecipe(catalystItem);
                 List<ItemStack> pedestalItems = getPedestalItems();
                 if (recipe != null) {
                     pedestalItems.forEach(i -> i = null);
@@ -71,7 +69,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
         BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
             if (world.getTileEntity(blockPos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack != null) {
                 ArcanePedestalTile tile = ((ArcanePedestalTile) world.getTileEntity(blockPos));
-                tile.stack = tile.stack.getItem() == ItemsRegistry.bucketOfMana ? new ItemStack(Items.BUCKET) : ItemStack.EMPTY;
+                tile.stack = tile.stack == null ? ItemStack.EMPTY : tile.stack.getContainerItem();
                 BlockState state = world.getBlockState(blockPos);
                 world.notifyBlockUpdate(blockPos, state, state, 3);
             }
@@ -99,18 +97,26 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
         return pedestalItems;
     }
 
-    public IEnchantingRecipe getRecipe(){
+    public IEnchantingRecipe getRecipe(ItemStack catalyst){
         List<ItemStack> pedestalItems = getPedestalItems();
-        return ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes(world).stream().filter(r-> r.isMatch(pedestalItems, catalystItem, this)).findFirst().orElse(null);
+        return ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes(world).stream().filter(r-> r.isMatch(pedestalItems, catalyst, this)).findFirst().orElse(null);
     }
 
-    public void attemptCraft(){
-        if(this.catalystItem == null || isCrafting)
-            return;
-        if(this.getRecipe() != null)
+    public boolean attemptCraft(ItemStack catalyst){
+        if(isCrafting)
+            return false;
+        IEnchantingRecipe recipe = this.getRecipe(catalyst);
+        if(recipe != null) {
+            if(recipe.consumesMana()){
+                if(!ManaUtil.hasManaNearby(pos, world, 10, recipe.manaCost()))
+                    return false;
+                ManaUtil.takeManaNearbyWithParticles(pos, world, 10, recipe.manaCost());
+            }
             this.isCrafting = true;
-
-        updateBlock();
+            updateBlock();
+            return true;
+        }
+        return false;
     }
 
     public void updateBlock(){

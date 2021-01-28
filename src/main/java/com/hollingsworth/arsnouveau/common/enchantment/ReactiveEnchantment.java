@@ -28,6 +28,11 @@ public class ReactiveEnchantment extends Enchantment {
     }
 
     @Override
+    public boolean canApply(ItemStack stack) {
+        return true;
+    }
+
+    @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
         return false;
     }
