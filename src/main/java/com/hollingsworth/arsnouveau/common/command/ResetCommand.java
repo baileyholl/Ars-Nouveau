@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.command;
 import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.EntityArgument;
@@ -23,7 +22,7 @@ public class ResetCommand {
                         .executes(context -> resetPlayers(context.getSource(), EntityArgument.getEntities(context, "targets")))));
     }
 
-    private static int resetPlayers(CommandSource source, Collection<? extends Entity> entities) throws CommandSyntaxException {
+    private static int resetPlayers(CommandSource source, Collection<? extends Entity> entities) {
         for(Entity e : entities){
             if(!(e instanceof LivingEntity))
                 continue;
