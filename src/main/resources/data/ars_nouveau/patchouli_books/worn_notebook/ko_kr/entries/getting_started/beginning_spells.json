@@ -41,7 +41,7 @@
             "type": "spotlight",
 			"item":"ars_nouveau:glyph_ignite",
             "title":"점화",
-			"text":"상형 문자 인쇄기를 통해 제작할 수 있는 1단계 효과 주문입니다. 개체와 블록에 불을 붙입니다. A cheap way to increase damage. Try Projectile -> Harm -> Ignite"
+			"text":"상형 문자 인쇄기를 통해 제작할 수 있는 1단계 효과 주문입니다. 개체와 블록에 불을 붙입니다. 피해량을 손쉽게 늘릴 수 있는 값싼 주문입니다. 투사체 -> 피해 -> 점화 순으로 배치하고 시도해 보세요."
         },
 		{
             "type": "spotlight",
