@@ -127,7 +127,7 @@ public class ItemsRegistry {
                     new ModItem(LibItemNames.MYTHICAL_CLAY),
                     new ModItem(LibItemNames.BLAZE_FIBER),
                     new ModItem(LibItemNames.END_FIBER),
-                    new ModItem(LibItemNames.MANA_BLOOM),
+                    new CompostableItem(LibItemNames.MANA_BLOOM, 0.65F),
                     new ModItem(LibItemNames.MANA_FIBER),
                     new ModItem(LibItemNames.MUNDANE_BELT),
                     new ModItem(LibItemNames.ARCANE_BRICK).withTooltip(new TranslationTextComponent("tooltip.arcane_brick")),
@@ -210,6 +210,7 @@ public class ItemsRegistry {
                 registry.register(item);
                 ITEMS.add(item);
             }
+
         }
     }
 
