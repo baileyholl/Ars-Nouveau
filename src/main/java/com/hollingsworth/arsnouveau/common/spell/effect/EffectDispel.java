@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -33,7 +34,8 @@ public class EffectDispel extends AbstractEffect {
                 Collection<EffectInstance> effects = entity.getActivePotionEffects();
                 EffectInstance[] array = effects.toArray(new EffectInstance[effects.size()]);
                 for(EffectInstance e : array){
-                    entity.removePotionEffect(e.getPotion());
+                    if(e.isCurativeItem(new ItemStack(Items.MILK_BUCKET)))
+                        entity.removePotionEffect(e.getPotion());
                 }
                 if(entity instanceof IDispellable && entity.isAlive() && entity.getHealth() > 0 && !entity.removed){
                     ((IDispellable) entity).onDispel(shooter);
