@@ -331,5 +331,6 @@
 	"ars_nouveau.bow.invalid": "Bows may only accept spells that do not contain a form.",
 	"ars_nouveau.apparatus.norecipe": "No recipe found.",
 	"ars_nouveau.apparatus.nomana": "Not enough mana nearby.",
-	"ars_nouveau.reset.cleared": "Progress cleared."
+	"ars_nouveau.reset.cleared": "Progress cleared.",
+	"effect.ars_nouveau.summoning_sickness": "Mana Regeneration"
 }
