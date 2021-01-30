@@ -37,26 +37,24 @@ public class EffectFell extends AbstractEffect {
 
     @Override
     public void onResolveBlock(BlockRayTraceResult ray, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        for(BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter, ray.getPos(), ray, getBuffCount(augments, AugmentAOE.class))) {
-            BlockState state = world.getBlockState(blockpos);
-            if (isTree(state)) {
-                Set<BlockPos> list = getTree(world, ray.getPos(), 50 + 50 * getBuffCount(augments, AugmentAOE.class));
-                list.forEach(listPos -> {
-                    if (!BlockUtil.destroyRespectsClaim(shooter, world, listPos))
-                        return;
-                    if (hasBuff(augments, AugmentExtract.class)) {
-                        world.getBlockState(listPos).getDrops(LootUtil.getSilkContext((ServerWorld) world, listPos, shooter)).forEach(i -> world.addEntity(new ItemEntity(world, listPos.getX(), listPos.getY(), listPos.getZ(), i)));
-                        BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, false);
-                    } else if (hasBuff(augments, AugmentFortune.class)) {
-                        world.getBlockState(listPos).getDrops(LootUtil.getFortuneContext((ServerWorld) world, listPos, shooter, getBuffCount(augments, AugmentFortune.class))).forEach(i -> world.addEntity(new ItemEntity(world, listPos.getX(), listPos.getY(), listPos.getZ(), i)));
-                        BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, false);
-                    } else {
-                        BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, true);
-                    }
-                });
-                world.playEvent(2001, blockpos, Block.getStateId(state));
-                return;
-            }
+        BlockPos blockPos = ray.getPos();
+        BlockState state = world.getBlockState(blockPos);
+        if (isTree(state)) {
+            Set<BlockPos> list = getTree(world, blockPos, 50 + 50 * getBuffCount(augments, AugmentAOE.class));
+            list.forEach(listPos -> {
+                if (!BlockUtil.destroyRespectsClaim(shooter, world, listPos))
+                    return;
+                if (hasBuff(augments, AugmentExtract.class)) {
+                    world.getBlockState(listPos).getDrops(LootUtil.getSilkContext((ServerWorld) world, listPos, shooter)).forEach(i -> world.addEntity(new ItemEntity(world, listPos.getX(), listPos.getY(), listPos.getZ(), i)));
+                    BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, false);
+                } else if (hasBuff(augments, AugmentFortune.class)) {
+                    world.getBlockState(listPos).getDrops(LootUtil.getFortuneContext((ServerWorld) world, listPos, shooter, getBuffCount(augments, AugmentFortune.class))).forEach(i -> world.addEntity(new ItemEntity(world, listPos.getX(), listPos.getY(), listPos.getZ(), i)));
+                    BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, false);
+                } else {
+                    BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, true);
+                }
+            });
+            world.playEvent(2001, blockPos, Block.getStateId(state));
         }
     }
 

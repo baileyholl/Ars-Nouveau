@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.IGrowable;
 import net.minecraft.entity.LivingEntity;
@@ -32,7 +33,7 @@ public class EffectGrow  extends AbstractEffect {
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof BlockRayTraceResult) {
-            for(BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult) rayTraceResult, getBuffCount(augments, AugmentAOE.class))){
+            for(BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult) rayTraceResult, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))){
                 //BlockPos blockpos = ((BlockRayTraceResult) rayTraceResult).getPos();
                 ItemStack stack = new ItemStack(Items.BONE_MEAL);
                 if(world instanceof ServerWorld)
