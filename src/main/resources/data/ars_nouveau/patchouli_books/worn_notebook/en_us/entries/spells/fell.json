@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Harvests entire trees, mushrooms, cactus, and other vegetation. Can be amplified with Amplify to break materials of higher hardness. AOE will increase the number of blocks that may be broken at one time."
+      "text": "ars_nouveau.glyph_desc.fell"
     },
     {
       "type": "glyph_recipe",

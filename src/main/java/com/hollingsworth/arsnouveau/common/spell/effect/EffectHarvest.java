@@ -104,7 +104,7 @@ public class EffectHarvest extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "When used on grown crops, this spell will obtain the fully grown product without destroying the plant.";
     }
 }

@@ -86,7 +86,7 @@ public class EffectGrow  extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Causes plants to accelerate in growth, but this does not provide mana for nearby Mana Condensers.";
     }
 }

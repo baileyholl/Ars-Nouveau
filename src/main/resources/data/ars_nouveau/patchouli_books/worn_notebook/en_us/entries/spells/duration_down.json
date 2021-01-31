@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Reduces the duration of spells like potion effects, delay, redstone signal, and others."
+      "text": "ars_nouveau.glyph_desc.duration_down"
     },
     {
       "type": "glyph_recipe",

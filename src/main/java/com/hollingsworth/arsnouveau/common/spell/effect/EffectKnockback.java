@@ -58,7 +58,7 @@ public class EffectKnockback extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Knocks a target away a short distance from the caster";
     }
 }

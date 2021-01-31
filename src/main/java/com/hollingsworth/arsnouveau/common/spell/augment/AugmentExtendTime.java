@@ -29,7 +29,7 @@ public class AugmentExtendTime extends AbstractAugment {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Extends the time that spells last, including buffs, fangs, and summons";
     }
 }

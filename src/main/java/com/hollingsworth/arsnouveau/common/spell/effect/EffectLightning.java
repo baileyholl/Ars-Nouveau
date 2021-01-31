@@ -49,7 +49,7 @@ public class EffectLightning extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Summons a lightning bolt at the location";
     }
 }

@@ -66,7 +66,7 @@ public class EffectDispel extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Removes any potion effects on the target. When used on a witch at half health, the witch will vanish in return for a Wixie shard. Will also dispel tamed Whelps, Carbuncles, and Sylphs back into their charm.";
     }
 }

@@ -49,7 +49,7 @@ public class EffectSlowfall extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Applies the Slow Fall buff.";
     }
 }

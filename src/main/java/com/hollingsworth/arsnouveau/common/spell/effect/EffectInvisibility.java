@@ -44,7 +44,7 @@ public class EffectInvisibility extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Causes the target to turn invisible for a short time.";
     }
 }

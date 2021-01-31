@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "When applied to the Projectile spell, projectiles may continue through their path an additional time after hitting a mob or block."
+      "text": "ars_nouveau.glyph_desc.pierce"
     },
     {
       "type": "glyph_recipe",

@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Places blocks from the casters inventory. If a player is casting this, this spell will place blocks from the hot bar first."
+      "text": "ars_nouveau.glyph_desc.place_block"
     },
     {
       "type": "glyph_recipe",

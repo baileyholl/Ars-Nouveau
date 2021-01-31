@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Applies spells at the block or entity that is targeted."
+      "text": "ars_nouveau.glyph_desc.touch"
     },
     {
       "type": "glyph_recipe",

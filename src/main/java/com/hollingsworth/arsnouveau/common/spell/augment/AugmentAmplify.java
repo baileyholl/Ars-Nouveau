@@ -29,7 +29,7 @@ public class AugmentAmplify extends AbstractAugment {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Additively increases the power of most spell effects. Can increase the harvest level of Break and increases the damage of spells.";
     }
 }

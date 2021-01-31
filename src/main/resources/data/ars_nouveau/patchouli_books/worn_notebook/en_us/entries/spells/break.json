@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "A spell you start with. Breaks blocks of an average hardness. Can be amplified to increase the harvest level."
+      "text": "ars_nouveau.glyph_desc.break"
     },
     {
       "type": "glyph_recipe",

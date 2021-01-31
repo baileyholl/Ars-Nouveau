@@ -40,7 +40,7 @@ public class EffectDelay extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Delays the resolution of effects placed to the right of this spell for a few moments. The delay may be increased with the Extend Time augment.";
     }
 

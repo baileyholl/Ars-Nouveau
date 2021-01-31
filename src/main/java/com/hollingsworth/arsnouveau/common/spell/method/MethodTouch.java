@@ -83,7 +83,7 @@ public class MethodTouch extends AbstractCastMethod {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Applies spells at the block or entity that is targeted.";
     }
 

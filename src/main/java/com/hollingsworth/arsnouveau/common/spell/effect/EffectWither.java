@@ -47,7 +47,7 @@ public class EffectWither extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Applies the Wither debuff.";
     }
 }

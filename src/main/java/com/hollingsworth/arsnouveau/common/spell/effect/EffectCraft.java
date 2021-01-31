@@ -64,7 +64,7 @@ public class EffectCraft extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Opens the crafting menu.";
     }
 }

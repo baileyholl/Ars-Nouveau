@@ -40,7 +40,7 @@ public class EffectEnderChest extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Opens your personal ender chest inventory from anywhere.";
     }
 

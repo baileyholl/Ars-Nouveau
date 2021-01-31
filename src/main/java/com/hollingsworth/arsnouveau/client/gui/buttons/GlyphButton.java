@@ -7,6 +7,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -65,7 +66,7 @@ public class GlyphButton extends Button {
 
                 if(parent.api.getSpell_map().containsKey(this.spell_id)) {
                     List<String> test = new ArrayList<>();
-                    test.add(parent.api.getSpell_map().get(this.spell_id).name);
+                    test.add(new TranslationTextComponent("ars_nouveau.glyph_name." + parent.api.getSpell_map().get(this.spell_id).tag).getString());
                     parent.tooltip = test;
                 }
             }

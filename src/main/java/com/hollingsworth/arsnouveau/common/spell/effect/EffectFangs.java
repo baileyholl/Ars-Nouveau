@@ -117,7 +117,7 @@ public class EffectFangs extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Summons Evoker Fangs in the direction where the spell was targeted.";
     }
 }

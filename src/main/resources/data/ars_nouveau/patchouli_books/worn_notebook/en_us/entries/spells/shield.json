@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Applies the Shield buff. This buff will reduce a flat amount of damage taken from magical and physical sources. Does not reduce damage from environmental sources."
+      "text": "ars_nouveau.glyph_desc.shield"
     },
     {
       "type": "glyph_recipe",

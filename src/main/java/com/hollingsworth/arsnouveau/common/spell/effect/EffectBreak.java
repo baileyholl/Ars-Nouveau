@@ -110,7 +110,7 @@ public class EffectBreak extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "A spell you start with. Breaks blocks of an average hardness. Can be amplified to increase the harvest level.";
     }
 }

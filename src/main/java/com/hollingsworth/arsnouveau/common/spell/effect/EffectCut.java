@@ -70,7 +70,7 @@ public class EffectCut extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Shears entities and blocks, or damages non-shearable entities for a small amount. Costs nothing.";
     }
 

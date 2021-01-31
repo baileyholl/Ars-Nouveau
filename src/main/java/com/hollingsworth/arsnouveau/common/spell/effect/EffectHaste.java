@@ -55,7 +55,7 @@ public class EffectHaste extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Provides a speed boost to the target";
     }
 }

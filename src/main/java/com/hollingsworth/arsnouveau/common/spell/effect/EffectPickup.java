@@ -57,7 +57,7 @@ public class EffectPickup extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Picks up nearby items in a medium radius where this spell is activated. The range may be expanded with AOE.";
     }
 

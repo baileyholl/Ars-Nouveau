@@ -10,7 +10,6 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtract;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Explosion;
@@ -62,7 +61,7 @@ public class EffectExplosion extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Causes an explosion at the location.";
     }
 }

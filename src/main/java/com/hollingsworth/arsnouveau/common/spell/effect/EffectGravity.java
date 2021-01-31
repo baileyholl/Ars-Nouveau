@@ -64,7 +64,7 @@ public class EffectGravity extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Causes blocks and entities to fall.";
     }
 }

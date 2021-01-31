@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Decreases the power of most spells. Decreases the mana cost slighty, but never below 0."
+      "text": "ars_nouveau.glyph_desc.dampen"
     },
     {
       "type": "glyph_recipe",

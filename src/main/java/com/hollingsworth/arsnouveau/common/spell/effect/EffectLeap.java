@@ -38,7 +38,7 @@ public class EffectLeap extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Launches the target in the direction they are looking. Amplification will increase the distance moved.";
     }
 
