@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Causes multiple projectiles to be cast at once. Each projectile applies a set of effects."
+      "text": "ars_nouveau.glyph_desc.split"
     },
     {
       "type": "glyph_recipe",

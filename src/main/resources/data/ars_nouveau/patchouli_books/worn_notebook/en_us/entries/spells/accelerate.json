@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Increases the speed of projectile spells."
+      "text": "ars_nouveau.glyph_desc.accelerate"
     },
     {
       "type": "glyph_recipe",

@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Applies the Strength buff."
+      "text": "ars_nouveau.glyph_desc.strength"
     },
     {
       "type": "glyph_recipe",

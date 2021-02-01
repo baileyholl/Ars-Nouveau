@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Causes an explosion at the location."
+      "text": "ars_nouveau.glyph_desc.explosion"
     },
     {
       "type": "glyph_recipe",

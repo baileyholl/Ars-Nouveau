@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Extends the time that spells last, including buffs, fangs, and summons"
+      "text": "ars_nouveau.glyph_desc.extend_time"
     },
     {
       "type": "glyph_recipe",

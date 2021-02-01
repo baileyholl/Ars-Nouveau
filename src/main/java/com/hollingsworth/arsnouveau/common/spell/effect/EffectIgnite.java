@@ -71,7 +71,7 @@ public class EffectIgnite  extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Sets blocks and mobs on fire for a short time";
     }
 }

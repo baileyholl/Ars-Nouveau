@@ -586,6 +586,10 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         if (tile == null || stack == null || stack.isEmpty())
             return SortPref.INVALID;
         for (ItemFrameEntity i : world.getEntitiesWithinAABB(ItemFrameEntity.class, new AxisAlignedBB(tile.getPos()).grow(1))) {
+            // Check if these frames are attached to the tile
+            TileEntity adjTile = world.getTileEntity(i.getPosition().offset(i.getHorizontalFacing().getOpposite()));
+            if(adjTile == null || !adjTile.equals(tile))
+                continue;
             CompoundNBT tag = i.getDisplayedItem().getTag();
             if (i.getDisplayedItem().isEmpty())
                 continue;
@@ -630,6 +634,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             return null;
 
         for(BlockPos p : FROM_LIST){
+            if(world.getTileEntity(p) == null)
+                continue;
             IItemHandler iItemHandler = world.getTileEntity(p).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
             if(iItemHandler == null)
                 continue;

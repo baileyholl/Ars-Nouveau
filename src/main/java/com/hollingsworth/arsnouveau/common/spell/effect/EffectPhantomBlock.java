@@ -57,7 +57,7 @@ public class EffectPhantomBlock extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Creates a temporary block that will disappear after a short time.";
     }
 }

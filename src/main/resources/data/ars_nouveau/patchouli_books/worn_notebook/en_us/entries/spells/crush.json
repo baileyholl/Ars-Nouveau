@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Turns stone into gravel, and gravel into sand. Will also harm entities and deals bonus damage to entities that are swimming."
+      "text": "ars_nouveau.glyph_desc.crush"
     },
     {
       "type": "glyph_recipe",

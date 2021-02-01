@@ -29,7 +29,7 @@ public class AugmentPierce extends AbstractAugment {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "When applied to the Projectile spell, projectiles may continue through their path an additional time after hitting a mob or block.";
     }
 }

@@ -72,13 +72,16 @@ public class EntityAllyVex extends VexEntity implements ISummon {
     protected void registerGoals() {
 
         this.goalSelector.addGoal(0, new SwimGoal(this));
-        this.goalSelector.addGoal(4, new EntityAllyVex.ChargeAttackGoal());
+        this.goalSelector.addGoal(1, new EntityAllyVex.ChargeAttackGoal());
 
         this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 3.0F, 1.0F));
         this.goalSelector.addGoal(10, new LookAtGoal(this, MobEntity.class, 8.0F));
-        this.goalSelector.addGoal(2, new FollowSummonerFlyingGoal(this, this.owner, 1.0, 10.0f, 5.0f));
-        this.targetSelector.addGoal(2, new EntityAllyVex.CopyOwnerTargetGoal(this));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, MobEntity.class, 10, false, true, (entity ) -> !(entity instanceof EntityAllyVex || entity == this.owner || entity instanceof PlayerEntity) ));
+        this.goalSelector.addGoal(2, new FollowSummonerFlyingGoal(this, this.owner, 1.0, 6.0f, 3.0f));
+        this.targetSelector.addGoal(1, new EntityAllyVex.CopyOwnerTargetGoal(this));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, MobEntity.class, 10, false, true,
+                (entity ) -> (entity instanceof MobEntity && ((MobEntity) entity).getAttackTarget() != null &&
+                        ((MobEntity) entity).getAttackTarget().equals(this.owner)) || (entity instanceof LivingEntity && entity.getAttackingEntity() != null && entity.getAttackingEntity().equals(this.owner))
+        ));
     }
     protected PathNavigator createNavigator(World worldIn) {
         FlyingPathNavigator flyingpathnavigator = new FlyingPathNavigator(this, worldIn);

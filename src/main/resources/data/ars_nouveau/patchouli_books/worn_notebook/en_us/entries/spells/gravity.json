@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Causes blocks and entities to fall."
+      "text": "ars_nouveau.glyph_desc.gravity"
     },
     {
       "type": "glyph_recipe",

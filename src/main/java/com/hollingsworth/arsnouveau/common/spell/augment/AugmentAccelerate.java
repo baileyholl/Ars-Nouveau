@@ -30,7 +30,7 @@ public class AugmentAccelerate extends AbstractAugment {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Increases the speed of projectile spells.";
     }
 }

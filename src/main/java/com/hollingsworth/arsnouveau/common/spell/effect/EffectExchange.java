@@ -164,7 +164,7 @@ public class EffectExchange extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "When used on blocks, exchanges the blocks in the players hotbar for the blocks hit as if they were mined with silk touch. Can be augmented with AOE, and Amplify is required for swapping blocks of higher hardness. "
         + "When used on entities, the locations of the caster and the entity hit are swapped.";
     }

@@ -102,7 +102,7 @@ public class EffectPlaceBlock extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Places blocks from the casters inventory. If a player is casting this, this spell will place blocks from the hot bar first.";
     }
 }

@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.item.Item;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -91,7 +92,7 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
         JsonArray jsonArray = new JsonArray();
         JsonObject descPage = new JsonObject();
         descPage.addProperty("type", "text");
-        descPage.addProperty("text",this.getBookDescription());
+        descPage.addProperty("text","ars_nouveau.glyph_desc." + tag);
 
         JsonObject infoPage = new JsonObject();
         infoPage.addProperty("type", "glyph_recipe");
@@ -125,7 +126,11 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
         return "glyph_" + this.getTag();
     }
 
-    protected String getBookDescription(){
+    public String getBookDescription(){
         return "";
+    }
+
+    public String getLocaleName(){
+        return new TranslationTextComponent("ars_nouveau.glyph_name." + tag).getString();
     }
 }

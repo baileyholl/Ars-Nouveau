@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Summons three Vex allies that will attack nearby hostile enemies. These Vex will last a short time until they begin to take damage, but time may be extended with the Extend Time augment."
+      "text": "ars_nouveau.glyph_desc.summon_vex"
     },
     {
       "type": "glyph_recipe",

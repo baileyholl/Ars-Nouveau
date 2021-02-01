@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Applies the Wither debuff."
+      "text": "ars_nouveau.glyph_desc.wither"
     },
     {
       "type": "glyph_recipe",

@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Causes plants to accelerate in growth, but this does not provide mana for nearby Mana Condensers."
+      "text": "ars_nouveau.glyph_desc.grow"
     },
     {
       "type": "glyph_recipe",

@@ -56,7 +56,7 @@ public class EffectConjureWater extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Places water at a location. Can be augmented with AOE.";
     }
 

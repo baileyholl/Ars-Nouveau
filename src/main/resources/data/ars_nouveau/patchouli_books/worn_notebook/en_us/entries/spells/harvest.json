@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "When used on grown crops, this spell will obtain the fully grown product without destroying the plant."
+      "text": "ars_nouveau.glyph_desc.harvest"
     },
     {
       "type": "glyph_recipe",

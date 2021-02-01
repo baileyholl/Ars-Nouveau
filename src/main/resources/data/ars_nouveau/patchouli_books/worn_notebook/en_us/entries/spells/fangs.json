@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Summons Evoker Fangs in the direction where the spell was targeted."
+      "text": "ars_nouveau.glyph_desc.fangs"
     },
     {
       "type": "glyph_recipe",

@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Heals a small amount of health for the target. When used with Extend Time, the Regeneration buff is applied instead, up to level 5."
+      "text": "ars_nouveau.glyph_desc.heal"
     },
     {
       "type": "glyph_recipe",

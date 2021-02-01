@@ -66,7 +66,7 @@ public class EffectLight extends AbstractEffect {
     public Item getCraftingReagent(){return Items.LANTERN;}
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "If cast on a block, a permanent light source is created. When cast on yourself, you will receive night vision. When cast on other entities, they will receive Night Vision and Glowing.";
     }
 }

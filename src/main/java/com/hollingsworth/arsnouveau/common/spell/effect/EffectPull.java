@@ -59,7 +59,7 @@ public class EffectPull extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Pulls the target closer to the caster";
     }
 }

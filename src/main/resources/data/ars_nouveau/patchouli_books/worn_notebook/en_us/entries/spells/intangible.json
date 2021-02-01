@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Causes blocks to temporarily turn into air. Can be modified with Amplify for blocks of higher hardness, AOE, Duration Down, and Extend Time."
+      "text": "ars_nouveau.glyph_desc.intangible"
     },
     {
       "type": "glyph_recipe",

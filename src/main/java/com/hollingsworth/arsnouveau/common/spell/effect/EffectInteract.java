@@ -96,7 +96,7 @@ public class EffectInteract extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Interacts with blocks or entities as it were a player. Useful for reaching levers, chests, or animals.";
     }
 
