@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "블록 또는 개체와 플레이어처럼 상호작용합니다. 먼 곳에 있는 레버, 상자, 동물 등에 유용히 쓸 수 있습니다."
+      "text": "ars_nouveau.glyph_desc.interact"
     },
     {
       "type": "glyph_recipe",

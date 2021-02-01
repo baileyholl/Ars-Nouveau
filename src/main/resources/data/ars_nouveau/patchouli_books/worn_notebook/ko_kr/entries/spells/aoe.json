@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "주문이 목표 블록을 중심으로 더 넓게 작용합니다."
+      "text": "ars_nouveau.glyph_desc.aoe"
     },
     {
       "type": "glyph_recipe",

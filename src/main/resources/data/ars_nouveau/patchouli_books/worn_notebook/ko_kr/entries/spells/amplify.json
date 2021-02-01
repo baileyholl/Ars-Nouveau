@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "대다수 주문의 세기를 증가시킵니다. 주문이 주는 피해량과 파괴 주문이 부술 수 있는 블록의 등급을 증가시킵니다."
+      "text": "ars_nouveau.glyph_desc.amplify"
     },
     {
       "type": "glyph_recipe",

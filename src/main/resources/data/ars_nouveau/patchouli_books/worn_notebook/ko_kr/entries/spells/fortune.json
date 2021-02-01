@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "죽인 몹과 파괴 주문으로 부순 블록이 아이템을 더 많이 떨굴 확률이 높아집니다. 추출 주문과 결합될 수 없습니다."
+      "text": "ars_nouveau.glyph_desc.fortune"
     },
     {
       "type": "glyph_recipe",

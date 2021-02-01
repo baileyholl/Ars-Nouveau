@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "개체와 블록에 가위질합니다. 가위질할 수 없는 개체에겐 약간의 추가 피해를 줍니다. 비용이 들지 않습니다."
+      "text": "ars_nouveau.glyph_desc.cut"
     },
     {
       "type": "glyph_recipe",

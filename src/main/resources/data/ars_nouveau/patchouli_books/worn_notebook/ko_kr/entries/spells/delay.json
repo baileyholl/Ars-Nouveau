@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "오른쪽에 놓인 주문의 발동을 조금 지연시킵니다. 시간 연장 보강으로 지연 시간을 늘릴 수 있습니다."
+      "text": "ars_nouveau.glyph_desc.delay"
     },
     {
       "type": "glyph_recipe",

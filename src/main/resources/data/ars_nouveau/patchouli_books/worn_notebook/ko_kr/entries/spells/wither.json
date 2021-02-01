@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "시듦 디버프를 줍니다."
+      "text": "ars_nouveau.glyph_desc.wither"
     },
     {
       "type": "glyph_recipe",

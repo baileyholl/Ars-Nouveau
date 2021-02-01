@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "대상이 바라보는 방향으로 튀어나가게 합니다. 증폭으로 움직일 거리를 늘릴 수 있습니다."
+      "text": "ars_nouveau.glyph_desc.leap"
     },
     {
       "type": "glyph_recipe",

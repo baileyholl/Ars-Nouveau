@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "대상을 잠시 투명하게 합니다."
+      "text": "ars_nouveau.glyph_desc.invisibility"
     },
     {
       "type": "glyph_recipe",

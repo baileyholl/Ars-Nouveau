@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "일정 범위 내의 아이템을 줍습니다. 광역으로 범위를 늘릴 수 있습니다."
+      "text": "ars_nouveau.glyph_desc.pickup"
     },
     {
       "type": "glyph_recipe",

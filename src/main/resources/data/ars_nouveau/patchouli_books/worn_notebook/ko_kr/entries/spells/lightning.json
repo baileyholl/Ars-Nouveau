@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "해당 위치에 번개를 내리칩니다."
+      "text": "ars_nouveau.glyph_desc.lightning"
     },
     {
       "type": "glyph_recipe",

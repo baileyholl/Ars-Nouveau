@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "블록 위에 버튼 같이 짧은 레드스톤 신호를 생성합니다. 신호 세기는 10에서 시작하여, 증폭 또는 약화로 늘리거나 줄일 수 있습니다. 시간 연장으로 지속 시간을 늘릴 수 있습니다."
+      "text": "ars_nouveau.glyph_desc.redstone_signal"
     },
     {
       "type": "glyph_recipe",

@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "손에 닿은 블록이나 개체에 주문을 발동합니다."
+      "text": "ars_nouveau.glyph_desc.touch"
     },
     {
       "type": "glyph_recipe",

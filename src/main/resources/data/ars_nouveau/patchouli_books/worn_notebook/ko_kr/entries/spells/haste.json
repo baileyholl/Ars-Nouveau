@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "대상에게 속도 증가 효과를 줍니다."
+      "text": "ars_nouveau.glyph_desc.haste"
     },
     {
       "type": "glyph_recipe",

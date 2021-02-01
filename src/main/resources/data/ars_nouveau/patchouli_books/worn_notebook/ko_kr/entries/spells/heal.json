@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "대상의 체력을 약간 치유합니다. 시간 연장과 함께 사용 시, 재생 버프가 최대 5단계까지 적용됩니다."
+      "text": "ars_nouveau.glyph_desc.heal"
     },
     {
       "type": "glyph_recipe",

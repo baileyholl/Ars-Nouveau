@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "대상의 모든 물약 효과를 제거합니다. 체력이 절반 이하인 마녀에게 사용할 시 윅시 조각을 남긴 채 사라집니다. 길들여진 웰프, 카벙클, 실프에게 사용할 시 부적 형태로 되돌아갑니다."
+      "text": "ars_nouveau.glyph_desc.dispel"
     },
     {
       "type": "glyph_recipe",

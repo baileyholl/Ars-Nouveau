@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "마법 방패 버프를 줍니다. 이 버프는 마법 및 물리 피해를 줄여줍니다. 자연적인 피해는 줄이지 않습니다."
+      "text": "ars_nouveau.glyph_desc.shield"
     },
     {
       "type": "glyph_recipe",

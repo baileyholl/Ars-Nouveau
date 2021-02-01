@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "기본 주문입니다. 대상이나 블록에 맞을 시 주문이 발동하는 투사체를 생성합니다."
+      "text": "ars_nouveau.glyph_desc.projectile"
     },
     {
       "type": "glyph_recipe",

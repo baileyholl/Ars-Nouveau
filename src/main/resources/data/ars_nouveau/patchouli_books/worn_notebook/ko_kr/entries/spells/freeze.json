@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "물을 얼리거나 목표물을 잠시 느려지게 합니다."
+      "text": "ars_nouveau.glyph_desc.freeze"
     },
     {
       "type": "glyph_recipe",

@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "발동자의 인벤토리에 있는 블록을 설치합니다. 플레이어가 발동할 시, 핫바에 있는 블록이 우선적으로 설치됩니다."
+      "text": "ars_nouveau.glyph_desc.place_block"
     },
     {
       "type": "glyph_recipe",

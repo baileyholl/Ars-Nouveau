@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "목표물을 주문 발동자로부터 짧게 밀쳐냅니다."
+      "text": "ars_nouveau.glyph_desc.gust"
     },
     {
       "type": "glyph_recipe",

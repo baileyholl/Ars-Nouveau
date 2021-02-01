@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "제작대 화면을 띄웁니다."
+      "text": "ars_nouveau.glyph_desc.craft"
     },
     {
       "type": "glyph_recipe",

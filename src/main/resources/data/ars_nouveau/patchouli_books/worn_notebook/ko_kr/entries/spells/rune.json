@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "접촉할 시 대상에 주문을 발동시키는 룬을 설치합니다. 룬 분필과는 달리, 이 룬은 일시적이며 재사용될 수 없습니다. 아이템 줍기 주문을 사용할 시, 아이템을 접한 저장 공간에 넣습니다."
+      "text": "ars_nouveau.glyph_desc.rune"
     },
     {
       "type": "glyph_recipe",

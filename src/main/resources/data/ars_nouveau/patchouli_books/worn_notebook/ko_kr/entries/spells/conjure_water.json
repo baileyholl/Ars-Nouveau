@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "물을 설치합니다. 광역을 통해 보강될 수 있습니다."
+      "text": "ars_nouveau.glyph_desc.conjure_water"
     },
     {
       "type": "glyph_recipe",

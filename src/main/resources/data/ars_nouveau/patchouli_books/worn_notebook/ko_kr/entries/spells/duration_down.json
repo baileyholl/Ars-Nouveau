@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "물약 효과, 지연, 레드스톤 신호 및 그 외 주문들의 지속 시간을 줄입니다."
+      "text": "ars_nouveau.glyph_desc.duration_down"
     },
     {
       "type": "glyph_recipe",

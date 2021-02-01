@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "잠시 뒤 사라지는 일시적인 블록을 설치합니다."
+      "text": "ars_nouveau.glyph_desc.phantom_block"
     },
     {
       "type": "glyph_recipe",

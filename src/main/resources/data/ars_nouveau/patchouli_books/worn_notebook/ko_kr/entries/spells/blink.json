@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "발동자를 해당 위치로 순간이동시킵니다. 다른 손에 워프 두루마리를 든 채로 개체를 맞출 시 두루마기에 적힌 장소로 개체를 워프시킵니다. 자기 자신에게 사용 시 앞 쪽으로 이동합니다."
+      "text": "ars_nouveau.glyph_desc.blink"
     },
     {
       "type": "glyph_recipe",

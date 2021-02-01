@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "폭발을 일으킵니다."
+      "text": "ars_nouveau.glyph_desc.explosion"
     },
     {
       "type": "glyph_recipe",

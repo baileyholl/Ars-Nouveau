@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "힘 버프를 줍니다."
+      "text": "ars_nouveau.glyph_desc.strength"
     },
     {
       "type": "glyph_recipe",

@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "블록과 몹에 잠깐 동안 불을 붙입니다."
+      "text": "ars_nouveau.glyph_desc.ignite"
     },
     {
       "type": "glyph_recipe",

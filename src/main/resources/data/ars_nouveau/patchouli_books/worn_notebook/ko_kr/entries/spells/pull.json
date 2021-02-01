@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "발동자 쪽으로 대상을 당깁니다."
+      "text": "ars_nouveau.glyph_desc.pull"
     },
     {
       "type": "glyph_recipe",

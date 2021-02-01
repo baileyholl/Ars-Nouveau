@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "주문이 목표한 방향으로 소환사 송곳니를 소환합니다."
+      "text": "ars_nouveau.glyph_desc.fangs"
     },
     {
       "type": "glyph_recipe",

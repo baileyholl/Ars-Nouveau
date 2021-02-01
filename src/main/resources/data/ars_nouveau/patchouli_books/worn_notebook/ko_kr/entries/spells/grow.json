@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "식물의 성장을 촉진합니다. 단, 이 주문은 마나 축전기에 마나를 제공하지 않습니다."
+      "text": "ars_nouveau.glyph_desc.grow"
     },
     {
       "type": "glyph_recipe",

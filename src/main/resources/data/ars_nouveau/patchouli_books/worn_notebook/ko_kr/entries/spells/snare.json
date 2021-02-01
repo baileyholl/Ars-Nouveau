@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "개체가 움직이거나 점프할 수 없게 만듭니다. 시간 연장으로 지속 시간을 늘릴 수 있습니다."
+      "text": "ars_nouveau.glyph_desc.snare"
     },
     {
       "type": "glyph_recipe",

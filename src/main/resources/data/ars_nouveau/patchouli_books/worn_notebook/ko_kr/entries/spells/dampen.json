@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "대다수 주문의 세기를 감소시킵니다. 소모되는 마나가 조금 줄어드나 0 이하로는 줄지 않습니다."
+      "text": "ars_nouveau.glyph_desc.dampen"
     },
     {
       "type": "glyph_recipe",

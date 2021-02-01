@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "버프, 송곳니, 소환술을 포함한 주문의 지속 시간을 늘립니다."
+      "text": "ars_nouveau.glyph_desc.extend_time"
     },
     {
       "type": "glyph_recipe",

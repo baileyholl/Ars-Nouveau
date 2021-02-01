@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "블록과 개체가 떨어지게 합니다."
+      "text": "ars_nouveau.glyph_desc.gravity"
     },
     {
       "type": "glyph_recipe",

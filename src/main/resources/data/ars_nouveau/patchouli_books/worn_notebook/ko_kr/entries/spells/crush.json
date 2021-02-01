@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "돌을 자갈로, 자갈을 모래로 만듭니다. 또한 수영 중인 개체에게 추가적인 피해를 입힙니다."
+      "text": "ars_nouveau.glyph_desc.crush"
     },
     {
       "type": "glyph_recipe",

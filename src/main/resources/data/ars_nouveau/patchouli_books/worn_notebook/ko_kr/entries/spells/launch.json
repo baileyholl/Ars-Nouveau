@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "대상을 공중으로 날립니다. 높은 점프나 등산에 사용해보세요!"
+      "text": "ars_nouveau.glyph_desc.launch"
     },
     {
       "type": "glyph_recipe",

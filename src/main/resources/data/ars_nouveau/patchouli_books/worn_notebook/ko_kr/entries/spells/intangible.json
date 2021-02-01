@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "블록이 일시적으로 공기화됩니다. 증폭을 통해 더 높은 경도의 블록에 적용할 수 있습니다. 그 외 광역, 지속 감소, 시간 연장으로 보강될 수 있습니다."
+      "text": "ars_nouveau.glyph_desc.intangible"
     },
     {
       "type": "glyph_recipe",

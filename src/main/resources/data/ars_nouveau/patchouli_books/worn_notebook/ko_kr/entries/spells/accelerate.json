@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "투사체 주문의 속도를 증가시킵니다."
+      "text": "ars_nouveau.glyph_desc.accelerate"
     },
     {
       "type": "glyph_recipe",

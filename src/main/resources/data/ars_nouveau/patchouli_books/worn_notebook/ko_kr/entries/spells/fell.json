@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "나무, 버섯, 선인장 및 다른 초목을 수확합니다. 증폭을 통해 더 높은 경도의 블록을 부술 수 있습니다. 광역을 통해 한 번에 더 많은 블록을 부술 수 있습니다."
+      "text": "ars_nouveau.glyph_desc.fell"
     },
     {
       "type": "glyph_recipe",

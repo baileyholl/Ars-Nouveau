@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "투사체 주문에 적용 시, 투사체가 몹이나 블록을 맞춘 후 추가적으로 더 나아갑니다."
+      "text": "ars_nouveau.glyph_desc.pierce"
     },
     {
       "type": "glyph_recipe",

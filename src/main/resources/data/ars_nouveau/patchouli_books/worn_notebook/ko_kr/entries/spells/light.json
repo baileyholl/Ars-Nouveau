@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "블록에 발동할 시, 영구적인 광원이 생성됩니다. 자기 자신에게 발동할 시, 야간 투시 효과가 적용됩니다. 다른 개체에 발동할 시, 야간 투시와 발광 효과를 적용합니다."
+      "text": "ars_nouveau.glyph_desc.light"
     },
     {
       "type": "glyph_recipe",

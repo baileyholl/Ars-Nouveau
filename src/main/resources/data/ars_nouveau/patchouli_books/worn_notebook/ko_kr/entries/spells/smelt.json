@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "블록과 아이템을 제련합니다. 광역으로 한 번에 제련하는 아이템의 수와 블록의 범위를 늘릴 수 있습니다. 증폭을 통해 더 높은 경도의 블록을 제련할 수 있습니다."
+      "text": "ars_nouveau.glyph_desc.smelt"
     },
     {
       "type": "glyph_recipe",
