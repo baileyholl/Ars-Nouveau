@@ -1,0 +1,19 @@
+{
+    "name": "지배 지팡이",
+    "icon": "ars_nouveau:dominion_wand",
+    "category": "automation",
+    "pages": [
+        {
+            "type": "text",
+            "text": "마나 전달체 및 자동화 개체를 설정할 수 있는 도구입니다. 전달 경로를 설정하려면, 먼저 마나를 가져오고자 하는 대상에 지팡이를 사용한 뒤, 마나를 보낼 블록에 지팡이를 사용하세요. 예시: 마나 항아리에서 마나 전달체로, 마나 전달체에서 마나 전달체로, 마나 전달체에서 마나 항아리로. 연동을 초기화하려면, 웅크린 채로 지팡이를 전달체에 사용하세요."
+        },
+    {
+      "type": "apparatus_recipe",
+      "recipe": "ars_nouveau:dominion_wand"
+    },
+		{
+            "type": "relations",
+            "entries":["apparatus/arcane_relay", "apparatus/whelp_charm"]        
+        }
+    ]
+}

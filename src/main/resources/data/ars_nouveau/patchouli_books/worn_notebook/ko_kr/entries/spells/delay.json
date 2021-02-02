@@ -1,0 +1,20 @@
+{
+  "name": "지연",
+  "icon": "ars_nouveau:glyph_delay",
+  "category": "spells_1",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "text",
+      "text": "ars_nouveau.glyph_desc.delay"
+    },
+    {
+      "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_delay",
+      "tier": "1",
+      "mana_cost": "중간",
+      "clay_type": "ars_nouveau:magic_clay",
+      "reagent": "minecraft:repeater"
+    }
+  ]
+}

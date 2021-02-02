@@ -1,0 +1,20 @@
+{
+  "name": "느린 낙하",
+  "icon": "ars_nouveau:glyph_slowfall",
+  "category": "spells_1",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "text",
+      "text": "ars_nouveau.glyph_desc.slowfall"
+    },
+    {
+      "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_slowfall",
+      "tier": "1",
+      "mana_cost": "중간",
+      "clay_type": "ars_nouveau:magic_clay",
+      "reagent": "minecraft:feather"
+    }
+  ]
+}

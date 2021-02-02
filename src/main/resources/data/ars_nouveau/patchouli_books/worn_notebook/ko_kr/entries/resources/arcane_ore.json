@@ -1,0 +1,23 @@
+{
+    "name": "불가사의한 광물",
+    "icon": "ars_nouveau:arcane_ore",
+    "category": "resources",
+    "pages": [
+        {
+            "type": "text",
+            "text": "불가사의한 광물은 금보다 약간 흔하며, 마나 보석의 공급처입니다. 마나 보석은 장식품 제작, 새 주문 해금, 장치 제작에 쓰입니다. 또한 마나 보석은 결정화 장치를 통해 재생성될 수 있습니다."
+        },
+		{
+            "type":"smelting",
+			"recipe":"ars_nouveau:mana_gem"
+		},
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:arcane_stone"
+		},
+		{
+            "type": "relations",
+            "entries":["machines/crystallizer"]        
+        }
+    ]
+}

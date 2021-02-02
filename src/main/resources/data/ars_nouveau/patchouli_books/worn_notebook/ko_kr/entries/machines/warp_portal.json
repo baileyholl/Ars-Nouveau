@@ -1,0 +1,33 @@
+{
+    "name": "워프 포탈",
+    "icon": "ars_nouveau:warp_scroll",
+    "category": "machines",
+    "pages": [
+        {
+            "type": "text",
+            "text": "워프 포탈은 워프 두루마리처럼, 같은 차원 내의 특정 위치로의 일방향 순간이동을 제공합니다. 워프 포탈을 만들려면, 불가사의한 벽돌 또는 벽돌의 다른 형태로 네더 포탈 모양 틀을 짓고, 근처에 꽉 찬 마나 항아리를 놓으세요. 그 다음, 위치가 기록 된 워프 두루마리를 틀 안으로 던져 넣으세요. 주변에 충분한 마나가 있을 시 포탈이 생성됩니다."
+        },
+		{
+		"type":"multiblock",
+		"multiblock":{
+			"mapping":{
+				"B":"ars_nouveau:arcane_bricks",
+				"P":"ars_nouveau:portal",
+				"0":"ars_nouveau:portal"
+			},
+			"pattern":[
+				[" BB "],
+				["BPPB"],
+				["B0PB"],
+				["BPPB"],
+				[" BB "]
+			],
+			"symmetrical": true
+		},
+		"text":"이 신비로운 포탈은 플레이어, 몹, 주문, 그리고 아이템을 같은 차원 내의 어떤 위치에든 보낼 수 있습니다."
+		},{
+            "type": "relations",
+            "entries":["items/warp_scroll"]        
+        }
+    ]
+}

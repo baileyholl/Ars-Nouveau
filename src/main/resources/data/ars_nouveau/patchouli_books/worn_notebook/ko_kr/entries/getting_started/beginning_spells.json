@@ -1,0 +1,58 @@
+{
+    "name": "기본 주문",
+    "icon": "ars_nouveau:glyph_break",
+	"sortnum":3,
+    "category": "getting_started",
+    "pages": [
+        {
+            "type": "text",
+            "text": "맨 처음 당신은 오직 몇 가지 특정한 효과와 형태만 사용할 수 있을 겁니다. 일단 상형 문자 인쇄기를 만들고 나면, 모든 주문을 제작할 수 있게 됩니다. 원활한 시작을 위해, 여기 각종 기본 주문들이 서술되어 있습니다."       
+        },
+		{
+            "type": "spotlight",
+			"item":"ars_nouveau:glyph_break",
+            "title":"파괴",
+			"text":"기본 주문으로, 투사체 -> 파괴 또는 접촉 -> 파괴 순으로 배치하여 철 이하의 물질을 수확해 보세요."
+        },
+		{
+            "type": "spotlight",
+			"item":"ars_nouveau:glyph_harm",
+            "title":"피해",
+			"text":"기본 주문으로, 투사채 -> 피해 또는 접촉 -> 피해 순으로 배치하여 적에게 약간의 피해를 입힐 수 있습니다."
+        },
+		{
+            "type": "spotlight",
+			"item":"ars_nouveau:glyph_haste",
+            "title":"신속",
+			"text":"상형 문자 인쇄기를 통해 제작할 수 있는 1단계 효과 주문입니다. 대상에게 속도 증가 효과를 부여합니다. 자기 자신 -> 신속 순으로 배치하고 시도해 보세요."
+        },{
+            "type": "spotlight",
+			"item":"ars_nouveau:glyph_light",
+            "title":"빛",
+			"text":"상형 문자 인쇄기를 통해 제작할 수 있는 1단계 효과 주문입니다. 블록에 대고 사용 시 영구적인 광원을 생성합니다. 자기 자신에게 사용 시 야간 투시 효과를, 개체에게 사용 시 야간 투시 및 발광 효과를 부여합니다."
+        },
+		{
+            "type": "spotlight",
+			"item":"ars_nouveau:glyph_amplify",
+            "title":"증폭",
+			"text":"상형 문자 인쇄기를 통해 제작할 수 있는 1단계 보강 주문입니다. 거의 모든 주문의 세기를 증가시킵니다. 투사체 -> 파괴 -> 증폭 -> 증폭 순으로 배치하여 흑요석을 부수거나, 파괴 대신 피해를 넣고 더 큰 피해를 입혀 보세요."
+        },
+		{
+            "type": "spotlight",
+			"item":"ars_nouveau:glyph_ignite",
+            "title":"점화",
+			"text":"상형 문자 인쇄기를 통해 제작할 수 있는 1단계 효과 주문입니다. 개체와 블록에 불을 붙입니다. 피해량을 손쉽게 늘릴 수 있는 값싼 주문입니다. 투사체 -> 피해 -> 점화 순으로 배치하고 시도해 보세요."
+        },
+		{
+            "type": "spotlight",
+			"item":"ars_nouveau:glyph_harvest",
+            "title":"수확",
+			"text":"상형 문자 인쇄기를 통해 제작할 수 있는 1단계 효과 주문입니다. 작물을 부수지 않고 수확할 수 있습니다."
+        },
+		{
+            "type": "relations",
+            "entries":["machines/glyph_press"],
+			"text":"새로운 상형 문자를 제작하는 법을 배우려면, 상형 문자 인쇄기에 관해 살펴보세요."
+        }
+    ]
+}

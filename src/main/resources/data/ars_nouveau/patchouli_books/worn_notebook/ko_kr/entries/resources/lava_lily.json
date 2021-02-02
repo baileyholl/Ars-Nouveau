@@ -1,0 +1,15 @@
+{
+    "name": "용암 수련잎",
+    "icon": "ars_nouveau:lava_lily",
+    "category": "resources",
+    "pages": [
+        {
+            "type": "text",
+            "text": "액체나 블록 위에 설치 가능한 장식 블록입니다. 용암, 마그마 블록, 이 외의 블록 중 어느 블록 위에 놓였는 가에 따라 블록의 텍스처가 달라집니다."
+        },
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:lava_lily"
+		}
+    ]
+}

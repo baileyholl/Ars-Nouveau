@@ -1,0 +1,38 @@
+{
+	"processor": "com.hollingsworth.arsnouveau.client.patchouli.GlyphPressProcessor",
+    "components": [
+
+        {
+            "type":"item",
+            "item":"#clay_type",
+            "framed":true,
+            "x":20,
+            "y":20
+        },
+        {
+            "type":"item",
+            "item":"#reagent",
+            "framed":true,
+            "x":80,
+            "y":20
+        },
+		{
+			"type": "header",
+			"text": "상형 문자 인쇄기 시약",
+			"x": -1,
+			"y": -1
+        },
+        {
+			"type": "text",
+			"text": "단계: #tier#",
+			"x": 0,
+			"y": 50
+		},
+        {
+			"type": "text",
+			"text": "발동 비용: #mana_cost#",
+			"x": 0,
+			"y": 60
+		}
+	]
+}
