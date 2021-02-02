@@ -1,0 +1,15 @@
+{
+    "name": "아크우드 나무",
+    "icon": "ars_nouveau:blue_archwood_sapling",
+    "category": "resources",
+    "pages": [
+        {
+            "type": "text",
+            "text": "아크우드 나무는 어느 생물 군계에서든 작은 확률로 생성되며, 4 종류가 있습니다. 주문 지팡이를 만드는 데 필요합니다."
+        },
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:archwood_planks"
+		}
+    ]
+}

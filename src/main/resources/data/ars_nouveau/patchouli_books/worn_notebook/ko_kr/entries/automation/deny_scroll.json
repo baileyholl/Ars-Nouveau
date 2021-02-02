@@ -1,0 +1,20 @@
+{
+    "name": "아이템 두루마리: 거부",
+    "icon": "ars_nouveau:deny_scroll",
+    "category": "automation",
+    "pages": [
+        {
+            "type": "text",
+            "text": "자동화 관련 개체에게 아이템 목록을 제공합니다. 아이템을 기록하려면, 두루마리를 필기 작업대에 놓고 웅크린 채로 기록할 아이템을 사용하세요. 카벙클에게 주었을 시, 카벙클은 두루마리에 적히지 않은 모든 아이템을 줍거나 가져갈 것입니다."
+        },
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:blank_parchment",
+			"recipe2":"ars_nouveau:deny_scroll"
+		},
+		{
+            "type": "relations",
+            "entries":["apparatus/carbuncle_charm", "machines/scribes_table"]        
+        }
+    ]
+}

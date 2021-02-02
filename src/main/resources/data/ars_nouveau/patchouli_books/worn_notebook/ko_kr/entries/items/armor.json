@@ -1,0 +1,52 @@
+{
+    "name": "마법 복장",
+    "icon": "ars_nouveau:novice_robes",
+    "category": "equipment",
+    "pages": [
+        {
+            "type": "text",
+            "text": "마법 복장은 마나 최대치와 마나 재생 속도를 늘려줍니다. 더 크고 강력한 주문을 구사하려면, 시작할 때 보다 더 큰 마나 수용량이 필요할 겁니다. 마법 복장 각 부위는 이런 추가 효과를 제공하고, 더 높은 등급의 복장은 더 큰 효과를 제공합니다. 복장을 제작하려면, 마나 꽃을 얻어야 합니다."
+        },
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:mana_fiber",
+			"recipe2":"ars_nouveau:novice_hood"
+		},{
+            "type":"crafting",
+			"recipe":"ars_nouveau:novice_robes",
+			"recipe2":"ars_nouveau:novice_leggings"
+		},
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:novice_boots",
+			"recipe2":"ars_nouveau:blaze_fiber"
+		},
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:apprentice_hood",
+			"recipe2":"ars_nouveau:apprentice_robes"
+		},
+		
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:apprentice_leggings",
+			"recipe2":"ars_nouveau:apprentice_boots"
+		},
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:end_fiber",
+			"recipe2":"ars_nouveau:archmage_hood"
+		},
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:archmage_robes",
+			"recipe2":"ars_nouveau:archmage_leggings"
+		},
+		
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:archmage_boots"
+		
+		}
+    ]
+}

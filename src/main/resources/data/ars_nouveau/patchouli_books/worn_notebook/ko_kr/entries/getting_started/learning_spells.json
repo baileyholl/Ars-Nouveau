@@ -1,0 +1,17 @@
+{
+    "name": "새로운 주문",
+    "icon": "ars_nouveau:blank_glyph",
+	"sortnum":4,
+    "category": "getting_started",
+    "pages": [
+        {
+            "type": "text",
+            "text": "새 주문을 배우기 위해선 약간의 준비, 자원, 그리고 기본적인 장치가 필요합니다. 새 주문은 상형 문자라는 아이템을 통해 습득할 수 있습니다. 상형 문자는 신비한 점토, 시약, 그리고 세계 마나를 이용해 만들어집니다. 상형 문자를 얻고 나면, 주문서를 가진 채로 상형 문자를 사용해서 책에 상형 문자를 써 넣을 수 있습니다."       
+        },
+		{
+            "type": "relations",
+            "entries":["machines/glyph_press", "getting_started/world_mana"],
+			"text":"새로운 상형 문자를 제작하는 법을 배우려면, 상형 문자 인쇄기에 관해 살펴보세요."
+        }
+    ]
+}

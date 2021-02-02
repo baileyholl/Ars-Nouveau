@@ -1,0 +1,16 @@
+{
+    "name": "더 나은 주문 발동",
+    "icon": "ars_nouveau:novice_robes",
+	"sortnum":7,
+    "category": "getting_started",
+    "pages": [
+        {
+            "type": "text",
+            "text": "특별한 마법사 갑옷, 마법 부여, 새로운 상형 문자 습득, 물약 섭취를 통해 마나 총량을 늘릴 수 있습니다. 일단 마나 꽃 씨앗을 얻고 나면, 주문 능력을 크게 향상시켜 줄 초심자 가운을 제작할 수 있습니다. 이 가운은 당신의 마나를 써서 자가 수리하며, 높은 마법 부여 가중치를 가졌고, 괜찮은 보호력을 제공합니다."       
+        },
+		{
+            "type": "relations",
+            "entries":["machines/enchanting_apparatus", "apparatus/mana_bloom_crop","items/armor"]        
+        }
+    ]
+}

@@ -1,0 +1,15 @@
+{
+    "name": "원천 열매 덤불",
+    "icon": "ars_nouveau:mana_berry",
+    "category": "resources",
+    "pages": [
+        {
+            "type": "text",
+            "text": "원천 열매 덤불은 타이가에서 발견되며, 원천 열매를 만듭니다. 원천 열매는 마나 재생의 물약을 제조하는 데 쓰이거나 음식으로 섭취될 수 있습니다. 카벙클은 다 자란 원천 열매 덤불을 알아서 수확하기에, 초반 마나 축전기 자동화에 유용합니다."
+        },
+		{
+            "type": "relations",
+            "entries":["apparatus/carbuncle_charm"]        
+        }
+    ]
+}
