@@ -69,6 +69,10 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         super(p_i48568_1_, p_i48568_2_);
         this.moveController =  new FlyingMovementController(this, 10, true);
     }
+    @Override
+    protected int getExperiencePoints(PlayerEntity player) {
+        return 0;
+    }
 
     public EntityWhelp setRecipe(ArrayList<AbstractSpellPart> recipe){
         this.spellRecipe = recipe;

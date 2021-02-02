@@ -20,6 +20,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraftforge.common.Tags;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -67,22 +68,50 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.EffectLaunchID))
                 .withCategory(ArsNouveauAPI.PatchouliCategories.equipment)
                 .build());
-        addRecipe(new EnchantingApparatusRecipe(ItemsRegistry.jarOfLight, Items.GLASS_BOTTLE, new Item[]
-                {Items.GLOWSTONE, Items.GLOWSTONE, Items.GLOWSTONE, Items.GLOWSTONE, Items.REDSTONE_LAMP, Items.GLASS, Items.GLASS, Items.REDSTONE_LAMP}, ArsNouveauAPI.PatchouliCategories.equipment.name()));
+        addRecipe(new EnchantingApparatusRecipe(new ItemStack(ItemsRegistry.jarOfLight), Ingredient.fromItems(Items.GLASS_BOTTLE), Arrays.asList(Ingredient.fromItems(Items.GLOWSTONE),
+                Ingredient.fromItems(Items.GLOWSTONE),
+                Ingredient.fromItems(Items.GLOWSTONE),
+                Ingredient.fromItems(Items.GLOWSTONE),
+                Ingredient.fromItems(Items.REDSTONE_LAMP),
+                Ingredient.fromTag(Tags.Items.GLASS),
+                Ingredient.fromTag(Tags.Items.GLASS),
+                Ingredient.fromItems(Items.REDSTONE_LAMP)), ArsNouveauAPI.PatchouliCategories.equipment.name()));
 
-        addRecipe(new EnchantingApparatusRecipe( BlockRegistry.MANA_BLOOM_CROP.asItem(), Items.WHEAT_SEEDS, new Item[]
-                {ItemsRegistry.manaGem, ItemsRegistry.manaGem, ItemsRegistry.manaGem, ItemsRegistry.manaGem},  ArsNouveauAPI.PatchouliCategories.resources.name()));
+        addRecipe(new EnchantingApparatusRecipe(new ItemStack(BlockRegistry.MANA_BLOOM_CROP.asItem()), Ingredient.fromTag(Tags.Items.SEEDS),
+                Arrays.asList(
+                Recipes.MANA_GEM,   Recipes.MANA_GEM,   Recipes.MANA_GEM,  Recipes.MANA_GEM),  ArsNouveauAPI.PatchouliCategories.resources.name()));
 
-        addRecipe(new EnchantingApparatusRecipe(ItemsRegistry.ringOfLesserDiscount, ItemsRegistry.ringOfPotential, new Item[]{
-                Items.DIAMOND, Items.ENDER_PEARL, Items.DIAMOND, ItemsRegistry.manaGem, ItemsRegistry.manaGem, Items.DIAMOND, Items.ENDER_PEARL, Items.DIAMOND
-        }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
+        addRecipe(new EnchantingApparatusRecipe(new ItemStack(ItemsRegistry.ringOfLesserDiscount), Ingredient.fromItems(ItemsRegistry.ringOfPotential), Arrays.asList(
+                Ingredient.fromTag(Tags.Items.GEMS_DIAMOND),
+                Ingredient.fromTag(Tags.Items.ENDER_PEARLS),
+                Ingredient.fromTag(Tags.Items.GEMS_DIAMOND),
+                Recipes.MANA_GEM,
+                Recipes.MANA_GEM,
+                Ingredient.fromTag(Tags.Items.GEMS_DIAMOND),
+                Ingredient.fromTag(Tags.Items.ENDER_PEARLS),
+                Ingredient.fromTag(Tags.Items.GEMS_DIAMOND)),
+                ArsNouveauAPI.PatchouliCategories.equipment.name()));
 
-        addRecipe(new EnchantingApparatusRecipe(ItemsRegistry.ringOfGreaterDiscount, ItemsRegistry.ringOfLesserDiscount, new Item[]{
-                Items.DIAMOND, Items.BLAZE_ROD, Items.DIAMOND, ItemsRegistry.manaGem, ItemsRegistry.manaGem, Items.DIAMOND, Items.BLAZE_ROD, Items.DIAMOND
-        }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
-        addRecipe(new EnchantingApparatusRecipe(ItemsRegistry.beltOfUnstableGifts, ItemsRegistry.mundaneBelt, new Item[]{
-                Items.SUGAR, Items.NETHER_WART, Items.BLAZE_POWDER, Items.GLOWSTONE_DUST, Items.FERMENTED_SPIDER_EYE, Items.REDSTONE, Items.BREWING_STAND, Items.FEATHER
-        }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
+        addRecipe(new EnchantingApparatusRecipe(new ItemStack(ItemsRegistry.ringOfGreaterDiscount), Ingredient.fromItems(ItemsRegistry.ringOfLesserDiscount), Arrays.asList(
+                Ingredient.fromTag(Tags.Items.GEMS_DIAMOND),
+                Ingredient.fromTag(Tags.Items.RODS_BLAZE),
+                Ingredient.fromTag(Tags.Items.GEMS_DIAMOND),
+                Recipes.MANA_GEM, Recipes.MANA_GEM,
+                Ingredient.fromTag(Tags.Items.GEMS_DIAMOND),
+                Ingredient.fromTag(Tags.Items.RODS_BLAZE),
+                Ingredient.fromTag(Tags.Items.GEMS_DIAMOND)
+        ), ArsNouveauAPI.PatchouliCategories.equipment.name()));
+
+        addRecipe(new EnchantingApparatusRecipe(new ItemStack(ItemsRegistry.beltOfUnstableGifts), Ingredient.fromItems(ItemsRegistry.mundaneBelt), Arrays.asList(
+                Ingredient.fromItems(Items.SUGAR),
+                Ingredient.fromTag(Tags.Items.CROPS_NETHER_WART),
+                Ingredient.fromTag(Tags.Items.RODS_BLAZE),
+                Ingredient.fromTag(Tags.Items.DUSTS_GLOWSTONE),
+                Ingredient.fromItems(Items.FERMENTED_SPIDER_EYE),
+                Ingredient.fromTag(Tags.Items.DUSTS_REDSTONE),
+                Ingredient.fromItems(Items.BREWING_STAND),
+                Ingredient.fromTag(Tags.Items.FEATHERS)
+        ), ArsNouveauAPI.PatchouliCategories.equipment.name()));
 
         addRecipe(new EnchantingApparatusRecipe(BlockRegistry.SUMMONING_CRYSTAL.asItem(), BlockRegistry.MANA_GEM_BLOCK.asItem(), new Item[]{
                 Items.GOLD_INGOT, Items.DIAMOND, Items.DIAMOND, Items.GOLD_INGOT, BlockRegistry.ARCANE_STONE.asItem(),BlockRegistry.ARCANE_STONE.asItem(), BlockRegistry.ARCANE_STONE.asItem(), BlockRegistry.ARCANE_STONE.asItem()

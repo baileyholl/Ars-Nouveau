@@ -16,6 +16,7 @@ import net.minecraft.entity.ai.controller.FlyingMovementController;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
@@ -62,6 +63,10 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
 
     private <P extends IAnimatable> PlayState summonPredicate(AnimationEvent<P> event) {
         return PlayState.CONTINUE;
+    }
+    @Override
+    protected int getExperiencePoints(PlayerEntity player) {
+        return 0;
     }
 
     @Override

@@ -185,17 +185,18 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             return;
         Direction[] directions = Direction.values();
         if (this.getHeldStack().isEmpty() && !world.isRemote) {
-            for (Direction d : directions){
+
                 // Cannot use a single expanded bounding box because we don't want this to overlap with an adjacentt inventory that also has a frame.
-                for (ItemEntity itementity : this.world.getEntitiesWithinAABB(ItemEntity.class, this.getBoundingBox().grow(d.getXOffset(), d.getYOffset(), d.getZOffset()))) {
-                    if (!itementity.removed && !itementity.getItem().isEmpty() && !itementity.cannotPickup()) {
-                        if (!isTamed() && itementity.getItem().getItem() != Items.GOLD_NUGGET)
-                            return;
-                        this.updateEquipmentIfNeeded(itementity);
-                        this.dataManager.set(HOP, false);
-                    }
+            for (ItemEntity itementity : this.world.getEntitiesWithinAABB(ItemEntity.class, this.getBoundingBox().grow(1))) {
+                if (!itementity.removed && !itementity.getItem().isEmpty() && !itementity.cannotPickup()) {
+                    if (!isTamed() && itementity.getItem().getItem() != Items.GOLD_NUGGET)
+                        return;
+                    this.updateEquipmentIfNeeded(itementity);
+                    this.dataManager.set(HOP, false);
+                    break;
                 }
             }
+
 
         }
         attemptTame();
@@ -265,6 +266,18 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             setHeldStack(itemEntity.getItem());
             itemEntity.remove();
             this.world.playSound(null, this.getPosX(), this.getPosY(), this.getPosZ(), SoundEvents.ENTITY_ITEM_PICKUP, this.getSoundCategory(), 1.0F, 1.0F);
+            if(!isTamed())
+                return;
+            for(ItemEntity i : world.getEntitiesWithinAABB(ItemEntity.class, this.getBoundingBox().grow(3))){
+                if(itemEntity.getItem().getCount() >= itemEntity.getItem().getMaxStackSize())
+                    break;
+                int maxTake = getHeldStack().getMaxStackSize() - getHeldStack().getCount();
+                if(i.getItem().isItemEqual(getHeldStack())){
+                    int toTake = Math.min(i.getItem().getCount(), maxTake);
+                    i.getItem().shrink(toTake);
+                    getHeldStack().grow(toTake);
+                }
+            }
         }
     }
 
@@ -615,6 +628,11 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         return !ItemStack.areItemStacksEqual(ItemHandlerHelper.insertItemStacked(handler, stack.copy(), true), stack) ? pref : SortPref.INVALID;
     }
 
+    @Override
+    protected int getExperiencePoints(PlayerEntity player) {
+        return 0;
+    }
+
     public BlockPos getValidStorePos(ItemStack stack){
         BlockPos returnPos = null;
         if(TO_LIST == null)
@@ -650,6 +668,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
 
     public boolean isValidItem(ItemStack stack){
+
         if(!isTamed() && stack.getItem() == Items.GOLD_NUGGET)
             return true;
 
