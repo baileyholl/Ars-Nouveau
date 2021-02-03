@@ -156,7 +156,7 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
             if(SpellBook.unlockSpell(stack.getTag(), spellPart))
                 unlocked++;
         }
-        PortUtil.sendMessage(player, new StringTextComponent("Copied " + unlocked + " new spells to the book."));
+        PortUtil.sendMessage(player, new StringTextComponent("Copied " + unlocked + " new glyphs to the book."));
         return true;
     }
 
