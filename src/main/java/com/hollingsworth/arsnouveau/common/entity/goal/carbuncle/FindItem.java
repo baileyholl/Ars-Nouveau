@@ -7,6 +7,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.pathfinding.Path;
+import net.minecraft.util.math.AxisAlignedBB;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -17,7 +18,7 @@ public class FindItem extends Goal {
 
     Entity pathingEntity;
     boolean itemStuck;
-
+    AxisAlignedBB aab;
     private final Predicate<ItemEntity> TRUSTED_TARGET_SELECTOR = (itemEntity) -> {
         return !itemEntity.cannotPickup() && itemEntity.isAlive() && entityCarbuncle.isValidItem(itemEntity.getItem());
     };
@@ -35,6 +36,7 @@ public class FindItem extends Goal {
     public FindItem(EntityCarbuncle entityCarbuncle) {
         this.entityCarbuncle = entityCarbuncle;
         this.setMutexFlags(EnumSet.of(Flag.MOVE));
+        this.aab = entityCarbuncle.getBoundingBox().grow(8.0D, 6, 8.0D);
     }
 
 
@@ -43,7 +45,7 @@ public class FindItem extends Goal {
     }
 
     public List<ItemEntity> nearbyItems(){
-       return entityCarbuncle.world.getEntitiesWithinAABB(ItemEntity.class, entityCarbuncle.getBoundingBox().grow(8.0D, 6, 8.0D), getFinderItems());
+       return entityCarbuncle.world.getLoadedEntitiesWithinAABB(ItemEntity.class, aab, getFinderItems());
     }
 
     @Override
@@ -53,7 +55,7 @@ public class FindItem extends Goal {
 
     @Override
     public boolean shouldExecute() {
-        return !entityCarbuncle.isStuck && !nearbyItems().isEmpty() && entityCarbuncle.getHeldStack().isEmpty();
+        return !entityCarbuncle.isStuck && entityCarbuncle.getHeldStack().isEmpty() && !nearbyItems().isEmpty();
     }
 
     @Override
@@ -62,13 +64,13 @@ public class FindItem extends Goal {
         itemStuck = false;
         ItemStack itemstack = entityCarbuncle.getHeldStack();
         List<ItemEntity> list = nearbyItems();
-
         if (itemstack.isEmpty() && !list.isEmpty() && !itemStuck) {
             for(ItemEntity entity : list){
                 if(!entityCarbuncle.isValidItem(entity.getItem()))
                     continue;
                 Path path = entityCarbuncle.getNavigator().getPathToEntity(entity, 0);
                 if(path != null && path.reachesTarget()) {
+
                     this.pathingEntity = entity;
                     pathToTarget(pathingEntity, 1.2f);
 
@@ -77,6 +79,9 @@ public class FindItem extends Goal {
                 }
             }
         }
+
+        if(pathingEntity == null)
+            itemStuck = true;
 
     }
 
@@ -93,7 +98,7 @@ public class FindItem extends Goal {
         }
     }
     public void pathToTarget(Entity entity, double speed){
-        Path path = entityCarbuncle.getNavigator().getPathToEntity(entity, 1);
+        Path path = entityCarbuncle.getNavigator().getPathToEntity(entity, 0);
         if(path != null && path.reachesTarget()) {
             entityCarbuncle.getNavigator().setPath(path, speed);
           //  entityCarbuncle.setMotion(entityCarbuncle.getMotion().add(ParticleUtil.inRange(-0.1, 0.1),0,ParticleUtil.inRange(-0.1, 0.1)));

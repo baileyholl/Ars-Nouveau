@@ -22,6 +22,7 @@ public class StoreItemGoal extends Goal {
 
     private final EntityCarbuncle entityCarbuncle;
     BlockPos storePos;
+    boolean unreachable;
     public StoreItemGoal(EntityCarbuncle entityCarbuncle) {
         //super(entityCarbuncle::getPosition, 3, entityCarbuncle::setStuck);
         this.entityCarbuncle = entityCarbuncle;
@@ -32,7 +33,7 @@ public class StoreItemGoal extends Goal {
     @Override
     public void resetTask() {
         storePos = null;
-
+        unreachable = false;
     }
 
     @Override
@@ -85,12 +86,16 @@ public class StoreItemGoal extends Goal {
     }
 
     public void setPath(double x, double y, double z, double speedIn){
-        entityCarbuncle.getNavigator().setPath( entityCarbuncle.getNavigator().getPathToPos(x+0.5, y+1, z+0.5, 1), speedIn);
+        Path path = entityCarbuncle.getNavigator().getPathToPos(x+0.5, y+1, z+0.5, 1);
+        if(path == null || !path.reachesTarget())
+            unreachable = true;
+
+        entityCarbuncle.getNavigator().setPath(path, speedIn);
     }
 
     @Override
     public boolean shouldContinueExecuting() {
-        return entityCarbuncle.isTamed() && entityCarbuncle.getHeldStack() != null && !entityCarbuncle.getHeldStack().isEmpty() && entityCarbuncle.backOff == 0 && storePos != null;
+        return !unreachable && entityCarbuncle.isTamed() && entityCarbuncle.getHeldStack() != null && !entityCarbuncle.getHeldStack().isEmpty() && entityCarbuncle.backOff == 0 && storePos != null;
     }
 
     @Override

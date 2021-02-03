@@ -36,6 +36,6 @@ public class GoBackHomeGoal extends DistanceRestrictedGoal {
 
     @Override
     public boolean shouldExecute() {
-        return positionFrom != null && !this.isInRange(entity.getPosition()) && shouldGo.get();
+        return entity.world.rand.nextFloat() < 0.02f && positionFrom != null && !this.isInRange(entity.getPosition()) && shouldGo.get();
     }
 }

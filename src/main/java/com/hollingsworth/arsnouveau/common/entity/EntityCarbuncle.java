@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.goal.GetUnstuckGoal;
-import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.*;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -193,7 +192,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
                         return;
                     this.updateEquipmentIfNeeded(itementity);
                     this.dataManager.set(HOP, false);
-                    break;
+                    if(getHeldStack() != null && !getHeldStack().isEmpty())
+                        break;
                 }
             }
 
@@ -325,8 +325,11 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         list.add(new PrioritizedGoal(8, new LookAtGoal(this, PlayerEntity.class, 3.0F, 0.01F)));
         list.add(new PrioritizedGoal(8, new NonHoggingLook(this, MobEntity.class, 3.0F, 0.01f)));
         list.add(new PrioritizedGoal(0, new SwimGoal(this)));
-        // Roam back in case we have no item and are far from home.
-        list.add(new PrioritizedGoal(2, new GoBackHomeGoal(this, this::getHome, 25, () -> (this.getHeldStack() == null || this.getHeldStack().isEmpty()))));
+//        list.add(new PrioritizedGoal(4, new GoBackHomeGoal(this, this::getHome, 5, () ->
+//                (this.getHeldStack() == null || this.getHeldStack().isEmpty()) &&
+//                        world.getEntitiesWithinAABB(ItemEntity.class, getBoundingBox().grow(8.0D, 6, 8.0D), (itemEntity) -> !itemEntity.cannotPickup() && itemEntity.isAlive() && isValidItem(itemEntity.getItem())).isEmpty())));
+//        // Roam back in case we have no item and are far from home.
+      //  list.add(new PrioritizedGoal(1, new GoBackHomeGoal(this, this::getHome, 25, () -> (this.getHeldStack() == null || this.getHeldStack().isEmpty()))));
         return list;
     }
 
@@ -672,15 +675,19 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         if(!isTamed() && stack.getItem() == Items.GOLD_NUGGET)
             return true;
 
-        if(getValidStorePos(stack) == null)
+        if(getValidStorePos(stack) == null) {
             return false;
+        }
 
         if(!whitelist && !blacklist)
             return true;
         if(whitelist){
-            for(ItemStack s : allowedItems)
-                if(s.isItemEqual(stack))
+            for(ItemStack s : allowedItems) {
+                if (s.isItemEqual(stack)) {
                     return true;
+                }
+            }
+            return false;
         }
         if(blacklist){
             for(ItemStack s : ignoreItems)
