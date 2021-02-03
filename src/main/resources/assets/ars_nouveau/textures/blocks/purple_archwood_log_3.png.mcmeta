@@ -1,0 +1,55 @@
+{
+  "animation": {
+    "interpolate": true,
+    "frames": [
+      {
+        "index": 0,
+        "time": 100
+      },
+      {
+        "index": 1,
+        "time": 6
+      },
+      {
+        "index": 2,
+        "time": 6
+      },
+      {
+        "index": 3,
+        "time": 6
+      },
+      {
+        "index": 4,
+        "time": 6
+      },
+      {
+        "index": 5,
+        "time": 6
+      },
+      {
+        "index": 6,
+        "time": 6
+      },
+      {
+        "index": 7,
+        "time": 6
+      },
+      {
+        "index": 8,
+        "time": 6
+      },
+      {
+        "index": 9,
+        "time": 6
+      },
+      {
+        "index": 10,
+        "time": 6
+      },
+      {
+        "index": 11,
+        "time": 6
+      }
+    ]
+  }
+}
