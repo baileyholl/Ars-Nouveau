@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleSparkleData;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
 import net.minecraft.client.Minecraft;
@@ -51,6 +52,18 @@ public class EntityRitualProjectile extends ColoredProjectile{
                             (float) (getPositionVec().getX()) + Math.sin(world.getGameTime()/3D),
                             (float) (getPositionVec().getY()),
                             (float) (getPositionVec().getZ()) + Math.cos(world.getGameTime()/3D),
+                            0.0225f * (rand.nextFloat() ), 0.0225f * (rand.nextFloat()), 0.0225f * (rand.nextFloat() ));
+                }
+            }
+
+            for (double j = 0; j < 3; j++) {
+
+                counter += world.rand.nextInt(3);
+                if (counter % (Minecraft.getInstance().gameSettings.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().gameSettings.particles.getId()) == 0) {
+                    world.addParticle(ParticleSparkleData.createData(new ParticleColor(2, 0, 144)),
+                            (float) (getPositionVec().getX()) - Math.sin(world.getGameTime()/3D),
+                            (float) (getPositionVec().getY()),
+                            (float) (getPositionVec().getZ()) - Math.cos(world.getGameTime()/3D),
                             0.0225f * (rand.nextFloat() ), 0.0225f * (rand.nextFloat()), 0.0225f * (rand.nextFloat() ));
                 }
             }

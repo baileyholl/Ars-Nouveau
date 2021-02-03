@@ -15,6 +15,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -85,8 +86,6 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
     }
 
 
-// 5 - become template
-// 20 - spraying
     @Override
     public void tick() {
         if(!world.isRemote && world.getGameTime() % 20 == 0 && reagentItem != null && baseMaterial != null && canCraft(reagentItem.getItem(), baseMaterial.getItem()))
@@ -282,6 +281,8 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
     }
 
     public boolean canCraft(Item reagent, Item base){
+        if(reagent == null || reagent == Items.AIR || base == null || base == Items.AIR)
+            return false;
         GlyphPressRecipe recipe = ArsNouveauAPI.getInstance().getGlyphPressRecipe(world, reagent, getTier(base));
         if(recipe == null)
             return false;
