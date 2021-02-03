@@ -332,7 +332,7 @@
 	"ars_nouveau.apparatus.norecipe": "No recipe found.",
 	"ars_nouveau.apparatus.nomana": "Not enough mana nearby.",
 	"ars_nouveau.reset.cleared": "Progress cleared.",
-	"effect.ars_nouveau.summoning_sickness": "Mana Regeneration",
+	"effect.ars_nouveau.summoning_sickness": "Summoning Sickness",
 	  "ars_nouveau.glyph_desc.accelerate": "Increases the speed of projectile spells.",
   "ars_nouveau.glyph_desc.amplify": "Additively increases the power of most spell effects. Can increase the harvest level of Break and increases the damage of spells.",
   "ars_nouveau.glyph_desc.aoe": "Spells will affect a larger area around a targeted block.",
