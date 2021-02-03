@@ -2,42 +2,42 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "item_1": [
     {
-      "item": "minecraft:blaze_rod"
+      "tag": "forge:rods/blaze"
     }
   ],
   "item_2": [
     {
-      "item": "minecraft:gold_ingot"
+      "item": "ars_nouveau:glyph_redstone_signal"
     }
   ],
   "item_3": [
     {
-      "item": "minecraft:gold_ingot"
+      "tag": "forge:storage_blocks/quartz"
     }
   ],
   "item_4": [
     {
-      "item": "minecraft:gold_ingot"
+      "tag": "forge:storage_blocks/redstone"
     }
   ],
   "item_5": [
     {
-      "item": "ars_nouveau:glyph_redstone_signal"
+      "tag": "forge:storage_blocks/mana"
     }
   ],
   "item_6": [
     {
-      "item": "minecraft:quartz_block"
+      "tag": "forge:ingots/gold"
     }
   ],
   "item_7": [
     {
-      "item": "minecraft:redstone_block"
+      "tag": "forge:ingots/gold"
     }
   ],
   "item_8": [
     {
-      "item": "ars_nouveau:spell_parchment"
+      "tag": "forge:ingots/gold"
     }
   ],
   "reagent": [

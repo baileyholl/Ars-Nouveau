@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.IItemProvider;
@@ -44,11 +43,11 @@ public class ApparatusRecipeBuilder {
         return this;
     }
 
-    public ApparatusRecipeBuilder withPedestalItem(Item i){
+    public ApparatusRecipeBuilder withPedestalItem(IItemProvider i){
         return this.withPedestalItem(Ingredient.fromItems(i));
     }
 
-    public ApparatusRecipeBuilder withPedestalItem(int count, Item item){
+    public ApparatusRecipeBuilder withPedestalItem(int count, IItemProvider item){
         for(int i = 0; i < count; i++)
             this.withPedestalItem(item);
         return this;

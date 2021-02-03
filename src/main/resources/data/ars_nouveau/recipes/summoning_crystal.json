@@ -2,22 +2,22 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "item_1": [
     {
-      "item": "minecraft:gold_ingot"
+      "tag": "forge:gems/diamond"
     }
   ],
   "item_2": [
     {
-      "item": "minecraft:diamond"
+      "tag": "forge:gems/diamond"
     }
   ],
   "item_3": [
     {
-      "item": "minecraft:diamond"
+      "tag": "forge:ingots/gold"
     }
   ],
   "item_4": [
     {
-      "item": "minecraft:gold_ingot"
+      "tag": "forge:ingots/gold"
     }
   ],
   "item_5": [
@@ -42,7 +42,7 @@
   ],
   "reagent": [
     {
-      "item": "ars_nouveau:mana_gem_block"
+      "tag": "forge:storage_blocks/mana"
     }
   ],
   "output": {

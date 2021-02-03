@@ -2,42 +2,42 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "item_1": [
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:nuggets/gold"
     }
   ],
   "item_2": [
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:nuggets/gold"
     }
   ],
   "item_3": [
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:nuggets/gold"
     }
   ],
   "item_4": [
     {
-      "item": "minecraft:gold_nugget"
+      "tag": "forge:nuggets/gold"
     }
   ],
   "item_5": [
     {
-      "item": "minecraft:gold_nugget"
+      "tag": "forge:nuggets/gold"
     }
   ],
   "item_6": [
     {
-      "item": "minecraft:gold_nugget"
+      "tag": "forge:gems/mana"
     }
   ],
   "item_7": [
     {
-      "item": "minecraft:gold_nugget"
+      "tag": "forge:gems/mana"
     }
   ],
   "item_8": [
     {
-      "item": "minecraft:gold_nugget"
+      "tag": "forge:gems/mana"
     }
   ],
   "reagent": [

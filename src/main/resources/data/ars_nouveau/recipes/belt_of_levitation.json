@@ -2,22 +2,22 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "item_1": [
     {
-      "item": "minecraft:gold_ingot"
+      "tag": "forge:ingots/gold"
     }
   ],
   "item_2": [
     {
-      "item": "minecraft:gold_ingot"
+      "tag": "forge:ingots/gold"
     }
   ],
   "item_3": [
     {
-      "item": "minecraft:gold_ingot"
+      "tag": "forge:ingots/gold"
     }
   ],
   "item_4": [
     {
-      "item": "minecraft:gold_ingot"
+      "tag": "forge:ingots/gold"
     }
   ],
   "item_5": [

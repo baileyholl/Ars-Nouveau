@@ -2,17 +2,17 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "item_1": [
     {
-      "item": "minecraft:dark_oak_sapling"
+      "tag": "minecraft:saplings"
     }
   ],
   "item_2": [
     {
-      "item": "minecraft:crafting_table"
+      "tag": "forge:gems/emerald"
     }
   ],
   "item_3": [
     {
-      "item": "minecraft:emerald"
+      "item": "minecraft:crafting_table"
     }
   ],
   "item_4": [

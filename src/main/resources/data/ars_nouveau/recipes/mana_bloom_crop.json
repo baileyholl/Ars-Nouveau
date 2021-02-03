@@ -2,27 +2,27 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "item_1": [
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     }
   ],
   "item_2": [
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     }
   ],
   "item_3": [
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     }
   ],
   "item_4": [
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     }
   ],
   "reagent": [
     {
-      "item": "minecraft:wheat_seeds"
+      "tag": "forge:seeds"
     }
   ],
   "output": {

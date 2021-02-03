@@ -7,17 +7,17 @@
   ],
   "item_2": [
     {
-      "item": "minecraft:nether_wart"
+      "tag": "forge:crops/nether_wart"
     }
   ],
   "item_3": [
     {
-      "item": "minecraft:blaze_powder"
+      "tag": "forge:rods/blaze"
     }
   ],
   "item_4": [
     {
-      "item": "minecraft:glowstone_dust"
+      "tag": "forge:dusts/glowstone"
     }
   ],
   "item_5": [
@@ -27,7 +27,7 @@
   ],
   "item_6": [
     {
-      "item": "minecraft:redstone"
+      "tag": "forge:dusts/redstone"
     }
   ],
   "item_7": [
@@ -37,7 +37,7 @@
   ],
   "item_8": [
     {
-      "item": "minecraft:feather"
+      "tag": "forge:feathers"
     }
   ],
   "reagent": [
