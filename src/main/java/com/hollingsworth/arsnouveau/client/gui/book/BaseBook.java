@@ -18,9 +18,7 @@ public class BaseBook extends ModdedScreen {
     public int bookLeft;
     public int bookTop;
     public int bookRight;
-    int bookBottom;
-    private int offsetFromScreenLeft;
-    private int offsetFromScreenTop;
+    public int bookBottom;
 
     public BaseBook() {
         super(new StringTextComponent(""));
@@ -30,8 +28,6 @@ public class BaseBook extends ModdedScreen {
     public void init() {
         super.init();
         this.minecraft.keyboardListener.enableRepeatEvents(true);
-        offsetFromScreenLeft = (width - FULL_WIDTH) / 2;
-        offsetFromScreenTop = (height - FULL_HEIGHT) / 2;
         bookLeft = width / 2 - FULL_WIDTH / 2;
         bookTop = height / 2 - FULL_HEIGHT / 2;
         bookRight = width / 2 + FULL_WIDTH / 2;
