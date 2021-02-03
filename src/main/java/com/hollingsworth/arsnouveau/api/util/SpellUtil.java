@@ -23,6 +23,10 @@ public class SpellUtil {
         return calcAOEBlocks(caster, origin, mop, 1 + aoeBonus, 1 + aoeBonus, 1, -1);
     }
 
+    public static List<BlockPos> calcAOEBlocks(LivingEntity caster, BlockPos origin, BlockRayTraceResult mop, int aoeBonus, int pierceBonus) {
+        return calcAOEBlocks(caster, origin, mop, 1 + aoeBonus, 1 + aoeBonus, 1 + pierceBonus, -1);
+    }
+
     public static List<BlockPos> calcAOEBlocks(LivingEntity caster, BlockPos origin, BlockRayTraceResult mop, int width, int height, int depth, int distance) {
         return calcAOEBlocks(caster.getHorizontalFacing().getDirectionVec(), origin, mop, width, height, depth, distance);
     }

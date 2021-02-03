@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -51,7 +52,7 @@ public class EffectCut extends AbstractEffect {
 
     @Override
     public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world,  LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        for(BlockPos p : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getPos(), rayTraceResult, getBuffCount(augments, AugmentAOE.class))) {
+        for(BlockPos p : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getPos(), rayTraceResult, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))) {
             ItemStack shears = new ItemStack(Items.SHEARS);
             applyEnchantments(augments, shears);
             if (world.getBlockState(p).getBlock() instanceof IForgeShearable) {

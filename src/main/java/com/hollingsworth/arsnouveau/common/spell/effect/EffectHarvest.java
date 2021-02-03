@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -39,7 +40,7 @@ public class EffectHarvest extends AbstractEffect {
             BlockRayTraceResult ray = (BlockRayTraceResult) rayTraceResult;
             if(world.isRemote)
                 return;
-            for(BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter, ray.getPos(), ray, getBuffCount(augments, AugmentAOE.class))){
+            for(BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter, ray.getPos(), ray, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))){
                 BlockState state = world.getBlockState(blockpos);
 
                 if(state.getBlock() instanceof FarmlandBlock || world.getBlockState(blockpos.up()).getBlock() instanceof CropsBlock){
