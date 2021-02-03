@@ -20,6 +20,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.tags.ItemTags;
+import net.minecraftforge.common.Tags;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -62,106 +64,196 @@ public class ApparatusRecipeProvider implements IDataProvider {
 //                Items.FEATHER,Items.FEATHER,Items.FEATHER, ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.EffectLaunchID)},  ArsNouveauAPI.PatchouliCategories.equipment.name()));
         addRecipe(builder().withResult(ItemsRegistry.beltOfLevitation)
                 .withReagent(ItemsRegistry.mundaneBelt)
-                .withPedestalItem(4, Items.GOLD_INGOT)
+                .withPedestalItem(4, Ingredient.fromTag(Tags.Items.INGOTS_GOLD))
                 .withPedestalItem(3, Items.FEATHER)
                 .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.EffectLaunchID))
                 .withCategory(ArsNouveauAPI.PatchouliCategories.equipment)
                 .build());
-        addRecipe(new EnchantingApparatusRecipe(ItemsRegistry.jarOfLight, Items.GLASS_BOTTLE, new Item[]
-                {Items.GLOWSTONE, Items.GLOWSTONE, Items.GLOWSTONE, Items.GLOWSTONE, Items.REDSTONE_LAMP, Items.GLASS, Items.GLASS, Items.REDSTONE_LAMP}, ArsNouveauAPI.PatchouliCategories.equipment.name()));
 
-        addRecipe(new EnchantingApparatusRecipe( BlockRegistry.MANA_BLOOM_CROP.asItem(), Items.WHEAT_SEEDS, new Item[]
-                {ItemsRegistry.manaGem, ItemsRegistry.manaGem, ItemsRegistry.manaGem, ItemsRegistry.manaGem},  ArsNouveauAPI.PatchouliCategories.resources.name()));
+        addRecipe(builder()
+                .withResult(ItemsRegistry.jarOfLight)
+                .withReagent(Items.GLASS_BOTTLE)
+                .withPedestalItem(4, Items.GLOWSTONE)
+                .withPedestalItem(2, Items.REDSTONE_LAMP)
+                .withPedestalItem(2,  Ingredient.fromTag(Tags.Items.GLASS))
+                .build());
 
-        addRecipe(new EnchantingApparatusRecipe(ItemsRegistry.ringOfLesserDiscount, ItemsRegistry.ringOfPotential, new Item[]{
-                Items.DIAMOND, Items.ENDER_PEARL, Items.DIAMOND, ItemsRegistry.manaGem, ItemsRegistry.manaGem, Items.DIAMOND, Items.ENDER_PEARL, Items.DIAMOND
-        }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
+        addRecipe(builder()
+                .withResult(BlockRegistry.MANA_BLOOM_CROP)
+                .withReagent(Ingredient.fromTag(Tags.Items.SEEDS))
+                .withPedestalItem(4, Recipes.MANA_GEM)
+                .build());
 
-        addRecipe(new EnchantingApparatusRecipe(ItemsRegistry.ringOfGreaterDiscount, ItemsRegistry.ringOfLesserDiscount, new Item[]{
-                Items.DIAMOND, Items.BLAZE_ROD, Items.DIAMOND, ItemsRegistry.manaGem, ItemsRegistry.manaGem, Items.DIAMOND, Items.BLAZE_ROD, Items.DIAMOND
-        }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
-        addRecipe(new EnchantingApparatusRecipe(ItemsRegistry.beltOfUnstableGifts, ItemsRegistry.mundaneBelt, new Item[]{
-                Items.SUGAR, Items.NETHER_WART, Items.BLAZE_POWDER, Items.GLOWSTONE_DUST, Items.FERMENTED_SPIDER_EYE, Items.REDSTONE, Items.BREWING_STAND, Items.FEATHER
-        }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
+        addRecipe(builder()
+                .withResult(ItemsRegistry.ringOfLesserDiscount)
+                .withReagent(ItemsRegistry.ringOfPotential)
+                .withPedestalItem(4,  Ingredient.fromTag(Tags.Items.GEMS_DIAMOND))
+                .withPedestalItem(2,Ingredient.fromTag(Tags.Items.ENDER_PEARLS))
+                .withPedestalItem(2,   Recipes.MANA_GEM)
+                .withPedestalItem(2,   Ingredient.fromTag(Tags.Items.ENDER_PEARLS))
+                .build());
 
-        addRecipe(new EnchantingApparatusRecipe(BlockRegistry.SUMMONING_CRYSTAL.asItem(), BlockRegistry.MANA_GEM_BLOCK.asItem(), new Item[]{
-                Items.GOLD_INGOT, Items.DIAMOND, Items.DIAMOND, Items.GOLD_INGOT, BlockRegistry.ARCANE_STONE.asItem(),BlockRegistry.ARCANE_STONE.asItem(), BlockRegistry.ARCANE_STONE.asItem(), BlockRegistry.ARCANE_STONE.asItem()
-        }, ArsNouveauAPI.PatchouliCategories.automation.name()));
-
-        addRecipe(new EnchantingApparatusRecipe(ItemsRegistry.whelpCharm, Items.EGG, new Item[]{
-                ItemsRegistry.manaGem,ItemsRegistry.manaGem,Items.DIAMOND, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, ItemsRegistry.noviceSpellBook,
-        }, ArsNouveauAPI.PatchouliCategories.automation.name()));
-
-        addRecipe(new EnchantingApparatusRecipe(BlockRegistry.ARCANE_RELAY.asItem(), BlockRegistry.MANA_JAR.asItem(), new Item[]{
-                ItemsRegistry.manaGem,ItemsRegistry.manaGem,Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT,
-        }, ArsNouveauAPI.PatchouliCategories.automation.name()));
-
-        addRecipe(new EnchantingApparatusRecipe(ItemsRegistry.carbuncleCharm, ItemsRegistry.carbuncleShard, new Item[]{
-                ItemsRegistry.manaGem,ItemsRegistry.manaGem,ItemsRegistry.manaGem, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET, Items.GOLD_NUGGET,
-        }, ArsNouveauAPI.PatchouliCategories.automation.name()));
-
-        addRecipe(new EnchantingApparatusRecipe(ItemsRegistry.amuletOfManaBoost, ItemsRegistry.dullTrinket, new Item[]{
-                Items.DIAMOND, Items.DIAMOND, Items.DIAMOND, ItemsRegistry.manaGem, ItemsRegistry.manaGem, ItemsRegistry.manaGem, ItemsRegistry.manaGem, ItemsRegistry.manaGem
-        }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
-
-        addRecipe(new EnchantingApparatusRecipe(ItemsRegistry.amuletOfManaRegen, ItemsRegistry.dullTrinket, new Item[]{
-                Items.DIAMOND, Items.DIAMOND, Items.GOLD_INGOT, Items.GOLD_INGOT, ItemsRegistry.manaGem, ItemsRegistry.manaGem, ItemsRegistry.manaGem, ItemsRegistry.manaGem
-        }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
-
-        addRecipe(new EnchantingApparatusRecipe(BlockRegistry.ARCANE_RELAY_SPLITTER.asItem(), BlockRegistry.ARCANE_RELAY.asItem(), new Item[]{
-                Items.QUARTZ,Items.QUARTZ, Items.QUARTZ, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.GOLD_INGOT, Items.QUARTZ
-        }, ArsNouveauAPI.PatchouliCategories.automation.name()));
-
-        addRecipe(new EnchantingApparatusRecipe(ItemsRegistry.sylphCharm,ItemsRegistry.sylphShard, new Item[]{
-                ItemsRegistry.manaGem,BlockRegistry.MANA_BLOOM_CROP.asItem(), ItemsRegistry.manaBloom, Items.DIAMOND, Items.OAK_SAPLING, Items.SPRUCE_SAPLING, Items.BIRCH_SAPLING, Items.WHEAT_SEEDS
-        }, ArsNouveauAPI.PatchouliCategories.automation.name()));
-
-        addRecipe(new EnchantingApparatusRecipe(BlockRegistry.SPELL_TURRET.asItem(),Items.DISPENSER, new Item[]{
-                Items.BLAZE_ROD, Items.GOLD_INGOT, Items.GOLD_INGOT,Items.GOLD_INGOT,
-               ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.EffectRedstoneID),
-                Items.QUARTZ_BLOCK, Items.REDSTONE_BLOCK, ItemsRegistry.spellParchment
-        }, ArsNouveauAPI.PatchouliCategories.automation.name()));
-
-        addRecipe(new EnchantingApparatusRecipe(ItemsRegistry.VOID_JAR, Items.GLASS_BOTTLE, new Item[]{
-                Items.LAVA_BUCKET, Items.BUCKET, Items.ENDER_PEARL,ItemsRegistry.ALLOW_ITEM_SCROLL
-        }, ArsNouveauAPI.PatchouliCategories.equipment.name()));
-
-        addRecipe(new EnchantingApparatusRecipe(ItemsRegistry.DOMINION_ROD, Items.STICK, new Item[]{
-                ItemsRegistry.manaGem,  ItemsRegistry.manaGem, Items.GOLD_INGOT
-        }, ArsNouveauAPI.PatchouliCategories.automation.name()));
-
-        addRecipe(new EnchantingApparatusRecipe(ItemsRegistry.WIXIE_CHARM, ItemsRegistry.WIXIE_SHARD, new Item[]{
-                Items.DARK_OAK_SAPLING, Items.CRAFTING_TABLE, Items.EMERALD, Items.BREWING_STAND
-        }, ArsNouveauAPI.PatchouliCategories.automation.name()));
-
-        addRecipe(new EnchantingApparatusRecipe(new ItemStack(ItemsRegistry.WAND), Ingredient.fromItems(BlockRegistry.ARCHWOOD_PLANK.asItem()),
-                listOfIngred(new Item[]{
-                ItemsRegistry.manaGem, ItemsRegistry.manaGem,ItemsRegistry.manaGem, Items.GOLD_INGOT,Items.GOLD_INGOT,
-                        ItemsRegistry.spellParchment, ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile()),
-                        ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAccelerate())
-        }), ArsNouveauAPI.PatchouliCategories.equipment.name()));
-
-        addRecipe(new EnchantingApparatusRecipe(new ItemStack(ItemsRegistry.SPELL_BOW), Ingredient.fromItems(Items.BOW),
-                listOfIngred(new Item[]{
-                        BlockRegistry.MANA_GEM_BLOCK.asItem(), Items.GOLD_BLOCK, ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile())
-                }), ArsNouveauAPI.PatchouliCategories.equipment.name()));
-
-        addRecipe(new EnchantingApparatusRecipe(new ItemStack(ItemsRegistry.AMPLIFY_ARROW, 32), Ingredient.fromItems(Items.ARROW),
-                listOfIngred(new Item[]{
-                        BlockRegistry.MANA_GEM_BLOCK.asItem(),BlockRegistry.MANA_GEM_BLOCK.asItem(), ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify())
-                }), ArsNouveauAPI.PatchouliCategories.equipment.name()));
-
-        addRecipe(new EnchantingApparatusRecipe(new ItemStack(ItemsRegistry.SPLIT_ARROW, 32), Ingredient.fromItems(Items.ARROW),
-                listOfIngred(new Item[]{
-                        BlockRegistry.MANA_GEM_BLOCK.asItem(),BlockRegistry.MANA_GEM_BLOCK.asItem(), ArsNouveauAPI.getInstance().getGlyphItem(new AugmentSplit())
-                }), ArsNouveauAPI.PatchouliCategories.equipment.name()));
-
-        addRecipe(new EnchantingApparatusRecipe(new ItemStack(ItemsRegistry.PIERCE_ARROW, 32), Ingredient.fromItems(Items.ARROW),
-                listOfIngred(new Item[]{
-                        BlockRegistry.MANA_GEM_BLOCK.asItem(),BlockRegistry.MANA_GEM_BLOCK.asItem(), ArsNouveauAPI.getInstance().getGlyphItem(new AugmentPierce())
-                }), ArsNouveauAPI.PatchouliCategories.equipment.name()));
+        addRecipe(builder()
+                .withResult(ItemsRegistry.ringOfGreaterDiscount)
+                .withReagent(ItemsRegistry.ringOfLesserDiscount)
+                .withPedestalItem(4,  Ingredient.fromTag(Tags.Items.GEMS_DIAMOND))
+                .withPedestalItem(2,Ingredient.fromTag(Tags.Items.RODS_BLAZE))
+                .withPedestalItem(2, Recipes.MANA_GEM)
+                .build());
 
 
+        addRecipe(new EnchantingApparatusRecipe(new ItemStack(ItemsRegistry.beltOfUnstableGifts), Ingredient.fromItems(ItemsRegistry.mundaneBelt), Arrays.asList(
+                Ingredient.fromItems(Items.SUGAR),
+                Ingredient.fromTag(Tags.Items.CROPS_NETHER_WART),
+                Ingredient.fromTag(Tags.Items.RODS_BLAZE),
+                Ingredient.fromTag(Tags.Items.DUSTS_GLOWSTONE),
+                Ingredient.fromItems(Items.FERMENTED_SPIDER_EYE),
+                Ingredient.fromTag(Tags.Items.DUSTS_REDSTONE),
+                Ingredient.fromItems(Items.BREWING_STAND),
+                Ingredient.fromTag(Tags.Items.FEATHERS)
+        ), ArsNouveauAPI.PatchouliCategories.equipment.name()));
+
+
+        addRecipe(builder()
+                .withResult(BlockRegistry.SUMMONING_CRYSTAL)
+                .withReagent(Recipes.MANA_GEM_BLOCK)
+                .withPedestalItem(2,  Ingredient.fromTag(Tags.Items.GEMS_DIAMOND))
+                .withPedestalItem(2,Ingredient.fromTag(Tags.Items.INGOTS_GOLD))
+                .withPedestalItem(4, BlockRegistry.ARCANE_STONE)
+                .build());
+
+        addRecipe(builder()
+                .withResult(ItemsRegistry.whelpCharm)
+                .withReagent( Items.EGG)
+                .withPedestalItem(4,Ingredient.fromTag(Tags.Items.INGOTS_GOLD))
+                .withPedestalItem(3, Recipes.MANA_GEM)
+                .withPedestalItem( ItemsRegistry.noviceSpellBook)
+                .build());
+
+
+        addRecipe(builder()
+                .withResult(BlockRegistry.ARCANE_RELAY)
+                .withReagent(  BlockRegistry.MANA_JAR)
+                .withPedestalItem(6,Ingredient.fromTag(Tags.Items.INGOTS_GOLD))
+                .withPedestalItem(2, Recipes.MANA_GEM)
+                .build());
+
+        addRecipe(builder()
+                .withResult(ItemsRegistry.carbuncleCharm)
+                .withReagent(ItemsRegistry.carbuncleShard)
+                .withPedestalItem(5,Ingredient.fromTag(Tags.Items.NUGGETS_GOLD))
+                .withPedestalItem(3, Recipes.MANA_GEM)
+                .build());
+
+        addRecipe(builder()
+                .withResult(ItemsRegistry.amuletOfManaBoost)
+                .withReagent(ItemsRegistry.dullTrinket)
+                .withPedestalItem(3,Ingredient.fromTag(Tags.Items.GEMS_DIAMOND))
+                .withPedestalItem(5, Recipes.MANA_GEM)
+                .build());
+
+        addRecipe(builder()
+                .withResult(ItemsRegistry.amuletOfManaRegen)
+                .withReagent(ItemsRegistry.dullTrinket)
+                .withPedestalItem(2,Ingredient.fromTag(Tags.Items.GEMS_DIAMOND))
+                .withPedestalItem(2,Ingredient.fromTag(Tags.Items.INGOTS_GOLD))
+                .withPedestalItem(4, Recipes.MANA_GEM)
+                .build());
+
+        addRecipe(builder()
+                .withResult(BlockRegistry.ARCANE_RELAY_SPLITTER)
+                .withReagent( BlockRegistry.ARCANE_RELAY)
+                .withPedestalItem(4,Ingredient.fromTag(Tags.Items.GEMS_QUARTZ))
+                .withPedestalItem(4,Ingredient.fromTag(Tags.Items.INGOTS_GOLD))
+                .build());
+
+        addRecipe(builder()
+                .withResult(ItemsRegistry.sylphCharm)
+                .withReagent(ItemsRegistry.sylphShard)
+                .withPedestalItem(Recipes.MANA_GEM)
+                .withPedestalItem(BlockRegistry.MANA_BLOOM_CROP)
+                .withPedestalItem(ItemsRegistry.manaBloom)
+                .withPedestalItem(Ingredient.fromTag(Tags.Items.GEMS_DIAMOND))
+                .withPedestalItem( Items.OAK_SAPLING)
+                .withPedestalItem( Items.SPRUCE_SAPLING)
+                .withPedestalItem( Items.BIRCH_SAPLING)
+                .withPedestalItem(Ingredient.fromTag(Tags.Items.SEEDS_WHEAT))
+                .build());
+
+
+        addRecipe(builder()
+                .withResult(BlockRegistry.SPELL_TURRET)
+                .withReagent(Items.DISPENSER)
+                .withPedestalItem(Ingredient.fromTag(Tags.Items.RODS_BLAZE))
+                .withPedestalItem( ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.EffectRedstoneID))
+                .withPedestalItem(Ingredient.fromTag(Tags.Items.STORAGE_BLOCKS_QUARTZ))
+                .withPedestalItem(Ingredient.fromTag(Tags.Items.STORAGE_BLOCKS_REDSTONE))
+                .withPedestalItem(Recipes.MANA_GEM_BLOCK)
+                .withPedestalItem(3,Ingredient.fromTag(Tags.Items.INGOTS_GOLD))
+                .build());
+
+        addRecipe(builder()
+                .withResult(ItemsRegistry.VOID_JAR)
+                .withReagent(Items.GLASS_BOTTLE)
+                .withPedestalItem(Items.LAVA_BUCKET)
+                .withPedestalItem(Items.BUCKET)
+                .withPedestalItem(ItemsRegistry.ALLOW_ITEM_SCROLL)
+                .withPedestalItem(Ingredient.fromTag(Tags.Items.ENDER_PEARLS))
+                .build());
+
+        addRecipe(builder()
+                .withResult(ItemsRegistry.DOMINION_ROD)
+                .withReagent(Items.STICK)
+                .withPedestalItem(2, Recipes.MANA_GEM)
+                .withPedestalItem(Ingredient.fromTag(Tags.Items.INGOTS_GOLD))
+                .build());
+
+        addRecipe(builder()
+                .withResult(ItemsRegistry.WIXIE_CHARM)
+                .withReagent( ItemsRegistry.WIXIE_SHARD)
+                .withPedestalItem(Ingredient.fromTag(ItemTags.SAPLINGS))
+                .withPedestalItem(Ingredient.fromTag(Tags.Items.GEMS_EMERALD))
+                .withPedestalItem(Items.CRAFTING_TABLE)
+                .withPedestalItem(Items.BREWING_STAND)
+                .build());
+
+        addRecipe(builder()
+                .withResult(ItemsRegistry.WAND)
+                .withReagent(Recipes.ARCHWOOD_LOG)
+                .withPedestalItem(4, Recipes.MANA_GEM)
+                .withPedestalItem(2, Ingredient.fromTag(Tags.Items.INGOTS_GOLD))
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile()))
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAccelerate()))
+                .build());
+
+        addRecipe(builder()
+                .withResult(ItemsRegistry.SPELL_BOW)
+                .withReagent(Items.BOW)
+                .withPedestalItem(Recipes.MANA_GEM_BLOCK)
+                .withPedestalItem(Ingredient.fromTag(Tags.Items.STORAGE_BLOCKS_GOLD))
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile()))
+                .build());
+
+        addRecipe(builder()
+                .withResult(new ItemStack(ItemsRegistry.AMPLIFY_ARROW, 32))
+                .withReagent( Ingredient.fromTag(ItemTags.ARROWS))
+                .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify()))
+                .build());
+
+
+        addRecipe(builder()
+                .withResult(new ItemStack(ItemsRegistry.SPLIT_ARROW, 32))
+                .withReagent( Ingredient.fromTag(ItemTags.ARROWS))
+                .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentSplit()))
+                .build());
+        addRecipe(builder()
+                .withResult(new ItemStack(ItemsRegistry.PIERCE_ARROW, 32))
+                .withReagent( Ingredient.fromTag(ItemTags.ARROWS))
+                .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentPierce()))
+                .build());
     }
 
     public static List<Ingredient> listOfIngred(Item[] items) {

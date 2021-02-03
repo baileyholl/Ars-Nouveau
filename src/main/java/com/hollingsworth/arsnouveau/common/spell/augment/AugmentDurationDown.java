@@ -28,7 +28,7 @@ public class AugmentDurationDown extends AbstractAugment {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Reduces the duration of spells like potion effects, delay, redstone signal, and others.";
     }
 }

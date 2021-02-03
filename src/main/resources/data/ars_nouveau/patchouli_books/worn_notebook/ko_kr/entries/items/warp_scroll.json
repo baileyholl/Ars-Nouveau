@@ -1,0 +1,15 @@
+{
+    "name": "워프 두루마리",
+    "icon": "ars_nouveau:warp_scroll",
+    "category": "equipment",
+    "pages": [
+        {
+            "type": "text",
+            "text": "기록된 위치로 순간이동할 수 있는 일회성 두루마리입니다. 그러나, 차원 간 이동은 불가능합니다. 두루마리를 반대편 손에 든 채로 개체에게 점멸 주문을 사용할 시 그 개체를 워프시킬 수 있습니다."
+        },
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:warp_scroll"
+		}
+    ]
+}

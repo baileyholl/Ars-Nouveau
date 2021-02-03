@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Creates a temporary block that will disappear after a short time."
+      "text": "ars_nouveau.glyph_desc.phantom_block"
     },
     {
       "type": "glyph_recipe",

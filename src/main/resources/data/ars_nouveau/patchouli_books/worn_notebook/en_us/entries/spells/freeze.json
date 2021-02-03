@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Freezes water or slows a target for a short time."
+      "text": "ars_nouveau.glyph_desc.freeze"
     },
     {
       "type": "glyph_recipe",

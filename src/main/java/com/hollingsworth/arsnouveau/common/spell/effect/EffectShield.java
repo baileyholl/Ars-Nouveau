@@ -49,7 +49,7 @@ public class EffectShield extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Applies the Shield buff. This buff will reduce a flat amount of damage taken from magical and physical sources. Does not reduce damage from environmental sources.";
     }
 }

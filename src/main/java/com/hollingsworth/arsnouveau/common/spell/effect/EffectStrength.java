@@ -44,7 +44,7 @@ public class EffectStrength extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Applies the Strength buff.";
     }
 

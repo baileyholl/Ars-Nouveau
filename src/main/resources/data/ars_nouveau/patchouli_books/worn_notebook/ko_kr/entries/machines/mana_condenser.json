@@ -1,0 +1,31 @@
+{
+    "name": "마나 축전기",
+    "icon": "ars_nouveau:mana_condenser",
+    "category": "machines",
+    "pages": [
+        {
+            "type": "text",
+            "text": "마나 축전기는 밑에 부착된 마나 항아리에 세계 마나를 공급합니다. 이 마나는 주위에서 일어나는 특수한 현상에서 모아집니다. 이러한 현상에는 작물의 성장, 동물 교배, 몬스터의 죽음이 포함되어 있습니다. 다만, 마나 축전기는 다른 마나 축전기가 너무 가까이 있을 시 작동하지 않기에 주의해야 합니다."
+        },
+		{
+		"type":"multiblock",
+		"multiblock":{
+			"mapping":{
+				"C":"ars_nouveau:mana_condenser",
+				"0":"ars_nouveau:mana_jar"
+			},
+			"pattern":[
+				["C"],
+				["0"],
+				[" "]
+			],
+			"symmetrical": true
+		},
+		"text":""
+		},
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:mana_condenser"
+		}
+    ]
+}

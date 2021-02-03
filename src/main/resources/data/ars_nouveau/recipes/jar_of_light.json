@@ -27,17 +27,17 @@
   ],
   "item_6": [
     {
-      "item": "minecraft:glass"
+      "item": "minecraft:redstone_lamp"
     }
   ],
   "item_7": [
     {
-      "item": "minecraft:glass"
+      "tag": "forge:glass"
     }
   ],
   "item_8": [
     {
-      "item": "minecraft:redstone_lamp"
+      "tag": "forge:glass"
     }
   ],
   "reagent": [

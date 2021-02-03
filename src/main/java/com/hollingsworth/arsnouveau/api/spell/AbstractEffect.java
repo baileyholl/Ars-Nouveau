@@ -90,12 +90,13 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public void dealDamage(World world, LivingEntity shooter, float damage, List<AbstractAugment> augments, Entity entity, DamageSource source){
-        if(!(entity instanceof LivingEntity))
-            return;
 
-        LivingEntity mob = (LivingEntity) entity;
         shooter = shooter == null ? FakePlayerFactory.getMinecraft((ServerWorld) world) : shooter;
         entity.attackEntityFrom(source, damage);
+        if(!(entity instanceof LivingEntity))
+            return;
+        LivingEntity mob = (LivingEntity) entity;
+
         if(mob.getHealth() <= 0 && !mob.removed && hasBuff(augments, AugmentFortune.class)){
             int looting = getBuffCount(augments, AugmentFortune.class);
             LootContext.Builder lootContext = LootUtil.getLootingContext((ServerWorld)world,shooter, mob, looting, DamageSource.causePlayerDamage((PlayerEntity) shooter));

@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Applies the Conduit Power buff."
+      "text": "ars_nouveau.glyph_desc.aquatic"
     },
     {
       "type": "glyph_recipe",

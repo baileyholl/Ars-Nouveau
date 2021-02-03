@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
 import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
 import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.pathfinding.Path;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -19,6 +20,7 @@ import java.util.EnumSet;
 public class TakeItemGoal extends Goal {
     EntityCarbuncle carbuncle;
     BlockPos takePos;
+    boolean unreachable;
     public TakeItemGoal(EntityCarbuncle carbuncle){
       //  super(carbuncle::getPosition, 3, carbuncle::setStuck);
         this.setMutexFlags(EnumSet.of(Flag.MOVE));
@@ -26,16 +28,20 @@ public class TakeItemGoal extends Goal {
     }
 
 
+
+
     @Override
     public void resetTask() {
         super.resetTask();
         takePos = null;
+        unreachable = false;
     }
 
     @Override
     public void startExecuting() {
         super.startExecuting();
         takePos = carbuncle.getValidTakePos();
+        unreachable = false;
         if(carbuncle.isTamed() && takePos != null && carbuncle.getHeldStack().isEmpty())
             setPath(takePos.getX(), takePos.getY(), takePos.getZ(), 1.2D);
     }
@@ -43,6 +49,8 @@ public class TakeItemGoal extends Goal {
 
     public void getItem(){
         World world = carbuncle.world;
+        if(world.getTileEntity(takePos) == null)
+            return;
         IItemHandler iItemHandler = world.getTileEntity(takePos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
         if(iItemHandler == null)
             return;
@@ -63,8 +71,12 @@ public class TakeItemGoal extends Goal {
             }
         }
     }
+
     public void setPath(double x, double y, double z, double speedIn){
-        carbuncle.getNavigator().setPath( carbuncle.getNavigator().getPathToPos(x+0.5, y+1, z+0.5, 1), speedIn);
+        Path path = carbuncle.getNavigator().getPathToPos(x+0.5, y+1, z+0.5, 1);
+        if(path == null || !path.reachesTarget())
+            unreachable = true;
+        carbuncle.getNavigator().setPath( path, speedIn);
     }
 
     @Override
@@ -89,7 +101,7 @@ public class TakeItemGoal extends Goal {
 
     @Override
     public boolean shouldContinueExecuting() {
-        return !carbuncle.isStuck && carbuncle.getHeldStack() != null && carbuncle.getHeldStack().isEmpty() && carbuncle.backOff == 0 && carbuncle.isTamed() && takePos != null;
+        return !unreachable && !carbuncle.isStuck && carbuncle.getHeldStack() != null && carbuncle.getHeldStack().isEmpty() && carbuncle.backOff == 0 && carbuncle.isTamed() && takePos != null;
     }
 
     @Override

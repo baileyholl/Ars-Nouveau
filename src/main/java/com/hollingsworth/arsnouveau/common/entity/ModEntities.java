@@ -5,6 +5,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.monster.VexEntity;
+import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
@@ -36,6 +37,8 @@ public class ModEntities {
 
     public static EntityType<WildenHunter> ENTITY_WILDEN = null;
     public static EntityType<EntitySpellArrow> ENTITY_SPELL_ARROW = null;
+    public static EntityType<SummonWolf> SUMMON_WOLF = null;
+
 
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
@@ -108,6 +111,12 @@ public class ModEntities {
                     "spell_arrow",
                     EntityType.Builder.<EntitySpellArrow>create(EntitySpellArrow::new, EntityClassification.MISC)
                             .trackingRange(20).func_233608_b_(20).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntitySpellArrow::new));
+
+            SUMMON_WOLF = build(
+                    "summon_wolf",
+                    EntityType.Builder.<SummonWolf>create(SummonWolf::new, EntityClassification.CREATURE).size(0.6F, 0.85F).trackingRange(10));
+
+
             event.getRegistry().registerAll(
                     SPELL_PROJ,
                     ENTITY_EVOKER_FANGS_ENTITY_TYPE,
@@ -120,7 +129,8 @@ public class ModEntities {
                     ENTITY_FLYING_ITEM,
                     ENTITY_RITUAL,
                     ENTITY_WILDEN,
-                    ENTITY_SPELL_ARROW
+                    ENTITY_SPELL_ARROW,
+                    SUMMON_WOLF
             );
 
             GlobalEntityTypeAttributes.put(ENTITY_WHELP_TYPE, EntityWhelp.attributes().create());
@@ -129,6 +139,7 @@ public class ModEntities {
             GlobalEntityTypeAttributes.put(ENTITY_SYLPH_TYPE, EntitySylph.attributes().create());
             GlobalEntityTypeAttributes.put(ENTITY_WIXIE_TYPE, EntityWixie.attributes().create());
             GlobalEntityTypeAttributes.put(ENTITY_WILDEN, WildenHunter.getAttributes().create());
+            GlobalEntityTypeAttributes.put(SUMMON_WOLF, WolfEntity.func_234233_eS_().create());
 
             EntitySpawnPlacementRegistry.register(ENTITY_CARBUNCLE_TYPE, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
             EntitySpawnPlacementRegistry.register(ENTITY_SYLPH_TYPE, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);

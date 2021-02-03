@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Summons a lightning bolt at the location"
+      "text": "ars_nouveau.glyph_desc.lightning"
     },
     {
       "type": "glyph_recipe",

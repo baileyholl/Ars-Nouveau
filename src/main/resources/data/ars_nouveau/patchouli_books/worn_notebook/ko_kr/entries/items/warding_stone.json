@@ -1,0 +1,15 @@
+{
+    "name": "액막이 돌",
+    "icon": "ars_nouveau:warding_stone",
+    "category": "machines",
+    "pages": [
+        {
+            "type": "text",
+            "text": "몬스터에게 울타리처럼 사용할 수 있는 블록입니다. 땅에 설치할 시, 몬스터들은 돌 위를 지나가지 않으려 할 것입니다."
+        },
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:warding_stone"
+		}
+    ]
+}

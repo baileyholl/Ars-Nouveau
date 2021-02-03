@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Shears entities and blocks, or damages non-shearable entities for a small amount. Costs nothing."
+      "text": "ars_nouveau.glyph_desc.cut"
     },
     {
       "type": "glyph_recipe",

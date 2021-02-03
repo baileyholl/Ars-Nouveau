@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Opens the crafting menu."
+      "text": "ars_nouveau.glyph_desc.craft"
     },
     {
       "type": "glyph_recipe",

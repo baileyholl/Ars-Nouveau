@@ -22,6 +22,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraftforge.items.IItemHandler;
 
 import java.util.List;
 import java.util.UUID;
@@ -123,6 +124,11 @@ public class RuneTile extends AnimatedTile implements IPickupResponder {
             }else
                 ticksUntilCharge = 20 * 3;
         }
+    }
+
+    @Override
+    public List<IItemHandler> getInventory() {
+        return BlockUtil.getAdjacentInventories(world, pos);
     }
 
     @Override

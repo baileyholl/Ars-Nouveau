@@ -91,6 +91,10 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
     public AnimationFactory getFactory() {
         return manager;
     }
+    @Override
+    protected int getExperiencePoints(PlayerEntity player) {
+        return 0;
+    }
 
 
     @Override

@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Knocks a target away a short distance from the caster"
+      "text": "ars_nouveau.glyph_desc.gust"
     },
     {
       "type": "glyph_recipe",

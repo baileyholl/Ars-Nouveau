@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "A spell you start with. Damages a target. May be increased by Amplify, or applies the Poison debuff when using Extend Time. Note, multiple Harms without a delay will not apply due to invincibility on hit."
+      "text": "ars_nouveau.glyph_desc.harm"
     },
     {
       "type": "glyph_recipe",

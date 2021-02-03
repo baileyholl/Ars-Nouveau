@@ -26,10 +26,12 @@ public class Recipes extends RecipeProvider {
     }
 
     public static ITag.INamedTag<Item> MANA_GEM_TAG = ItemTags.makeWrapperTag("forge:gems/mana");
+    public static ITag.INamedTag<Item> MANA_GEM_BLOCK_TAG = ItemTags.makeWrapperTag("forge:storage_blocks/mana");
     public static ITag.INamedTag<Item> ARCHWOOD_LOG_TAG = ItemTags.makeWrapperTag("forge:logs/archwood");
     public static ITag.INamedTag<Block> DECORATIVE_AN =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "an_decorative"));
 
     public static Ingredient MANA_GEM = Ingredient.fromTag(MANA_GEM_TAG);
+    public static Ingredient MANA_GEM_BLOCK = Ingredient.fromTag(MANA_GEM_BLOCK_TAG);
     public static Ingredient ARCHWOOD_LOG = Ingredient.fromTag(ARCHWOOD_LOG_TAG);
     @Override
     protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {

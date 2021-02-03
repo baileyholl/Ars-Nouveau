@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Provides a speed boost to the target"
+      "text": "ars_nouveau.glyph_desc.haste"
     },
     {
       "type": "glyph_recipe",

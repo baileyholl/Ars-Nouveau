@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Interacts with blocks or entities as it were a player. Useful for reaching levers, chests, or animals."
+      "text": "ars_nouveau.glyph_desc.interact"
     },
     {
       "type": "glyph_recipe",

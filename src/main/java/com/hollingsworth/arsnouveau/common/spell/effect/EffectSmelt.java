@@ -39,9 +39,10 @@ public class EffectSmelt extends AbstractEffect {
 
 
         int aoeBuff = getBuffCount(augments, AugmentAOE.class);
-        int maxItemSmelt = 3 + 4*aoeBuff;
+        int pierceBuff = getBuffCount(augments, AugmentAOE.class);
+        int maxItemSmelt = 3 + 4*aoeBuff*pierceBuff;
 
-        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1 + pierceBuff, -1);
         List<ItemEntity> itemEntities = world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(((BlockRayTraceResult) rayTraceResult).getPos()).grow(aoeBuff + 1.0));
         smeltItems(world, itemEntities, maxItemSmelt);
 
@@ -74,19 +75,18 @@ public class EffectSmelt extends AbstractEffect {
 
     public void smeltItems(World world, List<ItemEntity> itemEntities, int maxItemSmelt){
         int numSmelted = 0;
-        for(int i = 0; i < itemEntities.size(); i++){
-            if( numSmelted > maxItemSmelt)
+        for (ItemEntity itemEntity : itemEntities) {
+            if (numSmelted > maxItemSmelt)
                 break;
-            ItemEntity entity = itemEntities.get(i);
-            Optional<FurnaceRecipe> optional = world.getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory(entity.getItem()),
+            Optional<FurnaceRecipe> optional = world.getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory(itemEntity.getItem()),
                     world);
-            if(optional.isPresent()){
+            if (optional.isPresent()) {
                 ItemStack result = optional.get().getRecipeOutput().copy();
-                if(result.isEmpty())
+                if (result.isEmpty())
                     continue;
-                while(numSmelted < maxItemSmelt && !entity.getItem().isEmpty()){
-                    entity.getItem().shrink(1);
-                    world.addEntity(new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), result.copy()));
+                while (numSmelted < maxItemSmelt && !itemEntity.getItem().isEmpty()) {
+                    itemEntity.getItem().shrink(1);
+                    world.addEntity(new ItemEntity(world, itemEntity.getPosX(), itemEntity.getPosY(), itemEntity.getPosZ(), result.copy()));
                     numSmelted++;
                 }
             }
@@ -99,7 +99,7 @@ public class EffectSmelt extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Smelts blocks and items in the world. AOE will increase the number of items and radius of blocks that can be smelted at once, while Amplify will allow Smelt to work on blocks of higher hardness.";
     }
 

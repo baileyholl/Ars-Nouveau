@@ -28,13 +28,12 @@ public class EffectHarm extends AbstractEffect {
         if(rayTraceResult instanceof EntityRayTraceResult){
             float damage = 5.0f +2.0f * getAmplificationBonus(augments);
             Entity entity = ((EntityRayTraceResult) rayTraceResult).getEntity();
-            if(entity instanceof LivingEntity){
-                int time = getBuffCount(augments, AugmentExtendTime.class);
-                if(time > 0){
+            int time = getBuffCount(augments, AugmentExtendTime.class);
+            if(time > 0){
+                if(entity instanceof LivingEntity)
                     applyPotion((LivingEntity) entity, Effects.POISON, augments, 5, 5);
-                }else{
-                    dealDamage(world, shooter, damage, augments, entity, DamageSource.causePlayerDamage(getPlayer(shooter, (ServerWorld) world)));
-                }
+            }else{
+                dealDamage(world, shooter, damage, augments, entity, DamageSource.causePlayerDamage(getPlayer(shooter, (ServerWorld) world)));
             }
         }
     }
@@ -61,7 +60,7 @@ public class EffectHarm extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "A spell you start with. Damages a target. May be increased by Amplify, or applies the Poison debuff when using Extend Time. Note, multiple Harms without a delay will not apply due to invincibility on hit.";
     }
 }

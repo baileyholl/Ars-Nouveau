@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtract;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.Enchantment;
@@ -57,7 +58,8 @@ public class EffectBreak extends AbstractEffect {
             BlockState state;
 
             int aoeBuff = getBuffCount(augments, AugmentAOE.class);
-            List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
+            int pierceBuff = getBuffCount(augments, AugmentPierce.class);
+            List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1 + pierceBuff, -1);
 
             for(BlockPos pos1 : posList) {
                 state = world.getBlockState(pos1);
@@ -110,7 +112,7 @@ public class EffectBreak extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "A spell you start with. Breaks blocks of an average hardness. Can be amplified to increase the harvest level.";
     }
 }

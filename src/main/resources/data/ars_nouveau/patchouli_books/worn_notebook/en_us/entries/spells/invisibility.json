@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Causes the target to turn invisible for a short time."
+      "text": "ars_nouveau.glyph_desc.invisibility"
     },
     {
       "type": "glyph_recipe",

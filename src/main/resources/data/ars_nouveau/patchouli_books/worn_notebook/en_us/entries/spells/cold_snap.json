@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Snares and causes a burst of damage to an entity that is afflicted by Slowness or is wet. Nearby enemies that are not afflicted by Slow will be slowed. Nearby Enemies afflicted by Slow or wetness will also be hit by Cold Snap. Can be augmented using Amplify, Extend Time, and AOE."
+      "text": "ars_nouveau.glyph_desc.cold_snap"
     },
     {
       "type": "glyph_recipe",

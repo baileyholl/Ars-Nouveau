@@ -2,15 +2,20 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.entity.goal.wilden.WildenMeleeAttack;
+import com.hollingsworth.arsnouveau.common.entity.goal.wilden.WildenRamAttack;
+import com.hollingsworth.arsnouveau.common.entity.goal.wilden.WildenSummon;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
+import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -25,67 +30,109 @@ public class  WildenHunter extends CreatureEntity implements IAnimatable, IAnima
     protected WildenHunter(EntityType<? extends CreatureEntity> type, World worldIn) {
         super(type, worldIn);
     }
-
+    public int ramCooldown = 0;
+    public int summonCooldown = 0;
     @Override
     protected void registerGoals() {
         super.registerGoals();
-
-       // this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F));
-        this.goalSelector.addGoal(5, new WildenMeleeAttack(this, 1.0D, true));
+        this.goalSelector.addGoal(5, new WildenMeleeAttack(this, 1.3D, true));
+        this.goalSelector.addGoal(3, new WildenRamAttack(this, 2D, true));
+        this.goalSelector.addGoal(3, new WildenSummon(this));
         this.goalSelector.addGoal(1, new SwimGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AnimalEntity.class, true));
+        this.goalSelector.addGoal(8, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
+        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
+        this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
 
+    }
+    protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+        return SoundEvents.ENTITY_WOLF_HURT;
+    }
+
+    protected SoundEvent getDeathSound() {
+        return SoundEvents.ENTITY_WOLF_DEATH;
+    }
+
+    @Override
+    protected int getExperiencePoints(PlayerEntity player) {
+        return 5;
+    }
+
+    /**
+     * Returns the volume for the sounds this mob makes.
+     */
+    protected float getSoundVolume() {
+        return 0.4F;
+    }
+
+    @Override
+    public void playSound(SoundEvent soundIn, float volume, float pitch) {
+        super.playSound(soundIn, volume, pitch -0.5f);
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return SoundEvents.ENTITY_WOLF_GROWL;
     }
 
     public static AttributeModifierMap.MutableAttribute getAttributes(){
-        return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MOVEMENT_SPEED, Attributes.MOVEMENT_SPEED.getDefaultValue())
-                .createMutableAttribute(Attributes.MAX_HEALTH, 6.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.2D).createMutableAttribute(Attributes.ATTACK_DAMAGE, 3.5d);
+        return MobEntity.func_233666_p_()
+                .createMutableAttribute(Attributes.MAX_HEALTH, 20.0D)
+                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D)
+                .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 0.6F)
+                .createMutableAttribute(Attributes.ATTACK_KNOCKBACK, 1.0D)
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 3.5D)
+                .createMutableAttribute(Attributes.ARMOR, 2.0D);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if(world.isRemote)
+            return;
+        if(ramCooldown > 0)
+            ramCooldown--;
+        if(summonCooldown > 0)
+            summonCooldown--;
     }
 
     @Override
     public void startAnimation(int arg) {
         try{
-                        AnimationController controller = this.manager.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("attackController");
+            if(arg == Animations.ATTACK.ordinal()){
+                AnimationController controller = this.manager.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("attackController");
 
-//            if(controller.getCurrentAnimation() != null && controller.getCurrentAnimation().animationName.equals("attack")) {
-//                System.out.println("cancalling");
-//                return;
-//            }
-            controller.markNeedsReload();
-            controller.setAnimation(new AnimationBuilder().addAnimation("attack"));
+                if(controller.getCurrentAnimation() != null && (controller.getCurrentAnimation().animationName.equals("attack") || controller.getCurrentAnimation().animationName.equals("attack2") ||
+                        controller.getCurrentAnimation().animationName.equals("howl"))) {
+                    return;
+                }
+                controller.markNeedsReload();
+                controller.setAnimation(new AnimationBuilder().addAnimation("attack").addAnimation("idle"));
+            }
+
+            if(arg == Animations.RAM.ordinal()){
+                AnimationController controller = this.manager.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("attackController");
+                if(controller.getCurrentAnimation() != null && controller.getCurrentAnimation().animationName.equals("attack2")) {
+                    return;
+                }
+                controller.markNeedsReload();
+                controller.setAnimation(new AnimationBuilder().addAnimation("attack2").addAnimation("idle"));
+            }
+
+            if(arg == Animations.HOWL.ordinal()){
+                AnimationController controller = this.manager.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("attackController");
+                controller.markNeedsReload();
+                controller.setAnimation(new AnimationBuilder().addAnimation("howl").addAnimation("idle"));
+            }
+
         }catch (Exception e){
             e.printStackTrace();
         }
-        System.out.println("got arg" + arg);
-        if(arg == Animations.ATTACK.ordinal()){
-//            AnimationController controller = this.manager.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("attackController");
-//
-//            if(controller.getCurrentAnimation() != null && controller.getCurrentAnimation().animationName.equals("attack")) {
-//                System.out.println("cancalling");
-//                return;
-//            }
-//            controller.markNeedsReload();
-//            controller.setAnimation(new AnimationBuilder().addAnimation("attack"));
-            System.out.println("playing anim");
-        }
+
     }
 
     private <E extends Entity> PlayState attackPredicate(AnimationEvent event) {
-        try{
-            if (limbSwingAmount > 0.1) {
-                //event.getController().setAnimation(new AnimationBuilder().addAnimation("running_legs", true));
-                return PlayState.CONTINUE;
-            }else if(this.isAggressive()){
-                // event.getController().setAnimation(new AnimationBuilder().addAnimation("attack"));
-                return PlayState.CONTINUE;
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-        //event.getController().setAnimation(new AnimationBuilder().addAnimation("idle", false));
-
         return PlayState.CONTINUE;
     }
 
@@ -100,6 +147,8 @@ public class  WildenHunter extends CreatureEntity implements IAnimatable, IAnima
     }
 
     public enum Animations{
-        ATTACK
+        ATTACK,
+        RAM,
+        HOWL
     }
 }

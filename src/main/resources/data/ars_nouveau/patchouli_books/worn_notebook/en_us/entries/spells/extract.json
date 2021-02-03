@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Applies a silk-touch effect to Break and causes Explosion to not destroy blocks that drop. Cannot be combined with Fortune."
+      "text": "ars_nouveau.glyph_desc.extract"
     },
     {
       "type": "glyph_recipe",

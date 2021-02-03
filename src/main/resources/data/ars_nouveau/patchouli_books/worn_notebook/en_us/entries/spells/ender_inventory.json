@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Opens your personal ender chest inventory from anywhere."
+      "text": "ars_nouveau.glyph_desc.ender_inventory"
     },
     {
       "type": "glyph_recipe",

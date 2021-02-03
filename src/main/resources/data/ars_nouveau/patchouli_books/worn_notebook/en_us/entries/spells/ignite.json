@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Sets blocks and mobs on fire for a short time"
+      "text": "ars_nouveau.glyph_desc.ignite"
     },
     {
       "type": "glyph_recipe",

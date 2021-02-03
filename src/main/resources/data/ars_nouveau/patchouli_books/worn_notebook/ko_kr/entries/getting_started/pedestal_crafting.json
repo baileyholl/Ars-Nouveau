@@ -1,0 +1,16 @@
+{
+    "name": "장치 제작",
+    "icon": "ars_nouveau:enchanting_apparatus",
+	"sortnum":6,
+    "category": "getting_started",
+    "pages": [
+        {
+            "type": "text",
+            "text": "마법 부여 장치는 Ars Nouveau에서 발전해 나가기 위해 필요한 특별한 기계, 장식품, 그리고 장비를 제작할 수 있습니다. 마법 부여 장치를 통해 무언가를 제작하려면 불가사의한 받침대가 최대 8개, 불가사의한 코어 1개, 마법 부여 장치 1개가 필요합니다. 장치를 다 만들었다면, 먼저 마나 꽃 씨앗을 제작해 보세요."       
+        },
+		{
+            "type": "relations",
+            "entries":["machines/enchanting_apparatus", "apparatus/mana_bloom_crop"]        
+        }
+    ]
+}

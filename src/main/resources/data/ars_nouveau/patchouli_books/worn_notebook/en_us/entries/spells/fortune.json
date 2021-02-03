@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Increases the drop chance from mobs killed by Damage and blocks that are destroyed by Break. Cannot be combined with Extract"
+      "text": "ars_nouveau.glyph_desc.fortune"
     },
     {
       "type": "glyph_recipe",

@@ -1,0 +1,20 @@
+{
+  "name": "자르기",
+  "icon": "ars_nouveau:glyph_cut",
+  "category": "spells_1",
+  "sortnum": 2,
+  "pages": [
+    {
+      "type": "text",
+      "text": "ars_nouveau.glyph_desc.cut"
+    },
+    {
+      "type": "glyph_recipe",
+      "recipe": "ars_nouveau:glyph_cut",
+      "tier": "1",
+      "mana_cost": "낮음",
+      "clay_type": "ars_nouveau:magic_clay",
+      "reagent": "minecraft:shears"
+    }
+  ]
+}

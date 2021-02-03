@@ -384,6 +384,7 @@ public class BlockRegistry {
             registry.register(getDefaultBlockItem(BlockRegistry.STRIPPED_AWWOOD_PURPLE, LibBlockNames.STRIPPED_AWWOOD_PURPLE));
           //  registry.register(new SignItem((new Item.Properties()).maxStackSize(16).group(ItemGroup.DECORATIONS), BlockRegistry.ARCHWOOD_SIGN, BlockRegistry.ARCHWOOD_SIGN).setRegistryName(LibBlockNames.ARCHWOOD_SIGN));
             registry.register(getDefaultBlockItem(BlockRegistry.MANA_GEM_BLOCK, LibBlockNames.MANA_GEM_BLOCK));
+            ComposterBlock.CHANCES.put(BlockRegistry.MANA_BLOOM_CROP.asItem(), 0.3f);
         }
 
         public static Item getDefaultBlockItem(Block block, String registry){

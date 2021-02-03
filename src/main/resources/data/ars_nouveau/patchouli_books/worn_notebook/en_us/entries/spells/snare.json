@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Stops entities from moving and jumping. Extend Time will increase the duration of this effect."
+      "text": "ars_nouveau.glyph_desc.snare"
     },
     {
       "type": "glyph_recipe",

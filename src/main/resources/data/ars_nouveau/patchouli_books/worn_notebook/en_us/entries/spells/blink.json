@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Teleports the caster to a location. If an entity is hit and the caster is holding a Warp Scroll in the offhand, the entity will be warped to the location on the Warp Scroll. When used on Self, the caster blinks forward."
+      "text": "ars_nouveau.glyph_desc.blink"
     },
     {
       "type": "glyph_recipe",

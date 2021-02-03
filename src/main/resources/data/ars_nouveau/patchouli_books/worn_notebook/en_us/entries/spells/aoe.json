@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Spells will affect a larger area around a targeted block."
+      "text": "ars_nouveau.glyph_desc.aoe"
     },
     {
       "type": "glyph_recipe",

@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "A spell you start with. Applies spells on the caster."
+      "text": "ars_nouveau.glyph_desc.self"
     },
     {
       "type": "glyph_recipe",

@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Applies the Slow Fall buff."
+      "text": "ars_nouveau.glyph_desc.slowfall"
     },
     {
       "type": "glyph_recipe",

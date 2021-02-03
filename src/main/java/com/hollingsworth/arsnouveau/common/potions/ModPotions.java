@@ -17,8 +17,9 @@ import net.minecraftforge.registries.ObjectHolder;
 @ObjectHolder(ArsNouveau.MODID)
 public class ModPotions {
 
-    public static final ShieldPotion SHIELD_POTION = new ShieldPotion();
-    public static final ManaRegenPotion MANA_REGEN_EFFECT = new ManaRegenPotion();
+    public static final ShieldEffect SHIELD_POTION = new ShieldEffect();
+    public static final ManaRegenEffect MANA_REGEN_EFFECT = new ManaRegenEffect();
+    public static final SummoningSicknessEffect SUMMONING_SICKNESS = new SummoningSicknessEffect();
 
     @ObjectHolder("mana_regen_potion")
     public static Potion MANA_REGEN_POTION;
@@ -44,6 +45,7 @@ public class ModPotions {
             final IForgeRegistry<Effect> registry = event.getRegistry();
             registry.register(SHIELD_POTION);
             registry.register(MANA_REGEN_EFFECT);
+            registry.register(SUMMONING_SICKNESS);
         }
 
         @SubscribeEvent

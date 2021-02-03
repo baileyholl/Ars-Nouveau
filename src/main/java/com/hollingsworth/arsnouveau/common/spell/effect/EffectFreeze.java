@@ -84,7 +84,7 @@ public class EffectFreeze extends AbstractEffect {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Freezes water or slows a target for a short time.";
     }
 }

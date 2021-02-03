@@ -14,18 +14,22 @@ public class WildenMeleeAttack extends MeleeAttackGoal {
     }
 
     @Override
+    public boolean shouldExecute() {
+        return super.shouldExecute();
+    }
+
+    @Override
     protected void checkAndPerformAttack(LivingEntity enemy, double distToEnemySqr) {
         double d0 = this.getAttackReachSqr(enemy);
-        if(distToEnemySqr - 2 <= d0)
+        if(distToEnemySqr - 5 <= d0)
             Networking.sendToNearby(attacker.world, attacker, new PacketAnimEntity(attacker.getEntityId(), WildenHunter.Animations.ATTACK.ordinal()));
 
         if (distToEnemySqr <= d0 && this.func_234041_j_() <= 0) {
          //   Networking.sendToNearby(attacker.world, attacker, new PacketAnimEntity(attacker.getEntityId(), WildenHunter.Animations.ATTACK.ordinal()));
-
             this.func_234039_g_();
             this.attacker.swingArm(Hand.MAIN_HAND);
-            System.out.println("sending packet");
             this.attacker.attackEntityAsMob(enemy);
+
         }
     }
 }

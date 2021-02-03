@@ -1,0 +1,6 @@
+{
+	"name": "2단계 주문",
+	"description": "마법사의 주문서를 통해 발동할 수 있는 주문들.",
+	"icon": "ars_nouveau:glyph_aoe",
+	"sortnum":3
+}

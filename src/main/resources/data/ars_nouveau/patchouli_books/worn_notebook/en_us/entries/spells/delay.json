@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Delays the resolution of effects placed to the right of this spell for a few moments. The delay may be increased with the Extend Time augment."
+      "text": "ars_nouveau.glyph_desc.delay"
     },
     {
       "type": "glyph_recipe",

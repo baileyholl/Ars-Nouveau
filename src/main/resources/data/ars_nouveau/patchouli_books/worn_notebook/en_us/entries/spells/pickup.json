@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Picks up nearby items in a medium radius where this spell is activated. The range may be expanded with AOE."
+      "text": "ars_nouveau.glyph_desc.pickup"
     },
     {
       "type": "glyph_recipe",

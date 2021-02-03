@@ -65,7 +65,7 @@ public class GlyphButton extends Button {
 
                 if(parent.api.getSpell_map().containsKey(this.spell_id)) {
                     List<String> test = new ArrayList<>();
-                    test.add(parent.api.getSpell_map().get(this.spell_id).name);
+                    test.add(parent.api.getSpell_map().get(this.spell_id).getLocaleName());
                     parent.tooltip = test;
                 }
             }

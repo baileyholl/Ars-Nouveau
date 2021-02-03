@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.goal.GetUnstuckGoal;
-import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.*;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -185,17 +184,19 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             return;
         Direction[] directions = Direction.values();
         if (this.getHeldStack().isEmpty() && !world.isRemote) {
-            for (Direction d : directions){
+
                 // Cannot use a single expanded bounding box because we don't want this to overlap with an adjacentt inventory that also has a frame.
-                for (ItemEntity itementity : this.world.getEntitiesWithinAABB(ItemEntity.class, this.getBoundingBox().grow(d.getXOffset(), d.getYOffset(), d.getZOffset()))) {
-                    if (!itementity.removed && !itementity.getItem().isEmpty() && !itementity.cannotPickup()) {
-                        if (!isTamed() && itementity.getItem().getItem() != Items.GOLD_NUGGET)
-                            return;
-                        this.updateEquipmentIfNeeded(itementity);
-                        this.dataManager.set(HOP, false);
-                    }
+            for (ItemEntity itementity : this.world.getEntitiesWithinAABB(ItemEntity.class, this.getBoundingBox().grow(1))) {
+                if (!itementity.removed && !itementity.getItem().isEmpty() && !itementity.cannotPickup()) {
+                    if (!isTamed() && itementity.getItem().getItem() != Items.GOLD_NUGGET)
+                        return;
+                    this.updateEquipmentIfNeeded(itementity);
+                    this.dataManager.set(HOP, false);
+                    if(getHeldStack() != null && !getHeldStack().isEmpty())
+                        break;
                 }
             }
+
 
         }
         attemptTame();
@@ -265,6 +266,18 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             setHeldStack(itemEntity.getItem());
             itemEntity.remove();
             this.world.playSound(null, this.getPosX(), this.getPosY(), this.getPosZ(), SoundEvents.ENTITY_ITEM_PICKUP, this.getSoundCategory(), 1.0F, 1.0F);
+            if(!isTamed())
+                return;
+            for(ItemEntity i : world.getEntitiesWithinAABB(ItemEntity.class, this.getBoundingBox().grow(3))){
+                if(itemEntity.getItem().getCount() >= itemEntity.getItem().getMaxStackSize())
+                    break;
+                int maxTake = getHeldStack().getMaxStackSize() - getHeldStack().getCount();
+                if(i.getItem().isItemEqual(getHeldStack())){
+                    int toTake = Math.min(i.getItem().getCount(), maxTake);
+                    i.getItem().shrink(toTake);
+                    getHeldStack().grow(toTake);
+                }
+            }
         }
     }
 
@@ -312,8 +325,11 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         list.add(new PrioritizedGoal(8, new LookAtGoal(this, PlayerEntity.class, 3.0F, 0.01F)));
         list.add(new PrioritizedGoal(8, new NonHoggingLook(this, MobEntity.class, 3.0F, 0.01f)));
         list.add(new PrioritizedGoal(0, new SwimGoal(this)));
-        // Roam back in case we have no item and are far from home.
-        list.add(new PrioritizedGoal(2, new GoBackHomeGoal(this, this::getHome, 25, () -> (this.getHeldStack() == null || this.getHeldStack().isEmpty()))));
+//        list.add(new PrioritizedGoal(4, new GoBackHomeGoal(this, this::getHome, 5, () ->
+//                (this.getHeldStack() == null || this.getHeldStack().isEmpty()) &&
+//                        world.getEntitiesWithinAABB(ItemEntity.class, getBoundingBox().grow(8.0D, 6, 8.0D), (itemEntity) -> !itemEntity.cannotPickup() && itemEntity.isAlive() && isValidItem(itemEntity.getItem())).isEmpty())));
+//        // Roam back in case we have no item and are far from home.
+      //  list.add(new PrioritizedGoal(1, new GoBackHomeGoal(this, this::getHome, 25, () -> (this.getHeldStack() == null || this.getHeldStack().isEmpty()))));
         return list;
     }
 
@@ -586,6 +602,10 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         if (tile == null || stack == null || stack.isEmpty())
             return SortPref.INVALID;
         for (ItemFrameEntity i : world.getEntitiesWithinAABB(ItemFrameEntity.class, new AxisAlignedBB(tile.getPos()).grow(1))) {
+            // Check if these frames are attached to the tile
+            TileEntity adjTile = world.getTileEntity(i.getPosition().offset(i.getHorizontalFacing().getOpposite()));
+            if(adjTile == null || !adjTile.equals(tile))
+                continue;
             CompoundNBT tag = i.getDisplayedItem().getTag();
             if (i.getDisplayedItem().isEmpty())
                 continue;
@@ -611,6 +631,11 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         return !ItemStack.areItemStacksEqual(ItemHandlerHelper.insertItemStacked(handler, stack.copy(), true), stack) ? pref : SortPref.INVALID;
     }
 
+    @Override
+    protected int getExperiencePoints(PlayerEntity player) {
+        return 0;
+    }
+
     public BlockPos getValidStorePos(ItemStack stack){
         BlockPos returnPos = null;
         if(TO_LIST == null)
@@ -630,6 +655,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             return null;
 
         for(BlockPos p : FROM_LIST){
+            if(world.getTileEntity(p) == null)
+                continue;
             IItemHandler iItemHandler = world.getTileEntity(p).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
             if(iItemHandler == null)
                 continue;
@@ -644,18 +671,23 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
 
     public boolean isValidItem(ItemStack stack){
+
         if(!isTamed() && stack.getItem() == Items.GOLD_NUGGET)
             return true;
 
-        if(getValidStorePos(stack) == null)
+        if(getValidStorePos(stack) == null) {
             return false;
+        }
 
         if(!whitelist && !blacklist)
             return true;
         if(whitelist){
-            for(ItemStack s : allowedItems)
-                if(s.isItemEqual(stack))
+            for(ItemStack s : allowedItems) {
+                if (s.isItemEqual(stack)) {
                     return true;
+                }
+            }
+            return false;
         }
         if(blacklist){
             for(ItemStack s : ignoreItems)

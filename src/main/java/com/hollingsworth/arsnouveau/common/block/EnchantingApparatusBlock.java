@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
+import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.block.Block;
@@ -7,6 +9,7 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -35,7 +38,6 @@ public class EnchantingApparatusBlock extends ModBlock{
     @Override
     public void onBlockClicked(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
         super.onBlockClicked(state, worldIn, pos, player);
-
     }
 
     @Override
@@ -46,34 +48,32 @@ public class EnchantingApparatusBlock extends ModBlock{
         if(tile.isCrafting)
             return ActionResultType.SUCCESS;
 
-        if(!player.getHeldItemOffhand().isEmpty() && tile.catalystItem != null && !tile.catalystItem.isEmpty()){
-            tile.attemptCraft();
-            return ActionResultType.SUCCESS;
-        }
-
 
         if(!(world.getBlockState(pos.down()).getBlock() instanceof ArcaneCore)){
             PortUtil.sendMessage(player, new TranslationTextComponent("alert.core"));
             return ActionResultType.SUCCESS;
         }
-
-        if(player.isSneaking()){
-            tile.attemptCraft();
-            return ActionResultType.SUCCESS;
-        }
-        if (tile.catalystItem != null && !tile.catalystItem.isEmpty() && player.getHeldItem(handIn).isEmpty()) {
+        if(tile.catalystItem == null || tile.catalystItem.isEmpty()){
+            IEnchantingRecipe recipe = tile.getRecipe(player.getHeldItemMainhand());
+            if(recipe == null){
+                PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.apparatus.norecipe"));
+            }else if(recipe.consumesMana() && !ManaUtil.hasManaNearby(tile.getPos(), tile.getWorld(), 10, recipe.manaCost())){
+                PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.apparatus.nomana"));
+            }else{
+                if(tile.attemptCraft(player.getHeldItemMainhand())){
+                    tile.catalystItem = player.inventory.decrStackSize(player.inventory.currentItem, 1);
+                }
+            }
+        }else{
             ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.catalystItem);
             world.addEntity(item);
-            tile.catalystItem = null;
-        } else if (!player.inventory.getCurrentItem().isEmpty()) {
-            if(tile.catalystItem != null){
-                ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.catalystItem);
-                world.addEntity(item);
+            tile.catalystItem = ItemStack.EMPTY;
+            if(tile.attemptCraft(player.getHeldItemMainhand())){
+                tile.catalystItem = player.inventory.decrStackSize(player.inventory.currentItem, 1);
             }
-            tile.catalystItem = player.inventory.decrStackSize(player.inventory.currentItem, 1);;
         }
-        world.notifyBlockUpdate(pos, state, state, 2);
 
+        world.notifyBlockUpdate(pos, state, state, 2);
         return ActionResultType.SUCCESS;
     }
 

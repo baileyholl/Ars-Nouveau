@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Boosts a target into the air. Can be used for large jumps or for scaling mountains!"
+      "text": "ars_nouveau.glyph_desc.launch"
     },
     {
       "type": "glyph_recipe",

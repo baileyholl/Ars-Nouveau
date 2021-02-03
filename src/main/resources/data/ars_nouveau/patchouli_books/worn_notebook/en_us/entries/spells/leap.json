@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Launches the target in the direction they are looking. Amplification will increase the distance moved."
+      "text": "ars_nouveau.glyph_desc.leap"
     },
     {
       "type": "glyph_recipe",

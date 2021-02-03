@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Places water at a location. Can be augmented with AOE."
+      "text": "ars_nouveau.glyph_desc.conjure_water"
     },
     {
       "type": "glyph_recipe",

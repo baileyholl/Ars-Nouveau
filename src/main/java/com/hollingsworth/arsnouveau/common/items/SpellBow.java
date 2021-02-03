@@ -140,7 +140,6 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
                         return;
                     }else if(new SpellResolver(new SpellContext(caster.getSpell(), playerentity)).canCast(playerentity)){
                         new SpellResolver(new SpellContext(caster.getSpell(), playerentity)).expendMana(playerentity);
-                        System.out.println("expending");
                         didCastSpell = true;
                     }
                 }
@@ -170,10 +169,6 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
                         arr.setIsCritical(true);
                     }
                     addArrow(arr, bowStack, arrowStack, isArrowInfinite, playerentity);
-                    if(arr instanceof EntitySpellArrow){
-                        System.out.println(((EntitySpellArrow) arr).spellResolver.spell.getDisplayString());
-                    }
-
                 }
             }
 
@@ -257,5 +252,16 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
     @Override
     public int getItemEnchantability() {
         return super.getItemEnchantability();
+    }
+
+
+    @Override
+    public boolean isEnchantable(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
+        return true;
     }
 }

@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Creates a brief redstone signal on a block, like a button. The signal starts at strength 10, and may be increased with Amplify, or decreased with Dampen. The duration may be extended with Extend Time."
+      "text": "ars_nouveau.glyph_desc.redstone_signal"
     },
     {
       "type": "glyph_recipe",

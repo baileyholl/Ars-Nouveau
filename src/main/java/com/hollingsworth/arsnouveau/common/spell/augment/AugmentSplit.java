@@ -29,7 +29,7 @@ public class AugmentSplit extends AbstractAugment {
     }
 
     @Override
-    protected String getBookDescription() {
+    public String getBookDescription() {
         return "Causes multiple projectiles to be cast at once. Each projectile applies a set of effects.";
     }
 }

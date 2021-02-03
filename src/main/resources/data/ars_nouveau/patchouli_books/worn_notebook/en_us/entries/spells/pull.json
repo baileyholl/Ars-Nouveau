@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "Pulls the target closer to the caster"
+      "text": "ars_nouveau.glyph_desc.pull"
     },
     {
       "type": "glyph_recipe",

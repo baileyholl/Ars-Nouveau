@@ -2,42 +2,42 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "item_1": [
     {
-      "item": "minecraft:diamond"
+      "tag": "forge:gems/diamond"
     }
   ],
   "item_2": [
     {
-      "item": "minecraft:diamond"
+      "tag": "forge:gems/diamond"
     }
   ],
   "item_3": [
     {
-      "item": "minecraft:diamond"
+      "tag": "forge:gems/diamond"
     }
   ],
   "item_4": [
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     }
   ],
   "item_5": [
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     }
   ],
   "item_6": [
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     }
   ],
   "item_7": [
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     }
   ],
   "item_8": [
     {
-      "item": "ars_nouveau:mana_gem"
+      "tag": "forge:gems/mana"
     }
   ],
   "reagent": [
