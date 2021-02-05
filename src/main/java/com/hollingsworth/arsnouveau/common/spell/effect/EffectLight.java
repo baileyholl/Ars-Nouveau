@@ -38,14 +38,14 @@ public class EffectLight extends AbstractEffect {
 
         if(rayTraceResult instanceof BlockRayTraceResult){
             BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getPos().offset(((BlockRayTraceResult) rayTraceResult).getFace());
-            //placedBlockWouldCollide
             if (world.getBlockState(pos).getMaterial() == Material.AIR && world.placedBlockCollides(BlockRegistry.LIGHT_BLOCK.getDefaultState(), pos, ISelectionContext.dummy())) {
                 world.setBlockState(pos, BlockRegistry.LIGHT_BLOCK.getDefaultState());
                 LightTile tile = ((LightTile)world.getTileEntity(pos));
-                tile.red = spellContext.colors.r;
-                tile.green = spellContext.colors.g;
-                tile.blue = spellContext.colors.b;
-                world.notifyBlockUpdate(pos, world.getBlockState(pos),world.getBlockState(pos), 2);
+                if(tile != null){
+                    tile.red = spellContext.colors.r;
+                    tile.green = spellContext.colors.g;
+                    tile.blue = spellContext.colors.b;
+                }
             }
 
         }
