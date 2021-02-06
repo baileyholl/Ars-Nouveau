@@ -35,9 +35,10 @@ public class ModEntities {
     public static EntityType<EntityFlyingItem> ENTITY_FLYING_ITEM = null;
     public static EntityType<EntityRitualProjectile> ENTITY_RITUAL = null;
 
-    public static EntityType<WildenHunter> ENTITY_WILDEN = null;
+    public static EntityType<WildenHunter> WILDEN_HUNTER = null;
     public static EntityType<EntitySpellArrow> ENTITY_SPELL_ARROW = null;
     public static EntityType<SummonWolf> SUMMON_WOLF = null;
+    public static EntityType<WildenStalker> WILDEN_STALKER = null;
 
 
 
@@ -101,7 +102,7 @@ public class ModEntities {
                             .size(0.5f, 0.5f)
                             .setTrackingRange(10).setUpdateInterval(60)
                             .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityRitualProjectile::new));
-            ENTITY_WILDEN = build(
+            WILDEN_HUNTER = build(
                     "wilden_hunter",
                     EntityType.Builder.<WildenHunter>create(WildenHunter::new, EntityClassification.CREATURE)
                             .size(1.0f, 2.0f)
@@ -116,7 +117,12 @@ public class ModEntities {
                     "summon_wolf",
                     EntityType.Builder.<SummonWolf>create(SummonWolf::new, EntityClassification.CREATURE).size(0.6F, 0.85F).trackingRange(10));
 
-
+            WILDEN_STALKER = build(
+                    "wilden_stalker",
+                    EntityType.Builder.<WildenStalker>create(WildenStalker::new, EntityClassification.CREATURE)
+                            .size(1.0f, 2.0f)
+                            .setTrackingRange(10)
+                            .setShouldReceiveVelocityUpdates(true));
             event.getRegistry().registerAll(
                     SPELL_PROJ,
                     ENTITY_EVOKER_FANGS_ENTITY_TYPE,
@@ -128,9 +134,10 @@ public class ModEntities {
                     ENTITY_WIXIE_TYPE,
                     ENTITY_FLYING_ITEM,
                     ENTITY_RITUAL,
-                    ENTITY_WILDEN,
+                    WILDEN_HUNTER,
                     ENTITY_SPELL_ARROW,
-                    SUMMON_WOLF
+                    SUMMON_WOLF,
+                    WILDEN_STALKER
             );
 
             GlobalEntityTypeAttributes.put(ENTITY_WHELP_TYPE, EntityWhelp.attributes().create());
@@ -138,7 +145,8 @@ public class ModEntities {
             GlobalEntityTypeAttributes.put(ENTITY_CARBUNCLE_TYPE, EntityCarbuncle.attributes().create());
             GlobalEntityTypeAttributes.put(ENTITY_SYLPH_TYPE, EntitySylph.attributes().create());
             GlobalEntityTypeAttributes.put(ENTITY_WIXIE_TYPE, EntityWixie.attributes().create());
-            GlobalEntityTypeAttributes.put(ENTITY_WILDEN, WildenHunter.getAttributes().create());
+            GlobalEntityTypeAttributes.put(WILDEN_HUNTER, WildenHunter.getAttributes().create());
+            GlobalEntityTypeAttributes.put(WILDEN_STALKER, WildenHunter.getAttributes().create());
             GlobalEntityTypeAttributes.put(SUMMON_WOLF, WolfEntity.func_234233_eS_().create());
 
             EntitySpawnPlacementRegistry.register(ENTITY_CARBUNCLE_TYPE, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
