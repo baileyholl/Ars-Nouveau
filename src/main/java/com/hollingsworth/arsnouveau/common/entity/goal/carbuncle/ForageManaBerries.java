@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.command.arguments.EntityAnchorArgument;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.item.ItemStack;
+import net.minecraft.pathfinding.Path;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -34,19 +35,20 @@ public class ForageManaBerries extends Goal {
         if(entity.isStuck || world.rand.nextDouble() > 0.02 || entity.getValidStorePos(new ItemStack(BlockRegistry.MANA_BERRY_BUSH.asItem())) == null)
             return false;
         this.pos = getNearbyManaBerry();
-        return  pos != null;
+        return pos != null;
     }
 
     @Override
     public void tick() {
         super.tick();
+
         if(this.pos == null || entity.isStuck) {
             return;
         }
 
-        if(BlockUtil.distanceFrom(entity.getPosition(), pos) > 1.0){
+        if(BlockUtil.distanceFrom(entity.getPosition(), pos) > 1.2){
             entity.getNavigator().tryMoveToXYZ(this.pos.getX(), this.pos.getY(), this.pos.getZ(), 1.2);
-        }else{
+        }else if(world.getBlockState(pos).getBlock() instanceof ManaBerryBush){
             int i = world.getBlockState(pos).get(AGE);
             boolean flag = i == 3;
             entity.lookAt(EntityAnchorArgument.Type.EYES,new Vector3d(this.pos.getX(), this.pos.getY(), this.pos.getZ()));
@@ -60,7 +62,10 @@ public class ForageManaBerries extends Goal {
 
     @Override
     public boolean shouldContinueExecuting() {
-        return !entity.isStuck && pos != null;
+        if(pos == null)
+            return false;
+        Path path = entity.getNavigator().getPathToPos(pos, 0);
+        return !entity.isStuck && world.getBlockState(pos).getBlock() instanceof ManaBerryBush && path != null && path.reachesTarget();
     }
 
     public BlockPos getNearbyManaBerry(){
