@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
@@ -18,7 +18,7 @@ import java.util.List;
 public class EffectHaste extends AbstractEffect {
 
     public EffectHaste() {
-        super(ModConfig.EffectHasteID, "Speed");
+        super(GlyphLib.EffectHasteID, "Speed");
     }
 
     @Override

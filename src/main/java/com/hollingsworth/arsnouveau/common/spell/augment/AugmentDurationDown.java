@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.augment;
 
-import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import net.minecraft.item.Item;
@@ -8,7 +8,7 @@ import net.minecraft.item.Item;
 public class AugmentDurationDown extends AbstractAugment {
 
     public AugmentDurationDown() {
-        super(ModConfig.AugmentDurationDown, "Duration Down");
+        super(GlyphLib.AugmentDurationDown, "Duration Down");
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class EffectLeap extends AbstractEffect {
     public EffectLeap() {
-        super(ModConfig.EffectLeapID, "Leap");
+        super(GlyphLib.EffectLeapID, "Leap");
     }
 
     @Override

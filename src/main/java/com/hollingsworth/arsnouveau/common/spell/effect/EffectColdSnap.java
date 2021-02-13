@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
@@ -25,7 +25,7 @@ import java.util.List;
 
 public class EffectColdSnap extends AbstractEffect {
     public EffectColdSnap() {
-        super(ModConfig.EffectColdSnapID, "Cold Snap");
+        super(GlyphLib.EffectColdSnapID, "Cold Snap");
     }
 
     @Override

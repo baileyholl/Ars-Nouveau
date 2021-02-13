@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
@@ -22,7 +22,7 @@ import java.util.List;
 
 public class EffectCraft extends AbstractEffect {
     public EffectCraft() {
-        super(ModConfig.EffectCraftID, "Craft");
+        super(GlyphLib.EffectCraftID, "Craft");
     }
 
     private static final ITextComponent CONTAINER_NAME = new TranslationTextComponent("container.crafting");

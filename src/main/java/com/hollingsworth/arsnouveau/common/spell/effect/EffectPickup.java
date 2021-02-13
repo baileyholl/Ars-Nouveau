@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
@@ -23,7 +23,7 @@ import java.util.List;
 
 public class EffectPickup extends AbstractEffect {
     public EffectPickup() {
-        super(ModConfig.EffectPickupID, "Item Pickup");
+        super(GlyphLib.EffectPickupID, "Item Pickup");
     }
 
     @Override

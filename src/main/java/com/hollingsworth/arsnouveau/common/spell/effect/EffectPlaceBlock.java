@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
@@ -29,7 +29,7 @@ import java.util.List;
 
 public class EffectPlaceBlock extends AbstractEffect {
     public EffectPlaceBlock() {
-        super(ModConfig.EffectPlaceBlockID, "Place Block");
+        super(GlyphLib.EffectPlaceBlockID, "Place Block");
     }
 
     @Override

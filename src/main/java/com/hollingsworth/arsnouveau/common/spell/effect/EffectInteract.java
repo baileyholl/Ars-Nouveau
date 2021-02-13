@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -29,7 +29,7 @@ import java.util.List;
 
 public class EffectInteract extends AbstractEffect {
     public EffectInteract() {
-        super(ModConfig.EffectInteractID, "Interact");
+        super(GlyphLib.EffectInteractID, "Interact");
     }
 
     @Override

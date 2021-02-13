@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.items.WarpScroll;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -23,7 +23,7 @@ import java.util.List;
 public class EffectBlink extends AbstractEffect {
 
     public EffectBlink() {
-        super(ModConfig.EffectBlinkID, "Blink");
+        super(GlyphLib.EffectBlinkID, "Blink");
     }
 
     @Override

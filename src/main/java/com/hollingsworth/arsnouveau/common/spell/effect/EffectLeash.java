@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
@@ -18,7 +18,7 @@ import java.util.List;
 
 public class EffectLeash extends AbstractEffect {
     public EffectLeash() {
-        super(ModConfig.EffectLeashID, "Leash");
+        super(GlyphLib.EffectLeashID, "Leash");
     }
 
     @Override

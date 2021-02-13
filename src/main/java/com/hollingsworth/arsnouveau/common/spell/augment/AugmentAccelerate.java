@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.augment;
 
-import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -10,7 +10,7 @@ import javax.annotation.Nullable;
 public class AugmentAccelerate extends AbstractAugment {
 
     public AugmentAccelerate() {
-        super(ModConfig.AugmentAccelerateID, "Accelerate");
+        super(GlyphLib.AugmentAccelerateID, "Accelerate");
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
@@ -29,7 +29,7 @@ import java.util.Optional;
 public class EffectSmelt extends AbstractEffect {
 
     public EffectSmelt() {
-        super(ModConfig.EffectSmeltID, "Smelt");
+        super(GlyphLib.EffectSmeltID, "Smelt");
     }
 
     @Override

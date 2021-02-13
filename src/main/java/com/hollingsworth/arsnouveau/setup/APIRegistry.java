@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.setup;
 
-import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantmentRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
@@ -21,9 +21,9 @@ public class APIRegistry {
 
     public static void registerApparatusRecipes() {
         registerApparatusRecipe(new ReactiveEnchantmentRecipe(new ItemStack[]{new ItemStack(ItemsRegistry.spellParchment),
-                new ItemStack( ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentAmplifyID)),
-                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentAmplifyID)),
-                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentAmplifyID))}, 3000));
+                new ItemStack( ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentAmplifyID)),
+                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentAmplifyID)),
+                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentAmplifyID))}, 3000));
 
         registerApparatusRecipe(new EnchantmentRecipe(new ItemStack[]{
                 new ItemStack(Items.BLAZE_POWDER),
@@ -31,9 +31,9 @@ public class APIRegistry {
                 new ItemStack(Items.BLAZE_POWDER),
                 new ItemStack(Items.BLAZE_POWDER),
                 new ItemStack(Items.GOLD_BLOCK),
-                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentExtendTimeID)),
-                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentAOEID)),
-                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentDampenID))
+                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentExtendTimeID)),
+                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentAOEID)),
+                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentDampenID))
         }, EnchantmentRegistry.REACTIVE_ENCHANTMENT, 2, 6000));
 
         registerApparatusRecipe(new EnchantmentRecipe(new ItemStack[]{
@@ -42,9 +42,9 @@ public class APIRegistry {
                 ItemsRegistry.mythicalClay.getStack(),
                 ItemsRegistry.mythicalClay.getStack(),
                 new ItemStack(Items.ENDER_PEARL),
-                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentPierceID)),
-                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentExtractID)),
-                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentFortuneID))
+                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentPierceID)),
+                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentExtractID)),
+                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentFortuneID))
         }, EnchantmentRegistry.REACTIVE_ENCHANTMENT, 3, 9000));
 
         registerApparatusRecipe(new SpellWriteRecipe());
@@ -55,73 +55,73 @@ public class APIRegistry {
     }
 
     public static void registerSpells(){
-        registerSpell(ModConfig.MethodProjectileID, new MethodProjectile());
-        registerSpell(ModConfig.MethodTouchID, new MethodTouch());
-        registerSpell(ModConfig.MethodSelfID, new MethodSelf());
-        registerSpell(ModConfig.EffectBreakID, new EffectBreak());
-        registerSpell(ModConfig.EffectHarmID, new EffectHarm());
-        registerSpell(ModConfig.EffectIgniteID, new EffectIgnite());
-        registerSpell(ModConfig.EffectPhantomBlockID, new EffectPhantomBlock());
-        registerSpell(ModConfig.EffectHealID, new EffectHeal());
-        registerSpell(ModConfig.EffectGrowID, new EffectGrow());
-        registerSpell(ModConfig.EffectKnockbackID, new EffectKnockback());
-        registerSpell(ModConfig.EffectHasteID, new EffectHaste());
-        registerSpell(ModConfig.EffectLightID, new EffectLight());
-        registerSpell(ModConfig.EffectDispelID, new EffectDispel());
-        registerSpell(ModConfig.EffectFreezeID, new EffectFreeze());
-        registerSpell(ModConfig.EffectLaunchID, new EffectLaunch());
-        registerSpell(ModConfig.EffectPullID, new EffectPull());
-        registerSpell(ModConfig.EffectBlinkID, new EffectBlink());
-        registerSpell(ModConfig.EffectExplosionID, new EffectExplosion());
-        registerSpell(ModConfig.EffectLightningID, new EffectLightning());
-        registerSpell(ModConfig.EffectSlowfallID, new EffectSlowfall());
-        registerSpell(ModConfig.EffectShieldID, new EffectShield());
-        registerSpell(ModConfig.EffectAquatic, new EffectAquatic());
-        registerSpell(ModConfig.EffectFangsID, new EffectFangs());
-        registerSpell(ModConfig.EffectSummonVexID, new EffectSummonVex());
-        registerSpell(ModConfig.EffectStrength, new EffectStrength());
-        registerSpell(ModConfig.AugmentAccelerateID, new AugmentAccelerate());
-        registerSpell(ModConfig.AugmentSplitID, new AugmentSplit());
-        registerSpell(ModConfig.AugmentAmplifyID, new AugmentAmplify());
-        registerSpell(ModConfig.AugmentAOEID, new AugmentAOE());
-        registerSpell(ModConfig.AugmentExtendTimeID, new AugmentExtendTime());
-        registerSpell(ModConfig.AugmentPierceID, new AugmentPierce());
-        registerSpell(ModConfig.AugmentDampenID, new AugmentDampen());
-        registerSpell(ModConfig.AugmentExtractID, new AugmentExtract());
-        registerSpell(ModConfig.AugmentFortuneID, new AugmentFortune());
-        registerSpell(ModConfig.EffectEnderChestID, new EffectEnderChest());
-        registerSpell(ModConfig.EffectHarvestID, new EffectHarvest());
-        registerSpell(ModConfig.EffectFellID, new EffectFell());
-        registerSpell(ModConfig.EffectPickupID, new EffectPickup());
-        registerSpell(ModConfig.EffectInteractID, new EffectInteract());
-        registerSpell(ModConfig.EffectPlaceBlockID, new EffectPlaceBlock());
-        registerSpell(ModConfig.MethodRuneID, new MethodRune());
-        registerSpell(ModConfig.EffectSnareID, new EffectSnare());
-        registerSpell(ModConfig.EffectSmeltID, new EffectSmelt());
-        registerSpell(ModConfig.EffectLeapID, new EffectLeap());
-        registerSpell(ModConfig.EffectDelayID, new EffectDelay());
-        registerSpell(ModConfig.EffectRedstoneID, new EffectRedstone());
-        registerSpell(ModConfig.EffectIntangibleID, new EffectIntangible());
-        registerSpell(ModConfig.EffectInvisibilityID, new EffectInvisibility());
-        registerSpell(ModConfig.AugmentDurationDown, new AugmentDurationDown());
-        registerSpell(ModConfig.EffectWitherID, new EffectWither());
-        registerSpell(ModConfig.EffectExchangeID, new EffectExchange());
-        registerSpell(ModConfig.EffectCraftID, new EffectCraft());
-        registerSpell(ModConfig.EffectFlareID, new EffectFlare());
-        registerSpell(ModConfig.EffectColdSnapID, new EffectColdSnap());
-        registerSpell(ModConfig.EffectConjureWaterID, new EffectConjureWater());
-        registerSpell(ModConfig.EffectGravityID, new EffectGravity());
-        registerSpell(ModConfig.EffectCutID, new EffectCut());
-        registerSpell(ModConfig.EffectCrushID, new EffectCrush());
+        registerSpell(GlyphLib.MethodProjectileID, new MethodProjectile());
+        registerSpell(GlyphLib.MethodTouchID, new MethodTouch());
+        registerSpell(GlyphLib.MethodSelfID, new MethodSelf());
+        registerSpell(GlyphLib.EffectBreakID, new EffectBreak());
+        registerSpell(GlyphLib.EffectHarmID, new EffectHarm());
+        registerSpell(GlyphLib.EffectIgniteID, new EffectIgnite());
+        registerSpell(GlyphLib.EffectPhantomBlockID, new EffectPhantomBlock());
+        registerSpell(GlyphLib.EffectHealID, new EffectHeal());
+        registerSpell(GlyphLib.EffectGrowID, new EffectGrow());
+        registerSpell(GlyphLib.EffectKnockbackID, new EffectKnockback());
+        registerSpell(GlyphLib.EffectHasteID, new EffectHaste());
+        registerSpell(GlyphLib.EffectLightID, new EffectLight());
+        registerSpell(GlyphLib.EffectDispelID, new EffectDispel());
+        registerSpell(GlyphLib.EffectFreezeID, new EffectFreeze());
+        registerSpell(GlyphLib.EffectLaunchID, new EffectLaunch());
+        registerSpell(GlyphLib.EffectPullID, new EffectPull());
+        registerSpell(GlyphLib.EffectBlinkID, new EffectBlink());
+        registerSpell(GlyphLib.EffectExplosionID, new EffectExplosion());
+        registerSpell(GlyphLib.EffectLightningID, new EffectLightning());
+        registerSpell(GlyphLib.EffectSlowfallID, new EffectSlowfall());
+        registerSpell(GlyphLib.EffectShieldID, new EffectShield());
+        registerSpell(GlyphLib.EffectAquatic, new EffectAquatic());
+        registerSpell(GlyphLib.EffectFangsID, new EffectFangs());
+        registerSpell(GlyphLib.EffectSummonVexID, new EffectSummonVex());
+        registerSpell(GlyphLib.EffectStrength, new EffectStrength());
+        registerSpell(GlyphLib.AugmentAccelerateID, new AugmentAccelerate());
+        registerSpell(GlyphLib.AugmentSplitID, new AugmentSplit());
+        registerSpell(GlyphLib.AugmentAmplifyID, new AugmentAmplify());
+        registerSpell(GlyphLib.AugmentAOEID, new AugmentAOE());
+        registerSpell(GlyphLib.AugmentExtendTimeID, new AugmentExtendTime());
+        registerSpell(GlyphLib.AugmentPierceID, new AugmentPierce());
+        registerSpell(GlyphLib.AugmentDampenID, new AugmentDampen());
+        registerSpell(GlyphLib.AugmentExtractID, new AugmentExtract());
+        registerSpell(GlyphLib.AugmentFortuneID, new AugmentFortune());
+        registerSpell(GlyphLib.EffectEnderChestID, new EffectEnderChest());
+        registerSpell(GlyphLib.EffectHarvestID, new EffectHarvest());
+        registerSpell(GlyphLib.EffectFellID, new EffectFell());
+        registerSpell(GlyphLib.EffectPickupID, new EffectPickup());
+        registerSpell(GlyphLib.EffectInteractID, new EffectInteract());
+        registerSpell(GlyphLib.EffectPlaceBlockID, new EffectPlaceBlock());
+        registerSpell(GlyphLib.MethodRuneID, new MethodRune());
+        registerSpell(GlyphLib.EffectSnareID, new EffectSnare());
+        registerSpell(GlyphLib.EffectSmeltID, new EffectSmelt());
+        registerSpell(GlyphLib.EffectLeapID, new EffectLeap());
+        registerSpell(GlyphLib.EffectDelayID, new EffectDelay());
+        registerSpell(GlyphLib.EffectRedstoneID, new EffectRedstone());
+        registerSpell(GlyphLib.EffectIntangibleID, new EffectIntangible());
+        registerSpell(GlyphLib.EffectInvisibilityID, new EffectInvisibility());
+        registerSpell(GlyphLib.AugmentDurationDown, new AugmentDurationDown());
+        registerSpell(GlyphLib.EffectWitherID, new EffectWither());
+        registerSpell(GlyphLib.EffectExchangeID, new EffectExchange());
+        registerSpell(GlyphLib.EffectCraftID, new EffectCraft());
+        registerSpell(GlyphLib.EffectFlareID, new EffectFlare());
+        registerSpell(GlyphLib.EffectColdSnapID, new EffectColdSnap());
+        registerSpell(GlyphLib.EffectConjureWaterID, new EffectConjureWater());
+        registerSpell(GlyphLib.EffectGravityID, new EffectGravity());
+        registerSpell(GlyphLib.EffectCutID, new EffectCut());
+        registerSpell(GlyphLib.EffectCrushID, new EffectCrush());
         registerStartingSpells();
     }
 
     public static void registerStartingSpells(){
-        addStartingSpell(ModConfig.MethodProjectileID);
-        addStartingSpell(ModConfig.MethodTouchID);
-        addStartingSpell(ModConfig.MethodSelfID);
-        addStartingSpell(ModConfig.EffectBreakID);
-        addStartingSpell(ModConfig.EffectHarmID);
+        addStartingSpell(GlyphLib.MethodProjectileID);
+        addStartingSpell(GlyphLib.MethodTouchID);
+        addStartingSpell(GlyphLib.MethodSelfID);
+        addStartingSpell(GlyphLib.EffectBreakID);
+        addStartingSpell(GlyphLib.EffectHarmID);
     }
 
     public static void addStartingSpell(String spellTag){

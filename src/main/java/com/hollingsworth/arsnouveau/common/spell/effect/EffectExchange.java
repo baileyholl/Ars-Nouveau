@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
@@ -35,7 +35,7 @@ import static com.hollingsworth.arsnouveau.api.util.BlockUtil.destroyBlockSafely
 
 public class EffectExchange extends AbstractEffect {
     public EffectExchange() {
-        super(ModConfig.EffectExchangeID, "Exchange");
+        super(GlyphLib.EffectExchangeID, "Exchange");
     }
 
     @Override
@@ -171,7 +171,7 @@ public class EffectExchange extends AbstractEffect {
 
     @Override
     public Item getCraftingReagent() {
-        return ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.AugmentExtractID);
+        return ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentExtractID);
     }
 
     @Override

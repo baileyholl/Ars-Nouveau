@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
@@ -25,7 +25,7 @@ public class EffectEnderChest extends AbstractEffect {
     private static final ITextComponent CONTAINER_NAME = new TranslationTextComponent("container.enderchest");
 
     public EffectEnderChest() {
-        super(ModConfig.EffectEnderChestID, "Access Ender Inventory");
+        super(GlyphLib.EffectEnderChestID, "Access Ender Inventory");
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.event.DispelEvent;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
@@ -23,7 +23,7 @@ import java.util.List;
 
 public class EffectDispel extends AbstractEffect {
     public EffectDispel() {
-        super(ModConfig.EffectDispelID, "Dispel");
+        super(GlyphLib.EffectDispelID, "Dispel");
     }
 
     @Override

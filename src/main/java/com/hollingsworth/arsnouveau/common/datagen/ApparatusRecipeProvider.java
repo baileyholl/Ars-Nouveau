@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
@@ -66,7 +66,7 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withReagent(ItemsRegistry.mundaneBelt)
                 .withPedestalItem(4, Ingredient.fromTag(Tags.Items.INGOTS_GOLD))
                 .withPedestalItem(3, Items.FEATHER)
-                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.EffectLaunchID))
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.EffectLaunchID))
                 .withCategory(ArsNouveauAPI.PatchouliCategories.equipment)
                 .build());
 
@@ -185,7 +185,7 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withResult(BlockRegistry.SPELL_TURRET)
                 .withReagent(Items.DISPENSER)
                 .withPedestalItem(Ingredient.fromTag(Tags.Items.RODS_BLAZE))
-                .withPedestalItem( ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.EffectRedstoneID))
+                .withPedestalItem( ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.EffectRedstoneID))
                 .withPedestalItem(Ingredient.fromTag(Tags.Items.STORAGE_BLOCKS_QUARTZ))
                 .withPedestalItem(Ingredient.fromTag(Tags.Items.STORAGE_BLOCKS_REDSTONE))
                 .withPedestalItem(Recipes.MANA_GEM_BLOCK)

@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau;
 
-public class ModConfig {
+public class GlyphLib {
     public static final String MethodProjectileID = "projectile";
     public static final String MethodTouchID = "touch";
     public static final String MethodSelfID = "self";
@@ -21,7 +21,7 @@ public class ModConfig {
     public static final String EffectLaunchID = "launch";
     public static final String EffectPullID = "pull";
     public static final String EffectBlinkID = "blink";
-    public static final String EffectJumpID = "jump";
+
     public static final String EffectAquatic = "aquatic";
     public static final String EffectStrength = "strength";
     public static final String EffectExplosionID = "explosion";

@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
@@ -22,7 +22,7 @@ import java.util.List;
 
 public class EffectFreeze extends AbstractEffect {
     public EffectFreeze() {
-        super(ModConfig.EffectFreezeID, "Freeze");
+        super(GlyphLib.EffectFreezeID, "Freeze");
     }
 
     @Override

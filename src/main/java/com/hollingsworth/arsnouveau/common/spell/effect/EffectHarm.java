@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
@@ -21,7 +21,7 @@ import java.util.List;
 
 public class EffectHarm extends AbstractEffect {
 
-    public EffectHarm() {super(ModConfig.EffectHarmID, "Harm" ); }
+    public EffectHarm() {super(GlyphLib.EffectHarmID, "Harm" ); }
 
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
