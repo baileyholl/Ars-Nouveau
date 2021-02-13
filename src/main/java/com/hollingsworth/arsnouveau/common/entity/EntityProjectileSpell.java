@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -89,7 +88,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
             raytraceresult = entityraytraceresult;
         }
 
-        if (raytraceresult != null && raytraceresult.getType() == RayTraceResult.Type.ENTITY) {
+        if (raytraceresult != null && raytraceresult instanceof EntityRayTraceResult) {
             Entity entity = ((EntityRayTraceResult)raytraceresult).getEntity();
             Entity entity1 = this.func_234616_v_();
             if (entity instanceof PlayerEntity && entity1 instanceof PlayerEntity && !((PlayerEntity)entity1).canAttackPlayer((PlayerEntity)entity)) {
@@ -135,9 +134,9 @@ public class EntityProjectileSpell extends ColoredProjectile {
                 for (double j = 0; j < dist; j++) {
                     double coeff = j / dist;
                     counter += world.rand.nextInt(3);
-                    if (counter % (Minecraft.getInstance().gameSettings.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().gameSettings.particles.getId()) == 0) {
-                        world.addParticle(GlowParticleData.createData(getParticleColor()), (float) (prevPosX + deltaX * coeff), (float) (prevPosY + deltaY * coeff), (float) (prevPosZ + deltaZ * coeff), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f));
-                    }
+
+                    world.addParticle(GlowParticleData.createData(getParticleColor()), (float) (prevPosX + deltaX * coeff), (float) (prevPosY + deltaY * coeff), (float) (prevPosZ + deltaZ * coeff), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f));
+
                 }
             }
         }
@@ -159,7 +158,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
         float f = -MathHelper.sin(rotationYawIn * ((float)Math.PI / 180F)) * MathHelper.cos(rotationPitchIn * ((float)Math.PI / 180F));
         float f1 = -MathHelper.sin((rotationPitchIn + pitchOffset) * ((float)Math.PI / 180F));
         float f2 = MathHelper.cos(rotationYawIn * ((float)Math.PI / 180F)) * MathHelper.cos(rotationPitchIn * ((float)Math.PI / 180F));
-        this.shoot((double)f, (double)f1, (double)f2, velocity, inaccuracy);
+        this.shoot(f, f1, f2, velocity, inaccuracy);
         Vector3d vec3d = entityThrower.getLookVec();
         this.setMotion(this.getMotion().add(vec3d.x, vec3d.y, vec3d.z));
     }
@@ -179,10 +178,6 @@ public class EntityProjectileSpell extends ColoredProjectile {
 
     }
 
-    public void shootDown(){
-        this.setMotion(new Vector3d(0, -0.1, 0));
-    }
-
     @Override
     public boolean hasNoGravity() {
         return true;
@@ -200,8 +195,6 @@ public class EntityProjectileSpell extends ColoredProjectile {
             this.remove();
         }
     }
-
-
 
     @Override
     protected void onImpact(RayTraceResult result) {
