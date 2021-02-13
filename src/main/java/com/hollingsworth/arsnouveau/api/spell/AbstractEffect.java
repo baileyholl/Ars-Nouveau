@@ -113,9 +113,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public Vector3d safelyGetHitPos(RayTraceResult result){
-        if(result instanceof EntityRayTraceResult)
-            return ((EntityRayTraceResult) result).getEntity() != null ? ((EntityRayTraceResult) result).getEntity().getPositionVec() : result.getHitVec();
-        return result.getHitVec();
+        return result instanceof EntityRayTraceResult ? ((EntityRayTraceResult) result).getEntity().getPositionVec() : result.getHitVec();
     }
 
     public boolean isRealPlayer(LivingEntity entity){

@@ -14,7 +14,7 @@ public class AugmentPierce extends AbstractAugment {
 
     @Override
     public int getManaCost() {
-        return 20;
+        return 40;
     }
 
     @Override
@@ -30,6 +30,6 @@ public class AugmentPierce extends AbstractAugment {
 
     @Override
     public String getBookDescription() {
-        return "When applied to the Projectile spell, projectiles may continue through their path an additional time after hitting a mob or block.";
+        return "When applied to the Projectile spell, projectiles may continue through their path an additional time after hitting a mob or block. Causes certain effects to also target the block behind them, like Break. Combines with AOE to provide depth.";
     }
 }
