@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.entity.goal.stalker.DiveAttackGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.stalker.FlyHelper;
 import com.hollingsworth.arsnouveau.common.entity.goal.stalker.LeapGoal;
+import com.hollingsworth.arsnouveau.common.entity.goal.wilden.WildenMeleeAttack;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
@@ -32,7 +33,7 @@ public class WildenStalker extends CreatureEntity implements IAnimatable, IAnima
     public BlockPos orbitPosition = BlockPos.ZERO;
 
     public static final DataParameter<Boolean> isFlying = EntityDataManager.createKey(WildenStalker.class, DataSerializers.BOOLEAN);
-
+    public int timeFlying;
     protected WildenStalker(EntityType<? extends CreatureEntity> type, World worldIn) {
         super(type, worldIn);
         moveController = new FlyHelper(this);
@@ -41,11 +42,12 @@ public class WildenStalker extends CreatureEntity implements IAnimatable, IAnima
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        goalSelector.addGoal(1, new LeapGoal(this));
-        goalSelector.addGoal(1, new DiveAttackGoal(this));
+        this.goalSelector.addGoal(1, new LeapGoal(this));
+        this.goalSelector.addGoal(1, new DiveAttackGoal(this));
         this.goalSelector.addGoal(1, new SwimGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AnimalEntity.class, true));
+        this.goalSelector.addGoal(5, new WildenMeleeAttack(this, 1.3D, true, WildenStalker.Animations.ATTACK.ordinal(), () -> !isFlying()));
         this.goalSelector.addGoal(8, new MeleeAttackGoal(this, 1.2f, true));
         this.goalSelector.addGoal(8, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
@@ -55,11 +57,18 @@ public class WildenStalker extends CreatureEntity implements IAnimatable, IAnima
     @Override
     public void tick() {
         super.tick();
-        if(leapCooldown > 0)
-            leapCooldown--;
+        if(!world.isRemote){
+            if(leapCooldown > 0)
+                leapCooldown--;
 
-        if(this.isFlying() && this.isOnGround())
-            this.setFlying(false);
+            if(this.isFlying() && this.isOnGround())
+                this.setFlying(false);
+
+            if(this.isFlying()) {
+                timeFlying++;
+            }else
+                timeFlying = 0;
+        }
     }
 
     @Override
@@ -92,7 +101,22 @@ public class WildenStalker extends CreatureEntity implements IAnimatable, IAnima
             if(arg == Animations.DIVE.ordinal()){
                 AnimationController controller = this.factory.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("flyController");
                 controller.markNeedsReload();
-                controller.setAnimation(new AnimationBuilder().addAnimation("flying").addAnimation("dive", true));
+                controller.setAnimation(new AnimationBuilder().addAnimation("dive", true));
+            }
+
+            if(arg == Animations.FLY.ordinal()){
+                AnimationController controller = this.factory.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("flyController");
+                controller.markNeedsReload();
+                controller.setAnimation(new AnimationBuilder().addAnimation("flying", true));
+            }
+
+            if(arg == Animations.ATTACK.ordinal()){
+                AnimationController controller = this.factory.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("groundController");
+                if(controller.getCurrentAnimation() != null && (controller.getCurrentAnimation().animationName.equals("attack"))){
+                    return;
+                }
+                controller.markNeedsReload();
+                controller.setAnimation(new AnimationBuilder().addAnimation("attack", false).addAnimation("idle"));
             }
 
         }catch (Exception e){
@@ -100,12 +124,31 @@ public class WildenStalker extends CreatureEntity implements IAnimatable, IAnima
         }
     }
     private <E extends Entity> PlayState flyPredicate(AnimationEvent event) {
+//        AnimationController controller = event.getController();
+//        if(controller.getCurrentAnimation() != null)
+//            System.out.println(controller.getCurrentAnimation().animationName);
+//        if(controller.getCurrentAnimation() != null && (controller.getCurrentAnimation().animationName.equals("dive"))){
+//            System.out.println("returning");
+//            return PlayState.CONTINUE;
+//        }
+//        System.out.println(isFlying());
+//        if(isFlying()){
+//            controller.setAnimation(new AnimationBuilder().addAnimation("flying"));
+//        }else{
+//            System.out.println("setting no fly");
+//            controller.setAnimation(new AnimationBuilder().addAnimation("idle"));
+//        }
         return isFlying() ? PlayState.CONTINUE : PlayState.STOP;
+    }
+
+    private<E extends Entity> PlayState groundPredicate(AnimationEvent e){
+        return isFlying() ? PlayState.STOP : PlayState.CONTINUE;
     }
 
     @Override
     public void registerControllers(AnimationData animationData) {
         animationData.addAnimationController(new AnimationController(this, "flyController", 1, this::flyPredicate));
+        animationData.addAnimationController(new AnimationController(this, "groundController", 1, this::groundPredicate));
     }
     AnimationFactory factory = new AnimationFactory(this);
     @Override
@@ -172,6 +215,6 @@ public class WildenStalker extends CreatureEntity implements IAnimatable, IAnima
     public enum Animations{
         ATTACK,
         DIVE,
-
+        FLY
     }
 }

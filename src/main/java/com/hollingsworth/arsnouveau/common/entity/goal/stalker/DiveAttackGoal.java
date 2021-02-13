@@ -1,8 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.stalker;
 
 import com.hollingsworth.arsnouveau.common.entity.WildenStalker;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.player.PlayerEntity;
@@ -45,7 +43,7 @@ public class DiveAttackGoal extends Goal {
      * Execute a one shot task or start executing a continuous task
      */
     public void startExecuting() {
-        Networking.sendToNearby(stalker.world, stalker, new PacketAnimEntity(stalker.getEntityId(), WildenStalker.Animations.DIVE.ordinal()));
+        //Networking.sendToNearby(stalker.world, stalker, new PacketAnimEntity(stalker.getEntityId(), WildenStalker.Animations.DIVE.ordinal()));
     }
 
     /**

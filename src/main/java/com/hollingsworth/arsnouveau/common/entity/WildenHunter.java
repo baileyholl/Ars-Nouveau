@@ -35,7 +35,7 @@ public class  WildenHunter extends CreatureEntity implements IAnimatable, IAnima
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(5, new WildenMeleeAttack(this, 1.3D, true));
+        this.goalSelector.addGoal(5, new WildenMeleeAttack(this, 1.3D, true, WildenHunter.Animations.ATTACK.ordinal(), () -> true));
         this.goalSelector.addGoal(3, new WildenRamAttack(this, 2D, true));
         this.goalSelector.addGoal(3, new WildenSummon(this));
         this.goalSelector.addGoal(1, new SwimGoal(this));
