@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
@@ -23,7 +24,6 @@ import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IForgeShearable;
-import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -63,7 +63,7 @@ public class EffectCut extends AbstractEffect {
                     items.forEach(i -> world.addEntity(new ItemEntity(world, p.getX(), p.getY(),p.getZ(), i)));
                 }
             }
-            PlayerEntity entity = FakePlayerFactory.getMinecraft((ServerWorld)world);
+            PlayerEntity entity = new ANFakePlayer((ServerWorld) world);
             entity.setHeldItem(Hand.MAIN_HAND, shears);
             entity.setPosition(p.getX(), p.getY(), p.getZ());
             world.getBlockState(p).onBlockActivated(world, entity, Hand.MAIN_HAND, rayTraceResult);
