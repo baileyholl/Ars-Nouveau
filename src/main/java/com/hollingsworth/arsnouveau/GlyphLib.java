@@ -59,11 +59,15 @@ public class GlyphLib {
     public static final String EffectWitherID = "wither";
     public static final String EffectExchangeID = "exchange";
     public static final String EffectCraftID = "craft";
-    public static String EffectColdSnapID = "cold_snap";
-    public static String EffectFlareID = "flare";
-    public static String EffectGravityID = "gravity";
-    public static String EffectConjureWaterID = "conjure_water";
-    public static String EffectLeashID = "leash";
-    public static String EffectCutID = "cut";
-    public static String EffectCrushID = "crush";
+    public static final String EffectColdSnapID = "cold_snap";
+    public static final String EffectFlareID = "flare";
+    public static final String EffectGravityID = "gravity";
+    public static final String EffectConjureWaterID = "conjure_water";
+    public static final String EffectLeashID = "leash";
+    public static final String EffectCutID = "cut";
+    public static final String EffectCrushID = "crush";
+    public static final String EffectSummonWolvesID = "summon_wolves";
+
+    public static final String EffectSummonSteedID = "summon_steed";
+
 }

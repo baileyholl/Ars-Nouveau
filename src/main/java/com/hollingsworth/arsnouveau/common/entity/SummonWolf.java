@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
@@ -30,6 +31,18 @@ public class SummonWolf extends WolfEntity {
                 this.remove();
             }
         }
+    }
+
+    @Override
+    public void readAdditional(CompoundNBT compound) {
+        super.readAdditional(compound);
+        this.ticksLeft = compound.getInt("left");
+    }
+
+    @Override
+    public void writeAdditional(CompoundNBT compound) {
+        super.writeAdditional(compound);
+        compound.putInt("left", ticksLeft);
     }
 
     @Override

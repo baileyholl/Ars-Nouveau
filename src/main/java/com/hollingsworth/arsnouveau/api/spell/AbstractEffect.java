@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
+import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtract;
@@ -55,6 +56,13 @@ public abstract class AbstractEffect extends AbstractSpellPart {
 
     public void applyPotion(LivingEntity entity, Effect potionEffect, List<AbstractAugment> augmentTypes){
         applyPotion(entity, potionEffect, augmentTypes, 30, 8);
+    }
+
+    public boolean canSummon(LivingEntity playerEntity){
+        return isRealPlayer(playerEntity) && playerEntity.getActivePotionEffect(ModPotions.SUMMONING_SICKNESS) == null;
+    }
+    public void applySummoningSickness(LivingEntity playerEntity, int time){
+        playerEntity.addPotionEffect(new EffectInstance(ModPotions.SUMMONING_SICKNESS, time));
     }
 
     public void applyPotionWithCap(LivingEntity entity, Effect potionEffect, List<AbstractAugment> augmentTypes, int baseDuration, int durationBuffBase, int cap){

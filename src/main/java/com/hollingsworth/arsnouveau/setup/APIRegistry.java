@@ -21,7 +21,7 @@ public class APIRegistry {
 
     public static void registerApparatusRecipes() {
         registerApparatusRecipe(new ReactiveEnchantmentRecipe(new ItemStack[]{new ItemStack(ItemsRegistry.spellParchment),
-                new ItemStack( ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentAmplifyID)),
+                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentAmplifyID)),
                 new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentAmplifyID)),
                 new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentAmplifyID))}, 3000));
 
@@ -50,73 +50,75 @@ public class APIRegistry {
         registerApparatusRecipe(new SpellWriteRecipe());
     }
 
-    public static void registerApparatusRecipe(IEnchantingRecipe recipe){
+    public static void registerApparatusRecipe(IEnchantingRecipe recipe) {
         ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes().add(recipe);
     }
 
-    public static void registerSpells(){
-        registerSpell(GlyphLib.MethodProjectileID, new MethodProjectile());
-        registerSpell(GlyphLib.MethodTouchID, new MethodTouch());
-        registerSpell(GlyphLib.MethodSelfID, new MethodSelf());
-        registerSpell(GlyphLib.EffectBreakID, new EffectBreak());
-        registerSpell(GlyphLib.EffectHarmID, new EffectHarm());
-        registerSpell(GlyphLib.EffectIgniteID, new EffectIgnite());
-        registerSpell(GlyphLib.EffectPhantomBlockID, new EffectPhantomBlock());
-        registerSpell(GlyphLib.EffectHealID, new EffectHeal());
-        registerSpell(GlyphLib.EffectGrowID, new EffectGrow());
-        registerSpell(GlyphLib.EffectKnockbackID, new EffectKnockback());
-        registerSpell(GlyphLib.EffectHasteID, new EffectHaste());
-        registerSpell(GlyphLib.EffectLightID, new EffectLight());
-        registerSpell(GlyphLib.EffectDispelID, new EffectDispel());
-        registerSpell(GlyphLib.EffectFreezeID, new EffectFreeze());
-        registerSpell(GlyphLib.EffectLaunchID, new EffectLaunch());
-        registerSpell(GlyphLib.EffectPullID, new EffectPull());
-        registerSpell(GlyphLib.EffectBlinkID, new EffectBlink());
-        registerSpell(GlyphLib.EffectExplosionID, new EffectExplosion());
-        registerSpell(GlyphLib.EffectLightningID, new EffectLightning());
-        registerSpell(GlyphLib.EffectSlowfallID, new EffectSlowfall());
-        registerSpell(GlyphLib.EffectShieldID, new EffectShield());
-        registerSpell(GlyphLib.EffectAquatic, new EffectAquatic());
-        registerSpell(GlyphLib.EffectFangsID, new EffectFangs());
-        registerSpell(GlyphLib.EffectSummonVexID, new EffectSummonVex());
-        registerSpell(GlyphLib.EffectStrength, new EffectStrength());
-        registerSpell(GlyphLib.AugmentAccelerateID, new AugmentAccelerate());
-        registerSpell(GlyphLib.AugmentSplitID, new AugmentSplit());
-        registerSpell(GlyphLib.AugmentAmplifyID, new AugmentAmplify());
-        registerSpell(GlyphLib.AugmentAOEID, new AugmentAOE());
-        registerSpell(GlyphLib.AugmentExtendTimeID, new AugmentExtendTime());
-        registerSpell(GlyphLib.AugmentPierceID, new AugmentPierce());
-        registerSpell(GlyphLib.AugmentDampenID, new AugmentDampen());
-        registerSpell(GlyphLib.AugmentExtractID, new AugmentExtract());
-        registerSpell(GlyphLib.AugmentFortuneID, new AugmentFortune());
-        registerSpell(GlyphLib.EffectEnderChestID, new EffectEnderChest());
-        registerSpell(GlyphLib.EffectHarvestID, new EffectHarvest());
-        registerSpell(GlyphLib.EffectFellID, new EffectFell());
-        registerSpell(GlyphLib.EffectPickupID, new EffectPickup());
-        registerSpell(GlyphLib.EffectInteractID, new EffectInteract());
-        registerSpell(GlyphLib.EffectPlaceBlockID, new EffectPlaceBlock());
-        registerSpell(GlyphLib.MethodRuneID, new MethodRune());
-        registerSpell(GlyphLib.EffectSnareID, new EffectSnare());
-        registerSpell(GlyphLib.EffectSmeltID, new EffectSmelt());
-        registerSpell(GlyphLib.EffectLeapID, new EffectLeap());
-        registerSpell(GlyphLib.EffectDelayID, new EffectDelay());
-        registerSpell(GlyphLib.EffectRedstoneID, new EffectRedstone());
-        registerSpell(GlyphLib.EffectIntangibleID, new EffectIntangible());
-        registerSpell(GlyphLib.EffectInvisibilityID, new EffectInvisibility());
-        registerSpell(GlyphLib.AugmentDurationDown, new AugmentDurationDown());
-        registerSpell(GlyphLib.EffectWitherID, new EffectWither());
-        registerSpell(GlyphLib.EffectExchangeID, new EffectExchange());
-        registerSpell(GlyphLib.EffectCraftID, new EffectCraft());
-        registerSpell(GlyphLib.EffectFlareID, new EffectFlare());
-        registerSpell(GlyphLib.EffectColdSnapID, new EffectColdSnap());
-        registerSpell(GlyphLib.EffectConjureWaterID, new EffectConjureWater());
-        registerSpell(GlyphLib.EffectGravityID, new EffectGravity());
-        registerSpell(GlyphLib.EffectCutID, new EffectCut());
-        registerSpell(GlyphLib.EffectCrushID, new EffectCrush());
+    public static void registerSpells() {
+        registerSpell(new MethodProjectile());
+        registerSpell(new MethodTouch());
+        registerSpell(new MethodSelf());
+        registerSpell(new EffectBreak());
+        registerSpell(new EffectHarm());
+        registerSpell(new EffectIgnite());
+        registerSpell(new EffectPhantomBlock());
+        registerSpell(new EffectHeal());
+        registerSpell(new EffectGrow());
+        registerSpell(new EffectKnockback());
+        registerSpell(new EffectHaste());
+        registerSpell(new EffectLight());
+        registerSpell(new EffectDispel());
+        registerSpell(new EffectFreeze());
+        registerSpell(new EffectLaunch());
+        registerSpell(new EffectPull());
+        registerSpell(new EffectBlink());
+        registerSpell(new EffectExplosion());
+        registerSpell(new EffectLightning());
+        registerSpell(new EffectSlowfall());
+        registerSpell(new EffectShield());
+        registerSpell(new EffectAquatic());
+        registerSpell(new EffectFangs());
+        registerSpell(new EffectSummonVex());
+        registerSpell(new EffectStrength());
+        registerSpell(new AugmentAccelerate());
+        registerSpell(new AugmentSplit());
+        registerSpell(new AugmentAmplify());
+        registerSpell(new AugmentAOE());
+        registerSpell(new AugmentExtendTime());
+        registerSpell(new AugmentPierce());
+        registerSpell(new AugmentDampen());
+        registerSpell(new AugmentExtract());
+        registerSpell(new AugmentFortune());
+        registerSpell(new EffectEnderChest());
+        registerSpell(new EffectHarvest());
+        registerSpell(new EffectFell());
+        registerSpell(new EffectPickup());
+        registerSpell(new EffectInteract());
+        registerSpell(new EffectPlaceBlock());
+        registerSpell(new MethodRune());
+        registerSpell(new EffectSnare());
+        registerSpell(new EffectSmelt());
+        registerSpell(new EffectLeap());
+        registerSpell(new EffectDelay());
+        registerSpell(new EffectRedstone());
+        registerSpell(new EffectIntangible());
+        registerSpell(new EffectInvisibility());
+        registerSpell(new AugmentDurationDown());
+        registerSpell(new EffectWither());
+        registerSpell(new EffectExchange());
+        registerSpell(new EffectCraft());
+        registerSpell(new EffectFlare());
+        registerSpell(new EffectColdSnap());
+        registerSpell(new EffectConjureWater());
+        registerSpell(new EffectGravity());
+        registerSpell(new EffectCut());
+        registerSpell(new EffectCrush());
+        registerSpell(new EffectSummonWolves());
+        registerSpell(new EffectSummonSteed());
         registerStartingSpells();
     }
 
-    public static void registerStartingSpells(){
+    public static void registerStartingSpells() {
         addStartingSpell(GlyphLib.MethodProjectileID);
         addStartingSpell(GlyphLib.MethodTouchID);
         addStartingSpell(GlyphLib.MethodSelfID);
@@ -124,13 +126,18 @@ public class APIRegistry {
         addStartingSpell(GlyphLib.EffectHarmID);
     }
 
-    public static void addStartingSpell(String spellTag){
+    public static void addStartingSpell(String spellTag) {
         ArsNouveauAPI.getInstance().addStartingSpell(spellTag);
     }
 
-    public static void registerSpell(String id, AbstractSpellPart spellPart){
+    public static void registerSpell(AbstractSpellPart spellPart) {
+        ArsNouveauAPI.getInstance().registerSpell(spellPart.getTag(), spellPart);
+    }
+
+    public static void registerSpell(String id, AbstractSpellPart spellPart) {
         ArsNouveauAPI.getInstance().registerSpell(id, spellPart);
     }
 
-    private APIRegistry(){}
+    private APIRegistry() {
+    }
 }

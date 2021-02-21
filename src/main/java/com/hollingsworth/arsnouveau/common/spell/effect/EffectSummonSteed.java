@@ -5,9 +5,12 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
-import com.hollingsworth.arsnouveau.common.entity.SummonWolf;
+import com.hollingsworth.arsnouveau.common.entity.SummonHorse;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -15,28 +18,30 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class EffectSummonWolves extends AbstractEffect {
+public class EffectSummonSteed extends AbstractEffect {
 
-    public EffectSummonWolves() {
-        super(GlyphLib.EffectSummonWolvesID, "Summon Wolves");
+
+    public EffectSummonSteed() {
+        super(GlyphLib.EffectSummonSteedID, "Summon Steed");
     }
 
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         super.onResolve(rayTraceResult, world, shooter, augments, spellContext);
+        int ticks = 60 * 20 * (5 + 2* getDurationModifier(augments));
         if(!canSummon(shooter))
             return;
         Vector3d hit = rayTraceResult.getHitVec();
-        for(int i = 0; i < 2; i++){
-            SummonWolf wolf = new SummonWolf(ModEntities.SUMMON_WOLF, world);
-            wolf.ticksLeft = 400;
-            wolf.setPosition(hit.getX(), hit.getY(), hit.getZ());
-            wolf.setAttackTarget(shooter.getLastAttackedEntity());
-            wolf.setAggroed(true);
-            wolf.setTamed(true);
-            wolf.setTamedBy((PlayerEntity) shooter);
-            world.addEntity(wolf);
-        }
+        SummonHorse horse = new SummonHorse(ModEntities.SUMMON_HORSE, world);
+      //  wolf.ticksLeft = 400;
+        horse.setPosition(hit.getX(), hit.getY(), hit.getZ());
+        horse.ticksLeft = ticks;
+        horse.setTamedBy((PlayerEntity) shooter);
+        world.addEntity(horse);
+        horse.getHorseInventory().setInventorySlotContents(0, new ItemStack(Items.SADDLE));
+        //horse.setItemStackToSlot(EquipmentSlotType.CHEST, new ItemStack(Items.DIAMOND_HORSE_ARMOR));
+        horse.setDropChance(EquipmentSlotType.CHEST, 0.0F);
+        applySummoningSickness(shooter, ticks/2);
     }
 
     @Override
