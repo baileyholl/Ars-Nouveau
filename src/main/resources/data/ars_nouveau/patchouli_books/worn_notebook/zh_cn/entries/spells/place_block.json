@@ -1,15 +1,17 @@
 {
   "name": "放置方块",
   "icon": "ars_nouveau:glyph_place_block",
-  "category": "spells",
+  "category": "spells_1",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",
-      "text": "从施法者的背包中放置方块。如果是玩家施法，则放置的方块是快捷栏第一格的方块。"
+      "text": "ars_nouveau.glyph_desc.place_block"
     },
     {
       "type": "glyph_recipe",
-      "tier": "1",
+      "recipe": "ars_nouveau:glyph_place_block",
+      "tier": "一",
       "mana_cost": "低",
       "clay_type": "ars_nouveau:magic_clay",
       "reagent": "minecraft:dispenser"

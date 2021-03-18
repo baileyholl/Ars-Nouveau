@@ -7,17 +7,9 @@
       "type": "text",
       "text": "ars_nouveau.page.summoning_crystal"
     },
-    {
+   {
       "type": "apparatus_recipe",
-      "reagent": "minecraft:diamond_block",
-      "item1": "minecraft:gold_ingot",
-      "item2": "minecraft:gold_ingot",
-      "item3": "minecraft:gold_ingot",
-      "item4": "minecraft:gold_ingot",
-      "item5": "ars_nouveau:arcane_brick",
-      "item6": "ars_nouveau:arcane_brick",
-      "item7": "ars_nouveau:arcane_brick",
-      "item8": "ars_nouveau:arcane_brick"
+      "recipe": "ars_nouveau:summoning_crystal"
     },
 	{
       "type": "text",

@@ -1,16 +1,18 @@
 {
-  "name": "幸运",
+  "name": "时运",
   "icon": "ars_nouveau:glyph_fortune",
-  "category": "spells",
+  "category": "spells_2",
+  "sortnum": 3,
   "pages": [
     {
       "type": "text",
-      "text": "增加被「伤害」杀死的生物和用「破坏」摧毁的方块的掉率。无法与「提取」组合。"
+      "text": "ars_nouveau.glyph_desc.fortune"
     },
     {
       "type": "glyph_recipe",
-      "tier": "2",
-      "mana_cost": "中",
+      "recipe": "ars_nouveau:glyph_fortune",
+      "tier": "二",
+      "mana_cost": "高",
       "clay_type": "ars_nouveau:marvelous_clay",
       "reagent": "minecraft:rabbit_foot"
     }

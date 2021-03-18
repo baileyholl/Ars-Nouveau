@@ -1,15 +1,15 @@
 {
-    "name": "Glyph Press ",
+    "name": "魔符压印器",
     "icon": "ars_nouveau:glyph_press",
     "category": "machines",
     "pages": [
         {
             "type": "text",
-            "text": "Accessing new spells requires a special machine designed to convert reagents into spell glyphs. These glyphs can be used to unlock new spells in a spell book or may be used in special crafting recipes. Creating a glyph will require a special form of magical clay, a reagent for the spell, and nearby mana provided by a mana jar. To use the glyph press, first place your clay into the press. "
+            "text": "得到新法术需要一种设计用于将试剂转换为法术魔符的特殊机器。这些魔符可用于解锁法术书的新法术构件，也可用于特殊的合成配方。制造魔符需要一种特殊的魔法粘土、一种用于法术的试剂，还有来自附近魔力罐的魔力。要使用魔符压印器，首先放入粘土。"
         },
 		{
 		"type":"text",
-		"text":"Then, use the reagent provided on the press. If there is enough mana nearby, the press will begin crafting. Mana can be provided by a nearby Mana Jar."
+		"text":"然后，对压印器使用试剂。如果附近有足够魔力，压印器会开始合成。魔力可通过附近的魔力罐提供。魔符压印器能被漏斗自动化。漏斗可以从任何侧面插入粘土，从顶部插入试剂。如果附近有足够的魔力，合成会自动开始。魔符会自动放入压印器旁的箱子内。"
 		},
 		{
             "type":"crafting",

@@ -1,17 +1,19 @@
 {
   "name": "力量",
   "icon": "ars_nouveau:glyph_strength",
-  "category": "spells",
+  "category": "spells_3",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",
-      "text": "给予力量效果"
+      "text": "ars_nouveau.glyph_desc.strength"
     },
     {
       "type": "glyph_recipe",
-      "tier": "1",
-      "mana_cost": "低",
-      "clay_type": "ars_nouveau:magic_clay",
+      "recipe": "ars_nouveau:glyph_strength",
+      "tier": "三",
+      "mana_cost": "高",
+      "clay_type": "ars_nouveau:mythical_clay",
       "reagent": "minecraft:blaze_powder"
     }
   ]

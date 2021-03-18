@@ -1,15 +1,17 @@
 {
-  "name": "羽落",
+  "name": "缓落",
   "icon": "ars_nouveau:glyph_slowfall",
-  "category": "spells",
+  "category": "spells_1",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",
-      "text": "给予缓降效果。"
+      "text": "ars_nouveau.glyph_desc.slowfall"
     },
     {
       "type": "glyph_recipe",
-      "tier": "1",
+      "recipe": "ars_nouveau:glyph_slowfall",
+      "tier": "一",
       "mana_cost": "中",
       "clay_type": "ars_nouveau:magic_clay",
       "reagent": "minecraft:feather"

@@ -1,15 +1,17 @@
 {
   "name": "治疗",
   "icon": "ars_nouveau:glyph_heal",
-  "category": "spells",
+  "category": "spells_2",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",
-      "text": "治疗目标"
+      "text": "ars_nouveau.glyph_desc.heal"
     },
     {
       "type": "glyph_recipe",
-      "tier": "2",
+      "recipe": "ars_nouveau:glyph_heal",
+      "tier": "二",
       "mana_cost": "中",
       "clay_type": "ars_nouveau:marvelous_clay",
       "reagent": "minecraft:glistering_melon_slice"
