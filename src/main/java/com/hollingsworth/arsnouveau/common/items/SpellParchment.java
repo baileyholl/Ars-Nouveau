@@ -5,6 +5,8 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+
+import net.minecraft.client.gui.NewChatGui;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,6 +16,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -49,7 +52,7 @@ public class SpellParchment extends ModItem implements IScribeable {
         List<AbstractSpellPart> spellsFromTagString = SpellRecipeUtil.getSpellsFromTagString(stack.getTag().getString("spell"));
         for (int i = 0; i < spellsFromTagString.size(); i++) {
             AbstractSpellPart spellPart = spellsFromTagString.get(i);
-            tip.append(spellPart.name);
+            tip.append(spellPart.getLocaleName());
             if(i < spellsFromTagString.size() - 1){
                 tip.append(" -> ");
             }
@@ -64,12 +67,12 @@ public class SpellParchment extends ModItem implements IScribeable {
             return false;
 
         if(SpellBook.getMode(player.getHeldItem(handIn).getTag()) == 0){
-            PortUtil.sendMessage(player, new StringTextComponent("Set your spell book to a spell."));
+            PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.spell_parchment.no_spell"));
             return false;
         }
 
         SpellParchment.setSpell(thisStack, SpellBook.getRecipeString(player.getHeldItem(handIn).getTag(), SpellBook.getMode(player.getHeldItem(handIn).getTag())));
-        PortUtil.sendMessage(player,new StringTextComponent("Spell inscribed."));
+        PortUtil.sendMessage(player,new TranslationTextComponent("ars_nouveau.spell_parchment.inscribed"));
         return false;
     }
 }

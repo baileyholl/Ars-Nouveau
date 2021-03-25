@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -106,10 +107,10 @@ public class Spell {
                     break;
             }
             if(num > 1){
-                str.append(spellPart.name).append(" x").append(num);
+                str.append(spellPart.getLocaleName()).append(" x").append(num);
                 i += num - 1;
             }else{
-                str.append(spellPart.name);
+                str.append(spellPart.getLocaleName());
             }
             if(i < recipe.size() - 1){
                 str.append(" -> ");

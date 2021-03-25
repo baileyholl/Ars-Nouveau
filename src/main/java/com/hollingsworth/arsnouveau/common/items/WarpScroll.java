@@ -16,6 +16,7 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
@@ -68,7 +69,7 @@ public class WarpScroll extends ModItem{
 
         if(pos != null ){
             if(getDimension(stack) == null || !getDimension(stack).equals(player.getEntityWorld().getDimensionKey().getRegistryName().toString())){
-                player.sendMessage(new StringTextComponent("Using this scroll from a different dimension would be a bad idea."), Util.DUMMY_UUID);
+                player.sendMessage(new TranslationTextComponent("ars_nouveau.warp_scroll.wrong_dim"), Util.DUMMY_UUID);
                 return ActionResult.resultFail(stack);
             }
             player.teleportKeepLoaded(pos.getX() +0.5, pos.getY(), pos.getZ() +0.5);
@@ -80,10 +81,10 @@ public class WarpScroll extends ModItem{
             newWarpStack.setTag(new CompoundNBT());
             setTeleportTag(newWarpStack, player.getPosition(), player.getEntityWorld().getDimensionKey().getRegistryName().toString());
             if(!player.addItemStackToInventory(newWarpStack)){
-                player.sendMessage(new StringTextComponent("There is no room in your inventory."), Util.DUMMY_UUID);
+                player.sendMessage(new TranslationTextComponent("ars_nouveau.warp_scroll.inv_full"), Util.DUMMY_UUID);
                 return ActionResult.resultFail(stack);
             }else{
-                player.sendMessage(new StringTextComponent("You record your location to your Warp Scroll."), Util.DUMMY_UUID);
+                player.sendMessage(new TranslationTextComponent("ars_nouveau.warp_scroll.recorded"), Util.DUMMY_UUID);
                 stack.shrink(1);
             }
         }
@@ -114,9 +115,9 @@ public class WarpScroll extends ModItem{
     public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag p_77624_4_) {
         BlockPos pos = getPos(stack);
         if(pos == null){
-            tooltip.add(new StringTextComponent("No location set."));
+            tooltip.add(new TranslationTextComponent("ars_nouveau.warp_scroll.no_location"));
             return;
         }
-        tooltip.add(new StringTextComponent("X: " + pos.getX() + " Y: " + pos.getY() + " Z:" + pos.getZ()));
+        tooltip.add(new TranslationTextComponent("ars_nouveau.position", pos.getX(), pos.getY(), pos.getZ()));
     }
 }

@@ -8,6 +8,7 @@ import net.minecraft.client.gui.FocusableGui;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.Collections;
 import java.util.List;
@@ -42,7 +43,7 @@ public class GuiSpellHUD extends FocusableGui implements IGuiEventListener {
             if(mode != 0){
             renderString = mode + " " + SpellBook.getSpellName(stack.getTag());
             }else{
-                renderString = "Crafting Mode";
+                renderString = new TranslationTextComponent("ars_nouveau.spell_hud.crafting_mode").getString();
             }
             minecraft.fontRenderer.drawStringWithShadow(ms,renderString, offsetLeft, minecraft.getMainWindow().getScaledHeight() - 30 , 0xFFFFFF);
         }

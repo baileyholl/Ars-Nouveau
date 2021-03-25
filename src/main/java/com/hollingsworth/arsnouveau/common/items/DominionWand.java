@@ -16,6 +16,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -50,7 +51,7 @@ public class DominionWand extends ModItem{
 
         if((getPos(stack) == null || getPos(stack).equals(new BlockPos(0,0,0))) && getEntityID(stack) == -1){
             setEntityID(stack, target.getEntityId());
-            PortUtil.sendMessage(playerEntity, "Stored entity");
+            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.dominion_wand.stored_entity").getString());
             return  ActionResultType.SUCCESS;
         }
         World world = playerEntity.getEntityWorld();
@@ -96,7 +97,7 @@ public class DominionWand extends ModItem{
 
         if(getEntityID(stack) == - 1 && (getPos(stack) == null || getPos(stack).equals(new BlockPos(0,0,0)))){
             setPosTag(stack, pos);
-            PortUtil.sendMessage(playerEntity, "Position set.");
+            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.dominion_wand.position_set").getString());
             return ActionResultType.SUCCESS;
         }
 
@@ -158,16 +159,18 @@ public class DominionWand extends ModItem{
     @Override
     public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag p_77624_4_) {
         BlockPos pos = getPos(stack);
-        tooltip.add(new StringTextComponent( getEntityID(stack) == -1 ? "No entity set" : "Entity stored."));
+        tooltip.add(getEntityID(stack) == -1 ? 
+        		new TranslationTextComponent("ars_nouveau.dominion_wand.no_entity") : 
+        		new TranslationTextComponent("ars_nouveau.dominion_wand.entity_stored"));
         if(pos == null){
-            tooltip.add(new StringTextComponent("No location set."));
+            tooltip.add(new TranslationTextComponent("ars_nouveau.dominion_wand.no_location"));
             return;
         }
 
-        tooltip.add(new StringTextComponent("Stored: " + getPosString(pos)));
+        tooltip.add(new TranslationTextComponent("ars_nouveau.dominion_wand.position_stored", getPosString(pos)));
     }
 
     public static String getPosString(BlockPos pos){
-        return "X: " + pos.getX() + " Y: " + pos.getY() + " Z:" + pos.getZ();
+        return new TranslationTextComponent("ars_nouveau.position", pos.getX(), pos.getY(), pos.getZ()).getString();
     }
 }

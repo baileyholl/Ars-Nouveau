@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.common.block.ManaJar;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +53,7 @@ public class ManaJarTile extends AbstractManaTile implements ITickableTileEntity
     @Override
     public List<String> getTooltip() {
         List<String> list = new ArrayList<>();
-        list.add( (getCurrentMana()*100) / this.getMaxMana() + "% full");
+        list.add(new TranslationTextComponent("ars_nouveau.mana_jar.fullness", (getCurrentMana()*100) / this.getMaxMana()).getString());
         return list;
     }
 }

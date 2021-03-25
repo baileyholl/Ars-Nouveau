@@ -106,7 +106,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
             List<ItemStack> items = ItemsRegistry.DENY_ITEM_SCROLL.getItems(stack);
             if (!items.isEmpty()) {
                 this.ignoreItems = ItemsRegistry.DENY_ITEM_SCROLL.getItems(stack);
-                PortUtil.sendMessage(player, new StringTextComponent("Sylph will ignore these items"));
+                PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.sylph.ignore"));
             }
         }
         return super.func_230254_b_(player,hand);
@@ -143,7 +143,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
             }
             if(ignoreItems != null && !ignoreItems.isEmpty()) {
                 StringBuilder status = new StringBuilder();
-                status.append("Ignoring: ");
+                status.append(new TranslationTextComponent("ars_nouveau.sylph.ignore_list").getString());
                 for (ItemStack i : ignoreItems) {
                     status.append(i.getDisplayName().getString()).append(" ");
                 }
@@ -318,16 +318,16 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
         if(!this.dataManager.get(TAMED))
             return tooltip;
         int mood = this.dataManager.get(MOOD_SCORE);
-        String moodStr = "Very unhappy";
+        String moodStr = new TranslationTextComponent("ars_nouveau.sylph.tooltip_unhappy").getString();
         if(mood >= 1000)
-            moodStr = "Extremely happy";
+            moodStr = new TranslationTextComponent("ars_nouveau.sylph.tooltip_extremely_happy").getString();
         else if(mood >= 750)
-            moodStr = "Very happy";
+            moodStr = new TranslationTextComponent("ars_nouveau.sylph.tooltip_very_happy").getString();
         else if(mood >= 500)
-            moodStr = "Happy";
+            moodStr = new TranslationTextComponent("ars_nouveau.sylph.tooltip_happy").getString();
         else if(mood >= 250)
-            moodStr = "Content";
-        tooltip.add("Mood: " + moodStr);
+            moodStr = new TranslationTextComponent("ars_nouveau.sylph.tooltip_content").getString();
+        tooltip.add(new TranslationTextComponent("ars_nouveau.sylph.tooltip_mood").getString() + moodStr);
         return tooltip;
     }
 
