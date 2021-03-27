@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:wilden_spike"
+    }
+  ],
+  "result": {
+    "item": "minecraft:orange_dye",
+    "count": 5
+  }
+}

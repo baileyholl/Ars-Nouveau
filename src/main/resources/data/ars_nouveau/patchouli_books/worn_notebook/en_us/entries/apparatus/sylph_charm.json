@@ -37,7 +37,7 @@
 	"type":"multiblock",
 	"multiblock":{
 		"mapping":{
-			"C":"forge:chest",
+			"C":"minecraft:chest",
 			"0":"ars_nouveau:summoning_crystal",
 			"J":"ars_nouveau:mana_jar"
 		},

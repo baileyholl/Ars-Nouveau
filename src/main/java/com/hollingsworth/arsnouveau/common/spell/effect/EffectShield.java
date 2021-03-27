@@ -5,9 +5,9 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.Items;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
@@ -40,7 +40,7 @@ public class EffectShield extends AbstractEffect {
     @Nullable
     @Override
     public Item getCraftingReagent() {
-        return ItemsRegistry.WILDEN_SPIKE;
+        return Items.SHIELD;
     }
 
     @Override
