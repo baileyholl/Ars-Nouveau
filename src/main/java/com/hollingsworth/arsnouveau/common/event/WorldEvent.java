@@ -74,12 +74,6 @@ public class WorldEvent {
     public static void registerFeatures() {
         BlockClusterFeatureConfig BERRY_BUSH_PATCH_CONFIG = (new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(BlockRegistry.MANA_BERRY_BUSH.getDefaultState()), SimpleBlockPlacer.PLACER)).tries(64).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK)).func_227317_b_().build();
 
-//       MAGIC_TREE_CONFIG2 = Feature.TREE.withConfiguration((
-//                new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.DARK_OAK_LOG.getDefaultState()),
-//                        new SimpleBlockStateProvider(Blocks.DARK_OAK_LEAVES.getDefaultState()),
-//                        new BlobFoliagePlacer(FeatureSpread.func_242252_a(0), FeatureSpread.func_242252_a(0), 0),
-//                        new MagicTrunkPlacer(9, 3, 0),
-//                        new TwoLayerFeature(2, 0, 2))).setIgnoreVines().build());
         float treeChance = Config.TREE_SPAWN_RATE.get().floatValue();
         ConfiguredFeature<?, ?> CASCADE = CASCADING_TREE
                 .withPlacement(Features.Placements.HEIGHTMAP_PLACEMENT)
@@ -122,6 +116,11 @@ public class WorldEvent {
             e.getSpawns().withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_SYLPH_TYPE, Config.SYLPH_WEIGHT.get(), 1, 1));
         }
 
+        if(e.getClimate().temperature <= 0.35f){
+            e.getSpawns().withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.WILDEN_GUARDIAN, Config.WGUARDIAN_WEIGHT.get(), 1, 1));
+        }
+        e.getSpawns().withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.WILDEN_STALKER, Config.WGUARDIAN_WEIGHT.get(), 3, 3));
+        e.getSpawns().withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.WILDEN_HUNTER, Config.WGUARDIAN_WEIGHT.get(), 1, 1));
         if (e.getCategory().equals(Biome.Category.TAIGA) && Config.SPAWN_BERRIES.get()) {
             e.getGeneration().withFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Objects.requireNonNull(WorldGenRegistries.CONFIGURED_FEATURE.getOrDefault(BlockRegistry.MANA_BERRY_BUSH.getRegistryName()))).build();
         }

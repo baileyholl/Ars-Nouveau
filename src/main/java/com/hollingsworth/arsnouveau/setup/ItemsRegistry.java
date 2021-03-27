@@ -105,6 +105,9 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.SPLIT_ARROW)public static SpellArrow SPLIT_ARROW;
     @ObjectHolder(LibItemNames.PIERCE_ARROW)public static SpellArrow PIERCE_ARROW;
 
+    @ObjectHolder(LibItemNames.WILDEN_HORN)public static ModItem WILDEN_HORN;
+    @ObjectHolder(LibItemNames.WILDEN_SPIKE)public static ModItem WILDEN_SPIKE;
+    @ObjectHolder(LibItemNames.WILDEN_WING)public static ModItem WILDEN_WING;
 
     public static Food MANA_BERRY_FOOD = (new Food.Builder()).hunger(2).saturation(0.1F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).setAlwaysEdible().build();
 
@@ -198,7 +201,10 @@ public class ItemsRegistry {
                     new SpellBow().setRegistryName(LibItemNames.SPELL_BOW),
                     new FormSpellArrow(LibItemNames.PIERCE_ARROW, new AugmentPierce(), 2),
                     new FormSpellArrow(LibItemNames.SPLIT_ARROW, new AugmentSplit(), 2),
-                    new SpellArrow(LibItemNames.AMPLIFY_ARROW, new AugmentAmplify(), 2)
+                    new SpellArrow(LibItemNames.AMPLIFY_ARROW, new AugmentAmplify(), 2),
+                    new ModItem(LibItemNames.WILDEN_HORN),
+                    new ModItem(LibItemNames.WILDEN_WING),
+                    new ModItem(LibItemNames.WILDEN_SPIKE)
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();
