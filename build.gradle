@@ -16,7 +16,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 
-version = '1.11.5'
+version = '1.11.6'
 group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'ars_nouveau-1.16.4'
 
@@ -115,15 +115,15 @@ repositories {
 dependencies {
 
     minecraft 'net.minecraftforge:forge:1.16.4-35.1.13'
-    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.2-45:api")
-    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.2-45")
+    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50:api")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50")
 
     compileOnly fg.deobf("mezz.jei:jei-1.16.2:7.3.2.25:api")
     runtimeOnly fg.deobf("mezz.jei:jei-1.16.2:7.3.2.25")
 
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.1.0:api")
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.1.0")
-    implementation fg.deobf('software.bernie.geckolib:forge-1.16.4-geckolib:3.0.0')
+    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.16.5:3.0.15')
     
     compileOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.4:7.1.0.84")
 
