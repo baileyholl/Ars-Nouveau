@@ -9,7 +9,10 @@ import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.IWorld;
+import net.minecraft.world.LightType;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -41,6 +44,7 @@ public class ModEntities {
     public static EntityType<SummonWolf> SUMMON_WOLF = null;
     public static EntityType<WildenStalker> WILDEN_STALKER = null;
     public static EntityType<SummonHorse> SUMMON_HORSE = null;
+    public static EntityType<WildenGuardian> WILDEN_GUARDIAN = null;
 
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
@@ -129,6 +133,13 @@ public class ModEntities {
                     "summon_horse",
                     EntityType.Builder.<SummonHorse>create(SummonHorse::new, EntityClassification.CREATURE).size(1.3964844F, 1.6F).trackingRange(10));
 
+            WILDEN_GUARDIAN = build(
+                    "wilden_guardian",
+                    EntityType.Builder.<WildenGuardian>create(WildenGuardian::new, EntityClassification.CREATURE)
+                            .size(1.0f, 2.0f)
+                            .setTrackingRange(10)
+                            .setShouldReceiveVelocityUpdates(true));
+
             event.getRegistry().registerAll(
                     SPELL_PROJ,
                     ENTITY_EVOKER_FANGS_ENTITY_TYPE,
@@ -144,7 +155,8 @@ public class ModEntities {
                     ENTITY_SPELL_ARROW,
                     SUMMON_WOLF,
                     WILDEN_STALKER,
-                    SUMMON_HORSE
+                    SUMMON_HORSE,
+                    WILDEN_GUARDIAN
             );
 
             GlobalEntityTypeAttributes.put(ENTITY_WHELP_TYPE, EntityWhelp.attributes().create());
@@ -156,14 +168,35 @@ public class ModEntities {
             GlobalEntityTypeAttributes.put(WILDEN_STALKER, WildenHunter.getAttributes().create());
             GlobalEntityTypeAttributes.put(SUMMON_WOLF, WolfEntity.func_234233_eS_().create());
             GlobalEntityTypeAttributes.put(SUMMON_HORSE, AbstractHorseEntity.func_234237_fg_().create());
+            GlobalEntityTypeAttributes.put(WILDEN_GUARDIAN, WildenGuardian.getAttributes().create());
 
             EntitySpawnPlacementRegistry.register(ENTITY_CARBUNCLE_TYPE, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
             EntitySpawnPlacementRegistry.register(ENTITY_SYLPH_TYPE, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
+
+            EntitySpawnPlacementRegistry.register(WILDEN_GUARDIAN, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ModEntities::canMonsterSpawnInLight);
+            EntitySpawnPlacementRegistry.register(WILDEN_HUNTER, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ModEntities::canMonsterSpawnInLight);
+            EntitySpawnPlacementRegistry.register(WILDEN_STALKER, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ModEntities::canMonsterSpawnInLight);
         }
     }
+    public static boolean canMonsterSpawnInLight(EntityType<? extends Entity> type, IServerWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
+        return worldIn.getDifficulty() != Difficulty.PEACEFUL && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn);
+    }
 
+    public static boolean canSpawnOn(EntityType<? extends Entity> typeIn, IWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
+        BlockPos blockpos = pos.down();
+        return reason == SpawnReason.SPAWNER || worldIn.getBlockState(blockpos).canEntitySpawn(worldIn, blockpos, typeIn);
+    }
     public static boolean genericGroundSpawn(EntityType<? extends Entity> animal, IWorld worldIn, SpawnReason reason, BlockPos pos, Random random) {
         return worldIn.getBlockState(pos.down()).isIn(Blocks.GRASS_BLOCK) && worldIn.getLightSubtracted(pos, 0) > 8;
+    }
+
+    public static boolean isValidLightLevel(IServerWorld worldIn, BlockPos pos, Random randomIn) {
+        if (worldIn.getLightFor(LightType.SKY, pos) > randomIn.nextInt(32)) {
+            return false;
+        } else {
+            int i = worldIn.getWorld().isThundering() ? worldIn.getNeighborAwareLightSubtracted(pos, 10) : worldIn.getLight(pos);
+            return i <= randomIn.nextInt(8);
+        }
     }
     /**
      * Build an {@link EntityType} from a {@link EntityType.Builder} using the specified name.
