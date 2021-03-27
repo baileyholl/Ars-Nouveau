@@ -14,7 +14,7 @@
       "tier": "TWO",
       "mana_cost": "Medium",
       "clay_type": "ars_nouveau:marvelous_clay",
-      "reagent": "minecraft:shield"
+      "reagent": "ars_nouveau:wilden_spike"
     }
   ]
 }
