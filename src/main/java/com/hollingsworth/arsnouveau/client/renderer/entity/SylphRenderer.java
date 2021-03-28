@@ -6,7 +6,9 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleSparkleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntitySylph;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
@@ -14,6 +16,7 @@ import net.minecraft.world.World;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
 public class SylphRenderer extends GeoEntityRenderer<EntitySylph> {
@@ -51,5 +54,10 @@ public class SylphRenderer extends GeoEntityRenderer<EntitySylph> {
     @Override
     public ResourceLocation getEntityTexture(EntitySylph entity) {
         return WILD_TEXTURE;
+    }
+
+    @Override
+    public RenderType getRenderType(EntitySylph animatable, float partialTicks, MatrixStack stack, @Nullable IRenderTypeBuffer renderTypeBuffer, @Nullable IVertexBuilder vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
+        return RenderType.getEntityCutoutNoCull(textureLocation);
     }
 }

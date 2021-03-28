@@ -202,9 +202,9 @@ public class ItemsRegistry {
                     new FormSpellArrow(LibItemNames.PIERCE_ARROW, new AugmentPierce(), 2),
                     new FormSpellArrow(LibItemNames.SPLIT_ARROW, new AugmentSplit(), 2),
                     new SpellArrow(LibItemNames.AMPLIFY_ARROW, new AugmentAmplify(), 2),
-                    new ModItem(LibItemNames.WILDEN_HORN),
-                    new ModItem(LibItemNames.WILDEN_WING),
-                    new ModItem(LibItemNames.WILDEN_SPIKE)
+                    new ModItem(LibItemNames.WILDEN_HORN).withTooltip(new TranslationTextComponent("tooltip.wilden_horn")),
+                    new ModItem(LibItemNames.WILDEN_WING).withTooltip(new TranslationTextComponent("tooltip.wilden_wing")),
+                    new ModItem(LibItemNames.WILDEN_SPIKE).withTooltip(new TranslationTextComponent("tooltip.wilden_spike"))
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

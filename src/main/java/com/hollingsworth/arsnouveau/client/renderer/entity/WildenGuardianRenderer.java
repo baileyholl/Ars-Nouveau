@@ -19,6 +19,8 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
+import javax.annotation.Nullable;
+
 public class WildenGuardianRenderer  extends GeoEntityRenderer<WildenGuardian> {
     protected WildenGuardianRenderer(EntityRendererManager renderManager) {
         super(renderManager, new WildenGuardianModel());
@@ -125,5 +127,10 @@ public class WildenGuardianRenderer  extends GeoEntityRenderer<WildenGuardian> {
 
     private static void func_229108_a_(IVertexBuilder p_229108_0_, Matrix4f p_229108_1_, Matrix3f p_229108_2_, float p_229108_3_, float p_229108_4_, float p_229108_5_, int p_229108_6_, int p_229108_7_, int p_229108_8_, float p_229108_9_, float p_229108_10_) {
         p_229108_0_.pos(p_229108_1_, p_229108_3_, p_229108_4_, p_229108_5_).color(p_229108_6_, p_229108_7_, p_229108_8_, 255).tex(p_229108_9_, p_229108_10_).overlay(OverlayTexture.NO_OVERLAY).lightmap(15728880).normal(p_229108_2_, 0.0F, 1.0F, 0.0F).endVertex();
+    }
+
+    @Override
+    public RenderType getRenderType(WildenGuardian animatable, float partialTicks, MatrixStack stack, @Nullable IRenderTypeBuffer renderTypeBuffer, @Nullable IVertexBuilder vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
+        return RenderType.getEntityCutoutNoCull(textureLocation);
     }
 }

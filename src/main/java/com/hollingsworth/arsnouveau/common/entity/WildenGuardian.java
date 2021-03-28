@@ -3,7 +3,10 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.entity.goal.guardian.LaserAttackGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.wilden.WildenMeleeAttack;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
@@ -100,6 +103,11 @@ public class WildenGuardian extends MonsterEntity implements IAnimatable, IAnima
         return this.dataManager.get(TARGET_ENTITY) != 0;
     }
 
+    @Override
+    public boolean attackEntityAsMob(Entity entityIn) {
+        return super.attackEntityAsMob(entityIn);
+    }
+
     @Nullable
     public LivingEntity getTargetedEntity() {
         if (!this.hasTargetedEntity()) {
@@ -138,7 +146,6 @@ public class WildenGuardian extends MonsterEntity implements IAnimatable, IAnima
 
         }
         super.damageEntity(damageSrc, damageAmount);
-
     }
 
     @Override
@@ -250,11 +257,11 @@ public class WildenGuardian extends MonsterEntity implements IAnimatable, IAnima
 
     public static AttributeModifierMap.MutableAttribute getAttributes(){
         return MobEntity.func_233666_p_()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 20.0D)
+                .createMutableAttribute(Attributes.MAX_HEALTH, 25D)
                 .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D)
                 .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 0.6F)
                 .createMutableAttribute(Attributes.ATTACK_KNOCKBACK, 1.0D)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 3.5D)
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.5D)
                 .createMutableAttribute(Attributes.ARMOR, 2.0D);
     }
 

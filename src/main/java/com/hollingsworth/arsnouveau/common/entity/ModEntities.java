@@ -165,7 +165,7 @@ public class ModEntities {
             GlobalEntityTypeAttributes.put(ENTITY_SYLPH_TYPE, EntitySylph.attributes().create());
             GlobalEntityTypeAttributes.put(ENTITY_WIXIE_TYPE, EntityWixie.attributes().create());
             GlobalEntityTypeAttributes.put(WILDEN_HUNTER, WildenHunter.getAttributes().create());
-            GlobalEntityTypeAttributes.put(WILDEN_STALKER, WildenHunter.getAttributes().create());
+            GlobalEntityTypeAttributes.put(WILDEN_STALKER, WildenStalker.getAttributes().create());
             GlobalEntityTypeAttributes.put(SUMMON_WOLF, WolfEntity.func_234233_eS_().create());
             GlobalEntityTypeAttributes.put(SUMMON_HORSE, AbstractHorseEntity.func_234237_fg_().create());
             GlobalEntityTypeAttributes.put(WILDEN_GUARDIAN, WildenGuardian.getAttributes().create());
