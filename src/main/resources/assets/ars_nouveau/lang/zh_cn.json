@@ -546,5 +546,7 @@
 	"ars_nouveau.true": "是",
 	"ars_nouveau.false": "否",
   
-	"ars_nouveau.spell_hud.crafting_mode": "法术制作模式"
+	"ars_nouveau.spell_hud.crafting_mode": "法术制作模式",
+	
+	"ars_nouveau.spell.no_mana": "魔力不足。"
 }

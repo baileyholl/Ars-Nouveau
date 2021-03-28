@@ -103,7 +103,7 @@ public class GuiSpellBook extends BaseBook {
         mode = mode == 0 ? 1 : mode;
         spell_name.setText(SpellBook.getSpellName(spell_book_tag, mode));
         if(spell_name.getText().isEmpty())
-            spell_name.setSuggestion("My Spell");
+            spell_name.setSuggestion(new TranslationTextComponent("ars_nouveau.spell_book_gui.spell_name").getString());
 
         if(searchBar.getText().isEmpty())
             searchBar.setSuggestion(new TranslationTextComponent("ars_nouveau.spell_book_gui.search").getString());
@@ -141,7 +141,7 @@ public class GuiSpellBook extends BaseBook {
         if(!str.isEmpty()){
             searchBar.setSuggestion("");
         }else
-            searchBar.setSuggestion("Search");
+            searchBar.setSuggestion(new TranslationTextComponent("ars_nouveau.spell_book_gui.search").getString());
 
         for(Widget w : buttons){
             if(w instanceof GlyphButton ){

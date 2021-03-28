@@ -546,5 +546,7 @@
 	"ars_nouveau.true": "true",
 	"ars_nouveau.false": "false",
 	
-	"ars_nouveau.spell_hud.crafting_mode": "Crafting Mode"
+	"ars_nouveau.spell_hud.crafting_mode": "Crafting Mode",
+	
+	"ars_nouveau.spell.no_mana": "Not enough mana."
 }
