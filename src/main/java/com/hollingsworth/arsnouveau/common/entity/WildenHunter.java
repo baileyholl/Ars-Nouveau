@@ -82,7 +82,7 @@ public class  WildenHunter extends CreatureEntity implements IAnimatable, IAnima
                 .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D)
                 .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 0.6F)
                 .createMutableAttribute(Attributes.ATTACK_KNOCKBACK, 1.0D)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 3.5D)
+                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.5D)
                 .createMutableAttribute(Attributes.ARMOR, 2.0D);
     }
 

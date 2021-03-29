@@ -20,7 +20,17 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
         getBuilder("glyph").texture("layer0",itemTexture(ItemsRegistry.noviceSpellBook));
         ItemsRegistry.RegistrationHandler.ITEMS.forEach(i ->{
             if(i instanceof Glyph){
-                getBuilder("glyph_" + ((Glyph) i).spellPart.getTag()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", spellTexture(i));
+                try {
+                    getBuilder("glyph_" + ((Glyph) i).spellPart.getTag()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", spellTexture(i));
+                }catch (Exception e){
+                    System.out.println("No texture for " + i.toString());
+                }
+            }else{
+                try {
+                    getBuilder(i.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(i));
+                }catch (Exception e){
+                    System.out.println("No texture for " + i.toString());
+                }
             }
         });
         getBuilder(LibBlockNames.ARCANE_STONE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.ARCANE_STONE));

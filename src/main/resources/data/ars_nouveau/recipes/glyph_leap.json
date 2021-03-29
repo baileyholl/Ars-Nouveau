@@ -1,6 +1,6 @@
 {
   "type": "ars_nouveau:glyph_recipe",
   "tier": "ONE",
-  "input": "minecraft:spider_eye",
+  "input": "ars_nouveau:wilden_wing",
   "output": "ars_nouveau:glyph_leap"
 }

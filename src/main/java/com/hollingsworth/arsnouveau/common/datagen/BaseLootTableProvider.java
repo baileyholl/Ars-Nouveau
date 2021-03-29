@@ -9,10 +9,10 @@ import net.minecraft.data.DirectoryCache;
 import net.minecraft.data.IDataProvider;
 import net.minecraft.data.LootTableProvider;
 import net.minecraft.loot.*;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.loot.functions.CopyName;
 import net.minecraft.loot.functions.CopyNbt;
 import net.minecraft.loot.functions.SetContents;
+import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,7 +26,8 @@ public abstract class BaseLootTableProvider extends LootTableProvider {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
-    protected final Map<Block, LootTable.Builder> lootTables = new HashMap<>();
+    protected final Map<Block, LootTable.Builder> blockTables = new HashMap<>();
+    protected final Map<ResourceLocation, LootTable.Builder> entityTables = new HashMap<>();
     private final DataGenerator generator;
 
     public BaseLootTableProvider(DataGenerator dataGeneratorIn) {
@@ -68,8 +69,11 @@ public abstract class BaseLootTableProvider extends LootTableProvider {
         addTables();
 
         Map<ResourceLocation, LootTable> tables = new HashMap<>();
-        for (Map.Entry<Block, LootTable.Builder> entry : lootTables.entrySet()) {
+        for (Map.Entry<Block, LootTable.Builder> entry : blockTables.entrySet()) {
             tables.put(entry.getKey().getLootTable(), entry.getValue().setParameterSet(LootParameterSets.BLOCK).build());
+        }
+        for (Map.Entry<ResourceLocation, LootTable.Builder> entry : entityTables.entrySet()) {
+            tables.put(entry.getKey(), entry.getValue().setParameterSet(LootParameterSets.ENTITY).build());
         }
         writeTables(cache, tables);
     }

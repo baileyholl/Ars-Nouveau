@@ -1,9 +1,15 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.entity.EntityType;
+import net.minecraft.loot.*;
+import net.minecraft.loot.functions.LootingEnchantBonus;
+import net.minecraft.loot.functions.SetCount;
 
 public class LootTables extends BaseLootTableProvider{
     public LootTables(DataGenerator dataGeneratorIn) {
@@ -13,7 +19,7 @@ public class LootTables extends BaseLootTableProvider{
     @Override
     protected void addTables() {
         System.out.println(BlockRegistry.MANA_JAR);
-        lootTables.put(BlockRegistry.MANA_JAR, createManaManchineTable("mana_jar", BlockRegistry.MANA_JAR));
+        blockTables.put(BlockRegistry.MANA_JAR, createManaManchineTable("mana_jar", BlockRegistry.MANA_JAR));
         putStandardLoot(BlockRegistry.ARCANE_ORE);
         putStandardLoot(BlockRegistry.GLYPH_PRESS_BLOCK);
         putStandardLoot(BlockRegistry.WARD_BLOCK);
@@ -31,12 +37,34 @@ public class LootTables extends BaseLootTableProvider{
         putStandardLoot(BlockRegistry.VOLCANIC_BLOCK);
         putStandardLoot(BlockRegistry.LAVA_LILY);
 
-
+        putEntityTable(ModEntities.WILDEN_STALKER,  LootTable.builder()
+                .addLootPool(LootPool.builder().rolls(ConstantRange.of(1))
+                .addEntry(ItemLootEntry.builder(ItemsRegistry.WILDEN_WING)
+                .acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 1.0F)))
+                .acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))))
+        );
+        putEntityTable(ModEntities.WILDEN_GUARDIAN,  LootTable.builder()
+                .addLootPool(LootPool.builder().rolls(ConstantRange.of(1))
+                        .addEntry(ItemLootEntry.builder(ItemsRegistry.WILDEN_SPIKE)
+                                .acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 1.0F)))
+                                .acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))))
+        );
+        putEntityTable(ModEntities.WILDEN_HUNTER,  LootTable.builder()
+                .addLootPool(LootPool.builder().rolls(ConstantRange.of(1))
+                        .addEntry(ItemLootEntry.builder(ItemsRegistry.WILDEN_HORN)
+                                .acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 1.0F)))
+                                .acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))))
+        );
+        //LootTable.builder().addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(Items.BONE).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))))
        // putStandardLoot(BlockRegistry.ARCANE_BRICKS);
     }
 
     public void putStandardLoot(Block block){
-        lootTables.put(block, createStandardTable(block.getRegistryName().toString().replace(ArsNouveau.MODID + ":", "") , block));
+        blockTables.put(block, createStandardTable(block.getRegistryName().toString().replace(ArsNouveau.MODID + ":", "") , block));
+    }
+
+    public void putEntityTable(EntityType e, LootTable.Builder table){
+        entityTables.put(e.getLootTable(), table);
     }
 
 

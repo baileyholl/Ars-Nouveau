@@ -58,7 +58,7 @@ public class ManaCondenserTile extends AbstractManaTile {
     }
     @SubscribeEvent
     public void cropGrow(BlockEvent.CropGrowEvent.Post event) {
-        if(isDisabled)
+        if(isDisabled || world == null)
             return;
         if(BlockUtil.distanceFrom(pos, event.getPos()) <= 15) {
             int mana = 50;
@@ -72,7 +72,7 @@ public class ManaCondenserTile extends AbstractManaTile {
 
     @SubscribeEvent
     public void babySpawnEvent(BabyEntitySpawnEvent event) {
-        if(isDisabled || event.getChild() == null)
+        if(isDisabled || event.getChild() == null || world == null)
             return;
 
         if(BlockUtil.distanceFrom(pos, event.getParentA().getPosition()) <= 15) {
@@ -83,7 +83,7 @@ public class ManaCondenserTile extends AbstractManaTile {
 
     @SubscribeEvent
     public void livingDeath(LivingDeathEvent e) {
-        if(e.getEntityLiving().world.isRemote || isDisabled || e.getEntity() instanceof IDispellable)
+        if(e.getEntityLiving().world.isRemote || isDisabled || e.getEntity() instanceof IDispellable || world == null)
             return;
 
         if(BlockUtil.distanceFrom(pos, e.getEntity().getPosition()) <= 15) {

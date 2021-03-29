@@ -6,8 +6,10 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.SummonWolf;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -27,9 +29,10 @@ public class EffectSummonWolves extends AbstractEffect {
         if(!canSummon(shooter))
             return;
         Vector3d hit = rayTraceResult.getHitVec();
+        int ticks = 60 * 20 * (1 + getDurationModifier(augments));
         for(int i = 0; i < 2; i++){
             SummonWolf wolf = new SummonWolf(ModEntities.SUMMON_WOLF, world);
-            wolf.ticksLeft = 400;
+            wolf.ticksLeft = ticks;
             wolf.setPosition(hit.getX(), hit.getY(), hit.getZ());
             wolf.setAttackTarget(shooter.getLastAttackedEntity());
             wolf.setAggroed(true);
@@ -37,10 +40,28 @@ public class EffectSummonWolves extends AbstractEffect {
             wolf.setTamedBy((PlayerEntity) shooter);
             world.addEntity(wolf);
         }
+        applySummoningSickness(shooter, ticks);
     }
 
     @Override
     public int getManaCost() {
-        return 0;
+        return 100;
+    }
+
+
+    @Override
+    public String getBookDescription() {
+        return "Summons two wolves that will fight with you. Extend Time will increase the amount of time on the summons. Applies Summoning Sickness to the caster, preventing other summoning magic.";
+    }
+
+    @Override
+    public Tier getTier() {
+        return Tier.ONE;
+    }
+
+    @Nullable
+    @Override
+    public Item getCraftingReagent() {
+        return ItemsRegistry.WILDEN_HORN;
     }
 }

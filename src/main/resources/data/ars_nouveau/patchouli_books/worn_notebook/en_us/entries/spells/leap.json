@@ -14,7 +14,7 @@
       "tier": "ONE",
       "mana_cost": "Medium",
       "clay_type": "ars_nouveau:magic_clay",
-      "reagent": "minecraft:spider_eye"
+      "reagent": "ars_nouveau:wilden_wing"
     }
   ]
 }

@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:wilden_wing"
+    }
+  ],
+  "result": {
+    "item": "minecraft:leather"
+  }
+}

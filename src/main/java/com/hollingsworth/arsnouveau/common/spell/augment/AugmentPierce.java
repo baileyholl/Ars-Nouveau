@@ -2,8 +2,8 @@ package com.hollingsworth.arsnouveau.common.spell.augment;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.item.Item;
-import net.minecraft.item.Items;
 
 import javax.annotation.Nullable;
 
@@ -25,7 +25,7 @@ public class AugmentPierce extends AbstractAugment {
     @Nullable
     @Override
     public Item getCraftingReagent() {
-        return Items.ARROW;
+        return ItemsRegistry.WILDEN_SPIKE;
     }
 
     @Override

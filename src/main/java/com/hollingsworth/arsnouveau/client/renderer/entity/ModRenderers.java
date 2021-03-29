@@ -28,6 +28,7 @@ public class ModRenderers {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_SYLPH_TYPE, SylphRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_WIXIE_TYPE, WixieRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.WILDEN_STALKER,renderManager -> new GenericRenderer(renderManager, new WildenStalkerModel()));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.WILDEN_GUARDIAN, WildenGuardianRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.WILDEN_HUNTER, WildenRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.SUMMON_WOLF, WolfRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.SUMMON_HORSE, HorseRenderer::new);
