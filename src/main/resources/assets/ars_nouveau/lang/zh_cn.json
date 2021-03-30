@@ -283,6 +283,9 @@
 	"tooltip.wilden_spike": "荒野守卫者的掉落物，后者可在寒冷群落中发现。",
 	"tooltip.wilden_wing": "荒野伏击者的掉落物",
 	"tooltip.wilden_horn": "荒野兽群猎手的掉落物",
+	"entity.ars_nouveau.summon_wolf": "被召唤的狼",
+	"tooltip.worn_notebook": "新生魔艺的详细资料",
+	
 	"ars_nouveau.glyph_desc.accelerate": "增加弹射物法术的飞行速度。",
 	"ars_nouveau.glyph_desc.amplify": "可叠加地增加大多数法术效果的强度。可增加破坏的挖掘等级和增加法术的伤害。",
 	"ars_nouveau.glyph_desc.aoe": "法术会影响目标方块附近一个更大的范围。",
