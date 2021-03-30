@@ -157,7 +157,7 @@ public class ItemsRegistry {
                     new BeltOfLevitation(),
                     new WarpScroll(),
                     new JarOfLight(),
-                    new WornNotebook(),
+                    new WornNotebook().withTooltip(new TranslationTextComponent("tooltip.worn_notebook")),
                     new CarbuncleCharm(),
                     new ModItem(LibItemNames.CARBUNCLE_SHARD).withTooltip(new TranslationTextComponent("tooltip.carbuncle_shard")),
                     new WixieCharm(),
@@ -189,8 +189,6 @@ public class ItemsRegistry {
                     new ModItem(LibItemNames.SYLPH_SHARD).withTooltip(new TranslationTextComponent("tooltip.sylph_shard")),
                     new SylphCharm(),
                     new ModItem(LibItemNames.MANA_GEM).withTooltip(new TranslationTextComponent("tooltip.mana_gem")),
-             //       new ModItem(LibItemNames.WIXIE_SHARD),
-
                     new ItemScroll(LibItemNames.ALLOW_ITEM_SCROLL),
                     new ItemScroll(LibItemNames.DENY_ITEM_SCROLL),
                     new ModItem(LibItemNames.BLANK_PARCHMENT),
@@ -204,7 +202,8 @@ public class ItemsRegistry {
                     new SpellArrow(LibItemNames.AMPLIFY_ARROW, new AugmentAmplify(), 2),
                     new ModItem(LibItemNames.WILDEN_HORN).withTooltip(new TranslationTextComponent("tooltip.wilden_horn")),
                     new ModItem(LibItemNames.WILDEN_WING).withTooltip(new TranslationTextComponent("tooltip.wilden_wing")),
-                    new ModItem(LibItemNames.WILDEN_SPIKE).withTooltip(new TranslationTextComponent("tooltip.wilden_spike"))
+                    new ModItem(LibItemNames.WILDEN_SPIKE).withTooltip(new TranslationTextComponent("tooltip.wilden_spike")),
+
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

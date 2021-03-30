@@ -38,7 +38,7 @@ public class EffectSummonWolves extends AbstractEffect {
             wolf.setAggroed(true);
             wolf.setTamed(true);
             wolf.setTamedBy((PlayerEntity) shooter);
-            world.addEntity(wolf);
+            summonLivingEntity(rayTraceResult, world, shooter, augments, spellContext, wolf);
         }
         applySummoningSickness(shooter, ticks);
     }

@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.goal;
 
-import com.hollingsworth.arsnouveau.api.ISummon;
+import com.hollingsworth.arsnouveau.api.IFollowingSummon;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
@@ -17,7 +17,7 @@ import net.minecraft.world.IWorldReader;
 import java.util.EnumSet;
 
 public class FollowSummonerGoal extends Goal {
-    protected final ISummon summon;
+    protected final IFollowingSummon summon;
     protected final IWorldReader world;
     private final double followSpeed;
     private final PathNavigator navigator;
@@ -26,7 +26,7 @@ public class FollowSummonerGoal extends Goal {
     private final float minDist;
     private float oldWaterCost;
 
-    public FollowSummonerGoal(ISummon mobEntity, LivingEntity owner, double followSpeedIn, float minDistIn, float maxDistIn) {
+    public FollowSummonerGoal(IFollowingSummon mobEntity, LivingEntity owner, double followSpeedIn, float minDistIn, float maxDistIn) {
         this.summon = mobEntity;
         this.world = mobEntity.getWorld();
         this.followSpeed = followSpeedIn;

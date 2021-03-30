@@ -1,14 +1,16 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-public class SummonWolf extends WolfEntity {
+public class SummonWolf extends WolfEntity implements ISummon {
     public int ticksLeft;
 
     public SummonWolf(EntityType<? extends WolfEntity> type, World worldIn) {
@@ -34,6 +36,12 @@ public class SummonWolf extends WolfEntity {
     }
 
     @Override
+    public void onDeath(DamageSource cause) {
+        super.onDeath(cause);
+        onSummonDeath(world, cause, false);
+    }
+
+    @Override
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
         this.ticksLeft = compound.getInt("left");
@@ -48,5 +56,15 @@ public class SummonWolf extends WolfEntity {
     @Override
     protected int getExperiencePoints(PlayerEntity player) {
         return 0;
+    }
+
+    @Override
+    public int getTicksLeft() {
+        return ticksLeft;
+    }
+
+    @Override
+    public void setTicksLeft(int ticks) {
+        this.ticksLeft = ticks;
     }
 }
