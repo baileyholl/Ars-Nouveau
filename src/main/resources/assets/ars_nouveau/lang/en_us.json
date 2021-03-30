@@ -283,6 +283,9 @@
 	"tooltip.wilden_spike": "Drops from Wilden Defenders, found in cold biomes.",
 	"tooltip.wilden_wing": "Drops from Wilden Stalkers",
 	"tooltip.wilden_horn": "Drops from Wilden Pack Hunters",
+	"entity.ars_nouveau.summon_wolf": "Summoned Wolf",
+	"tooltip.worn_notebook": "Documentation for Ars Nouveau",
+
 	"ars_nouveau.glyph_desc.accelerate": "Increases the speed of projectile spells.",
 	"ars_nouveau.glyph_desc.amplify": "Additively increases the power of most spell effects. Can increase the harvest level of Break and increases the damage of spells.",
 	"ars_nouveau.glyph_desc.aoe": "Spells will affect a larger area around a targeted block.",

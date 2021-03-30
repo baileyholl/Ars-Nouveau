@@ -109,7 +109,7 @@ public class ModEntities {
                             .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityRitualProjectile::new));
             WILDEN_HUNTER = build(
                     "wilden_hunter",
-                    EntityType.Builder.<WildenHunter>create(WildenHunter::new, EntityClassification.CREATURE)
+                    EntityType.Builder.<WildenHunter>create(WildenHunter::new, EntityClassification.MONSTER)
                             .size(1.0f, 2.0f)
                             .setTrackingRange(10)
                             .setShouldReceiveVelocityUpdates(true));
@@ -124,7 +124,7 @@ public class ModEntities {
 
             WILDEN_STALKER = build(
                     "wilden_stalker",
-                    EntityType.Builder.<WildenStalker>create(WildenStalker::new, EntityClassification.CREATURE)
+                    EntityType.Builder.<WildenStalker>create(WildenStalker::new, EntityClassification.MONSTER)
                             .size(1.0f, 2.0f)
                             .setTrackingRange(10)
                             .setShouldReceiveVelocityUpdates(true));
@@ -135,7 +135,7 @@ public class ModEntities {
 
             WILDEN_GUARDIAN = build(
                     "wilden_guardian",
-                    EntityType.Builder.<WildenGuardian>create(WildenGuardian::new, EntityClassification.CREATURE)
+                    EntityType.Builder.<WildenGuardian>create(WildenGuardian::new, EntityClassification.MONSTER)
                             .size(1.0f, 2.0f)
                             .setTrackingRange(10)
                             .setShouldReceiveVelocityUpdates(true));

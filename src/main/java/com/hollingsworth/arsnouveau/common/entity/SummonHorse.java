@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.AnimalEntity;
@@ -13,7 +14,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-public class SummonHorse extends HorseEntity {
+public class SummonHorse extends HorseEntity implements ISummon {
     public int ticksLeft;
     public SummonHorse(EntityType<? extends HorseEntity> type, World worldIn) {
         super(type, worldIn);
@@ -76,5 +77,15 @@ public class SummonHorse extends HorseEntity {
     public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
         compound.putInt("left", ticksLeft);
+    }
+
+    @Override
+    public int getTicksLeft() {
+        return ticksLeft;
+    }
+
+    @Override
+    public void setTicksLeft(int ticks) {
+        this.ticksLeft = ticks;
     }
 }

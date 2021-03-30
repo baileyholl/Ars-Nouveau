@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface  ISummon {
+public interface IFollowingSummon {
     DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(TameableEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     World getWorld();
 

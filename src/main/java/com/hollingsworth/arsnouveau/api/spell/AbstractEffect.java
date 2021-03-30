@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.hollingsworth.arsnouveau.api.entity.ISummon;
+import com.hollingsworth.arsnouveau.api.event.SummonEvent;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
@@ -26,6 +28,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
@@ -63,6 +66,12 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
     public void applySummoningSickness(LivingEntity playerEntity, int time){
         playerEntity.addPotionEffect(new EffectInstance(ModPotions.SUMMONING_SICKNESS, time));
+    }
+
+    public void summonLivingEntity(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext, ISummon summon){
+        if(summon.getLivingEntity() != null)
+            world.addEntity(summon.getLivingEntity());
+        MinecraftForge.EVENT_BUS.post(new SummonEvent(rayTraceResult, world, shooter, augments, spellContext, summon));
     }
 
     public void applyPotionWithCap(LivingEntity entity, Effect potionEffect, List<AbstractAugment> augmentTypes, int baseDuration, int durationBuffBase, int cap){

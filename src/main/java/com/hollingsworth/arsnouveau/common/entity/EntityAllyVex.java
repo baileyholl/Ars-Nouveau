@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
-import com.hollingsworth.arsnouveau.api.ISummon;
+import com.hollingsworth.arsnouveau.api.IFollowingSummon;
+import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.common.entity.goal.FollowSummonerFlyingGoal;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.controller.MovementController;
@@ -28,7 +29,7 @@ import java.util.EnumSet;
 import java.util.Optional;
 import java.util.UUID;
 
-public class EntityAllyVex extends VexEntity implements ISummon {
+public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummon {
     private LivingEntity owner;
     @Nullable
     private BlockPos boundOrigin;
@@ -266,6 +267,16 @@ public class EntityAllyVex extends VexEntity implements ISummon {
 
     }
 
+
+    @Override
+    public int getTicksLeft() {
+        return limitedLifeTicks;
+    }
+
+    @Override
+    public void setTicksLeft(int ticks) {
+        this.limitedLifeTicks = ticks;
+    }
 
     class MoveHelperController extends MovementController {
         public MoveHelperController(VexEntity vex) {
