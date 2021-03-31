@@ -36,7 +36,7 @@ public class EffectColdSnap extends AbstractEffect {
                 return;
             LivingEntity livingEntity = (LivingEntity) entity;
             Vector3d vec = safelyGetHitPos(rayTraceResult);
-            float damage = 6.0f + 3.0f*getAmplificationBonus(augments);
+            float damage = 6.0f + 2.5f*getAmplificationBonus(augments);
             int range = 3 + getBuffCount(augments, AugmentAOE.class);
             int snareSec = 5 + getDurationModifier(augments);
             if(livingEntity.isWet() || livingEntity.getActivePotionEffect(Effects.SLOWNESS) != null){

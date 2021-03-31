@@ -41,7 +41,7 @@ public class EffectFangs extends AbstractEffect {
             return;
         Vector3d vec = rayTraceResult.getHitVec();
 
-        float bonusDamage = 6f * getAmplificationBonus(augments);
+        float bonusDamage = 3f * getAmplificationBonus(augments);
         double targetX = vec.x;
         double targetY = vec.y;
         double targetZ = vec.z;

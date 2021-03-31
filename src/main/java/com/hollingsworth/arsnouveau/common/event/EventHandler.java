@@ -26,8 +26,8 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -97,12 +97,19 @@ public class EventHandler {
     }
 
     @SubscribeEvent
-    public static void playerDamaged(LivingDamageEvent e){
+    public static void playerDamaged(LivingHurtEvent e){
         if(e.getEntityLiving() != null && e.getEntityLiving().getActivePotionMap().containsKey(ModPotions.SHIELD_POTION)
                 && (e.getSource() == DamageSource.MAGIC || e.getSource() == DamageSource.GENERIC || e.getSource() instanceof EntityDamageSource)){
             float damage = e.getAmount() - (1.0f + 0.5f * e.getEntityLiving().getActivePotionMap().get(ModPotions.SHIELD_POTION).getAmplifier());
-            if (damage < 0) damage = 0;
-            e.setAmount(damage);
+            e.setAmount(Math.max(0, damage));
+        }
+    }
+
+    @SubscribeEvent
+    public static void entityHurt(LivingHurtEvent e){
+        if(e.getEntityLiving() != null && e.getSource() == DamageSource.LIGHTNING_BOLT && e.getEntityLiving().getActivePotionEffect(ModPotions.SHOCKED_EFFECT) != null){
+            float damage = e.getAmount() + 3.0f + 3.0f * e.getEntityLiving().getActivePotionEffect(ModPotions.SHOCKED_EFFECT).getAmplifier();
+            e.setAmount(Math.max(0, damage));
         }
     }
 
