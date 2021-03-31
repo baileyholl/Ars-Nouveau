@@ -10,6 +10,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -38,8 +39,15 @@ public class SummonHorse extends HorseEntity implements ISummon {
             if(ticksLeft <= 0) {
                 ParticleUtil.spawnPoof((ServerWorld) world, getPosition());
                 this.remove();
+                onSummonDeath(world, null, true);
             }
         }
+    }
+
+    @Override
+    public void onDeath(DamageSource cause) {
+        super.onDeath(cause);
+        onSummonDeath(world, cause, false);
     }
 
     @Override

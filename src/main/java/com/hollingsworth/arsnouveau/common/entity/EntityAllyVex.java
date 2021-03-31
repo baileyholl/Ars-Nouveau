@@ -15,6 +15,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.pathfinding.FlyingPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.server.management.PreYggdrasilConverter;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
@@ -267,6 +268,12 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
 
     }
 
+
+    @Override
+    public void onDeath(DamageSource cause) {
+        super.onDeath(cause);
+        onSummonDeath(world, cause, false);
+    }
 
     @Override
     public int getTicksLeft() {

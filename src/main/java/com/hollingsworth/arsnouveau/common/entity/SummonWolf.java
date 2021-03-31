@@ -31,6 +31,7 @@ public class SummonWolf extends WolfEntity implements ISummon {
             if(ticksLeft <= 0) {
                 ParticleUtil.spawnPoof((ServerWorld) world, getPosition());
                 this.remove();
+                onSummonDeath(world, null, true);
             }
         }
     }
