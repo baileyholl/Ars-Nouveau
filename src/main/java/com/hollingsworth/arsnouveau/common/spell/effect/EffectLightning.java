@@ -35,7 +35,7 @@ public class EffectLightning extends AbstractEffect {
 
     @Override
     public int getManaCost() {
-        return 50;
+        return 100;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class EffectLightning extends AbstractEffect {
     @Nullable
     @Override
     public Item getCraftingReagent() {
-        return Items.CONDUIT;
+        return Items.HEART_OF_THE_SEA;
     }
 
     @Override
