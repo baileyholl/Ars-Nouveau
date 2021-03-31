@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.common.entity.goal.stalker.DiveAttackGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.stalker.FlyHelper;
 import com.hollingsworth.arsnouveau.common.entity.goal.stalker.LeapGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.wilden.WildenMeleeAttack;
+import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -47,12 +48,14 @@ public class WildenStalker extends CreatureEntity implements IAnimatable, IAnima
         this.goalSelector.addGoal(1, new DiveAttackGoal(this));
         this.goalSelector.addGoal(1, new SwimGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AnimalEntity.class, true));
         this.goalSelector.addGoal(5, new WildenMeleeAttack(this, 1.3D, true, WildenStalker.Animations.ATTACK.ordinal(), () -> !isFlying()));
         this.goalSelector.addGoal(8, new MeleeAttackGoal(this, 1.2f, true));
         this.goalSelector.addGoal(8, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+        if(Config.STALKER_ATTACK_ANIMALS.get())
+            this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AnimalEntity.class, 10, true, false, (entity) -> !(entity instanceof SummonWolf) || !((SummonWolf) entity).isWildenSummon));
+
     }
 
     @Override

@@ -40,6 +40,8 @@ public class WildenSummon extends Goal {
         wolf.setAggroed(true);
         wolf2.setAttackTarget(entity.getAttackTarget());
         wolf2.setAggroed(true);
+        wolf.isWildenSummon = true;
+        wolf2.isWildenSummon = true;
         entity.world.addEntity(wolf);
         entity.world.addEntity(wolf2);
     }

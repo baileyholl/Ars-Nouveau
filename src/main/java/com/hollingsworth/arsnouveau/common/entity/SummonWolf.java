@@ -12,7 +12,7 @@ import net.minecraft.world.server.ServerWorld;
 
 public class SummonWolf extends WolfEntity implements ISummon {
     public int ticksLeft;
-
+    public boolean isWildenSummon;
     public SummonWolf(EntityType<? extends WolfEntity> type, World worldIn) {
         super(type, worldIn);
     }
@@ -46,12 +46,14 @@ public class SummonWolf extends WolfEntity implements ISummon {
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
         this.ticksLeft = compound.getInt("left");
+        this.isWildenSummon = compound.getBoolean("wildenSummon");
     }
 
     @Override
     public void writeAdditional(CompoundNBT compound) {
         super.writeAdditional(compound);
         compound.putInt("left", ticksLeft);
+        compound.putBoolean("wildenSummon", isWildenSummon);
     }
 
     @Override
