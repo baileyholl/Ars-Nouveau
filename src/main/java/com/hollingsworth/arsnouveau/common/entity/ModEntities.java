@@ -45,6 +45,7 @@ public class ModEntities {
     public static EntityType<WildenStalker> WILDEN_STALKER = null;
     public static EntityType<SummonHorse> SUMMON_HORSE = null;
     public static EntityType<WildenGuardian> WILDEN_GUARDIAN = null;
+    public static EntityType<LightningEntity> LIGHTNING_ENTITY = null;
 
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
@@ -139,7 +140,7 @@ public class ModEntities {
                             .size(1.0f, 2.0f)
                             .setTrackingRange(10)
                             .setShouldReceiveVelocityUpdates(true));
-
+            LIGHTNING_ENTITY = build("an_lightning", EntityType.Builder.<LightningEntity>create(LightningEntity::new, EntityClassification.MISC).size(0.0F, 0.0F).trackingRange(16).func_233608_b_(Integer.MAX_VALUE).setShouldReceiveVelocityUpdates(true).setUpdateInterval(60));
             event.getRegistry().registerAll(
                     SPELL_PROJ,
                     ENTITY_EVOKER_FANGS_ENTITY_TYPE,
@@ -156,7 +157,8 @@ public class ModEntities {
                     SUMMON_WOLF,
                     WILDEN_STALKER,
                     SUMMON_HORSE,
-                    WILDEN_GUARDIAN
+                    WILDEN_GUARDIAN,
+                    LIGHTNING_ENTITY
             );
 
             GlobalEntityTypeAttributes.put(ENTITY_WHELP_TYPE, EntityWhelp.attributes().create());

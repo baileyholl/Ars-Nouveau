@@ -285,6 +285,7 @@
 	"tooltip.wilden_horn": "Drops from Wilden Pack Hunters",
 	"entity.ars_nouveau.summon_wolf": "Summoned Wolf",
 	"tooltip.worn_notebook": "Documentation for Ars Nouveau",
+	"effect.ars_nouveau.shocked": "Shocked",
 
 	"ars_nouveau.glyph_desc.accelerate": "Increases the speed of projectile spells.",
 	"ars_nouveau.glyph_desc.amplify": "Additively increases the power of most spell effects. Can increase the harvest level of Break and increases the damage of spells.",
@@ -325,7 +326,7 @@
 	"ars_nouveau.glyph_desc.launch": "Boosts a target into the air. Can be used for large jumps or for scaling mountains!",
 	"ars_nouveau.glyph_desc.leap": "Launches the target in the direction they are looking. Amplification will increase the distance moved.",
 	"ars_nouveau.glyph_desc.light": "If cast on a block, a permanent light source is created. When cast on yourself, you will receive night vision. When cast on other entities, they will receive Night Vision and Glowing.",
-	"ars_nouveau.glyph_desc.lightning": "Summons a lightning bolt at the location",
+	"ars_nouveau.glyph_desc.lightning": "Summons a lightning bolt at the location. Entities struck will be given the Shocked effect. Shocked causes all additional lightning damage to deal bonus damage, and increases the level of Shocked up to III. Lightning also deals bonus damage to entities that are wet. Can be augmented with Amplify, Dampen, and Extend Time.",
 	"ars_nouveau.glyph_desc.phantom_block": "Creates a temporary block that will disappear after a short time.",
 	"ars_nouveau.glyph_desc.pickup": "Picks up nearby items in a medium radius where this spell is activated. The range may be expanded with AOE.",
 	"ars_nouveau.glyph_desc.pierce": "When applied to the Projectile spell, projectiles may continue through their path an additional time after hitting a mob or block. Causes certain effects to also target the block behind them, like Break. Combines with AOE to provide depth.",

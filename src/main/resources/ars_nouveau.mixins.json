@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.hollingsworth.arsnouveau.common.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "ars_nouveau.refmap.json",
+  "mixins": [
+    "LightningRedirectMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}
