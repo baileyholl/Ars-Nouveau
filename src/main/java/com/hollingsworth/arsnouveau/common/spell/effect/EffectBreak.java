@@ -45,7 +45,7 @@ public class EffectBreak extends AbstractEffect {
     public ItemStack getStack(LivingEntity shooter){
         if(isRealPlayer(shooter)){
             ItemStack mainHand = getPlayer(shooter, (ServerWorld)shooter.world).getHeldItemMainhand();
-            return mainHand.isEmpty() ? getPlayer(shooter, (ServerWorld)shooter.world).getHeldItemOffhand() : mainHand;
+            return (mainHand.isEmpty() ? getPlayer(shooter, (ServerWorld)shooter.world).getHeldItemOffhand() : mainHand).copy();
         }
 
         return new ItemStack(Items.DIAMOND_PICKAXE);
@@ -60,6 +60,9 @@ public class EffectBreak extends AbstractEffect {
             int aoeBuff = getBuffCount(augments, AugmentAOE.class);
             int pierceBuff = getBuffCount(augments, AugmentPierce.class);
             List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1 + pierceBuff, -1);
+            ItemStack stack = getStack(shooter);
+
+            Map<Enchantment, Integer> map =  EnchantmentHelper.getEnchantments(stack);
 
             for(BlockPos pos1 : posList) {
                 state = world.getBlockState(pos1);
@@ -67,10 +70,6 @@ public class EffectBreak extends AbstractEffect {
                 if(!canBlockBeHarvested(augments, world, pos1) || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, pos1)){
                     continue;
                 }
-                ItemStack stack = getStack(shooter);
-
-                Map<Enchantment, Integer> map =  EnchantmentHelper.getEnchantments(stack);
-
                 if (hasBuff(augments, AugmentExtract.class)) {
                     stack.addEnchantment(Enchantments.SILK_TOUCH, 1);
                     state.getBlock().harvestBlock(world, getPlayer(shooter, (ServerWorld) world), pos1, world.getBlockState(pos1), world.getTileEntity(pos1), stack);
@@ -89,8 +88,6 @@ public class EffectBreak extends AbstractEffect {
                     destroyBlockSafely(world, pos1, false, shooter);
                     state.getBlock().dropXpOnBlockBreak((ServerWorld) world, pos1, state.getExpDrop(world, pos1, 0, 0));
                 }
-
-                EnchantmentHelper.setEnchantments(map, stack);
             }
         }
     }
