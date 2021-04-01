@@ -18,7 +18,7 @@ public interface ISummon {
         return this instanceof LivingEntity ? (LivingEntity) this : null;
     }
 
-    default void onSummonDeath(World world, DamageSource source, boolean didExpire){
+    default void onSummonDeath(World world, @Nullable DamageSource source, boolean didExpire){
         MinecraftForge.EVENT_BUS.post(new SummonEvent.Death(world,this, source, didExpire));
     }
 }

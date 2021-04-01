@@ -116,11 +116,14 @@ public class WorldEvent {
             e.getSpawns().withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_SYLPH_TYPE, Config.SYLPH_WEIGHT.get(), 1, 1));
         }
 
-        if(e.getClimate().temperature <= 0.35f){
-            e.getSpawns().withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.WILDEN_GUARDIAN, Config.WGUARDIAN_WEIGHT.get(), 1, 1));
+        if(!e.getCategory().equals(Biome.Category.MUSHROOM)){
+            if(e.getClimate().temperature <= 0.35f){
+                e.getSpawns().withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.WILDEN_GUARDIAN, Config.WGUARDIAN_WEIGHT.get(), 1, 1));
+            }
+            e.getSpawns().withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.WILDEN_STALKER, Config.WSTALKER_WEIGHT.get(), 3, 3));
+            e.getSpawns().withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.WILDEN_HUNTER, Config.WHUNTER_WEIGHT.get(), 1, 1));
         }
-        e.getSpawns().withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.WILDEN_STALKER, Config.WSTALKER_WEIGHT.get(), 3, 3));
-        e.getSpawns().withSpawner(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.WILDEN_HUNTER, Config.WHUNTER_WEIGHT.get(), 1, 1));
+
         if (e.getCategory().equals(Biome.Category.TAIGA) && Config.SPAWN_BERRIES.get()) {
             e.getGeneration().withFeature(GenerationStage.Decoration.VEGETAL_DECORATION, Objects.requireNonNull(WorldGenRegistries.CONFIGURED_FEATURE.getOrDefault(BlockRegistry.MANA_BERRY_BUSH.getRegistryName()))).build();
         }

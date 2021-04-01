@@ -29,7 +29,7 @@ public class EffectSnare extends AbstractEffect {
             Entity livingEntity = ((EntityRayTraceResult) rayTraceResult).getEntity();
             if(!(livingEntity instanceof LivingEntity))
                 return;
-            ((LivingEntity)livingEntity).addPotionEffect(new EffectInstance(Effects.SLOWNESS,  40  + 20 * getBuffCount(augments, AugmentExtendTime.class), 20));
+            ((LivingEntity)livingEntity).addPotionEffect(new EffectInstance(Effects.SLOWNESS,  100  + 20 * getBuffCount(augments, AugmentExtendTime.class), 20));
             livingEntity.setMotion(0,0,0);
             livingEntity.velocityChanged = true;
         }

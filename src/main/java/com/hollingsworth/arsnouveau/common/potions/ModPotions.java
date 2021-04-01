@@ -18,6 +18,7 @@ import net.minecraftforge.registries.ObjectHolder;
 public class ModPotions {
 
     public static final ShieldEffect SHIELD_POTION = new ShieldEffect();
+    public static final ShockedEffect SHOCKED_EFFECT = new ShockedEffect();
     public static final ManaRegenEffect MANA_REGEN_EFFECT = new ManaRegenEffect();
     public static final SummoningSicknessEffect SUMMONING_SICKNESS = new SummoningSicknessEffect();
 
@@ -46,6 +47,7 @@ public class ModPotions {
             registry.register(SHIELD_POTION);
             registry.register(MANA_REGEN_EFFECT);
             registry.register(SUMMONING_SICKNESS);
+            registry.register(SHOCKED_EFFECT);
         }
 
         @SubscribeEvent
