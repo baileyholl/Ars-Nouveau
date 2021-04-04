@@ -109,6 +109,9 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.WILDEN_SPIKE)public static ModItem WILDEN_SPIKE;
     @ObjectHolder(LibItemNames.WILDEN_WING)public static ModItem WILDEN_WING;
 
+
+    @ObjectHolder(LibItemNames.POTION_FLASK)public static PotionFlask POTION_FLASK;
+
     public static Food MANA_BERRY_FOOD = (new Food.Builder()).hunger(2).saturation(0.1F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).setAlwaysEdible().build();
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -203,6 +206,7 @@ public class ItemsRegistry {
                     new ModItem(LibItemNames.WILDEN_HORN).withTooltip(new TranslationTextComponent("tooltip.wilden_horn")),
                     new ModItem(LibItemNames.WILDEN_WING).withTooltip(new TranslationTextComponent("tooltip.wilden_wing")),
                     new ModItem(LibItemNames.WILDEN_SPIKE).withTooltip(new TranslationTextComponent("tooltip.wilden_spike")),
+                    new PotionFlask()
 
             };
 

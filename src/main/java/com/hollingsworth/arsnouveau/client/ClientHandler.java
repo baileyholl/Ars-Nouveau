@@ -3,10 +3,14 @@ package com.hollingsworth.arsnouveau.client;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.renderer.tile.*;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.potion.PotionUtils;
+import net.minecraft.potion.Potions;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -59,6 +63,12 @@ public class ClientHandler {
         RenderTypeLookup.setRenderLayer(BlockRegistry.CASCADING_SAPLING, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_GEM_BLOCK, RenderType.getTranslucent());
 
+    }
+
+    @SubscribeEvent
+    public static void initColors(final ColorHandlerEvent.Item event) {
+        System.out.println("REGISTERED COLORS");
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 : (PotionUtils.getPotionFromItem(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1), ItemsRegistry.POTION_FLASK);
     }
 
 }
