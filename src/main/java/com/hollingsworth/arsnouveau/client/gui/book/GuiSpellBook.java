@@ -27,7 +27,7 @@ import net.minecraft.client.gui.widget.button.ChangePageButton;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import vazkii.patchouli.api.PatchouliAPI;
 
 import java.util.ArrayList;
@@ -89,12 +89,12 @@ public class GuiSpellBook extends BaseBook {
         addButton(new GuiImageButton(bookRight - 126, bookBottom - 13, 0,0,41, 12, 41, 12, "textures/gui/clear_icon.png", this::clear));
 
         spell_name = new NoShadowTextField(minecraft.fontRenderer, bookLeft + 32, bookTop + FULL_HEIGHT - 11,
-                88, 12, null, new StringTextComponent("Spell Name"));
+                88, 12, null, new TranslationTextComponent("ars_nouveau.spell_book_gui.spell_name"));
         spell_name.setEnableBackgroundDrawing(false);
         spell_name.setTextColor(12694931);
 
         searchBar = new NoShadowTextField(minecraft.fontRenderer, bookRight - 73, bookTop +2,
-                54, 12, null, new StringTextComponent("Search"));
+                54, 12, null, new TranslationTextComponent("ars_nouveau.spell_book_gui.search"));
         searchBar.setEnableBackgroundDrawing(false);
         searchBar.setTextColor(12694931);
 
@@ -103,10 +103,10 @@ public class GuiSpellBook extends BaseBook {
         mode = mode == 0 ? 1 : mode;
         spell_name.setText(SpellBook.getSpellName(spell_book_tag, mode));
         if(spell_name.getText().isEmpty())
-            spell_name.setSuggestion("My Spell");
+            spell_name.setSuggestion(new TranslationTextComponent("ars_nouveau.spell_book_gui.spell_name").getString());
 
         if(searchBar.getText().isEmpty())
-            searchBar.setSuggestion("Search");
+            searchBar.setSuggestion(new TranslationTextComponent("ars_nouveau.spell_book_gui.search").getString());
         searchBar.setResponder(this::onSearchChanged);
 //
         addButton(spell_name);
@@ -141,7 +141,7 @@ public class GuiSpellBook extends BaseBook {
         if(!str.isEmpty()){
             searchBar.setSuggestion("");
         }else
-            searchBar.setSuggestion("Search");
+            searchBar.setSuggestion(new TranslationTextComponent("ars_nouveau.spell_book_gui.search").getString());
 
         for(Widget w : buttons){
             if(w instanceof GlyphButton ){
@@ -292,15 +292,15 @@ public class GuiSpellBook extends BaseBook {
 
     public void drawBackgroundElements(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
-        minecraft.fontRenderer.drawString(stack,"Form", 20, 24, -8355712);
-        minecraft.fontRenderer.drawString(stack,"Effect", 154, 24, -8355712);
-        minecraft.fontRenderer.drawString(stack,"Augment", 20, 78, -8355712);
+        minecraft.fontRenderer.drawString(stack,new TranslationTextComponent("ars_nouveau.spell_book_gui.form").getString(), 20, 24, -8355712);
+        minecraft.fontRenderer.drawString(stack,new TranslationTextComponent("ars_nouveau.spell_book_gui.effect").getString(), 154, 24, -8355712);
+        minecraft.fontRenderer.drawString(stack,new TranslationTextComponent("ars_nouveau.spell_book_gui.augment").getString(), 20, 78, -8355712);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/spell_name_paper.png"), 16, 179, 0, 0, 109, 15,109,15, stack);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15,72,15, stack);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/clear_paper.png"), 161, 179, 0, 0, 47, 15,47,15, stack);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15,56,15, stack);
-        minecraft.fontRenderer.drawString(stack,"Create", 233, 183, -8355712);
-        minecraft.fontRenderer.drawString(stack,"Clear", 177, 183, -8355712);
+        minecraft.fontRenderer.drawString(stack,new TranslationTextComponent("ars_nouveau.spell_book_gui.create").getString(), 233, 183, -8355712);
+        minecraft.fontRenderer.drawString(stack,new TranslationTextComponent("ars_nouveau.spell_book_gui.clear").getString(), 177, 183, -8355712);
     }
 
     /**
@@ -309,7 +309,7 @@ public class GuiSpellBook extends BaseBook {
     @Override
     public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
         super.render(ms, mouseX, mouseY, partialTicks);
-        spell_name.setSuggestion(spell_name.getText().isEmpty() ? "My Spell Name" : "");
+        spell_name.setSuggestion(spell_name.getText().isEmpty() ? new TranslationTextComponent("ars_nouveau.spell_book_gui.spell_name").getString() : "");
     }
 
 }

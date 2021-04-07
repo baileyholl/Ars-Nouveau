@@ -1,15 +1,17 @@
 {
   "name": "生长",
   "icon": "ars_nouveau:glyph_grow",
-  "category": "spells",
+  "category": "spells_2",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",
-      "text": "加速植物生长，这个符号不会给法力凝聚器提供法力。"
+      "text": "ars_nouveau.glyph_desc.grow"
     },
     {
       "type": "glyph_recipe",
-      "tier": "2",
+      "recipe": "ars_nouveau:glyph_grow",
+      "tier": "二",
       "mana_cost": "高",
       "clay_type": "ars_nouveau:marvelous_clay",
       "reagent": "minecraft:bone_block"

@@ -1,16 +1,20 @@
 {
   "name": "触摸",
   "icon": "ars_nouveau:glyph_touch",
-  "category": "spells",
+  "category": "spells_1",
+  "sortnum": 1,
   "pages": [
     {
       "type": "text",
-      "text": "对目标方块或实体施放法术。"
+      "text": "ars_nouveau.glyph_desc.touch"
     },
     {
       "type": "glyph_recipe",
-      "tier": "1",
-      "mana_cost": "低"
+      "recipe": "ars_nouveau:glyph_touch",
+      "tier": "一",
+      "mana_cost": "低",
+      "clay_type": "ars_nouveau:magic_clay",
+      "reagent": "minecraft:stone_button"
     }
   ]
 }

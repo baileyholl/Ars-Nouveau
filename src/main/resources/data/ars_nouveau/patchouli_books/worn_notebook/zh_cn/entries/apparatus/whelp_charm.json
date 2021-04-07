@@ -9,15 +9,7 @@
     },
     {
       "type": "apparatus_recipe",
-      "reagent": "minecraft:egg",
-      "item1": "ars_nouveau:bucket_of_mana",
-      "item2": "ars_nouveau:bucket_of_mana",
-      "item3": "minecraft:diamond",
-      "item4": "minecraft:gold_ingot",
-      "item5": "minecraft:gold_ingot",
-      "item6": "minecraft:gold_ingot",
-      "item7": "minecraft:gold_ingot",
-      "item8": "ars_nouveau:novice_spell_book"
+      "recipe": "ars_nouveau:whelp_charm"
     },
 	{
 	 "type": "entity",

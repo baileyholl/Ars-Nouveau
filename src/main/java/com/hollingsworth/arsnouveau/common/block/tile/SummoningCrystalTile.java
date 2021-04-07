@@ -31,6 +31,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -91,13 +92,13 @@ public class SummoningCrystalTile extends AbstractManaTile implements IAnimatabl
     public void changeTier(PlayerEntity entity){
         if(tier == 1){
             tier = 2;
-            entity.sendMessage(new StringTextComponent("Set area to 5 x 5"), Util.DUMMY_UUID);
+            entity.sendMessage(new TranslationTextComponent("ars_nouveau.summoning_crystal.5x5"), Util.DUMMY_UUID);
         }else if(tier == 2){
             tier = 3;
-            entity.sendMessage(new StringTextComponent("Set area to 9 x 9"), Util.DUMMY_UUID);
+            entity.sendMessage(new TranslationTextComponent("ars_nouveau.summoning_crystal.9x9"), Util.DUMMY_UUID);
         }else if(tier == 3){
             tier = 1;
-            entity.sendMessage(new StringTextComponent("Set area to adjacent blocks only."), Util.DUMMY_UUID);
+            entity.sendMessage(new TranslationTextComponent("ars_nouveau.summoning_crystal.adjacent"), Util.DUMMY_UUID);
         }
     }
 

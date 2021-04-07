@@ -1,16 +1,20 @@
 {
   "name": "弹射物",
   "icon": "ars_nouveau:glyph_projectile",
-  "category": "spells",
+  "category": "spells_1",
+  "sortnum": 1,
   "pages": [
     {
       "type": "text",
-      "text": "向目标发射弹射物。"
+      "text": "ars_nouveau.glyph_desc.projectile"
     },
     {
       "type": "glyph_recipe",
-      "tier": "1",
-      "mana_cost": "低"
+      "recipe": "ars_nouveau:glyph_projectile",
+      "tier": "一",
+      "mana_cost": "低",
+      "clay_type": "ars_nouveau:magic_clay",
+      "reagent": "minecraft:bow"
     }
   ]
 }

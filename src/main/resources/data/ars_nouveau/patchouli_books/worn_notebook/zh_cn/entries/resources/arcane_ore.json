@@ -5,11 +5,19 @@
     "pages": [
         {
             "type": "text",
-            "text": "奥术矿石可以在铁矿石生成的高度找到。奥术矿石可冶炼为用于建造魔法机器和传送门地点奥术砖块。"
+            "text": "奥术矿石比金矿石稍微常见一点，挖掘后掉落魔力宝石。魔力宝石可用于合成饰品、解锁新法术和建造设备。魔力宝石也可以用结晶器可再生地制造。"
         },
 		{
             "type":"smelting",
-			"recipe":"ars_nouveau:arcane_brick"
-		}
+			"recipe":"ars_nouveau:mana_gem"
+		},
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:arcane_stone"
+		},
+		{
+            "type": "relations",
+            "entries":["machines/crystallizer"]        
+        }
     ]
 }

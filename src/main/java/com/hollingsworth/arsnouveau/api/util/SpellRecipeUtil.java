@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -73,7 +74,7 @@ public class SpellRecipeUtil {
         StringBuilder str = new StringBuilder();
         for (int i = 0; i < abstractSpellPart.size(); i++) {
             AbstractSpellPart spellPart = abstractSpellPart.get(i);
-            str.append(spellPart.name);
+            str.append(spellPart.getLocaleName());
             if(i < abstractSpellPart.size() - 1){
                 str.append(" -> ");
             }

@@ -358,6 +358,9 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
         if(craftingItem == null)
             return new ArrayList<>();
         List<String> strings = new ArrayList<>();
+
+        strings.add(new TranslationTextComponent("ars_nouveau.wixie.crafting").getString() +new TranslationTextComponent(craftingItem.getTranslationKey()).getString());
+
         if(!isCraftingPotion){
             strings.add("Crafting: " +new TranslationTextComponent(craftingItem.getTranslationKey()).getString());
         }else if(this.craftManager != null && this.craftManager.isPotionCrafting()){
@@ -365,17 +368,18 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
             PotionUtils.addPotionToItemStack(potionStack, this.craftManager.potionOut);
             strings.add("Crafting: " + potionStack.getDisplayName().getString());
         }
+
         if(!hasMana){
-            strings.add("Mana needed.");
+            strings.add(new TranslationTextComponent("ars_nouveau.wixie.need_mana").getString());
         }
         if(this.craftManager != null && !this.craftManager.neededItems.isEmpty())
-            strings.add("Needs: " + new TranslationTextComponent(this.craftManager.neededItems.get(0).getTranslationKey()).getString());
+            strings.add(new TranslationTextComponent("ars_nouveau.wixie.needs").getString() + new TranslationTextComponent(this.craftManager.neededItems.get(0).getTranslationKey()).getString());
+
         if(this.craftManager != null && this.craftManager.isPotionCrafting() && !this.craftManager.hasObtainedPotion()){
             ItemStack potionStack = new ItemStack(Items.POTION);
             PotionUtils.addPotionToItemStack(potionStack, this.craftManager.potionNeeded);
             strings.add("Needs: " + potionStack.getDisplayName().getString());
         }
-
 
         return strings;
     }

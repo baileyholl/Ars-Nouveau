@@ -9,15 +9,7 @@
     },
     {
       "type": "apparatus_recipe",
-      "reagent": "ars_nouveau:dull_trinket",
-      "item1": "minecraft:diamond",
-      "item2": "minecraft:diamond",
-      "item3": "minecraft:diamond",
-      "item4": "ars_nouveau:bucket_of_mana",
-      "item5": "ars_nouveau:bucket_of_mana",
-      "item6": "ars_nouveau:bucket_of_mana",
-      "item7": "ars_nouveau:bucket_of_mana",
-      "item8": "ars_nouveau:bucket_of_mana"
+      "recipe": "ars_nouveau:amulet_of_mana_boost"
     }
   ]
 }

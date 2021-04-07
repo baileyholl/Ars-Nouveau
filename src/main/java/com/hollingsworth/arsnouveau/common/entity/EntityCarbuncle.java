@@ -219,7 +219,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         if (storedPos == null)
             return;
         if (world.getTileEntity(storedPos) != null && world.getTileEntity(storedPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
-            PortUtil.sendMessage(playerEntity, "Carbuncle will store items here.");
+            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.carbuncle.store"));
             setToPos(storedPos);
         }
     }
@@ -230,7 +230,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             return;
 
         if (world.getTileEntity(storedPos) != null && world.getTileEntity(storedPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
-            PortUtil.sendMessage(playerEntity, "Carbuncle take from this inventory.");
+            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.carbuncle.take"));
             setFromPos(storedPos);
         }
     }
@@ -384,12 +384,12 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         if (player.getHeldItemMainhand().isEmpty() && this.isTamed()) {
             StringBuilder status = new StringBuilder();
             if (whitelist && allowedItems != null) {
-                status.append("Whitelisted: ");
+                status.append(new TranslationTextComponent("ars_nouveau.carbuncle.whitelist").getString());
                 for (ItemStack i : allowedItems) {
                     status.append(i.getDisplayName().getString());
                 }
             } else if (blacklist && allowedItems != null) {
-                status.append("Ignoring: ");
+                status.append(new TranslationTextComponent("ars_nouveau.carbuncle.blacklist").getString());
                 for (ItemStack i : ignoreItems) {
                     status.append(i.getDisplayName().getString());
                 }
@@ -591,8 +591,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         List<String> toolTip = new ArrayList<>();
         if(!isTamed())
             return toolTip;
-        toolTip.add("Storing items at " + this.dataManager.get(TO_POS) + " locations");
-        toolTip.add("Taking items from " + this.dataManager.get(FROM_POS) + " locations");
+        toolTip.add(new TranslationTextComponent("ars_nouveau.carbuncle.storing", this.dataManager.get(TO_POS)).getString());
+        toolTip.add(new TranslationTextComponent("ars_nouveau.carbuncle.taking", this.dataManager.get(FROM_POS)).getString());
         return toolTip;
     }
 

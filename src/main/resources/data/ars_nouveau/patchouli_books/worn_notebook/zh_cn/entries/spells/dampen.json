@@ -1,15 +1,17 @@
 {
-  "name": "潮湿",
+  "name": "抑制",
   "icon": "ars_nouveau:glyph_dampen",
-  "category": "spells",
+  "category": "spells_2",
+  "sortnum": 3,
   "pages": [
     {
       "type": "text",
-      "text": "降低大多数法力的强度。略微就爱你耕地法力消耗，但法力消耗不会低于0。"
+      "text": "ars_nouveau.glyph_desc.dampen"
     },
     {
       "type": "glyph_recipe",
-      "tier": "2",
+      "recipe": "ars_nouveau:glyph_dampen",
+      "tier": "二",
       "mana_cost": "低",
       "clay_type": "ars_nouveau:marvelous_clay",
       "reagent": "minecraft:nether_brick"

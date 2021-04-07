@@ -14,6 +14,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
@@ -61,7 +62,7 @@ public class SpellTurretTile extends TileEntity  implements IPickupResponder, IP
         if(this.recipe == null || this.recipe.isEmpty())
             return new ArrayList<>();
         List<String> list = new ArrayList<>();
-        list.add("Casting: " + SpellRecipeUtil.getDisplayString(recipe));
+        list.add(new TranslationTextComponent("ars_nouveau.spell_turret.casting").getString() + SpellRecipeUtil.getDisplayString(recipe));
         return list;
     }
     @Override
