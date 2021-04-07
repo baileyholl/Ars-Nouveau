@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.renderer.tile.*;
+import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.client.renderer.RenderType;
@@ -62,6 +63,7 @@ public class ClientHandler {
         RenderTypeLookup.setRenderLayer(BlockRegistry.BLAZING_SAPLING, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.CASCADING_SAPLING, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_GEM_BLOCK, RenderType.getTranslucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.POTION_JAR, RenderType.getCutout());
 
     }
 
@@ -69,6 +71,11 @@ public class ClientHandler {
     public static void initColors(final ColorHandlerEvent.Item event) {
         System.out.println("REGISTERED COLORS");
         event.getItemColors().register((stack, color) -> color > 0 ? -1 : (PotionUtils.getPotionFromItem(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1), ItemsRegistry.POTION_FLASK);
+
+        event.getBlockColors().register((state, reader, pos, tIndex) ->
+                reader != null && pos != null && reader.getTileEntity(pos) instanceof PotionJarTile
+                        ? ((PotionJarTile) reader.getTileEntity(pos)).getColor()
+                        : -1, BlockRegistry.POTION_JAR);
     }
 
 }

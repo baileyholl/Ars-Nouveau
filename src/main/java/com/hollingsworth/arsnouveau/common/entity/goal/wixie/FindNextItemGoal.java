@@ -22,8 +22,6 @@ public class FindNextItemGoal extends Goal {
     BlockPos movePos;
     ItemStack getStack;
     boolean found;
-    int ticksSinceCast;
-    boolean hasCast;
 
     public FindNextItemGoal(EntityWixie wixie){
         this.wixie = wixie;
@@ -38,7 +36,7 @@ public class FindNextItemGoal extends Goal {
             found = true;
             return;
         }
-        getStack = tile.craftManager.getNextItem();//tile.getNextRequiredItem();
+        getStack = tile.craftManager.getNextItem();
         if(getStack.isEmpty()){
             found = true;
             return;
@@ -61,10 +59,9 @@ public class FindNextItemGoal extends Goal {
     public boolean shouldExecute() {
         if(wixie.cauldronPos == null)
             return false;
-
         TileEntity tileEntity = wixie.world.getTileEntity(wixie.cauldronPos);
         return wixie.inventoryBackoff == 0 && tileEntity instanceof WixieCauldronTile
-                && ((WixieCauldronTile) tileEntity).hasMana && !((WixieCauldronTile) tileEntity).isCraftingDone() && !((WixieCauldronTile) tileEntity).isOff;
+                && ((WixieCauldronTile) tileEntity).hasMana && !((WixieCauldronTile) tileEntity).isCraftingDone() && !((WixieCauldronTile) tileEntity).isOff &&  !((WixieCauldronTile) tileEntity).craftManager.getNextItem().isEmpty();
     }
 
     @Override
@@ -74,7 +71,6 @@ public class FindNextItemGoal extends Goal {
 
     @Override
     public void tick() {
-
         if(!found && movePos != null && BlockUtil.distanceFrom(wixie.getPosition(), movePos.up()) < 1.5D){
             WixieCauldronTile tile = (WixieCauldronTile) wixie.getEntityWorld().getTileEntity(wixie.cauldronPos);
             World world = wixie.getEntityWorld();

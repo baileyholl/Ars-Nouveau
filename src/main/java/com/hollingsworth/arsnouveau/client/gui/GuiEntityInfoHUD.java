@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.gui;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
+
 import java.util.List;
 public class GuiEntityInfoHUD extends AbstractGui {
 
@@ -11,6 +12,8 @@ public class GuiEntityInfoHUD extends AbstractGui {
         int offsetLeft = 5;
         fill(ms, offsetLeft, 50, 100+ offsetLeft, 0, 300);
         int counter = 0;
+        if(tooltips == null)
+            return;
         for(String s : tooltips){
             minecraft.fontRenderer.drawStringWithShadow(ms, s, offsetLeft, 5f + 10 * counter, 0xFFFFFF);
             counter++;

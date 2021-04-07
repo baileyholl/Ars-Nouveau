@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
 import com.hollingsworth.arsnouveau.common.entity.goal.wixie.CompleteCraftingGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.wixie.FindNextItemGoal;
+import com.hollingsworth.arsnouveau.common.entity.goal.wixie.FindPotionGoal;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -113,6 +114,7 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
         List<PrioritizedGoal> list = new ArrayList<>();
         list.add(new PrioritizedGoal(3, new LookRandomlyGoal(this)));
         list.add(new PrioritizedGoal(2, new FindNextItemGoal(this)));
+        list.add(new PrioritizedGoal(2, new FindPotionGoal(this)));
         list.add(new PrioritizedGoal(1, new CompleteCraftingGoal(this)));
         return list;
     }
@@ -121,6 +123,7 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
         List<PrioritizedGoal> list = new ArrayList<>();
         list.add(new PrioritizedGoal(3, new LookRandomlyGoal(this)));
         list.add(new PrioritizedGoal(2, new FindNextItemGoal(this)));
+        list.add(new PrioritizedGoal(2, new FindPotionGoal(this)));
         list.add(new PrioritizedGoal(1, new CompleteCraftingGoal(this)));
         return list;
     }
