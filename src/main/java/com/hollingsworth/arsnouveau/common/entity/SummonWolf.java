@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
@@ -40,6 +41,16 @@ public class SummonWolf extends WolfEntity implements ISummon {
     public void onDeath(DamageSource cause) {
         super.onDeath(cause);
         onSummonDeath(world, cause, false);
+    }
+
+    @Override
+    public boolean canBreed() {
+        return false;
+    }
+
+    @Override
+    public boolean isBreedingItem(ItemStack stack) {
+        return false;
     }
 
     @Override

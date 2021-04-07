@@ -4,7 +4,8 @@
   "compatibilityLevel": "JAVA_8",
   "refmap": "ars_nouveau.refmap.json",
   "mixins": [
-    "LightningRedirectMixin"
+    "LightningRedirectMixin",
+    "PotionRecipeMixin"
   ],
   "injectors": {
     "defaultRequire": 1

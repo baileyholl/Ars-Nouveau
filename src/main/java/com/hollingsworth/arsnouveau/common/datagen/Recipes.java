@@ -192,16 +192,16 @@ public class Recipes extends RecipeProvider {
 
             ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.ALLOW_ITEM_SCROLL, 1).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                     .addIngredient(ItemsRegistry.BLANK_PARCHMENT, 1)
-                    .addIngredient(Items.CHEST, 1)
+                    .addIngredient(Ingredient.fromTag(Tags.Items.CHESTS), 1)
                     .build(consumer);
 
             ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.DENY_ITEM_SCROLL, 1).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
                     .addIngredient(ItemsRegistry.BLANK_PARCHMENT, 1)
-                    .addIngredient(Items.COBBLESTONE, 1)
+                    .addIngredient(Ingredient.fromTag(Tags.Items.COBBLESTONE), 1)
                     .build(consumer);
 
             ShapelessRecipeBuilder.shapelessRecipe(ItemsRegistry.warpScroll).addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
-                    .addIngredient(Items.LAPIS_LAZULI, 4).addIngredient(ItemsRegistry.BLANK_PARCHMENT).addIngredient(MANA_GEM, 4)
+                    .addIngredient(Ingredient.fromTag(Tags.Items.GEMS_LAPIS), 4).addIngredient(ItemsRegistry.BLANK_PARCHMENT).addIngredient(MANA_GEM, 4)
                     .build(consumer);
 
             ShapedRecipeBuilder.shapedRecipe(BlockRegistry.VOLCANIC_BLOCK).addCriterion("has_journal",InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))

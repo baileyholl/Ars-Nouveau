@@ -74,4 +74,6 @@ public class LibBlockNames {
     public final static String STRIPPED_AWWOOD_PURPLE = "stripped_purple_archwood_wood";
     public final static String MANA_GEM_BLOCK = "mana_gem_block";
 
+    public final static String POTION_JAR_BLOCK = "potion_jar";
+
 }

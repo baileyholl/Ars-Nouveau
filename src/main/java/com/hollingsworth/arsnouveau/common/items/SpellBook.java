@@ -63,6 +63,11 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
         super(new Item.Properties().maxStackSize(1).group(ArsNouveau.itemGroup).setISTER(() -> SpellBookRenderer::new));
         this.tier = tier;
     }
+    
+    public SpellBook(Properties properties, Tier tier) {
+        super(properties);
+        this.tier = tier;
+    }
 
     @Override
     public boolean isDamageable() {

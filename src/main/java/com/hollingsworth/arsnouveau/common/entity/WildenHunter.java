@@ -5,13 +5,13 @@ import com.hollingsworth.arsnouveau.common.entity.goal.wilden.WildenMeleeAttack;
 import com.hollingsworth.arsnouveau.common.entity.goal.wilden.WildenRamAttack;
 import com.hollingsworth.arsnouveau.common.entity.goal.wilden.WildenSummon;
 import com.hollingsworth.arsnouveau.setup.Config;
-import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.DamageSource;
@@ -26,9 +26,9 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class  WildenHunter extends CreatureEntity implements IAnimatable, IAnimationListener {
+public class  WildenHunter extends MonsterEntity implements IAnimatable, IAnimationListener {
     AnimationFactory manager = new AnimationFactory(this);
-    protected WildenHunter(EntityType<? extends CreatureEntity> type, World worldIn) {
+    protected WildenHunter(EntityType<? extends MonsterEntity> type, World worldIn) {
         super(type, worldIn);
     }
     public int ramCooldown = 0;

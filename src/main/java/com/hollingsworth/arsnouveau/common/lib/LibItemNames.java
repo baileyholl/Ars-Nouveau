@@ -70,4 +70,6 @@ public class LibItemNames {
     public static final String WILDEN_HORN = "wilden_horn";
     public static final String WILDEN_SPIKE = "wilden_spike";
     public static final String WILDEN_WING = "wilden_wing";
+
+    public static final String POTION_FLASK ="potion_flask";
 }

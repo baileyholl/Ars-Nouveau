@@ -52,7 +52,7 @@ public class Config {
     private static Map<String, ForgeConfigSpec.IntValue> spellCost = new HashMap<>();
 
     public static boolean isSpellEnabled(String tag){
-        return enabledSpells.get(tag).get();
+        return enabledSpells.containsKey(tag) ? enabledSpells.get(tag).get() : true;
     }
 
     public static int getSpellCost(String tag){

@@ -76,6 +76,15 @@ public class SummonHorse extends HorseEntity implements ISummon {
     }
 
     @Override
+    public boolean canBreed() {
+        return false;
+    }
+
+    @Override
+    public boolean isBreedingItem(ItemStack stack) {
+        return false;
+    }
+    @Override
     public void readAdditional(CompoundNBT compound) {
         super.readAdditional(compound);
         this.ticksLeft = compound.getInt("left");
