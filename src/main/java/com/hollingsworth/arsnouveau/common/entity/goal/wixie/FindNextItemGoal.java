@@ -66,12 +66,14 @@ public class FindNextItemGoal extends Goal {
 
     @Override
     public boolean shouldContinueExecuting() {
-        return !found;
+        return !found && movePos != null;
     }
 
     @Override
     public void tick() {
+
         if(!found && movePos != null && BlockUtil.distanceFrom(wixie.getPosition(), movePos.up()) < 1.5D){
+
             WixieCauldronTile tile = (WixieCauldronTile) wixie.getEntityWorld().getTileEntity(wixie.cauldronPos);
             World world = wixie.getEntityWorld();
             if(tile == null) {
@@ -80,6 +82,7 @@ public class FindNextItemGoal extends Goal {
             }
 
             for(BlockPos b : tile.inventories){
+
                 if(!(world.getTileEntity(b) instanceof IInventory))
                     continue;
                 IInventory i = (IInventory) world.getTileEntity(b);

@@ -19,6 +19,7 @@ public class FindItem extends Goal {
     Entity pathingEntity;
     boolean itemStuck;
     AxisAlignedBB aab;
+    int timeFinding;
     private final Predicate<ItemEntity> TRUSTED_TARGET_SELECTOR = (itemEntity) -> {
         return !itemEntity.cannotPickup() && itemEntity.isAlive() && entityCarbuncle.isValidItem(itemEntity.getItem());
     };
@@ -31,6 +32,7 @@ public class FindItem extends Goal {
     public void resetTask() {
         super.resetTask();
         itemStuck = false;
+        timeFinding = 0;
     }
 
     public FindItem(EntityCarbuncle entityCarbuncle) {
@@ -48,9 +50,11 @@ public class FindItem extends Goal {
        return entityCarbuncle.world.getLoadedEntitiesWithinAABB(ItemEntity.class, aab, getFinderItems());
     }
 
+
+
     @Override
     public boolean shouldContinueExecuting() {
-        return !itemStuck && !entityCarbuncle.isStuck && !(pathingEntity == null || pathingEntity.removed || ((ItemEntity)pathingEntity).getItem().isEmpty()) && entityCarbuncle.getHeldStack().isEmpty();
+        return timeFinding <= 20 * 30 && !itemStuck && !entityCarbuncle.isStuck && !(pathingEntity == null || pathingEntity.removed || ((ItemEntity)pathingEntity).getItem().isEmpty()) && entityCarbuncle.getHeldStack().isEmpty();
     }
 
     @Override
@@ -61,6 +65,7 @@ public class FindItem extends Goal {
     @Override
     public void startExecuting() {
         super.startExecuting();
+        timeFinding = 0;
         itemStuck = false;
         ItemStack itemstack = entityCarbuncle.getHeldStack();
         List<ItemEntity> list = nearbyItems();
@@ -88,6 +93,7 @@ public class FindItem extends Goal {
     @Override
     public void tick() {
         super.tick();
+        timeFinding += 1;
         if(pathingEntity == null || pathingEntity.removed)
             return;
 
