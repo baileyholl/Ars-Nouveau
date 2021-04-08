@@ -7,8 +7,10 @@ import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.potion.Potions;
@@ -17,16 +19,20 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class PotionJarTile extends TileEntity implements ITickableTileEntity, ITooltipProvider {
 
     public int amount;
     private Potion potion;
+    private List<EffectInstance> customEffects = new ArrayList<>();
     public PotionJarTile(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
     }
@@ -40,6 +46,10 @@ public class PotionJarTile extends TileEntity implements ITickableTileEntity, IT
         if(world.isRemote) {
             // world.addParticle(ParticleTypes.DRIPPING_WATER, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0);
             return;
+        }
+        if(world.getGameTime() % 20 == 0){
+            if(this.amount <= 0)
+                this.potion = Potions.EMPTY;
         }
         BlockState state = world.getBlockState(pos);
         int fillState = 0;
@@ -75,8 +85,14 @@ public class PotionJarTile extends TileEntity implements ITickableTileEntity, IT
 
     public void addAmount(Potion potion, int fill){
         setPotion(potion);
+        addAmount(fill);
+    }
+
+    public void addAmount(int fill){
         amount = Math.min(getMaxFill(), amount + fill);
         world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+        if(amount <= 0)
+            this.potion = Potions.EMPTY;
     }
 
     @Override
@@ -86,10 +102,41 @@ public class PotionJarTile extends TileEntity implements ITickableTileEntity, IT
             ItemStack potionStack = new ItemStack(Items.POTION);
             PotionUtils.addPotionToItemStack(potionStack, potion);
             list.add(potionStack.getDisplayName().getString());
+            List<ITextComponent> tooltip = new ArrayList<>();
+            PotionUtils.addPotionTooltip(potionStack, tooltip, 1.0F);
+            for(ITextComponent i : tooltip){
+                list.add(i.getString());
+            }
 
         }
-        list.add( (getCurrentFill()*100) / this.getMaxFill() + "% full");
+        list.add(new TranslationTextComponent("ars_nouveau.mana_jar.fullness", (getCurrentFill()*100) / this.getMaxFill()).getString());
         return list;
+    }
+
+    public void appendEffect(List<EffectInstance> effects){
+        this.customEffects.addAll(effects);
+    }
+
+    //If the effect list of jars or flasks are equal
+    public boolean isMixEqual(List<EffectInstance> effects){
+
+        List<EffectInstance> thisEffects = new ArrayList<>(customEffects);
+        thisEffects.addAll(potion.getEffects());
+        effects = new ArrayList<>(effects);
+        if(thisEffects.size() != effects.size())
+            return false;
+        effects.sort(Comparator.comparing(EffectInstance::toString));
+        thisEffects.sort(Comparator.comparing(EffectInstance::toString));
+        return thisEffects.equals(effects);
+    }
+
+    //If the effect list of jars or flasks are equal
+    public boolean isMixEqual(Potion potion){
+        return isMixEqual(potion.getEffects());
+    }
+
+    public boolean isMixEqual(ItemStack stack){
+        return isMixEqual(PotionUtils.getEffectsFromStack(stack));
     }
 
     @Override
@@ -97,6 +144,7 @@ public class PotionJarTile extends TileEntity implements ITickableTileEntity, IT
         super.read(state, tag);
         this.amount = tag.getInt("amount");
         this.potion = PotionUtils.getPotionTypeFromNBT(tag);
+        this.customEffects.addAll(PotionUtils.getFullEffectsFromTag(tag));
     }
 
     @Override
@@ -104,9 +152,18 @@ public class PotionJarTile extends TileEntity implements ITickableTileEntity, IT
         ResourceLocation resourcelocation = Registry.POTION.getKey(potion);
         tag.putInt("amount", this.amount);
         tag.putString("Potion", resourcelocation.toString());
+
+        if(!customEffects.isEmpty()) {
+            ListNBT listnbt = new ListNBT();
+
+            for (EffectInstance effectinstance : customEffects) {
+                listnbt.add(effectinstance.write(new CompoundNBT()));
+            }
+
+            tag.put("CustomPotionEffects", listnbt);
+        }
         return super.write(tag);
     }
-
 
     @Override
     @Nullable

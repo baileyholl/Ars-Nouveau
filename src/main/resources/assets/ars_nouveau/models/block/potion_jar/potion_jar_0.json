@@ -1,5 +1,6 @@
 {
 	"credit": "Made with Blockbench",
+	"parent": "block/cube_all",
 	"texture_size": [32, 32],
 	"textures": {
 		"4": "ars_nouveau:blocks/potion_jar",
