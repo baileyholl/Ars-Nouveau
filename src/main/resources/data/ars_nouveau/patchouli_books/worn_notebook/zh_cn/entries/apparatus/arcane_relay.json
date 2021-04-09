@@ -9,15 +9,7 @@
     },
     {
       "type": "apparatus_recipe",
-      "reagent": "ars_nouveau:mana_jar",
-      "item1": "ars_nouveau:bucket_of_mana",
-      "item2": "ars_nouveau:bucket_of_mana",
-      "item3": "minecraft:gold_ingot",
-      "item4": "minecraft:gold_ingot",
-      "item5": "minecraft:gold_ingot",
-      "item6": "minecraft:gold_ingot",
-      "item7": "minecraft:gold_ingot",
-      "item8": "minecraft:gold_ingot"
+      "recipe": "ars_nouveau:arcane_relay"
     }
   ]
 }

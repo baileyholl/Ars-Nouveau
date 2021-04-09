@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.potion.Potion;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -19,6 +20,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WixieCauldron extends ModBlock{
 
@@ -33,17 +36,18 @@ public class WixieCauldron extends ModBlock{
 
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(worldIn.isRemote || handIn != Hand.MAIN_HAND)
+        if(worldIn.isRemote || handIn != Hand.MAIN_HAND || !(worldIn.getTileEntity(pos) instanceof WixieCauldronTile))
             return ActionResultType.SUCCESS;
 
-        if(worldIn.getTileEntity(pos) instanceof WixieCauldronTile && player.getHeldItemMainhand().getItem() != ItemsRegistry.WIXIE_CHARM){
+
+        if(player.getHeldItemMainhand().getItem() != ItemsRegistry.WIXIE_CHARM){
             ((WixieCauldronTile) worldIn.getTileEntity(pos)).setRecipes(player, player.getHeldItemMainhand());
             worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 3);
             return ActionResultType.CONSUME;
         }
         return ActionResultType.PASS;
     }
-
+    public static List<Potion> list = new ArrayList<>();
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FILLED, CONVERTED);

@@ -1,15 +1,17 @@
 {
   "name": "爆炸",
   "icon": "ars_nouveau:glyph_explosion",
-  "category": "spells",
+  "category": "spells_2",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",
-      "text": "在目标位置产生爆炸。"
+      "text": "ars_nouveau.glyph_desc.explosion"
     },
     {
       "type": "glyph_recipe",
-      "tier": "2",
+      "recipe": "ars_nouveau:glyph_explosion",
+      "tier": "二",
       "mana_cost": "中",
       "clay_type": "ars_nouveau:marvelous_clay",
       "reagent": "minecraft:tnt"

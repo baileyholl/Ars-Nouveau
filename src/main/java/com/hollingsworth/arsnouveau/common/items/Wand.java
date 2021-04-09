@@ -74,7 +74,7 @@ public class Wand extends ModItem  implements IAnimatable, ICasterTool {
         }
 
         if(caster.getSpell() == null) {
-            playerIn.sendMessage(new StringTextComponent("Invalid Spell."), Util.DUMMY_UUID);
+            playerIn.sendMessage(new TranslationTextComponent("ars_nouveau.wand.spell_invalid"), Util.DUMMY_UUID);
             return new ActionResult<>(ActionResultType.CONSUME, stack);
         }
         SpellResolver resolver = new SpellResolver(caster.getSpell().recipe, new SpellContext(caster.getSpell(), playerIn));

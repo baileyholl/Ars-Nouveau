@@ -1,18 +1,20 @@
 {
   "name": "提取",
   "icon": "ars_nouveau:glyph_extract",
-  "category": "spells",
+  "category": "spells_2",
+  "sortnum": 3,
   "pages": [
     {
       "type": "text",
-      "text": "精准采集方块，可让「爆炸」无法破坏方块。无法和「幸运」组合。"
+      "text": "ars_nouveau.glyph_desc.extract"
     },
     {
       "type": "glyph_recipe",
-      "tier": "2",
+      "recipe": "ars_nouveau:glyph_extract",
+      "tier": "二",
       "mana_cost": "中",
       "clay_type": "ars_nouveau:marvelous_clay",
-      "reagent": "minecraft:shears"
+      "reagent": "minecraft:emerald_block"
     }
   ]
 }

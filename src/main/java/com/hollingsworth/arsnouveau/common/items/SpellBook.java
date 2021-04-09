@@ -38,6 +38,7 @@ import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -60,6 +61,11 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
 
     public SpellBook(Tier tier){
         super(new Item.Properties().maxStackSize(1).group(ArsNouveau.itemGroup).setISTER(() -> SpellBookRenderer::new));
+        this.tier = tier;
+    }
+    
+    public SpellBook(Properties properties, Tier tier) {
+        super(properties);
         this.tier = tier;
     }
 
@@ -156,7 +162,7 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
             if(SpellBook.unlockSpell(stack.getTag(), spellPart))
                 unlocked++;
         }
-        PortUtil.sendMessage(player, new StringTextComponent("Copied " + unlocked + " new glyphs to the book."));
+        PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.spell_book.copied", unlocked));
         return true;
     }
 
@@ -196,7 +202,7 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
 
     public static String getSpellName(CompoundNBT tag, int slot){
         if(slot == 0)
-            return "Create Mode";
+            return new TranslationTextComponent("ars_nouveau.spell_book.create_mode").getString();
         return tag.getString( slot+ "_name");
     }
 
@@ -264,8 +270,8 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
         if(stack != null && stack.hasTag()) {
             tooltip.add(new StringTextComponent(SpellBook.getSpellName(stack.getTag())));
 
-            tooltip.add(new StringTextComponent("Press " + KeyBinding.getDisplayString(ModKeyBindings.OPEN_SPELL_SELECTION.getKeyBinding().getKeyDescription()).get().getString()+ " to quick select"));
-            tooltip.add(new StringTextComponent("Press " + KeyBinding.getDisplayString(ModKeyBindings.OPEN_BOOK.getKeyBinding().getKeyDescription()).get().getString() + " to quick craft"));
+            tooltip.add(new TranslationTextComponent("ars_nouveau.spell_book.select", KeyBinding.getDisplayString(ModKeyBindings.OPEN_SPELL_SELECTION.getKeyBinding().getKeyDescription()).get().getString()));
+            tooltip.add(new TranslationTextComponent("ars_nouveau.spell_book.craft", KeyBinding.getDisplayString(ModKeyBindings.OPEN_BOOK.getKeyBinding().getKeyDescription()).get().getString()));
         }
     }
 

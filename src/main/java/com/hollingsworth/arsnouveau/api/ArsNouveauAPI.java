@@ -4,6 +4,8 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
+import com.hollingsworth.arsnouveau.api.recipe.PotionIngredient;
+import com.hollingsworth.arsnouveau.api.recipe.VanillaPotionRecipe;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
@@ -12,9 +14,12 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.common.brewing.BrewingRecipe;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -132,6 +137,29 @@ public class ArsNouveauAPI {
             }
         }
         return null;
+    }
+    public List<VanillaPotionRecipe> vanillaPotionRecipes = new ArrayList<>();
+    private List<BrewingRecipe> brewingRecipes;
+
+    public List<BrewingRecipe> getAllPotionRecipes(){
+        if(brewingRecipes == null){
+            brewingRecipes = new ArrayList<>();
+            BrewingRecipeRegistry.getRecipes().forEach(ib ->{
+                if(ib instanceof BrewingRecipe)
+                    brewingRecipes.add((BrewingRecipe) ib);
+            });
+
+            vanillaPotionRecipes.forEach(vanillaPotionRecipe -> {
+                BrewingRecipe recipe = new BrewingRecipe(
+                        PotionIngredient.fromPotion(vanillaPotionRecipe.potionIn),
+                        Ingredient.fromItems(vanillaPotionRecipe.reagent),
+                        PotionIngredient.fromPotion(vanillaPotionRecipe.potionOut).getStack()
+                );
+                brewingRecipes.add(recipe);
+            });
+
+        }
+        return brewingRecipes;
     }
 
     private ArsNouveauAPI(){

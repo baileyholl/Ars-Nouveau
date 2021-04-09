@@ -24,6 +24,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -212,7 +213,7 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
             return true;
         }
 
-        playerEntity.sendMessage(new StringTextComponent("There does not appear to be enough mana nearby. "), Util.DUMMY_UUID);
+        playerEntity.sendMessage(new TranslationTextComponent("ars_nouveau.glyph_press.no_mana"), Util.DUMMY_UUID);
         return false;
     }
 

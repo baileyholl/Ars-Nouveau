@@ -17,6 +17,7 @@ import net.minecraft.item.ArrowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -62,7 +63,7 @@ public class SpellArrow extends ArrowItem {
 
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new StringTextComponent("Augments spells when used with an Enchanter's Bow."));
+        tooltip.add(new TranslationTextComponent("ars_nouveau.spell_arrow.desc"));
         Spell spell = new Spell();
         for(int i = 0; i < numParts; i++){
             spell.recipe.add(part);

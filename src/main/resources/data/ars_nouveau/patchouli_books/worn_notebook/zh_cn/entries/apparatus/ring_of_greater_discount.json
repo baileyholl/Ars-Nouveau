@@ -9,15 +9,7 @@
     },
     {
       "type": "apparatus_recipe",
-      "reagent": "ars_nouveau:ring_of_lesser_discount",
-      "item1": "minecraft:diamond",
-      "item2": "minecraft:blaze_rod",
-      "item3": "minecraft:diamond",
-      "item4": "ars_nouveau:arcane_brick",
-      "item5": "ars_nouveau:arcane_brick",
-      "item6": "minecraft:diamond",
-      "item7": "minecraft:blaze_rod",
-      "item8": "minecraft:diamond"
+      "recipe": "ars_nouveau:ring_of_greater_discount"
     }
   ]
 }

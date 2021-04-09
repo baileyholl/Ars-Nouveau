@@ -1,15 +1,17 @@
 {
   "name": "召唤恼鬼",
   "icon": "ars_nouveau:glyph_summon_vex",
-  "category": "spells",
+  "category": "spells_3",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",
-      "text": "召唤三个自动攻击附近敌对生物的恼鬼。恼鬼不受伤时其存在时间较短，存在时间可通过「延长时效」增长。"
+      "text": "ars_nouveau.glyph_desc.summon_vex"
     },
     {
       "type": "glyph_recipe",
-      "tier": "3",
+      "recipe": "ars_nouveau:glyph_summon_vex",
+      "tier": "三",
       "mana_cost": "高",
       "clay_type": "ars_nouveau:mythical_clay",
       "reagent": "minecraft:totem_of_undying"

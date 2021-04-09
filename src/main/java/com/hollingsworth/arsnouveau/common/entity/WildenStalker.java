@@ -11,6 +11,7 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.datasync.DataParameter;
@@ -29,14 +30,14 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class WildenStalker extends CreatureEntity implements IAnimatable, IAnimationListener {
+public class WildenStalker extends MonsterEntity implements IAnimatable, IAnimationListener {
     int leapCooldown;
     public Vector3d orbitOffset = Vector3d.ZERO;
     public BlockPos orbitPosition = BlockPos.ZERO;
 
     public static final DataParameter<Boolean> isFlying = EntityDataManager.createKey(WildenStalker.class, DataSerializers.BOOLEAN);
     public int timeFlying;
-    protected WildenStalker(EntityType<? extends CreatureEntity> type, World worldIn) {
+    protected WildenStalker(EntityType<? extends MonsterEntity> type, World worldIn) {
         super(type, worldIn);
         moveController = new FlyHelper(this);
     }

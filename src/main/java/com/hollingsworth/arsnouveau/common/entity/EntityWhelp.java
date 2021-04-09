@@ -99,23 +99,23 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
             if(new EntitySpellResolver(spellParts, new SpellContext(spellParts, this)).canCast(this)) {
                 this.spellRecipe = SpellParchment.getSpellRecipe(stack);
                 setRecipeString(SpellRecipeUtil.serializeForNBT(spellRecipe));
-                player.sendMessage(new StringTextComponent("Spell set."), Util.DUMMY_UUID);
+                player.sendMessage(new TranslationTextComponent("ars_nouveau.whelp.spell_set"), Util.DUMMY_UUID);
                 return ActionResultType.SUCCESS;
             } else{
-                player.sendMessage(new StringTextComponent("A whelp cannot cast an invalid spell."), Util.DUMMY_UUID);
+                player.sendMessage(new TranslationTextComponent("ars_nouveau.whelp.invalid"), Util.DUMMY_UUID);
                 return ActionResultType.SUCCESS;
             }
         }else if(stack == ItemStack.EMPTY){
             if(spellRecipe == null || spellRecipe.size() == 0){
-                player.sendMessage(new StringTextComponent("Give this whelp a spell by giving it some inscribed Spell Parchment. "), Util.DUMMY_UUID);
+                player.sendMessage(new TranslationTextComponent("ars_nouveau.whelp.desc"), Util.DUMMY_UUID);
             }else
-                player.sendMessage(new StringTextComponent("This whelp is casting " + SpellRecipeUtil.getDisplayString(spellRecipe)), Util.DUMMY_UUID);
+                player.sendMessage(new TranslationTextComponent("ars_nouveau.whelp.casting", SpellRecipeUtil.getDisplayString(spellRecipe)), Util.DUMMY_UUID);
             return ActionResultType.SUCCESS;
         }
 
         if(!stack.isEmpty()){
             setHeldStack(new ItemStack(stack.getItem()));
-            player.sendMessage(new StringTextComponent("This whelp will use " + stack.getItem().getDisplayName(stack).getString() +  " in spells if this item is in a Summoning Crystal chest."), Util.DUMMY_UUID);
+            player.sendMessage(new TranslationTextComponent("ars_nouveau.whelp.spell_item", stack.getItem().getDisplayName(stack).getString()), Util.DUMMY_UUID);
         }
         return super.func_230254_b_(player,  hand);
 
@@ -233,11 +233,13 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         List<String> list = new ArrayList<>();
         List<AbstractSpellPart> spellParts = SpellRecipeUtil.getSpellsFromTagString(this.getRecipeString());
         String spellString = spellParts.size() > 4 ? SpellRecipeUtil.getDisplayString(spellParts.subList(0, 4)) + "..." :SpellRecipeUtil.getDisplayString(spellParts);
-        String itemString = this.getHeldStack() == ItemStack.EMPTY ? "Nothing." : this.getHeldStack().getDisplayName().getString();
-        String itemAction = this.getHeldStack().getItem() instanceof BlockItem ? "Placing: " : "Using: ";
-        list.add("Casting: " + spellString);
+        String itemString = this.getHeldStack() == ItemStack.EMPTY ? new TranslationTextComponent("ars_nouveau.whelp.no_item").getString() : this.getHeldStack().getDisplayName().getString();
+        String itemAction = this.getHeldStack().getItem() instanceof BlockItem ? 
+        		new TranslationTextComponent("ars_nouveau.whelp.placing").getString() : 
+        		new TranslationTextComponent("ars_nouveau.whelp.using").getString();
+        list.add(new TranslationTextComponent("ars_nouveau.whelp.spell").getString() + spellString);
         list.add(itemAction + itemString);
-        list.add("Strict mode: " + this.dataManager.get(STRICT_MODE));
+        list.add(new TranslationTextComponent("ars_nouveau.whelp.strict").getString() + new TranslationTextComponent("ars_nouveau." + this.dataManager.get(STRICT_MODE)).getString() );
         return list;
     }
 

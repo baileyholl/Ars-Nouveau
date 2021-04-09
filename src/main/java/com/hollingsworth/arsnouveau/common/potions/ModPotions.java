@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.potions;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.recipe.PotionIngredient;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -34,7 +35,8 @@ public class ModPotions {
         ItemStack manaPot = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), ModPotions.MANA_REGEN_POTION);
         ItemStack manaPotLong = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), ModPotions.LONG_MANA_REGEN_POTION);
         ItemStack manaPotStrong = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), ModPotions.STRONG_MANA_REGEN_POTION);
-        BrewingRecipeRegistry.addRecipe(new SimpleBrewingRecipe(Ingredient.fromItems(BlockRegistry.MANA_BERRY_BUSH),  manaPot));
+
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(AWKWARD), Ingredient.fromItems(BlockRegistry.MANA_BERRY_BUSH),  manaPot));
         BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.fromStacks(manaPot), Ingredient.fromItems(Items.GLOWSTONE_DUST),  manaPotStrong));
         BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.fromStacks(manaPot), Ingredient.fromItems(Items.REDSTONE),  manaPotLong));
     }

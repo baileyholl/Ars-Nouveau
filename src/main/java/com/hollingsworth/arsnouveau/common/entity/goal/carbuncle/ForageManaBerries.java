@@ -22,12 +22,25 @@ import static com.hollingsworth.arsnouveau.common.block.ManaBerryBush.AGE;
 public class ForageManaBerries extends Goal {
     private final EntityCarbuncle entity;
     private final World world;
+    int timeSpent;
     BlockPos pos;
 
     public ForageManaBerries(EntityCarbuncle entityCarbuncle) {
         this.entity = entityCarbuncle;
         this.world = entity.world;
         this.setMutexFlags(EnumSet.of(Flag.MOVE));
+    }
+
+    @Override
+    public void startExecuting() {
+        super.startExecuting();
+        timeSpent = 0;
+    }
+
+    @Override
+    public void resetTask() {
+        super.resetTask();
+        timeSpent = 0;
     }
 
     @Override
@@ -41,7 +54,7 @@ public class ForageManaBerries extends Goal {
     @Override
     public void tick() {
         super.tick();
-
+        timeSpent++;
         if(this.pos == null || entity.isStuck) {
             return;
         }
@@ -65,7 +78,7 @@ public class ForageManaBerries extends Goal {
         if(pos == null)
             return false;
         Path path = entity.getNavigator().getPathToPos(pos, 0);
-        return !entity.isStuck && world.getBlockState(pos).getBlock() instanceof ManaBerryBush && path != null && path.reachesTarget();
+        return timeSpent <= 20 * 30 && !entity.isStuck && world.getBlockState(pos).getBlock() instanceof ManaBerryBush && path != null && path.reachesTarget();
     }
 
     public BlockPos getNearbyManaBerry(){

@@ -8,8 +8,8 @@ import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.entity.EntityType;
 import net.minecraft.loot.*;
-import net.minecraft.loot.functions.LootingEnchantBonus;
-import net.minecraft.loot.functions.SetCount;
+import net.minecraft.loot.functions.*;
+import net.minecraft.util.ResourceLocation;
 
 public class LootTables extends BaseLootTableProvider{
     public LootTables(DataGenerator dataGeneratorIn) {
@@ -20,6 +20,20 @@ public class LootTables extends BaseLootTableProvider{
     protected void addTables() {
         System.out.println(BlockRegistry.MANA_JAR);
         blockTables.put(BlockRegistry.MANA_JAR, createManaManchineTable("mana_jar", BlockRegistry.MANA_JAR));
+
+        LootPool.Builder potionJarBuilder = LootPool.builder()
+                .name("potion_jar")
+                .rolls(ConstantRange.of(1))
+                .addEntry(ItemLootEntry.builder(BlockRegistry.POTION_JAR)
+                        .acceptFunction(CopyName.builder(CopyName.Source.BLOCK_ENTITY))
+                        .acceptFunction(CopyNbt.builder(CopyNbt.Source.BLOCK_ENTITY)
+                                .addOperation("amount", "BlockEntityTag.amount", CopyNbt.Action.REPLACE)
+                                .addOperation("Potion", "BlockEntityTag.Potion", CopyNbt.Action.REPLACE)
+                                .addOperation("CustomPotionEffects", "BlockEntityTag.CustomPotionEffects", CopyNbt.Action.REPLACE))
+                        .acceptFunction(SetContents.builderIn()
+                                .addLootEntry(DynamicLootEntry.func_216162_a(new ResourceLocation("minecraft", "contents"))))
+                );
+        blockTables.put(BlockRegistry.POTION_JAR,LootTable.builder().addLootPool(potionJarBuilder));
         putStandardLoot(BlockRegistry.ARCANE_ORE);
         putStandardLoot(BlockRegistry.GLYPH_PRESS_BLOCK);
         putStandardLoot(BlockRegistry.WARD_BLOCK);

@@ -1,6 +1,6 @@
 {
-  "name": "Worn Notebook",
-  "landing_text": "Ars Nouveau provides spell crafting, magical devices, powerful trinkets, and magical entity automation. To help  development or report issues, join the community: https://discord.gg/y7TMXZu Thank you for playing.",
+  "name": "ars_nouveau.book.name",
+  "landing_text": "ars_nouveau.book.landing_text",
   "dont_generate_book":true,
   "custom_book_item":"ars_nouveau:worn_notebook",
   "version": "1",

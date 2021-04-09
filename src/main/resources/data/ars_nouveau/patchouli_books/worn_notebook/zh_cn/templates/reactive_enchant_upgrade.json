@@ -2,13 +2,13 @@
     "components": [
 		{
 			"type": "header",
-			"text": "Enchanting Apparatus",
+			"text": "附魔装置",
 			"x": -1,
 			"y": -1
         },
 		 {
             "type":"text",
-            "text":"Reagent:",
+            "text":"试剂：",
             "x":5,
             "y":25
         },
@@ -77,7 +77,7 @@
         },
         {
             "type":"text",
-            "text":"Mana Cost:",
+            "text":"魔力消耗：",
             "x":5,
             "y":130
         },

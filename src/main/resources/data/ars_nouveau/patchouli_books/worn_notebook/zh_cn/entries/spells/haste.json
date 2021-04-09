@@ -1,15 +1,17 @@
 {
-  "name": "疾驰",
+  "name": "速度",
   "icon": "ars_nouveau:glyph_haste",
-  "category": "spells",
+  "category": "spells_1",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",
-      "text": "给予目标速度效果"
+      "text": "ars_nouveau.glyph_desc.haste"
     },
     {
       "type": "glyph_recipe",
-      "tier": "1",
+      "recipe": "ars_nouveau:glyph_haste",
+      "tier": "一",
       "mana_cost": "中",
       "clay_type": "ars_nouveau:magic_clay",
       "reagent": "minecraft:minecart"

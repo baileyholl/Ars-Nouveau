@@ -7,17 +7,9 @@
       "type": "text",
       "text": "ars_nouveau.page.carbuncle_charm"
     },
-    {
+     {
       "type": "apparatus_recipe",
-      "reagent": "ars_nouveau:carbuncle_shards",
-      "item1": "ars_nouveau:bucket_of_mana",
-      "item2": "ars_nouveau:bucket_of_mana",
-      "item3": "minecraft:diamond",
-      "item4": "minecraft:gold_nugget",
-      "item5": "minecraft:gold_nugget",
-      "item6": "minecraft:gold_nugget",
-      "item7": "minecraft:gold_nugget",
-      "item8": "minecraft:gold_nugget"
+      "recipe": "ars_nouveau:carbuncle_charm"
     },
 	{
 	 "type": "entity",
@@ -26,10 +18,21 @@
 	},
 	{
       "type": "text",
+	  "title":"召唤",
       "text": "ars_nouveau.page3.carbuncle_charm"
+    },
+	{
+      "type": "text",
+	  "title":"物品运输",
+      "text": "ars_nouveau.page4.carbuncle_charm"
     },{
+      "type": "text",
+	  "title":"过滤",
+      "text": "ars_nouveau.page5.carbuncle_charm"
+    },
+	{
             "type": "relations",
-            "entries":["machines/scribes_table", "automation/dominion_wand"]        
+            "entries":["machines/scribes_table", "automation/dominion_wand", "automation/allow_scroll","automation/deny_scroll"]        
         }
   ]
 }
