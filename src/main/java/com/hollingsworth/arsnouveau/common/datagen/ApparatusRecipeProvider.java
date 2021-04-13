@@ -272,6 +272,14 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withReagent(Ingredient.fromItems(ItemsRegistry.POTION_FLASK))
                 .withPedestalItem(8, ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify()))
                 .build());
+
+        addRecipe(builder()
+                .withResult(new ItemStack(BlockRegistry.POTION_MELDER))
+                .withReagent(Ingredient.fromItems(BlockRegistry.POTION_JAR))
+                .withPedestalItem(2, ArsNouveauAPI.getInstance().getGlyphItem(new AugmentExtract()))
+                .withPedestalItem(2,Ingredient.fromTag(Tags.Items.STORAGE_BLOCKS_GOLD))
+                .withPedestalItem(4,Ingredient.fromTag(Tags.Items.RODS_BLAZE))
+                .build());
     }
 
     public static List<Ingredient> listOfIngred(Item[] items) {

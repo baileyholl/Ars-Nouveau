@@ -12,14 +12,15 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapelessRecipe;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
+import net.minecraft.potion.*;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PotionFlaskRecipe extends ShapelessRecipe {
     public PotionFlaskRecipe(ResourceLocation idIn, String groupIn, ItemStack recipeOutputIn, NonNullList<Ingredient> recipeItemsIn) {
@@ -32,28 +33,35 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
         final ItemStack output = super.getCraftingResult(inv); // Get the default output
         int newCount = 0;
         Potion flaskPotion = Potions.EMPTY;
+        List<EffectInstance> effectsList = new ArrayList<>();
+        List<EffectInstance> flaskEffects = new ArrayList<>();
         if(output.isEmpty())
             return ItemStack.EMPTY;
 
-
+        ItemStack flaskPotionStack = ItemStack.EMPTY;
         for (int i = 0; i < inv.getSizeInventory(); i++) { // For each slot in the crafting inventory,
             final ItemStack ingredient = inv.getStackInSlot(i); // Get the ingredient in the slot
             if (!ingredient.isEmpty() && ingredient.getItem() instanceof PotionFlask) {
                 CompoundNBT tag = ingredient.hasTag() ? ingredient.getTag() : new CompoundNBT();
                 newCount = tag.getInt("count") + 1;
                 flaskPotion = PotionUtils.getPotionFromItem(ingredient);
+                flaskPotionStack = ingredient;
+                flaskEffects = PotionUtils.getFullEffectsFromTag(ingredient.getTag());
             }
         }
         for (int i = 0; i < inv.getSizeInventory(); i++) { // For each slot in the crafting inventory,
             final ItemStack ingredient = inv.getStackInSlot(i); // Get the ingredient in the slot
             if (!ingredient.isEmpty() && ingredient.getItem() instanceof PotionItem) {
                 Potion stackPotion = PotionUtils.getPotionFromItem(ingredient);
+                effectsList = PotionUtils.getFullEffectsFromTag(ingredient.getTag());
+                if(flaskPotion != Potions.EMPTY && !PotionUtils.getFullEffectsFromTag(ingredient.getTag()).equals(PotionUtils.getFullEffectsFromTag(flaskPotionStack.getTag())))
+                    return ItemStack.EMPTY;
                 if(flaskPotion == Potions.EMPTY){
                     flaskPotion = stackPotion;
+                    System.out.println(effectsList.size());
                 }
                 if(!flaskPotion.equals(stackPotion))
                     return ItemStack.EMPTY;
-
             }
         }
 
@@ -61,6 +69,15 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
             output.setTag(new CompoundNBT());
             output.getTag().putInt("count", newCount);
             PotionUtils.addPotionToItemStack(output, flaskPotion);
+//            for(EffectInstance e : flaskPotion.getEffects()){
+//                //effectsList.remove(e);
+//                System.out.println(e.getPotion().getRegistryName().toString());
+//            }
+//            for(EffectInstance e : effectsList){
+//                //effectsList.remove(e);
+//                System.out.println(e.getPotion().getRegistryName().toString());
+//            }
+            PotionUtils.appendEffects(output, effectsList);
         }
         return output; // Return the modified output
     }

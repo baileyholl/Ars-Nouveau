@@ -1,0 +1,51 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "item_1": [
+    {
+      "item": "ars_nouveau:glyph_extract"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:glyph_extract"
+    }
+  ],
+  "item_3": [
+    {
+      "tag": "forge:storage_blocks/gold"
+    }
+  ],
+  "item_4": [
+    {
+      "tag": "forge:storage_blocks/gold"
+    }
+  ],
+  "item_5": [
+    {
+      "tag": "forge:rods/blaze"
+    }
+  ],
+  "item_6": [
+    {
+      "tag": "forge:rods/blaze"
+    }
+  ],
+  "item_7": [
+    {
+      "tag": "forge:rods/blaze"
+    }
+  ],
+  "item_8": [
+    {
+      "tag": "forge:rods/blaze"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "ars_nouveau:potion_jar"
+    }
+  ],
+  "output": {
+    "item": "ars_nouveau:potion_melder"
+  }
+}

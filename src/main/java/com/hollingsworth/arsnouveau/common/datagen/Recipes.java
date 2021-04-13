@@ -235,7 +235,19 @@ public class Recipes extends RecipeProvider {
             shapelessBuilder(Items.LEATHER, 1).addIngredient(ItemsRegistry.WILDEN_WING).build(consumer,  new ResourceLocation(ArsNouveau.MODID, "wing_to_leather"));
             shapelessBuilder(Items.BONE_MEAL, 3).addIngredient(ItemsRegistry.WILDEN_HORN).build(consumer,  new ResourceLocation(ArsNouveau.MODID, "horn_to_bonemeal"));
             shapelessBuilder(Items.ORANGE_DYE, 5).addIngredient(ItemsRegistry.WILDEN_SPIKE).build(consumer,  new ResourceLocation(ArsNouveau.MODID, "spike_to_dye"));
-
+            ShapedRecipeBuilder.shapedRecipe(Items.ARROW, 32)
+                    .addCriterion("has_journal", InventoryChangeTrigger.Instance.forItems(ItemsRegistry.wornNotebook))
+                .patternLine(" x ")
+                    .patternLine(" y ")
+                    .patternLine(" z ")
+                    .key('x', ItemsRegistry.WILDEN_SPIKE)
+                    .key('y', Items.STICK)
+                    .key('z', Items.FEATHER)
+                .build(consumer, new ResourceLocation(ArsNouveau.MODID, "spike_to_arrow"));
+            shapelessBuilder(BlockRegistry.POTION_JAR)
+                    .addIngredient(BlockRegistry.MANA_JAR)
+                    .addIngredient(Items.NETHER_WART)
+                    .build(consumer);
 
         }
     }
