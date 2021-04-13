@@ -24,6 +24,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
+import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -111,6 +112,8 @@ public class ItemsRegistry {
 
 
     @ObjectHolder(LibItemNames.POTION_FLASK)public static PotionFlask POTION_FLASK;
+    @ObjectHolder(LibItemNames.POTION_FLASK_AMPLIFY)public static PotionFlask POTION_FLASK_AMPLIFY;
+    @ObjectHolder(LibItemNames.POTION_FLASK_EXTEND_TIME)public static PotionFlask POTION_FLASK_EXTEND_TIME;
 
     public static Food MANA_BERRY_FOOD = (new Food.Builder()).hunger(2).saturation(0.1F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).setAlwaysEdible().build();
 
@@ -206,7 +209,25 @@ public class ItemsRegistry {
                     new ModItem(LibItemNames.WILDEN_HORN).withTooltip(new TranslationTextComponent("tooltip.wilden_horn")),
                     new ModItem(LibItemNames.WILDEN_WING).withTooltip(new TranslationTextComponent("tooltip.wilden_wing")),
                     new ModItem(LibItemNames.WILDEN_SPIKE).withTooltip(new TranslationTextComponent("tooltip.wilden_spike")),
-                    new PotionFlask()
+                    new PotionFlask() {
+                        @Nonnull
+                        @Override
+                        public EffectInstance getEffectInstance(EffectInstance effectInstance) {
+                            return effectInstance;
+                        }
+                    }.withTooltip(new TranslationTextComponent("tooltip.potion_flask")),
+                    new PotionFlask(LibItemNames.POTION_FLASK_EXTEND_TIME) {
+                        @Override
+                        public EffectInstance getEffectInstance(EffectInstance effectInstance) {
+                            return new EffectInstance(effectInstance.getPotion(), effectInstance.getDuration() + effectInstance.getDuration()/2, effectInstance.getAmplifier());
+                        }
+                    }.withTooltip(new TranslationTextComponent("tooltip.potion_flask_extend_time")),
+                    new PotionFlask(LibItemNames.POTION_FLASK_AMPLIFY) {
+                        @Override
+                        public EffectInstance getEffectInstance(EffectInstance effectInstance) {
+                            return new EffectInstance(effectInstance.getPotion(), effectInstance.getDuration()/2, effectInstance.getAmplifier() + 1);
+                        }
+                    }.withTooltip(new TranslationTextComponent("tooltip.potion_flask_amplify"))
 
             };
 

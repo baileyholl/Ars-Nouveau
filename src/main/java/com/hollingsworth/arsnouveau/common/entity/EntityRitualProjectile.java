@@ -102,8 +102,6 @@ public class EntityRitualProjectile extends ColoredProjectile{
 
 
 
-
-
     @Override
     public EntityType<?> getType() {
         return ModEntities.ENTITY_RITUAL;

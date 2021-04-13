@@ -21,6 +21,14 @@ public class ParticleColor {
         this((int)r,(int) g,(int) b);
     }
 
+
+    public static ParticleColor fromInt(int color){
+        int r = (color >> 16) & 0xFF;
+        int g = (color >> 8) & 0xFF;
+        int b = (color >> 0) & 0xFF;
+        return new ParticleColor(r,g,b);
+    }
+
     public float getRed(){return r;}
 
     public float getGreen() {

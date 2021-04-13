@@ -5,7 +5,6 @@ import net.minecraft.client.particle.IAnimatedSprite;
 import net.minecraft.client.particle.IParticleRenderType;
 import net.minecraft.client.particle.SpriteTexturedParticle;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -41,6 +40,7 @@ public class ParticleGlow extends SpriteTexturedParticle {
         this.motionZ = vz*2.0f;
         this.initAlpha = a;
         this.selectSpriteRandomly(sprite);
+
     }
     @Override
     public IParticleRenderType getRenderType() {

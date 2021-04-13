@@ -28,6 +28,9 @@ public class EntityFlyingItem extends EntityFollowProjectile {
     int maxAge;
 
     public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.createKey(EntityFlyingItem.class, DataSerializers.ITEMSTACK);
+    public static final DataParameter<Float> OFFSET = EntityDataManager.createKey(EntityFlyingItem.class, DataSerializers.FLOAT);
+    public static final DataParameter<Boolean> DIDOFFSET = EntityDataManager.createKey(EntityFlyingItem.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Boolean> SPAWN_TOUCH = EntityDataManager.createKey(EntityFlyingItem.class, DataSerializers.BOOLEAN);
 
     public EntityFlyingItem(World worldIn, Vector3d from, Vector3d to) {
         this(ModEntities.ENTITY_FLYING_ITEM, worldIn);
@@ -101,7 +104,7 @@ public class EntityFlyingItem extends EntityFollowProjectile {
         BlockPos end = dataManager.get(to);
         if(BlockUtil.distanceFrom(this.getPosition(), end) < 1 || this.age > 1000 || BlockUtil.distanceFrom(this.getPosition(), end) > 14){
             this.remove();
-            if(world.isRemote)
+            if(world.isRemote && dataManager.get(SPAWN_TOUCH))
                 ParticleUtil.spawnTouch(world, end);
             return;
         }
@@ -150,7 +153,21 @@ public class EntityFlyingItem extends EntityFollowProjectile {
         }
     }
 
+    public EntityFlyingItem withNoTouch(){
+        this.dataManager.set(SPAWN_TOUCH, false);
+        return this;
+    }
+
+    public void setDistanceAdjust(float offset){
+        this.dataManager.set(OFFSET, offset);
+        this.dataManager.set(DIDOFFSET, true);
+
+    }
+
     private double getDistanceAdjustment(BlockPos start, BlockPos end) {
+        if(this.dataManager.get(DIDOFFSET))
+            return this.dataManager.get(OFFSET);
+
         double distance = BlockUtil.distanceFrom(start, end);
 
         if(distance <= 1.5)
@@ -182,6 +199,8 @@ public class EntityFlyingItem extends EntityFollowProjectile {
             this.dataManager.set(HELD_ITEM, ItemStack.read(compound.getCompound("item")));
         }
         this.age = compound.getInt("age");
+        this.dataManager.set(DIDOFFSET,compound.getBoolean("didoffset"));
+        this.dataManager.set(OFFSET,compound.getFloat("offset") );
     }
 
     @Override
@@ -193,6 +212,8 @@ public class EntityFlyingItem extends EntityFollowProjectile {
             compound.put("item", tag);
         }
         compound.putInt("age", age);
+        compound.putBoolean("didoffset", this.dataManager.get(DIDOFFSET));
+        compound.putFloat("offset", this.dataManager.get(OFFSET));
     }
 
     public ItemStack getStack(){
@@ -203,6 +224,9 @@ public class EntityFlyingItem extends EntityFollowProjectile {
     protected void registerData() {
         super.registerData();
         this.dataManager.register(HELD_ITEM, ItemStack.EMPTY);
+        this.dataManager.register(OFFSET, 0.0f);
+        this.dataManager.register(DIDOFFSET, false);
+        this.dataManager.register(SPAWN_TOUCH, true);
     }
 
     @Override

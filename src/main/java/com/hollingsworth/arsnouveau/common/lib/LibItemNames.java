@@ -72,4 +72,6 @@ public class LibItemNames {
     public static final String WILDEN_WING = "wilden_wing";
 
     public static final String POTION_FLASK ="potion_flask";
+    public static final String POTION_FLASK_EXTEND_TIME ="potion_flask_extend_time";
+    public static final String POTION_FLASK_AMPLIFY ="potion_flask_amplify";
 }

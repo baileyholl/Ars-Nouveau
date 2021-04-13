@@ -75,5 +75,5 @@ public class LibBlockNames {
     public final static String MANA_GEM_BLOCK = "mana_gem_block";
 
     public final static String POTION_JAR_BLOCK = "potion_jar";
-
+    public final static String POTION_MELDER_BLOCK = "potion_melder";
 }

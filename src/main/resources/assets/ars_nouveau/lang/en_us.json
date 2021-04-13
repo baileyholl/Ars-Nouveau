@@ -493,8 +493,7 @@
 	"ars_nouveau.spell_book_gui.augment": "Augment",
 	"ars_nouveau.spell_book_gui.create": "Create",
 	"ars_nouveau.spell_book_gui.clear": "Clear",
-	"ars_nouveau.spell_book_gui.spell_name": "My Spell Name",
-	
+
 	"ars_nouveau.color_gui.red_slider": "Red: ",
 	"ars_nouveau.color_gui.green_slider": "Green: ",
 	"ars_nouveau.color_gui.blue_slider": "Blue: ",
@@ -570,6 +569,13 @@
 	"ars_nouveau.spell_hud.crafting_mode": "Crafting Mode",
 	
 	"ars_nouveau.spell.no_mana": "Not enough mana.",
-	"block.ars_nouveau.potion_jar": "Potion Jar"
-
+	"block.ars_nouveau.potion_jar": "Potion Jar",
+	"block.ars_nouveau.potion_melder": "Potion Melder",
+	"item.ars_nouveau.potion_flask_extend_time": "Enchanted Potion Flask: Extend Time",
+	"item.ars_nouveau.potion_flask_amplify": "Enchanted Potion Flask: Amplify",
+	"tooltip.potion_flask_extend_time": "Increases the duration of potions by 50%.",
+	"tooltip.potion_flask_amplify": "Increases the level of potions, but reduces their duration.",
+	"tooltip.potion_flask": "Holds 8 charges of potion.",
+	"ars_nouveau.locked": "Locked",
+	"ars_nouveau.unlocked": "Unlocked"
 }

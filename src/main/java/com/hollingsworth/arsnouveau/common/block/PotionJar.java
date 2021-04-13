@@ -59,9 +59,9 @@ public class PotionJar extends ModBlock{
         Potion potion = PotionUtils.getPotionFromItem(stack);
 
         if(stack.getItem() == Items.POTION && potion != Potions.EMPTY ) {
-            if (tile.amount == 0) {
+            if (tile.getAmount() == 0) {
 
-                tile.setPotion(PotionUtils.getPotionFromItem(player.getHeldItem(handIn)));
+                tile.setPotion(stack);
                 tile.addAmount(100);
                 if(!player.isCreative()) {
                     player.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
@@ -83,6 +83,7 @@ public class PotionJar extends ModBlock{
         if(stack.getItem() == Items.GLASS_BOTTLE && tile.getCurrentFill() >= 100){
             ItemStack potionStack = new ItemStack(Items.POTION);
             PotionUtils.addPotionToItemStack(potionStack, tile.getPotion());
+            PotionUtils.appendEffects(potionStack, tile.getCustomEffects());
             player.addItemStackToInventory(potionStack);
             player.getHeldItem(handIn).shrink(1);
             tile.addAmount(-100);

@@ -1,25 +1,12 @@
 {
 	"credit": "Made with Blockbench",
 	"texture_size": [32, 32],
+	"parent": "block/cube_all",
 	"textures": {
-		"1": "ars_nouveau:blocks/potion_still",
 		"3": "ars_nouveau:blocks/potion_jar",
 		"particle": "ars_nouveau:blocks/potion_still"
 	},
 	"elements": [
-		{
-			"name": "<10%",
-			"from": [4, 3, 4],
-			"to": [12, 3.25, 12],
-			"faces": {
-				"north": {"uv": [23, 0, 27, 0.5], "texture": "#1", "tintindex": 0},
-				"east": {"uv": [23, 0.5, 27, 1], "texture": "#1", "tintindex": 0},
-				"south": {"uv": [23, 1, 27, 1.5], "texture": "#1", "tintindex": 0},
-				"west": {"uv": [23, 1.5, 27, 2], "texture": "#1", "tintindex": 0},
-				"up": {"uv": [20, 20, 16, 16], "texture": "#1", "tintindex": 0},
-				"down": {"uv": [21, 12, 17, 16], "texture": "#1", "tintindex": 0}
-			}
-		},
 		{
 			"from": [3, 10, 3],
 			"to": [13, 10, 13],

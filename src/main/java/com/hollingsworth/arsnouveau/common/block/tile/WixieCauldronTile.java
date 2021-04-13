@@ -45,6 +45,7 @@ import net.minecraftforge.common.brewing.BrewingRecipe;
 
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class WixieCauldronTile extends TileEntity implements ITickableTileEntity, ITooltipProvider {
@@ -253,12 +254,18 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
 
     public @Nullable BlockPos findPotionStorage(Potion passedPot){
         AtomicReference<BlockPos> foundPod = new AtomicReference<>();
-        BlockPos.getProximitySortedBoxPositions(pos.down(2), 6, 4,6).forEach(bPos ->{
-            if (foundPod.get() == null && world.getTileEntity(bPos) instanceof PotionJarTile) {
+        AtomicBoolean foundOptimal = new AtomicBoolean(false);
+        BlockPos.getProximitySortedBoxPositions(pos.down(2), 4, 3,4).forEach(bPos ->{
+            if (!foundOptimal.get() && world.getTileEntity(bPos) instanceof PotionJarTile) {
                 PotionJarTile tile = (PotionJarTile) world.getTileEntity(bPos);
-                if(tile.getPotion() == Potions.EMPTY || tile.isMixEqual(passedPot)){
+                if(tile.canAcceptNewPotion() || tile.isMixEqual(passedPot)){
                     if(tile.getMaxFill() - tile.getCurrentFill() >= 300) {
-                        foundPod.set(bPos.toImmutable());
+                        if(tile.isMixEqual(passedPot) && tile.getAmount() >= 0) {
+                            foundOptimal.set(true);
+                            foundPod.set(bPos.toImmutable());
+                        }
+                        if(foundPod.get() == null)
+                            foundPod.set(bPos.toImmutable());
                     }
                 }
             }
@@ -269,7 +276,7 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
 
     public @Nullable BlockPos findNeededPotion(Potion passedPot, int amount){
         AtomicReference<BlockPos> foundPod = new AtomicReference<>();
-        BlockPos.getProximitySortedBoxPositions(pos.down(2), 6, 4,6).forEach(bPos ->{
+        BlockPos.getProximitySortedBoxPositions(pos.down(2), 4, 3,4).forEach(bPos ->{
             if (foundPod.get() == null && world.getTileEntity(bPos) instanceof PotionJarTile) {
                 PotionJarTile tile = (PotionJarTile) world.getTileEntity(bPos);
                 if(tile.getCurrentFill() >= amount && tile.isMixEqual(passedPot)){
@@ -389,7 +396,7 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
             ItemStack potionStack = new ItemStack(Items.POTION);
             PotionUtils.addPotionToItemStack(potionStack, this.craftManager.potionOut);
             strings.add(new TranslationTextComponent("ars_nouveau.wixie.crafting").getString() + potionStack.getDisplayName().getString());
-            strings.add(potionStack.getDisplayName().getString());
+//            strings.add(potionStack.getDisplayName().getString());
             List<ITextComponent> tooltip = new ArrayList<>();
             PotionUtils.addPotionTooltip(potionStack, tooltip, 1.0F);
             for(ITextComponent i : tooltip){

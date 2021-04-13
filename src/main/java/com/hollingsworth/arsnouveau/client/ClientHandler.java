@@ -38,6 +38,7 @@ public class ClientHandler {
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.VOLCANIC_TILE, VolcanicRenderer::new);
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.CRYSTALLIZER_TILE, CrystallizerRenderer::new);
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.SUMMONING_CRYSTAL_TILE, SummoningCrystalRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(BlockRegistry.POTION_MELDER_TYPE, PotionMelderRenderer::new);
 
         RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_JAR, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.GLYPH_PRESS_BLOCK, RenderType.getCutout());
@@ -64,13 +65,23 @@ public class ClientHandler {
         RenderTypeLookup.setRenderLayer(BlockRegistry.CASCADING_SAPLING, RenderType.getCutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_GEM_BLOCK, RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.POTION_JAR, RenderType.getCutout());
-
+        RenderTypeLookup.setRenderLayer(BlockRegistry.POTION_MELDER, RenderType.getCutout());
     }
 
     @SubscribeEvent
     public static void initColors(final ColorHandlerEvent.Item event) {
         System.out.println("REGISTERED COLORS");
-        event.getItemColors().register((stack, color) -> color > 0 ? -1 : (PotionUtils.getPotionFromItem(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1), ItemsRegistry.POTION_FLASK);
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                (PotionUtils.getPotionFromItem(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
+                ItemsRegistry.POTION_FLASK);
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        (PotionUtils.getPotionFromItem(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
+                ItemsRegistry.POTION_FLASK_EXTEND_TIME);
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        (PotionUtils.getPotionFromItem(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
+                ItemsRegistry.POTION_FLASK_AMPLIFY);
 
         event.getBlockColors().register((state, reader, pos, tIndex) ->
                 reader != null && pos != null && reader.getTileEntity(pos) instanceof PotionJarTile

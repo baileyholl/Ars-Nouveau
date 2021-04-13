@@ -6,10 +6,7 @@ import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
+import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -253,6 +250,27 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withReagent( Ingredient.fromTag(ItemTags.ARROWS))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentPierce()))
+                .build());
+
+        addRecipe(builder()
+                .withResult(new ItemStack(ItemsRegistry.POTION_FLASK))
+                .withReagent(Ingredient.fromItems(Items.GLASS_BOTTLE))
+                .withPedestalItem(2, ItemsRegistry.blazeFiber)
+                .withPedestalItem(Recipes.MANA_GEM_BLOCK)
+                .withPedestalItem(Ingredient.fromTag(Tags.Items.STORAGE_BLOCKS_GOLD))
+                .build());
+
+        addRecipe(builder()
+                .withResult(new ItemStack(ItemsRegistry.POTION_FLASK_EXTEND_TIME))
+                .withReagent(Ingredient.fromItems(ItemsRegistry.POTION_FLASK))
+                .withPedestalItem(8, ArsNouveauAPI.getInstance().getGlyphItem(new AugmentExtendTime()))
+                .build());
+
+
+        addRecipe(builder()
+                .withResult(new ItemStack(ItemsRegistry.POTION_FLASK_AMPLIFY))
+                .withReagent(Ingredient.fromItems(ItemsRegistry.POTION_FLASK))
+                .withPedestalItem(8, ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify()))
                 .build());
     }
 

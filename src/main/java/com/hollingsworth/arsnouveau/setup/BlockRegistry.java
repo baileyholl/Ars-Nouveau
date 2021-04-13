@@ -188,6 +188,8 @@ public class BlockRegistry {
 
     @ObjectHolder(LibBlockNames.POTION_JAR_BLOCK) public static PotionJar POTION_JAR;
     @ObjectHolder(LibBlockNames.POTION_JAR_BLOCK) public static TileEntityType<PotionJarTile> POTION_JAR_TYPE;
+    @ObjectHolder(LibBlockNames.POTION_MELDER_BLOCK) public static PotionMelder POTION_MELDER;
+    @ObjectHolder(LibBlockNames.POTION_MELDER_BLOCK) public static TileEntityType<PotionMelderTile> POTION_MELDER_TYPE;
     @ObjectHolder("an_stateprovider") public static BlockStateProviderType stateProviderType;
 
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
@@ -274,6 +276,7 @@ public class BlockRegistry {
     //        registry.register(new WallSignBlock(AbstractBlock.Properties.create(Material.WOOD, JUNGLE_LOG.getMaterialColor()).doesNotBlockMovement().hardnessAndResistance(1.0F).sound(SoundType.WOOD).lootFrom(JUNGLE_SIGN), WoodType.ACACIA).setRegistryName(LibBlockNames.ARCHWOOD_SIGN));
             registry.register(new ModBlock(ModBlock.defaultProperties().notSolid().setLightLevel((s) -> 6),LibBlockNames.MANA_GEM_BLOCK));
             registry.register(new PotionJar(ModBlock.defaultProperties().notSolid(), LibBlockNames.POTION_JAR_BLOCK));
+            registry.register(new PotionMelder(ModBlock.defaultProperties().notSolid(), LibBlockNames.POTION_MELDER_BLOCK));
         }
         static Block.Properties woodProp = AbstractBlock.Properties.create(Material.WOOD, MaterialColor.WOOD).hardnessAndResistance(2.0F, 3.0F).sound(SoundType.WOOD);
         public static MagicLeaves createLeavesBlock() {
@@ -306,6 +309,7 @@ public class BlockRegistry {
             event.getRegistry().register(TileEntityType.Builder.create(CreativeManaJarTile::new, BlockRegistry.CREATIVE_MANA_JAR).build(null).setRegistryName(LibBlockNames.CREATIVE_MANA_JAR));
             event.getRegistry().register(TileEntityType.Builder.create(RitualTile::new, BlockRegistry.RITUAL_BLOCK).build(null).setRegistryName(LibBlockNames.RITUAL_CIRCLE));
             event.getRegistry().register(TileEntityType.Builder.create(PotionJarTile::new, BlockRegistry.POTION_JAR).build(null).setRegistryName(LibBlockNames.POTION_JAR_BLOCK));
+            event.getRegistry().register(TileEntityType.Builder.create(PotionMelderTile::new, BlockRegistry.POTION_MELDER).build(null).setRegistryName(LibBlockNames.POTION_MELDER_BLOCK));
 
         }
 
@@ -391,8 +395,9 @@ public class BlockRegistry {
             ComposterBlock.CHANCES.put(BlockRegistry.MANA_BLOOM_CROP.asItem(), 0.3f);
 
             registry.register(getDefaultBlockItem(BlockRegistry.POTION_JAR, LibBlockNames.POTION_JAR_BLOCK));
-
+            registry.register(new AnimBlockItem(BlockRegistry.POTION_MELDER, ItemsRegistry.defaultItemProperties().setISTER(() -> PotionMelderRenderer::getISTER)).setRegistryName(LibBlockNames.POTION_MELDER_BLOCK));
         }
+
 
         public static Item getDefaultBlockItem(Block block, String registry){
             return new BlockItem(block, ItemsRegistry.defaultItemProperties()).setRegistryName(registry);
