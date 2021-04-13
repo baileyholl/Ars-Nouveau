@@ -286,6 +286,8 @@
 	"entity.ars_nouveau.summon_wolf": "被召唤的狼",
 	"tooltip.worn_notebook": "新生魔艺的详细资料",
 	"effect.ars_nouveau.shocked": "触电",
+	"ars_nouveau.flask.charges": "可用次数：%d",
+	"item.ars_nouveau.potion_flask": "药水烧瓶",
 	
 	"ars_nouveau.glyph_desc.accelerate": "增加弹射物法术的飞行速度。",
 	"ars_nouveau.glyph_desc.amplify": "可叠加地增加大多数法术效果的强度。可增加破坏的挖掘等级和增加法术的伤害。",
@@ -561,11 +563,20 @@
 	"ars_nouveau.wixie.crafting": "合成：",
 	"ars_nouveau.wixie.need_mana": "需要魔力。",
 	"ars_nouveau.wixie.needs": "需要原料：",
-	
+	"ars_nouveau.wixie.needs_storage": "需要：更多药水存储空间。",
 	"ars_nouveau.true": "是",
 	"ars_nouveau.false": "否",
   
 	"ars_nouveau.spell_hud.crafting_mode": "法术制作模式",
 	
-	"ars_nouveau.spell.no_mana": "魔力不足。"
+	"ars_nouveau.spell.no_mana": "魔力不足。",
+	"block.ars_nouveau.potion_jar": "药水罐",
+	"block.ars_nouveau.potion_melder": "药水混合器",
+	"item.ars_nouveau.potion_flask_extend_time": "增强药水烧瓶：延长时效",
+	"item.ars_nouveau.potion_flask_amplify": "增强药水烧瓶：强化",
+	"tooltip.potion_flask_extend_time": "将药水的持续时间延长 50%。",
+	"tooltip.potion_flask_amplify": "提升药水等级，但会减少持续时间。",
+	"tooltip.potion_flask": "容纳的药水量能饮用 8 次。",
+	"ars_nouveau.locked": "已锁定",
+	"ars_nouveau.unlocked": "已解锁"
 }
