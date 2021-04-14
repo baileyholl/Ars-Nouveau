@@ -7,7 +7,6 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.pathfinding.Path;
-import net.minecraft.util.math.AxisAlignedBB;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -18,7 +17,7 @@ public class FindItem extends Goal {
 
     Entity pathingEntity;
     boolean itemStuck;
-    AxisAlignedBB aab;
+
     int timeFinding;
     private final Predicate<ItemEntity> TRUSTED_TARGET_SELECTOR = (itemEntity) -> {
         return !itemEntity.cannotPickup() && itemEntity.isAlive() && entityCarbuncle.isValidItem(itemEntity.getItem());
@@ -38,7 +37,6 @@ public class FindItem extends Goal {
     public FindItem(EntityCarbuncle entityCarbuncle) {
         this.entityCarbuncle = entityCarbuncle;
         this.setMutexFlags(EnumSet.of(Flag.MOVE));
-        this.aab = entityCarbuncle.getBoundingBox().grow(8.0D, 6, 8.0D);
     }
 
 
@@ -47,10 +45,8 @@ public class FindItem extends Goal {
     }
 
     public List<ItemEntity> nearbyItems(){
-       return entityCarbuncle.world.getLoadedEntitiesWithinAABB(ItemEntity.class, aab, getFinderItems());
+       return entityCarbuncle.world.getLoadedEntitiesWithinAABB(ItemEntity.class, entityCarbuncle.getAABB(), getFinderItems());
     }
-
-
 
     @Override
     public boolean shouldContinueExecuting() {
@@ -59,6 +55,7 @@ public class FindItem extends Goal {
 
     @Override
     public boolean shouldExecute() {
+        //System.out.println(nearbyItems());
         return !entityCarbuncle.isStuck && entityCarbuncle.getHeldStack().isEmpty() && !nearbyItems().isEmpty();
     }
 
@@ -66,6 +63,7 @@ public class FindItem extends Goal {
     public void startExecuting() {
         super.startExecuting();
         timeFinding = 0;
+
         itemStuck = false;
         ItemStack itemstack = entityCarbuncle.getHeldStack();
         List<ItemEntity> list = nearbyItems();

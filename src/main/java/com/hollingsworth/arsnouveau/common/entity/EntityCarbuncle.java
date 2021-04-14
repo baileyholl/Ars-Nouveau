@@ -83,7 +83,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     public int backOff; // Used to stop inventory store/take spam when chests are full or empty.
     public int tamingTime;
     public boolean isStuck;
-
+    private int lastAABBCalc;
+    private AxisAlignedBB cachedAAB;
     AnimationFactory manager = new AnimationFactory(this);
 
     public EntityCarbuncle(EntityType<EntityCarbuncle> entityCarbuncleEntityType, World world) {
@@ -171,6 +172,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         super.tick();
 
         if (!world.isRemote) {
+            lastAABBCalc++;
             if (this.navigator.noPath()) {
                 EntityCarbuncle.this.dataManager.set(HOP, false);
             } else {
@@ -356,6 +358,14 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         super.onDeath(source);
     }
 
+    public AxisAlignedBB getAABB(){
+        if(cachedAAB == null || lastAABBCalc >= 60) {
+            cachedAAB = new AxisAlignedBB(getPosition()).grow(8);
+            lastAABBCalc = 0;
+        }
+        return cachedAAB;
+    }
+
     @Override
     protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
         if (hand != Hand.MAIN_HAND || player.getEntityWorld().isRemote || !isTamed())
@@ -445,11 +455,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     @Override
     public boolean canDespawn(double distanceToClosestPlayer) {
         return false;
-    }
-
-    public Void setStuck(boolean isStuck) {
-        this.isStuck = isStuck;
-        return null;
     }
 
     public void setHeldStack(ItemStack stack) {
