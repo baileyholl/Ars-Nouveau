@@ -30,7 +30,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -145,8 +144,9 @@ public class SummoningCrystalTile extends AbstractManaTile implements IAnimatabl
 
         if(recipe != null && caster.getDataManager().get(EntityWhelp.STRICT_MODE)){
             SpellResolver resolver = new SpellResolver(recipe, new SpellContext(recipe, caster));
-            if(!resolver.wouldCastOnBlockSuccessfully(new BlockRayTraceResult(new Vector3d(taskPos.getX(), taskPos.getY(), taskPos.getZ()), Direction.UP,taskPos, false ), caster))
+            if(!resolver.wouldCastOnBlockSuccessfully(new BlockRayTraceResult(new Vector3d(taskPos.getX(), taskPos.getY(), taskPos.getZ()), Direction.UP,taskPos, false ), caster)) {
                 return null;
+            }
         }
         return taskPos;
     }

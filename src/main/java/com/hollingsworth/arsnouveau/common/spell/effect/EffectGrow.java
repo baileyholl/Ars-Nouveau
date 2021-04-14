@@ -47,8 +47,9 @@ public class EffectGrow  extends AbstractEffect {
         if(!(rayTraceResult instanceof BlockRayTraceResult))
             return false;
         BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getPos();
-        return world.getBlockState(pos) instanceof IGrowable
-                && ((IGrowable) world.getBlockState(pos)).canGrow(world, pos, world.getBlockState(pos), world.isRemote);
+
+        return world.getBlockState(pos).getBlock() instanceof IGrowable
+                && ((IGrowable) world.getBlockState(pos).getBlock()).canGrow(world, pos, world.getBlockState(pos), world.isRemote);
     }
 
     public static boolean applyBonemeal(World worldIn, BlockPos pos) {
