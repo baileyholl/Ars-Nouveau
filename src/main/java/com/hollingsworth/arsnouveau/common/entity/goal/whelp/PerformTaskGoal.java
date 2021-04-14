@@ -18,6 +18,13 @@ public class PerformTaskGoal extends Goal {
         this.setMutexFlags(EnumSet.of(Flag.MOVE));
     }
 
+
+    @Override
+    public void resetTask() {
+        super.resetTask();
+        timePerformingTask = 0;
+    }
+
     @Override
     public void startExecuting() {
         super.startExecuting();
@@ -30,6 +37,7 @@ public class PerformTaskGoal extends Goal {
     @Override
     public void tick() {
         super.tick();
+
         timePerformingTask++;
         if (kobold == null || taskLoc == null)
             return;

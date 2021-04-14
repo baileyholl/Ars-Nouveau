@@ -186,7 +186,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     }
 
     public boolean canPerformAnotherTask(){
-        return !isBackedOff() && ticksSinceLastSpell > 60 && new EntitySpellResolver(spellRecipe, new SpellContext(spellRecipe, this)).canCast(this);
+        return  ticksSinceLastSpell > 60 && new EntitySpellResolver(spellRecipe, new SpellContext(spellRecipe, this)).canCast(this) && !isBackedOff();
     }
 
     public @Nullable BlockPos getTaskLoc(){
