@@ -1,6 +1,5 @@
 {
 	"credit": "Made with Blockbench",
-	"texture_size": [32, 32],
 	"textures": {
 		"1": "ars_nouveau:blocks/potion_still",
 		"3": "ars_nouveau:blocks/potion_jar",
@@ -8,29 +7,16 @@
 	},
 	"elements": [
 		{
-			"name": "60%",
+			"name": "10%",
 			"from": [4, 3, 4],
-			"to": [12, 9, 12],
+			"to": [12, 4, 12],
 			"faces": {
-				"north": {"uv": [0, 18, 4, 21], "texture": "#1", "tintindex": 0},
-				"east": {"uv": [4, 18, 8, 21], "texture": "#1", "tintindex": 0},
-				"south": {"uv": [18, 4, 22, 7], "texture": "#1", "tintindex": 0},
-				"west": {"uv": [18, 7, 22, 10], "texture": "#1", "tintindex": 0},
-				"up": {"uv": [12, 20, 8, 16], "texture": "#1", "tintindex": 0},
-				"down": {"uv": [16, 16, 12, 20], "texture": "#1", "tintindex": 0}
-			}
-		},
-		{
-			"name": "100%",
-			"from": [7, 9, 7],
-			"to": [9, 13, 9],
-			"faces": {
-				"north": {"uv": [9, 10, 10, 12], "texture": "#1", "tintindex": 0},
-				"east": {"uv": [8, 14, 9, 16], "texture": "#1", "tintindex": 0},
-				"south": {"uv": [18, 22.5, 19, 24.5], "texture": "#1", "tintindex": 0},
-				"west": {"uv": [19, 22.5, 20, 24.5], "texture": "#1", "tintindex": 0},
-				"up": {"uv": [18, 25, 17, 24], "texture": "#1", "tintindex": 0},
-				"down": {"uv": [25, 17, 24, 18], "texture": "#1", "tintindex": 0}
+				"north": {"uv": [0, 0, 8, 1], "texture": "#1", "tintindex": 0},
+				"east": {"uv": [0, 0, 8, 1], "texture": "#1", "tintindex": 0},
+				"south": {"uv": [0, 0, 8, 1], "texture": "#1", "tintindex": 0},
+				"west": {"uv": [0, 0, 8, 1], "texture": "#1", "tintindex": 0},
+				"up": {"uv": [0, 0, 8, 8], "texture": "#1", "tintindex": 0},
+				"down": {"uv": [0, 0, 8, 8], "texture": "#1", "tintindex": 0}
 			}
 		},
 		{

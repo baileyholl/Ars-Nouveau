@@ -37,7 +37,6 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -59,7 +58,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     public BlockPos crystalPos;
     public int ticksSinceLastSpell;
     public List<AbstractSpellPart> spellRecipe;
-
+    private int backoffTicks;
     @Override
     public boolean canDespawn(double p_213397_1_) {
         return false;
@@ -138,6 +137,10 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         if(world == null || this.dead || crystalPos == null)
             return;
         ticksSinceLastSpell += 1;
+        if(!world.isRemote){
+            if(backoffTicks >= 0)
+                backoffTicks--;
+        }
 
         if(world.getGameTime() % 20 == 0) {
             if (!(world.getTileEntity(crystalPos) instanceof SummoningCrystalTile)) {
@@ -174,8 +177,16 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
     }
 
+    private boolean isBackedOff(){
+        if(backoffTicks <= 0) {
+            backoffTicks = 60;
+            return false;
+        }
+        return true;
+    }
+
     public boolean canPerformAnotherTask(){
-        return ticksSinceLastSpell > 60 && new EntitySpellResolver(spellRecipe, new SpellContext(spellRecipe, this)).canCast(this);
+        return !isBackedOff() && ticksSinceLastSpell > 60 && new EntitySpellResolver(spellRecipe, new SpellContext(spellRecipe, this)).canCast(this);
     }
 
     public @Nullable BlockPos getTaskLoc(){
@@ -266,7 +277,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
             getHeldStack().write(itemTag);
             tag.put("held", itemTag);
         }
-
+        tag.putInt("backoff", backoffTicks);
         tag.putBoolean("strict", this.dataManager.get(STRICT_MODE));
     }
 
@@ -314,6 +325,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
 
         setRecipeString(SpellRecipeUtil.serializeForNBT(spellRecipe));
         this.dataManager.set(STRICT_MODE, tag.getBoolean("strict"));
+        this.backoffTicks = tag.getInt("backoff");
     }
 
     /**

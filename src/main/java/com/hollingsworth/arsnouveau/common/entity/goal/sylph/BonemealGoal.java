@@ -75,7 +75,7 @@ public class BonemealGoal extends DistanceRestrictedGoal {
 
     @Override
     public boolean shouldExecute() {
-        return isInRange(sylph.getPosition()) && sylph.timeSinceBonemeal >= (60 * 20 * 5) && sylph.world.rand.nextInt(5) == 0;
+        return  sylph.world.rand.nextInt(5) == 0 && sylph.timeSinceBonemeal >= (60 * 20 * 5) && isInRange(sylph.getPosition());
     }
 
     @Override

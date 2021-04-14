@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -8,6 +9,8 @@ import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
@@ -22,6 +25,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -30,6 +34,7 @@ import java.util.Set;
 public class PotionMelderTile extends TileEntity implements IAnimatable, ITickableTileEntity {
     int timeMixing;
     boolean isMixing;
+    boolean hasMana;
     public PotionMelderTile() {
         super(BlockRegistry.POTION_MELDER_TYPE);
     }
@@ -38,6 +43,17 @@ public class PotionMelderTile extends TileEntity implements IAnimatable, ITickab
 
     @Override
     public void tick() {
+
+        if(!world.isRemote && !hasMana && world.getGameTime() % 20 == 0){
+            if(ManaUtil.takeManaNearbyWithParticles(pos, world, 5, 100) != null) {
+                hasMana = true;
+                world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+            }
+
+        }
+
+        if(!hasMana)
+            return;
 
         PotionJarTile tile1 = null;
         PotionJarTile tile2 = null;
@@ -133,11 +149,11 @@ public class PotionMelderTile extends TileEntity implements IAnimatable, ITickab
 
         if(timeMixing % 20 == 0 && timeMixing > 0 && timeMixing <= 60){
 
-            EntityFlyingItem item = new EntityFlyingItem(world,tile1.getPos().up(), pos, Math.round(255*color1.getRed()), Math.round(255*color1.getBlue()),Math.round(255*color1.getGreen()))
+            EntityFlyingItem item = new EntityFlyingItem(world,tile1.getPos().up(), pos, Math.round(255*color1.getRed()), Math.round(255*color1.getGreen()),Math.round(255*color1.getBlue()))
                     .withNoTouch();
             item.setDistanceAdjust(2f);
             world.addEntity(item);
-            EntityFlyingItem item2 = new EntityFlyingItem(world,tile2.getPos().up(), pos,  Math.round(255*color2.getRed()), Math.round(255*color2.getBlue()),Math.round(255*color2.getGreen()))
+            EntityFlyingItem item2 = new EntityFlyingItem(world,tile2.getPos().up(), pos,  Math.round(255*color2.getRed()), Math.round(255*color2.getGreen()),Math.round(255*color2.getBlue()))
                     .withNoTouch();
             item2.setDistanceAdjust(2f);
             world.addEntity(item2);
@@ -154,10 +170,14 @@ public class PotionMelderTile extends TileEntity implements IAnimatable, ITickab
                 combJar.setFill(100);
                 tile1.addAmount(-300);
                 tile2.addAmount(-300);
+                hasMana = false;
+                world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
             }else if(combJar.isMixEqual(combined) && combJar.getMaxFill() - combJar.getCurrentFill() >= 100){
                 combJar.addAmount(100);
                 tile1.addAmount(-300);
                 tile2.addAmount(-300);
+                hasMana = false;
+                world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
             }
         }
 
@@ -193,15 +213,34 @@ public class PotionMelderTile extends TileEntity implements IAnimatable, ITickab
 
     @Override
     public void read(BlockState state, CompoundNBT nbt) {
+        super.read(state, nbt);
         this.timeMixing = nbt.getInt("mixing");
         this.isMixing = nbt.getBoolean("isMixing");
-        super.read(state, nbt);
+        this.hasMana = nbt.getBoolean("hasMana");
     }
 
     @Override
     public CompoundNBT write(CompoundNBT compound) {
         compound.putInt("mixing", timeMixing);
         compound.putBoolean("isMixing", isMixing);
+        compound.putBoolean("hasMana", hasMana);
         return super.write(compound);
+    }
+
+    @Override
+    @Nullable
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(this.pos, 3, this.getUpdateTag());
+    }
+
+    @Override
+    public CompoundNBT getUpdateTag() {
+        return this.write(new CompoundNBT());
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        super.onDataPacket(net, pkt);
+        handleUpdateTag(world.getBlockState(pos),pkt.getNbtCompound());
     }
 }
