@@ -42,7 +42,7 @@ public class EffectInteract extends AbstractEffect {
             BlockState blockState = world.getBlockState(blockPos);
 
             if(isRealPlayer(shooter)) {
-                blockState.onBlockActivatewwwsawwworld, (PlayerEntity) shooter, Hand.MAIN_HAND, (BlockRayTraceResult) rayTraceResult);
+                blockState.onBlockActivated(world, (PlayerEntity) shooter, Hand.MAIN_HAND, (BlockRayTraceResult) rayTraceResult);
             } else if(world instanceof ServerWorld){
                 FakePlayer player = new ANFakePlayer((ServerWorld) world);
                 // NOTE: Get IInteractResponder held item if we have one
