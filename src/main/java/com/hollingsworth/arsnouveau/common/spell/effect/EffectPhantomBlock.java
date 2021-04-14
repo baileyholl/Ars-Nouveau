@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import net.minecraft.block.material.Material;
@@ -31,7 +32,7 @@ public class EffectPhantomBlock extends AbstractEffect {
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof BlockRayTraceResult){
 
-            for(BlockPos pos : SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult, getBuffCount(augments, AugmentAOE.class))) {
+            for(BlockPos pos : SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))) {
                 pos = pos.offset(((BlockRayTraceResult) rayTraceResult).getFace());
                 if (world.getBlockState(pos).getMaterial() == Material.AIR && world.placedBlockCollides(BlockRegistry.PHANTOM_BLOCK.getDefaultState(), pos, ISelectionContext.dummy())) {
                     world.setBlockState(pos, BlockRegistry.PHANTOM_BLOCK.getDefaultState());

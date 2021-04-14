@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -66,7 +67,7 @@ public class EffectExchange extends AbstractEffect {
 
     public void resolveBlockHit(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext){
         int aoeBuff = getBuffCount(augments, AugmentAOE.class);
-        List<BlockPos> posList = SpellUtil.calcAOEBlocks(rayTraceResult.getHitVec(), ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult,aoeBuff, getBuffCount(augments, AugmentPierce.class));
         BlockRayTraceResult result = (BlockRayTraceResult) rayTraceResult;
         BlockState origState = world.getBlockState(result.getPos());
         PlayerEntity playerEntity = getPlayer(shooter, (ServerWorld) world);

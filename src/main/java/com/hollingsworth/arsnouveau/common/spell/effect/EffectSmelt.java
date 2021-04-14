@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -39,10 +40,10 @@ public class EffectSmelt extends AbstractEffect {
 
 
         int aoeBuff = getBuffCount(augments, AugmentAOE.class);
-        int pierceBuff = getBuffCount(augments, AugmentAOE.class);
+        int pierceBuff = getBuffCount(augments, AugmentPierce.class);
         int maxItemSmelt = 3 + 4*aoeBuff*pierceBuff;
 
-        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1 + pierceBuff, -1);
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult,aoeBuff, pierceBuff);
         List<ItemEntity> itemEntities = world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(((BlockRayTraceResult) rayTraceResult).getPos()).grow(aoeBuff + 1.0));
         smeltItems(world, itemEntities, maxItemSmelt);
 

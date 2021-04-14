@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.IntangibleAirTile;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -35,7 +36,7 @@ public class EffectIntangible extends AbstractEffect {
             int aoeBuff = getBuffCount(augments, AugmentAOE.class);
             int duration = 60 + 20 * getDurationModifier(augments);
 
-            List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
+            List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult,aoeBuff, getBuffCount(augments, AugmentPierce.class));
             for(BlockPos pos1 : posList) {
                 if(world.getTileEntity(pos1) != null || world.getBlockState(pos1).getMaterial() == Material.AIR
                         || world.getBlockState(pos1).getBlock() == Blocks.BEDROCK || !canBlockBeHarvested(augments, world, pos))

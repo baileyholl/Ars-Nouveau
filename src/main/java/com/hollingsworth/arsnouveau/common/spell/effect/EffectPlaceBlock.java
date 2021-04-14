@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.api.spell.IPlaceBlockResponder;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -38,7 +39,7 @@ public class EffectPlaceBlock extends AbstractEffect {
             return;
         int aoeBuff = getBuffCount(augments, AugmentAOE.class);
 
-        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult,aoeBuff, getBuffCount(augments, AugmentPierce.class));
         BlockRayTraceResult result = (BlockRayTraceResult) rayTraceResult;
         for(BlockPos pos1 : posList) {
             BlockPos hitPos = pos1.offset(result.getFace());

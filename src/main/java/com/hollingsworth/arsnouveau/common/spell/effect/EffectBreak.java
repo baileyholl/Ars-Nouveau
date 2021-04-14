@@ -59,7 +59,7 @@ public class EffectBreak extends AbstractEffect {
 
             int aoeBuff = getBuffCount(augments, AugmentAOE.class);
             int pierceBuff = getBuffCount(augments, AugmentPierce.class);
-            List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1 + pierceBuff, -1);
+            List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult, aoeBuff, pierceBuff);
             ItemStack stack = getStack(shooter);
 
             Map<Enchantment, Integer> map =  EnchantmentHelper.getEnchantments(stack);

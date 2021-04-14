@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.FallingBlockEntity;
@@ -32,7 +33,7 @@ public class EffectGravity extends AbstractEffect {
             BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult) rayTraceResult;
             BlockPos pos = blockRayTraceResult.getPos();
             int aoeBuff = getBuffCount(augments, AugmentAOE.class);
-            List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult,1 + aoeBuff, 1 + aoeBuff, 1, -1);
+            List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult,aoeBuff, getBuffCount(augments, AugmentPierce.class));
             for(BlockPos pos1 : posList) {
                 if(world.getTileEntity(pos1) != null || !canBlockBeHarvested(augments, world, pos1))
                     continue;
