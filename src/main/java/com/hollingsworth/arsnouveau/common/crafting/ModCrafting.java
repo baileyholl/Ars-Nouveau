@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.crafting;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.BookUpgradeRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.DyeRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.PotionFlaskRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.util.ResourceLocation;
@@ -19,14 +20,17 @@ public class ModCrafting {
     public static class Recipes {
         public static IRecipeSerializer<BookUpgradeRecipe> BOOK_UPGRADE_RECIPE = Null();
         public static IRecipeSerializer<PotionFlaskRecipe> POTION_FLASK_RECIPE = Null();
+        public static IRecipeSerializer<DyeRecipe> DYE_RECIPE = Null();
 
         @SubscribeEvent
         public static void register(final RegistryEvent.Register<IRecipeSerializer<?>> event) {
             BOOK_UPGRADE_RECIPE = new BookUpgradeRecipe.Serializer();
             POTION_FLASK_RECIPE = new PotionFlaskRecipe.Serializer();
+            DYE_RECIPE = new DyeRecipe.Serializer();
             event.getRegistry().registerAll(
                     BOOK_UPGRADE_RECIPE.setRegistryName(new ResourceLocation(ArsNouveau.MODID, "book_upgrade")),
-                    POTION_FLASK_RECIPE.setRegistryName(new ResourceLocation(ArsNouveau.MODID, "potion_flask"))
+                    POTION_FLASK_RECIPE.setRegistryName(new ResourceLocation(ArsNouveau.MODID, "potion_flask")),
+                    DYE_RECIPE.setRegistryName(new ResourceLocation(ArsNouveau.MODID, "dye"))
             );
         }
     }
