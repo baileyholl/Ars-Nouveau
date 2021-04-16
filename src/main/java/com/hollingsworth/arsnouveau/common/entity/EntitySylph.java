@@ -419,6 +419,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
             setBehaviors = true;
         }
         ignoreItems = NBTUtil.readItems(tag, "ignored_");
+        this.dataManager.set(COLOR, tag.getString("color"));
     }
     // A workaround for goals not registering correctly for a dynamic variable on reload as read() is called after constructor.
     public void tryResetGoals(){
@@ -439,6 +440,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
         tag.putInt("gather", timeUntilGather);
         tag.putBoolean("tamed", this.dataManager.get(TAMED));
         tag.putInt("score", this.dataManager.get(EntitySylph.MOOD_SCORE));
+        tag.putString("color", this.dataManager.get(COLOR));
         if (ignoreItems != null && !ignoreItems.isEmpty())
             NBTUtil.writeItems(tag, "ignored_", ignoreItems);
     }

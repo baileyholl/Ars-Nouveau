@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "ars_nouveau:arcane_stone"
+  },
+  "result": "ars_nouveau:sas_alternating",
+  "count": 1
+}

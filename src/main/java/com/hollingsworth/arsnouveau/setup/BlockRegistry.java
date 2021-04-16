@@ -123,6 +123,14 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.AB_SMOOTH_SLAB) public static ModBlock AB_SMOOTH_SLAB;
     @ObjectHolder(LibBlockNames.AB_CLOVER) public static ModBlock AB_CLOVER;
 
+
+    @ObjectHolder(LibBlockNames.AB_SMOOTH_BASKET) public static ModBlock AB_SMOOTH_BASKET;
+    @ObjectHolder(LibBlockNames.AB_SMOOTH_CLOVER) public static ModBlock AB_SMOOTH_CLOVER;
+    @ObjectHolder(LibBlockNames.AB_SMOOTH_HERRING) public static ModBlock AB_SMOOTH_HERRING;
+    @ObjectHolder(LibBlockNames.AB_SMOOTH_MOSAIC) public static ModBlock AB_SMOOTH_MOSAIC;
+    @ObjectHolder(LibBlockNames.AB_SMOOTH_ALTERNATING) public static ModBlock AB_SMOOTH_ALTERNATING;
+    @ObjectHolder(LibBlockNames.AB_SMOOTH_ASHLAR) public static ModBlock AB_SMOOTH_ASHLAR;
+
     @ObjectHolder(LibBlockNames.SPELL_TURRET) public static SpellTurret SPELL_TURRET;
     @ObjectHolder(LibBlockNames.SPELL_TURRET) public static TileEntityType<SpellTurretTile> SPELL_TURRET_TYPE;
     @ObjectHolder(LibBlockNames.REDSTONE_AIR) public static RedstoneAir REDSTONE_AIR;
@@ -277,6 +285,13 @@ public class BlockRegistry {
             registry.register(new ModBlock(ModBlock.defaultProperties().notSolid().setLightLevel((s) -> 6),LibBlockNames.MANA_GEM_BLOCK));
             registry.register(new PotionJar(ModBlock.defaultProperties().notSolid(), LibBlockNames.POTION_JAR_BLOCK));
             registry.register(new PotionMelder(ModBlock.defaultProperties().notSolid(), LibBlockNames.POTION_MELDER_BLOCK));
+
+            registry.register(new ModBlock(LibBlockNames.AB_SMOOTH_BASKET));
+            registry.register(new ModBlock(LibBlockNames.AB_SMOOTH_CLOVER));
+            registry.register(new ModBlock(LibBlockNames.AB_SMOOTH_HERRING));
+            registry.register(new ModBlock(LibBlockNames.AB_SMOOTH_MOSAIC));
+            registry.register(new ModBlock(LibBlockNames.AB_SMOOTH_ALTERNATING));
+            registry.register(new ModBlock(LibBlockNames.AB_SMOOTH_ASHLAR));
         }
         static Block.Properties woodProp = AbstractBlock.Properties.create(Material.WOOD, MaterialColor.WOOD).hardnessAndResistance(2.0F, 3.0F).sound(SoundType.WOOD);
         public static MagicLeaves createLeavesBlock() {
@@ -396,6 +411,13 @@ public class BlockRegistry {
 
             registry.register(getDefaultBlockItem(BlockRegistry.POTION_JAR, LibBlockNames.POTION_JAR_BLOCK));
             registry.register(new AnimBlockItem(BlockRegistry.POTION_MELDER, ItemsRegistry.defaultItemProperties().setISTER(() -> PotionMelderRenderer::getISTER)).setRegistryName(LibBlockNames.POTION_MELDER_BLOCK));
+
+            registry.register(getDefaultBlockItem(BlockRegistry.AB_SMOOTH_BASKET, LibBlockNames.AB_SMOOTH_BASKET));
+            registry.register(getDefaultBlockItem(BlockRegistry.AB_SMOOTH_CLOVER, LibBlockNames.AB_SMOOTH_CLOVER));
+            registry.register(getDefaultBlockItem(BlockRegistry.AB_SMOOTH_HERRING, LibBlockNames.AB_SMOOTH_HERRING));
+            registry.register(getDefaultBlockItem(BlockRegistry.AB_SMOOTH_MOSAIC, LibBlockNames.AB_SMOOTH_MOSAIC));
+            registry.register(getDefaultBlockItem(BlockRegistry.AB_SMOOTH_ALTERNATING, LibBlockNames.AB_SMOOTH_ALTERNATING));
+            registry.register(getDefaultBlockItem(BlockRegistry.AB_SMOOTH_ASHLAR, LibBlockNames.AB_SMOOTH_ASHLAR));
         }
 
 

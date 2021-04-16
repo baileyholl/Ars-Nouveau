@@ -86,6 +86,15 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.STRIPPED_AWWOOD_PURPLE);
             registerDropDoor(BlockRegistry.ARCHWOOD_DOOR);
             registerDropSelf(BlockRegistry.MANA_GEM_BLOCK);
+
+            registerDropSelf(BlockRegistry.AB_SMOOTH_BASKET);
+            registerDropSelf(BlockRegistry.AB_SMOOTH_CLOVER);
+            registerDropSelf(BlockRegistry.AB_SMOOTH_HERRING);
+            registerDropSelf(BlockRegistry.AB_SMOOTH_MOSAIC);
+            registerDropSelf(BlockRegistry.AB_SMOOTH_ALTERNATING);
+            registerDropSelf(BlockRegistry.AB_SMOOTH_ASHLAR);
+            registerDropSelf(BlockRegistry.POTION_MELDER);
+
         }
 
         public void registerLeavesAndSticks(Block leaves, Block sapling){

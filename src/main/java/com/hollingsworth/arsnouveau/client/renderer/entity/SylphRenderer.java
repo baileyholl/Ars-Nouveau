@@ -53,7 +53,7 @@ public class SylphRenderer extends GeoEntityRenderer<EntitySylph> {
 
     @Override
     public ResourceLocation getEntityTexture(EntitySylph entity) {
-        return  new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_" + entity.getColor()+ ".png");
+        return  new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_" + (entity.getColor().isEmpty() ? "summer" : entity.getColor())+ ".png");
     }
 
     @Override
