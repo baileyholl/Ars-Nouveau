@@ -36,13 +36,12 @@ public class CarbuncleRenderer extends GeoEntityRenderer<EntityCarbuncle> {
 
 
     public ResourceLocation getColor(EntityCarbuncle e){
-        String color = e.getDataManager().get(EntityCarbuncle.COLOR);
-        if(color.equals(EntityCarbuncle.COLORS.PURPLE.name()))
-            return PURPLE;
-        if(color.equals(EntityCarbuncle.COLORS.GREEN.name()))
-            return GREEN;
+        String color = e.getDataManager().get(EntityCarbuncle.COLOR).toLowerCase();
 
-        return ORANGE;
+        if(color.isEmpty())
+            return ORANGE;
+
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_" + color +".png");
     }
 
     @Override

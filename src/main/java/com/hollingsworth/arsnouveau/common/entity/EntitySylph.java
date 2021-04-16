@@ -28,6 +28,7 @@ import net.minecraft.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
@@ -43,6 +44,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.world.SaplingGrowTreeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -68,6 +70,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
     public int tamingTime = 0;
     public boolean droppingShards; // Stricly used by non-tamed spawns for giving shards
     public static final DataParameter<Integer> MOOD_SCORE = EntityDataManager.createKey(EntitySylph.class, DataSerializers.VARINT);
+    public static final DataParameter<String> COLOR = EntityDataManager.createKey(EntitySylph.class, DataSerializers.STRING);
     public List<ItemStack> ignoreItems;
     public int timeUntilGather = 0;
     public int timeUntilEvaluation = 0;
@@ -113,12 +116,44 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
         return super.func_230254_b_(player,hand);
     }
 
+    public String getColor(){
+        return this.dataManager.get(COLOR);
+    }
+
     @Override
     public ActionResultType applyPlayerInteraction(PlayerEntity player, Vector3d vec, Hand hand) {
         if(hand != Hand.MAIN_HAND || player.getEntityWorld().isRemote || !this.dataManager.get(TAMED))
             return ActionResultType.PASS;
         
         ItemStack stack = player.getHeldItem(hand);
+        Item item = stack.getItem();
+        if(Tags.Items.DYES.contains(item)){
+            System.out.println("contains");
+            if(Tags.Items.DYES_GREEN.contains(item) && !getColor().equals("summer")){
+                this.dataManager.set(COLOR, "summer");
+                stack.shrink(1);
+                return ActionResultType.SUCCESS;
+            }
+            if(Tags.Items.DYES_ORANGE.contains(item) && !getColor().equals("autumn")){
+                this.dataManager.set(COLOR, "autumn");
+                stack.shrink(1);
+                return ActionResultType.SUCCESS;
+            }
+            if(Tags.Items.DYES_YELLOW.contains(item) && !getColor().equals("spring")){
+                this.dataManager.set(COLOR, "spring");
+                stack.shrink(1);
+                return ActionResultType.SUCCESS;
+            }
+            if(Tags.Items.DYES_WHITE.contains(item) && !getColor().equals("winter")){
+                this.dataManager.set(COLOR, "winter");
+                stack.shrink(1);
+                return ActionResultType.SUCCESS;
+            }
+
+
+        }
+
+
         if(stack.isEmpty()) {
             int moodScore = dataManager.get(MOOD_SCORE);
             if(moodScore < 250){
@@ -413,6 +448,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
         super.registerData();
         this.dataManager.register(MOOD_SCORE, 0);
         this.dataManager.register(TAMED, false);
+        this.dataManager.register(COLOR, "summer");
     }
 
     @Override

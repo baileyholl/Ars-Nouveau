@@ -26,6 +26,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.item.ItemFrameEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
@@ -58,6 +59,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -373,20 +375,11 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
         ItemStack stack = player.getHeldItem(hand);
 
-        if (player.getHeldItemMainhand().getItem().isIn(Tags.Items.DYES_GREEN) && !this.dataManager.get(COLOR).equals(COLORS.GREEN.name())) {
-            this.dataManager.set(COLOR, COLORS.GREEN.name());
-            player.getHeldItemMainhand().shrink(1);
-            return ActionResultType.SUCCESS;
-        }
-
-        if (player.getHeldItemMainhand().getItem().isIn(Tags.Items.DYES_PURPLE) && !this.dataManager.get(COLOR).equals(COLORS.PURPLE.name())) {
-            this.dataManager.set(COLOR, COLORS.PURPLE.name());
-            player.getHeldItemMainhand().shrink(1);
-            return ActionResultType.SUCCESS;
-        }
-
-        if (player.getHeldItemMainhand().getItem().isIn(Tags.Items.DYES_ORANGE) && !this.dataManager.get(COLOR).equals(COLORS.ORANGE.name())) {
-            this.dataManager.set(COLOR, COLORS.ORANGE.name());
+        if (player.getHeldItemMainhand().getItem().isIn(Tags.Items.DYES)) {
+            DyeColor color = DyeColor.getColor(stack);
+            if(color == null || this.dataManager.get(COLOR).equals(color.getTranslationKey()) || !Arrays.asList(carbyColors).contains(color.getTranslationKey()))
+                return ActionResultType.SUCCESS;
+            this.dataManager.set(COLOR, color.getTranslationKey());
             player.getHeldItemMainhand().shrink(1);
             return ActionResultType.SUCCESS;
         }
@@ -713,6 +706,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             this.TO_LIST.add(toPos.toImmutable());
         this.dataManager.set(TO_POS, TO_LIST.size());
     }
+
+    public static String[] carbyColors = {"purple", "orange", "blue", "red", "yellow", "green"};
 
     public enum COLORS {
         ORANGE,
