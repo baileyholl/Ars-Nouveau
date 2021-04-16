@@ -185,6 +185,11 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
         if(isCraftingPotion && recipeWrapper.recipes.size() > 0){
 
             RecipeWrapper.SingleRecipe recipe = (RecipeWrapper.SingleRecipe) recipeWrapper.recipes.toArray()[0];
+            if(!(recipe.recipe.get(0) instanceof PotionIngredient)){
+                isCraftingPotion = false;
+                return;
+            }
+
             PotionIngredient potionIngred = (PotionIngredient) recipe.recipe.get(0);
             Ingredient itemIngred = recipe.recipe.get(1);
             List<ItemStack> needed = new ArrayList<ItemStack>(Arrays.asList(itemIngred.getMatchingStacks()));
@@ -232,6 +237,7 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
                     recipes.addRecipe(r.getIngredients(), r.getRecipeOutput(), r);
 
             }
+            isCraftingPotion = false;
         }
         this.recipeWrapper = recipes;
         if(recipeWrapper.recipes.isEmpty() && playerEntity != null){
