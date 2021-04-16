@@ -32,7 +32,7 @@ public class PortalTile extends TileEntity implements ITickableTileEntity {
 
     public void warp(Entity e){
         if(!world.isRemote && warpPos != null && !(world.getBlockState(warpPos).getBlock() instanceof PortalBlock)) {
-            e.setLocationAndAngles(warpPos.getX(), warpPos.getY(), warpPos.getZ(), e.rotationYaw, e.rotationPitch);
+            e.setLocationAndAngles(warpPos.getX() +0.5, warpPos.getY(), warpPos.getZ() +0.5, e.rotationYaw, e.rotationPitch);
             Networking.sendToNearby(world, e, new PacketWarpPosition(e.getEntityId(), e.getPosX(), e.getPosY(), e.getPosZ()));
             ((ServerWorld) world).spawnParticle(ParticleTypes.PORTAL, warpPos.getX(),  warpPos.getY() + 1,  warpPos.getZ(),
                     4,(this.world.rand.nextDouble() - 0.5D) * 2.0D, -this.world.rand.nextDouble(), (this.world.rand.nextDouble() - 0.5D) * 2.0D, 0.1f);

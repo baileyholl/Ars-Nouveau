@@ -19,6 +19,7 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -26,9 +27,11 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Random;
 
 public class RuneBlock extends ModBlock{
     public RuneBlock() {
@@ -67,10 +70,18 @@ public class RuneBlock extends ModBlock{
     }
 
     @Override
+    public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
+        super.tick(state, worldIn, pos, rand);
+        List<Entity> entities = worldIn.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX(), pos.getY() +1, pos.getZ()).grow(1));
+        if(!entities.isEmpty() && worldIn.getTileEntity(pos) instanceof RuneTile)
+            ((RuneTile) worldIn.getTileEntity(pos)).castSpell(entities.get(0));
+    }
+
+    @Override
     public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
         super.onEntityCollision(state, worldIn, pos, entityIn);
         if(worldIn.getTileEntity(pos) instanceof RuneTile)
-            ((RuneTile) worldIn.getTileEntity(pos)).castSpell(entityIn);
+            worldIn.getPendingBlockTicks().scheduleTick(pos, this, 1);
     }
 
     @Override

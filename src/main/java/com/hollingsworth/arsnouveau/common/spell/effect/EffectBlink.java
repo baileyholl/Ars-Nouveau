@@ -3,6 +3,8 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.items.WarpScroll;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketWarpPosition;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -54,6 +56,7 @@ public class EffectBlink extends AbstractEffect {
                 BlockPos warpPos = WarpScroll.getPos(shooter.getHeldItemOffhand());
                 if(warpPos != null && !warpPos.equals(BlockPos.ZERO)){
                     warpEntity(rayTraceResult.getEntity(), warpPos);
+
                 }
 
             }else
@@ -73,7 +76,7 @@ public class EffectBlink extends AbstractEffect {
                 4,(world.rand.nextDouble() - 0.5D) * 2.0D, -world.rand.nextDouble(), (world.rand.nextDouble() - 0.5D) * 2.0D, 0.1f);
 
         entity.setPositionAndUpdate(warpPos.getX() +0.5, warpPos.getY(), warpPos.getZ() +0.5);
-
+        Networking.sendToNearby(world, entity, new PacketWarpPosition(entity.getEntityId(), entity.getPosX(), entity.getPosY(), entity.getPosZ()));
         entity.world.playSound(null, warpPos, SoundEvents.ENTITY_ILLUSIONER_MIRROR_MOVE, SoundCategory.NEUTRAL, 1.0f, 1.0f);
         ((ServerWorld) entity.world).spawnParticle(ParticleTypes.PORTAL, warpPos.getX() +0.5,  warpPos.getY() + 1.0,  warpPos.getZ() +0.5,
                 4,(world.rand.nextDouble() - 0.5D) * 2.0D, -world.rand.nextDouble(), (world.rand.nextDouble() - 0.5D) * 2.0D, 0.1f);
