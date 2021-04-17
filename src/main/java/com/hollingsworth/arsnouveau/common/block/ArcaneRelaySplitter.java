@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 public class ArcaneRelaySplitter extends ModBlock{
 
     public ArcaneRelaySplitter() {
-        super(defaultProperties().setLightLevel((state) -> 8).notSolid(), LibBlockNames.ARCANE_RELAY_SPLITTER);
+        super(defaultProperties().lightLevel((state) -> 8).noOcclusion(), LibBlockNames.ARCANE_RELAY_SPLITTER);
     }
 
     @Override
@@ -31,12 +31,12 @@ public class ArcaneRelaySplitter extends ModBlock{
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState p_149645_1_) {
+    public BlockRenderType getRenderShape(BlockState p_149645_1_) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return Block.makeCuboidShape(1D, 1.0D, 1.0D, 15, 15, 15);
+        return Block.box(1D, 1.0D, 1.0D, 15, 15, 15);
     }
 }

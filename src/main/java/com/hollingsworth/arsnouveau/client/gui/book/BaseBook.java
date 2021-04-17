@@ -27,7 +27,7 @@ public class BaseBook extends ModdedScreen {
     @Override
     public void init() {
         super.init();
-        this.minecraft.keyboardListener.enableRepeatEvents(true);
+        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         bookLeft = width / 2 - FULL_WIDTH / 2;
         bookTop = height / 2 - FULL_HEIGHT / 2;
         bookRight = width / 2 + FULL_WIDTH / 2;
@@ -37,24 +37,24 @@ public class BaseBook extends ModdedScreen {
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        GlStateManager.pushMatrix();
+        GlStateManager._pushMatrix();
         if(scaleFactor != 1) {
-            GlStateManager.scalef(scaleFactor, scaleFactor, scaleFactor);
+            GlStateManager._scalef(scaleFactor, scaleFactor, scaleFactor);
 
             mouseX /= scaleFactor;
             mouseY /= scaleFactor;
         }
         drawScreenAfterScale(matrixStack,mouseX, mouseY, partialTicks);
-        GlStateManager.popMatrix();
+        GlStateManager._popMatrix();
     }
 
     public void drawBackgroundElements(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
-        Minecraft.getInstance().textureManager.bindTexture(background);
+        Minecraft.getInstance().textureManager.bind(background);
         drawFromTexture(background,0, 0, 0, 0, FULL_WIDTH, FULL_HEIGHT, FULL_WIDTH, FULL_HEIGHT, stack);
     }
 
     public static void drawFromTexture(ResourceLocation resourceLocation, int x, int y, int u, int v, int w, int h, int fileWidth, int fileHeight, MatrixStack stack) {
-        Minecraft.getInstance().textureManager.bindTexture(resourceLocation);
+        Minecraft.getInstance().textureManager.bind(resourceLocation);
         blit(stack,x, y, u, v, w, h, fileWidth, fileHeight);
     }
 
@@ -66,12 +66,12 @@ public class BaseBook extends ModdedScreen {
     public void drawScreenAfterScale(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         resetTooltip();
         renderBackground(stack);
-        stack.push();
+        stack.pushPose();
         stack.translate(bookLeft, bookTop, 0);
         RenderSystem.color3f(1F, 1F, 1F);
         drawBackgroundElements(stack,mouseX, mouseY, partialTicks);
         drawForegroundElements(mouseX, mouseY, partialTicks);
-        stack.pop();
+        stack.popPose();
         super.render(stack, mouseX, mouseY, partialTicks);
         drawTooltip(stack, mouseX, mouseY);
     }

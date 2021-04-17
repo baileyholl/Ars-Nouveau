@@ -15,10 +15,10 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 
 public class LavaLily extends BushBlock {
-    protected static final VoxelShape LILY_PAD_AABB = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 1.5D, 16.0D);
+    protected static final VoxelShape LILY_PAD_AABB = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 1.5D, 16.0D);
 
     public LavaLily() {
-        super(ModBlock.defaultProperties().notSolid());
+        super(ModBlock.defaultProperties().noOcclusion());
         setRegistryName(LibBlockNames.LAVA_LILY);
     }
 
@@ -30,33 +30,33 @@ public class LavaLily extends BushBlock {
     public static final IntegerProperty LOC = IntegerProperty.create("loc", 0, 2);
 
     public BlockState getState(World world, BlockPos pos){
-        BlockState state = getDefaultState();
-        if(world.getBlockState(pos.down()).getBlock() == Blocks.STONE)
-            state = state.with(LOC, 0);
-        if(world.getBlockState(pos.down()).getBlock() == Blocks.MAGMA_BLOCK)
-            state = state.with(LOC, 1);
-        if(world.getBlockState(pos.down()).getBlock() == Blocks.LAVA)
-            state = state.with(LOC, 2);
+        BlockState state = defaultBlockState();
+        if(world.getBlockState(pos.below()).getBlock() == Blocks.STONE)
+            state = state.setValue(LOC, 0);
+        if(world.getBlockState(pos.below()).getBlock() == Blocks.MAGMA_BLOCK)
+            state = state.setValue(LOC, 1);
+        if(world.getBlockState(pos.below()).getBlock() == Blocks.LAVA)
+            state = state.setValue(LOC, 2);
         return state;
     }
 
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return getState(context.getWorld(), context.getPos());
+        return getState(context.getLevel(), context.getClickedPos());
     }
 
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(LOC);
     }
 
     @Override
-    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        return super.isValidPosition(state, worldIn, pos);
+    public boolean canSurvive(BlockState state, IWorldReader worldIn, BlockPos pos) {
+        return super.canSurvive(state, worldIn, pos);
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState p_149645_1_) {
+    public BlockRenderType getRenderShape(BlockState p_149645_1_) {
         return BlockRenderType.MODEL;
     }
 
@@ -66,9 +66,9 @@ public class LavaLily extends BushBlock {
     }
 
     @Override
-    protected boolean isValidGround(BlockState state, IBlockReader worldIn, BlockPos pos) {
+    protected boolean mayPlaceOn(BlockState state, IBlockReader worldIn, BlockPos pos) {
         FluidState fluidstate = worldIn.getFluidState(pos);
-        FluidState fluidstate1 = worldIn.getFluidState(pos.up());
-        return fluidstate1.getFluid() == Fluids.EMPTY;
+        FluidState fluidstate1 = worldIn.getFluidState(pos.above());
+        return fluidstate1.getType() == Fluids.EMPTY;
     }
 }

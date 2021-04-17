@@ -18,7 +18,7 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe{
 
 
     public SpellWriteRecipe(){
-        this.pedestalItems = Arrays.asList(new Ingredient[]{Ingredient.fromItems(ItemsRegistry.spellParchment)});
+        this.pedestalItems = Arrays.asList(new Ingredient[]{Ingredient.of(ItemsRegistry.spellParchment)});
     }
 
     @Override

@@ -41,7 +41,7 @@ public class ApparatusRecipeProvider implements IDataProvider {
 
     List<EnchantingApparatusRecipe> recipes = new ArrayList<>();
     @Override
-    public void act(DirectoryCache cache) throws IOException {
+    public void run(DirectoryCache cache) throws IOException {
         addEntries();
         Path output = this.generator.getOutputFolder();
         for(IEnchantingRecipe g : recipes){
@@ -63,7 +63,7 @@ public class ApparatusRecipeProvider implements IDataProvider {
 //                Items.FEATHER,Items.FEATHER,Items.FEATHER, ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.EffectLaunchID)},  ArsNouveauAPI.PatchouliCategories.equipment.name()));
         addRecipe(builder().withResult(ItemsRegistry.beltOfLevitation)
                 .withReagent(ItemsRegistry.mundaneBelt)
-                .withPedestalItem(4, Ingredient.fromTag(Tags.Items.INGOTS_GOLD))
+                .withPedestalItem(4, Ingredient.of(Tags.Items.INGOTS_GOLD))
                 .withPedestalItem(3, Items.FEATHER)
                 .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.EffectLaunchID))
                 .withCategory(ArsNouveauAPI.PatchouliCategories.equipment)
@@ -74,57 +74,57 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withReagent(Items.GLASS_BOTTLE)
                 .withPedestalItem(4, Items.GLOWSTONE)
                 .withPedestalItem(2, Items.REDSTONE_LAMP)
-                .withPedestalItem(2,  Ingredient.fromTag(Tags.Items.GLASS))
+                .withPedestalItem(2,  Ingredient.of(Tags.Items.GLASS))
                 .build());
 
         addRecipe(builder()
                 .withResult(BlockRegistry.MANA_BLOOM_CROP)
-                .withReagent(Ingredient.fromTag(Tags.Items.SEEDS))
+                .withReagent(Ingredient.of(Tags.Items.SEEDS))
                 .withPedestalItem(4, Recipes.MANA_GEM)
                 .build());
 
         addRecipe(builder()
                 .withResult(ItemsRegistry.ringOfLesserDiscount)
                 .withReagent(ItemsRegistry.ringOfPotential)
-                .withPedestalItem(4,  Ingredient.fromTag(Tags.Items.GEMS_DIAMOND))
-                .withPedestalItem(2,Ingredient.fromTag(Tags.Items.ENDER_PEARLS))
+                .withPedestalItem(4,  Ingredient.of(Tags.Items.GEMS_DIAMOND))
+                .withPedestalItem(2,Ingredient.of(Tags.Items.ENDER_PEARLS))
                 .withPedestalItem(2,   Recipes.MANA_GEM)
-                .withPedestalItem(2,   Ingredient.fromTag(Tags.Items.ENDER_PEARLS))
+                .withPedestalItem(2,   Ingredient.of(Tags.Items.ENDER_PEARLS))
                 .build());
 
         addRecipe(builder()
                 .withResult(ItemsRegistry.ringOfGreaterDiscount)
                 .withReagent(ItemsRegistry.ringOfLesserDiscount)
-                .withPedestalItem(4,  Ingredient.fromTag(Tags.Items.GEMS_DIAMOND))
-                .withPedestalItem(2,Ingredient.fromTag(Tags.Items.RODS_BLAZE))
+                .withPedestalItem(4,  Ingredient.of(Tags.Items.GEMS_DIAMOND))
+                .withPedestalItem(2,Ingredient.of(Tags.Items.RODS_BLAZE))
                 .withPedestalItem(2, Recipes.MANA_GEM)
                 .build());
 
 
-        addRecipe(new EnchantingApparatusRecipe(new ItemStack(ItemsRegistry.beltOfUnstableGifts), Ingredient.fromItems(ItemsRegistry.mundaneBelt), Arrays.asList(
-                Ingredient.fromItems(Items.SUGAR),
-                Ingredient.fromTag(Tags.Items.CROPS_NETHER_WART),
-                Ingredient.fromTag(Tags.Items.RODS_BLAZE),
-                Ingredient.fromTag(Tags.Items.DUSTS_GLOWSTONE),
-                Ingredient.fromItems(Items.FERMENTED_SPIDER_EYE),
-                Ingredient.fromTag(Tags.Items.DUSTS_REDSTONE),
-                Ingredient.fromItems(Items.BREWING_STAND),
-                Ingredient.fromTag(Tags.Items.FEATHERS)
+        addRecipe(new EnchantingApparatusRecipe(new ItemStack(ItemsRegistry.beltOfUnstableGifts), Ingredient.of(ItemsRegistry.mundaneBelt), Arrays.asList(
+                Ingredient.of(Items.SUGAR),
+                Ingredient.of(Tags.Items.CROPS_NETHER_WART),
+                Ingredient.of(Tags.Items.RODS_BLAZE),
+                Ingredient.of(Tags.Items.DUSTS_GLOWSTONE),
+                Ingredient.of(Items.FERMENTED_SPIDER_EYE),
+                Ingredient.of(Tags.Items.DUSTS_REDSTONE),
+                Ingredient.of(Items.BREWING_STAND),
+                Ingredient.of(Tags.Items.FEATHERS)
         ), ArsNouveauAPI.PatchouliCategories.equipment.name()));
 
 
         addRecipe(builder()
                 .withResult(BlockRegistry.SUMMONING_CRYSTAL)
                 .withReagent(Recipes.MANA_GEM_BLOCK)
-                .withPedestalItem(2,  Ingredient.fromTag(Tags.Items.GEMS_DIAMOND))
-                .withPedestalItem(2,Ingredient.fromTag(Tags.Items.INGOTS_GOLD))
+                .withPedestalItem(2,  Ingredient.of(Tags.Items.GEMS_DIAMOND))
+                .withPedestalItem(2,Ingredient.of(Tags.Items.INGOTS_GOLD))
                 .withPedestalItem(4, BlockRegistry.ARCANE_STONE)
                 .build());
 
         addRecipe(builder()
                 .withResult(ItemsRegistry.whelpCharm)
                 .withReagent( Items.EGG)
-                .withPedestalItem(4,Ingredient.fromTag(Tags.Items.INGOTS_GOLD))
+                .withPedestalItem(4,Ingredient.of(Tags.Items.INGOTS_GOLD))
                 .withPedestalItem(3, Recipes.MANA_GEM)
                 .withPedestalItem( ItemsRegistry.noviceSpellBook)
                 .build());
@@ -133,37 +133,37 @@ public class ApparatusRecipeProvider implements IDataProvider {
         addRecipe(builder()
                 .withResult(BlockRegistry.ARCANE_RELAY)
                 .withReagent(  BlockRegistry.MANA_JAR)
-                .withPedestalItem(6,Ingredient.fromTag(Tags.Items.INGOTS_GOLD))
+                .withPedestalItem(6,Ingredient.of(Tags.Items.INGOTS_GOLD))
                 .withPedestalItem(2, Recipes.MANA_GEM)
                 .build());
 
         addRecipe(builder()
                 .withResult(ItemsRegistry.carbuncleCharm)
                 .withReagent(ItemsRegistry.carbuncleShard)
-                .withPedestalItem(5,Ingredient.fromTag(Tags.Items.NUGGETS_GOLD))
+                .withPedestalItem(5,Ingredient.of(Tags.Items.NUGGETS_GOLD))
                 .withPedestalItem(3, Recipes.MANA_GEM)
                 .build());
 
         addRecipe(builder()
                 .withResult(ItemsRegistry.amuletOfManaBoost)
                 .withReagent(ItemsRegistry.dullTrinket)
-                .withPedestalItem(3,Ingredient.fromTag(Tags.Items.GEMS_DIAMOND))
+                .withPedestalItem(3,Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(5, Recipes.MANA_GEM)
                 .build());
 
         addRecipe(builder()
                 .withResult(ItemsRegistry.amuletOfManaRegen)
                 .withReagent(ItemsRegistry.dullTrinket)
-                .withPedestalItem(2,Ingredient.fromTag(Tags.Items.GEMS_DIAMOND))
-                .withPedestalItem(2,Ingredient.fromTag(Tags.Items.INGOTS_GOLD))
+                .withPedestalItem(2,Ingredient.of(Tags.Items.GEMS_DIAMOND))
+                .withPedestalItem(2,Ingredient.of(Tags.Items.INGOTS_GOLD))
                 .withPedestalItem(4, Recipes.MANA_GEM)
                 .build());
 
         addRecipe(builder()
                 .withResult(BlockRegistry.ARCANE_RELAY_SPLITTER)
                 .withReagent( BlockRegistry.ARCANE_RELAY)
-                .withPedestalItem(4,Ingredient.fromTag(Tags.Items.GEMS_QUARTZ))
-                .withPedestalItem(4,Ingredient.fromTag(Tags.Items.INGOTS_GOLD))
+                .withPedestalItem(4,Ingredient.of(Tags.Items.GEMS_QUARTZ))
+                .withPedestalItem(4,Ingredient.of(Tags.Items.INGOTS_GOLD))
                 .build());
 
         addRecipe(builder()
@@ -172,23 +172,23 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withPedestalItem(Recipes.MANA_GEM)
                 .withPedestalItem(BlockRegistry.MANA_BLOOM_CROP)
                 .withPedestalItem(ItemsRegistry.manaBloom)
-                .withPedestalItem(Ingredient.fromTag(Tags.Items.GEMS_DIAMOND))
+                .withPedestalItem(Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem( Items.OAK_SAPLING)
                 .withPedestalItem( Items.SPRUCE_SAPLING)
                 .withPedestalItem( Items.BIRCH_SAPLING)
-                .withPedestalItem(Ingredient.fromTag(Tags.Items.SEEDS_WHEAT))
+                .withPedestalItem(Ingredient.of(Tags.Items.SEEDS_WHEAT))
                 .build());
 
 
         addRecipe(builder()
                 .withResult(BlockRegistry.SPELL_TURRET)
                 .withReagent(Items.DISPENSER)
-                .withPedestalItem(Ingredient.fromTag(Tags.Items.RODS_BLAZE))
+                .withPedestalItem(Ingredient.of(Tags.Items.RODS_BLAZE))
                 .withPedestalItem( ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.EffectRedstoneID))
-                .withPedestalItem(Ingredient.fromTag(Tags.Items.STORAGE_BLOCKS_QUARTZ))
-                .withPedestalItem(Ingredient.fromTag(Tags.Items.STORAGE_BLOCKS_REDSTONE))
+                .withPedestalItem(Ingredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ))
+                .withPedestalItem(Ingredient.of(Tags.Items.STORAGE_BLOCKS_REDSTONE))
                 .withPedestalItem(Recipes.MANA_GEM_BLOCK)
-                .withPedestalItem(3,Ingredient.fromTag(Tags.Items.INGOTS_GOLD))
+                .withPedestalItem(3,Ingredient.of(Tags.Items.INGOTS_GOLD))
                 .build());
 
         addRecipe(builder()
@@ -197,21 +197,21 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withPedestalItem(Items.LAVA_BUCKET)
                 .withPedestalItem(Items.BUCKET)
                 .withPedestalItem(ItemsRegistry.ALLOW_ITEM_SCROLL)
-                .withPedestalItem(Ingredient.fromTag(Tags.Items.ENDER_PEARLS))
+                .withPedestalItem(Ingredient.of(Tags.Items.ENDER_PEARLS))
                 .build());
 
         addRecipe(builder()
                 .withResult(ItemsRegistry.DOMINION_ROD)
                 .withReagent(Items.STICK)
                 .withPedestalItem(2, Recipes.MANA_GEM)
-                .withPedestalItem(Ingredient.fromTag(Tags.Items.INGOTS_GOLD))
+                .withPedestalItem(Ingredient.of(Tags.Items.INGOTS_GOLD))
                 .build());
 
         addRecipe(builder()
                 .withResult(ItemsRegistry.WIXIE_CHARM)
                 .withReagent( ItemsRegistry.WIXIE_SHARD)
-                .withPedestalItem(Ingredient.fromTag(ItemTags.SAPLINGS))
-                .withPedestalItem(Ingredient.fromTag(Tags.Items.GEMS_EMERALD))
+                .withPedestalItem(Ingredient.of(ItemTags.SAPLINGS))
+                .withPedestalItem(Ingredient.of(Tags.Items.GEMS_EMERALD))
                 .withPedestalItem(Items.CRAFTING_TABLE)
                 .withPedestalItem(Items.BREWING_STAND)
                 .build());
@@ -220,7 +220,7 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withResult(ItemsRegistry.WAND)
                 .withReagent(Recipes.ARCHWOOD_LOG)
                 .withPedestalItem(4, Recipes.MANA_GEM)
-                .withPedestalItem(2, Ingredient.fromTag(Tags.Items.INGOTS_GOLD))
+                .withPedestalItem(2, Ingredient.of(Tags.Items.INGOTS_GOLD))
                 .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile()))
                 .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAccelerate()))
                 .build());
@@ -229,13 +229,13 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withResult(ItemsRegistry.SPELL_BOW)
                 .withReagent(Items.BOW)
                 .withPedestalItem(Recipes.MANA_GEM_BLOCK)
-                .withPedestalItem(Ingredient.fromTag(Tags.Items.STORAGE_BLOCKS_GOLD))
+                .withPedestalItem(Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
                 .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile()))
                 .build());
 
         addRecipe(builder()
                 .withResult(new ItemStack(ItemsRegistry.AMPLIFY_ARROW, 32))
-                .withReagent( Ingredient.fromTag(ItemTags.ARROWS))
+                .withReagent( Ingredient.of(ItemTags.ARROWS))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify()))
                 .build());
@@ -243,56 +243,56 @@ public class ApparatusRecipeProvider implements IDataProvider {
 
         addRecipe(builder()
                 .withResult(new ItemStack(ItemsRegistry.SPLIT_ARROW, 32))
-                .withReagent( Ingredient.fromTag(ItemTags.ARROWS))
+                .withReagent( Ingredient.of(ItemTags.ARROWS))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentSplit()))
                 .build());
         addRecipe(builder()
                 .withResult(new ItemStack(ItemsRegistry.PIERCE_ARROW, 32))
-                .withReagent( Ingredient.fromTag(ItemTags.ARROWS))
+                .withReagent( Ingredient.of(ItemTags.ARROWS))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentPierce()))
                 .build());
 
         addRecipe(builder()
                 .withResult(new ItemStack(ItemsRegistry.POTION_FLASK))
-                .withReagent(Ingredient.fromItems(Items.GLASS_BOTTLE))
+                .withReagent(Ingredient.of(Items.GLASS_BOTTLE))
                 .withPedestalItem(2, ItemsRegistry.blazeFiber)
                 .withPedestalItem(Recipes.MANA_GEM_BLOCK)
-                .withPedestalItem(Ingredient.fromTag(Tags.Items.STORAGE_BLOCKS_GOLD))
+                .withPedestalItem(Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
                 .build());
 
         addRecipe(builder()
                 .withResult(new ItemStack(ItemsRegistry.POTION_FLASK_EXTEND_TIME))
-                .withReagent(Ingredient.fromItems(ItemsRegistry.POTION_FLASK))
+                .withReagent(Ingredient.of(ItemsRegistry.POTION_FLASK))
                 .withPedestalItem(8, ArsNouveauAPI.getInstance().getGlyphItem(new AugmentExtendTime()))
                 .build());
 
 
         addRecipe(builder()
                 .withResult(new ItemStack(ItemsRegistry.POTION_FLASK_AMPLIFY))
-                .withReagent(Ingredient.fromItems(ItemsRegistry.POTION_FLASK))
+                .withReagent(Ingredient.of(ItemsRegistry.POTION_FLASK))
                 .withPedestalItem(8, ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify()))
                 .build());
 
         addRecipe(builder()
                 .withResult(new ItemStack(BlockRegistry.POTION_MELDER))
-                .withReagent(Ingredient.fromItems(BlockRegistry.POTION_JAR))
+                .withReagent(Ingredient.of(BlockRegistry.POTION_JAR))
                 .withPedestalItem(2, ArsNouveauAPI.getInstance().getGlyphItem(new AugmentExtract()))
-                .withPedestalItem(2,Ingredient.fromTag(Tags.Items.STORAGE_BLOCKS_GOLD))
-                .withPedestalItem(4,Ingredient.fromTag(Tags.Items.RODS_BLAZE))
+                .withPedestalItem(2,Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
+                .withPedestalItem(4,Ingredient.of(Tags.Items.RODS_BLAZE))
                 .build());
 
 
         addRecipe(builder()
-                .withPedestalItem(4, Ingredient.fromTag(ItemTags.FISHES))
+                .withPedestalItem(4, Ingredient.of(ItemTags.FISHES))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
-                .withPedestalItem(2,Ingredient.fromTag(Tags.Items.STORAGE_BLOCKS_GOLD))
-                .withPedestalItem(2, Ingredient.fromTag(Tags.Items.STORAGE_BLOCKS_LAPIS))
+                .withPedestalItem(2,Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
+                .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.AQUA_AFFINITY, 1, 5000));
         addRecipe(builder()
-                 .withPedestalItem(4, Ingredient.fromTag(Tags.Items.RODS_BLAZE))
-                .withPedestalItem(1,Ingredient.fromTag(Tags.Items.STORAGE_BLOCKS_GOLD))
+                 .withPedestalItem(4, Ingredient.of(Tags.Items.RODS_BLAZE))
+                .withPedestalItem(1,Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
                 .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentExtendTime()))
                 .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAOE()))
                 .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentDampen()))
@@ -300,7 +300,7 @@ public class ApparatusRecipeProvider implements IDataProvider {
 
         addRecipe(builder()
                 .withPedestalItem(4, ItemsRegistry.mythicalClay)
-                .withPedestalItem(1,Ingredient.fromTag(Tags.Items.ENDER_PEARLS))
+                .withPedestalItem(1,Ingredient.of(Tags.Items.ENDER_PEARLS))
                 .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentPierce()))
                 .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentExtract()))
                 .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentFortune()))
@@ -309,7 +309,7 @@ public class ApparatusRecipeProvider implements IDataProvider {
     }
 
     public static List<Ingredient> listOfIngred(Item[] items) {
-        return Arrays.stream(items).map(Ingredient::fromItems).collect(Collectors.toList());
+        return Arrays.stream(items).map(Ingredient::of).collect(Collectors.toList());
     }
 
     public void addRecipe(EnchantingApparatusRecipe recipe){

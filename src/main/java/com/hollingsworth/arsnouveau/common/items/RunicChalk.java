@@ -11,22 +11,22 @@ import net.minecraft.world.World;
 
 public class RunicChalk extends ModItem{
     public RunicChalk() {
-        super(ItemsRegistry.defaultItemProperties().maxDamage(15),LibItemNames.RUNIC_CHALK);
+        super(ItemsRegistry.defaultItemProperties().durability(15),LibItemNames.RUNIC_CHALK);
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext context) {
-        BlockPos pos = context.getPos();
-        World world = context.getWorld();
-        if(world.isRemote)
-            return super.onItemUse(context);
+    public ActionResultType useOn(ItemUseContext context) {
+        BlockPos pos = context.getClickedPos();
+        World world = context.getLevel();
+        if(world.isClientSide)
+            return super.useOn(context);
 
-        if(world.getBlockState(pos.up()).getMaterial() == Material.AIR){
-            world.setBlockState(pos.up(), BlockRegistry.RUNE_BLOCK.getDefaultState());
-            if(world.getTileEntity(pos.up()) instanceof RuneTile){
-                ((RuneTile) world.getTileEntity(pos.up())).uuid = context.getPlayer().getUniqueID();
+        if(world.getBlockState(pos.above()).getMaterial() == Material.AIR){
+            world.setBlockAndUpdate(pos.above(), BlockRegistry.RUNE_BLOCK.defaultBlockState());
+            if(world.getBlockEntity(pos.above()) instanceof RuneTile){
+                ((RuneTile) world.getBlockEntity(pos.above())).uuid = context.getPlayer().getUUID();
             }
-            context.getItem().damageItem(1, context.getPlayer(), (t)->{});
+            context.getItemInHand().hurtAndBreak(1, context.getPlayer(), (t)->{});
         }
         return ActionResultType.SUCCESS;
     }

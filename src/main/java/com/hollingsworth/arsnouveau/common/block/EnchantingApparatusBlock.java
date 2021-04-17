@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 public class EnchantingApparatusBlock extends ModBlock{
 
     public EnchantingApparatusBlock() {
-        super(ModBlock.defaultProperties().notSolid(),"enchanting_apparatus");
+        super(ModBlock.defaultProperties().noOcclusion(),"enchanting_apparatus");
     }
 
 
@@ -36,57 +36,57 @@ public class EnchantingApparatusBlock extends ModBlock{
     }
 
     @Override
-    public void onBlockClicked(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
-        super.onBlockClicked(state, worldIn, pos, player);
+    public void attack(BlockState state, World worldIn, BlockPos pos, PlayerEntity player) {
+        super.attack(state, worldIn, pos, player);
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(world.isRemote || handIn != Hand.MAIN_HAND)
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if(world.isClientSide || handIn != Hand.MAIN_HAND)
             return ActionResultType.SUCCESS;
-        EnchantingApparatusTile tile = (EnchantingApparatusTile) world.getTileEntity(pos);
+        EnchantingApparatusTile tile = (EnchantingApparatusTile) world.getBlockEntity(pos);
         if(tile.isCrafting)
             return ActionResultType.SUCCESS;
 
 
-        if(!(world.getBlockState(pos.down()).getBlock() instanceof ArcaneCore)){
+        if(!(world.getBlockState(pos.below()).getBlock() instanceof ArcaneCore)){
             PortUtil.sendMessage(player, new TranslationTextComponent("alert.core"));
             return ActionResultType.SUCCESS;
         }
         if(tile.catalystItem == null || tile.catalystItem.isEmpty()){
-            IEnchantingRecipe recipe = tile.getRecipe(player.getHeldItemMainhand());
+            IEnchantingRecipe recipe = tile.getRecipe(player.getMainHandItem());
             if(recipe == null){
                 PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.apparatus.norecipe"));
-            }else if(recipe.consumesMana() && !ManaUtil.hasManaNearby(tile.getPos(), tile.getWorld(), 10, recipe.manaCost())){
+            }else if(recipe.consumesMana() && !ManaUtil.hasManaNearby(tile.getBlockPos(), tile.getLevel(), 10, recipe.manaCost())){
                 PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.apparatus.nomana"));
             }else{
-                if(tile.attemptCraft(player.getHeldItemMainhand())){
-                    tile.catalystItem = player.inventory.decrStackSize(player.inventory.currentItem, 1);
+                if(tile.attemptCraft(player.getMainHandItem())){
+                    tile.catalystItem = player.inventory.removeItem(player.inventory.selected, 1);
                 }
             }
         }else{
-            ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.catalystItem);
-            world.addEntity(item);
+            ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.catalystItem);
+            world.addFreshEntity(item);
             tile.catalystItem = ItemStack.EMPTY;
-            if(tile.attemptCraft(player.getHeldItemMainhand())){
-                tile.catalystItem = player.inventory.decrStackSize(player.inventory.currentItem, 1);
+            if(tile.attemptCraft(player.getMainHandItem())){
+                tile.catalystItem = player.inventory.removeItem(player.inventory.selected, 1);
             }
         }
 
-        world.notifyBlockUpdate(pos, state, state, 2);
+        world.sendBlockUpdated(pos, state, state, 2);
         return ActionResultType.SUCCESS;
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return Block.makeCuboidShape(1D, 1.0D, 1.0D, 15, 16, 15);
+        return Block.box(1D, 1.0D, 1.0D, 15, 16, 15);
     }
 
     @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        super.onBlockHarvested(worldIn, pos, state, player);
-        if(worldIn.getTileEntity(pos) instanceof EnchantingApparatusTile && ((EnchantingApparatusTile) worldIn.getTileEntity(pos)).catalystItem != null){
-            worldIn.addEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), ((EnchantingApparatusTile) worldIn.getTileEntity(pos)).catalystItem));
+    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.playerWillDestroy(worldIn, pos, state, player);
+        if(worldIn.getBlockEntity(pos) instanceof EnchantingApparatusTile && ((EnchantingApparatusTile) worldIn.getBlockEntity(pos)).catalystItem != null){
+            worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), ((EnchantingApparatusTile) worldIn.getBlockEntity(pos)).catalystItem));
         }
     }
 
@@ -97,7 +97,7 @@ public class EnchantingApparatusBlock extends ModBlock{
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState p_149645_1_) {
+    public BlockRenderType getRenderShape(BlockState p_149645_1_) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 }

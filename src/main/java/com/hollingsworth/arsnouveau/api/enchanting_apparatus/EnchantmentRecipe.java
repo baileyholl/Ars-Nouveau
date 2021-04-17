@@ -40,7 +40,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
     public EnchantmentRecipe(ItemStack[] pedestalItems, Enchantment enchantment, int level, int manaCost){
         List<Ingredient> ingres = new ArrayList<>();
         for(ItemStack i : pedestalItems){
-            ingres.add(Ingredient.fromItems(i.getItem()));
+            ingres.add(Ingredient.of(i.getItem()));
         }
         this.pedestalItems = ingres;
         this.enchantment = enchantment;
@@ -59,18 +59,18 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
 
     @Override
     public IRecipeType<?> getType() {
-        return Registry.RECIPE_TYPE.getOrDefault(new ResourceLocation(ArsNouveau.MODID, RECIPE_ID));
+        return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, RECIPE_ID));
     }
 
     @Override
     public boolean doesReagentMatch(ItemStack stack) {
         Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
         int level = enchantments.getOrDefault(enchantment, 0);
-        return enchantment.canApply(stack) && this.enchantLevel - level == 1;
+        return enchantment.canEnchant(stack) && this.enchantLevel - level == 1;
     }
 
     @Override
-    public ItemStack getCraftingResult(EnchantingApparatusTile inv) {
+    public ItemStack assemble(EnchantingApparatusTile inv) {
         ItemStack stack = inv.catalystItem.copy();
         Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
         enchantments.put(enchantment, enchantLevel);
@@ -81,7 +81,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
 
     @Override
     public ItemStack getResult(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile tile) {
-        return getCraftingResult(tile);
+        return assemble(tile);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
         int counter = 1;
         for(Ingredient i : pedestalItems){
             JsonArray item = new JsonArray();
-            item.add(i.serialize());
+            item.add(i.toJson());
             jsonobject.add("item_"+counter, item);
             counter++;
         }
@@ -110,29 +110,29 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<EnchantmentRecipe> {
 
         @Override
-        public EnchantmentRecipe read(ResourceLocation recipeId, JsonObject json) {
-            Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(JSONUtils.getString(json, "enchantment")));
-            int level = JSONUtils.getInt(json, "level", 1);
-            int manaCost = JSONUtils.getInt(json,"mana", 0);
+        public EnchantmentRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+            Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(JSONUtils.getAsString(json, "enchantment")));
+            int level = JSONUtils.getAsInt(json, "level", 1);
+            int manaCost = JSONUtils.getAsInt(json,"mana", 0);
             List<Ingredient> stacks = new ArrayList<>();
             for(int i = 1; i < 9; i++){
                 if(json.has("item_"+i))
-                    stacks.add(Ingredient.deserialize(JSONUtils.getJsonArray(json, "item_" + i)));
+                    stacks.add(Ingredient.fromJson(JSONUtils.getAsJsonArray(json, "item_" + i)));
             }
             return new EnchantmentRecipe( stacks,enchantment,level, manaCost);
         }
 
         @Nullable
         @Override
-        public EnchantmentRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+        public EnchantmentRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
             int length = buffer.readInt();
-            String enchantID = buffer.readString();
+            String enchantID = buffer.readUtf();
             int level = buffer.readInt();
             int manaCost = buffer.readInt();
             List<Ingredient> stacks = new ArrayList<>();
 
             for(int i = 0; i < length; i++){
-                try{ stacks.add(Ingredient.read(buffer)); }catch (Exception e){
+                try{ stacks.add(Ingredient.fromNetwork(buffer)); }catch (Exception e){
                     e.printStackTrace();
                     break;
                 }
@@ -141,13 +141,13 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
         }
 
         @Override
-        public void write(PacketBuffer buf, EnchantmentRecipe recipe) {
+        public void toNetwork(PacketBuffer buf, EnchantmentRecipe recipe) {
             buf.writeInt(recipe.pedestalItems.size());
-            buf.writeString(recipe.enchantment.getRegistryName().toString());
+            buf.writeUtf(recipe.enchantment.getRegistryName().toString());
             buf.writeInt(recipe.enchantLevel);
             buf.writeInt(recipe.manaCost());
             for(Ingredient i : recipe.pedestalItems){
-                i.write(buf);
+                i.toNetwork(buf);
             }
         }
     }

@@ -44,10 +44,10 @@ public class PotionMelderTile extends TileEntity implements IAnimatable, ITickab
     @Override
     public void tick() {
 
-        if(!world.isRemote && !hasMana && world.getGameTime() % 20 == 0){
-            if(ManaUtil.takeManaNearbyWithParticles(pos, world, 5, 100) != null) {
+        if(!level.isClientSide && !hasMana && level.getGameTime() % 20 == 0){
+            if(ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 5, 100) != null) {
                 hasMana = true;
-                world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+                level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
             }
 
         }
@@ -62,7 +62,7 @@ public class PotionMelderTile extends TileEntity implements IAnimatable, ITickab
                 continue;
             if(tile1 != null && tile2 != null)
                 break;
-            TileEntity tileEntity = world.getTileEntity(pos.offset(d));
+            TileEntity tileEntity = level.getBlockEntity(worldPosition.relative(d));
             if(tileEntity instanceof PotionJarTile && ((PotionJarTile) tileEntity).getAmount() > 0){
                 if(tile1 == null)
                     tile1 = (PotionJarTile) tileEntity;
@@ -77,8 +77,8 @@ public class PotionMelderTile extends TileEntity implements IAnimatable, ITickab
             return;
         }
         PotionJarTile combJar = null;
-        if(world.getTileEntity(pos.down()) instanceof PotionJarTile)
-            combJar = (PotionJarTile) world.getTileEntity(pos.down());
+        if(level.getBlockEntity(worldPosition.below()) instanceof PotionJarTile)
+            combJar = (PotionJarTile) level.getBlockEntity(worldPosition.below());
 
         if(combJar == null) {
             isMixing = false;
@@ -96,14 +96,14 @@ public class PotionMelderTile extends TileEntity implements IAnimatable, ITickab
         timeMixing++;
         ParticleColor color1 = ParticleColor.fromInt(tile1.getColor());
         ParticleColor color2 = ParticleColor.fromInt(tile2.getColor());
-        if(world.isRemote ) {
+        if(level.isClientSide ) {
             //Burning jar
             if(timeMixing >= 80 && combJar.getPotion() != Potions.EMPTY) {
                 for (int i = 0; i < 3; i++) {
-                    double d0 = pos.getX() + 0.5 + ParticleUtil.inRange(-0.25, 0.25);
-                    double d1 = pos.getY() + 1 + ParticleUtil.inRange(-0.1, 0.4);
-                    double d2 = pos.getZ() + .5 + ParticleUtil.inRange(-0.25, 0.25);
-                    world.addParticle(GlowParticleData.createData(
+                    double d0 = worldPosition.getX() + 0.5 + ParticleUtil.inRange(-0.25, 0.25);
+                    double d1 = worldPosition.getY() + 1 + ParticleUtil.inRange(-0.1, 0.4);
+                    double d2 = worldPosition.getZ() + .5 + ParticleUtil.inRange(-0.25, 0.25);
+                    level.addParticle(GlowParticleData.createData(
                             ParticleColor.fromInt(combJar.getColor())),
                             d0, d1, d2,
                             0,
@@ -113,33 +113,33 @@ public class PotionMelderTile extends TileEntity implements IAnimatable, ITickab
             }
             int offset = 30;
            if(timeMixing >= 60) {
-               world.addParticle(GlowParticleData.createData(color1),
-                       (float) (pos.getX()) + 0.5 - Math.sin(ClientInfo.ticksInGame / 8D) / 4D,
-                       (float) (pos.getY()) + 0.75 - Math.pow(Math.sin(ClientInfo.ticksInGame / 32D), 2.0) / 2d,
-                       (float) (pos.getZ()) + 0.5 - Math.cos(ClientInfo.ticksInGame / 8D) / 4D,
+               level.addParticle(GlowParticleData.createData(color1),
+                       (float) (worldPosition.getX()) + 0.5 - Math.sin(ClientInfo.ticksInGame / 8D) / 4D,
+                       (float) (worldPosition.getY()) + 0.75 - Math.pow(Math.sin(ClientInfo.ticksInGame / 32D), 2.0) / 2d,
+                       (float) (worldPosition.getZ()) + 0.5 - Math.cos(ClientInfo.ticksInGame / 8D) / 4D,
                        0, 0, 0);
 
-               world.addParticle(GlowParticleData.createData(color2),
-                       (float) (pos.getX()) +0.5 - Math.sin((ClientInfo.ticksInGame +offset)  / 8D)/4D,
-                       (float) (pos.getY()) + 0.75 - Math.pow(Math.sin((ClientInfo.ticksInGame +offset)/ 32D), 2.0)/2d,
-                       (float) (pos.getZ()) +0.5 - Math.cos((ClientInfo.ticksInGame +offset) / 8D)/4D,
+               level.addParticle(GlowParticleData.createData(color2),
+                       (float) (worldPosition.getX()) +0.5 - Math.sin((ClientInfo.ticksInGame +offset)  / 8D)/4D,
+                       (float) (worldPosition.getY()) + 0.75 - Math.pow(Math.sin((ClientInfo.ticksInGame +offset)/ 32D), 2.0)/2d,
+                       (float) (worldPosition.getZ()) +0.5 - Math.cos((ClientInfo.ticksInGame +offset) / 8D)/4D,
                        0, 0, 0);
 
            }
            if(timeMixing >= 80) {
 
                offset = 50;
-               world.addParticle(GlowParticleData.createData(color1),
-                       (float) (pos.getX()) + 0.5 - Math.sin((ClientInfo.ticksInGame + offset) / 8D) / 4D,
-                       (float) (pos.getY()) + 0.75 - Math.pow(Math.sin((ClientInfo.ticksInGame + offset) / 32D), 2.0) / 2d,
-                       (float) (pos.getZ()) + 0.5 - Math.cos((ClientInfo.ticksInGame + offset) / 8D) / 4D,
+               level.addParticle(GlowParticleData.createData(color1),
+                       (float) (worldPosition.getX()) + 0.5 - Math.sin((ClientInfo.ticksInGame + offset) / 8D) / 4D,
+                       (float) (worldPosition.getY()) + 0.75 - Math.pow(Math.sin((ClientInfo.ticksInGame + offset) / 32D), 2.0) / 2d,
+                       (float) (worldPosition.getZ()) + 0.5 - Math.cos((ClientInfo.ticksInGame + offset) / 8D) / 4D,
                        0, 0, 0);
 
                offset = 70;
-               world.addParticle(GlowParticleData.createData(color2),
-                       (float) (pos.getX()) + 0.5 - Math.sin((ClientInfo.ticksInGame + offset) / 8D) / 4D,
-                       (float) (pos.getY()) + 0.75 - Math.pow(Math.sin((ClientInfo.ticksInGame + offset) / 32D), 2.0) / 2d,
-                       (float) (pos.getZ()) + 0.5 - Math.cos((ClientInfo.ticksInGame + offset) / 8D) / 4D,
+               level.addParticle(GlowParticleData.createData(color2),
+                       (float) (worldPosition.getX()) + 0.5 - Math.sin((ClientInfo.ticksInGame + offset) / 8D) / 4D,
+                       (float) (worldPosition.getY()) + 0.75 - Math.pow(Math.sin((ClientInfo.ticksInGame + offset) / 32D), 2.0) / 2d,
+                       (float) (worldPosition.getZ()) + 0.5 - Math.cos((ClientInfo.ticksInGame + offset) / 8D) / 4D,
                        0, 0, 0);
            }
            if(timeMixing >= 120)
@@ -149,16 +149,16 @@ public class PotionMelderTile extends TileEntity implements IAnimatable, ITickab
 
         if(timeMixing % 20 == 0 && timeMixing > 0 && timeMixing <= 60){
 
-            EntityFlyingItem item = new EntityFlyingItem(world,tile1.getPos().up(), pos, Math.round(255*color1.getRed()), Math.round(255*color1.getGreen()),Math.round(255*color1.getBlue()))
+            EntityFlyingItem item = new EntityFlyingItem(level,tile1.getBlockPos().above(), worldPosition, Math.round(255*color1.getRed()), Math.round(255*color1.getGreen()),Math.round(255*color1.getBlue()))
                     .withNoTouch();
             item.setDistanceAdjust(2f);
-            world.addEntity(item);
-            EntityFlyingItem item2 = new EntityFlyingItem(world,tile2.getPos().up(), pos,  Math.round(255*color2.getRed()), Math.round(255*color2.getGreen()),Math.round(255*color2.getBlue()))
+            level.addFreshEntity(item);
+            EntityFlyingItem item2 = new EntityFlyingItem(level,tile2.getBlockPos().above(), worldPosition,  Math.round(255*color2.getRed()), Math.round(255*color2.getGreen()),Math.round(255*color2.getBlue()))
                     .withNoTouch();
             item2.setDistanceAdjust(2f);
-            world.addEntity(item2);
+            level.addFreshEntity(item2);
         }
-        if(!world.isRemote && timeMixing >= 120){
+        if(!level.isClientSide && timeMixing >= 120){
             timeMixing++;
             if(timeMixing >= 120)
                 timeMixing = 0;
@@ -171,13 +171,13 @@ public class PotionMelderTile extends TileEntity implements IAnimatable, ITickab
                 tile1.addAmount(-300);
                 tile2.addAmount(-300);
                 hasMana = false;
-                world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+                level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
             }else if(combJar.isMixEqual(combined) && combJar.getMaxFill() - combJar.getCurrentFill() >= 100){
                 combJar.addAmount(100);
                 tile1.addAmount(-300);
                 tile2.addAmount(-300);
                 hasMana = false;
-                world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+                level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
             }
         }
 
@@ -212,35 +212,35 @@ public class PotionMelderTile extends TileEntity implements IAnimatable, ITickab
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT nbt) {
-        super.read(state, nbt);
+    public void load(BlockState state, CompoundNBT nbt) {
+        super.load(state, nbt);
         this.timeMixing = nbt.getInt("mixing");
         this.isMixing = nbt.getBoolean("isMixing");
         this.hasMana = nbt.getBoolean("hasMana");
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         compound.putInt("mixing", timeMixing);
         compound.putBoolean("isMixing", isMixing);
         compound.putBoolean("hasMana", hasMana);
-        return super.write(compound);
+        return super.save(compound);
     }
 
     @Override
     @Nullable
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 3, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 3, this.getUpdateTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         super.onDataPacket(net, pkt);
-        handleUpdateTag(world.getBlockState(pos),pkt.getNbtCompound());
+        handleUpdateTag(level.getBlockState(worldPosition),pkt.getTag());
     }
 }

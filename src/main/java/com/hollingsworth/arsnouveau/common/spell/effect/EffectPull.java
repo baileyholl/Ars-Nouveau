@@ -26,13 +26,13 @@ public class EffectPull extends AbstractEffect {
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof EntityRayTraceResult){
             Entity target = ((EntityRayTraceResult) rayTraceResult).getEntity();
-            Vector3d vec3d = new Vector3d(shooter.getPosX() - target.getPosX(), shooter.getPosY() - target.getPosY(), shooter.getPosZ() - target.getPosZ());
+            Vector3d vec3d = new Vector3d(shooter.getX() - target.getX(), shooter.getY() - target.getY(), shooter.getZ() - target.getZ());
             double d1 = 7;
 
             double d2 = 1.0D + 0.5 * getAmplificationBonus(augments);
             //target.setMotion(target.getMotion().add(vec3d.normalize().scale(d2 * d2 * 0.1D)));
-            target.setMotion(target.getMotion().add(vec3d.normalize().scale(d2 )));
-            target.velocityChanged = true;
+            target.setDeltaMovement(target.getDeltaMovement().add(vec3d.normalize().scale(d2 )));
+            target.hurtMarked = true;
             //target.move(MoverType.PLAYER, target.getMotion());
         }
     }

@@ -52,13 +52,13 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
         ArrayList<BlockPos> stale = new ArrayList<>();
         int ratePer = getTransferRate() / fromList.size();
         for(BlockPos fromPos : fromList){
-            if(!(world.getTileEntity(fromPos) instanceof AbstractManaTile)){
+            if(!(level.getBlockEntity(fromPos) instanceof AbstractManaTile)){
                 stale.add(fromPos);
                 continue;
             }
-            AbstractManaTile fromTile = (AbstractManaTile) world.getTileEntity(fromPos);
+            AbstractManaTile fromTile = (AbstractManaTile) level.getBlockEntity(fromPos);
             if(transferMana(fromTile, this, ratePer) > 0){
-                ParticleUtil.spawnFollowProjectile(world, fromPos, pos);
+                ParticleUtil.spawnFollowProjectile(level, fromPos, worldPosition);
             }
         }
         for(BlockPos s : stale)
@@ -72,14 +72,14 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
         ArrayList<BlockPos> stale = new ArrayList<>();
         int ratePer = getTransferRate() / toList.size();
         for(BlockPos toPos : toList){
-            if(!(world.getTileEntity(toPos) instanceof AbstractManaTile)){
+            if(!(level.getBlockEntity(toPos) instanceof AbstractManaTile)){
                 stale.add(toPos);
                 continue;
             }
-            AbstractManaTile toTile = (AbstractManaTile) world.getTileEntity(toPos);
+            AbstractManaTile toTile = (AbstractManaTile) level.getBlockEntity(toPos);
             int transfer = transferMana(this, toTile, ratePer);
             if(transfer > 0){
-                ParticleUtil.spawnFollowProjectile(world, pos, toPos);
+                ParticleUtil.spawnFollowProjectile(level, worldPosition, toPos);
             }
         }
         for(BlockPos s : stale)
@@ -90,7 +90,7 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
     @Override
     public void tick() {
         spawnParticles();
-        if(world.getGameTime() % 20 != 0 || toList.isEmpty() || world.isRemote)
+        if(level.getGameTime() % 20 != 0 || toList.isEmpty() || level.isClientSide)
             return;
 
         processFromList();
@@ -109,8 +109,8 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT tag) {
-        super.read(state, tag);
+    public void load(BlockState state, CompoundNBT tag) {
+        super.load(state, tag);
         fromList = new ArrayList<>();
         toList = new ArrayList<>();
         int counter = 0;
@@ -133,7 +133,7 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundNBT save(CompoundNBT tag) {
         int counter = 0;
         for(BlockPos p : this.fromList){
             NBTUtil.storeBlockPos(tag, "from_" +counter, p);
@@ -144,7 +144,7 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
             NBTUtil.storeBlockPos(tag, "to_" +counter, p);
             counter ++;
         }
-        return super.write(tag);
+        return super.save(tag);
     }
 
     @Override

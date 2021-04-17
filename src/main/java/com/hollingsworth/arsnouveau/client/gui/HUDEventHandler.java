@@ -51,7 +51,7 @@ public class HUDEventHandler {
     @SubscribeEvent
     public static void renderEntityHUD(final RenderGameOverlayEvent.Post event) {
         if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) return;
-        RayTraceResult mouseOver = Minecraft.getInstance().objectMouseOver;
+        RayTraceResult mouseOver = Minecraft.getInstance().hitResult;
         if (mouseOver != null && mouseOver.getType() == RayTraceResult.Type.ENTITY) {
 
           EntityRayTraceResult result = (EntityRayTraceResult) mouseOver;
@@ -65,9 +65,9 @@ public class HUDEventHandler {
         }
         if (mouseOver != null && mouseOver.getType() == RayTraceResult.Type.BLOCK) {
             BlockRayTraceResult result = (BlockRayTraceResult) mouseOver;
-            BlockPos pos = result.getPos();
-            if(Minecraft.getInstance().world != null && Minecraft.getInstance().world.getTileEntity(pos) instanceof ITooltipProvider){
-                entityHUD.drawHUD(event.getMatrixStack(), ((ITooltipProvider) Minecraft.getInstance().world.getTileEntity(pos)).getTooltip());
+            BlockPos pos = result.getBlockPos();
+            if(Minecraft.getInstance().level != null && Minecraft.getInstance().level.getBlockEntity(pos) instanceof ITooltipProvider){
+                entityHUD.drawHUD(event.getMatrixStack(), ((ITooltipProvider) Minecraft.getInstance().level.getBlockEntity(pos)).getTooltip());
             }
         }
     }

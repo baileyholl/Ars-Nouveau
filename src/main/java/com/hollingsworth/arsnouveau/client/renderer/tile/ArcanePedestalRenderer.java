@@ -18,26 +18,26 @@ public class ArcanePedestalRenderer extends TileEntityRenderer<ArcanePedestalTil
     }
 
     public void renderFloatingItem(ArcanePedestalTile tileEntityIn, ItemEntity entityItem, double x, double y, double z, MatrixStack stack, IRenderTypeBuffer iRenderTypeBuffer, float partialFrames){
-        stack.push();
+        stack.pushPose();
         tileEntityIn.frames++;
-        entityItem.setRotationYawHead(tileEntityIn.frames);
+        entityItem.setYHeadRot(tileEntityIn.frames);
         ObfuscationReflectionHelper.setPrivateValue(ItemEntity.class, entityItem, (int) (800f - (tileEntityIn.frames + partialFrames)/2f), MappingUtil.getItemEntityAge());
-        Minecraft.getInstance().getRenderManager().renderEntityStatic(entityItem, 0.5,1,0.5, entityItem.rotationYaw, 2.0f,stack, iRenderTypeBuffer,15728880);
-        Minecraft.getInstance().getRenderManager().getRenderer(entityItem);
-        stack.pop();
+        Minecraft.getInstance().getEntityRenderDispatcher().render(entityItem, 0.5,1,0.5, entityItem.yRot, 2.0f,stack, iRenderTypeBuffer,15728880);
+        Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entityItem);
+        stack.popPose();
     }
 
     @Override
     public void render(ArcanePedestalTile tileEntityIn, float v, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int i1) {
-        double x = tileEntityIn.getPos().getX();
-        double y = tileEntityIn.getPos().getY();
-        double z = tileEntityIn.getPos().getZ();
+        double x = tileEntityIn.getBlockPos().getX();
+        double y = tileEntityIn.getBlockPos().getY();
+        double z = tileEntityIn.getBlockPos().getZ();
 
         if(tileEntityIn.stack == null)
             return;
 
-        if (tileEntityIn.entity == null || !ItemStack.areItemStacksEqual(tileEntityIn.entity.getItem(), tileEntityIn.stack)) {
-            tileEntityIn.entity = new ItemEntity(tileEntityIn.getWorld(), x, y, z, tileEntityIn.stack);
+        if (tileEntityIn.entity == null || !ItemStack.matches(tileEntityIn.entity.getItem(), tileEntityIn.stack)) {
+            tileEntityIn.entity = new ItemEntity(tileEntityIn.getLevel(), x, y, z, tileEntityIn.stack);
         }
 
         ItemEntity entityItem = tileEntityIn.entity;

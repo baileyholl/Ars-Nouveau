@@ -38,13 +38,13 @@ public class EffectHarvest extends AbstractEffect {
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof BlockRayTraceResult){
             BlockRayTraceResult ray = (BlockRayTraceResult) rayTraceResult;
-            if(world.isRemote)
+            if(world.isClientSide)
                 return;
-            for(BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter, ray.getPos(), ray, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))){
+            for(BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter, ray.getBlockPos(), ray, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))){
                 BlockState state = world.getBlockState(blockpos);
 
-                if(state.getBlock() instanceof FarmlandBlock || world.getBlockState(blockpos.up()).getBlock() instanceof CropsBlock){
-                    blockpos = blockpos.up();
+                if(state.getBlock() instanceof FarmlandBlock || world.getBlockState(blockpos.above()).getBlock() instanceof CropsBlock){
+                    blockpos = blockpos.above();
                     state = world.getBlockState(blockpos);
                 }
 
@@ -55,7 +55,7 @@ public class EffectHarvest extends AbstractEffect {
                 if(!cropsBlock.isMaxAge(state) || !(world instanceof ServerWorld))
                     continue;
 
-                List<ItemStack> cropDrops = Block.getDrops(state, (ServerWorld)world, blockpos, world.getTileEntity(blockpos));
+                List<ItemStack> cropDrops = Block.getDrops(state, (ServerWorld)world, blockpos, world.getBlockEntity(blockpos));
 
                 if(hasBuff(augments, AugmentFortune.class)){
                     cropDrops = state.getDrops(LootUtil.getFortuneContext((ServerWorld) world, blockpos, shooter, getBuffCount(augments, AugmentFortune.class)));
@@ -65,9 +65,9 @@ public class EffectHarvest extends AbstractEffect {
                     if(d.getItem() == BlockRegistry.MANA_BLOOM_CROP.asItem()){
                         return;
                     }
-                    world.addEntity(new ItemEntity(world, finalBlockpos.getX(), finalBlockpos.getY(), finalBlockpos.getZ(), d));
+                    world.addFreshEntity(new ItemEntity(world, finalBlockpos.getX(), finalBlockpos.getY(), finalBlockpos.getZ(), d));
                 });
-                world.setBlockState(blockpos,cropsBlock.withAge(1));
+                world.setBlockAndUpdate(blockpos,cropsBlock.getStateForAge(1));
             }
         }
     }
@@ -77,11 +77,11 @@ public class EffectHarvest extends AbstractEffect {
         if(!(rayTraceResult instanceof BlockRayTraceResult))
             return false;
 
-        BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getPos();
+        BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getBlockPos();
         BlockState state = world.getBlockState(pos);
 
-        if(state.getBlock() instanceof FarmlandBlock || world.getBlockState(pos.up()).getBlock() instanceof CropsBlock){
-            pos = pos.up();
+        if(state.getBlock() instanceof FarmlandBlock || world.getBlockState(pos.above()).getBlock() instanceof CropsBlock){
+            pos = pos.above();
             state = world.getBlockState(pos);
         }
         if(!(state.getBlock() instanceof CropsBlock))

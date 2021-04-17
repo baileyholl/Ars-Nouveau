@@ -12,6 +12,8 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Predicate;
 
+import net.minecraft.entity.ai.goal.Goal.Flag;
+
 public class FindItem extends Goal {
     private EntityCarbuncle entityCarbuncle;
 
@@ -20,23 +22,23 @@ public class FindItem extends Goal {
 
     int timeFinding;
     private final Predicate<ItemEntity> TRUSTED_TARGET_SELECTOR = (itemEntity) -> {
-        return !itemEntity.cannotPickup() && itemEntity.isAlive() && entityCarbuncle.isValidItem(itemEntity.getItem());
+        return !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && entityCarbuncle.isValidItem(itemEntity.getItem());
     };
 
     private final Predicate<ItemEntity> NONTAMED_TARGET_SELECTOR = (itemEntity -> {
-        return !itemEntity.cannotPickup() && itemEntity.isAlive() && itemEntity.getItem().getItem() == Items.GOLD_NUGGET;
+        return !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && itemEntity.getItem().getItem() == Items.GOLD_NUGGET;
     });
 
     @Override
-    public void resetTask() {
-        super.resetTask();
+    public void stop() {
+        super.stop();
         itemStuck = false;
         timeFinding = 0;
     }
 
     public FindItem(EntityCarbuncle entityCarbuncle) {
         this.entityCarbuncle = entityCarbuncle;
-        this.setMutexFlags(EnumSet.of(Flag.MOVE));
+        this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
 
@@ -45,23 +47,23 @@ public class FindItem extends Goal {
     }
 
     public List<ItemEntity> nearbyItems(){
-       return entityCarbuncle.world.getLoadedEntitiesWithinAABB(ItemEntity.class, entityCarbuncle.getAABB(), getFinderItems());
+       return entityCarbuncle.level.getLoadedEntitiesOfClass(ItemEntity.class, entityCarbuncle.getAABB(), getFinderItems());
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
+    public boolean canContinueToUse() {
         return timeFinding <= 20 * 30 && !itemStuck && !entityCarbuncle.isStuck && !(pathingEntity == null || pathingEntity.removed || ((ItemEntity)pathingEntity).getItem().isEmpty()) && entityCarbuncle.getHeldStack().isEmpty();
     }
 
     @Override
-    public boolean shouldExecute() {
+    public boolean canUse() {
         //System.out.println(nearbyItems());
         return !entityCarbuncle.isStuck && entityCarbuncle.getHeldStack().isEmpty() && !nearbyItems().isEmpty();
     }
 
     @Override
-    public void startExecuting() {
-        super.startExecuting();
+    public void start() {
+        super.start();
         timeFinding = 0;
 
         itemStuck = false;
@@ -71,13 +73,13 @@ public class FindItem extends Goal {
             for(ItemEntity entity : list){
                 if(!entityCarbuncle.isValidItem(entity.getItem()))
                     continue;
-                Path path = entityCarbuncle.getNavigator().getPathToEntity(entity, 0);
-                if(path != null && path.reachesTarget()) {
+                Path path = entityCarbuncle.getNavigation().createPath(entity, 0);
+                if(path != null && path.canReach()) {
 
                     this.pathingEntity = entity;
                     pathToTarget(pathingEntity, 1.2f);
 
-                    entityCarbuncle.getDataManager().set(EntityCarbuncle.HOP, true);
+                    entityCarbuncle.getEntityData().set(EntityCarbuncle.HOP, true);
                     break;
                 }
             }
@@ -98,16 +100,16 @@ public class FindItem extends Goal {
         ItemStack itemstack = entityCarbuncle.getHeldStack();
         if (itemstack.isEmpty()) {
             pathToTarget(pathingEntity, 1.2f);
-            entityCarbuncle.getDataManager().set(EntityCarbuncle.HOP, true);
+            entityCarbuncle.getEntityData().set(EntityCarbuncle.HOP, true);
         }
     }
     public void pathToTarget(Entity entity, double speed){
-        Path path = entityCarbuncle.getNavigator().getPathToEntity(entity, 0);
-        if(path != null && path.reachesTarget()) {
-            entityCarbuncle.getNavigator().setPath(path, speed);
+        Path path = entityCarbuncle.getNavigation().createPath(entity, 0);
+        if(path != null && path.canReach()) {
+            entityCarbuncle.getNavigation().moveTo(path, speed);
           //  entityCarbuncle.setMotion(entityCarbuncle.getMotion().add(ParticleUtil.inRange(-0.1, 0.1),0,ParticleUtil.inRange(-0.1, 0.1)));
         }
-        if(path != null && !path.reachesTarget()) {
+        if(path != null && !path.canReach()) {
             itemStuck = true;
         }
     }

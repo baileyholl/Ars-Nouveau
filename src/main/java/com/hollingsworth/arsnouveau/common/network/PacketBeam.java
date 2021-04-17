@@ -54,7 +54,7 @@ public class PacketBeam {
                 // Use anon - lambda causes classloading issues
                 @Override
                 public void run() {
-                    ArsNouveau.proxy.getMinecraft().world.addEntity(new EntityFollowProjectile(ArsNouveau.proxy.getMinecraft().world,
+                    ArsNouveau.proxy.getMinecraft().level.addFreshEntity(new EntityFollowProjectile(ArsNouveau.proxy.getMinecraft().level,
                             message.fromPos, message.toPos));
 //                    RenderEventQueue.getInstance().addEvent(new BeamEvent(message.fromPos, message.toPos, message.duration));
                 };

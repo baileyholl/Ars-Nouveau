@@ -4,6 +4,8 @@ import com.hollingsworth.arsnouveau.client.gui.book.GuiRitualBook;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.util.text.StringTextComponent;
 
+import net.minecraft.client.gui.widget.button.Button.IPressable;
+
 public class RitualButton extends GuiImageButton{
     GuiRitualBook parent;
     public String desc;
@@ -18,6 +20,6 @@ public class RitualButton extends GuiImageButton{
     @Override
     public void render(MatrixStack ms, int parX, int parY, float partialTicks) {
       //  super.render(ms, parX, parY, partialTicks);
-        parent.mc.fontRenderer.func_238418_a_(new StringTextComponent(name), x, y +5,  123, 123);
+        parent.mc.font.drawWordWrap(new StringTextComponent(name), x, y +5,  123, 123);
     }
 }

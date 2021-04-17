@@ -19,11 +19,11 @@ import net.minecraft.world.IWorld;
 
 public class IntangibleAirBlock extends Block implements ILiquidContainer {
     public IntangibleAirBlock() {
-        super(Block.Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().noDrops());
+        super(Block.Properties.of(Material.DECORATION).noCollission().noDrops());
         setRegistryName(LibBlockNames.INTANGIBLE_AIR);
     }
 
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
@@ -47,12 +47,12 @@ public class IntangibleAirBlock extends Block implements ILiquidContainer {
     }
 
     @Override
-    public boolean canContainFluid(IBlockReader worldIn, BlockPos pos, BlockState state, Fluid fluidIn) {
+    public boolean canPlaceLiquid(IBlockReader worldIn, BlockPos pos, BlockState state, Fluid fluidIn) {
         return false;
     }
 
     @Override
-    public boolean receiveFluid(IWorld worldIn, BlockPos pos, BlockState state, FluidState fluidStateIn) {
+    public boolean placeLiquid(IWorld worldIn, BlockPos pos, BlockState state, FluidState fluidStateIn) {
         return false;
     }
 }

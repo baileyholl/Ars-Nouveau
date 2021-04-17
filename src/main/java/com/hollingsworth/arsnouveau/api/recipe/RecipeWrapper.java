@@ -51,7 +51,7 @@ public class RecipeWrapper {
             List<ItemStack> items = new ArrayList<>();
             for(Ingredient i : recipe){
                 boolean foundStack = false;
-                for(ItemStack stack : i.getMatchingStacks()){
+                for(ItemStack stack : i.getItems()){
                     // If our inventory has the item, decrease the effective count
                     if(inventory.containsKey(stack.getItem()) && map.get(stack.getItem()) > 0){
                         map.put(stack.getItem(), map.get(stack.getItem()) - 1);

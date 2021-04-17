@@ -17,32 +17,32 @@ public class BeltOfLevitation extends ArsNouveauCurio {
     public void wearableTick(LivingEntity player) {
 
 
-        if(!player.isOnGround() && player.isSneaking() && !player.world.isRemote){
+        if(!player.isOnGround() && player.isShiftKeyDown() && !player.level.isClientSide){
             boolean isTooHigh = true;
-            World world = player.getEntityWorld();
+            World world = player.getCommandSenderWorld();
             for(int i = 1; i < 6; i ++){
-                if(world.getBlockState(player.getPosition().down(i)).getMaterial() != Material.AIR) {
+                if(world.getBlockState(player.blockPosition().below(i)).getMaterial() != Material.AIR) {
                     isTooHigh = false;
                     break;
                 }
             }
 
             if(!isTooHigh) {
-                player.addPotionEffect(new EffectInstance(Effects.LEVITATION, 5, 2));
+                player.addEffect(new EffectInstance(Effects.LEVITATION, 5, 2));
             }else {
-                player.addPotionEffect(new EffectInstance(Effects.SLOW_FALLING, 5, 2));
+                player.addEffect(new EffectInstance(Effects.SLOW_FALLING, 5, 2));
             }
             player.fallDistance = 0.0f;
         }
-        if(player.world.isRemote){
-            Vector3d oldMotion = player.getMotion();
-            double y = oldMotion.getY();
-            Vector3d motion = player.getMotion().scale(1.1);
+        if(player.level.isClientSide){
+            Vector3d oldMotion = player.getDeltaMovement();
+            double y = oldMotion.y();
+            Vector3d motion = player.getDeltaMovement().scale(1.1);
             if(Math.sqrt(motion.length()) > 0.6){
                 return;
             }
-            player.setVelocity(motion.x, y, motion.z);
-            player.velocityChanged = true;
+            player.lerpMotion(motion.x, y, motion.z);
+            player.hurtMarked = true;
         }
     }
 }

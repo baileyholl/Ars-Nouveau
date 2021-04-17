@@ -46,13 +46,13 @@ import java.util.List;
 public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, IAnimationListener, IDispellable {
     AnimationFactory manager = new AnimationFactory(this);
 
-    public static final DataParameter<Boolean> TAMED = EntityDataManager.createKey(EntityWixie.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Boolean> TAMED = EntityDataManager.defineId(EntityWixie.class, DataSerializers.BOOLEAN);
 
     public BlockPos cauldronPos;
     public int inventoryBackoff;
 
     private <P extends IAnimatable> PlayState idlePredicate(AnimationEvent<P> event) {
-        if(getNavigator().hasPath())
+        if(getNavigation().isInProgress())
             return PlayState.STOP;
         event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
         return PlayState.CONTINUE;
@@ -66,7 +66,7 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
         return PlayState.CONTINUE;
     }
     @Override
-    protected int getExperiencePoints(PlayerEntity player) {
+    protected int getExperienceReward(PlayerEntity player) {
         return 0;
     }
 
@@ -85,7 +85,7 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
     protected EntityWixie(EntityType<? extends AbstractFlyingCreature> type, World worldIn) {
         super(type, worldIn);
         MinecraftForge.EVENT_BUS.register(this);
-        this.moveController =  new FlyingMovementController(this, 10, true);
+        this.moveControl =  new FlyingMovementController(this, 10, true);
         addGoalsAfterConstructor();
     }
 
@@ -93,17 +93,17 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
         super(ModEntities.ENTITY_WIXIE_TYPE, world);
         MinecraftForge.EVENT_BUS.register(this);
         this.cauldronPos = pos;
-        this.moveController =  new FlyingMovementController(this, 10, true);
-        this.dataManager.set(TAMED, isTamed);
+        this.moveControl =  new FlyingMovementController(this, 10, true);
+        this.entityData.set(TAMED, isTamed);
         addGoalsAfterConstructor();
     }
 
     @Override
     public void tick() {
         super.tick();
-        if(!world.isRemote && (cauldronPos == null || !(world.getTileEntity(cauldronPos) instanceof WixieCauldronTile)))
-            this.attackEntityFrom(DamageSource.causePlayerDamage(FakePlayerFactory.getMinecraft((ServerWorld)world)), 99);
-        if(!world.isRemote && inventoryBackoff > 0){
+        if(!level.isClientSide && (cauldronPos == null || !(level.getBlockEntity(cauldronPos) instanceof WixieCauldronTile)))
+            this.hurt(DamageSource.playerAttack(FakePlayerFactory.getMinecraft((ServerWorld)level)), 99);
+        if(!level.isClientSide && inventoryBackoff > 0){
             inventoryBackoff--;
         }
 
@@ -131,7 +131,7 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
 
     // Cannot add conditional goals in RegisterGoals as it is final and called during the MobEntity super.
     protected void addGoalsAfterConstructor(){
-        if(this.world.isRemote())
+        if(this.level.isClientSide())
             return;
 
         for(PrioritizedGoal goal : getGoals()){
@@ -140,52 +140,52 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
     }
 
     public List<PrioritizedGoal> getGoals(){
-        return this.dataManager.get(TAMED) ? getTamedGoals() : getUntamedGoals();
+        return this.entityData.get(TAMED) ? getTamedGoals() : getUntamedGoals();
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        this.dataManager.register(TAMED, false);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(TAMED, false);
     }
 
     @Override
-    public boolean canDespawn(double p_213397_1_) {
+    public boolean removeWhenFarAway(double p_213397_1_) {
         return false;
     }
 
     @Override
-    protected PathNavigator createNavigator(World world) {
+    protected PathNavigator createNavigation(World world) {
         FlyingPathNavigator flyingpathnavigator = new FlyingPathNavigator(this, world);
         flyingpathnavigator.setCanOpenDoors(false);
-        flyingpathnavigator.setCanSwim(true);
-        flyingpathnavigator.setCanEnterDoors(true);
+        flyingpathnavigator.setCanFloat(true);
+        flyingpathnavigator.setCanPassDoors(true);
         return flyingpathnavigator;
     }
     public static AttributeModifierMap.MutableAttribute attributes() {
-        return MobEntity.func_233666_p_().createMutableAttribute(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.getDefaultValue())
-                .createMutableAttribute(Attributes.MAX_HEALTH, 6.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.2D);
+        return MobEntity.createMobAttributes().add(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.getDefaultValue())
+                .add(Attributes.MAX_HEALTH, 6.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.2D);
     }
 
     @Override
-    public void readAdditional(CompoundNBT tag) {
-        super.readAdditional(tag);
+    public void readAdditionalSaveData(CompoundNBT tag) {
+        super.readAdditionalSaveData(tag);
         if(tag.contains("summoner_x"))
             cauldronPos = new BlockPos(tag.getInt("summoner_x"), tag.getInt("summoner_y"), tag.getInt("summoner_z"));
 
-        this.dataManager.set(TAMED, tag.getBoolean("tamed"));
+        this.entityData.set(TAMED, tag.getBoolean("tamed"));
     }
 
     @Override
-    public void writeAdditional(CompoundNBT tag) {
-        super.writeAdditional(tag);
+    public void addAdditionalSaveData(CompoundNBT tag) {
+        super.addAdditionalSaveData(tag);
         if(cauldronPos != null){
             tag.putInt("summoner_x", cauldronPos.getX());
             tag.putInt("summoner_y", cauldronPos.getY());
             tag.putInt("summoner_z", cauldronPos.getZ());
         }
-        tag.putBoolean("tamed", this.dataManager.get(TAMED));
+        tag.putBoolean("tamed", this.entityData.get(TAMED));
     }
 
     @Override
@@ -201,23 +201,23 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
         }
     }
     @Override
-    public void onDeath(DamageSource source) {
-        if(!world.isRemote ){
+    public void die(DamageSource source) {
+        if(!level.isClientSide ){
             ItemStack stack = new ItemStack(ItemsRegistry.WIXIE_CHARM);
-            world.addEntity(new ItemEntity(world, getPosX(), getPosY(), getPosZ(), stack));
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
 
         }
-        super.onDeath(source);
+        super.die(source);
     }
     @Override
     public boolean onDispel(@Nullable LivingEntity caster) {
         if(this.removed)
             return false;
 
-        if(!world.isRemote ){
+        if(!level.isClientSide ){
             ItemStack stack = new ItemStack(ItemsRegistry.WIXIE_CHARM);
-            world.addEntity(new ItemEntity(world, getPosX(), getPosY(), getPosZ(), stack.copy()));
-            ParticleUtil.spawnPoof((ServerWorld)world, getPosition());
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack.copy()));
+            ParticleUtil.spawnPoof((ServerWorld)level, blockPosition());
             this.remove();
         }
         return true;

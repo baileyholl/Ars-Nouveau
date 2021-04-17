@@ -12,6 +12,8 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.world.World;
 
+import net.minecraft.item.Item.Properties;
+
 public class FluidBlockItem extends BlockItem {
     public FluidBlockItem(Block blockIn, Properties builder) {
         super(blockIn, builder);
@@ -20,7 +22,7 @@ public class FluidBlockItem extends BlockItem {
     /**
      * Called when this item is used when targetting a Block
      */
-    public ActionResultType onItemUse(ItemUseContext context) {
+    public ActionResultType useOn(ItemUseContext context) {
         return ActionResultType.PASS;
     }
 
@@ -28,12 +30,12 @@ public class FluidBlockItem extends BlockItem {
      * Called to trigger the item's "innate" right click behavior. To handle when this item is used on a Block, see
      * {@link #onItemUse}.
      */
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        BlockRayTraceResult blockraytraceresult = rayTrace(worldIn, playerIn, RayTraceContext.FluidMode.ANY);
-        BlockRayTraceResult blockraytraceresult1 = blockraytraceresult.withPosition(blockraytraceresult.getPos().up());
-        if(worldIn.getBlockState(blockraytraceresult.getPos()).isAir())
-            return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
-        super.onItemUse(new ItemUseContext(playerIn, handIn, blockraytraceresult1));
-        return new ActionResult<>(ActionResultType.FAIL, playerIn.getHeldItem(handIn));
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        BlockRayTraceResult blockraytraceresult = getPlayerPOVHitResult(worldIn, playerIn, RayTraceContext.FluidMode.ANY);
+        BlockRayTraceResult blockraytraceresult1 = blockraytraceresult.withPosition(blockraytraceresult.getBlockPos().above());
+        if(worldIn.getBlockState(blockraytraceresult.getBlockPos()).isAir())
+            return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getItemInHand(handIn));
+        super.useOn(new ItemUseContext(playerIn, handIn, blockraytraceresult1));
+        return new ActionResult<>(ActionResultType.FAIL, playerIn.getItemInHand(handIn));
     }
 }

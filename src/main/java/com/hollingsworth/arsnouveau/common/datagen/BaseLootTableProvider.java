@@ -38,42 +38,42 @@ public abstract class BaseLootTableProvider extends LootTableProvider {
     protected abstract void addTables();
 
     protected LootTable.Builder createStandardTable(String name, Block block) {
-        LootPool.Builder builder = LootPool.builder()
+        LootPool.Builder builder = LootPool.lootPool()
                 .name(name)
-                .rolls(ConstantRange.of(1))
-                .addEntry(ItemLootEntry.builder(block)
-                        .acceptFunction(CopyName.builder(CopyName.Source.BLOCK_ENTITY))
-                        .acceptFunction(SetContents.builderIn()
-                                .addLootEntry(DynamicLootEntry.func_216162_a(new ResourceLocation("minecraft", "contents"))))
+                .setRolls(ConstantRange.exactly(1))
+                .add(ItemLootEntry.lootTableItem(block)
+                        .apply(CopyName.copyName(CopyName.Source.BLOCK_ENTITY))
+                        .apply(SetContents.setContents()
+                                .withEntry(DynamicLootEntry.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
                 );
-        return LootTable.builder().addLootPool(builder);
+        return LootTable.lootTable().withPool(builder);
     }
 
     protected LootTable.Builder createManaManchineTable(String name, Block block){
-        LootPool.Builder builder = LootPool.builder()
+        LootPool.Builder builder = LootPool.lootPool()
                 .name(name)
-                .rolls(ConstantRange.of(1))
-                .addEntry(ItemLootEntry.builder(block)
-                        .acceptFunction(CopyName.builder(CopyName.Source.BLOCK_ENTITY))
-                        .acceptFunction(CopyNbt.builder(CopyNbt.Source.BLOCK_ENTITY)
-                                .addOperation("inv", "BlockEntityTag.inv", CopyNbt.Action.REPLACE) //addOperation
-                                .addOperation("mana", "BlockEntityTag.mana", CopyNbt.Action.REPLACE))
-                        .acceptFunction(SetContents.builderIn()
-                                .addLootEntry(DynamicLootEntry.func_216162_a(new ResourceLocation("minecraft", "contents"))))
+                .setRolls(ConstantRange.exactly(1))
+                .add(ItemLootEntry.lootTableItem(block)
+                        .apply(CopyName.copyName(CopyName.Source.BLOCK_ENTITY))
+                        .apply(CopyNbt.copyData(CopyNbt.Source.BLOCK_ENTITY)
+                                .copy("inv", "BlockEntityTag.inv", CopyNbt.Action.REPLACE) //addOperation
+                                .copy("mana", "BlockEntityTag.mana", CopyNbt.Action.REPLACE))
+                        .apply(SetContents.setContents()
+                                .withEntry(DynamicLootEntry.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
                 );
-        return LootTable.builder().addLootPool(builder);
+        return LootTable.lootTable().withPool(builder);
     }
 
     @Override
-    public void act(DirectoryCache cache) {
+    public void run(DirectoryCache cache) {
         addTables();
 
         Map<ResourceLocation, LootTable> tables = new HashMap<>();
         for (Map.Entry<Block, LootTable.Builder> entry : blockTables.entrySet()) {
-            tables.put(entry.getKey().getLootTable(), entry.getValue().setParameterSet(LootParameterSets.BLOCK).build());
+            tables.put(entry.getKey().getLootTable(), entry.getValue().setParamSet(LootParameterSets.BLOCK).build());
         }
         for (Map.Entry<ResourceLocation, LootTable.Builder> entry : entityTables.entrySet()) {
-            tables.put(entry.getKey(), entry.getValue().setParameterSet(LootParameterSets.ENTITY).build());
+            tables.put(entry.getKey(), entry.getValue().setParamSet(LootParameterSets.ENTITY).build());
         }
         writeTables(cache, tables);
     }
@@ -83,7 +83,7 @@ public abstract class BaseLootTableProvider extends LootTableProvider {
         tables.forEach((key, lootTable) -> {
             Path path = outputFolder.resolve("data/" + key.getNamespace() + "/loot_tables/" + key.getPath() + ".json");
             try {
-                IDataProvider.save(GSON, cache, LootTableManager.toJson(lootTable), path);
+                IDataProvider.save(GSON, cache, LootTableManager.serialize(lootTable), path);
             } catch (IOException e) {
                 LOGGER.error("Couldn't write loot table {}", path, e);
             }

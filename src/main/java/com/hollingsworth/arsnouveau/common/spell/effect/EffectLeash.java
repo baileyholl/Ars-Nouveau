@@ -25,12 +25,12 @@ public class EffectLeash extends AbstractEffect {
     public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(shooter == null || !isRealPlayer(shooter))
             return;
-        Vector3d vector3d = rayTraceResult.getHitVec();
+        Vector3d vector3d = rayTraceResult.getLocation();
         BlockPos hit = new BlockPos(vector3d.x, vector3d.y +1, vector3d.z);
         if(rayTraceResult instanceof EntityRayTraceResult){
             Entity e = ((EntityRayTraceResult) rayTraceResult).getEntity();
             if(e instanceof MobEntity){
-                ((MobEntity) e).setLeashHolder(shooter, true);
+                ((MobEntity) e).setLeashedTo(shooter, true);
 
                 System.out.println("set");
                // LeadItem.bindPlayerMobs((PlayerEntity) shooter, world, hit);

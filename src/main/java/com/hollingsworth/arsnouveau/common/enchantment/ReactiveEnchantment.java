@@ -6,6 +6,8 @@ import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
 
+import net.minecraft.enchantment.Enchantment.Rarity;
+
 public class ReactiveEnchantment extends Enchantment {
     protected ReactiveEnchantment() {
         super(Rarity.VERY_RARE, EnchantmentType.WEARABLE, new EquipmentSlotType[]{EquipmentSlotType.CHEST, EquipmentSlotType.FEET, EquipmentSlotType.HEAD, EquipmentSlotType.LEGS});
@@ -13,12 +15,12 @@ public class ReactiveEnchantment extends Enchantment {
     }
 
     @Override
-    public int getMinEnchantability(int enchantmentLevel) {
+    public int getMinCost(int enchantmentLevel) {
         return 0;
     }
 
     @Override
-    public int getMaxEnchantability(int enchantmentLevel) {
+    public int getMaxCost(int enchantmentLevel) {
         return 0;
     }
 
@@ -28,7 +30,7 @@ public class ReactiveEnchantment extends Enchantment {
     }
 
     @Override
-    public boolean canApply(ItemStack stack) {
+    public boolean canEnchant(ItemStack stack) {
         return true;
     }
 

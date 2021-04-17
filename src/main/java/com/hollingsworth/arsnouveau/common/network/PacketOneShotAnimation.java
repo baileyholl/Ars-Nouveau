@@ -58,9 +58,9 @@ public class PacketOneShotAnimation {
                 @Override
                 public void run() {
                     Minecraft mc = Minecraft.getInstance();
-                    ClientWorld world = mc.world;
-                    if(world.getTileEntity(new BlockPos(m.x, m.y, m.z)) instanceof IAnimationListener){
-                        ((IAnimationListener) world.getTileEntity(new BlockPos(m.x, m.y, m.z))).startAnimation(m.arg);
+                    ClientWorld world = mc.level;
+                    if(world.getBlockEntity(new BlockPos(m.x, m.y, m.z)) instanceof IAnimationListener){
+                        ((IAnimationListener) world.getBlockEntity(new BlockPos(m.x, m.y, m.z))).startAnimation(m.arg);
                     }
                 }
             });

@@ -29,12 +29,12 @@ public class ManaCondenserTile extends AbstractManaTile {
 
     @Override
     public void tick() {
-        if(world.isRemote || isDisabled) {
+        if(level.isClientSide || isDisabled) {
             return;
         }
-        if(world.getTileEntity(pos.down()) instanceof ManaJarTile ) {
-            ManaJarTile jar = (ManaJarTile) world.getTileEntity(pos.down());
-            if(jar.canAcceptMana() && world.getGameTime() % 20 == 0 ) {
+        if(level.getBlockEntity(worldPosition.below()) instanceof ManaJarTile ) {
+            ManaJarTile jar = (ManaJarTile) level.getBlockEntity(worldPosition.below());
+            if(jar.canAcceptMana() && level.getGameTime() % 20 == 0 ) {
                 transferMana(this, jar);
             }
         }
@@ -46,48 +46,48 @@ public class ManaCondenserTile extends AbstractManaTile {
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT tag) {
+    public void load(BlockState state, CompoundNBT tag) {
         isDisabled = tag.getBoolean("disabled");
-        super.read(state, tag);
+        super.load(state, tag);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundNBT save(CompoundNBT tag) {
         tag.putBoolean("disabled", isDisabled);
-        return super.write(tag);
+        return super.save(tag);
     }
     @SubscribeEvent
     public void cropGrow(BlockEvent.CropGrowEvent.Post event) {
-        if(isDisabled || world == null)
+        if(isDisabled || level == null)
             return;
-        if(BlockUtil.distanceFrom(pos, event.getPos()) <= 15) {
+        if(BlockUtil.distanceFrom(worldPosition, event.getPos()) <= 15) {
             int mana = 50;
-            if(world.getBlockState(event.getPos()).getBlock() instanceof ManaBloomCrop) {
+            if(level.getBlockState(event.getPos()).getBlock() instanceof ManaBloomCrop) {
                 mana += 25;
             }
             this.addMana(mana);
-            ParticleUtil.spawnFollowProjectile(world, event.getPos(), pos);
+            ParticleUtil.spawnFollowProjectile(level, event.getPos(), worldPosition);
         }
     }
 
     @SubscribeEvent
     public void babySpawnEvent(BabyEntitySpawnEvent event) {
-        if(isDisabled || event.getChild() == null || world == null)
+        if(isDisabled || event.getChild() == null || level == null)
             return;
 
-        if(BlockUtil.distanceFrom(pos, event.getParentA().getPosition()) <= 15) {
+        if(BlockUtil.distanceFrom(worldPosition, event.getParentA().blockPosition()) <= 15) {
             this.addMana(1000);
-            ParticleUtil.spawnFollowProjectile(world, event.getParentA().getPosition(), pos);
+            ParticleUtil.spawnFollowProjectile(level, event.getParentA().blockPosition(), worldPosition);
         }
     }
 
     @SubscribeEvent
     public void livingDeath(LivingDeathEvent e) {
-        if(e.getEntityLiving().world.isRemote || isDisabled || e.getEntity() instanceof IDispellable || world == null)
+        if(e.getEntityLiving().level.isClientSide || isDisabled || e.getEntity() instanceof IDispellable || level == null)
             return;
 
-        if(BlockUtil.distanceFrom(pos, e.getEntity().getPosition()) <= 15) {
-            ParticleUtil.spawnFollowProjectile(world, e.getEntity().getPosition(), pos);
+        if(BlockUtil.distanceFrom(worldPosition, e.getEntity().blockPosition()) <= 15) {
+            ParticleUtil.spawnFollowProjectile(level, e.getEntity().blockPosition(), worldPosition);
             this.addMana(200);
 
         }

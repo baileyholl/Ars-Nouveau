@@ -25,12 +25,12 @@ public class ManaCondenserRenderer extends TileEntityRenderer<ManaCondenserTile>
 
     @Override
     public void render(ManaCondenserTile manaCondenserTile, float v, MatrixStack ms, IRenderTypeBuffer buffers, int light, int overlay) {
-        ms.push();
+        ms.pushPose();
         ms.translate(0.5F, 1.5F, 0.5F);
         ms.scale(1F, -1F, -1F);
-        IVertexBuilder buffer = buffers.getBuffer(model.getRenderType(texture));
-        model.render(ms, buffer, light, overlay, 1, 1, 1, 1);
-        ms.pop();
+        IVertexBuilder buffer = buffers.getBuffer(model.renderType(texture));
+        model.renderToBuffer(ms, buffer, light, overlay, 1, 1, 1, 1);
+        ms.popPose();
     }
 
     public static class ISRender extends ItemStackTileEntityRenderer {
@@ -38,16 +38,16 @@ public class ManaCondenserRenderer extends TileEntityRenderer<ManaCondenserTile>
         public ISRender(){ }
 
         @Override
-        public void func_239207_a_(ItemStack p_239207_1_, ItemCameraTransforms.TransformType p_239207_2_, MatrixStack ms, IRenderTypeBuffer buffers, int light, int overlay) {
-            ms.push();
+        public void renderByItem(ItemStack p_239207_1_, ItemCameraTransforms.TransformType p_239207_2_, MatrixStack ms, IRenderTypeBuffer buffers, int light, int overlay) {
+            ms.pushPose();
             ms.translate(0.5, 1.5, 0.5);
-            ms.rotate(Vector3f.YP.rotationDegrees(180));
-            ms.rotate(Vector3f.ZP.rotationDegrees(0));
-            ms.rotate(Vector3f.XP.rotationDegrees(180));
-            IVertexBuilder buffer = buffers.getBuffer(model.getRenderType(texture));
-            model.render(ms, buffer, light, overlay, 1, 1, 1, 1);
+            ms.mulPose(Vector3f.YP.rotationDegrees(180));
+            ms.mulPose(Vector3f.ZP.rotationDegrees(0));
+            ms.mulPose(Vector3f.XP.rotationDegrees(180));
+            IVertexBuilder buffer = buffers.getBuffer(model.renderType(texture));
+            model.renderToBuffer(ms, buffer, light, overlay, 1, 1, 1, 1);
 
-            ms.pop();
+            ms.popPose();
         }
     }
 }

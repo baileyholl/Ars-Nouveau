@@ -15,7 +15,7 @@ public class GuiEntityInfoHUD extends AbstractGui {
         if(tooltips == null)
             return;
         for(String s : tooltips){
-            minecraft.fontRenderer.drawStringWithShadow(ms, s, offsetLeft, 5f + 10 * counter, 0xFFFFFF);
+            minecraft.font.drawShadow(ms, s, offsetLeft, 5f + 10 * counter, 0xFFFFFF);
             counter++;
         }
     }

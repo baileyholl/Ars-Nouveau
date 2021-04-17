@@ -8,6 +8,8 @@ import net.minecraft.world.IBlockReader;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class PotionMelder extends ModBlock{
     public PotionMelder(Properties properties, String registry) {
         super(properties, registry);
@@ -24,7 +26,7 @@ public class PotionMelder extends ModBlock{
         return new PotionMelderTile();
     }
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 }

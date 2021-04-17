@@ -26,7 +26,7 @@ public class ItemRecipe {
         Map<Item, Integer> invCopy = new HashMap<>(inventoryCount);
         List<ItemStack> finalItems = new ArrayList<>();
         for(Ingredient i : ingredientList){
-            ItemStack stack = inventoryContainsItem(invCopy, i.getMatchingStacks());
+            ItemStack stack = inventoryContainsItem(invCopy, i.getItems());
             if(!stack.isEmpty()){
                 finalItems.add(stack);
                 invCopy.put(stack.getItem(), invCopy.get(stack.getItem()) - 1);

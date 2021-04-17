@@ -15,12 +15,12 @@ public class PacketSetBookMode {
     public CompoundNBT tag;
     //Decoder
     public PacketSetBookMode(PacketBuffer buf){
-        tag = buf.readCompoundTag();
+        tag = buf.readNbt();
     }
 
     //Encoder
     public void toBytes(PacketBuffer buf){
-        buf.writeCompoundTag(tag);
+        buf.writeNbt(tag);
     }
 
     public PacketSetBookMode(CompoundNBT tag){

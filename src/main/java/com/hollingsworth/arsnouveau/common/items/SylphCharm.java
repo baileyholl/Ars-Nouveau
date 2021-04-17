@@ -19,15 +19,15 @@ public class SylphCharm extends ModItem{
      * Called when this item is used when targetting a Block
      */
     @Override
-    public ActionResultType onItemUse(ItemUseContext context) {
-        World world = context.getWorld();
-        BlockPos blockpos = context.getPos();
-        if(world.getTileEntity(blockpos) instanceof SummoningCrystalTile){
+    public ActionResultType useOn(ItemUseContext context) {
+        World world = context.getLevel();
+        BlockPos blockpos = context.getClickedPos();
+        if(world.getBlockEntity(blockpos) instanceof SummoningCrystalTile){
             EntitySylph sylph = new EntitySylph(world, true, blockpos);
-            sylph.setPosition(blockpos.getX(), blockpos.getY() + 1.0, blockpos.getZ());
-            world.addEntity(sylph);
-            ((SummoningCrystalTile) world.getTileEntity(blockpos)).summon(sylph);
-            context.getItem().shrink(1);
+            sylph.setPos(blockpos.getX(), blockpos.getY() + 1.0, blockpos.getZ());
+            world.addFreshEntity(sylph);
+            ((SummoningCrystalTile) world.getBlockEntity(blockpos)).summon(sylph);
+            context.getItemInHand().shrink(1);
         }
         return ActionResultType.SUCCESS;
     }

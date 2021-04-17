@@ -32,42 +32,42 @@ public class ParticleLine extends SpriteTexturedParticle {
             this.colorB = this.colorB/255.0f;
         }
         this.setColor(colorR, colorG, colorB);
-        this.maxAge = lifetime;
-        this.particleScale = scale;
+        this.lifetime = lifetime;
+        this.quadSize = scale;
         this.initScale = scale;
-        this.motionX = 0;
-        this.motionY = 0;
-        this.motionZ = 0;
+        this.xd = 0;
+        this.yd = 0;
+        this.zd = 0;
         this.initX = (float)x;
         this.initY = (float)y;
         this.initZ = (float)z;
         this.destX = (float)vx;
         this.destY = (float)vy;
         this.destZ = (float)vz;
-        this.particleAngle = 2.0f*(float)Math.PI;
-        this.selectSpriteRandomly(sprite);
+        this.roll = 2.0f*(float)Math.PI;
+        this.pickSprite(sprite);
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (world.rand.nextInt(6) == 0){
+        if (level.random.nextInt(6) == 0){
             this.age ++;
         }
-        float lifeCoeff = (float)this.age/(float)this.maxAge;
-        this.posX = ((1.0f-lifeCoeff)*initX + (lifeCoeff)*destX);
-        this.posY = ((1.0f-lifeCoeff)*initY + (lifeCoeff)*destY);
-        this.posZ = ((1.0f-lifeCoeff)*initZ + (lifeCoeff)*destZ);
-        this.particleScale = initScale-initScale*lifeCoeff;
-        this.particleAlpha = 1.0f-lifeCoeff;
-        this.prevParticleAngle = particleAngle;
+        float lifeCoeff = (float)this.age/(float)this.lifetime;
+        this.x = ((1.0f-lifeCoeff)*initX + (lifeCoeff)*destX);
+        this.y = ((1.0f-lifeCoeff)*initY + (lifeCoeff)*destY);
+        this.z = ((1.0f-lifeCoeff)*initZ + (lifeCoeff)*destZ);
+        this.quadSize = initScale-initScale*lifeCoeff;
+        this.alpha = 1.0f-lifeCoeff;
+        this.oRoll = roll;
 //        particleAngle += 1.0f;
     }
 
 
     @Override
     public boolean isAlive() {
-        return this.age < maxAge;
+        return this.age < lifetime;
     }
 
     @Override
@@ -77,7 +77,7 @@ public class ParticleLine extends SpriteTexturedParticle {
 
 
     @Override
-    public int getBrightnessForRender(float pTicks){
+    public int getLightColor(float pTicks){
         return 255;
     }
 }

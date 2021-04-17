@@ -28,24 +28,24 @@ public class EffectFreeze extends AbstractEffect {
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
-            applyPotion((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity(), Effects.SLOWNESS, augments, 10, 5);
+            applyPotion((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity(), Effects.MOVEMENT_SLOWDOWN, augments, 10, 5);
         }
         else if (rayTraceResult instanceof BlockRayTraceResult) {
-            BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getPos();
-            BlockState state = world.getBlockState(pos.up());
+            BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getBlockPos();
+            BlockState state = world.getBlockState(pos.above());
             if(state.getMaterial() == Material.WATER){
-                world.setBlockState(pos.up(), Blocks.ICE.getDefaultState());
+                world.setBlockAndUpdate(pos.above(), Blocks.ICE.defaultBlockState());
             }else if(state.getMaterial() == Material.FIRE){
-                world.destroyBlock(pos.up(), false);
+                world.destroyBlock(pos.above(), false);
             }
         }else if(shooter instanceof PlayerEntity){
             RayTraceResult result = rayTrace(world, (PlayerEntity)shooter, RayTraceContext.FluidMode.SOURCE_ONLY);
             if (result instanceof BlockRayTraceResult) {
-                BlockState state = world.getBlockState(((BlockRayTraceResult) result).getPos());
-                if (state.getBlock().getDefaultState() == Blocks.WATER.getDefaultState()) {
-                    world.setBlockState(((BlockRayTraceResult) result).getPos(), Blocks.ICE.getDefaultState());
-                }else if(state.getBlock().getDefaultState() == Blocks.LAVA.getDefaultState()){
-                    world.setBlockState(((BlockRayTraceResult) result).getPos(), Blocks.OBSIDIAN.getDefaultState());
+                BlockState state = world.getBlockState(((BlockRayTraceResult) result).getBlockPos());
+                if (state.getBlock().defaultBlockState() == Blocks.WATER.defaultBlockState()) {
+                    world.setBlockAndUpdate(((BlockRayTraceResult) result).getBlockPos(), Blocks.ICE.defaultBlockState());
+                }else if(state.getBlock().defaultBlockState() == Blocks.LAVA.defaultBlockState()){
+                    world.setBlockAndUpdate(((BlockRayTraceResult) result).getBlockPos(), Blocks.OBSIDIAN.defaultBlockState());
                 }
             }
         }
@@ -57,8 +57,8 @@ public class EffectFreeze extends AbstractEffect {
     }
 
     protected static RayTraceResult rayTrace(World worldIn, PlayerEntity player, RayTraceContext.FluidMode fluidMode) {
-        float f = player.rotationPitch;
-        float f1 = player.rotationYaw;
+        float f = player.xRot;
+        float f1 = player.yRot;
         Vector3d vec3d = player.getEyePosition(1.0F);
         float f2 = MathHelper.cos(-f1 * ((float)Math.PI / 180F) - (float)Math.PI);
         float f3 = MathHelper.sin(-f1 * ((float)Math.PI / 180F) - (float)Math.PI);
@@ -69,7 +69,7 @@ public class EffectFreeze extends AbstractEffect {
         //
         double d0 = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();;
         Vector3d vec3d1 = vec3d.add((double)f6 * d0, (double)f5 * d0, (double)f7 * d0);
-        return worldIn.rayTraceBlocks(new RayTraceContext(vec3d, vec3d1, RayTraceContext.BlockMode.OUTLINE, fluidMode, player));
+        return worldIn.clip(new RayTraceContext(vec3d, vec3d1, RayTraceContext.BlockMode.OUTLINE, fluidMode, player));
     }
 
     @Override

@@ -17,6 +17,8 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.item.Item.Properties;
+
 public class ItemScroll extends ModItem implements IScribeable {
     public ItemScroll(String reg) {
         super(reg);
@@ -39,9 +41,9 @@ public class ItemScroll extends ModItem implements IScribeable {
         if(tag == null)
             return stacks;
 
-        for(String s : tag.keySet()){
+        for(String s : tag.getAllKeys()){
             if(s.contains(ITEM_PREFIX)){
-                stacks.add(ItemStack.read(tag.getCompound(s)));
+                stacks.add(ItemStack.of(tag.getCompound(s)));
             }
         }
         return stacks;
@@ -49,7 +51,7 @@ public class ItemScroll extends ModItem implements IScribeable {
 
     public boolean addItem(ItemStack itemToAdd, CompoundNBT tag){
         CompoundNBT itemTag = new CompoundNBT();
-        itemToAdd.write(itemTag);
+        itemToAdd.save(itemTag);
         tag.put(getItemKey(itemToAdd), itemTag);
         return true;
     }
@@ -70,7 +72,7 @@ public class ItemScroll extends ModItem implements IScribeable {
     @Override
     public boolean onScribe(World world, BlockPos pos, PlayerEntity player, Hand handIn, ItemStack thisStack) {
         ItemScroll itemScroll = (ItemScroll) thisStack.getItem();
-        ItemStack stackToWrite = player.getHeldItem(handIn);
+        ItemStack stackToWrite = player.getItemInHand(handIn);
         CompoundNBT tag = thisStack.getTag();
         if(stackToWrite == ItemStack.EMPTY || tag == null)
             return false;
@@ -84,18 +86,18 @@ public class ItemScroll extends ModItem implements IScribeable {
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
         CompoundNBT tag = stack.getTag();
         if(tag == null)
             return;
         List<ItemStack> stacks = new ArrayList<>();
-        for(String s : tag.keySet()){
+        for(String s : tag.getAllKeys()){
             if(s.contains(ITEM_PREFIX)){
-                stacks.add(ItemStack.read(tag.getCompound(s)));
+                stacks.add(ItemStack.of(tag.getCompound(s)));
             }
         }
         for(ItemStack s : stacks){
-            tooltip2.add(s.getDisplayName());
+            tooltip2.add(s.getHoverName());
         }
     }
 }

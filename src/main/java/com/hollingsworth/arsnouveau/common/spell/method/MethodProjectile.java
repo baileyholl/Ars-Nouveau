@@ -46,24 +46,24 @@ public class MethodProjectile extends AbstractCastMethod {
         int numSplits = getBuffCount(augments, AugmentSplit.class);
 
         for(int i =1; i < numSplits + 1; i++){
-            Direction offset =shooter.getHorizontalFacing().rotateY();
+            Direction offset =shooter.getDirection().getClockWise();
             if(i%2==0) offset = offset.getOpposite();
              // Alternate sides
-            BlockPos projPos = shooter.getPosition().offset(offset, i);
-            projPos = projPos.add(0, 1.5, 0);
+            BlockPos projPos = shooter.blockPosition().relative(offset, i);
+            projPos = projPos.offset(0, 1.5, 0);
             EntityProjectileSpell spell = new EntityProjectileSpell(world, shooter, this.resolver, numPierce);
-            spell.setPosition(projPos.getX(), projPos.getY(), projPos.getZ());
+            spell.setPos(projPos.getX(), projPos.getY(), projPos.getZ());
             projectiles.add(spell);
         }
 
         float velocity = 1.0f + getBuffCount(augments, AugmentAccelerate.class);
 
         for(EntityProjectileSpell proj : projectiles) {
-            proj.shoot(shooter, shooter.rotationPitch, shooter.rotationYaw, 0.0F, velocity, 0.8f);
+            proj.shoot(shooter, shooter.xRot, shooter.yRot, 0.0F, velocity, 0.8f);
             ParticleColor.IntWrapper wrapper = context.colors;
             wrapper.makeVisible();
             proj.setColor(wrapper);
-            world.addEntity(proj);
+            world.addFreshEntity(proj);
         }
     }
 
@@ -72,24 +72,24 @@ public class MethodProjectile extends AbstractCastMethod {
         ArrayList<EntityProjectileSpell> projectiles = new ArrayList<>();
         int numPierce = getBuffCount(augments, AugmentPierce.class);
         EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, shooter, this.resolver, numPierce);
-        projectileSpell.setPosition(pos.getX(), pos.getY() + 1, pos.getZ());
+        projectileSpell.setPos(pos.getX(), pos.getY() + 1, pos.getZ());
         projectiles.add(projectileSpell);
 
         int numSplits = getBuffCount(augments, AugmentSplit.class);
 
         for(int i =1; i < numSplits + 1; i++){
-            Direction offset = shooter.getHorizontalFacing().rotateY();
+            Direction offset = shooter.getDirection().getClockWise();
             if(i%2==0) offset = offset.getOpposite();
             // Alternate sides
-            BlockPos projPos = pos.offset(offset, i);
-            projPos = projPos.add(0, 1.5, 0);
+            BlockPos projPos = pos.relative(offset, i);
+            projPos = projPos.offset(0, 1.5, 0);
             EntityProjectileSpell spell = new EntityProjectileSpell(world, shooter, this.resolver, numPierce);
-            spell.setPosition(projPos.getX(), projPos.getY(), projPos.getZ());
+            spell.setPos(projPos.getX(), projPos.getY(), projPos.getZ());
             projectiles.add(spell);
         }
         for(EntityProjectileSpell proj : projectiles) {
-            proj.setMotion(new Vector3d(0, -0.1, 0));
-            world.addEntity(proj);
+            proj.setDeltaMovement(new Vector3d(0, -0.1, 0));
+            world.addFreshEntity(proj);
         }
     }
 
@@ -101,7 +101,7 @@ public class MethodProjectile extends AbstractCastMethod {
 
     @Override
     public void onCastOnBlock(ItemUseContext context, List<AbstractAugment> augments, SpellContext spellContext) {
-        World world = context.getWorld();
+        World world = context.getLevel();
         PlayerEntity shooter = context.getPlayer();
         summonProjectiles(world, shooter, augments, spellContext);
         resolver.expendMana(shooter);
@@ -112,14 +112,14 @@ public class MethodProjectile extends AbstractCastMethod {
      */
     @Override
     public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments, SpellContext spellContext) {
-        caster.lookAt(EntityAnchorArgument.Type.EYES, blockRayTraceResult.getHitVec().add(0, 0, 0));
-        summonProjectiles(caster.getEntityWorld(), blockRayTraceResult.getPos(), caster, augments);
+        caster.lookAt(EntityAnchorArgument.Type.EYES, blockRayTraceResult.getLocation().add(0, 0, 0));
+        summonProjectiles(caster.getCommandSenderWorld(), blockRayTraceResult.getBlockPos(), caster, augments);
         resolver.expendMana(caster);
     }
 
     @Override
     public void onCastOnEntity(ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments, SpellContext spellContext) {
-        summonProjectiles(caster.getEntityWorld(), caster, augments, spellContext);
+        summonProjectiles(caster.getCommandSenderWorld(), caster, augments, spellContext);
         resolver.expendMana(caster);
     }
 

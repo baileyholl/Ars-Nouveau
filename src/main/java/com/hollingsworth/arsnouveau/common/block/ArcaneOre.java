@@ -10,12 +10,12 @@ import java.util.Random;
 
 public class ArcaneOre extends OreBlock {
     public ArcaneOre() {
-        super(ModBlock.defaultProperties().hardnessAndResistance(3.0F, 3.0F).harvestTool(ToolType.PICKAXE).setRequiresTool());
+        super(ModBlock.defaultProperties().strength(3.0F, 3.0F).harvestTool(ToolType.PICKAXE).requiresCorrectToolForDrops());
         setRegistryName("arcane_ore");
     }
 
     @Override
-    protected int getExperience(@Nonnull Random rand) {
+    protected int xpOnDrop(@Nonnull Random rand) {
         return MathHelper.nextInt(rand, 2, 5); // same as lapis or redstone
     }
 }

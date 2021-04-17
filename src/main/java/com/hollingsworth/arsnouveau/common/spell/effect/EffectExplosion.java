@@ -18,6 +18,8 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
+
 public class EffectExplosion extends AbstractEffect {
 
     public EffectExplosion() {
@@ -36,7 +38,7 @@ public class EffectExplosion extends AbstractEffect {
         intensity -= 0.5 * dampen;
         Explosion.Mode mode = hasBuff(augments, AugmentDampen.class) ? Explosion.Mode.NONE  : Explosion.Mode.DESTROY;
         mode = hasBuff(augments, AugmentExtract.class) ? Explosion.Mode.BREAK : mode;
-        world.createExplosion(shooter,  vec.x, vec.y, vec.z, intensity,  mode);
+        world.explode(shooter,  vec.x, vec.y, vec.z, intensity,  mode);
     }
 
     @Override

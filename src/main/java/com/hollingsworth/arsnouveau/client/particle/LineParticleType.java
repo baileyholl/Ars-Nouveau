@@ -9,7 +9,7 @@ public class LineParticleType extends ParticleType<ColoredDynamicTypeData> {
     }
 
     @Override
-    public Codec<ColoredDynamicTypeData> func_230522_e_() {
+    public Codec<ColoredDynamicTypeData> codec() {
         return ColoredDynamicTypeData.CODEC;
     }
 }

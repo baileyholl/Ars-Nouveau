@@ -44,9 +44,9 @@ public class PacketAnimEntity {
                 @Override
                 public void run() {
                     Minecraft mc = Minecraft.getInstance();
-                    ClientWorld world = mc.world;
-                    if(world.getEntityByID(m.entityID) instanceof IAnimationListener){
-                        ((IAnimationListener)world.getEntityByID(m.entityID)).startAnimation(m.anim);
+                    ClientWorld world = mc.level;
+                    if(world.getEntity(m.entityID) instanceof IAnimationListener){
+                        ((IAnimationListener)world.getEntity(m.entityID)).startAnimation(m.anim);
                     }
                 }
             });

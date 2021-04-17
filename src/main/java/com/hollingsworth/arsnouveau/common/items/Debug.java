@@ -14,8 +14,8 @@ public class Debug extends ModItem{
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity playerIn, Hand handIn) {
-        System.out.println(world.getDimensionKey().getLocation().toString());
-        return ActionResult.resultSuccess(playerIn.getHeldItem(handIn));
+    public ActionResult<ItemStack> use(World world, PlayerEntity playerIn, Hand handIn) {
+        System.out.println(world.dimension().location().toString());
+        return ActionResult.success(playerIn.getItemInHand(handIn));
     }
 }

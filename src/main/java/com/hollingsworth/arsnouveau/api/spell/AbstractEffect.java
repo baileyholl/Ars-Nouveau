@@ -62,15 +62,15 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public boolean canSummon(LivingEntity playerEntity){
-        return isRealPlayer(playerEntity) && playerEntity.getActivePotionEffect(ModPotions.SUMMONING_SICKNESS) == null;
+        return isRealPlayer(playerEntity) && playerEntity.getEffect(ModPotions.SUMMONING_SICKNESS) == null;
     }
     public void applySummoningSickness(LivingEntity playerEntity, int time){
-        playerEntity.addPotionEffect(new EffectInstance(ModPotions.SUMMONING_SICKNESS, time));
+        playerEntity.addEffect(new EffectInstance(ModPotions.SUMMONING_SICKNESS, time));
     }
 
     public void summonLivingEntity(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext, ISummon summon){
         if(summon.getLivingEntity() != null)
-            world.addEntity(summon.getLivingEntity());
+            world.addFreshEntity(summon.getLivingEntity());
         MinecraftForge.EVENT_BUS.post(new SummonEvent(rayTraceResult, world, shooter, augments, spellContext, summon));
     }
 
@@ -79,7 +79,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
             return;
         int duration = baseDuration + durationBuffBase * getDurationModifier(augmentTypes);
         int amp = Math.min(cap, getAmplificationBonus(augmentTypes));
-        entity.addPotionEffect(new EffectInstance(potionEffect, duration * 20, amp));
+        entity.addEffect(new EffectInstance(potionEffect, duration * 20, amp));
     }
 
     public void applyPotion(LivingEntity entity, Effect potionEffect, List<AbstractAugment> augmentTypes, int baseDuration, int durationBuffBase){
@@ -87,7 +87,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
             return;
         int duration = baseDuration + durationBuffBase * getDurationModifier(augmentTypes);
         int amp = getAmplificationBonus(augmentTypes);
-        entity.addPotionEffect(new EffectInstance(potionEffect, duration * 20, amp));
+        entity.addEffect(new EffectInstance(potionEffect, duration * 20, amp));
     }
 
     public int getDurationModifier( List<AbstractAugment> augmentTypes){
@@ -103,34 +103,34 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public boolean canBlockBeHarvested(List<AbstractAugment> augments, World world, BlockPos pos){
-        return world.getBlockState(pos).getBlockHardness(world, pos) >= 0 && getBaseHarvestLevel(augments) >= world.getBlockState(pos).getHarvestLevel();
+        return world.getBlockState(pos).getDestroySpeed(world, pos) >= 0 && getBaseHarvestLevel(augments) >= world.getBlockState(pos).getHarvestLevel();
     }
 
     public void dealDamage(World world, LivingEntity shooter, float damage, List<AbstractAugment> augments, Entity entity, DamageSource source){
 
         shooter = shooter == null ? FakePlayerFactory.getMinecraft((ServerWorld) world) : shooter;
-        entity.attackEntityFrom(source, damage);
+        entity.hurt(source, damage);
         if(!(entity instanceof LivingEntity))
             return;
         LivingEntity mob = (LivingEntity) entity;
 
         if(mob.getHealth() <= 0 && !mob.removed && hasBuff(augments, AugmentFortune.class)){
             int looting = getBuffCount(augments, AugmentFortune.class);
-            LootContext.Builder lootContext = LootUtil.getLootingContext((ServerWorld)world,shooter, mob, looting, DamageSource.causePlayerDamage((PlayerEntity) shooter));
-            ResourceLocation lootTable = mob.getLootTableResourceLocation();
-            LootTable loottable = world.getServer().getLootTableManager().getLootTableFromLocation(lootTable);
-            List<ItemStack> items = loottable.generate(lootContext.build(LootParameterSets.GENERIC));
-            items.forEach(mob::entityDropItem);
+            LootContext.Builder lootContext = LootUtil.getLootingContext((ServerWorld)world,shooter, mob, looting, DamageSource.playerAttack((PlayerEntity) shooter));
+            ResourceLocation lootTable = mob.getLootTable();
+            LootTable loottable = world.getServer().getLootTables().get(lootTable);
+            List<ItemStack> items = loottable.getRandomItems(lootContext.create(LootParameterSets.ALL_PARAMS));
+            items.forEach(mob::spawnAtLocation);
         }
     }
 
     public DamageSource buildDamageSource(World world, LivingEntity shooter){
         shooter = shooter == null ? FakePlayerFactory.getMinecraft((ServerWorld) world) : shooter;
-        return DamageSource.causePlayerDamage((PlayerEntity) shooter);
+        return DamageSource.playerAttack((PlayerEntity) shooter);
     }
 
     public Vector3d safelyGetHitPos(RayTraceResult result){
-        return result instanceof EntityRayTraceResult ? ((EntityRayTraceResult) result).getEntity().getPositionVec() : result.getHitVec();
+        return result instanceof EntityRayTraceResult ? ((EntityRayTraceResult) result).getEntity().position() : result.getLocation();
     }
 
     public boolean isRealPlayer(LivingEntity entity){
@@ -147,7 +147,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public boolean nonAirBlockSuccess(RayTraceResult rayTraceResult, World world){
-        return rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos()).getMaterial() != Material.AIR;
+        return rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getBlockPos()).getMaterial() != Material.AIR;
     }
 
     public boolean livingEntityHitSuccess(RayTraceResult rayTraceResult){
@@ -160,10 +160,10 @@ public abstract class AbstractEffect extends AbstractSpellPart {
 
     public void applyEnchantments(List<AbstractAugment> augments, ItemStack stack){
         if(hasBuff(augments, AugmentExtract.class)){
-            stack.addEnchantment(Enchantments.SILK_TOUCH, 1);
+            stack.enchant(Enchantments.SILK_TOUCH, 1);
         }
         if(hasBuff(augments, AugmentFortune.class)){
-            stack.addEnchantment(Enchantments.FORTUNE, getBuffCount(augments, AugmentExtract.class));
+            stack.enchant(Enchantments.BLOCK_FORTUNE, getBuffCount(augments, AugmentExtract.class));
         }
     }
 }

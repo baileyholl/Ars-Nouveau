@@ -24,8 +24,8 @@ public class EntityEarthElemental extends CreatureEntity  {
 
 
     @Override
-    protected void registerData() {
-        super.registerData();
+    protected void defineSynchedData() {
+        super.defineSynchedData();
 
     }
 
@@ -41,10 +41,10 @@ public class EntityEarthElemental extends CreatureEntity  {
     @Override
     public void tick() {
         super.tick();
-        if(getHeldStack().isEmpty() && !world.isRemote){
-            for(ItemEntity itementity : this.world.getEntitiesWithinAABB(ItemEntity.class, this.getBoundingBox().grow(1.0D, 0.0D, 1.0D))) {
-                if (!itementity.removed && !itementity.getItem().isEmpty() && !itementity.cannotPickup()) {
-                    this.updateEquipmentIfNeeded(itementity);
+        if(getHeldStack().isEmpty() && !level.isClientSide){
+            for(ItemEntity itementity : this.level.getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(1.0D, 0.0D, 1.0D))) {
+                if (!itementity.removed && !itementity.getItem().isEmpty() && !itementity.hasPickUpDelay()) {
+                    this.pickUpItem(itementity);
                     System.out.println("sending packet");
 //                    Networking.sendToNearby(world, this, new PacketEntityAnimationSync(this.getEntityId(), "smeltController", "smelting"));
 //                    EventQueue.getInstance().addEvent(new ProcessOreEvent(this, 20 * 20));
@@ -57,9 +57,9 @@ public class EntityEarthElemental extends CreatureEntity  {
      * Handler for {@link World#setEntityState}
      */
     @OnlyIn(Dist.CLIENT)
-    public void handleStatusUpdate(byte id) {
+    public void handleEntityEvent(byte id) {
         if (id == 45) {
-            ItemStack itemstack = this.getItemStackFromSlot(EquipmentSlotType.MAINHAND);
+            ItemStack itemstack = this.getItemBySlot(EquipmentSlotType.MAINHAND);
             if (!itemstack.isEmpty()) {
                 for(int i = 0; i < 8; ++i) {
 //                    Vec3d vec3d = (new Vec3d(((double)this.rand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D)).rotatePitch(-this.rotationPitch * ((float)Math.PI / 180F)).rotateYaw(-this.rotationYaw * ((float)Math.PI / 180F));
@@ -67,44 +67,44 @@ public class EntityEarthElemental extends CreatureEntity  {
                 }
             }
         } else {
-            super.handleStatusUpdate(id);
+            super.handleEntityEvent(id);
         }
 
     }
 
     @Override
-    protected void updateEquipmentIfNeeded(ItemEntity itemEntity) {
+    protected void pickUpItem(ItemEntity itemEntity) {
         if(this.getHeldStack().isEmpty()){
             setHeldStack(itemEntity.getItem());
             itemEntity.remove();
-            this.world.playSound(null, this.getPosX(), this.getPosY(), this.getPosZ(), SoundEvents.ENTITY_ITEM_PICKUP, this.getSoundCategory(),1.0F, 1.0F);
+            this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ITEM_PICKUP, this.getSoundSource(),1.0F, 1.0F);
         }
     }
     public void setHeldStack(ItemStack stack){
 //        this.dataManager.set(HELD_ITEM,stack);
-        this.setItemStackToSlot(EquipmentSlotType.MAINHAND, stack);
+        this.setItemSlot(EquipmentSlotType.MAINHAND, stack);
     }
 
     public ItemStack getHeldStack(){
-        return this.getHeldItemMainhand();
+        return this.getMainHandItem();
 //        return this.dataManager.get(HELD_ITEM);
     }
 
 
     @Override
-    public void writeAdditional(CompoundNBT tag) {
-        super.writeAdditional(tag);
+    public void addAdditionalSaveData(CompoundNBT tag) {
+        super.addAdditionalSaveData(tag);
         if(getHeldStack() != null) {
             CompoundNBT itemTag = new CompoundNBT();
-            getHeldStack().write(itemTag);
+            getHeldStack().save(itemTag);
             tag.put("held", itemTag);
         }
     }
 
     @Override
-    public void read(CompoundNBT tag) {
-        super.read(tag);
+    public void load(CompoundNBT tag) {
+        super.load(tag);
         if(tag.contains("held"))
-            setHeldStack(ItemStack.read((CompoundNBT)tag.get("held")));
+            setHeldStack(ItemStack.of((CompoundNBT)tag.get("held")));
     }
 }

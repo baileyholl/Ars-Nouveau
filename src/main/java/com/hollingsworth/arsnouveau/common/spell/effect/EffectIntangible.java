@@ -24,6 +24,8 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
+
 public class EffectIntangible extends AbstractEffect {
     public EffectIntangible() {
         super(GlyphLib.EffectIntangibleID, "Intangible");
@@ -32,20 +34,20 @@ public class EffectIntangible extends AbstractEffect {
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof BlockRayTraceResult){
-            BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getPos();
+            BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getBlockPos();
             int aoeBuff = getBuffCount(augments, AugmentAOE.class);
             int duration = 60 + 20 * getDurationModifier(augments);
 
             List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult,aoeBuff, getBuffCount(augments, AugmentPierce.class));
             for(BlockPos pos1 : posList) {
-                if(world.getTileEntity(pos1) != null || world.getBlockState(pos1).getMaterial() == Material.AIR
+                if(world.getBlockEntity(pos1) != null || world.getBlockState(pos1).getMaterial() == Material.AIR
                         || world.getBlockState(pos1).getBlock() == Blocks.BEDROCK || !canBlockBeHarvested(augments, world, pos))
                     continue;
 
                 BlockState state = world.getBlockState(pos1);
-                int id = Block.getStateId(state);
-                world.setBlockState(pos1, BlockRegistry.INTANGIBLE_AIR.getDefaultState());
-                IntangibleAirTile tile = ((IntangibleAirTile) world.getTileEntity(pos1));
+                int id = Block.getId(state);
+                world.setBlockAndUpdate(pos1, BlockRegistry.INTANGIBLE_AIR.defaultBlockState());
+                IntangibleAirTile tile = ((IntangibleAirTile) world.getBlockEntity(pos1));
                 tile.stateID = id;
                 tile.maxLength = duration;
             }

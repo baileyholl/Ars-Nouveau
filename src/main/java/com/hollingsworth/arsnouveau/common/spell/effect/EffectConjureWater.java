@@ -22,6 +22,8 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
+
 public class EffectConjureWater extends AbstractEffect {
     public EffectConjureWater() {
         super(GlyphLib.EffectConjureWaterID, "Conjure Water");
@@ -31,22 +33,22 @@ public class EffectConjureWater extends AbstractEffect {
     public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof EntityRayTraceResult){
             Entity entity = ((EntityRayTraceResult) rayTraceResult).getEntity();
-            if(entity.isBurning()){
-                entity.extinguish();
+            if(entity.isOnFire()){
+                entity.clearFire();
             }
         }
 
         if(!(rayTraceResult instanceof BlockRayTraceResult))
             return;
         int aoeBuff = getBuffCount(augments, AugmentAOE.class);
-        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult,aoeBuff, getBuffCount(augments, AugmentPierce.class));
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getBlockPos(), (BlockRayTraceResult)rayTraceResult,aoeBuff, getBuffCount(augments, AugmentPierce.class));
         BlockRayTraceResult result = (BlockRayTraceResult) rayTraceResult;
-        if(world.getDimensionType().isUltrawarm())
+        if(world.dimensionType().ultraWarm())
             return;
         for(BlockPos pos1 : posList) {
-            BlockPos hitPos = pos1.offset(result.getFace());
-            if(world.getBlockState(hitPos).isReplaceable(Fluids.WATER)){
-                world.setBlockState(hitPos, Blocks.WATER.getDefaultState());
+            BlockPos hitPos = pos1.relative(result.getDirection());
+            if(world.getBlockState(hitPos).canBeReplaced(Fluids.WATER)){
+                world.setBlockAndUpdate(hitPos, Blocks.WATER.defaultBlockState());
             }
         }
     }

@@ -27,6 +27,8 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.Optional;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
+
 public class EffectSmelt extends AbstractEffect {
 
     public EffectSmelt() {
@@ -43,8 +45,8 @@ public class EffectSmelt extends AbstractEffect {
         int pierceBuff = getBuffCount(augments, AugmentPierce.class);
         int maxItemSmelt = 3 + 4*aoeBuff*pierceBuff;
 
-        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult,aoeBuff, pierceBuff);
-        List<ItemEntity> itemEntities = world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(((BlockRayTraceResult) rayTraceResult).getPos()).grow(aoeBuff + 1.0));
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getBlockPos(), (BlockRayTraceResult)rayTraceResult,aoeBuff, pierceBuff);
+        List<ItemEntity> itemEntities = world.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(((BlockRayTraceResult) rayTraceResult).getBlockPos()).inflate(aoeBuff + 1.0));
         smeltItems(world, itemEntities, maxItemSmelt);
 
         for(BlockPos pos : posList) {
@@ -57,16 +59,16 @@ public class EffectSmelt extends AbstractEffect {
 
     public void smeltBlock(World world, BlockPos pos, LivingEntity shooter){
         BlockState state = world.getBlockState(pos);
-        Optional<FurnaceRecipe> optional = world.getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory(new ItemStack(state.getBlock().asItem(), 1)),
+        Optional<FurnaceRecipe> optional = world.getRecipeManager().getRecipeFor(IRecipeType.SMELTING, new Inventory(new ItemStack(state.getBlock().asItem(), 1)),
                 world);
         if (optional.isPresent()) {
-            ItemStack itemstack = optional.get().getRecipeOutput();
+            ItemStack itemstack = optional.get().getResultItem();
             if (!itemstack.isEmpty()) {
                 if(itemstack.getItem() instanceof BlockItem){
-                    world.setBlockState(pos, ((BlockItem)itemstack.getItem()).getBlock().getDefaultState());
+                    world.setBlockAndUpdate(pos, ((BlockItem)itemstack.getItem()).getBlock().defaultBlockState());
                 }else{
                     BlockUtil.destroyBlockSafely(world, pos, false, shooter);
-                    world.addEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(),itemstack.copy()));
+                    world.addFreshEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(),itemstack.copy()));
                     BlockUtil.safelyUpdateState(world, pos);
                 }
             }
@@ -79,15 +81,15 @@ public class EffectSmelt extends AbstractEffect {
         for (ItemEntity itemEntity : itemEntities) {
             if (numSmelted > maxItemSmelt)
                 break;
-            Optional<FurnaceRecipe> optional = world.getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory(itemEntity.getItem()),
+            Optional<FurnaceRecipe> optional = world.getRecipeManager().getRecipeFor(IRecipeType.SMELTING, new Inventory(itemEntity.getItem()),
                     world);
             if (optional.isPresent()) {
-                ItemStack result = optional.get().getRecipeOutput().copy();
+                ItemStack result = optional.get().getResultItem().copy();
                 if (result.isEmpty())
                     continue;
                 while (numSmelted < maxItemSmelt && !itemEntity.getItem().isEmpty()) {
                     itemEntity.getItem().shrink(1);
-                    world.addEntity(new ItemEntity(world, itemEntity.getPosX(), itemEntity.getPosY(), itemEntity.getPosZ(), result.copy()));
+                    world.addFreshEntity(new ItemEntity(world, itemEntity.getX(), itemEntity.getY(), itemEntity.getZ(), result.copy()));
                     numSmelted++;
                 }
             }

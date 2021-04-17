@@ -30,7 +30,7 @@ import java.util.function.Predicate;
 public class BlockUtil {
 
     public static boolean isTreeBlock(Block block){
-        return block.isIn(BlockTags.LEAVES) || block.isIn(BlockTags.LOGS);
+        return block.is(BlockTags.LEAVES) || block.is(BlockTags.LOGS);
     }
 
     public static boolean containsStateInRadius(World world, BlockPos start, int radius, Class clazz){
@@ -57,7 +57,7 @@ public class BlockUtil {
         PlayerEntity playerEntity = caster instanceof PlayerEntity ? (PlayerEntity) caster : FakePlayerFactory.getMinecraft((ServerWorld) world);
         if(MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos),playerEntity)))
             return false;
-        world.getBlockState(pos).getBlock().onBlockHarvested(world, pos, world.getBlockState(pos), playerEntity);
+        world.getBlockState(pos).getBlock().playerWillDestroy(world, pos, world.getBlockState(pos), playerEntity);
         return world.destroyBlock(pos, dropBlock);
 
     }
@@ -69,7 +69,7 @@ public class BlockUtil {
 
     public static void safelyUpdateState(World world, BlockPos pos, BlockState state){
         if(!World.isOutsideBuildHeight(pos))
-            world.notifyBlockUpdate(pos, state, state, 3);
+            world.sendBlockUpdated(pos, state, state, 3);
     }
 
     public static void safelyUpdateState(World world, BlockPos pos){
@@ -102,11 +102,11 @@ public class BlockUtil {
         } else {
             FluidState ifluidstate = world.getFluidState(pos);
             if (isMoving) {
-                TileEntity tileentity = blockstate.hasTileEntity() ? world.getTileEntity(pos) : null;
-                Block.spawnDrops(blockstate, world, pos, tileentity, entityIn, ItemStack.EMPTY);
+                TileEntity tileentity = blockstate.hasTileEntity() ? world.getBlockEntity(pos) : null;
+                Block.dropResources(blockstate, world, pos, tileentity, entityIn, ItemStack.EMPTY);
             }
 
-            return world.setBlockState(pos, ifluidstate.getBlockState(), 3);
+            return world.setBlock(pos, ifluidstate.createLegacyBlock(), 3);
         }
     }
 
@@ -114,7 +114,7 @@ public class BlockUtil {
         if(world == null || pos == null)return new ArrayList<>();
         ArrayList<IItemHandler> iInventories = new ArrayList<>();
         for(Direction d : Direction.values()){
-            TileEntity tileEntity = world.getTileEntity(pos.offset(d));
+            TileEntity tileEntity = world.getBlockEntity(pos.relative(d));
             if(tileEntity == null)
                 continue;
 

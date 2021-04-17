@@ -44,7 +44,7 @@ public class SpellParchment extends ModItem implements IScribeable {
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag p_77624_4_) {
+    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag p_77624_4_) {
         if(!stack.hasTag() || stack.getTag().getString("spell").equals(""))
             return;
 
@@ -63,15 +63,15 @@ public class SpellParchment extends ModItem implements IScribeable {
     @Override
     public boolean onScribe(World world, BlockPos pos, PlayerEntity player, Hand handIn, ItemStack thisStack) {
 
-        if(!(player.getHeldItem(handIn).getItem() instanceof SpellBook))
+        if(!(player.getItemInHand(handIn).getItem() instanceof SpellBook))
             return false;
 
-        if(SpellBook.getMode(player.getHeldItem(handIn).getTag()) == 0){
+        if(SpellBook.getMode(player.getItemInHand(handIn).getTag()) == 0){
             PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.spell_parchment.no_spell"));
             return false;
         }
 
-        SpellParchment.setSpell(thisStack, SpellBook.getRecipeString(player.getHeldItem(handIn).getTag(), SpellBook.getMode(player.getHeldItem(handIn).getTag())));
+        SpellParchment.setSpell(thisStack, SpellBook.getRecipeString(player.getItemInHand(handIn).getTag(), SpellBook.getMode(player.getItemInHand(handIn).getTag())));
         PortUtil.sendMessage(player,new TranslationTextComponent("ars_nouveau.spell_parchment.inscribed"));
         return false;
     }

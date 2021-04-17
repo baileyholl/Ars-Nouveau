@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 
 public class SummoningCrystal extends ModBlock{
     public SummoningCrystal() {
-        super(ModBlock.defaultProperties().notSolid(), LibBlockNames.SUMMONING_CRYSTAL);
+        super(ModBlock.defaultProperties().noOcclusion(), LibBlockNames.SUMMONING_CRYSTAL);
     }
 
     @Override
@@ -27,12 +27,12 @@ public class SummoningCrystal extends ModBlock{
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState p_225533_1_, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult p_225533_6_) {
-        if(!world.isRemote && hand == Hand.MAIN_HAND && player.getHeldItem(hand).isEmpty()){
-            if(world.getTileEntity(pos) instanceof SummoningCrystalTile)
-                ((SummoningCrystalTile) world.getTileEntity(pos)).changeTier(player);
+    public ActionResultType use(BlockState p_225533_1_, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult p_225533_6_) {
+        if(!world.isClientSide && hand == Hand.MAIN_HAND && player.getItemInHand(hand).isEmpty()){
+            if(world.getBlockEntity(pos) instanceof SummoningCrystalTile)
+                ((SummoningCrystalTile) world.getBlockEntity(pos)).changeTier(player);
         }
-        return super.onBlockActivated(p_225533_1_, world, pos, player, hand, p_225533_6_);
+        return super.use(p_225533_1_, world, pos, player, hand, p_225533_6_);
 
     }
 
@@ -40,13 +40,13 @@ public class SummoningCrystal extends ModBlock{
     @Override
     public void neighborChanged(BlockState p_220069_1_, World world, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_, boolean p_220069_6_) {
         super.neighborChanged(p_220069_1_, world, pos, p_220069_4_, p_220069_5_, p_220069_6_);
-        if(!world.isRemote() && world.getTileEntity(pos) instanceof SummoningCrystalTile){
-            ((SummoningCrystalTile) world.getTileEntity(pos)).isOff = world.isBlockPowered(pos);
+        if(!world.isClientSide() && world.getBlockEntity(pos) instanceof SummoningCrystalTile){
+            ((SummoningCrystalTile) world.getBlockEntity(pos)).isOff = world.hasNeighborSignal(pos);
         }
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 

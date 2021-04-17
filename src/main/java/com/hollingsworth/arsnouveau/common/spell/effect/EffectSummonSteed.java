@@ -19,6 +19,8 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
+
 public class EffectSummonSteed extends AbstractEffect {
 
 
@@ -32,14 +34,14 @@ public class EffectSummonSteed extends AbstractEffect {
         int ticks = 60 * 20 * (5 + 2* getDurationModifier(augments));
         if(!canSummon(shooter))
             return;
-        Vector3d hit = rayTraceResult.getHitVec();
+        Vector3d hit = rayTraceResult.getLocation();
         SummonHorse horse = new SummonHorse(ModEntities.SUMMON_HORSE, world);
       //  wolf.ticksLeft = 400;
-        horse.setPosition(hit.getX(), hit.getY(), hit.getZ());
+        horse.setPos(hit.x(), hit.y(), hit.z());
         horse.ticksLeft = ticks;
-        horse.setTamedBy((PlayerEntity) shooter);
-        world.addEntity(horse);
-        horse.getHorseInventory().setInventorySlotContents(0, new ItemStack(Items.SADDLE));
+        horse.tameWithName((PlayerEntity) shooter);
+        world.addFreshEntity(horse);
+        horse.getHorseInventory().setItem(0, new ItemStack(Items.SADDLE));
         //horse.setItemStackToSlot(EquipmentSlotType.CHEST, new ItemStack(Items.DIAMOND_HORSE_ARMOR));
         horse.setDropChance(EquipmentSlotType.CHEST, 0.0F);
         applySummoningSickness(shooter, ticks/2);

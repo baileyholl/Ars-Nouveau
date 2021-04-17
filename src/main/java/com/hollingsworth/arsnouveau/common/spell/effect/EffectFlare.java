@@ -21,6 +21,8 @@ import net.minecraft.world.server.ServerWorld;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
+
 public class EffectFlare extends AbstractEffect {
     public EffectFlare() {
         super(GlyphLib.EffectFlareID, "Flare");
@@ -37,18 +39,18 @@ public class EffectFlare extends AbstractEffect {
             float damage = 6.0f + 3.0f*getAmplificationBonus(augments);
             int range = 3 + getBuffCount(augments, AugmentAOE.class);
             int fireSec = 5 + getDurationModifier(augments);
-            if(livingEntity.isBurning()){
-                dealDamage(world, shooter, damage, augments, livingEntity, buildDamageSource(world, shooter).setFireDamage().setDamageBypassesArmor());
-                ((ServerWorld)world).spawnParticle(ParticleTypes.FLAME, vec.x, vec.y +0.5, vec.z,50,
+            if(livingEntity.isOnFire()){
+                dealDamage(world, shooter, damage, augments, livingEntity, buildDamageSource(world, shooter).setIsFire().bypassArmor());
+                ((ServerWorld)world).sendParticles(ParticleTypes.FLAME, vec.x, vec.y +0.5, vec.z,50,
                         ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1),ParticleUtil.inRange(-0.1, 0.1), 0.3);
-                for(Entity e : world.getEntitiesWithinAABBExcludingEntity(shooter, new AxisAlignedBB(
-                        livingEntity.getPosition().north(range).east(range).up(range),  livingEntity.getPosition().south(range).west(range).down(range)))){
+                for(Entity e : world.getEntities(shooter, new AxisAlignedBB(
+                        livingEntity.blockPosition().north(range).east(range).above(range),  livingEntity.blockPosition().south(range).west(range).below(range)))){
                     if(e.equals(livingEntity) || !(e instanceof LivingEntity))
                         continue;
-                    dealDamage(world, shooter, damage, augments, e, buildDamageSource(world, shooter).setFireDamage().setDamageBypassesArmor());
-                    e.setFire(fireSec);
-                    vec = e.getPositionVec();
-                    ((ServerWorld)world).spawnParticle(ParticleTypes.FLAME, vec.x, vec.y +0.5, vec.z,50,
+                    dealDamage(world, shooter, damage, augments, e, buildDamageSource(world, shooter).setIsFire().bypassArmor());
+                    e.setSecondsOnFire(fireSec);
+                    vec = e.position();
+                    ((ServerWorld)world).sendParticles(ParticleTypes.FLAME, vec.x, vec.y +0.5, vec.z,50,
                             ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1),ParticleUtil.inRange(-0.1, 0.1), 0.3);
                 }
             }

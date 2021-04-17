@@ -46,11 +46,11 @@ public class ManaUtil {
         if(mana == null)
             return 0;
         int max = Config.INIT_MAX_MANA.get();
-        for(ItemStack i : e.getEquipmentAndArmor()){
+        for(ItemStack i : e.getAllSlots()){
             if(i.getItem() instanceof IManaEquipment){
                 max += (((IManaEquipment) i.getItem()).getMaxManaBoost());
             }
-            max += ( Config.MANA_BOOST_BONUS.get() * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, i));
+            max += ( Config.MANA_BOOST_BONUS.get() * EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, i));
         }
 
         IItemHandlerModifiable items = CuriosUtil.getAllWornItems(e).orElse(null);
@@ -78,12 +78,12 @@ public class ManaUtil {
         if(mana == null)
             return 0;
         double regen = Config.INIT_MANA_REGEN.get();
-        for(ItemStack i : e.getEquipmentAndArmor()){
+        for(ItemStack i : e.getAllSlots()){
             if(i.getItem() instanceof MagicArmor){
                 MagicArmor armor = ((MagicArmor) i.getItem());
                 regen += armor.getManaRegenBonus();
             }
-            regen += Config.MANA_REGEN_ENCHANT_BONUS.get() * EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, i);
+            regen += Config.MANA_REGEN_ENCHANT_BONUS.get() * EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, i);
         }
         IItemHandlerModifiable items = CuriosUtil.getAllWornItems(e).orElse(null);
         if(items != null){
@@ -98,8 +98,8 @@ public class ManaUtil {
         double numGlyphs = mana.getGlyphBonus() > 5 ? mana.getGlyphBonus() - 5 : 0;
         regen += numGlyphs * Config.GLYPH_REGEN_BONUS.get();
         regen += tier;
-        if(e.getActivePotionEffect(ModPotions.MANA_REGEN_EFFECT) != null)
-            regen += Config.MANA_REGEN_POTION.get() * (1 + e.getActivePotionEffect(ModPotions.MANA_REGEN_EFFECT).getAmplifier());
+        if(e.getEffect(ModPotions.MANA_REGEN_EFFECT) != null)
+            regen += Config.MANA_REGEN_POTION.get() * (1 + e.getEffect(ModPotions.MANA_REGEN_EFFECT).getAmplifier());
         ManaRegenCalcEvent event = new ManaRegenCalcEvent(e, regen);
         MinecraftForge.EVENT_BUS.post(event);
         regen = event.getRegen();
@@ -113,10 +113,10 @@ public class ManaUtil {
     @Nullable
     public static BlockPos takeManaNearby(BlockPos pos, World world, int range, int mana){
         final BlockPos[] pos1 = {null};
-        BlockPos.getAllInBox(pos.add(range, range, range), pos.add(-range, -range, -range)).forEach(blockPos -> {
-            blockPos = blockPos.toImmutable();
-            if(pos1[0] == null && world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= mana) {
-                ((ManaJarTile) world.getTileEntity(blockPos)).removeMana(mana);
+        BlockPos.betweenClosedStream(pos.offset(range, range, range), pos.offset(-range, -range, -range)).forEach(blockPos -> {
+            blockPos = blockPos.immutable();
+            if(pos1[0] == null && world.getBlockEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getBlockEntity(blockPos)).getCurrentMana() >= mana) {
+                ((ManaJarTile) world.getBlockEntity(blockPos)).removeMana(mana);
                 pos1[0] = blockPos;
             }
         });
@@ -127,7 +127,7 @@ public class ManaUtil {
         BlockPos result = takeManaNearby(pos,world,range,mana);
         if(result != null){
             EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, result, pos);
-            world.addEntity(aoeProjectile);
+            world.addFreshEntity(aoeProjectile);
         }
         return result;
     }
@@ -139,9 +139,9 @@ public class ManaUtil {
     @Nullable
     public static boolean hasManaNearby(BlockPos pos, World world, int range, int mana){
         final boolean[] hasMana = {false};
-        BlockPos.getAllInBox(pos.add(range, range, range), pos.add(-range, -range, -range)).forEach(blockPos -> {
-            blockPos = blockPos.toImmutable();
-            if(!hasMana[0] && world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= mana) {
+        BlockPos.betweenClosedStream(pos.offset(range, range, range), pos.offset(-range, -range, -range)).forEach(blockPos -> {
+            blockPos = blockPos.immutable();
+            if(!hasMana[0] && world.getBlockEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getBlockEntity(blockPos)).getCurrentMana() >= mana) {
                 hasMana[0] = true;
             }
         });
@@ -152,9 +152,9 @@ public class ManaUtil {
     public static BlockPos canGiveMana(BlockPos pos, World world, int range){
         final boolean[] hasMana = {false};
         final BlockPos[] loc = {null};
-        BlockPos.getAllInBox(pos.add(range, range, range), pos.add(-range, -range, -range)).forEach(blockPos -> {
-            blockPos = blockPos.toImmutable();
-            if(!hasMana[0] && world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).canAcceptMana()) {
+        BlockPos.betweenClosedStream(pos.offset(range, range, range), pos.offset(-range, -range, -range)).forEach(blockPos -> {
+            blockPos = blockPos.immutable();
+            if(!hasMana[0] && world.getBlockEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getBlockEntity(blockPos)).canAcceptMana()) {
                 hasMana[0] = true;
                 loc[0] = blockPos;
             }
@@ -164,7 +164,7 @@ public class ManaUtil {
 
     @Nullable
     public static BlockPos canGiveManaClosest(BlockPos pos, World world, int range){
-        Optional<BlockPos> loc = BlockPos.getClosestMatchingPosition(pos, range, range, (b) ->  world.getTileEntity(b) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(b)).canAcceptMana());
+        Optional<BlockPos> loc = BlockPos.findClosestMatch(pos, range, range, (b) ->  world.getBlockEntity(b) instanceof ManaJarTile && ((ManaJarTile) world.getBlockEntity(b)).canAcceptMana());
         return loc.orElse(null);
     }
 }

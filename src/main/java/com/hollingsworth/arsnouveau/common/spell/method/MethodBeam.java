@@ -29,10 +29,10 @@ public class MethodBeam extends AbstractCastMethod {
     @Override
     public void onCastOnBlock(ItemUseContext context, List<AbstractAugment> augments, SpellContext spellContext) {
         PlayerEntity playerEntity = context.getPlayer();
-        BlockRayTraceResult res = new BlockRayTraceResult(context.getHitVec(), context.getFace(), context.getPos(), false);
+        BlockRayTraceResult res = new BlockRayTraceResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), false);
         if(playerEntity != null) {
 //            Networking.sendToNearby(context.getWorld(), playerEntity.getPosition(), new PacketBeam(new BlockPos(MathUtil.getEntityLookHit(playerEntity, 8f)), playerEntity.getPosition().add(0, playerEntity.getEyeHeight() -0.2f, 0), 0));
-            resolver.onResolveEffect(playerEntity.getEntityWorld(), playerEntity, res);
+            resolver.onResolveEffect(playerEntity.getCommandSenderWorld(), playerEntity, res);
             resolver.expendMana(playerEntity);
         }
     }
@@ -41,7 +41,7 @@ public class MethodBeam extends AbstractCastMethod {
     public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments, SpellContext spellContext) {
         if(caster instanceof PlayerEntity) {
 //            Networking.sendToNearby(caster.world, caster.getPosition(), new PacketBeam(new BlockPos(MathUtil.getEntityLookHit(caster, 8f)), caster.getPosition().add(0, caster.getEyeHeight() -0.2f, 0), 0));
-            resolver.onResolveEffect(caster.getEntityWorld(), caster, blockRayTraceResult);
+            resolver.onResolveEffect(caster.getCommandSenderWorld(), caster, blockRayTraceResult);
             resolver.expendMana(caster);
         }
     }
@@ -50,7 +50,7 @@ public class MethodBeam extends AbstractCastMethod {
     public void onCastOnEntity(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments, SpellContext spellContext) {
         if(caster instanceof PlayerEntity) {
 //            Networking.sendToNearby(caster.world, caster.getPosition(), new PacketBeam(new BlockPos(MathUtil.getEntityLookHit(caster, 8f)), caster.getPosition().add(0, caster.getEyeHeight() -0.2f, 0), 0));
-            resolver.onResolveEffect(caster.getEntityWorld(), caster, new EntityRayTraceResult(target));
+            resolver.onResolveEffect(caster.getCommandSenderWorld(), caster, new EntityRayTraceResult(target));
             resolver.expendMana(caster);
         }
     }

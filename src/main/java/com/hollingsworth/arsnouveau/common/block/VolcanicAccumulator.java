@@ -17,7 +17,7 @@ import java.util.Random;
 public class VolcanicAccumulator extends ModBlock {
 
     public VolcanicAccumulator() {
-        super(defaultProperties().notSolid().setLightLevel(state -> 15), LibBlockNames.VOLCANIC_ACCUMULATOR);
+        super(defaultProperties().noOcclusion().lightLevel(state -> 15), LibBlockNames.VOLCANIC_ACCUMULATOR);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class VolcanicAccumulator extends ModBlock {
     public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
         super.randomTick(state, worldIn, pos, random);
 
-        VolcanicTile tile = (VolcanicTile) worldIn.getTileEntity(pos);
+        VolcanicTile tile = (VolcanicTile) worldIn.getBlockEntity(pos);
         if(tile == null)
             return;
         tile.doRandomAction();
@@ -37,11 +37,11 @@ public class VolcanicAccumulator extends ModBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return Block.makeCuboidShape(1D, 0.0D, 1.0D, 15, 16, 15);
+        return Block.box(1D, 0.0D, 1.0D, 15, 16, 15);
     }
 
     @Override
-    public boolean ticksRandomly(BlockState state) {
+    public boolean isRandomlyTicking(BlockState state) {
         return true;
     }
 
@@ -51,7 +51,7 @@ public class VolcanicAccumulator extends ModBlock {
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 }

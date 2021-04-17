@@ -153,7 +153,7 @@ public class ArsNouveauAPI {
             vanillaPotionRecipes.forEach(vanillaPotionRecipe -> {
                 BrewingRecipe recipe = new BrewingRecipe(
                         PotionIngredient.fromPotion(vanillaPotionRecipe.potionIn),
-                        Ingredient.fromItems(vanillaPotionRecipe.reagent),
+                        Ingredient.of(vanillaPotionRecipe.reagent),
                         PotionIngredient.fromPotion(vanillaPotionRecipe.potionOut).getStack()
                 );
                 brewingRecipes.add(recipe);

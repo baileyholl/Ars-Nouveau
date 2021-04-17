@@ -21,45 +21,45 @@ import java.util.Random;
 
 public class RedstoneAir extends Block {
 
-    public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
+    public static final IntegerProperty POWER = BlockStateProperties.POWER;
     public RedstoneAir() {
-        super(Block.Properties.create(Material.AIR).doesNotBlockMovement().noDrops());
+        super(Block.Properties.of(Material.AIR).noCollission().noDrops());
         setRegistryName(LibBlockNames.REDSTONE_AIR);
     }
 
     @Override
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
         worldIn.removeBlock(pos, false);
-        worldIn.notifyNeighborsOfStateChange(pos, this);
+        worldIn.updateNeighborsAt(pos, this);
         for(Direction d : Direction.values()){
-            worldIn.notifyNeighborsOfStateChange(pos.offset(d), this);
+            worldIn.updateNeighborsAt(pos.relative(d), this);
         }
     }
 
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(POWER);
     }
 
     @Override
-    public void onBlockAdded(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
-        super.onBlockAdded(state, worldIn, pos, oldState, isMoving);
+    public void onPlace(BlockState state, World worldIn, BlockPos pos, BlockState oldState, boolean isMoving) {
+        super.onPlace(state, worldIn, pos, oldState, isMoving);
     }
 
-    public boolean canProvidePower(BlockState state) {
+    public boolean isSignalSource(BlockState state) {
         return true;
     }
 
-    public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-        return blockState.get(POWER);
+    public int getSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+        return blockState.getValue(POWER);
     }
 
-    public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-        return blockState.get(POWER);
+    public int getDirectSignal(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+        return blockState.getValue(POWER);
     }
 
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.INVISIBLE;
     }
 

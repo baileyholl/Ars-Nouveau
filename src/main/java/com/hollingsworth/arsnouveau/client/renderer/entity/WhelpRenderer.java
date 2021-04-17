@@ -24,7 +24,7 @@ public class WhelpRenderer extends MobRenderer<EntityWhelp, WhelpModel> {
     }
 
     @Override
-    public ResourceLocation getEntityTexture(EntityWhelp entity) {
+    public ResourceLocation getTextureLocation(EntityWhelp entity) {
         return TEXTURE;
     }
 

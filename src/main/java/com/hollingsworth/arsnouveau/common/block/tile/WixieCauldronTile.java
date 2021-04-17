@@ -69,7 +69,7 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
 
     @Override
     public void tick() {
-        if(world.isRemote)
+        if(level.isClientSide)
             return;
 
         if (!converted) {
@@ -77,10 +77,10 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
             return;
         }
 
-        if(!hasMana && world.getGameTime() % 5 == 0){
-            if(ManaUtil.takeManaNearbyWithParticles(pos, world, 6, 50) != null) {
+        if(!hasMana && level.getGameTime() % 5 == 0){
+            if(ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 6, 50) != null) {
                 this.hasMana = true;
-                world.setBlockState(pos, world.getBlockState(pos).with(WixieCauldron.FILLED, true));
+                level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(WixieCauldron.FILLED, true));
             }
         }
 
@@ -90,7 +90,7 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
         if(this.recipeWrapper == null && craftingItem != null)
             setRecipes(null, craftingItem);
 
-        if (world.getGameTime() % 100 == 0) {
+        if (level.getGameTime() % 100 == 0) {
             updateInventories(); // Update the inventories available to use
 
            // attemptFinish();
@@ -99,7 +99,7 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
     }
 
     public boolean hasWixie(){
-        return !this.converted || world.getEntityByID(entityID) != null;
+        return !this.converted || level.getEntity(entityID) != null;
     }
 
     public boolean isCraftingDone(){
@@ -114,12 +114,12 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
 
     public void givePotion(){
         craftManager.setHasObtainedPotion(true);
-        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+        level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
     }
 
     public boolean giveItem(ItemStack stack) {
         boolean res = craftManager.giveItem(stack.getItem());
-        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+        level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
         return res;
     }
 
@@ -129,12 +129,12 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
             if(!isCraftingPotion) {
 
                 if (!craftManager.outputStack.isEmpty()) {
-                    world.addEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), craftManager.outputStack.copy()));
+                    level.addFreshEntity(new ItemEntity(level, worldPosition.getX(), worldPosition.getY() + 1, worldPosition.getZ(), craftManager.outputStack.copy()));
                     this.hasMana = false;
-                    world.setBlockState(pos, world.getBlockState(pos).with(WixieCauldron.FILLED, false));
+                    level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(WixieCauldron.FILLED, false));
                 }
                 for (ItemStack i : craftManager.remainingItems) {
-                    world.addEntity(new ItemEntity(world, pos.getX(), pos.getY() + 1, pos.getZ(), i.copy()));
+                    level.addFreshEntity(new ItemEntity(level, worldPosition.getX(), worldPosition.getY() + 1, worldPosition.getZ(), i.copy()));
 
                 }
 
@@ -152,23 +152,23 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
                 if(jarPos == null){
                     if(!needsPotionStorage) {
                         needsPotionStorage = true;
-                        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+                        level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
                     }
                     return;
                 }
 
-                if(world.getTileEntity(jarPos) instanceof PotionJarTile){
+                if(level.getBlockEntity(jarPos) instanceof PotionJarTile){
                     needsPotionStorage = false;
-                    ((PotionJarTile) world.getTileEntity(jarPos)).addAmount(craftManager.potionOut, 300);
-                    int color = ((PotionJarTile) world.getTileEntity(jarPos)).getColor();
+                    ((PotionJarTile) level.getBlockEntity(jarPos)).addAmount(craftManager.potionOut, 300);
+                    int color = ((PotionJarTile) level.getBlockEntity(jarPos)).getColor();
                     int r = (color >> 16) & 0xFF;
                     int g = (color >> 8) & 0xFF;
                     int b = (color >> 0) & 0xFF;
                     int a = (color >> 24) & 0xFF;
-                    EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, pos, jarPos, r,g,b);
-                    world.addEntity(aoeProjectile);
+                    EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(level, worldPosition, jarPos, r,g,b);
+                    level.addFreshEntity(aoeProjectile);
                     this.hasMana = false;
-                    world.setBlockState(pos, world.getBlockState(pos).with(WixieCauldron.FILLED, false));
+                    level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(WixieCauldron.FILLED, false));
                     craftManager = new CraftingProgress();
                     setNewCraft();
                 }
@@ -192,16 +192,16 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
 
             PotionIngredient potionIngred = (PotionIngredient) recipe.recipe.get(0);
             Ingredient itemIngred = recipe.recipe.get(1);
-            List<ItemStack> needed = new ArrayList<ItemStack>(Arrays.asList(itemIngred.getMatchingStacks()));
-            craftManager = new CraftingProgress(PotionUtils.getPotionFromItem(potionIngred.getStack()),needed, PotionUtils.getPotionFromItem(recipe.outputStack));
-            world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+            List<ItemStack> needed = new ArrayList<ItemStack>(Arrays.asList(itemIngred.getItems()));
+            craftManager = new CraftingProgress(PotionUtils.getPotion(potionIngred.getStack()),needed, PotionUtils.getPotion(recipe.outputStack));
+            level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
             //BrewingRecipe
         }else {
 
             RecipeWrapper.SingleRecipe recipe = recipeWrapper.canCraftFromInventory(count);
             if (recipe != null) {
                 craftManager = new CraftingProgress(recipe.outputStack.copy(), recipe.canCraftFromInventory(count), recipe.iRecipe);
-                world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+                level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
             }
         }
 
@@ -212,29 +212,29 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
         RecipeWrapper recipes = new RecipeWrapper();
         if(craftingItem.getItem() == Items.POTION){
             for(BrewingRecipe r : ArsNouveauAPI.getInstance().getAllPotionRecipes()){
-                if(ItemStack.areItemStacksEqual(stack, r.getOutput())) {
+                if(ItemStack.matches(stack, r.getOutput())) {
                     isCraftingPotion = true;
                     List<Ingredient> list = new ArrayList<>();
-                    list.add(new PotionIngredient(r.getInput().getMatchingStacks()[0]));
+                    list.add(new PotionIngredient(r.getInput().getItems()[0]));
                     list.add(r.getIngredient());
                     recipes.addRecipe(list, r.getOutput(), null);
                     break;
                 }
             }
         }else {
-            for (IRecipe r : world.getServer().getRecipeManager().getRecipes()) {
-                if (r.getRecipeOutput().getItem() != craftingItem.getItem())
+            for (IRecipe r : level.getServer().getRecipeManager().getRecipes()) {
+                if (r.getResultItem().getItem() != craftingItem.getItem())
                     continue;
 
                 if (r instanceof ShapedRecipe) {
                     ShapedHelper helper = new ShapedHelper((ShapedRecipe) r);
                     for (List<Ingredient> iList : helper.getPossibleRecipes()) {
-                        recipes.addRecipe(iList, r.getRecipeOutput(), r);
+                        recipes.addRecipe(iList, r.getResultItem(), r);
                     }
                 }
 
                 if (r instanceof ShapelessRecipe)
-                    recipes.addRecipe(r.getIngredients(), r.getRecipeOutput(), r);
+                    recipes.addRecipe(r.getIngredients(), r.getResultItem(), r);
 
             }
             isCraftingPotion = false;
@@ -252,26 +252,26 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
 
     public void updateInventories() {
         inventories = new ArrayList<>();
-        for (BlockPos bPos : BlockPos.getAllInBoxMutable(pos.north(6).east(6).down(2), pos.south(6).west(6).up(2))) {
-            if (world.getTileEntity(bPos) instanceof IInventory)
-                inventories.add(bPos.toImmutable());
+        for (BlockPos bPos : BlockPos.betweenClosed(worldPosition.north(6).east(6).below(2), worldPosition.south(6).west(6).above(2))) {
+            if (level.getBlockEntity(bPos) instanceof IInventory)
+                inventories.add(bPos.immutable());
         }
     }
 
     public @Nullable BlockPos findPotionStorage(Potion passedPot){
         AtomicReference<BlockPos> foundPod = new AtomicReference<>();
         AtomicBoolean foundOptimal = new AtomicBoolean(false);
-        BlockPos.getProximitySortedBoxPositions(pos.down(2), 4, 3,4).forEach(bPos ->{
-            if (!foundOptimal.get() && world.getTileEntity(bPos) instanceof PotionJarTile) {
-                PotionJarTile tile = (PotionJarTile) world.getTileEntity(bPos);
+        BlockPos.withinManhattanStream(worldPosition.below(2), 4, 3,4).forEach(bPos ->{
+            if (!foundOptimal.get() && level.getBlockEntity(bPos) instanceof PotionJarTile) {
+                PotionJarTile tile = (PotionJarTile) level.getBlockEntity(bPos);
                 if(tile.canAcceptNewPotion() || tile.isMixEqual(passedPot)){
                     if(tile.getMaxFill() - tile.getCurrentFill() >= 300) {
                         if(tile.isMixEqual(passedPot) && tile.getAmount() >= 0) {
                             foundOptimal.set(true);
-                            foundPod.set(bPos.toImmutable());
+                            foundPod.set(bPos.immutable());
                         }
                         if(foundPod.get() == null)
-                            foundPod.set(bPos.toImmutable());
+                            foundPod.set(bPos.immutable());
                     }
                 }
             }
@@ -282,11 +282,11 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
 
     public @Nullable BlockPos findNeededPotion(Potion passedPot, int amount){
         AtomicReference<BlockPos> foundPod = new AtomicReference<>();
-        BlockPos.getProximitySortedBoxPositions(pos.down(2), 4, 3,4).forEach(bPos ->{
-            if (foundPod.get() == null && world.getTileEntity(bPos) instanceof PotionJarTile) {
-                PotionJarTile tile = (PotionJarTile) world.getTileEntity(bPos);
+        BlockPos.withinManhattanStream(worldPosition.below(2), 4, 3,4).forEach(bPos ->{
+            if (foundPod.get() == null && level.getBlockEntity(bPos) instanceof PotionJarTile) {
+                PotionJarTile tile = (PotionJarTile) level.getBlockEntity(bPos);
                 if(tile.getCurrentFill() >= amount && tile.isMixEqual(passedPot)){
-                    foundPod.set(bPos.toImmutable());
+                    foundPod.set(bPos.immutable());
                 }
             }
         });
@@ -296,31 +296,31 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
 
 
     public void spawnFlyingItem(BlockPos from, ItemStack stack) {
-        EntityFlyingItem flyingItem = new EntityFlyingItem(world, from.up(), pos);
-        flyingItem.getDataManager().set(EntityFlyingItem.HELD_ITEM, stack.copy());
-        world.addEntity(flyingItem);
+        EntityFlyingItem flyingItem = new EntityFlyingItem(level, from.above(), worldPosition);
+        flyingItem.getEntityData().set(EntityFlyingItem.HELD_ITEM, stack.copy());
+        level.addFreshEntity(flyingItem);
     }
 
 
     public void convertedEffect() {
         tickCounter++;
-        if (tickCounter >= 120 && !world.isRemote) {
+        if (tickCounter >= 120 && !level.isClientSide) {
             converted = true;
-            world.setBlockState(pos, world.getBlockState(pos).with(WixieCauldron.FILLED, false).with(WixieCauldron.CONVERTED, true));
-            EntityWixie wixie = new EntityWixie(world, true, pos);
-            wixie.setPosition(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
-            world.addEntity(wixie);
-            ParticleUtil.spawnPoof((ServerWorld) world, pos.up());
-            entityID = wixie.getEntityId();
+            level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(WixieCauldron.FILLED, false).setValue(WixieCauldron.CONVERTED, true));
+            EntityWixie wixie = new EntityWixie(level, true, worldPosition);
+            wixie.setPos(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ() + 0.5);
+            level.addFreshEntity(wixie);
+            ParticleUtil.spawnPoof((ServerWorld) level, worldPosition.above());
+            entityID = wixie.getId();
             tickCounter = 0;
             return;
         }
-        if (tickCounter % 10 == 0 && !world.isRemote) {
-            Random r = world.rand;
+        if (tickCounter % 10 == 0 && !level.isClientSide) {
+            Random r = level.random;
             int min = -2;
             int max = 2;
-            EntityFollowProjectile proj1 = new EntityFollowProjectile(world, pos.add(r.nextInt(max - min) + min, 3, r.nextInt(max - min) + min), pos, r.nextInt(255), r.nextInt(255), r.nextInt(255));
-            world.addEntity(proj1);
+            EntityFollowProjectile proj1 = new EntityFollowProjectile(level, worldPosition.offset(r.nextInt(max - min) + min, 3, r.nextInt(max - min) + min), worldPosition, r.nextInt(255), r.nextInt(255), r.nextInt(255));
+            level.addFreshEntity(proj1);
         }
     }
 
@@ -330,10 +330,10 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
         if(inventories == null)
             return itemsAvailable;
         for(BlockPos p : inventories){
-            if(world.getTileEntity(p) instanceof IInventory){
-                IInventory inventory = (IInventory) world.getTileEntity(p);
-                for(int i = 0; i < inventory.getSizeInventory(); i++){
-                    ItemStack stack = inventory.getStackInSlot(i);
+            if(level.getBlockEntity(p) instanceof IInventory){
+                IInventory inventory = (IInventory) level.getBlockEntity(p);
+                for(int i = 0; i < inventory.getContainerSize(); i++){
+                    ItemStack stack = inventory.getItem(i);
                     if(!itemsAvailable.containsKey(stack.getItem())) {
                         itemsAvailable.put(stack.getItem(), stack.getCount());
                         continue;
@@ -352,10 +352,10 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         if(compound.contains("crafting")) {
-            this.craftingItem = ItemStack.read(compound.getCompound("crafting"));
+            this.craftingItem = ItemStack.of(compound.getCompound("crafting"));
         }
         this.converted = compound.getBoolean("converted");
 
@@ -368,12 +368,12 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         compound.putBoolean("converted", converted);
 
         if(craftingItem != null){
             CompoundNBT itemTag = new CompoundNBT();
-            craftingItem.write(itemTag);
+            craftingItem.save(itemTag);
             compound.put("crafting", itemTag);
         }
         if(craftManager != null)
@@ -384,7 +384,7 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
         compound.putBoolean("off", isOff);
         compound.putBoolean("isPotion", isCraftingPotion);
         compound.putBoolean("storage", needsPotionStorage);
-        return super.write(compound);
+        return super.save(compound);
     }
 
     @Override
@@ -397,11 +397,11 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
 
 
         if(!isCraftingPotion){
-            strings.add(new TranslationTextComponent("ars_nouveau.wixie.crafting").getString() +new TranslationTextComponent(craftingItem.getTranslationKey()).getString());
+            strings.add(new TranslationTextComponent("ars_nouveau.wixie.crafting").getString() +new TranslationTextComponent(craftingItem.getDescriptionId()).getString());
         }else if(this.craftManager != null && this.craftManager.isPotionCrafting()){
             ItemStack potionStack = new ItemStack(Items.POTION);
-            PotionUtils.addPotionToItemStack(potionStack, this.craftManager.potionOut);
-            strings.add(new TranslationTextComponent("ars_nouveau.wixie.crafting").getString() + potionStack.getDisplayName().getString());
+            PotionUtils.setPotion(potionStack, this.craftManager.potionOut);
+            strings.add(new TranslationTextComponent("ars_nouveau.wixie.crafting").getString() + potionStack.getHoverName().getString());
 //            strings.add(potionStack.getDisplayName().getString());
             List<ITextComponent> tooltip = new ArrayList<>();
             PotionUtils.addPotionTooltip(potionStack, tooltip, 1.0F);
@@ -414,12 +414,12 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
             strings.add(new TranslationTextComponent("ars_nouveau.wixie.need_mana").getString());
         }
         if(this.craftManager != null && !this.craftManager.neededItems.isEmpty())
-            strings.add(new TranslationTextComponent("ars_nouveau.wixie.needs").getString() + new TranslationTextComponent(this.craftManager.neededItems.get(0).getTranslationKey()).getString());
+            strings.add(new TranslationTextComponent("ars_nouveau.wixie.needs").getString() + new TranslationTextComponent(this.craftManager.neededItems.get(0).getDescriptionId()).getString());
 
         if(this.craftManager != null && this.craftManager.isPotionCrafting() && !this.craftManager.hasObtainedPotion()){
             ItemStack potionStack = new ItemStack(Items.POTION);
-            PotionUtils.addPotionToItemStack(potionStack, this.craftManager.getPotionNeeded());
-            strings.add(new TranslationTextComponent("ars_nouveau.wixie.needs").getString() + potionStack.getDisplayName().getString());
+            PotionUtils.setPotion(potionStack, this.craftManager.getPotionNeeded());
+            strings.add(new TranslationTextComponent("ars_nouveau.wixie.needs").getString() + potionStack.getHoverName().getString());
         }
         if(this.needsPotionStorage)
             strings.add(new TranslationTextComponent("ars_nouveau.wixie.needs_storage").getString());
@@ -454,12 +454,12 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
 
         public CraftingProgress(ItemStack outputStack, List<ItemStack> neededItems, IRecipe recipe){
             CraftingInventory inventory = new CraftingInventory(new Container((ContainerType)null, -1) {
-                public boolean canInteractWith(PlayerEntity playerIn) {
+                public boolean stillValid(PlayerEntity playerIn) {
                     return false;
                 }
             }, 3, 3);
             for(int i = 0; i < neededItems.size(); i++) {
-                inventory.setInventorySlotContents(i, neededItems.get(i).copy());
+                inventory.setItem(i, neededItems.get(i).copy());
             }
             this.remainingItems = recipe.getRemainingItems(inventory);
             this.outputStack = outputStack;
@@ -495,7 +495,7 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
 
         public void write(CompoundNBT tag){
             CompoundNBT stack = new CompoundNBT();
-            outputStack.write(stack);
+            outputStack.save(stack);
             tag.put("output_stack", stack);
             NBTUtil.writeItems(tag, "progress", neededItems);
             NBTUtil.writeItems(tag, "refund", remainingItems);
@@ -512,11 +512,11 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
 
         public static CraftingProgress read(CompoundNBT tag){
             CraftingProgress progress = new CraftingProgress();
-            progress.outputStack = ItemStack.read(tag.getCompound("output_stack"));
+            progress.outputStack = ItemStack.of(tag.getCompound("output_stack"));
             progress.neededItems = NBTUtil.readItems(tag,"progress");
             progress.remainingItems = NBTUtil.readItems(tag, "refund");
-            progress.potionOut = PotionUtils.getPotionTypeFromNBT(tag.getCompound("potionout"));
-            progress.setPotionNeeded(PotionUtils.getPotionTypeFromNBT(tag.getCompound("potionNeeded")));
+            progress.potionOut = PotionUtils.getPotion(tag.getCompound("potionout"));
+            progress.setPotionNeeded(PotionUtils.getPotion(tag.getCompound("potionNeeded")));
             progress.setHasObtainedPotion(tag.getBoolean("gotPotion"));
             progress.isPotionCrafting = tag.getBoolean("isPotionCraft");
             return progress;
@@ -542,17 +542,17 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
     @Override
     @Nullable
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 3, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 3, this.getUpdateTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         super.onDataPacket(net, pkt);
-        handleUpdateTag(world.getBlockState(pos),pkt.getNbtCompound());
+        handleUpdateTag(level.getBlockState(worldPosition),pkt.getTag());
     }
 }

@@ -30,7 +30,7 @@ public class JarOfLight extends ModItem {
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
 
-        if(worldIn.isRemote)
+        if(worldIn.isClientSide)
             return;
         CompoundNBT tag = stack.getTag();
         if(tag == null)
@@ -53,24 +53,24 @@ public class JarOfLight extends ModItem {
                 setLightLocation(tag, null);
             }
 
-            if(BlockUtil.distanceFrom(lightLocation, entityIn.getPosition()) > 7 ){
-                Direction opposite = entityIn.getHorizontalFacing().getOpposite();
-                BlockPos preferredLightPos = entityIn.getPosition().offset(opposite, 1);
+            if(BlockUtil.distanceFrom(lightLocation, entityIn.blockPosition()) > 7 ){
+                Direction opposite = entityIn.getDirection().getOpposite();
+                BlockPos preferredLightPos = entityIn.blockPosition().relative(opposite, 1);
                 removeLight(worldIn, tag);
                 if(!placeLight(worldIn, preferredLightPos, tag))
-                    placeLight(worldIn, preferredLightPos.up(2), tag);
+                    placeLight(worldIn, preferredLightPos.above(2), tag);
 
             }
         }
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack itemstack = playerIn.getHeldItem(handIn);
-        if(worldIn.isRemote)
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack itemstack = playerIn.getItemInHand(handIn);
+        if(worldIn.isClientSide)
             return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
 
-        CompoundNBT tag = playerIn.getHeldItem(handIn).getTag();
+        CompoundNBT tag = playerIn.getItemInHand(handIn).getTag();
 
         if(tag == null)
             return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
@@ -80,13 +80,13 @@ public class JarOfLight extends ModItem {
             return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
         }
         // No light exists. Place a new one.
-        placeLight(worldIn, playerIn.getPosition(), tag);
+        placeLight(worldIn, playerIn.blockPosition(), tag);
         return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
     }
 
     public boolean placeLight(World world, BlockPos pos, CompoundNBT tag){
         if(world.getBlockState(pos).getMaterial() == Material.AIR){
-            world.setBlockState(pos, BlockRegistry.LIGHT_BLOCK.getDefaultState());
+            world.setBlockAndUpdate(pos, BlockRegistry.LIGHT_BLOCK.defaultBlockState());
             setLightExists(tag, true);
             setLightLocation(tag, pos);
             return true;
@@ -99,7 +99,7 @@ public class JarOfLight extends ModItem {
             return;
 
         if(world.getBlockState(getLightLocation(tag)).getBlock() instanceof LightBlock)
-            world.setBlockState(getLightLocation(tag), Blocks.AIR.getDefaultState());
+            world.setBlockAndUpdate(getLightLocation(tag), Blocks.AIR.defaultBlockState());
 
         setLightExists(tag, false);
     }

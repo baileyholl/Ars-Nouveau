@@ -27,21 +27,21 @@ public class RenderSpell extends EntityRenderer<EntityProjectileSpell> {
         if(proj.age < 1 || true)
             return;
 
-        double deltaX = proj.getPosX() - proj.lastTickPosX;
-        double deltaY = proj.getPosY() - proj.lastTickPosY;
-        double deltaZ = proj.getPosZ() - proj.lastTickPosZ;
-        deltaX = deltaX + proj.getMotion().getX() * partialTicks%20;
-        deltaY = deltaY + proj.getMotion().getY() *partialTicks%20;
-        deltaZ = deltaZ + proj.getMotion().getZ() *partialTicks%20;
+        double deltaX = proj.getX() - proj.xOld;
+        double deltaY = proj.getY() - proj.yOld;
+        double deltaZ = proj.getZ() - proj.zOld;
+        deltaX = deltaX + proj.getDeltaMovement().x() * partialTicks%20;
+        deltaY = deltaY + proj.getDeltaMovement().y() *partialTicks%20;
+        deltaZ = deltaZ + proj.getDeltaMovement().z() *partialTicks%20;
         double dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 10);
         int counter = 0;
 
         for (double j = 0; j < dist; j++) {
             double coeff = j / dist;
 
-            proj.world.addParticle(GlowParticleData.createData(proj.getParticleColor()), (float) (proj.lastTickPosX + deltaX * coeff),
-                    (float) (proj.lastTickPosY + deltaY * coeff),
-                    (float) (proj.lastTickPosZ  + deltaZ * coeff),
+            proj.level.addParticle(GlowParticleData.createData(proj.getParticleColor()), (float) (proj.xOld + deltaX * coeff),
+                    (float) (proj.yOld + deltaY * coeff),
+                    (float) (proj.zOld  + deltaZ * coeff),
                     0.0125f * ParticleUtil.inRange(-0.5, 0.5), 0.0125f * ParticleUtil.inRange(-0.5, 0.5), 0.0125f * ParticleUtil.inRange(-0.5, 0.5));
 
 
@@ -86,7 +86,7 @@ public class RenderSpell extends EntityRenderer<EntityProjectileSpell> {
 //    }
 
     @Override
-    public ResourceLocation getEntityTexture(EntityProjectileSpell entity) {
+    public ResourceLocation getTextureLocation(EntityProjectileSpell entity) {
         return this.entityTexture;
     }
 }

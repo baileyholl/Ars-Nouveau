@@ -14,6 +14,8 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.item.Item.Properties;
+
 public class ModItem extends Item {
     public List<ITextComponent> tooltip;
     public ModItem(Properties properties) {
@@ -43,7 +45,7 @@ public class ModItem extends Item {
      * allows items to add custom lines of information to the mouseover description
      */
     @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
         if(tooltip != null && !tooltip.isEmpty()){
             tooltip2.addAll(tooltip);
         }

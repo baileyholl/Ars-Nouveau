@@ -29,8 +29,8 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
 
 
     @Override
-    public ItemStack getCraftingResult(final CraftingInventory inv) {
-        final ItemStack output = super.getCraftingResult(inv); // Get the default output
+    public ItemStack assemble(final CraftingInventory inv) {
+        final ItemStack output = super.assemble(inv); // Get the default output
         int newCount = 0;
         Potion flaskPotion = Potions.EMPTY;
         List<EffectInstance> effectsList = new ArrayList<>();
@@ -39,22 +39,22 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
             return ItemStack.EMPTY;
 
         ItemStack flaskPotionStack = ItemStack.EMPTY;
-        for (int i = 0; i < inv.getSizeInventory(); i++) { // For each slot in the crafting inventory,
-            final ItemStack ingredient = inv.getStackInSlot(i); // Get the ingredient in the slot
+        for (int i = 0; i < inv.getContainerSize(); i++) { // For each slot in the crafting inventory,
+            final ItemStack ingredient = inv.getItem(i); // Get the ingredient in the slot
             if (!ingredient.isEmpty() && ingredient.getItem() instanceof PotionFlask) {
                 CompoundNBT tag = ingredient.hasTag() ? ingredient.getTag() : new CompoundNBT();
                 newCount = tag.getInt("count") + 1;
-                flaskPotion = PotionUtils.getPotionFromItem(ingredient);
+                flaskPotion = PotionUtils.getPotion(ingredient);
                 flaskPotionStack = ingredient;
-                flaskEffects = PotionUtils.getFullEffectsFromTag(ingredient.getTag());
+                flaskEffects = PotionUtils.getCustomEffects(ingredient.getTag());
             }
         }
-        for (int i = 0; i < inv.getSizeInventory(); i++) { // For each slot in the crafting inventory,
-            final ItemStack ingredient = inv.getStackInSlot(i); // Get the ingredient in the slot
+        for (int i = 0; i < inv.getContainerSize(); i++) { // For each slot in the crafting inventory,
+            final ItemStack ingredient = inv.getItem(i); // Get the ingredient in the slot
             if (!ingredient.isEmpty() && ingredient.getItem() instanceof PotionItem) {
-                Potion stackPotion = PotionUtils.getPotionFromItem(ingredient);
-                effectsList = PotionUtils.getFullEffectsFromTag(ingredient.getTag());
-                if(flaskPotion != Potions.EMPTY && !PotionUtils.getFullEffectsFromTag(ingredient.getTag()).equals(PotionUtils.getFullEffectsFromTag(flaskPotionStack.getTag())))
+                Potion stackPotion = PotionUtils.getPotion(ingredient);
+                effectsList = PotionUtils.getCustomEffects(ingredient.getTag());
+                if(flaskPotion != Potions.EMPTY && !PotionUtils.getCustomEffects(ingredient.getTag()).equals(PotionUtils.getCustomEffects(flaskPotionStack.getTag())))
                     return ItemStack.EMPTY;
                 if(flaskPotion == Potions.EMPTY){
                     flaskPotion = stackPotion;
@@ -68,7 +68,7 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
         if(!output.hasTag()){
             output.setTag(new CompoundNBT());
             output.getTag().putInt("count", newCount);
-            PotionUtils.addPotionToItemStack(output, flaskPotion);
+            PotionUtils.setPotion(output, flaskPotion);
 //            for(EffectInstance e : flaskPotion.getEffects()){
 //                //effectsList.remove(e);
 //                System.out.println(e.getPotion().getRegistryName().toString());
@@ -77,17 +77,17 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
 //                //effectsList.remove(e);
 //                System.out.println(e.getPotion().getRegistryName().toString());
 //            }
-            PotionUtils.appendEffects(output, effectsList);
+            PotionUtils.setCustomEffects(output, effectsList);
         }
         return output; // Return the modified output
     }
 
     @Override
     public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv) {
-        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
+        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
 
         for(int i = 0; i < nonnulllist.size(); ++i) {
-            ItemStack item = inv.getStackInSlot(i);
+            ItemStack item = inv.getItem(i);
             if (item.hasContainerItem()) {
                 nonnulllist.set(i, item.getContainerItem());
             }else if(item.getItem() instanceof PotionItem){
@@ -105,39 +105,39 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
 
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<PotionFlaskRecipe> {
         @Override
-        public PotionFlaskRecipe read(final ResourceLocation recipeID, final JsonObject json) {
-            final String group = JSONUtils.getString(json, "group", "");
+        public PotionFlaskRecipe fromJson(final ResourceLocation recipeID, final JsonObject json) {
+            final String group = JSONUtils.getAsString(json, "group", "");
             final NonNullList<Ingredient> ingredients = RecipeUtil.parseShapeless(json);
-            final ItemStack result = CraftingHelper.getItemStack(JSONUtils.getJsonObject(json, "result"), true);
+            final ItemStack result = CraftingHelper.getItemStack(JSONUtils.getAsJsonObject(json, "result"), true);
 
             return new PotionFlaskRecipe(recipeID, group, result, ingredients);
         }
 
         @Override
-        public PotionFlaskRecipe read(final ResourceLocation recipeID, final PacketBuffer buffer) {
-            final String group = buffer.readString(Short.MAX_VALUE);
+        public PotionFlaskRecipe fromNetwork(final ResourceLocation recipeID, final PacketBuffer buffer) {
+            final String group = buffer.readUtf(Short.MAX_VALUE);
             final int numIngredients = buffer.readVarInt();
             final NonNullList<Ingredient> ingredients = NonNullList.withSize(numIngredients, Ingredient.EMPTY);
 
             for (int j = 0; j < ingredients.size(); ++j) {
-                ingredients.set(j, Ingredient.read(buffer));
+                ingredients.set(j, Ingredient.fromNetwork(buffer));
             }
 
-            final ItemStack result = buffer.readItemStack();
+            final ItemStack result = buffer.readItem();
 
             return new PotionFlaskRecipe(recipeID, group, result, ingredients);
         }
 
         @Override
-        public void write(final PacketBuffer buffer, final PotionFlaskRecipe recipe) {
-            buffer.writeString(recipe.getGroup());
+        public void toNetwork(final PacketBuffer buffer, final PotionFlaskRecipe recipe) {
+            buffer.writeUtf(recipe.getGroup());
             buffer.writeVarInt(recipe.getIngredients().size());
 
             for (final Ingredient ingredient : recipe.getIngredients()) {
-                ingredient.write(buffer);
+                ingredient.toNetwork(buffer);
             }
 
-            buffer.writeItemStack(recipe.getRecipeOutput());
+            buffer.writeItem(recipe.getResultItem());
         }
     }
 }

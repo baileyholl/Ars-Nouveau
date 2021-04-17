@@ -22,6 +22,8 @@ import net.minecraft.world.server.ServerWorld;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
+
 public class EffectBlink extends AbstractEffect {
 
     public EffectBlink() {
@@ -52,15 +54,15 @@ public class EffectBlink extends AbstractEffect {
 
 
         if(isRealPlayer(shooter) && spellContext.castingTile == null && shooter != null) {
-            if(shooter.getHeldItemOffhand().getItem() instanceof WarpScroll){
-                BlockPos warpPos = WarpScroll.getPos(shooter.getHeldItemOffhand());
+            if(shooter.getOffhandItem().getItem() instanceof WarpScroll){
+                BlockPos warpPos = WarpScroll.getPos(shooter.getOffhandItem());
                 if(warpPos != null && !warpPos.equals(BlockPos.ZERO)){
                     warpEntity(rayTraceResult.getEntity(), warpPos);
 
                 }
 
             }else
-                shooter.setPositionAndUpdate(vec.getX(), vec.getY(), vec.getZ());
+                shooter.teleportTo(vec.x(), vec.y(), vec.z());
 
 
         }else if(spellContext.getType() == SpellContext.CasterType.RUNE && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
@@ -71,32 +73,32 @@ public class EffectBlink extends AbstractEffect {
     public static void warpEntity(Entity entity, BlockPos warpPos){
         if(entity == null)
             return;
-        World world = entity.world;
-        ((ServerWorld) entity.world).spawnParticle(ParticleTypes.PORTAL, entity.getPosX(),  entity.getPosY() + 1,  entity.getPosZ(),
-                4,(world.rand.nextDouble() - 0.5D) * 2.0D, -world.rand.nextDouble(), (world.rand.nextDouble() - 0.5D) * 2.0D, 0.1f);
+        World world = entity.level;
+        ((ServerWorld) entity.level).sendParticles(ParticleTypes.PORTAL, entity.getX(),  entity.getY() + 1,  entity.getZ(),
+                4,(world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
 
-        entity.setPositionAndUpdate(warpPos.getX() +0.5, warpPos.getY(), warpPos.getZ() +0.5);
-        Networking.sendToNearby(world, entity, new PacketWarpPosition(entity.getEntityId(), entity.getPosX(), entity.getPosY(), entity.getPosZ()));
-        entity.world.playSound(null, warpPos, SoundEvents.ENTITY_ILLUSIONER_MIRROR_MOVE, SoundCategory.NEUTRAL, 1.0f, 1.0f);
-        ((ServerWorld) entity.world).spawnParticle(ParticleTypes.PORTAL, warpPos.getX() +0.5,  warpPos.getY() + 1.0,  warpPos.getZ() +0.5,
-                4,(world.rand.nextDouble() - 0.5D) * 2.0D, -world.rand.nextDouble(), (world.rand.nextDouble() - 0.5D) * 2.0D, 0.1f);
+        entity.teleportTo(warpPos.getX() +0.5, warpPos.getY(), warpPos.getZ() +0.5);
+        Networking.sendToNearby(world, entity, new PacketWarpPosition(entity.getId(), entity.getX(), entity.getY(), entity.getZ()));
+        entity.level.playSound(null, warpPos, SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundCategory.NEUTRAL, 1.0f, 1.0f);
+        ((ServerWorld) entity.level).sendParticles(ParticleTypes.PORTAL, warpPos.getX() +0.5,  warpPos.getY() + 1.0,  warpPos.getZ() +0.5,
+                4,(world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
     }
 
     @Override
     public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        Vector3d vec = rayTraceResult.getHitVec();
-        if(isRealPlayer(shooter) && isValidTeleport(world, (rayTraceResult).getPos().offset((rayTraceResult).getFace()))){
+        Vector3d vec = rayTraceResult.getLocation();
+        if(isRealPlayer(shooter) && isValidTeleport(world, (rayTraceResult).getBlockPos().relative((rayTraceResult).getDirection()))){
             warpEntity(shooter, new BlockPos(vec));
         }
     }
 
     public static void blinkForward(World world, LivingEntity shooter, double distance){
-        Vector3d lookVec = new Vector3d(shooter.getLookVec().getX(), 0, shooter.getLookVec().getZ());
-        Vector3d vec = shooter.getPositionVec().add(lookVec.scale(distance));
+        Vector3d lookVec = new Vector3d(shooter.getLookAngle().x(), 0, shooter.getLookAngle().z());
+        Vector3d vec = shooter.position().add(lookVec.scale(distance));
 
         BlockPos pos = new BlockPos(vec);
         if (!isValidTeleport(world, pos)){
-            pos = getForward(world, pos, shooter, distance) == null ? getForward(world, pos.up(2), shooter, distance) : getForward(world, pos, shooter, distance);
+            pos = getForward(world, pos, shooter, distance) == null ? getForward(world, pos.above(2), shooter, distance) : getForward(world, pos, shooter, distance);
         }
         if(pos == null)
             return;
@@ -104,7 +106,7 @@ public class EffectBlink extends AbstractEffect {
     }
 
     public static BlockPos getForward(World world, BlockPos pos,LivingEntity shooter, double distance){
-        Vector3d lookVec = new Vector3d(shooter.getLookVec().getX(), 0, shooter.getLookVec().getZ());
+        Vector3d lookVec = new Vector3d(shooter.getLookAngle().x(), 0, shooter.getLookAngle().z());
         Vector3d oldVec = new Vector3d(pos.getX(), pos.getY(), pos.getZ()).add(lookVec.scale(distance));
         Vector3d vec;
         BlockPos sendPos = null;
@@ -132,7 +134,7 @@ public class EffectBlink extends AbstractEffect {
      * Checks is a player can be placed at a given position without suffocating.
      */
     public static boolean isValidTeleport(World world, BlockPos pos){
-        return !world.getBlockState(pos).isSolid() &&  !world.getBlockState(pos.up()).isSolid() && !world.getBlockState(pos.up(2)).isSolid();
+        return !world.getBlockState(pos).canOcclude() &&  !world.getBlockState(pos.above()).canOcclude() && !world.getBlockState(pos.above(2)).canOcclude();
     }
 
     @Override

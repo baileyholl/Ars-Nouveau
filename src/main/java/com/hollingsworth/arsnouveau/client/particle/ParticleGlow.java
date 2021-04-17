@@ -32,14 +32,14 @@ public class ParticleGlow extends SpriteTexturedParticle {
             this.colorB = this.colorB/255.0f;
         }
         this.setColor(colorR, colorG, colorB);
-        this.maxAge = (int)((float)lifetime*0.5f);
-        this.particleScale = scale/8;
+        this.lifetime = (int)((float)lifetime*0.5f);
+        this.quadSize = scale/8;
         this.initScale = scale;
-        this.motionX = vx*2.0f;
-        this.motionY = vy*2.0f;
-        this.motionZ = vz*2.0f;
+        this.xd = vx*2.0f;
+        this.yd = vy*2.0f;
+        this.zd = vz*2.0f;
         this.initAlpha = a;
-        this.selectSpriteRandomly(sprite);
+        this.pickSprite(sprite);
 
     }
     @Override
@@ -49,7 +49,7 @@ public class ParticleGlow extends SpriteTexturedParticle {
 
 
     @Override
-    public int getBrightnessForRender(float pTicks){
+    public int getLightColor(float pTicks){
         return 255;
     }
 
@@ -61,17 +61,17 @@ public class ParticleGlow extends SpriteTexturedParticle {
         if (new Random().nextInt(6) == 0){
             this.age++;
         }
-        float lifeCoeff = (float)this.age/(float)this.maxAge;
-        this.particleScale = initScale-initScale*lifeCoeff;
-        this.particleAlpha = initAlpha*(1.0f-lifeCoeff);
-        this.prevParticleAngle = particleAngle;
-        particleAngle += 1.0f;
+        float lifeCoeff = (float)this.age/(float)this.lifetime;
+        this.quadSize = initScale-initScale*lifeCoeff;
+        this.alpha = initAlpha*(1.0f-lifeCoeff);
+        this.oRoll = roll;
+        roll += 1.0f;
     }
 
 
 
     @Override
     public boolean isAlive() {
-        return this.age < this.maxAge;
+        return this.age < this.lifetime;
     }
 }

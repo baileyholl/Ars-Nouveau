@@ -14,18 +14,18 @@ public class RenderTypes {
 
     static final IParticleRenderType AN_RENDER = new IParticleRenderType() {
         @Override
-        public void beginRender(BufferBuilder buffer, TextureManager textureManager) {
+        public void begin(BufferBuilder buffer, TextureManager textureManager) {
             RenderSystem.depthMask(false);
-            textureManager.bindTexture(AtlasTexture.LOCATION_PARTICLES_TEXTURE);
+            textureManager.bind(AtlasTexture.LOCATION_PARTICLES);
             RenderSystem.enableBlend();
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
             RenderSystem.alphaFunc(516, 0.003921569F);
-            buffer.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
+            buffer.begin(7, DefaultVertexFormats.PARTICLE);
         }
 
         @Override
-        public void finishRender(Tessellator tessellator) {
-            tessellator.draw();
+        public void end(Tessellator tessellator) {
+            tessellator.end();
             RenderSystem.depthMask(true);
         }
 
@@ -36,26 +36,26 @@ public class RenderTypes {
     };
     static final IParticleRenderType EMBER_RENDER = new IParticleRenderType() {
         @Override
-        public void beginRender(BufferBuilder buffer, TextureManager textureManager) {
+        public void begin(BufferBuilder buffer, TextureManager textureManager) {
 
             RenderSystem.disableAlphaTest();
             RenderSystem.enableBlend();
             RenderSystem.alphaFunc(516, 0.3f);
             RenderSystem.enableCull();
-            textureManager.bindTexture(AtlasTexture.LOCATION_PARTICLES_TEXTURE);
+            textureManager.bind(AtlasTexture.LOCATION_PARTICLES);
             RenderSystem.depthMask(false);
-            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.param, GlStateManager.DestFactor.ONE.param);
-            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
+            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.DestFactor.ONE.value);
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE);
         }
 
         @Override
-        public void finishRender(Tessellator tessellator) {
-            tessellator.draw();
+        public void end(Tessellator tessellator) {
+            tessellator.end();
             RenderSystem.enableDepthTest();
             RenderSystem.enableAlphaTest();
 
             RenderSystem.depthMask(true);
-            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.param, GlStateManager.DestFactor.ONE.param);
+            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.DestFactor.ONE.value);
             RenderSystem.disableCull();
             RenderSystem.alphaFunc(516, 0.1F);
         }

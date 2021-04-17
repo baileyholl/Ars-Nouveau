@@ -28,7 +28,7 @@ public class SingleItemCapability {
                     if (!stack.isEmpty()) {
                         CompoundNBT itemTag = new CompoundNBT();
                         itemTag.putInt("Slot", i);
-                        stack.write(itemTag);
+                        stack.save(itemTag);
                         nbtTagList.add(itemTag);
                     }
                 }
@@ -46,7 +46,7 @@ public class SingleItemCapability {
                     int j = itemTags.getInt("Slot");
 
                     if (j >= 0 && j < instance.getSlots()) {
-                        itemHandlerModifiable.setStackInSlot(j, ItemStack.read(itemTags));
+                        itemHandlerModifiable.setStackInSlot(j, ItemStack.of(itemTags));
                     }
                 }
             }

@@ -34,14 +34,14 @@ public class MethodRune extends AbstractCastMethod {
 
     @Override
     public void onCastOnBlock(ItemUseContext context, List<AbstractAugment> augments, SpellContext spellContext) {
-        BlockPos pos = context.getPos();
-        World world = context.getWorld();
-        if(world.getBlockState(pos.up()).getMaterial() == Material.AIR){
-            world.setBlockState(pos.up(), BlockRegistry.RUNE_BLOCK.getDefaultState());
-            if(world.getTileEntity(pos.up()) instanceof RuneTile){
-                RuneTile runeTile = (RuneTile) world.getTileEntity(pos.up());
+        BlockPos pos = context.getClickedPos();
+        World world = context.getLevel();
+        if(world.getBlockState(pos.above()).getMaterial() == Material.AIR){
+            world.setBlockAndUpdate(pos.above(), BlockRegistry.RUNE_BLOCK.defaultBlockState());
+            if(world.getBlockEntity(pos.above()) instanceof RuneTile){
+                RuneTile runeTile = (RuneTile) world.getBlockEntity(pos.above());
                 runeTile.isTemporary = true;
-                runeTile.uuid = context.getPlayer().getUniqueID();
+                runeTile.uuid = context.getPlayer().getUUID();
                 runeTile.setParsedSpell(resolver.spell.recipe);
             }
             resolver.expendMana(context.getPlayer());
@@ -50,14 +50,14 @@ public class MethodRune extends AbstractCastMethod {
 
     @Override
     public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments, SpellContext spellContext) {
-        BlockPos pos = blockRayTraceResult.getPos();
-        World world = caster.world;
-        if(world.getBlockState(pos.up()).getMaterial() == Material.AIR){
-            world.setBlockState(pos.up(), BlockRegistry.RUNE_BLOCK.getDefaultState());
-            if(world.getTileEntity(pos.up()) instanceof RuneTile){
-                RuneTile runeTile = (RuneTile) world.getTileEntity(pos.up());
+        BlockPos pos = blockRayTraceResult.getBlockPos();
+        World world = caster.level;
+        if(world.getBlockState(pos.above()).getMaterial() == Material.AIR){
+            world.setBlockAndUpdate(pos.above(), BlockRegistry.RUNE_BLOCK.defaultBlockState());
+            if(world.getBlockEntity(pos.above()) instanceof RuneTile){
+                RuneTile runeTile = (RuneTile) world.getBlockEntity(pos.above());
                 if(caster instanceof PlayerEntity){
-                    runeTile.uuid = caster.getUniqueID();
+                    runeTile.uuid = caster.getUUID();
                 }
                 runeTile.isTemporary = true;
                 runeTile.recipe = resolver.spell.recipe;

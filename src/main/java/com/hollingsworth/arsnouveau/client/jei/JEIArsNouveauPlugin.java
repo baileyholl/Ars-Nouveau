@@ -48,7 +48,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
 
         List<GlyphPressRecipe> recipeList = new ArrayList<>();
         List<EnchantingApparatusRecipe> apparatus = new ArrayList<>();
-        RecipeManager manager = Minecraft.getInstance().world.getRecipeManager();
+        RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
         for(IRecipe i : manager.getRecipes()){
             if(i instanceof GlyphPressRecipe){
                 recipeList.add((GlyphPressRecipe) i);
@@ -69,9 +69,9 @@ public class JEIArsNouveauPlugin implements IModPlugin {
 //                            recipe.pedestalItems, recipe.catalyst, recipe.result, recipe.manaCost()));
 //        }
         registry.addRecipes(apparatus, EnchantingApparatusRecipeCategory.UID);
-        ItemStack manaPot = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), ModPotions.MANA_REGEN_POTION);
+        ItemStack manaPot = PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotions.MANA_REGEN_POTION);
         IJeiBrewingRecipe manaPotionRecipe = registry.getVanillaRecipeFactory().createBrewingRecipe(Collections.singletonList(new ItemStack(BlockRegistry.MANA_BERRY_BUSH)),
-                PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.AWKWARD), manaPot );
+                PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.AWKWARD), manaPot );
         registry.addRecipes(Collections.singletonList(manaPotionRecipe), new ResourceLocation(ModIds.MINECRAFT_ID, "brewing"));
     }
 

@@ -33,7 +33,7 @@ public class ApparatusRecipeBuilder {
         return this;
     }
     public ApparatusRecipeBuilder withReagent(IItemProvider provider){
-        this.recipe.reagent = Ingredient.fromItems(provider);
+        this.recipe.reagent = Ingredient.of(provider);
         return this;
     }
 
@@ -48,7 +48,7 @@ public class ApparatusRecipeBuilder {
     }
 
     public ApparatusRecipeBuilder withPedestalItem(IItemProvider i){
-        return this.withPedestalItem(Ingredient.fromItems(i));
+        return this.withPedestalItem(Ingredient.of(i));
     }
 
     public ApparatusRecipeBuilder withPedestalItem(int count, IItemProvider item){

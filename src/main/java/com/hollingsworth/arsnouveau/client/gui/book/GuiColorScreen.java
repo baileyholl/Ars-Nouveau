@@ -38,9 +38,9 @@ public class GuiColorScreen extends BaseBook {
     @Override
     public void init() {
         super.init();
-        redW = (OptionSlider)buildSlider(new TranslationTextComponent("ars_nouveau.color_gui.red_slider").getString(), s -> red, (settings, d) -> red = d).createWidget(Minecraft.getInstance().gameSettings, bookLeft + 28, bookTop + 49, 100);
-        greenW = (OptionSlider)buildSlider(new TranslationTextComponent("ars_nouveau.color_gui.green_slider").getString(), s -> green, (settings, d) -> green = d).createWidget(Minecraft.getInstance().gameSettings, bookLeft + 28, bookTop + 89, 100);
-        blueW = (OptionSlider)buildSlider(new TranslationTextComponent("ars_nouveau.color_gui.blue_slider").getString(), s -> blue, (settings, d) -> blue = d).createWidget(Minecraft.getInstance().gameSettings, bookLeft + 28, bookTop + 129, 100);
+        redW = (OptionSlider)buildSlider(new TranslationTextComponent("ars_nouveau.color_gui.red_slider").getString(), s -> red, (settings, d) -> red = d).createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 49, 100);
+        greenW = (OptionSlider)buildSlider(new TranslationTextComponent("ars_nouveau.color_gui.green_slider").getString(), s -> green, (settings, d) -> green = d).createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 89, 100);
+        blueW = (OptionSlider)buildSlider(new TranslationTextComponent("ars_nouveau.color_gui.blue_slider").getString(), s -> blue, (settings, d) -> blue = d).createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 129, 100);
         addButton(redW);
         addButton(greenW);
         addButton(blueW);
@@ -89,9 +89,9 @@ public class GuiColorScreen extends BaseBook {
         red = r;
         green = g;
         blue = b;
-        redW.setSliderValue((r)/255.0);
-        greenW.setSliderValue((g)/255.0);
-        blueW.setSliderValue((b)/255.0);
+        redW.setValue((r)/255.0);
+        greenW.setValue((g)/255.0);
+        blueW.setValue((b)/255.0);
 
     }
 
@@ -104,19 +104,19 @@ public class GuiColorScreen extends BaseBook {
         super.drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/slider_gilding.png"), 22, 47, 0, 0, 112, 104,112,104, stack);
         int color = -8355712;
-        minecraft.fontRenderer.drawString(stack, new TranslationTextComponent("ars_nouveau.color_gui.title").getString(), 51, 24,  color);
-        minecraft.fontRenderer.drawString(stack, new TranslationTextComponent("ars_nouveau.color_gui.presets").getString(), 159, 24,  color);
-        minecraft.fontRenderer.drawString(stack, new TranslationTextComponent("ars_nouveau.color_gui.default").getString(), 170, 46,  color);
-        minecraft.fontRenderer.drawString(stack, new TranslationTextComponent("ars_nouveau.color_gui.purple").getString(), 170, 70,  color);
-        minecraft.fontRenderer.drawString(stack, new TranslationTextComponent("ars_nouveau.color_gui.blue").getString(), 170, 94,  color);
-        minecraft.fontRenderer.drawString(stack, new TranslationTextComponent("ars_nouveau.color_gui.red").getString(), 170, 118,  color);
-        minecraft.fontRenderer.drawString(stack, new TranslationTextComponent("ars_nouveau.color_gui.green").getString(), 170, 142,  color);
-        minecraft.fontRenderer.drawString(stack, new TranslationTextComponent("ars_nouveau.color_gui.yellow").getString(), 228, 46,  color);
-        minecraft.fontRenderer.drawString(stack, new TranslationTextComponent("ars_nouveau.color_gui.white").getString(), 228, 70,  color);
-        minecraft.fontRenderer.drawString(stack, new TranslationTextComponent("ars_nouveau.color_gui.orange").getString(), 228, 94,  color);
-        minecraft.fontRenderer.drawString(stack, new TranslationTextComponent("ars_nouveau.color_gui.cyan").getString(), 228, 118,  color);
+        minecraft.font.draw(stack, new TranslationTextComponent("ars_nouveau.color_gui.title").getString(), 51, 24,  color);
+        minecraft.font.draw(stack, new TranslationTextComponent("ars_nouveau.color_gui.presets").getString(), 159, 24,  color);
+        minecraft.font.draw(stack, new TranslationTextComponent("ars_nouveau.color_gui.default").getString(), 170, 46,  color);
+        minecraft.font.draw(stack, new TranslationTextComponent("ars_nouveau.color_gui.purple").getString(), 170, 70,  color);
+        minecraft.font.draw(stack, new TranslationTextComponent("ars_nouveau.color_gui.blue").getString(), 170, 94,  color);
+        minecraft.font.draw(stack, new TranslationTextComponent("ars_nouveau.color_gui.red").getString(), 170, 118,  color);
+        minecraft.font.draw(stack, new TranslationTextComponent("ars_nouveau.color_gui.green").getString(), 170, 142,  color);
+        minecraft.font.draw(stack, new TranslationTextComponent("ars_nouveau.color_gui.yellow").getString(), 228, 46,  color);
+        minecraft.font.draw(stack, new TranslationTextComponent("ars_nouveau.color_gui.white").getString(), 228, 70,  color);
+        minecraft.font.draw(stack, new TranslationTextComponent("ars_nouveau.color_gui.orange").getString(), 228, 94,  color);
+        minecraft.font.draw(stack, new TranslationTextComponent("ars_nouveau.color_gui.cyan").getString(), 228, 118,  color);
        // minecraft.fontRenderer.drawString(stack, "Ice", 218, 115,  0);
-        minecraft.fontRenderer.drawString(stack, new TranslationTextComponent("ars_nouveau.color_gui.save").getString(), 67, 160,  color);
+        minecraft.font.draw(stack, new TranslationTextComponent("ars_nouveau.color_gui.save").getString(), 67, 160,  color);
     }
 
     protected SliderPercentageOption buildSlider(String key, Function<GameSettings, Double> getter, BiConsumer<GameSettings, Double> setter){

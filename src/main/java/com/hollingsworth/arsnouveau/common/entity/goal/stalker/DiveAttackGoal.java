@@ -12,28 +12,28 @@ public class DiveAttackGoal extends Goal {
     WildenStalker stalker;
     public DiveAttackGoal(WildenStalker stalker) {
         this.stalker = stalker;
-        this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE));
+        this.setFlags(EnumSet.of(Goal.Flag.MOVE));
     }
 
     /**
      * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
      * method as well.
      */
-    public boolean shouldExecute() {
-        return stalker.getAttackTarget() != null && stalker.isFlying();
+    public boolean canUse() {
+        return stalker.getTarget() != null && stalker.isFlying();
     }
 
     /**
      * Returns whether an in-progress EntityAIBase should continue executing
      */
-    public boolean shouldContinueExecuting() {
-        LivingEntity livingentity = stalker.getAttackTarget();
+    public boolean canContinueToUse() {
+        LivingEntity livingentity = stalker.getTarget();
         if (livingentity == null) {
             return false;
         } else if (!livingentity.isAlive()) {
             return false;
         } else if (!(livingentity instanceof PlayerEntity) || !((PlayerEntity)livingentity).isSpectator() && !((PlayerEntity)livingentity).isCreative()) {
-            return this.shouldExecute();
+            return this.canUse();
         } else {
             return false;
         }
@@ -42,7 +42,7 @@ public class DiveAttackGoal extends Goal {
     /**
      * Execute a one shot task or start executing a continuous task
      */
-    public void startExecuting() {
+    public void start() {
         //Networking.sendToNearby(stalker.world, stalker, new PacketAnimEntity(stalker.getEntityId(), WildenStalker.Animations.DIVE.ordinal()));
     }
 
@@ -50,15 +50,15 @@ public class DiveAttackGoal extends Goal {
      * Keep ticking a continuous task that has already been started
      */
     public void tick() {
-        LivingEntity livingentity = stalker.getAttackTarget();
-        stalker.orbitOffset = new Vector3d(livingentity.getPosX(), livingentity.getPosYHeight(0.5D), livingentity.getPosZ());
-        if (stalker.getBoundingBox().grow((double)0.2F).intersects(livingentity.getBoundingBox())) {
-            stalker.attackEntityAsMob(livingentity);
+        LivingEntity livingentity = stalker.getTarget();
+        stalker.orbitOffset = new Vector3d(livingentity.getX(), livingentity.getY(0.5D), livingentity.getZ());
+        if (stalker.getBoundingBox().inflate((double)0.2F).intersects(livingentity.getBoundingBox())) {
+            stalker.doHurtTarget(livingentity);
             stalker.setFlying(false);
 //            if (!PhantomEntity.this.isSilent()) {
 //                PhantomEntity.this.world.playEvent(1039, PhantomEntity.this.getPosition(), 0);
 //            }
-        } else if (stalker.collidedHorizontally || stalker.hurtTime > 0) {
+        } else if (stalker.horizontalCollision || stalker.hurtTime > 0) {
             stalker.setFlying(false);
         }
 

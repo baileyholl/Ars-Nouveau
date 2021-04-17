@@ -16,12 +16,12 @@ public class ArcaneCoreTile extends TileEntity implements ITickableTileEntity {
     @Override
     public void tick() {
 
-        if(world.isRemote) {
-            ParticleColor randColor = new ParticleColor(world.rand.nextInt(255), world.rand.nextInt(255), world.rand.nextInt(255));
+        if(level.isClientSide) {
+            ParticleColor randColor = new ParticleColor(level.random.nextInt(255), level.random.nextInt(255), level.random.nextInt(255));
             for (int i = 0; i < 6; i++) {
-                world.addParticle(
+                level.addParticle(
                         GlowParticleData.createData(randColor),
-                        pos.getX() + 0.5 + ParticleUtil.inRange(-0.3, 0.3), pos.getY() + 0.5 + ParticleUtil.inRange(-0.3, 0.3), pos.getZ() + 0.5 + ParticleUtil.inRange(-0.3, 0.3),
+                        worldPosition.getX() + 0.5 + ParticleUtil.inRange(-0.3, 0.3), worldPosition.getY() + 0.5 + ParticleUtil.inRange(-0.3, 0.3), worldPosition.getZ() + 0.5 + ParticleUtil.inRange(-0.3, 0.3),
                         0, 0, 0);
             }
         }

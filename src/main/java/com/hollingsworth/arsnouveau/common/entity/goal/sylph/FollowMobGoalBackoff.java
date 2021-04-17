@@ -13,7 +13,7 @@ public class FollowMobGoalBackoff extends FollowMobGoal {
     }
 
     @Override
-    public boolean shouldExecute() {
-        return this.mob.world.rand.nextFloat() <= chance && super.shouldExecute();
+    public boolean canUse() {
+        return this.mob.level.random.nextFloat() <= chance && super.canUse();
     }
 }

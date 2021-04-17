@@ -24,6 +24,8 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
+
 public class EffectIgnite  extends AbstractEffect {
 
     public EffectIgnite() {
@@ -34,15 +36,15 @@ public class EffectIgnite  extends AbstractEffect {
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof EntityRayTraceResult){
             int duration = 3 + 2*getBuffCount(augments, AugmentExtendTime.class);
-            ((EntityRayTraceResult) rayTraceResult).getEntity().setFire(duration);
-        }else if(rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos().up()).getMaterial() == Material.AIR){
-            Direction face = ((BlockRayTraceResult) rayTraceResult).getFace();
-            for(BlockPos pos : SpellUtil.calcAOEBlocks( shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))) {
+            ((EntityRayTraceResult) rayTraceResult).getEntity().setSecondsOnFire(duration);
+        }else if(rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getBlockPos().above()).getMaterial() == Material.AIR){
+            Direction face = ((BlockRayTraceResult) rayTraceResult).getDirection();
+            for(BlockPos pos : SpellUtil.calcAOEBlocks( shooter, ((BlockRayTraceResult) rayTraceResult).getBlockPos(), (BlockRayTraceResult)rayTraceResult, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))) {
 
-                BlockPos blockpos1 = pos.offset(face);
-                if (AbstractFireBlock.canLightBlock(world, blockpos1, face)) {
-                    BlockState blockstate1 = AbstractFireBlock.getFireForPlacement(world, blockpos1);
-                    world.setBlockState(blockpos1, blockstate1, 11);
+                BlockPos blockpos1 = pos.relative(face);
+                if (AbstractFireBlock.canBePlacedAt(world, blockpos1, face)) {
+                    BlockState blockstate1 = AbstractFireBlock.getState(world, blockpos1);
+                    world.setBlock(blockpos1, blockstate1, 11);
                 }
 //                if(world.getBlockState(pos.up()).getMaterial() == Material.AIR)
 //                    world.setBlockState(pos.up(), Blocks.FIRE.getDefaultState());
@@ -52,7 +54,7 @@ public class EffectIgnite  extends AbstractEffect {
 
     @Override
     public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
-        return livingEntityHitSuccess(rayTraceResult) || rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos().up()).getMaterial() == Material.AIR;
+        return livingEntityHitSuccess(rayTraceResult) || rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getBlockPos().above()).getMaterial() == Material.AIR;
     }
 
     @Override

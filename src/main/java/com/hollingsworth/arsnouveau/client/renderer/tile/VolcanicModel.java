@@ -15,10 +15,10 @@ public class VolcanicModel extends AnimatedGeoModel<VolcanicTile> {
 
     @Override
     public ResourceLocation getTextureLocation(VolcanicTile volcanicTile) {
-        if(volcanicTile == null || volcanicTile.getWorld().getBlockState(volcanicTile.getPos().down()).getBlock() == Blocks.LAVA){
+        if(volcanicTile == null || volcanicTile.getLevel().getBlockState(volcanicTile.getBlockPos().below()).getBlock() == Blocks.LAVA){
             return new ResourceLocation(ArsNouveau.MODID, "textures/blocks/volcanic/volcanic_accumulator_core_source.png");
         }
-        Block block = volcanicTile.getWorld().getBlockState(volcanicTile.getPos().down()).getBlock();
+        Block block = volcanicTile.getLevel().getBlockState(volcanicTile.getBlockPos().below()).getBlock();
         if(block == Blocks.MAGMA_BLOCK){
             return new ResourceLocation(ArsNouveau.MODID, "textures/blocks/volcanic/volcanic_accumulator_core_magma.png");
         }

@@ -34,10 +34,10 @@ public class ModParticles {
     @SubscribeEvent
     public static void registerFactories(ParticleFactoryRegisterEvent evt) {
         System.out.println("Rendering factories");
-        Minecraft.getInstance().particles.registerFactory(GLOW_TYPE, GlowParticleData::new);
-        Minecraft.getInstance().particles.registerFactory(LINE_TYPE, ParticleLineData::new);
-        Minecraft.getInstance().particles.registerFactory(SPARKLE_TYPE, ParticleSparkleData::new);
-        Minecraft.getInstance().particles.registerFactory(VORTEX_TYPE, VortexParticleData::new);
+        Minecraft.getInstance().particleEngine.register(GLOW_TYPE, GlowParticleData::new);
+        Minecraft.getInstance().particleEngine.register(LINE_TYPE, ParticleLineData::new);
+        Minecraft.getInstance().particleEngine.register(SPARKLE_TYPE, ParticleSparkleData::new);
+        Minecraft.getInstance().particleEngine.register(VORTEX_TYPE, VortexParticleData::new);
 
     }
 

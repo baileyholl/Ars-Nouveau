@@ -29,7 +29,7 @@ public class SpellDocProvider implements IDataProvider {
     }
 
     @Override
-    public void act(DirectoryCache cache) throws IOException {
+    public void run(DirectoryCache cache) throws IOException {
         APIRegistry.registerApparatusRecipes();
         Path path = this.generator.getOutputFolder();
         System.out.println("ACTING IN DOC PROVIDER");

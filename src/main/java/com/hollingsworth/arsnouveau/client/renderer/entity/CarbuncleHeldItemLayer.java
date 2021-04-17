@@ -23,7 +23,7 @@ public class CarbuncleHeldItemLayer extends GeoLayerRenderer<EntityCarbuncle> {
 
     @Override
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, EntityCarbuncle entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
         CarbuncleModel model = ((CarbuncleModel)getEntityModel());
         IBone tail = model.getBone("tail");
         IBone carbuncle = ((CarbuncleModel)getEntityModel()).getBone("carbuncle");
@@ -36,11 +36,11 @@ public class CarbuncleHeldItemLayer extends GeoLayerRenderer<EntityCarbuncle> {
 
         Quaternion quaternion = Vector3f.XP.rotationDegrees(carbuncle.getRotationX() );
 
-        matrixStackIn.rotate(quaternion);
-        matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180f));
+        matrixStackIn.mulPose(quaternion);
+        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(180f));
 
         ItemStack itemstack = entitylivingbaseIn.getHeldStack();
-        Minecraft.getInstance().getItemRenderer().renderItem(itemstack, ItemCameraTransforms.TransformType.GROUND, packedLightIn, OverlayTexture.NO_OVERLAY , matrixStackIn, bufferIn);
-        matrixStackIn.pop();
+        Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemCameraTransforms.TransformType.GROUND, packedLightIn, OverlayTexture.NO_OVERLAY , matrixStackIn, bufferIn);
+        matrixStackIn.popPose();
     }
 }
