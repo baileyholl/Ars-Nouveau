@@ -1,10 +1,14 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
+import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantmentRecipe;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.IItemProvider;
+import net.minecraft.util.ResourceLocation;
 
 public class ApparatusRecipeBuilder {
     EnchantingApparatusRecipe recipe;
@@ -60,7 +64,13 @@ public class ApparatusRecipeBuilder {
     }
 
     public EnchantingApparatusRecipe build(){
+        if(recipe.id.getPath().equals("empty"))
+            recipe.id = new ResourceLocation(ArsNouveau.MODID, recipe.result.getItem().getRegistryName().getPath());
         return recipe;
+    }
+
+    public EnchantmentRecipe buildEnchantmentRecipe(Enchantment enchantment, int level, int mana){
+        return new EnchantmentRecipe(this.recipe.pedestalItems, enchantment, level, mana);
     }
 
 }

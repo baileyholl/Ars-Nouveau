@@ -82,7 +82,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
 
     @Override
     public ItemStack getResult(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile) {
-        return result;
+        return result.copy();
     }
 
 

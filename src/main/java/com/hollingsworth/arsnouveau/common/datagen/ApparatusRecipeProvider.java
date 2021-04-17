@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
+import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -13,6 +14,7 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
 import net.minecraft.data.IDataProvider;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -45,7 +47,7 @@ public class ApparatusRecipeProvider implements IDataProvider {
         for(IEnchantingRecipe g : recipes){
             if(g instanceof EnchantingApparatusRecipe){
                 System.out.println(g);
-                Path path = getRecipePath(output, ((EnchantingApparatusRecipe) g).result.getItem());
+                Path path = getRecipePath(output, ((EnchantingApparatusRecipe) g).getId().getPath());
                 IDataProvider.save(GSON, cache, ((EnchantingApparatusRecipe) g).asRecipe(), path);
             }
         }
@@ -280,6 +282,30 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withPedestalItem(2,Ingredient.fromTag(Tags.Items.STORAGE_BLOCKS_GOLD))
                 .withPedestalItem(4,Ingredient.fromTag(Tags.Items.RODS_BLAZE))
                 .build());
+
+
+        addRecipe(builder()
+                .withPedestalItem(4, Ingredient.fromTag(ItemTags.FISHES))
+                .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
+                .withPedestalItem(2,Ingredient.fromTag(Tags.Items.STORAGE_BLOCKS_GOLD))
+                .withPedestalItem(2, Ingredient.fromTag(Tags.Items.STORAGE_BLOCKS_LAPIS))
+                .buildEnchantmentRecipe(Enchantments.AQUA_AFFINITY, 1, 5000));
+        addRecipe(builder()
+                 .withPedestalItem(4, Ingredient.fromTag(Tags.Items.RODS_BLAZE))
+                .withPedestalItem(1,Ingredient.fromTag(Tags.Items.STORAGE_BLOCKS_GOLD))
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentExtendTime()))
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAOE()))
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentDampen()))
+                .buildEnchantmentRecipe(EnchantmentRegistry.REACTIVE_ENCHANTMENT, 2, 6000));
+
+        addRecipe(builder()
+                .withPedestalItem(4, ItemsRegistry.mythicalClay)
+                .withPedestalItem(1,Ingredient.fromTag(Tags.Items.ENDER_PEARLS))
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentPierce()))
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentExtract()))
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentFortune()))
+                .buildEnchantmentRecipe(EnchantmentRegistry.REACTIVE_ENCHANTMENT, 3, 9000));
+
     }
 
     public static List<Ingredient> listOfIngred(Item[] items) {
@@ -291,7 +317,11 @@ public class ApparatusRecipeProvider implements IDataProvider {
     }
 
     private static Path getRecipePath(Path pathIn, Item item) {
-        return pathIn.resolve("data/ars_nouveau/recipes/" + item.getRegistryName().getPath() + ".json");
+        return getRecipePath(pathIn, item.getRegistryName().getPath());
+    }
+
+    private static Path getRecipePath(Path pathIn, String str){
+        return pathIn.resolve("data/ars_nouveau/recipes/" + str + ".json");
     }
     @Override
     public String getName() {

@@ -1,0 +1,11 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:aqua_affinity",
+  "level": 1,
+  "mana": 0,
+  "item_1": [
+    {
+      "item": "minecraft:stick"
+    }
+  ]
+}
