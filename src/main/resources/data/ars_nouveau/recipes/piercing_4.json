@@ -1,26 +1,26 @@
 {
   "type": "ars_nouveau:enchantment",
-  "enchantment": "minecraft:aqua_affinity",
-  "level": 1,
-  "mana": 5000,
+  "enchantment": "minecraft:piercing",
+  "level": 4,
+  "mana": 9000,
   "item_1": [
     {
-      "tag": "minecraft:fishes"
+      "item": "ars_nouveau:glyph_pierce"
     }
   ],
   "item_2": [
     {
-      "tag": "minecraft:fishes"
+      "item": "ars_nouveau:glyph_pierce"
     }
   ],
   "item_3": [
     {
-      "tag": "minecraft:fishes"
+      "item": "ars_nouveau:glyph_pierce"
     }
   ],
   "item_4": [
     {
-      "tag": "minecraft:fishes"
+      "item": "ars_nouveau:glyph_pierce"
     }
   ],
   "item_5": [

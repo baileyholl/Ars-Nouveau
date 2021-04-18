@@ -1,0 +1,21 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:thorns",
+  "level": 1,
+  "mana": 2000,
+  "item_1": [
+    {
+      "item": "ars_nouveau:wilden_spike"
+    }
+  ],
+  "item_2": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_3": [
+    {
+      "tag": "forge:storage_blocks/lapis"
+    }
+  ]
+}

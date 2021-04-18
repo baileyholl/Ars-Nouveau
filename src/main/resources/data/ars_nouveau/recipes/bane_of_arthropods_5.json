@@ -1,26 +1,26 @@
 {
   "type": "ars_nouveau:enchantment",
-  "enchantment": "minecraft:aqua_affinity",
-  "level": 1,
-  "mana": 5000,
+  "enchantment": "minecraft:bane_of_arthropods",
+  "level": 5,
+  "mana": 8000,
   "item_1": [
     {
-      "tag": "minecraft:fishes"
+      "item": "minecraft:fermented_spider_eye"
     }
   ],
   "item_2": [
     {
-      "tag": "minecraft:fishes"
+      "item": "minecraft:fermented_spider_eye"
     }
   ],
   "item_3": [
     {
-      "tag": "minecraft:fishes"
+      "item": "minecraft:fermented_spider_eye"
     }
   ],
   "item_4": [
     {
-      "tag": "minecraft:fishes"
+      "item": "minecraft:fermented_spider_eye"
     }
   ],
   "item_5": [

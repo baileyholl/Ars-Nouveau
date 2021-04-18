@@ -5,27 +5,27 @@
   "mana": 6000,
   "item_1": [
     {
-      "item": "minecraft:blaze_powder"
+      "tag": "forge:rods/blaze"
     }
   ],
   "item_2": [
     {
-      "item": "minecraft:blaze_powder"
+      "tag": "forge:rods/blaze"
     }
   ],
   "item_3": [
     {
-      "item": "minecraft:blaze_powder"
+      "tag": "forge:rods/blaze"
     }
   ],
   "item_4": [
     {
-      "item": "minecraft:blaze_powder"
+      "tag": "forge:rods/blaze"
     }
   ],
   "item_5": [
     {
-      "item": "minecraft:gold_block"
+      "tag": "forge:storage_blocks/gold"
     }
   ],
   "item_6": [

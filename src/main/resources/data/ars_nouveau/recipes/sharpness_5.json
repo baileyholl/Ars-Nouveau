@@ -1,0 +1,36 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:sharpness",
+  "level": 5,
+  "mana": 8000,
+  "item_1": [
+    {
+      "tag": "forge:storage_blocks/quartz"
+    }
+  ],
+  "item_2": [
+    {
+      "tag": "forge:storage_blocks/quartz"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "ars_nouveau:glyph_amplify"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "ars_nouveau:glyph_amplify"
+    }
+  ],
+  "item_5": [
+    {
+      "tag": "forge:storage_blocks/lapis"
+    }
+  ],
+  "item_6": [
+    {
+      "tag": "forge:storage_blocks/lapis"
+    }
+  ]
+}

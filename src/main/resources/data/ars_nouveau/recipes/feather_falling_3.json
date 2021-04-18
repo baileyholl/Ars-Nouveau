@@ -1,26 +1,26 @@
 {
   "type": "ars_nouveau:enchantment",
-  "enchantment": "minecraft:aqua_affinity",
-  "level": 1,
+  "enchantment": "minecraft:feather_falling",
+  "level": 3,
   "mana": 5000,
   "item_1": [
     {
-      "tag": "minecraft:fishes"
+      "item": "ars_nouveau:glyph_slowfall"
     }
   ],
   "item_2": [
     {
-      "tag": "minecraft:fishes"
+      "item": "ars_nouveau:glyph_slowfall"
     }
   ],
   "item_3": [
     {
-      "tag": "minecraft:fishes"
+      "item": "ars_nouveau:glyph_slowfall"
     }
   ],
   "item_4": [
     {
-      "tag": "minecraft:fishes"
+      "tag": "forge:slimeballs"
     }
   ],
   "item_5": [

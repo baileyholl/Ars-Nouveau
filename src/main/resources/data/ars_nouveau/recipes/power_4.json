@@ -1,31 +1,31 @@
 {
   "type": "ars_nouveau:enchantment",
-  "enchantment": "minecraft:aqua_affinity",
-  "level": 1,
-  "mana": 5000,
+  "enchantment": "minecraft:power",
+  "level": 4,
+  "mana": 6500,
   "item_1": [
     {
-      "tag": "minecraft:fishes"
+      "item": "ars_nouveau:glyph_amplify"
     }
   ],
   "item_2": [
     {
-      "tag": "minecraft:fishes"
+      "item": "ars_nouveau:glyph_amplify"
     }
   ],
   "item_3": [
     {
-      "tag": "minecraft:fishes"
+      "item": "ars_nouveau:glyph_amplify"
     }
   ],
   "item_4": [
     {
-      "tag": "minecraft:fishes"
+      "item": "ars_nouveau:glyph_amplify"
     }
   ],
   "item_5": [
     {
-      "tag": "forge:storage_blocks/mana"
+      "item": "ars_nouveau:glyph_projectile"
     }
   ],
   "item_6": [

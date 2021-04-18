@@ -1,26 +1,26 @@
 {
   "type": "ars_nouveau:enchantment",
-  "enchantment": "minecraft:aqua_affinity",
-  "level": 1,
+  "enchantment": "minecraft:thorns",
+  "level": 3,
   "mana": 5000,
   "item_1": [
     {
-      "tag": "minecraft:fishes"
+      "item": "ars_nouveau:wilden_spike"
     }
   ],
   "item_2": [
     {
-      "tag": "minecraft:fishes"
+      "item": "ars_nouveau:wilden_spike"
     }
   ],
   "item_3": [
     {
-      "tag": "minecraft:fishes"
+      "item": "ars_nouveau:wilden_spike"
     }
   ],
   "item_4": [
     {
-      "tag": "minecraft:fishes"
+      "tag": "forge:storage_blocks/mana"
     }
   ],
   "item_5": [
@@ -30,7 +30,7 @@
   ],
   "item_6": [
     {
-      "tag": "forge:storage_blocks/mana"
+      "tag": "forge:storage_blocks/lapis"
     }
   ],
   "item_7": [

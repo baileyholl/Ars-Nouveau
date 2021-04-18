@@ -23,7 +23,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 
-version = '1.13.2'
+version = '1.13.4'
 group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'ars_nouveau-1.16.4'
 
@@ -71,6 +71,8 @@ minecraft {
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             properties 'mixin.env.disableRefMap': 'true'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             arg "-mixin.config="+"ars_nouveau"+".mixins.json"
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
@@ -88,6 +90,8 @@ minecraft {
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             properties 'mixin.env.disableRefMap': 'true'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
