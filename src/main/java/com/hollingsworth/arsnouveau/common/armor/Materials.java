@@ -16,13 +16,13 @@ import java.util.function.Supplier;
 public class Materials {
 
     public final static IArmorMaterial novice = new ArmorMaterial(ArsNouveau.MODID + ":novice", 25,new int[]{1, 4, 5, 2},
-            30, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F, () -> Ingredient.fromItems(Items.WHITE_WOOL));
+            30, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, () -> Ingredient.of(Items.WHITE_WOOL));
 
     public final static IArmorMaterial apprentice = new ArmorMaterial(ArsNouveau.MODID + ":apprentice", 25, new int[]{2, 5, 6, 2},
-            30, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 0.0F, () -> Ingredient.fromItems(Items.SCUTE));
+            30, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, () -> Ingredient.of(Items.SCUTE));
 
     public final static IArmorMaterial master = new ArmorMaterial(ArsNouveau.MODID + ":master", 33, new int[]{3, 6, 8, 3},
-            30, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, 2.5f, () -> Ingredient.fromItems(Items.SCUTE));
+            30, SoundEvents.ARMOR_EQUIP_LEATHER, 2.5f, () -> Ingredient.of(Items.SCUTE));
 
     //Fuck mojang
     private static class ArmorMaterial implements IArmorMaterial{
@@ -49,28 +49,28 @@ public class Materials {
 
 
         @Override
-        public int getDurability(EquipmentSlotType slotIn) {
+        public int getDurabilityForSlot(EquipmentSlotType slotIn) {
             return Max_Damage_Array[slotIn.getIndex()] * maxDamageFactor;
         }
 
         @Override
-        public int getDamageReductionAmount(EquipmentSlotType slotIn) {
+        public int getDefenseForSlot(EquipmentSlotType slotIn) {
             return damageReductionAmountArray[slotIn.getIndex()];
         }
 
         @Override
-        public int getEnchantability() {
+        public int getEnchantmentValue() {
             return enchantability;
         }
 
         @Override
-        public SoundEvent getSoundEvent() {
+        public SoundEvent getEquipSound() {
             return soundEvent;
         }
 
         @Override
-        public Ingredient getRepairMaterial() {
-            return repairMaterial.getValue();
+        public Ingredient getRepairIngredient() {
+            return repairMaterial.get();
         }
 
         @OnlyIn(Dist.CLIENT)

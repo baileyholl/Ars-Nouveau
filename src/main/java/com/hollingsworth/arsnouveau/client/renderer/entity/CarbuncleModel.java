@@ -31,10 +31,10 @@ public class CarbuncleModel extends AnimatedGeoModel<EntityCarbuncle> {
         IBone backRight = this.getAnimationProcessor().getBone("back_leg_right");
         IBone frontLeft = this.getAnimationProcessor().getBone("front_leg_left");
         IBone frontRight = this.getAnimationProcessor().getBone("front_leg_right");
-        backRight.setRotationX(MathHelper.cos(entity.limbSwing * 0.6662F) * 1.4F * entity.limbSwingAmount);
-        backLeft.setRotationX(MathHelper.cos(entity.limbSwing * 0.6662F + (float)Math.PI) * 1.4F * entity.limbSwingAmount);
-        frontLeft.setRotationX(MathHelper.cos(entity.limbSwing * 0.6662F) * 1.4F * entity.limbSwingAmount);
-        frontRight.setRotationX(MathHelper.cos(entity.limbSwing * 0.6662F + (float)Math.PI) * 1.4F * entity.limbSwingAmount);
+        backRight.setRotationX(MathHelper.cos(entity.animationPosition * 0.6662F) * 1.4F * entity.animationSpeed);
+        backLeft.setRotationX(MathHelper.cos(entity.animationPosition * 0.6662F + (float)Math.PI) * 1.4F * entity.animationSpeed);
+        frontLeft.setRotationX(MathHelper.cos(entity.animationPosition * 0.6662F) * 1.4F * entity.animationSpeed);
+        frontRight.setRotationX(MathHelper.cos(entity.animationPosition * 0.6662F + (float)Math.PI) * 1.4F * entity.animationSpeed);
     }
 
     @Override

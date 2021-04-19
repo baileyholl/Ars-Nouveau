@@ -18,40 +18,40 @@ public class LaserAttackGoal extends Goal {
 
     public LaserAttackGoal(WildenGuardian guardian) {
         this.guardian = guardian;
-        this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
 
     /**
      * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
      * method as well.
      */
-    public boolean shouldExecute() {
-        LivingEntity livingentity = this.guardian.getAttackTarget();
+    public boolean canUse() {
+        LivingEntity livingentity = this.guardian.getTarget();
         return livingentity != null && livingentity.isAlive() && guardian.laserCooldown == 0;
     }
 
     /**
      * Returns whether an in-progress EntityAIBase should continue executing
      */
-    public boolean shouldContinueExecuting() {
-        return super.shouldContinueExecuting() && (this.guardian.getDistanceSq(this.guardian.getAttackTarget()) > 9.0D) && guardian.laserCooldown == 0;
+    public boolean canContinueToUse() {
+        return super.canContinueToUse() && (this.guardian.distanceToSqr(this.guardian.getTarget()) > 9.0D) && guardian.laserCooldown == 0;
     }
 
     /**
      * Execute a one shot task or start executing a continuous task
      */
-    public void startExecuting() {
+    public void start() {
         this.tickCounter = -10;
-        this.guardian.getNavigator().clearPath();
-        this.guardian.getLookController().setLookPositionWithEntity(this.guardian.getAttackTarget(), 90.0F, 90.0F);
+        this.guardian.getNavigation().stop();
+        this.guardian.getLookControl().setLookAt(this.guardian.getTarget(), 90.0F, 90.0F);
         this.guardian.setLaser(true);
     }
 
     /**
      * Reset the task's internal state. Called when this task is interrupted by another one
      */
-    public void resetTask() {
-        this.guardian.setAttackTarget((LivingEntity)null);
+    public void stop() {
+        this.guardian.setTarget((LivingEntity)null);
         this.guardian.setLaser(false);
     }
 
@@ -59,27 +59,27 @@ public class LaserAttackGoal extends Goal {
      * Keep ticking a continuous task that has already been started
      */
     public void tick() {
-        LivingEntity livingentity = this.guardian.getAttackTarget();
-        this.guardian.getNavigator().clearPath();
-        this.guardian.getLookController().setLookPositionWithEntity(livingentity, 90.0F, 90.0F);
-        if (!this.guardian.canEntityBeSeen(livingentity)) {
-            this.guardian.setAttackTarget((LivingEntity)null);
+        LivingEntity livingentity = this.guardian.getTarget();
+        this.guardian.getNavigation().stop();
+        this.guardian.getLookControl().setLookAt(livingentity, 90.0F, 90.0F);
+        if (!this.guardian.canSee(livingentity)) {
+            this.guardian.setTarget((LivingEntity)null);
         } else {
             ++this.tickCounter;
             if (this.tickCounter == 0) {
-                this.guardian.setTargetedEntity(this.guardian.getAttackTarget().getEntityId());
+                this.guardian.setTargetedEntity(this.guardian.getTarget().getId());
             } else if (this.tickCounter >= this.guardian.getAttackDuration()) {
                 float f = 1.0F;
-                if (this.guardian.world.getDifficulty() == Difficulty.HARD) {
+                if (this.guardian.level.getDifficulty() == Difficulty.HARD) {
                     f += 2.0F;
                 }
 
-                livingentity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this.guardian, this.guardian), f);
-                livingentity.attackEntityFrom(DamageSource.causeMobDamage(this.guardian), (float)this.guardian.getAttributeValue(Attributes.ATTACK_DAMAGE));
-                livingentity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 100, 2));
+                livingentity.hurt(DamageSource.indirectMagic(this.guardian, this.guardian), f);
+                livingentity.hurt(DamageSource.mobAttack(this.guardian), (float)this.guardian.getAttributeValue(Attributes.ATTACK_DAMAGE));
+                livingentity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 100, 2));
 
 
-                this.guardian.setAttackTarget((LivingEntity)null);
+                this.guardian.setTarget((LivingEntity)null);
                 this.guardian.laserCooldown = 100;
                 this.guardian.setClientAttackTime(0);
             }

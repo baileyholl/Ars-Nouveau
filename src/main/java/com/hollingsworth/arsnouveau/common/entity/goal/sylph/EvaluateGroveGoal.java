@@ -22,7 +22,7 @@ public class EvaluateGroveGoal extends Goal {
     }
 
     @Override
-    public boolean shouldExecute() {
+    public boolean canUse() {
         return sylph.crystalPos != null && (sylph.timeUntilEvaluation <= 0 || sylph.genTable == null);
     }
 
@@ -30,7 +30,7 @@ public class EvaluateGroveGoal extends Goal {
         if(state.getMaterial() == Material.AIR)
             return 0;
 
-        if(state == Blocks.WATER.getDefaultState() || state == Blocks.GRASS_BLOCK.getDefaultState() || state == Blocks.PODZOL.getDefaultState() || state == Blocks.GRASS_PATH.getDefaultState())
+        if(state == Blocks.WATER.defaultBlockState() || state == Blocks.GRASS_BLOCK.defaultBlockState() || state == Blocks.PODZOL.defaultBlockState() || state == Blocks.GRASS_PATH.defaultBlockState())
             return 1;
 
         if(state.getBlock() instanceof BushBlock)
@@ -40,13 +40,13 @@ public class EvaluateGroveGoal extends Goal {
         if(state.getBlock() instanceof StemGrownBlock)
             return 2;
 
-        if(state.getBlock().isIn(BlockTags.LOGS))
+        if(state.getBlock().is(BlockTags.LOGS))
             return 2;
 
-        if(state.getBlock().isIn(BlockTags.LEAVES) || state.getBlock() instanceof LeavesBlock)
+        if(state.getBlock().is(BlockTags.LEAVES) || state.getBlock() instanceof LeavesBlock)
             return 1;
 
-        if(state.getMaterial() == Material.PLANTS || state.getMaterial() == Material.TALL_PLANTS)
+        if(state.getMaterial() == Material.PLANT || state.getMaterial() == Material.REPLACEABLE_PLANT)
             return 1;
 
         if(state.getBlock() instanceof IGrowable)
@@ -56,16 +56,16 @@ public class EvaluateGroveGoal extends Goal {
     }
 
     @Override
-    public void startExecuting() {
-        World world = sylph.getEntityWorld();
+    public void start() {
+        World world = sylph.getCommandSenderWorld();
         Map<BlockState, Integer> defaultMap = new HashMap<>();
         Map<BlockState, Integer> dropMap = new HashMap<>();
         int score = 0;
-        for(BlockPos b : BlockPos.getAllInBoxMutable(sylph.crystalPos.north(10).west(10).down(1),sylph.crystalPos.south(10).east(10).up(30))){
+        for(BlockPos b : BlockPos.betweenClosed(sylph.crystalPos.north(10).west(10).below(1),sylph.crystalPos.south(10).east(10).above(30))){
             if(b.getY() >= 256)
                 continue;
             BlockState state = world.getBlockState(b);
-            BlockState defaultState = state.getBlock().getDefaultState();
+            BlockState defaultState = state.getBlock().defaultBlockState();
             int points = getScore(defaultState);
             if(points == 0)
                 continue;
@@ -80,7 +80,7 @@ public class EvaluateGroveGoal extends Goal {
             defaultMap.put(defaultState, defaultMap.get(defaultState) + 1);
             score += defaultMap.get(defaultState) <= 50 ? getScore(defaultState) : 0;
         }
-        sylph.getDataManager().set(EntitySylph.MOOD_SCORE, score);
+        sylph.getEntityData().set(EntitySylph.MOOD_SCORE, score);
         sylph.timeUntilEvaluation = ticksToNextEval;
         sylph.genTable = dropMap;
         sylph.scoreMap = defaultMap;

@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 public class CreativeManaJar extends ManaJar {
 
     public CreativeManaJar(){
-        super(ModBlock.defaultProperties().notSolid(), LibBlockNames.CREATIVE_MANA_JAR);
+        super(ModBlock.defaultProperties().noOcclusion(), LibBlockNames.CREATIVE_MANA_JAR);
     }
 
     @Nullable

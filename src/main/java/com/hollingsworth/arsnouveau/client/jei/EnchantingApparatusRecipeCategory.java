@@ -80,11 +80,11 @@ public class EnchantingApparatusRecipeCategory implements IRecipeCategory<Enchan
     public void setIngredients(EnchantingApparatusRecipe o, IIngredients iIngredients) {
         List<List<ItemStack>> itemStacks = new ArrayList<>();
 
-        itemStacks.add(Arrays.asList(o.reagent.getMatchingStacks()));
+        itemStacks.add(Arrays.asList(o.reagent.getItems()));
         itemStacks.add(Collections.singletonList(o.result));
         for(Ingredient i : o.pedestalItems){
 
-           itemStacks.add(Arrays.asList(i.getMatchingStacks()));
+           itemStacks.add(Arrays.asList(i.getItems()));
         }
         iIngredients.setInputLists(VanillaTypes.ITEM, itemStacks);
         //   iIngredients.setInput(VanillaTypes.ITEM, glyphPressRecipe.reagent);

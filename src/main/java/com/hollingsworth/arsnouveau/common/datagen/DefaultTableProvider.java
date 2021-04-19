@@ -99,22 +99,22 @@ public class DefaultTableProvider extends LootTableProvider {
 
         public void registerLeavesAndSticks(Block leaves, Block sapling){
             list.add(leaves);
-            this.registerLootTable(leaves, l_state -> droppingWithChancesAndSticks(l_state, sapling, DEFAULT_SAPLING_DROP_RATES));
+            this.add(leaves, l_state -> createLeavesDrops(l_state, sapling, DEFAULT_SAPLING_DROP_RATES));
         }
 
         public void registerDropDoor(Block block){
             list.add(block);
-            this.registerLootTable(block, BlockLootTables::registerDoor);
+            this.add(block, BlockLootTables::createDoorTable);
         }
 
         public void registerDropSelf(Block block){
             list.add(block);
-            registerDropSelfLootTable(block);
+            dropSelf(block);
         }
 
         public void registerDrop(Block input, IItemProvider output){
             list.add(input);
-            registerDropping(input, output);
+            dropOther(input, output);
         }
 
         @Override
@@ -138,7 +138,7 @@ public class DefaultTableProvider extends LootTableProvider {
     protected void validate(Map<ResourceLocation, LootTable> map, ValidationTracker validationtracker)
     {
         map.forEach((p_218436_2_, p_218436_3_) -> {
-            LootTableManager.validateLootTable(validationtracker, p_218436_2_, p_218436_3_);
+            LootTableManager.validate(validationtracker, p_218436_2_, p_218436_3_);
         });
     }
 

@@ -36,7 +36,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
 
     @Override
     public void tick() {
-        if(world.isRemote)
+        if(level.isClientSide)
             return;
 
         if(isCrafting){
@@ -55,7 +55,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
                     pedestalItems.forEach(i -> i = null);
                     this.catalystItem = recipe.getResult(pedestalItems, this.catalystItem, this);
                     clearItems();
-                    ParticleUtil.spawnPoof((ServerWorld) world, pos);
+                    ParticleUtil.spawnPoof((ServerWorld) level, worldPosition);
                 }
 
                 this.isCrafting = false;
@@ -66,12 +66,12 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
 
 
     public void clearItems(){
-        BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
-            if (world.getTileEntity(blockPos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack != null) {
-                ArcanePedestalTile tile = ((ArcanePedestalTile) world.getTileEntity(blockPos));
+        BlockPos.betweenClosedStream(this.getBlockPos().offset(5, -3, 5), this.getBlockPos().offset(-5, 3, -5)).forEach(blockPos -> {
+            if (level.getBlockEntity(blockPos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) level.getBlockEntity(blockPos)).stack != null) {
+                ArcanePedestalTile tile = ((ArcanePedestalTile) level.getBlockEntity(blockPos));
                 tile.stack = tile.stack == null ? ItemStack.EMPTY : tile.stack.getContainerItem();
-                BlockState state = world.getBlockState(blockPos);
-                world.notifyBlockUpdate(blockPos, state, state, 3);
+                BlockState state = level.getBlockState(blockPos);
+                level.sendBlockUpdated(blockPos, state, state, 3);
             }
         });
     }
@@ -79,9 +79,9 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
     // Used for rendering on the client
     public List<BlockPos> pedestalList(){
         ArrayList<BlockPos> posList = new ArrayList<>();
-        BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
-            if(world.getTileEntity(blockPos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack != null &&  !((ArcanePedestalTile) world.getTileEntity(blockPos)).stack.isEmpty()) {
-                posList.add(blockPos.toImmutable());
+        BlockPos.betweenClosedStream(this.getBlockPos().offset(5, -3, 5), this.getBlockPos().offset(-5, 3, -5)).forEach(blockPos -> {
+            if(level.getBlockEntity(blockPos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) level.getBlockEntity(blockPos)).stack != null &&  !((ArcanePedestalTile) level.getBlockEntity(blockPos)).stack.isEmpty()) {
+                posList.add(blockPos.immutable());
             }
         });
         return posList;
@@ -89,9 +89,9 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
 
     public List<ItemStack> getPedestalItems(){
         ArrayList<ItemStack> pedestalItems = new ArrayList<>();
-        BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
-            if(world.getTileEntity(blockPos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) world.getTileEntity(blockPos)).stack != null && !((ArcanePedestalTile) world.getTileEntity(blockPos)).stack.isEmpty()) {
-                pedestalItems.add(((ArcanePedestalTile) world.getTileEntity(blockPos)).stack);
+        BlockPos.betweenClosedStream(this.getBlockPos().offset(5, -3, 5), this.getBlockPos().offset(-5, 3, -5)).forEach(blockPos -> {
+            if(level.getBlockEntity(blockPos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) level.getBlockEntity(blockPos)).stack != null && !((ArcanePedestalTile) level.getBlockEntity(blockPos)).stack.isEmpty()) {
+                pedestalItems.add(((ArcanePedestalTile) level.getBlockEntity(blockPos)).stack);
             }
         });
         return pedestalItems;
@@ -99,7 +99,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
 
     public IEnchantingRecipe getRecipe(ItemStack catalyst){
         List<ItemStack> pedestalItems = getPedestalItems();
-        return ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes(world).stream().filter(r-> r.isMatch(pedestalItems, catalyst, this)).findFirst().orElse(null);
+        return ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes(level).stream().filter(r-> r.isMatch(pedestalItems, catalyst, this)).findFirst().orElse(null);
     }
 
     public boolean attemptCraft(ItemStack catalyst){
@@ -108,9 +108,9 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
         IEnchantingRecipe recipe = this.getRecipe(catalyst);
         if(recipe != null) {
             if(recipe.consumesMana()){
-                if(!ManaUtil.hasManaNearby(pos, world, 10, recipe.manaCost()))
+                if(!ManaUtil.hasManaNearby(worldPosition, level, 10, recipe.manaCost()))
                     return false;
-                ManaUtil.takeManaNearbyWithParticles(pos, world, 10, recipe.manaCost());
+                ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 10, recipe.manaCost());
             }
             this.isCrafting = true;
             updateBlock();
@@ -122,34 +122,34 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
     public void updateBlock(){
         if(counter == 0)
             counter = 1;
-        BlockState state = world.getBlockState(pos);
-        world.notifyBlockUpdate(pos, state, state, 2);
+        BlockState state = level.getBlockState(worldPosition);
+        level.sendBlockUpdated(worldPosition, state, state, 2);
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        catalystItem = ItemStack.read((CompoundNBT)compound.get("itemStack"));
+    public void load(BlockState state, CompoundNBT compound) {
+        catalystItem = ItemStack.of((CompoundNBT)compound.get("itemStack"));
         isCrafting = compound.getBoolean("is_crafting");
         counter = compound.getInt("counter");
-        super.read(state, compound);
+        super.load(state, compound);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         if(catalystItem != null) {
             CompoundNBT reagentTag = new CompoundNBT();
-            catalystItem.write(reagentTag);
+            catalystItem.save(reagentTag);
             compound.put("itemStack", reagentTag);
         }
         compound.putBoolean("is_crafting", isCrafting);
         compound.putInt("counter", counter);
 
-        return super.write(compound);
+        return super.save(compound);
     }
     @Override
     @Nullable
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 3, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 3, this.getUpdateTag());
     }
 
     @Override
@@ -157,17 +157,17 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
         CompoundNBT tag = new CompoundNBT();
         tag.putInt("counter", this.counter);
         tag.putBoolean("is_crafting", this.isCrafting);
-        return this.write(tag);
+        return this.save(tag);
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         super.onDataPacket(net, pkt);
-        handleUpdateTag(world.getBlockState(pos), pkt.getNbtCompound());
+        handleUpdateTag(level.getBlockState(worldPosition), pkt.getTag());
     }
 
     @Override
-    public int getSizeInventory() {
+    public int getContainerSize() {
         return 0;
     }
 
@@ -177,32 +177,32 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
     }
 
     @Override
-    public ItemStack getStackInSlot(int index) {
+    public ItemStack getItem(int index) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public ItemStack decrStackSize(int index, int count) {
+    public ItemStack removeItem(int index, int count) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int index) {
+    public ItemStack removeItemNoUpdate(int index) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public void setInventorySlotContents(int index, ItemStack stack) {
+    public void setItem(int index, ItemStack stack) {
 
     }
 
     @Override
-    public boolean isUsableByPlayer(PlayerEntity player) {
+    public boolean stillValid(PlayerEntity player) {
         return false;
     }
 
     @Override
-    public void clear() {
+    public void clearContent() {
 
     }
 }

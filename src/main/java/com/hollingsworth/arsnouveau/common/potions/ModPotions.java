@@ -31,14 +31,14 @@ public class ModPotions {
     @ObjectHolder("mana_regen_potion_strong")
     public static Potion STRONG_MANA_REGEN_POTION;
     public static void addRecipes() {
-        ItemStack AWKWARD = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.AWKWARD);
-        ItemStack manaPot = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), ModPotions.MANA_REGEN_POTION);
-        ItemStack manaPotLong = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), ModPotions.LONG_MANA_REGEN_POTION);
-        ItemStack manaPotStrong = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), ModPotions.STRONG_MANA_REGEN_POTION);
+        ItemStack AWKWARD = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.AWKWARD);
+        ItemStack manaPot = PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotions.MANA_REGEN_POTION);
+        ItemStack manaPotLong = PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotions.LONG_MANA_REGEN_POTION);
+        ItemStack manaPotStrong = PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotions.STRONG_MANA_REGEN_POTION);
 
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(AWKWARD), Ingredient.fromItems(BlockRegistry.MANA_BERRY_BUSH),  manaPot));
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.fromStacks(manaPot), Ingredient.fromItems(Items.GLOWSTONE_DUST),  manaPotStrong));
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.fromStacks(manaPot), Ingredient.fromItems(Items.REDSTONE),  manaPotLong));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(AWKWARD), Ingredient.of(BlockRegistry.MANA_BERRY_BUSH),  manaPot));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(manaPot), Ingredient.of(Items.GLOWSTONE_DUST),  manaPotStrong));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(manaPot), Ingredient.of(Items.REDSTONE),  manaPotLong));
     }
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)

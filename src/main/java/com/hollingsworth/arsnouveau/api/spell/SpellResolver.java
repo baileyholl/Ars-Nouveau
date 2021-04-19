@@ -76,7 +76,7 @@ public class SpellResolver {
         int numMethods = 0;
         if(spell == null || !spell.isValid() || castType == null) {
             if(!silent)
-                entity.sendMessage(new StringTextComponent("Invalid Spell."), Util.DUMMY_UUID);
+                entity.sendMessage(new StringTextComponent("Invalid Spell."), Util.NIL_UUID);
             return false;
         }
         for(AbstractSpellPart spellPart : spell.recipe){
@@ -96,7 +96,7 @@ public class SpellResolver {
         AtomicBoolean canCast = new AtomicBoolean(false);
         ManaCapability.getMana(entity).ifPresent(mana -> {
             canCast.set(totalCost <= mana.getCurrentMana() || (entity instanceof PlayerEntity &&  ((PlayerEntity) entity).isCreative()));
-            if(!canCast.get() && !entity.getEntityWorld().isRemote && !silent)
+            if(!canCast.get() && !entity.getCommandSenderWorld().isClientSide && !silent)
                 PortUtil.sendMessage(entity,new TranslationTextComponent("ars_nouveau.spell.no_mana"));
         });
         return canCast.get();
@@ -147,8 +147,8 @@ public class SpellResolver {
     public static LivingEntity getUnwrappedCaster(World world, LivingEntity shooter, SpellContext spellContext){
         if(shooter == null && spellContext.castingTile != null) {
             shooter = FakePlayerFactory.getMinecraft((ServerWorld) world);
-            BlockPos pos = spellContext.castingTile.getPos();
-            shooter.setPosition(pos.getX(), pos.getY(), pos.getZ());
+            BlockPos pos = spellContext.castingTile.getBlockPos();
+            shooter.setPos(pos.getX(), pos.getY(), pos.getZ());
         }
         shooter = shooter == null ? FakePlayerFactory.getMinecraft((ServerWorld) world) : shooter;
         return shooter;

@@ -23,23 +23,23 @@ public class LightTile extends TileEntity {
     @Override
     @Nullable
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 3, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 3, this.getUpdateTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         super.onDataPacket(net, pkt);
-        handleUpdateTag(world.getBlockState(pos),pkt.getNbtCompound());
+        handleUpdateTag(level.getBlockState(worldPosition),pkt.getTag());
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT nbt) {
-        super.read(state, nbt);
+    public void load(BlockState state, CompoundNBT nbt) {
+        super.load(state, nbt);
         this.red = nbt.getInt("red");
         this.red = red > 0 ? red : 255;
         this.green = nbt.getInt("green");
@@ -49,10 +49,10 @@ public class LightTile extends TileEntity {
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         compound.putInt("red", red);
         compound.putInt("green", green);
         compound.putInt("blue", blue);
-        return super.write(compound);
+        return super.save(compound);
     }
 }

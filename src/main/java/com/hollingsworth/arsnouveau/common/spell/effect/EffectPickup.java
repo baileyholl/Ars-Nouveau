@@ -28,19 +28,19 @@ public class EffectPickup extends AbstractEffect {
 
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        BlockPos pos = new BlockPos(rayTraceResult.getHitVec());
+        BlockPos pos = new BlockPos(rayTraceResult.getLocation());
         int expansion = 5 + getBuffCount(augments, AugmentAOE.class);
 
-        List<ItemEntity> entityList = world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos.east(expansion).north(expansion).up(expansion),
-                pos.west(expansion).south(expansion).down(expansion)));
+        List<ItemEntity> entityList = world.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(pos.east(expansion).north(expansion).above(expansion),
+                pos.west(expansion).south(expansion).below(expansion)));
         for(ItemEntity i : entityList){
 
             if(isRealPlayer(shooter) && spellContext.castingTile == null){
                 ItemStack stack = i.getItem();
                 PlayerEntity player = (PlayerEntity) shooter;
                 VoidJar.tryVoiding(player, stack);
-                if(!player.addItemStackToInventory(stack)){
-                    i.setPosition(player.getPosX(), player.getPosY(), player.getPosZ());
+                if(!player.addItem(stack)){
+                    i.setPos(player.getX(), player.getY(), player.getZ());
                 }
 //                i.onCollideWithPlayer((PlayerEntity) shooter);
             }else if(shooter instanceof IPickupResponder){

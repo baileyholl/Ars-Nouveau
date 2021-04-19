@@ -39,10 +39,10 @@ public class EffectPlaceBlock extends AbstractEffect {
             return;
         int aoeBuff = getBuffCount(augments, AugmentAOE.class);
 
-        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult,aoeBuff, getBuffCount(augments, AugmentPierce.class));
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getBlockPos(), (BlockRayTraceResult)rayTraceResult,aoeBuff, getBuffCount(augments, AugmentPierce.class));
         BlockRayTraceResult result = (BlockRayTraceResult) rayTraceResult;
         for(BlockPos pos1 : posList) {
-            BlockPos hitPos = pos1.offset(result.getFace());
+            BlockPos hitPos = pos1.relative(result.getDirection());
             if(spellContext.castingTile instanceof IPlaceBlockResponder){
                 ItemStack stack = ((IPlaceBlockResponder) spellContext.castingTile).onPlaceBlock();
                 if(stack == null || !(stack.getItem() instanceof BlockItem))
@@ -55,12 +55,12 @@ public class EffectPlaceBlock extends AbstractEffect {
                     return;
                 BlockItem item = (BlockItem) stack.getItem();
                 if(world.getBlockState(hitPos).getMaterial() != Material.AIR){
-                    result = new BlockRayTraceResult(result.getHitVec().add(0, 1, 0), Direction.UP, result.getPos(),false);
+                    result = new BlockRayTraceResult(result.getLocation().add(0, 1, 0), Direction.UP, result.getBlockPos(),false);
                 }
                 attemptPlace(world, stack, item, result);
             }else if(shooter instanceof PlayerEntity){
                 PlayerEntity playerEntity = (PlayerEntity) shooter;
-                NonNullList<ItemStack> list =  playerEntity.inventory.mainInventory;
+                NonNullList<ItemStack> list =  playerEntity.inventory.items;
                 if(world.getBlockState(hitPos).getMaterial() != Material.AIR)
                     continue;
                 for(int i = 0; i < 9; i++){
@@ -68,7 +68,7 @@ public class EffectPlaceBlock extends AbstractEffect {
                     if(stack.getItem() instanceof BlockItem && world instanceof ServerWorld){
                         BlockItem item = (BlockItem)stack.getItem();
 
-                        BlockRayTraceResult resolveResult = new BlockRayTraceResult(new Vector3d(hitPos.getX(), hitPos.getY(), hitPos.getZ()), result.getFace(), hitPos, false);
+                        BlockRayTraceResult resolveResult = new BlockRayTraceResult(new Vector3d(hitPos.getX(), hitPos.getY(), hitPos.getZ()), result.getDirection(), hitPos, false);
                         ActionResultType resultType = attemptPlace(world, stack, item, resolveResult);
                         if(ActionResultType.FAIL != resultType)
                             break;
@@ -85,10 +85,10 @@ public class EffectPlaceBlock extends AbstractEffect {
 
     public static ActionResultType attemptPlace(World world, ItemStack stack, BlockItem item, BlockRayTraceResult result){
         FakePlayer fakePlayer = new ANFakePlayer((ServerWorld) world);
-        fakePlayer.setHeldItem(Hand.MAIN_HAND, stack);
-        BlockItemUseContext context = BlockItemUseContext.func_221536_a(new BlockItemUseContext(new ItemUseContext(fakePlayer, Hand.MAIN_HAND, result)), result.getPos(), result.getFace());
+        fakePlayer.setItemInHand(Hand.MAIN_HAND, stack);
+        BlockItemUseContext context = BlockItemUseContext.at(new BlockItemUseContext(new ItemUseContext(fakePlayer, Hand.MAIN_HAND, result)), result.getBlockPos(), result.getDirection());
 
-        return item.tryPlace(context);
+        return item.place(context);
     }
 
     @Override

@@ -9,6 +9,8 @@ import net.minecraft.item.IArmorMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import net.minecraft.item.Item.Properties;
+
 public abstract class MagicArmor extends ArmorItem implements IManaEquipment {
 
     public MagicArmor(IArmorMaterial materialIn, EquipmentSlotType slot, Properties builder) {
@@ -17,13 +19,13 @@ public abstract class MagicArmor extends ArmorItem implements IManaEquipment {
 
     @Override
     public void onArmorTick(ItemStack stack, World world, PlayerEntity player) {
-        if(world.isRemote() || world.getGameTime() % 200 !=  0 || stack.getDamage() == 0)
+        if(world.isClientSide() || world.getGameTime() % 200 !=  0 || stack.getDamageValue() == 0)
             return;
 
         ManaCapability.getMana(player).ifPresent(mana -> {
             if(mana.getCurrentMana() > 20){
                 mana.removeMana(20);
-                stack.setDamage(stack.getDamage() - 1);
+                stack.setDamageValue(stack.getDamageValue() - 1);
             }
         });
     }

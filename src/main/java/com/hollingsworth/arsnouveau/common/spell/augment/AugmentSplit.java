@@ -7,6 +7,8 @@ import net.minecraft.item.Items;
 
 import javax.annotation.Nullable;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
+
 public class AugmentSplit extends AbstractAugment {
     public AugmentSplit() {
         super(GlyphLib.AugmentSplitID, "Split");

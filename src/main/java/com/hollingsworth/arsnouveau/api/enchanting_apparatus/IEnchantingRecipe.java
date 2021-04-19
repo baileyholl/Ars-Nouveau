@@ -21,7 +21,7 @@ public interface IEnchantingRecipe extends IRecipe<EnchantingApparatusTile> {
     }
 
     default boolean canCraft(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile){
-        return isMatch(pedestalItems, reagent, enchantingApparatusTile) && (!consumesMana() || ManaUtil.hasManaNearby(enchantingApparatusTile.getPos(), enchantingApparatusTile.getWorld(), 10, manaCost()));
+        return isMatch(pedestalItems, reagent, enchantingApparatusTile) && (!consumesMana() || ManaUtil.hasManaNearby(enchantingApparatusTile.getBlockPos(), enchantingApparatusTile.getLevel(), 10, manaCost()));
     }
 
     int manaCost();

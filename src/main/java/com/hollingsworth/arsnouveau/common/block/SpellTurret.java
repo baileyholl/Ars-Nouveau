@@ -43,7 +43,7 @@ import java.util.Random;
 public class SpellTurret extends ModBlock {
     public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
     public SpellTurret() {
-        super(defaultProperties().notSolid(), LibBlockNames.SPELL_TURRET);
+        super(defaultProperties().noOcclusion(), LibBlockNames.SPELL_TURRET);
     }
 
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
@@ -57,25 +57,25 @@ public class SpellTurret extends ModBlock {
     }
 
     public void shootSpell(ServerWorld world, BlockPos pos ) {
-        SpellTurretTile tile = (SpellTurretTile) world.getTileEntity(pos);
+        SpellTurretTile tile = (SpellTurretTile) world.getBlockEntity(pos);
         if(tile == null || tile.recipe == null || tile.recipe.isEmpty())
             return;
         int manaCost = new Spell(tile.recipe).getCastingCost()/2;
         if(ManaUtil.takeManaNearbyWithParticles(pos, world, 10, manaCost) == null)
             return;
         IPosition iposition = getDispensePosition(new ProxyBlockSource(world, pos));
-        Direction direction = world.getBlockState(pos).get(FACING);
+        Direction direction = world.getBlockState(pos).getValue(FACING);
         FakePlayer fakePlayer = new ANFakePlayer(world);
-        fakePlayer.setPosition(pos.getX(), pos.getY(), pos.getZ());
-        EntitySpellResolver resolver = new EntitySpellResolver(tile.recipe,new SpellContext(tile.recipe, fakePlayer).withCastingTile(world.getTileEntity(pos)));
+        fakePlayer.setPos(pos.getX(), pos.getY(), pos.getZ());
+        EntitySpellResolver resolver = new EntitySpellResolver(tile.recipe,new SpellContext(tile.recipe, fakePlayer).withCastingTile(world.getBlockEntity(pos)));
         if(resolver.castType instanceof MethodProjectile){
             shootProjectile(world,pos,tile, resolver);
             return;
         }
         if(resolver.castType instanceof MethodTouch){
-            BlockPos touchPos = new BlockPos(iposition.getX(), iposition.getY(), iposition.getZ());
+            BlockPos touchPos = new BlockPos(iposition.x(), iposition.y(), iposition.z());
             if(direction == Direction.WEST || direction == Direction.NORTH){
-                touchPos = touchPos.offset(direction);
+                touchPos = touchPos.relative(direction);
             }
             resolver.onCastOnBlock(new BlockRayTraceResult(new Vector3d(touchPos.getX(), touchPos.getY(), touchPos.getZ()),
                     direction.getOpposite(), new BlockPos(touchPos.getX(), touchPos.getY(), touchPos.getZ()), false),
@@ -85,35 +85,35 @@ public class SpellTurret extends ModBlock {
 
     public void shootProjectile(ServerWorld world,BlockPos pos, SpellTurretTile tile, SpellResolver resolver){
         IPosition iposition = getDispensePosition(new ProxyBlockSource(world, pos));
-        Direction direction = world.getBlockState(pos).get(DispenserBlock.FACING);
+        Direction direction = world.getBlockState(pos).getValue(DispenserBlock.FACING);
         FakePlayer fakePlayer = FakePlayerFactory.getMinecraft(world);
-        fakePlayer.setPosition(pos.getX(), pos.getY(), pos.getZ());
+        fakePlayer.setPos(pos.getX(), pos.getY(), pos.getZ());
         EntityProjectileSpell spell = new EntityProjectileSpell(world, fakePlayer,resolver,
                 AbstractSpellPart.getBuffCount(new Spell(tile.recipe).getAugments(0, null), AugmentPierce.class));
-        spell.setShooter(fakePlayer);
-        spell.setPosition(iposition.getX(), iposition.getY(), iposition.getZ());
-        spell.shoot(direction.getXOffset(), ((float)direction.getYOffset()), direction.getZOffset(), 0.5f, 0);
-        world.addEntity(spell);
+        spell.setOwner(fakePlayer);
+        spell.setPos(iposition.x(), iposition.y(), iposition.z());
+        spell.shoot(direction.getStepX(), ((float)direction.getStepY()), direction.getStepZ(), 0.5f, 0);
+        world.addFreshEntity(spell);
     }
 
     public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        boolean flag = worldIn.isBlockPowered(pos) || worldIn.isBlockPowered(pos.up());
-        boolean flag1 = state.get(TRIGGERED);
+        boolean flag = worldIn.hasNeighborSignal(pos) || worldIn.hasNeighborSignal(pos.above());
+        boolean flag1 = state.getValue(TRIGGERED);
         if (flag && !flag1) {
-            worldIn.getPendingBlockTicks().scheduleTick(pos, this,4);
-            worldIn.setBlockState(pos, state.with(TRIGGERED, Boolean.valueOf(true)), 4);
+            worldIn.getBlockTicks().scheduleTick(pos, this,4);
+            worldIn.setBlock(pos, state.setValue(TRIGGERED, Boolean.valueOf(true)), 4);
         } else if (!flag && flag1) {
-            worldIn.setBlockState(pos, state.with(TRIGGERED, Boolean.valueOf(false)), 4);
+            worldIn.setBlock(pos, state.setValue(TRIGGERED, Boolean.valueOf(false)), 4);
         }
     }
 
-    public boolean hasComparatorInputOverride(BlockState state) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
 
-    public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
-        return Container.calcRedstone(worldIn.getTileEntity(pos));
+    public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
+        return Container.getRedstoneSignalFromBlockEntity(worldIn.getBlockEntity(pos));
     }
 
 
@@ -121,10 +121,10 @@ public class SpellTurret extends ModBlock {
      * Get the position where the dispenser at the given Coordinates should dispense to.
      */
     public static IPosition getDispensePosition(IBlockSource coords) {
-        Direction direction = coords.getBlockState().get(FACING);
-        double d0 = coords.getX() + 0.5D * (double)direction.getXOffset();
-        double d1 = coords.getY() + 0.5D * (double)direction.getYOffset();
-        double d2 = coords.getZ() + 0.5D * (double)direction.getZOffset();
+        Direction direction = coords.getBlockState().getValue(FACING);
+        double d0 = coords.x() + 0.5D * (double)direction.getStepX();
+        double d1 = coords.y() + 0.5D * (double)direction.getStepY();
+        double d2 = coords.z() + 0.5D * (double)direction.getStepZ();
         return new Position(d0, d1, d2);
     }
 
@@ -134,21 +134,21 @@ public class SpellTurret extends ModBlock {
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState p_149645_1_) {
+    public BlockRenderType getRenderShape(BlockState p_149645_1_) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getNearestLookingDirection().getOpposite());
+        return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if(handIn == Hand.MAIN_HAND){
-            ItemStack stack = player.getHeldItem(handIn);
-            if(!(stack.getItem() instanceof SpellParchment) || worldIn.isRemote)
+            ItemStack stack = player.getItemInHand(handIn);
+            if(!(stack.getItem() instanceof SpellParchment) || worldIn.isClientSide)
                 return ActionResultType.SUCCESS;
             List<AbstractSpellPart> recipe = SpellParchment.getSpellRecipe(stack);
             if(recipe == null || recipe.isEmpty())
@@ -158,24 +158,24 @@ public class SpellTurret extends ModBlock {
                 return ActionResultType.SUCCESS;
             }
 
-            ((SpellTurretTile)worldIn.getTileEntity(pos)).recipe = recipe;
+            ((SpellTurretTile)worldIn.getBlockEntity(pos)).recipe = recipe;
             PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.alert.spell_set"));
-            worldIn.notifyBlockUpdate(pos, state, state, 2);
+            worldIn.sendBlockUpdated(pos, state, state, 2);
         }
-        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+        return super.use(state, worldIn, pos, player, handIn, hit);
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING, TRIGGERED);
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     @Nullable

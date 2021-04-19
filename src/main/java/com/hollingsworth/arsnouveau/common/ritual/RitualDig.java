@@ -14,9 +14,9 @@ public class RitualDig extends AbstractRitual {
 
     @Override
     public void tick() {
-        World world = tile.getWorld();
+        World world = tile.getLevel();
         if(world.getGameTime() % 20 == 0){
-            BlockPos pos = tile.getPos().north().down(context.progress);
+            BlockPos pos = tile.getBlockPos().north().below(context.progress);
             if(pos.getY() <= 1){
                 onEnd();
                 return;

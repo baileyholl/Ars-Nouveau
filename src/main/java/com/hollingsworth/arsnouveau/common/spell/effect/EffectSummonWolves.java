@@ -17,6 +17,8 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
+
 public class EffectSummonWolves extends AbstractEffect {
 
     public EffectSummonWolves() {
@@ -28,16 +30,16 @@ public class EffectSummonWolves extends AbstractEffect {
         super.onResolve(rayTraceResult, world, shooter, augments, spellContext);
         if(!canSummon(shooter))
             return;
-        Vector3d hit = rayTraceResult.getHitVec();
+        Vector3d hit = rayTraceResult.getLocation();
         int ticks = 60 * 20 * (1 + getDurationModifier(augments));
         for(int i = 0; i < 2; i++){
             SummonWolf wolf = new SummonWolf(ModEntities.SUMMON_WOLF, world);
             wolf.ticksLeft = ticks;
-            wolf.setPosition(hit.getX(), hit.getY(), hit.getZ());
-            wolf.setAttackTarget(shooter.getLastAttackedEntity());
-            wolf.setAggroed(true);
-            wolf.setTamed(true);
-            wolf.setTamedBy((PlayerEntity) shooter);
+            wolf.setPos(hit.x(), hit.y(), hit.z());
+            wolf.setTarget(shooter.getLastHurtMob());
+            wolf.setAggressive(true);
+            wolf.setTame(true);
+            wolf.tame((PlayerEntity) shooter);
             summonLivingEntity(rayTraceResult, world, shooter, augments, spellContext, wolf);
         }
         applySummoningSickness(shooter, ticks);

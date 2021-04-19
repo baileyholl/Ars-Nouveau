@@ -8,14 +8,14 @@ import net.minecraft.item.Items;
 public class AvoidPlayerUntamedGoal extends AvoidEntityGoal<LivingEntity> {
     EntityCarbuncle carbuncle;
     public AvoidPlayerUntamedGoal(EntityCarbuncle entityIn, Class classToAvoidIn, float avoidDistanceIn, double farSpeedIn, double nearSpeedIn) {
-        super(entityIn, classToAvoidIn, avoidDistanceIn, farSpeedIn, nearSpeedIn, (living) -> living.getHeldItemMainhand().getItem() != Items.GOLD_NUGGET);
+        super(entityIn, classToAvoidIn, avoidDistanceIn, farSpeedIn, nearSpeedIn, (living) -> living.getMainHandItem().getItem() != Items.GOLD_NUGGET);
         this.carbuncle = entityIn;
     }
 
     @Override
-    public boolean shouldExecute() {
+    public boolean canUse() {
         if (carbuncle.isTamed())
             return false;
-        return super.shouldExecute();
+        return super.canUse();
     }
 }

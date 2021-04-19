@@ -29,26 +29,26 @@ public class EffectRedstone extends AbstractEffect {
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof BlockRayTraceResult){
-            BlockState state = BlockRegistry.REDSTONE_AIR.getDefaultState();
+            BlockState state = BlockRegistry.REDSTONE_AIR.defaultBlockState();
             int signalModifier = getAmplificationBonus(augments) + 10;
             if(signalModifier < 1)
                 signalModifier = 1;
             if(signalModifier > 15)
                 signalModifier = 15;
-            state = state.with(RedstoneAir.POWER, signalModifier);
-            BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getPos().offset(((BlockRayTraceResult) rayTraceResult).getFace());
+            state = state.setValue(RedstoneAir.POWER, signalModifier);
+            BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getBlockPos().relative(((BlockRayTraceResult) rayTraceResult).getDirection());
             if(!(world.getBlockState(pos).getMaterial() == Material.AIR && world.getBlockState(pos).getBlock() != BlockRegistry.REDSTONE_AIR)){
                 return;
             }
             int timeBonus = getBuffCount(augments, AugmentExtendTime.class);
-            world.setBlockState(pos, state);
-            world.getPendingBlockTicks().scheduleTick(pos, state.getBlock(), 5 + timeBonus * 10);
+            world.setBlockAndUpdate(pos, state);
+            world.getBlockTicks().scheduleTick(pos, state.getBlock(), 5 + timeBonus * 10);
 
-            BlockPos hitPos = pos.offset(((BlockRayTraceResult) rayTraceResult).getFace().getOpposite());
+            BlockPos hitPos = pos.relative(((BlockRayTraceResult) rayTraceResult).getDirection().getOpposite());
 
             BlockUtil.safelyUpdateState(world, pos);
-            world.notifyNeighborsOfStateChange(pos, state.getBlock());
-            world.notifyNeighborsOfStateChange(hitPos, state.getBlock());
+            world.updateNeighborsAt(pos, state.getBlock());
+            world.updateNeighborsAt(hitPos, state.getBlock());
         }
     }
 

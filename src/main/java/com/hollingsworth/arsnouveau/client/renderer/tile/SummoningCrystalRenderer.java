@@ -18,7 +18,7 @@ public class SummoningCrystalRenderer extends GeoBlockRenderer<SummoningCrystalT
 
     @Override
     public RenderType getRenderType(SummoningCrystalTile animatable, float partialTicks, MatrixStack stack, IRenderTypeBuffer renderTypeBuffer,IVertexBuilder vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
-        return RenderType.getEntityTranslucent(textureLocation);
+        return RenderType.entityTranslucent(textureLocation);
     }
 
     public static GenericItemRenderer getISTER(){

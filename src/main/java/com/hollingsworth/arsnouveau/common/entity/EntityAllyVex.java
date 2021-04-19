@@ -46,8 +46,8 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
         super(EntityType.VEX, p_i50190_2_);
         this.owner = owner;
         this.limitedLifespan = false;
-        setOwnerId(owner.getUniqueID());
-        this.moveController = new EntityAllyVex.MoveHelperController(this);
+        setOwnerId(owner.getUUID());
+        this.moveControl = new EntityAllyVex.MoveHelperController(this);
     }
 
     @Override
@@ -56,17 +56,17 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
     }
 
     @Nullable
-    public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        this.setEquipmentBasedOnDifficulty(difficultyIn);
-        this.setEnchantmentBasedOnDifficulty(difficultyIn);
-        return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    public ILivingEntityData finalizeSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+        this.populateDefaultEquipmentSlots(difficultyIn);
+        this.populateDefaultEquipmentEnchantments(difficultyIn);
+        return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
     }
 
     /**
      * Gives armor or weapon for entity based on given DifficultyInstance
      */
-    protected void setEquipmentBasedOnDifficulty(DifficultyInstance difficulty) {
-        this.setItemStackToSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.DIAMOND_SWORD));
+    protected void populateDefaultEquipmentSlots(DifficultyInstance difficulty) {
+        this.setItemSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.DIAMOND_SWORD));
         this.setDropChance(EquipmentSlotType.MAINHAND, 0.0F);
     }
 
@@ -81,15 +81,15 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
         this.goalSelector.addGoal(2, new FollowSummonerFlyingGoal(this, this.owner, 1.0, 6.0f, 3.0f));
         this.targetSelector.addGoal(1, new EntityAllyVex.CopyOwnerTargetGoal(this));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, MobEntity.class, 10, false, true,
-                (entity ) -> (entity instanceof MobEntity && ((MobEntity) entity).getAttackTarget() != null &&
-                        ((MobEntity) entity).getAttackTarget().equals(this.owner)) || (entity instanceof LivingEntity && entity.getAttackingEntity() != null && entity.getAttackingEntity().equals(this.owner))
+                (entity ) -> (entity instanceof MobEntity && ((MobEntity) entity).getTarget() != null &&
+                        ((MobEntity) entity).getTarget().equals(this.owner)) || (entity instanceof LivingEntity && entity.getKillCredit() != null && entity.getKillCredit().equals(this.owner))
         ));
     }
-    protected PathNavigator createNavigator(World worldIn) {
+    protected PathNavigator createNavigation(World worldIn) {
         FlyingPathNavigator flyingpathnavigator = new FlyingPathNavigator(this, worldIn);
         flyingpathnavigator.setCanOpenDoors(false);
-        flyingpathnavigator.setCanSwim(true);
-        flyingpathnavigator.setCanEnterDoors(true);
+        flyingpathnavigator.setCanFloat(true);
+        flyingpathnavigator.setCanPassDoors(true);
         return flyingpathnavigator;
     }
 
@@ -106,12 +106,12 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
 
     @Override
     public World getWorld() {
-        return this.world;
+        return this.level;
     }
 
     @Override
     public PathNavigator getPathNav() {
-        return this.navigator;
+        return this.navigation;
     }
 
     @Override
@@ -129,15 +129,15 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
 
     class ChargeAttackGoal extends Goal {
         public ChargeAttackGoal() {
-            this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE));
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE));
         }
 
         /**
          * Returns whether the EntityAIBase should begin execution.
          */
-        public boolean shouldExecute() {
-            if (EntityAllyVex.this.getAttackTarget() != null && !EntityAllyVex.this.getMoveHelper().isUpdating() && EntityAllyVex.this.rand.nextInt(7) == 0) {
-                return EntityAllyVex.this.getDistanceSq(EntityAllyVex.this.getAttackTarget()) > 4.0D;
+        public boolean canUse() {
+            if (EntityAllyVex.this.getTarget() != null && !EntityAllyVex.this.getMoveControl().hasWanted() && EntityAllyVex.this.random.nextInt(7) == 0) {
+                return EntityAllyVex.this.distanceToSqr(EntityAllyVex.this.getTarget()) > 4.0D;
             } else {
                 return false;
             }
@@ -146,41 +146,41 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
         /**
          * Returns whether an in-progress EntityAIBase should continue executing
          */
-        public boolean shouldContinueExecuting() {
-            return EntityAllyVex.this.getMoveHelper().isUpdating() && EntityAllyVex.this.isCharging() && EntityAllyVex.this.getAttackTarget() != null && EntityAllyVex.this.getAttackTarget().isAlive();
+        public boolean canContinueToUse() {
+            return EntityAllyVex.this.getMoveControl().hasWanted() && EntityAllyVex.this.isCharging() && EntityAllyVex.this.getTarget() != null && EntityAllyVex.this.getTarget().isAlive();
         }
 
         /**
          * Execute a one shot task or start executing a continuous task
          */
-        public void startExecuting() {
-            LivingEntity livingentity = EntityAllyVex.this.getAttackTarget();
+        public void start() {
+            LivingEntity livingentity = EntityAllyVex.this.getTarget();
             Vector3d vec3d = livingentity.getEyePosition(1.0F);
-            EntityAllyVex.this.moveController.setMoveTo(vec3d.x, vec3d.y, vec3d.z, 1.0D);
-            EntityAllyVex.this.setCharging(true);
-            EntityAllyVex.this.playSound(SoundEvents.ENTITY_VEX_CHARGE, 1.0F, 1.0F);
+            EntityAllyVex.this.moveControl.setWantedPosition(vec3d.x, vec3d.y, vec3d.z, 1.0D);
+            EntityAllyVex.this.setIsCharging(true);
+            EntityAllyVex.this.playSound(SoundEvents.VEX_CHARGE, 1.0F, 1.0F);
         }
 
         /**
          * Reset the task's internal state. Called when this task is interrupted by another one
          */
-        public void resetTask() {
-            EntityAllyVex.this.setCharging(false);
+        public void stop() {
+            EntityAllyVex.this.setIsCharging(false);
         }
 
         /**
          * Keep ticking a continuous task that has already been started
          */
         public void tick() {
-            LivingEntity livingentity = EntityAllyVex.this.getAttackTarget();
+            LivingEntity livingentity = EntityAllyVex.this.getTarget();
             if (EntityAllyVex.this.getBoundingBox().intersects(livingentity.getBoundingBox())) {
-                EntityAllyVex.this.attackEntityAsMob(livingentity);
-                EntityAllyVex.this.setCharging(false);
+                EntityAllyVex.this.doHurtTarget(livingentity);
+                EntityAllyVex.this.setIsCharging(false);
             } else {
-                double d0 = EntityAllyVex.this.getDistanceSq(livingentity);
+                double d0 = EntityAllyVex.this.distanceToSqr(livingentity);
                 if (d0 < 9.0D) {
                     Vector3d vec3d = livingentity.getEyePosition(1.0F);
-                    EntityAllyVex.this.moveController.setMoveTo(vec3d.x, vec3d.y, vec3d.z, 1.0D);
+                    EntityAllyVex.this.moveControl.setWantedPosition(vec3d.x, vec3d.y, vec3d.z, 1.0D);
                 }
             }
 
@@ -189,15 +189,15 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
 
 
     @Override
-    protected int getExperiencePoints(PlayerEntity player) {
+    protected int getExperienceReward(PlayerEntity player) {
         return 0;
     }
 
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
-    public void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
+    public void readAdditionalSaveData(CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
         if (compound.contains("BoundX")) {
             this.boundOrigin = new BlockPos(compound.getInt("BoundX"), compound.getInt("BoundY"), compound.getInt("BoundZ"));
         }
@@ -207,10 +207,10 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
         }
         UUID s;
         if (compound.contains("OwnerUUID", 8)) {
-            s = compound.getUniqueId("OwnerUUID");
+            s = compound.getUUID("OwnerUUID");
         } else {
             String s1 = compound.getString("Owner");
-            s = PreYggdrasilConverter.convertMobOwnerIfNeeded(this.getServer(), s1);
+            s = PreYggdrasilConverter.convertMobOwnerIfNecessary(this.getServer(), s1);
         }
 
         if (s != null) {
@@ -227,7 +227,7 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
         try {
             UUID uuid = this.getOwnerId();
 
-            return uuid == null ? null : this.world.getPlayerByUuid(uuid);
+            return uuid == null ? null : this.level.getPlayerByUUID(uuid);
         } catch (IllegalArgumentException var2) {
             return null;
         }
@@ -236,21 +236,21 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
 
     @Nullable
     public UUID getOwnerId() {
-        return this.dataManager.get(OWNER_UNIQUE_ID).orElse((UUID)null);
+        return this.entityData.get(OWNER_UNIQUE_ID).orElse((UUID)null);
     }
 
     public void setOwnerId(@Nullable UUID p_184754_1_) {
-        this.dataManager.set(OWNER_UNIQUE_ID, Optional.ofNullable(p_184754_1_));
+        this.entityData.set(OWNER_UNIQUE_ID, Optional.ofNullable(p_184754_1_));
     }
 
 
-    protected void registerData() {
-        super.registerData();
-        this.dataManager.register(OWNER_UNIQUE_ID, Optional.empty());
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(OWNER_UNIQUE_ID, Optional.empty());
     }
 
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
+    public void addAdditionalSaveData(CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
         if (this.boundOrigin != null) {
             compound.putInt("BoundX", this.boundOrigin.getX());
             compound.putInt("BoundY", this.boundOrigin.getY());
@@ -261,18 +261,18 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
             compound.putInt("LifeTicks", this.limitedLifeTicks);
         }
         if (this.getOwnerId() == null) {
-            compound.putUniqueId("OwnerUUID", Util.DUMMY_UUID);
+            compound.putUUID("OwnerUUID", Util.NIL_UUID);
         } else {
-            compound.putUniqueId("OwnerUUID", this.getOwnerId());
+            compound.putUUID("OwnerUUID", this.getOwnerId());
         }
 
     }
 
 
     @Override
-    public void onDeath(DamageSource cause) {
-        super.onDeath(cause);
-        onSummonDeath(world, cause, false);
+    public void die(DamageSource cause) {
+        super.die(cause);
+        onSummonDeath(level, cause, false);
     }
 
     @Override
@@ -291,23 +291,23 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
         }
 
         public void tick() {
-            if (this.action == MovementController.Action.MOVE_TO) {
-                Vector3d vec3d = new Vector3d(this.posX - EntityAllyVex.this.getPosX(), this.posY - EntityAllyVex.this.getPosY(), this.posZ - EntityAllyVex.this.getPosZ());
+            if (this.operation == MovementController.Action.MOVE_TO) {
+                Vector3d vec3d = new Vector3d(this.wantedX - EntityAllyVex.this.getX(), this.wantedY - EntityAllyVex.this.getY(), this.wantedZ - EntityAllyVex.this.getZ());
                 double d0 = vec3d.length();
-                if (d0 < EntityAllyVex.this.getBoundingBox().getAverageEdgeLength()) {
-                    this.action = MovementController.Action.WAIT;
-                    EntityAllyVex.this.setMotion(EntityAllyVex.this.getMotion().scale(0.5D));
+                if (d0 < EntityAllyVex.this.getBoundingBox().getSize()) {
+                    this.operation = MovementController.Action.WAIT;
+                    EntityAllyVex.this.setDeltaMovement(EntityAllyVex.this.getDeltaMovement().scale(0.5D));
                 } else {
-                    EntityAllyVex.this.setMotion(EntityAllyVex.this.getMotion().add(vec3d.scale(this.speed * 0.05D / d0)));
-                    if (EntityAllyVex.this.getAttackTarget() == null) {
-                        Vector3d vec3d1 = EntityAllyVex.this.getMotion();
-                        EntityAllyVex.this.rotationYaw = -((float) MathHelper.atan2(vec3d1.x, vec3d1.z)) * (180F / (float)Math.PI);
-                        EntityAllyVex.this.renderYawOffset = EntityAllyVex.this.rotationYaw;
+                    EntityAllyVex.this.setDeltaMovement(EntityAllyVex.this.getDeltaMovement().add(vec3d.scale(this.speedModifier * 0.05D / d0)));
+                    if (EntityAllyVex.this.getTarget() == null) {
+                        Vector3d vec3d1 = EntityAllyVex.this.getDeltaMovement();
+                        EntityAllyVex.this.yRot = -((float) MathHelper.atan2(vec3d1.x, vec3d1.z)) * (180F / (float)Math.PI);
+                        EntityAllyVex.this.yBodyRot = EntityAllyVex.this.yRot;
                     } else {
-                        double d2 = EntityAllyVex.this.getAttackTarget().getPosX() - EntityAllyVex.this.getPosX();
-                        double d1 = EntityAllyVex.this.getAttackTarget().getPosZ() - EntityAllyVex.this.getPosZ();
-                        EntityAllyVex.this.rotationYaw = -((float)MathHelper.atan2(d2, d1)) * (180F / (float)Math.PI);
-                        EntityAllyVex.this.renderYawOffset = EntityAllyVex.this.rotationYaw;
+                        double d2 = EntityAllyVex.this.getTarget().getX() - EntityAllyVex.this.getX();
+                        double d1 = EntityAllyVex.this.getTarget().getZ() - EntityAllyVex.this.getZ();
+                        EntityAllyVex.this.yRot = -((float)MathHelper.atan2(d2, d1)) * (180F / (float)Math.PI);
+                        EntityAllyVex.this.yBodyRot = EntityAllyVex.this.yRot;
                     }
                 }
 
@@ -316,7 +316,7 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
     }
 
     class CopyOwnerTargetGoal extends TargetGoal {
-        private final EntityPredicate field_220803_b = (new EntityPredicate()).setLineOfSiteRequired().setUseInvisibilityCheck();
+        private final EntityPredicate copyOwnerTargeting = (new EntityPredicate()).allowUnseeable().ignoreInvisibilityTesting();
 
         public CopyOwnerTargetGoal(CreatureEntity creature) {
             super(creature, false);
@@ -325,35 +325,35 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
         /**
          * Returns whether the EntityAIBase should begin execution.
          */
-        public boolean shouldExecute() {
-            return EntityAllyVex.this.owner != null && EntityAllyVex.this.owner.getLastAttackedEntity() != null;
+        public boolean canUse() {
+            return EntityAllyVex.this.owner != null && EntityAllyVex.this.owner.getLastHurtMob() != null;
         }
 
         /**
          * Execute a one shot task or start executing a continuous task
          */
-        public void startExecuting() {
-            EntityAllyVex.this.setAttackTarget(EntityAllyVex.this.owner.getLastAttackedEntity());
-            super.startExecuting();
+        public void start() {
+            EntityAllyVex.this.setTarget(EntityAllyVex.this.owner.getLastHurtMob());
+            super.start();
         }
     }
 
     class MoveRandomGoal extends Goal {
         public MoveRandomGoal() {
-            this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE));
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE));
         }
 
         /**
          * Returns whether the EntityAIBase should begin execution.
          */
-        public boolean shouldExecute() {
-            return !EntityAllyVex.this.getMoveHelper().isUpdating() && EntityAllyVex.this.rand.nextInt(7) == 0;
+        public boolean canUse() {
+            return !EntityAllyVex.this.getMoveControl().hasWanted() && EntityAllyVex.this.random.nextInt(7) == 0;
         }
 
         /**
          * Returns whether an in-progress EntityAIBase should continue executing
          */
-        public boolean shouldContinueExecuting() {
+        public boolean canContinueToUse() {
             return false;
         }
 
@@ -363,15 +363,15 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
         public void tick() {
             BlockPos blockpos = EntityAllyVex.this.getBoundOrigin();
             if (blockpos == null) {
-                blockpos = new BlockPos(EntityAllyVex.this.getPosition());
+                blockpos = new BlockPos(EntityAllyVex.this.blockPosition());
             }
 
             for(int i = 0; i < 3; ++i) {
-                BlockPos blockpos1 = blockpos.add(EntityAllyVex.this.rand.nextInt(15) - 7, EntityAllyVex.this.rand.nextInt(11) - 5, EntityAllyVex.this.rand.nextInt(15) - 7);
-                if (EntityAllyVex.this.world.isAirBlock(blockpos1)) {
-                    EntityAllyVex.this.moveController.setMoveTo((double)blockpos1.getX() + 0.5D, (double)blockpos1.getY() + 0.5D, (double)blockpos1.getZ() + 0.5D, 0.25D);
-                    if (EntityAllyVex.this.getAttackTarget() == null) {
-                        EntityAllyVex.this.getLookController().setLookPosition((double)blockpos1.getX() + 0.5D, (double)blockpos1.getY() + 0.5D, (double)blockpos1.getZ() + 0.5D, 180.0F, 20.0F);
+                BlockPos blockpos1 = blockpos.offset(EntityAllyVex.this.random.nextInt(15) - 7, EntityAllyVex.this.random.nextInt(11) - 5, EntityAllyVex.this.random.nextInt(15) - 7);
+                if (EntityAllyVex.this.level.isEmptyBlock(blockpos1)) {
+                    EntityAllyVex.this.moveControl.setWantedPosition((double)blockpos1.getX() + 0.5D, (double)blockpos1.getY() + 0.5D, (double)blockpos1.getZ() + 0.5D, 0.25D);
+                    if (EntityAllyVex.this.getTarget() == null) {
+                        EntityAllyVex.this.getLookControl().setLookAt((double)blockpos1.getX() + 0.5D, (double)blockpos1.getY() + 0.5D, (double)blockpos1.getZ() + 0.5D, 180.0F, 20.0F);
                     }
                     break;
                 }

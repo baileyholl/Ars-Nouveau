@@ -24,6 +24,8 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class PotionJar extends ModBlock{
     public PotionJar(Properties properties, String registry) {
         super(properties, registry);
@@ -34,13 +36,13 @@ public class PotionJar extends ModBlock{
     }
 
     @Override
-    public boolean hasComparatorInputOverride(BlockState state) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
     @Override
-    public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
-        PotionJarTile tile = (PotionJarTile) worldIn.getTileEntity(pos);
+    public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
+        PotionJarTile tile = (PotionJarTile) worldIn.getBlockEntity(pos);
         if (tile == null || tile.getCurrentFill() <= 0) return 0;
         int step = (tile.getMaxFill() - 1) / 14;
         return (tile.getCurrentFill() - 1) / step + 1;
@@ -48,15 +50,15 @@ public class PotionJar extends ModBlock{
 
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(worldIn.isRemote)
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if(worldIn.isClientSide)
             return ActionResultType.SUCCESS;
 
-        PotionJarTile tile = (PotionJarTile) worldIn.getTileEntity(pos);
+        PotionJarTile tile = (PotionJarTile) worldIn.getBlockEntity(pos);
         if(tile == null)
             return ActionResultType.SUCCESS;
-        ItemStack stack = player.getHeldItem(handIn);
-        Potion potion = PotionUtils.getPotionFromItem(stack);
+        ItemStack stack = player.getItemInHand(handIn);
+        Potion potion = PotionUtils.getPotion(stack);
 
         if(stack.getItem() == Items.POTION && potion != Potions.EMPTY ) {
             if (tile.getAmount() == 0) {
@@ -64,7 +66,7 @@ public class PotionJar extends ModBlock{
                 tile.setPotion(stack);
                 tile.addAmount(100);
                 if(!player.isCreative()) {
-                    player.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
+                    player.addItem(new ItemStack(Items.GLASS_BOTTLE));
                     stack.shrink(1);
                 }
 
@@ -72,23 +74,23 @@ public class PotionJar extends ModBlock{
 
                 tile.addAmount(100);
                 if(!player.isCreative()) {
-                    player.addItemStackToInventory(new ItemStack(Items.GLASS_BOTTLE));
+                    player.addItem(new ItemStack(Items.GLASS_BOTTLE));
                     stack.shrink(1);
                 }
 
             }
-            worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 3);
+            worldIn.sendBlockUpdated(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 3);
         }
 
         if(stack.getItem() == Items.GLASS_BOTTLE && tile.getCurrentFill() >= 100){
             ItemStack potionStack = new ItemStack(Items.POTION);
-            PotionUtils.addPotionToItemStack(potionStack, tile.getPotion());
-            PotionUtils.appendEffects(potionStack, tile.getCustomEffects());
-            player.addItemStackToInventory(potionStack);
-            player.getHeldItem(handIn).shrink(1);
+            PotionUtils.setPotion(potionStack, tile.getPotion());
+            PotionUtils.setCustomEffects(potionStack, tile.getCustomEffects());
+            player.addItem(potionStack);
+            player.getItemInHand(handIn).shrink(1);
             tile.addAmount(-100);
         }
-        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+        return super.use(state, worldIn, pos, player, handIn, hit);
     }
 
     @Override
@@ -97,12 +99,12 @@ public class PotionJar extends ModBlock{
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState p_149645_1_) {
+    public BlockRenderType getRenderShape(BlockState p_149645_1_) {
         return BlockRenderType.MODEL;
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<net.minecraft.block.Block, BlockState> builder) { builder.add(ManaJar.fill); }
+    protected void createBlockStateDefinition(StateContainer.Builder<net.minecraft.block.Block, BlockState> builder) { builder.add(ManaJar.fill); }
 
     @Nullable
     @Override
@@ -111,8 +113,8 @@ public class PotionJar extends ModBlock{
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
 
         if(stack.getTag() == null)
             return;

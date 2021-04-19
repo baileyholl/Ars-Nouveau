@@ -21,7 +21,7 @@ import java.util.List;
 public class VoidJar extends ItemScroll{
 
     public VoidJar() {
-        super(ItemsRegistry.defaultItemProperties().maxStackSize(1), LibItemNames.VOID_JAR);
+        super(ItemsRegistry.defaultItemProperties().stacksTo(1), LibItemNames.VOID_JAR);
     }
 
     public void toggleStatus(PlayerEntity playerEntity, ItemStack stack){
@@ -36,7 +36,7 @@ public class VoidJar extends ItemScroll{
     }
 
     public static boolean tryVoiding(PlayerEntity player, ItemStack pickingUp) {
-        NonNullList<ItemStack> list =  player.inventory.mainInventory;
+        NonNullList<ItemStack> list =  player.inventory.items;
         boolean voided = false;
         for(int i = 0; i < 9; i++){
             ItemStack jar = list.get(i);
@@ -57,41 +57,41 @@ public class VoidJar extends ItemScroll{
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity player, Hand handIn) {
-        if(worldIn.isRemote)
-            return super.onItemRightClick(worldIn, player, handIn);
-        ItemStack stack = player.getHeldItem(handIn);
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity player, Hand handIn) {
+        if(worldIn.isClientSide)
+            return super.use(worldIn, player, handIn);
+        ItemStack stack = player.getItemInHand(handIn);
         CompoundNBT tag = stack.getTag();
         ItemScroll itemScroll = (ItemScroll) stack.getItem();
 
 
         if(handIn == Hand.MAIN_HAND){
-            ItemStack stackToWrite = player.getHeldItemOffhand();
-            if(player.isSneaking()){
+            ItemStack stackToWrite = player.getOffhandItem();
+            if(player.isShiftKeyDown()){
                 toggleStatus(player, stack);
-                return ActionResult.resultConsume(stack);
+                return ActionResult.consume(stack);
             }
 
             if(!stackToWrite.isEmpty()){
                 if(itemScroll.containsItem(stackToWrite, tag)) {
                     PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.scribe.item_removed"));
                     removeItem(stackToWrite, tag);
-                    player.setActiveHand(handIn);
-                    return ActionResult.resultFail(stack);
+                    player.startUsingItem(handIn);
+                    return ActionResult.fail(stack);
                 }
                 PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.scribe.item_added"));
                 itemScroll.addItem(stackToWrite, tag);
-                player.setActiveHand(handIn);
-                return ActionResult.resultFail(stack);
+                player.startUsingItem(handIn);
+                return ActionResult.fail(stack);
             }
 
         }
 
-        return ActionResult.resultSuccess(stack);
+        return ActionResult.success(stack);
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
         if(stack.hasTag()){
             if(stack.getTag().getBoolean("on")){
                 tooltip2.add(new TranslationTextComponent("ars_nouveau.on"));
@@ -100,6 +100,6 @@ public class VoidJar extends ItemScroll{
             }
         }
 
-        super.addInformation(stack, worldIn, tooltip2, flagIn);
+        super.appendHoverText(stack, worldIn, tooltip2, flagIn);
     }
 }

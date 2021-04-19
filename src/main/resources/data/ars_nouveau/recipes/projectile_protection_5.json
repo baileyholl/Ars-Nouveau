@@ -1,0 +1,41 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:projectile_protection",
+  "level": 5,
+  "mana": 8000,
+  "item_1": [
+    {
+      "item": "ars_nouveau:glyph_projectile"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:glyph_projectile"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "ars_nouveau:glyph_projectile"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "ars_nouveau:glyph_shield"
+    }
+  ],
+  "item_5": [
+    {
+      "item": "ars_nouveau:glyph_shield"
+    }
+  ],
+  "item_6": [
+    {
+      "item": "ars_nouveau:glyph_shield"
+    }
+  ],
+  "item_7": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ]
+}

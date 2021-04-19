@@ -24,7 +24,7 @@ public class RecipeUtil {
      */
     public static NonNullList<Ingredient> parseShapeless(final JsonObject json) {
         final NonNullList<Ingredient> ingredients = NonNullList.create();
-        for (final JsonElement element : JSONUtils.getJsonArray(json, "ingredients"))
+        for (final JsonElement element : JSONUtils.getAsJsonArray(json, "ingredients"))
             ingredients.add(CraftingHelper.getIngredient(element));
 
         if (ingredients.isEmpty())

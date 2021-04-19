@@ -8,6 +8,8 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.particles.IParticleData;
 import net.minecraft.particles.ParticleType;
 
+import net.minecraft.particles.IParticleData.IDeserializer;
+
 public class ColoredDynamicTypeData implements IParticleData {
 
     private ParticleType<ColoredDynamicTypeData> type;
@@ -31,14 +33,14 @@ public class ColoredDynamicTypeData implements IParticleData {
 
     static final IDeserializer<ColoredDynamicTypeData> DESERIALIZER = new IDeserializer<ColoredDynamicTypeData>() {
         @Override
-        public ColoredDynamicTypeData deserialize(ParticleType<ColoredDynamicTypeData> type, StringReader reader) throws CommandSyntaxException {
+        public ColoredDynamicTypeData fromCommand(ParticleType<ColoredDynamicTypeData> type, StringReader reader) throws CommandSyntaxException {
             reader.expect(' ');
             return new ColoredDynamicTypeData(type, ParticleColor.deserialize(reader.readString()), reader.readFloat(), reader.readInt());
         }
 
         @Override
-        public ColoredDynamicTypeData read(ParticleType<ColoredDynamicTypeData> type, PacketBuffer buffer) {
-            return new ColoredDynamicTypeData(type, ParticleColor.deserialize(buffer.readString()), buffer.readFloat(), buffer.readInt());
+        public ColoredDynamicTypeData fromNetwork(ParticleType<ColoredDynamicTypeData> type, PacketBuffer buffer) {
+            return new ColoredDynamicTypeData(type, ParticleColor.deserialize(buffer.readUtf()), buffer.readFloat(), buffer.readInt());
         }
     };
 
@@ -57,14 +59,14 @@ public class ColoredDynamicTypeData implements IParticleData {
     }
 
     @Override
-    public void write(PacketBuffer buffer) {
-        buffer.writeString(color.serialize());
+    public void writeToNetwork(PacketBuffer buffer) {
+        buffer.writeUtf(color.serialize());
         buffer.writeFloat(scale);
         buffer.writeInt(age);
     }
 
     @Override
-    public String getParameters() {
+    public String writeToString() {
         return type.getRegistryName().toString() + " " + color.serialize() + " " + scale + " " + age;
     }
 }

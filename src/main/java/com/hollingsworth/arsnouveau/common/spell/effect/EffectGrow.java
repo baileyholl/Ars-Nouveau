@@ -24,6 +24,8 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
+
 public class EffectGrow  extends AbstractEffect {
 
     public EffectGrow() {
@@ -33,7 +35,7 @@ public class EffectGrow  extends AbstractEffect {
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof BlockRayTraceResult) {
-            for(BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult) rayTraceResult, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))){
+            for(BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getBlockPos(), (BlockRayTraceResult) rayTraceResult, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))){
                 //BlockPos blockpos = ((BlockRayTraceResult) rayTraceResult).getPos();
                 ItemStack stack = new ItemStack(Items.BONE_MEAL);
                 if(world instanceof ServerWorld)
@@ -46,21 +48,21 @@ public class EffectGrow  extends AbstractEffect {
     public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         if(!(rayTraceResult instanceof BlockRayTraceResult))
             return false;
-        BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getPos();
+        BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getBlockPos();
 
         return world.getBlockState(pos).getBlock() instanceof IGrowable
-                && ((IGrowable) world.getBlockState(pos).getBlock()).canGrow(world, pos, world.getBlockState(pos), world.isRemote);
+                && ((IGrowable) world.getBlockState(pos).getBlock()).isValidBonemealTarget(world, pos, world.getBlockState(pos), world.isClientSide);
     }
 
     public static boolean applyBonemeal(World worldIn, BlockPos pos) {
         BlockState blockstate = worldIn.getBlockState(pos);
         if (blockstate.getBlock() instanceof IGrowable) {
             IGrowable igrowable = (IGrowable)blockstate.getBlock();
-            if (igrowable.canGrow(worldIn, pos, blockstate, worldIn.isRemote)) {
-                if (!worldIn.isRemote) {
-                    if (igrowable.canUseBonemeal(worldIn, worldIn.rand, pos, blockstate) && !World.isOutsideBuildHeight(pos)) {
-                        igrowable.grow((ServerWorld)worldIn, worldIn.rand, pos, blockstate);
-                        worldIn.notifyBlockUpdate(pos, blockstate, blockstate, 3);
+            if (igrowable.isValidBonemealTarget(worldIn, pos, blockstate, worldIn.isClientSide)) {
+                if (!worldIn.isClientSide) {
+                    if (igrowable.isBonemealSuccess(worldIn, worldIn.random, pos, blockstate) && !World.isOutsideBuildHeight(pos)) {
+                        igrowable.performBonemeal((ServerWorld)worldIn, worldIn.random, pos, blockstate);
+                        worldIn.sendBlockUpdated(pos, blockstate, blockstate, 3);
                     }
                 }
 

@@ -75,13 +75,13 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     public boolean blacklist;
     public List<BlockPos> TO_LIST = new ArrayList<>();
     public List<BlockPos> FROM_LIST = new ArrayList<>();
-    public static final DataParameter<Integer> TO_POS = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.VARINT);
-    public static final DataParameter<Integer> FROM_POS = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.VARINT);
+    public static final DataParameter<Integer> TO_POS = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.INT);
+    public static final DataParameter<Integer> FROM_POS = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.INT);
 
-    public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.ITEMSTACK);
-    public static final DataParameter<Boolean> TAMED = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<Boolean> HOP = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<String> COLOR = EntityDataManager.createKey(EntityCarbuncle.class, DataSerializers.STRING);
+    public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.ITEM_STACK);
+    public static final DataParameter<Boolean> TAMED = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Boolean> HOP = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<String> COLOR = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.STRING);
     public int backOff; // Used to stop inventory store/take spam when chests are full or empty.
     public int tamingTime;
     public boolean isStuck;
@@ -91,14 +91,14 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
     public EntityCarbuncle(EntityType<EntityCarbuncle> entityCarbuncleEntityType, World world) {
         super(entityCarbuncleEntityType, world);
-        stepHeight = 1.2f;
+        maxUpStep = 1.2f;
         addGoalsAfterConstructor();
     }
 
     public EntityCarbuncle(World world, boolean tamed) {
         super(ModEntities.ENTITY_CARBUNCLE_TYPE, world);
         this.setTamed(tamed);
-        stepHeight = 1.2f;
+        maxUpStep = 1.2f;
         addGoalsAfterConstructor();
     }
 
@@ -114,15 +114,15 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource source, float amount) {
+    public boolean hurt(DamageSource source, float amount) {
         if (source == DamageSource.CACTUS || source == DamageSource.SWEET_BERRY_BUSH)
             return false;
-        return super.attackEntityFrom(source, amount);
+        return super.hurt(source, amount);
     }
 
 
     private PlayState idlePredicate(AnimationEvent event) {
-        if (world.getGameTime() % 20 == 0 && world.rand.nextInt(3) == 0 && !this.dataManager.get(HOP)) {
+        if (level.getGameTime() % 20 == 0 && level.random.nextInt(3) == 0 && !this.entityData.get(HOP)) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
         }
 
@@ -130,7 +130,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     }
 
     private PlayState animationPredicate(AnimationEvent event) {
-        if (this.dataManager.get(HOP)) {
+        if (this.entityData.get(HOP)) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("hop"));
             return PlayState.CONTINUE;
         }
@@ -138,31 +138,31 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     }
 
     public boolean isTamed() {
-        return this.dataManager.get(TAMED);
+        return this.entityData.get(TAMED);
     }
 
     public void setTamed(boolean tamed) {
-        this.dataManager.set(TAMED, tamed);
+        this.entityData.set(TAMED, tamed);
     }
 
 
     public void attemptTame() {
         if (!isTamed() && this.getHeldStack().getItem() == Items.GOLD_NUGGET) {
             tamingTime++;
-            if (tamingTime % 20 == 0 && !world.isRemote())
-                Networking.sendToNearby(world, this, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, getPosition()));
+            if (tamingTime % 20 == 0 && !level.isClientSide())
+                Networking.sendToNearby(level, this, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, blockPosition()));
 
-            if (tamingTime > 60 && !world.isRemote) {
-                ItemStack stack = new ItemStack(ItemsRegistry.carbuncleShard, 1 + world.rand.nextInt(2));
-                world.addEntity(new ItemEntity(world, getPosX(), getPosY() + 0.5, getPosZ(), stack));
+            if (tamingTime > 60 && !level.isClientSide) {
+                ItemStack stack = new ItemStack(ItemsRegistry.carbuncleShard, 1 + level.random.nextInt(2));
+                level.addFreshEntity(new ItemEntity(level, getX(), getY() + 0.5, getZ(), stack));
                 this.remove(false);
-                world.playSound(null, getPosX(), getPosY(), getPosZ(), SoundEvents.ENTITY_ILLUSIONER_MIRROR_MOVE, SoundCategory.NEUTRAL, 1f, 1f);
-            } else if (tamingTime > 55 && world.isRemote) {
+                level.playSound(null, getX(), getY(), getZ(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundCategory.NEUTRAL, 1f, 1f);
+            } else if (tamingTime > 55 && level.isClientSide) {
                 for (int i = 0; i < 10; i++) {
-                    double d0 = getPosX();
-                    double d1 = getPosY() + 0.1;
-                    double d2 = getPosZ();
-                    world.addParticle(ParticleTypes.END_ROD, d0, d1, d2, (world.rand.nextFloat() * 1 - 0.5) / 3, (world.rand.nextFloat() * 1 - 0.5) / 3, (world.rand.nextFloat() * 1 - 0.5) / 3);
+                    double d0 = getX();
+                    double d1 = getY() + 0.1;
+                    double d2 = getZ();
+                    level.addParticle(ParticleTypes.END_ROD, d0, d1, d2, (level.random.nextFloat() * 1 - 0.5) / 3, (level.random.nextFloat() * 1 - 0.5) / 3, (level.random.nextFloat() * 1 - 0.5) / 3);
                 }
             }
         }
@@ -173,29 +173,29 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     public void tick() {
         super.tick();
 
-        if (!world.isRemote) {
+        if (!level.isClientSide) {
             lastAABBCalc++;
-            if (this.navigator.noPath()) {
-                EntityCarbuncle.this.dataManager.set(HOP, false);
+            if (this.navigation.isDone()) {
+                EntityCarbuncle.this.entityData.set(HOP, false);
             } else {
-                EntityCarbuncle.this.dataManager.set(HOP, true);
+                EntityCarbuncle.this.entityData.set(HOP, true);
             }
         }
 
-        if (this.backOff > 0 && !world.isRemote)
+        if (this.backOff > 0 && !level.isClientSide)
             this.backOff--;
         if (this.dead)
             return;
         Direction[] directions = Direction.values();
-        if (this.getHeldStack().isEmpty() && !world.isRemote) {
+        if (this.getHeldStack().isEmpty() && !level.isClientSide) {
 
                 // Cannot use a single expanded bounding box because we don't want this to overlap with an adjacentt inventory that also has a frame.
-            for (ItemEntity itementity : this.world.getEntitiesWithinAABB(ItemEntity.class, this.getBoundingBox().grow(1))) {
-                if (!itementity.removed && !itementity.getItem().isEmpty() && !itementity.cannotPickup()) {
+            for (ItemEntity itementity : this.level.getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(1))) {
+                if (!itementity.removed && !itementity.getItem().isEmpty() && !itementity.hasPickUpDelay()) {
                     if (!isTamed() && itementity.getItem().getItem() != Items.GOLD_NUGGET)
                         return;
-                    this.updateEquipmentIfNeeded(itementity);
-                    this.dataManager.set(HOP, false);
+                    this.pickUpItem(itementity);
+                    this.entityData.set(HOP, false);
                     if(getHeldStack() != null && !getHeldStack().isEmpty())
                         break;
                 }
@@ -213,8 +213,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         this.blacklist = false;
         this.FROM_LIST = new ArrayList<>();
         this.TO_LIST = new ArrayList<>();
-        this.dataManager.set(TO_POS, 0);
-        this.dataManager.set(FROM_POS, 0);
+        this.entityData.set(TO_POS, 0);
+        this.entityData.set(FROM_POS, 0);
         PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.carbuncle.cleared"));
     }
 
@@ -222,7 +222,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, PlayerEntity playerEntity) {
         if (storedPos == null)
             return;
-        if (world.getTileEntity(storedPos) != null && world.getTileEntity(storedPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
+        if (level.getBlockEntity(storedPos) != null && level.getBlockEntity(storedPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
             PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.carbuncle.store"));
             setToPos(storedPos);
         }
@@ -233,7 +233,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         if (storedPos == null)
             return;
 
-        if (world.getTileEntity(storedPos) != null && world.getTileEntity(storedPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
+        if (level.getBlockEntity(storedPos) != null && level.getBlockEntity(storedPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
             PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.carbuncle.take"));
             setFromPos(storedPos);
         }
@@ -244,39 +244,39 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
      */
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void handleStatusUpdate(byte id) {
+    public void handleEntityEvent(byte id) {
         if (id == 45) {
-            ItemStack itemstack = this.getItemStackFromSlot(EquipmentSlotType.MAINHAND);
+            ItemStack itemstack = this.getItemBySlot(EquipmentSlotType.MAINHAND);
             if (!itemstack.isEmpty()) {
                 for (int i = 0; i < 8; ++i) {
-                    Vector3d vec3d = (new Vector3d(((double) this.rand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D)).rotatePitch(-this.rotationPitch * ((float) Math.PI / 180F)).rotateYaw(-this.rotationYaw * ((float) Math.PI / 180F));
-                    this.world.addParticle(new ItemParticleData(ParticleTypes.ITEM, itemstack), this.getPosX() + this.getLookVec().x / 2.0D, this.getPosY(), this.getPosZ() + this.getLookVec().z / 2.0D, vec3d.x, vec3d.y + 0.05D, vec3d.z);
+                    Vector3d vec3d = (new Vector3d(((double) this.random.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D)).xRot(-this.xRot * ((float) Math.PI / 180F)).yRot(-this.yRot * ((float) Math.PI / 180F));
+                    this.level.addParticle(new ItemParticleData(ParticleTypes.ITEM, itemstack), this.getX() + this.getLookAngle().x / 2.0D, this.getY(), this.getZ() + this.getLookAngle().z / 2.0D, vec3d.x, vec3d.y + 0.05D, vec3d.z);
                 }
             }
         } else {
-            super.handleStatusUpdate(id);
+            super.handleEntityEvent(id);
         }
 
     }
 
     public static AttributeModifierMap.MutableAttribute attributes() {
-        return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 6.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.2d);
+        return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 6.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.2d);
     }
 
     @Override
-    protected void updateEquipmentIfNeeded(ItemEntity itemEntity) {
+    protected void pickUpItem(ItemEntity itemEntity) {
         if (this.getHeldStack().isEmpty() && isValidItem(itemEntity.getItem())) {
             setHeldStack(itemEntity.getItem());
             itemEntity.remove();
-            this.world.playSound(null, this.getPosX(), this.getPosY(), this.getPosZ(), SoundEvents.ENTITY_ITEM_PICKUP, this.getSoundCategory(), 1.0F, 1.0F);
+            this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ITEM_PICKUP, this.getSoundSource(), 1.0F, 1.0F);
             if(!isTamed())
                 return;
-            for(ItemEntity i : world.getEntitiesWithinAABB(ItemEntity.class, this.getBoundingBox().grow(3))){
+            for(ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(3))){
                 if(itemEntity.getItem().getCount() >= itemEntity.getItem().getMaxStackSize())
                     break;
                 int maxTake = getHeldStack().getMaxStackSize() - getHeldStack().getCount();
-                if(i.getItem().isItemEqual(getHeldStack())){
+                if(i.getItem().sameItem(getHeldStack())){
                     int toTake = Math.min(i.getItem().getCount(), maxTake);
                     i.getItem().shrink(toTake);
                     getHeldStack().grow(toTake);
@@ -287,7 +287,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
     // Cannot add conditional goals in RegisterGoals as it is final and called during the MobEntity super.
     protected void addGoalsAfterConstructor() {
-        if (this.world.isRemote())
+        if (this.level.isClientSide())
             return;
 
         for (PrioritizedGoal goal : getGoals()) {
@@ -296,7 +296,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     }
 
     public List<PrioritizedGoal> getGoals() {
-        return Boolean.TRUE.equals(this.dataManager.get(TAMED)) ? getTamedGoals() : getUntamedGoals();
+        return Boolean.TRUE.equals(this.entityData.get(TAMED)) ? getTamedGoals() : getUntamedGoals();
     }
 
 
@@ -350,51 +350,51 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
 
     @Override
-    public void onDeath(DamageSource source) {
-        if (!world.isRemote && isTamed()) {
+    public void die(DamageSource source) {
+        if (!level.isClientSide && isTamed()) {
             ItemStack stack = new ItemStack(ItemsRegistry.carbuncleCharm);
-            world.addEntity(new ItemEntity(world, getPosX(), getPosY(), getPosZ(), stack));
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
             if (this.getHeldStack() != null)
-                world.addEntity(new ItemEntity(world, getPosX(), getPosY(), getPosZ(), this.getHeldStack()));
+                level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getHeldStack()));
         }
-        super.onDeath(source);
+        super.die(source);
     }
 
     public AxisAlignedBB getAABB(){
         if(cachedAAB == null || lastAABBCalc >= 60) {
-            cachedAAB = new AxisAlignedBB(getPosition()).grow(8);
+            cachedAAB = new AxisAlignedBB(blockPosition()).inflate(8);
             lastAABBCalc = 0;
         }
         return cachedAAB;
     }
 
     @Override
-    protected ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
-        if (hand != Hand.MAIN_HAND || player.getEntityWorld().isRemote || !isTamed())
+    protected ActionResultType mobInteract(PlayerEntity player, Hand hand) {
+        if (hand != Hand.MAIN_HAND || player.getCommandSenderWorld().isClientSide || !isTamed())
             return ActionResultType.SUCCESS;
 
-        ItemStack stack = player.getHeldItem(hand);
+        ItemStack stack = player.getItemInHand(hand);
 
-        if (player.getHeldItemMainhand().getItem().isIn(Tags.Items.DYES)) {
+        if (player.getMainHandItem().getItem().is(Tags.Items.DYES)) {
             DyeColor color = DyeColor.getColor(stack);
-            if(color == null || this.dataManager.get(COLOR).equals(color.getTranslationKey()) || !Arrays.asList(carbyColors).contains(color.getTranslationKey()))
+            if(color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(carbyColors).contains(color.getName()))
                 return ActionResultType.SUCCESS;
-            this.dataManager.set(COLOR, color.getTranslationKey());
-            player.getHeldItemMainhand().shrink(1);
+            this.entityData.set(COLOR, color.getName());
+            player.getMainHandItem().shrink(1);
             return ActionResultType.SUCCESS;
         }
 
-        if (player.getHeldItemMainhand().isEmpty() && this.isTamed()) {
+        if (player.getMainHandItem().isEmpty() && this.isTamed()) {
             StringBuilder status = new StringBuilder();
             if (whitelist && allowedItems != null) {
                 status.append(new TranslationTextComponent("ars_nouveau.carbuncle.whitelist").getString());
                 for (ItemStack i : allowedItems) {
-                    status.append(i.getDisplayName().getString());
+                    status.append(i.getHoverName().getString());
                 }
             } else if (blacklist && allowedItems != null) {
                 status.append(new TranslationTextComponent("ars_nouveau.carbuncle.blacklist").getString());
                 for (ItemStack i : ignoreItems) {
-                    status.append(i.getDisplayName().getString());
+                    status.append(i.getHoverName().getString());
                 }
             }
             if (!status.toString().isEmpty())
@@ -435,27 +435,27 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        this.dataManager.register(HELD_ITEM, ItemStack.EMPTY);
-        this.dataManager.register(TAMED, false);
-        this.dataManager.register(HOP, false);
-        this.dataManager.register(TO_POS, 0);
-        this.dataManager.register(FROM_POS, 0);
-        this.dataManager.register(COLOR, COLORS.ORANGE.name());
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(HELD_ITEM, ItemStack.EMPTY);
+        this.entityData.define(TAMED, false);
+        this.entityData.define(HOP, false);
+        this.entityData.define(TO_POS, 0);
+        this.entityData.define(FROM_POS, 0);
+        this.entityData.define(COLOR, COLORS.ORANGE.name());
     }
 
     @Override
-    public boolean canDespawn(double distanceToClosestPlayer) {
+    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
         return false;
     }
 
     public void setHeldStack(ItemStack stack) {
-        this.setItemStackToSlot(EquipmentSlotType.MAINHAND, stack);
+        this.setItemSlot(EquipmentSlotType.MAINHAND, stack);
     }
 
     public ItemStack getHeldStack() {
-        return this.getHeldItemMainhand();
+        return this.getMainHandItem();
     }
 
     @Override
@@ -463,12 +463,12 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         if (this.removed)
             return false;
 
-        if (!world.isRemote && isTamed()) {
+        if (!level.isClientSide && isTamed()) {
             ItemStack stack = new ItemStack(ItemsRegistry.carbuncleCharm);
-            world.addEntity(new ItemEntity(world, getPosX(), getPosY(), getPosZ(), stack.copy()));
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack.copy()));
             stack = getHeldStack();
-            world.addEntity(new ItemEntity(world, getPosX(), getPosY(), getPosZ(), stack));
-            ParticleUtil.spawnPoof((ServerWorld) world, getPosition());
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
+            ParticleUtil.spawnPoof((ServerWorld) level, blockPosition());
             this.remove();
         }
         return this.isTamed();
@@ -477,11 +477,11 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     private boolean setBehaviors;
 
     @Override
-    public void readAdditional(CompoundNBT tag) {
-        super.readAdditional(tag);
+    public void readAdditionalSaveData(CompoundNBT tag) {
+        super.readAdditionalSaveData(tag);
 
         if (tag.contains("held"))
-            setHeldStack(ItemStack.read((CompoundNBT) tag.get("held")));
+            setHeldStack(ItemStack.of((CompoundNBT) tag.get("held")));
         FROM_LIST = new ArrayList<>();
         TO_LIST = new ArrayList<>();
         int counter = 0;
@@ -519,12 +519,12 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         tamingTime = tag.getInt("taming_time");
         whitelist = tag.getBoolean("whitelist");
         blacklist = tag.getBoolean("blacklist");
-        this.dataManager.set(HOP, tag.getBoolean("hop"));
+        this.entityData.set(HOP, tag.getBoolean("hop"));
 
         // Remove goals and read them AFTER our tamed param is set because we can't ACCESS THEM OTHERWISE
         if (!setBehaviors)
             this.removeGoals();
-        this.dataManager.set(TAMED, tag.getBoolean("tamed"));
+        this.entityData.set(TAMED, tag.getBoolean("tamed"));
         if (!setBehaviors) {
             this.addGoalsAfterConstructor();
             setBehaviors = true;
@@ -534,19 +534,19 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         isStuck = tag.getBoolean("stuck");
 
         if (tag.contains("color"))
-            this.dataManager.set(COLOR, tag.getString("color"));
+            this.entityData.set(COLOR, tag.getString("color"));
 
-        this.dataManager.set(TO_POS, TO_LIST.size());
-       this.dataManager.set(FROM_POS, FROM_LIST.size());
+        this.entityData.set(TO_POS, TO_LIST.size());
+       this.entityData.set(FROM_POS, FROM_LIST.size());
     }
 
 
     @Override
-    public void writeAdditional(CompoundNBT tag) {
-        super.writeAdditional(tag);
+    public void addAdditionalSaveData(CompoundNBT tag) {
+        super.addAdditionalSaveData(tag);
         if (getHeldStack() != null) {
             CompoundNBT itemTag = new CompoundNBT();
-            getHeldStack().write(itemTag);
+            getHeldStack().save(itemTag);
             tag.put("held", itemTag);
         }
 
@@ -566,9 +566,9 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 //        if (getFromPos() != null)
 //            NBTUtil.storeBlockPos(tag, "from", getFromPos());
         tag.putInt("backoff", backOff);
-        tag.putBoolean("tamed", this.dataManager.get(TAMED));
+        tag.putBoolean("tamed", this.entityData.get(TAMED));
         tag.putInt("taming_time", tamingTime);
-        tag.putBoolean("hop", this.dataManager.get(HOP));
+        tag.putBoolean("hop", this.entityData.get(HOP));
         tag.putBoolean("whitelist", whitelist);
         tag.putBoolean("blacklist", blacklist);
         if (allowedItems != null && !allowedItems.isEmpty())
@@ -577,11 +577,11 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         if (ignoreItems != null && !ignoreItems.isEmpty())
             NBTUtil.writeItems(tag, "ignored_", ignoreItems);
         tag.putBoolean("stuck", isStuck);
-        tag.putString("color", this.dataManager.get(COLOR));
+        tag.putString("color", this.entityData.get(COLOR));
     }
 
     public void removeGoals() {
-        this.goalSelector.goals = new LinkedHashSet<>();
+        this.goalSelector.availableGoals = new LinkedHashSet<>();
     }
 
     @Override
@@ -589,8 +589,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         List<String> toolTip = new ArrayList<>();
         if(!isTamed())
             return toolTip;
-        toolTip.add(new TranslationTextComponent("ars_nouveau.carbuncle.storing", this.dataManager.get(TO_POS)).getString());
-        toolTip.add(new TranslationTextComponent("ars_nouveau.carbuncle.taking", this.dataManager.get(FROM_POS)).getString());
+        toolTip.add(new TranslationTextComponent("ars_nouveau.carbuncle.storing", this.entityData.get(TO_POS)).getString());
+        toolTip.add(new TranslationTextComponent("ars_nouveau.carbuncle.taking", this.entityData.get(FROM_POS)).getString());
         return toolTip;
     }
 
@@ -599,38 +599,38 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         SortPref pref = SortPref.LOW;
         if (tile == null || stack == null || stack.isEmpty())
             return SortPref.INVALID;
-        for (ItemFrameEntity i : world.getEntitiesWithinAABB(ItemFrameEntity.class, new AxisAlignedBB(tile.getPos()).grow(1))) {
+        for (ItemFrameEntity i : level.getEntitiesOfClass(ItemFrameEntity.class, new AxisAlignedBB(tile.getBlockPos()).inflate(1))) {
             // Check if these frames are attached to the tile
-            TileEntity adjTile = world.getTileEntity(i.getPosition().offset(i.getHorizontalFacing().getOpposite()));
+            TileEntity adjTile = level.getBlockEntity(i.blockPosition().relative(i.getDirection().getOpposite()));
             if(adjTile == null || !adjTile.equals(tile))
                 continue;
-            CompoundNBT tag = i.getDisplayedItem().getTag();
-            if (i.getDisplayedItem().isEmpty())
+            CompoundNBT tag = i.getItem().getTag();
+            if (i.getItem().isEmpty())
                 continue;
 
-            if (i.getDisplayedItem().getItem().getItem() == ItemsRegistry.ALLOW_ITEM_SCROLL) {
+            if (i.getItem().getItem().getItem() == ItemsRegistry.ALLOW_ITEM_SCROLL) {
                 if (!ItemScroll.containsItem(stack, tag))
                     return SortPref.INVALID;
                 else
                     pref = SortPref.HIGH;
-            } else if (i.getDisplayedItem().getItem().getItem() == ItemsRegistry.DENY_ITEM_SCROLL) {
+            } else if (i.getItem().getItem().getItem() == ItemsRegistry.DENY_ITEM_SCROLL) {
                 if (ItemScroll.containsItem(stack, tag))
                     return SortPref.INVALID;
                 else
                     pref = SortPref.LOW;
-            }else if (i.getDisplayedItem().getItem() != stack.getItem()) {
+            }else if (i.getItem().getItem() != stack.getItem()) {
                 return SortPref.INVALID;
-            }else if(i.getDisplayedItem().getItem() == stack.getItem())
+            }else if(i.getItem().getItem() == stack.getItem())
                 pref = SortPref.HIGH;
         }
         IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
         if(handler == null)
             return SortPref.INVALID;
-        return !ItemStack.areItemStacksEqual(ItemHandlerHelper.insertItemStacked(handler, stack.copy(), true), stack) ? pref : SortPref.INVALID;
+        return !ItemStack.matches(ItemHandlerHelper.insertItemStacked(handler, stack.copy(), true), stack) ? pref : SortPref.INVALID;
     }
 
     @Override
-    protected int getExperiencePoints(PlayerEntity player) {
+    protected int getExperienceReward(PlayerEntity player) {
         return 0;
     }
 
@@ -639,7 +639,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         if(TO_LIST == null)
             return returnPos;
         for(BlockPos b : TO_LIST){
-            SortPref pref = canDepositItem(world.getTileEntity(b), stack);
+            SortPref pref = canDepositItem(level.getBlockEntity(b), stack);
             if (pref == SortPref.HIGH)
                return b;
             else if(pref == SortPref.LOW)
@@ -653,9 +653,9 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             return null;
 
         for(BlockPos p : FROM_LIST){
-            if(world.getTileEntity(p) == null)
+            if(level.getBlockEntity(p) == null)
                 continue;
-            IItemHandler iItemHandler = world.getTileEntity(p).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+            IItemHandler iItemHandler = level.getBlockEntity(p).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
             if(iItemHandler == null)
                 continue;
             for(int j = 0; j < iItemHandler.getSlots(); j++){
@@ -681,7 +681,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             return true;
         if(whitelist){
             for(ItemStack s : allowedItems) {
-                if (s.isItemEqual(stack)) {
+                if (s.sameItem(stack)) {
                     return true;
                 }
             }
@@ -689,7 +689,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         }
         if(blacklist){
             for(ItemStack s : ignoreItems)
-                if(s.isItemEqual(stack))
+                if(s.sameItem(stack))
                     return false;
         }
         return true;
@@ -697,14 +697,14 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
     public void setFromPos(BlockPos fromPos) {
         if(!this.FROM_LIST.contains(fromPos))
-            this.FROM_LIST.add(fromPos.toImmutable());
-        this.dataManager.set(FROM_POS, FROM_LIST.size());
+            this.FROM_LIST.add(fromPos.immutable());
+        this.entityData.set(FROM_POS, FROM_LIST.size());
     }
 
     public void setToPos(BlockPos toPos) {
         if(!this.TO_LIST.contains(toPos))
-            this.TO_LIST.add(toPos.toImmutable());
-        this.dataManager.set(TO_POS, TO_LIST.size());
+            this.TO_LIST.add(toPos.immutable());
+        this.entityData.set(TO_POS, TO_LIST.size());
     }
 
     public static String[] carbyColors = {"purple", "orange", "blue", "red", "yellow", "green"};

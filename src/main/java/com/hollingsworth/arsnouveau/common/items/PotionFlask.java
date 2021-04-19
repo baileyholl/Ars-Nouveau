@@ -29,7 +29,7 @@ import java.util.List;
 
 public abstract class PotionFlask extends ModItem {
     public PotionFlask() {
-        super(ItemsRegistry.defaultItemProperties().maxStackSize(1));
+        super(ItemsRegistry.defaultItemProperties().stacksTo(1));
         setRegistryName(LibItemNames.POTION_FLASK);
     }
 
@@ -39,27 +39,27 @@ public abstract class PotionFlask extends ModItem {
     }
 
     public PotionFlask(String registryName){
-        super(ItemsRegistry.defaultItemProperties().maxStackSize(1));
+        super(ItemsRegistry.defaultItemProperties().stacksTo(1));
         setRegistryName(registryName);
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext context) {
-        if(context.getWorld().isRemote)
-            return super.onItemUse(context);
-        ItemStack thisStack = context.getItem();
-        Potion potion = PotionUtils.getPotionFromItem(thisStack);
+    public ActionResultType useOn(ItemUseContext context) {
+        if(context.getLevel().isClientSide)
+            return super.useOn(context);
+        ItemStack thisStack = context.getItemInHand();
+        Potion potion = PotionUtils.getPotion(thisStack);
         PlayerEntity playerEntity = context.getPlayer();
-        if(!(context.getWorld().getTileEntity(context.getPos()) instanceof PotionJarTile))
-            return super.onItemUse(context);
-        PotionJarTile jarTile = (PotionJarTile) context.getWorld().getTileEntity(context.getPos());
+        if(!(context.getLevel().getBlockEntity(context.getClickedPos()) instanceof PotionJarTile))
+            return super.useOn(context);
+        PotionJarTile jarTile = (PotionJarTile) context.getLevel().getBlockEntity(context.getClickedPos());
         int count = thisStack.getTag().getInt("count");
         if(jarTile == null)
             return ActionResultType.PASS;
-        if(playerEntity.isSneaking() && potion != Potions.EMPTY && count > 0 && jarTile.getMaxFill() - jarTile.getCurrentFill() >= 0){
+        if(playerEntity.isShiftKeyDown() && potion != Potions.EMPTY && count > 0 && jarTile.getMaxFill() - jarTile.getCurrentFill() >= 0){
             if(jarTile.getPotion() == Potions.EMPTY || jarTile.isMixEqual(thisStack)){
                 if(jarTile.getPotion() == Potions.EMPTY) {
-                    jarTile.setPotion(potion, PotionUtils.getEffectsFromStack(thisStack));
+                    jarTile.setPotion(potion, PotionUtils.getMobEffects(thisStack));
                 }
                 jarTile.addAmount(100);
                 thisStack.getTag().putInt("count", count - 1);
@@ -67,18 +67,18 @@ public abstract class PotionFlask extends ModItem {
             }
         }
 
-        if(context.getWorld().getTileEntity(context.getPos()) instanceof PotionJarTile && !playerEntity.isSneaking() && !isMax(thisStack)){
+        if(context.getLevel().getBlockEntity(context.getClickedPos()) instanceof PotionJarTile && !playerEntity.isShiftKeyDown() && !isMax(thisStack)){
 
             if(jarTile.getPotion() != Potions.EMPTY && (jarTile.isMixEqual(thisStack) || potion == Potions.EMPTY) && jarTile.getAmount() >= 100){
                 if(potion == Potions.EMPTY) {
-                    PotionUtils.addPotionToItemStack(thisStack, jarTile.getPotion());
-                    PotionUtils.appendEffects(thisStack, jarTile.getCustomEffects());
+                    PotionUtils.setPotion(thisStack, jarTile.getPotion());
+                    PotionUtils.setCustomEffects(thisStack, jarTile.getCustomEffects());
                 }
                 setCount(thisStack, 1 + count);
                 jarTile.addAmount(-100);
             }
         }
-        return super.onItemUse(context);
+        return super.useOn(context);
     }
 
     public boolean isMax(ItemStack stack){
@@ -93,25 +93,25 @@ public abstract class PotionFlask extends ModItem {
     public void setCount(ItemStack stack, int count){
         stack.getTag().putInt("count", count);
         if(count <= 0) {
-            PotionUtils.addPotionToItemStack(stack, Potions.EMPTY);
+            PotionUtils.setPotion(stack, Potions.EMPTY);
             stack.getTag().remove("CustomPotionEffects");
         }
     }
 
     @Override
-    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, LivingEntity entityLiving) {
+    public ItemStack finishUsingItem(ItemStack stack, World worldIn, LivingEntity entityLiving) {
         PlayerEntity playerentity = entityLiving instanceof PlayerEntity ? (PlayerEntity)entityLiving : null;
         if (playerentity instanceof ServerPlayerEntity) {
             CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayerEntity)playerentity, stack);
         }
 
-        if (!worldIn.isRemote) {
-            for(EffectInstance effectinstance : PotionUtils.getEffectsFromStack(stack)) {
+        if (!worldIn.isClientSide) {
+            for(EffectInstance effectinstance : PotionUtils.getMobEffects(stack)) {
                 effectinstance = getEffectInstance(effectinstance);
-                if (effectinstance.getPotion().isInstant()) {
-                    effectinstance.getPotion().affectEntity(playerentity, playerentity, entityLiving, effectinstance.getAmplifier(), 1.0D);
+                if (effectinstance.getEffect().isInstantenous()) {
+                    effectinstance.getEffect().applyInstantenousEffect(playerentity, playerentity, entityLiving, effectinstance.getAmplifier(), 1.0D);
                 } else {
-                    entityLiving.addPotionEffect(new EffectInstance(effectinstance));
+                    entityLiving.addEffect(new EffectInstance(effectinstance));
                 }
             }
             if(stack.hasTag()){
@@ -128,7 +128,7 @@ public abstract class PotionFlask extends ModItem {
     @Override
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
-        if(!worldIn.isRemote){
+        if(!worldIn.isClientSide){
          //   PotionUtils.addPotionToItemStack(stack, Potions.WEAKNESS);
             if(!stack.hasTag())
                 stack.setTag(new CompoundNBT());
@@ -145,7 +145,7 @@ public abstract class PotionFlask extends ModItem {
     /**
      * returns the action that specifies what animation to play when the items is being used
      */
-    public UseAction getUseAction(ItemStack stack) {
+    public UseAction getUseAnimation(ItemStack stack) {
         return UseAction.DRINK;
     }
 
@@ -153,15 +153,15 @@ public abstract class PotionFlask extends ModItem {
      * Called to trigger the item's "innate" right click behavior. To handle when this item is used on a Block, see
      * {@link #onItemUse}.
      */
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack stack = playerIn.getHeldItem(handIn);
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack stack = playerIn.getItemInHand(handIn);
 
-        return stack.hasTag() && stack.getTag().getInt("count") > 0 ? DrinkHelper.startDrinking(worldIn, playerIn, handIn) : ActionResult.resultPass(playerIn.getHeldItem(handIn));
+        return stack.hasTag() && stack.getTag().getInt("count") > 0 ? DrinkHelper.useDrink(worldIn, playerIn, handIn) : ActionResult.pass(playerIn.getItemInHand(handIn));
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if(stack.hasTag()){
             tooltip.add(new TranslationTextComponent("ars_nouveau.flask.charges", stack.getTag().getInt("count")));
             PotionUtils.addPotionTooltip(stack, tooltip, 1.0F);

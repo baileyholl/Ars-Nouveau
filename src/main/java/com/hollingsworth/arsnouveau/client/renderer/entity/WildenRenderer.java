@@ -18,6 +18,6 @@ public class WildenRenderer extends GeoEntityRenderer<WildenHunter> {
 
     @Override
     public RenderType getRenderType(WildenHunter animatable, float partialTicks, MatrixStack stack, @Nullable IRenderTypeBuffer renderTypeBuffer, @Nullable IVertexBuilder vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
-        return RenderType.getEntityCutoutNoCull(textureLocation);
+        return RenderType.entityCutoutNoCull(textureLocation);
     }
 }

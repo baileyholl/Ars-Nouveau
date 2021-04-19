@@ -15,16 +15,16 @@ public class PacketOpenSpellBook {
 
     //Decoder
     public PacketOpenSpellBook(PacketBuffer buf){
-        tag = buf.readCompoundTag();
+        tag = buf.readNbt();
         tier = buf.readInt();
-        unlockedSpells = buf.readString(32767);
+        unlockedSpells = buf.readUtf(32767);
     }
 
     //Encoder
     public void toBytes(PacketBuffer buf){
-        buf.writeCompoundTag(tag);
+        buf.writeNbt(tag);
         buf.writeInt(tier);
-        buf.writeString(unlockedSpells);
+        buf.writeUtf(unlockedSpells);
     }
 
     public PacketOpenSpellBook(CompoundNBT tag, int tier, String unlockedSpells){

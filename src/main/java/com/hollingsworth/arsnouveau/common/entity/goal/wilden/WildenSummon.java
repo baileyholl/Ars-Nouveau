@@ -18,31 +18,31 @@ public class WildenSummon extends Goal {
     }
 
     @Override
-    public boolean shouldExecute() {
-        return entity.getAttackTarget() instanceof PlayerEntity && entity.summonCooldown <= 0;
+    public boolean canUse() {
+        return entity.getTarget() instanceof PlayerEntity && entity.summonCooldown <= 0;
     }
 
 
 
     @Override
-    public void startExecuting() {
-        super.startExecuting();
-        Networking.sendToNearby(entity.world, entity, new PacketAnimEntity(entity.getEntityId(), WildenHunter.Animations.HOWL.ordinal()));
-        entity.world.playSound(null, entity.getPosition(), SoundEvents.ENTITY_WOLF_HOWL, SoundCategory.HOSTILE, 1.0f, 0.3f);
-        SummonWolf wolf = new SummonWolf(ModEntities.SUMMON_WOLF, entity.world);
+    public void start() {
+        super.start();
+        Networking.sendToNearby(entity.level, entity, new PacketAnimEntity(entity.getId(), WildenHunter.Animations.HOWL.ordinal()));
+        entity.level.playSound(null, entity.blockPosition(), SoundEvents.WOLF_HOWL, SoundCategory.HOSTILE, 1.0f, 0.3f);
+        SummonWolf wolf = new SummonWolf(ModEntities.SUMMON_WOLF, entity.level);
         wolf.ticksLeft = 400;
-        wolf.setPosition(entity.getPosXRandom(1), entity.getPosY(), entity.getPosZRandom(1));
-        SummonWolf wolf2 = new SummonWolf(ModEntities.SUMMON_WOLF, entity.world);
+        wolf.setPos(entity.getRandomX(1), entity.getY(), entity.getRandomZ(1));
+        SummonWolf wolf2 = new SummonWolf(ModEntities.SUMMON_WOLF, entity.level);
         wolf2.ticksLeft = 400;
-        wolf2.setPosition(entity.getPosXRandom(1), entity.getPosY(), entity.getPosZRandom(1));
+        wolf2.setPos(entity.getRandomX(1), entity.getY(), entity.getRandomZ(1));
         this.entity.summonCooldown = 400;
-        wolf.setAttackTarget(entity.getAttackTarget());
-        wolf.setAggroed(true);
-        wolf2.setAttackTarget(entity.getAttackTarget());
-        wolf2.setAggroed(true);
+        wolf.setTarget(entity.getTarget());
+        wolf.setAggressive(true);
+        wolf2.setTarget(entity.getTarget());
+        wolf2.setAggressive(true);
         wolf.isWildenSummon = true;
         wolf2.isWildenSummon = true;
-        entity.world.addEntity(wolf);
-        entity.world.addEntity(wolf2);
+        entity.level.addFreshEntity(wolf);
+        entity.level.addFreshEntity(wolf2);
     }
 }

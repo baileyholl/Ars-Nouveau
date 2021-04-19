@@ -35,11 +35,11 @@ public class WildenStalker extends MonsterEntity implements IAnimatable, IAnimat
     public Vector3d orbitOffset = Vector3d.ZERO;
     public BlockPos orbitPosition = BlockPos.ZERO;
 
-    public static final DataParameter<Boolean> isFlying = EntityDataManager.createKey(WildenStalker.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Boolean> isFlying = EntityDataManager.defineId(WildenStalker.class, DataSerializers.BOOLEAN);
     public int timeFlying;
     protected WildenStalker(EntityType<? extends MonsterEntity> type, World worldIn) {
         super(type, worldIn);
-        moveController = new FlyHelper(this);
+        moveControl = new FlyHelper(this);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class WildenStalker extends MonsterEntity implements IAnimatable, IAnimat
     @Override
     public void tick() {
         super.tick();
-        if(!world.isRemote){
+        if(!level.isClientSide){
             if(leapCooldown > 0)
                 leapCooldown--;
 
@@ -77,10 +77,10 @@ public class WildenStalker extends MonsterEntity implements IAnimatable, IAnimat
     }
 
     @Override
-    public boolean attackEntityAsMob(Entity entityIn) {
-        if(!world.isRemote && entityIn instanceof LivingEntity)
-            ((LivingEntity) entityIn).addPotionEffect(new EffectInstance(Effects.WEAKNESS, 60, 1));
-        return super.attackEntityAsMob(entityIn);
+    public boolean doHurtTarget(Entity entityIn) {
+        if(!level.isClientSide && entityIn instanceof LivingEntity)
+            ((LivingEntity) entityIn).addEffect(new EffectInstance(Effects.WEAKNESS, 60, 1));
+        return super.doHurtTarget(entityIn);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class WildenStalker extends MonsterEntity implements IAnimatable, IAnimat
     }
 
     @Override
-    protected int getExperiencePoints(PlayerEntity player) {
+    protected int getExperienceReward(PlayerEntity player) {
         return 5;
     }
 
@@ -154,9 +154,9 @@ public class WildenStalker extends MonsterEntity implements IAnimatable, IAnimat
         return factory;
     }
 
-    protected void updateFallState(double y, boolean onGroundIn, BlockState state, BlockPos pos) {
+    protected void checkFallDamage(double y, boolean onGroundIn, BlockState state, BlockPos pos) {
         if(!this.isFlying())
-            super.updateFallState(y, onGroundIn, state, pos);
+            super.checkFallDamage(y, onGroundIn, state, pos);
     }
 
 
@@ -169,54 +169,54 @@ public class WildenStalker extends MonsterEntity implements IAnimatable, IAnimat
         // Copy of FlyingEntity
         if (this.isInWater()) {
             this.moveRelative(0.02F, travelVector);
-            this.move(MoverType.SELF, this.getMotion());
-            this.setMotion(this.getMotion().scale((double)0.8F));
+            this.move(MoverType.SELF, this.getDeltaMovement());
+            this.setDeltaMovement(this.getDeltaMovement().scale((double)0.8F));
         } else if (this.isInLava()) {
             this.moveRelative(0.02F, travelVector);
-            this.move(MoverType.SELF, this.getMotion());
-            this.setMotion(this.getMotion().scale(0.5D));
+            this.move(MoverType.SELF, this.getDeltaMovement());
+            this.setDeltaMovement(this.getDeltaMovement().scale(0.5D));
         } else {
-            BlockPos ground = new BlockPos(this.getPosX(), this.getPosY() - 1.0D, this.getPosZ());
+            BlockPos ground = new BlockPos(this.getX(), this.getY() - 1.0D, this.getZ());
             float f = 0.91F;
             if (this.onGround) {
-                f = this.world.getBlockState(ground).getSlipperiness(this.world, ground, this) * 0.91F;
+                f = this.level.getBlockState(ground).getSlipperiness(this.level, ground, this) * 0.91F;
             }
 
             float f1 = 0.16277137F / (f * f * f);
             f = 0.91F;
             if (this.onGround) {
-                f = this.world.getBlockState(ground).getSlipperiness(this.world, ground, this) * 0.91F;
+                f = this.level.getBlockState(ground).getSlipperiness(this.level, ground, this) * 0.91F;
             }
 
             this.moveRelative(this.onGround ? 0.1F * f1 : 0.02F, travelVector);
-            this.move(MoverType.SELF, this.getMotion());
-            this.setMotion(this.getMotion().scale((double)f));
+            this.move(MoverType.SELF, this.getDeltaMovement());
+            this.setDeltaMovement(this.getDeltaMovement().scale((double)f));
         }
 
-        this.func_233629_a_(this, false);
+        this.calculateEntityAnimation(this, false);
     }
 
-    public static AttributeModifierMap.MutableAttribute getAttributes(){
-        return MobEntity.func_233666_p_()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 15D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D)
-                .createMutableAttribute(Attributes.ATTACK_KNOCKBACK, 0.7D)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 2.5D);
+    public static AttributeModifierMap.MutableAttribute getModdedAttributes(){
+        return MobEntity.createMobAttributes()
+                .add(Attributes.MAX_HEALTH, 15D)
+                .add(Attributes.MOVEMENT_SPEED, 0.25D)
+                .add(Attributes.ATTACK_KNOCKBACK, 0.7D)
+                .add(Attributes.ATTACK_DAMAGE, 2.5D);
     }
 
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        this.dataManager.register(isFlying, false);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(isFlying, false);
     }
 
     public boolean isFlying() {
-        return this.dataManager.get(isFlying);
+        return this.entityData.get(isFlying);
     }
 
     public void setFlying(boolean flying) {
-        this.dataManager.set(isFlying, flying);
+        this.entityData.set(isFlying, flying);
     }
 
     public enum Animations{

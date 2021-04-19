@@ -24,15 +24,15 @@ public class ScribeTableRenderer extends TileEntityRenderer<ScribesTile> {
     public void render(ScribesTile tileEntityIn, float v, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int i1) {
 //  ItemStack dirt = new ItemStack(Items.DIRT);
         //     System.out.println("rendering");
-        double x = tileEntityIn.getPos().getX();
-        double y = tileEntityIn.getPos().getY();
-        double z = tileEntityIn.getPos().getZ();
+        double x = tileEntityIn.getBlockPos().getX();
+        double y = tileEntityIn.getBlockPos().getY();
+        double z = tileEntityIn.getBlockPos().getZ();
         if(tileEntityIn.stack == null){
             return;
         }
 
-        if (tileEntityIn.entity == null || !ItemStack.areItemStacksEqual(tileEntityIn.entity.getItem(), tileEntityIn.stack)) {
-            tileEntityIn.entity = new ItemEntity(tileEntityIn.getWorld(), x, y, z, tileEntityIn.stack);
+        if (tileEntityIn.entity == null || !ItemStack.matches(tileEntityIn.entity.getItem(), tileEntityIn.stack)) {
+            tileEntityIn.entity = new ItemEntity(tileEntityIn.getLevel(), x, y, z, tileEntityIn.stack);
         }
 
 
@@ -41,20 +41,20 @@ public class ScribeTableRenderer extends TileEntityRenderer<ScribesTile> {
 
     }
     public void renderPressedItem(ScribesTile tile, Item itemToRender, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int il){
-        matrixStack.push();
+        matrixStack.pushPose();
         matrixStack.translate(0.5D, .9D, 0.5D);
-        BlockState state = tile.getWorld().getBlockState(tile.getPos());
+        BlockState state = tile.getLevel().getBlockState(tile.getBlockPos());
         if(!(state.getBlock() instanceof ScribesBlock))
             return;
-        float y = ((Direction)state.get(ScribesBlock.FACING)).rotateY().getHorizontalAngle();
-        matrixStack.rotate(Vector3f.YP.rotationDegrees(-y + 90f));
-        matrixStack.rotate(Vector3f.XP.rotationDegrees(112.5f));
-        matrixStack.rotate(Vector3f.ZP.rotationDegrees(180F));
+        float y = ((Direction)state.getValue(ScribesBlock.FACING)).getClockWise().toYRot();
+        matrixStack.mulPose(Vector3f.YP.rotationDegrees(-y + 90f));
+        matrixStack.mulPose(Vector3f.XP.rotationDegrees(112.5f));
+        matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180F));
 
         matrixStack.scale(0.6f, 0.6f, 0.6f);
 
-        Minecraft.getInstance().getItemRenderer().renderItem(new ItemStack(itemToRender), ItemCameraTransforms.TransformType.FIXED, i, il, matrixStack, iRenderTypeBuffer);
-        matrixStack.pop();
+        Minecraft.getInstance().getItemRenderer().renderStatic(new ItemStack(itemToRender), ItemCameraTransforms.TransformType.FIXED, i, il, matrixStack, iRenderTypeBuffer);
+        matrixStack.popPose();
     }
 
 }

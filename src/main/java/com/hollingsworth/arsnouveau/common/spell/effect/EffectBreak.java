@@ -44,8 +44,8 @@ public class EffectBreak extends AbstractEffect {
 
     public ItemStack getStack(LivingEntity shooter){
         if(isRealPlayer(shooter)){
-            ItemStack mainHand = getPlayer(shooter, (ServerWorld)shooter.world).getHeldItemMainhand();
-            return (mainHand.isEmpty() ? getPlayer(shooter, (ServerWorld)shooter.world).getHeldItemOffhand() : mainHand).copy();
+            ItemStack mainHand = getPlayer(shooter, (ServerWorld)shooter.level).getMainHandItem();
+            return (mainHand.isEmpty() ? getPlayer(shooter, (ServerWorld)shooter.level).getOffhandItem() : mainHand).copy();
         }
 
         return new ItemStack(Items.DIAMOND_PICKAXE);
@@ -53,8 +53,8 @@ public class EffectBreak extends AbstractEffect {
 
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(!world.isRemote && rayTraceResult instanceof BlockRayTraceResult){
-            BlockPos pos = new BlockPos(((BlockRayTraceResult) rayTraceResult).getPos());
+        if(!world.isClientSide && rayTraceResult instanceof BlockRayTraceResult){
+            BlockPos pos = new BlockPos(((BlockRayTraceResult) rayTraceResult).getBlockPos());
             BlockState state;
 
             int aoeBuff = getBuffCount(augments, AugmentAOE.class);
@@ -71,22 +71,22 @@ public class EffectBreak extends AbstractEffect {
                     continue;
                 }
                 if (hasBuff(augments, AugmentExtract.class)) {
-                    stack.addEnchantment(Enchantments.SILK_TOUCH, 1);
-                    state.getBlock().harvestBlock(world, getPlayer(shooter, (ServerWorld) world), pos1, world.getBlockState(pos1), world.getTileEntity(pos1), stack);
+                    stack.enchant(Enchantments.SILK_TOUCH, 1);
+                    state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerWorld) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
 
                     destroyBlockSafely(world, pos1, false, shooter);
 
                 } else if (hasBuff(augments, AugmentFortune.class)) {
                     int bonus = getBuffCount(augments, AugmentFortune.class);
-                    stack.addEnchantment(Enchantments.FORTUNE, bonus);
+                    stack.enchant(Enchantments.BLOCK_FORTUNE, bonus);
                     //Block.spawnDrops(world.getBlockState(pos1), world, pos1, world.getTileEntity(pos1), shooter,stack);
-                    state.getBlock().dropXpOnBlockBreak((ServerWorld) world, pos1, state.getExpDrop(world, pos1, bonus, 0));
-                    state.getBlock().harvestBlock(world, getPlayer(shooter, (ServerWorld) world), pos1, world.getBlockState(pos1), world.getTileEntity(pos1), stack);
+                    state.getBlock().popExperience((ServerWorld) world, pos1, state.getExpDrop(world, pos1, bonus, 0));
+                    state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerWorld) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
                     destroyBlockSafely(world, pos1, false, shooter);
                 } else {
-                    state.getBlock().harvestBlock(world, getPlayer(shooter, (ServerWorld) world), pos1, world.getBlockState(pos1), world.getTileEntity(pos1), stack);
+                    state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerWorld) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
                     destroyBlockSafely(world, pos1, false, shooter);
-                    state.getBlock().dropXpOnBlockBreak((ServerWorld) world, pos1, state.getExpDrop(world, pos1, 0, 0));
+                    state.getBlock().popExperience((ServerWorld) world, pos1, state.getExpDrop(world, pos1, 0, 0));
                 }
             }
         }
@@ -94,7 +94,7 @@ public class EffectBreak extends AbstractEffect {
 
     @Override
     public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
-        return rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos()).getMaterial() != Material.AIR && canBlockBeHarvested(augments, world, ((BlockRayTraceResult) rayTraceResult).getPos());
+        return rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getBlockPos()).getMaterial() != Material.AIR && canBlockBeHarvested(augments, world, ((BlockRayTraceResult) rayTraceResult).getBlockPos());
     }
 
     @Override

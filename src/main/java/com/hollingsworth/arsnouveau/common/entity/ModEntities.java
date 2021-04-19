@@ -60,88 +60,88 @@ public class ModEntities {
         public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
             SPELL_PROJ = build(
                     "spell_proj",
-                    EntityType.Builder.<EntityProjectileSpell>create(EntityProjectileSpell::new, EntityClassification.MISC)
-                            .size(0.5f, 0.5f)
+                    EntityType.Builder.<EntityProjectileSpell>of(EntityProjectileSpell::new, EntityClassification.MISC)
+                            .sized(0.5f, 0.5f)
                             .setTrackingRange(20)
                             .setShouldReceiveVelocityUpdates(true)
                             .setUpdateInterval(120).setCustomClientFactory(EntityProjectileSpell::new));
             ENTITY_EVOKER_FANGS_ENTITY_TYPE = build(
                     "fangs",
-                    EntityType.Builder.<EntityEvokerFangs>create(EntityEvokerFangs::new, EntityClassification.MISC)
-                    .size(0.5F, 0.8F)
+                    EntityType.Builder.<EntityEvokerFangs>of(EntityEvokerFangs::new, EntityClassification.MISC)
+                    .sized(0.5F, 0.8F)
                     .setUpdateInterval(60));
            ALLY_VEX = build(
                     "ally_vex",
-                    EntityType.Builder.<EntityAllyVex>create(EntityAllyVex::new, EntityClassification.MISC)
-                            .size(0.4F, 0.8F).immuneToFire());
-           ENTITY_WHELP_TYPE = build("whelp", EntityType.Builder.<EntityWhelp>create(EntityWhelp::new, EntityClassification.MISC)
-                   .size(0.6F, 0.63F).setTrackingRange(10)
+                    EntityType.Builder.<EntityAllyVex>of(EntityAllyVex::new, EntityClassification.MISC)
+                            .sized(0.4F, 0.8F).fireImmune());
+           ENTITY_WHELP_TYPE = build("whelp", EntityType.Builder.<EntityWhelp>of(EntityWhelp::new, EntityClassification.MISC)
+                   .sized(0.6F, 0.63F).setTrackingRange(10)
                    .setShouldReceiveVelocityUpdates(true));
 
-            ENTITY_CARBUNCLE_TYPE = build("carbuncle", EntityType.Builder.<EntityCarbuncle>create(EntityCarbuncle::new, EntityClassification.CREATURE)
-                    .size(0.7F, 0.63F).setTrackingRange(10)
+            ENTITY_CARBUNCLE_TYPE = build("carbuncle", EntityType.Builder.<EntityCarbuncle>of(EntityCarbuncle::new, EntityClassification.CREATURE)
+                    .sized(0.7F, 0.63F).setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
             ENTITY_FOLLOW_PROJ = build(
                     "follow_proj",
-                    EntityType.Builder.<EntityFollowProjectile>create(EntityFollowProjectile::new, EntityClassification.MISC)
-                            .size(0.5f, 0.5f)
+                    EntityType.Builder.<EntityFollowProjectile>of(EntityFollowProjectile::new, EntityClassification.MISC)
+                            .sized(0.5f, 0.5f)
                             .setTrackingRange(10)
                             .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityFollowProjectile::new));
 
 
-            ENTITY_SYLPH_TYPE = build("sylph", EntityType.Builder.<EntitySylph>create(EntitySylph::new, EntityClassification.CREATURE)
-                    .size(0.6F, 0.98F).setTrackingRange(10)
+            ENTITY_SYLPH_TYPE = build("sylph", EntityType.Builder.<EntitySylph>of(EntitySylph::new, EntityClassification.CREATURE)
+                    .sized(0.6F, 0.98F).setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
 
-            ENTITY_WIXIE_TYPE = build("wixie", EntityType.Builder.<EntityWixie>create(EntityWixie::new, EntityClassification.MISC)
-                    .size(0.6F, 0.98F).setTrackingRange(10)
+            ENTITY_WIXIE_TYPE = build("wixie", EntityType.Builder.<EntityWixie>of(EntityWixie::new, EntityClassification.MISC)
+                    .sized(0.6F, 0.98F).setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
 
             ENTITY_FLYING_ITEM = build(
                     "flying_item",
-                    EntityType.Builder.<EntityFlyingItem>create(EntityFlyingItem::new, EntityClassification.MISC)
-                            .size(0.5f, 0.5f)
+                    EntityType.Builder.<EntityFlyingItem>of(EntityFlyingItem::new, EntityClassification.MISC)
+                            .sized(0.5f, 0.5f)
                             .setTrackingRange(10).setUpdateInterval(60)
                             .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityFlyingItem::new));
             ENTITY_RITUAL = build(
                     "ritual",
-                    EntityType.Builder.<EntityRitualProjectile>create(EntityRitualProjectile::new, EntityClassification.MISC)
-                            .size(0.5f, 0.5f)
+                    EntityType.Builder.<EntityRitualProjectile>of(EntityRitualProjectile::new, EntityClassification.MISC)
+                            .sized(0.5f, 0.5f)
                             .setTrackingRange(10).setUpdateInterval(60)
                             .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityRitualProjectile::new));
             WILDEN_HUNTER = build(
                     "wilden_hunter",
-                    EntityType.Builder.<WildenHunter>create(WildenHunter::new, EntityClassification.MONSTER)
-                            .size(1.0f, 2.0f)
+                    EntityType.Builder.<WildenHunter>of(WildenHunter::new, EntityClassification.MONSTER)
+                            .sized(1.0f, 2.0f)
                             .setTrackingRange(10)
                             .setShouldReceiveVelocityUpdates(true));
             ENTITY_SPELL_ARROW = build(
                     "spell_arrow",
-                    EntityType.Builder.<EntitySpellArrow>create(EntitySpellArrow::new, EntityClassification.MISC)
-                            .trackingRange(20).func_233608_b_(20).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntitySpellArrow::new));
+                    EntityType.Builder.<EntitySpellArrow>of(EntitySpellArrow::new, EntityClassification.MISC)
+                            .clientTrackingRange(20).updateInterval(20).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntitySpellArrow::new));
 
             SUMMON_WOLF = build(
                     "summon_wolf",
-                    EntityType.Builder.<SummonWolf>create(SummonWolf::new, EntityClassification.CREATURE).size(0.6F, 0.85F).trackingRange(10));
+                    EntityType.Builder.<SummonWolf>of(SummonWolf::new, EntityClassification.CREATURE).sized(0.6F, 0.85F).clientTrackingRange(10));
 
             WILDEN_STALKER = build(
                     "wilden_stalker",
-                    EntityType.Builder.<WildenStalker>create(WildenStalker::new, EntityClassification.MONSTER)
-                            .size(1.0f, 2.0f)
+                    EntityType.Builder.<WildenStalker>of(WildenStalker::new, EntityClassification.MONSTER)
+                            .sized(1.0f, 2.0f)
                             .setTrackingRange(10)
                             .setShouldReceiveVelocityUpdates(true));
 
             SUMMON_HORSE = build(
                     "summon_horse",
-                    EntityType.Builder.<SummonHorse>create(SummonHorse::new, EntityClassification.CREATURE).size(1.3964844F, 1.6F).trackingRange(10));
+                    EntityType.Builder.<SummonHorse>of(SummonHorse::new, EntityClassification.CREATURE).sized(1.3964844F, 1.6F).clientTrackingRange(10));
 
             WILDEN_GUARDIAN = build(
                     "wilden_guardian",
-                    EntityType.Builder.<WildenGuardian>create(WildenGuardian::new, EntityClassification.MONSTER)
-                            .size(1.0f, 2.0f)
+                    EntityType.Builder.<WildenGuardian>of(WildenGuardian::new, EntityClassification.MONSTER)
+                            .sized(1.0f, 2.0f)
                             .setTrackingRange(10)
                             .setShouldReceiveVelocityUpdates(true));
-            LIGHTNING_ENTITY = build("an_lightning", EntityType.Builder.<LightningEntity>create(LightningEntity::new, EntityClassification.MISC).size(0.0F, 0.0F).trackingRange(16).func_233608_b_(Integer.MAX_VALUE).setShouldReceiveVelocityUpdates(true).setUpdateInterval(60));
+            LIGHTNING_ENTITY = build("an_lightning", EntityType.Builder.<LightningEntity>of(LightningEntity::new, EntityClassification.MISC).sized(0.0F, 0.0F).clientTrackingRange(16).updateInterval(Integer.MAX_VALUE).setShouldReceiveVelocityUpdates(true).setUpdateInterval(60));
             event.getRegistry().registerAll(
                     SPELL_PROJ,
                     ENTITY_EVOKER_FANGS_ENTITY_TYPE,
@@ -162,16 +162,16 @@ public class ModEntities {
                     LIGHTNING_ENTITY
             );
 
-            GlobalEntityTypeAttributes.put(ENTITY_WHELP_TYPE, EntityWhelp.attributes().create());
-            GlobalEntityTypeAttributes.put(ALLY_VEX, VexEntity.func_234321_m_().create());
-            GlobalEntityTypeAttributes.put(ENTITY_CARBUNCLE_TYPE, EntityCarbuncle.attributes().create());
-            GlobalEntityTypeAttributes.put(ENTITY_SYLPH_TYPE, EntitySylph.attributes().create());
-            GlobalEntityTypeAttributes.put(ENTITY_WIXIE_TYPE, EntityWixie.attributes().create());
-            GlobalEntityTypeAttributes.put(WILDEN_HUNTER, WildenHunter.getAttributes().create());
-            GlobalEntityTypeAttributes.put(WILDEN_STALKER, WildenStalker.getAttributes().create());
-            GlobalEntityTypeAttributes.put(SUMMON_WOLF, WolfEntity.func_234233_eS_().create());
-            GlobalEntityTypeAttributes.put(SUMMON_HORSE, AbstractHorseEntity.func_234237_fg_().create());
-            GlobalEntityTypeAttributes.put(WILDEN_GUARDIAN, WildenGuardian.getAttributes().create());
+            GlobalEntityTypeAttributes.put(ENTITY_WHELP_TYPE, EntityWhelp.attributes().build());
+            GlobalEntityTypeAttributes.put(ALLY_VEX, VexEntity.createAttributes().build());
+            GlobalEntityTypeAttributes.put(ENTITY_CARBUNCLE_TYPE, EntityCarbuncle.attributes().build());
+            GlobalEntityTypeAttributes.put(ENTITY_SYLPH_TYPE, EntitySylph.attributes().build());
+            GlobalEntityTypeAttributes.put(ENTITY_WIXIE_TYPE, EntityWixie.attributes().build());
+            GlobalEntityTypeAttributes.put(WILDEN_HUNTER, WildenHunter.getModdedAttributes().build());
+            GlobalEntityTypeAttributes.put(WILDEN_STALKER, WildenStalker.getModdedAttributes().build());
+            GlobalEntityTypeAttributes.put(SUMMON_WOLF, WolfEntity.createAttributes().build());
+            GlobalEntityTypeAttributes.put(SUMMON_HORSE, AbstractHorseEntity.createBaseHorseAttributes().build());
+            GlobalEntityTypeAttributes.put(WILDEN_GUARDIAN, WildenGuardian.getModdedAttributes().build());
 
             EntitySpawnPlacementRegistry.register(ENTITY_CARBUNCLE_TYPE, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
             EntitySpawnPlacementRegistry.register(ENTITY_SYLPH_TYPE, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
@@ -183,22 +183,22 @@ public class ModEntities {
     }
     public static boolean canMonsterSpawnInLight(EntityType<? extends Entity> type, IServerWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
         return worldIn.getDifficulty() != Difficulty.PEACEFUL && isValidLightLevel(worldIn, pos, randomIn) && canSpawnOn(type, worldIn, reason, pos, randomIn)
-                && !Config.DIMENSION_BLACKLIST.get().contains(worldIn.getWorld().getDimensionKey().getLocation().toString());
+                && !Config.DIMENSION_BLACKLIST.get().contains(worldIn.getLevel().dimension().location().toString());
     }
 
     public static boolean canSpawnOn(EntityType<? extends Entity> typeIn, IWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
-        BlockPos blockpos = pos.down();
-        return reason == SpawnReason.SPAWNER || worldIn.getBlockState(blockpos).canEntitySpawn(worldIn, blockpos, typeIn);
+        BlockPos blockpos = pos.below();
+        return reason == SpawnReason.SPAWNER || worldIn.getBlockState(blockpos).isValidSpawn(worldIn, blockpos, typeIn);
     }
     public static boolean genericGroundSpawn(EntityType<? extends Entity> animal, IWorld worldIn, SpawnReason reason, BlockPos pos, Random random) {
-        return worldIn.getBlockState(pos.down()).isIn(Blocks.GRASS_BLOCK) && worldIn.getLightSubtracted(pos, 0) > 8;
+        return worldIn.getBlockState(pos.below()).is(Blocks.GRASS_BLOCK) && worldIn.getRawBrightness(pos, 0) > 8;
     }
 
     public static boolean isValidLightLevel(IServerWorld worldIn, BlockPos pos, Random randomIn) {
-        if (worldIn.getLightFor(LightType.SKY, pos) > randomIn.nextInt(32)) {
+        if (worldIn.getBrightness(LightType.SKY, pos) > randomIn.nextInt(32)) {
             return false;
         } else {
-            int i = worldIn.getWorld().isThundering() ? worldIn.getNeighborAwareLightSubtracted(pos, 10) : worldIn.getLight(pos);
+            int i = worldIn.getLevel().isThundering() ? worldIn.getMaxLocalRawBrightness(pos, 10) : worldIn.getMaxLocalRawBrightness(pos);
             return i <= randomIn.nextInt(8);
         }
     }

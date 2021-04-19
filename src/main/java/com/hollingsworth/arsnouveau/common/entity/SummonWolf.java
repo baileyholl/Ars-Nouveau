@@ -27,20 +27,20 @@ public class SummonWolf extends WolfEntity implements ISummon {
     @Override
     public void tick() {
         super.tick();
-        if(!world.isRemote){
+        if(!level.isClientSide){
             ticksLeft--;
             if(ticksLeft <= 0) {
-                ParticleUtil.spawnPoof((ServerWorld) world, getPosition());
+                ParticleUtil.spawnPoof((ServerWorld) level, blockPosition());
                 this.remove();
-                onSummonDeath(world, null, true);
+                onSummonDeath(level, null, true);
             }
         }
     }
 
     @Override
-    public void onDeath(DamageSource cause) {
-        super.onDeath(cause);
-        onSummonDeath(world, cause, false);
+    public void die(DamageSource cause) {
+        super.die(cause);
+        onSummonDeath(level, cause, false);
     }
 
     @Override
@@ -49,26 +49,26 @@ public class SummonWolf extends WolfEntity implements ISummon {
     }
 
     @Override
-    public boolean isBreedingItem(ItemStack stack) {
+    public boolean isFood(ItemStack stack) {
         return false;
     }
 
     @Override
-    public void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
+    public void readAdditionalSaveData(CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
         this.ticksLeft = compound.getInt("left");
         this.isWildenSummon = compound.getBoolean("wildenSummon");
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
+    public void addAdditionalSaveData(CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
         compound.putInt("left", ticksLeft);
         compound.putBoolean("wildenSummon", isWildenSummon);
     }
 
     @Override
-    protected int getExperiencePoints(PlayerEntity player) {
+    protected int getExperienceReward(PlayerEntity player) {
         return 0;
     }
 

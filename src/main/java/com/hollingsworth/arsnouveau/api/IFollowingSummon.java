@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface IFollowingSummon {
-    DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(TameableEntity.class, DataSerializers.OPTIONAL_UNIQUE_ID);
+    DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.defineId(TameableEntity.class, DataSerializers.OPTIONAL_UUID);
     World getWorld();
 
     PathNavigator getPathNav();

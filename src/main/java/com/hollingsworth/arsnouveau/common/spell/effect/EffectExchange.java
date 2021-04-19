@@ -34,6 +34,8 @@ import java.util.List;
 
 import static com.hollingsworth.arsnouveau.api.util.BlockUtil.destroyBlockSafelyWithoutSound;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
+
 public class EffectExchange extends AbstractEffect {
     public EffectExchange() {
         super(GlyphLib.EffectExchangeID, "Exchange");
@@ -55,23 +57,23 @@ public class EffectExchange extends AbstractEffect {
         EntityRayTraceResult entityRayTraceResult = (EntityRayTraceResult) rayTraceResult;
         Entity entity = entityRayTraceResult.getEntity();
         if(shooter != null){
-            Vector3d origLoc = shooter.positionVec;
+            Vector3d origLoc = shooter.position;
             if(isNotFakePlayer(shooter)) {
-                shooter.setPositionAndUpdate(entity.getPosX(), entity.getPosY(), entity.getPosZ());
+                shooter.teleportTo(entity.getX(), entity.getY(), entity.getZ());
             }
             if(entity instanceof LivingEntity && isNotFakePlayer((LivingEntity)entity)) {
-                entity.setPositionAndUpdate(origLoc.getX(), origLoc.getY(), origLoc.getZ());
+                entity.teleportTo(origLoc.x(), origLoc.y(), origLoc.z());
             }
         }
     }
 
     public void resolveBlockHit(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext){
         int aoeBuff = getBuffCount(augments, AugmentAOE.class);
-        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult,aoeBuff, getBuffCount(augments, AugmentPierce.class));
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getBlockPos(), (BlockRayTraceResult)rayTraceResult,aoeBuff, getBuffCount(augments, AugmentPierce.class));
         BlockRayTraceResult result = (BlockRayTraceResult) rayTraceResult;
-        BlockState origState = world.getBlockState(result.getPos());
+        BlockState origState = world.getBlockState(result.getBlockPos());
         PlayerEntity playerEntity = getPlayer(shooter, (ServerWorld) world);
-        List<ItemStack> list = playerEntity.inventory.mainInventory;
+        List<ItemStack> list = playerEntity.inventory.items;
         List<IItemHandler> handlers = new ArrayList<>();
 
         if(spellContext.castingTile instanceof IPlaceBlockResponder && spellContext.castingTile instanceof IPickupResponder) {
@@ -142,16 +144,16 @@ public class EffectExchange extends AbstractEffect {
     public boolean attemptPlace(ItemStack stack, World world, BlockPos pos1, BlockRayTraceResult result, LivingEntity shooter){
         BlockItem item = (BlockItem)stack.getItem();
         ItemStack tool = LootUtil.getDefaultFakeTool();
-        tool.addEnchantment(Enchantments.SILK_TOUCH, 1);
+        tool.enchant(Enchantments.SILK_TOUCH, 1);
         FakePlayer fakePlayer = FakePlayerFactory.getMinecraft((ServerWorld)world);
-        fakePlayer.setHeldItem(Hand.MAIN_HAND, stack);
-        BlockItemUseContext context = BlockItemUseContext.func_221536_a(new BlockItemUseContext(new ItemUseContext(fakePlayer, Hand.MAIN_HAND, result)), pos1, result.getFace());
+        fakePlayer.setItemInHand(Hand.MAIN_HAND, stack);
+        BlockItemUseContext context = BlockItemUseContext.at(new BlockItemUseContext(new ItemUseContext(fakePlayer, Hand.MAIN_HAND, result)), pos1, result.getDirection());
         BlockState placeState = item.getBlock().getStateForPlacement(context);
-        Block.spawnDrops(world.getBlockState(pos1), world, pos1, world.getTileEntity(pos1), shooter,tool);
+        Block.dropResources(world.getBlockState(pos1), world, pos1, world.getBlockEntity(pos1), shooter,tool);
         destroyBlockSafelyWithoutSound(world, pos1, false, shooter);
 
         if(placeState != null){
-            world.setBlockState(pos1, placeState, 2);
+            world.setBlock(pos1, placeState, 2);
             stack.shrink(1);
             return true;
         }

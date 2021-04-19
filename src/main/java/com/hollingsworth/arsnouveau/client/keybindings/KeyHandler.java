@@ -23,11 +23,11 @@ public class KeyHandler {
     private static final Minecraft MINECRAFT = Minecraft.getInstance();
     @SubscribeEvent
     public static void keyEvent(final InputEvent.KeyInputEvent event) {
-        if(MINECRAFT.player == null || MINECRAFT.currentScreen != null)
+        if(MINECRAFT.player == null || MINECRAFT.screen != null)
             return;
         ItemStack stack = StackUtil.getHeldSpellbook(MINECRAFT.player);
 
-        if(event.getKey() == ModKeyBindings.NEXT_SLOT.getKey().getKeyCode() && event.getAction() == 1 && stack.getItem() instanceof SpellBook){
+        if(event.getKey() == ModKeyBindings.NEXT_SLOT.getKey().getValue() && event.getAction() == 1 && stack.getItem() instanceof SpellBook){
             if(!stack.hasTag())
                 return;
             CompoundNBT tag = stack.getTag();
@@ -39,7 +39,7 @@ public class KeyHandler {
            return;
         }
 
-        if(event.getKey() == ModKeyBindings.PREVIOUS__SLOT.getKey().getKeyCode() && event.getAction() == 1 && stack.getItem() instanceof SpellBook){
+        if(event.getKey() == ModKeyBindings.PREVIOUS__SLOT.getKey().getValue() && event.getAction() == 1 && stack.getItem() instanceof SpellBook){
             if(!stack.hasTag())
                 return;
             CompoundNBT tag = stack.getTag();
@@ -51,23 +51,23 @@ public class KeyHandler {
             return;
         }
 
-        if(event.getKey() == ModKeyBindings.OPEN_SPELL_SELECTION.getKey().getKeyCode() && event.getAction() == 1){
-            if(MINECRAFT.currentScreen instanceof GuiRadialMenu) {
-                MINECRAFT.player.closeScreen();
+        if(event.getKey() == ModKeyBindings.OPEN_SPELL_SELECTION.getKey().getValue() && event.getAction() == 1){
+            if(MINECRAFT.screen instanceof GuiRadialMenu) {
+                MINECRAFT.player.closeContainer();
                 return;
             }
-            if(stack.getItem() instanceof SpellBook && stack.hasTag() && MINECRAFT.currentScreen == null){
-                MINECRAFT.displayGuiScreen(new GuiRadialMenu(ModKeyBindings.OPEN_SPELL_SELECTION, stack.getTag()));
+            if(stack.getItem() instanceof SpellBook && stack.hasTag() && MINECRAFT.screen == null){
+                MINECRAFT.setScreen(new GuiRadialMenu(ModKeyBindings.OPEN_SPELL_SELECTION, stack.getTag()));
             }
         }
 
-        if(event.getKey() == ModKeyBindings.OPEN_BOOK.getKey().getKeyCode() && event.getAction() == 1){
-            if(MINECRAFT.currentScreen instanceof GuiSpellBook && !((GuiSpellBook) MINECRAFT.currentScreen).spell_name.isFocused()) {
-                MINECRAFT.player.closeScreen();
+        if(event.getKey() == ModKeyBindings.OPEN_BOOK.getKey().getValue() && event.getAction() == 1){
+            if(MINECRAFT.screen instanceof GuiSpellBook && !((GuiSpellBook) MINECRAFT.screen).spell_name.isFocused()) {
+                MINECRAFT.player.closeContainer();
                 return;
             }
 
-            if(stack.getItem() instanceof SpellBook && stack.hasTag() && MINECRAFT.currentScreen == null){
+            if(stack.getItem() instanceof SpellBook && stack.hasTag() && MINECRAFT.screen == null){
                 GuiSpellBook.open(ArsNouveauAPI.getInstance(), stack.getTag(), ((SpellBook) stack.getItem()).getTier().ordinal(), SpellBook.getUnlockedSpellString(stack.getTag()));
             }
         }

@@ -42,17 +42,17 @@ public class GlyphPressRecipe implements IRecipe<IInventory> {
     }
 
     @Override
-    public ItemStack getCraftingResult(IInventory inv) {
+    public ItemStack assemble(IInventory inv) {
         return output;
     }
 
     @Override
-    public boolean canFit(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return false;
     }
 
     @Override
-    public ItemStack getRecipeOutput() {
+    public ItemStack getResultItem() {
         return output;
     }
 
@@ -68,7 +68,7 @@ public class GlyphPressRecipe implements IRecipe<IInventory> {
 
     @Override
     public IRecipeType<?> getType() {
-        return Registry.RECIPE_TYPE.getOrDefault(new ResourceLocation(ArsNouveau.MODID, "glyph_recipe"));
+        return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, "glyph_recipe"));
     }
 
     public ItemStack getClay(){
@@ -89,27 +89,27 @@ public class GlyphPressRecipe implements IRecipe<IInventory> {
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<GlyphPressRecipe> {
 
         @Override
-        public GlyphPressRecipe read(ResourceLocation recipeId, JsonObject json) {
-            ISpellTier.Tier tier = ISpellTier.Tier.valueOf(JSONUtils.getString(json, "tier", "ONE"));
-            ItemStack input = new ItemStack(JSONUtils.getItem(json, "input"));
-            ItemStack output = new ItemStack(JSONUtils.getItem(json, "output"));
+        public GlyphPressRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+            ISpellTier.Tier tier = ISpellTier.Tier.valueOf(JSONUtils.getAsString(json, "tier", "ONE"));
+            ItemStack input = new ItemStack(JSONUtils.getAsItem(json, "input"));
+            ItemStack output = new ItemStack(JSONUtils.getAsItem(json, "output"));
             return new GlyphPressRecipe(recipeId, tier, input, output);
         }
 
         @Nullable
         @Override
-        public GlyphPressRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-            ISpellTier.Tier tier = ISpellTier.Tier.valueOf(buffer.readString());
-            ItemStack input = buffer.readItemStack();
-            ItemStack output = buffer.readItemStack();
+        public GlyphPressRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+            ISpellTier.Tier tier = ISpellTier.Tier.valueOf(buffer.readUtf());
+            ItemStack input = buffer.readItem();
+            ItemStack output = buffer.readItem();
             return new GlyphPressRecipe(recipeId, tier, input, output);
         }
 
         @Override
-        public void write(PacketBuffer buf, GlyphPressRecipe recipe) {
-            buf.writeString(recipe.tier.toString());
-            buf.writeItemStack(recipe.reagent);
-            buf.writeItemStack(recipe.output);
+        public void toNetwork(PacketBuffer buf, GlyphPressRecipe recipe) {
+            buf.writeUtf(recipe.tier.toString());
+            buf.writeItem(recipe.reagent);
+            buf.writeItem(recipe.output);
         }
     }
 }

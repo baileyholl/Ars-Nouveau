@@ -14,29 +14,29 @@ public class WildenRamAttack extends MeleeAttackGoal {
     }
 
     @Override
-    public boolean shouldExecute() {
-        return this.attacker instanceof WildenHunter && ((WildenHunter) this.attacker).ramCooldown <= 0 && super.shouldExecute();
+    public boolean canUse() {
+        return this.mob instanceof WildenHunter && ((WildenHunter) this.mob).ramCooldown <= 0 && super.canUse();
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
-        return this.attacker instanceof WildenHunter && ((WildenHunter) this.attacker).ramCooldown <= 0 && super.shouldContinueExecuting();
+    public boolean canContinueToUse() {
+        return this.mob instanceof WildenHunter && ((WildenHunter) this.mob).ramCooldown <= 0 && super.canContinueToUse();
     }
 
     @Override
     protected void checkAndPerformAttack(LivingEntity enemy, double distToEnemySqr) {
         double d0 = this.getAttackReachSqr(enemy);
         if(distToEnemySqr - 5 <= d0)
-            Networking.sendToNearby(attacker.world, attacker, new PacketAnimEntity(attacker.getEntityId(), WildenHunter.Animations.RAM.ordinal()));
+            Networking.sendToNearby(mob.level, mob, new PacketAnimEntity(mob.getId(), WildenHunter.Animations.RAM.ordinal()));
 
-        if (distToEnemySqr <= d0 && this.func_234041_j_() <= 0) {
-            this.func_234039_g_();
-            this.attacker.swingArm(Hand.MAIN_HAND);
-            this.attacker.attackEntityAsMob(enemy);
-            if(this.attacker instanceof WildenHunter)
-                ((WildenHunter) this.attacker).ramCooldown = 200;
-            enemy.applyKnockback(2.0F, enemy.getPosX() - attacker.getPosX(), enemy.getPosZ() - attacker.getPosZ());
-            enemy.velocityChanged = true;
+        if (distToEnemySqr <= d0 && this.getTicksUntilNextAttack() <= 0) {
+            this.resetAttackCooldown();
+            this.mob.swing(Hand.MAIN_HAND);
+            this.mob.doHurtTarget(enemy);
+            if(this.mob instanceof WildenHunter)
+                ((WildenHunter) this.mob).ramCooldown = 200;
+            enemy.knockback(2.0F, enemy.getX() - mob.getX(), enemy.getZ() - mob.getZ());
+            enemy.hurtMarked = true;
 
         }
     }

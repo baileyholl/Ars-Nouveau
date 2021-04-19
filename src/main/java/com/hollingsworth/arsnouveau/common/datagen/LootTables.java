@@ -21,19 +21,19 @@ public class LootTables extends BaseLootTableProvider{
         System.out.println(BlockRegistry.MANA_JAR);
         blockTables.put(BlockRegistry.MANA_JAR, createManaManchineTable("mana_jar", BlockRegistry.MANA_JAR));
 
-        LootPool.Builder potionJarBuilder = LootPool.builder()
+        LootPool.Builder potionJarBuilder = LootPool.lootPool()
                 .name("potion_jar")
-                .rolls(ConstantRange.of(1))
-                .addEntry(ItemLootEntry.builder(BlockRegistry.POTION_JAR)
-                        .acceptFunction(CopyName.builder(CopyName.Source.BLOCK_ENTITY))
-                        .acceptFunction(CopyNbt.builder(CopyNbt.Source.BLOCK_ENTITY)
-                                .addOperation("amount", "BlockEntityTag.amount", CopyNbt.Action.REPLACE)
-                                .addOperation("Potion", "BlockEntityTag.Potion", CopyNbt.Action.REPLACE)
-                                .addOperation("CustomPotionEffects", "BlockEntityTag.CustomPotionEffects", CopyNbt.Action.REPLACE))
-                        .acceptFunction(SetContents.builderIn()
-                                .addLootEntry(DynamicLootEntry.func_216162_a(new ResourceLocation("minecraft", "contents"))))
+                .setRolls(ConstantRange.exactly(1))
+                .add(ItemLootEntry.lootTableItem(BlockRegistry.POTION_JAR)
+                        .apply(CopyName.copyName(CopyName.Source.BLOCK_ENTITY))
+                        .apply(CopyNbt.copyData(CopyNbt.Source.BLOCK_ENTITY)
+                                .copy("amount", "BlockEntityTag.amount", CopyNbt.Action.REPLACE)
+                                .copy("Potion", "BlockEntityTag.Potion", CopyNbt.Action.REPLACE)
+                                .copy("CustomPotionEffects", "BlockEntityTag.CustomPotionEffects", CopyNbt.Action.REPLACE))
+                        .apply(SetContents.setContents()
+                                .withEntry(DynamicLootEntry.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
                 );
-        blockTables.put(BlockRegistry.POTION_JAR,LootTable.builder().addLootPool(potionJarBuilder));
+        blockTables.put(BlockRegistry.POTION_JAR,LootTable.lootTable().withPool(potionJarBuilder));
         putStandardLoot(BlockRegistry.ARCANE_ORE);
         putStandardLoot(BlockRegistry.GLYPH_PRESS_BLOCK);
         putStandardLoot(BlockRegistry.WARD_BLOCK);
@@ -51,23 +51,23 @@ public class LootTables extends BaseLootTableProvider{
         putStandardLoot(BlockRegistry.VOLCANIC_BLOCK);
         putStandardLoot(BlockRegistry.LAVA_LILY);
 
-        putEntityTable(ModEntities.WILDEN_STALKER,  LootTable.builder()
-                .addLootPool(LootPool.builder().rolls(ConstantRange.of(1))
-                .addEntry(ItemLootEntry.builder(ItemsRegistry.WILDEN_WING)
-                .acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 1.0F)))
-                .acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))))
+        putEntityTable(ModEntities.WILDEN_STALKER,  LootTable.lootTable()
+                .withPool(LootPool.lootPool().setRolls(ConstantRange.exactly(1))
+                .add(ItemLootEntry.lootTableItem(ItemsRegistry.WILDEN_WING)
+                .apply(SetCount.setCount(RandomValueRange.between(0.0F, 1.0F)))
+                .apply(LootingEnchantBonus.lootingMultiplier(RandomValueRange.between(0.0F, 1.0F)))))
         );
-        putEntityTable(ModEntities.WILDEN_GUARDIAN,  LootTable.builder()
-                .addLootPool(LootPool.builder().rolls(ConstantRange.of(1))
-                        .addEntry(ItemLootEntry.builder(ItemsRegistry.WILDEN_SPIKE)
-                                .acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 1.0F)))
-                                .acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))))
+        putEntityTable(ModEntities.WILDEN_GUARDIAN,  LootTable.lootTable()
+                .withPool(LootPool.lootPool().setRolls(ConstantRange.exactly(1))
+                        .add(ItemLootEntry.lootTableItem(ItemsRegistry.WILDEN_SPIKE)
+                                .apply(SetCount.setCount(RandomValueRange.between(0.0F, 1.0F)))
+                                .apply(LootingEnchantBonus.lootingMultiplier(RandomValueRange.between(0.0F, 1.0F)))))
         );
-        putEntityTable(ModEntities.WILDEN_HUNTER,  LootTable.builder()
-                .addLootPool(LootPool.builder().rolls(ConstantRange.of(1))
-                        .addEntry(ItemLootEntry.builder(ItemsRegistry.WILDEN_HORN)
-                                .acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 1.0F)))
-                                .acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))))
+        putEntityTable(ModEntities.WILDEN_HUNTER,  LootTable.lootTable()
+                .withPool(LootPool.lootPool().setRolls(ConstantRange.exactly(1))
+                        .add(ItemLootEntry.lootTableItem(ItemsRegistry.WILDEN_HORN)
+                                .apply(SetCount.setCount(RandomValueRange.between(0.0F, 1.0F)))
+                                .apply(LootingEnchantBonus.lootingMultiplier(RandomValueRange.between(0.0F, 1.0F)))))
         );
         //LootTable.builder().addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(Items.BONE).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))))
        // putStandardLoot(BlockRegistry.ARCANE_BRICKS);
@@ -78,7 +78,7 @@ public class LootTables extends BaseLootTableProvider{
     }
 
     public void putEntityTable(EntityType e, LootTable.Builder table){
-        entityTables.put(e.getLootTable(), table);
+        entityTables.put(e.getDefaultLootTable(), table);
     }
 
 

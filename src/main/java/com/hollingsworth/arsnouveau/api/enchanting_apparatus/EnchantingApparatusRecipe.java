@@ -60,9 +60,9 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
     public EnchantingApparatusRecipe(Item result, Item reagent, Item[] pedestalItems, String category){
         ArrayList<Ingredient> stacks = new ArrayList<>();
         for(Item i : pedestalItems){
-            stacks.add(Ingredient.fromItems(i));
+            stacks.add(Ingredient.of(i));
         }
-        this.reagent = Ingredient.fromItems(reagent);
+        this.reagent = Ingredient.of(reagent);
         this.result = new ItemStack(result);
         this.pedestalItems = stacks;
         this.category = category;
@@ -82,7 +82,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
 
     @Override
     public ItemStack getResult(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile) {
-        return result;
+        return result.copy();
     }
 
 
@@ -90,7 +90,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
     static boolean doItemsMatch(List<ItemStack> inputs, List<Ingredient> recipeItems) {
         RecipeItemHelper recipeitemhelper = new RecipeItemHelper();
         for(ItemStack i : inputs)
-            recipeitemhelper.func_221264_a(i, 1);
+            recipeitemhelper.accountStack(i, 1);
 
         return inputs.size() == recipeItems.size() && (net.minecraftforge.common.util.RecipeMatcher.findMatches(inputs,  recipeItems) != null);
     }
@@ -125,12 +125,12 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         int counter = 1;
         for(Ingredient i : pedestalItems){
             JsonArray item = new JsonArray();
-            item.add(i.serialize());
+            item.add(i.toJson());
             jsonobject.add("item_"+counter, item);
             counter++;
         }
         JsonArray reagent =  new JsonArray();
-        reagent.add(this.reagent.serialize());
+        reagent.add(this.reagent.toJson());
         jsonobject.add("reagent", reagent);
 
         JsonObject resultObj = new JsonObject();
@@ -150,7 +150,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
     public JsonElement serialize() {
         JsonObject jsonobject = new JsonObject();
 
-        jsonobject.addProperty("name", this.result.getItem().getTranslationKey());
+        jsonobject.addProperty("name", this.result.getItem().getDescriptionId());
         jsonobject.addProperty("icon",  this.result.getItem().getRegistryName().toString());
         jsonobject.addProperty("category", this.category);
         JsonArray jsonArray = new JsonArray();
@@ -184,17 +184,17 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
     }
 
     @Override
-    public ItemStack getCraftingResult(EnchantingApparatusTile inv) {
+    public ItemStack assemble(EnchantingApparatusTile inv) {
         return this.result;
     }
 
     @Override
-    public boolean canFit(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return false;
     }
 
     @Override
-    public ItemStack getRecipeOutput() {
+    public ItemStack getResultItem() {
         return this.result;
     }
 
@@ -210,33 +210,33 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
 
     @Override
     public IRecipeType<?> getType() {
-        return Registry.RECIPE_TYPE.getOrDefault(new ResourceLocation(ArsNouveau.MODID, "enchanting_apparatus"));
+        return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, "enchanting_apparatus"));
     }
 
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<EnchantingApparatusRecipe> {
 
         @Override
-        public EnchantingApparatusRecipe read(ResourceLocation recipeId, JsonObject json) {
-            Ingredient reagent = Ingredient.deserialize(JSONUtils.getJsonArray(json, "reagent"));
-            ItemStack output = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "output"));
+        public EnchantingApparatusRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
+            Ingredient reagent = Ingredient.fromJson(JSONUtils.getAsJsonArray(json, "reagent"));
+            ItemStack output = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(json, "output"));
             List<Ingredient> stacks = new ArrayList<>();
             for(int i = 1; i < 9; i++){
                 if(json.has("item_"+i))
-                    stacks.add(Ingredient.deserialize(JSONUtils.getJsonArray(json, "item_" + i)));
+                    stacks.add(Ingredient.fromJson(JSONUtils.getAsJsonArray(json, "item_" + i)));
             }
             return new EnchantingApparatusRecipe(recipeId, stacks, reagent, output);
         }
 
         @Nullable
         @Override
-        public EnchantingApparatusRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+        public EnchantingApparatusRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
             int length = buffer.readInt();
-            Ingredient reagent = Ingredient.read(buffer);
-            ItemStack output = buffer.readItemStack();
+            Ingredient reagent = Ingredient.fromNetwork(buffer);
+            ItemStack output = buffer.readItem();
             List<Ingredient> stacks = new ArrayList<>();
 
             for(int i = 0; i < length; i++){
-                try{ stacks.add(Ingredient.read(buffer)); }catch (Exception e){
+                try{ stacks.add(Ingredient.fromNetwork(buffer)); }catch (Exception e){
                     e.printStackTrace();
                     break;
                 }
@@ -245,12 +245,12 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         }
 
         @Override
-        public void write(PacketBuffer buf, EnchantingApparatusRecipe recipe) {
+        public void toNetwork(PacketBuffer buf, EnchantingApparatusRecipe recipe) {
             buf.writeInt(recipe.pedestalItems.size());
-            recipe.reagent.write(buf);
-            buf.writeItemStack(recipe.result);
+            recipe.reagent.toNetwork(buf);
+            buf.writeItem(recipe.result);
             for(Ingredient i : recipe.pedestalItems){
-                i.write(buf);
+                i.toNetwork(buf);
             }
         }
     }

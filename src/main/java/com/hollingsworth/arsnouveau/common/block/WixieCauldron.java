@@ -26,8 +26,8 @@ import java.util.List;
 public class WixieCauldron extends ModBlock{
 
     public WixieCauldron() {
-        super(defaultProperties().notSolid(), LibBlockNames.WIXIE_CAULDRON);
-        setDefaultState(getDefaultState().with(CONVERTED, false).with(FILLED, false));
+        super(defaultProperties().noOcclusion(), LibBlockNames.WIXIE_CAULDRON);
+        registerDefaultState(defaultBlockState().setValue(CONVERTED, false).setValue(FILLED, false));
     }
 
     public static final BooleanProperty FILLED = BooleanProperty.create("filled");
@@ -35,29 +35,29 @@ public class WixieCauldron extends ModBlock{
 
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(worldIn.isRemote || handIn != Hand.MAIN_HAND || !(worldIn.getTileEntity(pos) instanceof WixieCauldronTile))
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if(worldIn.isClientSide || handIn != Hand.MAIN_HAND || !(worldIn.getBlockEntity(pos) instanceof WixieCauldronTile))
             return ActionResultType.SUCCESS;
 
 
-        if(player.getHeldItemMainhand().getItem() != ItemsRegistry.WIXIE_CHARM){
-            ((WixieCauldronTile) worldIn.getTileEntity(pos)).setRecipes(player, player.getHeldItemMainhand());
-            worldIn.notifyBlockUpdate(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 3);
+        if(player.getMainHandItem().getItem() != ItemsRegistry.WIXIE_CHARM){
+            ((WixieCauldronTile) worldIn.getBlockEntity(pos)).setRecipes(player, player.getMainHandItem());
+            worldIn.sendBlockUpdated(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 3);
             return ActionResultType.CONSUME;
         }
         return ActionResultType.PASS;
     }
     public static List<Potion> list = new ArrayList<>();
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FILLED, CONVERTED);
     }
 
     @Override
     public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
-        if(!world.isRemote() && world.getTileEntity(pos) instanceof WixieCauldronTile){
-            ((WixieCauldronTile) world.getTileEntity(pos)).isOff = world.isBlockPowered(pos);
+        if(!world.isClientSide() && world.getBlockEntity(pos) instanceof WixieCauldronTile){
+            ((WixieCauldronTile) world.getBlockEntity(pos)).isOff = world.hasNeighborSignal(pos);
         }
     }
 
@@ -65,11 +65,11 @@ public class WixieCauldron extends ModBlock{
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         BlockState state = super.getStateForPlacement(context);
-        CompoundNBT tag = context.getItem().getTag();
+        CompoundNBT tag = context.getItemInHand().getTag();
         if(tag != null && tag.contains("BlockEntityTag")){
             tag = tag.getCompound("BlockEntityTag");
             if(tag.contains("converted") && tag.getBoolean("converted")){
-                state = state.with(CONVERTED, true);
+                state = state.setValue(CONVERTED, true);
             }
         }
         return state;

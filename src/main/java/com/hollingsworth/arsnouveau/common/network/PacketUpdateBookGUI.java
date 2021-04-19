@@ -14,12 +14,12 @@ public class PacketUpdateBookGUI {
     public CompoundNBT tag;
     //Decoder
     public PacketUpdateBookGUI(PacketBuffer buf){
-        tag = buf.readCompoundTag();
+        tag = buf.readNbt();
     }
 
     //Encoder
     public void toBytes(PacketBuffer buf){
-        buf.writeCompoundTag(tag);
+        buf.writeNbt(tag);
     }
 
     public PacketUpdateBookGUI(CompoundNBT tag){
@@ -28,8 +28,8 @@ public class PacketUpdateBookGUI {
 
     public void handle(Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(()->{
-            if(Minecraft.getInstance().currentScreen instanceof GuiSpellBook)
-                ((GuiSpellBook) ArsNouveau.proxy.getMinecraft().currentScreen).spell_book_tag = tag;
+            if(Minecraft.getInstance().screen instanceof GuiSpellBook)
+                ((GuiSpellBook) ArsNouveau.proxy.getMinecraft().screen).spell_book_tag = tag;
         } );
         ctx.get().setPacketHandled(true);
     }

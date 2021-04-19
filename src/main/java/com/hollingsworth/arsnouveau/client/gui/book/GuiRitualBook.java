@@ -19,18 +19,18 @@ public class GuiRitualBook extends BaseBook{
     }
 
     public static void open(){
-        Minecraft.getInstance().displayGuiScreen(new GuiRitualBook());
+        Minecraft.getInstance().setScreen(new GuiRitualBook());
     }
 
     @Override
     public void drawBackgroundElements(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
         ITextProperties itextproperties = new StringTextComponent(ritualDesc);
-        minecraft.fontRenderer.func_238418_a_(itextproperties, bookLeft +145, bookTop +15, 120, 0);
-        minecraft.fontRenderer.drawString(stack,"Select", 185, 157,  0);
-        minecraft.fontRenderer.drawString(stack,"Earth: 123", 145, 137,  10053171);
-        minecraft.fontRenderer.drawString(stack,"Water: 123", 145, 127,  26367);
-        minecraft.fontRenderer.drawString(stack,"Fire: 123", 205, 127,  16724736);
+        minecraft.font.drawWordWrap(itextproperties, bookLeft +145, bookTop +15, 120, 0);
+        minecraft.font.draw(stack,"Select", 185, 157,  0);
+        minecraft.font.draw(stack,"Earth: 123", 145, 137,  10053171);
+        minecraft.font.draw(stack,"Water: 123", 145, 127,  26367);
+        minecraft.font.draw(stack,"Fire: 123", 205, 127,  16724736);
         //10053171
     }
 

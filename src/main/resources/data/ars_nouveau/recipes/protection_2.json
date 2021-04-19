@@ -1,0 +1,41 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:protection",
+  "level": 2,
+  "mana": 3500,
+  "item_1": [
+    {
+      "item": "ars_nouveau:glyph_touch"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:glyph_touch"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "ars_nouveau:glyph_shield"
+    }
+  ],
+  "item_4": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_5": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_6": [
+    {
+      "tag": "forge:storage_blocks/lapis"
+    }
+  ],
+  "item_7": [
+    {
+      "tag": "forge:storage_blocks/lapis"
+    }
+  ]
+}

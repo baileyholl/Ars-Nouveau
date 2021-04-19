@@ -29,11 +29,11 @@ public class ManaJarTile extends AbstractManaTile implements ITickableTileEntity
 
     @Override
     public void tick() {
-        if(world.isRemote) {
+        if(level.isClientSide) {
             // world.addParticle(ParticleTypes.DRIPPING_WATER, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0);
             return;
         }
-        BlockState state = world.getBlockState(pos);
+        BlockState state = level.getBlockState(worldPosition);
         int fillState = 0;
         if(this.getCurrentMana() > 0 && this.getCurrentMana() < 1000)
             fillState = 1;
@@ -41,7 +41,7 @@ public class ManaJarTile extends AbstractManaTile implements ITickableTileEntity
             fillState = (this.getCurrentMana() / 1000) + 1;
         }
 
-        world.setBlockState(pos, state.with(ManaJar.fill, fillState),3);
+        level.setBlock(worldPosition, state.setValue(ManaJar.fill, fillState),3);
     }
 
 

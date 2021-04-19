@@ -32,10 +32,10 @@ public class EffectPhantomBlock extends AbstractEffect {
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof BlockRayTraceResult){
 
-            for(BlockPos pos : SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getPos(), (BlockRayTraceResult)rayTraceResult, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))) {
-                pos = pos.offset(((BlockRayTraceResult) rayTraceResult).getFace());
-                if (world.getBlockState(pos).getMaterial() == Material.AIR && world.placedBlockCollides(BlockRegistry.PHANTOM_BLOCK.getDefaultState(), pos, ISelectionContext.dummy())) {
-                    world.setBlockState(pos, BlockRegistry.PHANTOM_BLOCK.getDefaultState());
+            for(BlockPos pos : SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getBlockPos(), (BlockRayTraceResult)rayTraceResult, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))) {
+                pos = pos.relative(((BlockRayTraceResult) rayTraceResult).getDirection());
+                if (world.getBlockState(pos).getMaterial() == Material.AIR && world.isUnobstructed(BlockRegistry.PHANTOM_BLOCK.defaultBlockState(), pos, ISelectionContext.empty())) {
+                    world.setBlockAndUpdate(pos, BlockRegistry.PHANTOM_BLOCK.defaultBlockState());
                 }
             }
         }

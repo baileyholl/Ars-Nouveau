@@ -9,6 +9,8 @@ import net.minecraft.potion.PotionUtils;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
+import net.minecraft.item.crafting.Ingredient.SingleItemList;
+
 public class PotionIngredient extends Ingredient {
     private final ItemStack stack;
 
@@ -18,7 +20,7 @@ public class PotionIngredient extends Ingredient {
     }
     public static PotionIngredient fromPotion(Potion potion){
         ItemStack stack = new ItemStack(Items.POTION);
-        PotionUtils.addPotionToItemStack(stack, potion);
+        PotionUtils.setPotion(stack, potion);
         return new PotionIngredient(stack);
     }
 
@@ -31,7 +33,7 @@ public class PotionIngredient extends Ingredient {
         if (input == null) {
             return false;
         } else {
-            return this.stack.getItem() == input.getItem() && PotionUtils.getPotionFromItem(input).equals(PotionUtils.getPotionFromItem(stack)) && PotionUtils.getFullEffectsFromItem(input).equals(PotionUtils.getFullEffectsFromItem(stack));
+            return this.stack.getItem() == input.getItem() && PotionUtils.getPotion(input).equals(PotionUtils.getPotion(stack)) && PotionUtils.getCustomEffects(input).equals(PotionUtils.getCustomEffects(stack));
         }
     }
 

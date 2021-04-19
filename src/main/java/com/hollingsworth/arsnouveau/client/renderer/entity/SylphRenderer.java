@@ -32,9 +32,9 @@ public class SylphRenderer extends GeoEntityRenderer<EntitySylph> {
     @Override
     public void render(EntitySylph entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-        World world = entityIn.getEntityWorld();
+        World world = entityIn.getCommandSenderWorld();
         Random rand = ParticleUtil.r;
-        Vector3d particlePos = entityIn.getPositionVec();
+        Vector3d particlePos = entityIn.position();
 
         IBone sylph = ((SylphModel) getGeoModelProvider()).getBone("sylph");
         IBone propellers = ((SylphModel) getGeoModelProvider()).getBone("propellers");
@@ -45,19 +45,21 @@ public class SylphRenderer extends GeoEntityRenderer<EntitySylph> {
         if (rand.nextInt(5) == 0) {
             for (int i = 0; i < 5; i++) {
                 world.addParticle(ParticleSparkleData.createData(new ParticleColor(52, 255, 36), 0.05f, 60),
-                        particlePos.getX() + Math.cos(roteAngle) / 2, particlePos.getY() + 0.5 + offsetY, particlePos.getZ() + Math.sin(roteAngle) / 2,
+                        particlePos.x() + Math.cos(roteAngle) / 2, particlePos.y() + 0.5 + offsetY, particlePos.z() + Math.sin(roteAngle) / 2,
                         0, 0, 0);
             }
         }
     }
 
+
+
     @Override
-    public ResourceLocation getEntityTexture(EntitySylph entity) {
-        return  new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_" + (entity.getColor().isEmpty() ? "summer" : entity.getColor())+ ".png");
+    public ResourceLocation getTextureLocation(EntitySylph entity) {
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_" + (entity.getColor().isEmpty() ? "summer" : entity.getColor())+ ".png");
     }
 
     @Override
     public RenderType getRenderType(EntitySylph animatable, float partialTicks, MatrixStack stack, @Nullable IRenderTypeBuffer renderTypeBuffer, @Nullable IVertexBuilder vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
-        return RenderType.getEntityCutoutNoCull(textureLocation);
+        return RenderType.entityCutoutNoCull(textureLocation);
     }
 }

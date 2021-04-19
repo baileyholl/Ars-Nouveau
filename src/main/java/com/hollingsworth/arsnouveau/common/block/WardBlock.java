@@ -26,14 +26,14 @@ import javax.annotation.Nullable;
 public class WardBlock extends ModBlock {
 
     public WardBlock() {
-        super(defaultProperties().setLightLevel((bs)->7), "warding_stone");
+        super(defaultProperties().lightLevel((bs)->7), "warding_stone");
        // this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
     }
-    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    public static final DirectionProperty FACING = HorizontalBlock.FACING;
 
     @Override
-    public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-        super.onEntityCollision(state, worldIn, pos, entityIn);
+    public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+        super.entityInside(state, worldIn, pos, entityIn);
     }
 
     @Nullable
@@ -48,18 +48,18 @@ public class WardBlock extends ModBlock {
         if(context.getEntity() == null)
             return state.getShape(worldIn, pos);
 
-        if(context.getEntity().world.isRemote)
+        if(context.getEntity().level.isClientSide)
             return state.getShape(worldIn, pos);
 
         if(!(context.getEntity() instanceof PlayerEntity))
-            return VoxelShapes.fullCube().withOffset(0, 1, 0);
+            return VoxelShapes.block().move(0, 1, 0);
 
-        return VoxelShapes.fullCube();
+        return VoxelShapes.block();
     }
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
+    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         if (entity != null) {
-            world.setBlockState(pos, state.with(BlockStateProperties.FACING, getFacingFromEntity(pos, entity)), 2);
+            world.setBlock(pos, state.setValue(BlockStateProperties.FACING, getFacingFromEntity(pos, entity)), 2);
         }
     }
     @Override
@@ -69,12 +69,12 @@ public class WardBlock extends ModBlock {
 
 
     public static Direction getFacingFromEntity(BlockPos clickedBlock, LivingEntity entity) {
-        Vector3d vec = entity.getPositionVec();
-        return Direction.getFacingFromVector((float) (vec.x - clickedBlock.getX()), (float) (vec.y - clickedBlock.getY()), (float) (vec.z - clickedBlock.getZ()));
+        Vector3d vec = entity.position();
+        return Direction.getNearest((float) (vec.x - clickedBlock.getX()), (float) (vec.y - clickedBlock.getY()), (float) (vec.z - clickedBlock.getZ()));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.FACING);
     }
 //

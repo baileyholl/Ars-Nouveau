@@ -31,17 +31,17 @@ public abstract class AbstractSupplierBlockStateProvider extends BlockStateProvi
     }
 
     @Override
-    protected abstract BlockStateProviderType<?> getProviderType();
+    protected abstract BlockStateProviderType<?> type();
 
     @Override
-    public BlockState getBlockState(Random randomIn, BlockPos blockPosIn) {
+    public BlockState getState(Random randomIn, BlockPos blockPosIn) {
         if (state == null) {
             Block block = ForgeRegistries.BLOCKS.getValue(key);
             if (block == null) {
                 System.out.println("Block couldn't be located for key: " + key);
-                state = Blocks.AIR.getDefaultState();
+                state = Blocks.AIR.defaultBlockState();
             } else {
-                state = block.getDefaultState();
+                state = block.defaultBlockState();
             }
         }
 

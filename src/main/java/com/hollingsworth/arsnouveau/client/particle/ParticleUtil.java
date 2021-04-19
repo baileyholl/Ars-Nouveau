@@ -44,9 +44,9 @@ public class ParticleUtil {
     }
 
     public static void spawnFollowProjectile(World world, BlockPos from, BlockPos to){
-        if(world.getChunkProvider().isChunkLoaded(new ChunkPos(from)) && world.getChunkProvider().isChunkLoaded(new ChunkPos(to))){
+        if(world.getChunkSource().isEntityTickingChunk(new ChunkPos(from)) && world.getChunkSource().isEntityTickingChunk(new ChunkPos(to))){
             EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, from, to);
-            world.addEntity(aoeProjectile);
+            world.addFreshEntity(aoeProjectile);
         }
     }
 
@@ -72,10 +72,10 @@ public class ParticleUtil {
         while ((d4 + .65) < d3)
         {
             d4 += 1.8D - d5 + r.nextDouble() * (1.5D - d5);
-            if(world.isRemote)
+            if(world.isClientSide)
                 world.addParticle(ParticleTypes.ENCHANT, x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4, 0.0D, 0.0D, 0.0D);
             if(world instanceof ServerWorld){
-                ((ServerWorld)world).spawnParticle(ParticleTypes.WITCH,x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4,r.nextInt(4), 0,0.0,0, 0.0);
+                ((ServerWorld)world).sendParticles(ParticleTypes.WITCH,x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4,r.nextInt(4), 0,0.0,0, 0.0);
             }
         }
     }
@@ -93,7 +93,7 @@ public class ParticleUtil {
             double d0 = pos.getX() +0.5;
             double d1 = pos.getY() +1.2;
             double d2 = pos.getZ() +.5 ;
-            (world).spawnParticle(ParticleTypes.END_ROD, d0, d1, d2, 2,(world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3, 0.1f);
+            (world).sendParticles(ParticleTypes.END_ROD, d0, d1, d2, 2,(world.random.nextFloat() * 1 - 0.5)/3, (world.random.nextFloat() * 1 - 0.5)/3, (world.random.nextFloat() * 1 - 0.5)/3, 0.1f);
         }
     }
 
@@ -102,7 +102,7 @@ public class ParticleUtil {
             double d0 = loc.getX() +0.5;;
             double d1 = loc.getY() +1.0;
             double d2 = loc.getZ() +.5 ;
-            world.addParticle(GlowParticleData.createData(new ParticleColor(255,25,180)),d0, d1, d2, (world.rand.nextFloat() * 1 - 0.5)/5, (world.rand.nextFloat() * 1 - 0.5)/5, (world.rand.nextFloat() * 1 - 0.5)/5);
+            world.addParticle(GlowParticleData.createData(new ParticleColor(255,25,180)),d0, d1, d2, (world.random.nextFloat() * 1 - 0.5)/5, (world.random.nextFloat() * 1 - 0.5)/5, (world.random.nextFloat() * 1 - 0.5)/5);
         }
     }
 

@@ -22,7 +22,7 @@ import java.util.List;
 public interface ICasterTool extends IScribeable, IDisplayMana {
     @Override
     default boolean onScribe(World world, BlockPos pos, PlayerEntity player, Hand handIn, ItemStack stack) {
-        ItemStack heldStack = player.getHeldItem(handIn);
+        ItemStack heldStack = player.getItemInHand(handIn);
         ISpellCaster caster = getSpellCaster(stack);
 
         if(caster == null)

@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 @Mixin(Entity.class)
 public class LightningRedirectMixin {
 
-    @ModifyConstant(method = "func_241841_a", constant = @Constant(floatValue = 5.0F), remap = false)
+    @ModifyConstant(method = "thunderHit", constant = @Constant(floatValue = 5.0F), remap = true)
     public float hookLightningDamage(float original, ServerWorld level, LightningBoltEntity bolt) {
         if(bolt instanceof LightningEntity) {
             return ((LightningEntity)bolt).getDamage((Entity)((Object)this));

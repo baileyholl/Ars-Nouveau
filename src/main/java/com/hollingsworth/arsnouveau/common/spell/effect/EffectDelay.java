@@ -16,6 +16,8 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
+
 public class EffectDelay extends AbstractEffect {
     public EffectDelay() {
         super(GlyphLib.EffectDelayID, "Delay");

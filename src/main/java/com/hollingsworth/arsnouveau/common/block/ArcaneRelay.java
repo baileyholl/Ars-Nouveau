@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 public class ArcaneRelay extends ModBlock {
 
     public ArcaneRelay() {
-        super(defaultProperties().setLightLevel((blockState) ->8).notSolid(), LibBlockNames.ARCANE_RELAY);
+        super(defaultProperties().lightLevel((blockState) ->8).noOcclusion(), LibBlockNames.ARCANE_RELAY);
     }
 
     @Override
@@ -31,12 +31,12 @@ public class ArcaneRelay extends ModBlock {
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState p_149645_1_) {
+    public BlockRenderType getRenderShape(BlockState p_149645_1_) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return Block.makeCuboidShape(1D, 1.0D, 1.0D, 15, 15, 15);
+        return Block.box(1D, 1.0D, 1.0D, 15, 15, 15);
     }
 }

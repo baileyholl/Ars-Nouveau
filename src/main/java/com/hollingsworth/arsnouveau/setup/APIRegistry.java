@@ -2,12 +2,10 @@ package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantmentRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.ReactiveEnchantmentRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.SpellWriteRecipe;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
@@ -15,7 +13,6 @@ import com.hollingsworth.arsnouveau.common.spell.method.MethodRune;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 
 public class APIRegistry {
 
@@ -24,28 +21,28 @@ public class APIRegistry {
                 new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentAmplifyID)),
                 new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentAmplifyID)),
                 new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentAmplifyID))}, 3000));
-
-        registerApparatusRecipe(new EnchantmentRecipe(new ItemStack[]{
-                new ItemStack(Items.BLAZE_POWDER),
-                new ItemStack(Items.BLAZE_POWDER),
-                new ItemStack(Items.BLAZE_POWDER),
-                new ItemStack(Items.BLAZE_POWDER),
-                new ItemStack(Items.GOLD_BLOCK),
-                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentExtendTimeID)),
-                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentAOEID)),
-                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentDampenID))
-        }, EnchantmentRegistry.REACTIVE_ENCHANTMENT, 2, 6000));
-
-        registerApparatusRecipe(new EnchantmentRecipe(new ItemStack[]{
-                ItemsRegistry.mythicalClay.getStack(),
-                ItemsRegistry.mythicalClay.getStack(),
-                ItemsRegistry.mythicalClay.getStack(),
-                ItemsRegistry.mythicalClay.getStack(),
-                new ItemStack(Items.ENDER_PEARL),
-                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentPierceID)),
-                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentExtractID)),
-                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentFortuneID))
-        }, EnchantmentRegistry.REACTIVE_ENCHANTMENT, 3, 9000));
+//
+//        registerApparatusRecipe(new EnchantmentRecipe(new ItemStack[]{
+//                new ItemStack(Items.BLAZE_POWDER),
+//                new ItemStack(Items.BLAZE_POWDER),
+//                new ItemStack(Items.BLAZE_POWDER),
+//                new ItemStack(Items.BLAZE_POWDER),
+//                new ItemStack(Items.GOLD_BLOCK),
+//                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentExtendTimeID)),
+//                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentAOEID)),
+//                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentDampenID))
+//        }, EnchantmentRegistry.REACTIVE_ENCHANTMENT, 2, 6000));
+//
+//        registerApparatusRecipe(new EnchantmentRecipe(new ItemStack[]{
+//                ItemsRegistry.mythicalClay.getStack(),
+//                ItemsRegistry.mythicalClay.getStack(),
+//                ItemsRegistry.mythicalClay.getStack(),
+//                ItemsRegistry.mythicalClay.getStack(),
+//                new ItemStack(Items.ENDER_PEARL),
+//                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentPierceID)),
+//                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentExtractID)),
+//                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentFortuneID))
+//        }, EnchantmentRegistry.REACTIVE_ENCHANTMENT, 3, 9000));
 
         registerApparatusRecipe(new SpellWriteRecipe());
     }

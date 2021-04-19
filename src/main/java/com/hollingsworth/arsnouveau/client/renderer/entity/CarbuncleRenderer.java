@@ -36,7 +36,7 @@ public class CarbuncleRenderer extends GeoEntityRenderer<EntityCarbuncle> {
 
 
     public ResourceLocation getColor(EntityCarbuncle e){
-        String color = e.getDataManager().get(EntityCarbuncle.COLOR).toLowerCase();
+        String color = e.getEntityData().get(EntityCarbuncle.COLOR).toLowerCase();
 
         if(color.isEmpty())
             return ORANGE;
@@ -45,12 +45,12 @@ public class CarbuncleRenderer extends GeoEntityRenderer<EntityCarbuncle> {
     }
 
     @Override
-    public ResourceLocation getEntityTexture(EntityCarbuncle entity) {
+    public ResourceLocation getTextureLocation(EntityCarbuncle entity) {
         return entity.isTamed() ? getColor(entity) : WILD_TEXTURE;
     }
 
     @Override
     public RenderType getRenderType(EntityCarbuncle animatable, float partialTicks, MatrixStack stack, @Nullable IRenderTypeBuffer renderTypeBuffer, @Nullable IVertexBuilder vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
-        return RenderType.getEntityCutoutNoCull(textureLocation);
+        return RenderType.entityCutoutNoCull(textureLocation);
     }
 }

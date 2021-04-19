@@ -20,7 +20,7 @@ public class ParticleSparkleData implements IParticleFactory<ColoredDynamicTypeD
     }
 
     @Override
-    public Particle makeParticle(ColoredDynamicTypeData data, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+    public Particle createParticle(ColoredDynamicTypeData data, ClientWorld worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
         return new ParticleSparkle(worldIn, x,y,z,xSpeed, ySpeed, zSpeed, data.color.getRed(), data.color.getGreen(), data.color.getBlue(),
                 data.scale,
                 data.age,  this.spriteSet);

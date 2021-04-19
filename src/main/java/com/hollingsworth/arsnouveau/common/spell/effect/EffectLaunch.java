@@ -24,8 +24,8 @@ public class EffectLaunch extends AbstractEffect {
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof EntityRayTraceResult){
             Entity entity = ((EntityRayTraceResult) rayTraceResult).getEntity();
-            entity.setMotion(entity.getMotion().add(0, 0.8 + .25*getAmplificationBonus(augments), 0));
-            entity.velocityChanged = true;
+            entity.setDeltaMovement(entity.getDeltaMovement().add(0, 0.8 + .25*getAmplificationBonus(augments), 0));
+            entity.hurtMarked = true;
             entity.fallDistance = 0.0f;
         }
     }

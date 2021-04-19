@@ -18,14 +18,14 @@ public class ArcParticleTypeData implements IParticleData {
     public Vector3d target;
     static final IParticleData.IDeserializer<ArcParticleTypeData> DESERIALIZER = new IParticleData.IDeserializer<ArcParticleTypeData>() {
         @Override
-        public ArcParticleTypeData deserialize(ParticleType<ArcParticleTypeData> type, StringReader reader) throws CommandSyntaxException {
+        public ArcParticleTypeData fromCommand(ParticleType<ArcParticleTypeData> type, StringReader reader) throws CommandSyntaxException {
             reader.expect(' ');
             return new ArcParticleTypeData(type, deseralizeVec(reader.readString()), deseralizeVec(reader.readString()));
         }
 
         @Override
-        public ArcParticleTypeData read(ParticleType<ArcParticleTypeData> type, PacketBuffer buffer) {
-            return new ArcParticleTypeData(type, deseralizeVec(buffer.readString()), deseralizeVec(buffer.readString()));
+        public ArcParticleTypeData fromNetwork(ParticleType<ArcParticleTypeData> type, PacketBuffer buffer) {
+            return new ArcParticleTypeData(type, deseralizeVec(buffer.readUtf()), deseralizeVec(buffer.readUtf()));
         }
     };
 
@@ -41,13 +41,13 @@ public class ArcParticleTypeData implements IParticleData {
     }
 
     @Override
-    public void write(PacketBuffer packetBuffer) {
-        packetBuffer.writeString(serializeVec(target));
-        packetBuffer.writeString(serializeVec(source));
+    public void writeToNetwork(PacketBuffer packetBuffer) {
+        packetBuffer.writeUtf(serializeVec(target));
+        packetBuffer.writeUtf(serializeVec(source));
     }
 
     @Override
-    public String getParameters() {
+    public String writeToString() {
         return type.getRegistryName().toString() + " " + serializeVec(target) + " " + serializeVec(source);
     }
 

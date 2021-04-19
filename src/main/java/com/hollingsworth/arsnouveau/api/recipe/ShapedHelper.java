@@ -56,7 +56,7 @@ public class ShapedHelper {
                         ingredient = this.recipeItems.get(k + l * this.recipeWidth);
                     }
                 }
-                if(ingredient.getMatchingStacks().length != 0)
+                if(ingredient.getItems().length != 0)
                     ingredientList.add(ingredient);
 //                if (!ingredient.test(craftingInventory.getStackInSlot(i + j * craftingInventory.getWidth()))) {
 //                    return false;

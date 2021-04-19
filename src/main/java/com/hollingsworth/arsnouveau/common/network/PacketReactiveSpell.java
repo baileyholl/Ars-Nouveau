@@ -24,7 +24,7 @@ public class PacketReactiveSpell {
         ctx.get().enqueueWork(()->{
             ServerPlayerEntity serverPlayerEntity = ctx.get().getSender();
             if(serverPlayerEntity!= null){
-                ItemStack stack = serverPlayerEntity.getHeldItemMainhand();
+                ItemStack stack = serverPlayerEntity.getMainHandItem();
                 ReactiveEvents.castSpell(ctx.get().getSender(), stack);
             }
         });

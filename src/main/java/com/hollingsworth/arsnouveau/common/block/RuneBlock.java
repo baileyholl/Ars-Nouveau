@@ -35,26 +35,26 @@ import java.util.Random;
 
 public class RuneBlock extends ModBlock{
     public RuneBlock() {
-        super(defaultProperties().doesNotBlockMovement().notSolid().hardnessAndResistance(0f,0f), LibBlockNames.RUNE);
+        super(defaultProperties().noCollission().noOcclusion().strength(0f,0f), LibBlockNames.RUNE);
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(worldIn, pos, state, placer, stack);
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        ItemStack stack = player.getHeldItem(handIn);
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        ItemStack stack = player.getItemInHand(handIn);
 
-        if(!worldIn.isRemote && stack.getItem() instanceof RunicChalk){
-            if(((RuneTile)worldIn.getTileEntity(pos)).isTemporary){
-                ((RuneTile)worldIn.getTileEntity(pos)).isTemporary = false;
+        if(!worldIn.isClientSide && stack.getItem() instanceof RunicChalk){
+            if(((RuneTile)worldIn.getBlockEntity(pos)).isTemporary){
+                ((RuneTile)worldIn.getBlockEntity(pos)).isTemporary = false;
                 PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.rune.setperm"));
                 return ActionResultType.SUCCESS;
             }
         }
-        if(!(stack.getItem() instanceof SpellParchment) || worldIn.isRemote)
+        if(!(stack.getItem() instanceof SpellParchment) || worldIn.isClientSide)
             return ActionResultType.SUCCESS;
         List<AbstractSpellPart> recipe = SpellParchment.getSpellRecipe(stack);
         if(recipe == null || recipe.isEmpty())
@@ -64,29 +64,29 @@ public class RuneBlock extends ModBlock{
             PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.rune.touch"));
             return ActionResultType.SUCCESS;
         }
-        ((RuneTile)worldIn.getTileEntity(pos)).setRecipe(recipe);
+        ((RuneTile)worldIn.getBlockEntity(pos)).setRecipe(recipe);
         PortUtil.sendMessage(player, "Spell set.");
-        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+        return super.use(state, worldIn, pos, player, handIn, hit);
     }
 
     @Override
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
         super.tick(state, worldIn, pos, rand);
-        List<Entity> entities = worldIn.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX(), pos.getY() +1, pos.getZ()).grow(1));
-        if(!entities.isEmpty() && worldIn.getTileEntity(pos) instanceof RuneTile)
-            ((RuneTile) worldIn.getTileEntity(pos)).castSpell(entities.get(0));
+        List<Entity> entities = worldIn.getEntitiesOfClass(Entity.class, new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX(), pos.getY() +1, pos.getZ()).inflate(1));
+        if(!entities.isEmpty() && worldIn.getBlockEntity(pos) instanceof RuneTile)
+            ((RuneTile) worldIn.getBlockEntity(pos)).castSpell(entities.get(0));
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-        super.onEntityCollision(state, worldIn, pos, entityIn);
-        if(worldIn.getTileEntity(pos) instanceof RuneTile)
-            worldIn.getPendingBlockTicks().scheduleTick(pos, this, 1);
+    public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+        super.entityInside(state, worldIn, pos, entityIn);
+        if(worldIn.getBlockEntity(pos) instanceof RuneTile)
+            worldIn.getBlockTicks().scheduleTick(pos, this, 1);
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16D, 0.5D, 16D);
+        return Block.box(0.0D, 0.0D, 0.0D, 16D, 0.5D, 16D);
     }
 
     @Override
@@ -102,7 +102,7 @@ public class RuneBlock extends ModBlock{
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(POWERED);
     }
 }

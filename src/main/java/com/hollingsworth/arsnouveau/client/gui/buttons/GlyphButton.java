@@ -25,7 +25,7 @@ public class GlyphButton extends Button {
     GuiSpellBook parent;
 
     public GlyphButton(GuiSpellBook parent, int x, int y, boolean isCraftingSlot, String resource_image, String spell_id) {
-        super(x, y,  16, 16, ITextComponent.getTextComponentOrEmpty(""), parent::onGlyphClick);
+        super(x, y,  16, 16, ITextComponent.nullToEmpty(""), parent::onGlyphClick);
         this.parent = parent;
         this.x = x;
         this.y = y;

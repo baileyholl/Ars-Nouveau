@@ -16,6 +16,8 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import net.minecraft.item.Item.Properties;
+
 public abstract class AbstractAugmentItem extends ModItem implements ISpellBonus {
 
 
@@ -39,8 +41,8 @@ public abstract class AbstractAugmentItem extends ModItem implements ISpellBonus
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if(this.getBonusAugment(stack) == null)
             return;
         tooltip.add(new StringTextComponent(this.getBonusAugment(stack).name +" " + RomanNumber.toRoman(this.getBonusLevel(stack))));

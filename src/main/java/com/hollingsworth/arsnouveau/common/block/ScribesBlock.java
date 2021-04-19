@@ -34,39 +34,39 @@ import javax.annotation.Nullable;
 
 public class ScribesBlock extends ModBlock{
     public ScribesBlock() {
-        super(Block.Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(2.0f, 3.0f).notSolid(), LibBlockNames.SCRIBES_BLOCK);
+        super(Block.Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(2.0f, 3.0f).noOcclusion(), LibBlockNames.SCRIBES_BLOCK);
         MinecraftForge.EVENT_BUS.register(this);
     }
-    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    public static final DirectionProperty FACING = HorizontalBlock.FACING;
 
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (world.isRemote) {
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (world.isClientSide) {
             return ActionResultType.SUCCESS;
         }
         if(handIn != Hand.MAIN_HAND)
             return ActionResultType.PASS;
 
-        if(world.getTileEntity(pos) instanceof ScribesTile && !player.isSneaking()) {
-            ScribesTile tile = (ScribesTile) world.getTileEntity(pos);
-            if (tile.stack != null && player.getHeldItem(handIn).isEmpty()) {
-                ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.stack);
-                world.addEntity(item);
+        if(world.getBlockEntity(pos) instanceof ScribesTile && !player.isShiftKeyDown()) {
+            ScribesTile tile = (ScribesTile) world.getBlockEntity(pos);
+            if (tile.stack != null && player.getItemInHand(handIn).isEmpty()) {
+                ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
+                world.addFreshEntity(item);
                 tile.stack = null;
-            } else if (!player.inventory.getCurrentItem().isEmpty()) {
+            } else if (!player.inventory.getSelected().isEmpty()) {
                 if(tile.stack != null){
-                    ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.stack);
-                    world.addEntity(item);
+                    ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
+                    world.addFreshEntity(item);
                 }
 
-                tile.stack = player.inventory.decrStackSize(player.inventory.currentItem, 1);
+                tile.stack = player.inventory.removeItem(player.inventory.selected, 1);
 
             }
-            world.notifyBlockUpdate(pos, state, state, 2);
+            world.sendBlockUpdated(pos, state, state, 2);
         }
-        if(world.getTileEntity(pos) instanceof ScribesTile && player.isSneaking()){
-            ItemStack stack = ((ScribesTile) world.getTileEntity(pos)).stack;
+        if(world.getBlockEntity(pos) instanceof ScribesTile && player.isShiftKeyDown()){
+            ItemStack stack = ((ScribesTile) world.getBlockEntity(pos)).stack;
 
             if(stack == null || stack.isEmpty())
                 return ActionResultType.SUCCESS;
@@ -81,23 +81,23 @@ public class ScribesBlock extends ModBlock{
     }
 
     @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        super.onBlockHarvested(worldIn, pos, state, player);
-        if(worldIn.getTileEntity(pos) instanceof ScribesTile && ((ScribesTile) worldIn.getTileEntity(pos)).stack != null){
-            worldIn.addEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), ((ScribesTile) worldIn.getTileEntity(pos)).stack));
+    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.playerWillDestroy(worldIn, pos, state, player);
+        if(worldIn.getBlockEntity(pos) instanceof ScribesTile && ((ScribesTile) worldIn.getBlockEntity(pos)).stack != null){
+            worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), ((ScribesTile) worldIn.getBlockEntity(pos)).stack));
         }
     }
 
     @Override
-    public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
+    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         if (entity != null) {
-            world.setBlockState(pos, state.with(FACING, getFacingFromEntity(pos, entity)), 2);
+            world.setBlock(pos, state.setValue(FACING, getFacingFromEntity(pos, entity)), 2);
         }
     }
 
     public static Direction getFacingFromEntity(BlockPos clickedBlock, LivingEntity entity) {
-        Vector3d vec = entity.getPositionVec();
-        Direction direction = Direction.getFacingFromVector((float) (vec.x - clickedBlock.getX()), (float) (vec.y - clickedBlock.getY()), (float) (vec.z - clickedBlock.getZ()));
+        Vector3d vec = entity.position();
+        Direction direction = Direction.getNearest((float) (vec.x - clickedBlock.getX()), (float) (vec.y - clickedBlock.getY()), (float) (vec.z - clickedBlock.getZ()));
         if(direction == Direction.UP || direction == Direction.DOWN)
             direction = Direction.NORTH;
         return direction;
@@ -105,26 +105,26 @@ public class ScribesBlock extends ModBlock{
 
     @SubscribeEvent
     public void rightClick(PlayerInteractEvent.RightClickBlock event) {
-        if(!(event.getWorld().getTileEntity(event.getPos()) instanceof ScribesTile))
+        if(!(event.getWorld().getBlockEntity(event.getPos()) instanceof ScribesTile))
             return;
         World world = event.getWorld();
         BlockPos pos = event.getPos();
         if(world.getBlockState(pos).getBlock() instanceof ScribesBlock){
-            BlockRegistry.SCRIBES_BLOCK.onBlockActivated(world.getBlockState(pos), world, pos, event.getPlayer(), event.getHand(), null);
+            BlockRegistry.SCRIBES_BLOCK.use(world.getBlockState(pos), world, pos, event.getPlayer(), event.getHand(), null);
             event.setCanceled(true);
         }
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
     @Override
     public boolean hasTileEntity(BlockState state) {

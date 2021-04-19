@@ -19,7 +19,7 @@ public class GuiSpellHUD extends FocusableGui implements IGuiEventListener {
 
 
     @Override
-    public List<? extends IGuiEventListener> getEventListeners() {
+    public List<? extends IGuiEventListener> children() {
         return Collections.emptyList();
     }
 
@@ -45,7 +45,7 @@ public class GuiSpellHUD extends FocusableGui implements IGuiEventListener {
             }else{
                 renderString = new TranslationTextComponent("ars_nouveau.spell_hud.crafting_mode").getString();
             }
-            minecraft.fontRenderer.drawStringWithShadow(ms,renderString, offsetLeft, minecraft.getMainWindow().getScaledHeight() - 30 , 0xFFFFFF);
+            minecraft.font.drawShadow(ms,renderString, offsetLeft, minecraft.getWindow().getGuiScaledHeight() - 30 , 0xFFFFFF);
         }
     }
 }

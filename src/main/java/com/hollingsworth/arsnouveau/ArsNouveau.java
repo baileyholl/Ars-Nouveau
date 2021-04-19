@@ -33,7 +33,7 @@ public class ArsNouveau {
 
     public static ItemGroup itemGroup = new ItemGroup(MODID) {
         @Override
-        public ItemStack createIcon() {
+        public ItemStack makeIcon() {
             return ItemsRegistry.archmageSpellBook.getDefaultInstance();
         }
     };

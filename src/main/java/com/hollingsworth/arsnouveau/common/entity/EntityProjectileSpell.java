@@ -58,7 +58,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
         age++;
 
 
-        Vector3d vector3d = this.getMotion();
+        Vector3d vector3d = this.getDeltaMovement();
 
         if(this.age > 60*20){
             this.remove();
@@ -66,76 +66,76 @@ public class EntityProjectileSpell extends ColoredProjectile {
         }
 
 
-        this.lastTickPosX = this.getPosX();
-        this.lastTickPosY = this.getPosY();
-        this.lastTickPosZ = this.getPosZ();
+        this.xOld = this.getX();
+        this.yOld = this.getY();
+        this.zOld = this.getZ();
 
 
         if (this.inGround) {
             this.inGround = false;
-            this.setMotion(this.getMotion());
+            this.setDeltaMovement(this.getDeltaMovement());
         }
 
 
-        Vector3d vector3d2 = this.getPositionVec();
+        Vector3d vector3d2 = this.position();
         Vector3d vector3d3 = vector3d2.add(vector3d);
-        RayTraceResult raytraceresult = this.world.rayTraceBlocks(new RayTraceContext(vector3d2, vector3d3, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this));
+        RayTraceResult raytraceresult = this.level.clip(new RayTraceContext(vector3d2, vector3d3, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this));
         if (raytraceresult != null && raytraceresult.getType() != RayTraceResult.Type.MISS) {
-            vector3d3 = raytraceresult.getHitVec();
+            vector3d3 = raytraceresult.getLocation();
         }
-        EntityRayTraceResult entityraytraceresult = this.rayTraceEntities(vector3d2, vector3d3);
+        EntityRayTraceResult entityraytraceresult = this.findHitEntity(vector3d2, vector3d3);
         if (entityraytraceresult != null) {
             raytraceresult = entityraytraceresult;
         }
 
         if (raytraceresult != null && raytraceresult instanceof EntityRayTraceResult) {
             Entity entity = ((EntityRayTraceResult)raytraceresult).getEntity();
-            Entity entity1 = this.func_234616_v_();
-            if (entity instanceof PlayerEntity && entity1 instanceof PlayerEntity && !((PlayerEntity)entity1).canAttackPlayer((PlayerEntity)entity)) {
+            Entity entity1 = this.getOwner();
+            if (entity instanceof PlayerEntity && entity1 instanceof PlayerEntity && !((PlayerEntity)entity1).canHarmPlayer((PlayerEntity)entity)) {
                 raytraceresult = null;
             }
         }
 
         if (raytraceresult != null && raytraceresult.getType() != RayTraceResult.Type.MISS  && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
-            this.onImpact(raytraceresult);
-            this.isAirBorne = true;
+            this.onHit(raytraceresult);
+            this.hasImpulse = true;
         }
         if(raytraceresult != null && raytraceresult.getType() == RayTraceResult.Type.MISS && raytraceresult instanceof BlockRayTraceResult){
-            BlockRegistry.PORTAL_BLOCK.onProjectileCollision(world,world.getBlockState(new BlockPos(raytraceresult.getHitVec())),
+            BlockRegistry.PORTAL_BLOCK.onProjectileHit(level,level.getBlockState(new BlockPos(raytraceresult.getLocation())),
                     (BlockRayTraceResult)raytraceresult, this );
 
         }
 
 
 
-        Vector3d vec3d = this.getMotion();
-        double x = this.getPosX() + vec3d.x;
-        double y = this.getPosY() + vec3d.y;
-        double z = this.getPosZ() + vec3d.z;
+        Vector3d vec3d = this.getDeltaMovement();
+        double x = this.getX() + vec3d.x;
+        double y = this.getY() + vec3d.y;
+        double z = this.getZ() + vec3d.z;
 
 
-        if (!this.hasNoGravity()) {
-            Vector3d vec3d1 = this.getMotion();
-            this.setMotion(vec3d1.x, vec3d1.y , vec3d1.z);
+        if (!this.isNoGravity()) {
+            Vector3d vec3d1 = this.getDeltaMovement();
+            this.setDeltaMovement(vec3d1.x, vec3d1.y , vec3d1.z);
         }
 
-        this.setPosition(x,y,z);
+        this.setPos(x,y,z);
 
-        if(world.isRemote && this.age > 2) {
+        if(level.isClientSide && this.age > 2) {
 //
             for (int i = 0; i < 10; i++) {
 
-                double deltaX = getPosX() - lastTickPosX;
-                double deltaY = getPosY() - lastTickPosY;
-                double deltaZ = getPosZ() - lastTickPosZ;
+                double deltaX = getX() - xOld;
+                double deltaY = getY() - yOld;
+                double deltaZ = getZ() - zOld;
                 double dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 8);
                 int counter = 0;
 
                 for (double j = 0; j < dist; j++) {
                     double coeff = j / dist;
-                    counter += world.rand.nextInt(3);
+                    counter += level.random.nextInt(3);
 
-                    world.addParticle(GlowParticleData.createData(getParticleColor()), (float) (prevPosX + deltaX * coeff), (float) (prevPosY + deltaY * coeff), (float) (prevPosZ + deltaZ * coeff), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f));
+                    level.addParticle(GlowParticleData.createData(getParticleColor()), (float) (xo + deltaX * coeff), (float) (yo + deltaY * coeff), (float) (zo + deltaZ * coeff), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f));
 
                 }
             }
@@ -159,8 +159,8 @@ public class EntityProjectileSpell extends ColoredProjectile {
         float f1 = -MathHelper.sin((rotationPitchIn + pitchOffset) * ((float)Math.PI / 180F));
         float f2 = MathHelper.cos(rotationYawIn * ((float)Math.PI / 180F)) * MathHelper.cos(rotationPitchIn * ((float)Math.PI / 180F));
         this.shoot(f, f1, f2, velocity, inaccuracy);
-        Vector3d vec3d = entityThrower.getLookVec();
-        this.setMotion(this.getMotion().add(vec3d.x, vec3d.y, vec3d.z));
+        Vector3d vec3d = entityThrower.getLookAngle();
+        this.setDeltaMovement(this.getDeltaMovement().add(vec3d.x, vec3d.y, vec3d.z));
     }
 
     /**
@@ -168,18 +168,18 @@ public class EntityProjectileSpell extends ColoredProjectile {
      */
     public void shoot(double x, double y, double z, float velocity, float inaccuracy)
     {
-        Vector3d vec3d = (new Vector3d(x, y, z)).normalize().add(this.rand.nextGaussian() * (double)0.0075F * (double)inaccuracy, this.rand.nextGaussian() * (double)0.0075F * (double)inaccuracy, this.rand.nextGaussian() * (double)0.0075F * (double)inaccuracy).scale((double)velocity);
-        this.setMotion(vec3d);
-        float f = MathHelper.sqrt(horizontalMag(vec3d));
-        this.rotationYaw = (float)(MathHelper.atan2(vec3d.x, vec3d.z) * (double)(180F / (float)Math.PI));
-        this.rotationPitch = (float)(MathHelper.atan2(vec3d.y, (double)f) * (double)(180F / (float)Math.PI));
-        this.prevRotationYaw = this.rotationYaw;
-        this.prevRotationPitch = this.rotationPitch;
+        Vector3d vec3d = (new Vector3d(x, y, z)).normalize().add(this.random.nextGaussian() * (double)0.0075F * (double)inaccuracy, this.random.nextGaussian() * (double)0.0075F * (double)inaccuracy, this.random.nextGaussian() * (double)0.0075F * (double)inaccuracy).scale((double)velocity);
+        this.setDeltaMovement(vec3d);
+        float f = MathHelper.sqrt(getHorizontalDistanceSqr(vec3d));
+        this.yRot = (float)(MathHelper.atan2(vec3d.x, vec3d.z) * (double)(180F / (float)Math.PI));
+        this.xRot = (float)(MathHelper.atan2(vec3d.y, (double)f) * (double)(180F / (float)Math.PI));
+        this.yRotO = this.yRot;
+        this.xRotO = this.xRot;
 
     }
 
     @Override
-    public boolean hasNoGravity() {
+    public boolean isNoGravity() {
         return true;
     }
 
@@ -191,42 +191,42 @@ public class EntityProjectileSpell extends ColoredProjectile {
     protected void attemptRemoval(){
         this.pierceLeft--;
         if(this.pierceLeft < 0){
-            this.world.setEntityState(this, (byte)3);
+            this.level.broadcastEntityEvent(this, (byte)3);
             this.remove();
         }
     }
 
     @Override
-    protected void onImpact(RayTraceResult result) {
-        if(!world.isRemote &&  result != null && result.getType() == RayTraceResult.Type.ENTITY) {
+    protected void onHit(RayTraceResult result) {
+        if(!level.isClientSide &&  result != null && result.getType() == RayTraceResult.Type.ENTITY) {
             if (((EntityRayTraceResult) result).getEntity().equals(this.getShooter())) return;
             if(this.spellResolver != null) {
-                this.spellResolver.onResolveEffect(world, (LivingEntity) this.getShooter(), result);
-                Networking.sendToNearby(world, new BlockPos(result.getHitVec()), new PacketANEffect(PacketANEffect.EffectType.BURST,
-                        new BlockPos(result.getHitVec()),getParticleColorWrapper()));
+                this.spellResolver.onResolveEffect(level, (LivingEntity) this.getShooter(), result);
+                Networking.sendToNearby(level, new BlockPos(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
+                        new BlockPos(result.getLocation()),getParticleColorWrapper()));
                 attemptRemoval();
             }
         }
 
-        if (!world.isRemote && result instanceof BlockRayTraceResult  && !this.removed) {
+        if (!level.isClientSide && result instanceof BlockRayTraceResult  && !this.removed) {
 
             BlockRayTraceResult blockraytraceresult = (BlockRayTraceResult)result;
-            BlockState state = world.getBlockState(((BlockRayTraceResult) result).getPos());
+            BlockState state = level.getBlockState(((BlockRayTraceResult) result).getBlockPos());
             if(state.getMaterial() == Material.PORTAL){
-                state.getBlock().onEntityCollision(state, world, ((BlockRayTraceResult) result).getPos(),this);
+                state.getBlock().entityInside(state, level, ((BlockRayTraceResult) result).getBlockPos(),this);
                 return;
             }
 
             if(this.spellResolver != null) {
-                this.spellResolver.onResolveEffect(this.world, (LivingEntity) this.getShooter(), blockraytraceresult);
+                this.spellResolver.onResolveEffect(this.level, (LivingEntity) this.getShooter(), blockraytraceresult);
             }
-            Networking.sendToNearby(world, ((BlockRayTraceResult) result).getPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
-                    new BlockPos(result.getHitVec()).down(), getParticleColorWrapper()));
+            Networking.sendToNearby(level, ((BlockRayTraceResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
+                    new BlockPos(result.getLocation()).below(), getParticleColorWrapper()));
            attemptRemoval();
         }
     }
     public Entity getShooter(){
-        return this.func_234616_v_();
+        return this.getOwner();
     }
 
 
@@ -235,26 +235,26 @@ public class EntityProjectileSpell extends ColoredProjectile {
     }
 
     @Override
-    public IPacket<?> createSpawnPacket() {
+    public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
     @Override
-    public void readAdditional(CompoundNBT tag) {
-        super.readAdditional(tag);
+    public void readAdditionalSaveData(CompoundNBT tag) {
+        super.readAdditionalSaveData(tag);
         if(tag.contains("pierce")){
             this.pierceLeft = tag.getInt("pierce");
         }
     }
 
     @Override
-    public void writeAdditional(CompoundNBT tag) {
-        super.writeAdditional(tag);
+    public void addAdditionalSaveData(CompoundNBT tag) {
+        super.addAdditionalSaveData(tag);
         tag.putInt("pierce", this.pierceLeft);
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
+    protected void defineSynchedData() {
+        super.defineSynchedData();
     }
 }

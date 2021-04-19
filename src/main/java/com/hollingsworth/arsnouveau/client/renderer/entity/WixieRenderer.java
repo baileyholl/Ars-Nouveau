@@ -25,12 +25,12 @@ public class WixieRenderer extends GeoEntityRenderer<EntityWixie> {
     }
 
     @Override
-    public ResourceLocation getEntityTexture(EntityWixie entity) {
+    public ResourceLocation getTextureLocation(EntityWixie entity) {
         return WILD_TEXTURE;
     }
 
     @Override
     public RenderType getRenderType(EntityWixie animatable, float partialTicks, MatrixStack stack, @Nullable IRenderTypeBuffer renderTypeBuffer, @Nullable IVertexBuilder vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
-        return RenderType.getEntityCutoutNoCull(textureLocation);
+        return RenderType.entityCutoutNoCull(textureLocation);
     }
 }

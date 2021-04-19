@@ -47,11 +47,11 @@ public class PotionJarTile extends TileEntity implements ITickableTileEntity, IT
 
     @Override
     public void tick() {
-        if(world.isRemote) {
+        if(level.isClientSide) {
             // world.addParticle(ParticleTypes.DRIPPING_WATER, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0);
             return;
         }
-        BlockState state = world.getBlockState(pos);
+        BlockState state = level.getBlockState(worldPosition);
         int fillState = 0;
         if(this.getCurrentFill() > 0 && this.getCurrentFill() < 1000)
             fillState = 1;
@@ -60,17 +60,17 @@ public class PotionJarTile extends TileEntity implements ITickableTileEntity, IT
         }
 
 
-        if(world.getGameTime() % 20 == 0){
+        if(level.getGameTime() % 20 == 0){
             if(this.getAmount() <= 0 && this.potion != Potions.EMPTY && !this.isLocked) {
                 this.potion = Potions.EMPTY;
                 this.customEffects = new ArrayList<>();
-                world.setBlockState(pos, state.with(ManaJar.fill, fillState),3);
+                level.setBlock(worldPosition, state.setValue(ManaJar.fill, fillState),3);
             }
         }
 
 
 
-        world.setBlockState(pos, state.with(ManaJar.fill, fillState),3);
+        level.setBlock(worldPosition, state.setValue(ManaJar.fill, fillState),3);
     }
 
     public boolean canAcceptNewPotion(){
@@ -81,14 +81,14 @@ public class PotionJarTile extends TileEntity implements ITickableTileEntity, IT
     public void onWanded(PlayerEntity playerEntity) {
         if(!isLocked){
             this.isLocked = true;
-            playerEntity.sendMessage(new TranslationTextComponent("ars_nouveau.locked"), Util.DUMMY_UUID);
+            playerEntity.sendMessage(new TranslationTextComponent("ars_nouveau.locked"), Util.NIL_UUID);
         }else{
             this.isLocked = false;
-            playerEntity.sendMessage(new TranslationTextComponent("ars_nouveau.unlocked"), Util.DUMMY_UUID);
+            playerEntity.sendMessage(new TranslationTextComponent("ars_nouveau.unlocked"), Util.NIL_UUID);
         }
 
-        BlockState state = world.getBlockState(pos);
-        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+        BlockState state = level.getBlockState(worldPosition);
+        level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
     }
 
     public void setPotion(Potion potion, List<EffectInstance> effectInstances){
@@ -101,7 +101,7 @@ public class PotionJarTile extends TileEntity implements ITickableTileEntity, IT
     }
 
     public void setPotion(ItemStack stack){
-        setPotion(PotionUtils.getPotionFromItem(stack), PotionUtils.getEffectsFromStack(stack));
+        setPotion(PotionUtils.getPotion(stack), PotionUtils.getMobEffects(stack));
     }
 
     private void setPotion(Potion potion){
@@ -113,7 +113,7 @@ public class PotionJarTile extends TileEntity implements ITickableTileEntity, IT
     }
 
     public int getColor(){
-        return potion == null ? 16253176 : PotionUtils.getPotionColorFromEffectList(getFullEffects());
+        return potion == null ? 16253176 : PotionUtils.getColor(getFullEffects());
     }
 
     public int getCurrentFill(){
@@ -133,7 +133,7 @@ public class PotionJarTile extends TileEntity implements ITickableTileEntity, IT
         setAmount(Math.min(getMaxFill(), getAmount() + fill));
         if(getAmount() <= 0)
             this.potion = Potions.EMPTY;
-        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+        level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
     }
 
     @Override
@@ -141,9 +141,9 @@ public class PotionJarTile extends TileEntity implements ITickableTileEntity, IT
         List<String> list = new ArrayList<>();
         if(this.potion != null && this.potion != Potions.EMPTY) {
             ItemStack potionStack = new ItemStack(Items.POTION);
-            PotionUtils.addPotionToItemStack(potionStack, potion);
-            list.add(potionStack.getDisplayName().getString());
-            PotionUtils.appendEffects(potionStack, customEffects);
+            PotionUtils.setPotion(potionStack, potion);
+            list.add(potionStack.getHoverName().getString());
+            PotionUtils.setCustomEffects(potionStack, customEffects);
             List<ITextComponent> tooltip = new ArrayList<>();
             PotionUtils.addPotionTooltip(potionStack, tooltip, 1.0F);
             for(ITextComponent i : tooltip){
@@ -197,21 +197,21 @@ public class PotionJarTile extends TileEntity implements ITickableTileEntity, IT
     }
 
     public boolean isMixEqual(ItemStack stack){
-        return isMixEqual(PotionUtils.getEffectsFromStack(stack));
+        return isMixEqual(PotionUtils.getMobEffects(stack));
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT tag) {
-        super.read(state, tag);
+    public void load(BlockState state, CompoundNBT tag) {
+        super.load(state, tag);
         this.amount = tag.getInt("amount");
-        this.potion = PotionUtils.getPotionTypeFromNBT(tag);
+        this.potion = PotionUtils.getPotion(tag);
         this.customEffects = new ArrayList<>();
-        this.customEffects.addAll(PotionUtils.getFullEffectsFromTag(tag));
+        this.customEffects.addAll(PotionUtils.getCustomEffects(tag));
         this.isLocked = tag.getBoolean("locked");
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundNBT save(CompoundNBT tag) {
         ResourceLocation resourcelocation = Registry.POTION.getKey(potion);
         tag.putInt("amount", this.getAmount());
         tag.putString("Potion", resourcelocation.toString());
@@ -220,29 +220,29 @@ public class PotionJarTile extends TileEntity implements ITickableTileEntity, IT
             ListNBT listnbt = new ListNBT();
 
             for (EffectInstance effectinstance : customEffects) {
-                listnbt.add(effectinstance.write(new CompoundNBT()));
+                listnbt.add(effectinstance.save(new CompoundNBT()));
             }
 
             tag.put("CustomPotionEffects", listnbt);
         }
-        return super.write(tag);
+        return super.save(tag);
     }
 
     @Override
     @Nullable
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 3, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 3, this.getUpdateTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         super.onDataPacket(net, pkt);
-        handleUpdateTag(world.getBlockState(pos),pkt.getNbtCompound());
+        handleUpdateTag(level.getBlockState(worldPosition),pkt.getTag());
     }
 
     public int getMaxFill() {
@@ -255,7 +255,7 @@ public class PotionJarTile extends TileEntity implements ITickableTileEntity, IT
 
     public void setAmount(int amount) {
         this.amount = amount;
-        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
+        level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
     }
 }
 

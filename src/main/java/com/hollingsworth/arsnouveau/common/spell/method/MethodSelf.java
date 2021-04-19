@@ -27,33 +27,33 @@ public class MethodSelf extends AbstractCastMethod {
 
     @Override
     public void onCast(ItemStack stack, LivingEntity caster, World world, List<AbstractAugment> augments, SpellContext context) {
-        resolver.onResolveEffect(caster.getEntityWorld(), caster, new EntityRayTraceResult(caster));
+        resolver.onResolveEffect(caster.getCommandSenderWorld(), caster, new EntityRayTraceResult(caster));
         resolver.expendMana(caster);
-        Networking.sendToNearby(caster.world, caster, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, caster.getPosition()));
+        Networking.sendToNearby(caster.level, caster, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, caster.blockPosition()));
     }
 
     @Override
     public void onCastOnBlock(ItemUseContext context, List<AbstractAugment> augments, SpellContext spellContext) {
-        World world = context.getWorld();
+        World world = context.getLevel();
         resolver.onResolveEffect(world, context.getPlayer(),  new EntityRayTraceResult(context.getPlayer()));
         resolver.expendMana(context.getPlayer());
-        Networking.sendToNearby(context.getWorld(), context.getPlayer(), new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, context.getPlayer().getPosition()));
+        Networking.sendToNearby(context.getLevel(), context.getPlayer(), new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, context.getPlayer().blockPosition()));
     }
 
     @Override
     public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments, SpellContext spellContext) {
-        World world = caster.world;
+        World world = caster.level;
         resolver.onResolveEffect(world, caster,  new EntityRayTraceResult(caster));
         resolver.expendMana(caster);
-        Networking.sendToNearby(caster.world, caster, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, caster.getPosition()));
+        Networking.sendToNearby(caster.level, caster, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, caster.blockPosition()));
     }
 
     @Override
     public void onCastOnEntity(ItemStack stack, LivingEntity playerIn, LivingEntity target, Hand hand, List<AbstractAugment> augments, SpellContext spellContext) {
-        World world = playerIn.world;
+        World world = playerIn.level;
         resolver.onResolveEffect(world, playerIn,  new EntityRayTraceResult(playerIn));
         resolver.expendMana(playerIn);
-        Networking.sendToNearby(playerIn.world, playerIn, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, playerIn.getPosition()));
+        Networking.sendToNearby(playerIn.level, playerIn, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, playerIn.blockPosition()));
     }
 
     @Override

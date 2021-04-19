@@ -31,12 +31,12 @@ public class FollowPlayerGoal extends Goal {
         this.entity = mob;
         this.followPredicate = Objects::nonNull;
         this.speedModifier = speedModifier;
-        this.navigation = mob.getNavigator();
+        this.navigation = mob.getNavigation();
         this.stopDistance = stopDistance;
         this.areaSize = areaSize;
         this.probability = probability;
-        this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
-        if (!(mob.getNavigator() instanceof GroundPathNavigator) && !(mob.getNavigator() instanceof FlyingPathNavigator)) {
+        this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+        if (!(mob.getNavigation() instanceof GroundPathNavigator) && !(mob.getNavigation() instanceof FlyingPathNavigator)) {
             throw new IllegalArgumentException("Unsupported mob type for FollowMobGoal");
         }
     }
@@ -48,8 +48,8 @@ public class FollowPlayerGoal extends Goal {
      * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
      * method as well.
      */
-    public boolean shouldExecute() {
-        List<PlayerEntity> list = this.entity.world.getEntitiesWithinAABB(PlayerEntity.class, this.entity.getBoundingBox().grow((double)this.areaSize), this.followPredicate);
+    public boolean canUse() {
+        List<PlayerEntity> list = this.entity.level.getEntitiesOfClass(PlayerEntity.class, this.entity.getBoundingBox().inflate((double)this.areaSize), this.followPredicate);
         if (!list.isEmpty()) {
             for(PlayerEntity mobentity : list) {
                 if (!mobentity.isInvisible()) {
@@ -65,49 +65,49 @@ public class FollowPlayerGoal extends Goal {
     /**
      * Returns whether an in-progress EntityAIBase should continue executing
      */
-    public boolean shouldContinueExecuting() {
-        return this.followingEntity != null && !this.navigation.noPath() && this.entity.getDistanceSq(this.followingEntity) > (double)(this.stopDistance * this.stopDistance);
+    public boolean canContinueToUse() {
+        return this.followingEntity != null && !this.navigation.isDone() && this.entity.distanceToSqr(this.followingEntity) > (double)(this.stopDistance * this.stopDistance);
     }
 
     /**
      * Execute a one shot task or start executing a continuous task
      */
-    public void startExecuting() {
+    public void start() {
         this.timeToRecalcPath = 0;
-        this.oldWaterCost = this.entity.getPathPriority(PathNodeType.WATER);
-        this.entity.setPathPriority(PathNodeType.WATER, 0.0F);
+        this.oldWaterCost = this.entity.getPathfindingMalus(PathNodeType.WATER);
+        this.entity.setPathfindingMalus(PathNodeType.WATER, 0.0F);
     }
 
     /**
      * Reset the task's internal state. Called when this task is interrupted by another one
      */
-    public void resetTask() {
+    public void stop() {
         this.followingEntity = null;
-        this.navigation.clearPath();
-        this.entity.setPathPriority(PathNodeType.WATER, this.oldWaterCost);
+        this.navigation.stop();
+        this.entity.setPathfindingMalus(PathNodeType.WATER, this.oldWaterCost);
     }
 
     /**
      * Keep ticking a continuous task that has already been started
      */
     public void tick() {
-        if (this.followingEntity != null && !this.entity.getLeashed()) {
-            this.entity.getLookController().setLookPositionWithEntity(this.followingEntity, 10.0F, (float)this.entity.getVerticalFaceSpeed());
+        if (this.followingEntity != null && !this.entity.isLeashed()) {
+            this.entity.getLookControl().setLookAt(this.followingEntity, 10.0F, (float)this.entity.getMaxHeadXRot());
             if (--this.timeToRecalcPath <= 0) {
                 this.timeToRecalcPath = 10;
-                double d0 = this.entity.getPosX() - this.followingEntity.getPosX();
-                double d1 = this.entity.getPosY() - this.followingEntity.getPosY();
-                double d2 = this.entity.getPosZ() - this.followingEntity.getPosZ();
+                double d0 = this.entity.getX() - this.followingEntity.getX();
+                double d1 = this.entity.getY() - this.followingEntity.getY();
+                double d2 = this.entity.getZ() - this.followingEntity.getZ();
                 double d3 = d0 * d0 + d1 * d1 + d2 * d2;
                 if (!(d3 <= (double)(this.stopDistance * this.stopDistance))) {
-                    this.navigation.tryMoveToEntityLiving(this.followingEntity, this.speedModifier);
+                    this.navigation.moveTo(this.followingEntity, this.speedModifier);
                 } else {
-                    this.navigation.clearPath();
+                    this.navigation.stop();
 
                     if (d3 <= (double)this.stopDistance) {
-                        double d4 = this.followingEntity.getPosX() - this.entity.getPosX();
-                        double d5 = this.followingEntity.getPosZ() - this.entity.getPosZ();
-                        this.navigation.tryMoveToXYZ(this.entity.getPosX() - d4, this.entity.getPosY(), this.entity.getPosZ() - d5, this.speedModifier);
+                        double d4 = this.followingEntity.getX() - this.entity.getX();
+                        double d5 = this.followingEntity.getZ() - this.entity.getZ();
+                        this.navigation.moveTo(this.entity.getX() - d4, this.entity.getY(), this.entity.getZ() - d5, this.speedModifier);
                     }
 
                 }

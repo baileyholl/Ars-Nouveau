@@ -11,6 +11,8 @@ import java.util.EnumSet;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import net.minecraft.entity.ai.goal.Goal.Flag;
+
 public class GetUnstuckGoal extends CheckStuckGoal {
 
     int numUnstucks;
@@ -21,12 +23,12 @@ public class GetUnstuckGoal extends CheckStuckGoal {
     boolean isStuckTrying;
     Function<Boolean, Void> setUnstuck;
     public GetUnstuckGoal(MobEntity entity, Supplier<Boolean> isStuck, Function<Boolean, Void> setUnstuck){
-        super(entity::getPosition, 4, null);
+        super(entity::blockPosition, 4, null);
         this.entity = entity;
         this.isStuck = isStuck;
         this.setStuck = this::setStuckTrying;
         this.setUnstuck = setUnstuck;
-        this.setMutexFlags(EnumSet.of(Flag.MOVE));
+        this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
     public Void setStuckTrying(boolean isStuck){
@@ -35,22 +37,22 @@ public class GetUnstuckGoal extends CheckStuckGoal {
     }
 
     @Override
-    public void startExecuting() {
+    public void start() {
         resetStuckCheck();
         ArrayUtil.shuffleArray(directions);
         numUnstucks = 0;
         targetPos = getNextTarget();
         isStuckTrying = false;
-        entity.getNavigator().clearPath();
+        entity.getNavigation().stop();
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
+    public boolean canContinueToUse() {
         return this.targetPos != null && isStuck.get();
     }
 
     @Override
-    public boolean shouldExecute() {
+    public boolean canUse() {
         return isStuck.get();
     }
 
@@ -61,8 +63,8 @@ public class GetUnstuckGoal extends CheckStuckGoal {
         if (targetPos == null)
             return;
 
-        if(BlockUtil.distanceFrom(entity.getPosition(), targetPos) > 0.5){
-            entity.getNavigator().setPath(getPath(targetPos), 1.2D);
+        if(BlockUtil.distanceFrom(entity.blockPosition(), targetPos) > 0.5){
+            entity.getNavigation().moveTo(getPath(targetPos), 1.2D);
         }else{
             setUnstuck.apply(false);
             targetPos = null;
@@ -79,22 +81,22 @@ public class GetUnstuckGoal extends CheckStuckGoal {
         if(numUnstucks >= directions.length)
             return null;
         Direction direction = directions[numUnstucks];
-        if(entity.getAdjustedHorizontalFacing() == direction){
+        if(entity.getMotionDirection() == direction){
             return getNextTarget();
         }
         for(int i = 3; i > 1; i--){
-            BlockPos posToMove = entity.getPosition().offset(direction, i);
+            BlockPos posToMove = entity.blockPosition().relative(direction, i);
             Path path = getPath(posToMove);
-            if(path != null && path.reachesTarget()){
+            if(path != null && path.canReach()){
                 return posToMove;
-            }else if(getPath(posToMove.down()) != null && getPath(posToMove.down()).reachesTarget()){
-                return posToMove.down();
-            }else if(getPath(posToMove.down(2)) != null && getPath(posToMove.down(2)).reachesTarget()){
-                return posToMove.down(2);
-            }else if(getPath(posToMove.up()) != null && getPath(posToMove.up()).reachesTarget()){
-                return posToMove.up();
-            }else if(getPath(posToMove.up(2)) != null && getPath(posToMove.up(2)).reachesTarget()){
-                return posToMove.up(2);
+            }else if(getPath(posToMove.below()) != null && getPath(posToMove.below()).canReach()){
+                return posToMove.below();
+            }else if(getPath(posToMove.below(2)) != null && getPath(posToMove.below(2)).canReach()){
+                return posToMove.below(2);
+            }else if(getPath(posToMove.above()) != null && getPath(posToMove.above()).canReach()){
+                return posToMove.above();
+            }else if(getPath(posToMove.above(2)) != null && getPath(posToMove.above(2)).canReach()){
+                return posToMove.above(2);
             }
         }
 
@@ -102,6 +104,6 @@ public class GetUnstuckGoal extends CheckStuckGoal {
     }
 
     public Path getPath(BlockPos p){
-        return entity.getNavigator().getPathToPos(p, 0);
+        return entity.getNavigation().createPath(p, 0);
     }
 }
