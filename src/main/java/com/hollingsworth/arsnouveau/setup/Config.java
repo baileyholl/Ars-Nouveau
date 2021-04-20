@@ -52,14 +52,30 @@ public class Config {
     private static Map<String, ForgeConfigSpec.BooleanValue> enabledSpells = new HashMap<>();
     private static Map<String, ForgeConfigSpec.BooleanValue> startingSpells = new HashMap<>();
     private static Map<String, ForgeConfigSpec.IntValue> spellCost = new HashMap<>();
+    public static Map<String, Integer> addonSpellCosts = new HashMap<>();
 
     public static boolean isSpellEnabled(String tag){
         return enabledSpells.containsKey(tag) ? enabledSpells.get(tag).get() : true;
     }
 
-    public static int getSpellCost(String tag){
-        return spellCost.get(tag+"_cost").get();
+    public static void putAddonSpellCost(String tag, int cost){
+        addonSpellCosts.put(tag,cost);
     }
+
+
+    public static int getAddonSpellCost(String tag){
+        return addonSpellCosts.getOrDefault(tag,
+                ArsNouveauAPI.getInstance().getSpell_map().containsKey(tag) ?
+                        ArsNouveauAPI.getInstance().getSpell_map().get(tag).getManaCost() : 0);
+    }
+
+    /**
+     * Returns the mana cost specified in the Ars Nouveau config, or falls back to the addon spell cost map. If not there, falls back to the method cost.
+     */
+    public static int getSpellCost(String tag){
+        return spellCost.containsKey(tag + "_cost") ? spellCost.get(tag+"_cost").get() : getAddonSpellCost(tag);
+    }
+
     static {
         ForgeConfigSpec.Builder SERVER_BUILDER = new ForgeConfigSpec.Builder();
         ForgeConfigSpec.Builder CLIENT_BUILDER = new ForgeConfigSpec.Builder();
