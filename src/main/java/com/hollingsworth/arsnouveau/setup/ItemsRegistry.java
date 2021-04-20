@@ -115,7 +115,7 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.POTION_FLASK_AMPLIFY)public static PotionFlask POTION_FLASK_AMPLIFY;
     @ObjectHolder(LibItemNames.POTION_FLASK_EXTEND_TIME)public static PotionFlask POTION_FLASK_EXTEND_TIME;
 
-    public static Food MANA_BERRY_FOOD = (new Food.Builder()).hunger(2).saturation(0.1F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).setAlwaysEdible().build();
+    public static Food MANA_BERRY_FOOD = (new Food.Builder()).nutrition(2).saturationMod(0.1F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).alwaysEat().build();
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler{
@@ -142,7 +142,7 @@ public class ItemsRegistry {
                     new ModItem(LibItemNames.ARCANE_BRICK).withTooltip(new TranslationTextComponent("tooltip.arcane_brick")),
                     new ModItem(LibItemNames.RING_OF_POTENTIAL),
                     new BeltOfUnstableGifts(LibItemNames.BELT_OF_UNSTABLE_GIFTS),
-                    new ModItem(defaultItemProperties().maxStackSize(1), LibItemNames.BUCKET_OF_MANA),
+                    new ModItem(defaultItemProperties().stacksTo(1), LibItemNames.BUCKET_OF_MANA),
                     new NoviceArmor(EquipmentSlotType.FEET).setRegistryName("novice_boots"),
                     new NoviceArmor(EquipmentSlotType.LEGS).setRegistryName("novice_leggings"),
                     new NoviceArmor(EquipmentSlotType.CHEST).setRegistryName("novice_robes"),
@@ -219,13 +219,13 @@ public class ItemsRegistry {
                     new PotionFlask(LibItemNames.POTION_FLASK_EXTEND_TIME) {
                         @Override
                         public EffectInstance getEffectInstance(EffectInstance effectInstance) {
-                            return new EffectInstance(effectInstance.getPotion(), effectInstance.getDuration() + effectInstance.getDuration()/2, effectInstance.getAmplifier());
+                            return new EffectInstance(effectInstance.getEffect(), effectInstance.getDuration() + effectInstance.getDuration()/2, effectInstance.getAmplifier());
                         }
                     }.withTooltip(new TranslationTextComponent("tooltip.potion_flask_extend_time")),
                     new PotionFlask(LibItemNames.POTION_FLASK_AMPLIFY) {
                         @Override
                         public EffectInstance getEffectInstance(EffectInstance effectInstance) {
-                            return new EffectInstance(effectInstance.getPotion(), effectInstance.getDuration()/2, effectInstance.getAmplifier() + 1);
+                            return new EffectInstance(effectInstance.getEffect(), effectInstance.getDuration()/2, effectInstance.getAmplifier() + 1);
                         }
                     }.withTooltip(new TranslationTextComponent("tooltip.potion_flask_amplify"))
 
@@ -245,7 +245,7 @@ public class ItemsRegistry {
     }
 
     public static Item.Properties defaultItemProperties() {
-        return new Item.Properties().group(ArsNouveau.itemGroup);
+        return new Item.Properties().tab(ArsNouveau.itemGroup);
     }
 }
 

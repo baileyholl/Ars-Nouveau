@@ -22,56 +22,56 @@ public class SummonHorse extends HorseEntity implements ISummon {
     }
 
     @Override
-    protected boolean canMate() {
+    protected boolean canParent() {
         return false;
     }
 
     @Override
-    public ActionResultType func_230254_b_(PlayerEntity p_230254_1_, Hand p_230254_2_) {
-        return super.func_230254_b_(p_230254_1_, p_230254_2_);
+    public ActionResultType mobInteract(PlayerEntity p_230254_1_, Hand p_230254_2_) {
+        return super.mobInteract(p_230254_1_, p_230254_2_);
     }
 
     @Override
     public void tick() {
         super.tick();
-        if(!world.isRemote){
+        if(!level.isClientSide){
             ticksLeft--;
             if(ticksLeft <= 0) {
-                ParticleUtil.spawnPoof((ServerWorld) world, getPosition());
+                ParticleUtil.spawnPoof((ServerWorld) level, blockPosition());
                 this.remove();
-                onSummonDeath(world, null, true);
+                onSummonDeath(level, null, true);
             }
         }
     }
 
     @Override
-    public void onDeath(DamageSource cause) {
-        super.onDeath(cause);
-        onSummonDeath(world, cause, false);
+    public void die(DamageSource cause) {
+        super.die(cause);
+        onSummonDeath(level, cause, false);
     }
 
     @Override
-    public boolean canPickUpItem(ItemStack itemstackIn) {
+    public boolean canTakeItem(ItemStack itemstackIn) {
         return false;
     }
 
     @Override
-    protected void dropInventory() { }
+    protected void dropEquipment() { }
 
     @Override
-    protected int getExperiencePoints(PlayerEntity player) {
+    protected int getExperienceReward(PlayerEntity player) {
         return 0;
     }
 
     public Inventory getHorseInventory(){
-        return this.horseChest;
+        return this.inventory;
     }
 
     @Override
-    public void openGUI(PlayerEntity playerEntity) { }
+    public void openInventory(PlayerEntity playerEntity) { }
 
     @Override
-    public boolean canMateWith(AnimalEntity otherAnimal) {
+    public boolean canMate(AnimalEntity otherAnimal) {
         return false;
     }
 
@@ -81,18 +81,18 @@ public class SummonHorse extends HorseEntity implements ISummon {
     }
 
     @Override
-    public boolean isBreedingItem(ItemStack stack) {
+    public boolean isFood(ItemStack stack) {
         return false;
     }
     @Override
-    public void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
+    public void readAdditionalSaveData(CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
         this.ticksLeft = compound.getInt("left");
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
+    public void addAdditionalSaveData(CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
         compound.putInt("left", ticksLeft);
     }
 

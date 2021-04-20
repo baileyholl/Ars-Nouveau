@@ -1,0 +1,46 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "ars_nouveau:reactive",
+  "level": 3,
+  "mana": 9000,
+  "item_1": [
+    {
+      "item": "ars_nouveau:mythical_clay"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:mythical_clay"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "ars_nouveau:mythical_clay"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "ars_nouveau:mythical_clay"
+    }
+  ],
+  "item_5": [
+    {
+      "tag": "forge:ender_pearls"
+    }
+  ],
+  "item_6": [
+    {
+      "item": "ars_nouveau:glyph_pierce"
+    }
+  ],
+  "item_7": [
+    {
+      "item": "ars_nouveau:glyph_extract"
+    }
+  ],
+  "item_8": [
+    {
+      "item": "ars_nouveau:glyph_fortune"
+    }
+  ]
+}

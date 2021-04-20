@@ -14,6 +14,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public abstract class ManaBlock extends ModBlock{
     public ManaBlock(String registryName) {
         super(registryName);
@@ -25,28 +27,28 @@ public abstract class ManaBlock extends ModBlock{
 
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(!worldIn.isRemote && handIn == Hand.MAIN_HAND){
-            if(worldIn.getTileEntity(pos) instanceof AbstractManaTile){
-                AbstractManaTile tile = (AbstractManaTile) worldIn.getTileEntity(pos);
-                if(player.getHeldItem(handIn).getItem() == ItemsRegistry.bucketOfMana){
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if(!worldIn.isClientSide && handIn == Hand.MAIN_HAND){
+            if(worldIn.getBlockEntity(pos) instanceof AbstractManaTile){
+                AbstractManaTile tile = (AbstractManaTile) worldIn.getBlockEntity(pos);
+                if(player.getItemInHand(handIn).getItem() == ItemsRegistry.bucketOfMana){
                     if(tile.getMaxMana() - tile.getCurrentMana() >= 1000){
                         tile.addMana(1000);
                         if(!player.isCreative())
-                            player.setHeldItem(handIn, new ItemStack(Items.BUCKET));
+                            player.setItemInHand(handIn, new ItemStack(Items.BUCKET));
                     }
-                    return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
-                }else if(player.getHeldItem(handIn).getItem() instanceof BucketItem && ((BucketItem)player.getHeldItem(handIn).getItem()).getFluid() == Fluids.EMPTY){
-                    if(tile.getCurrentMana() >= 1000 && player.addItemStackToInventory(new ItemStack(ItemsRegistry.bucketOfMana))){
+                    return super.use(state, worldIn, pos, player, handIn, hit);
+                }else if(player.getItemInHand(handIn).getItem() instanceof BucketItem && ((BucketItem)player.getItemInHand(handIn).getItem()).getFluid() == Fluids.EMPTY){
+                    if(tile.getCurrentMana() >= 1000 && player.addItem(new ItemStack(ItemsRegistry.bucketOfMana))){
                         tile.removeMana(1000);
-                        player.getHeldItem(handIn).shrink(1);
-                    }else if(tile.getCurrentMana() >= 1000 && player.getHeldItem(handIn).getCount() == 1){
+                        player.getItemInHand(handIn).shrink(1);
+                    }else if(tile.getCurrentMana() >= 1000 && player.getItemInHand(handIn).getCount() == 1){
                         tile.removeMana(1000);
-                        player.setHeldItem(player.getActiveHand(),new ItemStack(ItemsRegistry.bucketOfMana));
+                        player.setItemInHand(player.getUsedItemHand(),new ItemStack(ItemsRegistry.bucketOfMana));
                     }
                 }
             }
         }
-        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+        return super.use(state, worldIn, pos, player, handIn, hit);
     }
 }

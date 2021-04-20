@@ -15,10 +15,10 @@ import javax.annotation.Nullable;
 
 public class LightBlock extends ModBlock {
 
-    protected static final VoxelShape SHAPE = Block.makeCuboidShape(4.0D, 4.0D, 4.0D, 12.0D, 12.0D, 12.0D);
+    protected static final VoxelShape SHAPE = Block.box(4.0D, 4.0D, 4.0D, 12.0D, 12.0D, 12.0D);
 
     public LightBlock() {
-        super(defaultProperties().setLightLevel((bs)->14).doesNotBlockMovement().notSolid().variableOpacity().hardnessAndResistance(0f,0f), "light_block");
+        super(defaultProperties().lightLevel((bs)->14).noCollission().noOcclusion().dynamicShape().strength(0f,0f), "light_block");
     }
 
     @Nullable
@@ -33,12 +33,12 @@ public class LightBlock extends ModBlock {
     }
 
     @Override
-    public boolean ticksRandomly(BlockState state) {
+    public boolean isRandomlyTicking(BlockState state) {
         return false;
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState p_149645_1_) {
+    public BlockRenderType getRenderShape(BlockState p_149645_1_) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 

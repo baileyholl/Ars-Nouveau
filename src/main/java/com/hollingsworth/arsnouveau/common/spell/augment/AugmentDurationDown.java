@@ -5,6 +5,8 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import net.minecraft.item.Item;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
+
 public class AugmentDurationDown extends AbstractAugment {
 
     public AugmentDurationDown() {

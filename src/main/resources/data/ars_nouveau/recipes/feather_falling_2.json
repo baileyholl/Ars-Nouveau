@@ -1,0 +1,31 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:feather_falling",
+  "level": 2,
+  "mana": 3500,
+  "item_1": [
+    {
+      "item": "ars_nouveau:glyph_slowfall"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:glyph_slowfall"
+    }
+  ],
+  "item_3": [
+    {
+      "tag": "forge:slimeballs"
+    }
+  ],
+  "item_4": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_5": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ]
+}

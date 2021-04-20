@@ -17,13 +17,15 @@ import net.minecraftforge.items.IItemHandler;
 
 import java.util.EnumSet;
 
+import net.minecraft.entity.ai.goal.Goal.Flag;
+
 public class TakeItemGoal extends Goal {
     EntityCarbuncle carbuncle;
     BlockPos takePos;
     boolean unreachable;
     public TakeItemGoal(EntityCarbuncle carbuncle){
       //  super(carbuncle::getPosition, 3, carbuncle::setStuck);
-        this.setMutexFlags(EnumSet.of(Flag.MOVE));
+        this.setFlags(EnumSet.of(Flag.MOVE));
         this.carbuncle = carbuncle;
     }
 
@@ -31,15 +33,15 @@ public class TakeItemGoal extends Goal {
 
 
     @Override
-    public void resetTask() {
-        super.resetTask();
+    public void stop() {
+        super.stop();
         takePos = null;
         unreachable = false;
     }
 
     @Override
-    public void startExecuting() {
-        super.startExecuting();
+    public void start() {
+        super.start();
         takePos = carbuncle.getValidTakePos();
         unreachable = false;
         if(carbuncle.isTamed() && takePos != null && carbuncle.getHeldStack().isEmpty())
@@ -48,10 +50,10 @@ public class TakeItemGoal extends Goal {
 
 
     public void getItem(){
-        World world = carbuncle.world;
-        if(world.getTileEntity(takePos) == null)
+        World world = carbuncle.level;
+        if(world.getBlockEntity(takePos) == null)
             return;
-        IItemHandler iItemHandler = world.getTileEntity(takePos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+        IItemHandler iItemHandler = world.getBlockEntity(takePos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
         if(iItemHandler == null)
             return;
         for(int j = 0; j < iItemHandler.getSlots(); j++){
@@ -59,8 +61,8 @@ public class TakeItemGoal extends Goal {
 
                 carbuncle.setHeldStack(iItemHandler.extractItem(j, 64, false));
 
-                carbuncle.world.playSound(null, carbuncle.getPosX(),carbuncle.getPosY(), carbuncle.getPosZ(),
-                        SoundEvents.ENTITY_ITEM_PICKUP, carbuncle.getSoundCategory(),1.0F, 1.0F);
+                carbuncle.level.playSound(null, carbuncle.getX(),carbuncle.getY(), carbuncle.getZ(),
+                        SoundEvents.ITEM_PICKUP, carbuncle.getSoundSource(),1.0F, 1.0F);
 
                 if(world instanceof ServerWorld){
                     OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), takePos, 20);
@@ -73,17 +75,17 @@ public class TakeItemGoal extends Goal {
     }
 
     public void setPath(double x, double y, double z, double speedIn){
-        Path path = carbuncle.getNavigator().getPathToPos(x+0.5, y+1, z+0.5, 1);
-        if(path == null || !path.reachesTarget())
+        Path path = carbuncle.getNavigation().createPath(x+0.5, y+1, z+0.5, 1);
+        if(path == null || !path.canReach())
             unreachable = true;
-        carbuncle.getNavigator().setPath( path, speedIn);
+        carbuncle.getNavigation().moveTo( path, speedIn);
     }
 
     @Override
     public void tick() {
-        if(carbuncle.getHeldStack().isEmpty() && takePos != null && BlockUtil.distanceFrom(carbuncle.getPosition(), takePos) < 2d){
-            World world = carbuncle.world;
-            TileEntity tileEntity = world.getTileEntity(takePos);
+        if(carbuncle.getHeldStack().isEmpty() && takePos != null && BlockUtil.distanceFrom(carbuncle.blockPosition(), takePos) < 2d){
+            World world = carbuncle.level;
+            TileEntity tileEntity = world.getBlockEntity(takePos);
             if(tileEntity == null)
                 return;
             IItemHandler iItemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
@@ -100,12 +102,12 @@ public class TakeItemGoal extends Goal {
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
+    public boolean canContinueToUse() {
         return !unreachable && !carbuncle.isStuck && carbuncle.getHeldStack() != null && carbuncle.getHeldStack().isEmpty() && carbuncle.backOff == 0 && carbuncle.isTamed() && takePos != null;
     }
 
     @Override
-    public boolean shouldExecute() {
+    public boolean canUse() {
         return !carbuncle.isStuck && carbuncle.getHeldStack() != null &&carbuncle.getHeldStack().isEmpty() && carbuncle.backOff == 0 && carbuncle.isTamed();
     }
 }

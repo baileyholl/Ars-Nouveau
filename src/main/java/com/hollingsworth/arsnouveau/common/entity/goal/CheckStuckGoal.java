@@ -29,7 +29,7 @@ public abstract class CheckStuckGoal extends Goal {
     }
 
     @Override
-    public void startExecuting() {
+    public void start() {
         resetStuckCheck();
     }
 

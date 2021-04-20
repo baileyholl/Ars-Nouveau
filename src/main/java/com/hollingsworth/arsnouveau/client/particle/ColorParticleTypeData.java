@@ -28,14 +28,14 @@ public class ColorParticleTypeData implements IParticleData {
 
     static final IParticleData.IDeserializer<ColorParticleTypeData> DESERIALIZER = new IParticleData.IDeserializer<ColorParticleTypeData>() {
         @Override
-        public ColorParticleTypeData deserialize(ParticleType<ColorParticleTypeData> type, StringReader reader) throws CommandSyntaxException {
+        public ColorParticleTypeData fromCommand(ParticleType<ColorParticleTypeData> type, StringReader reader) throws CommandSyntaxException {
             reader.expect(' ');
             return new ColorParticleTypeData(type, ParticleColor.deserialize(reader.readString()));
         }
 
         @Override
-        public ColorParticleTypeData read(ParticleType<ColorParticleTypeData> type, PacketBuffer buffer) {
-            return new ColorParticleTypeData(type, ParticleColor.deserialize(buffer.readString()));
+        public ColorParticleTypeData fromNetwork(ParticleType<ColorParticleTypeData> type, PacketBuffer buffer) {
+            return new ColorParticleTypeData(type, ParticleColor.deserialize(buffer.readUtf()));
         }
     };
     public ColorParticleTypeData(float r, float g, float b){
@@ -54,12 +54,12 @@ public class ColorParticleTypeData implements IParticleData {
     }
 
     @Override
-    public void write(PacketBuffer packetBuffer) {
-        packetBuffer.writeString(color.serialize());
+    public void writeToNetwork(PacketBuffer packetBuffer) {
+        packetBuffer.writeUtf(color.serialize());
     }
 
     @Override
-    public String getParameters() {
+    public String writeToString() {
         return type.getRegistryName().toString() + " " + color.serialize();
     }
 }

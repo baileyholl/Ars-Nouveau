@@ -32,22 +32,22 @@ public class ReactiveEvents {
     @SubscribeEvent
     public static void livingHitEvent(LivingHurtEvent e){
         LivingEntity entity = e.getEntityLiving();
-        if(entity.getEntityWorld().isRemote || !(entity instanceof PlayerEntity))
+        if(entity.getCommandSenderWorld().isClientSide || !(entity instanceof PlayerEntity))
             return;
 
-        for(ItemStack s : entity.getArmorInventoryList()){
+        for(ItemStack s : entity.getArmorSlots()){
             castSpell((PlayerEntity) entity, s);
         }
     }
 
     public static void castSpell(PlayerEntity playerIn, ItemStack s){
-        if(EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT, s) * .25 >= Math.random() && s.hasTag() && s.getTag().contains("spell")){
+        if(EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT, s) * .25 >= Math.random() && s.hasTag() && s.getTag().contains("spell")){
             List<AbstractSpellPart> list = SpellParchment.getSpellRecipe(s);
             SpellResolver resolver = new SpellResolver(list, true, new SpellContext(list, playerIn));
             RayTraceResult result = playerIn.pick(5, 0, false);
 
             EntityRayTraceResult entityRes = MathUtil.getLookedAtEntity(playerIn, 25);
-            ItemStack stack = playerIn.getHeldItemMainhand();
+            ItemStack stack = playerIn.getMainHandItem();
             Hand handIn = Hand.MAIN_HAND;
             if(entityRes != null && entityRes.getEntity() instanceof LivingEntity){
                 resolver.onCastOnEntity(stack, playerIn, (LivingEntity) entityRes.getEntity(), handIn);
@@ -59,7 +59,7 @@ public class ReactiveEvents {
                 resolver.onCastOnBlock(context);
                 return;
             }
-            resolver.onCast(stack,playerIn,playerIn.getEntityWorld());
+            resolver.onCast(stack,playerIn,playerIn.getCommandSenderWorld());
         }
     }
 
@@ -67,7 +67,7 @@ public class ReactiveEvents {
     public static void leftClickBlock(PlayerInteractEvent.LeftClickBlock e){
         LivingEntity entity = e.getEntityLiving();
 
-        if(entity.getEntityWorld().isRemote || !(entity instanceof PlayerEntity))
+        if(entity.getCommandSenderWorld().isClientSide || !(entity instanceof PlayerEntity))
             return;
         ItemStack s = e.getItemStack();
         castSpell((PlayerEntity) entity, s);
@@ -77,9 +77,9 @@ public class ReactiveEvents {
     public static void playerAttackEntity(AttackEntityEvent e){
         LivingEntity entity = e.getEntityLiving();
 
-        if(entity == null || entity.getEntityWorld().isRemote || !(entity instanceof PlayerEntity))
+        if(entity == null || entity.getCommandSenderWorld().isClientSide || !(entity instanceof PlayerEntity))
             return;
-        ItemStack s = e.getEntityLiving().getHeldItemMainhand();
+        ItemStack s = e.getEntityLiving().getMainHandItem();
         castSpell((PlayerEntity) entity, s);
     }
 
@@ -89,7 +89,7 @@ public class ReactiveEvents {
         LivingEntity entity = e.getEntityLiving();
         if(!(entity instanceof PlayerEntity))
             return;
-        if(EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT, e.getItemStack()) > 0)
+        if(EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT, e.getItemStack()) > 0)
             Networking.INSTANCE.sendToServer(new PacketReactiveSpell());
     }
 }

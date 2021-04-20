@@ -25,9 +25,9 @@ public class EffectLeap extends AbstractEffect {
             LivingEntity e = (LivingEntity) rayTraceResult1.getEntity();
 
             double bonus = 1.5 + getAmplificationBonus(augments);
-            e.setMotion(e.getLookVec().x * bonus, e.getLookVec().y * bonus, e.getLookVec().z * bonus);
+            e.setDeltaMovement(e.getLookAngle().x * bonus, e.getLookAngle().y * bonus, e.getLookAngle().z * bonus);
             e.fallDistance = 0;
-            e.velocityChanged = true;
+            e.hurtMarked = true;
         }
     }
 

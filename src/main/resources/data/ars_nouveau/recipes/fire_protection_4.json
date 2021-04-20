@@ -1,0 +1,46 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:fire_protection",
+  "level": 4,
+  "mana": 6500,
+  "item_1": [
+    {
+      "item": "ars_nouveau:glyph_ignite"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:glyph_ignite"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "ars_nouveau:glyph_shield"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "ars_nouveau:glyph_shield"
+    }
+  ],
+  "item_5": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_6": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_7": [
+    {
+      "tag": "forge:rods/blaze"
+    }
+  ],
+  "item_8": [
+    {
+      "tag": "forge:rods/blaze"
+    }
+  ]
+}

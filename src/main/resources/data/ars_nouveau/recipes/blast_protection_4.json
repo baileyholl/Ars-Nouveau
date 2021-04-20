@@ -1,0 +1,46 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:blast_protection",
+  "level": 4,
+  "mana": 8000,
+  "item_1": [
+    {
+      "tag": "forge:gems/diamond"
+    }
+  ],
+  "item_2": [
+    {
+      "tag": "forge:gems/diamond"
+    }
+  ],
+  "item_3": [
+    {
+      "tag": "forge:gems/diamond"
+    }
+  ],
+  "item_4": [
+    {
+      "tag": "forge:gems/diamond"
+    }
+  ],
+  "item_5": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_6": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_7": [
+    {
+      "tag": "forge:storage_blocks/gold"
+    }
+  ],
+  "item_8": [
+    {
+      "tag": "forge:storage_blocks/gold"
+    }
+  ]
+}

@@ -52,14 +52,14 @@ public class GuiRadialMenu extends Screen {
         this.doneClosing = false;
 
         Minecraft mc = Minecraft.getInstance();
-        this.startAnimation = mc.world.getGameTime() + (double) mc.getRenderPartialTicks();
+        this.startAnimation = mc.level.getGameTime() + (double) mc.getFrameTime();
 
         this.selectedItem = -1;
     }
 
     @SubscribeEvent
     public static void overlayEvent(RenderGameOverlayEvent.Pre event) {
-        if (Minecraft.getInstance().currentScreen instanceof GuiRadialMenu) {
+        if (Minecraft.getInstance().screen instanceof GuiRadialMenu) {
             if (event.getType() == RenderGameOverlayEvent.ElementType.CROSSHAIRS) {
                 event.setCanceled(true);
             }
@@ -78,7 +78,7 @@ public class GuiRadialMenu extends Screen {
 
         if (true) {
             final float OPEN_ANIMATION_LENGTH = 2.5f;
-            long worldTime = Minecraft.getInstance().world.getGameTime();
+            long worldTime = Minecraft.getInstance().level.getGameTime();
             float animationTime = (float) (worldTime + partialTicks - startAnimation);
             float openAnimation = closing ? 1.0f - animationTime / OPEN_ANIMATION_LENGTH : animationTime / OPEN_ANIMATION_LENGTH;
             if (closing && openAnimation <= 0.0f) {
@@ -111,7 +111,7 @@ public class GuiRadialMenu extends Screen {
             RenderSystem.translated(0, animTop, 0);
 
             Tessellator tessellator = Tessellator.getInstance();
-            BufferBuilder buffer = tessellator.getBuffer();
+            BufferBuilder buffer = tessellator.getBuilder();
             buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
             boolean hasMouseOver = false;
             int mousedOverSlot = -1;
@@ -142,16 +142,16 @@ public class GuiRadialMenu extends Screen {
                     drawSlice(buffer, x, y, 10, radiusIn, radiusOut, s, e, 0, 0, 0, 64);
             }
 
-            tessellator.draw();
+            tessellator.end();
             RenderSystem.enableTexture();
 
             if (hasMouseOver && mousedOverSlot != -1) {
                 int adjusted =  (mousedOverSlot+ 6) % 10;
                 adjusted = adjusted == 0 ? 10 : adjusted;
-                drawCenteredString(ms,font, SpellBook.getSpellName(tag,  adjusted), width/2,(height - font.FONT_HEIGHT) / 2,16777215);
+                drawCenteredString(ms,font, SpellBook.getSpellName(tag,  adjusted), width/2,(height - font.lineHeight) / 2,16777215);
             }
 
-            RenderHelper.enableStandardItemLighting();
+            RenderHelper.turnBackOn();
             RenderSystem.popMatrix();
             for(int i = 0; i< numberOfSlices; i++){
                 ItemStack stack = new ItemStack(Blocks.DIRT);
@@ -171,7 +171,7 @@ public class GuiRadialMenu extends Screen {
                     }
                 }
                 RenderSystem.disableRescaleNormal();
-                RenderHelper.disableStandardItemLighting();
+                RenderHelper.turnOff();
                 RenderSystem.disableLighting();
                 RenderSystem.disableDepthTest();
                 if(!resourceIcon.isEmpty()) {
@@ -180,7 +180,7 @@ public class GuiRadialMenu extends Screen {
                     GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + castType),
                             (int) posX +3 , (int) posY - 10, 0, 0, 10, 10, 10, 10,ms);
                 }
-                this.itemRenderer.renderItemOverlayIntoGUI(font, stack, (int) posX + 5, (int) posY, String.valueOf(i + 1));
+                this.itemRenderer.renderGuiItemDecorations(font, stack, (int) posX + 5, (int) posY, String.valueOf(i + 1));
 
             }
 
@@ -202,7 +202,7 @@ public class GuiRadialMenu extends Screen {
         if(this.selectedItem != -1){
             SpellBook.setMode(tag, selectedItem);
             Networking.INSTANCE.sendToServer(new PacketSetBookMode(tag));
-            minecraft.player.closeScreen();
+            minecraft.player.closeContainer();
         }
         return true;
     }
@@ -230,10 +230,10 @@ public class GuiRadialMenu extends Screen {
             float pos2InX = x + radiusIn * (float) Math.cos(angle2);
             float pos2InY = y + radiusIn * (float) Math.sin(angle2);
 
-            buffer.pos(pos1OutX, pos1OutY, z).color(r, g, b, a).endVertex();
-            buffer.pos(pos1InX, pos1InY, z).color(r, g, b, a).endVertex();
-            buffer.pos(pos2InX, pos2InY, z).color(r, g, b, a).endVertex();
-            buffer.pos(pos2OutX, pos2OutY, z).color(r, g, b, a).endVertex();
+            buffer.vertex(pos1OutX, pos1OutY, z).color(r, g, b, a).endVertex();
+            buffer.vertex(pos1InX, pos1InY, z).color(r, g, b, a).endVertex();
+            buffer.vertex(pos2InX, pos2InY, z).color(r, g, b, a).endVertex();
+            buffer.vertex(pos2OutX, pos2OutY, z).color(r, g, b, a).endVertex();
         }
     }
 

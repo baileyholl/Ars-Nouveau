@@ -15,6 +15,8 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
+
 public class EffectShield extends AbstractEffect {
     public EffectShield() {
         super(GlyphLib.EffectShieldID , "Shield");

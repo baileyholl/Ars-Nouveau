@@ -29,7 +29,7 @@ public class SpellRecipeUtil {
             }
 
         });
-        caster.getArmorInventoryList().forEach(itemStack -> {
+        caster.getArmorSlots().forEach(itemStack -> {
             if(itemStack.getItem() instanceof ISpellBonus)
                 augments.addAll(((ISpellBonus) itemStack.getItem()).getList( itemStack));
         });

@@ -44,7 +44,7 @@ import java.util.List;
 public class Wand extends ModItem  implements IAnimatable, ICasterTool {
     public AnimationFactory factory = new AnimationFactory(this);
     public Wand() {
-        super(new Item.Properties().maxStackSize(1).group(ArsNouveau.itemGroup).setISTER(() -> WandRenderer::new), LibItemNames.WAND);
+        super(new Item.Properties().stacksTo(1).tab(ArsNouveau.itemGroup).setISTER(() -> WandRenderer::new), LibItemNames.WAND);
     }
 
 
@@ -55,26 +55,26 @@ public class Wand extends ModItem  implements IAnimatable, ICasterTool {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack stack = playerIn.getHeldItem(handIn);
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack stack = playerIn.getItemInHand(handIn);
         ISpellCaster caster = getSpellCaster(stack);
 
-        if(caster == null || worldIn.isRemote)
-            return super.onItemRightClick(worldIn, playerIn, handIn);
+        if(caster == null || worldIn.isClientSide)
+            return super.use(worldIn, playerIn, handIn);
 
         RayTraceResult result = playerIn.pick(5, 0, false);
-        if(result instanceof BlockRayTraceResult && worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) instanceof ScribesTile)
+        if(result instanceof BlockRayTraceResult && worldIn.getBlockEntity(((BlockRayTraceResult) result).getBlockPos()) instanceof ScribesTile)
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
-        if(result instanceof BlockRayTraceResult && !playerIn.isSneaking()){
-            if(worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) != null &&
-                    !(worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) instanceof IntangibleAirTile
-                            ||(worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) instanceof PhantomBlockTile))) {
+        if(result instanceof BlockRayTraceResult && !playerIn.isShiftKeyDown()){
+            if(worldIn.getBlockEntity(((BlockRayTraceResult) result).getBlockPos()) != null &&
+                    !(worldIn.getBlockEntity(((BlockRayTraceResult) result).getBlockPos()) instanceof IntangibleAirTile
+                            ||(worldIn.getBlockEntity(((BlockRayTraceResult) result).getBlockPos()) instanceof PhantomBlockTile))) {
                 return new ActionResult<>(ActionResultType.SUCCESS, stack);
             }
         }
 
         if(caster.getSpell() == null) {
-            playerIn.sendMessage(new TranslationTextComponent("ars_nouveau.wand.spell_invalid"), Util.DUMMY_UUID);
+            playerIn.sendMessage(new TranslationTextComponent("ars_nouveau.wand.spell_invalid"), Util.NIL_UUID);
             return new ActionResult<>(ActionResultType.CONSUME, stack);
         }
         SpellResolver resolver = new SpellResolver(caster.getSpell().recipe, new SpellContext(caster.getSpell(), playerIn));
@@ -128,8 +128,8 @@ public class Wand extends ModItem  implements IAnimatable, ICasterTool {
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
         getInformation(stack, worldIn, tooltip2, flagIn);
-        super.addInformation(stack, worldIn, tooltip2, flagIn);
+        super.appendHoverText(stack, worldIn, tooltip2, flagIn);
     }
 }

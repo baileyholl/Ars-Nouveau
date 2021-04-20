@@ -51,6 +51,9 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
+import net.minecraft.item.Item.Properties;
+
 public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplayMana, IAnimatable {
 
     public static final String BOOK_MODE_TAG = "mode";
@@ -60,7 +63,7 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
 
 
     public SpellBook(Tier tier){
-        super(new Item.Properties().maxStackSize(1).group(ArsNouveau.itemGroup).setISTER(() -> SpellBookRenderer::new));
+        super(new Item.Properties().stacksTo(1).tab(ArsNouveau.itemGroup).setISTER(() -> SpellBookRenderer::new));
         this.tier = tier;
     }
     
@@ -70,7 +73,7 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
     }
 
     @Override
-    public boolean isDamageable() {
+    public boolean canBeDepleted() {
         return false;
     }
 
@@ -79,7 +82,7 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
         if(!stack.hasTag())
             stack.setTag(new CompoundNBT());
 
-        if(!worldIn.isRemote && worldIn.getGameTime() % 5 == 0 && !stack.hasTag()) {
+        if(!worldIn.isClientSide && worldIn.getGameTime() % 5 == 0 && !stack.hasTag()) {
             CompoundNBT tag = new CompoundNBT();
             tag.putInt(SpellBook.BOOK_MODE_TAG, 0);
             StringBuilder starting_spells = new StringBuilder();
@@ -96,8 +99,8 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack stack = playerIn.getHeldItem(handIn);
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack stack = playerIn.getItemInHand(handIn);
         if(!stack.hasTag())
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
 
@@ -111,24 +114,24 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
         });
 
         RayTraceResult result = playerIn.pick(5, 0, false);
-        if(result instanceof BlockRayTraceResult && worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) instanceof ScribesTile)
+        if(result instanceof BlockRayTraceResult && worldIn.getBlockEntity(((BlockRayTraceResult) result).getBlockPos()) instanceof ScribesTile)
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
-        if(result instanceof BlockRayTraceResult && !playerIn.isSneaking()){
-            if(worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) != null &&
-                    !(worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) instanceof IntangibleAirTile
-                    ||(worldIn.getTileEntity(((BlockRayTraceResult) result).getPos()) instanceof PhantomBlockTile))) {
+        if(result instanceof BlockRayTraceResult && !playerIn.isShiftKeyDown()){
+            if(worldIn.getBlockEntity(((BlockRayTraceResult) result).getBlockPos()) != null &&
+                    !(worldIn.getBlockEntity(((BlockRayTraceResult) result).getBlockPos()) instanceof IntangibleAirTile
+                    ||(worldIn.getBlockEntity(((BlockRayTraceResult) result).getBlockPos()) instanceof PhantomBlockTile))) {
                 return new ActionResult<>(ActionResultType.SUCCESS, stack);
             }
         }
 
 
-        if(worldIn.isRemote || !stack.hasTag()){
+        if(worldIn.isClientSide || !stack.hasTag()){
             return new ActionResult<>(ActionResultType.CONSUME, stack);
         }
         // Crafting mode
         if(getMode(stack.getTag()) == 0 && playerIn instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = (ServerPlayerEntity) playerIn;
-            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->player), new PacketOpenSpellBook(stack.getTag(), getTier().ordinal(), getUnlockedSpellString(player.getHeldItem(handIn).getTag())));
+            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->player), new PacketOpenSpellBook(stack.getTag(), getTier().ordinal(), getUnlockedSpellString(player.getItemInHand(handIn).getTag())));
             return new ActionResult<>(ActionResultType.CONSUME, stack);
         }
         SpellResolver resolver = new SpellResolver(new SpellContext(getCurrentRecipe(stack), playerIn)
@@ -153,10 +156,10 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
 
     @Override
     public boolean onScribe(World world, BlockPos pos, PlayerEntity player, Hand handIn, ItemStack stack) {
-        if(!(player.getHeldItem(handIn).getItem() instanceof SpellBook))
+        if(!(player.getItemInHand(handIn).getItem() instanceof SpellBook))
             return false;
 
-        List<AbstractSpellPart> spellParts = SpellBook.getUnlockedSpells(player.getHeldItem(handIn).getTag());
+        List<AbstractSpellPart> spellParts = SpellBook.getUnlockedSpells(player.getItemInHand(handIn).getTag());
         int unlocked = 0;
         for(AbstractSpellPart spellPart : spellParts){
             if(SpellBook.unlockSpell(stack.getTag(), spellPart))
@@ -177,7 +180,7 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
     /**
      * returns the action that specifies what animation to play when the items is being used
      */
-    public UseAction getUseAction(ItemStack stack) {
+    public UseAction getUseAnimation(ItemStack stack) {
         return UseAction.BOW;
     }
 
@@ -265,13 +268,13 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void addInformation(final ItemStack stack, @Nullable final World world, final List<ITextComponent> tooltip, final ITooltipFlag flag) {
-        super.addInformation(stack, world, tooltip, flag);
+    public void appendHoverText(final ItemStack stack, @Nullable final World world, final List<ITextComponent> tooltip, final ITooltipFlag flag) {
+        super.appendHoverText(stack, world, tooltip, flag);
         if(stack != null && stack.hasTag()) {
             tooltip.add(new StringTextComponent(SpellBook.getSpellName(stack.getTag())));
 
-            tooltip.add(new TranslationTextComponent("ars_nouveau.spell_book.select", KeyBinding.getDisplayString(ModKeyBindings.OPEN_SPELL_SELECTION.getKeyBinding().getKeyDescription()).get().getString()));
-            tooltip.add(new TranslationTextComponent("ars_nouveau.spell_book.craft", KeyBinding.getDisplayString(ModKeyBindings.OPEN_BOOK.getKeyBinding().getKeyDescription()).get().getString()));
+            tooltip.add(new TranslationTextComponent("ars_nouveau.spell_book.select", KeyBinding.createNameSupplier(ModKeyBindings.OPEN_SPELL_SELECTION.getKeyBinding().getName()).get().getString()));
+            tooltip.add(new TranslationTextComponent("ars_nouveau.spell_book.craft", KeyBinding.createNameSupplier(ModKeyBindings.OPEN_BOOK.getKeyBinding().getName()).get().getString()));
         }
     }
 

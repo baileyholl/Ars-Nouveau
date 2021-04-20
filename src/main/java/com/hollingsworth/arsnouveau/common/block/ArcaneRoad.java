@@ -15,25 +15,25 @@ public class ArcaneRoad extends ModBlock{
     }
 
     @Override
-    public void onEntityCollision(BlockState p_196262_1_, World p_196262_2_, BlockPos p_196262_3_, Entity entity) {
-        Vector3d dir = entity.getMotion();
+    public void entityInside(BlockState p_196262_1_, World p_196262_2_, BlockPos p_196262_3_, Entity entity) {
+        Vector3d dir = entity.getDeltaMovement();
 
         dir = dir.normalize();
-        entity.addVelocity(dir.x * 5, dir.y * 5, dir.z * 5);
-        super.onEntityCollision(p_196262_1_, p_196262_2_, p_196262_3_, entity);
+        entity.push(dir.x * 5, dir.y * 5, dir.z * 5);
+        super.entityInside(p_196262_1_, p_196262_2_, p_196262_3_, entity);
     }
 
     @Override
-    public void onEntityWalk(World world, BlockPos p_176199_2_, Entity entity) {
+    public void stepOn(World world, BlockPos p_176199_2_, Entity entity) {
         System.out.println("Walking");
-        if(world.isRemote){
-            Vector3d motion = entity.getMotion().scale(1.5);
+        if(world.isClientSide){
+            Vector3d motion = entity.getDeltaMovement().scale(1.5);
 
-            entity.setVelocity(motion.x, motion.y, motion.z);
+            entity.lerpMotion(motion.x, motion.y, motion.z);
 
         }
 //        entity.velocityChanged = true;
-        super.onEntityWalk(world, p_176199_2_, entity);
+        super.stepOn(world, p_176199_2_, entity);
     }
 
     public static AxisAlignedBB getAABB() {

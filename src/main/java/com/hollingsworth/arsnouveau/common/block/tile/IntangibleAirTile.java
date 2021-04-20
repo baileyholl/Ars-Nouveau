@@ -22,46 +22,46 @@ public class IntangibleAirTile extends TileEntity implements ITickableTileEntity
 
     @Override
     public void tick() {
-        if(world.isRemote)
+        if(level.isClientSide)
             return;
         duration++;
         if(duration > maxLength){
-            world.setBlockState(pos, Block.getStateById(stateID));
+            level.setBlockAndUpdate(worldPosition, Block.stateById(stateID));
 
         }
-        world.notifyBlockUpdate(this.pos, world.getBlockState(pos),  world.getBlockState(pos), 2);
+        level.sendBlockUpdated(this.worldPosition, level.getBlockState(worldPosition),  level.getBlockState(worldPosition), 2);
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT nbt) {
+    public void load(BlockState state, CompoundNBT nbt) {
         stateID = nbt.getInt("state_id");
         duration = nbt.getInt("duration");
         maxLength = nbt.getInt("max_length");
-        super.read(state, nbt);
+        super.load(state, nbt);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         compound.putInt("state_id", stateID);
         compound.putInt("duration", duration);
         compound.putInt("max_length", maxLength);
-        return super.write(compound);
+        return super.save(compound);
     }
 
     @Override
     @Nullable
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 3, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 3, this.getUpdateTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         super.onDataPacket(net, pkt);
-        handleUpdateTag(world.getBlockState(pos),pkt.getNbtCompound());
+        handleUpdateTag(level.getBlockState(worldPosition),pkt.getTag());
     }
 }

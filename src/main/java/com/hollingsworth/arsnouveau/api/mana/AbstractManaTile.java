@@ -21,17 +21,17 @@ public abstract class AbstractManaTile extends TileEntity implements IManaTile, 
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT tag) {
+    public void load(BlockState state, CompoundNBT tag) {
         mana = tag.getInt(MANA_TAG);
         maxMana = tag.getInt(MAX_MANA_TAG);
-        super.read(state, tag);
+        super.load(state, tag);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundNBT save(CompoundNBT tag) {
         tag.putInt(MANA_TAG, getCurrentMana());
         tag.putInt(MAX_MANA_TAG, getMaxMana());
-        return super.write(tag);
+        return super.save(tag);
     }
 
     @Override
@@ -69,8 +69,8 @@ public abstract class AbstractManaTile extends TileEntity implements IManaTile, 
     }
 
     public boolean update(){
-        if(this.pos != null && this.world != null){
-            world.notifyBlockUpdate(this.pos, world.getBlockState(pos),  world.getBlockState(pos), 2);
+        if(this.worldPosition != null && this.level != null){
+            level.sendBlockUpdated(this.worldPosition, level.getBlockState(worldPosition),  level.getBlockState(worldPosition), 2);
             return true;
         }
         return false;
@@ -110,18 +110,18 @@ public abstract class AbstractManaTile extends TileEntity implements IManaTile, 
     @Override
     @Nullable
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 3, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 3, this.getUpdateTag());
     }
 
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         super.onDataPacket(net, pkt);
-        handleUpdateTag(world.getBlockState(pos),pkt.getNbtCompound());
+        handleUpdateTag(level.getBlockState(worldPosition),pkt.getTag());
     }
 }
 

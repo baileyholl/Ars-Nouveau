@@ -41,18 +41,18 @@ public class EffectCut extends AbstractEffect {
             IForgeShearable shearable = (IForgeShearable) entity;
             ItemStack shears = new ItemStack(Items.SHEARS);
             applyEnchantments(augments, shears);
-            if(shearable.isShearable(shears, world, entity.getPosition())){
-                List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerWorld) world), shears, world, entity.getPosition(), getBuffCount(augments, AugmentFortune.class));
-                items.forEach(i->world.addEntity(new ItemEntity(world, entity.getPosX(), entity.getPosY(), entity.getPosZ(), i)));
+            if(shearable.isShearable(shears, world, entity.blockPosition())){
+                List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerWorld) world), shears, world, entity.blockPosition(), getBuffCount(augments, AugmentFortune.class));
+                items.forEach(i->world.addFreshEntity(new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), i)));
             }
         }else{
-            dealDamage(world, shooter, 1.0f + getAmplificationBonus(augments), augments, entity, DamageSource.causePlayerDamage(getPlayer(shooter, (ServerWorld) world)));
+            dealDamage(world, shooter, 1.0f + getAmplificationBonus(augments), augments, entity, DamageSource.playerAttack(getPlayer(shooter, (ServerWorld) world)));
         }
     }
 
     @Override
     public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world,  LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        for(BlockPos p : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getPos(), rayTraceResult, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))) {
+        for(BlockPos p : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))) {
             ItemStack shears = new ItemStack(Items.SHEARS);
             applyEnchantments(augments, shears);
             if (world.getBlockState(p).getBlock() instanceof IForgeShearable) {
@@ -60,13 +60,13 @@ public class EffectCut extends AbstractEffect {
 
                 if (shearable.isShearable(shears, world,p)) {
                     List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerWorld) world), shears, world, p, getBuffCount(augments, AugmentFortune.class));
-                    items.forEach(i -> world.addEntity(new ItemEntity(world, p.getX(), p.getY(),p.getZ(), i)));
+                    items.forEach(i -> world.addFreshEntity(new ItemEntity(world, p.getX(), p.getY(),p.getZ(), i)));
                 }
             }
             PlayerEntity entity = new ANFakePlayer((ServerWorld) world);
-            entity.setHeldItem(Hand.MAIN_HAND, shears);
-            entity.setPosition(p.getX(), p.getY(), p.getZ());
-            world.getBlockState(p).onBlockActivated(world, entity, Hand.MAIN_HAND, rayTraceResult);
+            entity.setItemInHand(Hand.MAIN_HAND, shears);
+            entity.setPos(p.getX(), p.getY(), p.getZ());
+            world.getBlockState(p).use(world, entity, Hand.MAIN_HAND, rayTraceResult);
         }
     }
 

@@ -22,11 +22,11 @@ public class RandomFlyingGoal extends WaterAvoidingRandomWalkingGoal {
     @Nullable
     protected Vector3d getPosition() {
         Vector3d vec3d = null;
-        if (this.creature.isInWater()) {
-            vec3d = RandomPositionGenerator.getLandPos(this.creature, 15, 15);
+        if (this.mob.isInWater()) {
+            vec3d = RandomPositionGenerator.getLandPos(this.mob, 15, 15);
         }
 
-        if (this.creature.getRNG().nextFloat() >= this.probability) {
+        if (this.mob.getRandom().nextFloat() >= this.probability) {
             vec3d = this.getTreePos();
         }
 
@@ -35,10 +35,10 @@ public class RandomFlyingGoal extends WaterAvoidingRandomWalkingGoal {
 
     @Nullable
     private Vector3d getTreePos() {
-        BlockPos blockpos = new BlockPos(this.creature.getPosition());
+        BlockPos blockpos = new BlockPos(this.mob.blockPosition());
         BlockPos.Mutable blockpos$mutable = new BlockPos.Mutable();
         BlockPos.Mutable blockpos$mutable1 = new BlockPos.Mutable();
-        Iterable<BlockPos> iterable = BlockPos.getAllInBoxMutable(MathHelper.floor(this.creature.getPosX() - 3.0D), MathHelper.floor(this.creature.getPosY() - 6.0D), MathHelper.floor(this.creature.getPosZ() - 3.0D), MathHelper.floor(this.creature.getPosX() + 3.0D), MathHelper.floor(this.creature.getPosY() + 6.0D), MathHelper.floor(this.creature.getPosZ() + 3.0D));
+        Iterable<BlockPos> iterable = BlockPos.betweenClosed(MathHelper.floor(this.mob.getX() - 3.0D), MathHelper.floor(this.mob.getY() - 6.0D), MathHelper.floor(this.mob.getZ() - 3.0D), MathHelper.floor(this.mob.getX() + 3.0D), MathHelper.floor(this.mob.getY() + 6.0D), MathHelper.floor(this.mob.getZ() + 3.0D));
         Iterator iterator = iterable.iterator();
 
         BlockPos blockpos1;
@@ -49,9 +49,9 @@ public class RandomFlyingGoal extends WaterAvoidingRandomWalkingGoal {
 
             blockpos1 = (BlockPos)iterator.next();
             if (!blockpos.equals(blockpos1)) {
-                Block block = this.creature.world.getBlockState(blockpos$mutable1.setPos(blockpos1).move(Direction.DOWN)).getBlock();
-                boolean flag = block instanceof LeavesBlock || block.isIn(BlockTags.LOGS);
-                if (flag && this.creature.world.isAirBlock(blockpos1) && this.creature.world.isAirBlock(blockpos$mutable.setPos(blockpos1).move(Direction.UP))) {
+                Block block = this.mob.level.getBlockState(blockpos$mutable1.set(blockpos1).move(Direction.DOWN)).getBlock();
+                boolean flag = block instanceof LeavesBlock || block.is(BlockTags.LOGS);
+                if (flag && this.mob.level.isEmptyBlock(blockpos1) && this.mob.level.isEmptyBlock(blockpos$mutable.set(blockpos1).move(Direction.UP))) {
                     break;
                 }
             }

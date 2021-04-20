@@ -23,6 +23,8 @@ import net.minecraft.world.server.ServerWorld;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
+
 public class EffectColdSnap extends AbstractEffect {
     public EffectColdSnap() {
         super(GlyphLib.EffectColdSnapID, "Cold Snap");
@@ -39,24 +41,24 @@ public class EffectColdSnap extends AbstractEffect {
             float damage = 6.0f + 2.5f*getAmplificationBonus(augments);
             int range = 3 + getBuffCount(augments, AugmentAOE.class);
             int snareSec = 5 + getDurationModifier(augments);
-            if(livingEntity.isWet() || livingEntity.getActivePotionEffect(Effects.SLOWNESS) != null){
-                dealDamage(world, shooter, damage, augments, livingEntity, buildDamageSource(world, shooter).setMagicDamage());
-                ((ServerWorld)world).spawnParticle(ParticleTypes.SPIT, vec.x, vec.y +0.5, vec.z,50,
+            if(livingEntity.isInWaterOrRain() || livingEntity.getEffect(Effects.MOVEMENT_SLOWDOWN) != null){
+                dealDamage(world, shooter, damage, augments, livingEntity, buildDamageSource(world, shooter).setMagic());
+                ((ServerWorld)world).sendParticles(ParticleTypes.SPIT, vec.x, vec.y +0.5, vec.z,50,
                         ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1),ParticleUtil.inRange(-0.1, 0.1), 0.3);
-                livingEntity.addPotionEffect(new EffectInstance(Effects.SLOWNESS, 20 * snareSec, 20));
-                for(Entity e : world.getEntitiesWithinAABBExcludingEntity(shooter, new AxisAlignedBB(
-                        livingEntity.getPosition().north(range).east(range).up(range),  livingEntity.getPosition().south(range).west(range).down(range)))){
+                livingEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 20 * snareSec, 20));
+                for(Entity e : world.getEntities(shooter, new AxisAlignedBB(
+                        livingEntity.blockPosition().north(range).east(range).above(range),  livingEntity.blockPosition().south(range).west(range).below(range)))){
                     if(e.equals(livingEntity) || !(e instanceof LivingEntity))
                         continue;
-                    if(((LivingEntity) e).getActivePotionEffect(Effects.SLOWNESS) != null || e.isWet()){
-                        dealDamage(world, shooter, damage, augments, e, buildDamageSource(world, shooter).setMagicDamage());
-                        vec = e.getPositionVec();
-                        ((ServerWorld)world).spawnParticle(ParticleTypes.SPIT, vec.x, vec.y +0.5, vec.z,50,
+                    if(((LivingEntity) e).getEffect(Effects.MOVEMENT_SLOWDOWN) != null || e.isInWaterOrRain()){
+                        dealDamage(world, shooter, damage, augments, e, buildDamageSource(world, shooter).setMagic());
+                        vec = e.position();
+                        ((ServerWorld)world).sendParticles(ParticleTypes.SPIT, vec.x, vec.y +0.5, vec.z,50,
                                 ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1),ParticleUtil.inRange(-0.1, 0.1), 0.3);
 
-                        ((LivingEntity) e).addPotionEffect(new EffectInstance(Effects.SLOWNESS, 20 * snareSec, 20));
+                        ((LivingEntity) e).addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 20 * snareSec, 20));
                     }else{
-                        ((LivingEntity) e).addPotionEffect(new EffectInstance(Effects.SLOWNESS, 20*snareSec, getAmplificationBonus(augments)));
+                        ((LivingEntity) e).addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 20*snareSec, getAmplificationBonus(augments)));
                     }
                 }
             }

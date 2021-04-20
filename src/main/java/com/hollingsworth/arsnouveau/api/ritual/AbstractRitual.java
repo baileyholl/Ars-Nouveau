@@ -12,8 +12,8 @@ public abstract class AbstractRitual {
     private BlockPos pos;
     public AbstractRitual(RitualTile tile, RitualContext context){
         this.tile = tile;
-        this.world = tile.getWorld();
-        this.pos = tile.getPos();
+        this.world = tile.getLevel();
+        this.pos = tile.getBlockPos();
         this.context = context;
     }
 

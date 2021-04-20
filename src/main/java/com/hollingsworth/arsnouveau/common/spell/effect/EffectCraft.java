@@ -31,8 +31,8 @@ public class EffectCraft extends AbstractEffect {
     public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(shooter instanceof PlayerEntity && isRealPlayer(shooter)){
             PlayerEntity playerEntity = (PlayerEntity) shooter;
-            playerEntity.openContainer(new SimpleNamedContainerProvider((id, inventory, player) -> {
-                return new CustomWorkbench(id, inventory, IWorldPosCallable.of(player.getEntityWorld(), player.getPosition()));
+            playerEntity.openMenu(new SimpleNamedContainerProvider((id, inventory, player) -> {
+                return new CustomWorkbench(id, inventory, IWorldPosCallable.create(player.getCommandSenderWorld(), player.blockPosition()));
             }, CONTAINER_NAME));
         }
     }
@@ -53,7 +53,7 @@ public class EffectCraft extends AbstractEffect {
         }
 
         @Override
-        public boolean canInteractWith(PlayerEntity playerIn) {
+        public boolean stillValid(PlayerEntity playerIn) {
             return true;
         }
     }

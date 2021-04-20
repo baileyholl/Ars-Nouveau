@@ -16,6 +16,8 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
+
 public class EffectWither extends AbstractEffect {
     public EffectWither() {
         super(GlyphLib.EffectWitherID, "Wither");

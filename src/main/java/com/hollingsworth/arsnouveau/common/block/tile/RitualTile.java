@@ -27,9 +27,9 @@ public class RitualTile extends TileEntity implements ITickableTileEntity {
     public void startRitual(AbstractRitual ritual){
         this.ritual = ritual;
         ritual.onStart();
-        EntityRitualProjectile ritualProjectile = new EntityRitualProjectile(world, pos.getX(), pos.getY() + 1.0, pos.getZ());
-        ritualProjectile.setPosition(ritualProjectile.getPosX() +0.5, ritualProjectile.getPosY(), ritualProjectile.getPosZ() +0.5);
-        ritualProjectile.tilePos = this.getPos();
-        world.addEntity(ritualProjectile);
+        EntityRitualProjectile ritualProjectile = new EntityRitualProjectile(level, worldPosition.getX(), worldPosition.getY() + 1.0, worldPosition.getZ());
+        ritualProjectile.setPos(ritualProjectile.getX() +0.5, ritualProjectile.getY(), ritualProjectile.getZ() +0.5);
+        ritualProjectile.tilePos = this.getBlockPos();
+        level.addFreshEntity(ritualProjectile);
     }
 }

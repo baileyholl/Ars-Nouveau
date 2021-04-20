@@ -37,18 +37,18 @@ public class PlayerEvent {
     @SubscribeEvent
     public static void onBlock(final PlayerInteractEvent.RightClickBlock event) {
         PlayerEntity entity = event.getPlayer();
-        if(!event.getWorld().isRemote || event.getHand() != Hand.MAIN_HAND || event.getWorld().getBlockState(event.getPos()).getBlock() instanceof ScribesBlock)
+        if(!event.getWorld().isClientSide || event.getHand() != Hand.MAIN_HAND || event.getWorld().getBlockState(event.getPos()).getBlock() instanceof ScribesBlock)
             return;
-        if(entity.getHeldItem(event.getHand()).getItem() instanceof SpellBook){
+        if(entity.getItemInHand(event.getHand()).getItem() instanceof SpellBook){
             event.setCanceled(true);
-            ObfuscationReflectionHelper.setPrivateValue(FirstPersonRenderer.class, minecraft.getFirstPersonRenderer(), 1f, MappingUtil.getEquippedProgressMainhand());
+            ObfuscationReflectionHelper.setPrivateValue(FirstPersonRenderer.class, minecraft.getItemInHandRenderer(), 1f, MappingUtil.getEquippedProgressMainhand());
         }
     }
 
     @SubscribeEvent
     public static void onTooltip(final ItemTooltipEvent event){
         ItemStack stack = event.getItemStack();
-        int level = EnchantmentHelper.getEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT, stack);
+        int level = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT, stack);
         if(level > 0 && stack.hasTag() && stack.getTag().contains("spell")){
             Spell spell = new Spell(SpellParchment.getSpellRecipe(stack));
             event.getToolTip().add(new StringTextComponent(spell.getDisplayString()));
@@ -58,11 +58,11 @@ public class PlayerEvent {
     @SubscribeEvent
     public static void onItem(final PlayerInteractEvent.RightClickItem event) {
         PlayerEntity entity = event.getPlayer();
-        if(!event.getWorld().isRemote || event.getHand() != Hand.MAIN_HAND)
+        if(!event.getWorld().isClientSide || event.getHand() != Hand.MAIN_HAND)
             return;
-        if(entity.getHeldItem(event.getHand()).getItem() instanceof SpellBook){
+        if(entity.getItemInHand(event.getHand()).getItem() instanceof SpellBook){
             event.setCanceled(true);
-            ObfuscationReflectionHelper.setPrivateValue(FirstPersonRenderer.class, minecraft.getFirstPersonRenderer(), 1f, MappingUtil.getEquippedProgressMainhand());
+            ObfuscationReflectionHelper.setPrivateValue(FirstPersonRenderer.class, minecraft.getItemInHandRenderer(), 1f, MappingUtil.getEquippedProgressMainhand());
         }
     }
 }

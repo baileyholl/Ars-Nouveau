@@ -33,7 +33,7 @@ public class EffectHarm extends AbstractEffect {
                 if(entity instanceof LivingEntity)
                     applyPotion((LivingEntity) entity, Effects.POISON, augments, 5, 5);
             }else{
-                dealDamage(world, shooter, damage, augments, entity, DamageSource.causePlayerDamage(getPlayer(shooter, (ServerWorld) world)));
+                dealDamage(world, shooter, damage, augments, entity, DamageSource.playerAttack(getPlayer(shooter, (ServerWorld) world)));
             }
         }
     }

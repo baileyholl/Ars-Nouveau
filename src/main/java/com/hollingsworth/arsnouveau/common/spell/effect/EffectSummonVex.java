@@ -23,6 +23,8 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
+
 public class EffectSummonVex extends AbstractEffect {
     public EffectSummonVex() {
         super(GlyphLib.EffectSummonVexID, "Summon Vex");
@@ -30,31 +32,31 @@ public class EffectSummonVex extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(isRealPlayer(shooter) && shooter != null && shooter.getActivePotionEffect(ModPotions.SUMMONING_SICKNESS) == null){
-            summonEntities(shooter, world, augments, rayTraceResult.getEntity().getPosition());
+        if(isRealPlayer(shooter) && shooter != null && shooter.getEffect(ModPotions.SUMMONING_SICKNESS) == null){
+            summonEntities(shooter, world, augments, rayTraceResult.getEntity().blockPosition());
         }
     }
 
     @Override
     public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(isRealPlayer(shooter) && shooter != null && shooter.getActivePotionEffect(ModPotions.SUMMONING_SICKNESS) == null){
-            summonEntities(shooter, world, augments, rayTraceResult.getPos());
+        if(isRealPlayer(shooter) && shooter != null && shooter.getEffect(ModPotions.SUMMONING_SICKNESS) == null){
+            summonEntities(shooter, world, augments, rayTraceResult.getBlockPos());
         }
     }
 
     public void summonEntities(LivingEntity shooter, World world, List<AbstractAugment> augments, BlockPos pos){
         int ticks = 20 * (15 + 10 * getBuffCount(augments, AugmentExtendTime.class));
         for(int i = 0; i < 3; ++i) {
-            BlockPos blockpos = pos.add(-2 + shooter.getRNG().nextInt(5), 2, -2 + shooter.getRNG().nextInt(5));
+            BlockPos blockpos = pos.offset(-2 + shooter.getRandom().nextInt(5), 2, -2 + shooter.getRandom().nextInt(5));
             EntityAllyVex vexentity = new EntityAllyVex(world, shooter);
-            vexentity.moveToBlockPosAndAngles(blockpos, 0.0F, 0.0F);
-            vexentity.onInitialSpawn((IServerWorld) world, world.getDifficultyForLocation(blockpos), SpawnReason.MOB_SUMMONED, (ILivingEntityData)null, (CompoundNBT)null);
+            vexentity.moveTo(blockpos, 0.0F, 0.0F);
+            vexentity.finalizeSpawn((IServerWorld) world, world.getCurrentDifficultyAt(blockpos), SpawnReason.MOB_SUMMONED, (ILivingEntityData)null, (CompoundNBT)null);
             vexentity.setOwner(shooter);
             vexentity.setBoundOrigin(blockpos);
             vexentity.setLimitedLife(ticks);
-            world.addEntity(vexentity);
+            world.addFreshEntity(vexentity);
         }
-        shooter.addPotionEffect(new EffectInstance(ModPotions.SUMMONING_SICKNESS, ticks));
+        shooter.addEffect(new EffectInstance(ModPotions.SUMMONING_SICKNESS, ticks));
     }
 
 

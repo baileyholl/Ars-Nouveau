@@ -24,47 +24,47 @@ public class EntityRitualProjectile extends ColoredProjectile{
     }
     @Override
     public void tick() {
-        if(!world.isRemote() && (tilePos == null || !(world.getTileEntity(tilePos) instanceof RitualTile) || ((RitualTile) world.getTileEntity(tilePos)).ritual == null )) {
+        if(!level.isClientSide() && (tilePos == null || !(level.getBlockEntity(tilePos) instanceof RitualTile) || ((RitualTile) level.getBlockEntity(tilePos)).ritual == null )) {
             this.remove();
             System.out.println("removing");
             return;
         }
 
 
-        lastTickPosX = getPosX();
-        lastTickPosY = getPosY();
-        lastTickPosZ = getPosZ();
+        xOld = getX();
+        yOld = getY();
+        zOld = getZ();
       //  this.setPosition(Math.sin(world.getGameTime()/10D)/9d+ getPosX(), getPosY(), Math.cos(world.getGameTime()/10D)/9d + getPosZ());
        // this.setPosition(getpost);
-        this.setPosition(getPosX(), getPosY() + Math.sin(world.getGameTime()/10D)/10, getPosZ());
-        prevPosX = getPosX();
-        prevPosY = getPosY();
-        prevPosZ = getPosZ();
+        this.setPos(getX(), getY() + Math.sin(level.getGameTime()/10D)/10, getZ());
+        xo = getX();
+        yo = getY();
+        zo = getZ();
 
-        System.out.println(this.getPositionVec());
-        if(world.isRemote) {
+        System.out.println(this.position());
+        if(level.isClientSide) {
             int counter = 0;
             for (double j = 0; j < 3; j++) {
 
-                counter += world.rand.nextInt(3);
-                if (counter % (Minecraft.getInstance().gameSettings.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().gameSettings.particles.getId()) == 0) {
-                    world.addParticle(ParticleSparkleData.createData(getParticleColor()),
-                            (float) (getPositionVec().getX()) + Math.sin(world.getGameTime()/3D),
-                            (float) (getPositionVec().getY()),
-                            (float) (getPositionVec().getZ()) + Math.cos(world.getGameTime()/3D),
-                            0.0225f * (rand.nextFloat() ), 0.0225f * (rand.nextFloat()), 0.0225f * (rand.nextFloat() ));
+                counter += level.random.nextInt(3);
+                if (counter % (Minecraft.getInstance().options.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles.getId()) == 0) {
+                    level.addParticle(ParticleSparkleData.createData(getParticleColor()),
+                            (float) (position().x()) + Math.sin(level.getGameTime()/3D),
+                            (float) (position().y()),
+                            (float) (position().z()) + Math.cos(level.getGameTime()/3D),
+                            0.0225f * (random.nextFloat() ), 0.0225f * (random.nextFloat()), 0.0225f * (random.nextFloat() ));
                 }
             }
 
             for (double j = 0; j < 3; j++) {
 
-                counter += world.rand.nextInt(3);
-                if (counter % (Minecraft.getInstance().gameSettings.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().gameSettings.particles.getId()) == 0) {
-                    world.addParticle(ParticleSparkleData.createData(new ParticleColor(2, 0, 144)),
-                            (float) (getPositionVec().getX()) - Math.sin(world.getGameTime()/3D),
-                            (float) (getPositionVec().getY()),
-                            (float) (getPositionVec().getZ()) - Math.cos(world.getGameTime()/3D),
-                            0.0225f * (rand.nextFloat() ), 0.0225f * (rand.nextFloat()), 0.0225f * (rand.nextFloat() ));
+                counter += level.random.nextInt(3);
+                if (counter % (Minecraft.getInstance().options.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles.getId()) == 0) {
+                    level.addParticle(ParticleSparkleData.createData(new ParticleColor(2, 0, 144)),
+                            (float) (position().x()) - Math.sin(level.getGameTime()/3D),
+                            (float) (position().y()),
+                            (float) (position().z()) - Math.cos(level.getGameTime()/3D),
+                            0.0225f * (random.nextFloat() ), 0.0225f * (random.nextFloat()), 0.0225f * (random.nextFloat() ));
                 }
             }
 //
@@ -108,7 +108,7 @@ public class EntityRitualProjectile extends ColoredProjectile{
     }
 
     @Override
-    public IPacket<?> createSpawnPacket() {
+    public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

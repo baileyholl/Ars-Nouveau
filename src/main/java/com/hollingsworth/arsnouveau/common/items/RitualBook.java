@@ -17,24 +17,24 @@ import net.minecraftforge.fml.network.PacketDistributor;
 
 public class RitualBook extends ModItem{
     public RitualBook() {
-        super(new Item.Properties().maxStackSize(1).group(ArsNouveau.itemGroup));
+        super(new Item.Properties().stacksTo(1).tab(ArsNouveau.itemGroup));
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext context) {
-        if(context.getWorld().getBlockState(context.getPos()).getBlock() instanceof RitualBlock){
+    public ActionResultType useOn(ItemUseContext context) {
+        if(context.getLevel().getBlockState(context.getClickedPos()).getBlock() instanceof RitualBlock){
             return ActionResultType.CONSUME;
         }
         return ActionResultType.PASS;
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
 
-        if(!worldIn.isRemote && playerIn instanceof ServerPlayerEntity) {
+        if(!worldIn.isClientSide && playerIn instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = (ServerPlayerEntity) playerIn;
             Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new PacketOpenRitualBook());
         }
-        return new ActionResult<>(ActionResultType.CONSUME, playerIn.getHeldItem(handIn));
+        return new ActionResult<>(ActionResultType.CONSUME, playerIn.getItemInHand(handIn));
     }
 }

@@ -1,0 +1,21 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:blast_protection",
+  "level": 1,
+  "mana": 2000,
+  "item_1": [
+    {
+      "tag": "forge:storage_blocks/iron"
+    }
+  ],
+  "item_2": [
+    {
+      "tag": "forge:storage_blocks/iron"
+    }
+  ],
+  "item_3": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ]
+}

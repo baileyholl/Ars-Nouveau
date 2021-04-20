@@ -59,21 +59,21 @@ public class VolcanicTile extends AbstractManaTile implements IAnimatable {
 
     @Override
     public void tick() {
-        if(world.isRemote)
+        if(level.isClientSide)
             return;
-        if(world.getGameTime() % 20 == 0 && this.canAcceptMana()){
-            int numSource = (int) BlockPos.getAllInBox(this.getPos().down().add(1, 0, 1), this.getPos().down().add(-1, 0, -1))
-                    .filter(b -> world.getFluidState(b).getFluid() instanceof LavaFluid).map(b -> world.getFluidState(b))
+        if(level.getGameTime() % 20 == 0 && this.canAcceptMana()){
+            int numSource = (int) BlockPos.betweenClosedStream(this.getBlockPos().below().offset(1, 0, 1), this.getBlockPos().below().offset(-1, 0, -1))
+                    .filter(b -> level.getFluidState(b).getType() instanceof LavaFluid).map(b -> level.getFluidState(b))
                     .filter(FluidState::isSource).count();
 
-            for(ItemEntity i : world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos).grow(1.0))){
+            for(ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(worldPosition).inflate(1.0))){
                 if(i.getItem().getItem() == BlockRegistry.BLAZING_LOG.asItem()){
                     int mana = 100;
                     this.addMana(mana);
                     this.progress += 5;
                     i.getItem().shrink(1);
-                    Networking.sendToNearby(world, getPos(),
-                            new PacketANEffect(PacketANEffect.EffectType.BURST, i.getPosition(), new ParticleColor.IntWrapper(255, 0, 0)));
+                    Networking.sendToNearby(level, getBlockPos(),
+                            new PacketANEffect(PacketANEffect.EffectType.BURST, i.blockPosition(), new ParticleColor.IntWrapper(255, 0, 0)));
                     break;
                 }
 
@@ -85,22 +85,22 @@ public class VolcanicTile extends AbstractManaTile implements IAnimatable {
             }
         }
 
-        if(world.getGameTime() % 100 == 0 && getCurrentMana() > 0){
-            BlockPos jarPos = ManaUtil.canGiveManaClosest(pos, world, 5);
+        if(level.getGameTime() % 100 == 0 && getCurrentMana() > 0){
+            BlockPos jarPos = ManaUtil.canGiveManaClosest(worldPosition, level, 5);
             if(jarPos != null){
-                transferMana(this, (IManaTile) world.getTileEntity(jarPos));
-                ParticleUtil.spawnFollowProjectile(world, this.pos, jarPos);
+                transferMana(this, (IManaTile) level.getBlockEntity(jarPos));
+                ParticleUtil.spawnFollowProjectile(level, this.worldPosition, jarPos);
             }
         }
     }
 
     public void doRandomAction(){
-        if(world.isRemote)
+        if(level.isClientSide)
             return;
         AtomicBoolean set = new AtomicBoolean(false);
-        BlockPos.getProximitySortedBoxPositions(pos, 1, 0,1).forEach(p ->{
-            if(!set.get() && world.getBlockState(p).isAir()){
-                world.setBlockState(p, BlockRegistry.LAVA_LILY.getState(world, p));
+        BlockPos.withinManhattanStream(worldPosition, 1, 0,1).forEach(p ->{
+            if(!set.get() && level.getBlockState(p).isAir()){
+                level.setBlockAndUpdate(p, BlockRegistry.LAVA_LILY.getState(level, p));
                 set.set(true);
             }
         });
@@ -108,28 +108,28 @@ public class VolcanicTile extends AbstractManaTile implements IAnimatable {
 
         BlockPos magmaPos = getBlockInArea(Blocks.MAGMA_BLOCK, 1);
         if(magmaPos != null && progress >= 500){
-            world.setBlockState(magmaPos, Blocks.LAVA.getDefaultState());
+            level.setBlockAndUpdate(magmaPos, Blocks.LAVA.defaultBlockState());
             progress -= 500;
             return;
         }
 
         BlockPos stonePos = getBlockInArea(Blocks.STONE, 1);
         if(stonePos != null && progress >= 300){
-            world.setBlockState(stonePos, Blocks.MAGMA_BLOCK.getDefaultState());
+            level.setBlockAndUpdate(stonePos, Blocks.MAGMA_BLOCK.defaultBlockState());
             progress -= 300;
             return;
         }
 
         magmaPos = getBlockInArea(Blocks.MAGMA_BLOCK, 1);
         if(magmaPos != null && progress >= 500){
-            world.setBlockState(magmaPos, Blocks.LAVA.getDefaultState());
+            level.setBlockAndUpdate(magmaPos, Blocks.LAVA.defaultBlockState());
             progress -= 500;
             return;
         }
 
         stonePos = getTagInArea(Tags.Blocks.STONE, 1);
         if(stonePos != null && progress >= 300){
-            world.setBlockState(stonePos, Blocks.MAGMA_BLOCK.getDefaultState());
+            level.setBlockAndUpdate(stonePos, Blocks.MAGMA_BLOCK.defaultBlockState());
             progress -= 300;
             return;
         }
@@ -137,9 +137,9 @@ public class VolcanicTile extends AbstractManaTile implements IAnimatable {
 
     public BlockPos getTagInArea(ITag<Block> block, int range){
         AtomicReference<BlockPos> posFound = new AtomicReference<>();
-        BlockPos.getAllInBox(pos.add(range, -1, range), pos.add(-range, -1, -range)).forEach(blockPos -> {
-            blockPos = blockPos.toImmutable();
-            if(posFound.get() == null && world.getBlockState(blockPos).getBlock().isIn(block))
+        BlockPos.betweenClosedStream(worldPosition.offset(range, -1, range), worldPosition.offset(-range, -1, -range)).forEach(blockPos -> {
+            blockPos = blockPos.immutable();
+            if(posFound.get() == null && level.getBlockState(blockPos).getBlock().is(block))
                 posFound.set(blockPos);
         });
 
@@ -149,9 +149,9 @@ public class VolcanicTile extends AbstractManaTile implements IAnimatable {
 
     public BlockPos getBlockInArea(Block block, int range){
         AtomicReference<BlockPos> posFound = new AtomicReference<>();
-        BlockPos.getAllInBox(pos.add(range, -1, range), pos.add(-range, -1, -range)).forEach(blockPos -> {
-            blockPos = blockPos.toImmutable();
-            if(posFound.get() == null && world.getBlockState(blockPos).getBlock() == block)
+        BlockPos.betweenClosedStream(worldPosition.offset(range, -1, range), worldPosition.offset(-range, -1, -range)).forEach(blockPos -> {
+            blockPos = blockPos.immutable();
+            if(posFound.get() == null && level.getBlockState(blockPos).getBlock() == block)
                 posFound.set(blockPos);
         });
 
@@ -165,15 +165,15 @@ public class VolcanicTile extends AbstractManaTile implements IAnimatable {
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT tag) {
-        super.read(state, tag);
+    public void load(BlockState state, CompoundNBT tag) {
+        super.load(state, tag);
         progress = tag.getInt("progress");
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundNBT save(CompoundNBT tag) {
         tag.putInt("progress", progress);
-        return super.write(tag);
+        return super.save(tag);
     }
 
     private <E extends TileEntity  & IAnimatable > PlayState idlePredicate(AnimationEvent<E> event) {

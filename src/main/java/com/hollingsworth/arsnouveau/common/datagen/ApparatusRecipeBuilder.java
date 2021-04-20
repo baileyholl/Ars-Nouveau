@@ -1,10 +1,14 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
+import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantmentRecipe;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.IItemProvider;
+import net.minecraft.util.ResourceLocation;
 
 public class ApparatusRecipeBuilder {
     EnchantingApparatusRecipe recipe;
@@ -29,7 +33,7 @@ public class ApparatusRecipeBuilder {
         return this;
     }
     public ApparatusRecipeBuilder withReagent(IItemProvider provider){
-        this.recipe.reagent = Ingredient.fromItems(provider);
+        this.recipe.reagent = Ingredient.of(provider);
         return this;
     }
 
@@ -44,7 +48,7 @@ public class ApparatusRecipeBuilder {
     }
 
     public ApparatusRecipeBuilder withPedestalItem(IItemProvider i){
-        return this.withPedestalItem(Ingredient.fromItems(i));
+        return this.withPedestalItem(Ingredient.of(i));
     }
 
     public ApparatusRecipeBuilder withPedestalItem(int count, IItemProvider item){
@@ -60,7 +64,13 @@ public class ApparatusRecipeBuilder {
     }
 
     public EnchantingApparatusRecipe build(){
+        if(recipe.id.getPath().equals("empty"))
+            recipe.id = new ResourceLocation(ArsNouveau.MODID, recipe.result.getItem().getRegistryName().getPath());
         return recipe;
+    }
+
+    public EnchantmentRecipe buildEnchantmentRecipe(Enchantment enchantment, int level, int mana){
+        return new EnchantmentRecipe(this.recipe.pedestalItems, enchantment, level, mana);
     }
 
 }

@@ -8,7 +8,7 @@ import net.minecraft.util.text.StringTextComponent;
 
 public class PortUtil {
     public static void sendMessage(Entity playerEntity, ITextComponent component){
-        playerEntity.sendMessage(component, Util.DUMMY_UUID);
+        playerEntity.sendMessage(component, Util.NIL_UUID);
     }
 
     public static void sendMessage(Entity playerEntity, String message){

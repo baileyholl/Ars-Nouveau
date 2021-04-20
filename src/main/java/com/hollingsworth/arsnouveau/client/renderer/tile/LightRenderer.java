@@ -20,9 +20,9 @@ public class LightRenderer extends TileEntityRenderer<LightTile> {
 
     @Override
     public void render(LightTile lightTile, float v, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int i1) {
-        World world = lightTile.getWorld();
-        BlockPos pos = lightTile.getPos();
-        Random rand = world.rand;
+        World world = lightTile.getLevel();
+        BlockPos pos = lightTile.getBlockPos();
+        Random rand = world.random;
         world.addParticle(
                 GlowParticleData.createData(new ParticleColor(
                         rand.nextInt(lightTile.red),

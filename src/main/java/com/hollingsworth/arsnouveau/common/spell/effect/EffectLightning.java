@@ -17,6 +17,8 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
+
 public class EffectLightning extends AbstractEffect {
     public EffectLightning() {
         super(GlyphLib.EffectLightningID, "Lightning");
@@ -26,11 +28,11 @@ public class EffectLightning extends AbstractEffect {
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         Vector3d pos = safelyGetHitPos(rayTraceResult);
         LightningEntity lightningBoltEntity = new LightningEntity(ModEntities.LIGHTNING_ENTITY,world);
-        lightningBoltEntity.setPosition(pos.getX(), pos.getY(), pos.getZ());
-        lightningBoltEntity.setCaster(shooter instanceof ServerPlayerEntity ? (ServerPlayerEntity) shooter : null);
+        lightningBoltEntity.setPos(pos.x(), pos.y(), pos.z());
+        lightningBoltEntity.setCause(shooter instanceof ServerPlayerEntity ? (ServerPlayerEntity) shooter : null);
         lightningBoltEntity.amps = getAmplificationBonus(augments);
         lightningBoltEntity.extendTimes = getDurationModifier(augments);
-        (world).addEntity(lightningBoltEntity);
+        (world).addFreshEntity(lightningBoltEntity);
     }
 
     @Override

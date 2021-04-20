@@ -96,7 +96,7 @@ public class PacketANEffect {
                 @Override
                 public void run() {
                     Minecraft mc = Minecraft.getInstance();
-                    ClientWorld world = mc.world;
+                    ClientWorld world = mc.level;
                     switch (message.type){
                         case TIMED_GLOW:{
                             BlockPos fromPos = new BlockPos(message.x + 0.5, message.y + 0.5, message.z + 0.5);
@@ -115,7 +115,7 @@ public class PacketANEffect {
                                 double d0 = message.x +0.5; //+ world.rand.nextFloat();
                                 double d1 = message.y +1.2;//+ world.rand.nextFloat() ;
                                 double d2 = message.z +.5 ; //+ world.rand.nextFloat();
-                                world.addParticle(GlowParticleData.createData(new ParticleColor(message.red, message.green, message.blue)),d0, d1, d2, (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3);
+                                world.addParticle(GlowParticleData.createData(new ParticleColor(message.red, message.green, message.blue)),d0, d1, d2, (world.random.nextFloat() * 1 - 0.5)/3, (world.random.nextFloat() * 1 - 0.5)/3, (world.random.nextFloat() * 1 - 0.5)/3);
                             }
                             break;
                         }

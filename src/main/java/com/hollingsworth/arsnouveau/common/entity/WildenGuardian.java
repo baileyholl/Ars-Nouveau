@@ -40,10 +40,10 @@ public class WildenGuardian extends MonsterEntity implements IAnimatable, IAnima
     public Vector3d orbitOffset = Vector3d.ZERO;
     public BlockPos orbitPosition = BlockPos.ZERO;
     private LivingEntity targetedEntity;
-    public static final DataParameter<Boolean> isLaser = EntityDataManager.createKey(WildenGuardian.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<Boolean> IS_ARMORED = EntityDataManager.createKey(WildenGuardian.class, DataSerializers.BOOLEAN);
-    private static final DataParameter<Integer> TARGET_ENTITY = EntityDataManager.createKey(WildenGuardian.class, DataSerializers.VARINT);
-    private static final DataParameter<Integer> CLIENT_TIME = EntityDataManager.createKey(WildenGuardian.class, DataSerializers.VARINT);
+    public static final DataParameter<Boolean> isLaser = EntityDataManager.defineId(WildenGuardian.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Boolean> IS_ARMORED = EntityDataManager.defineId(WildenGuardian.class, DataSerializers.BOOLEAN);
+    private static final DataParameter<Integer> TARGET_ENTITY = EntityDataManager.defineId(WildenGuardian.class, DataSerializers.INT);
+    private static final DataParameter<Integer> CLIENT_TIME = EntityDataManager.defineId(WildenGuardian.class, DataSerializers.INT);
     protected WildenGuardian(EntityType<? extends MonsterEntity> type, World worldIn) {
         super(type, worldIn);
     }
@@ -52,7 +52,7 @@ public class WildenGuardian extends MonsterEntity implements IAnimatable, IAnima
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(5, new WildenMeleeAttack(this, 0.8d, true, WildenGuardian.Animations.ATTACK.ordinal(), () -> !this.dataManager.get(isLaser)));
+        this.goalSelector.addGoal(5, new WildenMeleeAttack(this, 0.8d, true, WildenGuardian.Animations.ATTACK.ordinal(), () -> !this.entityData.get(isLaser)));
         this.goalSelector.addGoal(4, new LaserAttackGoal(this));
         this.goalSelector.addGoal(1, new SwimGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
@@ -64,8 +64,8 @@ public class WildenGuardian extends MonsterEntity implements IAnimatable, IAnima
             this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AnimalEntity.class, 10, true, false, (entity) -> !(entity instanceof SummonWolf) || !((SummonWolf) entity).isWildenSummon));
 
     }
-    public void notifyDataManagerChange(DataParameter<?> key) {
-        super.notifyDataManagerChange(key);
+    public void onSyncedDataUpdated(DataParameter<?> key) {
+        super.onSyncedDataUpdated(key);
         if (TARGET_ENTITY.equals(key)) {
             setClientAttackTime(0);
             this.targetedEntity = null;
@@ -74,53 +74,53 @@ public class WildenGuardian extends MonsterEntity implements IAnimatable, IAnima
     }
 
     public void setClientAttackTime(int i){
-        this.dataManager.set(CLIENT_TIME, i);
+        this.entityData.set(CLIENT_TIME, i);
     }
 
     public int getClientAttackTime(){
-        return this.dataManager.get(CLIENT_TIME);
+        return this.entityData.get(CLIENT_TIME);
     }
 
     public boolean getIsLaser(){
-        return this.dataManager.get(isLaser);
+        return this.entityData.get(isLaser);
     }
 
     public void setLaser(boolean isLasering){
-        this.dataManager.set(isLaser, isLasering);
+        this.entityData.set(isLaser, isLasering);
     }
 
 
     public boolean isArmored(){
-        return this.dataManager.get(IS_ARMORED);
+        return this.entityData.get(IS_ARMORED);
     }
 
     public void setArmored(boolean isArmored){
-        this.dataManager.set(IS_ARMORED, isArmored);
+        this.entityData.set(IS_ARMORED, isArmored);
     }
 
 
     public void setTargetedEntity(int entityId) {
-        this.dataManager.set(TARGET_ENTITY, entityId);
+        this.entityData.set(TARGET_ENTITY, entityId);
     }
 
     public boolean hasTargetedEntity() {
-        return this.dataManager.get(TARGET_ENTITY) != 0;
+        return this.entityData.get(TARGET_ENTITY) != 0;
     }
 
     @Override
-    public boolean attackEntityAsMob(Entity entityIn) {
-        return super.attackEntityAsMob(entityIn);
+    public boolean doHurtTarget(Entity entityIn) {
+        return super.doHurtTarget(entityIn);
     }
 
     @Nullable
     public LivingEntity getTargetedEntity() {
         if (!this.hasTargetedEntity()) {
             return null;
-        } else if (this.world.isRemote) {
+        } else if (this.level.isClientSide) {
             if (this.targetedEntity != null) {
                 return this.targetedEntity;
             } else {
-                Entity entity = this.world.getEntityByID(this.dataManager.get(TARGET_ENTITY));
+                Entity entity = this.level.getEntity(this.entityData.get(TARGET_ENTITY));
                 if (entity instanceof LivingEntity) {
                     this.targetedEntity = (LivingEntity)entity;
                     return this.targetedEntity;
@@ -129,33 +129,33 @@ public class WildenGuardian extends MonsterEntity implements IAnimatable, IAnima
                 }
             }
         } else {
-            return this.getAttackTarget();
+            return this.getTarget();
         }
     }
 
     @Override
-    protected void damageEntity(DamageSource damageSrc, float damageAmount) {
-        if(!world.isRemote && armorCooldown == 0){
+    protected void actuallyHurt(DamageSource damageSrc, float damageAmount) {
+        if(!level.isClientSide && armorCooldown == 0){
             setArmored(true);
             armorCooldown = 500;
             armorTimeRemaining = 250;
         }
-        if(!world.isRemote && isArmored()){
+        if(!level.isClientSide && isArmored()){
             damageAmount *= 0.25;
 
-            if(damageSrc.getTrueSource() != null ){
-                damageSrc.getTrueSource().attackEntityFrom(DamageSource.causeThornsDamage(this), 3.0f);
+            if(damageSrc.getEntity() != null ){
+                damageSrc.getEntity().hurt(DamageSource.thorns(this), 3.0f);
 
             }
 
         }
-        super.damageEntity(damageSrc, damageAmount);
+        super.actuallyHurt(damageSrc, damageAmount);
     }
 
     @Override
     public void tick() {
         super.tick();
-        if(!world.isRemote){
+        if(!level.isClientSide){
             if(laserCooldown > 0)
                 laserCooldown--;
             if(armorTimeRemaining > 0)
@@ -174,8 +174,8 @@ public class WildenGuardian extends MonsterEntity implements IAnimatable, IAnima
 
             LivingEntity livingentity = this.getTargetedEntity();
             if (livingentity != null) {
-                this.getLookController().setLookPositionWithEntity(livingentity, 90.0F, 90.0F);
-                this.getLookController().tick();
+                this.getLookControl().setLookAt(livingentity, 90.0F, 90.0F);
+                this.getLookControl().tick();
             }
         }
     }
@@ -215,12 +215,12 @@ public class WildenGuardian extends MonsterEntity implements IAnimatable, IAnima
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        this.dataManager.register(isLaser, false);
-        this.dataManager.register(TARGET_ENTITY, 0);
-        this.dataManager.register(CLIENT_TIME, 0);
-        this.dataManager.register(IS_ARMORED, false);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(isLaser, false);
+        this.entityData.define(TARGET_ENTITY, 0);
+        this.entityData.define(CLIENT_TIME, 0);
+        this.entityData.define(IS_ARMORED, false);
     }
 
     private <E extends Entity> PlayState attackPredicate(AnimationEvent event) {
@@ -241,15 +241,15 @@ public class WildenGuardian extends MonsterEntity implements IAnimatable, IAnima
     }
 
     @Override
-    public void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
+    public void readAdditionalSaveData(CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
         armorCooldown = compound.getInt("armorCooldown");
         armorTimeRemaining = compound.getInt("armorTimeRemaining");
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
+    public void addAdditionalSaveData(CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
         compound.putInt("armorCooldown", armorCooldown);
         compound.putInt("armorTimeRemaining", armorTimeRemaining);
     }
@@ -259,14 +259,14 @@ public class WildenGuardian extends MonsterEntity implements IAnimatable, IAnima
         return manager;
     }
 
-    public static AttributeModifierMap.MutableAttribute getAttributes(){
-        return MobEntity.func_233666_p_()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 25D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D)
-                .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 0.6F)
-                .createMutableAttribute(Attributes.ATTACK_KNOCKBACK, 1.0D)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.5D)
-                .createMutableAttribute(Attributes.ARMOR, 2.0D);
+    public static AttributeModifierMap.MutableAttribute getModdedAttributes(){
+        return MobEntity.createMobAttributes()
+                .add(Attributes.MAX_HEALTH, 25D)
+                .add(Attributes.MOVEMENT_SPEED, 0.25D)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 0.6F)
+                .add(Attributes.ATTACK_KNOCKBACK, 1.0D)
+                .add(Attributes.ATTACK_DAMAGE, 4.5D)
+                .add(Attributes.ARMOR, 2.0D);
     }
 
 

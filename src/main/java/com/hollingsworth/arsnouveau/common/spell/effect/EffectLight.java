@@ -37,10 +37,10 @@ public class EffectLight extends AbstractEffect {
         }
 
         if(rayTraceResult instanceof BlockRayTraceResult){
-            BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getPos().offset(((BlockRayTraceResult) rayTraceResult).getFace());
-            if (world.getBlockState(pos).getMaterial() == Material.AIR && world.placedBlockCollides(BlockRegistry.LIGHT_BLOCK.getDefaultState(), pos, ISelectionContext.dummy())) {
-                world.setBlockState(pos, BlockRegistry.LIGHT_BLOCK.getDefaultState());
-                LightTile tile = ((LightTile)world.getTileEntity(pos));
+            BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getBlockPos().relative(((BlockRayTraceResult) rayTraceResult).getDirection());
+            if (world.getBlockState(pos).getMaterial() == Material.AIR && world.isUnobstructed(BlockRegistry.LIGHT_BLOCK.defaultBlockState(), pos, ISelectionContext.empty())) {
+                world.setBlockAndUpdate(pos, BlockRegistry.LIGHT_BLOCK.defaultBlockState());
+                LightTile tile = ((LightTile)world.getBlockEntity(pos));
                 if(tile != null){
                     tile.red = spellContext.colors.r;
                     tile.green = spellContext.colors.g;

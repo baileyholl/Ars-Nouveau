@@ -1,0 +1,14 @@
+{
+  "type": "ars_nouveau:dye",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:apprentice_spell_book"
+    },
+    {
+       "tag": "forge:dyes"
+    }
+  ],
+  "result": {
+    "item": "ars_nouveau:apprentice_spell_book"
+  }
+}

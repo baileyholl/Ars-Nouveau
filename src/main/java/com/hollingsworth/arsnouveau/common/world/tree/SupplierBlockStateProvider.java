@@ -16,7 +16,7 @@ public class SupplierBlockStateProvider extends AbstractSupplierBlockStateProvid
             .apply(instance, SupplierBlockStateProvider::new));
 
     @Override
-    protected BlockStateProviderType<?> getProviderType() {
+    protected BlockStateProviderType<?> type() {
         return BlockRegistry.stateProviderType;
     }
 }

@@ -1,0 +1,46 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "ars_nouveau:reactive",
+  "level": 2,
+  "mana": 6000,
+  "item_1": [
+    {
+      "tag": "forge:rods/blaze"
+    }
+  ],
+  "item_2": [
+    {
+      "tag": "forge:rods/blaze"
+    }
+  ],
+  "item_3": [
+    {
+      "tag": "forge:rods/blaze"
+    }
+  ],
+  "item_4": [
+    {
+      "tag": "forge:rods/blaze"
+    }
+  ],
+  "item_5": [
+    {
+      "tag": "forge:storage_blocks/gold"
+    }
+  ],
+  "item_6": [
+    {
+      "item": "ars_nouveau:glyph_extend_time"
+    }
+  ],
+  "item_7": [
+    {
+      "item": "ars_nouveau:glyph_aoe"
+    }
+  ],
+  "item_8": [
+    {
+      "item": "ars_nouveau:glyph_dampen"
+    }
+  ]
+}

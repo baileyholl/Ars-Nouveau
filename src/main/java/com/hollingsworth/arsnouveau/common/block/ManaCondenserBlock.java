@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 public class ManaCondenserBlock extends ModBlock {
 
     public ManaCondenserBlock() {
-        super(ModBlock.defaultProperties().notSolid(),"mana_condenser");
+        super(ModBlock.defaultProperties().noOcclusion(),"mana_condenser");
     }
 
     @Override
@@ -32,26 +32,26 @@ public class ManaCondenserBlock extends ModBlock {
     }
 
     @Override
-    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
-        if(worldIn.isRemote)
+    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(worldIn, pos, state, placer, stack);
+        if(worldIn.isClientSide)
             return;
         if(BlockUtil.containsStateInRadius(worldIn, pos, 5, ManaCondenserBlock.class)){
-            ((ManaCondenserTile)worldIn.getTileEntity(pos)).isDisabled = true;
+            ((ManaCondenserTile)worldIn.getBlockEntity(pos)).isDisabled = true;
             if(placer != null)
-                placer.sendMessage(new StringTextComponent("Another condenser is nearby..."), Util.DUMMY_UUID);
+                placer.sendMessage(new StringTextComponent("Another condenser is nearby..."), Util.NIL_UUID);
         }
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return Block.makeCuboidShape(0D, 0.0D, 0.0D, 16, 16, 16);
+        return Block.box(0D, 0.0D, 0.0D, 16, 16, 16);
     }
 
     @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        super.onBlockHarvested(worldIn, pos, state, player);
-        ManaCondenserTile tile = (ManaCondenserTile) worldIn.getTileEntity(pos);
+    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.playerWillDestroy(worldIn, pos, state, player);
+        ManaCondenserTile tile = (ManaCondenserTile) worldIn.getBlockEntity(pos);
         if(tile != null)
             MinecraftForge.EVENT_BUS.unregister(tile);
     }
@@ -63,7 +63,7 @@ public class ManaCondenserBlock extends ModBlock {
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState p_149645_1_) {
+    public BlockRenderType getRenderShape(BlockState p_149645_1_) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 

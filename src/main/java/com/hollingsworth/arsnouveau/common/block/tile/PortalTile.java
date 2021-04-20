@@ -31,41 +31,41 @@ public class PortalTile extends TileEntity implements ITickableTileEntity {
 
 
     public void warp(Entity e){
-        if(!world.isRemote && warpPos != null && !(world.getBlockState(warpPos).getBlock() instanceof PortalBlock)) {
-            e.setLocationAndAngles(warpPos.getX(), warpPos.getY(), warpPos.getZ(), e.rotationYaw, e.rotationPitch);
-            Networking.sendToNearby(world, e, new PacketWarpPosition(e.getEntityId(), e.getPosX(), e.getPosY(), e.getPosZ()));
-            ((ServerWorld) world).spawnParticle(ParticleTypes.PORTAL, warpPos.getX(),  warpPos.getY() + 1,  warpPos.getZ(),
-                    4,(this.world.rand.nextDouble() - 0.5D) * 2.0D, -this.world.rand.nextDouble(), (this.world.rand.nextDouble() - 0.5D) * 2.0D, 0.1f);
+        if(!level.isClientSide && warpPos != null && !(level.getBlockState(warpPos).getBlock() instanceof PortalBlock)) {
+            e.moveTo(warpPos.getX() +0.5, warpPos.getY(), warpPos.getZ() +0.5, e.yRot, e.xRot);
+            Networking.sendToNearby(level, e, new PacketWarpPosition(e.getId(), e.getX(), e.getY(), e.getZ()));
+            ((ServerWorld) level).sendParticles(ParticleTypes.PORTAL, warpPos.getX(),  warpPos.getY() + 1,  warpPos.getZ(),
+                    4,(this.level.random.nextDouble() - 0.5D) * 2.0D, -this.level.random.nextDouble(), (this.level.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
         }
     }
 
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state, compound);
         this.dimID = compound.getString("dim");
         this.warpPos = NBTUtil.getBlockPos(compound, "warp");
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         if(this.warpPos != null){
             NBTUtil.storeBlockPos(compound, "warp", this.warpPos);
         }
         compound.putString("dim", this.dimID);
 
-        return super.write(compound);
+        return super.save(compound);
     }
 
     @Override
     public void tick() {
-        if(!world.isRemote && warpPos != null && !(world.getBlockState(warpPos).getBlock() instanceof PortalBlock)) {
-            List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(pos));
+        if(!level.isClientSide && warpPos != null && !(level.getBlockState(warpPos).getBlock() instanceof PortalBlock)) {
+            List<Entity> entities = level.getEntitiesOfClass(Entity.class, new AxisAlignedBB(worldPosition));
             for(Entity e : entities){
-                world.playSound(null, warpPos, SoundEvents.ENTITY_ILLUSIONER_MIRROR_MOVE, SoundCategory.NEUTRAL, 1.0f, 1.0f);
-                e.setPositionAndUpdate(warpPos.getX(), warpPos.getY(), warpPos.getZ());
-                            ((ServerWorld) world).spawnParticle(ParticleTypes.PORTAL, warpPos.getX(),  warpPos.getY() + 1,  warpPos.getZ(),
-                    4,(this.world.rand.nextDouble() - 0.5D) * 2.0D, -this.world.rand.nextDouble(), (this.world.rand.nextDouble() - 0.5D) * 2.0D, 0.1f);
+                level.playSound(null, warpPos, SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundCategory.NEUTRAL, 1.0f, 1.0f);
+                e.teleportTo(warpPos.getX(), warpPos.getY(), warpPos.getZ());
+                            ((ServerWorld) level).sendParticles(ParticleTypes.PORTAL, warpPos.getX(),  warpPos.getY() + 1,  warpPos.getZ(),
+                    4,(this.level.random.nextDouble() - 0.5D) * 2.0D, -this.level.random.nextDouble(), (this.level.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
 
             }
         }

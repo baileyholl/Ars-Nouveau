@@ -20,12 +20,12 @@ public class RitualBlock extends ModBlock{
 
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(worldIn.getTileEntity(pos) instanceof RitualTile){
-            RitualTile tile = (RitualTile) worldIn.getTileEntity(pos);
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if(worldIn.getBlockEntity(pos) instanceof RitualTile){
+            RitualTile tile = (RitualTile) worldIn.getBlockEntity(pos);
             tile.startRitual(new RitualDig(tile, new RitualContext()));
         }
-        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+        return super.use(state, worldIn, pos, player, handIn, hit);
     }
 
     @Override

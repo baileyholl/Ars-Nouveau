@@ -43,21 +43,21 @@ public class LightningEntity extends LightningBoltEntity {
 
     public LightningEntity(EntityType<? extends LightningBoltEntity> p_i231491_1_, World world) {
         super(p_i231491_1_, world);
-        this.ignoreFrustumCheck = true;
+        this.noCulling = true;
         this.lightningState = 2;
-        this.boltVertex = this.rand.nextLong();
-        this.boltLivingTime = this.rand.nextInt(3) + 1;
+        this.boltVertex = this.random.nextLong();
+        this.boltLivingTime = this.random.nextInt(3) + 1;
     }
 
-    public void setEffectOnly(boolean effectOnly) {
+    public void setVisualOnly(boolean effectOnly) {
         this.effectOnly = effectOnly;
     }
 
-    public SoundCategory getSoundCategory() {
+    public SoundCategory getSoundSource() {
         return SoundCategory.WEATHER;
     }
 
-    public void setCaster(@Nullable ServerPlayerEntity casterIn) {
+    public void setCause(@Nullable ServerPlayerEntity casterIn) {
         this.caster = casterIn;
     }
 
@@ -67,44 +67,44 @@ public class LightningEntity extends LightningBoltEntity {
     public void tick() {
         super.tick();
         if (this.lightningState == 2) {
-            Difficulty difficulty = this.world.getDifficulty();
+            Difficulty difficulty = this.level.getDifficulty();
             if (difficulty == Difficulty.NORMAL || difficulty == Difficulty.HARD) {
                 this.igniteBlocks(4);
             }
 
-            this.world.playSound(null, this.getPosX(), this.getPosY(), this.getPosZ(), SoundEvents.ENTITY_LIGHTNING_BOLT_THUNDER, SoundCategory.WEATHER, 1.0f, 0.8F + this.rand.nextFloat() * 0.2F);
-            this.world.playSound(null, this.getPosX(), this.getPosY(), this.getPosZ(), SoundEvents.ENTITY_LIGHTNING_BOLT_IMPACT, SoundCategory.WEATHER, 1.0F, 0.5F + this.rand.nextFloat() * 0.2F);
+            this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.LIGHTNING_BOLT_THUNDER, SoundCategory.WEATHER, 1.0f, 0.8F + this.random.nextFloat() * 0.2F);
+            this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.LIGHTNING_BOLT_IMPACT, SoundCategory.WEATHER, 1.0F, 0.5F + this.random.nextFloat() * 0.2F);
         }
 
         --this.lightningState;
         if (this.lightningState < 0) {
             if (this.boltLivingTime == 0) {
                 this.remove();
-            } else if (this.lightningState < -this.rand.nextInt(10)) {
+            } else if (this.lightningState < -this.random.nextInt(10)) {
                 --this.boltLivingTime;
                 this.lightningState = 1;
-                this.boltVertex = this.rand.nextLong();
+                this.boltVertex = this.random.nextLong();
                 this.igniteBlocks(0);
             }
         }
 
         if (this.lightningState >= 0) {
-            if (!(this.world instanceof ServerWorld)) {
-                this.world.setTimeLightningFlash(2);
+            if (!(this.level instanceof ServerWorld)) {
+                this.level.setSkyFlashTime(2);
             } else if (!this.effectOnly) {
                 double d0 = 3.0D;
-                List<Entity> list = this.world.getEntitiesInAABBexcluding(this, new AxisAlignedBB(this.getPosX() - 3.0D, this.getPosY() - 3.0D, this.getPosZ() - 3.0D, this.getPosX() + 3.0D, this.getPosY() + 6.0D + 3.0D, this.getPosZ() + 3.0D), Entity::isAlive);
+                List<Entity> list = this.level.getEntities(this, new AxisAlignedBB(this.getX() - 3.0D, this.getY() - 3.0D, this.getZ() - 3.0D, this.getX() + 3.0D, this.getY() + 6.0D + 3.0D, this.getZ() + 3.0D), Entity::isAlive);
 
                 for(Entity entity : list) {
                     if (!net.minecraftforge.event.ForgeEventFactory.onEntityStruckByLightning(entity, this)) {
-                        entity.func_241841_a((ServerWorld) this.world, this);
-                        if(!world.isRemote && !hitEntities.contains(entity.getEntityId()) && entity instanceof LivingEntity){
-                            EffectInstance effectInstance = ((LivingEntity) entity).getActivePotionEffect(ModPotions.SHOCKED_EFFECT);
+                        entity.thunderHit((ServerWorld) this.level, this);
+                        if(!level.isClientSide && !hitEntities.contains(entity.getId()) && entity instanceof LivingEntity){
+                            EffectInstance effectInstance = ((LivingEntity) entity).getEffect(ModPotions.SHOCKED_EFFECT);
                             int amp = effectInstance != null ? effectInstance.getAmplifier() : -1;
-                            ((LivingEntity) entity).addPotionEffect(new EffectInstance(ModPotions.SHOCKED_EFFECT, 200 + 10*20*extendTimes, Math.min(2, amp + 1)));
+                            ((LivingEntity) entity).addEffect(new EffectInstance(ModPotions.SHOCKED_EFFECT, 200 + 10*20*extendTimes, Math.min(2, amp + 1)));
                         }
-                        if(!world.isRemote && !hitEntities.contains(entity))
-                            hitEntities.add(entity.getEntityId());
+                        if(!level.isClientSide && !hitEntities.contains(entity))
+                            hitEntities.add(entity.getId());
 
                     }
                 }
@@ -117,18 +117,18 @@ public class LightningEntity extends LightningBoltEntity {
     }
 
     private void igniteBlocks(int extraIgnitions) {
-        if (!this.effectOnly && !this.world.isRemote && this.world.getGameRules().getBoolean(GameRules.DO_FIRE_TICK)) {
-            BlockPos blockpos = this.getPosition();
-            BlockState blockstate = AbstractFireBlock.getFireForPlacement(this.world, blockpos);
-            if (this.world.getBlockState(blockpos).isAir() && blockstate.isValidPosition(this.world, blockpos)) {
-                this.world.setBlockState(blockpos, blockstate);
+        if (!this.effectOnly && !this.level.isClientSide && this.level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) {
+            BlockPos blockpos = this.blockPosition();
+            BlockState blockstate = AbstractFireBlock.getState(this.level, blockpos);
+            if (this.level.getBlockState(blockpos).isAir() && blockstate.canSurvive(this.level, blockpos)) {
+                this.level.setBlockAndUpdate(blockpos, blockstate);
             }
 
             for(int i = 0; i < extraIgnitions; ++i) {
-                BlockPos blockpos1 = blockpos.add(this.rand.nextInt(3) - 1, this.rand.nextInt(3) - 1, this.rand.nextInt(3) - 1);
-                blockstate = AbstractFireBlock.getFireForPlacement(this.world, blockpos1);
-                if (this.world.getBlockState(blockpos1).isAir() && blockstate.isValidPosition(this.world, blockpos1)) {
-                    this.world.setBlockState(blockpos1, blockstate);
+                BlockPos blockpos1 = blockpos.offset(this.random.nextInt(3) - 1, this.random.nextInt(3) - 1, this.random.nextInt(3) - 1);
+                blockstate = AbstractFireBlock.getState(this.level, blockpos1);
+                if (this.level.getBlockState(blockpos1).isAir() && blockstate.canSurvive(this.level, blockpos1)) {
+                    this.level.setBlockAndUpdate(blockpos1, blockstate);
                 }
             }
 
@@ -136,28 +136,28 @@ public class LightningEntity extends LightningBoltEntity {
     }
 
     public float getDamage(Entity entity){
-        return 5.0f + 3.0f * amps + (entity.isWet() ? 2.0f : 0.0f);
+        return 5.0f + 3.0f * amps + (entity.isInWaterOrRain() ? 2.0f : 0.0f);
     }
 
     /**
      * Checks if the entity is in range to render.
      */
     @OnlyIn(Dist.CLIENT)
-    public boolean isInRangeToRenderDist(double distance) {
-        double d0 = 64.0D * getRenderDistanceWeight();
+    public boolean shouldRenderAtSqrDistance(double distance) {
+        double d0 = 64.0D * getViewScale();
         return distance < d0 * d0;
     }
 
-    protected void registerData() {
+    protected void defineSynchedData() {
     }
 
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
-    protected void readAdditional(CompoundNBT compound) {
+    protected void readAdditionalSaveData(CompoundNBT compound) {
     }
 
-    protected void writeAdditional(CompoundNBT compound) {
+    protected void addAdditionalSaveData(CompoundNBT compound) {
     }
 
     @Override
@@ -166,7 +166,7 @@ public class LightningEntity extends LightningBoltEntity {
     }
 
     @Override
-    public IPacket<?> createSpawnPacket() {
+    public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

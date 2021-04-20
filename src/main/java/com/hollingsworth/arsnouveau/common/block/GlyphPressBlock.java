@@ -25,7 +25,7 @@ public class GlyphPressBlock extends ModBlock{
     public static final Property<Integer> stage = IntegerProperty.create("stage", 1, 31);
 
     public GlyphPressBlock() {
-        super(ModBlock.defaultProperties().notSolid(),"glyph_press");
+        super(ModBlock.defaultProperties().noOcclusion(),"glyph_press");
     }
 
     @Override
@@ -34,54 +34,54 @@ public class GlyphPressBlock extends ModBlock{
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult p_225533_6_) {
-        if(!world.isRemote) {
-            GlyphPressTile tile = (GlyphPressTile) world.getTileEntity(pos);
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult p_225533_6_) {
+        if(!world.isClientSide) {
+            GlyphPressTile tile = (GlyphPressTile) world.getBlockEntity(pos);
             if(tile.isCrafting)
                 return ActionResultType.PASS;
 
-            if (tile.baseMaterial != null && !tile.baseMaterial.isEmpty() && player.getHeldItem(handIn).isEmpty()) {
-                ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.baseMaterial);
-                world.addEntity(item);
+            if (tile.baseMaterial != null && !tile.baseMaterial.isEmpty() && player.getItemInHand(handIn).isEmpty()) {
+                ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.baseMaterial);
+                world.addFreshEntity(item);
                 tile.baseMaterial = ItemStack.EMPTY;
             }
-            else if (!player.inventory.getCurrentItem().isEmpty()) {
-                if(player.getHeldItem(handIn).getItem() == Items.CLAY_BALL || player.getHeldItem(handIn).getItem() == ItemsRegistry.magicClay ||
-                        player.getHeldItem(handIn).getItem() == ItemsRegistry.marvelousClay || player.getHeldItem(handIn).getItem() == ItemsRegistry.mythicalClay) {
+            else if (!player.inventory.getSelected().isEmpty()) {
+                if(player.getItemInHand(handIn).getItem() == Items.CLAY_BALL || player.getItemInHand(handIn).getItem() == ItemsRegistry.magicClay ||
+                        player.getItemInHand(handIn).getItem() == ItemsRegistry.marvelousClay || player.getItemInHand(handIn).getItem() == ItemsRegistry.mythicalClay) {
                     if(tile.baseMaterial != null && !tile.baseMaterial.isEmpty()){
-                        ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.baseMaterial);
-                        world.addEntity(item);
+                        ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.baseMaterial);
+                        world.addFreshEntity(item);
                     }
-                    tile.baseMaterial = player.inventory.decrStackSize(player.inventory.currentItem, 1);
+                    tile.baseMaterial = player.inventory.removeItem(player.inventory.selected, 1);
                 }else if(tile.baseMaterial != null && !tile.baseMaterial.isEmpty()){
                     if(tile.reagentItem != null && !tile.reagentItem.isEmpty()){
-                        ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.reagentItem);
-                        world.addEntity(item);
+                        ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.reagentItem);
+                        world.addFreshEntity(item);
                     }
 
-                    tile.reagentItem = player.inventory.decrStackSize(player.inventory.currentItem, 1);
-                    if(!tile.craft(player) && player.inventory.addItemStackToInventory(tile.reagentItem)) {
+                    tile.reagentItem = player.inventory.removeItem(player.inventory.selected, 1);
+                    if(!tile.craft(player) && player.inventory.add(tile.reagentItem)) {
                         tile.reagentItem = ItemStack.EMPTY;
                     }
                 }
             }
 
-            world.notifyBlockUpdate(pos, state, state, 2);
+            world.sendBlockUpdated(pos, state, state, 2);
         }
         return ActionResultType.SUCCESS;
     }
 
 
     @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        super.onBlockHarvested(worldIn, pos, state, player);
-        if(!(worldIn.getTileEntity(pos) instanceof GlyphPressTile) || worldIn.isRemote)
+    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.playerWillDestroy(worldIn, pos, state, player);
+        if(!(worldIn.getBlockEntity(pos) instanceof GlyphPressTile) || worldIn.isClientSide)
             return;
-        GlyphPressTile tile = ((GlyphPressTile) worldIn.getTileEntity(pos));
+        GlyphPressTile tile = ((GlyphPressTile) worldIn.getBlockEntity(pos));
         if(tile.baseMaterial != null && !tile.baseMaterial.isEmpty()){
-            worldIn.addEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.baseMaterial));
+            worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.baseMaterial));
             if(tile.reagentItem != null && !tile.reagentItem.isEmpty()){
-                worldIn.addEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.reagentItem));
+                worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.reagentItem));
             }
 
         }
@@ -94,11 +94,11 @@ public class GlyphPressBlock extends ModBlock{
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<net.minecraft.block.Block, BlockState> builder) { builder.add(stage); }
+    protected void createBlockStateDefinition(StateContainer.Builder<net.minecraft.block.Block, BlockState> builder) { builder.add(stage); }
 
 }

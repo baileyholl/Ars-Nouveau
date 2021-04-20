@@ -26,9 +26,9 @@ public class VolcanicRenderer extends GeoBlockRenderer<VolcanicTile> {
 
     @Override
     public void renderLate(VolcanicTile animatable, MatrixStack stackIn, float ticks, IRenderTypeBuffer renderTypeBuffer, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
-        World world = animatable.getWorld();
-        BlockPos pos = animatable.getPos();
-        Random rand = world.rand;
+        World world = animatable.getLevel();
+        BlockPos pos = animatable.getBlockPos();
+        Random rand = world.random;
         for(int i = 0; i < 3; i++){
             world.addParticle(
                     GlowParticleData.createData(new ParticleColor(

@@ -45,7 +45,7 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
 
 
     public boolean setTakeFrom(BlockPos pos){
-        if(BlockUtil.distanceFrom(pos, this.pos) > 10){
+        if(BlockUtil.distanceFrom(pos, this.worldPosition) > 10){
             return false;
         }
         this.fromPos = pos;
@@ -54,7 +54,7 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
     }
 
     public boolean setSendTo(BlockPos pos ){
-        if(BlockUtil.distanceFrom(pos, this.pos) > 10){
+        if(BlockUtil.distanceFrom(pos, this.worldPosition) > 10){
             return false;
         }
         this.toPos = pos;
@@ -79,17 +79,17 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
     }
 
     public boolean closeEnough(BlockPos pos, int distance){
-        return BlockUtil.distanceFrom(pos, this.pos) <= distance;
+        return BlockUtil.distanceFrom(pos, this.worldPosition) <= distance;
     }
 
     @Override
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, PlayerEntity playerEntity) {
-        if(storedPos == null || world.isRemote)
+        if(storedPos == null || level.isClientSide)
             return;
         // Let relays take from us, no action needed.
-        if(this.setSendTo(storedPos.toImmutable())) {
+        if(this.setSendTo(storedPos.immutable())) {
             PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.connections.send", DominionWand.getPosString(storedPos)));
-            ParticleUtil.beam(storedPos, pos, (ServerWorld) world);
+            ParticleUtil.beam(storedPos, worldPosition, (ServerWorld) level);
         }else{
             PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.connections.fail"));
         }
@@ -99,9 +99,9 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, PlayerEntity playerEntity) {
         if(storedPos == null)
             return;
-        if(world.getTileEntity(storedPos) instanceof ArcaneRelayTile)
+        if(level.getBlockEntity(storedPos) instanceof ArcaneRelayTile)
             return;
-        if(this.setTakeFrom(storedPos.toImmutable())) {
+        if(this.setTakeFrom(storedPos.immutable())) {
             PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.connections.take", DominionWand.getPosString(storedPos)));
         }else{
             PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.connections.fail"));
@@ -115,12 +115,12 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
     }
 
     public void spawnParticles(){
-        if(world.isRemote){
+        if(level.isClientSide){
             ParticleColor randColor = new ParticleColor(255,55,255);
             for (int i = 0; i < 6; i++) {
-                world.addParticle(
+                level.addParticle(
                         GlowParticleData.createData(randColor),
-                        pos.getX() + 0.5 + ParticleUtil.inRange(-0.3, 0.3), pos.getY() + 0.5 + ParticleUtil.inRange(-0.3, 0.3), pos.getZ() + 0.5 + ParticleUtil.inRange(-0.3, 0.3),
+                        worldPosition.getX() + 0.5 + ParticleUtil.inRange(-0.3, 0.3), worldPosition.getY() + 0.5 + ParticleUtil.inRange(-0.3, 0.3), worldPosition.getZ() + 0.5 + ParticleUtil.inRange(-0.3, 0.3),
                         0, 0, 0);
             }
         }
@@ -128,42 +128,42 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
 
     @Override
     public void tick() {
-        if(world.isRemote){
+        if(level.isClientSide){
             spawnParticles();
             return;
         }
 
-        if(world.getGameTime() % 20 != 0 || toPos == null)
+        if(level.getGameTime() % 20 != 0 || toPos == null)
             return;
 
         if(fromPos != null){
             // Block has been removed
-            if(!(world.getTileEntity(fromPos) instanceof AbstractManaTile)){
+            if(!(level.getBlockEntity(fromPos) instanceof AbstractManaTile)){
                 fromPos = null;
                 update();
                 return;
-            }else if(world.getTileEntity(fromPos) instanceof AbstractManaTile){
+            }else if(level.getBlockEntity(fromPos) instanceof AbstractManaTile){
                 // Transfer mana fromPos to this
-                AbstractManaTile fromTile = (AbstractManaTile) world.getTileEntity(fromPos);
+                AbstractManaTile fromTile = (AbstractManaTile) level.getBlockEntity(fromPos);
                 if(transferMana(fromTile, this) > 0){
                     update();
-                    ParticleUtil.spawnFollowProjectile(world, fromPos, pos);
+                    ParticleUtil.spawnFollowProjectile(level, fromPos, worldPosition);
                 }
             }
         }
-        if(!(world.getTileEntity(toPos) instanceof AbstractManaTile)){
+        if(!(level.getBlockEntity(toPos) instanceof AbstractManaTile)){
             toPos = null;
             update();
             return;
         }
-        AbstractManaTile toTile = (AbstractManaTile) this.world.getTileEntity(toPos);
+        AbstractManaTile toTile = (AbstractManaTile) this.level.getBlockEntity(toPos);
         if(transferMana(this, toTile) > 0){
-            ParticleUtil.spawnFollowProjectile(world, pos, toPos);
+            ParticleUtil.spawnFollowProjectile(level, worldPosition, toPos);
         }
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT tag) {
+    public void load(BlockState state, CompoundNBT tag) {
         if(NBTUtil.hasBlockPos(tag, "to")){
             this.toPos = NBTUtil.getBlockPos(tag, "to");
         }else{
@@ -174,11 +174,11 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
         }else{
             fromPos = null;
         }
-        super.read(state, tag);
+        super.load(state, tag);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundNBT save(CompoundNBT tag) {
         if(toPos != null) {
             NBTUtil.storeBlockPos(tag, "to", toPos);
         }else{
@@ -189,7 +189,7 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
         }else{
             NBTUtil.removeBlockPos(tag, "from");
         }
-        return super.write(tag);
+        return super.save(tag);
     }
 
     @Override

@@ -18,22 +18,22 @@ public class GuiScrollHUD extends AbstractGui {
     private static final Minecraft minecraft = Minecraft.getInstance();
 
     public void drawHUD(MatrixStack matrixStack, ItemFrameEntity entity){
-        if(entity.getDisplayedItem().getItem() instanceof ItemScroll){
-            ItemStack stack = entity.getDisplayedItem();
+        if(entity.getItem().getItem() instanceof ItemScroll){
+            ItemStack stack = entity.getItem();
             CompoundNBT tag = stack.getTag();
             if(tag == null)
                 return;
             List<ItemStack> stacks = new ArrayList<>();
-            for(String s : tag.keySet()){
+            for(String s : tag.getAllKeys()){
                 if(s.contains(ITEM_PREFIX)){
-                    stacks.add(ItemStack.read(tag.getCompound(s)));
+                    stacks.add(ItemStack.of(tag.getCompound(s)));
                 }
             }
             int offsetLeft = 5;
             fill(matrixStack, offsetLeft, 50, 100+ offsetLeft, 0, 300000);
             int counter = 0;
             for(ItemStack s : stacks){
-                minecraft.fontRenderer.drawStringWithShadow(matrixStack, s.getDisplayName().getString(), offsetLeft, 5f + 10 * counter, 0xFFFFFF);
+                minecraft.font.drawShadow(matrixStack, s.getHoverName().getString(), offsetLeft, 5f + 10 * counter, 0xFFFFFF);
             }
         }
     }

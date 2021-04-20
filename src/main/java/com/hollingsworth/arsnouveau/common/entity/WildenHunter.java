@@ -49,15 +49,15 @@ public class  WildenHunter extends MonsterEntity implements IAnimatable, IAnimat
 
     }
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        return SoundEvents.ENTITY_WOLF_HURT;
+        return SoundEvents.WOLF_HURT;
     }
 
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_WOLF_DEATH;
+        return SoundEvents.WOLF_DEATH;
     }
 
     @Override
-    protected int getExperiencePoints(PlayerEntity player) {
+    protected int getExperienceReward(PlayerEntity player) {
         return 5;
     }
 
@@ -75,23 +75,23 @@ public class  WildenHunter extends MonsterEntity implements IAnimatable, IAnimat
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_WOLF_GROWL;
+        return SoundEvents.WOLF_GROWL;
     }
 
-    public static AttributeModifierMap.MutableAttribute getAttributes(){
-        return MobEntity.func_233666_p_()
-                .createMutableAttribute(Attributes.MAX_HEALTH, 20.0D)
-                .createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D)
-                .createMutableAttribute(Attributes.KNOCKBACK_RESISTANCE, 0.6F)
-                .createMutableAttribute(Attributes.ATTACK_KNOCKBACK, 1.0D)
-                .createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.5D)
-                .createMutableAttribute(Attributes.ARMOR, 2.0D);
+    public static AttributeModifierMap.MutableAttribute getModdedAttributes(){
+        return MobEntity.createMobAttributes()
+                .add(Attributes.MAX_HEALTH, 20.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.25D)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 0.6F)
+                .add(Attributes.ATTACK_KNOCKBACK, 1.0D)
+                .add(Attributes.ATTACK_DAMAGE, 4.5D)
+                .add(Attributes.ARMOR, 2.0D);
     }
 
     @Override
     public void tick() {
         super.tick();
-        if(world.isRemote)
+        if(level.isClientSide)
             return;
         if(ramCooldown > 0)
             ramCooldown--;

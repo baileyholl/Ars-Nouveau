@@ -16,25 +16,25 @@ public class PhantomBlockTile extends TileEntity implements ITickableTileEntity 
 
     @Override
     public void tick() {
-        if(!world.isRemote){
+        if(!level.isClientSide){
             age++;
             //15 seconds
             if(age > 20 * 15){
-                world.destroyBlock(this.getPos(), false);
-                world.removeTileEntity(this.getPos());
+                level.destroyBlock(this.getBlockPos(), false);
+                level.removeBlockEntity(this.getBlockPos());
             }
         }
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state,compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        super.load(state,compound);
         this.age = compound.getInt("age");
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         compound.put("age", IntNBT.valueOf(age));
-        return super.write(compound);
+        return super.save(compound);
     }
 }

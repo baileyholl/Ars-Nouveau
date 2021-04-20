@@ -27,15 +27,15 @@ public class ParticleSparkle extends SpriteTexturedParticle {
             this.colorB = this.colorB/255.0f;
         }
         this.setColor(colorR, colorG, colorB);
-        this.maxAge = lifetime;
-        this.particleScale = scale;
-        this.canCollide = false;
+        this.lifetime = lifetime;
+        this.quadSize = scale;
+        this.hasPhysics = false;
         this.initScale = scale;
-        this.motionX = ParticleUtil.inRange(-0.01, 0.01);
-        this.motionY = -0.02;
-        this.motionZ = ParticleUtil.inRange(-0.01, 0.01);
+        this.xd = ParticleUtil.inRange(-0.01, 0.01);
+        this.yd = -0.02;
+        this.zd = ParticleUtil.inRange(-0.01, 0.01);
 //        this.particleAngle = 2.0f*(float)Math.PI;
-        this.selectSpriteRandomly(sprite);
+        this.pickSprite(sprite);
     }
     @Override
     public IParticleRenderType getRenderType() {
@@ -44,7 +44,7 @@ public class ParticleSparkle extends SpriteTexturedParticle {
 
 
     @Override
-    public int getBrightnessForRender(float pTicks){
+    public int getLightColor(float pTicks){
         return 255;
     }
 
@@ -57,9 +57,9 @@ public class ParticleSparkle extends SpriteTexturedParticle {
 //            this.age++;
 //        }
 
-        float lifeCoeff = (float)this.age/(float)this.maxAge;
+        float lifeCoeff = (float)this.age/(float)this.lifetime;
 //        this.particleScale = initScale-initScale*lifeCoeff;
-        this.particleAlpha = 1.0f-lifeCoeff;
+        this.alpha = 1.0f-lifeCoeff;
 //        float lifeCoeff = (float)this.age/(float)this.maxAge;
 //        this.particleScale = initScale-initScale*lifeCoeff;
 //        this.particleAlpha = initAlpha*(1.0f-lifeCoeff);
@@ -69,6 +69,6 @@ public class ParticleSparkle extends SpriteTexturedParticle {
 
     @Override
     public boolean isAlive() {
-        return this.age < this.maxAge;
+        return this.age < this.lifetime;
     }
 }

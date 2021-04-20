@@ -1,0 +1,46 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:silk_touch",
+  "level": 1,
+  "mana": 9000,
+  "item_1": [
+    {
+      "item": "ars_nouveau:glyph_extract"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:glyph_extract"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "ars_nouveau:glyph_amplify"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "ars_nouveau:glyph_amplify"
+    }
+  ],
+  "item_5": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_6": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_7": [
+    {
+      "tag": "forge:storage_blocks/lapis"
+    }
+  ],
+  "item_8": [
+    {
+      "tag": "forge:storage_blocks/lapis"
+    }
+  ]
+}

@@ -54,64 +54,64 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
     }
 
     @Override
-    public void read(BlockState state,CompoundNBT compound) {
-        reagentItem = ItemStack.read((CompoundNBT)compound.get("itemStack"));
-        baseMaterial = ItemStack.read((CompoundNBT)compound.get("baseMat"));
-        oldBaseMat = ItemStack.read((CompoundNBT)compound.get("oldBase"));
+    public void load(BlockState state,CompoundNBT compound) {
+        reagentItem = ItemStack.of((CompoundNBT)compound.get("itemStack"));
+        baseMaterial = ItemStack.of((CompoundNBT)compound.get("baseMat"));
+        oldBaseMat = ItemStack.of((CompoundNBT)compound.get("oldBase"));
         isCrafting = compound.getBoolean("crafting");
         timeStartedSpraying = compound.getLong("spraying");
-        super.read(state, compound);
+        super.load(state, compound);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         if(reagentItem != null) {
             CompoundNBT reagentTag = new CompoundNBT();
-            reagentItem.write(reagentTag);
+            reagentItem.save(reagentTag);
             compound.put("itemStack", reagentTag);
         }
         if(baseMaterial != null){
             CompoundNBT baseMatTag = new CompoundNBT();
-            baseMaterial.write(baseMatTag);
+            baseMaterial.save(baseMatTag);
             compound.put("baseMat", baseMatTag);
         }
 
         if(oldBaseMat != null){
             CompoundNBT baseMatTag = new CompoundNBT();
-            oldBaseMat.write(baseMatTag);
+            oldBaseMat.save(baseMatTag);
             compound.put("oldBase", baseMatTag);
         }
         compound.putBoolean("crafting", isCrafting);
         compound.putLong("spraying", timeStartedSpraying);
-        return super.write(compound);
+        return super.save(compound);
     }
 
 
     @Override
     public void tick() {
-        if(!world.isRemote && world.getGameTime() % 20 == 0 && reagentItem != null && baseMaterial != null && canCraft(reagentItem.getItem(), baseMaterial.getItem()))
-            craft(FakePlayerFactory.getMinecraft((ServerWorld) world));
+        if(!level.isClientSide && level.getGameTime() % 20 == 0 && reagentItem != null && baseMaterial != null && canCraft(reagentItem.getItem(), baseMaterial.getItem()))
+            craft(FakePlayerFactory.getMinecraft((ServerWorld) level));
 
-        if(world.isRemote || !isCrafting){
+        if(level.isClientSide || !isCrafting){
             return;
         }
         counter += 1;
         if(counter == 110){
-            GlyphPressRecipe recipe = ArsNouveauAPI.getInstance().getGlyphPressRecipe(world, reagentItem.getItem(), getTier(baseMaterial.getItem()));
+            GlyphPressRecipe recipe = ArsNouveauAPI.getInstance().getGlyphPressRecipe(level, reagentItem.getItem(), getTier(baseMaterial.getItem()));
             oldBaseMat = this.baseMaterial.copy();
             this.baseMaterial = recipe.output.copy();
             updateBlock();
         }
         if(counter ==150) {
             isCrafting = false;
-            GlyphPressRecipe recipe = ArsNouveauAPI.getInstance().getGlyphPressRecipe(world, reagentItem.getItem(), getTier(oldBaseMat.getItem()));
+            GlyphPressRecipe recipe = ArsNouveauAPI.getInstance().getGlyphPressRecipe(level, reagentItem.getItem(), getTier(oldBaseMat.getItem()));
             if(recipe == null)
                 return;
 
             ItemStack stack = recipe.output.copy();
             stack = depositItem(stack);
             if(!stack.isEmpty())
-                world.addEntity(new ItemEntity(world, pos.getX() + 0.5, pos.getY()+ 1.5, pos.getZ()+0.5, stack));
+                level.addFreshEntity(new ItemEntity(level, worldPosition.getX() + 0.5, worldPosition.getY()+ 1.5, worldPosition.getZ()+0.5, stack));
             reagentItem = new ItemStack(null);
             this.baseMaterial = new ItemStack(null);
             this.oldBaseMat = new ItemStack(null);
@@ -124,7 +124,7 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
     public ItemStack depositItem(ItemStack stack){
         ArrayList<IInventory> iInventories = new ArrayList<>();
         for(Direction d : Direction.values()){
-            IInventory iInventory =  HopperTileEntity.getInventoryAtPosition(world, pos.offset(d));
+            IInventory iInventory =  HopperTileEntity.getContainerAt(level, worldPosition.relative(d));
             if(iInventory != null && !(iInventory instanceof HopperTileEntity))
                 iInventories.add(iInventory);
         }
@@ -132,19 +132,19 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
         for(IInventory i : iInventories){
             if(stack == ItemStack.EMPTY || stack == null)
                 break;
-            stack = HopperTileEntity.putStackInInventoryAllSlots(null, i, stack, null);
+            stack = HopperTileEntity.addItem(null, i, stack, null);
         }
         return stack;
     }
 
     public void updateBlock(){
-        BlockState state = world.getBlockState(pos);
-        world.notifyBlockUpdate(pos, state, state, 2);
+        BlockState state = level.getBlockState(worldPosition);
+        level.sendBlockUpdated(worldPosition, state, state, 2);
     }
 
 
     @Override
-    public int getSizeInventory() {
+    public int getContainerSize() {
         return 2;
     }
 
@@ -154,12 +154,12 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
     }
 
     @Override
-    public ItemStack getStackInSlot(int index) {
+    public ItemStack getItem(int index) {
         return index == 0 ? reagentItem : index == 1 ? baseMaterial : ItemStack.EMPTY ;
     }
 
     @Override
-    public ItemStack decrStackSize(int index, int count) {
+    public ItemStack removeItem(int index, int count) {
         if(index == 0 && reagentItem != null){
             reagentItem.shrink(count);
             return reagentItem;
@@ -171,14 +171,14 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int index) {
+    public ItemStack removeItemNoUpdate(int index) {
         ItemStack stack = reagentItem;
         reagentItem.setCount(0);
         return stack;
     }
 
     @Override
-    public void setInventorySlotContents(int index, ItemStack stack) {
+    public void setItem(int index, ItemStack stack) {
         if(index == 0)
             reagentItem = stack;
         if(index == 1)
@@ -188,12 +188,12 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
     }
 
     @Override
-    public boolean isUsableByPlayer(PlayerEntity player) {
+    public boolean stillValid(PlayerEntity player) {
         return true;
     }
 
     @Override
-    public void clear() {
+    public void clearContent() {
         reagentItem = ItemStack.EMPTY;
         baseMaterial = ItemStack.EMPTY;
     }
@@ -201,19 +201,19 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
     public boolean craft(PlayerEntity playerEntity) {
         if(isCrafting || baseMaterial == null || baseMaterial == ItemStack.EMPTY)
             return false;
-        GlyphPressRecipe recipe = ArsNouveauAPI.getInstance().getGlyphPressRecipe(world, reagentItem.getItem(), getTier(this.baseMaterial.getItem()));
+        GlyphPressRecipe recipe = ArsNouveauAPI.getInstance().getGlyphPressRecipe(level, reagentItem.getItem(), getTier(this.baseMaterial.getItem()));
         if(recipe == null)
             return false;
 
         int manaCost = recipe.tier == ISpellTier.Tier.ONE ? 1500 : (recipe.tier == ISpellTier.Tier.TWO ? 2500 : 5000);
-        BlockPos jar = ManaUtil.takeManaNearbyWithParticles(pos, world, 5, manaCost);
+        BlockPos jar = ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 5, manaCost);
         if(jar != null){
             isCrafting = true;
-            Networking.sendToNearby(world, pos, new PacketOneShotAnimation(pos));
+            Networking.sendToNearby(level, worldPosition, new PacketOneShotAnimation(worldPosition));
             return true;
         }
 
-        playerEntity.sendMessage(new TranslationTextComponent("ars_nouveau.glyph_press.no_mana"), Util.DUMMY_UUID);
+        playerEntity.sendMessage(new TranslationTextComponent("ars_nouveau.glyph_press.no_mana"), Util.NIL_UUID);
         return false;
     }
 
@@ -265,7 +265,7 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
     }
 
     @Override
-    public boolean canInsertItem(int index, ItemStack itemStackIn, @Nullable Direction direction) {
+    public boolean canPlaceItemThroughFace(int index, ItemStack itemStackIn, @Nullable Direction direction) {
         if(isCrafting)
             return false;
         if(index == 0 && (reagentItem == null || reagentItem.isEmpty()) && direction == Direction.UP){ // reagent
@@ -277,21 +277,21 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
     }
 
     @Override
-    public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
+    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
         return false;
     }
 
     public boolean canCraft(Item reagent, Item base){
         if(reagent == null || reagent == Items.AIR || base == null || base == Items.AIR)
             return false;
-        GlyphPressRecipe recipe = ArsNouveauAPI.getInstance().getGlyphPressRecipe(world, reagent, getTier(base));
+        GlyphPressRecipe recipe = ArsNouveauAPI.getInstance().getGlyphPressRecipe(level, reagent, getTier(base));
         if(recipe == null)
             return false;
 
         int manaCost = recipe.tier == ISpellTier.Tier.ONE ? 2000 : (recipe.tier == ISpellTier.Tier.TWO ? 4000 : 6000);
         AtomicBoolean valid = new AtomicBoolean(false);
-        BlockPos.getAllInBox(this.getPos().add(5, -3, 5), this.getPos().add(-5, 3, -5)).forEach(blockPos -> {
-            if(!valid.get() && world.getTileEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getTileEntity(blockPos)).getCurrentMana() >= manaCost) {
+        BlockPos.betweenClosedStream(this.getBlockPos().offset(5, -3, 5), this.getBlockPos().offset(-5, 3, -5)).forEach(blockPos -> {
+            if(!valid.get() && level.getBlockEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) level.getBlockEntity(blockPos)).getCurrentMana() >= manaCost) {
                 valid.set(true);
             }
         });

@@ -27,30 +27,30 @@ public class EntityFlyingItem extends EntityFollowProjectile {
     //    int age;
     int maxAge;
 
-    public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.createKey(EntityFlyingItem.class, DataSerializers.ITEMSTACK);
-    public static final DataParameter<Float> OFFSET = EntityDataManager.createKey(EntityFlyingItem.class, DataSerializers.FLOAT);
-    public static final DataParameter<Boolean> DIDOFFSET = EntityDataManager.createKey(EntityFlyingItem.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<Boolean> SPAWN_TOUCH = EntityDataManager.createKey(EntityFlyingItem.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.defineId(EntityFlyingItem.class, DataSerializers.ITEM_STACK);
+    public static final DataParameter<Float> OFFSET = EntityDataManager.defineId(EntityFlyingItem.class, DataSerializers.FLOAT);
+    public static final DataParameter<Boolean> DIDOFFSET = EntityDataManager.defineId(EntityFlyingItem.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Boolean> SPAWN_TOUCH = EntityDataManager.defineId(EntityFlyingItem.class, DataSerializers.BOOLEAN);
 
     public EntityFlyingItem(World worldIn, Vector3d from, Vector3d to) {
         this(ModEntities.ENTITY_FLYING_ITEM, worldIn);
-        this.dataManager.set(EntityFollowProjectile.to, new BlockPos(to));
-        this.dataManager.set(EntityFollowProjectile.from, new BlockPos(from));
+        this.entityData.set(EntityFollowProjectile.to, new BlockPos(to));
+        this.entityData.set(EntityFollowProjectile.from, new BlockPos(from));
 //        this.age = 0;
         this.maxAge = (int) Math.floor(from.subtract(to).length() * 5);
-        setPosition(from.x + 0.5, from.y, from.z+ 0.5);
-        this.dataManager.set(RED, 255);
-        this.dataManager.set(GREEN, 25);
-        this.dataManager.set(BLUE, 180);
+        setPos(from.x + 0.5, from.y, from.z+ 0.5);
+        this.entityData.set(RED, 255);
+        this.entityData.set(GREEN, 25);
+        this.entityData.set(BLUE, 180);
     }
     public EntityFlyingItem(World worldIn, BlockPos from, BlockPos to) {
         this(worldIn, new Vector3d(from.getX(), from.getY(), from.getZ()), new Vector3d(to.getX(), to.getY(), to.getZ()));
     }
     public EntityFlyingItem(World worldIn, BlockPos from, BlockPos to, int r, int g, int b) {
         this(worldIn, new Vector3d(from.getX(), from.getY(), from.getZ()), new Vector3d(to.getX(), to.getY(), to.getZ()));
-        this.dataManager.set(RED, r);
-        this.dataManager.set(GREEN, g);
-        this.dataManager.set(BLUE, b);
+        this.entityData.set(RED, r);
+        this.entityData.set(GREEN, g);
+        this.entityData.set(BLUE, b);
     }
 
     public EntityFlyingItem(EntityType<EntityFlyingItem> entityAOEProjectileEntityType, World world) {
@@ -99,18 +99,18 @@ public class EntityFlyingItem extends EntityFollowProjectile {
             this.remove();
 
 
-        Vector3d vec3d2 = this.getMotion();
-        BlockPos start = dataManager.get(from);
-        BlockPos end = dataManager.get(to);
-        if(BlockUtil.distanceFrom(this.getPosition(), end) < 1 || this.age > 1000 || BlockUtil.distanceFrom(this.getPosition(), end) > 14){
+        Vector3d vec3d2 = this.getDeltaMovement();
+        BlockPos start = entityData.get(from);
+        BlockPos end = entityData.get(to);
+        if(BlockUtil.distanceFrom(this.blockPosition(), end) < 1 || this.age > 1000 || BlockUtil.distanceFrom(this.blockPosition(), end) > 14){
             this.remove();
-            if(world.isRemote && dataManager.get(SPAWN_TOUCH))
-                ParticleUtil.spawnTouch(world, end);
+            if(level.isClientSide && entityData.get(SPAWN_TOUCH))
+                ParticleUtil.spawnTouch(level, end);
             return;
         }
-        double posX = getPosX();
-        double posY = getPosY();
-        double posZ = getPosZ();
+        double posX = getX();
+        double posY = getY();
+        double posZ = getZ();
 
 
 
@@ -126,27 +126,27 @@ public class EntityFlyingItem extends EntityFollowProjectile {
 
         BlockPos adjustedPos = new BlockPos(posX, end.getY(), posZ);
         if(BlockUtil.distanceFrom(adjustedPos, end) <= 0.5){
-            posY  = getPosY() - 0.05;
+            posY  = getY() - 0.05;
           //  this.setPosition(lerpX, posY - 0.05, lerpZ);
-            this.setPosition(lerpX, posY, lerpZ);
+            this.setPos(lerpX, posY, lerpZ);
         }else{
-            this.setPosition(lerpX, lerpY, lerpZ);
+            this.setPos(lerpX, lerpY, lerpZ);
         }
 
-        if(world.isRemote && this.age > 1) {
-            double deltaX = getPosX() - lastTickPosX;
-            double deltaY = getPosY() - lastTickPosY;
-            double deltaZ = getPosZ() - lastTickPosZ;
+        if(level.isClientSide && this.age > 1) {
+            double deltaX = getX() - xOld;
+            double deltaY = getY() - yOld;
+            double deltaZ = getZ() - zOld;
             double dist = Math.ceil(Math.sqrt(deltaX*deltaX+deltaY*deltaY+deltaZ*deltaZ) * 20);
             int counter = 0;
 
             for (double i = 0; i < dist; i ++){
                 double coeff = i/dist;
-                counter += world.rand.nextInt(3);
-                if (counter % (Minecraft.getInstance().gameSettings.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().gameSettings.particles.getId()) == 0) {
-                    world.addParticle(GlowParticleData.createData(
-                            new ParticleColor(this.dataManager.get(RED),this.dataManager.get(GREEN),this.dataManager.get(BLUE))),
-                            (float) (prevPosX + deltaX * coeff), (float) (prevPosY + deltaY * coeff), (float) (prevPosZ + deltaZ * coeff), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f), 0.0125f * (rand.nextFloat() - 0.5f));
+                counter += level.random.nextInt(3);
+                if (counter % (Minecraft.getInstance().options.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles.getId()) == 0) {
+                    level.addParticle(GlowParticleData.createData(
+                            new ParticleColor(this.entityData.get(RED),this.entityData.get(GREEN),this.entityData.get(BLUE))),
+                            (float) (xo + deltaX * coeff), (float) (yo + deltaY * coeff), (float) (zo + deltaZ * coeff), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f));
                 }
             }
 
@@ -154,19 +154,19 @@ public class EntityFlyingItem extends EntityFollowProjectile {
     }
 
     public EntityFlyingItem withNoTouch(){
-        this.dataManager.set(SPAWN_TOUCH, false);
+        this.entityData.set(SPAWN_TOUCH, false);
         return this;
     }
 
     public void setDistanceAdjust(float offset){
-        this.dataManager.set(OFFSET, offset);
-        this.dataManager.set(DIDOFFSET, true);
+        this.entityData.set(OFFSET, offset);
+        this.entityData.set(DIDOFFSET, true);
 
     }
 
     private double getDistanceAdjustment(BlockPos start, BlockPos end) {
-        if(this.dataManager.get(DIDOFFSET))
-            return this.dataManager.get(OFFSET);
+        if(this.entityData.get(DIDOFFSET))
+            return this.entityData.get(OFFSET);
 
         double distance = BlockUtil.distanceFrom(start, end);
 
@@ -179,8 +179,8 @@ public class EntityFlyingItem extends EntityFollowProjectile {
     }
 
     public Vector3d getLerped(){
-        BlockPos start = dataManager.get(from);
-        BlockPos end = dataManager.get(to);
+        BlockPos start = entityData.get(from);
+        BlockPos end = entityData.get(to);
         double startY = start.getY();
         double endY = end.getY() +4.0;
         double time = 1 - normalize((double)age, 0.0, 100);
@@ -193,40 +193,40 @@ public class EntityFlyingItem extends EntityFollowProjectile {
         return new Vector3d(lerpX, lerpY, lerpZ);
     }
     @Override
-    public void read(CompoundNBT compound) {
-        super.read(compound);
+    public void load(CompoundNBT compound) {
+        super.load(compound);
         if(compound.contains("item")){
-            this.dataManager.set(HELD_ITEM, ItemStack.read(compound.getCompound("item")));
+            this.entityData.set(HELD_ITEM, ItemStack.of(compound.getCompound("item")));
         }
         this.age = compound.getInt("age");
-        this.dataManager.set(DIDOFFSET,compound.getBoolean("didoffset"));
-        this.dataManager.set(OFFSET,compound.getFloat("offset") );
+        this.entityData.set(DIDOFFSET,compound.getBoolean("didoffset"));
+        this.entityData.set(OFFSET,compound.getFloat("offset") );
     }
 
     @Override
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
+    public void addAdditionalSaveData(CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
         if(getStack() != null){
             CompoundNBT tag = new CompoundNBT();
-            getStack().write(tag);
+            getStack().save(tag);
             compound.put("item", tag);
         }
         compound.putInt("age", age);
-        compound.putBoolean("didoffset", this.dataManager.get(DIDOFFSET));
-        compound.putFloat("offset", this.dataManager.get(OFFSET));
+        compound.putBoolean("didoffset", this.entityData.get(DIDOFFSET));
+        compound.putFloat("offset", this.entityData.get(OFFSET));
     }
 
     public ItemStack getStack(){
-        return this.dataManager.get(HELD_ITEM);
+        return this.entityData.get(HELD_ITEM);
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-        this.dataManager.register(HELD_ITEM, ItemStack.EMPTY);
-        this.dataManager.register(OFFSET, 0.0f);
-        this.dataManager.register(DIDOFFSET, false);
-        this.dataManager.register(SPAWN_TOUCH, true);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(HELD_ITEM, ItemStack.EMPTY);
+        this.entityData.define(OFFSET, 0.0f);
+        this.entityData.define(DIDOFFSET, false);
+        this.entityData.define(SPAWN_TOUCH, true);
     }
 
     @Override
@@ -235,7 +235,7 @@ public class EntityFlyingItem extends EntityFollowProjectile {
     }
 
     @Override
-    public IPacket<?> createSpawnPacket() {
+    public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 

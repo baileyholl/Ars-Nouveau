@@ -31,7 +31,7 @@ public class ANFakePlayer extends FakePlayer {
     }
 
     @Override
-    public OptionalInt openContainer(INamedContainerProvider container) {
+    public OptionalInt openMenu(INamedContainerProvider container) {
         return OptionalInt.empty();
     }
 
@@ -45,9 +45,9 @@ public class ANFakePlayer extends FakePlayer {
         }
 
         @Override
-        public void sendPacket(IPacket<?> packetIn) {}
+        public void send(IPacket<?> packetIn) {}
 
         @Override
-        public void sendPacket(IPacket<?> packetIn, GenericFutureListener<? extends Future<? super Void>> futureListeners) { }
+        public void send(IPacket<?> packetIn, GenericFutureListener<? extends Future<? super Void>> futureListeners) { }
     }
 }

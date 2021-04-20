@@ -46,26 +46,26 @@ public class RuneTile extends AnimatedTile implements IPickupResponder {
 
     public void castSpell(Entity entity){
 
-        if(!this.isCharged || recipe == null || recipe.isEmpty() || !(entity instanceof LivingEntity) || !(world instanceof ServerWorld) || !(recipe.get(0) instanceof MethodTouch))
+        if(!this.isCharged || recipe == null || recipe.isEmpty() || !(entity instanceof LivingEntity) || !(level instanceof ServerWorld) || !(recipe.get(0) instanceof MethodTouch))
             return;
         try {
 
-            PlayerEntity playerEntity = uuid != null ? world.getPlayerByUuid(uuid) : FakePlayerFactory.getMinecraft((ServerWorld) world);
-            playerEntity = playerEntity == null ?  FakePlayerFactory.getMinecraft((ServerWorld) world) : playerEntity;
+            PlayerEntity playerEntity = uuid != null ? level.getPlayerByUUID(uuid) : FakePlayerFactory.getMinecraft((ServerWorld) level);
+            playerEntity = playerEntity == null ?  FakePlayerFactory.getMinecraft((ServerWorld) level) : playerEntity;
             EntitySpellResolver resolver = new EntitySpellResolver(recipe, new SpellContext(recipe, playerEntity).withCastingTile(this).withType(SpellContext.CasterType.RUNE));
             resolver.onCastOnEntity(ItemStack.EMPTY, playerEntity, (LivingEntity) entity, Hand.MAIN_HAND);
             if (this.isTemporary) {
-                world.destroyBlock(pos, false);
+                level.destroyBlock(worldPosition, false);
                 return;
             }
             this.isCharged = false;
 
-            world.setBlockState(pos, world.getBlockState(pos).func_235896_a_(RuneBlock.POWERED));
+            level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).cycle(RuneBlock.POWERED));
             ticksUntilCharge = 20 * 2;
         }catch (Exception e){
             PortUtil.sendMessage(entity, new TranslationTextComponent("ars_nouveau.rune.error"));
             e.printStackTrace();
-            world.destroyBlock(pos, false);
+            level.destroyBlock(worldPosition, false);
         }
     }
 
@@ -79,33 +79,33 @@ public class RuneTile extends AnimatedTile implements IPickupResponder {
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundNBT save(CompoundNBT tag) {
         if(recipe != null)
             tag.putString("spell", SpellRecipeUtil.serializeForNBT(recipe));
         tag.putBoolean("charged", isCharged);
         tag.putBoolean("temp", isTemporary);
         tag.putInt("cooldown", ticksUntilCharge);
         if(uuid != null)
-            tag.putUniqueId("uuid", uuid);
-        return super.write(tag);
+            tag.putUUID("uuid", uuid);
+        return super.save(tag);
     }
 
     @Override
-    public void read( BlockState state, CompoundNBT tag) {
+    public void load( BlockState state, CompoundNBT tag) {
         this.recipe = SpellRecipeUtil.getSpellsFromTagString(tag.getString("spell"));
         this.isCharged = tag.getBoolean("charged");
         this.isTemporary = tag.getBoolean("temp");
         this.ticksUntilCharge = tag.getInt("cooldown");
         if(tag.contains("uuid"))
-            this.uuid = tag.getUniqueId("uuid");
-        super.read(state, tag);
+            this.uuid = tag.getUUID("uuid");
+        super.load(state, tag);
     }
 
     @Override
     public void tick() {
-        if(world == null)
+        if(level == null)
             return;
-        if(!world.isRemote) {
+        if(!level.isClientSide) {
             if (ticksUntilCharge > 0) {
                 ticksUntilCharge -= 1;
                 return;
@@ -113,14 +113,14 @@ public class RuneTile extends AnimatedTile implements IPickupResponder {
         }
         if(this.isCharged)
             return;
-        if(!world.isRemote && this.isTemporary){
-            world.destroyBlock(this.pos, false);
+        if(!level.isClientSide && this.isTemporary){
+            level.destroyBlock(this.worldPosition, false);
         }
-        if(!world.isRemote){
-            BlockPos fromPos = ManaUtil.takeManaNearbyWithParticles(pos, world, 10, 100);
+        if(!level.isClientSide){
+            BlockPos fromPos = ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 10, 100);
             if(fromPos != null) {
                 this.isCharged = true;
-                world.setBlockState(pos, world.getBlockState(pos).func_235896_a_(RuneBlock.POWERED));
+                level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).cycle(RuneBlock.POWERED));
             }else
                 ticksUntilCharge = 20 * 3;
         }
@@ -128,11 +128,11 @@ public class RuneTile extends AnimatedTile implements IPickupResponder {
 
     @Override
     public List<IItemHandler> getInventory() {
-        return BlockUtil.getAdjacentInventories(world, pos);
+        return BlockUtil.getAdjacentInventories(level, worldPosition);
     }
 
     @Override
     public ItemStack onPickup(ItemStack stack) {
-        return BlockUtil.insertItemAdjacent(world, pos, stack);
+        return BlockUtil.insertItemAdjacent(level, worldPosition, stack);
     }
 }

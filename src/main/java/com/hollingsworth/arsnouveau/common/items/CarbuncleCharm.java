@@ -15,13 +15,13 @@ public class CarbuncleCharm extends ModItem{
     /**
      * Called when this item is used when targetting a Block
      */
-    public ActionResultType onItemUse(ItemUseContext context) {
-        World world = context.getWorld();
-        BlockPos blockpos = context.getPos();
+    public ActionResultType useOn(ItemUseContext context) {
+        World world = context.getLevel();
+        BlockPos blockpos = context.getClickedPos();
         EntityCarbuncle carbuncle = new EntityCarbuncle(world, true);
-        carbuncle.setPosition(blockpos.getX(), blockpos.getY() + 1, blockpos.getZ());
-        world.addEntity(carbuncle);
-        context.getItem().shrink(1);
+        carbuncle.setPos(blockpos.getX(), blockpos.getY() + 1, blockpos.getZ());
+        world.addFreshEntity(carbuncle);
+        context.getItemInHand().shrink(1);
         return ActionResultType.SUCCESS;
     }
 }

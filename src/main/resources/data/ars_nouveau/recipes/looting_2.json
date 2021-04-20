@@ -1,0 +1,46 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:looting",
+  "level": 2,
+  "mana": 8000,
+  "item_1": [
+    {
+      "item": "ars_nouveau:glyph_fortune"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:glyph_fortune"
+    }
+  ],
+  "item_3": [
+    {
+      "tag": "forge:gems/emerald"
+    }
+  ],
+  "item_4": [
+    {
+      "tag": "forge:gems/emerald"
+    }
+  ],
+  "item_5": [
+    {
+      "tag": "forge:gems/emerald"
+    }
+  ],
+  "item_6": [
+    {
+      "tag": "forge:gems/emerald"
+    }
+  ],
+  "item_7": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_8": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ]
+}

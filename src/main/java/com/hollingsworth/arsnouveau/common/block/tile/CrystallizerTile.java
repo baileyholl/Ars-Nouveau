@@ -27,17 +27,17 @@ public class CrystallizerTile extends AbstractManaTile implements IInventory {
 
     @Override
     public void tick() {
-        if(world.isRemote)
+        if(level.isClientSide)
             return;
 
 
-        if(this.stack.isEmpty() && this.world.getGameTime() % 20 == 0 && ManaUtil.takeManaNearby(pos, world, 1, 200) != null){
+        if(this.stack.isEmpty() && this.level.getGameTime() % 20 == 0 && ManaUtil.takeManaNearby(worldPosition, level, 1, 200) != null){
             this.addMana(500);
             if(!draining) {
                 draining = true;
                 update();
             }
-        }else if(this.world.getGameTime() % 20 == 0){
+        }else if(this.level.getGameTime() % 20 == 0){
             this.addMana(5);
             if(draining){
                 draining = false;
@@ -52,21 +52,21 @@ public class CrystallizerTile extends AbstractManaTile implements IInventory {
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT tag) {
-        stack = ItemStack.read((CompoundNBT)tag.get("itemStack"));
+    public void load(BlockState state, CompoundNBT tag) {
+        stack = ItemStack.of((CompoundNBT)tag.get("itemStack"));
         draining = tag.getBoolean("draining");
-        super.read(state, tag);
+        super.load(state, tag);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundNBT save(CompoundNBT tag) {
         if(stack != null) {
             CompoundNBT reagentTag = new CompoundNBT();
-            stack.write(reagentTag);
+            stack.save(reagentTag);
             tag.put("itemStack", reagentTag);
         }
         tag.putBoolean("draining", draining);
-        return super.write(tag);
+        return super.save(tag);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class CrystallizerTile extends AbstractManaTile implements IInventory {
     }
 
     @Override
-    public int getSizeInventory() {
+    public int getContainerSize() {
         return 1;
     }
 
@@ -86,36 +86,36 @@ public class CrystallizerTile extends AbstractManaTile implements IInventory {
     }
 
     @Override
-    public ItemStack getStackInSlot(int index) {
+    public ItemStack getItem(int index) {
         return stack;
     }
 
     @Override
-    public ItemStack decrStackSize(int index, int count) {
+    public ItemStack removeItem(int index, int count) {
         ItemStack copy = stack.copy();
         stack.shrink(count);
         return copy;
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int index) {
+    public ItemStack removeItemNoUpdate(int index) {
         ItemStack stack = this.stack.copy();
         this.stack = ItemStack.EMPTY;
         return stack;
     }
 
     @Override
-    public void setInventorySlotContents(int index, ItemStack stack) {
+    public void setItem(int index, ItemStack stack) {
         this.stack = stack;
     }
 
     @Override
-    public boolean isUsableByPlayer(PlayerEntity player) {
+    public boolean stillValid(PlayerEntity player) {
         return true;
     }
 
     @Override
-    public void clear() {
+    public void clearContent() {
         this.stack = ItemStack.EMPTY;
     }
 }

@@ -29,35 +29,35 @@ public class ScribesTile extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        stack = ItemStack.read((CompoundNBT)compound.get("itemStack"));
-        super.read(state,compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        stack = ItemStack.of((CompoundNBT)compound.get("itemStack"));
+        super.load(state,compound);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         if(stack != null) {
             CompoundNBT reagentTag = new CompoundNBT();
-            stack.write(reagentTag);
+            stack.save(reagentTag);
             compound.put("itemStack", reagentTag);
         }
 
-        return super.write(compound);
+        return super.save(compound);
     }
 
     @Override
     @Nullable
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 3, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 3, this.getUpdateTag());
     }
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         super.onDataPacket(net, pkt);
-        handleUpdateTag(world.getBlockState(pos),pkt.getNbtCompound());
+        handleUpdateTag(level.getBlockState(worldPosition),pkt.getTag());
     }
 }

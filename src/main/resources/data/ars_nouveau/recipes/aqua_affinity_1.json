@@ -1,0 +1,46 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:aqua_affinity",
+  "level": 1,
+  "mana": 5000,
+  "item_1": [
+    {
+      "tag": "minecraft:fishes"
+    }
+  ],
+  "item_2": [
+    {
+      "tag": "minecraft:fishes"
+    }
+  ],
+  "item_3": [
+    {
+      "tag": "minecraft:fishes"
+    }
+  ],
+  "item_4": [
+    {
+      "tag": "minecraft:fishes"
+    }
+  ],
+  "item_5": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_6": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_7": [
+    {
+      "tag": "forge:storage_blocks/lapis"
+    }
+  ],
+  "item_8": [
+    {
+      "tag": "forge:storage_blocks/lapis"
+    }
+  ]
+}

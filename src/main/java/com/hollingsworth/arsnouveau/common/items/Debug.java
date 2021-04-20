@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.common.entity.EntityRitualProjectile;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,10 +14,8 @@ public class Debug extends ModItem{
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity playerIn, Hand handIn) {
-
-
-        world.addEntity(new EntityRitualProjectile(world, playerIn.getPosX(), playerIn.getPosY(), playerIn.getPosZ()));
-        return ActionResult.resultSuccess(playerIn.getHeldItem(handIn));
+    public ActionResult<ItemStack> use(World world, PlayerEntity playerIn, Hand handIn) {
+        System.out.println(world.dimension().location().toString());
+        return ActionResult.success(playerIn.getItemInHand(handIn));
     }
 }

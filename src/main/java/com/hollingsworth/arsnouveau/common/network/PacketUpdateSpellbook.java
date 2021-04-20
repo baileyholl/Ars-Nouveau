@@ -26,16 +26,16 @@ public class PacketUpdateSpellbook{
 
     //Decoder
     public PacketUpdateSpellbook(PacketBuffer buf){
-        spellRecipe = buf.readString(32767);
+        spellRecipe = buf.readUtf(32767);
         cast_slot = buf.readInt();
-        spellName = buf.readString(32767);
+        spellName = buf.readUtf(32767);
     }
 
     //Encoder
     public void toBytes(PacketBuffer buf){
-        buf.writeString(spellRecipe);
+        buf.writeUtf(spellRecipe);
         buf.writeInt(cast_slot);
-        buf.writeString(spellName);
+        buf.writeUtf(spellName);
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx){

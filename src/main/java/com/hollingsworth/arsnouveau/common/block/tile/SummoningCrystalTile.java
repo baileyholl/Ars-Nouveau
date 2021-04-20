@@ -30,7 +30,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -83,32 +82,32 @@ public class SummoningCrystalTile extends AbstractManaTile implements IAnimatabl
     }
 
     public void summon(LivingEntity entity){
-        if(!world.isRemote){
+        if(!level.isClientSide){
             numEntities +=1;
-            entityList.add(entity.getUniqueID());
+            entityList.add(entity.getUUID());
         }
     }
 
     public void changeTier(PlayerEntity entity){
         if(tier == 1){
             tier = 2;
-            entity.sendMessage(new TranslationTextComponent("ars_nouveau.summoning_crystal.5x5"), Util.DUMMY_UUID);
+            entity.sendMessage(new TranslationTextComponent("ars_nouveau.summoning_crystal.5x5"), Util.NIL_UUID);
         }else if(tier == 2){
             tier = 3;
-            entity.sendMessage(new TranslationTextComponent("ars_nouveau.summoning_crystal.9x9"), Util.DUMMY_UUID);
+            entity.sendMessage(new TranslationTextComponent("ars_nouveau.summoning_crystal.9x9"), Util.NIL_UUID);
         }else if(tier == 3){
             tier = 1;
-            entity.sendMessage(new TranslationTextComponent("ars_nouveau.summoning_crystal.adjacent"), Util.DUMMY_UUID);
+            entity.sendMessage(new TranslationTextComponent("ars_nouveau.summoning_crystal.adjacent"), Util.NIL_UUID);
         }
     }
 
 
     public ItemStack insertItem(ItemStack stack){
-       return BlockUtil.insertItemAdjacent(world, pos, stack);
+       return BlockUtil.insertItemAdjacent(level, worldPosition, stack);
     }
 
     public ItemStack getItem(Item item){
-        return BlockUtil.getItemAdjacent(world, pos, stack -> stack.getItem() == item);
+        return BlockUtil.getItemAdjacent(level, worldPosition, stack -> stack.getItem() == item);
     }
 
 
@@ -129,24 +128,25 @@ public class SummoningCrystalTile extends AbstractManaTile implements IAnimatabl
 
         taskIndex += 1;
         // If the block above is not air
-        if (world.getBlockState(taskPos.up()).getMaterial() != Material.AIR && !isTreeBlock(world.getBlockState(taskPos).getBlock())){
+        if (level.getBlockState(taskPos.above()).getMaterial() != Material.AIR && !isTreeBlock(level.getBlockState(taskPos).getBlock())){
             for(int i = 1; i < 4; i++) {
-                if (world.getBlockState(taskPos.up(i)).getMaterial() != Material.AIR || isTreeBlock(world.getBlockState(taskPos.up()).getBlock())){
-                    taskPos = taskPos.up(i);
+                if (level.getBlockState(taskPos.above(i)).getMaterial() != Material.AIR || isTreeBlock(level.getBlockState(taskPos.above()).getBlock())){
+                    taskPos = taskPos.above(i);
                     break;
                 }
             }
         }
 
-        Block block = world.getBlockState(taskPos).getBlock();
+        Block block = level.getBlockState(taskPos).getBlock();
         if(block instanceof SummoningCrystal || block instanceof ContainerBlock || block instanceof ManaBlock || block instanceof IInventory)
             return null;
 
 
-        if(recipe != null && caster.getDataManager().get(EntityWhelp.STRICT_MODE)){
+        if(recipe != null && caster.getEntityData().get(EntityWhelp.STRICT_MODE)){
             SpellResolver resolver = new SpellResolver(recipe, new SpellContext(recipe, caster));
-            if(!resolver.wouldCastOnBlockSuccessfully(new BlockRayTraceResult(new Vector3d(taskPos.getX(), taskPos.getY(), taskPos.getZ()), Direction.UP,taskPos, false ), caster))
+            if(!resolver.wouldCastOnBlockSuccessfully(new BlockRayTraceResult(new Vector3d(taskPos.getX(), taskPos.getY(), taskPos.getZ()), Direction.UP,taskPos, false ), caster)) {
                 return null;
+            }
         }
         return taskPos;
     }
@@ -161,11 +161,11 @@ public class SummoningCrystalTile extends AbstractManaTile implements IAnimatabl
     }
 
     public boolean enoughMana(int manaCost){
-        return ManaUtil.hasManaNearby(pos, world, 7, manaCost);
+        return ManaUtil.hasManaNearby(worldPosition, level, 7, manaCost);
     }
 
     public boolean removeManaAround(int manaCost){
-        return ManaUtil.takeManaNearbyWithParticles(pos, world, 7, manaCost) != null;
+        return ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 7, manaCost) != null;
     }
 
     public boolean removeManaAround(List<AbstractSpellPart> spellParts){
@@ -175,22 +175,22 @@ public class SummoningCrystalTile extends AbstractManaTile implements IAnimatabl
     public List<BlockPos> getTargets(){
         List<BlockPos> positions = new ArrayList<>();
         if(tier == 1){
-            positions.add(getPos().north().down());
-            positions.add(getPos().south().down());
-            positions.add(getPos().east().down());
-            positions.add(getPos().west().down());
+            positions.add(getBlockPos().north().below());
+            positions.add(getBlockPos().south().below());
+            positions.add(getBlockPos().east().below());
+            positions.add(getBlockPos().west().below());
         }
         if(tier == 2){
-            BlockPos.getAllInBox(getPos().north(2).east(2).down(1), getPos().south(2).west(2).down()).forEach(t -> positions.add(new BlockPos(t)));
+            BlockPos.betweenClosedStream(getBlockPos().north(2).east(2).below(1), getBlockPos().south(2).west(2).below()).forEach(t -> positions.add(new BlockPos(t)));
         }
         if(tier == 3){
-            BlockPos.getAllInBox(getPos().north(4).east(4).down(1), getPos().south(4).west(4).down()).forEach(t -> positions.add(new BlockPos(t)));
+            BlockPos.betweenClosedStream(getBlockPos().north(4).east(4).below(1), getBlockPos().south(4).west(4).below()).forEach(t -> positions.add(new BlockPos(t)));
         }
         return positions;
     }
 
     public void cleanupKobolds(){
-        List<UUID> list = world.getEntitiesWithinAABB(EntityWhelp.class, new AxisAlignedBB(pos).grow(10)).stream().map(f -> f.getUniqueID()).collect(Collectors.toList());
+        List<UUID> list = level.getEntitiesOfClass(EntityWhelp.class, new AxisAlignedBB(worldPosition).inflate(10)).stream().map(f -> f.getUUID()).collect(Collectors.toList());
         ArrayList<UUID> removed = new ArrayList<>();
         for(UUID uuid : this.entityList) {
             if (!list.contains(uuid)) {
@@ -205,15 +205,15 @@ public class SummoningCrystalTile extends AbstractManaTile implements IAnimatabl
 
     @Override
     public void tick() {
-        Random rand = world.getRandom();
-        if(world.isRemote && rand.nextInt(6) == 0){
+        Random rand = level.getRandom();
+        if(level.isClientSide && rand.nextInt(6) == 0){
             for(int i = 0; i < 10; i++){
-                world.addParticle(ParticleSparkleData.createData(ParticleUtil.defaultParticleColor(), 0.05f, 60),
-                        pos.getX()  +ParticleUtil.inRange(-0.5, 0.5) +0.5 , pos.getY() +ParticleUtil.inRange(-1, 1) , pos.getZ() +ParticleUtil.inRange(-0.5, 0.5) +0.5,
+                level.addParticle(ParticleSparkleData.createData(ParticleUtil.defaultParticleColor(), 0.05f, 60),
+                        worldPosition.getX()  +ParticleUtil.inRange(-0.5, 0.5) +0.5 , worldPosition.getY() +ParticleUtil.inRange(-1, 1) , worldPosition.getZ() +ParticleUtil.inRange(-0.5, 0.5) +0.5,
                         ParticleUtil.inRange(-0.03, 0.03),  ParticleUtil.inRange(0.01, 0.5), ParticleUtil.inRange(-0.03, 0.03));
             }
         }
-        if(world.getGameTime() % 20 != 0  || world.isRemote)
+        if(level.getGameTime() % 20 != 0  || level.isClientSide)
             return;
         cleanupKobolds();
     }
@@ -221,12 +221,12 @@ public class SummoningCrystalTile extends AbstractManaTile implements IAnimatabl
 
     public final static String ENTITY_TAG = "entity";
     @Override
-    public void read(BlockState state, CompoundNBT tag) {
-        super.read(state,tag);
+    public void load(BlockState state, CompoundNBT tag) {
+        super.load(state,tag);
         this.numEntities = tag.getInt("entities");
         int count = 0;
-        while(tag.hasUniqueId(ENTITY_TAG + count)){
-            entityList.add(tag.getUniqueId(ENTITY_TAG + count));
+        while(tag.hasUUID(ENTITY_TAG + count)){
+            entityList.add(tag.getUUID(ENTITY_TAG + count));
             count++;
         }
         taskIndex = tag.getInt("task_index");
@@ -235,14 +235,14 @@ public class SummoningCrystalTile extends AbstractManaTile implements IAnimatabl
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundNBT save(CompoundNBT tag) {
         tag.putInt("entities", numEntities);
         for (int i = 0; i < entityList.size(); i++) {
-            tag.putUniqueId(ENTITY_TAG + i, entityList.get(i));
+            tag.putUUID(ENTITY_TAG + i, entityList.get(i));
         }
         tag.putInt("task_index", taskIndex);
         tag.putInt("tier", tier);
         tag.putBoolean("is_off", isOff);
-        return super.write(tag);
+        return super.save(tag);
     }
 }

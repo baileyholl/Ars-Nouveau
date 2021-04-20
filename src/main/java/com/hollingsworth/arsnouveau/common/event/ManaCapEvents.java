@@ -21,7 +21,7 @@ public class ManaCapEvents {
 
     @SubscribeEvent
     public static void playerOnTick(TickEvent.PlayerTickEvent e) {
-        if(e.player.getEntityWorld().isRemote || e.player.getEntityWorld().getGameTime() % Config.REGEN_INTERVAL.get() != 0)
+        if(e.player.getCommandSenderWorld().isClientSide || e.player.getCommandSenderWorld().getGameTime() % Config.REGEN_INTERVAL.get() != 0)
             return;
 
         IMana mana = ManaCapability.getMana(e.player).orElse(null);
@@ -47,7 +47,7 @@ public class ManaCapEvents {
 
     @SubscribeEvent
     public static void playerClone(PlayerEvent.Clone e) {
-        if(e.getOriginal().world.isRemote)
+        if(e.getOriginal().level.isClientSide)
             return;
 
         ManaCapability.getMana((LivingEntity) e.getEntity()).ifPresent(newMana -> {

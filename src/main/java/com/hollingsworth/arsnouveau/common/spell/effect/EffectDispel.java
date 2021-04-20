@@ -31,11 +31,11 @@ public class EffectDispel extends AbstractEffect {
         if(rayTraceResult instanceof EntityRayTraceResult){
             if(((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
                 LivingEntity entity = (LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity();
-                Collection<EffectInstance> effects = entity.getActivePotionEffects();
+                Collection<EffectInstance> effects = entity.getActiveEffects();
                 EffectInstance[] array = effects.toArray(new EffectInstance[effects.size()]);
                 for(EffectInstance e : array){
                     if(e.isCurativeItem(new ItemStack(Items.MILK_BUCKET)))
-                        entity.removePotionEffect(e.getPotion());
+                        entity.removeEffect(e.getEffect());
                 }
                 if(entity instanceof IDispellable && entity.isAlive() && entity.getHealth() > 0 && !entity.removed){
                     ((IDispellable) entity).onDispel(shooter);
@@ -44,14 +44,14 @@ public class EffectDispel extends AbstractEffect {
             }
             return;
         }
-        if(rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos()) instanceof IDispellable){
-            ((IDispellable) world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos())).onDispel(shooter);
+        if(rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getBlockPos()) instanceof IDispellable){
+            ((IDispellable) world.getBlockState(((BlockRayTraceResult) rayTraceResult).getBlockPos())).onDispel(shooter);
         }
     }
 
     @Override
     public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
-        return rayTraceResult instanceof EntityRayTraceResult || (rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos()).getBlock() instanceof IDispellable);
+        return rayTraceResult instanceof EntityRayTraceResult || (rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getBlockPos()).getBlock() instanceof IDispellable);
     }
 
     @Override

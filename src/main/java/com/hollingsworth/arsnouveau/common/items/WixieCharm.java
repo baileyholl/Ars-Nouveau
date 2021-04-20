@@ -20,22 +20,22 @@ public class WixieCharm extends ModItem{
     /**
      * Called when this item is used when targetting a Block
      */
-    public ActionResultType onItemUse(ItemUseContext context) {
-        World world = context.getWorld();
-        if(world.isRemote)
+    public ActionResultType useOn(ItemUseContext context) {
+        World world = context.getLevel();
+        if(world.isClientSide)
             return ActionResultType.SUCCESS;
-        BlockPos pos = context.getPos();
+        BlockPos pos = context.getClickedPos();
         if(world.getBlockState(pos).getBlock() instanceof CauldronBlock){
-            world.setBlockState(pos, BlockRegistry.WIXIE_CAULDRON.getDefaultState());
-            context.getItem().shrink(1);
-        }else if(world.getTileEntity(pos) instanceof WixieCauldronTile){
-            WixieCauldronTile tile = (WixieCauldronTile) world.getTileEntity(pos);
+            world.setBlockAndUpdate(pos, BlockRegistry.WIXIE_CAULDRON.defaultBlockState());
+            context.getItemInHand().shrink(1);
+        }else if(world.getBlockEntity(pos) instanceof WixieCauldronTile){
+            WixieCauldronTile tile = (WixieCauldronTile) world.getBlockEntity(pos);
             if(!tile.hasWixie()){
                 EntityWixie wixie = new EntityWixie(world, true, pos);
-                wixie.setPosition(pos.getX()+0.5, pos.getY() + 1.0, pos.getZ() +0.5);
-                world.addEntity(wixie);
-                tile.entityID = wixie.getEntityId();
-                context.getItem().shrink(1);
+                wixie.setPos(pos.getX()+0.5, pos.getY() + 1.0, pos.getZ() +0.5);
+                world.addFreshEntity(wixie);
+                tile.entityID = wixie.getId();
+                context.getItemInHand().shrink(1);
             }else{
                 PortUtil.sendMessage(context.getPlayer(), new TranslationTextComponent("ars_nouveau.wixie.has_wixie"));
             }

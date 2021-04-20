@@ -1,0 +1,21 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:flame",
+  "level": 1,
+  "mana": 5000,
+  "item_1": [
+    {
+      "item": "ars_nouveau:glyph_ignite"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:glyph_projectile"
+    }
+  ],
+  "item_3": [
+    {
+      "tag": "forge:rods/blaze"
+    }
+  ]
+}
