@@ -34,8 +34,6 @@ import java.util.List;
 
 import static com.hollingsworth.arsnouveau.api.util.BlockUtil.destroyBlockSafelyWithoutSound;
 
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
-
 public class EffectExchange extends AbstractEffect {
     public EffectExchange() {
         super(GlyphLib.EffectExchangeID, "Exchange");
@@ -147,13 +145,14 @@ public class EffectExchange extends AbstractEffect {
         tool.enchant(Enchantments.SILK_TOUCH, 1);
         FakePlayer fakePlayer = FakePlayerFactory.getMinecraft((ServerWorld)world);
         fakePlayer.setItemInHand(Hand.MAIN_HAND, stack);
-        BlockItemUseContext context = BlockItemUseContext.at(new BlockItemUseContext(new ItemUseContext(fakePlayer, Hand.MAIN_HAND, result)), pos1, result.getDirection());
+        BlockItemUseContext context = BlockItemUseContext.at(new BlockItemUseContext(new ItemUseContext(fakePlayer, Hand.MAIN_HAND, result)), pos1.relative(result.getDirection().getOpposite()), result.getDirection());
         BlockState placeState = item.getBlock().getStateForPlacement(context);
         Block.dropResources(world.getBlockState(pos1), world, pos1, world.getBlockEntity(pos1), shooter,tool);
         destroyBlockSafelyWithoutSound(world, pos1, false, shooter);
 
         if(placeState != null){
-            world.setBlock(pos1, placeState, 2);
+            //world.setBlock(pos1, placeState, 2);
+            item.place(context);
             stack.shrink(1);
             return true;
         }
