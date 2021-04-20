@@ -39,30 +39,31 @@ public class EffectInteract extends AbstractEffect {
 
         if(rayTraceResult instanceof BlockRayTraceResult) {
             BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult) rayTraceResult;
-            BlockPos blockPos = blockRayTraceResult.getPos();
+            BlockPos blockPos = blockRayTraceResult.getBlockPos();
             BlockState blockState = world.getBlockState(blockPos);
 
-            if(isRealPlayer(shooter)) {
-                blockState.onBlockActivated(world, (PlayerEntity) shooter, Hand.MAIN_HAND, (BlockRayTraceResult) rayTraceResult);
-            } else if(world instanceof ServerWorld){
+            if (isRealPlayer(shooter)) {
+                blockState.use(world, (PlayerEntity) shooter, Hand.MAIN_HAND, (BlockRayTraceResult) rayTraceResult);
+            } else if (world instanceof ServerWorld) {
                 FakePlayer player = new ANFakePlayer((ServerWorld) world);
                 // NOTE: Get IInteractResponder held item if we have one
-                ItemStack stack = shooter instanceof IInteractResponder ? ((IInteractResponder)shooter).getHeldItem().copy() : ItemStack.EMPTY;
-                player.setHeldItem(Hand.MAIN_HAND, stack);
+                ItemStack stack = shooter instanceof IInteractResponder ? ((IInteractResponder) shooter).getHeldItem().copy() : ItemStack.EMPTY;
+                player.setItemInHand(Hand.MAIN_HAND, stack);
 
-                blockState.onBlockActivated(world, player, Hand.MAIN_HAND, (BlockRayTraceResult)rayTraceResult);
+                blockState.use(world, player, Hand.MAIN_HAND, (BlockRayTraceResult) rayTraceResult);
 
                 // NOTE: Return all items that were used by the fake player
                 // NOTE: Returning of items should probably not only be done for shears. But for now it's better than not returning shears
                 List<ItemStack> items = new ArrayList<>();
-                if(player.getHeldItemMainhand().getItem() instanceof ShearsItem) {
-                    items.addAll(player.inventory.mainInventory);
-                    items.addAll(player.inventory.armorInventory);
-                    items.addAll(player.inventory.offHandInventory);
+                if (player.getMainHandItem().getItem() instanceof ShearsItem) {
+                    items.addAll(player.inventory.items);
+                    items.addAll(player.inventory.armor);
+                    items.addAll(player.inventory.offhand);
                     returnItems(rayTraceResult, world, shooter, augments, spellContext, items);
                 }
 
 
+            }
         }
         if(rayTraceResult instanceof EntityRayTraceResult){
             Entity e = ((EntityRayTraceResult) rayTraceResult).getEntity();
