@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -41,7 +42,8 @@ public class EffectInteract extends AbstractEffect {
             BlockRayTraceResult blockRayTraceResult = (BlockRayTraceResult) rayTraceResult;
             BlockPos blockPos = blockRayTraceResult.getBlockPos();
             BlockState blockState = world.getBlockState(blockPos);
-
+            if(!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, blockPos))
+                return;
             if (isRealPlayer(shooter)) {
                 blockState.use(world, (PlayerEntity) shooter, Hand.MAIN_HAND, (BlockRayTraceResult) rayTraceResult);
             } else if (world instanceof ServerWorld) {
