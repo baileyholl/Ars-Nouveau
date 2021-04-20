@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
@@ -17,11 +18,10 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
 
 public class EffectGravity extends AbstractEffect {
 
@@ -37,8 +37,9 @@ public class EffectGravity extends AbstractEffect {
             int aoeBuff = getBuffCount(augments, AugmentAOE.class);
             List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult,aoeBuff, getBuffCount(augments, AugmentPierce.class));
             for(BlockPos pos1 : posList) {
-                if(world.getBlockEntity(pos1) != null || !canBlockBeHarvested(augments, world, pos1))
+                if(world.getBlockEntity(pos1) != null || !canBlockBeHarvested(augments, world, pos1) || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, pos1))
                     continue;
+
                 FallingBlockEntity blockEntity = new FallingBlockEntity(world,pos1.getX() +0.5, pos1.getY(), pos1.getZ() +0.5, world.getBlockState(pos1));
                 world.addFreshEntity(blockEntity);
             }

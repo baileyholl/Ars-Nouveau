@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -18,6 +19,7 @@ import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -34,6 +36,8 @@ public class EffectPhantomBlock extends AbstractEffect {
 
             for(BlockPos pos : SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getBlockPos(), (BlockRayTraceResult)rayTraceResult, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))) {
                 pos = pos.relative(((BlockRayTraceResult) rayTraceResult).getDirection());
+                if(!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, pos))
+                    continue;
                 if (world.getBlockState(pos).getMaterial() == Material.AIR && world.isUnobstructed(BlockRegistry.PHANTOM_BLOCK.defaultBlockState(), pos, ISelectionContext.empty())) {
                     world.setBlockAndUpdate(pos, BlockRegistry.PHANTOM_BLOCK.defaultBlockState());
                 }

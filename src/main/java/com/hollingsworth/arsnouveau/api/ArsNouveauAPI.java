@@ -44,7 +44,7 @@ public class ArsNouveauAPI {
      * Map of all spells to be registered in the spell system
      *
      * key: Unique spell ID. Please make this snake_case!
-     * value: Associated spell
+     * value: Associated glyph
      */
     private HashMap<String, AbstractSpellPart> spell_map;
 
@@ -84,16 +84,18 @@ public class ArsNouveauAPI {
         return getGlyphItem(spell.tag);
     }
 
-    /**
-     * Returns the glyph that belongs to the crafting reagent given
-     */
-    public Glyph hasCraftingReagent(Item item){
-        return getGlyphMap().values().stream().filter(a->a.spellPart.getCraftingReagent() == item).findFirst().orElse(null);
-    }
 
     public AbstractSpellPart registerSpell(String id, AbstractSpellPart part){
         glyphMap.put(id, new Glyph(getSpellRegistryName(id), part));
         return spell_map.put(id, part);
+    }
+
+    /**
+     * A registration helper for addons. Adds mana costs into the fallback cost map.
+     */
+    public AbstractSpellPart registerSpell(String id, AbstractSpellPart part, int manaCost){
+        Config.addonSpellCosts.put(id, manaCost);
+        return registerSpell(id, part);
     }
 
     public String getSpellRegistryName(String id){

@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
@@ -20,11 +21,10 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
 
 public class EffectIgnite  extends AbstractEffect {
 
@@ -42,7 +42,7 @@ public class EffectIgnite  extends AbstractEffect {
             for(BlockPos pos : SpellUtil.calcAOEBlocks( shooter, ((BlockRayTraceResult) rayTraceResult).getBlockPos(), (BlockRayTraceResult)rayTraceResult, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))) {
 
                 BlockPos blockpos1 = pos.relative(face);
-                if (AbstractFireBlock.canBePlacedAt(world, blockpos1, face)) {
+                if (AbstractFireBlock.canBePlacedAt(world, blockpos1, face) && BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, blockpos1)) {
                     BlockState blockstate1 = AbstractFireBlock.getState(world, blockpos1);
                     world.setBlock(blockpos1, blockstate1, 11);
                 }

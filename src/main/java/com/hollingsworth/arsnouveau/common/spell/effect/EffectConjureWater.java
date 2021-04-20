@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
@@ -18,11 +19,10 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
 
 public class EffectConjureWater extends AbstractEffect {
     public EffectConjureWater() {
@@ -47,6 +47,9 @@ public class EffectConjureWater extends AbstractEffect {
             return;
         for(BlockPos pos1 : posList) {
             BlockPos hitPos = pos1.relative(result.getDirection());
+            if(!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, pos1))
+                continue;
+
             if(world.getBlockState(hitPos).canBeReplaced(Fluids.WATER)){
                 world.setBlockAndUpdate(hitPos, Blocks.WATER.defaultBlockState());
             }

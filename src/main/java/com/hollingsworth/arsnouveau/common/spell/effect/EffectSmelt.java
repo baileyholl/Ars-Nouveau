@@ -23,11 +23,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 
 import java.util.List;
 import java.util.Optional;
-
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
 
 public class EffectSmelt extends AbstractEffect {
 
@@ -59,6 +58,8 @@ public class EffectSmelt extends AbstractEffect {
 
     public void smeltBlock(World world, BlockPos pos, LivingEntity shooter){
         BlockState state = world.getBlockState(pos);
+        if(!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, pos))
+            return;
         Optional<FurnaceRecipe> optional = world.getRecipeManager().getRecipeFor(IRecipeType.SMELTING, new Inventory(new ItemStack(state.getBlock().asItem(), 1)),
                 world);
         if (optional.isPresent()) {
