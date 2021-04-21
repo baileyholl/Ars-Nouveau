@@ -17,8 +17,6 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
-
 public class EffectHeal extends AbstractEffect {
     public EffectHeal() {
         super(GlyphLib.EffectHealID, "Heal");
@@ -36,8 +34,13 @@ public class EffectHeal extends AbstractEffect {
             if(getBuffCount(augments, AugmentExtendTime.class) > 0){
                 applyPotionWithCap(entity, Effects.REGENERATION, augments, 5, 5, 5);
             }else{
-                entity.setHealth(entity.getHealth() + healVal > maxHealth ? entity.getMaxHealth() : entity.getHealth() + healVal);
+                if(entity.isInvertedHealAndHarm()){
+                    dealDamage(world, shooter, healVal, augments, entity, buildDamageSource(world, shooter).setMagic());
+                }else{
+                    entity.setHealth(entity.getHealth() + healVal > maxHealth ? entity.getMaxHealth() : entity.getHealth() + healVal);
+                }
             }
+
         }
 
     }

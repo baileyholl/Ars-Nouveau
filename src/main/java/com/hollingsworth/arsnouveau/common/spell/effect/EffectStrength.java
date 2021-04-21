@@ -15,8 +15,6 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
-
 public class EffectStrength extends AbstractEffect {
     public EffectStrength() {
         super(GlyphLib.EffectStrength, "Strength");
@@ -25,7 +23,7 @@ public class EffectStrength extends AbstractEffect {
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
-            applyPotion((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity(), Effects.DAMAGE_BOOST, augments);
+            applyPotionWithCap((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity(), Effects.DAMAGE_BOOST, augments, 30, 8, 3);
         }
     }
 
@@ -47,7 +45,7 @@ public class EffectStrength extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Applies the Strength buff.";
+        return "Applies the Strength buff up to level 3.";
     }
 
     @Override

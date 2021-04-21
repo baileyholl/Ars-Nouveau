@@ -285,6 +285,17 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
         this.limitedLifeTicks = ticks;
     }
 
+    @Nullable
+    @Override
+    public UUID getOwnerID() {
+        return null;
+    }
+
+    @Override
+    public void setOwnerID(UUID uuid) {
+
+    }
+
     class MoveHelperController extends MovementController {
         public MoveHelperController(VexEntity vex) {
             super(vex);
