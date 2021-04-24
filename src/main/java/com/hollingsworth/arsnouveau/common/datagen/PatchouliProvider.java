@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
 import net.minecraft.data.IDataProvider;
@@ -84,7 +85,9 @@ public class PatchouliProvider implements IDataProvider {
                 Enchantments.SMITE,
                 Enchantments.SWEEPING_EDGE,
                 Enchantments.THORNS,
-                Enchantments.UNBREAKING
+                Enchantments.UNBREAKING,
+                EnchantmentRegistry.MANA_BOOST_ENCHANTMENT,
+                EnchantmentRegistry.MANA_REGEN_ENCHANTMENT
                 ));
     }
 

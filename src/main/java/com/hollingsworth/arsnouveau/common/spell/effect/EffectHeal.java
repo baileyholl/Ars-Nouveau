@@ -52,7 +52,7 @@ public class EffectHeal extends AbstractEffect {
 
     @Override
     public int getManaCost() {
-        return 40;
+        return 100;
     }
 
     @Override
@@ -68,6 +68,6 @@ public class EffectHeal extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Heals a small amount of health for the target. When used with Extend Time, the Regeneration buff is applied instead, up to level 5.";
+        return "Heals a small amount of health for the target. When used with Extend Time, the Regeneration buff is applied instead, up to level 5. When used on Undead, the spell will deal an equal amount of magic damage.";
     }
 }

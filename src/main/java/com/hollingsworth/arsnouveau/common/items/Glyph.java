@@ -62,7 +62,8 @@ public class Glyph extends ModItem{
         JsonObject jsonobject = new JsonObject();
         jsonobject.addProperty("type", "ars_nouveau:glyph_recipe");
         jsonobject.addProperty("tier", this.spellPart.getTier().toString());
-        jsonobject.addProperty("input", this.spellPart.getCraftingReagent().getRegistryName().toString());
+        if(this.spellPart.getCraftingReagent() != null)
+            jsonobject.addProperty("input", this.spellPart.getCraftingReagent().getRegistryName().toString());
         jsonobject.addProperty("output", this.getRegistryName().toString());
         return jsonobject;
     }

@@ -21,6 +21,7 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -78,8 +79,8 @@ public class WildenStalker extends MonsterEntity implements IAnimatable, IAnimat
 
     @Override
     public boolean doHurtTarget(Entity entityIn) {
-        if(!level.isClientSide && entityIn instanceof LivingEntity)
-            ((LivingEntity) entityIn).addEffect(new EffectInstance(Effects.WEAKNESS, 60, 1));
+        if(!level.isClientSide && entityIn instanceof LivingEntity && level.getDifficulty() == Difficulty.HARD)
+            ((LivingEntity) entityIn).addEffect(new EffectInstance(Effects.WEAKNESS, 40, 1));
         return super.doHurtTarget(entityIn);
     }
 
@@ -107,6 +108,7 @@ public class WildenStalker extends MonsterEntity implements IAnimatable, IAnimat
     protected float getSoundVolume() {
         return 0.4F;
     }
+
     @Override
     public void startAnimation(int arg) {
         try{

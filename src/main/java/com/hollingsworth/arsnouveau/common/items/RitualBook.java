@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.common.block.RitualBlock;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOpenRitualBook;
@@ -9,6 +11,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -36,5 +39,17 @@ public class RitualBook extends ModItem{
             Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new PacketOpenRitualBook());
         }
         return new ActionResult<>(ActionResultType.CONSUME, playerIn.getItemInHand(handIn));
+    }
+
+    public static void setRitualID(CompoundNBT tag, String ID){
+        tag.putString("ritual", ID);
+    }
+
+    public static void getRitualID(CompoundNBT tag, String ID){
+        tag.getString("ritual");
+    }
+
+    public static AbstractRitual getSelectedRitual(CompoundNBT tag){
+        return ArsNouveauAPI.getInstance().getRitual(tag.getString("ritual"));
     }
 }

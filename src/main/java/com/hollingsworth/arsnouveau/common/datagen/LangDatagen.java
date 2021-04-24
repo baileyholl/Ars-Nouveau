@@ -14,7 +14,7 @@ public class LangDatagen extends LanguageProvider {
     protected void addTranslations() {
         ItemsRegistry.RegistrationHandler.ITEMS.forEach(i ->{
             if(i instanceof Glyph){
-                add(i, "Glyph:" + ((Glyph) i).spellPart.name);
+                add(i, "Glyph: " + ((Glyph) i).spellPart.name);
                 add("ars_nouveau.glyph_desc." + ((Glyph) i).spellPart.tag, ((Glyph) i).spellPart.getBookDescription());
                 add("ars_nouveau.glyph_name." + ((Glyph) i).spellPart.tag, ((Glyph) i).spellPart.getName());
             }
