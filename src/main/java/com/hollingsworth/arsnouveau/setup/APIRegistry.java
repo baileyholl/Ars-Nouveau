@@ -5,7 +5,9 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.ReactiveEnchantmentRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.SpellWriteRecipe;
+import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.common.ritual.RitualDig;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
@@ -114,6 +116,8 @@ public class APIRegistry {
         registerSpell(new EffectSummonSteed());
         registerSpell(new EffectDecoy());
         registerStartingSpells();
+
+        registerRitual(new RitualDig());
     }
 
     public static void registerStartingSpells() {
@@ -130,6 +134,10 @@ public class APIRegistry {
 
     public static void registerSpell(AbstractSpellPart spellPart) {
         ArsNouveauAPI.getInstance().registerSpell(spellPart.getTag(), spellPart);
+    }
+
+    public static void registerRitual(AbstractRitual ritual){
+        ArsNouveauAPI.getInstance().registerRitual(ritual.getID(), ritual);
     }
 
     public static void registerSpell(String id, AbstractSpellPart spellPart) {

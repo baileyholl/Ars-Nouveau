@@ -2,6 +2,9 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.RitualButton;
+import com.hollingsworth.arsnouveau.common.items.RitualBook;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketSetRitual;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.ITextProperties;
@@ -14,7 +17,9 @@ public class GuiRitualBook extends BaseBook{
     public void init() {
         super.init();
         addButton(new RitualButton(this, bookLeft + 15, bookTop +15, b->ritualDesc = ((RitualButton)b).desc, "Digging the Well", "Digs a vertical shaft down to bedrock, filling in liquid blocks on the sides."));
-        addButton(new GuiImageButton(bookRight - 100, bookBottom - 40, 0,0,46, 18, 46, 18, "textures/gui/create_button.png", (n)->{}));
+        addButton(new GuiImageButton(bookRight - 100, bookBottom - 40, 0,0,46, 18, 46, 18, "textures/gui/create_button.png", (n)->{
+            Networking.INSTANCE.sendToServer(new PacketSetRitual("dig", mc.player.getMainHandItem().getItem() instanceof RitualBook));
+        }));
         this.mc = this.minecraft;
     }
 

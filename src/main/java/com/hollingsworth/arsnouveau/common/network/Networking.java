@@ -89,6 +89,12 @@ public class Networking {
                 PacketOpenRitualBook::toBytes,
                 PacketOpenRitualBook::new,
                 PacketOpenRitualBook::handle);
+
+        INSTANCE.registerMessage(nextID(),
+                PacketSetRitual.class,
+                PacketSetRitual::toBytes,
+                PacketSetRitual::new,
+                PacketSetRitual::handle);
     }
 
     public static void sendToNearby(World world, BlockPos pos, Object toSend){

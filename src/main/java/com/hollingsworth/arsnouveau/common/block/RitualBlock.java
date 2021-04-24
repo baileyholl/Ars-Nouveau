@@ -37,4 +37,5 @@ public class RitualBlock extends ModBlock{
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new RitualTile();
     }
+
 }

@@ -6,8 +6,11 @@ import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.PotionIngredient;
 import com.hollingsworth.arsnouveau.api.recipe.VanillaPotionRecipe;
+import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
+import com.hollingsworth.arsnouveau.api.ritual.RitualContext;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
+import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -47,6 +50,8 @@ public class ArsNouveauAPI {
      * value: Associated glyph
      */
     private HashMap<String, AbstractSpellPart> spell_map;
+
+    private HashMap<String, AbstractRitual> ritualMap;
 
     /**
      * Contains the list of glyph item instances used by the glyph press.
@@ -96,6 +101,30 @@ public class ArsNouveauAPI {
     public AbstractSpellPart registerSpell(String id, AbstractSpellPart part, int manaCost){
         Config.addonSpellCosts.put(id, manaCost);
         return registerSpell(id, part);
+    }
+
+    public AbstractRitual registerRitual(String id, AbstractRitual ritual){
+        return ritualMap.put(id, ritual);
+    }
+
+    public @Nullable AbstractRitual getRitual(String id){
+        if(!ritualMap.containsKey(id))
+            return null;
+        try{
+            return ritualMap.get(id).getClass().newInstance();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public @Nullable AbstractRitual getRitual(String id, RitualTile tile, RitualContext context){
+        AbstractRitual ritual = getRitual(id);
+        if(ritual != null){
+            ritual.tile = tile;
+            ritual.context = context;
+        }
+        return ritual;
     }
 
     public String getSpellRegistryName(String id){
@@ -170,6 +199,7 @@ public class ArsNouveauAPI {
         glyphMap = new HashMap<>();
         startingSpells = new ArrayList<>();
         enchantingApparatusRecipes = new ArrayList<>();
+        ritualMap = new HashMap<>();
     }
 
     public static ArsNouveauAPI getInstance(){
