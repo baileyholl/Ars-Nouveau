@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.ritual;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -50,8 +51,16 @@ public abstract class AbstractRitual {
     public void onEnd(){
         this.context.isDone = true;
     }
-
+    /*Must follow rules for the lang file.*/
     public abstract String getID();
+
+    public String getName(){
+        return new TranslationTextComponent("ars_nouveau.ritual_name." + getID()).getString();
+    }
+
+    public String getDescription(){
+        return new TranslationTextComponent("ars_nouveau.ritual_desc." + getID()).getString();
+    }
 
     public void write(CompoundNBT tag){
         if(context != null){

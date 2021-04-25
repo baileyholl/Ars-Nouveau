@@ -80,7 +80,7 @@ public class WildenStalker extends MonsterEntity implements IAnimatable, IAnimat
     @Override
     public boolean doHurtTarget(Entity entityIn) {
         if(!level.isClientSide && entityIn instanceof LivingEntity && level.getDifficulty() == Difficulty.HARD)
-            ((LivingEntity) entityIn).addEffect(new EffectInstance(Effects.WEAKNESS, 40, 1));
+            ((LivingEntity) entityIn).addEffect(new EffectInstance(Effects.WEAKNESS, 40, 0));
         return super.doHurtTarget(entityIn);
     }
 
@@ -99,7 +99,7 @@ public class WildenStalker extends MonsterEntity implements IAnimatable, IAnimat
 
     @Override
     protected int getExperienceReward(PlayerEntity player) {
-        return 5;
+        return 8;
     }
 
     /**

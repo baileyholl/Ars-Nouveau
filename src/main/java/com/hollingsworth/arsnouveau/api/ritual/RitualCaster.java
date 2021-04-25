@@ -17,23 +17,31 @@ public class RitualCaster implements IRitualCaster{
     }
 
     @Override
-    public List<AbstractRitual> getUnlockedRituals() {
-        return null;
+    public List<String> getUnlockedRitualIDs() {
+        return ritualIDs;
     }
 
     @Override
-    public void unlockRitual() {
-
+    public void unlockRitual(String ritualID) {
+        if(!ritualIDs.contains(ritualID))
+            ritualIDs.add(ritualID);
+        write(stack);
     }
 
     @Override
     public String getSelectedRitual() {
-        return null;
+        return stack.getOrCreateTag().getString("selected");
     }
 
     @Override
-    public void setRitual(AbstractRitual spell) {
+    public void setRitual(AbstractRitual ritual) {
+        setRitual(ritual.getID());
+    }
 
+    @Override
+    public void setRitual(String ritualID) {
+        stack.getOrCreateTag().putString("selected", ritualID);
+        write(stack);
     }
 
     public static RitualCaster deserialize(ItemStack stack){

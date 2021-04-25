@@ -29,7 +29,6 @@ public class EffectHeal extends AbstractEffect {
             if(entity.removed || entity.getHealth() <= 0)
                 return;
 
-            float maxHealth = entity.getMaxHealth();
             float healVal = 3.0f + 3 * getBuffCount(augments, AugmentAmplify.class);
             if(getBuffCount(augments, AugmentExtendTime.class) > 0){
                 applyPotionWithCap(entity, Effects.REGENERATION, augments, 5, 5, 5);
@@ -37,7 +36,7 @@ public class EffectHeal extends AbstractEffect {
                 if(entity.isInvertedHealAndHarm()){
                     dealDamage(world, shooter, healVal, augments, entity, buildDamageSource(world, shooter).setMagic());
                 }else{
-                    entity.setHealth(entity.getHealth() + healVal > maxHealth ? entity.getMaxHealth() : entity.getHealth() + healVal);
+                    entity.heal(healVal);
                 }
             }
 

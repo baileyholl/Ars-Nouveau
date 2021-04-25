@@ -19,7 +19,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
@@ -32,25 +31,24 @@ public class EffectIntangible extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof BlockRayTraceResult){
-            BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getBlockPos();
-            int aoeBuff = getBuffCount(augments, AugmentAOE.class);
-            int duration = 60 + 20 * getDurationModifier(augments);
+    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        super.onResolveBlock(rayTraceResult, world, shooter, augments, spellContext);
+        BlockPos pos =rayTraceResult.getBlockPos();
+        int aoeBuff = getBuffCount(augments, AugmentAOE.class);
+        int duration = 60 + 20 * getDurationModifier(augments);
 
-            List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult,aoeBuff, getBuffCount(augments, AugmentPierce.class));
-            for(BlockPos pos1 : posList) {
-                if(world.getBlockEntity(pos1) != null || world.getBlockState(pos1).getMaterial() == Material.AIR
-                        || world.getBlockState(pos1).getBlock() == Blocks.BEDROCK || !canBlockBeHarvested(augments, world, pos) || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, pos1))
-                    continue;
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult,aoeBuff, getBuffCount(augments, AugmentPierce.class));
+        for(BlockPos pos1 : posList) {
+            if (world.getBlockEntity(pos1) != null || world.getBlockState(pos1).getMaterial() == Material.AIR
+                    || world.getBlockState(pos1).getBlock() == Blocks.BEDROCK || !canBlockBeHarvested(augments, world, pos) || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, pos1))
+                continue;
 
-                BlockState state = world.getBlockState(pos1);
-                int id = Block.getId(state);
-                world.setBlockAndUpdate(pos1, BlockRegistry.INTANGIBLE_AIR.defaultBlockState());
-                IntangibleAirTile tile = ((IntangibleAirTile) world.getBlockEntity(pos1));
-                tile.stateID = id;
-                tile.maxLength = duration;
-            }
+            BlockState state = world.getBlockState(pos1);
+            int id = Block.getId(state);
+            world.setBlockAndUpdate(pos1, BlockRegistry.INTANGIBLE_AIR.defaultBlockState());
+            IntangibleAirTile tile = ((IntangibleAirTile) world.getBlockEntity(pos1));
+            tile.stateID = id;
+            tile.maxLength = duration;
         }
     }
 

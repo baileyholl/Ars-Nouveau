@@ -36,7 +36,7 @@ public class PacketSetRitual {
             if(ctx.get().getSender() != null){
                 ItemStack stack = isMainhand ? ctx.get().getSender().getMainHandItem() : ctx.get().getSender().getOffhandItem();
                 if(!stack.isEmpty() && stack.getItem() instanceof RitualBook && ritualID != null){
-                    RitualBook.setRitualID(stack.getOrCreateTag(), ritualID);
+                    RitualBook.setRitualID(stack, ritualID);
                 }
             }
         });

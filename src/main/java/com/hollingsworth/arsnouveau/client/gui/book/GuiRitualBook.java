@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.client.gui.book;
 
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.RitualButton;
 import com.hollingsworth.arsnouveau.common.items.RitualBook;
@@ -10,21 +12,52 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.StringTextComponent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GuiRitualBook extends BaseBook{
     public String ritualDesc = "";
     public Minecraft mc;
+    ArsNouveauAPI api;
+    List<AbstractRitual> unlockedRituals;
+    AbstractRitual selectedRitual;
+    boolean isMainhand;
+
+    public GuiRitualBook(ArsNouveauAPI api, List<String> unlockedRitualIds, boolean isMainhand){
+        this.api = api;
+        unlockedRituals = new ArrayList<>();
+        for(String s : unlockedRitualIds){
+            unlockedRituals.add(api.getRitual(s));
+        }
+        this.isMainhand = isMainhand;
+    }
+
     @Override
     public void init() {
         super.init();
-        addButton(new RitualButton(this, bookLeft + 15, bookTop +15, b->ritualDesc = ((RitualButton)b).desc, "Digging the Well", "Digs a vertical shaft down to bedrock, filling in liquid blocks on the sides."));
+        addUnlockedRituals();
         addButton(new GuiImageButton(bookRight - 100, bookBottom - 40, 0,0,46, 18, 46, 18, "textures/gui/create_button.png", (n)->{
-            Networking.INSTANCE.sendToServer(new PacketSetRitual("dig", mc.player.getMainHandItem().getItem() instanceof RitualBook));
+            Networking.INSTANCE.sendToServer(new PacketSetRitual(selectedRitual.getID(), mc.player.getMainHandItem().getItem() instanceof RitualBook));
         }));
         this.mc = this.minecraft;
     }
 
-    public static void open(){
-        Minecraft.getInstance().setScreen(new GuiRitualBook());
+    public void addUnlockedRituals(){
+
+        for(int i = 0; i < unlockedRituals.size(); i++){
+            AbstractRitual ritual = unlockedRituals.get(i);
+            addButton(new RitualButton(this, bookLeft + 15, bookTop +15 +15*i,
+                    b->{
+                        selectedRitual = ((RitualButton)b).ritual;
+                        ritualDesc = selectedRitual.getDescription();
+                    },
+                    ritual));
+
+        }
+    }
+
+    public static void open(ArsNouveauAPI api,  List<String> ritualIds, boolean isMainhand){
+        Minecraft.getInstance().setScreen(new GuiRitualBook(api, ritualIds, isMainhand));
     }
 
     @Override

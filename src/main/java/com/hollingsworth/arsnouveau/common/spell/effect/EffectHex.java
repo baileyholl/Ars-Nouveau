@@ -1,23 +1,24 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.potion.Effects;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class EffectWither extends AbstractEffect {
-    public EffectWither() {
-        super(GlyphLib.EffectWitherID, "Wither");
+public class EffectHex extends AbstractEffect {
+
+    public EffectHex() {
+        super(GlyphLib.EffectHexID, "Hex");
     }
 
     @Override
@@ -26,17 +27,18 @@ public class EffectWither extends AbstractEffect {
         Entity entity = rayTraceResult.getEntity();
         if(!(entity instanceof LivingEntity))
             return;
-        applyPotion((LivingEntity) entity, Effects.WITHER,augments);
+        applyPotionWithCap((LivingEntity) entity, ModPotions.HEX_EFFECT, augments, 30, 8, 5);
     }
 
     @Override
-    public int getManaCost() {
-        return 50;
+    public String getBookDescription() {
+        return "Applies the Hex effect up to level 5. Hex increases any damage taken by a small amount while the user is afflicted by poison, wither, or fire. Additionally, Hex cuts the rate of Mana Regeneration and healing in half.";
     }
 
+    @Nullable
     @Override
     public Item getCraftingReagent() {
-        return Items.WITHER_SKELETON_SKULL;
+        return ArsNouveauAPI.getInstance().getGlyphItem(new EffectWither());
     }
 
     @Override
@@ -45,7 +47,7 @@ public class EffectWither extends AbstractEffect {
     }
 
     @Override
-    public String getBookDescription() {
-        return "Applies the Wither debuff.";
+    public int getManaCost() {
+        return 100;
     }
 }

@@ -42,7 +42,7 @@ public class EffectPlaceBlock extends AbstractEffect {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getBlockPos(), (BlockRayTraceResult)rayTraceResult,aoeBuff, getBuffCount(augments, AugmentPierce.class));
         BlockRayTraceResult result = (BlockRayTraceResult) rayTraceResult;
         for(BlockPos pos1 : posList) {
-            BlockPos hitPos = pos1.relative(result.getDirection());
+            BlockPos hitPos = result.isInside() ? pos1 : pos1.relative(result.getDirection());
             if(spellContext.castingTile instanceof IPlaceBlockResponder){
                 ItemStack stack = ((IPlaceBlockResponder) spellContext.castingTile).onPlaceBlock();
                 if(stack == null || !(stack.getItem() instanceof BlockItem))

@@ -22,6 +22,7 @@ public class ModPotions {
     public static final ShockedEffect SHOCKED_EFFECT = new ShockedEffect();
     public static final ManaRegenEffect MANA_REGEN_EFFECT = new ManaRegenEffect();
     public static final SummoningSicknessEffect SUMMONING_SICKNESS = new SummoningSicknessEffect();
+    public static final HexEffect HEX_EFFECT = new HexEffect();
 
     @ObjectHolder("mana_regen_potion")
     public static Potion MANA_REGEN_POTION;
@@ -50,6 +51,7 @@ public class ModPotions {
             registry.register(MANA_REGEN_EFFECT);
             registry.register(SUMMONING_SICKNESS);
             registry.register(SHOCKED_EFFECT);
+            registry.register(HEX_EFFECT);
         }
 
         @SubscribeEvent

@@ -27,6 +27,7 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingHealEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -110,6 +111,20 @@ public class EventHandler {
         if(e.getEntityLiving() != null && e.getSource() == DamageSource.LIGHTNING_BOLT && e.getEntityLiving().getEffect(ModPotions.SHOCKED_EFFECT) != null){
             float damage = e.getAmount() + 3.0f + 3.0f * e.getEntityLiving().getEffect(ModPotions.SHOCKED_EFFECT).getAmplifier();
             e.setAmount(Math.max(0, damage));
+        }
+        LivingEntity entity = e.getEntityLiving();
+        if(entity != null  && entity.getEffect(ModPotions.HEX_EFFECT) != null &&
+                (entity.getEffect(Effects.POISON) != null || entity.getEffect(Effects.WITHER) != null || entity.isOnFire())){
+            e.setAmount(e.getAmount() + 0.5f + 0.33f*entity.getEffect(ModPotions.HEX_EFFECT).getAmplifier());
+
+        }
+    }
+
+    @SubscribeEvent
+    public static void entityHeal(LivingHealEvent e){
+        LivingEntity entity = e.getEntityLiving();
+        if(entity != null  && entity.getEffect(ModPotions.HEX_EFFECT) != null){
+            e.setAmount(e.getAmount()/2.0f);
         }
     }
 
