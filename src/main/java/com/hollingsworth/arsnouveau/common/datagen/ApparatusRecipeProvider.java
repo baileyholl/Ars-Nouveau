@@ -292,7 +292,7 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.AQUA_AFFINITY, 1, 5000));
         addRecipe(builder()
-                 .withPedestalItem(4, Ingredient.of(Tags.Items.RODS_BLAZE))
+                 .withPedestalItem(4, Ingredient.of(Items.BLAZE_POWDER))
                 .withPedestalItem(1,Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
                 .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentExtendTime()))
                 .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAOE()))
@@ -802,6 +802,45 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.UNBREAKING, 3, 5000));
+
+        addRecipe(builder()
+                .withPedestalItem(1, BlockRegistry.MANA_BERRY_BUSH)
+                .withPedestalItem(4, Recipes.MANA_GEM_BLOCK)
+                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, 1, 2000));
+        addRecipe(builder()
+                .withPedestalItem(1, BlockRegistry.MANA_BERRY_BUSH)
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify())))
+                .withPedestalItem(4, Recipes.MANA_GEM_BLOCK)
+                .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
+                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, 2, 3500));
+
+        addRecipe(builder()
+                .withPedestalItem(1, BlockRegistry.MANA_BERRY_BUSH)
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify())))
+                .withPedestalItem(4, Recipes.MANA_GEM_BLOCK)
+                .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
+                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, 3, 5000));
+
+
+        addRecipe(builder()
+                .withPedestalItem(2, BlockRegistry.MANA_BERRY_BUSH)
+                .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
+                .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
+                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, 1, 2000));
+        addRecipe(builder()
+                .withPedestalItem(2, BlockRegistry.MANA_BERRY_BUSH)
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentExtendTime())))
+                .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
+                .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
+                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, 2, 3500));
+
+        addRecipe(builder()
+                .withPedestalItem(2, BlockRegistry.MANA_BERRY_BUSH)
+                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentExtendTime())))
+                .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
+                .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
+                .buildEnchantmentRecipe(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, 3, 5000));
+
 
     }
 

@@ -69,8 +69,11 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public void summonLivingEntity(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext, ISummon summon){
+        if(shooter != null)
+            summon.setOwnerID(shooter.getUUID());
         if(summon.getLivingEntity() != null)
             world.addFreshEntity(summon.getLivingEntity());
+
         MinecraftForge.EVENT_BUS.post(new SummonEvent(rayTraceResult, world, shooter, augments, spellContext, summon));
     }
 
@@ -109,10 +112,14 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     public void dealDamage(World world, LivingEntity shooter, float damage, List<AbstractAugment> augments, Entity entity, DamageSource source){
 
         shooter = shooter == null ? FakePlayerFactory.getMinecraft((ServerWorld) world) : shooter;
+        if(entity instanceof LivingEntity && ((LivingEntity) entity).getHealth() <= 0)
+            return;
+
         entity.hurt(source, damage);
-        if(!(entity instanceof LivingEntity))
+        if(!(entity instanceof LivingEntity) )
             return;
         LivingEntity mob = (LivingEntity) entity;
+
 
         if(mob.getHealth() <= 0 && !mob.removed && hasBuff(augments, AugmentFortune.class)){
             int looting = getBuffCount(augments, AugmentFortune.class);

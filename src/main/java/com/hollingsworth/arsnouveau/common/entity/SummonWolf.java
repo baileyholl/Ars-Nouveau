@@ -7,9 +7,17 @@ import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Util;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+
+import javax.annotation.Nullable;
+import java.util.Optional;
+import java.util.UUID;
 
 public class SummonWolf extends WolfEntity implements ISummon {
     public int ticksLeft;
@@ -35,6 +43,13 @@ public class SummonWolf extends WolfEntity implements ISummon {
                 onSummonDeath(level, null, true);
             }
         }
+    }
+    private static final DataParameter<Optional<UUID>> OWNER_UUID = EntityDataManager.defineId(SummonWolf.class, DataSerializers.OPTIONAL_UUID);
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(OWNER_UUID, Optional.of(Util.NIL_UUID));
     }
 
     @Override
@@ -80,5 +95,17 @@ public class SummonWolf extends WolfEntity implements ISummon {
     @Override
     public void setTicksLeft(int ticks) {
         this.ticksLeft = ticks;
+    }
+
+
+    @Nullable
+    @Override
+    public UUID getOwnerID() {
+        return !this.getEntityData().get(OWNER_UUID).isPresent() ? this.getUUID() : this.getEntityData().get(OWNER_UUID).get();
+    }
+
+    @Override
+    public void setOwnerID(UUID uuid) {
+        this.getEntityData().set(OWNER_UUID, Optional.ofNullable(uuid));
     }
 }

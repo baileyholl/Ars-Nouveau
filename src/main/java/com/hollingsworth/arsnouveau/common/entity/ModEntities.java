@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.monster.VexEntity;
 import net.minecraft.entity.passive.WolfEntity;
@@ -47,6 +48,7 @@ public class ModEntities {
     public static EntityType<SummonHorse> SUMMON_HORSE = null;
     public static EntityType<WildenGuardian> WILDEN_GUARDIAN = null;
     public static EntityType<LightningEntity> LIGHTNING_ENTITY = null;
+    public static EntityType<EntityDummy> ENTITY_DUMMY = null;
 
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
@@ -141,6 +143,12 @@ public class ModEntities {
                             .sized(1.0f, 2.0f)
                             .setTrackingRange(10)
                             .setShouldReceiveVelocityUpdates(true));
+            ENTITY_DUMMY = build(
+                    "dummy",
+                    EntityType.Builder.<EntityDummy>of(EntityDummy::new, EntityClassification.MISC)
+                            .sized(1.0f, 2.0f)
+                            .setTrackingRange(10)
+                            .setShouldReceiveVelocityUpdates(true));
             LIGHTNING_ENTITY = build("an_lightning", EntityType.Builder.<LightningEntity>of(LightningEntity::new, EntityClassification.MISC).sized(0.0F, 0.0F).clientTrackingRange(16).updateInterval(Integer.MAX_VALUE).setShouldReceiveVelocityUpdates(true).setUpdateInterval(60));
             event.getRegistry().registerAll(
                     SPELL_PROJ,
@@ -159,7 +167,8 @@ public class ModEntities {
                     WILDEN_STALKER,
                     SUMMON_HORSE,
                     WILDEN_GUARDIAN,
-                    LIGHTNING_ENTITY
+                    LIGHTNING_ENTITY,
+                    ENTITY_DUMMY
             );
 
             GlobalEntityTypeAttributes.put(ENTITY_WHELP_TYPE, EntityWhelp.attributes().build());
@@ -172,6 +181,9 @@ public class ModEntities {
             GlobalEntityTypeAttributes.put(SUMMON_WOLF, WolfEntity.createAttributes().build());
             GlobalEntityTypeAttributes.put(SUMMON_HORSE, AbstractHorseEntity.createBaseHorseAttributes().build());
             GlobalEntityTypeAttributes.put(WILDEN_GUARDIAN, WildenGuardian.getModdedAttributes().build());
+            GlobalEntityTypeAttributes.put(ENTITY_DUMMY, MobEntity.createMobAttributes()
+                    .add(Attributes.MAX_HEALTH, 20.0D)
+                    .add(Attributes.MOVEMENT_SPEED, 0.25D).build());
 
             EntitySpawnPlacementRegistry.register(ENTITY_CARBUNCLE_TYPE, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
             EntitySpawnPlacementRegistry.register(ENTITY_SYLPH_TYPE, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);

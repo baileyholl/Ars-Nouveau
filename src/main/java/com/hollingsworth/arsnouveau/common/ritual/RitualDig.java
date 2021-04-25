@@ -3,10 +3,15 @@ package com.hollingsworth.arsnouveau.common.ritual;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.ritual.RitualContext;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
+import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class RitualDig extends AbstractRitual {
+
+    public RitualDig(){
+        super();
+    }
 
     public RitualDig(RitualTile tile, RitualContext context) {
         super(tile, context);
@@ -31,6 +36,6 @@ public class RitualDig extends AbstractRitual {
 
     @Override
     public String getID() {
-        return "Dig";
+        return RitualLib.DIG;
     }
 }

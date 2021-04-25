@@ -5,22 +5,22 @@
   "mana": 6000,
   "item_1": [
     {
-      "tag": "forge:rods/blaze"
+      "item": "minecraft:blaze_powder"
     }
   ],
   "item_2": [
     {
-      "tag": "forge:rods/blaze"
+      "item": "minecraft:blaze_powder"
     }
   ],
   "item_3": [
     {
-      "tag": "forge:rods/blaze"
+      "item": "minecraft:blaze_powder"
     }
   ],
   "item_4": [
     {
-      "tag": "forge:rods/blaze"
+      "item": "minecraft:blaze_powder"
     }
   ],
   "item_5": [

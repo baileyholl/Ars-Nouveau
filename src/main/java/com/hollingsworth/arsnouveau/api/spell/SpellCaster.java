@@ -12,13 +12,12 @@ public class SpellCaster implements ISpellCaster{
     private int slot;
     ItemStack stack;
 
-    public SpellCaster(ItemStack stack){
+    private SpellCaster(ItemStack stack){
         this.stack = stack;
     }
 
     @Override
     public Spell getSpell() {
-
         return spells.getOrDefault(getCurrentSlot(), new Spell());
     }
 
