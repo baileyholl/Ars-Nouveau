@@ -12,6 +12,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
+import com.hollingsworth.arsnouveau.common.items.RitualParchment;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.item.Item;
@@ -57,6 +58,11 @@ public class ArsNouveauAPI {
      * Contains the list of glyph item instances used by the glyph press.
      */
     private HashMap<String, Glyph> glyphMap;
+
+    /**
+     * Contains the list of parchment item instances created during registration
+     */
+    private HashMap<String, RitualParchment> ritualParchmentMap;
 
     private List<IEnchantingRecipe> enchantingApparatusRecipes;
     /**
@@ -104,6 +110,7 @@ public class ArsNouveauAPI {
     }
 
     public AbstractRitual registerRitual(String id, AbstractRitual ritual){
+        ritualParchmentMap.put(id, new RitualParchment(getRitualRegistryName(id), ritual));
         return ritualMap.put(id, ritual);
     }
 
@@ -131,12 +138,20 @@ public class ArsNouveauAPI {
         return "glyph_"+ id.toLowerCase();
     }
 
+    public String getRitualRegistryName(String id){
+        return "ritual_"+ id.toLowerCase();
+    }
+
     public Map<String, AbstractSpellPart> getSpell_map() {
         return spell_map;
     }
 
     public Map<String, Glyph> getGlyphMap(){
         return glyphMap;
+    }
+
+    public Map<String, RitualParchment> getRitualItemMap(){
+        return ritualParchmentMap;
     }
 
 
@@ -200,6 +215,7 @@ public class ArsNouveauAPI {
         startingSpells = new ArrayList<>();
         enchantingApparatusRecipes = new ArrayList<>();
         ritualMap = new HashMap<>();
+        ritualParchmentMap = new HashMap<>();
     }
 
     public static ArsNouveauAPI getInstance(){
