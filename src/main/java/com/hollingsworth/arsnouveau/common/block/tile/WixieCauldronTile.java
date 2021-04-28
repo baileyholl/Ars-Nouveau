@@ -208,7 +208,7 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
     }
 
     public void setRecipes(PlayerEntity playerEntity, ItemStack stack){
-        this.craftingItem = stack;
+        ItemStack craftingItem = stack;
         RecipeWrapper recipes = new RecipeWrapper();
         if(craftingItem.getItem() == Items.POTION){
             for(BrewingRecipe r : ArsNouveauAPI.getInstance().getAllPotionRecipes()){
@@ -237,12 +237,16 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
                     recipes.addRecipe(r.getIngredients(), r.getResultItem(), r);
 
             }
-            isCraftingPotion = false;
+            if(!recipes.recipes.isEmpty())
+                isCraftingPotion = false;
         }
-        this.recipeWrapper = recipes;
-        if(recipeWrapper.recipes.isEmpty() && playerEntity != null){
+        if(!recipes.recipes.isEmpty()) {
+            this.recipeWrapper = recipes;
+            this.craftingItem = stack.copy();
+        }
+
+        if((recipes.recipes.isEmpty() || recipeWrapper == null || recipeWrapper.recipes.isEmpty()) && playerEntity != null){
             PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.wixie.no_recipe"));
-            this.craftingItem = null;
         }else if(playerEntity != null){
             PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.wixie.recipe_set"));
         }

@@ -12,7 +12,7 @@ public class ManaRegenCalcEvent extends LivingEvent {
     }
 
 
-    public void setRegen(int newRegen){
+    public void setRegen(double newRegen){
         this.regen = Math.max(newRegen, 0);
     }
 

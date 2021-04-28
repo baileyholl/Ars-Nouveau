@@ -39,7 +39,7 @@ public class SpellUtil {
         // we know the block and we know which side of the block we're hitting. time to calculate the depth along the different axes
         int x, y, z;
         BlockPos start = origin;
-        switch(mop.getDirection()) {
+        switch(mop.isInside() ? Direction.DOWN : mop.getDirection()) {
             case DOWN:
             case UP:
                 // x y depends on the angle we look?

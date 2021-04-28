@@ -228,9 +228,7 @@ public class ItemsRegistry {
                         public EffectInstance getEffectInstance(EffectInstance effectInstance) {
                             return new EffectInstance(effectInstance.getEffect(), effectInstance.getDuration()/2, effectInstance.getAmplifier() + 1);
                         }
-                    }.withTooltip(new TranslationTextComponent("tooltip.potion_flask_amplify")),
-                    new RitualParchment(LibItemNames.RITUAL_PARCHMENT)
-
+                    }.withTooltip(new TranslationTextComponent("tooltip.potion_flask_amplify"))
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();
@@ -238,6 +236,13 @@ public class ItemsRegistry {
                 registry.register(glyph);
                 ITEMS.add(glyph);
             }
+
+            for(RitualParchment ritualParchment : ArsNouveauAPI.getInstance().getRitualItemMap().values()){
+                registry.register(ritualParchment);
+                ITEMS.add(ritualParchment);
+            }
+
+
             for (final Item item : items) {
                 registry.register(item);
                 ITEMS.add(item);

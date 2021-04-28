@@ -20,8 +20,9 @@ public class RitualParchment extends ModItem{
         super(properties);
     }
 
-    public RitualParchment(String registryName){
+    public RitualParchment(String registryName, AbstractRitual ritual){
         super(ItemsRegistry.defaultItemProperties(), registryName);
+        this.ritual = ritual;
     }
 
     @Override

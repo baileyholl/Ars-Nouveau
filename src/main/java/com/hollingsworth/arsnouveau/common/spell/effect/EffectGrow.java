@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.IGrowable;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.BoneMealItem;
@@ -23,8 +22,6 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
 
 public class EffectGrow  extends AbstractEffect {
 
@@ -54,24 +51,6 @@ public class EffectGrow  extends AbstractEffect {
                 && ((IGrowable) world.getBlockState(pos).getBlock()).isValidBonemealTarget(world, pos, world.getBlockState(pos), world.isClientSide);
     }
 
-    public static boolean applyBonemeal(World worldIn, BlockPos pos) {
-        BlockState blockstate = worldIn.getBlockState(pos);
-        if (blockstate.getBlock() instanceof IGrowable) {
-            IGrowable igrowable = (IGrowable)blockstate.getBlock();
-            if (igrowable.isValidBonemealTarget(worldIn, pos, blockstate, worldIn.isClientSide)) {
-                if (!worldIn.isClientSide) {
-                    if (igrowable.isBonemealSuccess(worldIn, worldIn.random, pos, blockstate) && !World.isOutsideBuildHeight(pos)) {
-                        igrowable.performBonemeal((ServerWorld)worldIn, worldIn.random, pos, blockstate);
-                        worldIn.sendBlockUpdated(pos, blockstate, blockstate, 3);
-                    }
-                }
-
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     @Override
     public int getManaCost() {

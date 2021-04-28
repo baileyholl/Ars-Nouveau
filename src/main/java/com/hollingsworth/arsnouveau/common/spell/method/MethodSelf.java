@@ -89,6 +89,6 @@ public class MethodSelf extends AbstractCastMethod {
 
     @Override
     public Item getCraftingReagent() {
-        return Items.STONE_PRESSURE_PLATE;
+        return Items.GLASS_BOTTLE;
     }
 }

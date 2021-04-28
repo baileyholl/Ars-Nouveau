@@ -10,10 +10,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.ritual.RitualDig;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodRune;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
+import com.hollingsworth.arsnouveau.common.spell.method.*;
 import net.minecraft.item.ItemStack;
 
 public class APIRegistry {
@@ -114,7 +111,9 @@ public class APIRegistry {
         registerSpell(new EffectCrush());
         registerSpell(new EffectSummonWolves());
         registerSpell(new EffectSummonSteed());
-        registerSpell(new EffectDecoy());
+        registerSpell(new EffectSummonDecoy());
+        registerSpell(new EffectHex());
+        registerSpell(new MethodUnderfoot());
         registerStartingSpells();
 
         registerRitual(new RitualDig());

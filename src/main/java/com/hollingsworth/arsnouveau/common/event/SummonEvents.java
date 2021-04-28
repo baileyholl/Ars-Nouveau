@@ -9,12 +9,8 @@ import net.minecraftforge.fml.common.Mod;
 public class SummonEvents {
 
     @SubscribeEvent
-    public static void summonedEvent(SummonEvent event){
-
-    }
+    public static void summonedEvent(SummonEvent event){ }
 
     @SubscribeEvent
-    public static void summonDeathEvent(SummonEvent.Death event){
-        System.out.println("ded");
-    }
+    public static void summonDeathEvent(SummonEvent.Death event){ }
 }

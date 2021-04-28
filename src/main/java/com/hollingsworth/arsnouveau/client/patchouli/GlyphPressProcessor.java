@@ -17,11 +17,14 @@ public class GlyphPressProcessor implements IComponentProcessor {
     public void setup(IVariableProvider variables) {
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
         String recipeID = variables.get("recipe").asString();
-        recipe = (GlyphPressRecipe) manager.byKey(new ResourceLocation(recipeID)).orElseThrow(IllegalArgumentException::new);
+        recipe = (GlyphPressRecipe) manager.byKey(new ResourceLocation(recipeID)).orElse(null);
     }
 
     @Override
     public IVariable process(String s) {
+        if(recipe == null)
+            return null;
+
         if(s.equals("clay_type"))
             return IVariable.from(recipe.getClay());
         if(s.equals("reagent"))
