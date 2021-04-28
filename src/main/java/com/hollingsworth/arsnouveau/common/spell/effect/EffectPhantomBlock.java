@@ -51,7 +51,7 @@ public class EffectPhantomBlock extends AbstractEffect {
     @Nullable
     @Override
     public Item getCraftingReagent() {
-        return Items.SCAFFOLDING;
+        return Items.GLASS;
     }
 
     @Override

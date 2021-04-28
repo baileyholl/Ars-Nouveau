@@ -111,7 +111,7 @@ public class APIRegistry {
         registerSpell(new EffectCrush());
         registerSpell(new EffectSummonWolves());
         registerSpell(new EffectSummonSteed());
-        registerSpell(new EffectDecoy());
+        registerSpell(new EffectSummonDecoy());
         registerSpell(new EffectHex());
         registerSpell(new MethodUnderfoot());
         registerStartingSpells();

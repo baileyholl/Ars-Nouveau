@@ -16,8 +16,8 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class EffectDecoy extends AbstractEffect {
-    public EffectDecoy() {
+public class EffectSummonDecoy extends AbstractEffect {
+    public EffectSummonDecoy() {
         super(GlyphLib.EffectDecoyID, "Summon Decoy");
     }
 

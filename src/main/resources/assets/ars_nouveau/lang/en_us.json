@@ -350,7 +350,7 @@
 	"ars_nouveau.glyph_desc.summon_vex": "Summons three Vex allies that will attack nearby hostile enemies. These Vex will last a short time until they begin to take damage, but time may be extended with the Extend Time augment.",
 	"ars_nouveau.glyph_desc.summon_wolves": "Summons two wolves that will fight with you. Extend Time will increase the amount of time on the summons. Applies Summoning Sickness to the caster, preventing other summoning magic.",
 	"ars_nouveau.glyph_desc.touch": "Applies spells at the block or entity that is targeted.",
-	"ars_nouveau.glyph_desc.underfoot": "",
+	"ars_nouveau.glyph_desc.underfoot": "Targets the spell on the block beneath the player.",
 	"ars_nouveau.glyph_desc.wither": "Applies the Wither debuff.",
 	"ars_nouveau.glyph_name.accelerate": "Accelerate",
 	"ars_nouveau.glyph_name.amplify": "Amplify",
