@@ -77,8 +77,14 @@ public class EntityDummy extends CreatureEntity implements ISummon {
     @Override
     public void tick() {
         super.tick();
-
         if(!level.isClientSide){
+            if(level.getGameTime() % 10 == 0 && level.getPlayerByUUID(getOwnerID()) == null){
+                ParticleUtil.spawnPoof((ServerWorld) level, blockPosition());
+                this.remove();
+                onSummonDeath(level, null, false);
+                return;
+            }
+
             ticksLeft--;
             if(ticksLeft <= 0) {
                 ParticleUtil.spawnPoof((ServerWorld) level, blockPosition());
@@ -96,6 +102,8 @@ public class EntityDummy extends CreatureEntity implements ISummon {
 
     @Override
     public ItemStack getItemBySlot(EquipmentSlotType p_184582_1_) {
+        if(!level.isClientSide)
+            return ItemStack.EMPTY;
         return level.getPlayerByUUID(getOwnerID()) != null ? level.getPlayerByUUID(getOwnerID()).getItemBySlot(p_184582_1_) : ItemStack.EMPTY;
     }
 
@@ -116,7 +124,7 @@ public class EntityDummy extends CreatureEntity implements ISummon {
         return this.playerInfo;
     }
     public ITextComponent getName() {
-        return this.level.getPlayerByUUID(getOwnerID()).getName();
+        return this.level.getPlayerByUUID(getOwnerID()) == null ? new StringTextComponent("") : this.level.getPlayerByUUID(getOwnerID()).getName();
     }
     public ITextComponent getDisplayName() {
         IFormattableTextComponent iformattabletextcomponent = new StringTextComponent("");

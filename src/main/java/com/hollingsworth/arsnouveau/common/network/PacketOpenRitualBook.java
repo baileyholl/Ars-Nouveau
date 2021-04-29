@@ -37,6 +37,7 @@ public class PacketOpenRitualBook {
     public void toBytes(PacketBuffer buf){
         buf.writeNbt(tag);
         buf.writeInt(unlockedRituals.size());
+
         for (String unlockedRitual : unlockedRituals) {
             buf.writeUtf(unlockedRitual);
         }

@@ -1,8 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.api.ritual.RitualContext;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
-import com.hollingsworth.arsnouveau.common.ritual.RitualDig;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -21,10 +19,16 @@ public class RitualBlock extends ModBlock{
 
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(worldIn.getBlockEntity(pos) instanceof RitualTile){
-            RitualTile tile = (RitualTile) worldIn.getBlockEntity(pos);
-            tile.startRitual(new RitualDig(tile, new RitualContext()));
+        if(!(worldIn.getBlockEntity(pos) instanceof RitualTile))
+            return super.use(state, worldIn, pos, player, handIn, hit);
+        RitualTile tile = (RitualTile) worldIn.getBlockEntity(pos);
+        if(!tile.isRitualRunning() && tile.canAffordCost(player.totalExperience)) {
+            player.giveExperiencePoints(-tile.getRitualCost());
+            tile.startRitual();
         }
+
+
+
         return super.use(state, worldIn, pos, player, handIn, hit);
     }
 

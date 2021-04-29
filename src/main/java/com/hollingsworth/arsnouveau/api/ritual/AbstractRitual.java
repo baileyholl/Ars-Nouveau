@@ -1,17 +1,21 @@
 package com.hollingsworth.arsnouveau.api.ritual;
 
 import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractRitual {
 
     public RitualTile tile;
-    public RitualContext context;
+    private RitualContext context;
     private World world;
     private BlockPos pos;
 
@@ -21,15 +25,15 @@ public abstract class AbstractRitual {
         this.tile = tile;
         this.world = tile.getLevel();
         this.pos = tile.getBlockPos();
-        this.context = context;
+        this.setContext(context);
     }
 
 
     public void tryTick(){
-        if(tile == null || context == null)
+        if(tile == null)
             return;
 
-        if(context.isDone)
+        if(getContext().isDone)
             return;
 
         tick();
@@ -43,13 +47,25 @@ public abstract class AbstractRitual {
         return true;
     }
 
+    public List<ItemStack> getConsumableItems(){
+        return new ArrayList<>();
+    }
+
+    public boolean canConsumeItem(ItemStack stack){
+        return false;
+    }
+
+    public void onItemConsumed(ItemStack stack){
+        stack.shrink(1);
+    }
+
 
     public void onStart(){}
 
     protected abstract void tick();
 
     public void onEnd(){
-        this.context.isDone = true;
+        this.getContext().isDone = true;
     }
     /*Must follow rules for the lang file.*/
     public abstract String getID();
@@ -63,14 +79,26 @@ public abstract class AbstractRitual {
     }
 
     public void write(CompoundNBT tag){
-        if(context != null){
-            CompoundNBT contextTag = new CompoundNBT();
-            context.write(contextTag);
-            tag.put("context", contextTag);
-        }
+        CompoundNBT contextTag = new CompoundNBT();
+        getContext().write(contextTag);
+        tag.put("context", contextTag);
     }
     // Called once the ritual tile has created a new instance of this ritual
     public void read(CompoundNBT tag){
-        this.context = RitualContext.read(tag.getCompound("context"));
+        this.setContext(RitualContext.read(tag.getCompound("context")));
+    }
+
+    public @Nonnull RitualContext getContext() {
+        if(context == null)
+            context = new RitualContext();
+        return context;
+    }
+
+    public void setContext(RitualContext context) {
+        this.context = context;
+    }
+
+    public int getCost(){
+        return 0;
     }
 }

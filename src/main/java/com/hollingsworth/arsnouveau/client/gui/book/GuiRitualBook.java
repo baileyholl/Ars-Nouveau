@@ -43,7 +43,6 @@ public class GuiRitualBook extends BaseBook{
     }
 
     public void addUnlockedRituals(){
-
         for(int i = 0; i < unlockedRituals.size(); i++){
             AbstractRitual ritual = unlockedRituals.get(i);
             addButton(new RitualButton(this, bookLeft + 15, bookTop +15 +15*i,

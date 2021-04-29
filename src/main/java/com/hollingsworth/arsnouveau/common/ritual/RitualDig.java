@@ -21,7 +21,7 @@ public class RitualDig extends AbstractRitual {
     public void tick() {
         World world = tile.getLevel();
         if(world.getGameTime() % 20 == 0){
-            BlockPos pos = tile.getBlockPos().north().below(context.progress);
+            BlockPos pos = tile.getBlockPos().north().below(getContext().progress);
             if(pos.getY() <= 1){
                 onEnd();
                 return;
@@ -30,7 +30,7 @@ public class RitualDig extends AbstractRitual {
             world.destroyBlock(pos.south().south(), true);
             world.destroyBlock(pos.south().east(), true);
             world.destroyBlock(pos.south().west(), true);
-            context.progress++;
+            getContext().progress++;
         }
     }
 

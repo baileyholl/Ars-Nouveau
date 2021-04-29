@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.api.enchanting_apparatus.SpellWriteRecipe;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.ritual.RitualDig;
+import com.hollingsworth.arsnouveau.common.ritual.RitualNight;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
@@ -117,6 +118,7 @@ public class APIRegistry {
         registerStartingSpells();
 
         registerRitual(new RitualDig());
+        registerRitual(new RitualNight());
     }
 
     public static void registerStartingSpells() {

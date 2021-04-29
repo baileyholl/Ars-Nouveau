@@ -40,7 +40,7 @@ public class RitualCaster implements IRitualCaster{
 
     @Override
     public void setRitual(String ritualID) {
-        stack.getOrCreateTag().putString("selected", ritualID);
+        selectedRitualID = ritualID;
         write(stack);
     }
 
@@ -54,13 +54,13 @@ public class RitualCaster implements IRitualCaster{
         }
         instance.ritualIDs = rituals;
         instance.selectedRitualID = tag.getString("selected");
+
         return instance;
     }
 
     public void write(ItemStack stack){
         CompoundNBT tag = stack.getOrCreateTag();
-        if(!this.selectedRitualID.isEmpty())
-            tag.putString("selected", selectedRitualID);
+        tag.putString("selected", selectedRitualID);
         tag.putInt("numrituals", this.ritualIDs.size());
         for(int i = 0; i < ritualIDs.size(); i++){
             tag.putString("ritual_"+i, ritualIDs.get(i));

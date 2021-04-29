@@ -129,7 +129,7 @@ public class ArsNouveauAPI {
         AbstractRitual ritual = getRitual(id);
         if(ritual != null){
             ritual.tile = tile;
-            ritual.context = context;
+            ritual.setContext(context);
         }
         return ritual;
     }
