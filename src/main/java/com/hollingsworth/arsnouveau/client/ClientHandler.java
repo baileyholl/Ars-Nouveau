@@ -22,7 +22,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 public class ClientHandler {
     @SubscribeEvent
     public static void init(final FMLClientSetupEvent evt) {
-        System.out.println("Rendering model");
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.GLYPH_PRESS_TILE, PressRenderer::new);
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.ARCANE_PEDESTAL_TILE, ArcanePedestalRenderer::new);
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.ENCHANTING_APP_TILE, EnchantingApparatusRenderer::new);
@@ -39,6 +38,7 @@ public class ClientHandler {
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.CRYSTALLIZER_TILE, CrystallizerRenderer::new);
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.SUMMONING_CRYSTAL_TILE, SummoningCrystalRenderer::new);
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.POTION_MELDER_TYPE, PotionMelderRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(BlockRegistry.RITUAL_TILE, RitualBrazierRenderer::new);
 
         RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_JAR, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.GLYPH_PRESS_BLOCK, RenderType.cutout());
@@ -66,11 +66,11 @@ public class ClientHandler {
         RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_GEM_BLOCK, RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.POTION_JAR, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.POTION_MELDER, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.RUNE_BLOCK, RenderType.cutout());
     }
 
     @SubscribeEvent
     public static void initColors(final ColorHandlerEvent.Item event) {
-        System.out.println("REGISTERED COLORS");
         event.getItemColors().register((stack, color) -> color > 0 ? -1 :
                 (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
                 ItemsRegistry.POTION_FLASK);

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -13,7 +14,7 @@ import net.minecraft.world.World;
 
 public class RitualBlock extends ModBlock{
     public RitualBlock(String registryName) {
-        super(registryName);
+        super(defaultProperties().noOcclusion(), registryName);
     }
 
 
@@ -42,4 +43,8 @@ public class RitualBlock extends ModBlock{
         return new RitualTile();
     }
 
+    @Override
+    public BlockRenderType getRenderShape(BlockState state) {
+        return BlockRenderType.ENTITYBLOCK_ANIMATED;
+    }
 }
