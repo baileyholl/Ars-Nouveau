@@ -14,16 +14,16 @@ import net.minecraft.world.World;
 
 public class RitualBlock extends ModBlock{
     public RitualBlock(String registryName) {
-        super(defaultProperties().noOcclusion(), registryName);
+        super(defaultProperties().noOcclusion().lightLevel((b) -> 15), registryName);
     }
 
 
     @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(!(worldIn.getBlockEntity(pos) instanceof RitualTile))
+        if(!(worldIn.getBlockEntity(pos) instanceof RitualTile) || handIn != Hand.MAIN_HAND || !player.getMainHandItem().isEmpty())
             return super.use(state, worldIn, pos, player, handIn, hit);
         RitualTile tile = (RitualTile) worldIn.getBlockEntity(pos);
-        if(!tile.isRitualRunning() && tile.canAffordCost(player.totalExperience)) {
+        if(tile.ritual != null && !tile.isRitualDone() && (tile.canAffordCost(player.totalExperience) || player.isCreative())) {
             player.giveExperiencePoints(-tile.getRitualCost());
             tile.startRitual();
         }

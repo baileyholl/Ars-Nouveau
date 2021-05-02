@@ -30,11 +30,9 @@ public abstract class AbstractRitual {
 
 
     public void tryTick(){
-        if(tile == null)
+        if(tile == null || !getContext().isStarted || getContext().isDone) {
             return;
-
-        if(getContext().isDone)
-            return;
+        }
 
         tick();
     }
@@ -60,7 +58,9 @@ public abstract class AbstractRitual {
     }
 
 
-    public void onStart(){}
+    public void onStart(){
+        getContext().isStarted = true;
+    }
 
     protected abstract void tick();
 

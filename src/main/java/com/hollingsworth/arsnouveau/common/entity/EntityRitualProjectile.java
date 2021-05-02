@@ -5,6 +5,8 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleSparkleData;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.IPacket;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -26,7 +28,6 @@ public class EntityRitualProjectile extends ColoredProjectile{
     public void tick() {
         if(!level.isClientSide() && (tilePos == null || !(level.getBlockEntity(tilePos) instanceof RitualTile) || ((RitualTile) level.getBlockEntity(tilePos)).ritual == null )) {
             this.remove();
-            System.out.println("removing");
             return;
         }
 
@@ -41,7 +42,7 @@ public class EntityRitualProjectile extends ColoredProjectile{
         yo = getY();
         zo = getZ();
 
-        System.out.println(this.position());
+
         if(level.isClientSide) {
             int counter = 0;
             for (double j = 0; j < 3; j++) {
@@ -116,5 +117,18 @@ public class EntityRitualProjectile extends ColoredProjectile{
         super(ModEntities.ENTITY_RITUAL, world);
     }
 
+    @Override
+    public boolean save(CompoundNBT tag) {
+        if(tilePos != null)
+            tag.put("ritpos", NBTUtil.writeBlockPos(tilePos));
+        return super.save(tag);
+    }
 
+    @Override
+    public void load(CompoundNBT compound) {
+        super.load(compound);
+        if(compound.contains("ritpos")){
+            tilePos = NBTUtil.readBlockPos(compound.getCompound("ritpos"));
+        }
+    }
 }

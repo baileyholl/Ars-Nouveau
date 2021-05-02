@@ -20,7 +20,7 @@ public class RitualDig extends AbstractRitual {
     @Override
     public void tick() {
         World world = tile.getLevel();
-        if(world.getGameTime() % 20 == 0){
+        if(world.getGameTime() % 20 == 0 && !world.isClientSide){
             BlockPos pos = tile.getBlockPos().north().below(getContext().progress);
             if(pos.getY() <= 1){
                 onEnd();
