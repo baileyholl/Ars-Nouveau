@@ -198,6 +198,12 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.POTION_JAR_BLOCK) public static TileEntityType<PotionJarTile> POTION_JAR_TYPE;
     @ObjectHolder(LibBlockNames.POTION_MELDER_BLOCK) public static PotionMelder POTION_MELDER;
     @ObjectHolder(LibBlockNames.POTION_MELDER_BLOCK) public static TileEntityType<PotionMelderTile> POTION_MELDER_TYPE;
+
+    @ObjectHolder(LibBlockNames.SCONCE) public static SconceBlock SCONCE_BLOCK;
+    @ObjectHolder(LibBlockNames.SCONCE) public static TileEntityType<SconceTile> SCONCE_TILE;
+
+
+
     @ObjectHolder("an_stateprovider") public static BlockStateProviderType stateProviderType;
 
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
@@ -292,6 +298,7 @@ public class BlockRegistry {
             registry.register(new ModBlock(LibBlockNames.AB_SMOOTH_MOSAIC));
             registry.register(new ModBlock(LibBlockNames.AB_SMOOTH_ALTERNATING));
             registry.register(new ModBlock(LibBlockNames.AB_SMOOTH_ASHLAR));
+            registry.register(new SconceBlock(LibBlockNames.SCONCE));
         }
         static Block.Properties woodProp = AbstractBlock.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD);
         public static MagicLeaves createLeavesBlock() {
@@ -325,6 +332,7 @@ public class BlockRegistry {
             event.getRegistry().register(TileEntityType.Builder.of(RitualTile::new, BlockRegistry.RITUAL_BLOCK).build(null).setRegistryName(LibBlockNames.RITUAL_CIRCLE));
             event.getRegistry().register(TileEntityType.Builder.of(PotionJarTile::new, BlockRegistry.POTION_JAR).build(null).setRegistryName(LibBlockNames.POTION_JAR_BLOCK));
             event.getRegistry().register(TileEntityType.Builder.of(PotionMelderTile::new, BlockRegistry.POTION_MELDER).build(null).setRegistryName(LibBlockNames.POTION_MELDER_BLOCK));
+            event.getRegistry().register(TileEntityType.Builder.of(SconceTile::new, BlockRegistry.SCONCE_BLOCK).build(null).setRegistryName(LibBlockNames.SCONCE));
 
         }
 
@@ -385,7 +393,8 @@ public class BlockRegistry {
             registry.register(getDefaultBlockItem(BlockRegistry.BLAZING_WOOD, LibBlockNames.BLAZING_WOOD));
 
             registry.register(getDefaultBlockItem(BlockRegistry.ARCHWOOD_PLANK, LibBlockNames.ARCHWOOD_PLANK));
-            registry.register(getDefaultBlockItem(BlockRegistry.RITUAL_BLOCK, LibBlockNames.RITUAL_CIRCLE));
+            registry.register(new AnimBlockItem(BlockRegistry.RITUAL_BLOCK,
+                    ItemsRegistry.defaultItemProperties().setISTER(() -> RitualBrazierRenderer::getISTER)).setRegistryName(LibBlockNames.RITUAL_CIRCLE));
 
             registry.register(getDefaultBlockItem(BlockRegistry.ARCHWOOD_BUTTON, LibBlockNames.ARCHWOOD_BUTTON));
             registry.register(getDefaultBlockItem(BlockRegistry.ARCHWOOD_STAIRS, LibBlockNames.ARCHWOOD_STAIRS));
@@ -418,6 +427,7 @@ public class BlockRegistry {
             registry.register(getDefaultBlockItem(BlockRegistry.AB_SMOOTH_MOSAIC, LibBlockNames.AB_SMOOTH_MOSAIC));
             registry.register(getDefaultBlockItem(BlockRegistry.AB_SMOOTH_ALTERNATING, LibBlockNames.AB_SMOOTH_ALTERNATING));
             registry.register(getDefaultBlockItem(BlockRegistry.AB_SMOOTH_ASHLAR, LibBlockNames.AB_SMOOTH_ASHLAR));
+            registry.register(getDefaultBlockItem(BlockRegistry.SCONCE_BLOCK, LibBlockNames.SCONCE));
         }
 
 

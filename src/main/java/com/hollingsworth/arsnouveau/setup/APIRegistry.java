@@ -7,8 +7,7 @@ import com.hollingsworth.arsnouveau.api.enchanting_apparatus.ReactiveEnchantment
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.SpellWriteRecipe;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.common.ritual.RitualDig;
-import com.hollingsworth.arsnouveau.common.ritual.RitualNight;
+import com.hollingsworth.arsnouveau.common.ritual.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
@@ -119,6 +118,11 @@ public class APIRegistry {
 
         registerRitual(new RitualDig());
         registerRitual(new RitualNight());
+        registerRitual(new RitualClearWeather());
+        registerRitual(new RitualDay());
+        registerRitual(new RitualStorm());
+        registerRitual(new RitualExpDrain());
+        registerRitual(new RitualPillagerRaid());
     }
 
     public static void registerStartingSpells() {

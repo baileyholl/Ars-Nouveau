@@ -24,21 +24,25 @@ public class ScribeTableRenderer extends TileEntityRenderer<ScribesTile> {
     public void render(ScribesTile tileEntityIn, float v, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int i1) {
 //  ItemStack dirt = new ItemStack(Items.DIRT);
         //     System.out.println("rendering");
-        double x = tileEntityIn.getBlockPos().getX();
-        double y = tileEntityIn.getBlockPos().getY();
-        double z = tileEntityIn.getBlockPos().getZ();
-        if(tileEntityIn.stack == null){
-            return;
+        try {
+            double x = tileEntityIn.getBlockPos().getX();
+            double y = tileEntityIn.getBlockPos().getY();
+            double z = tileEntityIn.getBlockPos().getZ();
+            if (tileEntityIn.stack == null) {
+                return;
+            }
+
+            if (tileEntityIn.entity == null || !ItemStack.matches(tileEntityIn.entity.getItem(), tileEntityIn.stack)) {
+                tileEntityIn.entity = new ItemEntity(tileEntityIn.getLevel(), x, y, z, tileEntityIn.stack);
+            }
+
+
+            ItemEntity entityItem = tileEntityIn.entity;
+            renderPressedItem(tileEntityIn, entityItem.getItem().getItem(), matrixStack, iRenderTypeBuffer, i, i1);
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println("Mercy for optifine users.");
         }
-
-        if (tileEntityIn.entity == null || !ItemStack.matches(tileEntityIn.entity.getItem(), tileEntityIn.stack)) {
-            tileEntityIn.entity = new ItemEntity(tileEntityIn.getLevel(), x, y, z, tileEntityIn.stack);
-        }
-
-
-        ItemEntity entityItem = tileEntityIn.entity;
-        renderPressedItem(tileEntityIn,entityItem.getItem().getItem(),matrixStack, iRenderTypeBuffer, i, i1);
-
     }
     public void renderPressedItem(ScribesTile tile, Item itemToRender, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int il){
         matrixStack.pushPose();

@@ -24,7 +24,6 @@ public class RitualBlock extends ModBlock{
             return super.use(state, worldIn, pos, player, handIn, hit);
         RitualTile tile = (RitualTile) worldIn.getBlockEntity(pos);
         if(tile.ritual != null && !tile.isRitualDone() && (tile.canAffordCost(player.totalExperience) || player.isCreative())) {
-            player.giveExperiencePoints(-tile.getRitualCost());
             tile.startRitual();
         }
 

@@ -37,14 +37,15 @@ public class RenderTypes {
     static final IParticleRenderType EMBER_RENDER = new IParticleRenderType() {
         @Override
         public void begin(BufferBuilder buffer, TextureManager textureManager) {
-
             RenderSystem.disableAlphaTest();
+
             RenderSystem.enableBlend();
             RenderSystem.alphaFunc(516, 0.3f);
             RenderSystem.enableCull();
             textureManager.bind(AtlasTexture.LOCATION_PARTICLES);
             RenderSystem.depthMask(false);
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.DestFactor.ONE.value);
+
             buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE);
         }
 
@@ -57,6 +58,7 @@ public class RenderTypes {
             RenderSystem.depthMask(true);
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.DestFactor.ONE.value);
             RenderSystem.disableCull();
+
             RenderSystem.alphaFunc(516, 0.1F);
         }
 

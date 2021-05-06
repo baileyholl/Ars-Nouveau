@@ -21,6 +21,10 @@ public class EntityRitualProjectile extends ColoredProjectile{
         super(worldIn, x, y, z);
     }
 
+    public EntityRitualProjectile(World worldIn, BlockPos pos) {
+        super(worldIn, pos.getX(), pos.getY(), pos.getZ());
+    }
+
     public EntityRitualProjectile(EntityType<EntityRitualProjectile> entityAOEProjectileEntityType, World world) {
         super(entityAOEProjectileEntityType, world);
     }

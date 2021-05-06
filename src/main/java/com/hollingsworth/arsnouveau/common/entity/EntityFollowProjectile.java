@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.projectile.ArrowEntity;
@@ -24,6 +25,8 @@ public class EntityFollowProjectile extends ArrowEntity {
     public static final DataParameter<Integer> RED = EntityDataManager.defineId(EntityFollowProjectile.class, DataSerializers.INT);
     public static final DataParameter<Integer> GREEN = EntityDataManager.defineId(EntityFollowProjectile.class, DataSerializers.INT);
     public static final DataParameter<Integer> BLUE = EntityDataManager.defineId(EntityFollowProjectile.class, DataSerializers.INT);
+    public static final DataParameter<Boolean> SPAWN_TOUCH = EntityDataManager.defineId(EntityFollowProjectile.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Integer> DESPAWN = EntityDataManager.defineId(EntityFollowProjectile.class, DataSerializers.INT);
 
     private int age;
 //    int age;
@@ -47,9 +50,13 @@ public class EntityFollowProjectile extends ArrowEntity {
 
     public EntityFollowProjectile(World worldIn, BlockPos from, BlockPos to, int r, int g, int b) {
         this(worldIn, new Vector3d(from.getX(), from.getY(), from.getZ()), new Vector3d(to.getX(), to.getY(), to.getZ()));
-        this.entityData.set(RED, r);
-        this.entityData.set(GREEN, g);
-        this.entityData.set(BLUE, b);
+        this.entityData.set(RED, Math.min(r, 255));
+        this.entityData.set(GREEN, Math.min(g, 255));
+        this.entityData.set(BLUE, Math.min(b, 255));
+    }
+
+    public EntityFollowProjectile(World worldIn, BlockPos from, BlockPos to,ParticleColor.IntWrapper color) {
+        this(worldIn, from, to, color.r, color.g, color.b);
     }
 
     public EntityFollowProjectile(World worldIn, BlockPos from, BlockPos to) {
@@ -67,6 +74,12 @@ public class EntityFollowProjectile extends ArrowEntity {
         this.entityData.define(RED, 0);
         this.entityData.define(GREEN, 0);
         this.entityData.define(BLUE, 0);
+        this.entityData.define(SPAWN_TOUCH, defaultsBurst());
+        this.entityData.define(DESPAWN, 10);
+    }
+
+    public boolean defaultsBurst(){
+        return false;
     }
 
 
@@ -79,7 +92,10 @@ public class EntityFollowProjectile extends ArrowEntity {
         }
         Vector3d vec3d2 = this.getDeltaMovement();
         BlockPos dest = this.entityData.get(EntityFollowProjectile.to);
-        if(BlockUtil.distanceFrom(this.blockPosition(), dest) < 1 || this.age > 1000 || BlockUtil.distanceFrom(this.blockPosition(), dest) > 10){
+        if(BlockUtil.distanceFrom(this.blockPosition(), dest) < 1 || this.age > 1000 || BlockUtil.distanceFrom(this.blockPosition(), dest) > this.entityData.get(DESPAWN)){
+            if(level.isClientSide && entityData.get(SPAWN_TOUCH)) {
+                ParticleUtil.spawnTouch(level, this.getOnPos(), new ParticleColor(this.entityData.get(RED),this.entityData.get(GREEN),this.entityData.get(BLUE)));
+            }
             this.remove();
             return;
         }

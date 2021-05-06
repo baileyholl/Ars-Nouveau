@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.api.ritual;
 
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -9,22 +11,20 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public abstract class AbstractRitual {
 
     public RitualTile tile;
     private RitualContext context;
-    private World world;
-    private BlockPos pos;
+
+    public Random rand = new Random();
 
     public AbstractRitual() { }
 
     public AbstractRitual(RitualTile tile, RitualContext context){
         this.tile = tile;
-        this.world = tile.getLevel();
-        this.pos = tile.getBlockPos();
         this.setContext(context);
     }
 
@@ -41,12 +41,14 @@ public abstract class AbstractRitual {
         return tile != null ? tile.getBlockPos() : null;
     }
 
+    public @Nullable World getWorld(){return tile != null ? tile.getLevel() : null;}
+
     public boolean canStart(){
         return true;
     }
 
-    public List<ItemStack> getConsumableItems(){
-        return new ArrayList<>();
+    public List<ItemStack> getConsumedItems(){
+        return getContext().consumedItems;
     }
 
     public boolean canConsumeItem(ItemStack stack){
@@ -54,12 +56,30 @@ public abstract class AbstractRitual {
     }
 
     public void onItemConsumed(ItemStack stack){
+        this.getConsumedItems().add(stack.copy());
         stack.shrink(1);
+        System.out.println("update");
+        BlockUtil.safelyUpdateState(getWorld(), tile.getBlockPos());
     }
 
+    public void incrementProgress(){
+        getContext().progress++;
+    }
+
+    public int getProgress(){
+        return getContext().progress;
+    }
 
     public void onStart(){
         getContext().isStarted = true;
+    }
+
+    public boolean isRunning(){
+        return getContext().isStarted && !getContext().isDone;
+    }
+
+    public void setFinished(){
+        getContext().isDone = true;
     }
 
     protected abstract void tick();
@@ -100,5 +120,21 @@ public abstract class AbstractRitual {
 
     public int getCost(){
         return 0;
+    }
+
+    public ParticleColor getCenterColor(){
+        return new ParticleColor(
+                rand.nextInt(255),
+                rand.nextInt(22),
+                rand.nextInt(255)
+        );
+    }
+
+    public ParticleColor getOuterColor(){
+        return getCenterColor();
+    }
+
+    public int getParticleIntensity(){
+        return 50;
     }
 }

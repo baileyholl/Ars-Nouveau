@@ -598,5 +598,10 @@
 	"block.ars_nouveau.sas_herring":"Arcane Brick: Smooth Herring",
 	"block.ars_nouveau.sas_mosaic":"Arcane Brick: Smooth Mosaic",
 	"block.ars_nouveau.sas_alternating":"Arcane Brick: Smooth Alternating",
-	"block.ars_nouveau.sas_ashlar":"Arcane Brick: Smooth Ashlar"
+	"block.ars_nouveau.sas_ashlar":"Arcane Brick: Smooth Ashlar",
+	"block.ars_nouveau.sconce": "Magelight Sconce",
+	"block.ars_nouveau.ritual": "Ritual Brazier",
+	"ars_nouveau.tooltip.consumed": "Items Consumed:",
+	"ars_nouveau.tooltip.waiting": "Awaiting Activation",
+	"ars_nouveau.tooltip.running": "Running"
 }

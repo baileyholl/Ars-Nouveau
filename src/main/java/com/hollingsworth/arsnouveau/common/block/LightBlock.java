@@ -5,6 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -13,12 +14,14 @@ import net.minecraft.world.IBlockReader;
 
 import javax.annotation.Nullable;
 
+import static com.hollingsworth.arsnouveau.common.block.SconceBlock.LIGHT_LEVEL;
+
 public class LightBlock extends ModBlock {
 
     protected static final VoxelShape SHAPE = Block.box(4.0D, 4.0D, 4.0D, 12.0D, 12.0D, 12.0D);
 
     public LightBlock() {
-        super(defaultProperties().lightLevel((bs)->14).noCollission().noOcclusion().dynamicShape().strength(0f,0f), "light_block");
+        super(defaultProperties().lightLevel((bs)-> bs.getValue(LIGHT_LEVEL) == 0 ? 14 :  bs.getValue(LIGHT_LEVEL)).noCollission().noOcclusion().dynamicShape().strength(0f,0f), "light_block");
     }
 
     @Nullable
@@ -40,6 +43,12 @@ public class LightBlock extends ModBlock {
     @Override
     public BlockRenderType getRenderShape(BlockState p_149645_1_) {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
+    }
+
+
+    @Override
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        builder.add(LIGHT_LEVEL);
     }
 
     @Nullable

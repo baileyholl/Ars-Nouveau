@@ -30,7 +30,6 @@ public class EntityFlyingItem extends EntityFollowProjectile {
     public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.defineId(EntityFlyingItem.class, DataSerializers.ITEM_STACK);
     public static final DataParameter<Float> OFFSET = EntityDataManager.defineId(EntityFlyingItem.class, DataSerializers.FLOAT);
     public static final DataParameter<Boolean> DIDOFFSET = EntityDataManager.defineId(EntityFlyingItem.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<Boolean> SPAWN_TOUCH = EntityDataManager.defineId(EntityFlyingItem.class, DataSerializers.BOOLEAN);
 
     public EntityFlyingItem(World worldIn, Vector3d from, Vector3d to) {
         this(ModEntities.ENTITY_FLYING_ITEM, worldIn);
@@ -226,7 +225,11 @@ public class EntityFlyingItem extends EntityFollowProjectile {
         this.entityData.define(HELD_ITEM, ItemStack.EMPTY);
         this.entityData.define(OFFSET, 0.0f);
         this.entityData.define(DIDOFFSET, false);
-        this.entityData.define(SPAWN_TOUCH, true);
+    }
+
+    @Override
+    public boolean defaultsBurst() {
+        return true;
     }
 
     @Override

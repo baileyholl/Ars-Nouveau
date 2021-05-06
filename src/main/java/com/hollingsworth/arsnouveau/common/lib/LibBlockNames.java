@@ -83,5 +83,6 @@ public class LibBlockNames {
     public final static String AB_SMOOTH_MOSAIC= "sas_mosaic";
     public final static String AB_SMOOTH_ALTERNATING = "sas_alternating";
     public final static String AB_SMOOTH_ASHLAR = "sas_ashlar";
+    public final static String SCONCE = "sconce";
 
 }

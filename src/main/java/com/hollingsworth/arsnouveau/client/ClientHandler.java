@@ -39,15 +39,15 @@ public class ClientHandler {
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.SUMMONING_CRYSTAL_TILE, SummoningCrystalRenderer::new);
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.POTION_MELDER_TYPE, PotionMelderRenderer::new);
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.RITUAL_TILE, RitualBrazierRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(BlockRegistry.SCONCE_TILE, SconceRenderer::new);
 
-        RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_JAR, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_JAR, RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.GLYPH_PRESS_BLOCK, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.ARCANE_PEDESTAL, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.ENCHANTING_APP_BLOCK, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.LIGHT_BLOCK, RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.PHANTOM_BLOCK, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_BLOOM_CROP, RenderType.cutout());
-        //RenderTypeLookup.setRenderLayer(BlockRegistry.SUMMONING_CRYSTAL, RenderType.getTranslucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.SCRIBES_BLOCK, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.ARCANE_RELAY, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.RUNE_BLOCK, RenderType.cutout());
@@ -58,15 +58,17 @@ public class ClientHandler {
         RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_BERRY_BUSH, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.LAVA_LILY, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.WIXIE_CAULDRON, RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(BlockRegistry.CREATIVE_MANA_JAR, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.CREATIVE_MANA_JAR, RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.VEXING_SAPLING, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.FLOURISHING_SAPLING, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.BLAZING_SAPLING, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.CASCADING_SAPLING, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_GEM_BLOCK, RenderType.translucent());
-        RenderTypeLookup.setRenderLayer(BlockRegistry.POTION_JAR, RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(BlockRegistry.POTION_MELDER, RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(BlockRegistry.RUNE_BLOCK, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.POTION_JAR, RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.POTION_MELDER, RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.RITUAL_BLOCK, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.SCONCE_BLOCK, RenderType.cutout());
+
     }
 
     @SubscribeEvent

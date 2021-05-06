@@ -5,7 +5,8 @@
   "refmap": "ars_nouveau.refmap.json",
   "mixins": [
     "LightningRedirectMixin",
-    "PotionRecipeMixin"
+    "PotionRecipeMixin",
+    "ExpInvokerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
