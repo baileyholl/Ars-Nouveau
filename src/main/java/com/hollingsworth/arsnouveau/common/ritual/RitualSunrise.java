@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.world.server.ServerWorld;
 
-public class RitualDay extends AbstractRitual {
+public class RitualSunrise extends AbstractRitual {
     @Override
     protected void tick() {
         ParticleUtil.spawnRitualSkyEffect(this, tile, rand, new ParticleColor.IntWrapper(255 + rand.nextInt(1), 255 + rand.nextInt(1), 25 + rand.nextInt(1)));
@@ -29,8 +29,18 @@ public class RitualDay extends AbstractRitual {
     }
 
     @Override
+    public String getLangName() {
+        return "Sunrise";
+    }
+
+    @Override
+    public String getLangDescription() {
+        return "Sets the time to day.";
+    }
+
+    @Override
     public String getID() {
-        return RitualLib.DAY;
+        return RitualLib.SUNRISE;
     }
 
     @Override

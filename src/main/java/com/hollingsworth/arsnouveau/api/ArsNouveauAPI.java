@@ -12,7 +12,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
-import com.hollingsworth.arsnouveau.common.items.RitualParchment;
+import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.item.Item;
@@ -62,7 +62,7 @@ public class ArsNouveauAPI {
     /**
      * Contains the list of parchment item instances created during registration
      */
-    private HashMap<String, RitualParchment> ritualParchmentMap;
+    private HashMap<String, RitualTablet> ritualParchmentMap;
 
     private List<IEnchantingRecipe> enchantingApparatusRecipes;
     /**
@@ -110,7 +110,7 @@ public class ArsNouveauAPI {
     }
 
     public AbstractRitual registerRitual(String id, AbstractRitual ritual){
-        ritualParchmentMap.put(id, new RitualParchment(getRitualRegistryName(id), ritual));
+        ritualParchmentMap.put(id, new RitualTablet(getRitualRegistryName(id), ritual));
         return ritualMap.put(id, ritual);
     }
 
@@ -150,7 +150,7 @@ public class ArsNouveauAPI {
         return glyphMap;
     }
 
-    public Map<String, RitualParchment> getRitualItemMap(){
+    public Map<String, RitualTablet> getRitualItemMap(){
         return ritualParchmentMap;
     }
 

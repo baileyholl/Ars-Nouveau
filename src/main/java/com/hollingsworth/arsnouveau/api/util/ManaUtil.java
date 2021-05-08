@@ -113,7 +113,7 @@ public class ManaUtil {
     @Nullable
     public static BlockPos takeManaNearby(BlockPos pos, World world, int range, int mana){
         final BlockPos[] pos1 = {null};
-        BlockPos.betweenClosedStream(pos.offset(range, range, range), pos.offset(-range, -range, -range)).forEach(blockPos -> {
+        BlockPos.betweenClosedStream(pos.offset(range, 2, range), pos.offset(-range, -2, -range)).forEach(blockPos -> {
             blockPos = blockPos.immutable();
             if(pos1[0] == null && world.getBlockEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getBlockEntity(blockPos)).getCurrentMana() >= mana) {
                 ((ManaJarTile) world.getBlockEntity(blockPos)).removeMana(mana);
@@ -123,7 +123,7 @@ public class ManaUtil {
         return pos1[0];
     }
 
-    public static BlockPos takeManaNearbyWithParticles(BlockPos pos, World world, int range, int mana){
+    public static @Nullable BlockPos takeManaNearbyWithParticles(BlockPos pos, World world, int range, int mana){
         BlockPos result = takeManaNearby(pos,world,range,mana);
         if(result != null){
             EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, result, pos);

@@ -59,4 +59,14 @@ public class RitualDig extends AbstractRitual {
     public String getID() {
         return RitualLib.DIG;
     }
+
+    @Override
+    public String getLangDescription() {
+        return "Digs four adjacent holes to bedrock, dropping any blocks.";
+    }
+
+    @Override
+    public String getLangName() {
+        return "Burrowing";
+    }
 }

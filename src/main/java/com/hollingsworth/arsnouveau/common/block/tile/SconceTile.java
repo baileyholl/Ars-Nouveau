@@ -84,11 +84,12 @@ public class SconceTile extends TileEntity implements ILightable, ITickableTileE
         this.green = spellContext.colors.g;
         this.blue = spellContext.colors.b;
         lit = true;
+        System.out.println("lit");
         if(rayTraceResult instanceof BlockRayTraceResult) {
             BlockState state = world.getBlockState(((BlockRayTraceResult) rayTraceResult).getBlockPos());
-            world.setBlock(getBlockPos(), state.setValue(SconceBlock.LIGHT_LEVEL, Math.min(Math.min(0, 15 - AbstractEffect.getBuffCount(augments, AugmentDampen.class)), 15)), 3);
-//            world.sendBlockUpdated(((BlockRayTraceResult) rayTraceResult).getBlockPos(), state,
-//                    state.setValue(SconceBlock.LIGHT_LEVEL, 15), 3);
+            world.setBlock(getBlockPos(), state.setValue(SconceBlock.LIGHT_LEVEL, Math.min(Math.max(0, 15 - AbstractEffect.getBuffCount(augments, AugmentDampen.class)), 15)), 3);
+            world.sendBlockUpdated(((BlockRayTraceResult) rayTraceResult).getBlockPos(), state,
+                    state.setValue(SconceBlock.LIGHT_LEVEL, 15), 3);
         }
     }
 

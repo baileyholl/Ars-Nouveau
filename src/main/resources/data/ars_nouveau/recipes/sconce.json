@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "tag": "forge:gems/mana"
+    },
+    {
+      "tag": "forge:ingots/gold"
+    },
+    {
+      "tag": "forge:ingots/gold"
+    }
+  ],
+  "result": {
+    "item": "ars_nouveau:sconce"
+  }
+}

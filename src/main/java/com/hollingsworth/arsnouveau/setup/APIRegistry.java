@@ -117,12 +117,14 @@ public class APIRegistry {
         registerStartingSpells();
 
         registerRitual(new RitualDig());
-        registerRitual(new RitualNight());
-        registerRitual(new RitualClearWeather());
-        registerRitual(new RitualDay());
-        registerRitual(new RitualStorm());
+        registerRitual(new RitualMoonfall());
+        registerRitual(new RitualCloudshaper());
+        registerRitual(new RitualSunrise());
         registerRitual(new RitualExpDrain());
         registerRitual(new RitualPillagerRaid());
+        registerRitual(new RitualOvergrowth());
+        registerRitual(new RitualBreed());
+
     }
 
     public static void registerStartingSpells() {

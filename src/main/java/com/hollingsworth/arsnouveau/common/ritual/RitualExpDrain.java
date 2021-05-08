@@ -57,7 +57,17 @@ public class RitualExpDrain extends AbstractRitual {
     }
 
     @Override
+    public String getLangName() {
+        return "Disintegration";
+    }
+
+    @Override
+    public String getLangDescription() {
+        return super.getLangDescription();
+    }
+
+    @Override
     public String getID() {
-        return RitualLib.EXP;
+        return RitualLib.DISINTEGRATION;
     }
 }

@@ -94,6 +94,9 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.AB_SMOOTH_ALTERNATING);
             registerDropSelf(BlockRegistry.AB_SMOOTH_ASHLAR);
             registerDropSelf(BlockRegistry.POTION_MELDER);
+            registerDropSelf(BlockRegistry.RITUAL_BLOCK);
+            registerDropSelf(BlockRegistry.SCONCE_BLOCK);
+
 
         }
 

@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api.ritual;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
@@ -58,8 +59,15 @@ public abstract class AbstractRitual {
     public void onItemConsumed(ItemStack stack){
         this.getConsumedItems().add(stack.copy());
         stack.shrink(1);
-        System.out.println("update");
         BlockUtil.safelyUpdateState(getWorld(), tile.getBlockPos());
+    }
+
+    public boolean didConsumeItem(Item item){
+        for(ItemStack i : getConsumedItems()){
+            if(i.getItem() == item)
+                return true;
+        }
+        return false;
     }
 
     public void incrementProgress(){
@@ -78,6 +86,10 @@ public abstract class AbstractRitual {
         return getContext().isStarted && !getContext().isDone;
     }
 
+    public boolean isDone(){
+        return getContext().isDone;
+    }
+
     public void setFinished(){
         getContext().isDone = true;
     }
@@ -91,11 +103,28 @@ public abstract class AbstractRitual {
     public abstract String getID();
 
     public String getName(){
-        return new TranslationTextComponent("ars_nouveau.ritual_name." + getID()).getString();
+        return new TranslationTextComponent("item.ars_nouveau.ritual_" + getID()).getString();
     }
 
     public String getDescription(){
         return new TranslationTextComponent("ars_nouveau.ritual_desc." + getID()).getString();
+    }
+
+    public int getManaCost(){
+        return 0;
+    }
+
+    public boolean consumesMana(){
+        return getManaCost() > 0;
+    }
+
+    public void setNeedsMana(boolean needMana){
+        getContext().needsManaToRun = needMana;
+        BlockUtil.safelyUpdateState(getWorld(), tile.getBlockPos());
+    }
+
+    public boolean needsManaNow(){
+        return getContext().needsManaToRun;
     }
 
     public void write(CompoundNBT tag){
@@ -136,5 +165,12 @@ public abstract class AbstractRitual {
 
     public int getParticleIntensity(){
         return 50;
+    }
+
+    public String getLangName(){
+        return "";
+    }
+    public String getLangDescription(){
+        return "";
     }
 }
