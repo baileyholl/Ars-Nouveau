@@ -74,7 +74,8 @@ public class LibItemNames {
     public static final String POTION_FLASK ="potion_flask";
     public static final String POTION_FLASK_EXTEND_TIME ="potion_flask_extend_time";
     public static final String POTION_FLASK_AMPLIFY ="potion_flask_amplify";
+    public static final String EXP_GEM ="experience_gem";
+    public static final String GREATER_EXP_GEM ="greater_experience_gem";
 
-    public static final String RITUAL_PARCHMENT ="ritual_parchment";
 
 }

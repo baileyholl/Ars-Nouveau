@@ -114,6 +114,8 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.POTION_FLASK)public static PotionFlask POTION_FLASK;
     @ObjectHolder(LibItemNames.POTION_FLASK_AMPLIFY)public static PotionFlask POTION_FLASK_AMPLIFY;
     @ObjectHolder(LibItemNames.POTION_FLASK_EXTEND_TIME)public static PotionFlask POTION_FLASK_EXTEND_TIME;
+    @ObjectHolder(LibItemNames.POTION_FLASK_AMPLIFY)public static ExperienceGem EXPERIENCE_GEM;
+    @ObjectHolder(LibItemNames.POTION_FLASK_EXTEND_TIME)public static ExperienceGem GREATER_EXPERIENCE_GEM;
 
     public static Food MANA_BERRY_FOOD = (new Food.Builder()).nutrition(2).saturationMod(0.1F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).alwaysEat().build();
 
@@ -227,7 +229,19 @@ public class ItemsRegistry {
                         public EffectInstance getEffectInstance(EffectInstance effectInstance) {
                             return new EffectInstance(effectInstance.getEffect(), effectInstance.getDuration()/2, effectInstance.getAmplifier() + 1);
                         }
-                    }.withTooltip(new TranslationTextComponent("tooltip.potion_flask_amplify"))
+                    }.withTooltip(new TranslationTextComponent("tooltip.potion_flask_amplify")),
+                    new ExperienceGem(defaultItemProperties(), LibItemNames.EXP_GEM) {
+                        @Override
+                        public int getValue() {
+                            return 3;
+                        }
+                    },
+                    new ExperienceGem(defaultItemProperties(), LibItemNames.GREATER_EXP_GEM) {
+                        @Override
+                        public int getValue() {
+                            return 12;
+                        }
+                    }
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

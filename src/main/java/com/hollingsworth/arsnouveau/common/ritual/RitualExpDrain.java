@@ -52,7 +52,6 @@ public class RitualExpDrain extends AbstractRitual {
                     }
                 }
             });
-
         }
     }
 

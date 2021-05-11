@@ -150,6 +150,10 @@ public class ArsNouveauAPI {
         return glyphMap;
     }
 
+    public Map<String, AbstractRitual> getRitualMap(){
+        return ritualMap;
+    }
+
     public Map<String, RitualTablet> getRitualItemMap(){
         return ritualParchmentMap;
     }

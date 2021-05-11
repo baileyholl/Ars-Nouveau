@@ -142,8 +142,9 @@ public class RitualTile extends TileEntity implements ITickableTileEntity, ITool
     }
 
     public void startRitual(){
-        if(ritual == null || !ritual.canStart())
+        if(ritual == null || !ritual.canStart() || ritual.isRunning())
             return;
+        getLevel().playSound(null, getBlockPos(), SoundEvents.ILLUSIONER_CAST_SPELL, SoundCategory.NEUTRAL, 1.0f, 1.0f);
         ritual.onStart();
     }
 
@@ -204,7 +205,10 @@ public class RitualTile extends TileEntity implements ITickableTileEntity, ITool
         if(ritual != null){
             tooltips.add(ritual.getName());
             if(!ritual.isRunning()){
-                tooltips.add(new TranslationTextComponent("ars_nouveau.tooltip.waiting").getString());
+                if(!ritual.canStart()){
+                    tooltips.add(new TranslationTextComponent("ars_nouveau.tooltip.conditions_unmet").getString());
+                }else
+                    tooltips.add(new TranslationTextComponent("ars_nouveau.tooltip.waiting").getString());
             }else{
                 tooltips.add(new TranslationTextComponent("ars_nouveau.tooltip.running").getString());
             }

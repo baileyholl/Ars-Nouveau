@@ -112,6 +112,22 @@ public class ParticleUtil {
         }
     }
 
+    public static void spawnRitualAreaEffect(TileEntity entity, Random rand, ParticleColor color, int range){
+        BlockPos pos = entity.getBlockPos();
+        BlockPos.betweenClosedStream(pos.offset(range, 0, range), pos.offset(-range, 0, -range)).forEach(blockPos -> {
+            if(rand.nextInt(10) == 0){
+                for(int i =0; i< rand.nextInt(10); i++) {
+                    double x = blockPos.getX() + ParticleUtil.inRange(-0.5, 0.5);
+                    double y = blockPos.getY() + ParticleUtil.inRange(-0.5, 0.5);
+                    double z = blockPos.getZ() + ParticleUtil.inRange(-0.5, 0.5);
+                    entity.getLevel().addParticle(ParticleLineData.createData(color),
+                            x, y, z,
+                            x, y  + ParticleUtil.inRange(0.5, 5), z);
+                }
+            }
+        });
+    }
+
     public static void spawnRitualSkyEffect(TileEntity tileEntity, Random rand, ParticleColor.IntWrapper color){
         for(int i = 0; i < 1; i++) {
             int min = -5;

@@ -619,5 +619,6 @@
 	"block.ars_nouveau.ritual": "Ritual Brazier",
 	"ars_nouveau.tooltip.consumed": "Items Consumed:",
 	"ars_nouveau.tooltip.waiting": "Awaiting Activation",
-	"ars_nouveau.tooltip.running": "Running"
+	"ars_nouveau.tooltip.running": "Running",
+	"ars_nouveau.tooltip.conditions_unmet": "Conditions Unmet"
 }

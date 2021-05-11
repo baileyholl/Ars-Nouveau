@@ -2,12 +2,20 @@ package com.hollingsworth.arsnouveau.common.ritual;
 
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.ritual.RitualContext;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityRitualProjectile;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
+import net.minecraft.block.BlockState;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.util.FakePlayerFactory;
+
+import static com.hollingsworth.arsnouveau.api.util.BlockUtil.destroyBlockSafely;
 
 public class RitualDig extends AbstractRitual {
 
@@ -30,20 +38,35 @@ public class RitualDig extends AbstractRitual {
         getWorld().addFreshEntity(ritualProjectile);
     }
 
+    public boolean canBlockBeHarvested(BlockPos pos){
+        return getWorld().getBlockState(pos).getDestroySpeed(getWorld(), pos) >= 0 && 5 >= getWorld().getBlockState(pos).getHarvestLevel();
+    }
+
+    public void breakBlock(BlockPos pos){
+        if(!canBlockBeHarvested(pos) || !BlockUtil.destroyRespectsClaim( FakePlayerFactory.getMinecraft((ServerWorld) getWorld()), getWorld(), pos)){
+            return;
+        }
+        BlockState state = getWorld().getBlockState(pos);
+        ItemStack stack = new ItemStack(Items.DIAMOND_PICKAXE);
+        state.getBlock().playerDestroy(getWorld(), FakePlayerFactory.getMinecraft((ServerWorld) getWorld()), pos, getWorld().getBlockState(pos), getWorld().getBlockEntity(pos), stack);
+        destroyBlockSafely(getWorld(), pos, false,  FakePlayerFactory.getMinecraft((ServerWorld) getWorld()));
+    }
+
     @Override
     public void tick() {
         World world = tile.getLevel();
         if(world.getGameTime() % 20 == 0 && !world.isClientSide){
             BlockPos pos = tile.getBlockPos().north().below(getContext().progress);
-            if(pos.getY() <= 1){
+            if(pos.getY() < 1){
                 onEnd();
                 return;
             }
-            world.destroyBlock(pos, true);
-            world.destroyBlock(pos.south().south(), true);
-            world.destroyBlock(pos.south().east(), true);
-            world.destroyBlock(pos.south().west(), true);
+            breakBlock(pos);
+            breakBlock(pos.south().south());
+            breakBlock(pos.south().east());
+            breakBlock(pos.south().west());
             getContext().progress++;
+
         }
     }
 

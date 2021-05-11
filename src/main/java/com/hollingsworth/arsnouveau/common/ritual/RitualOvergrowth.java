@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.ritual;
 
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.entity.AgeableEntity;
@@ -25,19 +24,7 @@ public class RitualOvergrowth extends AbstractRitual {
 
 
         if(getWorld().isClientSide){
-            int range = 5;
-            BlockPos.betweenClosedStream(pos.offset(range, 0, range), pos.offset(-range, 0, -range)).forEach(blockPos -> {
-                if(rand.nextInt(10) == 0){
-                    for(int i =0; i< rand.nextInt(10); i++) {
-                        double x = blockPos.getX() + ParticleUtil.inRange(-0.5, 0.5);
-                        double y = blockPos.getY() + ParticleUtil.inRange(-0.5, 0.5);
-                        double z = blockPos.getZ() + ParticleUtil.inRange(-0.5, 0.5);
-                        world.addParticle(ParticleLineData.createData(getCenterColor()),
-                                x, y, z,
-                                x, y  + ParticleUtil.inRange(0.5, 5), z);
-                    }
-                }
-            });
+            ParticleUtil.spawnRitualAreaEffect(tile, rand, getCenterColor(), 5);
         }else{
             if(getWorld().getGameTime() % 200 != 0)
                 return;

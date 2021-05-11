@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DirectoryCache;
@@ -34,11 +36,35 @@ public class PatchouliProvider implements IDataProvider {
         addEntries();
         Path output = this.generator.getOutputFolder();
         for(Enchantment g : enchants){
-            System.out.println(g);
-
             Path path = getPath(output, g.getRegistryName().getPath());
             IDataProvider.save(GSON, cache, getPage(g), path);
         }
+
+        for(AbstractRitual r : ArsNouveauAPI.getInstance().getRitualMap().values()){
+            Path path = getRitualPath(output, r.getID());
+            IDataProvider.save(GSON, cache, getRitualPage(r), path);
+        }
+    }
+
+    public JsonObject getRitualPage(AbstractRitual ritual){
+        JsonObject object = new JsonObject();
+        object.addProperty("name", "item.ars_nouveau.ritual_" + ritual.getID());
+        object.addProperty("icon","ars_nouveau:ritual_" + ritual.getID());
+        object.addProperty("category", "rituals");
+        JsonArray pages = new JsonArray();
+
+        JsonObject page = new JsonObject();
+        page.addProperty("type", "text");
+        page.addProperty("text", "ars_nouveau.ritual_desc." + ritual.getID());
+        pages.add(page);
+
+        JsonObject page2 = new JsonObject();
+        page2.addProperty("type", "crafting");
+        page2.addProperty("recipe", "ars_nouveau:ritual_" + ritual.getID());
+        pages.add(page2);
+
+        object.add("pages", pages);
+        return object;
     }
 
     public JsonObject getPage(Enchantment enchantment){
@@ -93,6 +119,10 @@ public class PatchouliProvider implements IDataProvider {
 
     private static Path getPath(Path pathIn, String str){
         return pathIn.resolve("data/ars_nouveau/patchouli/enchantments/" + str + ".json");
+    }
+
+    private static Path getRitualPath(Path pathIn, String str){
+        return pathIn.resolve("data/ars_nouveau/patchouli/rituals/" + str + ".json");
     }
     @Override
     public String getName() {
