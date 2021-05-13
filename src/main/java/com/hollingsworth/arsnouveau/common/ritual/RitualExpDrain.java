@@ -2,17 +2,24 @@ package com.hollingsworth.arsnouveau.common.ritual;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.common.mixin.ExpInvokerMixin;
-import net.minecraft.entity.item.ExperienceOrbEntity;
-import net.minecraft.entity.monster.MonsterEntity;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+
+import java.util.List;
 
 public class RitualExpDrain extends AbstractRitual {
 
@@ -41,18 +48,39 @@ public class RitualExpDrain extends AbstractRitual {
         }
 
         if(!world.isClientSide && world.getGameTime() % 60 == 0){
-            world.getEntitiesOfClass(MonsterEntity.class, new AxisAlignedBB(getPos()).inflate(5.0), (m) -> true).forEach(m ->{
+            boolean didWorkOnce = false;
+            List<LivingEntity> entityList = world.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(getPos()).inflate(5.0),
+                    (m) -> m.getClassification(false).equals(EntityClassification.MONSTER) && !(m instanceof PlayerEntity));
+            for(LivingEntity m : entityList) {
+
                 m.remove();
-                if(m.removed){
-                    ExpInvokerMixin invoker = ((ExpInvokerMixin)m);
+                if (m.removed) {
+                    ExpInvokerMixin invoker = ((ExpInvokerMixin) m);
                     ParticleUtil.spawnPoof((ServerWorld) world, m.blockPosition());
-                    if(invoker.an_shouldDropExperience()) {
-                        world.addFreshEntity(new ExperienceOrbEntity(world, m.position.x, m.position.y, m.position.z,
-                                invoker.an_getExperienceReward(new ANFakePlayer((ServerWorld) getWorld())) * 5));
+                    if (invoker.an_shouldDropExperience()) {
+                        int exp = invoker.an_getExperienceReward(new ANFakePlayer((ServerWorld) getWorld())) * 2;
+                        if (exp > 0) {
+                            int numGreater = (int) (exp / 12);
+                            exp -= numGreater * 12;
+                            int numLesser = (int) (exp / 3);
+                            if ((exp - numLesser * 3) > 0)
+                                numLesser++;
+                            world.addFreshEntity(new ItemEntity(world, m.blockPosition().getX(), m.blockPosition().getY(), m.blockPosition().getZ(), new ItemStack(ItemsRegistry.GREATER_EXPERIENCE_GEM, numGreater)));
+                            world.addFreshEntity(new ItemEntity(world, m.blockPosition().getX(), m.blockPosition().getY(), m.blockPosition().getZ(), new ItemStack(ItemsRegistry.EXPERIENCE_GEM, numLesser)));
+                            didWorkOnce = true;
+                        }
+
                     }
                 }
-            });
+            }
+            if(didWorkOnce)
+                setNeedsMana(true);
         }
+    }
+
+    @Override
+    public int getManaCost() {
+        return 300;
     }
 
     @Override
@@ -62,7 +90,12 @@ public class RitualExpDrain extends AbstractRitual {
 
     @Override
     public String getLangDescription() {
-        return super.getLangDescription();
+        return "Destroys nearby monsters and converts them into Experience Gems worth twice as much experience. Monsters destroyed this way will not drop items. This ritual consumes mana each time a monster is destroyed.";
+    }
+
+    @Override
+    public ParticleColor getCenterColor() {
+        return ParticleColor.makeRandomColor(220, 20, 20, rand);
     }
 
     @Override

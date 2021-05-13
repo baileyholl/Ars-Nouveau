@@ -20,8 +20,14 @@ public abstract class ExperienceGem extends ModItem{
 
     public ActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
         if(!world.isClientSide) {
-            playerEntity.giveExperiencePoints(getValue());
-            playerEntity.getItemInHand(hand).shrink(1);
+            if(playerEntity.isCrouching()){
+                playerEntity.giveExperiencePoints(getValue() * playerEntity.getItemInHand(hand).getCount());
+                playerEntity.getItemInHand(hand).shrink( playerEntity.getItemInHand(hand).getCount());
+            }else{
+                playerEntity.giveExperiencePoints(getValue());
+                playerEntity.getItemInHand(hand).shrink(1);
+            }
+
         }
         return ActionResult.pass(playerEntity.getItemInHand(hand));
     }

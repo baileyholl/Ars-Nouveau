@@ -10,6 +10,6 @@ public class RitualLib {
     public static final String CHALLENGE = "challenge";
     public static final String OVERGROWTH = "overgrowth";
     public static final String FERTILITY = "fertility";
-    public static final String HEALING = "healing";
+    public static final String RESTORATION = "restoration";
     public static final String WARP = "warping";
 }

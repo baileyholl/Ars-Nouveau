@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.ritual;
 
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.items.WarpScroll;
@@ -50,6 +51,20 @@ public class RitualWarp extends AbstractRitual {
         }
     }
 
+    @Override
+    public String getLangName() {
+        return "Warping";
+    }
+
+    @Override
+    public String getLangDescription() {
+        return "Warps all nearby entities to the location on a warp scroll. Before starting the ritual, you must first augment the ritual with an inscribed Warp Scroll.";
+    }
+
+    @Override
+    public ParticleColor getCenterColor() {
+        return super.getCenterColor();
+    }
 
     @Override
     public boolean canConsumeItem(ItemStack stack) {

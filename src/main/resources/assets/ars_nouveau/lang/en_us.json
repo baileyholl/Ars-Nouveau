@@ -289,6 +289,7 @@
 	"effect.ars_nouveau.shocked": "Shocked",
 	"ars_nouveau.flask.charges": "Charges: %d",
 	"item.ars_nouveau.potion_flask": "Potion Flask",
+
 	"ars_nouveau.glyph_desc.accelerate": "Increases the speed of projectile spells.",
 	"ars_nouveau.glyph_desc.amplify": "Additively increases the power of most spell effects. Can increase the harvest level of Break and increases the damage of spells.",
 	"ars_nouveau.glyph_desc.aoe": "Spells will affect a larger area around a targeted block.",
@@ -418,11 +419,13 @@
 	"ars_nouveau.ritual_desc.burrowing": "Digs four adjacent holes to bedrock, dropping any blocks.",
 	"ars_nouveau.ritual_desc.challenge": "Summons an illager raid when used inside a village. An Emerald may be used to increase the difficulty of the raid to the maximum amount, making Totems of the Undying accessible on easier difficulties. Augmenting has no effect on Hard difficulty.",
 	"ars_nouveau.ritual_desc.cloudshaping": "This ritual can change the weather at a moments notice. By default, this ritual will set the weather to clear. Augmenting with Gunpowder will cause it to rain, while a Lapis Block will cause it to storm.",
-	"ars_nouveau.ritual_desc.disintegration": "",
+	"ars_nouveau.ritual_desc.disintegration": "Destroys nearby monsters and converts them into Experience Gems worth twice as much experience. Monsters destroyed this way will not drop items. This ritual consumes mana each time a monster is destroyed.",
 	"ars_nouveau.ritual_desc.fertility": "Periodically causes nearby animals to breed if possible. This ritual requires mana to operate, and will have no effect if there are twenty or more animals nearby.",
 	"ars_nouveau.ritual_desc.moonfall": "Sets the time to night.",
 	"ars_nouveau.ritual_desc.overgrowth": "Occasionally bone meals blocks in the area around it. This ritual requires Mana to operate. If augmented with a Bone Block, this ritual will instead force baby animals to grow faster.",
+	"ars_nouveau.ritual_desc.restoration": "Heals nearby entities or harms undead over time. Additionally, Zombie Villagers will be instantly cured, and the resulting villager will offer discounts if a player was nearby. This ritual requires mana to operate.",
 	"ars_nouveau.ritual_desc.sunrise": "Sets the time to day.",
+	"ars_nouveau.ritual_desc.warping": "Warps all nearby entities to the location on a warp scroll. Before starting the ritual, you must first augment the ritual with an inscribed Warp Scroll.",
 	"item.ars_nouveau.glyph_accelerate": "Glyph of Accelerate",
 	"item.ars_nouveau.glyph_amplify": "Glyph of Amplify",
 	"item.ars_nouveau.glyph_aoe": "Glyph of AOE",
@@ -493,7 +496,9 @@
 	"item.ars_nouveau.ritual_fertility": "Tablet of Fertility",
 	"item.ars_nouveau.ritual_moonfall": "Tablet of Moonfall",
 	"item.ars_nouveau.ritual_overgrowth": "Tablet of Overgrowth",
+	"item.ars_nouveau.ritual_restoration": "Tablet of Restoration",
 	"item.ars_nouveau.ritual_sunrise": "Tablet of Sunrise",
+	"item.ars_nouveau.ritual_warping": "Tablet of Warping",
   
 	"ars_nouveau.book.name": "Worn Notebook",
 	"ars_nouveau.book.landing_text": "Ars Nouveau provides spell crafting, magical devices, powerful trinkets, and magical entity automation. To help  development or report issues, join the community: https://discord.gg/y7TMXZu Thank you for playing.",
@@ -620,5 +625,9 @@
 	"ars_nouveau.tooltip.consumed": "Items Consumed:",
 	"ars_nouveau.tooltip.waiting": "Awaiting Activation",
 	"ars_nouveau.tooltip.running": "Running",
-	"ars_nouveau.tooltip.conditions_unmet": "Conditions Unmet"
+	"ars_nouveau.tooltip.conditions_unmet": "Conditions Unmet",
+	"ars_nouveau.tooltip.exp_gem": "Grants experience on use. Sneak to consume the entire stack.",
+	"item.ars_nouveau.experience_gem": "Experience Gem",
+	"item.ars_nouveau.greater_experience_gem": "Greater Experience Gem",
+	"effect.ars_nouveau.hex": "Hex"
 }

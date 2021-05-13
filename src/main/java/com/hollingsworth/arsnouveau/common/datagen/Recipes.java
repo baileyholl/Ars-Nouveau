@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectGrow;
+import com.hollingsworth.arsnouveau.common.spell.effect.EffectHeal;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.advancements.criterion.InventoryChangeTrigger;
@@ -330,6 +331,42 @@ public class Recipes extends RecipeProvider {
                     .requires(Items.WHEAT, 3)
                     .requires(Items.GOLDEN_APPLE)
                     .requires(Items.BLAZE_POWDER, 2)
+                    .save(consumer);
+
+            shapelessBuilder(getRitualItem(RitualLib.RESTORATION))
+                    .requires(BlockRegistry.FLOURISHING_LOG)
+                    .requires(Items.GOLDEN_APPLE)
+                    .requires(ArsNouveauAPI.getInstance().getGlyphItem(new EffectHeal()), 1)
+                    .save(consumer);
+
+            shapelessBuilder(getRitualItem(RitualLib.DISINTEGRATION))
+                    .requires(BlockRegistry.BLAZING_LOG)
+                    .requires(Items.GOLDEN_SWORD, 3)
+                    .requires(Items.BOOK, 3)
+                    .save(consumer);
+
+            shapelessBuilder(getRitualItem(RitualLib.WARP))
+                    .requires(BlockRegistry.VEXING_LOG)
+                    .requires(ItemsRegistry.warpScroll)
+                    .save(consumer);
+
+            shapelessBuilder(ItemsRegistry.GREATER_EXPERIENCE_GEM)
+                    .requires(ItemsRegistry.EXPERIENCE_GEM, 4)
+                    .save(consumer);
+            shapelessBuilder(ItemsRegistry.EXPERIENCE_GEM, 4)
+                    .requires(ItemsRegistry.GREATER_EXPERIENCE_GEM)
+                    .save(consumer);
+
+            shapelessBuilder(ItemsRegistry.ALLOW_ITEM_SCROLL)
+                    .requires(ItemsRegistry.ALLOW_ITEM_SCROLL)
+                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "clear_allow"));
+
+            shapelessBuilder(ItemsRegistry.DENY_ITEM_SCROLL)
+                    .requires(ItemsRegistry.DENY_ITEM_SCROLL)
+                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "clear_deny"));
+
+            shapelessBuilder(Items.EXPERIENCE_BOTTLE)
+                    .requires(ItemsRegistry.EXPERIENCE_GEM, 2)
                     .save(consumer);
         }
     }

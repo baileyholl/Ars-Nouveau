@@ -99,7 +99,6 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.VOID_JAR)public static VoidJar VOID_JAR;
     @ObjectHolder(LibItemNames.WIXIE_CHARM)public static WixieCharm WIXIE_CHARM;
     @ObjectHolder(LibItemNames.WIXIE_SHARD)public static ModItem WIXIE_SHARD;
-    @ObjectHolder(LibItemNames.RITUAL_BOOK)public static RitualBook RITUAL_BOOK;
     @ObjectHolder(LibItemNames.SPELL_BOW)public static SpellBow SPELL_BOW;
 
     @ObjectHolder(LibItemNames.AMPLIFY_ARROW)public static SpellArrow AMPLIFY_ARROW;
@@ -114,8 +113,8 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.POTION_FLASK)public static PotionFlask POTION_FLASK;
     @ObjectHolder(LibItemNames.POTION_FLASK_AMPLIFY)public static PotionFlask POTION_FLASK_AMPLIFY;
     @ObjectHolder(LibItemNames.POTION_FLASK_EXTEND_TIME)public static PotionFlask POTION_FLASK_EXTEND_TIME;
-    @ObjectHolder(LibItemNames.POTION_FLASK_AMPLIFY)public static ExperienceGem EXPERIENCE_GEM;
-    @ObjectHolder(LibItemNames.POTION_FLASK_EXTEND_TIME)public static ExperienceGem GREATER_EXPERIENCE_GEM;
+    @ObjectHolder(LibItemNames.EXP_GEM)public static ExperienceGem EXPERIENCE_GEM;
+    @ObjectHolder(LibItemNames.GREATER_EXP_GEM)public static ExperienceGem GREATER_EXPERIENCE_GEM;
 
     public static Food MANA_BERRY_FOOD = (new Food.Builder()).nutrition(2).saturationMod(0.1F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).alwaysEat().build();
 
@@ -203,7 +202,6 @@ public class ItemsRegistry {
                     new ModItem(LibItemNames.WIXIE_SHARD).withTooltip(new TranslationTextComponent("tooltip.wixie_shard")),
                     new Wand(),
                     new VoidJar(),
-                    new RitualBook().setRegistryName(LibItemNames.RITUAL_BOOK),
                     new SpellBow().setRegistryName(LibItemNames.SPELL_BOW),
                     new FormSpellArrow(LibItemNames.PIERCE_ARROW, new AugmentPierce(), 2),
                     new FormSpellArrow(LibItemNames.SPLIT_ARROW, new AugmentSplit(), 2),
@@ -235,13 +233,13 @@ public class ItemsRegistry {
                         public int getValue() {
                             return 3;
                         }
-                    },
+                    }.withTooltip(new TranslationTextComponent("ars_nouveau.tooltip.exp_gem")),
                     new ExperienceGem(defaultItemProperties(), LibItemNames.GREATER_EXP_GEM) {
                         @Override
                         public int getValue() {
                             return 12;
                         }
-                    }
+                    }.withTooltip(new TranslationTextComponent("ars_nouveau.tooltip.exp_gem"))
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

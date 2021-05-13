@@ -19,8 +19,6 @@ import java.util.Optional;
 
 import static com.hollingsworth.arsnouveau.common.block.ManaBerryBush.AGE;
 
-import net.minecraft.entity.ai.goal.Goal.Flag;
-
 public class ForageManaBerries extends Goal {
     private final EntityCarbuncle entity;
     private final World world;
@@ -47,10 +45,15 @@ public class ForageManaBerries extends Goal {
 
     @Override
     public boolean canUse() {
-        if(entity.isStuck || world.random.nextDouble() > 0.02 || entity.getValidStorePos(new ItemStack(BlockRegistry.MANA_BERRY_BUSH.asItem())) == null)
+        if(entity.isStuck || !entity.getHeldStack().isEmpty() || world.random.nextDouble() > 0.02 || !entity.isValidItem(new ItemStack(BlockRegistry.MANA_BERRY_BUSH)))
             return false;
         this.pos = getNearbyManaBerry();
         return pos != null;
+    }
+
+    @Override
+    public boolean isInterruptable() {
+        return false;
     }
 
     @Override
@@ -61,8 +64,9 @@ public class ForageManaBerries extends Goal {
             return;
         }
 
-        if(BlockUtil.distanceFrom(entity.blockPosition(), pos) > 1.2){
-            entity.getNavigation().moveTo(this.pos.getX(), this.pos.getY(), this.pos.getZ(), 1.2);
+        if(BlockUtil.distanceFrom(entity.blockPosition(), pos) > 1.5){
+            Path path = entity.getNavigation().createPath(pos, 0);
+            entity.getNavigation().moveTo(path, 1.2D);
         }else if(world.getBlockState(pos).getBlock() instanceof ManaBerryBush){
             int i = world.getBlockState(pos).getValue(AGE);
             boolean flag = i == 3;
@@ -80,7 +84,7 @@ public class ForageManaBerries extends Goal {
         if(pos == null)
             return false;
         Path path = entity.getNavigation().createPath(pos, 0);
-        return timeSpent <= 20 * 30 && !entity.isStuck && world.getBlockState(pos).getBlock() instanceof ManaBerryBush && path != null && path.canReach();
+        return timeSpent <= 20 * 30 && !entity.isStuck && world.getBlockState(pos).getBlock() instanceof ManaBerryBush && world.getBlockState(pos).getValue(AGE) == 3 && path != null && path.canReach();
     }
 
     public BlockPos getNearbyManaBerry(){
