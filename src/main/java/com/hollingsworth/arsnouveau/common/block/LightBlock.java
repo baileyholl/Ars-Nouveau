@@ -14,6 +14,8 @@ import net.minecraft.world.IBlockReader;
 
 import javax.annotation.Nullable;
 
+import java.util.Random;
+
 import static com.hollingsworth.arsnouveau.common.block.SconceBlock.LIGHT_LEVEL;
 
 public class LightBlock extends ModBlock {
@@ -54,6 +56,14 @@ public class LightBlock extends ModBlock {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
+        if(context.getLevel().getBlockEntity(context.getClickedPos()) instanceof LightTile){
+            Random random = context.getLevel().random;
+            LightTile tile = (LightTile) context.getLevel().getBlockEntity(context.getClickedPos());
+            tile.red = Math.max(10, random.nextInt(255));
+            tile.green = Math.max(10, random.nextInt(255));
+            tile.blue = Math.max(10, random.nextInt(255));
+
+        }
         return super.getStateForPlacement(context);
     }
 

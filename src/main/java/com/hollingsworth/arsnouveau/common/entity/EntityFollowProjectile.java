@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -94,7 +95,7 @@ public class EntityFollowProjectile extends ArrowEntity {
         BlockPos dest = this.entityData.get(EntityFollowProjectile.to);
         if(BlockUtil.distanceFrom(this.blockPosition(), dest) < 1 || this.age > 1000 || BlockUtil.distanceFrom(this.blockPosition(), dest) > this.entityData.get(DESPAWN)){
             if(level.isClientSide && entityData.get(SPAWN_TOUCH)) {
-                ParticleUtil.spawnTouch(level, this.getOnPos(), new ParticleColor(this.entityData.get(RED),this.entityData.get(GREEN),this.entityData.get(BLUE)));
+                ParticleUtil.spawnTouch((ClientWorld) level, this.getOnPos(), new ParticleColor(this.entityData.get(RED),this.entityData.get(GREEN),this.entityData.get(BLUE)));
             }
             this.remove();
             return;

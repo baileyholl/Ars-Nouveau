@@ -64,8 +64,8 @@ public class ClientHandler {
         RenderTypeLookup.setRenderLayer(BlockRegistry.BLAZING_SAPLING, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.CASCADING_SAPLING, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_GEM_BLOCK, RenderType.translucent());
-        RenderTypeLookup.setRenderLayer(BlockRegistry.POTION_JAR, RenderType.translucent());
-        RenderTypeLookup.setRenderLayer(BlockRegistry.POTION_MELDER, RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.POTION_JAR, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.POTION_MELDER, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.RITUAL_BLOCK, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.SCONCE_BLOCK, RenderType.cutout());
 

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.*;
@@ -68,7 +69,7 @@ public class ManaBerryBush extends BushBlock implements IGrowable {
     }
 
     public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-        if (entityIn instanceof LivingEntity && entityIn.getType() != EntityType.FOX && entityIn.getType() != EntityType.BEE) {
+        if (entityIn instanceof LivingEntity && entityIn.getType() != EntityType.FOX && entityIn.getType() != EntityType.BEE && entityIn.getType() != ModEntities.ENTITY_CARBUNCLE_TYPE) {
             entityIn.makeStuckInBlock(state, new Vector3d((double)0.8F, 0.75D, (double)0.8F));
             if (!worldIn.isClientSide && state.getValue(AGE) > 0 && (entityIn.xOld != entityIn.getX() || entityIn.zOld != entityIn.getZ())) {
                 double d0 = Math.abs(entityIn.getX() - entityIn.xOld);

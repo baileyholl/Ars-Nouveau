@@ -103,6 +103,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder {
 
     @Override
     public void tick() {
+
         if(level == null)
             return;
         if(!level.isClientSide) {

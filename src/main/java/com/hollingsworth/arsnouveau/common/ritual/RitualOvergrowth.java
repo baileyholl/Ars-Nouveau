@@ -47,7 +47,6 @@ public class RitualOvergrowth extends AbstractRitual {
                     if(rand.nextInt(25) == 0)
                         if(BoneMealItem.applyBonemeal(new ItemStack(Items.BONE_MEAL), world, b, FakePlayerFactory.getMinecraft((ServerWorld) world))) {
                             didWorkOnce = true;
-                            ParticleUtil.spawnTouch(world, b, new ParticleColor(20, 250, 20));
                         }
                 }
                 if(didWorkOnce)

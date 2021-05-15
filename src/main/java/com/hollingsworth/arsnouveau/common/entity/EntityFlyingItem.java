@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -104,7 +105,7 @@ public class EntityFlyingItem extends EntityFollowProjectile {
         if(BlockUtil.distanceFrom(this.blockPosition(), end) < 1 || this.age > 1000 || BlockUtil.distanceFrom(this.blockPosition(), end) > 14){
             this.remove();
             if(level.isClientSide && entityData.get(SPAWN_TOUCH))
-                ParticleUtil.spawnTouch(level, end);
+                ParticleUtil.spawnTouch((ClientWorld) level, end);
             return;
         }
         double posX = getX();

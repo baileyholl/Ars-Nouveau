@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.particle;
 
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -99,11 +100,11 @@ public class ParticleUtil {
         }
     }
 
-    public static void spawnTouch(World world, BlockPos loc){
+    public static void spawnTouch(ClientWorld world, BlockPos loc){
         spawnTouch(world, loc, defaultParticleColor());
     }
 
-    public static void spawnTouch(World world, BlockPos loc, ParticleColor particleColor){
+    public static void spawnTouch(ClientWorld world, BlockPos loc, ParticleColor particleColor){
         for(int i =0; i < 10; i++){
             double d0 = loc.getX() +0.5;;
             double d1 = loc.getY() +1.0;
