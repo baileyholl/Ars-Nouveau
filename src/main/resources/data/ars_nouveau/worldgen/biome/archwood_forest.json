@@ -68,6 +68,9 @@
     ]
   ],
   "starts": [
+    "minecraft:swamp_hut",
+    "minecraft:village_plains",
+    "minecraft:pillager_outpost",
     "minecraft:mineshaft",
     "minecraft:stronghold",
     "minecraft:ruined_portal"
@@ -118,7 +121,7 @@
       },
       {
         "type": "minecraft:witch",
-        "weight": 5,
+        "weight": 10,
         "minCount": 1,
         "maxCount": 1
       }
@@ -126,19 +129,19 @@
     "creature": [
       {
         "type": "minecraft:sheep",
-        "weight": 12,
+        "weight": 8,
         "minCount": 4,
         "maxCount": 4
       },
       {
         "type": "minecraft:pig",
-        "weight": 10,
+        "weight": 8,
         "minCount": 4,
         "maxCount": 4
       },
       {
         "type": "minecraft:chicken",
-        "weight": 10,
+        "weight": 8,
         "minCount": 4,
         "maxCount": 4
       },
@@ -146,6 +149,18 @@
         "type": "minecraft:cow",
         "weight": 8,
         "minCount": 4,
+        "maxCount": 4
+      },
+      {
+        "type": "ars_nouveau:sylph",
+        "weight": 20,
+        "minCount": 1,
+        "maxCount": 4
+      },
+      {
+        "type": "ars_nouveau:carbuncle",
+        "weight": 20,
+        "minCount": 1,
         "maxCount": 4
       },
       {
@@ -158,7 +173,7 @@
     "ambient": [
       {
         "type": "minecraft:bat",
-        "weight": 10,
+        "weight": 5,
         "minCount": 8,
         "maxCount": 8
       }
@@ -173,5 +188,5 @@
   "temperature": 0.7,
   "downfall": 0.8,
   "category": "forest",
-  "depth": 0.1
+  "depth": 0.11
 }

@@ -64,7 +64,7 @@ public class ForageManaBerries extends Goal {
             return;
         }
 
-        if(BlockUtil.distanceFrom(entity.blockPosition(), pos) > 1.5){
+        if(BlockUtil.distanceFrom(entity.position, pos) >= 2.0){
             Path path = entity.getNavigation().createPath(pos, 0);
             entity.getNavigation().moveTo(path, 1.2D);
         }else if(world.getBlockState(pos).getBlock() instanceof ManaBerryBush){

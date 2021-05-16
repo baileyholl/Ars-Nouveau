@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.common.block.tile.LightTile;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import com.hollingsworth.arsnouveau.common.world.FeatureLib;
 import com.hollingsworth.arsnouveau.common.world.feature.SingleBlockFeature;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
 import com.hollingsworth.arsnouveau.common.world.tree.SupplierBlockStateProvider;
@@ -47,6 +48,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
+import static com.hollingsworth.arsnouveau.common.world.FeatureLib.*;
 import static net.minecraft.world.gen.feature.Features.*;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
@@ -161,16 +163,16 @@ public class WorldEvent {
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.BLAZING_SAPLING.getRegistryName(), BLAZE);
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.CASCADING_SAPLING.getRegistryName(), CASCADE);
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.FLOURISHING_SAPLING.getRegistryName(), FLOURISHING);
-        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(ArsNouveau.MODID, "random_lights"), RANDOM_LIGHTS);
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, FeatureLib.RANDOM_LIGHTS_LOC, RANDOM_LIGHTS);
 
-        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BLAZE_COMMON_LOC, BLAZE_COMMON);
-        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BLAZE_SEMI_LOC, BLAZE_SEMI);
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, FeatureLib.BLAZE_COMMON_LOC, BLAZE_COMMON);
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, FeatureLib.BLAZE_SEMI_LOC, BLAZE_SEMI);
 //        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.VEXING_SAPLING.getRegistryName(), VEX_COMMON);
 //        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.CASCADING_SAPLING.getRegistryName(), CASCADE_COMMON);
 //        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.FLOURISHING_SAPLING.getRegistryName(), FLOURISHING_COMMON);
 
      //   Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(ArsNouveau.MODID, "archwood_trees"), FLOURISHING_COMMON);
-        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(ArsNouveau.MODID, "archwood_trees"), Feature.RANDOM_SELECTOR.configured(new MultipleRandomFeatureConfig(ImmutableList.of(
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, ARCHWOOD_TREES, Feature.RANDOM_SELECTOR.configured(new MultipleRandomFeatureConfig(ImmutableList.of(
                 VEX_COMMON.weighted(0.15f),
                 BLAZE_COMMON.weighted(0.15f),
                 CASCADE_COMMON.weighted(0.15f),
@@ -179,7 +181,7 @@ public class WorldEvent {
                 .decorated(Features.Placements.HEIGHTMAP_SQUARE)
                 .decorated(Placement.COUNT_EXTRA.configured(new AtSurfaceWithExtraConfig(0, 0, 0))))));
 
-        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(ArsNouveau.MODID, "vanilla_bigtrees"), Feature.RANDOM_SELECTOR.configured(new MultipleRandomFeatureConfig(ImmutableList.of(
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, VANILLA_BIG_TREES, Feature.RANDOM_SELECTOR.configured(new MultipleRandomFeatureConfig(ImmutableList.of(
                 FANCY_OAK.weighted(0.5f),
                 FANCY_OAK_BEES_0002.weighted(0.2f),
                 FANCY_OAK_BEES_005.weighted(0.2f),
@@ -193,8 +195,6 @@ public class WorldEvent {
 //                "water_color": 4164351,
 //                "water_fog_color": 329011,
 //                "grass_color": 2031484
-    public static final ResourceLocation BLAZE_COMMON_LOC = new ResourceLocation(ArsNouveau.MODID, "blazing_common");
-    public static final ResourceLocation BLAZE_SEMI_LOC = new ResourceLocation(ArsNouveau.MODID, "blazing_semi_common");
 
 
     @SubscribeEvent
@@ -203,7 +203,7 @@ public class WorldEvent {
             return;
         if (Config.SPAWN_ORE.get()) {
             e.getGeneration().addFeature(GenerationStage.Decoration.UNDERGROUND_ORES,
-                    WorldGenRegistries.CONFIGURED_FEATURE.get(BlockRegistry.ARCANE_ORE.getRegistryName())).build();
+                    Objects.requireNonNull(WorldGenRegistries.CONFIGURED_FEATURE.get(BlockRegistry.ARCANE_ORE.getRegistryName()))).build();
         }
         List<Biome.Category> categories = Arrays.asList(Biome.Category.FOREST, Biome.Category.EXTREME_HILLS, Biome.Category.JUNGLE,
                 Biome.Category.PLAINS, Biome.Category.SWAMP, Biome.Category.SAVANNA);
@@ -227,16 +227,16 @@ public class WorldEvent {
         }
         //Feature.RANDOM_SELECTOR.withConfiguration(new MultipleRandomFeatureConfig(ImmutableList.of(MAGIC_TREE_CONFIG.withChance(0.2F)), MAGIC_TREE_CONFIG)),
         e.getGeneration().addFeature(GenerationStage.Decoration.VEGETAL_DECORATION,
-                WorldGenRegistries.CONFIGURED_FEATURE.get(BlockRegistry.VEXING_SAPLING.getRegistryName())).build();
+                Objects.requireNonNull(WorldGenRegistries.CONFIGURED_FEATURE.get(BlockRegistry.VEXING_SAPLING.getRegistryName()))).build();
 
         e.getGeneration().addFeature(GenerationStage.Decoration.VEGETAL_DECORATION,
-                WorldGenRegistries.CONFIGURED_FEATURE.get(BlockRegistry.CASCADING_SAPLING.getRegistryName())).build();
+                Objects.requireNonNull(WorldGenRegistries.CONFIGURED_FEATURE.get(BlockRegistry.CASCADING_SAPLING.getRegistryName()))).build();
 
         e.getGeneration().addFeature(GenerationStage.Decoration.VEGETAL_DECORATION,
-                WorldGenRegistries.CONFIGURED_FEATURE.get(BlockRegistry.BLAZING_SAPLING.getRegistryName())).build();
+                Objects.requireNonNull(WorldGenRegistries.CONFIGURED_FEATURE.get(BlockRegistry.BLAZING_SAPLING.getRegistryName()))).build();
 
         e.getGeneration().addFeature(GenerationStage.Decoration.VEGETAL_DECORATION,
-                WorldGenRegistries.CONFIGURED_FEATURE.get(BlockRegistry.FLOURISHING_SAPLING.getRegistryName())).build();
+                Objects.requireNonNull(WorldGenRegistries.CONFIGURED_FEATURE.get(BlockRegistry.FLOURISHING_SAPLING.getRegistryName()))).build();
 
         if(e.getName().equals(archwoodForest.getRegistryName())){
             addArchwoodForestFeatures(e);
@@ -251,19 +251,18 @@ public class WorldEvent {
         e.getGeneration().addFeature(GenerationStage.Decoration.VEGETAL_DECORATION,
                 Objects.requireNonNull(WorldGenRegistries.CONFIGURED_FEATURE.get(BLAZE_SEMI_LOC))).build();
 
-
     }
 
     public static void addArchwoodForestFeatures(BiomeLoadingEvent e){
         e.getGeneration().addFeature(GenerationStage.Decoration.VEGETAL_DECORATION,
-                WorldGenRegistries.CONFIGURED_FEATURE.get(new ResourceLocation(ArsNouveau.MODID, "archwood_trees"))).build();
+                Objects.requireNonNull(WorldGenRegistries.CONFIGURED_FEATURE.get(ARCHWOOD_TREES))).build();
         e.getGeneration().addFeature(GenerationStage.Decoration.VEGETAL_DECORATION,
-                WorldGenRegistries.CONFIGURED_FEATURE.get(new ResourceLocation(ArsNouveau.MODID, "vanilla_bigtrees"))).build();
+                Objects.requireNonNull(WorldGenRegistries.CONFIGURED_FEATURE.get(VANILLA_BIG_TREES))).build();
         e.getGeneration().addFeature(GenerationStage.Decoration.LOCAL_MODIFICATIONS,
-                WorldGenRegistries.CONFIGURED_FEATURE.get(new ResourceLocation(ArsNouveau.MODID, "random_lights"))).build();
+                Objects.requireNonNull(WorldGenRegistries.CONFIGURED_FEATURE.get(RANDOM_LIGHTS_LOC))).build();
 
-        e.getSpawns().addSpawn(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_CARBUNCLE_TYPE,20, 2, 4));
-        e.getSpawns().addSpawn(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_SYLPH_TYPE, 20, 2, 4));
+//        e.getSpawns().addSpawn(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_CARBUNCLE_TYPE,20, 2, 4));
+//        e.getSpawns().addSpawn(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_SYLPH_TYPE, 20, 2, 4));
     }
 
     public static Biome archwoodForest = BiomeMaker.theVoidBiome().setRegistryName(ArsNouveau.MODID, "archwood_forest");
@@ -280,9 +279,8 @@ public class WorldEvent {
 //        Registry.REg
 //        BiomeManager.addBiome(BiomeManager.BiomeType.COOL, new BiomeManager.BiomeEntry(k(archwoodForest), 100));+
             if(!FMLEnvironment.production){
-                BiomeManager.addBiome(BiomeManager.BiomeType.COOL, new BiomeManager.BiomeEntry(k(archwoodForest), 100));
-                BiomeManager.addBiome(BiomeManager.BiomeType.DESERT, new BiomeManager.BiomeEntry(k(blazingForest), 100));
-                biomeRegistryEvent.getRegistry().registerAll(archwoodForest, blazingForest);
+                BiomeManager.addBiome(BiomeManager.BiomeType.COOL, new BiomeManager.BiomeEntry(k(archwoodForest), 3));
+               biomeRegistryEvent.getRegistry().registerAll(archwoodForest);
 
             }
 
