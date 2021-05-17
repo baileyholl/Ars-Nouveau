@@ -67,4 +67,38 @@ public class RenderTypes {
             return "ars_nouveau:em_rend";
         }
     };
+
+    static final IParticleRenderType EMBER_RENDER_NO_MASK = new IParticleRenderType() {
+        @Override
+        public void begin(BufferBuilder buffer, TextureManager textureManager) {
+            RenderSystem.disableAlphaTest();
+
+            RenderSystem.enableBlend();
+            RenderSystem.alphaFunc(516, 0.3f);
+            RenderSystem.enableCull();
+            textureManager.bind(AtlasTexture.LOCATION_PARTICLES);
+            RenderSystem.depthMask(false);
+            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.DestFactor.ONE.value);
+
+            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE);
+        }
+
+        @Override
+        public void end(Tessellator tessellator) {
+            tessellator.end();
+            RenderSystem.enableDepthTest();
+            RenderSystem.enableAlphaTest();
+
+            RenderSystem.depthMask(true);
+            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.DestFactor.ONE.value);
+            RenderSystem.disableCull();
+
+            RenderSystem.alphaFunc(516, 0.1F);
+        }
+
+        @Override
+        public String toString() {
+            return "ars_nouveau:em_rend_no_mask";
+        }
+    };
 }

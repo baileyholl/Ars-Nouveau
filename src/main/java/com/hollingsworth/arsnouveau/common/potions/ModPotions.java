@@ -24,6 +24,7 @@ public class ModPotions {
     public static final ManaRegenEffect MANA_REGEN_EFFECT = new ManaRegenEffect();
     public static final SummoningSicknessEffect SUMMONING_SICKNESS = new SummoningSicknessEffect();
     public static final HexEffect HEX_EFFECT = new HexEffect();
+    public static final ScryingEffect SCRYING_EFFECT = new ScryingEffect();
 
     @ObjectHolder("mana_regen_potion")
     public static Potion MANA_REGEN_POTION;
@@ -53,11 +54,12 @@ public class ModPotions {
         @SubscribeEvent
         public static void registerEffects(final RegistryEvent.Register<Effect> event) {
             final IForgeRegistry<Effect> registry = event.getRegistry();
-            registry.register(SHIELD_POTION);
-            registry.register(MANA_REGEN_EFFECT);
-            registry.register(SUMMONING_SICKNESS);
-            registry.register(SHOCKED_EFFECT);
-            registry.register(HEX_EFFECT);
+            registry.registerAll(SCRYING_EFFECT,
+                    SHIELD_POTION,
+                    MANA_REGEN_EFFECT,
+                    SUMMONING_SICKNESS,
+                    SHOCKED_EFFECT,
+                    HEX_EFFECT);
         }
 
         @SubscribeEvent

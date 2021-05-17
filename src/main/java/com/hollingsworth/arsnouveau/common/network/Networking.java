@@ -95,6 +95,12 @@ public class Networking {
                 PacketSetRitual::toBytes,
                 PacketSetRitual::new,
                 PacketSetRitual::handle);
+
+        INSTANCE.registerMessage(nextID(),
+                PacketGetPersistentData.class,
+                PacketGetPersistentData::toBytes,
+                PacketGetPersistentData::new,
+                PacketGetPersistentData::handle);
     }
 
     public static void sendToNearby(World world, BlockPos pos, Object toSend){

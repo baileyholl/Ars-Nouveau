@@ -16,6 +16,7 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemTier;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.event.RegistryEvent;
@@ -115,6 +116,10 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.POTION_FLASK_EXTEND_TIME)public static PotionFlask POTION_FLASK_EXTEND_TIME;
     @ObjectHolder(LibItemNames.EXP_GEM)public static ExperienceGem EXPERIENCE_GEM;
     @ObjectHolder(LibItemNames.GREATER_EXP_GEM)public static ExperienceGem GREATER_EXPERIENCE_GEM;
+
+    @ObjectHolder(LibItemNames.ENCHANTERS_SWORD)public static EnchantersSword ENCHANTERS_SWORD;
+    @ObjectHolder(LibItemNames.ENCHANTERS_SHIELD)public static EnchantersShield ENCHANTERS_SHIELD;
+
 
     public static Food MANA_BERRY_FOOD = (new Food.Builder()).nutrition(2).saturationMod(0.1F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).alwaysEat().build();
 
@@ -239,7 +244,9 @@ public class ItemsRegistry {
                         public int getValue() {
                             return 12;
                         }
-                    }.withTooltip(new TranslationTextComponent("ars_nouveau.tooltip.exp_gem"))
+                    }.withTooltip(new TranslationTextComponent("ars_nouveau.tooltip.exp_gem")),
+                    new EnchantersShield(defaultItemProperties().stacksTo(1)).setRegistryName(LibItemNames.ENCHANTERS_SHIELD),
+                    new EnchantersSword(ItemTier.NETHERITE, 2, 2.0f, defaultItemProperties().stacksTo(1)).setRegistryName(LibItemNames.ENCHANTERS_SWORD)
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

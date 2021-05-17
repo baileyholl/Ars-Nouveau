@@ -126,6 +126,7 @@ public class APIRegistry {
         registerRitual(new RitualBreed());
         registerRitual(new RitualHealing());
         registerRitual(new RitualWarp());
+        registerRitual(new ScryingRitual());
     }
 
     public static void registerStartingSpells() {

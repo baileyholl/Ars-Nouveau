@@ -629,5 +629,7 @@
 	"ars_nouveau.tooltip.exp_gem": "Grants experience on use. Sneak to consume the entire stack.",
 	"item.ars_nouveau.experience_gem": "Experience Gem",
 	"item.ars_nouveau.greater_experience_gem": "Greater Experience Gem",
-	"effect.ars_nouveau.hex": "Hex"
+	"effect.ars_nouveau.hex": "Hex",
+	"ars_nouveau.set_spell": "Set spell.",
+	"ars_nouveau.invalid_spell": "Invalid Spell"
 }

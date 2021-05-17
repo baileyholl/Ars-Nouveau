@@ -55,7 +55,8 @@ public class ArsNouveau {
     public void setup (final FMLCommonSetupEvent event){
         ManaCapability.register();
         APIRegistry.registerApparatusRecipes();
-        WorldEvent.registerFeatures();
+        event.enqueueWork(WorldEvent::registerFeatures);
+
         //Pre-init code
         proxy.init();
         Networking.registerMessages();

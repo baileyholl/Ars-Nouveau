@@ -78,4 +78,6 @@ public class LibItemNames {
     public static final String GREATER_EXP_GEM ="greater_experience_gem";
 
 
+    public static final String ENCHANTERS_SWORD = "enchanters_sword";
+    public static final String ENCHANTERS_SHIELD = "enchanters_shield";
 }

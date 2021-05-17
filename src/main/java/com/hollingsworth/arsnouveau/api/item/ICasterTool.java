@@ -14,6 +14,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -50,11 +51,11 @@ public interface ICasterTool extends IScribeable, IDisplayMana {
     }
 
     default void sendSetMessage(PlayerEntity player){
-        PortUtil.sendMessage(player, new StringTextComponent("Set spell."));
+        PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.set_spell"));
     }
 
     default void sendInvalidMessage(PlayerEntity player){
-        PortUtil.sendMessage(player, new StringTextComponent("Invalid spell."));
+        PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.invalid_spell"));
     }
 
     default ISpellCaster getSpellCaster(ItemStack stack){
