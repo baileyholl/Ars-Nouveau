@@ -365,8 +365,11 @@ public class Recipes extends RecipeProvider {
                     .requires(ItemsRegistry.DENY_ITEM_SCROLL)
                     .save(consumer, new ResourceLocation(ArsNouveau.MODID, "clear_deny"));
 
-            shapelessBuilder(Items.EXPERIENCE_BOTTLE)
-                    .requires(ItemsRegistry.EXPERIENCE_GEM, 2)
+            shapelessBuilder(getRitualItem(RitualLib.SCRYING))
+                    .requires(BlockRegistry.VEXING_LOG)
+                    .requires(Items.SPIDER_EYE, 3)
+                    .requires(Items.GLOWSTONE)
+                    .requires(Recipes.MANA_GEM_BLOCK)
                     .save(consumer);
         }
     }

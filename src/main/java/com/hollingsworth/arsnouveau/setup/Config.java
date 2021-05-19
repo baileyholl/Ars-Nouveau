@@ -54,6 +54,10 @@ public class Config {
     private static Map<String, ForgeConfigSpec.IntValue> spellCost = new HashMap<>();
     public static Map<String, Integer> addonSpellCosts = new HashMap<>();
 
+
+    public static ForgeConfigSpec.IntValue ARCHWOOD_FOREST_WEIGHT;
+
+
     public static boolean isSpellEnabled(String tag){
         return enabledSpells.containsKey(tag) ? enabledSpells.get(tag).get() : true;
     }
@@ -95,6 +99,7 @@ public class Config {
         HUNTER_ATTACK_ANIMALS = SERVER_BUILDER.comment("Should the Wilden Hunter attack animals?").define("hunterHuntsAnimals", true);
         STALKER_ATTACK_ANIMALS = SERVER_BUILDER.comment("Should the Wilden Stalker attack animals?").define("stalkerHuntsAnimals", false);
         GUARDIAN_ATTACK_ANIMALS = SERVER_BUILDER.comment("Should the Wilden Defender attack animals?").define("defenderHuntsAnimals", false);
+        ARCHWOOD_FOREST_WEIGHT = SERVER_BUILDER.comment("Archwood forest spawn weight").defineInRange("archwoodForest", 3, 0, Integer.MAX_VALUE);
 
         SERVER_BUILDER.pop();
         SERVER_BUILDER.comment("Mana").push("mana");
@@ -108,6 +113,7 @@ public class Config {
         MANA_REGEN_ENCHANT_BONUS = SERVER_BUILDER.comment("(enchantment) Mana regen per second per level").defineInRange("manaRegenEnchantment", 2, 0, Integer.MAX_VALUE);
         GLYPH_REGEN_BONUS = SERVER_BUILDER.comment("Regen bonus per glyph").defineInRange("glyphRegen", 0.33, 0.0, Integer.MAX_VALUE);
         MANA_REGEN_POTION = SERVER_BUILDER.comment("Regen bonus per potion level").defineInRange("potionRegen", 10, 0, Integer.MAX_VALUE);
+
         SERVER_BUILDER.pop();
         SERVER_BUILDER.comment("Enabled Spells").push(CATEGORY_SPELLS);
         for(AbstractSpellPart spellPart : ArsNouveauAPI.getInstance().getSpell_map().values()){

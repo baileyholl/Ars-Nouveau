@@ -20,7 +20,7 @@ public class VortexParticleData implements IParticleFactory<ColorParticleTypeDat
     }
 
     public static IParticleData createData(ParticleColor color) {
-        return new ColorParticleTypeData(ModParticles.VORTEX_TYPE, color);
+        return new ColorParticleTypeData(ModParticles.VORTEX_TYPE, color, false);
     }
 
 }

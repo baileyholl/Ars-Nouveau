@@ -11,7 +11,7 @@ public class ParticleVortex extends ParticleGlow{
     int randOffset;
     double randMotionOff;
     public ParticleVortex(ClientWorld worldIn, double x, double y, double z, double vx, double vy, double vz, float r, float g, float b, float a, float scale, int lifetime, IAnimatedSprite sprite) {
-        super(worldIn, x, y, z, vx, vy, vz, r, g, b, a, scale, lifetime, sprite);
+        super(worldIn, x, y, z, vx, vy, vz, r, g, b, a, scale, lifetime, sprite, false);
         this.quadSize = scale/15f;
         initScale = scale/2.0f;
         this.lifetime = (int) ParticleUtil.inRange(25, 90);

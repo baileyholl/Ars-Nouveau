@@ -43,7 +43,6 @@ import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.registries.ObjectHolder;
 
 import java.util.Arrays;
@@ -297,16 +296,9 @@ public class WorldEvent {
     public static class BiomeRegistry{
         @SubscribeEvent
         public static void biomeRegistry(final RegistryEvent.Register<Biome> biomeRegistryEvent) {
-            System.out.println("BIOME REGISTRY");
-//        Biome archwoodForest = BiomeMaker.theVoidBiome().setRegistryName(ArsNouveau.MODID, "archwood_forest");
-//        Registry.REg
-//        BiomeManager.addBiome(BiomeManager.BiomeType.COOL, new BiomeManager.BiomeEntry(k(archwoodForest), 100));+
-            if(!FMLEnvironment.production){
-                BiomeManager.addBiome(BiomeManager.BiomeType.COOL, new BiomeManager.BiomeEntry(k(archwoodForest), 3));
-               biomeRegistryEvent.getRegistry().registerAll(archwoodForest);
-
-            }
-
+            if(Config.ARCHWOOD_FOREST_WEIGHT.get() > 0)
+                BiomeManager.addBiome(BiomeManager.BiomeType.COOL, new BiomeManager.BiomeEntry(k(archwoodForest), Config.ARCHWOOD_FOREST_WEIGHT.get()));
+            biomeRegistryEvent.getRegistry().registerAll(archwoodForest);
         }
 
         private static RegistryKey<Biome> k(Biome b) {

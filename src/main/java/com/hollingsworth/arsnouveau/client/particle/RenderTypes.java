@@ -72,14 +72,15 @@ public class RenderTypes {
         @Override
         public void begin(BufferBuilder buffer, TextureManager textureManager) {
             RenderSystem.disableAlphaTest();
-
+            RenderSystem.disableDepthTest();
             RenderSystem.enableBlend();
+            RenderSystem.enableFog();
             RenderSystem.alphaFunc(516, 0.3f);
-            RenderSystem.enableCull();
+            //RenderSystem.enableCull();
             textureManager.bind(AtlasTexture.LOCATION_PARTICLES);
             RenderSystem.depthMask(false);
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.DestFactor.ONE.value);
-
+            RenderSystem.disableCull();
             buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.PARTICLE);
         }
 
@@ -91,7 +92,7 @@ public class RenderTypes {
 
             RenderSystem.depthMask(true);
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.DestFactor.ONE.value);
-            RenderSystem.disableCull();
+            //RenderSystem.disableCull();
 
             RenderSystem.alphaFunc(516, 0.1F);
         }

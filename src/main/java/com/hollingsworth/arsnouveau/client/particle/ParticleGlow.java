@@ -17,7 +17,8 @@ public class ParticleGlow extends SpriteTexturedParticle {
     public float initScale = 0;
     public float initAlpha = 0;
 
-    public ParticleGlow(ClientWorld worldIn, double x, double y, double z, double vx, double vy, double vz, float r, float g, float b, float a, float scale, int lifetime, IAnimatedSprite sprite) {
+    public boolean disableDepthTest;
+    public ParticleGlow(ClientWorld worldIn, double x, double y, double z, double vx, double vy, double vz, float r, float g, float b, float a, float scale, int lifetime, IAnimatedSprite sprite, boolean disableDepthTest) {
         super(worldIn, x,y,z,0,0,0);
         this.colorR = r;
         this.colorG = g;
@@ -40,11 +41,11 @@ public class ParticleGlow extends SpriteTexturedParticle {
         this.zd = vz*2.0f;
         this.initAlpha = a;
         this.pickSprite(sprite);
-
+        this.disableDepthTest = disableDepthTest;
     }
     @Override
     public IParticleRenderType getRenderType() {
-        return RenderTypes.EMBER_RENDER;
+        return this.disableDepthTest ? RenderTypes.EMBER_RENDER_NO_MASK : RenderTypes.EMBER_RENDER;
     }
 
 
