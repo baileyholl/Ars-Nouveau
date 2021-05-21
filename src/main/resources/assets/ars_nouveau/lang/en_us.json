@@ -556,7 +556,7 @@
 	"ars_nouveau.warp_scroll.wrong_dim": "Using this scroll from a different dimension would be a bad idea.",
 	"ars_nouveau.warp_scroll.inv_full": "There is no room in your inventory.",
 	"ars_nouveau.warp_scroll.recorded": "You record your location to your Warp Scroll.",
-	"ars_nouveau.warp_scroll.no_location": "No location set.",
+	"ars_nouveau.warp_scroll.no_location": "Use while sneaking to set a location.",
 	"ars_nouveau.wand.spell_invalid": "Invalid Spell.",
 	
 	"ars_nouveau.carbuncle.store": "Carbuncle will store items here.",
@@ -636,5 +636,11 @@
 	"ars_nouveau.invalid_spell": "Invalid Spell",
 	"effect.ars_nouveau.scrying": "Scrying",
 	"ars_nouveau.tooltip.mana_bloom": "Grown from seeds crafted using the Enchanting Apparatus.",
-	"ars_nouveau.tooltip.dull": "A dull trinket, cannot be worn. Used for crafting."
+	"ars_nouveau.tooltip.dull": "A dull trinket, cannot be worn. Used for crafting.",
+	"ars_nouveau.sword.invalid": "Invalid spell. Swords accept Effects and Augments only, such as Freeze -> Extend Time.",
+	"item.ars_nouveau.enchanters_sword": "Enchanter's Sword",
+	"item.ars_nouveau.enchanters_shield": "Enchanter's Shield",
+	"ars_nouveau.page.enchanters_sword": "Applies a Touch spell before damaging an entity. Additionally, all spells gain one additional Amplify augment on the last effect in the spell. Apply a spell at the Scribes Table that does NOT contain a method, such as Ignite -> Extend Time.",
+	"ars_nouveau.page.enchanters_shield": "Upon blocking damage, the user will gain a short duration of Mana Regeneration. Additionally, this shield will repair over time using the wearers mana.",
+	"ars_nouveau.tooltip.can_inscribe": "Can be inscribed with a spell at the Scribes Table."
 }

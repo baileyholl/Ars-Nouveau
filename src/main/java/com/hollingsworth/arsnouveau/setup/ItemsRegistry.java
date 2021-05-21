@@ -245,8 +245,8 @@ public class ItemsRegistry {
                             return 12;
                         }
                     }.withTooltip(new TranslationTextComponent("ars_nouveau.tooltip.exp_gem")),
-                    new EnchantersShield(defaultItemProperties().stacksTo(1)).setRegistryName(LibItemNames.ENCHANTERS_SHIELD),
-                    new EnchantersSword(ItemTier.NETHERITE, 2, 2.0f, defaultItemProperties().stacksTo(1)).setRegistryName(LibItemNames.ENCHANTERS_SWORD)
+                    new EnchantersShield(),
+                    new EnchantersSword(ItemTier.NETHERITE, 4, -2.4F).setRegistryName(LibItemNames.ENCHANTERS_SWORD)
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

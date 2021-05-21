@@ -83,8 +83,10 @@ public interface ICasterTool extends IScribeable, IDisplayMana {
         ISpellCaster caster = getSpellCaster(stack);
         if(caster == null)
             return;
-        if(caster.getSpell() == null)
+        if(caster.getSpell() == null || caster.getSpell().isEmpty()){
+            tooltip2.add(new TranslationTextComponent("ars_nouveau.tooltip.can_inscribe"));
             return;
+        }
 
         Spell spell = caster.getSpell();
         tooltip2.add(new StringTextComponent(spell.getDisplayString()));

@@ -1,0 +1,36 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "item_1": [
+    {
+      "item": "ars_nouveau:glyph_amplify"
+    }
+  ],
+  "item_2": [
+    {
+      "tag": "forge:storage_blocks/gold"
+    }
+  ],
+  "item_3": [
+    {
+      "tag": "forge:storage_blocks/gold"
+    }
+  ],
+  "item_4": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_5": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "minecraft:diamond_sword"
+    }
+  ],
+  "output": {
+    "item": "ars_nouveau:enchanters_sword"
+  }
+}

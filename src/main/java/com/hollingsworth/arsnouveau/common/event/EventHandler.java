@@ -51,6 +51,15 @@ public class EventHandler {
 
 
     @SubscribeEvent
+    public static void livingHurtEvent(LivingHurtEvent e){
+       if(!e.getEntityLiving().level.isClientSide && e.getEntityLiving() instanceof PlayerEntity && e.getEntityLiving().isBlocking()){
+           if(e.getEntityLiving().isHolding(ItemsRegistry.ENCHANTERS_SHIELD)){
+               e.getEntityLiving().addEffect(new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 200, 1));
+           }
+       }
+    }
+
+    @SubscribeEvent
     public static void livingAttackEvent(LivingAttackEvent e){
         if(e.getSource() == DamageSource.HOT_FLOOR && e.getEntityLiving() != null && !e.getEntity().getCommandSenderWorld().isClientSide){
             World world = e.getEntity().level;

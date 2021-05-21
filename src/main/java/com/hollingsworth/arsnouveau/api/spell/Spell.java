@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -71,6 +70,10 @@ public class Spell {
 
     public void setCost(int cost){
         this.cost = cost;
+    }
+
+    public boolean isEmpty(){
+        return recipe == null || recipe.isEmpty();
     }
 
     public String serialize(){

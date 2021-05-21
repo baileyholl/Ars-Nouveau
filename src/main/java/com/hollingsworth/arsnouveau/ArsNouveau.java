@@ -8,7 +8,9 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.setup.*;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -24,8 +26,6 @@ import org.apache.logging.log4j.Logger;
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class ArsNouveau {
     public static final String MODID = "ars_nouveau";
-    public static final String MODNAME = "Ars Nouveau";
-    public static final String MODVERSION = "0.0.1";
 
     public static IProxy proxy = DistExecutor.runForDist(()-> () -> new ClientProxy(), () -> ()-> new ServerProxy());
     public static Logger logger;
@@ -66,6 +66,12 @@ public class ArsNouveau {
     public void clientSetup(final FMLClientSetupEvent event){
         proxy.init();
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientHandler::init);
+        event.enqueueWork(() -> {
+            ItemModelsProperties.register(ItemsRegistry.ENCHANTERS_SHIELD,new ResourceLocation(ArsNouveau.MODID,"blocking"), (p_239421_0_, p_239421_1_, p_239421_2_) -> {
+                return p_239421_2_ != null && p_239421_2_.isUsingItem() && p_239421_2_.getUseItem() == p_239421_0_ ? 1.0F : 0.0F;
+            });
+        });
+
     }
 
 

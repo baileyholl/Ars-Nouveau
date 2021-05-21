@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
@@ -51,8 +52,24 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 System.out.println(g);
                 Path path = getRecipePath(output, ((EnchantingApparatusRecipe) g).getId().getPath());
                 IDataProvider.save(GSON, cache, ((EnchantingApparatusRecipe) g).asRecipe(), path);
+
+                if(g.getResultItem().isEmpty())
+                    continue;
+                Path path1 = getApparatusPath(output, (EnchantingApparatusRecipe) g);
+                try {
+                    IDataProvider.save(GSON, cache, ((EnchantingApparatusRecipe)g).serialize(), path1);
+                    System.out.println(g);
+                } catch (IOException ioexception) {
+                    LOGGER.error("Couldn't save apparatus {}", path1, ioexception);
+                }
+
             }
         }
+
+    }
+    private static Path getApparatusPath(Path pathIn, EnchantingApparatusRecipe e) {
+        System.out.println(e.result.getItem().toString());
+        return pathIn.resolve("data/ars_nouveau/apparatus/" + e.result.getItem().getRegistryName().toString().replace(ArsNouveau.MODID + ":", "") + ".json");
     }
 
     public ApparatusRecipeBuilder builder(){
@@ -841,7 +858,20 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, 3, 5000));
 
+        addRecipe(builder()
+                .withResult(ItemsRegistry.ENCHANTERS_SWORD)
+                .withReagent(Items.DIAMOND_SWORD)
+                .withPedestalItem(1, ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify()))
+                .withPedestalItem(2,Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
+                .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
+                .build());
 
+        addRecipe(builder()
+                .withResult(ItemsRegistry.ENCHANTERS_SHIELD)
+                .withReagent(Items.SHIELD)
+                .withPedestalItem(2,Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
+                .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
+                .build());
     }
 
     public static List<Ingredient> listOfIngred(Item[] items) {
