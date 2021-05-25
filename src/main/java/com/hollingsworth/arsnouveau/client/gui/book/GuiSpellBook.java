@@ -2,10 +2,7 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.buttons.CraftingButton;
@@ -16,7 +13,6 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellbook;
-import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
@@ -27,12 +23,11 @@ import net.minecraft.client.gui.widget.button.ChangePageButton;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import vazkii.patchouli.api.PatchouliAPI;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GuiSpellBook extends BaseBook {
@@ -48,12 +43,17 @@ public class GuiSpellBook extends BaseBook {
     public GuiSpellSlot selected_slot;
     public int max_spell_tier; // Used to load spells that are appropriate tier
     List<CraftingButton> craftingCells;
-    public List<AbstractSpellPart>unlockedSpells;
+    public List<AbstractSpellPart> unlockedSpells;
+    public List<AbstractSpellPart> castMethods;
+    public List<AbstractSpellPart> augments;
     public List<AbstractSpellPart> effects;
-    public List<Widget> effectButtons;
+    public List<GlyphButton> castMethodButtons;
+    public List<GlyphButton> augmentButtons;
+    public List<GlyphButton> effectButtons;
     public int page = 0;
     ChangePageButton nextButton;
     ChangePageButton previousButton;
+
     public GuiSpellBook(ArsNouveauAPI api, CompoundNBT tag, int tier, String unlockedSpells) {
         super();
         this.api = api;
@@ -62,6 +62,25 @@ public class GuiSpellBook extends BaseBook {
         this.max_spell_tier = tier;
         this.spell_book_tag = tag;
         this.unlockedSpells = SpellRecipeUtil.getSpellsFromString(unlockedSpells);
+
+        this.castMethods = new ArrayList<>();
+        this.augments = new ArrayList<>();
+        this.effects = new ArrayList<>();
+
+        // Pre-partition the known spell glyphs
+        for (AbstractSpellPart part : this.unlockedSpells) {
+            if (part instanceof AbstractCastMethod) {
+                this.castMethods.add(part);
+            } else if (part instanceof AbstractAugment) {
+                this.augments.add(part);
+            } else if (part instanceof AbstractEffect) {
+                this.effects.add(part);
+            }
+        }
+
+        this.castMethodButtons = new ArrayList<>();
+        this.augmentButtons = new ArrayList<>();
+        this.effectButtons = new ArrayList<>();
         this.effects = this.unlockedSpells.stream().filter(a -> a instanceof AbstractEffect).collect(Collectors.toList());
         effectButtons = new ArrayList<>();
     }
@@ -84,7 +103,9 @@ public class GuiSpellBook extends BaseBook {
         }
         updateCraftingSlots(selected_slot_ind);
 
-        addSpellParts(0);
+        addCastMethodParts();
+        addAugmentParts();
+        addEffectParts(0);
         addButton(new GuiImageButton(bookRight - 71, bookBottom - 13, 0,0,50, 12, 50, 12, "textures/gui/create_icon.png", this::onCreateClick));
         addButton(new GuiImageButton(bookRight - 126, bookBottom - 13, 0,0,41, 12, 41, 12, "textures/gui/clear_icon.png", this::clear));
 
@@ -150,50 +171,36 @@ public class GuiSpellBook extends BaseBook {
         }
     }
 
-    public void addSpellParts(int page){
-        for(Widget w : effectButtons) {
-            buttons.remove(w);
-            children.remove(w);
-        }
-        effectButtons.clear();
-        Collections.sort(unlockedSpells);
+    private void addCastMethodParts() {
+        layoutParts(castMethods, castMethodButtons, bookLeft + 20, bookTop + 34, 2);
+    }
 
+    private void addAugmentParts() {
+        layoutParts(augments, augmentButtons, bookLeft + 20, bookTop + 88, 3);
+    }
+
+    private void addEffectParts(int page) {
         List<AbstractSpellPart> displayedEffects = effects.subList(36 * page, Math.min(effects.size(), 36 * (page + 1)));
-        //Adding spell parts
-        int numCast = 0;
-        int numEffect = 0;
-        int numAugment = 0;
-        for(AbstractSpellPart key  : unlockedSpells){
-            AbstractSpellPart spell = this.api.getSpell_map().get(key.tag);
-            GlyphButton cell = null;
-            if(spell.getTier().ordinal() > max_spell_tier)
-                continue; //Skip spells too high of a tier
+        layoutParts(displayedEffects, effectButtons, bookLeft + 154, bookTop + 34, 6);
+    }
 
-            if(spell instanceof AbstractCastMethod) {
-                int xOffset = 20 * (numCast % 6 );
-                int yOffset = (numCast / 6) * 18 ;
-                cell = new GlyphButton(this, bookLeft + 20 + xOffset, bookTop + 34 + yOffset, false, spell.getIcon(), spell.tag);
-                numCast++;
-            }else if(spell instanceof AbstractAugment){
-                int xOffset = 20 * (numAugment % 6 );
-                int yOffset = (numAugment / 6) * 18 ;
-                cell = new GlyphButton(this, bookLeft + 20 + xOffset, bookTop + 88 +  yOffset, false, spell.getIcon(), spell.tag);
-                numAugment++;
-            }else{
-                continue;
-            }
-            addButton(cell);
+    private void layoutParts(List<AbstractSpellPart> parts, List<GlyphButton> glyphButtons, int xStart, int yStart, int maxRows) {
+        // Clear out the old buttons
+        for (GlyphButton b : glyphButtons) {
+            buttons.remove(b);
+            children.remove(b);
         }
-        for(AbstractSpellPart s : displayedEffects){
-            AbstractEffect spell = (AbstractEffect)s;
-            if(!Config.isSpellEnabled(s.tag) || spell.getTier().ordinal() > max_spell_tier)
-                continue;
-            GlyphButton cell;
-            int xOffset = 20 * (numEffect % 6 );
-            int yOffset = (numEffect / 6) * 18 ;
-            cell = new GlyphButton(this, bookLeft + 154 + xOffset, bookTop + 34 +  yOffset, false, spell.getIcon(), spell.tag);
-            numEffect ++;
-            effectButtons.add(addButton(cell));
+        glyphButtons.clear();
+
+        final int PER_ROW = 6;
+        int toLayout = Math.min(parts.size(), PER_ROW * maxRows);
+        for (int i = 0; i < toLayout; i++) {
+            AbstractSpellPart part = parts.get(i);
+            int xOffset = 20 * (i % PER_ROW);
+            int yOffset = (i / PER_ROW) * 18;
+            GlyphButton cell = new GlyphButton(this, xStart + xOffset, yStart + yOffset, false, part.getIcon(), part.tag);
+            glyphButtons.add(cell);
+            addButton(cell);
         }
     }
 
@@ -205,7 +212,7 @@ public class GuiSpellBook extends BaseBook {
         }
         previousButton.active = true;
         previousButton.visible = true;
-        addSpellParts(page);
+        addEffectParts(page);
     }
 
     public void onPageDec(Button button){
@@ -219,7 +226,7 @@ public class GuiSpellBook extends BaseBook {
             nextButton.visible = true;
             nextButton.active = true;
         }
-        addSpellParts(page);
+        addEffectParts(page);
     }
 
     public void onDocumentationClick(Button button){

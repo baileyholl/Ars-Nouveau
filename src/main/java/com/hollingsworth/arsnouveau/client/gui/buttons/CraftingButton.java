@@ -5,9 +5,10 @@ import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.*;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class CraftingButton extends GuiImageButton{
@@ -35,9 +36,9 @@ public class CraftingButton extends GuiImageButton{
             if(parent.isMouseInRelativeRange(parX, parY, x, y, width, height)){
 
                 if(parent.api.getSpell_map().containsKey(this.spellTag)) {
-                    List<String> test = new ArrayList<>();
-                    test.add(parent.api.getSpell_map().get(this.spellTag).name);
-                    parent.tooltip = test;
+                    List<ITextComponent> tooltip = new LinkedList<>();
+                    tooltip.add(new TranslationTextComponent(parent.api.getSpell_map().get(this.spellTag).getLocalizationKey()));
+                    parent.tooltip = tooltip;
                 }
             }
         }

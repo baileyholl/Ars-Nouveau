@@ -146,7 +146,11 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
         return "";
     }
 
+    public String getLocalizationKey() {
+        return "ars_nouveau.glyph_name." + tag;
+    }
+
     public String getLocaleName(){
-        return new TranslationTextComponent("ars_nouveau.glyph_name." + tag).getString();
+        return new TranslationTextComponent(getLocalizationKey()).getString();
     }
 }

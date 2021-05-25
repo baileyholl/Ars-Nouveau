@@ -16,7 +16,7 @@ public class ModdedScreen extends Screen {
 
     public int maxScale;
     public float scaleFactor;
-    public List<String> tooltip;
+    public List<ITextComponent> tooltip;
 
     public ModdedScreen(ITextComponent titleIn) {
         super(titleIn);
@@ -46,14 +46,8 @@ public class ModdedScreen extends Screen {
         return mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h;
     }
     public final void drawTooltip(MatrixStack stack, int mouseX, int mouseY) {
-        if(tooltip != null) {
-            FontRenderer font = Minecraft.getInstance().font;
-            this.renderTooltip(stack,new StringTextComponent(tooltip.get(0)), mouseX, mouseY);
-
-        } else if(tooltip != null && !tooltip.isEmpty()) {
-            List<String> wrappedTooltip = new ArrayList<>();
-            for (String s : tooltip)
-                Collections.addAll(wrappedTooltip, s.split("\n"));
+        if (tooltip != null && !tooltip.isEmpty()) {
+            this.renderWrappedToolTip(stack, tooltip, mouseX, mouseY, font);
         }
     }
 
