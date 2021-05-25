@@ -6,10 +6,10 @@ import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
-import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -43,7 +43,7 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
     }
 
     public int getConfigCost(){
-        return Config.getSpellCost(this.tag);
+        return COST == null ? getManaCost() : COST.get();
     }
 
     @Nullable
@@ -120,6 +120,14 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
         jsonArray.add(infoPage);
         jsonobject.add("pages", jsonArray);
         return jsonobject;
+    }
+    public ForgeConfigSpec CONFIG;
+    public ForgeConfigSpec.IntValue COST;
+    public ForgeConfigSpec.BooleanValue ENABLED;
+    public void buildConfig(ForgeConfigSpec.Builder builder){
+        builder.comment("General settings").push("general");
+        ENABLED = builder.comment("Is Enabled?").define("enabled", true);
+        COST = builder.comment("Cost").defineInRange("cost", getManaCost(), Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
 
     public String getItemID(){

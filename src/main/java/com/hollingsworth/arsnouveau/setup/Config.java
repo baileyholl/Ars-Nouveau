@@ -4,8 +4,10 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -131,6 +133,17 @@ public class Config {
         }
         SERVER_BUILDER.pop();
         SERVER_CONFIG = SERVER_BUILDER.build();
+        FMLPaths.getOrCreateGameRelativePath(FMLPaths.CONFIGDIR.get().resolve("ars_nouveau"), "ars_nouveau");
+        for(AbstractSpellPart spellPart : ArsNouveauAPI.getInstance().getSpell_map().values()){
+
+            ForgeConfigSpec spec;
+            ForgeConfigSpec.Builder spellBuilder = new ForgeConfigSpec.Builder();
+            spellPart.buildConfig(spellBuilder);
+            spec = spellBuilder.build();
+            spellPart.CONFIG = spec;
+            ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, spellPart.CONFIG, "ars_nouveau/" + spellPart.tag +".toml");
+
+        }
     }
 
     public static boolean isStarterEnabled(AbstractSpellPart e){
