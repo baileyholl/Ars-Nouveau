@@ -49,6 +49,7 @@ public class ModEntities {
     public static EntityType<WildenGuardian> WILDEN_GUARDIAN = null;
     public static EntityType<LightningEntity> LIGHTNING_ENTITY = null;
     public static EntityType<EntityDummy> ENTITY_DUMMY = null;
+    public static EntityType<DrygmyEntity> ENTITY_DRYGMY = null;
 
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
@@ -150,6 +151,11 @@ public class ModEntities {
                             .setTrackingRange(10)
                             .setShouldReceiveVelocityUpdates(true));
             LIGHTNING_ENTITY = build("an_lightning", EntityType.Builder.<LightningEntity>of(LightningEntity::new, EntityClassification.MISC).sized(0.0F, 0.0F).clientTrackingRange(16).updateInterval(Integer.MAX_VALUE).setShouldReceiveVelocityUpdates(true).setUpdateInterval(60));
+
+            ENTITY_DRYGMY = build(
+                    "drygmy",
+                    EntityType.Builder.<DrygmyEntity>of(DrygmyEntity::new, EntityClassification.CREATURE).sized(0.6F, 0.85F).clientTrackingRange(10));
+
             event.getRegistry().registerAll(
                     SPELL_PROJ,
                     ENTITY_EVOKER_FANGS_ENTITY_TYPE,
@@ -168,13 +174,15 @@ public class ModEntities {
                     SUMMON_HORSE,
                     WILDEN_GUARDIAN,
                     LIGHTNING_ENTITY,
-                    ENTITY_DUMMY
+                    ENTITY_DUMMY,
+                    ENTITY_DRYGMY
             );
 
             GlobalEntityTypeAttributes.put(ENTITY_WHELP_TYPE, EntityWhelp.attributes().build());
             GlobalEntityTypeAttributes.put(ALLY_VEX, VexEntity.createAttributes().build());
             GlobalEntityTypeAttributes.put(ENTITY_CARBUNCLE_TYPE, EntityCarbuncle.attributes().build());
             GlobalEntityTypeAttributes.put(ENTITY_SYLPH_TYPE, EntitySylph.attributes().build());
+            GlobalEntityTypeAttributes.put(ENTITY_DRYGMY, EntitySylph.attributes().build());
             GlobalEntityTypeAttributes.put(ENTITY_WIXIE_TYPE, EntityWixie.attributes().build());
             GlobalEntityTypeAttributes.put(WILDEN_HUNTER, WildenHunter.getModdedAttributes().build());
             GlobalEntityTypeAttributes.put(WILDEN_STALKER, WildenStalker.getModdedAttributes().build());

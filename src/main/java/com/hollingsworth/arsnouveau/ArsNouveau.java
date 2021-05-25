@@ -8,9 +8,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.setup.*;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemModelsProperties;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -42,10 +40,12 @@ public class ArsNouveau {
         APIRegistry.registerSpells();
         MappingUtil.setup();
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SERVER_CONFIG);
+//        FMLPaths.getOrCreateGameRelativePath(FMLPaths.CONFIGDIR.get().resolve("ars_nouveau"), "ars_nouveau");
+//        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SERVER_CONFIG, "ars_nouveau/break.toml");
+
         // modLoading setup
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        // Register the doClientStuff method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::sendImc);
         MinecraftForge.EVENT_BUS.register(this);
@@ -66,11 +66,6 @@ public class ArsNouveau {
     public void clientSetup(final FMLClientSetupEvent event){
         proxy.init();
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientHandler::init);
-        event.enqueueWork(() -> {
-            ItemModelsProperties.register(ItemsRegistry.ENCHANTERS_SHIELD,new ResourceLocation(ArsNouveau.MODID,"blocking"), (p_239421_0_, p_239421_1_, p_239421_2_) -> {
-                return p_239421_2_ != null && p_239421_2_.isUsingItem() && p_239421_2_.getUseItem() == p_239421_0_ ? 1.0F : 0.0F;
-            });
-        });
 
     }
 

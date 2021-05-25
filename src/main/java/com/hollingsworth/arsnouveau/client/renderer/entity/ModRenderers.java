@@ -42,6 +42,7 @@ public class ModRenderers {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_SPELL_ARROW, TippedArrowRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_WIXIE_TYPE, WixieRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_DUMMY, DummyRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_DRYGMY, DrygmyRenderer::new);
 
     }
 }

@@ -246,7 +246,7 @@ public class ItemsRegistry {
                         }
                     }.withTooltip(new TranslationTextComponent("ars_nouveau.tooltip.exp_gem")),
                     new EnchantersShield(),
-                    new EnchantersSword(ItemTier.NETHERITE, 4, -2.4F).setRegistryName(LibItemNames.ENCHANTERS_SWORD)
+                    new EnchantersSword(ItemTier.NETHERITE, 3, -2.4F).setRegistryName(LibItemNames.ENCHANTERS_SWORD)
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();
