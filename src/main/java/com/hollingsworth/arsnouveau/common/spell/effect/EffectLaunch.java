@@ -16,7 +16,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class EffectLaunch extends AbstractEffect {
-    public EffectLaunch() {
+    public static EffectLaunch INSTANCE = new EffectLaunch();
+
+    private EffectLaunch() {
         super(GlyphLib.EffectLaunchID, "Launch");
     }
 

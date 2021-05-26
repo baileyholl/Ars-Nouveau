@@ -18,7 +18,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class MethodUnderfoot extends AbstractCastMethod {
-    public MethodUnderfoot() {
+    public static MethodUnderfoot INSTANCE = new MethodUnderfoot();
+
+    private MethodUnderfoot() {
         super(GlyphLib.MethodUnderfootID, "Underfoot");
     }
 

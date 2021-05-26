@@ -31,7 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EffectInteract extends AbstractEffect {
-    public EffectInteract() {
+    public static EffectInteract INSTANCE = new EffectInteract();
+
+    private EffectInteract() {
         super(GlyphLib.EffectInteractID, "Interact");
     }
 

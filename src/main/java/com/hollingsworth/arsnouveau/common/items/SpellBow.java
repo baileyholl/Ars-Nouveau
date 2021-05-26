@@ -243,7 +243,7 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
     @Override
     public boolean setSpell(ISpellCaster caster, PlayerEntity player, Hand hand, ItemStack stack, Spell spell) {
         ArrayList<AbstractSpellPart> recipe = new ArrayList<>();
-        recipe.add(new MethodProjectile());
+        recipe.add(MethodProjectile.INSTANCE);
         recipe.addAll(spell.recipe);
         spell.recipe = recipe;
         return ICasterTool.super.setSpell(caster, player, hand, stack, spell);

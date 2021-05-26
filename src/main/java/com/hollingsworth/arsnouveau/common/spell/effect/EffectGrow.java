@@ -24,22 +24,22 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class EffectGrow  extends AbstractEffect {
+    public static EffectGrow INSTANCE = new EffectGrow();
 
-    public EffectGrow() {
+    private EffectGrow() {
         super(GlyphLib.EffectGrowID, "Grow");
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof BlockRayTraceResult) {
-            for(BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getBlockPos(), (BlockRayTraceResult) rayTraceResult, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))){
-                //BlockPos blockpos = ((BlockRayTraceResult) rayTraceResult).getPos();
-                ItemStack stack = new ItemStack(Items.BONE_MEAL);
-                if(world instanceof ServerWorld)
-                    BoneMealItem.applyBonemeal(stack, world, blockpos, FakePlayerFactory.getMinecraft((ServerWorld) world));
-            }
+    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        super.onResolveBlock(rayTraceResult, world, shooter, augments, spellContext);
+        for(BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter,  rayTraceResult.getBlockPos(), rayTraceResult, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))){
+            ItemStack stack = new ItemStack(Items.BONE_MEAL);
+            if(world instanceof ServerWorld)
+                BoneMealItem.applyBonemeal(stack, world, blockpos, FakePlayerFactory.getMinecraft((ServerWorld) world));
         }
     }
+
 
     @Override
     public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {

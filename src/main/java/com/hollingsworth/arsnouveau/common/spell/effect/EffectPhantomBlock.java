@@ -23,8 +23,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class EffectPhantomBlock extends AbstractEffect {
+    public static EffectPhantomBlock INSTANCE = new EffectPhantomBlock();
 
-    public EffectPhantomBlock() {
+    private EffectPhantomBlock() {
         super(GlyphLib.EffectPhantomBlockID, "Phantom");
     }
 

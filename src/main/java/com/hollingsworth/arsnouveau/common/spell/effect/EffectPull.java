@@ -17,8 +17,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class EffectPull extends AbstractEffect {
+    public static EffectPull INSTANCE = new EffectPull();
 
-    public EffectPull() {
+    private EffectPull() {
         super(GlyphLib.EffectPullID, "Pull");
     }
 

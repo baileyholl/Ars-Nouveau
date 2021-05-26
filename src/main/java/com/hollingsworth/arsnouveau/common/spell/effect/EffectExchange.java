@@ -35,7 +35,9 @@ import java.util.List;
 import static com.hollingsworth.arsnouveau.api.util.BlockUtil.destroyBlockSafelyWithoutSound;
 
 public class EffectExchange extends AbstractEffect {
-    public EffectExchange() {
+    public static EffectExchange INSTANCE = new EffectExchange();
+
+    private EffectExchange() {
         super(GlyphLib.EffectExchangeID, "Exchange");
     }
 

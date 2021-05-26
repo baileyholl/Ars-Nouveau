@@ -23,13 +23,17 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.IForgeShearable;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class EffectCut extends AbstractEffect {
-    public EffectCut() {
+
+    public static EffectCut INSTANCE = new EffectCut();
+
+    private EffectCut() {
         super(GlyphLib.EffectCutID, "Cut");
     }
 
@@ -46,7 +50,7 @@ public class EffectCut extends AbstractEffect {
                 items.forEach(i->world.addFreshEntity(new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), i)));
             }
         }else{
-            dealDamage(world, shooter, 1.0f + getAmplificationBonus(augments), augments, entity, DamageSource.playerAttack(getPlayer(shooter, (ServerWorld) world)));
+            dealDamage(world, shooter, (float) (DAMAGE.get() + AMP_VALUE.get() * getAmplificationBonus(augments)), augments, entity, DamageSource.playerAttack(getPlayer(shooter, (ServerWorld) world)));
         }
     }
 
@@ -68,6 +72,13 @@ public class EffectCut extends AbstractEffect {
             entity.setPos(p.getX(), p.getY(), p.getZ());
             world.getBlockState(p).use(world, entity, Hand.MAIN_HAND, rayTraceResult);
         }
+    }
+
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addDamageConfig(builder, 1.0);
+        addAmpConfig(builder, 1.0);
     }
 
     @Override

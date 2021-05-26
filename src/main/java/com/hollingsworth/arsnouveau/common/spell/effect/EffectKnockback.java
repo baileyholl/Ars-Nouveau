@@ -16,8 +16,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class EffectKnockback extends AbstractEffect {
+    public static EffectKnockback INSTANCE = new EffectKnockback();
 
-    public EffectKnockback() {
+    private EffectKnockback() {
         super(GlyphLib.EffectKnockbackID, "Knockback");
     }
 

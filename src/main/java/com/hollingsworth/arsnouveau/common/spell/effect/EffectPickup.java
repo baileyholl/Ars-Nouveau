@@ -22,7 +22,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class EffectPickup extends AbstractEffect {
-    public EffectPickup() {
+    public static EffectPickup INSTANCE = new EffectPickup();
+
+    private EffectPickup() {
         super(GlyphLib.EffectPickupID, "Item Pickup");
     }
 

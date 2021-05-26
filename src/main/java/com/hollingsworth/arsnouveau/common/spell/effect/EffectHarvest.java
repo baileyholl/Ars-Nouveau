@@ -29,8 +29,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class EffectHarvest extends AbstractEffect {
+    public static EffectHarvest INSTANCE = new EffectHarvest();
 
-    public EffectHarvest() {
+    private EffectHarvest() {
         super(GlyphLib.EffectHarvestID, "Harvest");
     }
 

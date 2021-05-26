@@ -18,8 +18,9 @@ import net.minecraft.world.World;
 import java.util.List;
 
 public class EffectSnare extends AbstractEffect {
+    public static EffectSnare INSTANCE = new EffectSnare();
 
-    public EffectSnare() {
+    private EffectSnare() {
         super(GlyphLib.EffectSnareID, "Snare");
     }
 

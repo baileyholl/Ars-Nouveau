@@ -17,15 +17,17 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
-
 public class EffectCrush extends AbstractEffect {
-    public EffectCrush() {
+
+    public static EffectCrush INSTANCE = new EffectCrush();
+
+    private EffectCrush() {
         super(GlyphLib.EffectCrushID, "Crush");
     }
 
@@ -47,14 +49,20 @@ public class EffectCrush extends AbstractEffect {
         if(!(rayTraceResult.getEntity() instanceof LivingEntity))
             return;
         LivingEntity livingEntity = (LivingEntity) rayTraceResult.getEntity();
-        dealDamage(world, shooter, (livingEntity.isSwimming() ? 8.0f : 3.0f) + getAmplificationBonus(augments),augments, livingEntity, DamageSource.DROWN);
+        dealDamage(world, shooter, (float) ((livingEntity.isSwimming() ? DAMAGE.get() * 3.0 : DAMAGE.get()) + AMP_VALUE.get() * getAmplificationBonus(augments)),augments, livingEntity, DamageSource.DROWN);
+    }
+
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addDamageConfig(builder, 3.0);
+        addAmpConfig(builder, 1.0);
     }
 
     @Override
     public String getBookDescription() {
         return "Turns stone into gravel, and gravel into sand. Will also harm entities and deals bonus damage to entities that are swimming.";
     }
-
 
     @Override
     public Item getCraftingReagent() {

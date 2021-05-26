@@ -15,20 +15,23 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeMod;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class EffectFreeze extends AbstractEffect {
-    public EffectFreeze() {
+    public static EffectFreeze INSTANCE = new EffectFreeze();
+
+    private EffectFreeze() {
         super(GlyphLib.EffectFreezeID, "Freeze");
     }
 
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
-            applyPotion((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity(), Effects.MOVEMENT_SLOWDOWN, augments, 10, 5);
+            applyConfigPotion((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity(), Effects.MOVEMENT_SLOWDOWN, augments);
         }
         else if (rayTraceResult instanceof BlockRayTraceResult) {
             BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getBlockPos();
@@ -49,6 +52,13 @@ public class EffectFreeze extends AbstractEffect {
                 }
             }
         }
+    }
+
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addPotionConfig(builder, 10);
+        addExtendTimeConfig(builder, 5);
     }
 
     @Override

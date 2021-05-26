@@ -17,10 +17,10 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
-
 public class EffectLightning extends AbstractEffect {
-    public EffectLightning() {
+    public static EffectLightning INSTANCE = new EffectLightning();
+
+    private EffectLightning() {
         super(GlyphLib.EffectLightningID, "Lightning");
     }
 

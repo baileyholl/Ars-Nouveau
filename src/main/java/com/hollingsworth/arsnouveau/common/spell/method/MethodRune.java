@@ -23,7 +23,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class MethodRune extends AbstractCastMethod {
-    public MethodRune() {
+    public static MethodRune INSTANCE = new MethodRune();
+
+    private MethodRune() {
         super(GlyphLib.MethodRuneID, "Rune");
     }
 

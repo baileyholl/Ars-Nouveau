@@ -28,6 +28,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -57,8 +58,13 @@ public abstract class AbstractEffect extends AbstractSpellPart {
 
     public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext){}
 
+    @Deprecated // Use config-sensitive method
     public void applyPotion(LivingEntity entity, Effect potionEffect, List<AbstractAugment> augmentTypes){
         applyPotion(entity, potionEffect, augmentTypes, 30, 8);
+    }
+
+    public void applyConfigPotion(LivingEntity entity, Effect potionEffect, List<AbstractAugment> augmentTypes){
+        applyPotion(entity, potionEffect, augmentTypes, POTION_TIME == null ? 30 : POTION_TIME.get(), EXTEND_TIME == null ? 8 : EXTEND_TIME.get());
     }
 
     public boolean canSummon(LivingEntity playerEntity){
@@ -85,6 +91,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         entity.addEffect(new EffectInstance(potionEffect, duration * 20, amp));
     }
 
+    @Deprecated // Use config-sensitive method. Will become private
     public void applyPotion(LivingEntity entity, Effect potionEffect, List<AbstractAugment> augmentTypes, int baseDuration, int durationBuffBase){
         if(entity == null)
             return;
@@ -172,5 +179,46 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         if(hasBuff(augments, AugmentFortune.class)){
             stack.enchant(Enchantments.BLOCK_FORTUNE, getBuffCount(augments, AugmentExtract.class));
         }
+    }
+
+    public ForgeConfigSpec.DoubleValue DAMAGE;
+    public ForgeConfigSpec.DoubleValue AMP_VALUE;
+    public ForgeConfigSpec.IntValue POTION_TIME;
+    public ForgeConfigSpec.IntValue EXTEND_TIME;
+    public ForgeConfigSpec.IntValue GENERIC_INT;
+    public ForgeConfigSpec.DoubleValue GENERIC_DOUBLE;
+
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+    }
+
+    public void addDamageConfig(ForgeConfigSpec.Builder builder, double defaultValue){
+        DAMAGE = builder.defineInRange("damage", defaultValue, 0, Integer.MAX_VALUE);
+    }
+
+    public void addAmpConfig(ForgeConfigSpec.Builder builder, double defaultValue){
+        AMP_VALUE = builder.defineInRange("damage", defaultValue, 0, Integer.MAX_VALUE);
+    }
+
+    public void addPotionConfig(ForgeConfigSpec.Builder builder, int defaultTime){
+        POTION_TIME = builder.comment("Potion duration, in seconds").defineInRange("potion_time", defaultTime, 0, Integer.MAX_VALUE);
+    }
+
+    public void addExtendTimeConfig(ForgeConfigSpec.Builder builder, int defaultTime){
+        EXTEND_TIME = builder.comment("Extend time duration, in seconds").defineInRange("extend_time", defaultTime, 0, Integer.MAX_VALUE);
+    }
+
+    public void addGenericInt(ForgeConfigSpec.Builder builder, int val, String comment, String path){
+        GENERIC_INT = builder.comment(comment).defineInRange(path, val, 0, Integer.MAX_VALUE);
+    }
+
+    public void addGenericDouble(ForgeConfigSpec.Builder builder, double val, String comment, String path){
+        GENERIC_DOUBLE = builder.comment(comment).defineInRange(path, val, 0.0, Double.MAX_VALUE);
+    }
+
+    public void addDefaultPotionConfig(ForgeConfigSpec.Builder builder){
+        addPotionConfig(builder, 30);
+        addExtendTimeConfig(builder, 8);
     }
 }

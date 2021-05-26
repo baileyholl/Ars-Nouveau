@@ -16,7 +16,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class EffectWither extends AbstractEffect {
-    public EffectWither() {
+    public static EffectWither INSTANCE = new EffectWither();
+
+    private EffectWither() {
         super(GlyphLib.EffectWitherID, "Wither");
     }
 

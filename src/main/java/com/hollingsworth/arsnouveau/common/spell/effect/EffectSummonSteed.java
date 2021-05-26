@@ -19,12 +19,11 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
-
 public class EffectSummonSteed extends AbstractEffect {
+    public static EffectSummonSteed INSTANCE = new EffectSummonSteed();
 
 
-    public EffectSummonSteed() {
+    private EffectSummonSteed() {
         super(GlyphLib.EffectSummonSteedID, "Summon Steed");
     }
 

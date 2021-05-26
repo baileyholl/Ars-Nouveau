@@ -22,13 +22,15 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.ExplosionContext;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class EffectExplosion extends AbstractEffect {
+    public static EffectExplosion INSTANCE = new EffectExplosion();
 
-    public EffectExplosion() {
+    private EffectExplosion() {
         super(GlyphLib.EffectExplosionID, "Explosion");
     }
 
@@ -39,12 +41,12 @@ public class EffectExplosion extends AbstractEffect {
 
         Vector3d vec = safelyGetHitPos(rayTraceResult);
 
-        float intensity = 0.75f + 0.5f*getBuffCount(augments, AugmentAmplify.class) + 1.5f*getBuffCount(augments, AugmentAOE.class);
+        double intensity = BASE.get() + AMP_VALUE.get()*getBuffCount(augments, AugmentAmplify.class) + AOE_BONUS.get()*getBuffCount(augments, AugmentAOE.class);
         int dampen = getBuffCount(augments, AugmentDampen.class);
         intensity -= 0.5 * dampen;
         Explosion.Mode mode = hasBuff(augments, AugmentDampen.class) ? Explosion.Mode.NONE  : Explosion.Mode.DESTROY;
         mode = hasBuff(augments, AugmentExtract.class) ? Explosion.Mode.BREAK : mode;
-        explode(world, shooter, null, null, vec.x, vec.y, vec.z, intensity, false, mode, augments);
+        explode(world, shooter, null, null, vec.x, vec.y, vec.z, (float) intensity, false, mode, augments);
     }
 
     public Explosion explode(World world, @Nullable Entity e, @Nullable DamageSource source, @Nullable ExplosionContext context,
@@ -64,6 +66,18 @@ public class EffectExplosion extends AbstractEffect {
         }
 
         return explosion;
+    }
+
+    public ForgeConfigSpec.DoubleValue BASE;
+    public ForgeConfigSpec.DoubleValue AOE_BONUS;
+
+
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addAmpConfig(builder, 0.5);
+        BASE = builder.comment("Explosion base intensity").defineInRange("base", 0.75, 0.0, 100);
+        AOE_BONUS = builder.comment("AOE intensity bonus").defineInRange("aoe_bonus", 1.5, 0.0, 100);
     }
 
     @Override

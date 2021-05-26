@@ -17,11 +17,10 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
-
 public class EffectSummonWolves extends AbstractEffect {
+    public static EffectSummonWolves INSTANCE = new EffectSummonWolves();
 
-    public EffectSummonWolves() {
+    private EffectSummonWolves() {
         super(GlyphLib.EffectSummonWolvesID, "Summon Wolves");
     }
 

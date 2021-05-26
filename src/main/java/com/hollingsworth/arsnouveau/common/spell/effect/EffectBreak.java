@@ -32,8 +32,9 @@ import java.util.Map;
 import static com.hollingsworth.arsnouveau.api.util.BlockUtil.destroyBlockSafely;
 
 public class EffectBreak extends AbstractEffect {
+    public static EffectBreak INSTANCE = new EffectBreak();
 
-    public EffectBreak() {
+    private EffectBreak() {
         super(GlyphLib.EffectBreakID, "Break");
     }
 

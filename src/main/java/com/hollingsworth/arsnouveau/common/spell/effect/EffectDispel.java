@@ -22,7 +22,9 @@ import java.util.Collection;
 import java.util.List;
 
 public class EffectDispel extends AbstractEffect {
-    public EffectDispel() {
+    public static EffectDispel INSTANCE = new EffectDispel();
+
+    private EffectDispel() {
         super(GlyphLib.EffectDispelID, "Dispel");
     }
 

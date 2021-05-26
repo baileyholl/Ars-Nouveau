@@ -21,7 +21,10 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class EffectCraft extends AbstractEffect {
-    public EffectCraft() {
+
+    public static EffectCraft INSTANCE = new EffectCraft();
+
+    private EffectCraft() {
         super(GlyphLib.EffectCraftID, "Craft");
     }
 

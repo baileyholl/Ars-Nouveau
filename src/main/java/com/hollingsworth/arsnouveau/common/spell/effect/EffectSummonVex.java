@@ -23,10 +23,10 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
-
 public class EffectSummonVex extends AbstractEffect {
-    public EffectSummonVex() {
+    public static EffectSummonVex INSTANCE = new EffectSummonVex();
+
+    private EffectSummonVex() {
         super(GlyphLib.EffectSummonVexID, "Summon Vex");
     }
 

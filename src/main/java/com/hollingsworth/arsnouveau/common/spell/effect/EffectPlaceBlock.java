@@ -29,7 +29,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class EffectPlaceBlock extends AbstractEffect {
-    public EffectPlaceBlock() {
+    public static EffectPlaceBlock INSTANCE = new EffectPlaceBlock();
+
+    private EffectPlaceBlock() {
         super(GlyphLib.EffectPlaceBlockID, "Place Block");
     }
 

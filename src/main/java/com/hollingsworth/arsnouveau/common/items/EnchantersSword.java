@@ -67,11 +67,11 @@ public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatab
     @Override
     public boolean setSpell(ISpellCaster caster, PlayerEntity player, Hand hand, ItemStack stack, Spell spell) {
         ArrayList<AbstractSpellPart> recipe = new ArrayList<>();
-        recipe.add(new MethodTouch());
+        recipe.add(MethodTouch.INSTANCE);
         recipe.addAll(spell.recipe);
-        recipe.add(new AugmentAmplify());
+        recipe.add(AugmentAmplify.INSTANCE);
         spell.recipe = recipe;
-        spell.setCost(spell.getCastingCost() - new AugmentAmplify().getManaCost());
+        spell.setCost(spell.getCastingCost() - AugmentAmplify.INSTANCE.getManaCost());
         return ICasterTool.super.setSpell(caster, player, hand, stack, spell);
     }
 

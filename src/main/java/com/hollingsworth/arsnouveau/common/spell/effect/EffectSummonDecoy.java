@@ -17,7 +17,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class EffectSummonDecoy extends AbstractEffect {
-    public EffectSummonDecoy() {
+    public static EffectSummonDecoy INSTANCE = new EffectSummonDecoy();
+
+    private EffectSummonDecoy() {
         super(GlyphLib.EffectDecoyID, "Summon Decoy");
     }
 

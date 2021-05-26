@@ -240,8 +240,8 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withReagent(Recipes.ARCHWOOD_LOG)
                 .withPedestalItem(4, Recipes.MANA_GEM)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.INGOTS_GOLD))
-                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile()))
-                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAccelerate()))
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(MethodProjectile.INSTANCE))
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(AugmentAccelerate.INSTANCE))
                 .build());
 
         addRecipe(builder()
@@ -249,14 +249,14 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withReagent(Items.BOW)
                 .withPedestalItem(Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
-                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile()))
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(MethodProjectile.INSTANCE))
                 .build());
 
         addRecipe(builder()
                 .withResult(new ItemStack(ItemsRegistry.AMPLIFY_ARROW, 32))
                 .withReagent( Ingredient.of(ItemTags.ARROWS))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
-                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify()))
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(AugmentAmplify.INSTANCE))
                 .build());
 
 
@@ -264,13 +264,13 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withResult(new ItemStack(ItemsRegistry.SPLIT_ARROW, 32))
                 .withReagent( Ingredient.of(ItemTags.ARROWS))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
-                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentSplit()))
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(AugmentSplit.INSTANCE))
                 .build());
         addRecipe(builder()
                 .withResult(new ItemStack(ItemsRegistry.PIERCE_ARROW, 32))
                 .withReagent( Ingredient.of(ItemTags.ARROWS))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
-                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentPierce()))
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(AugmentPierce.INSTANCE))
                 .build());
 
         addRecipe(builder()
@@ -284,20 +284,20 @@ public class ApparatusRecipeProvider implements IDataProvider {
         addRecipe(builder()
                 .withResult(new ItemStack(ItemsRegistry.POTION_FLASK_EXTEND_TIME))
                 .withReagent(Ingredient.of(ItemsRegistry.POTION_FLASK))
-                .withPedestalItem(8, ArsNouveauAPI.getInstance().getGlyphItem(new AugmentExtendTime()))
+                .withPedestalItem(8, ArsNouveauAPI.getInstance().getGlyphItem(AugmentExtendTime.INSTANCE))
                 .build());
 
 
         addRecipe(builder()
                 .withResult(new ItemStack(ItemsRegistry.POTION_FLASK_AMPLIFY))
                 .withReagent(Ingredient.of(ItemsRegistry.POTION_FLASK))
-                .withPedestalItem(8, ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify()))
+                .withPedestalItem(8, ArsNouveauAPI.getInstance().getGlyphItem(AugmentAmplify.INSTANCE))
                 .build());
 
         addRecipe(builder()
                 .withResult(new ItemStack(BlockRegistry.POTION_MELDER))
                 .withReagent(Ingredient.of(BlockRegistry.POTION_JAR))
-                .withPedestalItem(2, ArsNouveauAPI.getInstance().getGlyphItem(new AugmentExtract()))
+                .withPedestalItem(2, ArsNouveauAPI.getInstance().getGlyphItem(AugmentExtract.INSTANCE))
                 .withPedestalItem(2,Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
                 .withPedestalItem(4,Ingredient.of(Tags.Items.RODS_BLAZE))
                 .build());
@@ -311,17 +311,17 @@ public class ApparatusRecipeProvider implements IDataProvider {
         addRecipe(builder()
                  .withPedestalItem(4, Ingredient.of(Items.BLAZE_POWDER))
                 .withPedestalItem(1,Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
-                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentExtendTime()))
-                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAOE()))
-                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentDampen()))
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(AugmentExtendTime.INSTANCE))
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(AugmentAOE.INSTANCE))
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(AugmentDampen.INSTANCE))
                 .buildEnchantmentRecipe(EnchantmentRegistry.REACTIVE_ENCHANTMENT, 2, 6000));
 
         addRecipe(builder()
                 .withPedestalItem(4, ItemsRegistry.mythicalClay)
                 .withPedestalItem(1,Ingredient.of(Tags.Items.ENDER_PEARLS))
-                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentPierce()))
-                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentExtract()))
-                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentFortune()))
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(AugmentPierce.INSTANCE))
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(AugmentExtract.INSTANCE))
+                .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(AugmentFortune.INSTANCE))
                 .buildEnchantmentRecipe(EnchantmentRegistry.REACTIVE_ENCHANTMENT, 3, 9000));
 
         addRecipe(builder()
@@ -376,16 +376,16 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .buildEnchantmentRecipe(Enchantments.BLAST_PROTECTION, 4, 8000));
 
         addRecipe(builder()
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectAquatic())))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectAquatic.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.DEPTH_STRIDER, 1, 3000));
         addRecipe(builder()
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectAquatic())))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectAquatic.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Items.PRISMARINE_SHARD))
                 .buildEnchantmentRecipe(Enchantments.DEPTH_STRIDER, 2, 6000));
         addRecipe(builder()
-                .withPedestalItem(4,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectAquatic())))
+                .withPedestalItem(4,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectAquatic.INSTANCE)))
                 .withPedestalItem(3, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(1, Ingredient.of(Items.HEART_OF_THE_SEA))
                 .buildEnchantmentRecipe(Enchantments.DEPTH_STRIDER, 3, 9000));
@@ -423,280 +423,280 @@ public class ApparatusRecipeProvider implements IDataProvider {
 
 
         addRecipe(builder()
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectSlowfall())))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectSlowfall.INSTANCE)))
                 .withPedestalItem(1,  Ingredient.of(Tags.Items.SLIMEBALLS))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.FALL_PROTECTION, 1, 2000));
         addRecipe(builder()
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectSlowfall())))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectSlowfall.INSTANCE)))
                 .withPedestalItem(1,  Ingredient.of(Tags.Items.SLIMEBALLS))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.FALL_PROTECTION, 2, 3500));
         addRecipe(builder()
-                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectSlowfall())))
+                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectSlowfall.INSTANCE)))
                 .withPedestalItem(1,  Ingredient.of(Tags.Items.SLIMEBALLS))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2,  Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.FALL_PROTECTION, 3, 5000));
         addRecipe(builder()
-                .withPedestalItem(4,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectSlowfall())))
+                .withPedestalItem(4,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectSlowfall.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2,  Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.FALL_PROTECTION, 4, 6500));
 
         addRecipe(builder()
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectIgnite())))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectIgnite.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2,  Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.FIRE_ASPECT, 1, 2000));
 
         addRecipe(builder()
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectIgnite())))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectIgnite.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2,  Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.FIRE_ASPECT, 2, 4000));
 
         addRecipe(builder()
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectIgnite())))
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectShield())))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectIgnite.INSTANCE)))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectShield.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.FIRE_PROTECTION, 1, 2000));
         addRecipe(builder()
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectIgnite())))
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectShield())))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectIgnite.INSTANCE)))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectShield.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.FIRE_PROTECTION, 2, 3500));
         addRecipe(builder()
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectIgnite())))
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectShield())))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectIgnite.INSTANCE)))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectShield.INSTANCE)))
                 .withPedestalItem(3, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(1,  Ingredient.of(Tags.Items.RODS_BLAZE))
                 .buildEnchantmentRecipe(Enchantments.FIRE_PROTECTION, 3, 5000));
         addRecipe(builder()
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectIgnite())))
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectShield())))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectIgnite.INSTANCE)))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectShield.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2,  Ingredient.of(Tags.Items.RODS_BLAZE))
                 .buildEnchantmentRecipe(Enchantments.FIRE_PROTECTION, 4, 6500));
 
         addRecipe(builder()
-                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectIgnite())))
-                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectShield())))
+                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectIgnite.INSTANCE)))
+                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectShield.INSTANCE)))
                 .withPedestalItem(1, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.RODS_BLAZE))
                 .buildEnchantmentRecipe(Enchantments.FIRE_PROTECTION, 5, 8000));
 
         addRecipe(builder()
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectIgnite())))
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile())))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectIgnite.INSTANCE)))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(MethodProjectile.INSTANCE)))
                 .withPedestalItem(1, Ingredient.of(Tags.Items.RODS_BLAZE))
                 .buildEnchantmentRecipe(Enchantments.FLAMING_ARROWS, 1, 5000));
 
         addRecipe(builder()
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentFortune())))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentFortune.INSTANCE)))
                 .withPedestalItem(1,  Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(6, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.BLOCK_FORTUNE, 1, 6000));
         addRecipe(builder()
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentFortune())))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentFortune.INSTANCE)))
                 .withPedestalItem(4,  Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.BLOCK_FORTUNE, 2, 8000));
         addRecipe(builder()
-                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentFortune())))
+                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentFortune.INSTANCE)))
                 .withPedestalItem(1,  Ingredient.of(Tags.Items.STORAGE_BLOCKS_DIAMOND))
                 .withPedestalItem(2,  Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.BLOCK_FORTUNE, 3, 9000));
 
         addRecipe(builder()
-                .withPedestalItem(7,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile())))
+                .withPedestalItem(7,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(MethodProjectile.INSTANCE)))
                 .withPedestalItem(1,  Ingredient.of(Tags.Items.STORAGE_BLOCKS_DIAMOND))
                 .buildEnchantmentRecipe(Enchantments.INFINITY_ARROWS, 1, 9000));
 
         addRecipe(builder()
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new MethodTouch())))
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectKnockback())))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(MethodTouch.INSTANCE)))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectKnockback.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.KNOCKBACK, 1, 2000));
         addRecipe(builder()
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new MethodTouch())))
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectKnockback())))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(MethodTouch.INSTANCE)))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectKnockback.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.KNOCKBACK, 2, 4000));
 
         addRecipe(builder()
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentFortune())))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentFortune.INSTANCE)))
                 .withPedestalItem(1,  Ingredient.of(Tags.Items.GEMS_EMERALD))
                 .withPedestalItem(6, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.MOB_LOOTING, 1, 6000));
         addRecipe(builder()
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentFortune())))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentFortune.INSTANCE)))
                 .withPedestalItem(4,  Ingredient.of(Tags.Items.GEMS_EMERALD))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.MOB_LOOTING, 2, 8000));
         addRecipe(builder()
-                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentFortune())))
+                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentFortune.INSTANCE)))
                 .withPedestalItem(1,  Ingredient.of(Tags.Items.STORAGE_BLOCKS_EMERALD))
                 .withPedestalItem(2,  Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.MOB_LOOTING, 3, 9000));
 
         addRecipe(builder()
-                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentSplit())))
+                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentSplit.INSTANCE)))
                 .withPedestalItem(5, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.MULTISHOT, 1, 9000));
 
         addRecipe(builder()
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentPierce())))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentPierce.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2,  Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.PIERCING, 1, 2500));
         addRecipe(builder()
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentPierce())))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentPierce.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2,  Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.PIERCING, 2, 5000));
         addRecipe(builder()
-                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentPierce())))
+                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentPierce.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2,  Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.PIERCING, 3, 7500));
         addRecipe(builder()
-                .withPedestalItem(4,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentPierce())))
+                .withPedestalItem(4,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentPierce.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2,  Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.PIERCING, 4, 9000));
 
         addRecipe(builder()
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify())))
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile())))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentAmplify.INSTANCE)))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(MethodProjectile.INSTANCE)))
                 .withPedestalItem(1, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.POWER_ARROWS, 1, 2000));
         addRecipe(builder()
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify())))
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile())))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentAmplify.INSTANCE)))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(MethodProjectile.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.POWER_ARROWS, 2, 3500));
         addRecipe(builder()
-                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify())))
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile())))
+                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentAmplify.INSTANCE)))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(MethodProjectile.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2,  Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.POWER_ARROWS, 3, 5000));
         addRecipe(builder()
-                .withPedestalItem(4,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify())))
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile())))
+                .withPedestalItem(4,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentAmplify.INSTANCE)))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(MethodProjectile.INSTANCE)))
                 .withPedestalItem(1, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2,  Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.POWER_ARROWS, 4, 6500));
         addRecipe(builder()
-                .withPedestalItem(5,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify())))
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile())))
+                .withPedestalItem(5,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentAmplify.INSTANCE)))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(MethodProjectile.INSTANCE)))
                 .withPedestalItem(1, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(1,  Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.POWER_ARROWS, 5, 9000));
 
 
         addRecipe(builder()
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile())))
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectShield())))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(MethodProjectile.INSTANCE)))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectShield.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.PROJECTILE_PROTECTION, 1, 2000));
         addRecipe(builder()
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile())))
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectShield())))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(MethodProjectile.INSTANCE)))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectShield.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.PROJECTILE_PROTECTION, 2, 3500));
         addRecipe(builder()
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile())))
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectShield())))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(MethodProjectile.INSTANCE)))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectShield.INSTANCE)))
                 .withPedestalItem(3, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.PROJECTILE_PROTECTION, 3, 5000));
         addRecipe(builder()
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile())))
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectShield())))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(MethodProjectile.INSTANCE)))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectShield.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.PROJECTILE_PROTECTION, 4, 6500));
 
         addRecipe(builder()
-                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile())))
-                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectShield())))
+                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(MethodProjectile.INSTANCE)))
+                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectShield.INSTANCE)))
                 .withPedestalItem(1, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.PROJECTILE_PROTECTION, 5, 8000));
 
 
         addRecipe(builder()
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new MethodTouch())))
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectShield())))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(MethodTouch.INSTANCE)))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectShield.INSTANCE)))
                 .withPedestalItem(1,  Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.ALL_DAMAGE_PROTECTION, 1, 2000));
         addRecipe(builder()
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new MethodTouch())))
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectShield())))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(MethodTouch.INSTANCE)))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectShield.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2,  Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.ALL_DAMAGE_PROTECTION, 2, 3500));
         addRecipe(builder()
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new MethodTouch())))
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectShield())))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(MethodTouch.INSTANCE)))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectShield.INSTANCE)))
                 .withPedestalItem(3, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2,  Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.ALL_DAMAGE_PROTECTION, 3, 5000));
         addRecipe(builder()
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new MethodTouch())))
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectShield())))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(MethodTouch.INSTANCE)))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectShield.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2,  Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.ALL_DAMAGE_PROTECTION, 4, 6500));
 
         addRecipe(builder()
-                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new MethodTouch())))
-                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectShield())))
+                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(MethodTouch.INSTANCE)))
+                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectShield.INSTANCE)))
                 .withPedestalItem(1, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(1,  Ingredient.of(Tags.Items.STORAGE_BLOCKS_DIAMOND))
                 .buildEnchantmentRecipe(Enchantments.ALL_DAMAGE_PROTECTION, 5, 8000));
 
 
         addRecipe(builder()
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile())))
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectKnockback())))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(MethodProjectile.INSTANCE)))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectKnockback.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.PUNCH_ARROWS, 1, 2000));
         addRecipe(builder()
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile())))
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectKnockback())))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(MethodProjectile.INSTANCE)))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectKnockback.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.PUNCH_ARROWS, 2, 4000));
 
         addRecipe(builder()
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile())))
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectHaste())))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(MethodProjectile.INSTANCE)))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectHaste.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.QUICK_CHARGE, 1, 2000));
         addRecipe(builder()
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile())))
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectHaste())))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(MethodProjectile.INSTANCE)))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectHaste.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.QUICK_CHARGE, 2, 4000));
         addRecipe(builder()
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new MethodProjectile())))
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectHaste())))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(MethodProjectile.INSTANCE)))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectHaste.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.QUICK_CHARGE, 3, 6000));
 
 
         addRecipe(builder()
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectAquatic())))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectAquatic.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.RESPIRATION, 1, 3000));
         addRecipe(builder()
-                .withPedestalItem(4,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectAquatic())))
+                .withPedestalItem(4,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectAquatic.INSTANCE)))
                 .withPedestalItem(4, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.RESPIRATION, 2, 6000));
         addRecipe(builder()
-                .withPedestalItem(6,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectAquatic())))
+                .withPedestalItem(6,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectAquatic.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(Enchantments.RESPIRATION, 3, 9000));
 
@@ -713,25 +713,25 @@ public class ApparatusRecipeProvider implements IDataProvider {
 
         addRecipe(builder()
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ))
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify())))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentAmplify.INSTANCE)))
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.SHARPNESS, 3, 500));
 
         addRecipe(builder()
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ))
-                .withPedestalItem(2, Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify())))
+                .withPedestalItem(2, Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentAmplify.INSTANCE)))
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.SHARPNESS, 4, 6500));
 
         addRecipe(builder()
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ))
-                .withPedestalItem(2, Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify())))
+                .withPedestalItem(2, Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentAmplify.INSTANCE)))
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.SHARPNESS, 5, 8000));
 
         addRecipe(builder()
-                .withPedestalItem(2, Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentExtract())))
-                .withPedestalItem(2, Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify())))
+                .withPedestalItem(2, Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentExtract.INSTANCE)))
+                .withPedestalItem(2, Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentAmplify.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.SILK_TOUCH, 1, 9000));
@@ -767,18 +767,18 @@ public class ApparatusRecipeProvider implements IDataProvider {
 
 
         addRecipe(builder()
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAOE())))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentAOE.INSTANCE)))
                 .withPedestalItem(1, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.SWEEPING_EDGE, 1, 2000));
         addRecipe(builder()
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAOE())))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentAOE.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.SWEEPING_EDGE, 2, 3500));
 
         addRecipe(builder()
-                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAOE())))
+                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentAOE.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(3, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.SWEEPING_EDGE, 3, 5000));
@@ -801,21 +801,21 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .buildEnchantmentRecipe(Enchantments.THORNS, 3, 5000));
 
         addRecipe(builder()
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectShield())))
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify())))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectShield.INSTANCE)))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentAmplify.INSTANCE)))
                 .withPedestalItem(1, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.UNBREAKING, 1, 2000));
         addRecipe(builder()
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectShield())))
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify())))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectShield.INSTANCE)))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentAmplify.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.UNBREAKING, 2, 3500));
 
         addRecipe(builder()
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new EffectShield())))
-                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify())))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(EffectShield.INSTANCE)))
+                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentAmplify.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(Enchantments.UNBREAKING, 3, 5000));
@@ -826,14 +826,14 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .buildEnchantmentRecipe(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, 1, 2000));
         addRecipe(builder()
                 .withPedestalItem(1, BlockRegistry.MANA_BERRY_BUSH)
-                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify())))
+                .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentAmplify.INSTANCE)))
                 .withPedestalItem(4, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, 2, 3500));
 
         addRecipe(builder()
                 .withPedestalItem(1, BlockRegistry.MANA_BERRY_BUSH)
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify())))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentAmplify.INSTANCE)))
                 .withPedestalItem(4, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, 3, 5000));
@@ -846,14 +846,14 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .buildEnchantmentRecipe(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, 1, 2000));
         addRecipe(builder()
                 .withPedestalItem(2, BlockRegistry.MANA_BERRY_BUSH)
-                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentExtendTime())))
+                .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentExtendTime.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, 2, 3500));
 
         addRecipe(builder()
                 .withPedestalItem(2, BlockRegistry.MANA_BERRY_BUSH)
-                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentExtendTime())))
+                .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentExtendTime.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, 3, 5000));
@@ -861,7 +861,7 @@ public class ApparatusRecipeProvider implements IDataProvider {
         addRecipe(builder()
                 .withResult(ItemsRegistry.ENCHANTERS_SWORD)
                 .withReagent(Items.DIAMOND_SWORD)
-                .withPedestalItem(1, ArsNouveauAPI.getInstance().getGlyphItem(new AugmentAmplify()))
+                .withPedestalItem(1, ArsNouveauAPI.getInstance().getGlyphItem(AugmentAmplify.INSTANCE))
                 .withPedestalItem(2,Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .build());

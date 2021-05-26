@@ -14,14 +14,15 @@ import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
-
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class MethodSelf extends AbstractCastMethod {
-    public MethodSelf() {
+    public static MethodSelf INSTANCE = new MethodSelf();
+
+    private MethodSelf() {
         super(GlyphLib.MethodSelfID, "Self");
     }
 

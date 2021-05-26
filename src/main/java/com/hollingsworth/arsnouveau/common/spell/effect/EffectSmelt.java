@@ -29,8 +29,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class EffectSmelt extends AbstractEffect {
+    public static EffectSmelt INSTANCE = new EffectSmelt();
 
-    public EffectSmelt() {
+    private EffectSmelt() {
         super(GlyphLib.EffectSmeltID, "Smelt");
     }
 

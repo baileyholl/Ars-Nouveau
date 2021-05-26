@@ -27,8 +27,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class EffectIgnite  extends AbstractEffect {
+    public static EffectIgnite INSTANCE = new EffectIgnite();
 
-    public EffectIgnite() {
+    private EffectIgnite() {
         super(GlyphLib.EffectIgniteID, "Ignite");
     }
 

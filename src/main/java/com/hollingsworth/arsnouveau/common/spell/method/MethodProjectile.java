@@ -28,8 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MethodProjectile extends AbstractCastMethod {
+    public static MethodProjectile INSTANCE = new MethodProjectile();
 
-    public MethodProjectile() {
+    private MethodProjectile() {
         super(GlyphLib.MethodProjectileID, "Projectile");
     }
 

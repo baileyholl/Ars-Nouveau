@@ -81,6 +81,7 @@ public class Config {
     public static int getSpellCost(String tag){
         return spellCost.containsKey(tag + "_cost") ? spellCost.get(tag+"_cost").get() : getAddonSpellCost(tag);
     }
+    public static Map<String, ForgeConfigSpec> SPELL_CONFIG = new HashMap<>();
 
     static {
         ForgeConfigSpec.Builder SERVER_BUILDER = new ForgeConfigSpec.Builder();
@@ -142,9 +143,11 @@ public class Config {
             spec = spellBuilder.build();
             spellPart.CONFIG = spec;
             ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, spellPart.CONFIG, "ars_nouveau/" + spellPart.tag +".toml");
+            SPELL_CONFIG.put(spellPart.tag, spec);
 
         }
     }
+
 
     public static boolean isStarterEnabled(AbstractSpellPart e){
         return startingSpells.entrySet().stream().noneMatch(entry -> entry.getValue().get() == false && entry.getKey().replace("_starter", "").equals(e.tag));

@@ -11,25 +11,35 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class EffectAquatic extends AbstractEffect {
-    public EffectAquatic() {
+
+    public static EffectAquatic INSTANCE = new EffectAquatic();
+
+    private EffectAquatic() {
         super(GlyphLib.EffectAquatic, "Aquatic");
     }
 
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
-            applyPotion(((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity()), Effects.CONDUIT_POWER, augments);
+            applyConfigPotion(((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity()), Effects.CONDUIT_POWER, augments);
         }
     }
 
     @Override
     public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         return livingEntityHitSuccess(rayTraceResult);
+    }
+
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addDefaultPotionConfig(builder);
     }
 
     @Override

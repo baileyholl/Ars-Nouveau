@@ -323,7 +323,7 @@ public class Recipes extends RecipeProvider {
             shapelessBuilder(getRitualItem(RitualLib.OVERGROWTH))
                     .requires(BlockRegistry.FLOURISHING_LOG)
                     .requires(ItemsRegistry.manaBloom, 3)
-                    .requires(ArsNouveauAPI.getInstance().getGlyphItem(new EffectGrow()), 2)
+                    .requires(ArsNouveauAPI.getInstance().getGlyphItem(EffectGrow.INSTANCE), 2)
                     .save(consumer);
 
             shapelessBuilder(getRitualItem(RitualLib.FERTILITY))
@@ -336,7 +336,7 @@ public class Recipes extends RecipeProvider {
             shapelessBuilder(getRitualItem(RitualLib.RESTORATION))
                     .requires(BlockRegistry.FLOURISHING_LOG)
                     .requires(Items.GOLDEN_APPLE)
-                    .requires(ArsNouveauAPI.getInstance().getGlyphItem(new EffectHeal()), 1)
+                    .requires(ArsNouveauAPI.getInstance().getGlyphItem(EffectHeal.INSTANCE), 1)
                     .save(consumer);
 
             shapelessBuilder(getRitualItem(RitualLib.DISINTEGRATION))

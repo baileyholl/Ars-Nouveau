@@ -7,10 +7,10 @@ import net.minecraft.item.Item;
 
 import javax.annotation.Nullable;
 
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
-
 public class AugmentPierce extends AbstractAugment {
-    public AugmentPierce() {
+    public static AugmentPierce INSTANCE = new AugmentPierce();
+
+    private AugmentPierce() {
         super(GlyphLib.AugmentPierceID, "Pierce");
     }
 

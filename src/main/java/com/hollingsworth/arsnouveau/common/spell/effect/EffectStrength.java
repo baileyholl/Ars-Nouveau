@@ -16,7 +16,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class EffectStrength extends AbstractEffect {
-    public EffectStrength() {
+    public static EffectStrength INSTANCE = new EffectStrength();
+
+    private EffectStrength() {
         super(GlyphLib.EffectStrength, "Strength");
     }
 

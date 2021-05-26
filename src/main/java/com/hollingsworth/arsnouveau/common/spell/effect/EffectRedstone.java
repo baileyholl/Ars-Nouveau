@@ -22,7 +22,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class EffectRedstone extends AbstractEffect {
-    public EffectRedstone() {
+    public static EffectRedstone INSTANCE = new EffectRedstone();
+
+    private EffectRedstone() {
         super(GlyphLib.EffectRedstoneID, "Redstone Signal");
     }
 

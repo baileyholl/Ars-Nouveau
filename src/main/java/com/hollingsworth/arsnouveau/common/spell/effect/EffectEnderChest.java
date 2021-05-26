@@ -20,13 +20,12 @@ import net.minecraftforge.common.util.FakePlayer;
 import javax.annotation.Nullable;
 import java.util.List;
 
-
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
-
 public class EffectEnderChest extends AbstractEffect {
+    public static EffectEnderChest INSTANCE = new EffectEnderChest();
+
     private static final ITextComponent CONTAINER_NAME = new TranslationTextComponent("container.enderchest");
 
-    public EffectEnderChest() {
+    private EffectEnderChest() {
         super(GlyphLib.EffectEnderChestID, "Access Ender Inventory");
     }
 

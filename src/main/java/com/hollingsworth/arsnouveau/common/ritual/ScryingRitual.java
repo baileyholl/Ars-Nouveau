@@ -34,7 +34,7 @@ public class ScryingRitual extends AbstractRitual {
             List<ServerPlayerEntity> players =  getWorld().getEntitiesOfClass(ServerPlayerEntity.class, new AxisAlignedBB(getPos()).inflate(5.0));
             if(players.size() > 0){
                 for(ServerPlayerEntity playerEntity : players){
-                    playerEntity.addEffect(new EffectInstance(ModPotions.SCRYING_EFFECT, 60 * 20 * 5 * (didConsumeItem(ArsNouveauAPI.getInstance().getGlyphItem(new AugmentExtendTime())) ? 3 : 1), 0));
+                    playerEntity.addEffect(new EffectInstance(ModPotions.SCRYING_EFFECT, 60 * 20 * 5 * (didConsumeItem(ArsNouveauAPI.getInstance().getGlyphItem(AugmentExtendTime.INSTANCE)) ? 3 : 1), 0));
                     CompoundNBT tag = playerEntity.getPersistentData().getCompound(PlayerEntity.PERSISTED_NBT_TAG);
                     ItemStack item = getConsumedItems().stream().filter(i -> i.getItem() instanceof BlockItem).findFirst().orElse(ItemStack.EMPTY);
                     tag.putString("an_scrying", item.getItem().getRegistryName().toString());
@@ -53,7 +53,7 @@ public class ScryingRitual extends AbstractRitual {
 
     @Override
     public boolean canConsumeItem(ItemStack stack) {
-        Item extendTime = ArsNouveauAPI.getInstance().getGlyphItem(new AugmentExtendTime());
+        Item extendTime = ArsNouveauAPI.getInstance().getGlyphItem(AugmentExtendTime.INSTANCE);
         if(didConsumeItem(extendTime) && getConsumedItems().size() == 1 && stack.getItem() instanceof BlockItem)
             return true;
 

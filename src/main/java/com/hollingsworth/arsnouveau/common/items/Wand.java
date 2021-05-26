@@ -26,7 +26,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -120,8 +119,8 @@ public class Wand extends ModItem  implements IAnimatable, ICasterTool {
     @Override
     public boolean setSpell(ISpellCaster caster, PlayerEntity player, Hand hand, ItemStack stack, Spell spell) {
         ArrayList<AbstractSpellPart> recipe = new ArrayList<>();
-        recipe.add(new MethodProjectile());
-        recipe.add(new AugmentAccelerate());
+        recipe.add(MethodProjectile.INSTANCE);
+        recipe.add(AugmentAccelerate.INSTANCE);
         recipe.addAll(spell.recipe);
         spell.recipe = recipe;
         return ICasterTool.super.setSpell(caster, player, hand, stack, spell);

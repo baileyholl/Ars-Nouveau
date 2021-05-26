@@ -15,10 +15,10 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
-
 public class EffectSlowfall extends AbstractEffect {
-    public EffectSlowfall() {
+    public static EffectSlowfall INSTANCE = new EffectSlowfall();
+
+    private EffectSlowfall() {
         super(GlyphLib.EffectSlowfallID, "Slowfall");
     }
 

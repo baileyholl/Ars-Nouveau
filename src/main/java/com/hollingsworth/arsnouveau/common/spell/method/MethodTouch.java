@@ -14,15 +14,15 @@ import net.minecraft.item.Items;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
-
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class MethodTouch extends AbstractCastMethod {
+    public static MethodTouch INSTANCE = new MethodTouch();
 
-    public MethodTouch() {
+    private MethodTouch() {
         super(GlyphLib.MethodTouchID, "Touch");
     }
 

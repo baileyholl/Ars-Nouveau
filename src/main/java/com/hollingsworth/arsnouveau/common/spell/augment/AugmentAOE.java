@@ -7,10 +7,10 @@ import net.minecraft.item.Items;
 
 import javax.annotation.Nullable;
 
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
-
 public class AugmentAOE extends AbstractAugment {
-    public AugmentAOE() {
+    public static AugmentAOE INSTANCE = new AugmentAOE();
+
+    private AugmentAOE() {
         super(GlyphLib.AugmentAOEID, "AOE");
     }
 

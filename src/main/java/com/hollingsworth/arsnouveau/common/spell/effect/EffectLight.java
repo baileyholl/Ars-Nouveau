@@ -25,8 +25,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class EffectLight extends AbstractEffect {
+    public static EffectLight INSTANCE = new EffectLight();
 
-    public EffectLight() {
+    private EffectLight() {
         super(GlyphLib.EffectLightID, "Light");
     }
 

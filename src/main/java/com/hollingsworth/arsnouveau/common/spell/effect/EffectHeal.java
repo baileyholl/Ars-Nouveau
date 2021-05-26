@@ -13,12 +13,15 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class EffectHeal extends AbstractEffect {
-    public EffectHeal() {
+    public static EffectHeal INSTANCE = new EffectHeal();
+
+    private EffectHeal() {
         super(GlyphLib.EffectHealID, "Heal");
     }
 
@@ -29,7 +32,7 @@ public class EffectHeal extends AbstractEffect {
             if(entity.removed || entity.getHealth() <= 0)
                 return;
 
-            float healVal = 3.0f + 3 * getBuffCount(augments, AugmentAmplify.class);
+            float healVal = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * getBuffCount(augments, AugmentAmplify.class));
             if(getBuffCount(augments, AugmentExtendTime.class) > 0){
                 applyPotionWithCap(entity, Effects.REGENERATION, augments, 5, 5, 5);
             }else{
@@ -39,9 +42,14 @@ public class EffectHeal extends AbstractEffect {
                     entity.heal(healVal);
                 }
             }
-
         }
+    }
 
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addGenericDouble(builder, 3.0, "Base heal amount", "base_heal");
+        addAmpConfig(builder, 3.0);
     }
 
     @Override

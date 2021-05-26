@@ -114,7 +114,6 @@ public class ANExplosion extends Explosion {
                         double d14 = (double)getSeenPercent(vector3d, entity);
                         double d10 = (1.0D - d12) * d14;
                         float damage = Math.min(Math.max(0.0f,(float)((int)((d10 * d10 + d10) / 2.0D * 7.0D * (double)f2 + 1.0D))), 6F + this.amps * 2.5f);
-                        System.out.println(damage);
                         entity.hurt(this.getDamageSource(), damage);
                         double d11 = d10;
                         if (entity instanceof LivingEntity) {

@@ -7,11 +7,10 @@ import net.minecraft.item.Items;
 
 import javax.annotation.Nullable;
 
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
-
 public class AugmentExtract extends AbstractAugment {
+    public static AugmentExtract INSTANCE = new AugmentExtract();
 
-    public AugmentExtract() {
+    private AugmentExtract() {
         super(GlyphLib.AugmentExtractID, "Extract");
     }
 

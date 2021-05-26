@@ -15,54 +15,72 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
-
 public class EffectColdSnap extends AbstractEffect {
-    public EffectColdSnap() {
+
+    public static EffectColdSnap INSTANCE = new EffectColdSnap();
+
+    private EffectColdSnap() {
         super(GlyphLib.EffectColdSnapID, "Cold Snap");
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof EntityRayTraceResult){
-            Entity entity = ((EntityRayTraceResult) rayTraceResult).getEntity();
-            if(!(entity instanceof LivingEntity))
-                return;
-            LivingEntity livingEntity = (LivingEntity) entity;
-            Vector3d vec = safelyGetHitPos(rayTraceResult);
-            float damage = 6.0f + 2.5f*getAmplificationBonus(augments);
-            int range = 3 + getBuffCount(augments, AugmentAOE.class);
-            int snareSec = 5 + getDurationModifier(augments);
-            if(livingEntity.isInWaterOrRain() || livingEntity.getEffect(Effects.MOVEMENT_SLOWDOWN) != null){
-                dealDamage(world, shooter, damage, augments, livingEntity, buildDamageSource(world, shooter).setMagic());
-                ((ServerWorld)world).sendParticles(ParticleTypes.SPIT, vec.x, vec.y +0.5, vec.z,50,
-                        ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1),ParticleUtil.inRange(-0.1, 0.1), 0.3);
-                livingEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 20 * snareSec, 20));
-                for(Entity e : world.getEntities(shooter, new AxisAlignedBB(
-                        livingEntity.blockPosition().north(range).east(range).above(range),  livingEntity.blockPosition().south(range).west(range).below(range)))){
-                    if(e.equals(livingEntity) || !(e instanceof LivingEntity))
-                        continue;
-                    if(((LivingEntity) e).getEffect(Effects.MOVEMENT_SLOWDOWN) != null || e.isInWaterOrRain()){
-                        dealDamage(world, shooter, damage, augments, e, buildDamageSource(world, shooter).setMagic());
-                        vec = e.position();
-                        ((ServerWorld)world).sendParticles(ParticleTypes.SPIT, vec.x, vec.y +0.5, vec.z,50,
-                                ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1),ParticleUtil.inRange(-0.1, 0.1), 0.3);
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        super.onResolveEntity(rayTraceResult, world, shooter, augments, spellContext);
+        Entity entity = ((EntityRayTraceResult) rayTraceResult).getEntity();
+        if(!(entity instanceof LivingEntity))
+            return;
+        LivingEntity livingEntity = (LivingEntity) entity;
+        Vector3d vec = safelyGetHitPos(rayTraceResult);
+        float damage = (float) (DAMAGE.get() + AMP_VALUE.get()*getAmplificationBonus(augments));
+        int range = 3 + getBuffCount(augments, AugmentAOE.class);
+        int snareSec = POTION_TIME.get() + EXTEND_TIME.get() * getDurationModifier(augments);
 
-                        ((LivingEntity) e).addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 20 * snareSec, 20));
-                    }else{
-                        ((LivingEntity) e).addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 20*snareSec, getAmplificationBonus(augments)));
-                    }
-                }
+        if(!canDamage(livingEntity))
+            return;
+
+        damage(vec, world, shooter, augments, damage, snareSec, livingEntity);
+
+        for(Entity e : world.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(livingEntity.blockPosition().north(range).east(range).above(range),  livingEntity.blockPosition().south(range).west(range).below(range)))){
+            if(e.equals(livingEntity) || !(e instanceof LivingEntity))
+                continue;
+            if(((LivingEntity) e).getEffect(Effects.MOVEMENT_SLOWDOWN) != null || e.isInWaterOrRain()){
+                vec = e.position();
+                damage(vec, world, shooter, augments, damage, snareSec, (LivingEntity) e);
+
+            }else{
+                ((LivingEntity) e).addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 20*snareSec, getAmplificationBonus(augments)));
             }
         }
+
+    }
+
+    public boolean canDamage(LivingEntity livingEntity){
+        return livingEntity.isInWaterOrRain() || livingEntity.getEffect(Effects.MOVEMENT_SLOWDOWN) != null;
+    }
+
+    public void damage(Vector3d vec, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, float damage, int snareTime, LivingEntity livingEntity){
+        dealDamage(world, shooter, damage, augments, livingEntity, buildDamageSource(world, shooter).setMagic());
+        ((ServerWorld)world).sendParticles(ParticleTypes.SPIT, vec.x, vec.y +0.5, vec.z,50,
+                ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1),ParticleUtil.inRange(-0.1, 0.1), 0.3);
+        livingEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 20 * snareTime, 20));
+    }
+
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addDamageConfig(builder, 6.0);
+        addAmpConfig(builder, 2.5);
+        addPotionConfig(builder, 5);
+        addExtendTimeConfig(builder, 1);
+
     }
 
     @Override
@@ -77,7 +95,7 @@ public class EffectColdSnap extends AbstractEffect {
 
     @Override
     public Item getCraftingReagent() {
-        return ArsNouveauAPI.getInstance().getGlyphItem(new EffectFreeze());
+        return ArsNouveauAPI.getInstance().getGlyphItem(EffectFreeze.INSTANCE);
     }
 
     @Override

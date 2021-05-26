@@ -26,7 +26,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class EffectIntangible extends AbstractEffect {
-    public EffectIntangible() {
+    public static EffectIntangible INSTANCE = new EffectIntangible();
+
+    private EffectIntangible() {
         super(GlyphLib.EffectIntangibleID, "Intangible");
     }
 

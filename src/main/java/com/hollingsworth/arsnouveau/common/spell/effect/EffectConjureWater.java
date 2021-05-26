@@ -25,7 +25,10 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class EffectConjureWater extends AbstractEffect {
-    public EffectConjureWater() {
+
+    public static EffectConjureWater INSTANCE = new EffectConjureWater();
+
+    private EffectConjureWater() {
         super(GlyphLib.EffectConjureWaterID, "Conjure Water");
     }
 

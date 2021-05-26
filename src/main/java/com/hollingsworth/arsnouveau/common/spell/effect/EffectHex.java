@@ -16,8 +16,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class EffectHex extends AbstractEffect {
+    public static EffectHex INSTANCE = new EffectHex();
 
-    public EffectHex() {
+    private EffectHex() {
         super(GlyphLib.EffectHexID, "Hex");
     }
 
@@ -38,7 +39,7 @@ public class EffectHex extends AbstractEffect {
     @Nullable
     @Override
     public Item getCraftingReagent() {
-        return ArsNouveauAPI.getInstance().getGlyphItem(new EffectWither());
+        return ArsNouveauAPI.getInstance().getGlyphItem(EffectWither.INSTANCE);
     }
 
     @Override

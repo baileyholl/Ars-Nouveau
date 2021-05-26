@@ -23,21 +23,21 @@ public class EntityEvokerFangs extends EvokerFangsEntity {
     private boolean clientSideAttackStarted;
     private LivingEntity caster;
     private UUID casterUuid;
-    float bonusDamage;
 
+    float damage;
     public EntityEvokerFangs(EntityType<? extends EvokerFangsEntity> p_i50170_1_, World p_i50170_2_) {
         super(p_i50170_1_, p_i50170_2_);
     }
 
 
 
-    public EntityEvokerFangs(World worldIn, double x, double y, double z, float p_i47276_8_, int p_i47276_9_, LivingEntity casterIn, float bonusDamage) {
+    public EntityEvokerFangs(World worldIn, double x, double y, double z, float p_i47276_8_, int p_i47276_9_, LivingEntity casterIn, float damage) {
         this(EntityType.EVOKER_FANGS, worldIn);
         this.warmupDelayTicks = p_i47276_9_;
         this.setOwner(casterIn);
         this.yRot = p_i47276_8_ * (180F / (float)Math.PI);
         this.setPos(x, y, z);
-        this.bonusDamage = bonusDamage;
+        this.damage = damage;
     }
 
 
@@ -86,7 +86,6 @@ public class EntityEvokerFangs extends EvokerFangsEntity {
 
     private void damage(LivingEntity p_190551_1_) {
         LivingEntity livingentity = this.getOwner();
-        float damage = 6.0f + bonusDamage;
         if (p_190551_1_.isAlive() && !p_190551_1_.isInvulnerable() && p_190551_1_ != livingentity) {
             if (livingentity == null) {
                 p_190551_1_.hurt(DamageSource.MAGIC, damage);
@@ -116,9 +115,8 @@ public class EntityEvokerFangs extends EvokerFangsEntity {
         }
 
     }
-    /**
-     * Handler for {@link World#setEntityState}
-     */
+
+
     @OnlyIn(Dist.CLIENT)
     public void handleEntityEvent(byte id) {
         super.handleEntityEvent(id);

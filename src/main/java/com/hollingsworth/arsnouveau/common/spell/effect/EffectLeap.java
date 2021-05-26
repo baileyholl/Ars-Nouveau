@@ -14,7 +14,9 @@ import net.minecraft.world.World;
 import java.util.List;
 
 public class EffectLeap extends AbstractEffect {
-    public EffectLeap() {
+    public static EffectLeap INSTANCE = new EffectLeap();
+
+    private EffectLeap() {
         super(GlyphLib.EffectLeapID, "Leap");
     }
 

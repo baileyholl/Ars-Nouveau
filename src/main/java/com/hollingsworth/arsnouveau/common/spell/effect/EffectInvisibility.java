@@ -15,11 +15,11 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
-
 public class EffectInvisibility extends AbstractEffect {
+    public static EffectInvisibility INSTANCE = new EffectInvisibility();
 
-    public EffectInvisibility() {
+
+    private EffectInvisibility() {
         super(GlyphLib.EffectInvisibilityID, "Invisibility");
     }
 
@@ -32,7 +32,7 @@ public class EffectInvisibility extends AbstractEffect {
 
     @Override
     public Item getCraftingReagent() {
-        return ArsNouveauAPI.getInstance().getGlyphItem(new EffectPhantomBlock());
+        return ArsNouveauAPI.getInstance().getGlyphItem(EffectPhantomBlock.INSTANCE);
     }
 
     @Override

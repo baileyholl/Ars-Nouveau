@@ -23,16 +23,17 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
-
 public class EffectFell extends AbstractEffect {
+    public static EffectFell INSTANCE = new EffectFell();
+
     public static ITag.INamedTag<Block> FELLABLE =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "harvest/fellable"));
 
-    public EffectFell() {
+    private EffectFell() {
         super(GlyphLib.EffectFellID, "Fell");
     }
 
@@ -41,7 +42,7 @@ public class EffectFell extends AbstractEffect {
         BlockPos blockPos = ray.getBlockPos();
         BlockState state = world.getBlockState(blockPos);
         if (isTree(state)) {
-            Set<BlockPos> list = getTree(world, blockPos, 50 + 50 * getBuffCount(augments, AugmentAOE.class));
+            Set<BlockPos> list = getTree(world, blockPos, GENERIC_INT.get()+ AOE_BONUS.get() * getBuffCount(augments, AugmentAOE.class));
             list.forEach(listPos -> {
                 if (!BlockUtil.destroyRespectsClaim(shooter, world, listPos))
                     return;
@@ -57,6 +58,14 @@ public class EffectFell extends AbstractEffect {
             });
             world.levelEvent(2001, blockPos, Block.getId(state));
         }
+    }
+
+    public ForgeConfigSpec.IntValue AOE_BONUS;
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addGenericInt(builder, 50, "Base amount of harvested blocks", "base_harvest");
+        AOE_BONUS = builder.comment("Additional max blocks per AOE").defineInRange("aoe_bonus", 50, 0, Integer.MAX_VALUE);
     }
 
     public boolean isTree(BlockState blockstate){

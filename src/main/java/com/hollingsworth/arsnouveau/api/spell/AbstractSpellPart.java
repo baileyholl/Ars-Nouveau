@@ -124,6 +124,7 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
     public ForgeConfigSpec CONFIG;
     public ForgeConfigSpec.IntValue COST;
     public ForgeConfigSpec.BooleanValue ENABLED;
+
     public void buildConfig(ForgeConfigSpec.Builder builder){
         builder.comment("General settings").push("general");
         ENABLED = builder.comment("Is Enabled?").define("enabled", true);
