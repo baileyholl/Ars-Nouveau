@@ -11,6 +11,8 @@ import java.util.*;
  *
  * That is to say if it contains all the required elements to be cast, and that it does not violate any configured
  * limits to spell construction such as limits on the number of times a given glyph may appear.
+ *
+ * Instances of this class should be obtained from {@link com.hollingsworth.arsnouveau.api.ArsNouveauAPI}.
  */
 public class StandardSpellValidator implements ISpellValidator {
     // Validators are static and immutable. It's safe to eagerly construct these and pull them in when a validator is requested.
