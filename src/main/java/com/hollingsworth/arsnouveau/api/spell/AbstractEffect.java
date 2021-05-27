@@ -198,7 +198,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public void addAmpConfig(ForgeConfigSpec.Builder builder, double defaultValue){
-        AMP_VALUE = builder.defineInRange("damage", defaultValue, 0, Integer.MAX_VALUE);
+        AMP_VALUE = builder.defineInRange("amplify", defaultValue, 0, Integer.MAX_VALUE);
     }
 
     public void addPotionConfig(ForgeConfigSpec.Builder builder, int defaultTime){

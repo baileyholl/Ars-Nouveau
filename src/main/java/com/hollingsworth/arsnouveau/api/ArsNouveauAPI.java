@@ -71,7 +71,7 @@ public class ArsNouveauAPI {
     private List<AbstractSpellPart> startingSpells;
 
     public List<AbstractSpellPart> getDefaultStartingSpells(){
-        return startingSpells.stream().filter(Config::isStarterEnabled).collect(Collectors.toList());
+        return spell_map.values().stream().filter(Config::isStarterEnabled).collect(Collectors.toList());
     }
 
     public boolean addStartingSpell(String tag){

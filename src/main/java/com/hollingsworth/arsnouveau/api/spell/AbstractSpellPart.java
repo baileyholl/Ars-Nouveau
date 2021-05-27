@@ -30,7 +30,7 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
         this.tag = tag;
         this.name = name;
     }
-
+    // Final mana cost
     public int getAdjustedManaCost(List<AbstractAugment> augmentTypes){
         int cost = getConfigCost();
         for(AbstractAugment a: augmentTypes){
@@ -124,11 +124,18 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
     public ForgeConfigSpec CONFIG;
     public ForgeConfigSpec.IntValue COST;
     public ForgeConfigSpec.BooleanValue ENABLED;
+    public ForgeConfigSpec.BooleanValue STARTER_SPELL;
 
     public void buildConfig(ForgeConfigSpec.Builder builder){
         builder.comment("General settings").push("general");
         ENABLED = builder.comment("Is Enabled?").define("enabled", true);
         COST = builder.comment("Cost").defineInRange("cost", getManaCost(), Integer.MIN_VALUE, Integer.MAX_VALUE);
+        STARTER_SPELL = builder.comment("Is Starter Glyph?").define("starter", defaultedStarterGlyph());
+    }
+
+    // Default value for the starter spell config
+    public boolean defaultedStarterGlyph(){
+        return false;
     }
 
     public String getItemID(){

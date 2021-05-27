@@ -153,4 +153,9 @@ public class MethodProjectile extends AbstractCastMethod {
     public Item getCraftingReagent() {
         return Items.BOW;
     }
+
+    @Override
+    public boolean defaultedStarterGlyph() {
+        return true;
+    }
 }

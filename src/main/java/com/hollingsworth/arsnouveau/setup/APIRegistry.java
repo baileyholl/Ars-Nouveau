@@ -114,7 +114,6 @@ public class APIRegistry {
         registerSpell(EffectSummonDecoy.INSTANCE);
         registerSpell(EffectHex.INSTANCE);
         registerSpell(MethodUnderfoot.INSTANCE);
-        registerStartingSpells();
 
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());
@@ -127,18 +126,6 @@ public class APIRegistry {
         registerRitual(new RitualHealing());
         registerRitual(new RitualWarp());
         registerRitual(new ScryingRitual());
-    }
-
-    public static void registerStartingSpells() {
-        addStartingSpell(GlyphLib.MethodProjectileID);
-        addStartingSpell(GlyphLib.MethodTouchID);
-        addStartingSpell(GlyphLib.MethodSelfID);
-        addStartingSpell(GlyphLib.EffectBreakID);
-        addStartingSpell(GlyphLib.EffectHarmID);
-    }
-
-    public static void addStartingSpell(String spellTag) {
-        ArsNouveauAPI.getInstance().addStartingSpell(spellTag);
     }
 
     public static void registerSpell(AbstractSpellPart spellPart) {

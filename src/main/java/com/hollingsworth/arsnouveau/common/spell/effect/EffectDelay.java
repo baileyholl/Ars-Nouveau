@@ -46,7 +46,7 @@ public class EffectDelay extends AbstractEffect {
 
     @Override
     public int getManaCost() {
-        return 50;
+        return 0;
     }
 
     @Override

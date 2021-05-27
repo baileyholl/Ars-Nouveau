@@ -94,6 +94,11 @@ public class EffectBreak extends AbstractEffect {
     }
 
     @Override
+    public boolean defaultedStarterGlyph() {
+        return true;
+    }
+
+    @Override
     public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         return rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getBlockPos()).getMaterial() != Material.AIR && canBlockBeHarvested(augments, world, ((BlockRayTraceResult) rayTraceResult).getBlockPos());
     }

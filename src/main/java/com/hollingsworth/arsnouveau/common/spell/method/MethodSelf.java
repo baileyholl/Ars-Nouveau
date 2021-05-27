@@ -92,4 +92,9 @@ public class MethodSelf extends AbstractCastMethod {
     public Item getCraftingReagent() {
         return Items.GLASS_BOTTLE;
     }
+
+    @Override
+    public boolean defaultedStarterGlyph() {
+        return true;
+    }
 }

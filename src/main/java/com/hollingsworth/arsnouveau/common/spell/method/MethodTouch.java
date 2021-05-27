@@ -92,4 +92,9 @@ public class MethodTouch extends AbstractCastMethod {
     public Item getCraftingReagent() {
         return Items.STONE_BUTTON;
     }
+
+    @Override
+    public boolean defaultedStarterGlyph() {
+        return true;
+    }
 }
