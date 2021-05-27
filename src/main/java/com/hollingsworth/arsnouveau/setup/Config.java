@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.setup;
 
+import com.electronwill.nightconfig.core.InMemoryFormat;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -9,10 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.loading.FMLPaths;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Mod.EventBusSubscriber
 public class Config {

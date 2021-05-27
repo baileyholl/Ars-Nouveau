@@ -6,6 +6,7 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -29,6 +30,11 @@ public abstract class AbstractCastMethod extends AbstractSpellPart {
 
     public abstract boolean wouldCastOnEntitySuccessfully(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments);
 
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        super.buildAugmentLimitsConfig(builder, getDefaultAugmentLimits());
+    }
 
     public AbstractCastMethod(String tag, String description){
         super(tag,description);

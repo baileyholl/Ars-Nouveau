@@ -191,6 +191,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     @Override
     public void buildConfig(ForgeConfigSpec.Builder builder) {
         super.buildConfig(builder);
+        super.buildAugmentLimitsConfig(builder, getDefaultAugmentLimits());
     }
 
     public void addDamageConfig(ForgeConfigSpec.Builder builder, double defaultValue){

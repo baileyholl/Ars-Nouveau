@@ -4,15 +4,23 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
+import com.hollingsworth.arsnouveau.common.util.SpellPartConfigUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public abstract class AbstractSpellPart implements ISpellTier, Comparable<AbstractSpellPart> {
 
@@ -125,12 +133,36 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
     public ForgeConfigSpec.IntValue COST;
     public ForgeConfigSpec.BooleanValue ENABLED;
     public ForgeConfigSpec.BooleanValue STARTER_SPELL;
+    public ForgeConfigSpec.IntValue PER_SPELL_LIMIT;
 
     public void buildConfig(ForgeConfigSpec.Builder builder){
         builder.comment("General settings").push("general");
         ENABLED = builder.comment("Is Enabled?").define("enabled", true);
         COST = builder.comment("Cost").defineInRange("cost", getManaCost(), Integer.MIN_VALUE, Integer.MAX_VALUE);
         STARTER_SPELL = builder.comment("Is Starter Glyph?").define("starter", defaultedStarterGlyph());
+        PER_SPELL_LIMIT = builder.comment("The maximum number of times this glyph may appear in a single spell").defineInRange("per_spell_limit", Integer.MAX_VALUE, 1, Integer.MAX_VALUE);
+    }
+
+    /** Returns the number of times that this glyph may be modified by the given augment. */
+    public int getAugmentLimit(String augmentTag) {
+        if (augmentLimits == null) {
+            return Integer.MAX_VALUE;
+        } else {
+            return augmentLimits.getAugmentLimit(augmentTag);
+        }
+    }
+
+    // Augment limits only apply to cast forms and effects, but not augments.
+    private SpellPartConfigUtil.AugmentLimits augmentLimits;
+
+    /** Registers the glyph_limits configuration entry for augmentation limits. */
+    protected void buildAugmentLimitsConfig(ForgeConfigSpec.Builder builder, Map<String, Integer> defaults) {
+        this.augmentLimits = SpellPartConfigUtil.buildAugmentLimitsConfig(builder, defaults);
+    }
+
+    /** Override this method to provide defaults for the augmentation limits configuration. */
+    protected Map<String, Integer> getDefaultAugmentLimits() {
+        return new HashMap<>();
     }
 
     // Default value for the starter spell config
