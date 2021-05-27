@@ -11,6 +11,7 @@ import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -26,7 +27,7 @@ public class EffectKnockback extends AbstractEffect {
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
             LivingEntity target = (LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity();
-            float strength = 1.5f + getAmplificationBonus(augments);
+            float strength = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * getAmplificationBonus(augments));
             knockback(target, shooter, strength);
             target.hurtMarked = true;
         }
@@ -36,6 +37,12 @@ public class EffectKnockback extends AbstractEffect {
         target.knockback(strength,MathHelper.sin(entityKnockingAway.yRot * ((float)Math.PI / 180F)), (double)(-MathHelper.cos(entityKnockingAway.yRot * ((float)Math.PI / 180F))));
     }
 
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addGenericDouble(builder, 1.5, "Base knockback value", "base_value");
+        addAmpConfig(builder, 1);
+    }
 
     @Override
     public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {

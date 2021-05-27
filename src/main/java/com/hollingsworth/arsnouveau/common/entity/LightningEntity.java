@@ -40,6 +40,9 @@ public class LightningEntity extends LightningBoltEntity {
 
     public int amps;
     public int extendTimes;
+    public float damage;
+    public float ampScalar;
+    public float wetBonus;
 
     public LightningEntity(EntityType<? extends LightningBoltEntity> p_i231491_1_, World world) {
         super(p_i231491_1_, world);
@@ -136,7 +139,7 @@ public class LightningEntity extends LightningBoltEntity {
     }
 
     public float getDamage(Entity entity){
-        return 5.0f + 3.0f * amps + (entity.isInWaterOrRain() ? 2.0f : 0.0f);
+        return damage + ampScalar * amps + (entity.isInWaterOrRain() ? wetBonus : 0.0f);
     }
 
     /**

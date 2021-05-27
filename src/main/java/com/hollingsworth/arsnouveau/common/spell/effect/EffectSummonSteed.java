@@ -15,6 +15,7 @@ import net.minecraft.item.Items;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -30,7 +31,8 @@ public class EffectSummonSteed extends AbstractEffect {
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         super.onResolve(rayTraceResult, world, shooter, augments, spellContext);
-        int ticks = 60 * 20 * (5 + 2* getDurationModifier(augments));
+        int ticks = 20 * (GENERIC_INT.get() +  EXTEND_TIME.get() * getDurationModifier(augments));
+
         if(!canSummon(shooter))
             return;
         Vector3d hit = rayTraceResult.getLocation();
@@ -44,6 +46,14 @@ public class EffectSummonSteed extends AbstractEffect {
         //horse.setItemStackToSlot(EquipmentSlotType.CHEST, new ItemStack(Items.DIAMOND_HORSE_ARMOR));
         horse.setDropChance(EquipmentSlotType.CHEST, 0.0F);
         applySummoningSickness(shooter, ticks/2);
+    }
+
+
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addExtendTimeConfig(builder, 120);
+        addGenericInt(builder, 300, "Base duration in seconds", "duration");
     }
 
     @Override

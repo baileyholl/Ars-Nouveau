@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.List;
 
@@ -26,11 +27,18 @@ public class EffectLeap extends AbstractEffect {
             EntityRayTraceResult rayTraceResult1 = (EntityRayTraceResult) rayTraceResult;
             LivingEntity e = (LivingEntity) rayTraceResult1.getEntity();
 
-            double bonus = 1.5 + getAmplificationBonus(augments);
+            double bonus = GENERIC_DOUBLE.get() + AMP_VALUE.get() * getAmplificationBonus(augments);
             e.setDeltaMovement(e.getLookAngle().x * bonus, e.getLookAngle().y * bonus, e.getLookAngle().z * bonus);
             e.fallDistance = 0;
             e.hurtMarked = true;
         }
+    }
+
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addGenericDouble(builder, 1.5, "Base knockup amount", "knock_up");
+        addAmpConfig(builder, 1.0);
     }
 
     @Override

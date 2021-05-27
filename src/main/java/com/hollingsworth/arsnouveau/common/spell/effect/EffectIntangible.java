@@ -21,6 +21,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -37,7 +38,7 @@ public class EffectIntangible extends AbstractEffect {
         super.onResolveBlock(rayTraceResult, world, shooter, augments, spellContext);
         BlockPos pos =rayTraceResult.getBlockPos();
         int aoeBuff = getBuffCount(augments, AugmentAOE.class);
-        int duration = 60 + 20 * getDurationModifier(augments);
+        int duration = GENERIC_INT.get() + EXTEND_TIME.get() * getDurationModifier(augments);
 
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult,aoeBuff, getBuffCount(augments, AugmentPierce.class));
         for(BlockPos pos1 : posList) {
@@ -50,8 +51,15 @@ public class EffectIntangible extends AbstractEffect {
             world.setBlockAndUpdate(pos1, BlockRegistry.INTANGIBLE_AIR.defaultBlockState());
             IntangibleAirTile tile = ((IntangibleAirTile) world.getBlockEntity(pos1));
             tile.stateID = id;
-            tile.maxLength = duration;
+            tile.maxLength = duration * 20;
         }
+    }
+
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addGenericInt(builder, 3, "Base duration, in seconds", "base");
+        addExtendTimeConfig(builder, 1);
     }
 
     @Override

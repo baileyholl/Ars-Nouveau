@@ -11,6 +11,7 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -25,8 +26,15 @@ public class EffectStrength extends AbstractEffect {
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
-            applyPotionWithCap((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity(), Effects.DAMAGE_BOOST, augments, 30, 8, 3);
+            applyPotionWithCap((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity(), Effects.DAMAGE_BOOST, augments, POTION_TIME.get(), EXTEND_TIME.get(), 3);
         }
+    }
+
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addPotionConfig(builder, 30);
+        addExtendTimeConfig(builder, 8);
     }
 
     @Override

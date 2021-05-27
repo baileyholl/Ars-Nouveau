@@ -11,6 +11,7 @@ import net.minecraft.item.Items;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -28,7 +29,14 @@ public class EffectWither extends AbstractEffect {
         Entity entity = rayTraceResult.getEntity();
         if(!(entity instanceof LivingEntity))
             return;
-        applyPotion((LivingEntity) entity, Effects.WITHER,augments);
+        applyConfigPotion((LivingEntity) entity, Effects.WITHER,augments);
+    }
+
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addPotionConfig(builder, 30);
+        addExtendTimeConfig(builder, 8);
     }
 
     @Override

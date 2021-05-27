@@ -22,6 +22,7 @@ import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -34,23 +35,32 @@ public class EffectIgnite  extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof EntityRayTraceResult){
-            int duration = 3 + 2*getBuffCount(augments, AugmentExtendTime.class);
-            ((EntityRayTraceResult) rayTraceResult).getEntity().setSecondsOnFire(duration);
-        }else if(rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getBlockPos().above()).getMaterial() == Material.AIR){
-            Direction face = ((BlockRayTraceResult) rayTraceResult).getDirection();
-            for(BlockPos pos : SpellUtil.calcAOEBlocks( shooter, ((BlockRayTraceResult) rayTraceResult).getBlockPos(), (BlockRayTraceResult)rayTraceResult, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))) {
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        super.onResolveEntity(rayTraceResult, world, shooter, augments, spellContext);
+        int duration = POTION_TIME.get() + EXTEND_TIME.get()*getBuffCount(augments, AugmentExtendTime.class);
+        rayTraceResult.getEntity().setSecondsOnFire(duration);
+    }
 
+    @Override
+    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        super.onResolveBlock(rayTraceResult, world, shooter, augments, spellContext);
+        if(world.getBlockState((rayTraceResult).getBlockPos().above()).getMaterial() == Material.AIR) {
+            Direction face = (rayTraceResult).getDirection();
+            for (BlockPos pos : SpellUtil.calcAOEBlocks(shooter, (rayTraceResult).getBlockPos(), rayTraceResult, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))) {
                 BlockPos blockpos1 = pos.relative(face);
                 if (AbstractFireBlock.canBePlacedAt(world, blockpos1, face) && BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, blockpos1)) {
                     BlockState blockstate1 = AbstractFireBlock.getState(world, blockpos1);
                     world.setBlock(blockpos1, blockstate1, 11);
                 }
-//                if(world.getBlockState(pos.up()).getMaterial() == Material.AIR)
-//                    world.setBlockState(pos.up(), Blocks.FIRE.getDefaultState());
             }
         }
+    }
+
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addExtendTimeConfig(builder, 2);
+        addPotionConfig(builder, 3);
     }
 
     @Override

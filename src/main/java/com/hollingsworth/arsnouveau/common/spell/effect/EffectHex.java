@@ -11,6 +11,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -28,7 +29,14 @@ public class EffectHex extends AbstractEffect {
         Entity entity = rayTraceResult.getEntity();
         if(!(entity instanceof LivingEntity))
             return;
-        applyPotionWithCap((LivingEntity) entity, ModPotions.HEX_EFFECT, augments, 30, 8, 5);
+        applyPotionWithCap((LivingEntity) entity, ModPotions.HEX_EFFECT, augments, POTION_TIME.get(), EXTEND_TIME.get(), 5);
+    }
+
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addPotionConfig(builder, 30);
+        addExtendTimeConfig(builder, 8);
     }
 
     @Override

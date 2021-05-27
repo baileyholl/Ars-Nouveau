@@ -12,6 +12,7 @@ import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -24,18 +25,20 @@ public class EffectPull extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof EntityRayTraceResult){
-            Entity target = ((EntityRayTraceResult) rayTraceResult).getEntity();
-            Vector3d vec3d = new Vector3d(shooter.getX() - target.getX(), shooter.getY() - target.getY(), shooter.getZ() - target.getZ());
-            double d1 = 7;
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        super.onResolveEntity(rayTraceResult, world, shooter, augments, spellContext);
+        Entity target = ((EntityRayTraceResult) rayTraceResult).getEntity();
+        Vector3d vec3d = new Vector3d(shooter.getX() - target.getX(), shooter.getY() - target.getY(), shooter.getZ() - target.getZ());
+        double d2 = GENERIC_DOUBLE.get() + AMP_VALUE.get() * getAmplificationBonus(augments);
+        target.setDeltaMovement(target.getDeltaMovement().add(vec3d.normalize().scale(d2 )));
+        target.hurtMarked = true;
+    }
 
-            double d2 = 1.0D + 0.5 * getAmplificationBonus(augments);
-            //target.setMotion(target.getMotion().add(vec3d.normalize().scale(d2 * d2 * 0.1D)));
-            target.setDeltaMovement(target.getDeltaMovement().add(vec3d.normalize().scale(d2 )));
-            target.hurtMarked = true;
-            //target.move(MoverType.PLAYER, target.getMotion());
-        }
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addGenericDouble(builder, 1.0, "Base movement velocity", "base_value");
+        addAmpConfig(builder, 0.5);
     }
 
     @Override

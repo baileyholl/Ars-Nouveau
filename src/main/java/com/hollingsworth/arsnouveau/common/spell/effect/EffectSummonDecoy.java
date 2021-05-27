@@ -12,6 +12,7 @@ import net.minecraft.item.Items;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -30,7 +31,7 @@ public class EffectSummonDecoy extends AbstractEffect {
         if(shooter != null){
             Vector3d pos = safelyGetHitPos(rayTraceResult);
             EntityDummy dummy = new EntityDummy(world);
-            dummy.ticksLeft = 30 * 20 + getDurationModifier(augments) * 20 * 15;
+            dummy.ticksLeft = 20 * (GENERIC_INT.get() + getDurationModifier(augments) * EXTEND_TIME.get());
 //            dummy.setUUID(shooter.getUUID());
             dummy.setPos(pos.x, pos.y +1, pos.z);
             dummy.setOwnerID(shooter.getUUID());
@@ -41,6 +42,12 @@ public class EffectSummonDecoy extends AbstractEffect {
         }
     }
 
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addExtendTimeConfig(builder, 15);
+        addGenericInt(builder, 30, "Base duration in seconds", "duration");
+    }
 
     @Override
     public int getManaCost() {

@@ -14,6 +14,7 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.List;
 
@@ -30,10 +31,17 @@ public class EffectSnare extends AbstractEffect {
             Entity livingEntity = ((EntityRayTraceResult) rayTraceResult).getEntity();
             if(!(livingEntity instanceof LivingEntity))
                 return;
-            ((LivingEntity)livingEntity).addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN,  100  + 20 * getBuffCount(augments, AugmentExtendTime.class), 20));
+            ((LivingEntity)livingEntity).addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN,  POTION_TIME.get() * 20  + 20 * EXTEND_TIME.get() * getBuffCount(augments, AugmentExtendTime.class), 20));
             livingEntity.setDeltaMovement(0,0,0);
             livingEntity.hurtMarked = true;
         }
+    }
+
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addPotionConfig(builder, 8);
+        addExtendTimeConfig(builder, 1);
     }
 
     @Override

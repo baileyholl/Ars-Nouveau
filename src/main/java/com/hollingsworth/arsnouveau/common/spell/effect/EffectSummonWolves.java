@@ -13,6 +13,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -30,7 +31,7 @@ public class EffectSummonWolves extends AbstractEffect {
         if(!canSummon(shooter))
             return;
         Vector3d hit = rayTraceResult.getLocation();
-        int ticks = 60 * 20 * (1 + getDurationModifier(augments));
+        int ticks = 20 * (GENERIC_INT.get() + EXTEND_TIME.get() * getDurationModifier(augments));
         for(int i = 0; i < 2; i++){
             SummonWolf wolf = new SummonWolf(ModEntities.SUMMON_WOLF, world);
             wolf.ticksLeft = ticks;
@@ -42,6 +43,13 @@ public class EffectSummonWolves extends AbstractEffect {
             summonLivingEntity(rayTraceResult, world, shooter, augments, spellContext, wolf);
         }
         applySummoningSickness(shooter, ticks);
+    }
+
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addGenericInt(builder, 60, "Base duration in seconds", "duration");
+        addExtendTimeConfig(builder, 60);
     }
 
     @Override

@@ -13,6 +13,7 @@ import net.minecraft.item.Items;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -32,7 +33,18 @@ public class EffectLightning extends AbstractEffect {
         lightningBoltEntity.setCause(shooter instanceof ServerPlayerEntity ? (ServerPlayerEntity) shooter : null);
         lightningBoltEntity.amps = getAmplificationBonus(augments);
         lightningBoltEntity.extendTimes = getDurationModifier(augments);
+        lightningBoltEntity.damage = DAMAGE.get().floatValue();
+        lightningBoltEntity.ampScalar = AMP_VALUE.get().floatValue();
+        lightningBoltEntity.wetBonus = GENERIC_DOUBLE.get().floatValue();
         (world).addFreshEntity(lightningBoltEntity);
+    }
+
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addDamageConfig(builder, 5.0);
+        addAmpConfig(builder, 3.0);
+        addGenericDouble(builder, 2.0, "Bonus damage for wet entities", "wet_bonus");
     }
 
     @Override

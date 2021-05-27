@@ -17,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -44,7 +45,7 @@ public class EffectRedstone extends AbstractEffect {
             }
             int timeBonus = getBuffCount(augments, AugmentExtendTime.class);
             world.setBlockAndUpdate(pos, state);
-            world.getBlockTicks().scheduleTick(pos, state.getBlock(), 5 + timeBonus * 10);
+            world.getBlockTicks().scheduleTick(pos, state.getBlock(), GENERIC_INT.get() + timeBonus * BONUS_TIME.get());
 
             BlockPos hitPos = pos.relative(((BlockRayTraceResult) rayTraceResult).getDirection().getOpposite());
 
@@ -52,6 +53,15 @@ public class EffectRedstone extends AbstractEffect {
             world.updateNeighborsAt(pos, state.getBlock());
             world.updateNeighborsAt(hitPos, state.getBlock());
         }
+    }
+
+
+    public ForgeConfigSpec.IntValue BONUS_TIME;
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addGenericInt(builder, 5, "Base time in ticks", "base_duration");
+        BONUS_TIME = builder.comment("Extend time bonus, in ticks").defineInRange("extend_time", 10, 0, Integer.MAX_VALUE);
     }
 
     @Nullable

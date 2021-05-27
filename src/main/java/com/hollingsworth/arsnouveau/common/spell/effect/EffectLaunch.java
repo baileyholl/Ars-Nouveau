@@ -11,6 +11,7 @@ import net.minecraft.item.Items;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -26,10 +27,17 @@ public class EffectLaunch extends AbstractEffect {
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof EntityRayTraceResult){
             Entity entity = ((EntityRayTraceResult) rayTraceResult).getEntity();
-            entity.setDeltaMovement(entity.getDeltaMovement().add(0, 0.8 + .25*getAmplificationBonus(augments), 0));
+            entity.setDeltaMovement(entity.getDeltaMovement().add(0, GENERIC_DOUBLE.get() + AMP_VALUE.get() * getAmplificationBonus(augments), 0));
             entity.hurtMarked = true;
             entity.fallDistance = 0.0f;
         }
+    }
+
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addGenericDouble(builder, 0.8, "Base knockup amount", "knockup");
+        addAmpConfig(builder, 0.25);
     }
 
     @Override
