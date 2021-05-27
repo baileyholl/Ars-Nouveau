@@ -21,8 +21,8 @@ import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class EntityFollowProjectile extends ArrowEntity {
-    public static final DataParameter<BlockPos> to = EntityDataManager.defineId(ArrowEntity.class, DataSerializers.BLOCK_POS);
-    public static final DataParameter<BlockPos> from = EntityDataManager.defineId(ArrowEntity.class, DataSerializers.BLOCK_POS);
+    public static final DataParameter<BlockPos> to = EntityDataManager.defineId(EntityFollowProjectile.class, DataSerializers.BLOCK_POS);
+    public static final DataParameter<BlockPos> from = EntityDataManager.defineId(EntityFollowProjectile.class, DataSerializers.BLOCK_POS);
     public static final DataParameter<Integer> RED = EntityDataManager.defineId(EntityFollowProjectile.class, DataSerializers.INT);
     public static final DataParameter<Integer> GREEN = EntityDataManager.defineId(EntityFollowProjectile.class, DataSerializers.INT);
     public static final DataParameter<Integer> BLUE = EntityDataManager.defineId(EntityFollowProjectile.class, DataSerializers.INT);
