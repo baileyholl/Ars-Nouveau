@@ -20,28 +20,6 @@ public class APIRegistry {
                 new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentAmplifyID)),
                 new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentAmplifyID)),
                 new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentAmplifyID))}, 3000));
-//
-//        registerApparatusRecipe(new EnchantmentRecipe(new ItemStack[]{
-//                new ItemStack(Items.BLAZE_POWDER),
-//                new ItemStack(Items.BLAZE_POWDER),
-//                new ItemStack(Items.BLAZE_POWDER),
-//                new ItemStack(Items.BLAZE_POWDER),
-//                new ItemStack(Items.GOLD_BLOCK),
-//                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentExtendTimeID)),
-//                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentAOEID)),
-//                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentDampenID))
-//        }, EnchantmentRegistry.REACTIVE_ENCHANTMENT, 2, 6000));
-//
-//        registerApparatusRecipe(new EnchantmentRecipe(new ItemStack[]{
-//                ItemsRegistry.mythicalClay.getStack(),
-//                ItemsRegistry.mythicalClay.getStack(),
-//                ItemsRegistry.mythicalClay.getStack(),
-//                ItemsRegistry.mythicalClay.getStack(),
-//                new ItemStack(Items.ENDER_PEARL),
-//                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentPierceID)),
-//                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentExtractID)),
-//                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentFortuneID))
-//        }, EnchantmentRegistry.REACTIVE_ENCHANTMENT, 3, 9000));
 
         registerApparatusRecipe(new SpellWriteRecipe());
     }
