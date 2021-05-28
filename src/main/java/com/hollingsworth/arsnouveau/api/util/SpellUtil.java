@@ -9,6 +9,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.FakePlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,12 @@ public class SpellUtil {
     }
 
     public static List<BlockPos> calcAOEBlocks(LivingEntity caster, BlockPos origin, BlockRayTraceResult mop, int width, int height, int depth, int distance) {
-        return calcAOEBlocks(caster.getDirection().getNormal(), origin, mop, width, height, depth, distance);
+        Vector3i hitVec = caster.getDirection().getNormal();
+        if(caster instanceof FakePlayer){ // Do I know why I need this? No. But I do, or else spell turrets break on the wrong plane.
+            mop = new BlockRayTraceResult( mop.getLocation(), mop.getDirection(), mop.getBlockPos(), false);
+        }
+
+        return calcAOEBlocks(hitVec, origin, mop, width, height, depth, distance);
     }
 
     public static List<BlockPos> calcAOEBlocks(Vector3d hitVec, BlockPos origin, BlockRayTraceResult mop, int width, int height, int depth, int distance) {

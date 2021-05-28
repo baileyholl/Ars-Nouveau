@@ -47,10 +47,11 @@ public class EffectPlaceBlock extends AbstractEffect {
             BlockPos hitPos = result.isInside() ? pos1 : pos1.relative(result.getDirection());
             if(spellContext.castingTile instanceof IPlaceBlockResponder){
                 ItemStack stack = ((IPlaceBlockResponder) spellContext.castingTile).onPlaceBlock();
-                if(stack == null || !(stack.getItem() instanceof BlockItem))
+                if(stack.isEmpty() || !(stack.getItem() instanceof BlockItem))
                     return;
+                BlockRayTraceResult resolveResult = new BlockRayTraceResult(new Vector3d(hitPos.getX(), hitPos.getY(), hitPos.getZ()), result.getDirection(), hitPos, false);
                 BlockItem item = (BlockItem) stack.getItem();
-                attemptPlace(world, stack, item, result);
+                attemptPlace(world, stack, item, resolveResult);
             }else if(shooter instanceof IPlaceBlockResponder){
                 ItemStack stack = ((IPlaceBlockResponder) shooter).onPlaceBlock();
                 if(stack.isEmpty() || !(stack.getItem() instanceof BlockItem))

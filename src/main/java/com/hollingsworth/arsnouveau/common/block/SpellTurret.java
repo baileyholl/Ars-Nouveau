@@ -67,7 +67,7 @@ public class SpellTurret extends ModBlock {
         Direction direction = world.getBlockState(pos).getValue(FACING);
         FakePlayer fakePlayer = new ANFakePlayer(world);
         fakePlayer.setPos(pos.getX(), pos.getY(), pos.getZ());
-        EntitySpellResolver resolver = new EntitySpellResolver(tile.recipe,new SpellContext(tile.recipe, fakePlayer).withCastingTile(world.getBlockEntity(pos)));
+        EntitySpellResolver resolver = new EntitySpellResolver(tile.recipe, new SpellContext(tile.recipe, fakePlayer).withCastingTile(world.getBlockEntity(pos)));
         if(resolver.castType instanceof MethodProjectile){
             shootProjectile(world,pos,tile, resolver);
             return;

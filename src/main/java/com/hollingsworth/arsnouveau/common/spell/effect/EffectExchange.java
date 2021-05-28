@@ -153,9 +153,7 @@ public class EffectExchange extends AbstractEffect {
         destroyBlockSafelyWithoutSound(world, pos1, false, shooter);
 
         if(placeState != null){
-            //world.setBlock(pos1, placeState, 2);
             item.place(context);
-            stack.shrink(1);
             return true;
         }
         return false;
