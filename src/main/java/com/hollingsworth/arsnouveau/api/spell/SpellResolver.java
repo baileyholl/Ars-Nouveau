@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
@@ -9,11 +10,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -32,6 +31,7 @@ public class SpellResolver {
     public Spell spell;
     public final SpellContext spellContext;
     public boolean silent;
+    private final ISpellValidator spellValidator;
 
     public SpellResolver(AbstractCastMethod cast, List<AbstractSpellPart> spell, SpellContext context){
         this.castType = cast;
@@ -39,6 +39,8 @@ public class SpellResolver {
         this.spellContext = context;
         if(castType != null)
             this.castType.resolver = this;
+        ArsNouveauAPI api = ArsNouveauAPI.getInstance();
+        this.spellValidator = api.getSpellCastingSpellValidator();
     }
 
 
@@ -65,7 +67,7 @@ public class SpellResolver {
         if(this.castType != null)
             this.castType.resolver = this;
 
-}
+    }
     public SpellResolver(List<AbstractSpellPart> spell, boolean silent, SpellContext context){
         this(spell, context);
         this.silent = silent;
@@ -73,22 +75,20 @@ public class SpellResolver {
     }
 
     public boolean canCast(LivingEntity entity){
-        int numMethods = 0;
-        if(spell == null || !spell.isValid() || castType == null) {
-            if(!silent)
-                entity.sendMessage(new StringTextComponent("Invalid Spell."), Util.NIL_UUID);
-            return false;
-        }
-        for(AbstractSpellPart spellPart : spell.recipe){
-            if(spellPart instanceof AbstractCastMethod)
-                numMethods++;
-        }
-        if(numMethods > 1 && !silent) {
-            PortUtil.sendMessage(entity,new TranslationTextComponent("ars_nouveau.alert.duplicate_method"));
+        // Validate the spell
+        List<SpellValidationError> validationErrors = spellValidator.validate(spell.recipe);
 
+        if (validationErrors.isEmpty()) {
+            // Validation successful. We can check the player's mana now.
+            return enoughMana(entity);
+        } else {
+            // Validation failed, explain why if applicable
+            if (!silent && !entity.getCommandSenderWorld().isClientSide) {
+                // Sending only the first error to avoid spam
+                PortUtil.sendMessage(entity, validationErrors.get(0).makeTextComponentExisting());
+            }
             return false;
         }
-        return enoughMana(entity);
     }
 
     boolean enoughMana(LivingEntity entity){

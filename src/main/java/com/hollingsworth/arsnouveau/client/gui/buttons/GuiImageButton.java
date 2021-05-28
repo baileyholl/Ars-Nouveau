@@ -55,14 +55,5 @@ public class GuiImageButton extends Button
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, image_width, image_height,ms);
         }
-        if(isHovered){
-            String name = "hi";
-            if(!name.isEmpty()){
-                List<String> tip = new ArrayList<>();
-                tip.add(name);
-                parent.tooltip = tip;
-            }
-        }
-
     }
 }

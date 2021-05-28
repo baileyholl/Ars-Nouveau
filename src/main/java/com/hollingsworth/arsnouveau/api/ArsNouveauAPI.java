@@ -10,6 +10,8 @@ import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.ritual.RitualContext;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
+import com.hollingsworth.arsnouveau.api.spell.ISpellValidator;
+import com.hollingsworth.arsnouveau.common.spell.validation.StandardSpellValidator;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
@@ -32,6 +34,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Main class of the Ars Nouveau API.
+ *
+ * Obtain an instance with {@link ArsNouveauAPI#getInstance()}.
+ */
 public class ArsNouveauAPI {
 
 
@@ -63,6 +70,11 @@ public class ArsNouveauAPI {
      * Contains the list of parchment item instances created during registration
      */
     private HashMap<String, RitualTablet> ritualParchmentMap;
+
+    /** Validator to use when crafting a spell in the spell book. */
+    private ISpellValidator craftingSpellValidator;
+    /** Validator to use when casting a spell. */
+    private ISpellValidator castingSpellValidator;
 
     private List<IEnchantingRecipe> enchantingApparatusRecipes;
     /**
@@ -213,6 +225,23 @@ public class ArsNouveauAPI {
         return brewingRecipes;
     }
 
+    /**
+     * Returns the {@link ISpellValidator} that enforces the standard rules for spell crafting.
+     * This validator relaxes the rule about starting with a cast method, to allow for spells that will be imprinted
+     * onto caster items, which generally have a built-in cast method.
+     */
+    public ISpellValidator getSpellCraftingSpellValidator() {
+        return craftingSpellValidator;
+    }
+
+    /**
+     * Returns the {@link ISpellValidator} that enforces the standard rules for spells at cast time.
+     * This validator enforces all rules, asserting that a spell can be cast.
+     */
+    public ISpellValidator getSpellCastingSpellValidator() {
+        return castingSpellValidator;
+    }
+
     private ArsNouveauAPI(){
         spell_map = new HashMap<>();
         glyphMap = new HashMap<>();
@@ -220,13 +249,15 @@ public class ArsNouveauAPI {
         enchantingApparatusRecipes = new ArrayList<>();
         ritualMap = new HashMap<>();
         ritualParchmentMap = new HashMap<>();
+        craftingSpellValidator = new StandardSpellValidator(false);
+        castingSpellValidator = new StandardSpellValidator(true);
     }
 
-    public static ArsNouveauAPI getInstance(){
-        if(arsNouveauAPI == null)
-            arsNouveauAPI = new ArsNouveauAPI();
+    /** Retrieves a handle to the singleton instance. */
+    public static ArsNouveauAPI getInstance() {
         return arsNouveauAPI;
     }
 
-    private static ArsNouveauAPI arsNouveauAPI = null;
+    // This is needed internally by the mod, so just make it eagerly.
+    private static final ArsNouveauAPI arsNouveauAPI = new ArsNouveauAPI();
 }

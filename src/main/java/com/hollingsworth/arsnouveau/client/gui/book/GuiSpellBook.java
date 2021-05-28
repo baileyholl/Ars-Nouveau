@@ -2,13 +2,11 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.buttons.CraftingButton;
+import com.hollingsworth.arsnouveau.client.gui.buttons.CreateSpellButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GlyphButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiSpellSlot;
@@ -16,7 +14,8 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellbook;
-import com.hollingsworth.arsnouveau.setup.Config;
+import com.hollingsworth.arsnouveau.common.spell.validation.CombinedSpellValidator;
+import com.hollingsworth.arsnouveau.common.spell.validation.GlyphMaxTierValidator;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
@@ -27,12 +26,12 @@ import net.minecraft.client.gui.widget.button.ChangePageButton;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.Color;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import vazkii.patchouli.api.PatchouliAPI;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GuiSpellBook extends BaseBook {
@@ -48,12 +47,19 @@ public class GuiSpellBook extends BaseBook {
     public GuiSpellSlot selected_slot;
     public int max_spell_tier; // Used to load spells that are appropriate tier
     List<CraftingButton> craftingCells;
-    public List<AbstractSpellPart>unlockedSpells;
+    public List<AbstractSpellPart> unlockedSpells;
+    public List<AbstractSpellPart> castMethods;
+    public List<AbstractSpellPart> augments;
     public List<AbstractSpellPart> effects;
-    public List<Widget> effectButtons;
+    public List<GlyphButton> castMethodButtons;
+    public List<GlyphButton> augmentButtons;
+    public List<GlyphButton> effectButtons;
     public int page = 0;
+    public List<SpellValidationError> validationErrors;
     ChangePageButton nextButton;
     ChangePageButton previousButton;
+    ISpellValidator spellValidator;
+
     public GuiSpellBook(ArsNouveauAPI api, CompoundNBT tag, int tier, String unlockedSpells) {
         super();
         this.api = api;
@@ -62,8 +68,30 @@ public class GuiSpellBook extends BaseBook {
         this.max_spell_tier = tier;
         this.spell_book_tag = tag;
         this.unlockedSpells = SpellRecipeUtil.getSpellsFromString(unlockedSpells);
-        this.effects = this.unlockedSpells.stream().filter(a -> a instanceof AbstractEffect).collect(Collectors.toList());
-        effectButtons = new ArrayList<>();
+
+        this.castMethods = new ArrayList<>();
+        this.augments = new ArrayList<>();
+        this.effects = new ArrayList<>();
+
+        // Pre-partition the known spell glyphs
+        for (AbstractSpellPart part : this.unlockedSpells) {
+            if (part instanceof AbstractCastMethod) {
+                this.castMethods.add(part);
+            } else if (part instanceof AbstractAugment) {
+                this.augments.add(part);
+            } else if (part instanceof AbstractEffect) {
+                this.effects.add(part);
+            }
+        }
+
+        this.castMethodButtons = new ArrayList<>();
+        this.augmentButtons = new ArrayList<>();
+        this.effectButtons = new ArrayList<>();
+        this.validationErrors = new LinkedList<>();
+        this.spellValidator = new CombinedSpellValidator(
+                api.getSpellCraftingSpellValidator(),
+                new GlyphMaxTierValidator(tier)
+        );
     }
 
     @Override
@@ -84,8 +112,10 @@ public class GuiSpellBook extends BaseBook {
         }
         updateCraftingSlots(selected_slot_ind);
 
-        addSpellParts(0);
-        addButton(new GuiImageButton(bookRight - 71, bookBottom - 13, 0,0,50, 12, 50, 12, "textures/gui/create_icon.png", this::onCreateClick));
+        addCastMethodParts();
+        addAugmentParts();
+        addEffectParts(0);
+        addButton(new CreateSpellButton(this, bookRight - 71, bookBottom - 13, this::onCreateClick));
         addButton(new GuiImageButton(bookRight - 126, bookBottom - 13, 0,0,41, 12, 41, 12, "textures/gui/clear_icon.png", this::clear));
 
         spell_name = new NoShadowTextField(minecraft.font, bookLeft + 32, bookTop + FULL_HEIGHT - 11,
@@ -135,6 +165,8 @@ public class GuiSpellBook extends BaseBook {
         }
         previousButton.active = false;
         previousButton.visible = false;
+
+        validate();
     }
 
     public void onSearchChanged(String str){
@@ -150,50 +182,36 @@ public class GuiSpellBook extends BaseBook {
         }
     }
 
-    public void addSpellParts(int page){
-        for(Widget w : effectButtons) {
-            buttons.remove(w);
-            children.remove(w);
-        }
-        effectButtons.clear();
-        Collections.sort(unlockedSpells);
+    private void addCastMethodParts() {
+        layoutParts(castMethods, castMethodButtons, bookLeft + 20, bookTop + 34, 2);
+    }
 
+    private void addAugmentParts() {
+        layoutParts(augments, augmentButtons, bookLeft + 20, bookTop + 88, 3);
+    }
+
+    private void addEffectParts(int page) {
         List<AbstractSpellPart> displayedEffects = effects.subList(36 * page, Math.min(effects.size(), 36 * (page + 1)));
-        //Adding spell parts
-        int numCast = 0;
-        int numEffect = 0;
-        int numAugment = 0;
-        for(AbstractSpellPart key  : unlockedSpells){
-            AbstractSpellPart spell = this.api.getSpell_map().get(key.tag);
-            GlyphButton cell = null;
-            if(spell.getTier().ordinal() > max_spell_tier)
-                continue; //Skip spells too high of a tier
+        layoutParts(displayedEffects, effectButtons, bookLeft + 154, bookTop + 34, 6);
+    }
 
-            if(spell instanceof AbstractCastMethod) {
-                int xOffset = 20 * (numCast % 6 );
-                int yOffset = (numCast / 6) * 18 ;
-                cell = new GlyphButton(this, bookLeft + 20 + xOffset, bookTop + 34 + yOffset, false, spell.getIcon(), spell.tag);
-                numCast++;
-            }else if(spell instanceof AbstractAugment){
-                int xOffset = 20 * (numAugment % 6 );
-                int yOffset = (numAugment / 6) * 18 ;
-                cell = new GlyphButton(this, bookLeft + 20 + xOffset, bookTop + 88 +  yOffset, false, spell.getIcon(), spell.tag);
-                numAugment++;
-            }else{
-                continue;
-            }
-            addButton(cell);
+    private void layoutParts(List<AbstractSpellPart> parts, List<GlyphButton> glyphButtons, int xStart, int yStart, int maxRows) {
+        // Clear out the old buttons
+        for (GlyphButton b : glyphButtons) {
+            buttons.remove(b);
+            children.remove(b);
         }
-        for(AbstractSpellPart s : displayedEffects){
-            AbstractEffect spell = (AbstractEffect)s;
-            if(!Config.isSpellEnabled(s.tag) || spell.getTier().ordinal() > max_spell_tier)
-                continue;
-            GlyphButton cell;
-            int xOffset = 20 * (numEffect % 6 );
-            int yOffset = (numEffect / 6) * 18 ;
-            cell = new GlyphButton(this, bookLeft + 154 + xOffset, bookTop + 34 +  yOffset, false, spell.getIcon(), spell.tag);
-            numEffect ++;
-            effectButtons.add(addButton(cell));
+        glyphButtons.clear();
+
+        final int PER_ROW = 6;
+        int toLayout = Math.min(parts.size(), PER_ROW * maxRows);
+        for (int i = 0; i < toLayout; i++) {
+            AbstractSpellPart part = parts.get(i);
+            int xOffset = 20 * (i % PER_ROW);
+            int yOffset = (i / PER_ROW) * 18;
+            GlyphButton cell = new GlyphButton(this, xStart + xOffset, yStart + yOffset, false, part.getIcon(), part.tag);
+            glyphButtons.add(cell);
+            addButton(cell);
         }
     }
 
@@ -205,7 +223,8 @@ public class GuiSpellBook extends BaseBook {
         }
         previousButton.active = true;
         previousButton.visible = true;
-        addSpellParts(page);
+        addEffectParts(page);
+        validate();
     }
 
     public void onPageDec(Button button){
@@ -219,7 +238,8 @@ public class GuiSpellBook extends BaseBook {
             nextButton.visible = true;
             nextButton.active = true;
         }
-        addSpellParts(page);
+        addEffectParts(page);
+        validate();
     }
 
     public void onDocumentationClick(Button button){
@@ -232,17 +252,21 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void onCraftingSlotClick(Button button){
-        ((CraftingButton) button).spellTag = "";
-        ((CraftingButton) button).resourceIcon = "";
+        ((CraftingButton) button).clear();
+        validate();
     }
 
     public void onGlyphClick(Button button){
         GlyphButton button1 = (GlyphButton) button;
-        for(CraftingButton b : craftingCells){
-            if(b.resourceIcon.equals("")){
-                b.resourceIcon = button1.resourceIcon;
-                b.spellTag = button1.spell_id;
-                return;
+
+        if (button1.validationErrors.isEmpty()) {
+            for (CraftingButton b : craftingCells) {
+                if (b.resourceIcon.equals("")) {
+                    b.resourceIcon = button1.resourceIcon;
+                    b.spellTag = button1.spell_id;
+                    validate();
+                    return;
+                }
             }
         }
     }
@@ -254,6 +278,7 @@ public class GuiSpellBook extends BaseBook {
         this.selected_cast_slot = this.selected_slot.slotNum;
         updateCraftingSlots(this.selected_cast_slot);
         spell_name.setValue(SpellBook.getSpellName(spell_book_tag, this.selected_cast_slot));
+        validate();
     }
 
     public void updateCraftingSlots(int bookSlot){
@@ -271,19 +296,21 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void clear(Button button){
-        for (int i = 0; i < craftingCells.size(); i++) {
-            CraftingButton slot = craftingCells.get(i);
-            slot.spellTag = "";
-            slot.resourceIcon = "";
+        for (CraftingButton slot : craftingCells) {
+            slot.clear();
         }
+        validate();
     }
 
-    public void onCreateClick(Button button){
-        List<String> ids = new ArrayList<>();
-        for(CraftingButton slot : craftingCells){
-            ids.add(slot.spellTag);
+    public void onCreateClick(Button button) {
+        validate();
+        if (validationErrors.isEmpty()) {
+            List<String> ids = new ArrayList<>();
+            for (CraftingButton slot : craftingCells) {
+                ids.add(slot.spellTag);
+            }
+            Networking.INSTANCE.sendToServer(new PacketUpdateSpellbook(ids.toString(), this.selected_cast_slot, this.spell_name.getValue()));
         }
-        Networking.INSTANCE.sendToServer(new PacketUpdateSpellbook(ids.toString(), this.selected_cast_slot, this.spell_name.getValue()));
     }
 
     public static void open(ArsNouveauAPI api, CompoundNBT spell_book_tag, int tier, String unlockedSpells){
@@ -299,8 +326,73 @@ public class GuiSpellBook extends BaseBook {
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15,72,15, stack);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/clear_paper.png"), 161, 179, 0, 0, 47, 15,47,15, stack);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15,56,15, stack);
-        minecraft.font.draw(stack,new TranslationTextComponent("ars_nouveau.spell_book_gui.create").getString(), 233, 183, -8355712);
+        if (validationErrors.isEmpty()) {
+            minecraft.font.draw(stack, new TranslationTextComponent("ars_nouveau.spell_book_gui.create"), 233, 183, -8355712);
+        } else {
+            // Color code chosen to match GL11.glColor4f(1.0F, 0.7F, 0.7F, 1.0F);
+            ITextComponent textComponent = new TranslationTextComponent("ars_nouveau.spell_book_gui.create")
+                    .withStyle(s -> s.setStrikethrough(true).withColor(Color.parseColor("#FFB2B2")));
+            // The final argument to draw desaturates the above color from the text component
+            minecraft.font.draw(stack, textComponent, 233, 183, -8355712);
+        }
         minecraft.font.draw(stack,new TranslationTextComponent("ars_nouveau.spell_book_gui.clear").getString(), 177, 183, -8355712);
+    }
+
+    /**
+     * Validates the current spell as well as the potential for adding each glyph.
+     */
+    private void validate() {
+        List<AbstractSpellPart> recipe = new LinkedList<>();
+
+        // Reset the crafting slots and build the recipe to validate
+        for (CraftingButton b : craftingCells) {
+            b.validationErrors.clear();
+            if (b.spellTag.isEmpty()) {
+                // The validator can cope with null. Insert it to preserve glyph indices.
+                recipe.add(null);
+            } else {
+                recipe.add(api.getSpell_map().get(b.spellTag));
+            }
+        }
+
+        // Validate the crafting slots
+        List<SpellValidationError> errors = spellValidator.validate(recipe);
+        for (SpellValidationError ve : errors) {
+            // Attach errors to the corresponding crafting slot (when applicable)
+            if (ve.getPosition() >= 0 && ve.getPosition() <= craftingCells.size()) {
+                CraftingButton b = craftingCells.get(ve.getPosition());
+                b.validationErrors.add(ve);
+            }
+        }
+        this.validationErrors = errors;
+
+        // Validate the glyph buttons
+        for (GlyphButton button : castMethodButtons) {
+            validateGlyphButton(recipe, button);
+        }
+        for (GlyphButton button : augmentButtons) {
+            validateGlyphButton(recipe, button);
+        }
+        for (GlyphButton button : effectButtons) {
+            validateGlyphButton(recipe, button);
+        }
+    }
+
+    private void validateGlyphButton(List<AbstractSpellPart> recipe, GlyphButton glyphButton) {
+        // Start from a clean slate
+        glyphButton.validationErrors.clear();
+
+        // Simulate adding the glyph to the current spell
+        recipe.add(api.getSpell_map().get(glyphButton.spell_id));
+
+        // Filter the errors to ones referring to the simulated glyph
+        glyphButton.validationErrors.addAll(
+                spellValidator.validate(recipe).stream()
+                        .filter(ve -> ve.getPosition() == recipe.size() - 1).collect(Collectors.toList())
+        );
+
+        // Remove the simulated glyph to make room for the next one
+        recipe.remove(recipe.size() - 1);
     }
 
     /**
