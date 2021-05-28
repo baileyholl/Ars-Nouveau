@@ -73,7 +73,7 @@
 	"ars_nouveau.page.amulet_of_mana_boost": "Increases max mana by a moderate amount.",
 	"ars_nouveau.page.amulet_of_mana_regen": "Increases mana regeneration by a moderate amount.",
 
-	"ars_nouveau.page.arcane_relay": "Enables the transport of mana between Mana Jars and other Mana Relays. To pull mana from jars, use the Dominion Wand on the jar, and then on the relay. To send between relays or from a relay to a jar, use the wand on the relay and then the target you wish to send mana to. Relays may only reach up to 10 blocks away. To clear connections, sneak while using the Dominion Wand on the relay.",
+	"ars_nouveau.page.arcane_relay": "Enables the transport of mana between Mana Jars and other Mana Relays. To pull mana from jars, use the Dominion Wand on the jar, and then on the relay. To send between relays or from a relay to a jar, use the wand on the relay and then the target you wish to send mana to. Relays may only reach up to 30 blocks away. To clear connections, sneak while using the Dominion Wand on the relay.",
 	"ars_nouveau.page.arcane_relay_splitter": "Operates similar to the Mana Relay, but will support taking from and transferring to multiple jars at once. The splitter has a much larger through-put than the Mana Relay, and will split this throughput amongst all of its jars. See the instructions on the Mana Relay for use.",
 	"ars_nouveau.page.enchanting_apparatus1": "The Enchanting Apparatus utilizes pedestals and world mana for crafting. To use the Enchanting Apparatus, place any number of Arcane Pedestals nearby with their items. Place your reagent item on the Enchanting Apparatus block, and interact with the block while sneaking to begin crafting. The Enchanting Apparatus requires an Arcane Core beneath it in order to work.",
 
@@ -664,5 +664,6 @@
 	"ars_nouveau.page.enchanters_sword": "Applies a Touch spell before damaging an entity. Additionally, all spells gain one additional Amplify augment on the last effect in the spell. Apply a spell at the Scribes Table that does NOT contain a method, such as Ignite -> Extend Time.",
 	"ars_nouveau.page.enchanters_shield": "Upon blocking damage, the user will gain a short duration of Mana Regeneration. Additionally, this shield will repair over time using the wearers mana.",
 	"ars_nouveau.tooltip.can_inscribe": "Can be inscribed with a spell at the Scribes Table.",
-	"biome.ars_nouveau.archwood_forest": "Archwood Forest"
+	"biome.ars_nouveau.archwood_forest": "Archwood Forest",
+	"ars_nouveau.tooltip.turned_off": "Turned off"
 }

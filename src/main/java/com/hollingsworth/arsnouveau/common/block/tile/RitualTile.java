@@ -49,6 +49,7 @@ public class RitualTile extends TileEntity implements ITickableTileEntity, ITool
     int red;
     int blue;
     int green;
+    public boolean isOff;
     public RitualTile() {
         super(BlockRegistry.RITUAL_TILE);
     }
@@ -83,7 +84,8 @@ public class RitualTile extends TileEntity implements ITickableTileEntity, ITool
         if(level.isClientSide && ritual != null){
             makeParticle(ritual.getCenterColor(), ritual.getOuterColor(), ritual.getParticleIntensity());
         }
-
+        if(isOff)
+            return;
         if(ritual != null){
 
             if(ritual.getContext().isDone){
@@ -117,9 +119,6 @@ public class RitualTile extends TileEntity implements ITickableTileEntity, ITool
         return ritual != null && ritual.getContext().isDone;
     }
 
-    public boolean canAffordCost(int currentExp){
-        return ritual != null && ritual.getCost() <= currentExp;
-    }
 
     public boolean canRitualStart(){
         return ritual.canStart();
@@ -168,6 +167,7 @@ public class RitualTile extends TileEntity implements ITickableTileEntity, ITool
         this.blue = tag.getInt("blue");
         blue = this.blue > 0 ? blue : 255;
         isDecorative = tag.getBoolean("decorative");
+        isOff = tag.getBoolean("off");
     }
 
     @Override
@@ -182,7 +182,7 @@ public class RitualTile extends TileEntity implements ITickableTileEntity, ITool
         tag.putInt("green", green);
         tag.putInt("blue", blue);
         tag.putBoolean("decorative", isDecorative);
-
+        tag.putBoolean("off", isOff);
         return super.save(tag);
     }
 
@@ -204,12 +204,17 @@ public class RitualTile extends TileEntity implements ITickableTileEntity, ITool
         List<String> tooltips = new ArrayList<>();
         if(ritual != null){
             tooltips.add(ritual.getName());
+            if(isOff) {
+                tooltips.add(new TranslationTextComponent("ars_nouveau.tooltip.turned_off").getString());
+                return tooltips;
+            }
             if(!ritual.isRunning()){
                 if(!ritual.canStart()){
                     tooltips.add(new TranslationTextComponent("ars_nouveau.tooltip.conditions_unmet").getString());
                 }else
                     tooltips.add(new TranslationTextComponent("ars_nouveau.tooltip.waiting").getString());
             }else{
+
                 tooltips.add(new TranslationTextComponent("ars_nouveau.tooltip.running").getString());
             }
             if(ritual.getConsumedItems().size() != 0) {
@@ -224,9 +229,6 @@ public class RitualTile extends TileEntity implements ITickableTileEntity, ITool
         return tooltips;
     }
 
-    public int getRitualCost() {
-        return ritual == null ? 0 : ritual.getCost();
-    }
 
     @Override
     public void registerControllers(AnimationData animationData) {

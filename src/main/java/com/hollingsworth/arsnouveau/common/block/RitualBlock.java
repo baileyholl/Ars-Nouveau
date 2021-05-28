@@ -1,10 +1,13 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.BooleanProperty;
@@ -31,13 +34,20 @@ public class RitualBlock extends ModBlock{
         if(!(worldIn.getBlockEntity(pos) instanceof RitualTile) || handIn != Hand.MAIN_HAND || !player.getMainHandItem().isEmpty())
             return super.use(state, worldIn, pos, player, handIn, hit);
         RitualTile tile = (RitualTile) worldIn.getBlockEntity(pos);
-        if(tile.ritual != null && !tile.isRitualDone() && (tile.canAffordCost(player.totalExperience) || player.isCreative())) {
+        if(tile.ritual != null && !tile.isRitualDone()) {
             tile.startRitual();
         }
-
-
-
         return super.use(state, worldIn, pos, player, handIn, hit);
+    }
+
+
+    @Override
+    public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
+        if(!world.isClientSide() && world.getBlockEntity(pos) instanceof RitualTile){
+            ((RitualTile) world.getBlockEntity(pos)).isOff = world.hasNeighborSignal(pos);
+            BlockUtil.safelyUpdateState(world, pos);
+        }
     }
 
     @Override
@@ -46,7 +56,7 @@ public class RitualBlock extends ModBlock{
         if(worldIn.getBlockEntity(pos) instanceof RitualTile){
             RitualTile tile = (RitualTile) worldIn.getBlockEntity(pos);
             if(tile.ritual != null && !tile.ritual.isRunning() && !tile.ritual.isDone()){
-                //worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), ((RitualTile) worldIn.getBlockEntity(pos)).stack));
+                worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ArsNouveauAPI.getInstance().getRitualItemMap().get(tile.ritual.getID()))));
             }
 
         }

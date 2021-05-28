@@ -147,9 +147,6 @@ public abstract class AbstractRitual {
         this.context = context;
     }
 
-    public int getCost(){
-        return 0;
-    }
 
     public ParticleColor getCenterColor(){
         return new ParticleColor(
