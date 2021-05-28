@@ -25,6 +25,8 @@ import java.util.Set;
 
 public class ANExplosion extends Explosion {
     int amps;
+    public double baseDamage;
+    public double ampDamageScalar;
     public ANExplosion(World p_i45752_1_, @Nullable Entity p_i45752_2_, double p_i45752_3_, double p_i45752_5_, double p_i45752_7_, float p_i45752_9_, List<BlockPos> p_i45752_10_) {
         super(p_i45752_1_, p_i45752_2_, p_i45752_3_, p_i45752_5_, p_i45752_7_, p_i45752_9_, p_i45752_10_);
     }
@@ -113,7 +115,7 @@ public class ANExplosion extends Explosion {
                         d9 = d9 / d13;
                         double d14 = (double)getSeenPercent(vector3d, entity);
                         double d10 = (1.0D - d12) * d14;
-                        float damage = Math.min(Math.max(0.0f,(float)((int)((d10 * d10 + d10) / 2.0D * 7.0D * (double)f2 + 1.0D))), 6F + this.amps * 2.5f);
+                        float damage = (float) Math.min(Math.max(0.0f,(float)((int)((d10 * d10 + d10) / 2.0D * 7.0D * (double)f2 + 1.0D))), baseDamage + this.amps * ampDamageScalar);
                         entity.hurt(this.getDamageSource(), damage);
                         double d11 = d10;
                         if (entity instanceof LivingEntity) {
