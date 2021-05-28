@@ -52,6 +52,8 @@ public class EffectExplosion extends AbstractEffect {
     public Explosion explode(World world, @Nullable Entity e, @Nullable DamageSource source, @Nullable ExplosionContext context,
                              double x, double y, double z, float radius, boolean p_230546_11_, Explosion.Mode p_230546_12_, List<AbstractAugment> augments) {
         ANExplosion explosion = new ANExplosion(world, e, source, context, x, y, z, radius, p_230546_11_, p_230546_12_, getAmplificationBonus(augments));
+        explosion.baseDamage = DAMAGE.get();
+        explosion.ampDamageScalar = AMP_DAMAGE.get();
         if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(world, explosion)) return explosion;
         explosion.explode();
         explosion.finalizeExplosion(false);
@@ -70,7 +72,7 @@ public class EffectExplosion extends AbstractEffect {
 
     public ForgeConfigSpec.DoubleValue BASE;
     public ForgeConfigSpec.DoubleValue AOE_BONUS;
-
+    public ForgeConfigSpec.DoubleValue AMP_DAMAGE;
 
     @Override
     public void buildConfig(ForgeConfigSpec.Builder builder) {
@@ -78,6 +80,8 @@ public class EffectExplosion extends AbstractEffect {
         addAmpConfig(builder, 0.5);
         BASE = builder.comment("Explosion base intensity").defineInRange("base", 0.75, 0.0, 100);
         AOE_BONUS = builder.comment("AOE intensity bonus").defineInRange("aoe_bonus", 1.5, 0.0, 100);
+        addDamageConfig(builder, 6.0);
+        AMP_DAMAGE = builder.comment("Additional damage per amplify").defineInRange("amp_damage", 2.5, 0.0, Integer.MAX_VALUE);
     }
 
     @Override
