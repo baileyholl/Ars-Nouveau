@@ -4,12 +4,15 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 
 import javax.annotation.Nullable;
+import java.util.function.Function;
 
 public class NoShadowTextField extends TextFieldWidget {
 
+    public Function<String, Void> onClear;
 
     public NoShadowTextField(FontRenderer p_i232260_1_, int p_i232260_2_, int p_i232260_3_, int p_i232260_4_, int p_i232260_5_, ITextComponent p_i232260_6_) {
         super(p_i232260_1_, p_i232260_2_, p_i232260_3_, p_i232260_4_, p_i232260_5_, p_i232260_6_);
@@ -76,6 +79,41 @@ public class NoShadowTextField extends TextFieldWidget {
 //                this.drawSelectionBox(k1, i1 - 1, l1 - 1, i1 + 1 + 9);
 //            }
 
+        }
+    }
+
+    @Override
+    public boolean mouseClicked(double clickedX, double clickedY, int mouseButton) { // 0 for primary, 1 for secondary
+        if (!this.isVisible()) {
+            return false;
+        } else {
+            boolean flag = clickedX >= (double)this.x && clickedX < (double)(this.x + this.width) && clickedY >= (double)this.y && clickedY < (double)(this.y + this.height);
+            if (this.canLoseFocus) {
+                this.setFocus(flag);
+            }
+
+            if (this.isFocused() && flag && mouseButton == 0) {
+                int i = MathHelper.floor(clickedX) - this.x;
+                if (this.bordered) {
+                    i -= 4;
+                }
+
+                String s = this.font.plainSubstrByWidth(this.value.substring(this.displayPos), this.getInnerWidth());
+                this.moveCursorTo(this.font.plainSubstrByWidth(s, i).length() + this.displayPos);
+                return true;
+            }else if(this.isFocused() && mouseButton == 1){
+                if(this.value.isEmpty())
+                    return false;
+
+
+                if(onClear != null)
+                    onClear.apply("");
+                setValue("");
+                return true;
+            }
+            else {
+                return false;
+            }
         }
     }
 }
