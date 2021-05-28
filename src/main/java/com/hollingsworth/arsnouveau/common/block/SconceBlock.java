@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.SconceTile;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
@@ -41,10 +42,8 @@ public class SconceBlock extends ModBlock{
     public static final DirectionProperty FACING = HorizontalBlock.FACING;
 
     @Override
-    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
-        if (entity != null) {
-            world.setBlock(pos, state.setValue(FACING, getFacingFromEntity(pos, entity)).setValue(LIGHT_LEVEL, 0), 2);
-        }
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        return this.defaultBlockState().setValue(FACING, context.getClickedFace());
     }
 
     public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
