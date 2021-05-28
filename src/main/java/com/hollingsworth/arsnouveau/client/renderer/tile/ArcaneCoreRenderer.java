@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcaneCoreTile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
@@ -39,6 +40,9 @@ public class ArcaneCoreRenderer extends TileEntityRenderer<ArcaneCoreTile> {
         BlockPos pos = tileEntityIn.getBlockPos();
         ParticleColor color = new ParticleColor(50 +rand.nextInt(175),50+ rand.nextInt(175), 50+rand.nextInt(175));
         ParticleColor randColor = new ParticleColor(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
+        if(Minecraft.getInstance().isPaused())
+            return;
+
         for(int i = 0; i < 2; i++) {
             world.addParticle(
                     GlowParticleData.createData(randColor),
