@@ -42,7 +42,11 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
         for (int i = 0; i < inv.getContainerSize(); i++) { // For each slot in the crafting inventory,
             final ItemStack ingredient = inv.getItem(i); // Get the ingredient in the slot
             if (!ingredient.isEmpty() && ingredient.getItem() instanceof PotionFlask) {
+                if(((PotionFlask) ingredient.getItem()).isMax(ingredient))
+                    return ItemStack.EMPTY;
+
                 CompoundNBT tag = ingredient.hasTag() ? ingredient.getTag() : new CompoundNBT();
+
                 newCount = tag.getInt("count") + 1;
                 flaskPotion = PotionUtils.getPotion(ingredient);
                 flaskPotionStack = ingredient;
