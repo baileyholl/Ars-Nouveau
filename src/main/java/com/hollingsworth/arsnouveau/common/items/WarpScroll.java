@@ -15,7 +15,6 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -61,7 +60,7 @@ public class WarpScroll extends ModItem{
     public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
         ItemStack stack = player.getItemInHand(hand);
         BlockPos pos = getPos(stack);
-        if(hand == Hand.OFF_HAND && player.getMainHandItem().getItem() instanceof SpellBook)
+        if(hand == Hand.OFF_HAND)
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
 
         if(world.isClientSide())
