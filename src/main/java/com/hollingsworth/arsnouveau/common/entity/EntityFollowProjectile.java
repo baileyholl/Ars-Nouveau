@@ -38,6 +38,10 @@ public class EntityFollowProjectile extends ArrowEntity {
     }
 
 
+    public void setDespawnDistance(int distance){
+        getEntityData().set(DESPAWN, distance);
+    }
+
     public EntityFollowProjectile(World worldIn, Vector3d from, Vector3d to) {
         this(ModEntities.ENTITY_FOLLOW_PROJ, worldIn);
         this.entityData.set(EntityFollowProjectile.to, new BlockPos(to));
@@ -47,6 +51,9 @@ public class EntityFollowProjectile extends ArrowEntity {
         this.entityData.set(RED, 255);
         this.entityData.set(GREEN, 25);
         this.entityData.set(BLUE, 180);
+
+        double distance = BlockUtil.distanceFrom(new BlockPos(from), new BlockPos(to));
+        setDespawnDistance((int) (distance + 10));
     }
 
     public EntityFollowProjectile(World worldIn, BlockPos from, BlockPos to, int r, int g, int b) {
@@ -54,6 +61,7 @@ public class EntityFollowProjectile extends ArrowEntity {
         this.entityData.set(RED, Math.min(r, 255));
         this.entityData.set(GREEN, Math.min(g, 255));
         this.entityData.set(BLUE, Math.min(b, 255));
+
     }
 
     public EntityFollowProjectile(World worldIn, BlockPos from, BlockPos to,ParticleColor.IntWrapper color) {

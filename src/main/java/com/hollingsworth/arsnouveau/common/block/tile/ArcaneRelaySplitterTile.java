@@ -23,26 +23,18 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
 
     @Override
     public boolean setTakeFrom(BlockPos pos) {
-        return closeEnough(pos, 10) && fromList.add(pos) && update();
+        return closeEnough(pos) && fromList.add(pos) && update();
     }
 
     @Override
     public boolean setSendTo(BlockPos pos) {
-        return closeEnough(pos, 10) && toList.add(pos) && update();
+        return closeEnough(pos) && toList.add(pos) && update();
     }
 
     @Override
     public void clearPos() {
-//        CompoundNBT tag = getTileData();
-//        for(int i = 0; i < this.toList.size(); i++){
-//            NBTUtil.removeBlockPos(tag,"to_" + i);
-//        }
-//        for(int i = 0; i < this.fromList.size(); i++){
-//            NBTUtil.removeBlockPos(tag,"from_" + i);
-//        }
         this.toList.clear();
         this.fromList.clear();
-
         update();
     }
 
@@ -100,7 +92,7 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
 
     @Override
     public int getTransferRate() {
-        return 500;
+        return 2500;
     }
 
     @Override

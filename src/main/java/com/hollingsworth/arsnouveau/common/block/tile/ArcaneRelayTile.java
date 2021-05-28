@@ -45,7 +45,7 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
 
 
     public boolean setTakeFrom(BlockPos pos){
-        if(BlockUtil.distanceFrom(pos, this.worldPosition) > 10){
+        if(BlockUtil.distanceFrom(pos, this.worldPosition) > getMaxDistance()){
             return false;
         }
         this.fromPos = pos;
@@ -54,12 +54,16 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
     }
 
     public boolean setSendTo(BlockPos pos ){
-        if(BlockUtil.distanceFrom(pos, this.worldPosition) > 10){
+        if(BlockUtil.distanceFrom(pos, this.worldPosition) > getMaxDistance()){
             return false;
         }
         this.toPos = pos;
         update();
         return true;
+    }
+
+    public int getMaxDistance(){
+        return 30;
     }
 
     public void clearPos(){
@@ -70,7 +74,7 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
 
     @Override
     public int getTransferRate() {
-        return 500;
+        return 1000;
     }
 
     @Override
@@ -78,8 +82,8 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
         return 1000;
     }
 
-    public boolean closeEnough(BlockPos pos, int distance){
-        return BlockUtil.distanceFrom(pos, this.worldPosition) <= distance;
+    public boolean closeEnough(BlockPos pos){
+        return BlockUtil.distanceFrom(pos, this.worldPosition) <= getMaxDistance();
     }
 
     @Override
