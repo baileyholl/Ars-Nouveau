@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.setup;
 
-import com.electronwill.nightconfig.core.InMemoryFormat;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -10,7 +9,10 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.loading.FMLPaths;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Mod.EventBusSubscriber
 public class Config {
@@ -54,6 +56,7 @@ public class Config {
 
 
     public static ForgeConfigSpec.IntValue ARCHWOOD_FOREST_WEIGHT;
+    public static ForgeConfigSpec.ConfigValue<? extends String> CRYSTALLIZER_ITEM;
 
 
     public static boolean isSpellEnabled(String tag){
@@ -102,6 +105,7 @@ public class Config {
         STALKER_ATTACK_ANIMALS = SERVER_BUILDER.comment("Should the Wilden Stalker attack animals?").define("stalkerHuntsAnimals", false);
         GUARDIAN_ATTACK_ANIMALS = SERVER_BUILDER.comment("Should the Wilden Defender attack animals?").define("defenderHuntsAnimals", false);
         ARCHWOOD_FOREST_WEIGHT = SERVER_BUILDER.comment("Archwood forest spawn weight").defineInRange("archwoodForest", 3, 0, Integer.MAX_VALUE);
+        CRYSTALLIZER_ITEM = SERVER_BUILDER.comment("Crystallizer output item. Do not use a wrong ID!").define("crystallizer_output", "ars_nouveau:mana_gem");
         SERVER_BUILDER.pop();
 
         SERVER_BUILDER.comment("Mana").push("mana");

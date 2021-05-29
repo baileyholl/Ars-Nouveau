@@ -3,13 +3,17 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class CrystallizerTile extends AbstractManaTile implements IInventory {
     public ItemStack stack = ItemStack.EMPTY;
@@ -46,7 +50,13 @@ public class CrystallizerTile extends AbstractManaTile implements IInventory {
         }
 
         if(this.getCurrentMana() >= 5000 && (stack == null || stack.isEmpty())){
-            this.stack = new ItemStack(ItemsRegistry.manaGem);
+            Item foundItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(Config.CRYSTALLIZER_ITEM.get()));
+            if(foundItem == null){
+                System.out.println("NULL CRYSTALLIZER ITEM.");
+                foundItem = ItemsRegistry.manaGem;
+            }
+            this.stack = new ItemStack(foundItem);
+
             this.setMana(0);
         }
     }
