@@ -39,7 +39,7 @@ public class CrystallizerRenderer extends TileEntityRenderer<CrystallizerTile> {
         int randBound = draining ? 3 : 6;
         int numParticles = draining ? 2 : 1;
         float scaleAge = draining ?(float) ParticleUtil.inRange(0.1, 0.2) : (float) ParticleUtil.inRange(0.05, 0.15);
-        if(world.random.nextInt( randBound)  == 0){
+        if(world.random.nextInt( randBound)  == 0 && !Minecraft.getInstance().isPaused()){
             for(int i =0; i< numParticles; i++){
                 Vector3d particlePos = new Vector3d(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0.5, 0.5);
                 particlePos = particlePos.add(ParticleUtil.pointInSphere());
