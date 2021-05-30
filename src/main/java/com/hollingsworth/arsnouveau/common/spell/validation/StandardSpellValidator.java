@@ -21,6 +21,7 @@ public class StandardSpellValidator implements ISpellValidator {
     private static final ISpellValidator REQUIRE_CAST_METHOD_START = new StartingCastMethodSpellValidator();
     private static final ISpellValidator GLYPH_OCCURRENCES_POLICY = new GlyphOccurrencesPolicyValidator();
     private static final ISpellValidator EFFECT_AUGMENTATION_POLICY = new ActionAugmentationPolicyValidator();
+    private static final ISpellValidator AUGMENT_COMPATIBILITY = new AugmentCompatibilityValidator();
 
     private final ISpellValidator combinedValidator;
 
@@ -38,6 +39,12 @@ public class StandardSpellValidator implements ISpellValidator {
         validators.add(MAX_ONE_CAST_METHOD);
         validators.add(GLYPH_OCCURRENCES_POLICY);
         validators.add(EFFECT_AUGMENTATION_POLICY);
+
+        // Validators only applicable at crafting time
+        if (!enforceCastTimeValidations) {
+            // Not enforcing this at cast time so we don't break existing spells with ineffective augments
+            validators.add(AUGMENT_COMPATIBILITY);
+        }
 
         // Validators only applicable at casting time
         if (enforceCastTimeValidations) {

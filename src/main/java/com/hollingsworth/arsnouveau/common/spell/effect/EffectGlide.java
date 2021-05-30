@@ -5,6 +5,8 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -15,6 +17,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class EffectGlide extends AbstractEffect {
 
@@ -47,5 +50,11 @@ public class EffectGlide extends AbstractEffect {
     @Override
     public Item getCraftingReagent() {
         return Items.ELYTRA;
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        // ModPotions.GLIDE_EFFECT does not respond to amplification
+        return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
     }
 }

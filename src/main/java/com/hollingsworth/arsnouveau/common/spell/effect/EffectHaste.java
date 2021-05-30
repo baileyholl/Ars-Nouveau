@@ -15,6 +15,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class EffectHaste extends AbstractEffect {
     public static EffectHaste INSTANCE = new EffectHaste();
@@ -62,6 +63,11 @@ public class EffectHaste extends AbstractEffect {
     @Override
     public Tier getTier() {
         return Tier.ONE;
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return POTION_AUGMENTS;
     }
 
     @Override

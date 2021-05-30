@@ -6,6 +6,8 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.SummonHorse;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
@@ -19,6 +21,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class EffectSummonSteed extends AbstractEffect {
     public static EffectSummonSteed INSTANCE = new EffectSummonSteed();
@@ -66,6 +69,10 @@ public class EffectSummonSteed extends AbstractEffect {
         return Tier.ONE;
     }
 
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return SUMMON_AUGMENTS;
+    }
 
     @Override
     public String getBookDescription() {

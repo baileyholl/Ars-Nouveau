@@ -29,6 +29,7 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class EffectInteract extends AbstractEffect {
     public static EffectInteract INSTANCE = new EffectInteract();
@@ -118,6 +119,11 @@ public class EffectInteract extends AbstractEffect {
     @Override
     public Item getCraftingReagent() {
         return Items.LEVER;
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf();
     }
 
     @Override

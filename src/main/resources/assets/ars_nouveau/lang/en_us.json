@@ -609,6 +609,7 @@
 	"ars_nouveau.spell.validation.exists.action_augmentation_policy": "%s was augmented by %s too many times.",
 	"ars_nouveau.spell.validation.exists.action_augmentation_policy.zero": "%s may not be augmented by %s.",
 	"ars_nouveau.spell.validation.exists.glyph_occurrences_policy": "%s appears too many times.",
+	"ars_nouveau.spell.validation.exists.augment_compatibility": "%s cannot be augmented by %s",
 	"ars_nouveau.spell.validation.exists.glyph_tier": "%s is too powerful for your current spell book.",
 
 	"ars_nouveau.spell.validation.adding._comment": "__ These messages appear when attempting to add a glyph that would make a spell invalid. __",
@@ -618,6 +619,7 @@
 	"ars_nouveau.spell.validation.adding.action_augmentation_policy": "%s is already augmented to the limit by %s.",
 	"ars_nouveau.spell.validation.adding.action_augmentation_policy.zero": "%s may not be augmented by %s.",
 	"ars_nouveau.spell.validation.adding.glyph_occurrences_policy": "%s has appeared its maximum number of times.",
+	"ars_nouveau.spell.validation.adding.augment_compatibility": "%s cannot be augmented by %s",
 	"ars_nouveau.spell.validation.adding.glyph_tier": "%s is too powerful for your current spell book.",
 
 	"ars_nouveau.spell.no_mana": "Not enough mana.",

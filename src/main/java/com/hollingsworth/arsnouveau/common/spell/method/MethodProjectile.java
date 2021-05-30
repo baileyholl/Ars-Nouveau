@@ -26,6 +26,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class MethodProjectile extends AbstractCastMethod {
     public static MethodProjectile INSTANCE = new MethodProjectile();
@@ -142,6 +143,11 @@ public class MethodProjectile extends AbstractCastMethod {
     @Override
     public boolean wouldCastOnEntitySuccessfully(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments) {
         return true;
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf(AugmentPierce.INSTANCE, AugmentSplit.INSTANCE, AugmentAccelerate.INSTANCE);
     }
 
     @Override

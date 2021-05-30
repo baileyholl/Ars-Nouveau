@@ -19,6 +19,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class EffectCraft extends AbstractEffect {
 
@@ -64,6 +65,11 @@ public class EffectCraft extends AbstractEffect {
     @Override
     public Item getCraftingReagent() {
         return Items.CRAFTING_TABLE;
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf();
     }
 
     @Override

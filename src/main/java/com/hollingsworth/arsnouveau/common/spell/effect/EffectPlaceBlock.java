@@ -27,6 +27,7 @@ import net.minecraftforge.common.util.FakePlayer;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class EffectPlaceBlock extends AbstractEffect {
     public static EffectPlaceBlock INSTANCE = new EffectPlaceBlock();
@@ -103,6 +104,11 @@ public class EffectPlaceBlock extends AbstractEffect {
     @Override
     public Item getCraftingReagent() {
         return Items.DISPENSER;
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf(AugmentAOE.INSTANCE, AugmentPierce.INSTANCE);
     }
 
     @Override

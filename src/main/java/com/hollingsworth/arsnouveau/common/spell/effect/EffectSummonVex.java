@@ -22,6 +22,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class EffectSummonVex extends AbstractEffect {
     public static EffectSummonVex INSTANCE = new EffectSummonVex();
@@ -80,6 +81,11 @@ public class EffectSummonVex extends AbstractEffect {
     @Override
     public Tier getTier() {
         return Tier.THREE;
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return SUMMON_AUGMENTS;
     }
 
     @Override
