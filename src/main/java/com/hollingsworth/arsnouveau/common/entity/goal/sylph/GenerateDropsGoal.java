@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static com.hollingsworth.arsnouveau.common.entity.goal.sylph.EvaluateGroveGoal.getScore;
 
@@ -81,7 +82,6 @@ public class GenerateDropsGoal extends Goal {
                 if(block == null)
                     return;
 
-                // Reroll 1 time if the drops are empty or dirt i.e. grass.
                 for(ItemStack s : getDrops(blockDropDistribution)){
                     sylph.onPickup(s);
                 }
@@ -89,21 +89,22 @@ public class GenerateDropsGoal extends Goal {
 
         }
     }
-    // Keep rerolling on empty or dirt drops.
+
     public List<ItemStack> getDrops(DropDistribution<BlockState> blockDropDistribution){
         World world = sylph.getCommandSenderWorld();
         Supplier<List<ItemStack>> getDrops = () -> Block.getDrops(blockDropDistribution.nextDrop(), (ServerWorld) world, sylph.blockPosition(), null);
 
-        List<ItemStack> drops = getDrops.get();
-        int numRerolls = 0;
+        List<ItemStack> successfulDrops;
         boolean bonusReroll = false;
-        while(numRerolls < (bonusReroll ? 7 : 4) && (drops.isEmpty() || drops.get(0).getItem() ==  Blocks.DIRT.asItem() || (!drops.isEmpty() && !sylph.isValidReward(drops.get(0))))){
-            drops = getDrops.get();
-            if(!drops.isEmpty() && !sylph.isValidReward(drops.get(0)))
-                bonusReroll = true;
-            numRerolls++;
+        for(int numRerolls = 0; numRerolls < (bonusReroll ? 16 : 8); numRerolls++) {
+            List<ItemStack> drops = getDrops.get();
+            if (drops.isEmpty()) continue;
+            successfulDrops = drops.stream().filter(s -> sylph.isValidReward(s)).collect(Collectors.toCollection(ArrayList::new));
+            bonusReroll = true;
+            if (successfulDrops.isEmpty()) continue;
+            return successfulDrops;
         }
-        return drops;
+        return new ArrayList<>();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
@@ -37,6 +38,8 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.FlyingPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
+import net.minecraft.tags.ITag;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
@@ -63,6 +66,8 @@ import java.util.Map;
 
 public class EntitySylph extends AbstractFlyingCreature implements IPickupResponder, IAnimatable, ITooltipProvider, IDispellable {
     AnimationFactory manager = new AnimationFactory(this);
+
+    public static ITag.INamedTag<Item> DENIED_DROP =  ItemTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "sylph/denied_drop"));
 
     public int timeSinceBonemeal = 0;
     public static final DataParameter<Boolean> TAMED = EntityDataManager.defineId(EntitySylph.class, DataSerializers.BOOLEAN);
@@ -368,7 +373,9 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
     }
 
     public boolean isValidReward(ItemStack stack){
-        if(ignoreItems == null || ignoreItems.isEmpty())
+        if (DENIED_DROP.contains(stack.getItem()))
+            return false;
+        if (ignoreItems == null || ignoreItems.isEmpty())
             return true;
         return ignoreItems.stream().noneMatch(i -> i.sameItem(stack));
     }
