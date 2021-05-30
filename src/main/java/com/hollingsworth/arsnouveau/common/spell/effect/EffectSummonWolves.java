@@ -17,6 +17,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class EffectSummonWolves extends AbstractEffect {
     public static EffectSummonWolves INSTANCE = new EffectSummonWolves();
@@ -57,6 +58,11 @@ public class EffectSummonWolves extends AbstractEffect {
         return 100;
     }
 
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        // SummonEvent captures augments, but no uses of that field were found
+        return SUMMON_AUGMENTS;
+    }
 
     @Override
     public String getBookDescription() {

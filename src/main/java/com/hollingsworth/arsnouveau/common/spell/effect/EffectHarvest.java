@@ -27,6 +27,7 @@ import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class EffectHarvest extends AbstractEffect {
     public static EffectHarvest INSTANCE = new EffectHarvest();
@@ -103,6 +104,11 @@ public class EffectHarvest extends AbstractEffect {
     @Override
     public int getManaCost() {
         return 10;
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf(AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentFortune.INSTANCE);
     }
 
     @Override

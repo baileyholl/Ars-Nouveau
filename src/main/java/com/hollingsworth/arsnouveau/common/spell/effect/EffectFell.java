@@ -114,6 +114,15 @@ public class EffectFell extends AbstractEffect {
     }
 
     @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf(
+                AugmentAOE.INSTANCE,
+                AugmentExtract.INSTANCE,
+                AugmentFortune.INSTANCE
+        );
+    }
+
+    @Override
     public String getBookDescription() {
         return "Harvests entire trees, mushrooms, cactus, and other vegetation. Can be amplified with Amplify to break materials of higher hardness. AOE will increase the number of blocks that may be broken at one time.";
     }

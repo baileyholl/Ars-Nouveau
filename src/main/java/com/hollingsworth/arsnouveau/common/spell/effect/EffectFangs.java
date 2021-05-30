@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.common.entity.EntityEvokerFangs;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
+import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
@@ -23,6 +23,7 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class EffectFangs extends AbstractEffect {
     public static EffectFangs INSTANCE = new EffectFangs();
@@ -123,6 +124,15 @@ public class EffectFangs extends AbstractEffect {
     @Override
     public Tier getTier() {
         return Tier.THREE;
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf(
+                AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE,
+                AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE,
+                AugmentAccelerate.INSTANCE
+        );
     }
 
     @Override

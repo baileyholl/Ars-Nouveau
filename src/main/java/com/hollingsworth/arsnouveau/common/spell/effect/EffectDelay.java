@@ -16,6 +16,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class EffectDelay extends AbstractEffect {
     public static EffectDelay INSTANCE = new EffectDelay();
@@ -47,6 +48,11 @@ public class EffectDelay extends AbstractEffect {
     @Override
     public int getManaCost() {
         return 0;
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf(AugmentExtendTime.INSTANCE);
     }
 
     @Override

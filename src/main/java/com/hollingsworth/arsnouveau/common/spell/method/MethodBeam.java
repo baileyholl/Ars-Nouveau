@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class MethodBeam extends AbstractCastMethod {
     public MethodBeam() {
@@ -78,5 +79,10 @@ public class MethodBeam extends AbstractCastMethod {
     @Override
     public int getManaCost() {
         return 0;
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf();
     }
 }

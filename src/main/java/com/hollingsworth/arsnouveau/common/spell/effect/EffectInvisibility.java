@@ -5,6 +5,8 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Effects;
@@ -15,6 +17,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class EffectInvisibility extends AbstractEffect {
     public static EffectInvisibility INSTANCE = new EffectInvisibility();
@@ -51,6 +54,12 @@ public class EffectInvisibility extends AbstractEffect {
     @Override
     public int getManaCost() {
         return 30;
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        // Augmentation has no effect
+        return augmentSetOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
     }
 
     @Override

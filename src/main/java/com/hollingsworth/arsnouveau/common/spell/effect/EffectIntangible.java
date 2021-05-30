@@ -7,8 +7,7 @@ import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.IntangibleAirTile;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -25,6 +24,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class EffectIntangible extends AbstractEffect {
     public static EffectIntangible INSTANCE = new EffectIntangible();
@@ -75,6 +75,16 @@ public class EffectIntangible extends AbstractEffect {
     @Override
     public int getManaCost() {
         return 30;
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf(
+                AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE,
+                AugmentExtendTime.INSTANCE, AugmentDampen.INSTANCE,
+                AugmentPierce.INSTANCE,
+                AugmentAOE.INSTANCE
+        );
     }
 
     @Override

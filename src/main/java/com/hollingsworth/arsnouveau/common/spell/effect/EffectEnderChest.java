@@ -19,6 +19,7 @@ import net.minecraftforge.common.util.FakePlayer;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class EffectEnderChest extends AbstractEffect {
     public static EffectEnderChest INSTANCE = new EffectEnderChest();
@@ -38,6 +39,11 @@ public class EffectEnderChest extends AbstractEffect {
             }, CONTAINER_NAME));
         }
 
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf();
     }
 
     @Override
