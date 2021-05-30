@@ -6,7 +6,10 @@
   "mixins": [
     "LightningRedirectMixin",
     "PotionRecipeMixin",
-    "ExpInvokerMixin"
+    "ExpInvokerMixin",
+    "ElytraClientPlayer",
+    "ElytraPlayerMixin",
+    "MixinLivingEntity"
   ],
   "injectors": {
     "defaultRequire": 1

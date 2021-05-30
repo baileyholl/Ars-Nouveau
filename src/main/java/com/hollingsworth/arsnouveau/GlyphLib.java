@@ -72,4 +72,5 @@ public class GlyphLib {
     public static final String EffectDecoyID = "summon_decoy";
     public static final String EffectHexID = "hex";
     public static final String MethodUnderfootID = "underfoot";
+    public static final String EffectGlideID = "glide";
 }
