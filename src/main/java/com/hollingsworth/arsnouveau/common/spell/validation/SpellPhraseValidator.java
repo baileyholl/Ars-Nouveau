@@ -62,13 +62,14 @@ public abstract class SpellPhraseValidator extends AbstractSpellValidator {
                     augmentPositionMap.put(currentPart.tag, new LinkedList<>());
                 }
                 augmentPositionMap.get(currentPart.tag).add(new SpellPhrase.SpellPartPosition<>((AbstractAugment) currentPart, pos));
-            } else {
+            } else if (currentPart != null) {
                 // Action changed, wrap up the current phrase and add it to the list
                 phrases.add(new SpellPhrase(action, augments, augmentPositionMap, phraseStart));
 
                 // Reset the accumulators
                 action = currentPart;
-                augments = new LinkedList<>();
+                augments = new ArrayList<>();
+                augmentPositionMap = new LinkedHashMap<>();
                 phraseStart = pos;
             }
         }
