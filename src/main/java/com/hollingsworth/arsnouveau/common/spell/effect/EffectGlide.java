@@ -9,7 +9,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec;
 
@@ -25,9 +24,10 @@ public class EffectGlide extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
-            applyConfigPotion(((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity()), ModPotions.GLIDE_EFFECT, augments);
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        super.onResolveEntity(rayTraceResult, world, shooter, augments, spellContext);
+        if(rayTraceResult.getEntity() instanceof LivingEntity){
+            applyConfigPotion(((LivingEntity) rayTraceResult.getEntity()), ModPotions.GLIDE_EFFECT, augments);
         }
     }
 
