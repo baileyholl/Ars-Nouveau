@@ -177,39 +177,45 @@ public class GuiSpellBook extends BaseBook {
         previousButton.active = false;
         previousButton.visible = false;
         addEffectParts(0);
+        validate();
     }
 
     public void onSearchChanged(String str){
         if(str.equals(previousString))
             return;
         previousString = str;
-        displayedEffects = new ArrayList<>();
-        if(!str.isEmpty()) {
+
+        if (!str.isEmpty()) {
             searchBar.setSuggestion("");
-            for (AbstractSpellPart spellPart : api.getSpell_map().values()) {
+            displayedEffects = new ArrayList<>();
+            // Filter Effects
+            for (AbstractSpellPart spellPart : unlockedSpells) {
                 if (spellPart instanceof AbstractEffect && spellPart.getLocaleName().toLowerCase().contains(str.toLowerCase())) {
                     displayedEffects.add(spellPart);
-                }else{
-                    for(Widget w : buttons){
-                        if(w instanceof GlyphButton ){
-                            w.visible = spellPart.getLocaleName().toLowerCase().contains(str.toLowerCase());
+                }
+            }
+            // Set visibility of Cast Methods and Augments
+            for(Widget w : buttons) {
+                if(w instanceof GlyphButton) {
+                    if (((GlyphButton) w).spell_id != null) {
+                        AbstractSpellPart part = api.getSpell_map().get(((GlyphButton) w).spell_id);
+                        if (part != null) {
+                            w.visible = part.getLocaleName().toLowerCase().contains(str.toLowerCase());
                         }
                     }
                 }
             }
-
-            resetPageState();
-        }else {
+        } else {
             // Reset our book on clear
             searchBar.setSuggestion(new TranslationTextComponent("ars_nouveau.spell_book_gui.search").getString());
-            this.displayedEffects = allEffects;
-            resetPageState();
+            displayedEffects = allEffects;
             for(Widget w : buttons){
                 if(w instanceof GlyphButton ) {
                     w.visible = true;
                 }
             }
         }
+        resetPageState();
     }
 
     public void updateNextPageButtons(){
@@ -431,7 +437,7 @@ public class GuiSpellBook extends BaseBook {
         // Filter the errors to ones referring to the simulated glyph
         glyphButton.validationErrors.addAll(
                 spellValidator.validate(recipe).stream()
-                        .filter(ve -> ve.getPosition() == recipe.size() - 1).collect(Collectors.toList())
+                        .filter(ve -> ve.getPosition() >= craftingCells.size()).collect(Collectors.toList())
         );
 
         // Remove the simulated glyph to make room for the next one
