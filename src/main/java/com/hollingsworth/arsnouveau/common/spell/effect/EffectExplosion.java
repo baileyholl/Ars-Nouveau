@@ -26,6 +26,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class EffectExplosion extends AbstractEffect {
     public static EffectExplosion INSTANCE = new EffectExplosion();
@@ -103,6 +104,15 @@ public class EffectExplosion extends AbstractEffect {
     @Override
     public Tier getTier() {
         return Tier.TWO;
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf(
+                AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE,
+                AugmentAOE.INSTANCE,
+                AugmentExtract.INSTANCE
+        );
     }
 
     @Override

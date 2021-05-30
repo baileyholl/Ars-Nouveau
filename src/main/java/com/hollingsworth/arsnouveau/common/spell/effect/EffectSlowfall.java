@@ -15,6 +15,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class EffectSlowfall extends AbstractEffect {
     public static EffectSlowfall INSTANCE = new EffectSlowfall();
@@ -56,6 +57,11 @@ public class EffectSlowfall extends AbstractEffect {
     @Override
     public Tier getTier() {
         return Tier.ONE;
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return POTION_AUGMENTS;
     }
 
     @Override

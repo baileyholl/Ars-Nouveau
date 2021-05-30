@@ -20,6 +20,7 @@ import net.minecraftforge.common.MinecraftForge;
 import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 public class EffectDispel extends AbstractEffect {
     public static EffectDispel INSTANCE = new EffectDispel();
@@ -65,6 +66,12 @@ public class EffectDispel extends AbstractEffect {
     @Override
     public Item getCraftingReagent() {
         return Items.MILK_BUCKET;
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        // Augments were sent with the DispelEvent, but there's no use of its augments field.
+        return augmentSetOf();
     }
 
     @Override

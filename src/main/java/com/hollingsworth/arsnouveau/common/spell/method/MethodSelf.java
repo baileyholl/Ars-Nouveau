@@ -18,6 +18,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class MethodSelf extends AbstractCastMethod {
     public static MethodSelf INSTANCE = new MethodSelf();
@@ -80,6 +81,11 @@ public class MethodSelf extends AbstractCastMethod {
     @Override
     public int getManaCost() {
         return 10;
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf();
     }
 
     @Override

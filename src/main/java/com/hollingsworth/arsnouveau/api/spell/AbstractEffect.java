@@ -4,10 +4,7 @@ import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.api.event.SummonEvent;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtract;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
+import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
@@ -35,6 +32,7 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 
 public abstract class AbstractEffect extends AbstractSpellPart {
@@ -180,6 +178,15 @@ public abstract class AbstractEffect extends AbstractSpellPart {
             stack.enchant(Enchantments.BLOCK_FORTUNE, getBuffCount(augments, AugmentExtract.class));
         }
     }
+
+    protected Set<AbstractAugment> POTION_AUGMENTS = augmentSetOf(
+            AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE,
+            AugmentAmplify.INSTANCE
+    );
+
+    protected Set<AbstractAugment> SUMMON_AUGMENTS = augmentSetOf(
+            AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE
+    );
 
     public ForgeConfigSpec.DoubleValue DAMAGE;
     public ForgeConfigSpec.DoubleValue AMP_VALUE;

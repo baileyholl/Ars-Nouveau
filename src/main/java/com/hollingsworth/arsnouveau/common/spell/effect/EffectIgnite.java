@@ -26,6 +26,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class EffectIgnite  extends AbstractEffect {
     public static EffectIgnite INSTANCE = new EffectIgnite();
@@ -82,6 +83,11 @@ public class EffectIgnite  extends AbstractEffect {
     @Override
     public Item getCraftingReagent() {
         return Items.FLINT_AND_STEEL;
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf(AugmentExtendTime.INSTANCE);
     }
 
     @Override

@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class MethodUnderfoot extends AbstractCastMethod {
     public static MethodUnderfoot INSTANCE = new MethodUnderfoot();
@@ -72,6 +73,11 @@ public class MethodUnderfoot extends AbstractCastMethod {
     @Override
     public int getManaCost() {
         return 5;
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf();
     }
 
     @Override

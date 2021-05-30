@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.event.DispelEvent;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.LavaLily;
+import com.hollingsworth.arsnouveau.common.command.DataDumpCommand;
 import com.hollingsworth.arsnouveau.common.command.ResetCommand;
 import com.hollingsworth.arsnouveau.common.items.VoidJar;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
@@ -157,6 +158,7 @@ public class EventHandler {
     @SubscribeEvent
     public static void commandRegister(RegisterCommandsEvent event){
         ResetCommand.register(event.getDispatcher());
+        DataDumpCommand.register(event.getDispatcher());
     }
 
     private EventHandler(){}

@@ -15,6 +15,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class EffectHex extends AbstractEffect {
     public static EffectHex INSTANCE = new EffectHex();
@@ -37,6 +38,11 @@ public class EffectHex extends AbstractEffect {
         super.buildConfig(builder);
         addPotionConfig(builder, 30);
         addExtendTimeConfig(builder, 8);
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return POTION_AUGMENTS;
     }
 
     @Override

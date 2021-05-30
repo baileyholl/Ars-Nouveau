@@ -15,6 +15,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class EffectStrength extends AbstractEffect {
     public static EffectStrength INSTANCE = new EffectStrength();
@@ -51,6 +52,11 @@ public class EffectStrength extends AbstractEffect {
     @Override
     public Item getCraftingReagent() {
         return Items.BLAZE_POWDER;
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return POTION_AUGMENTS;
     }
 
     @Override

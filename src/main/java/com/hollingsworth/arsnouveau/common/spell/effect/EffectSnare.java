@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.List;
+import java.util.Set;
 
 public class EffectSnare extends AbstractEffect {
     public static EffectSnare INSTANCE = new EffectSnare();
@@ -47,6 +48,11 @@ public class EffectSnare extends AbstractEffect {
     @Override
     public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         return livingEntityHitSuccess(rayTraceResult);
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf(AugmentExtendTime.INSTANCE);
     }
 
     @Override

@@ -20,6 +20,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class EffectPickup extends AbstractEffect {
     public static EffectPickup INSTANCE = new EffectPickup();
@@ -56,6 +57,11 @@ public class EffectPickup extends AbstractEffect {
     @Override
     public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         return true;
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf(AugmentAOE.INSTANCE);
     }
 
     @Override

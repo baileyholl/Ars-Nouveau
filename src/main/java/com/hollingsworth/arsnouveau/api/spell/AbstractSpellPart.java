@@ -14,10 +14,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -80,6 +77,20 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
 
     public int getAmplificationBonus(List<AbstractAugment> augmentTypes){
         return getBuffCount(augmentTypes, AugmentAmplify.class) - getBuffCount(augmentTypes, AugmentDampen.class);
+    }
+
+    /**
+     * Returns the set of augments that this spell part can be enhanced by.
+     *
+     * @see AbstractSpellPart#augmentSetOf(AbstractAugment...) for easy syntax to make the Set.
+     */
+    public abstract Set<AbstractAugment> getCompatibleAugments();
+
+    /**
+     * Syntax support to easily make a set for {@link AbstractSpellPart#getCompatibleAugments()}
+     */
+    protected Set<AbstractAugment> augmentSetOf(AbstractAugment... augments) {
+        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(augments)));
     }
 
     @Override

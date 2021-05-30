@@ -20,6 +20,7 @@ import net.minecraftforge.common.ForgeMod;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class EffectFreeze extends AbstractEffect {
     public static EffectFreeze INSTANCE = new EffectFreeze();
@@ -91,6 +92,11 @@ public class EffectFreeze extends AbstractEffect {
     @Override
     public Item getCraftingReagent() {
         return Items.SNOW_BLOCK;
+    }
+
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return POTION_AUGMENTS;
     }
 
     @Override
