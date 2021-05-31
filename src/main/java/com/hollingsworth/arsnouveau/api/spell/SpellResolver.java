@@ -85,7 +85,7 @@ public class SpellResolver {
             // Validation failed, explain why if applicable
             if (!silent && !entity.getCommandSenderWorld().isClientSide) {
                 // Sending only the first error to avoid spam
-                PortUtil.sendMessage(entity, validationErrors.get(0).makeTextComponentExisting());
+                PortUtil.sendMessageNoSpam(entity, validationErrors.get(0).makeTextComponentExisting());
             }
             return false;
         }
@@ -97,7 +97,7 @@ public class SpellResolver {
         ManaCapability.getMana(entity).ifPresent(mana -> {
             canCast.set(totalCost <= mana.getCurrentMana() || (entity instanceof PlayerEntity &&  ((PlayerEntity) entity).isCreative()));
             if(!canCast.get() && !entity.getCommandSenderWorld().isClientSide && !silent)
-                PortUtil.sendMessage(entity,new TranslationTextComponent("ars_nouveau.spell.no_mana"));
+                PortUtil.sendMessageNoSpam(entity,new TranslationTextComponent("ars_nouveau.spell.no_mana"));
         });
         return canCast.get();
     }

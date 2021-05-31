@@ -51,11 +51,11 @@ public interface ICasterTool extends IScribeable, IDisplayMana {
     }
 
     default void sendSetMessage(PlayerEntity player){
-        PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.set_spell"));
+        PortUtil.sendMessageNoSpam(player, new TranslationTextComponent("ars_nouveau.set_spell"));
     }
 
     default void sendInvalidMessage(PlayerEntity player){
-        PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.invalid_spell"));
+        PortUtil.sendMessageNoSpam(player, new TranslationTextComponent("ars_nouveau.invalid_spell"));
     }
 
     default ISpellCaster getSpellCaster(ItemStack stack){
