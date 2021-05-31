@@ -60,7 +60,7 @@ public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatab
 
     @Override
     public void sendInvalidMessage(PlayerEntity player) {
-        PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.sword.invalid"));
+        PortUtil.sendMessageNoSpam(player, new TranslationTextComponent("ars_nouveau.sword.invalid"));
     }
 
 

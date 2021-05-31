@@ -237,7 +237,7 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
 
     @Override
     public void sendInvalidMessage(PlayerEntity player) {
-        PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.bow.invalid"));
+        PortUtil.sendMessageNoSpam(player, new TranslationTextComponent("ars_nouveau.bow.invalid"));
     }
 
     @Override

@@ -73,7 +73,7 @@ public class Wand extends ModItem  implements IAnimatable, ICasterTool {
         }
 
         if(caster.getSpell() == null) {
-            playerIn.sendMessage(new TranslationTextComponent("ars_nouveau.wand.spell_invalid"), Util.NIL_UUID);
+            PortUtil.sendMessageNoSpam(playerIn, new TranslationTextComponent("ars_nouveau.wand.spell_invalid"));
             return new ActionResult<>(ActionResultType.CONSUME, stack);
         }
         SpellResolver resolver = new SpellResolver(caster.getSpell().recipe, new SpellContext(caster.getSpell(), playerIn));
@@ -113,7 +113,7 @@ public class Wand extends ModItem  implements IAnimatable, ICasterTool {
 
     @Override
     public void sendInvalidMessage(PlayerEntity player) {
-        PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.wand.invalid"));
+        PortUtil.sendMessageNoSpam(player, new TranslationTextComponent("ars_nouveau.wand.invalid"));
     }
 
     @Override
