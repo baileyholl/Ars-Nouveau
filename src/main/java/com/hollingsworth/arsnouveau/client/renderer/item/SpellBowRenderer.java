@@ -1,7 +1,8 @@
 package com.hollingsworth.arsnouveau.client.renderer.item;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
+import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
-import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.items.Wand;
@@ -42,14 +43,15 @@ public class SpellBowRenderer extends FixedGeoItemRenderer<Wand> {
             Vector3d laserPos = playerPos.add(right);
             laserPos = laserPos.add(forward);
             laserPos = laserPos.add(down);
+            ISpellCaster tool = SpellCaster.deserialize(itemStack);
                 int timeHeld = (int) (72000 - Minecraft.getInstance().player.getUseItemRemainingTicks());
                 if(timeHeld > 0 && timeHeld != 72000){
-                    float scaleAge = true ?(float) ParticleUtil.inRange(0.05,0.1) : (float) ParticleUtil.inRange(0.05, 0.15);
+                    float scaleAge = (float) ParticleUtil.inRange(0.05,0.1);
                     if(player.level.random.nextInt( 6)  == 0){
                         for(int i =0; i< 1; i++){
                             Vector3d particlePos = new Vector3d(laserPos.x, laserPos.y,laserPos.z);
                             particlePos = particlePos.add(ParticleUtil.pointInSphere().scale(0.3f));
-                            player.level.addParticle(ParticleLineData.createData(new ParticleColor(255,25,180) ,scaleAge, 5+player.level.random.nextInt(20)) ,
+                            player.level.addParticle(ParticleLineData.createData(tool.getColor().toParticleColor() ,scaleAge, 5+player.level.random.nextInt(20)) ,
                                     particlePos.x(), particlePos.y(), particlePos.z(),
                                     laserPos.x()   , laserPos.y() , laserPos.z());
                         }

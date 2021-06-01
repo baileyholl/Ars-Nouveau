@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 
@@ -11,6 +13,7 @@ public class SpellCaster implements ISpellCaster{
 
     private int slot;
     ItemStack stack;
+    ParticleColor.IntWrapper color = ParticleUtil.defaultParticleColorWrapper();
 
     private SpellCaster(ItemStack stack){
         this.stack = stack;
@@ -55,6 +58,16 @@ public class SpellCaster implements ISpellCaster{
     }
 
     @Override
+    public void setColor(ParticleColor.IntWrapper color) {
+        this.color = color;
+    }
+
+    @Override
+    public ParticleColor.IntWrapper getColor() {
+        return color;
+    }
+
+    @Override
     public Map<Integer, Spell> getSpells() {
         return spells;
     }
@@ -68,6 +81,7 @@ public class SpellCaster implements ISpellCaster{
                 instance.getSpells().put(i, Spell.deserialize(tag.getString("spell_" + i)));
             }
         }
+        instance.color = tag.getString("color").isEmpty() ? ParticleUtil.defaultParticleColorWrapper(): ParticleColor.IntWrapper.deserialize(tag.getString("color"));
         return instance;
     }
 
@@ -75,6 +89,7 @@ public class SpellCaster implements ISpellCaster{
         CompoundNBT tag = stack.hasTag() ? stack.getTag() : new CompoundNBT();
         tag.putInt("current_slot", getCurrentSlot());
         tag.putInt("max_slot", getMaxSlots());
+        tag.putString("color", color.serialize());
         int i = 0;
         for(Integer s : getSpells().keySet()){
             tag.putString("spell_" + i, getSpells().get(s).serialize());

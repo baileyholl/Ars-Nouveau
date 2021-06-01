@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 /**
@@ -95,9 +96,16 @@ public class ParticleColor {
             }
         }
 
-        public static ParticleColor.IntWrapper deserialize(String string){
-            String[] arr = string.split(",");
-            return new ParticleColor.IntWrapper(Integer.parseInt(arr[0].trim()), Integer.parseInt(arr[1].trim()), Integer.parseInt(arr[2].trim()));
+        public static @Nonnull ParticleColor.IntWrapper deserialize(String string){
+            ParticleColor.IntWrapper color = ParticleUtil.defaultParticleColorWrapper();
+            try{
+                String[] arr = string.split(",");
+                color = new ParticleColor.IntWrapper(Integer.parseInt(arr[0].trim()), Integer.parseInt(arr[1].trim()), Integer.parseInt(arr[2].trim()));
+                return color;
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            return color;
         }
     }
 }

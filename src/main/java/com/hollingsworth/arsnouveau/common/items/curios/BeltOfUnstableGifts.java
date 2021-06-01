@@ -18,7 +18,7 @@ public class BeltOfUnstableGifts extends ArsNouveauCurio {
     }
     public static ArrayList<Effect> effectTable = new ArrayList<>(Arrays.asList(
             Effects.SLOW_FALLING, Effects.NIGHT_VISION, Effects.CONDUIT_POWER, Effects.ABSORPTION, Effects.DAMAGE_BOOST,
-            Effects.FIRE_RESISTANCE, Effects.DIG_SPEED, Effects.HEALTH_BOOST,  Effects.MOVEMENT_SPEED, Effects.REGENERATION, Effects.DAMAGE_RESISTANCE,
+            Effects.FIRE_RESISTANCE, Effects.DIG_SPEED, Effects.MOVEMENT_SPEED, Effects.REGENERATION, Effects.DAMAGE_RESISTANCE,
             ModPotions.SHIELD_POTION
             ));
 

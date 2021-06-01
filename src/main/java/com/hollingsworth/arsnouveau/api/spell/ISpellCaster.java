@@ -1,9 +1,11 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.util.MathUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.IntangibleAirTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PhantomBlockTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -11,7 +13,6 @@ import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -36,6 +37,10 @@ public interface ISpellCaster {
 
     void setSpell(Spell spell);
 
+    void setColor(ParticleColor.IntWrapper color);
+
+    ParticleColor.IntWrapper getColor();
+
     Map<Integer, Spell> getSpells();
 
     default ActionResult<ItemStack> castSpell(World worldIn, PlayerEntity playerIn, Hand handIn, TranslationTextComponent invalidMessage){
@@ -57,10 +62,11 @@ public interface ISpellCaster {
         }
 
         if(caster.getSpell() == null) {
-            playerIn.sendMessage(invalidMessage, Util.NIL_UUID);
+            PortUtil.sendMessageNoSpam(playerIn,invalidMessage);
             return new ActionResult<>(ActionResultType.CONSUME, stack);
         }
-        SpellResolver resolver = new SpellResolver(caster.getSpell().recipe, new SpellContext(caster.getSpell(), playerIn));
+        SpellResolver resolver = new SpellResolver(caster.getSpell().recipe, new SpellContext(caster.getSpell(), playerIn)
+        .withColors(getColor()));
         EntityRayTraceResult entityRes = MathUtil.getLookedAtEntity(playerIn, 25);
 
         if(entityRes != null && entityRes.getEntity() instanceof LivingEntity){
@@ -77,4 +83,5 @@ public interface ISpellCaster {
         resolver.onCast(stack,playerIn,worldIn);
         return new ActionResult<>(ActionResultType.CONSUME, stack);
     }
+
 }

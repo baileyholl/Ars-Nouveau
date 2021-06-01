@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
-import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -12,6 +12,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.network.IPacket;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.*;
@@ -25,17 +28,33 @@ public class EntitySpellArrow extends ArrowEntity {
     public int pierceLeft;
     BlockPos lastPosHit;
     Entity lastEntityHit;
+    public static final DataParameter<Integer> RED = EntityDataManager.defineId(EntitySpellArrow.class, DataSerializers.INT);
+    public static final DataParameter<Integer> GREEN = EntityDataManager.defineId(EntitySpellArrow.class, DataSerializers.INT);
+    public static final DataParameter<Integer> BLUE = EntityDataManager.defineId(EntitySpellArrow.class, DataSerializers.INT);
 
     public EntitySpellArrow(EntityType<? extends ArrowEntity> type, World worldIn) {
         super(type, worldIn);
+        setDefaultColors();
     }
 
     public EntitySpellArrow(World worldIn, double x, double y, double z) {
         super(worldIn, x, y, z);
+        setDefaultColors();
     }
 
     public EntitySpellArrow(World worldIn, LivingEntity shooter) {
         super(worldIn, shooter);
+        setDefaultColors();
+    }
+
+    public void setDefaultColors(){
+        setColors(255, 25, 180);
+    }
+
+    public void setColors(int r, int g, int b){
+        this.entityData.set(RED, r);
+        this.entityData.set(GREEN, g);
+        this.entityData.set(BLUE, b);
     }
 
     @Override
@@ -153,7 +172,7 @@ public class EntitySpellArrow extends ArrowEntity {
                     double coeff = j / dist;
                     counter += level.random.nextInt(3);
                     if (counter % (Minecraft.getInstance().options.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles.getId()) == 0) {
-                        level.addParticle(GlowParticleData.createData(ParticleUtil.defaultParticleColor()), (float) (xo + deltaX * coeff), (float) (yo + deltaY * coeff), (float) (zo + deltaZ * coeff), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f));
+                        level.addParticle(GlowParticleData.createData(new ParticleColor(entityData.get(RED), entityData.get(GREEN), entityData.get(BLUE))), (float) (xo + deltaX * coeff), (float) (yo + deltaY * coeff), (float) (zo + deltaZ * coeff), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f));
                     }
                 }
             }
@@ -234,6 +253,14 @@ public class EntitySpellArrow extends ArrowEntity {
 
         }
 
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(RED, 0);
+        this.entityData.define(GREEN, 0);
+        this.entityData.define(BLUE, 0);
     }
 
     @Override
