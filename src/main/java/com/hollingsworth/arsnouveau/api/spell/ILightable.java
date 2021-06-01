@@ -8,5 +8,8 @@ import java.util.List;
 
 public interface ILightable {
 
+    /**
+     * Called when a light spell is cast on this block or entity.
+     */
     void onLight(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext);
 }

@@ -26,7 +26,4 @@ public class EntitySpellResolver extends SpellResolver {
     boolean enoughMana(LivingEntity entity) {
         return true;
     }
-
-
-
 }

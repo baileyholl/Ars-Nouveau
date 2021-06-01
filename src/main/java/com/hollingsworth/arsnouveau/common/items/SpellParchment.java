@@ -2,11 +2,10 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.IScribeable;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-
-import net.minecraft.client.gui.NewChatGui;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -48,16 +47,9 @@ public class SpellParchment extends ModItem implements IScribeable {
         if(!stack.hasTag() || stack.getTag().getString("spell").equals(""))
             return;
 
-        StringBuilder tip = new StringBuilder();
         List<AbstractSpellPart> spellsFromTagString = SpellRecipeUtil.getSpellsFromTagString(stack.getTag().getString("spell"));
-        for (int i = 0; i < spellsFromTagString.size(); i++) {
-            AbstractSpellPart spellPart = spellsFromTagString.get(i);
-            tip.append(spellPart.getLocaleName());
-            if(i < spellsFromTagString.size() - 1){
-                tip.append(" -> ");
-            }
-        }
-        tooltip.add(new StringTextComponent(tip.toString()));
+        Spell spell = new Spell(spellsFromTagString);
+        tooltip.add(new StringTextComponent(spell.getDisplayString()));
     }
 
     @Override

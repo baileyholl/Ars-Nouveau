@@ -8,8 +8,6 @@ import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.SconceBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.LightTile;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
@@ -24,8 +22,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -39,6 +35,10 @@ public class EffectLight extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         super.onResolveEntity(rayTraceResult, world, shooter, augments, spellContext);
+        if(rayTraceResult.getEntity() instanceof ILightable){
+            ((ILightable) rayTraceResult.getEntity()).onLight(rayTraceResult, world, shooter, augments, spellContext);
+        }
+
         if(!(rayTraceResult.getEntity() instanceof LivingEntity))
             return;
         if (shooter == null || !shooter.equals(rayTraceResult.getEntity())) {

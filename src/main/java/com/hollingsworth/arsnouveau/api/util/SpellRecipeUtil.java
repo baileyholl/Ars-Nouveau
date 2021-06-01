@@ -4,9 +4,9 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.ISpellBonus;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
-import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -36,6 +36,7 @@ public class SpellRecipeUtil {
         return augments;
     }
 
+    @Deprecated // Marked for removal for Spell object methods.
     public static ArrayList<AbstractSpellPart> getSpellsFromString(String spellString){
         List<String> spellStrings = Arrays.asList(spellString.split(","));
         ArrayList<AbstractSpellPart> spells = new ArrayList<>();
@@ -50,6 +51,7 @@ public class SpellRecipeUtil {
     /**
      * Parses the NBT stored string, which is stored as an array of spell IDs. ex: [touch, harm, , , ,]
      */
+    @Deprecated // Marked for removal for Spell object methods.
     public static List<AbstractSpellPart> getSpellsFromTagString(String recipeStr){
         ArrayList<AbstractSpellPart> recipe = new ArrayList<>();
         if (recipeStr.length() <= 3) // Account for empty strings and '[,]'
@@ -62,6 +64,7 @@ public class SpellRecipeUtil {
         return recipe;
     }
 
+    @Deprecated // Marked for removal for Spell object methods.
     public static String serializeForNBT(List<AbstractSpellPart> abstractSpellPart){
         List<String> tags = new ArrayList<>();
         for(AbstractSpellPart slot : abstractSpellPart){
@@ -69,16 +72,8 @@ public class SpellRecipeUtil {
         }
         return tags.toString();
     }
-
+    @Deprecated // Marked for removal
     public static String getDisplayString(List<AbstractSpellPart> abstractSpellPart){
-        StringBuilder str = new StringBuilder();
-        for (int i = 0; i < abstractSpellPart.size(); i++) {
-            AbstractSpellPart spellPart = abstractSpellPart.get(i);
-            str.append(spellPart.getLocaleName());
-            if(i < abstractSpellPart.size() - 1){
-                str.append(" -> ");
-            }
-        }
-        return str.toString();
+        return new Spell(abstractSpellPart).getDisplayString();
     }
 }
