@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
 import com.hollingsworth.arsnouveau.api.spell.IPlaceBlockResponder;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -62,7 +63,7 @@ public class SpellTurretTile extends TileEntity  implements IPickupResponder, IP
         if(this.recipe == null || this.recipe.isEmpty())
             return new ArrayList<>();
         List<String> list = new ArrayList<>();
-        list.add(new TranslationTextComponent("ars_nouveau.spell_turret.casting").getString() + SpellRecipeUtil.getDisplayString(recipe));
+        list.add(new TranslationTextComponent("ars_nouveau.spell_turret.casting").getString() + new Spell(recipe).getDisplayString());
         return list;
     }
     @Override

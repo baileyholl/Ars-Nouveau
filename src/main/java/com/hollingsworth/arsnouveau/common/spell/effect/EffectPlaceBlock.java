@@ -9,6 +9,8 @@ import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -50,9 +52,24 @@ public class EffectPlaceBlock extends AbstractEffect {
                 ItemStack stack = ((IPlaceBlockResponder) spellContext.castingTile).onPlaceBlock();
                 if(stack.isEmpty() || !(stack.getItem() instanceof BlockItem))
                     return;
-                BlockRayTraceResult resolveResult = new BlockRayTraceResult(new Vector3d(hitPos.getX(), hitPos.getY(), hitPos.getZ()), result.getDirection(), hitPos, false);
-                BlockItem item = (BlockItem) stack.getItem();
-                attemptPlace(world, stack, item, resolveResult);
+
+               BlockItem item = (BlockItem) stack.getItem();
+                FakePlayer fakePlayer = new ANFakePlayer((ServerWorld) world);
+                fakePlayer.setItemInHand(Hand.MAIN_HAND, stack);
+
+                // Special offset for touch
+                boolean isTouch = spellContext.spell.recipe.get(0) instanceof MethodTouch;
+                BlockState blockTargetted = isTouch ? world.getBlockState(hitPos.relative(result.getDirection().getOpposite())) : world.getBlockState(hitPos.relative(result.getDirection()));
+                if(blockTargetted.getMaterial() != Material.AIR)
+                    continue;
+                // Special offset because we are placing a block against the face we are looking at (in the case of touch)
+                Direction direction = isTouch ? result.getDirection().getOpposite() : result.getDirection();
+                BlockItemUseContext context = BlockItemUseContext.at(new BlockItemUseContext(new ItemUseContext(fakePlayer, Hand.MAIN_HAND, result)),
+                        hitPos.relative(direction), direction);
+
+                item.place(context);
+
+
             }else if(shooter instanceof IPlaceBlockResponder){
                 ItemStack stack = ((IPlaceBlockResponder) shooter).onPlaceBlock();
                 if(stack.isEmpty() || !(stack.getItem() instanceof BlockItem))

@@ -62,7 +62,6 @@ public class MethodTouch extends AbstractCastMethod {
 
     @Override
     public boolean wouldCastSuccessfully(@Nullable ItemStack stack, LivingEntity playerEntity, World world, List<AbstractAugment> augments) {
-
         return false;
     }
 

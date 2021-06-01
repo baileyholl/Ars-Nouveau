@@ -42,14 +42,13 @@ import java.util.Random;
 
 public class SpellTurret extends ModBlock {
     public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
+
     public SpellTurret() {
         super(defaultProperties().noOcclusion(), LibBlockNames.SPELL_TURRET);
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(TRIGGERED, Boolean.FALSE));
     }
 
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
-
-
-
 
     @Override
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
@@ -58,11 +57,13 @@ public class SpellTurret extends ModBlock {
 
     public void shootSpell(ServerWorld world, BlockPos pos ) {
         SpellTurretTile tile = (SpellTurretTile) world.getBlockEntity(pos);
+
         if(tile == null || tile.recipe == null || tile.recipe.isEmpty())
             return;
         int manaCost = new Spell(tile.recipe).getCastingCost()/2;
         if(ManaUtil.takeManaNearbyWithParticles(pos, world, 10, manaCost) == null)
             return;
+
         IPosition iposition = getDispensePosition(new ProxyBlockSource(world, pos));
         Direction direction = world.getBlockState(pos).getValue(FACING);
         FakePlayer fakePlayer = new ANFakePlayer(world);
@@ -77,6 +78,8 @@ public class SpellTurret extends ModBlock {
             if(direction == Direction.WEST || direction == Direction.NORTH){
                 touchPos = touchPos.relative(direction);
             }
+            if(direction == Direction.DOWN) // Why do I need to do this? Why does the vanilla dispenser code not offset correctly for DOWN?
+                touchPos = touchPos.below();
             resolver.onCastOnBlock(new BlockRayTraceResult(new Vector3d(touchPos.getX(), touchPos.getY(), touchPos.getZ()),
                     direction.getOpposite(), new BlockPos(touchPos.getX(), touchPos.getY(), touchPos.getZ()), false),
                    fakePlayer);
@@ -101,14 +104,15 @@ public class SpellTurret extends ModBlock {
         boolean flag1 = state.getValue(TRIGGERED);
         if (flag && !flag1) {
             worldIn.getBlockTicks().scheduleTick(pos, this,4);
-            worldIn.setBlock(pos, state.setValue(TRIGGERED, Boolean.valueOf(true)), 4);
+            worldIn.setBlock(pos, state.setValue(TRIGGERED, Boolean.TRUE), 4);
+
         } else if (!flag && flag1) {
-            worldIn.setBlock(pos, state.setValue(TRIGGERED, Boolean.valueOf(false)), 4);
+            worldIn.setBlock(pos, state.setValue(TRIGGERED, Boolean.FALSE), 4);
         }
     }
 
     public boolean hasAnalogOutputSignal(BlockState state) {
-        return true;
+        return false;
     }
 
 
