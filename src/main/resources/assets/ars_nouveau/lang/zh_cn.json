@@ -73,7 +73,7 @@
 	"ars_nouveau.page.amulet_of_mana_boost": "中幅增加魔力上限。",
 	"ars_nouveau.page.amulet_of_mana_regen": "中幅增加魔力再生速度。",
 
-	"ars_nouveau.page.arcane_relay": "可在魔力罐和其它魔力中继器之间传输魔力。要从魔力罐中抽取魔力，需使用支配之杖先右击魔力罐，再右击魔力中继器。要从中继传输到另一个中继或魔力罐，先右击中继器，再右击传输的目标。一个中继器最多只能连接到 10 格远的目标。使用支配之杖潜行右击中继器可清空连接。",
+	"ars_nouveau.page.arcane_relay": "可在魔力罐和其它魔力中继器之间传输魔力。要从魔力罐中抽取魔力，需使用支配之杖先右击魔力罐，再右击魔力中继器。要从中继传输到另一个中继或魔力罐，先右击中继器，再右击传输的目标。一个中继器最多只能连接到 30 格远的目标。使用支配之杖潜行右击中继器可清空连接。",
 	"ars_nouveau.page.arcane_relay_splitter": "操作方式和魔力中继器相似，但它支持同时传输魔力到多个魔力罐内。分流器的吞吐量比中继器大得多，它会将流量在所有目标魔力罐间平分。使用说明请参阅魔力中继器的条目。",
 	"ars_nouveau.page.enchanting_apparatus1": "附魔装置能利用基座和世界中的魔力进行合成。要想使用附魔装置，请在附近放置任意数量的奥术基座，并在其上放置物品。将你的试剂物品放置在附魔装置方块上，然后潜行与其互动以开始制作。附魔装置下方需要放置一个奥术核心，否则它不会运行。",
 
@@ -424,6 +424,7 @@
 	"ars_nouveau.ritual_desc.moonfall": "将时间设为夜晚。",
 	"ars_nouveau.ritual_desc.overgrowth": "在仪式火盆附近区域不定期地催熟方块。该仪式的运作需要魔力。如果使用骨块增强，仪式的效果会变为加快幼年动物成长。",
 	"ars_nouveau.ritual_desc.restoration": "持续治疗附近实体或者伤害不死生物。此外，附近的僵尸村民会被立即治疗，产生的村民还会为附近的玩家提供折扣。该仪式的运作需要魔力。",
+	"ars_nouveau.ritual_desc.scrying": "使玩家能在一定时间内透视看到特定方块。透视时看见白色粒子表明玩家和目标方块距离很近，绿色表明距离较远，蓝色表明距离非常远。要进行仪式，需要在仪式开始前投入你想要探知的目标方块。你也可以使用延长时效魔符进行增强，使仪式的持续时间增加到 15 分钟。",
 	"ars_nouveau.ritual_desc.sunrise": "将时间设为白天。",
 	"ars_nouveau.ritual_desc.warping": "将附近所有实体折越到折越卷轴上的位置。开始仪式前，你必须先使用已记录位置的折越卷轴对仪式进行增强。",
 	"item.ars_nouveau.glyph_accelerate": "魔符：加速",
@@ -497,6 +498,7 @@
 	"item.ars_nouveau.ritual_moonfall": "落月之板",
 	"item.ars_nouveau.ritual_overgrowth": "繁茂之板",
 	"item.ars_nouveau.ritual_restoration": "复原之板",
+	"item.ars_nouveau.ritual_scrying": "探知之板",
 	"item.ars_nouveau.ritual_sunrise": "升阳之板",
 	"item.ars_nouveau.ritual_warping": "折越之板",
 	
@@ -554,7 +556,7 @@
 	"ars_nouveau.warp_scroll.wrong_dim": "在其他维度使用这个卷轴不是一个好主意。",
 	"ars_nouveau.warp_scroll.inv_full": "你的物品栏中空间不足。",
 	"ars_nouveau.warp_scroll.recorded": "你的位置已记录到折越卷轴。",
-	"ars_nouveau.warp_scroll.no_location": "没有已记录的位置。",
+	"ars_nouveau.warp_scroll.no_location": "潜行时使用可设定位置。",
 	"ars_nouveau.wand.spell_invalid": "法术无效。",
 	
 	"ars_nouveau.carbuncle.store": "卡班克尔会在这里存储物品。",
@@ -596,6 +598,29 @@
 	"ars_nouveau.false": "否",
   
 	"ars_nouveau.spell_hud.crafting_mode": "法术制作模式",
+
+	"ars_nouveau.spell.validation.crafting.invalid": "该法术的构成有一些问题。",
+	"ars_nouveau.spell.validation.crafting.invalid_glyphs": "法术中一个或多个魔符无效。",
+
+	"ars_nouveau.spell.validation.exists._comment": "__ These messages appear when reporting on an existing spell that is invalid. __",
+	"ars_nouveau.spell.validation.exists.non_empty_spell": "法术不能为空。",
+	"ars_nouveau.spell.validation.exists.max_one_cast_method": "该法术有额外的形态魔符：%s",
+	"ars_nouveau.spell.validation.exists.starting_cast_method": "法术未以形态魔符开头。",
+	"ars_nouveau.spell.validation.exists.action_augmentation_policy": "%s被%s增强的次数过多。",
+	"ars_nouveau.spell.validation.exists.action_augmentation_policy.zero": "%s不能被%s增强。",
+	"ars_nouveau.spell.validation.exists.glyph_occurrences_policy": "%s出现次数过多。",
+	"ars_nouveau.spell.validation.exists.augment_compatibility": "%s不能被%s增强",
+	"ars_nouveau.spell.validation.exists.glyph_tier": "%s对于你当前的法术书来说过于强大了。",
+
+	"ars_nouveau.spell.validation.adding._comment": "__ These messages appear when attempting to add a glyph that would make a spell invalid. __",
+	"ars_nouveau.spell.validation.adding.non_empty_spell": "法术不能为空。",
+	"ars_nouveau.spell.validation.adding.max_one_cast_method": "该法术已经有一个形态魔符了。",
+	"ars_nouveau.spell.validation.adding.starting_cast_method": "法术必须以形态魔符开头。",
+	"ars_nouveau.spell.validation.adding.action_augmentation_policy": "%s已经被%s增强到了极限。",
+	"ars_nouveau.spell.validation.adding.action_augmentation_policy.zero": "%s不能被%s增强。",
+	"ars_nouveau.spell.validation.adding.glyph_occurrences_policy": "%s的出现次数已经达到上限。",
+	"ars_nouveau.spell.validation.adding.augment_compatibility": "%s不能被%s增强",
+	"ars_nouveau.spell.validation.adding.glyph_tier": "%s对于你当前的法术书来说过于强大了。",
 	
 	"ars_nouveau.spell.no_mana": "魔力不足。",
 	"block.ars_nouveau.potion_jar": "药水罐",
@@ -629,5 +654,18 @@
 	"ars_nouveau.tooltip.exp_gem": "使用时获得经验。潜行可使用整个堆叠。",
 	"item.ars_nouveau.experience_gem": "经验宝石",
 	"item.ars_nouveau.greater_experience_gem": "高等经验宝石",
-	"effect.ars_nouveau.hex": "脆弱诅咒"
+	"effect.ars_nouveau.hex": "脆弱诅咒",
+	"ars_nouveau.set_spell": "法术已设置。",
+	"ars_nouveau.invalid_spell": "无效法术",
+	"effect.ars_nouveau.scrying": "探知",
+	"ars_nouveau.tooltip.mana_bloom": "从附魔装置合成的种子中生长而来。",
+	"ars_nouveau.tooltip.dull": "一个平凡无趣的饰品，无法被穿戴。用于进一步合成。",
+	"ars_nouveau.sword.invalid": "无效法术。剑仅接受只含效果和增强构件的法术，例如冻结 -> 延长时效。",
+	"item.ars_nouveau.enchanters_sword": "附魔师之剑",
+	"item.ars_nouveau.enchanters_shield": "附魔师之盾",
+	"ars_nouveau.page.enchanters_sword": "在对实体造成伤害前会施放一个触摸开头的法术。此外，附魔师之剑还会在所有法术的最后一个效果构件后添加一个额外的强化构件。需要在抄写台添加不含形态的法术，例如点燃 -> 延长时效。",
+	"ars_nouveau.page.enchanters_shield": "在使用该盾阻挡伤害时，使用者会得到短时间的魔力再生状态。此外，这面盾牌会消耗使用者的魔力慢慢进行自我修复。",
+	"ars_nouveau.tooltip.can_inscribe": "可以在抄写台抄入法术。",
+	"biome.ars_nouveau.archwood_forest": "至高木森林",
+	"ars_nouveau.tooltip.turned_off": "已关闭"
 }
