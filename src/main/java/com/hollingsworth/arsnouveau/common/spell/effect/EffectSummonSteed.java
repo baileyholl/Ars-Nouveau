@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.SummonHorse;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import net.minecraft.entity.LivingEntity;
@@ -39,16 +40,16 @@ public class EffectSummonSteed extends AbstractEffect {
         if(!canSummon(shooter))
             return;
         Vector3d hit = rayTraceResult.getLocation();
-        SummonHorse horse = new SummonHorse(ModEntities.SUMMON_HORSE, world);
-      //  wolf.ticksLeft = 400;
-        horse.setPos(hit.x(), hit.y(), hit.z());
-        horse.ticksLeft = ticks;
-        horse.tameWithName((PlayerEntity) shooter);
-        world.addFreshEntity(horse);
-        horse.getHorseInventory().setItem(0, new ItemStack(Items.SADDLE));
-        //horse.setItemStackToSlot(EquipmentSlotType.CHEST, new ItemStack(Items.DIAMOND_HORSE_ARMOR));
-        horse.setDropChance(EquipmentSlotType.CHEST, 0.0F);
-        applySummoningSickness(shooter, ticks/2);
+        for(int i = 0; i < 1 + getBuffCount(augments, AugmentAOE.class); i++){
+            SummonHorse horse = new SummonHorse(ModEntities.SUMMON_HORSE, world);
+            horse.setPos(hit.x(), hit.y(), hit.z());
+            horse.ticksLeft = ticks;
+            horse.tameWithName((PlayerEntity) shooter);
+            world.addFreshEntity(horse);
+            horse.getHorseInventory().setItem(0, new ItemStack(Items.SADDLE));
+            horse.setDropChance(EquipmentSlotType.CHEST, 0.0F);
+        }
+        applySummoningSickness(shooter, 30 * 20);
     }
 
 
@@ -71,17 +72,19 @@ public class EffectSummonSteed extends AbstractEffect {
 
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return SUMMON_AUGMENTS;
+        return augmentSetOf(
+                AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE, AugmentAOE.INSTANCE
+        );
     }
 
     @Override
     public String getBookDescription() {
-        return "Summons a saddled horse that will vanish after a few minutes. Extend Time will increase the duration of the summon. Applies Summoning Sickness to the caster, and cannot be cast while afflicted by this Sickness.";
+        return "Summons a saddled horse that will vanish after a few minutes. AOE will increase the amount summoned, while Extend Time will increase the duration of the summon. Applies Summoning Sickness to the caster, and cannot be cast while afflicted by this Sickness.";
     }
 
     @Nullable
     @Override
     public Item getCraftingReagent() {
-        return Items.SADDLE;
+        return Items.LEATHER;
     }
 }

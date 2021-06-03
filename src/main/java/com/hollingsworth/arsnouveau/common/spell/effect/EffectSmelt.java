@@ -46,7 +46,7 @@ public class EffectSmelt extends AbstractEffect {
 
         int aoeBuff = getBuffCount(augments, AugmentAOE.class);
         int pierceBuff = getBuffCount(augments, AugmentPierce.class);
-        int maxItemSmelt = 3 + 4*aoeBuff*pierceBuff;
+        int maxItemSmelt = 3 + 4 * aoeBuff + 4 * pierceBuff;
 
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getBlockPos(), (BlockRayTraceResult)rayTraceResult,aoeBuff, pierceBuff);
         List<ItemEntity> itemEntities = world.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(((BlockRayTraceResult) rayTraceResult).getBlockPos()).inflate(aoeBuff + 1.0));
