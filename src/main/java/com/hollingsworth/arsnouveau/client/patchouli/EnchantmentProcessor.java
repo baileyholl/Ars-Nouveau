@@ -19,11 +19,13 @@ public class EnchantmentProcessor implements IComponentProcessor {
     public void setup(IVariableProvider variables) {
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
         String recipeID = variables.get("recipe").asString();
-        recipe = (EnchantmentRecipe) manager.byKey(new ResourceLocation(recipeID)).orElseThrow(IllegalArgumentException::new);
+        recipe = (EnchantmentRecipe) manager.byKey(new ResourceLocation(recipeID)).orElse(null);
     }
 
     @Override
     public IVariable process(String key) {
+        if(recipe == null)
+            return null;
         if(key.equals("enchantment"))
             return IVariable.wrap(recipe.enchantment.getDescriptionId());
         if(key.equals("level"))

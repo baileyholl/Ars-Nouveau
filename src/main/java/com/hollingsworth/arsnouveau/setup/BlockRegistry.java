@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.renderer.tile.*;
 import com.hollingsworth.arsnouveau.common.block.*;
 import com.hollingsworth.arsnouveau.common.block.tile.*;
-import com.hollingsworth.arsnouveau.common.event.WorldEvent;
+import com.hollingsworth.arsnouveau.common.world.WorldEvent;
 import com.hollingsworth.arsnouveau.common.items.AnimBlockItem;
 import com.hollingsworth.arsnouveau.common.items.FluidBlockItem;
 import com.hollingsworth.arsnouveau.common.items.VolcanicAccumulatorBI;

@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.common.event;
+package com.hollingsworth.arsnouveau.common.world;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.common.block.tile.LightTile;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
-import com.hollingsworth.arsnouveau.common.world.FeatureLib;
 import com.hollingsworth.arsnouveau.common.world.feature.SingleBlockFeature;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
 import com.hollingsworth.arsnouveau.common.world.tree.SupplierBlockStateProvider;
@@ -36,6 +35,7 @@ import net.minecraft.world.gen.feature.template.*;
 import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
 import net.minecraft.world.gen.placement.AtSurfaceWithExtraConfig;
 import net.minecraft.world.gen.placement.Placement;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
@@ -296,9 +296,13 @@ public class WorldEvent {
     public static class BiomeRegistry{
         @SubscribeEvent
         public static void biomeRegistry(final RegistryEvent.Register<Biome> biomeRegistryEvent) {
-            if(Config.ARCHWOOD_FOREST_WEIGHT.get() > 0)
-                BiomeManager.addBiome(BiomeManager.BiomeType.COOL, new BiomeManager.BiomeEntry(k(archwoodForest), Config.ARCHWOOD_FOREST_WEIGHT.get()));
+            RegistryKey<Biome> archwoodKey = k(archwoodForest);
+            if(Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
+                BiomeManager.addBiome(BiomeManager.BiomeType.COOL, new BiomeManager.BiomeEntry(archwoodKey, Config.ARCHWOOD_FOREST_WEIGHT.get()));
+
+            }
             biomeRegistryEvent.getRegistry().registerAll(archwoodForest);
+            BiomeDictionary.addTypes(archwoodKey, BiomeDictionary.Type.OVERWORLD);
         }
 
         private static RegistryKey<Biome> k(Biome b) {

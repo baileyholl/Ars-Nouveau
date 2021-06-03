@@ -19,11 +19,13 @@ public class ApparatusProcessor implements IComponentProcessor {
     public void setup(IVariableProvider variables) {
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
         String recipeID = variables.get("recipe").asString();
-        recipe = (EnchantingApparatusRecipe) manager.byKey(new ResourceLocation(recipeID)).orElseThrow(IllegalArgumentException::new);
+        recipe = (EnchantingApparatusRecipe) manager.byKey(new ResourceLocation(recipeID)).orElse(null);
     }
 
     @Override
     public IVariable process(String key) {
+        if(recipe == null)
+            return null;
         if(key.equals("reagent"))
             return IVariable.wrapList(Arrays.asList(recipe.reagent.getItems()).stream().map(IVariable::from).collect(Collectors.toList()));
 
