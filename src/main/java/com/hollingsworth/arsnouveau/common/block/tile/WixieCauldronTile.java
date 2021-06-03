@@ -40,6 +40,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 
@@ -184,7 +185,9 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
 
         if(isCraftingPotion && recipeWrapper.recipes.size() > 0){
 
-            RecipeWrapper.SingleRecipe recipe = (RecipeWrapper.SingleRecipe) recipeWrapper.recipes.toArray()[0];
+            RecipeWrapper.SingleRecipe recipe = recipeWrapper.canCraftPotionFromInventory(count, level, worldPosition);
+            if(recipe == null)
+                return;
             if(!(recipe.recipe.get(0) instanceof PotionIngredient)){
                 isCraftingPotion = false;
                 return;
@@ -208,9 +211,8 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
     }
 
     public void setRecipes(PlayerEntity playerEntity, ItemStack stack){
-        ItemStack craftingItem = stack;
         RecipeWrapper recipes = new RecipeWrapper();
-        if(craftingItem.getItem() == Items.POTION){
+        if(stack.getItem() == Items.POTION){
             for(BrewingRecipe r : ArsNouveauAPI.getInstance().getAllPotionRecipes()){
                 if(ItemStack.matches(stack, r.getOutput())) {
                     isCraftingPotion = true;
@@ -218,12 +220,11 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
                     list.add(new PotionIngredient(r.getInput().getItems()[0]));
                     list.add(r.getIngredient());
                     recipes.addRecipe(list, r.getOutput(), null);
-                    break;
                 }
             }
         }else {
             for (IRecipe r : level.getServer().getRecipeManager().getRecipes()) {
-                if (r.getResultItem().getItem() != craftingItem.getItem())
+                if (r.getResultItem().getItem() != stack.getItem())
                     continue;
 
                 if (r instanceof ShapedRecipe) {
@@ -284,7 +285,7 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
         return foundPod.get();
     }
 
-    public @Nullable BlockPos findNeededPotion(Potion passedPot, int amount){
+    public static @Nullable BlockPos findNeededPotion(Potion passedPot, int amount, World level, BlockPos worldPosition){
         AtomicReference<BlockPos> foundPod = new AtomicReference<>();
         BlockPos.withinManhattanStream(worldPosition.below(2), 4, 3,4).forEach(bPos ->{
             if (foundPod.get() == null && level.getBlockEntity(bPos) instanceof PotionJarTile) {
@@ -297,7 +298,9 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
         return foundPod.get();
     }
 
-
+    public @Nullable BlockPos findNeededPotion(Potion passedPot, int amount){
+        return findNeededPotion(passedPot, amount, level, worldPosition);
+    }
 
     public void spawnFlyingItem(BlockPos from, ItemStack stack) {
         EntityFlyingItem flyingItem = new EntityFlyingItem(level, from.above(), worldPosition);

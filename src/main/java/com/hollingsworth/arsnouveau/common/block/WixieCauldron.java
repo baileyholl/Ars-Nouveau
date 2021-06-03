@@ -39,7 +39,6 @@ public class WixieCauldron extends ModBlock{
         if(worldIn.isClientSide || handIn != Hand.MAIN_HAND || !(worldIn.getBlockEntity(pos) instanceof WixieCauldronTile))
             return ActionResultType.SUCCESS;
 
-
         if(player.getMainHandItem().getItem() != ItemsRegistry.WIXIE_CHARM && !player.getMainHandItem().isEmpty()){
             ((WixieCauldronTile) worldIn.getBlockEntity(pos)).setRecipes(player, player.getMainHandItem());
             worldIn.sendBlockUpdated(pos, worldIn.getBlockState(pos), worldIn.getBlockState(pos), 3);
