@@ -20,7 +20,6 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 public class SylphRenderer extends GeoEntityRenderer<EntitySylph> {
-    private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph.png");
 
     private static SylphModel model = new SylphModel();
 
@@ -48,6 +47,7 @@ public class SylphRenderer extends GeoEntityRenderer<EntitySylph> {
                         particlePos.x() + Math.cos(roteAngle) / 2, particlePos.y() + 0.5 + offsetY, particlePos.z() + Math.sin(roteAngle) / 2,
                         0, 0, 0);
             }
+
         }
     }
 
