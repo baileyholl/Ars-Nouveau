@@ -92,7 +92,7 @@ public class APIRegistry {
         registerSpell(EffectSummonDecoy.INSTANCE);
         registerSpell(EffectHex.INSTANCE);
         registerSpell(MethodUnderfoot.INSTANCE);
-        registerSpell(EffectGlide.INTANCE);
+        registerSpell(EffectGlide.INSTANCE);
 
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());

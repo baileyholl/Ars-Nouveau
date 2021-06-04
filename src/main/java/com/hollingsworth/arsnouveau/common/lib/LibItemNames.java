@@ -80,4 +80,12 @@ public class LibItemNames {
 
     public static final String ENCHANTERS_SWORD = "enchanters_sword";
     public static final String ENCHANTERS_SHIELD = "enchanters_shield";
+
+    public static final String CARBUNCLE_SE = "carbuncle_se";
+    public static final String SYLPH_SE = "sylph_se";
+
+    public static final String WILDEN_HUNTER_SE = "wilden_hunter_se";
+    public static final String WILDEN_STALKER_SE = "wilden_stalker_se";
+    public static final String WILDEN_GUARDIAN_SE = "wilden_guardian_se";
+
 }
