@@ -20,7 +20,7 @@ import java.util.Set;
 
 public class EffectGlide extends AbstractEffect {
 
-    public static EffectGlide INTANCE = new EffectGlide();
+    public static EffectGlide INSTANCE = new EffectGlide();
 
     private EffectGlide() {
         super(GlyphLib.EffectGlideID, "Glide");
@@ -37,13 +37,23 @@ public class EffectGlide extends AbstractEffect {
     @Override
     public void buildConfig(ForgeConfigSpec.Builder builder) {
         super.buildConfig(builder);
-        addPotionConfig(builder, 60);
-        addExtendTimeConfig(builder, 60);
+        addPotionConfig(builder, 180);
+        addExtendTimeConfig(builder, 120);
     }
 
     @Override
     public int getManaCost() {
         return 100;
+    }
+
+    @Override
+    public String getBookDescription() {
+        return "Grants the Glide effect, allowing the wearer to fly as if they were wearing an Elytra. ";
+    }
+
+    @Override
+    public Tier getTier() {
+        return Tier.THREE;
     }
 
     @Nullable
