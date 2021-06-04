@@ -26,6 +26,7 @@ public class ModPotions {
     public static final HexEffect HEX_EFFECT = new HexEffect();
     public static final ScryingEffect SCRYING_EFFECT = new ScryingEffect();
     public static final GlideEffect GLIDE_EFFECT = new GlideEffect();
+    public static final SnareEffect SNARE_EFFECT = new SnareEffect();
 
     @ObjectHolder("mana_regen_potion")
     public static Potion MANA_REGEN_POTION;
@@ -61,7 +62,8 @@ public class ModPotions {
                     SUMMONING_SICKNESS,
                     SHOCKED_EFFECT,
                     HEX_EFFECT,
-                    GLIDE_EFFECT);
+                    GLIDE_EFFECT,
+                    SNARE_EFFECT);
         }
 
         @SubscribeEvent

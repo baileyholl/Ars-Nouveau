@@ -74,14 +74,11 @@ public class EventHandler {
 
     @SubscribeEvent
     public static void jumpEvent(LivingEvent.LivingJumpEvent e) {
-        if(e.getEntityLiving() == null  || e.getEntityLiving().getEffect(Effects.MOVEMENT_SLOWDOWN) == null)
+        if(e.getEntityLiving() == null  || e.getEntityLiving().getEffect(ModPotions.SNARE_EFFECT) == null)
             return;
-        EffectInstance effectInstance = e.getEntityLiving().getEffect(Effects.MOVEMENT_SLOWDOWN);
-        if(effectInstance.getAmplifier() >= 20){
-            e.getEntityLiving().setDeltaMovement(0,0,0);
-        }
-    }
+        e.getEntityLiving().setDeltaMovement(0,0,0);
 
+    }
 
 
     @SubscribeEvent

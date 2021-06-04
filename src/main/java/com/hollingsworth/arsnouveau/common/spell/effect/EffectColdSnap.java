@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -71,7 +72,7 @@ public class EffectColdSnap extends AbstractEffect {
         dealDamage(world, shooter, damage, augments, livingEntity, buildDamageSource(world, shooter).setMagic());
         ((ServerWorld)world).sendParticles(ParticleTypes.SPIT, vec.x, vec.y +0.5, vec.z,50,
                 ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1),ParticleUtil.inRange(-0.1, 0.1), 0.3);
-        livingEntity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 20 * snareTime, 20));
+        livingEntity.addEffect(new EffectInstance(ModPotions.SNARE_EFFECT, 20 * snareTime));
     }
 
     @Override
