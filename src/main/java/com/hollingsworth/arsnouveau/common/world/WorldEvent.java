@@ -36,7 +36,6 @@ import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
 import net.minecraft.world.gen.placement.AtSurfaceWithExtraConfig;
 import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -289,18 +288,13 @@ public class WorldEvent {
 
     public static Biome archwoodForest = BiomeMaker.theVoidBiome().setRegistryName(ArsNouveau.MODID, "archwood_forest");
     public static Biome blazingForest = BiomeMaker.theVoidBiome().setRegistryName(ArsNouveau.MODID, "blazing_archwood_forest");
-
+    public static RegistryKey<Biome> archwoodKey = BiomeRegistry.k(archwoodForest);
 
     @ObjectHolder(ArsNouveau.MODID)
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class BiomeRegistry{
         @SubscribeEvent
         public static void biomeRegistry(final RegistryEvent.Register<Biome> biomeRegistryEvent) {
-            RegistryKey<Biome> archwoodKey = k(archwoodForest);
-            if(Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
-                BiomeManager.addBiome(BiomeManager.BiomeType.COOL, new BiomeManager.BiomeEntry(archwoodKey, Config.ARCHWOOD_FOREST_WEIGHT.get()));
-
-            }
             biomeRegistryEvent.getRegistry().registerAll(archwoodForest);
             BiomeDictionary.addTypes(archwoodKey, BiomeDictionary.Type.OVERWORLD);
         }
