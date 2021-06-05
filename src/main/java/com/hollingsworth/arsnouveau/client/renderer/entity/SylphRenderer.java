@@ -21,7 +21,6 @@ import java.util.Random;
 
 public class SylphRenderer extends GeoEntityRenderer<EntitySylph> {
 
-    private static SylphModel model = new SylphModel();
 
     public SylphRenderer(EntityRendererManager manager) {
         super(manager, new SylphModel());
