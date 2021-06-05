@@ -1,23 +1,31 @@
 package com.hollingsworth.arsnouveau.common.loot;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.ObjectHolder;
 
 import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
 
-@Mod.EventBusSubscriber(modid = MODID)
+@Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class LootProviderEvent {
 
-    public static final DeferredRegister<GlobalLootModifierSerializer<?>> GLM = DeferredRegister.create(ForgeRegistries.LOOT_MODIFIER_SERIALIZERS, ArsNouveau.MODID);
 
-    @SubscribeEvent
-    public static void runData(GatherDataEvent event)
+    @ObjectHolder(ArsNouveau.MODID)
+    @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
+    public static class LootRegistry{
+        @SubscribeEvent
+        public static void runData(GatherDataEvent event)
+        {
+            event.getGenerator().addProvider(new ParchmentLootGenerator(event.getGenerator(), MODID));
+        }
+    }
+
+
+
+    public static void registerLootData()
     {
-        event.getGenerator().addProvider(new ParchmentLootGenerator(event.getGenerator(), MODID));
+
     }
 }

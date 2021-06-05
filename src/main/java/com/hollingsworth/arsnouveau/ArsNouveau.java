@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau;
 import com.hollingsworth.arsnouveau.api.util.MappingUtil;
 import com.hollingsworth.arsnouveau.client.ClientHandler;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
+import com.hollingsworth.arsnouveau.common.loot.LootProviderEvent;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.world.WorldEvent;
@@ -48,6 +49,8 @@ public class ArsNouveau {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::sendImc);
         MinecraftForge.EVENT_BUS.register(this);
         ModSetup.initGeckolib();
+
+        LootProviderEvent.registerLootData();
     }
 
     public void setup (final FMLCommonSetupEvent event){

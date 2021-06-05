@@ -29,6 +29,7 @@ import java.util.List;
 public class DrygmyEntity extends CreatureEntity implements IPickupResponder, IAnimatable, ITooltipProvider, IDispellable {
 
     public static final DataParameter<Boolean> CHANNELING = EntityDataManager.defineId(DrygmyEntity.class, DataSerializers.BOOLEAN);
+
     public int channelCooldown;
 
 
