@@ -88,4 +88,6 @@ public class LibItemNames {
     public static final String WILDEN_STALKER_SE = "wilden_stalker_se";
     public static final String WILDEN_GUARDIAN_SE = "wilden_guardian_se";
 
+    public static final String CASTER_TOME = "caster_tome";
+
 }

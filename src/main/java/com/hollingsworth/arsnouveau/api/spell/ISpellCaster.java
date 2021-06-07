@@ -39,13 +39,21 @@ public interface ISpellCaster {
 
     void setColor(ParticleColor.IntWrapper color);
 
+    void setFlavorText(String str);
+
+    String getFlavorText();
+
     ParticleColor.IntWrapper getColor();
 
     Map<Integer, Spell> getSpells();
 
-    default ActionResult<ItemStack> castSpell(World worldIn, PlayerEntity playerIn, Hand handIn, TranslationTextComponent invalidMessage){
+
+    default Spell getSpell(World world, PlayerEntity playerEntity, Hand hand, ISpellCaster caster){
+        return caster.getSpell();
+    }
+
+    default ActionResult<ItemStack> castSpell(World worldIn, PlayerEntity playerIn, Hand handIn, TranslationTextComponent invalidMessage, Spell spell){
         ItemStack stack = playerIn.getItemInHand(handIn);
-        ISpellCaster caster = this;
 
         if(worldIn.isClientSide)
             return ActionResult.pass(playerIn.getItemInHand(handIn));
@@ -60,13 +68,12 @@ public interface ISpellCaster {
                 return new ActionResult<>(ActionResultType.SUCCESS, stack);
             }
         }
-
-        if(caster.getSpell() == null) {
+        if(spell == null) {
             PortUtil.sendMessageNoSpam(playerIn,invalidMessage);
             return new ActionResult<>(ActionResultType.CONSUME, stack);
         }
-        SpellResolver resolver = new SpellResolver(caster.getSpell().recipe, new SpellContext(caster.getSpell(), playerIn)
-        .withColors(getColor()));
+        SpellResolver resolver = new SpellResolver(spell.recipe, new SpellContext(spell, playerIn)
+                .withColors(getColor()));
         EntityRayTraceResult entityRes = MathUtil.getLookedAtEntity(playerIn, 25);
 
         if(entityRes != null && entityRes.getEntity() instanceof LivingEntity){
@@ -82,6 +89,10 @@ public interface ISpellCaster {
 
         resolver.onCast(stack,playerIn,worldIn);
         return new ActionResult<>(ActionResultType.CONSUME, stack);
+    }
+
+    default ActionResult<ItemStack> castSpell(World worldIn, PlayerEntity playerIn, Hand handIn, TranslationTextComponent invalidMessage){
+        return castSpell(worldIn, playerIn, handIn, invalidMessage, getSpell(worldIn, playerIn, handIn, this));
     }
 
 }

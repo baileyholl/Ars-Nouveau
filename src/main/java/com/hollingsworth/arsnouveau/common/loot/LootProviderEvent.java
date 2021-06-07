@@ -6,8 +6,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.registries.ObjectHolder;
 
-import static com.hollingsworth.arsnouveau.ArsNouveau.MODID;
-
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class LootProviderEvent {
 
@@ -18,7 +16,7 @@ public class LootProviderEvent {
         @SubscribeEvent
         public static void runData(GatherDataEvent event)
         {
-            event.getGenerator().addProvider(new ParchmentLootGenerator(event.getGenerator(), MODID));
+          //  event.getGenerator().addProvider(new ParchmentLootGenerator(event.getGenerator(), MODID));
         }
     }
 

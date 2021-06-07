@@ -199,9 +199,9 @@ public class EntityProjectileSpell extends ColoredProjectile {
     @Override
     protected void onHit(RayTraceResult result) {
         if(!level.isClientSide &&  result != null && result.getType() == RayTraceResult.Type.ENTITY) {
-            if (((EntityRayTraceResult) result).getEntity().equals(this.getShooter())) return;
+            if (((EntityRayTraceResult) result).getEntity().equals(this.getOwner())) return;
             if(this.spellResolver != null) {
-                this.spellResolver.onResolveEffect(level, (LivingEntity) this.getShooter(), result);
+                this.spellResolver.onResolveEffect(level, (LivingEntity) this.an_getShooter(), result);
                 Networking.sendToNearby(level, new BlockPos(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
                         new BlockPos(result.getLocation()),getParticleColorWrapper()));
                 attemptRemoval();
@@ -218,14 +218,14 @@ public class EntityProjectileSpell extends ColoredProjectile {
             }
 
             if(this.spellResolver != null) {
-                this.spellResolver.onResolveEffect(this.level, (LivingEntity) this.getShooter(), blockraytraceresult);
+                this.spellResolver.onResolveEffect(this.level, (LivingEntity) this.an_getShooter(), blockraytraceresult);
             }
             Networking.sendToNearby(level, ((BlockRayTraceResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
                     new BlockPos(result.getLocation()).below(), getParticleColorWrapper()));
            attemptRemoval();
         }
     }
-    public Entity getShooter(){
+    public Entity an_getShooter(){
         return this.getOwner();
     }
 

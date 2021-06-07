@@ -210,10 +210,6 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         return ((SummoningCrystalTile) level.getBlockEntity(crystalPos)).enoughMana(spellRecipe);
     }
 
-    protected void customServerAiStep() {
-        super.customServerAiStep();
-    }
-
     @Override
     public void die(DamageSource source) {
         if(!level.isClientSide){

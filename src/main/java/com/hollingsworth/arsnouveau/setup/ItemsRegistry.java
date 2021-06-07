@@ -121,6 +121,7 @@ public class ItemsRegistry {
 
     @ObjectHolder(LibItemNames.ENCHANTERS_SWORD)public static EnchantersSword ENCHANTERS_SWORD;
     @ObjectHolder(LibItemNames.ENCHANTERS_SHIELD)public static EnchantersShield ENCHANTERS_SHIELD;
+    @ObjectHolder(LibItemNames.CASTER_TOME)public static CasterTome CASTER_TOME;
 
 
     public static Food MANA_BERRY_FOOD = (new Food.Builder()).nutrition(2).saturationMod(0.1F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).alwaysEat().build();
@@ -253,7 +254,8 @@ public class ItemsRegistry {
                     new SpawnEggItem(ModEntities.ENTITY_SYLPH_TYPE, 0x77FF33,0xFFFB00,defaultItemProperties()).setRegistryName(LibItemNames.SYLPH_SE),
                     new SpawnEggItem(ModEntities.WILDEN_HUNTER, 0xFDFDFD,0xCAA97F,defaultItemProperties()).setRegistryName(LibItemNames.WILDEN_HUNTER_SE),
                     new SpawnEggItem(ModEntities.WILDEN_GUARDIAN, 0xFFFFFF,0xFF9E00,defaultItemProperties()).setRegistryName(LibItemNames.WILDEN_GUARDIAN_SE),
-                    new SpawnEggItem(ModEntities.WILDEN_STALKER, 0x9B650C,0xEF1818,defaultItemProperties()).setRegistryName(LibItemNames.WILDEN_STALKER_SE)
+                    new SpawnEggItem(ModEntities.WILDEN_STALKER, 0x9B650C,0xEF1818,defaultItemProperties()).setRegistryName(LibItemNames.WILDEN_STALKER_SE),
+                    new CasterTome(LibItemNames.CASTER_TOME)
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

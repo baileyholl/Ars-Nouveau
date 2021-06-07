@@ -13,10 +13,12 @@ public class SpellCaster implements ISpellCaster{
 
     private int slot;
     ItemStack stack;
+    String flavorText;
     ParticleColor.IntWrapper color = ParticleUtil.defaultParticleColorWrapper();
 
     private SpellCaster(ItemStack stack){
         this.stack = stack;
+        flavorText = "";
     }
 
     @Override
@@ -58,6 +60,17 @@ public class SpellCaster implements ISpellCaster{
     }
 
     @Override
+    public void setFlavorText(String str) {
+        this.flavorText = str;
+        write(stack);
+    }
+
+    @Override
+    public String getFlavorText() {
+        return flavorText == null ? "" : flavorText;
+    }
+
+    @Override
     public void setColor(ParticleColor.IntWrapper color) {
         this.color = color;
     }
@@ -72,6 +85,7 @@ public class SpellCaster implements ISpellCaster{
         return spells;
     }
 
+    // Creates a new instance of SpellCaster for new itemstacks
     public static SpellCaster deserialize(ItemStack stack){
         SpellCaster instance = new SpellCaster(stack);
         CompoundNBT tag = stack.getTag() != null ? stack.getTag() : new CompoundNBT();
@@ -82,6 +96,7 @@ public class SpellCaster implements ISpellCaster{
             }
         }
         instance.color = tag.getString("color").isEmpty() ? ParticleUtil.defaultParticleColorWrapper(): ParticleColor.IntWrapper.deserialize(tag.getString("color"));
+        instance.flavorText = tag.getString("flavor");
         return instance;
     }
 
@@ -90,6 +105,7 @@ public class SpellCaster implements ISpellCaster{
         tag.putInt("current_slot", getCurrentSlot());
         tag.putInt("max_slot", getMaxSlots());
         tag.putString("color", color.serialize());
+        tag.putString("flavor", getFlavorText());
         int i = 0;
         for(Integer s : getSpells().keySet()){
             tag.putString("spell_" + i, getSpells().get(s).serialize());

@@ -12,9 +12,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -68,6 +66,7 @@ public interface ICasterTool extends IScribeable, IDisplayMana {
         return true;
     }
 
+
     default boolean isScribedSpellValid(ISpellCaster caster, PlayerEntity player, Hand hand, ItemStack stack, Spell spell){
         return spell.isValid();
     }
@@ -91,6 +90,7 @@ public interface ICasterTool extends IScribeable, IDisplayMana {
 
         Spell spell = caster.getSpell();
         tooltip2.add(new StringTextComponent(spell.getDisplayString()));
-
+        if(!caster.getFlavorText().isEmpty())
+            tooltip2.add(new StringTextComponent(caster.getFlavorText()).withStyle(Style.EMPTY.withItalic(true).withColor(TextFormatting.BLUE)));
     }
 }

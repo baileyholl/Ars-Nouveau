@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.loot;
 
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.hollingsworth.arsnouveau.api.loot.LootTables;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
@@ -18,18 +18,18 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
-public class ParchmentLootGenerator extends GlobalLootModifierProvider {
+public class DungeonLootGenerator extends GlobalLootModifierProvider {
 
-    public ParchmentLootGenerator(DataGenerator gen, String modid) {
+    public DungeonLootGenerator(DataGenerator gen, String modid) {
         super(gen, modid);
     }
     public static final DeferredRegister<GlobalLootModifierSerializer<?>> GLM = DeferredRegister.create(ForgeRegistries.LOOT_MODIFIER_SERIALIZERS, ArsNouveau.MODID);
-    public static final RegistryObject<DungeonLootEnhancerModifier.Serializer> DUNGEON_LOOT = GLM.register("dungeon_loot", ParchmentLootGenerator.DungeonLootEnhancerModifier.Serializer::new);
+    public static final RegistryObject<DungeonLootEnhancerModifier.Serializer> DUNGEON_LOOT = GLM.register("dungeon_loot", DungeonLootGenerator.DungeonLootEnhancerModifier.Serializer::new);
 
     @Override
     protected void start() {
         add("dungeon_loot", DUNGEON_LOOT.get(), new DungeonLootEnhancerModifier(  new ILootCondition[] {
-                LootTableIdCondition.builder(new ResourceLocation("chests/simple_dungeon")).build()
+                LootTableIdCondition.builder(new ResourceLocation("chests/simple_dungeon")).or(LootTableIdCondition.builder(new ResourceLocation("chests/jungle_temple"))).build()
         }));
     }
 
@@ -48,8 +48,7 @@ public class ParchmentLootGenerator extends GlobalLootModifierProvider {
 
         @Override
         protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
-            generatedLoot.add(new ItemStack(ItemsRegistry.EXPERIENCE_GEM));
-            System.out.println("hi");
+            generatedLoot.addAll(LootTables.getRandomRoll());
             return generatedLoot;
         }
 

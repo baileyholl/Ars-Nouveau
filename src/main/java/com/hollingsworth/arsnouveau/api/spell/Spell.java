@@ -24,6 +24,17 @@ public class Spell {
         this.cost = 0;
     }
 
+    public Spell add(AbstractSpellPart spellPart){
+        recipe.add(spellPart);
+        return this;
+    }
+
+    public Spell add(AbstractSpellPart spellPart, int count){
+        for(int i = 0; i < count; i++)
+            recipe.add(spellPart);
+        return this;
+    }
+
     public int getSpellSize(){
         return recipe.size();
     }
