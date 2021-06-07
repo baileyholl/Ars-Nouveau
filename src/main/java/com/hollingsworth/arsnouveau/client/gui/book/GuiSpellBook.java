@@ -392,13 +392,17 @@ public class GuiSpellBook extends BaseBook {
      */
     private void validate() {
         List<AbstractSpellPart> recipe = new LinkedList<>();
+        int firstBlankSlot = -1;
 
         // Reset the crafting slots and build the recipe to validate
-        for (CraftingButton b : craftingCells) {
+        for (int i = 0; i < craftingCells.size(); i++) {
+            CraftingButton b = craftingCells.get(i);
             b.validationErrors.clear();
             if (b.spellTag.isEmpty()) {
                 // The validator can cope with null. Insert it to preserve glyph indices.
                 recipe.add(null);
+                // Also note where we found the first blank.  Used later for the glyph buttons.
+                if (firstBlankSlot < 0) firstBlankSlot = i;
             } else {
                 recipe.add(api.getSpell_map().get(b.spellTag));
             }
@@ -416,6 +420,11 @@ public class GuiSpellBook extends BaseBook {
         this.validationErrors = errors;
 
         // Validate the glyph buttons
+        // Trim the spell to the first gap, if there is a gap
+        if (firstBlankSlot >= 0) {
+            recipe = new ArrayList<>(recipe.subList(0, firstBlankSlot));
+        }
+
         for (GlyphButton button : castMethodButtons) {
             validateGlyphButton(recipe, button);
         }
@@ -437,7 +446,7 @@ public class GuiSpellBook extends BaseBook {
         // Filter the errors to ones referring to the simulated glyph
         glyphButton.validationErrors.addAll(
                 spellValidator.validate(recipe).stream()
-                        .filter(ve -> ve.getPosition() >= craftingCells.size()).collect(Collectors.toList())
+                        .filter(ve -> ve.getPosition() >= recipe.size() - 1).collect(Collectors.toList())
         );
 
         // Remove the simulated glyph to make room for the next one
