@@ -4,21 +4,28 @@ import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.potion.Effects;
-import net.minecraft.util.math.*;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.EntityRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeMod;
 
 import javax.annotation.Nullable;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -30,30 +37,35 @@ public class EffectFreeze extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
-            applyConfigPotion((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity(), Effects.MOVEMENT_SLOWDOWN, augments);
+    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        super.onResolveBlock(rayTraceResult, world, shooter, augments, spellContext);
+        BlockPos pos = rayTraceResult.getBlockPos();
+        for(BlockPos p : SpellUtil.calcAOEBlocks(shooter, pos, rayTraceResult, getBuffCount(augments, AugmentAOE.class))){
+            extinguishOrFreeze(world, p);
+            for(Direction d : Direction.values()){
+                extinguishOrFreeze(world, p.relative(d));
+            }
         }
-        else if (rayTraceResult instanceof BlockRayTraceResult) {
-            BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getBlockPos();
-            BlockState state = world.getBlockState(pos.above());
-            if(state.getMaterial() == Material.WATER){
-                world.setBlockAndUpdate(pos.above(), Blocks.ICE.defaultBlockState());
-            }else if(state.getMaterial() == Material.FIRE){
-                world.destroyBlock(pos.above(), false);
-            }
-        }else if(shooter instanceof PlayerEntity){
-            RayTraceResult result = rayTrace(world, (PlayerEntity)shooter, RayTraceContext.FluidMode.SOURCE_ONLY);
-            if (result instanceof BlockRayTraceResult) {
-                BlockState state = world.getBlockState(((BlockRayTraceResult) result).getBlockPos());
-                if (state.getBlock().defaultBlockState() == Blocks.WATER.defaultBlockState()) {
-                    world.setBlockAndUpdate(((BlockRayTraceResult) result).getBlockPos(), Blocks.ICE.defaultBlockState());
-                }else if(state.getBlock().defaultBlockState() == Blocks.LAVA.defaultBlockState()){
-                    world.setBlockAndUpdate(((BlockRayTraceResult) result).getBlockPos(), Blocks.OBSIDIAN.defaultBlockState());
-                }
-            }
+
+    }
+
+    public void extinguishOrFreeze(World world, BlockPos p){
+        BlockState state = world.getBlockState(p.above());
+        FluidState fluidState = world.getFluidState(p.above());
+        if(fluidState.getType() == Fluids.WATER && state.getBlock() instanceof FlowingFluidBlock){
+            world.setBlockAndUpdate(p.above(), Blocks.ICE.defaultBlockState());
+        }else if(state.getMaterial() == Material.FIRE){
+            world.destroyBlock(p.above(), false);
+
         }
     }
+
+    @Override
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        super.onResolveEntity(rayTraceResult, world, shooter, augments, spellContext);
+        applyConfigPotion((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity(), Effects.MOVEMENT_SLOWDOWN, augments);
+    }
+
 
     @Override
     public void buildConfig(ForgeConfigSpec.Builder builder) {
@@ -65,22 +77,6 @@ public class EffectFreeze extends AbstractEffect {
     @Override
     public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         return nonAirAnythingSuccess(rayTraceResult, world);
-    }
-
-    protected static RayTraceResult rayTrace(World worldIn, PlayerEntity player, RayTraceContext.FluidMode fluidMode) {
-        float f = player.xRot;
-        float f1 = player.yRot;
-        Vector3d vec3d = player.getEyePosition(1.0F);
-        float f2 = MathHelper.cos(-f1 * ((float)Math.PI / 180F) - (float)Math.PI);
-        float f3 = MathHelper.sin(-f1 * ((float)Math.PI / 180F) - (float)Math.PI);
-        float f4 = -MathHelper.cos(-f * ((float)Math.PI / 180F));
-        float f5 = MathHelper.sin(-f * ((float)Math.PI / 180F));
-        float f6 = f3 * f4;
-        float f7 = f2 * f4;
-        //
-        double d0 = player.getAttribute(ForgeMod.REACH_DISTANCE.get()).getValue();;
-        Vector3d vec3d1 = vec3d.add((double)f6 * d0, (double)f5 * d0, (double)f7 * d0);
-        return worldIn.clip(new RayTraceContext(vec3d, vec3d1, RayTraceContext.BlockMode.OUTLINE, fluidMode, player));
     }
 
     @Override
@@ -96,11 +92,13 @@ public class EffectFreeze extends AbstractEffect {
 
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return POTION_AUGMENTS;
+        Set<AbstractAugment> augments = new HashSet<>(POTION_AUGMENTS);
+        augments.add(AugmentAOE.INSTANCE);
+        return augments;
     }
 
     @Override
     public String getBookDescription() {
-        return "Freezes water or slows a target for a short time.";
+        return "Freezes water in a small area or slows a target for a short time. Can be augmented with AOE, Extend Time, or Amplify.";
     }
 }

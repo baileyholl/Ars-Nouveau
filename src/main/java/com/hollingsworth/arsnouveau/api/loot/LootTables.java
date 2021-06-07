@@ -1,14 +1,14 @@
 package com.hollingsworth.arsnouveau.api.loot;
 
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
+import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodRune;
-import com.hollingsworth.arsnouveau.common.spell.method.MethodUnderfoot;
+import com.hollingsworth.arsnouveau.common.spell.method.*;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.item.ItemStack;
@@ -42,6 +42,19 @@ public class LootTables {
             return stack;
         });
 
+        BASIC_LOOT.add(() ->{
+            ItemStack stack = new ItemStack(Items.POTION);
+            PotionUtils.setPotion(stack, ModPotions.STRONG_MANA_REGEN_POTION);
+            return stack;
+        });
+
+        BASIC_LOOT.add(() ->{
+            ItemStack stack = new ItemStack(Items.POTION);
+            PotionUtils.setPotion(stack, ModPotions.MANA_REGEN_POTION);
+            return stack;
+        });
+
+
         UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.warpScroll, 1 + r.nextInt(2)));
         UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.carbuncleShard));
         UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.sylphShard));
@@ -49,6 +62,11 @@ public class LootTables {
         UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.AMPLIFY_ARROW, 16 + r.nextInt(16)));
         UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.SPLIT_ARROW, 16 + r.nextInt(16)));
         UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.PIERCE_ARROW, 16 + r.nextInt(16)));
+
+        UNCOMMON_LOOT.add(() ->{
+            List<RitualTablet> tablets = new ArrayList<>(ArsNouveauAPI.getInstance().getRitualItemMap().values());
+            return new ItemStack(tablets.get(r.nextInt(tablets.size())));
+        });
 
         RARE_LOOT.add(() -> makeTome("Xacris' Tiny Hut", new Spell()
                 .add(MethodUnderfoot.INSTANCE)
@@ -109,12 +127,38 @@ public class LootTables {
                 .add(AugmentExtendTime.INSTANCE),
                 "Poisons that target and causes them to take additional damage from all sources."
         ));
-        RARE_LOOT.add(() -> makeTome("Potent Toxin", new Spell()
-                        .add(MethodProjectile.INSTANCE)
+        RARE_LOOT.add(() -> makeTome("The Shadow's Temporary Tunnel", new Spell()
+                        .add(MethodTouch.INSTANCE)
                         .add(EffectIntangible.INSTANCE)
                         .add(AugmentAOE.INSTANCE, 2)
-                        .add(AugmentPierce.INSTANCE, 2),
-                "Poisons that target and causes them to take additional damage from all sources."
+                        .add(AugmentPierce.INSTANCE, 5)
+                        .add(AugmentExtendTime.INSTANCE),
+                "Creates a temporary tunnel of blocks."
+        ));
+
+        RARE_LOOT.add(() -> makeTome("Vault", new Spell()
+                        .add(MethodSelf.INSTANCE)
+                        .add(EffectLaunch.INSTANCE)
+                        .add(EffectDelay.INSTANCE)
+                        .add(EffectLeap.INSTANCE)
+                        .add(EffectSlowfall.INSTANCE),
+                "Sometimes you just need to get over that wall."
+        ));
+
+        RARE_LOOT.add(() -> makeTome("Fireball!", new Spell()
+                        .add(MethodProjectile.INSTANCE)
+                        .add(EffectIgnite.INSTANCE)
+                        .add(EffectExplosion.INSTANCE)
+                        .add(AugmentAmplify.INSTANCE, 2)
+                        .add(AugmentAOE.INSTANCE, 2),
+                "A classic."
+        ));
+        RARE_LOOT.add(() -> makeTome("Rune of Renewing", new Spell()
+                        .add(MethodRune.INSTANCE)
+                        .add(EffectDispel.INSTANCE)
+                        .add(EffectHeal.INSTANCE)
+                        .add(AugmentExtendTime.INSTANCE),
+                "Cures status effects and grants regeneration."
         ));
     }
 
