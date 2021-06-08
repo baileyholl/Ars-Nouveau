@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.LavaLily;
 import com.hollingsworth.arsnouveau.common.command.DataDumpCommand;
 import com.hollingsworth.arsnouveau.common.command.ResetCommand;
+import com.hollingsworth.arsnouveau.common.compat.CaelusHandler;
 import com.hollingsworth.arsnouveau.common.items.VoidJar;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.setup.Config;
@@ -102,6 +103,12 @@ public class EventHandler {
         if(event.phase == TickEvent.Phase.END){
             ClientInfo.ticksInGame++;
         }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onGlideTick(TickEvent.PlayerTickEvent event){
+        if(ArsNouveau.caelusLoaded && event.player.hasEffect(ModPotions.GLIDE_EFFECT))
+            CaelusHandler.setFlying(event.player);
     }
 
     @SubscribeEvent
