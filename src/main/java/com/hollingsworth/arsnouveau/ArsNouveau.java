@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -27,6 +28,8 @@ import static com.hollingsworth.arsnouveau.common.datagen.DungeonLootGenerator.G
 public class ArsNouveau {
     public static final String MODID = "ars_nouveau";
 
+    public static boolean caelusLoaded = false;
+
     public static IProxy proxy = DistExecutor.runForDist(()-> () -> new ClientProxy(), () -> ()-> new ServerProxy());
 
     public static ItemGroup itemGroup = new ItemGroup(MODID) {
@@ -37,6 +40,7 @@ public class ArsNouveau {
     };
 
     public ArsNouveau(){
+        caelusLoaded = ModList.get().isLoaded("caelus");
         APIRegistry.registerSpells();
         MappingUtil.setup();
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SERVER_CONFIG);

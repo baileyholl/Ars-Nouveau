@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,7 +87,7 @@ public class SpellCaster implements ISpellCaster{
     }
 
     // Creates a new instance of SpellCaster for new itemstacks
-    public static SpellCaster deserialize(ItemStack stack){
+    public @Nonnull static SpellCaster deserialize(ItemStack stack){
         SpellCaster instance = new SpellCaster(stack);
         CompoundNBT tag = stack.getTag() != null ? stack.getTag() : new CompoundNBT();
         instance.slot = tag.getInt("current_slot");

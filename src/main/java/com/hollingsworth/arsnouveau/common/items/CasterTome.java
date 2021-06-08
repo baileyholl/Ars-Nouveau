@@ -9,8 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -40,7 +39,15 @@ public class CasterTome extends ModItem implements ICasterTool {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
-        getInformation(stack, worldIn, tooltip2, flagIn);
+        if(worldIn == null)
+            return;
+        ISpellCaster caster = getSpellCaster(stack);
+
+        Spell spell = caster.getSpell();
+        tooltip2.add(new StringTextComponent(spell.getDisplayString()));
+        if(!caster.getFlavorText().isEmpty())
+            tooltip2.add(new StringTextComponent(caster.getFlavorText()).withStyle(Style.EMPTY.withItalic(true).withColor(TextFormatting.BLUE)));
+
         tooltip2.add(new TranslationTextComponent("tooltip.ars_nouveau.caster_tome"));
         super.appendHoverText(stack, worldIn, tooltip2, flagIn);
     }

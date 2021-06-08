@@ -15,6 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.*;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -57,7 +58,7 @@ public interface ICasterTool extends IScribeable, IDisplayMana {
         PortUtil.sendMessageNoSpam(player, new TranslationTextComponent("ars_nouveau.invalid_spell"));
     }
 
-    default ISpellCaster getSpellCaster(ItemStack stack){
+    default @Nonnull ISpellCaster getSpellCaster(ItemStack stack){
         return SpellCaster.deserialize(stack);
     }
 
@@ -81,8 +82,7 @@ public interface ICasterTool extends IScribeable, IDisplayMana {
         if(worldIn == null)
             return;
         ISpellCaster caster = getSpellCaster(stack);
-        if(caster == null)
-            return;
+
         if(caster.getSpell() == null || caster.getSpell().isEmpty()){
             tooltip2.add(new TranslationTextComponent("ars_nouveau.tooltip.can_inscribe"));
             return;
