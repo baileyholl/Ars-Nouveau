@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
+import com.hollingsworth.arsnouveau.common.datagen.DungeonLootGenerator;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
@@ -166,20 +167,20 @@ public class LootTables {
         return pool.isEmpty() ? ItemStack.EMPTY : pool.get(r.nextInt(pool.size())).get();
     }
 
-    public static List<ItemStack> getRandomRoll(){
+    public static List<ItemStack> getRandomRoll(DungeonLootGenerator.DungeonLootEnhancerModifier modifier){
         List<ItemStack> stacks = new ArrayList<>();
-        // 3 20% chances to pull a basic item
+
         for(int i = 0; i < 4; i++){
-            if(r.nextDouble() <= 0.5)
+            if(r.nextDouble() <= modifier.commonChance)
                 stacks.add(getRandomItem(BASIC_LOOT));
         }
 
         for(int i = 0; i < 3; i++){
-            if(r.nextDouble() <= 0.3)
+            if(r.nextDouble() <= modifier.uncommonChance)
                 stacks.add(getRandomItem(UNCOMMON_LOOT));
         }
         for(int i = 0; i < 2; i++){
-            if(r.nextDouble() <= 0.2)
+            if(r.nextDouble() <= modifier.rareChance)
                 stacks.add(getRandomItem(RARE_LOOT));
         }
         return stacks;
