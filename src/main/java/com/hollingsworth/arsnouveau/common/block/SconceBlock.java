@@ -43,7 +43,12 @@ public class SconceBlock extends ModBlock{
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.defaultBlockState().setValue(FACING, context.getClickedFace());
+        if (context.getClickedFace().getAxis().isHorizontal()) {
+            return this.defaultBlockState().setValue(FACING, context.getClickedFace());
+        } else {
+            // The player tried to place on the floor or ceiling. Sconces don't have models for those facings.
+            return null; // Block the placement outright
+        }
     }
 
     public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
