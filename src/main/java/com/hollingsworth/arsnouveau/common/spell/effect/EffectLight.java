@@ -8,6 +8,10 @@ import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.SconceBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.LightTile;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
@@ -86,8 +90,11 @@ public class EffectLight extends AbstractEffect {
 
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        // Potion augments includes amp/dampen which apply when creating light sources.
-        return POTION_AUGMENTS;
+        // Potion augments + Dampen
+        return augmentSetOf(
+                AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE,
+                AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE
+        );
     }
 
     @Override
