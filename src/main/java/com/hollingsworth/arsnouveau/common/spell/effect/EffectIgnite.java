@@ -87,7 +87,7 @@ public class EffectIgnite  extends AbstractEffect {
 
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentExtendTime.INSTANCE);
+        return augmentSetOf(AugmentExtendTime.INSTANCE , AugmentAOE.INSTANCE,AugmentPierce.INSTANCE);
     }
 
     @Override

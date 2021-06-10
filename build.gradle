@@ -131,7 +131,7 @@ repositories {
             includeGroup "curse.maven"
         }
     }
-    maven { url 'https://repo.repsy.io/mvn/gandiber/geckolib' }
+    maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
     jcenter()
     mavenCentral()
 }
@@ -147,7 +147,7 @@ dependencies {
 
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.1.0:api")
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.1.0")
-    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.16.5:3.0.30')
+    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.16.5:3.0.41')
     
     compileOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.4:7.1.0.84")
 
