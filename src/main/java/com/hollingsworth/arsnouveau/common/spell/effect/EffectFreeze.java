@@ -64,7 +64,9 @@ public class EffectFreeze extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         super.onResolveEntity(rayTraceResult, world, shooter, augments, spellContext);
-        applyConfigPotion((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity(), Effects.MOVEMENT_SLOWDOWN, augments);
+        if(!(rayTraceResult.getEntity() instanceof LivingEntity))
+            return;
+        applyConfigPotion((LivingEntity) (rayTraceResult).getEntity(), Effects.MOVEMENT_SLOWDOWN, augments);
     }
 
 

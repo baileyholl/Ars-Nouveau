@@ -22,9 +22,10 @@ public class SpellCaster implements ISpellCaster{
         flavorText = "";
     }
 
+    @Nonnull
     @Override
     public Spell getSpell() {
-        return spells.getOrDefault(getCurrentSlot(), new Spell());
+        return spells.getOrDefault(getCurrentSlot(), Spell.EMPTY);
     }
 
     @Override

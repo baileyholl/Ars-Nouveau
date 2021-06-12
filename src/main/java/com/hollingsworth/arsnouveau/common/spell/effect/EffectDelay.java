@@ -31,11 +31,11 @@ public class EffectDelay extends AbstractEffect {
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         spellContext.setCanceled(true);
 
-        if(spellContext.getCurrentIndex() >= spellContext.spell.recipe.size())
+        if(spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
         EventQueue.getInstance().addEvent(
                 new DelayedSpellEvent(GENERIC_INT.get() + EXTEND_TIME.get() * getBuffCount(augments, AugmentExtendTime.class) * 20 - (EXTEND_TIME.get() / 2) * getBuffCount(augments, AugmentDurationDown.class) * 20 ,
-                        spellContext.spell.recipe.subList(spellContext.getCurrentIndex(), spellContext.spell.recipe.size()),
+                        spellContext.getSpell().recipe.subList(spellContext.getCurrentIndex(), spellContext.getSpell().recipe.size()),
                         rayTraceResult, world, shooter));
 
     }

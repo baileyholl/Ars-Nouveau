@@ -19,11 +19,12 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 
 public interface ISpellCaster {
 
-    Spell getSpell();
+    @Nonnull Spell getSpell();
 
     Spell getSpell(int slot);
 
@@ -72,7 +73,7 @@ public interface ISpellCaster {
             PortUtil.sendMessageNoSpam(playerIn,invalidMessage);
             return new ActionResult<>(ActionResultType.CONSUME, stack);
         }
-        SpellResolver resolver = new SpellResolver(spell.recipe, new SpellContext(spell, playerIn)
+        SpellResolver resolver = new SpellResolver(new SpellContext(spell, playerIn)
                 .withColors(getColor()));
         EntityRayTraceResult entityRes = MathUtil.getLookedAtEntity(playerIn, 25);
 

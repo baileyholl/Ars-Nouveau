@@ -33,7 +33,7 @@ public class SpellResolver {
     public boolean silent;
     private final ISpellValidator spellValidator;
 
-    @Deprecated
+    @Deprecated // BAD
     public SpellResolver(AbstractCastMethod cast, List<AbstractSpellPart> spell, SpellContext context){
         this.castType = cast;
         this.spell = new Spell(spell);
@@ -42,9 +42,11 @@ public class SpellResolver {
         this.spellValidator = api.getSpellCastingSpellValidator();
     }
 
-
     public SpellResolver(SpellContext spellContext){
-        this(spellContext.getSpell().recipe, spellContext);
+        this.spell = spellContext.getSpell();
+        this.castType = spellContext.getSpell().getCastMethod();
+        this.spellContext = spellContext;
+        this.spellValidator =  ArsNouveauAPI.getInstance().getSpellCastingSpellValidator();
     }
 
     @Deprecated
@@ -66,6 +68,8 @@ public class SpellResolver {
 
         this.castType = method;
     }
+
+    @Deprecated
     public SpellResolver(List<AbstractSpellPart> spell, boolean silent, SpellContext context){
         this(spell, context);
         this.silent = silent;

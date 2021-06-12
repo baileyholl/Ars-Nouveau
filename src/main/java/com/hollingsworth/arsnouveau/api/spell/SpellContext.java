@@ -14,7 +14,7 @@ public class SpellContext {
 
     private boolean isCanceled;
 
-    public final Spell spell;
+    private final Spell spell;
 
     public final @Nullable LivingEntity caster;
 
@@ -43,7 +43,7 @@ public class SpellContext {
 
     public AbstractSpellPart nextSpell(){
         this.currentIndex++;
-        return spell.recipe.get(currentIndex - 1);
+        return getSpell().recipe.get(currentIndex - 1);
     }
 
     public void resetSpells(){
@@ -88,8 +88,9 @@ public class SpellContext {
     }
 
     public Spell getSpell() {
-        return spell;
+        return spell == null ? Spell.EMPTY : spell;
     }
+
 
     @Nullable
     public LivingEntity getCaster() {

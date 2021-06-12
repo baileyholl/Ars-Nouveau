@@ -59,7 +59,7 @@ public class EffectPlaceBlock extends AbstractEffect {
                 fakePlayer.setItemInHand(Hand.MAIN_HAND, stack);
 
                 // Special offset for touch
-                boolean isTouch = spellContext.spell.recipe.get(0) instanceof MethodTouch;
+                boolean isTouch = spellContext.getSpell().recipe.get(0) instanceof MethodTouch;
                 BlockState blockTargetted = isTouch ? world.getBlockState(hitPos.relative(result.getDirection().getOpposite())) : world.getBlockState(hitPos.relative(result.getDirection()));
                 if(blockTargetted.getMaterial() != Material.AIR)
                     continue;
