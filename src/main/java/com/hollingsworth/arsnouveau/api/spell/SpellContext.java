@@ -26,12 +26,10 @@ public class SpellContext {
 
     private CasterType type;
 
+
+    @Deprecated
     public SpellContext(List<AbstractSpellPart> spell, @Nullable LivingEntity caster){
-        this.spell = new Spell(spell);
-        this.caster = caster;
-        this.isCanceled = false;
-        this.currentIndex = 0;
-        this.colors = ParticleUtil.defaultParticleColorWrapper();
+        this(new Spell(spell), caster);
     }
 
     public SpellContext(Spell spell, @Nullable LivingEntity caster){
@@ -41,6 +39,7 @@ public class SpellContext {
         this.currentIndex = 0;
         this.colors = ParticleUtil.defaultParticleColorWrapper();
     }
+
 
     public AbstractSpellPart nextSpell(){
         this.currentIndex++;

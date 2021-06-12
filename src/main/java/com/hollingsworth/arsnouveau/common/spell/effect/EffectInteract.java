@@ -26,6 +26,7 @@ import net.minecraftforge.common.IForgeShearable;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -121,6 +122,7 @@ public class EffectInteract extends AbstractEffect {
         return Items.LEVER;
     }
 
+    @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf();

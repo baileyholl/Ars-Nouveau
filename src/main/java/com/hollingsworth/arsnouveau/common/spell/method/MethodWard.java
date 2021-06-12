@@ -5,13 +5,12 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
+import com.hollingsworth.arsnouveau.common.entity.EntityWardProjectile;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -19,43 +18,39 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
-public class MethodBeam extends AbstractCastMethod {
-    public MethodBeam() {
-        super(GlyphLib.MethodBeamID, "Beam");
+public class MethodWard extends AbstractCastMethod {
+
+    public static MethodWard INSTANCE = new MethodWard();
+
+    private MethodWard() {
+        super(GlyphLib.MethodWardID, "Ward");
     }
 
     @Override
     public void onCast(@Nullable ItemStack stack, LivingEntity playerEntity, World world, List<AbstractAugment> augments, SpellContext context, SpellResolver resolver) {
+        for(int i = 0; i < 3; i++){
+            EntityWardProjectile wardProjectile = new EntityWardProjectile(world, playerEntity);
+            wardProjectile.wardedEntity = playerEntity;
+            wardProjectile.setOwnerID(playerEntity.getUUID());
+            wardProjectile.setOffset(i);
+            world.addFreshEntity(wardProjectile);
+        }
 
     }
 
     @Override
     public void onCastOnBlock(ItemUseContext context, List<AbstractAugment> augments, SpellContext spellContext, SpellResolver resolver) {
-        PlayerEntity playerEntity = context.getPlayer();
-        BlockRayTraceResult res = new BlockRayTraceResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), false);
-        if(playerEntity != null) {
-//            Networking.sendToNearby(context.getWorld(), playerEntity.getPosition(), new PacketBeam(new BlockPos(MathUtil.getEntityLookHit(playerEntity, 8f)), playerEntity.getPosition().add(0, playerEntity.getEyeHeight() -0.2f, 0), 0));
-            resolver.onResolveEffect(playerEntity.getCommandSenderWorld(), playerEntity, res);
-            resolver.expendMana(playerEntity);
-        }
+
     }
 
     @Override
     public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments, SpellContext spellContext, SpellResolver resolver) {
-        if(caster instanceof PlayerEntity) {
-//            Networking.sendToNearby(caster.world, caster.getPosition(), new PacketBeam(new BlockPos(MathUtil.getEntityLookHit(caster, 8f)), caster.getPosition().add(0, caster.getEyeHeight() -0.2f, 0), 0));
-            resolver.onResolveEffect(caster.getCommandSenderWorld(), caster, blockRayTraceResult);
-            resolver.expendMana(caster);
-        }
+
     }
 
     @Override
     public void onCastOnEntity(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments, SpellContext spellContext, SpellResolver resolver) {
-        if(caster instanceof PlayerEntity) {
-//            Networking.sendToNearby(caster.world, caster.getPosition(), new PacketBeam(new BlockPos(MathUtil.getEntityLookHit(caster, 8f)), caster.getPosition().add(0, caster.getEyeHeight() -0.2f, 0), 0));
-            resolver.onResolveEffect(caster.getCommandSenderWorld(), caster, new EntityRayTraceResult(target));
-            resolver.expendMana(caster);
-        }
+
     }
 
     @Override

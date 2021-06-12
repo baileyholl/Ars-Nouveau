@@ -15,6 +15,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
@@ -64,6 +65,7 @@ public class EffectLaunch extends AbstractEffect {
         return Items.SLIME_BALL;
     }
 
+    @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE);

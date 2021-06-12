@@ -27,6 +27,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeConfigSpec;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
@@ -166,6 +167,7 @@ public class EffectBlink extends AbstractEffect {
         return Items.ENDER_PEARL;
     }
 
+    @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE);

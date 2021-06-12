@@ -4,7 +4,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.util.SpellPartConfigUtil;
@@ -13,11 +12,9 @@ import net.minecraft.item.Item;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public abstract class AbstractSpellPart implements ISpellTier, Comparable<AbstractSpellPart> {
 
@@ -84,7 +81,7 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
      *
      * @see AbstractSpellPart#augmentSetOf(AbstractAugment...) for easy syntax to make the Set.
      */
-    public abstract Set<AbstractAugment> getCompatibleAugments();
+    public abstract @Nonnull Set<AbstractAugment> getCompatibleAugments();
 
     /**
      * Syntax support to easily make a set for {@link AbstractSpellPart#getCompatibleAugments()}

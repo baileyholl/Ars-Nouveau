@@ -85,4 +85,5 @@ public class LibBlockNames {
     public final static String AB_SMOOTH_ASHLAR = "sas_ashlar";
     public final static String SCONCE = "sconce";
 
+    public static final String DRYGMY_STONE = "drygmy_stone";
 }

@@ -25,6 +25,7 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
@@ -88,9 +89,9 @@ public class EffectLight extends AbstractEffect {
     @Override
     public Item getCraftingReagent(){return Items.LANTERN;}
 
+    @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        // Potion augments includes amp/dampen which apply when creating light sources.
         return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDurationDown.INSTANCE, AugmentDampen.INSTANCE, AugmentExtendTime.INSTANCE);
     }
 

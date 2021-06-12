@@ -93,7 +93,7 @@ public class APIRegistry {
         registerSpell(EffectHex.INSTANCE);
         registerSpell(MethodUnderfoot.INSTANCE);
         registerSpell(EffectGlide.INSTANCE);
-
+        registerSpell(MethodWard.INSTANCE);
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());
         registerRitual(new RitualCloudshaper());

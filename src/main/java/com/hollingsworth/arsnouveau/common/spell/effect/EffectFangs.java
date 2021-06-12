@@ -11,9 +11,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.*;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -21,6 +19,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
@@ -32,6 +31,12 @@ public class EffectFangs extends AbstractEffect {
         super(GlyphLib.EffectFangsID, "Fangs");
     }
 
+
+
+    @Override
+    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        super.onResolveBlock(rayTraceResult, world, shooter, augments, spellContext);
+    }
 
     public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(shooter == null && spellContext.castingTile != null) {
@@ -53,6 +58,20 @@ public class EffectFangs extends AbstractEffect {
         double d1 = Math.max(targetY, shooter.getY()) + 1.0D;
         float f = (float)MathHelper.atan2(targetZ - shooter.getZ(), targetX - shooter.getX());
 
+        if(rayTraceResult instanceof EntityRayTraceResult && shooter.equals(((EntityRayTraceResult) rayTraceResult).getEntity())){
+            for(int i = 0; i < 5; ++i) {
+                float f1 = f + (float)i * (float)Math.PI * 0.4F;
+                int j =  ( i + getDurationModifier(augments)) / (1 + getBuffCount(augments, AugmentAccelerate.class));
+                spawnFangs(world, shooter.getX() + (double)MathHelper.cos(f1) * 1.5D, shooter.getZ() + (double)MathHelper.sin(f1) * 1.5D, d0, d1, f1, j,shooter, (float) damage);
+            }
+
+            for(int k = 0; k < 8; ++k) {
+                float f2 = f + (float)k * (float)Math.PI * 2.0F / 8.0F + 1.2566371F;
+                int j =  ( k + getDurationModifier(augments)) / (1 + getBuffCount(augments, AugmentAccelerate.class));
+                spawnFangs(world, shooter.getX() + (double)MathHelper.cos(f2) * 2.5D, shooter.getZ() + (double)MathHelper.sin(f2) * 2.5D, d0, d1, f2, j, shooter, (float) damage);
+            }
+            return;
+        }
         for(int l = 0; l < 16; ++l) {
             double d2 = 1.25D * (double)(l + 1);
             int j =  ( l + getDurationModifier(augments)) / (1 + getBuffCount(augments, AugmentAccelerate.class));
@@ -126,6 +145,7 @@ public class EffectFangs extends AbstractEffect {
         return Tier.THREE;
     }
 
+    @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(

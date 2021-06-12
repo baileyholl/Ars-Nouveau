@@ -23,7 +23,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 public class EntityProjectileSpell extends ColoredProjectile {
 
     public int age;
-    private SpellResolver spellResolver;
+    public SpellResolver spellResolver;
     public int pierceLeft;
 
     public EntityProjectileSpell(EntityType<? extends ArrowEntity> type, World worldIn, SpellResolver spellResolver, int pierceLeft) {
@@ -201,7 +201,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
         if(!level.isClientSide &&  result != null && result.getType() == RayTraceResult.Type.ENTITY) {
             if (((EntityRayTraceResult) result).getEntity().equals(this.getOwner())) return;
             if(this.spellResolver != null) {
-                this.spellResolver.onResolveEffect(level, (LivingEntity) this.an_getShooter(), result);
+                this.spellResolver.onResolveEffect(level, (LivingEntity) this.getOwner(), result);
                 Networking.sendToNearby(level, new BlockPos(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
                         new BlockPos(result.getLocation()),getParticleColorWrapper()));
                 attemptRemoval();
@@ -218,15 +218,12 @@ public class EntityProjectileSpell extends ColoredProjectile {
             }
 
             if(this.spellResolver != null) {
-                this.spellResolver.onResolveEffect(this.level, (LivingEntity) this.an_getShooter(), blockraytraceresult);
+                this.spellResolver.onResolveEffect(this.level, (LivingEntity) this.getOwner(), blockraytraceresult);
             }
             Networking.sendToNearby(level, ((BlockRayTraceResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
                     new BlockPos(result.getLocation()).below(), getParticleColorWrapper()));
            attemptRemoval();
         }
-    }
-    public Entity an_getShooter(){
-        return this.getOwner();
     }
 
 

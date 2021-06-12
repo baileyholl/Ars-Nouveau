@@ -71,6 +71,7 @@ public class ModEntities {
     public static EntityType<LightningEntity> LIGHTNING_ENTITY = null;
     public static EntityType<EntityDummy> ENTITY_DUMMY = null;
     public static EntityType<DrygmyEntity> ENTITY_DRYGMY = null;
+    public static EntityType<EntityWardProjectile> ENTITY_WARD = null;
 
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
@@ -152,6 +153,10 @@ public class ModEntities {
             ENTITY_DRYGMY = build(
                     "drygmy",
                     EntityType.Builder.<DrygmyEntity>of(DrygmyEntity::new, EntityClassification.CREATURE).sized(0.6F, 0.85F).clientTrackingRange(10));
+            ENTITY_WARD = build(
+                    "ward_entity",
+                    EntityType.Builder.<EntityWardProjectile>of(EntityWardProjectile::new, EntityClassification.MISC)
+                            .clientTrackingRange(20).updateInterval(20).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityWardProjectile::new));
 
             event.getRegistry().registerAll(
                     SPELL_PROJ,
@@ -172,7 +177,8 @@ public class ModEntities {
                     WILDEN_GUARDIAN,
                     LIGHTNING_ENTITY,
                     ENTITY_DUMMY,
-                    ENTITY_DRYGMY
+                    ENTITY_DRYGMY,
+                    ENTITY_WARD
             );
 
             GlobalEntityTypeAttributes.put(ENTITY_WHELP_TYPE, EntityWhelp.attributes().build());

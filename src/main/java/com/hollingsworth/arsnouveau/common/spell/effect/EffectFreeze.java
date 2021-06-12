@@ -24,6 +24,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.List;
@@ -90,6 +91,7 @@ public class EffectFreeze extends AbstractEffect {
         return Items.SNOW_BLOCK;
     }
 
+    @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         Set<AbstractAugment> augments = new HashSet<>(POTION_AUGMENTS);

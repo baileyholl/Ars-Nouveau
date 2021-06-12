@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
@@ -23,6 +24,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,10 +42,10 @@ public class MethodProjectile extends AbstractCastMethod {
         return 10;
     }
 
-    public void summonProjectiles(World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext context){
+    public void summonProjectiles(World world, LivingEntity shooter, List<AbstractAugment> augments, SpellResolver resolver){
         ArrayList<EntityProjectileSpell> projectiles = new ArrayList<>();
         int numPierce = getBuffCount(augments, AugmentPierce.class);
-        EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, shooter, this.resolver, numPierce);
+        EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, shooter, resolver, numPierce);
         projectiles.add(projectileSpell);
         int numSplits = getBuffCount(augments, AugmentSplit.class);
 
@@ -53,7 +55,7 @@ public class MethodProjectile extends AbstractCastMethod {
              // Alternate sides
             BlockPos projPos = shooter.blockPosition().relative(offset, i);
             projPos = projPos.offset(0, 1.5, 0);
-            EntityProjectileSpell spell = new EntityProjectileSpell(world, shooter, this.resolver, numPierce);
+            EntityProjectileSpell spell = new EntityProjectileSpell(world, shooter,  resolver, numPierce);
             spell.setPos(projPos.getX(), projPos.getY(), projPos.getZ());
             projectiles.add(spell);
         }
@@ -62,7 +64,7 @@ public class MethodProjectile extends AbstractCastMethod {
 
         for(EntityProjectileSpell proj : projectiles) {
             proj.shoot(shooter, shooter.xRot, shooter.yRot, 0.0F, velocity, 0.8f);
-            ParticleColor.IntWrapper wrapper = context.colors;
+            ParticleColor.IntWrapper wrapper = resolver.spellContext.colors;
             wrapper.makeVisible();
             proj.setColor(wrapper);
             world.addFreshEntity(proj);
@@ -70,10 +72,10 @@ public class MethodProjectile extends AbstractCastMethod {
     }
 
     // Summons the projectiles directly above the block, facing downwards.
-    public void summonProjectiles(World world, BlockPos pos, LivingEntity shooter, List<AbstractAugment> augments){
+    public void summonProjectiles(World world, BlockPos pos, LivingEntity shooter, List<AbstractAugment> augments, SpellResolver resolver){
         ArrayList<EntityProjectileSpell> projectiles = new ArrayList<>();
         int numPierce = getBuffCount(augments, AugmentPierce.class);
-        EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, shooter, this.resolver, numPierce);
+        EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, shooter,  resolver, numPierce);
         projectileSpell.setPos(pos.getX(), pos.getY() + 1, pos.getZ());
         projectiles.add(projectileSpell);
 
@@ -85,7 +87,7 @@ public class MethodProjectile extends AbstractCastMethod {
             // Alternate sides
             BlockPos projPos = pos.relative(offset, i);
             projPos = projPos.offset(0, 1.5, 0);
-            EntityProjectileSpell spell = new EntityProjectileSpell(world, shooter, this.resolver, numPierce);
+            EntityProjectileSpell spell = new EntityProjectileSpell(world, shooter, resolver, numPierce);
             spell.setPos(projPos.getX(), projPos.getY(), projPos.getZ());
             projectiles.add(spell);
         }
@@ -96,16 +98,16 @@ public class MethodProjectile extends AbstractCastMethod {
     }
 
     @Override
-    public void onCast(ItemStack stack, LivingEntity shooter, World world, List<AbstractAugment> augments, SpellContext context) {
-        summonProjectiles(world, shooter, augments, context);
+    public void onCast(ItemStack stack, LivingEntity shooter, World world, List<AbstractAugment> augments, SpellContext context, SpellResolver resolver) {
+        summonProjectiles(world, shooter, augments, resolver);
         resolver.expendMana(shooter);
     }
 
     @Override
-    public void onCastOnBlock(ItemUseContext context, List<AbstractAugment> augments, SpellContext spellContext) {
+    public void onCastOnBlock(ItemUseContext context, List<AbstractAugment> augments, SpellContext spellContext, SpellResolver resolver) {
         World world = context.getLevel();
         PlayerEntity shooter = context.getPlayer();
-        summonProjectiles(world, shooter, augments, spellContext);
+        summonProjectiles(world, shooter, augments, resolver);
         resolver.expendMana(shooter);
     }
 
@@ -113,38 +115,39 @@ public class MethodProjectile extends AbstractCastMethod {
      * Cast by entities.
      */
     @Override
-    public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments, SpellContext spellContext) {
+    public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments, SpellContext spellContext, SpellResolver resolver) {
         caster.lookAt(EntityAnchorArgument.Type.EYES, blockRayTraceResult.getLocation().add(0, 0, 0));
-        summonProjectiles(caster.getCommandSenderWorld(), blockRayTraceResult.getBlockPos(), caster, augments);
+        summonProjectiles(caster.getCommandSenderWorld(), blockRayTraceResult.getBlockPos(), caster, augments, resolver);
         resolver.expendMana(caster);
     }
 
     @Override
-    public void onCastOnEntity(ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments, SpellContext spellContext) {
-        summonProjectiles(caster.getCommandSenderWorld(), caster, augments, spellContext);
+    public void onCastOnEntity(ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments, SpellContext spellContext, SpellResolver resolver) {
+        summonProjectiles(caster.getCommandSenderWorld(), caster, augments, resolver);
         resolver.expendMana(caster);
     }
 
     @Override
-    public boolean wouldCastSuccessfully(@Nullable ItemStack stack, LivingEntity playerEntity, World world, List<AbstractAugment> augments) {
+    public boolean wouldCastSuccessfully(@Nullable ItemStack stack, LivingEntity playerEntity, World world, List<AbstractAugment> augments, SpellResolver resolver) {
         return true;
     }
 
     @Override
-    public boolean wouldCastOnBlockSuccessfully(ItemUseContext context, List<AbstractAugment> augments) {
+    public boolean wouldCastOnBlockSuccessfully(ItemUseContext context, List<AbstractAugment> augments, SpellResolver resolver) {
         return true;
     }
 
     @Override
-    public boolean wouldCastOnBlockSuccessfully(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments) {
+    public boolean wouldCastOnBlockSuccessfully(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments, SpellResolver resolver) {
         return true;
     }
 
     @Override
-    public boolean wouldCastOnEntitySuccessfully(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments) {
+    public boolean wouldCastOnEntitySuccessfully(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments, SpellResolver resolver) {
         return true;
     }
 
+    @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(AugmentPierce.INSTANCE, AugmentSplit.INSTANCE, AugmentAccelerate.INSTANCE);

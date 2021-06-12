@@ -33,12 +33,11 @@ public class SpellResolver {
     public boolean silent;
     private final ISpellValidator spellValidator;
 
+    @Deprecated
     public SpellResolver(AbstractCastMethod cast, List<AbstractSpellPart> spell, SpellContext context){
         this.castType = cast;
         this.spell = new Spell(spell);
         this.spellContext = context;
-        if(castType != null)
-            this.castType.resolver = this;
         ArsNouveauAPI api = ArsNouveauAPI.getInstance();
         this.spellValidator = api.getSpellCastingSpellValidator();
     }
@@ -48,6 +47,7 @@ public class SpellResolver {
         this(spellContext.getSpell().recipe, spellContext);
     }
 
+    @Deprecated
     public SpellResolver(AbstractSpellPart[] spellParts, SpellContext context){
         this(new ArrayList<>(Arrays.asList(spellParts)), context);
     }
@@ -57,6 +57,7 @@ public class SpellResolver {
         return this;
     }
 
+    @Deprecated // Removed in favor of Spell constructor
     public SpellResolver(List<AbstractSpellPart> spell, SpellContext context) {
         this(null, spell, context);
         AbstractCastMethod method = null;
@@ -64,9 +65,6 @@ public class SpellResolver {
             method = (AbstractCastMethod) spell.get(0);
 
         this.castType = method;
-        if(this.castType != null)
-            this.castType.resolver = this;
-
     }
     public SpellResolver(List<AbstractSpellPart> spell, boolean silent, SpellContext context){
         this(spell, context);
@@ -108,22 +106,22 @@ public class SpellResolver {
 
     public void onCast(ItemStack stack, LivingEntity livingEntity, World world){
         if(canCast(livingEntity) && !postEvent(livingEntity))
-            castType.onCast(stack, livingEntity, world, spell.getAugments( 0, livingEntity), spellContext);
+            castType.onCast(stack, livingEntity, world, spell.getAugments( 0, livingEntity), spellContext, this);
     }
 
     public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster){
         if(canCast(caster) && !postEvent(caster))
-            castType.onCastOnBlock(blockRayTraceResult, caster, spell.getAugments( 0, caster), spellContext);
+            castType.onCastOnBlock(blockRayTraceResult, caster, spell.getAugments( 0, caster), spellContext, this);
     }
 
     public void onCastOnBlock(ItemUseContext context){
         if(canCast(context.getPlayer()) && !postEvent(context.getPlayer()))
-            castType.onCastOnBlock(context, spell.getAugments( 0, context.getPlayer()), spellContext);
+            castType.onCastOnBlock(context, spell.getAugments( 0, context.getPlayer()), spellContext, this);
     }
 
     public void onCastOnEntity(ItemStack stack, LivingEntity playerIn, LivingEntity target, Hand hand){
         if(canCast(playerIn) && !postEvent(playerIn))
-            castType.onCastOnEntity(stack, playerIn, target, hand, spell.getAugments(0, playerIn), spellContext);
+            castType.onCastOnEntity(stack, playerIn, target, hand, spell.getAugments(0, playerIn), spellContext, this);
     }
 
     public void onResolveEffect(World world, LivingEntity shooter, RayTraceResult result){
@@ -166,19 +164,19 @@ public class SpellResolver {
     }
 
     public boolean wouldCastSuccessfully(@Nullable ItemStack stack, LivingEntity caster, World world, List<AbstractAugment> augments){
-        return castType.wouldCastSuccessfully(stack, caster, world, augments);
+        return castType.wouldCastSuccessfully(stack, caster, world, augments, this);
     }
 
     public boolean wouldCastOnBlockSuccessfully(ItemUseContext context, List<AbstractAugment> augments){
-        return castType.wouldCastOnBlockSuccessfully(context, augments);
+        return castType.wouldCastOnBlockSuccessfully(context, augments,this );
     }
 
     public boolean wouldCastOnBlockSuccessfully(BlockRayTraceResult blockRayTraceResult, LivingEntity caster){
-        return castType.wouldCastOnBlockSuccessfully(blockRayTraceResult, caster,  spell.getAugments(0, caster));
+        return castType.wouldCastOnBlockSuccessfully(blockRayTraceResult, caster,  spell.getAugments(0, caster), this);
     }
 
     public boolean wouldCastOnEntitySuccessfully(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments){
-        return castType.wouldCastOnEntitySuccessfully(stack, caster, target, hand, augments);
+        return castType.wouldCastOnEntitySuccessfully(stack, caster, target, hand, augments,this);
     }
 
 

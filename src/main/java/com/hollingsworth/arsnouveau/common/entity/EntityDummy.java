@@ -38,6 +38,7 @@ public class EntityDummy extends CreatureEntity implements ISummon {
     private NetworkPlayerInfo playerInfo;
     public int ticksLeft;
     private static final DataParameter<Optional<UUID>> OWNER_UUID = EntityDataManager.defineId(EntityDummy.class, DataSerializers.OPTIONAL_UUID);
+
     public EntityDummy(EntityType<? extends CreatureEntity> p_i48577_1_, World p_i48577_2_) {
         super(p_i48577_1_, p_i48577_2_);
     }

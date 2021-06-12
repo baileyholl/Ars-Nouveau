@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Spell validation that checks a cast method or effect's augment compatibility.

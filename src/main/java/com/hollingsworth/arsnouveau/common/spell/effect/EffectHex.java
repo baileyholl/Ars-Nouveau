@@ -13,6 +13,7 @@ import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
@@ -40,6 +41,7 @@ public class EffectHex extends AbstractEffect {
         addExtendTimeConfig(builder, 8);
     }
 
+    @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return POTION_AUGMENTS;

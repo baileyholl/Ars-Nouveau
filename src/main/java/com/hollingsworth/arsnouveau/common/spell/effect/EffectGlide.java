@@ -14,6 +14,7 @@ import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
@@ -62,6 +63,7 @@ public class EffectGlide extends AbstractEffect {
         return Items.ELYTRA;
     }
 
+    @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         // ModPotions.GLIDE_EFFECT does not respond to amplification
