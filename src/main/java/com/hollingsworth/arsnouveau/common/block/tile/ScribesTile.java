@@ -7,12 +7,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 
-public class ScribesTile extends TileEntity implements ITickableTileEntity {
+public class ScribesTile extends TileEntity implements IAnimatable {
 
     public ItemEntity entity; // For rendering
     public ItemStack stack;
@@ -21,11 +23,6 @@ public class ScribesTile extends TileEntity implements ITickableTileEntity {
 
     public ScribesTile() {
         super(BlockRegistry.SCRIBES_TABLE_TILE);
-    }
-
-    @Override
-    public void tick() {
-
     }
 
     @Override
@@ -59,5 +56,16 @@ public class ScribesTile extends TileEntity implements ITickableTileEntity {
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         super.onDataPacket(net, pkt);
         handleUpdateTag(level.getBlockState(worldPosition),pkt.getTag());
+    }
+
+    @Override
+    public void registerControllers(AnimationData data) {
+
+    }
+
+    AnimationFactory factory = new AnimationFactory(this);
+    @Override
+    public AnimationFactory getFactory() {
+        return factory;
     }
 }

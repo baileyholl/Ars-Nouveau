@@ -356,7 +356,7 @@ public class BlockRegistry {
             registry.register(new BlockItem(BlockRegistry.ARCANE_PEDESTAL, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.ARCANE_PEDESTAL));
             registry.register(new AnimBlockItem(BlockRegistry.SUMMONING_CRYSTAL, ItemsRegistry.defaultItemProperties().setISTER(()-> SummoningCrystalRenderer::getISTER)).setRegistryName(LibBlockNames.SUMMONING_CRYSTAL));
             registry.register(new BlockItem(BlockRegistry.ARCANE_BRICKS, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.ARCANE_BRICKS));
-            registry.register(new BlockItem(BlockRegistry.SCRIBES_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.SCRIBES_BLOCK));
+            registry.register(new AnimBlockItem(BlockRegistry.SCRIBES_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(() -> ScribesRenderer::getISTER)).setRegistryName(LibBlockNames.SCRIBES_BLOCK));
             registry.register(new BlockItem(BlockRegistry.ARCANE_ROAD, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.ARCANE_ROAD));
             registry.register(new AnimBlockItem(BlockRegistry.ARCANE_RELAY, ItemsRegistry.defaultItemProperties().setISTER(()-> RelayRenderer::getISTER)).setRegistryName(LibBlockNames.ARCANE_RELAY));
             registry.register(new BlockItem(BlockRegistry.RUNE_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.RUNE));

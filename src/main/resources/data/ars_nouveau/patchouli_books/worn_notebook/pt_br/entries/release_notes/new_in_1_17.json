@@ -1,0 +1,15 @@
+{
+    "name": "Changelog 1.17",
+    "icon": "ars_nouveau:enchanters_sword",
+    "category": "release_notes",
+	"sortnum":71,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Ars Nouveau 1.17,Archwood Forest! $ (Li) Adiciona o bioma Archwood Forest, um bioma cheio de Árvores Archwood e entidades mágicas! $ (Li) Adiciona a Espada Encantadora $ (li) Adiciona o Escudo Encantador $ (li) Adiciona Ritual of Scrying"       
+        },{
+            "type": "relations",
+            "entries":["rituals/scrying","items/enchanters_sword","items/enchanters_shield"]        
+        }
+    ]
+}

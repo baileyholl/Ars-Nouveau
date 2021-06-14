@@ -1,0 +1,16 @@
+{
+    "name": "Decorative Blocks",
+    "icon": "ars_nouveau:arcane_bricks",
+    "category": "resources",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Blocos puramente decorativos. Para ver a lista completa, coloque Arcane Stone em um Stonecutter.
+"
+        },
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:arcane_bricks"
+		}
+    ]
+}

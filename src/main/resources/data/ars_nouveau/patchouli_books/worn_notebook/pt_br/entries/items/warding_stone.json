@@ -1,0 +1,15 @@
+{
+    "name": "Warding Stone",
+    "icon": "ars_nouveau:warding_stone",
+    "category": "machines",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Um bloco que pode funcionar como uma cerca para monstros. Colocados no chão, os monstros evitarão andar sobre a pedra enquanto os jogadores estiverem livres para passar."
+        },
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:warding_stone"
+		}
+    ]
+}

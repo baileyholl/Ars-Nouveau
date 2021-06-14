@@ -1,0 +1,15 @@
+{
+    "name": "Lava Lily",
+    "icon": "ars_nouveau:lava_lily",
+    "category": "resources",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Um bloco decorativo que pode ser colocado sobre qualquer líquido ou bloco. A textura deste bloco varia se ele for colocado no Lava, um Bloco de Magma ou qualquer outro bloco."
+        },
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:lava_lily"
+		}
+    ]
+}

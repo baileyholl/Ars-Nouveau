@@ -1,0 +1,16 @@
+{
+    "name": "World Generation",
+    "icon": "ars_nouveau:mana_gem",
+	"sortnum":8,
+    "category": "getting_started",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Vários recursos podem surgir no mundo, cada um com suas próprias propriedades mágicas. As joias de mana podem ser encontradas no subsolo, mas também podem ser criadas de maneira renovável usando o Cristalizador. Árvores de Archwood vêm em várias variantes decorativas e podem ser usadas para fazer Varinhas de Fundição. Source Berries, encontradas em Taigas, são essenciais para a elaboração de poções de regeneração de Mana."       
+        },
+		{
+            "type": "relations",
+            "entries":["machines/crystallizer", "resources/archwood","resources/mana_berry"]        
+        }
+    ]
+}
