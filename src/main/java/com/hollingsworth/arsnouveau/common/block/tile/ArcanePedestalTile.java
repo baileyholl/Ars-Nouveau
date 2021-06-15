@@ -7,8 +7,18 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ArcanePedestalTile extends AnimatedTile implements IInventory {
+    private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     public int frames;
     public ItemEntity entity;
     public ItemStack stack;
@@ -94,5 +104,11 @@ public class ArcanePedestalTile extends AnimatedTile implements IInventory {
     @Override
     public void tick() {
 
+    }
+
+    @Nonnull
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, final @Nullable Direction side) {
+        return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, itemHandler);
     }
 }
