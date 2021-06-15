@@ -5,8 +5,6 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentType;
 import net.minecraft.inventory.EquipmentSlotType;
 
-import net.minecraft.enchantment.Enchantment.Rarity;
-
 public class ManaRegenEnchantment extends Enchantment {
 
     protected ManaRegenEnchantment() {
@@ -16,13 +14,9 @@ public class ManaRegenEnchantment extends Enchantment {
 
     @Override
     public int getMinCost(int enchantmentLevel) {
-        return 20;
+        return 1+11*(enchantmentLevel-1);
     }
 
-    @Override
-    public int getMaxCost(int enchantmentLevel) {
-        return 50;
-    }
 
     @Override
     public int getMaxLevel() {
