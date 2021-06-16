@@ -47,7 +47,7 @@ public class ScribesBlock extends ModBlock{
 
     public ScribesBlock() {
         super(Block.Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(2.0f, 3.0f).noOcclusion(), LibBlockNames.SCRIBES_BLOCK);
-        this.registerDefaultState(this.stateDefinition.any().setValue(PART, BedPart.FOOT));
+        this.registerDefaultState(this.stateDefinition.any().setValue(PART, BedPart.HEAD));
         MinecraftForge.EVENT_BUS.register(this);
     }
     public static final DirectionProperty FACING = HorizontalBlock.FACING;
@@ -58,11 +58,20 @@ public class ScribesBlock extends ModBlock{
         if (world.isClientSide) {
             return ActionResultType.SUCCESS;
         }
-        if(handIn != Hand.MAIN_HAND)
+        if(handIn != Hand.MAIN_HAND || !(world.getBlockEntity(pos) instanceof ScribesTile))
             return ActionResultType.PASS;
+        ScribesTile tile = (ScribesTile) world.getBlockEntity(pos);
+        if(state.getValue(ScribesBlock.PART) != BedPart.HEAD) {
+            TileEntity tileEntity = world.getBlockEntity(pos.relative(ScribesBlock.getConnectedDirection(state)));
+            tile = tileEntity instanceof ScribesTile ? (ScribesTile) tileEntity : null;
+            if(tile == null)
+                return ActionResultType.PASS;
+        }
 
-        if(world.getBlockEntity(pos) instanceof ScribesTile && !player.isShiftKeyDown()) {
-            ScribesTile tile = (ScribesTile) world.getBlockEntity(pos);
+
+
+        if(!player.isShiftKeyDown()) {
+
             if (tile.stack != null && player.getItemInHand(handIn).isEmpty()) {
                 ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
                 world.addFreshEntity(item);
@@ -76,10 +85,12 @@ public class ScribesBlock extends ModBlock{
                 tile.stack = player.inventory.removeItem(player.inventory.selected, 1);
 
             }
-            world.sendBlockUpdated(pos, state, state, 2);
+            BlockState updateState = world.getBlockState(tile.getBlockPos());
+            world.sendBlockUpdated(tile.getBlockPos(), updateState, updateState, 2);
+//            world.updateNeighborsAt(tile.getBlockPos(), state.getBlock());
         }
-        if(world.getBlockEntity(pos) instanceof ScribesTile && player.isShiftKeyDown()){
-            ItemStack stack = ((ScribesTile) world.getBlockEntity(pos)).stack;
+        if(player.isShiftKeyDown()){
+            ItemStack stack = tile.stack;
 
             if(stack == null || stack.isEmpty())
                 return ActionResultType.SUCCESS;
@@ -126,11 +137,22 @@ public class ScribesBlock extends ModBlock{
             direction = Direction.NORTH;
         return direction;
     }
-    public BlockState updateShape(BlockState p_196271_1_, Direction p_196271_2_, BlockState p_196271_3_, IWorld p_196271_4_, BlockPos p_196271_5_, BlockPos p_196271_6_) {
-        if (p_196271_2_ == getNeighbourDirection(p_196271_1_.getValue(PART), p_196271_1_.getValue(FACING))) {
-            return p_196271_3_.is(this) && p_196271_3_.getValue(PART) != p_196271_1_.getValue(PART) ? p_196271_1_ : Blocks.AIR.defaultBlockState();
+    // If the user breaks the other side of the table, this side needs to drop its item
+    public BlockState tearDown(BlockState state, Direction direction, BlockState state2, IWorld world, BlockPos pos, BlockPos pos2){
+        if(!world.isClientSide()) {
+            TileEntity entity = world.getBlockEntity(pos);
+            if (entity instanceof ScribesTile && ((ScribesTile) entity).stack != null) {
+                world.addFreshEntity(new ItemEntity((World) world, pos.getX(), pos.getY(), pos.getZ(), ((ScribesTile) entity).stack));
+            }
+        }
+        return Blocks.AIR.defaultBlockState();
+    }
+
+    public BlockState updateShape(BlockState state, Direction direction, BlockState state2, IWorld world, BlockPos pos, BlockPos pos2) {
+        if (direction == getNeighbourDirection(state.getValue(PART), state.getValue(FACING))) {
+            return state2.is(this) && state2.getValue(PART) != state.getValue(PART) ? state : tearDown(state, direction, state2, world, pos, pos2);
         } else {
-            return super.updateShape(p_196271_1_, p_196271_2_, p_196271_3_, p_196271_4_, p_196271_5_, p_196271_6_);
+            return super.updateShape(state, direction, state2, world, pos, pos2);
         }
     }
     private static Direction getNeighbourDirection(BedPart p_208070_0_, Direction p_208070_1_) {

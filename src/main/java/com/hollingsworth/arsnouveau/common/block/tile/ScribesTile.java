@@ -8,6 +8,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.AxisAlignedBB;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
@@ -63,9 +64,19 @@ public class ScribesTile extends TileEntity implements IAnimatable {
 
     }
 
+    @Override
+    public AxisAlignedBB getRenderBoundingBox() {
+        return INFINITE_EXTENT_AABB;
+    }
+
     AnimationFactory factory = new AnimationFactory(this);
     @Override
     public AnimationFactory getFactory() {
         return factory;
+    }
+
+    @Override
+    public double getViewDistance() {
+        return 256;
     }
 }
