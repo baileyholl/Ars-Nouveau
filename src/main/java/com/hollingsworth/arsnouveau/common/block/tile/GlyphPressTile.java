@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
@@ -26,7 +27,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.SidedInvWrapper;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -35,11 +41,15 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity, IAnimatable, IAnimationListener, ISidedInventory {
+    private final Map<Direction, LazyOptional<IItemHandler>> itemHandlers = new HashMap<>();
     public long frames;
     public boolean isCrafting;
     public ItemStack reagentItem = ItemStack.EMPTY;
@@ -51,6 +61,10 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
     public GlyphPressTile() {
         super(BlockRegistry.GLYPH_PRESS_TILE);
         frames = 0;
+
+        // Add the sided inventory handlers
+        ImmutableList.of(Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST).forEach(this::addItemHandler);
+        addItemHandler(null);
     }
 
     @Override
@@ -296,5 +310,24 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
             }
         });
         return valid.get();
+    }
+
+    private void addItemHandler(@Nullable Direction side) {
+        itemHandlers.put(side, LazyOptional.of(() -> new SidedInvWrapper(this, side)));
+    }
+
+    @Nonnull
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, final @Nullable Direction side) {
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return itemHandlers.getOrDefault(side, super.getCapability(cap, side).cast()).cast();
+        }
+        return super.getCapability(cap, side);
+    }
+
+    @Override
+    protected void invalidateCaps() {
+        itemHandlers.values().forEach(LazyOptional::invalidate);
+        super.invalidateCaps();
     }
 }

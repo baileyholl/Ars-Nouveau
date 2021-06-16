@@ -12,10 +12,20 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class CrystallizerTile extends AbstractManaTile implements IInventory {
+    private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     public ItemStack stack = ItemStack.EMPTY;
     public ItemEntity entity;
     public boolean draining;
@@ -127,5 +137,20 @@ public class CrystallizerTile extends AbstractManaTile implements IInventory {
     @Override
     public void clearContent() {
         this.stack = ItemStack.EMPTY;
+    }
+
+    @Nonnull
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, final @Nullable Direction side) {
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return itemHandler.cast();
+        }
+        return super.getCapability(cap, side);
+    }
+
+    @Override
+    protected void invalidateCaps() {
+        itemHandler.invalidate();
+        super.invalidateCaps();
     }
 }
