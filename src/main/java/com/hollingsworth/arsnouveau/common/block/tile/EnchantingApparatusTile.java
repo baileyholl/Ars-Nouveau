@@ -217,6 +217,15 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, final @Nullable Direction side) {
-        return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, itemHandler);
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return itemHandler.cast();
+        }
+        return super.getCapability(cap, side);
+    }
+
+    @Override
+    protected void invalidateCaps() {
+        itemHandler.invalidate();
+        super.invalidateCaps();
     }
 }

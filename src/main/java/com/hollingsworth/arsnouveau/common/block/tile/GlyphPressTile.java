@@ -319,6 +319,15 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, final @Nullable Direction side) {
-        return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.orEmpty(cap, itemHandlers.getOrDefault(side, LazyOptional.empty()).cast());
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return itemHandlers.getOrDefault(side, super.getCapability(cap, side).cast()).cast();
+        }
+        return super.getCapability(cap, side);
+    }
+
+    @Override
+    protected void invalidateCaps() {
+        itemHandlers.values().forEach(LazyOptional::invalidate);
+        super.invalidateCaps();
     }
 }
