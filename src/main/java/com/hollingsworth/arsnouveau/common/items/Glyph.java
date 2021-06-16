@@ -53,7 +53,9 @@ public class Glyph extends ModItem{
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
         if(spellPart != null){
             if(!Config.isSpellEnabled(this.spellPart.tag)){
-                tooltip2.add(new StringTextComponent("Disabled. Cannot be used."));
+                tooltip2.add(new TranslationTextComponent("tooltip.ars_nouveau.glyph_disabled"));
+            }else if(spellPart != null){
+                tooltip2.add(new TranslationTextComponent("tooltip.ars_nouveau.glyph_level", spellPart.getTier().ordinal() + 1));
             }
         }
     }
