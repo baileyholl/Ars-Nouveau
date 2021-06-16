@@ -6,6 +6,9 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.common.entity.EntityWardProjectile;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -26,31 +29,39 @@ public class MethodWard extends AbstractCastMethod {
         super(GlyphLib.MethodWardID, "Ward");
     }
 
-    @Override
-    public void onCast(@Nullable ItemStack stack, LivingEntity playerEntity, World world, List<AbstractAugment> augments, SpellContext context, SpellResolver resolver) {
+
+    public void summonProjectiles(World world, LivingEntity shooter, SpellResolver resolver, List<AbstractAugment> augments){
         for(int i = 0; i < 3; i++){
-            EntityWardProjectile wardProjectile = new EntityWardProjectile(world, playerEntity);
-            wardProjectile.wardedEntity = playerEntity;
-            wardProjectile.setOwnerID(playerEntity.getUUID());
+            EntityWardProjectile wardProjectile = new EntityWardProjectile(world, shooter);
+            wardProjectile.wardedEntity = shooter;
+            wardProjectile.setOwnerID(shooter.getUUID());
+            wardProjectile.spellResolver = resolver;
             wardProjectile.setOffset(i);
+            wardProjectile.pierceLeft = getBuffCount(augments, AugmentPierce.class);
+            wardProjectile.setAccelerates(getBuffCount(augments, AugmentAccelerate.class));
+            wardProjectile.setAoe(getBuffCount(augments, AugmentAOE.class));
             world.addFreshEntity(wardProjectile);
         }
+    }
 
+    @Override
+    public void onCast(@Nullable ItemStack stack, LivingEntity playerEntity, World world, List<AbstractAugment> augments, SpellContext context, SpellResolver resolver) {
+        summonProjectiles(world, playerEntity, resolver, augments);
     }
 
     @Override
     public void onCastOnBlock(ItemUseContext context, List<AbstractAugment> augments, SpellContext spellContext, SpellResolver resolver) {
-
+        summonProjectiles(context.getLevel(), context.getPlayer(), resolver, augments);
     }
 
     @Override
     public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments, SpellContext spellContext, SpellResolver resolver) {
-
+        summonProjectiles(caster.level, caster, resolver, augments);
     }
 
     @Override
     public void onCastOnEntity(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments, SpellContext spellContext, SpellResolver resolver) {
-
+        summonProjectiles(caster.level, caster, resolver, augments);
     }
 
     @Override
@@ -81,6 +92,6 @@ public class MethodWard extends AbstractCastMethod {
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf();
+        return augmentSetOf(AugmentAccelerate.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE);
     }
 }
