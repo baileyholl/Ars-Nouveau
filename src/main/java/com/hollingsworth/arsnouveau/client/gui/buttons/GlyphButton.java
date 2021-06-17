@@ -1,13 +1,14 @@
 package com.hollingsworth.arsnouveau.client.gui.buttons;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -76,13 +77,19 @@ public class GlyphButton extends Button {
             }
 
             if(parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)){
-
                 if(parent.api.getSpell_map().containsKey(this.spell_id)) {
                     List<ITextComponent> tip = new ArrayList<>();
-                    tip.add(new TranslationTextComponent(parent.api.getSpell_map().get(this.spell_id).getLocalizationKey()));
+                    AbstractSpellPart spellPart = parent.api.getSpell_map().get(this.spell_id);
+                    tip.add(new TranslationTextComponent(spellPart.getLocalizationKey()));
                     for (SpellValidationError ve : validationErrors) {
                         tip.add(ve.makeTextComponentAdding().withStyle(TextFormatting.RED));
                     }
+                    if(Screen.hasShiftDown()){
+                        tip.add(spellPart.getBookDescLang());
+                    }else{
+                        tip.add(new TranslationTextComponent("tooltip.ars_nouveau.hold_shift"));
+                    }
+
                     parent.tooltip = tip;
                 }
             }
