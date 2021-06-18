@@ -6,9 +6,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.common.entity.EntityWardProjectile;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
@@ -31,7 +29,8 @@ public class MethodWard extends AbstractCastMethod {
 
 
     public void summonProjectiles(World world, LivingEntity shooter, SpellResolver resolver, List<AbstractAugment> augments){
-        for(int i = 0; i < 3; i++){
+        int total = 3 + getBuffCount(augments, AugmentSplit.class);
+        for(int i = 0; i < total; i++){
             EntityWardProjectile wardProjectile = new EntityWardProjectile(world, shooter);
             wardProjectile.wardedEntity = shooter;
             wardProjectile.setOwnerID(shooter.getUUID());
@@ -40,6 +39,8 @@ public class MethodWard extends AbstractCastMethod {
             wardProjectile.pierceLeft = getBuffCount(augments, AugmentPierce.class);
             wardProjectile.setAccelerates(getBuffCount(augments, AugmentAccelerate.class));
             wardProjectile.setAoe(getBuffCount(augments, AugmentAOE.class));
+            wardProjectile.setTotal(total);
+            wardProjectile.setColor(resolver.spellContext.colors);
             world.addFreshEntity(wardProjectile);
         }
     }
@@ -92,6 +93,6 @@ public class MethodWard extends AbstractCastMethod {
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentAccelerate.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE);
+        return augmentSetOf(AugmentAccelerate.INSTANCE, AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentSplit.INSTANCE);
     }
 }

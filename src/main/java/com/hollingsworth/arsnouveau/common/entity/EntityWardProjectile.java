@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
-import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import net.minecraft.entity.Entity;
@@ -34,6 +33,7 @@ public class EntityWardProjectile extends EntityProjectileSpell{
     public static final DataParameter<Integer> OFFSET = EntityDataManager.defineId(EntityWardProjectile.class, DataSerializers.INT);
     public static final DataParameter<Integer> ACCELERATES = EntityDataManager.defineId(EntityWardProjectile.class, DataSerializers.INT);
     public static final DataParameter<Integer> AOE = EntityDataManager.defineId(EntityWardProjectile.class, DataSerializers.INT);
+    public static final DataParameter<Integer> TOTAL = EntityDataManager.defineId(EntityWardProjectile.class, DataSerializers.INT);
 
 
     public EntityWardProjectile(World worldIn, double x, double y, double z) {
@@ -54,8 +54,18 @@ public class EntityWardProjectile extends EntityProjectileSpell{
     }
 
     public int getOffset(){
-        return entityData.get(OFFSET) * 15;
+        int val = 15;
+        return (entityData.get(OFFSET)) * val;
     }
+
+    public void setTotal(int total){
+        entityData.set(TOTAL, total);
+    }
+
+    public int getTotal(){
+        return entityData.get(TOTAL) > 0 ? entityData.get(TOTAL) : 1;
+    }
+
     public void setAccelerates(int accelerates){
         entityData.set(ACCELERATES, accelerates);
     }
@@ -73,6 +83,7 @@ public class EntityWardProjectile extends EntityProjectileSpell{
     }
     @Override
     public void tick() {
+        this.age++;
         if(!level.isClientSide && spellResolver == null)
             this.remove();
         Entity owner = level.getPlayerByUUID(getOwnerID());
@@ -118,22 +129,41 @@ public class EntityWardProjectile extends EntityProjectileSpell{
             this.onHit(raytraceresult);
             this.hasImpulse = true;
         }
-        if(level.isClientSide) {
+        if(level.isClientSide && this.age > 2) {
 
 //            level.addParticle(GlowParticleData.createData(ParticleUtil.defaultParticleColor()),
 //                    (float) (getX()) - Math.sin((ClientInfo.ticksInGame + getOffset()) / 8D) ,
 //                    (float) (getY()) + 1  ,
 //                    (float) (getZ()) - Math.cos((ClientInfo.ticksInGame + getOffset()) / 8D) ,
 //                    0, 0, 0);
-            for(int i = 0; i < 3; i++){
-                level.addParticle(GlowParticleData.createData(ParticleUtil.defaultParticleColor()),
-                        (float) (getX()) ,
-                        (float) (getY())  ,
-                        (float) (getZ()) ,
-                        0, 0, 0);
+//            for(int i = 0; i < 3; i++){
+//                level.addParticle(GlowParticleData.createData(ParticleUtil.defaultParticleColor()),
+//                        (float) (getX()) ,
+//                        (float) (getY())  ,
+//                        (float) (getZ()) ,
+//                        0, 0, 0);
+//            }
+
+
+                double deltaX = getX() - xOld;
+                double deltaY = getY() - yOld;
+                double deltaZ = getZ() - zOld;
+                double dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 8);
+
+                for (double j = 0; j < dist; j++) {
+                    double coeff = j / dist;
+
+                    level.addParticle(GlowParticleData.createData(getParticleColor()),
+                            (float) (xo + deltaX * coeff),
+                            (float) (yo + deltaY * coeff), (float)
+                                    (zo + deltaZ * coeff),
+                            0.0125f * (random.nextFloat() - 0.5f),
+                            0.0125f * (random.nextFloat() - 0.5f),
+                            0.0125f * (random.nextFloat() - 0.5f));
+
+                }
             }
 
-        }
     }
 
     protected void attemptRemoval(){
@@ -163,6 +193,7 @@ public class EntityWardProjectile extends EntityProjectileSpell{
         this.entityData.define(OFFSET, 0);
         this.entityData.define(ACCELERATES, 0);
         this.entityData.define(AOE, 0);
+        this.entityData.define(TOTAL, 0);
     }
 
     @Override
@@ -172,6 +203,7 @@ public class EntityWardProjectile extends EntityProjectileSpell{
         tag.putInt("offset", getOffset());
         tag.putInt("aoe", getAoe());
         tag.putInt("accelerate", getAccelerates());
+        tag.putInt("total", getTotal());
         writeOwner(tag);
     }
 
@@ -184,6 +216,7 @@ public class EntityWardProjectile extends EntityProjectileSpell{
         setAccelerates(tag.getInt("accelerate"));
         if(getOwnerID() != null)
             setOwnerID(tag.getUUID("owner"));
+        setTotal(tag.getInt("total"));
     }
 
     @Override
