@@ -10,9 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Util;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.util.text.*;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -53,7 +51,9 @@ public class Glyph extends ModItem{
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
         if(spellPart != null){
             if(!Config.isSpellEnabled(this.spellPart.tag)){
-                tooltip2.add(new StringTextComponent("Disabled. Cannot be used."));
+                tooltip2.add(new TranslationTextComponent("tooltip.ars_nouveau.glyph_disabled"));
+            }else if(spellPart != null){
+                tooltip2.add(new TranslationTextComponent("tooltip.ars_nouveau.glyph_level", spellPart.getTier().ordinal() + 1).setStyle(Style.EMPTY.withColor(TextFormatting.BLUE)));
             }
         }
     }

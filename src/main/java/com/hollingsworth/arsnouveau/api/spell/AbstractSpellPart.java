@@ -95,6 +95,10 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
         return this.getTier().ordinal() - o.getTier().ordinal();
     }
 
+
+    public TranslationTextComponent getBookDescLang(){
+        return new TranslationTextComponent("ars_nouveau.glyph_desc." + getTag());
+    }
     /**
      * Converts to a patchouli documentation page
      */

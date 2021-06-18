@@ -155,7 +155,7 @@ public class ModEntities {
                     EntityType.Builder.<DrygmyEntity>of(DrygmyEntity::new, EntityClassification.CREATURE).sized(0.6F, 0.85F).clientTrackingRange(10));
             ENTITY_WARD = build(
                     "ward_entity",
-                    EntityType.Builder.<EntityWardProjectile>of(EntityWardProjectile::new, EntityClassification.MISC)
+                    EntityType.Builder.<EntityWardProjectile>of(EntityWardProjectile::new, EntityClassification.MISC).sized(0.5f, 0.5f)
                             .clientTrackingRange(20).updateInterval(20).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityWardProjectile::new));
 
             event.getRegistry().registerAll(

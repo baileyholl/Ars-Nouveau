@@ -99,7 +99,10 @@ public class EntitySpellArrow extends ArrowEntity {
             if (raytraceresult != null && raytraceresult.getType() == RayTraceResult.Type.ENTITY) {
                 Entity entity = ((EntityRayTraceResult) raytraceresult).getEntity();
                 Entity entity1 = this.getOwner();
-                if (entity instanceof PlayerEntity && entity1 instanceof PlayerEntity && !((PlayerEntity) entity1).canHarmPlayer((PlayerEntity) entity)) {
+                if(entity.noPhysics) {
+                    raytraceresult = null;
+                    entityraytraceresult = null;
+                } else if (entity instanceof PlayerEntity && entity1 instanceof PlayerEntity && !((PlayerEntity) entity1).canHarmPlayer((PlayerEntity) entity)) {
                     raytraceresult = null;
                     entityraytraceresult = null;
                 }

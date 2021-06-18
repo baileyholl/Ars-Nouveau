@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
+import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -8,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.block.ManaBloomCrop;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -32,9 +34,9 @@ public class ManaCondenserTile extends AbstractManaTile {
         if(level.isClientSide || isDisabled) {
             return;
         }
-        if(level.getBlockEntity(worldPosition.below()) instanceof ManaJarTile ) {
+        if(level.getGameTime() % 20 == 0 && level.getBlockEntity(worldPosition.below()) instanceof ManaJarTile ) {
             ManaJarTile jar = (ManaJarTile) level.getBlockEntity(worldPosition.below());
-            if(jar.canAcceptMana() && level.getGameTime() % 20 == 0 ) {
+            if(jar != null && jar.canAcceptMana()) {
                 transferMana(this, jar);
             }
         }
@@ -58,15 +60,15 @@ public class ManaCondenserTile extends AbstractManaTile {
     }
     @SubscribeEvent
     public void cropGrow(BlockEvent.CropGrowEvent.Post event) {
-        if(isDisabled || level == null)
+        if(isDisabled)
             return;
         if(BlockUtil.distanceFrom(worldPosition, event.getPos()) <= 15) {
             int mana = 50;
-            if(level.getBlockState(event.getPos()).getBlock() instanceof ManaBloomCrop) {
+            if(event.getWorld().getBlockState(event.getPos()).getBlock() instanceof ManaBloomCrop) {
                 mana += 25;
             }
             this.addMana(mana);
-            ParticleUtil.spawnFollowProjectile(level, event.getPos(), worldPosition);
+            ParticleUtil.spawnFollowProjectile((World) event.getWorld(), event.getPos(), worldPosition);
         }
     }
 
@@ -77,17 +79,17 @@ public class ManaCondenserTile extends AbstractManaTile {
 
         if(BlockUtil.distanceFrom(worldPosition, event.getParentA().blockPosition()) <= 15) {
             this.addMana(1000);
-            ParticleUtil.spawnFollowProjectile(level, event.getParentA().blockPosition(), worldPosition);
+            ParticleUtil.spawnFollowProjectile(event.getChild().level, event.getParentA().blockPosition(), worldPosition);
         }
     }
 
     @SubscribeEvent
     public void livingDeath(LivingDeathEvent e) {
-        if(e.getEntityLiving().level.isClientSide || isDisabled || e.getEntity() instanceof IDispellable || level == null)
+        if(e.getEntityLiving().level.isClientSide || isDisabled || e.getEntity() instanceof IDispellable || e.getEntity() instanceof ISummon || level == null)
             return;
 
         if(BlockUtil.distanceFrom(worldPosition, e.getEntity().blockPosition()) <= 15) {
-            ParticleUtil.spawnFollowProjectile(level, e.getEntity().blockPosition(), worldPosition);
+            ParticleUtil.spawnFollowProjectile(e.getEntityLiving().level, e.getEntity().blockPosition(), worldPosition);
             this.addMana(200);
 
         }
