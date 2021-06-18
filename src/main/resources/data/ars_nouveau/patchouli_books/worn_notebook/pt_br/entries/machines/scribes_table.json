@@ -1,0 +1,20 @@
+{
+    "name": "Scribes Table",
+    "icon": "ars_nouveau:scribes_table",
+    "category": "machines",
+    "pages": [
+        {
+            "type": "text",
+            "text": "É possível copiar seus feitiços para um novo livro, seja como um backup ou como uma forma de compartilhar com seus amigos. Primeiro, coloque um livro de feitiços na mesa dos escribas. Então, enquanto foge, use outro livro de feitiços na mesa. Isso copiará os feitiços do livro que você está segurando para o livro na mesa."
+        },
+		{
+		"type":"text",
+		"text":"Você também pode escrever um feitiço específico para Feitiço Pergaminho que é usado para ensinar servos mágicos como lançar feitiços. Para fazer isso, coloque um pergaminho de feitiço sobre a mesa. Então, com seu livro de feitiços em mãos, mude seu livro de feitiços para o feitiço desejado, como se fosse lançá-lo. Em seguida, use o livro sobre a mesa enquanto se esgueira. Seu pergaminho agora conterá aquela receita de feitiço."
+		},
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:spell_parchment",
+			"recipe2":"ars_nouveau:scribes_table"
+		}
+    ]
+}

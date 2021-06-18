@@ -1,0 +1,15 @@
+{
+    "name": "Changelog 1.18",
+    "icon": "ars_nouveau:arcane_relay",
+    "category": "release_notes",
+	"sortnum":70,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Ars Nouveau 1.18,Configs! $ (Li) Adiciona configurações extensas para cada glifo, incluindo valores para dano, duração e muito mais! $ (Li) Relés e divisores agora podem atingir 30 blocos. $ (Li) Corrige frascos de capacidade infinita $ (li) Corrige AOE para torres de feitiço $ (li) Corrige direção inconsistente de arandelas $ (li) Corrige a barra de pesquisa de feitiço $ (li) Adiciona suporte de redstone para braseiros de ritual"       
+        },{
+            "type": "text",
+            "text": "$ (li) Os tabletes de ritual agora caem se você não iniciar o ritual, mas quebrar o braseiro. $ (li) Corrige partículas geradas enquanto o jogo está pausado. $ (li) Ritual de restauração agora danifica adequadamente os mortos-vivos. $ (li) Cristalizador item de saída agora pode ser alterado. $ (li) Adiciona uma configuração para limitar o número de combinações de glifos específicas $ (li) Qualquer feitiço agora pode ser transformado em Feitiço inicial. $ (li) Novas dicas e dicas durante a elaboração de feitiços!"       
+        }
+    ]
+}

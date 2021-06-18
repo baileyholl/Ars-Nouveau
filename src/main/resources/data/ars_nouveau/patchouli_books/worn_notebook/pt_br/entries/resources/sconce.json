@@ -1,0 +1,15 @@
+{
+    "name": "Magelight Sconce",
+    "icon": "ars_nouveau:sconce",
+    "category": "resources",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Uma luz decorativa. Para acender, lance luz no arandela. A cor da chama corresponde à cor do seu feitiço."
+        },
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:sconce"
+		}
+    ]
+}

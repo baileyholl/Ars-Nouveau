@@ -1,0 +1,16 @@
+{
+    "name": "Spell Mana",
+    "icon": "ars_nouveau:novice_spell_book",
+	"sortnum":2,
+    "category": "getting_started",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Spell Mana é usado para lançar feitiços com um $ (coisa) Spellbook $ (). A quantidade máxima de mana e a velocidade na qual ela se regenera podem ser aumentados usando $ (item) Armadura Mago especial $ () ou aplicando $ (item) Mana Boost $ () ou $ (item) Mana Regen $ () encantamentos em seu equipamento. Além disso, você receberá bônus de mana e regeneração para cada glifo desbloqueado em seu livro de feitiços."       
+        },
+		{
+            "type": "text",
+            "text": "Adicionar glifos ao seu livro de feitiços também aumentará sua quantidade máxima de mana e regeneração de mana. Este bônus também se escala com a camada de seu livro de feitiços."       
+        }
+    ]
+}

@@ -1,0 +1,20 @@
+{
+    "name": "Changelog 1.2.3",
+    "icon": "ars_nouveau:carbuncle_charm",
+    "category": "release_notes",
+	"sortnum":97,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Ars Nouveau 1.2.3, Entity School! $ (li) O Carbúnculo, Filhote e Sylph se formaram na escola e agora são muito espertos! $ (li) Os Carbúnculos agora apenas tentam encontrar itens para os quais possam se encaminhar e desistirão se demorarem muito. $ (li) Os carbúnculos vagarão de volta para casa se se afastarem demais. $ (li) Whelps agora podem ter seu modo de cast estrito desabilitado. "       
+        },
+		 {
+            "type": "text",
+            "text": "$ (li) Silfos agora consideram Melões, Abóboras e Bambu (e mais blocos modificados) como um item interessante. $ (li) Corrige bug relacionado à coleta de item + qualquer feitiço em filhotes."       
+        },
+		{
+            "type": "relations",
+            "entries":["apparatus/carbuncle_charm"]        
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+{
+    "name": "Upgrades",
+    "icon": "ars_nouveau:archmage_spell_book",
+	"sortnum":9,
+    "category": "getting_started",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Glifos de nível 2 e 3 exigirão um livro de feitiços de Aprendiz e Arquimago, respectivamente. Livros de nível superior permitirão que você lance feitiços de nível superior, use-os na automação e forneça mana adicional e regeneração de mana como bônus. Assim que você for capaz de atualizar seu livro, atualizar sua armadura para o próximo nível de vestes também concederá a você outro impulso na conjuração."       
+        },
+		{
+            "type": "relations",
+            "entries":["items/books","items/armor"]        
+        }
+    ]
+}
