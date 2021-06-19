@@ -82,6 +82,8 @@ public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
         stack.popPose();
     }
     public void renderPressedItem(ScribesTile tile, Item itemToRender, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int il){
+        Direction direction = tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.FACING);
+
         matrixStack.pushPose();
         matrixStack.translate(0, 1.D, 0);
         BlockState state = tile.getLevel().getBlockState(tile.getBlockPos());
@@ -91,7 +93,15 @@ public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(-y + 90f));
         matrixStack.mulPose(Vector3f.XP.rotationDegrees(90f));
         matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180F));
-
+        if(direction == Direction.WEST){
+            matrixStack.mulPose(Vector3f.ZP.rotationDegrees(90f));
+        }
+        if(direction == Direction.EAST){
+            matrixStack.mulPose(Vector3f.ZP.rotationDegrees(-90f));
+        }
+        if(direction == Direction.SOUTH){
+            matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180));
+        }
         matrixStack.scale(0.6f, 0.6f, 0.6f);
 
         Minecraft.getInstance().getItemRenderer().renderStatic(new ItemStack(itemToRender), ItemCameraTransforms.TransformType.FIXED, i, il, matrixStack, iRenderTypeBuffer);

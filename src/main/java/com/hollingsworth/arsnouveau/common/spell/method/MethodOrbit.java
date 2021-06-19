@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
-import com.hollingsworth.arsnouveau.common.entity.EntityWardProjectile;
+import com.hollingsworth.arsnouveau.common.entity.EntityOrbitProjectile;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
@@ -19,11 +19,11 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
-public class MethodWard extends AbstractCastMethod {
+public class MethodOrbit extends AbstractCastMethod {
 
-    public static MethodWard INSTANCE = new MethodWard();
+    public static MethodOrbit INSTANCE = new MethodOrbit();
 
-    private MethodWard() {
+    private MethodOrbit() {
         super(GlyphLib.MethodWardID, "Ward");
     }
 
@@ -31,7 +31,7 @@ public class MethodWard extends AbstractCastMethod {
     public void summonProjectiles(World world, LivingEntity shooter, SpellResolver resolver, List<AbstractAugment> augments){
         int total = 3 + getBuffCount(augments, AugmentSplit.class);
         for(int i = 0; i < total; i++){
-            EntityWardProjectile wardProjectile = new EntityWardProjectile(world, shooter);
+            EntityOrbitProjectile wardProjectile = new EntityOrbitProjectile(world, shooter);
             wardProjectile.wardedEntity = shooter;
             wardProjectile.setOwnerID(shooter.getUUID());
             wardProjectile.spellResolver = resolver;
@@ -87,7 +87,7 @@ public class MethodWard extends AbstractCastMethod {
 
     @Override
     public int getManaCost() {
-        return 0;
+        return 50;
     }
 
     @Nonnull

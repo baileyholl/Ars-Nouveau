@@ -47,7 +47,7 @@ public class ScribesBlock extends ModBlock{
 
     public ScribesBlock() {
         super(Block.Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(2.0f, 3.0f).noOcclusion(), LibBlockNames.SCRIBES_BLOCK);
-        this.registerDefaultState(this.stateDefinition.any().setValue(PART, BedPart.HEAD));
+        this.registerDefaultState(this.stateDefinition.any().setValue(PART, BedPart.FOOT));
         MinecraftForge.EVENT_BUS.register(this);
     }
     public static final DirectionProperty FACING = HorizontalBlock.FACING;
@@ -196,13 +196,13 @@ public class ScribesBlock extends ModBlock{
     }
 
     public BlockState rotate(BlockState state, Rotation rot) {
-//        return super.rotate(state,rot);
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
+
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-//        return super.mirror(state, mirrorIn);
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
+
     @Override
     public boolean hasTileEntity(BlockState state) {
         return true;

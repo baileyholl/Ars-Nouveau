@@ -45,6 +45,8 @@ public class FixedGeoItemRenderer<T extends Item & IAnimatable> extends GeoItemR
         this.currentItemStack = itemStack;
         GeoModel model = modelProvider instanceof TransformAnimatedModel ? modelProvider.getModel(((TransformAnimatedModel) modelProvider).getModelLocation((IAnimatable) animatable, transformType)) : modelProvider.getModel(modelProvider.getModelLocation(animatable));
         AnimationEvent itemEvent = new AnimationEvent((IAnimatable) animatable, 0, 0, Minecraft.getInstance().getFrameTime(), false, Collections.singletonList(itemStack));
+        if(modelProvider == null)
+            return;
         modelProvider.setLivingAnimations((IAnimatable) animatable, this.getUniqueID(animatable), itemEvent);
         stack.pushPose();
         stack.translate(0, 0.01f, 0);

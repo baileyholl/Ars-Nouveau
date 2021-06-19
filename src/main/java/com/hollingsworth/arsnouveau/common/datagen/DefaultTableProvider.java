@@ -1,16 +1,22 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.common.collect.ImmutableList;
+import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.advancements.criterion.StatePropertiesPredicate;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.LootTableProvider;
 import net.minecraft.data.loot.BlockLootTables;
 import net.minecraft.item.Items;
 import net.minecraft.loot.*;
+import net.minecraft.loot.conditions.BlockStateProperty;
+import net.minecraft.state.Property;
+import net.minecraft.state.properties.BedPart;
 import net.minecraft.util.IItemProvider;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
@@ -96,10 +102,14 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.POTION_MELDER);
             registerDropSelf(BlockRegistry.RITUAL_BLOCK);
             registerDropSelf(BlockRegistry.SCONCE_BLOCK);
-
+            registerBedCondition(BlockRegistry.SCRIBES_BLOCK, ScribesBlock.PART, BedPart.HEAD);
 
         }
-
+        protected <T extends Comparable<T> & IStringSerializable> void registerBedCondition(Block block, Property<T> prop, T isValue) {
+            list.add(block);
+            this.add(block, LootTable.lootTable().withPool(applyExplosionCondition(block, LootPool.lootPool().setRolls(ConstantRange.exactly(1))
+                    .add(ItemLootEntry.lootTableItem(block).when(BlockStateProperty.hasBlockStateProperties(block).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(prop, isValue)))))));
+        }
         public void registerLeavesAndSticks(Block leaves, Block sapling){
             list.add(leaves);
             this.add(leaves, l_state -> createLeavesDrops(l_state, sapling, DEFAULT_SAPLING_DROP_RATES));

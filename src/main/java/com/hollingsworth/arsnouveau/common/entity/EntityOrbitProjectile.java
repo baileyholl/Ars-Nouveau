@@ -26,25 +26,25 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-public class EntityWardProjectile extends EntityProjectileSpell{
+public class EntityOrbitProjectile extends EntityProjectileSpell{
     public Entity wardedEntity;
     int ticksLeft;
-    private static final DataParameter<Optional<UUID>> OWNER_UUID = EntityDataManager.defineId(EntityWardProjectile.class, DataSerializers.OPTIONAL_UUID);
-    public static final DataParameter<Integer> OFFSET = EntityDataManager.defineId(EntityWardProjectile.class, DataSerializers.INT);
-    public static final DataParameter<Integer> ACCELERATES = EntityDataManager.defineId(EntityWardProjectile.class, DataSerializers.INT);
-    public static final DataParameter<Integer> AOE = EntityDataManager.defineId(EntityWardProjectile.class, DataSerializers.INT);
-    public static final DataParameter<Integer> TOTAL = EntityDataManager.defineId(EntityWardProjectile.class, DataSerializers.INT);
+    private static final DataParameter<Optional<UUID>> OWNER_UUID = EntityDataManager.defineId(EntityOrbitProjectile.class, DataSerializers.OPTIONAL_UUID);
+    public static final DataParameter<Integer> OFFSET = EntityDataManager.defineId(EntityOrbitProjectile.class, DataSerializers.INT);
+    public static final DataParameter<Integer> ACCELERATES = EntityDataManager.defineId(EntityOrbitProjectile.class, DataSerializers.INT);
+    public static final DataParameter<Integer> AOE = EntityDataManager.defineId(EntityOrbitProjectile.class, DataSerializers.INT);
+    public static final DataParameter<Integer> TOTAL = EntityDataManager.defineId(EntityOrbitProjectile.class, DataSerializers.INT);
 
 
-    public EntityWardProjectile(World worldIn, double x, double y, double z) {
+    public EntityOrbitProjectile(World worldIn, double x, double y, double z) {
         super(worldIn, x, y, z);
     }
 
-    public EntityWardProjectile(World worldIn, LivingEntity shooter) {
+    public EntityOrbitProjectile(World worldIn, LivingEntity shooter) {
         super(worldIn, shooter);
     }
 
-    public EntityWardProjectile(EntityType<EntityWardProjectile> entityWardProjectileEntityType, World world) {
+    public EntityOrbitProjectile(EntityType<EntityOrbitProjectile> entityWardProjectileEntityType, World world) {
         super(entityWardProjectileEntityType, world);
     }
 
@@ -229,7 +229,7 @@ public class EntityWardProjectile extends EntityProjectileSpell{
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public EntityWardProjectile(FMLPlayMessages.SpawnEntity packet, World world) {
+    public EntityOrbitProjectile(FMLPlayMessages.SpawnEntity packet, World world) {
         super(ModEntities.ENTITY_WARD, world);
     }
 

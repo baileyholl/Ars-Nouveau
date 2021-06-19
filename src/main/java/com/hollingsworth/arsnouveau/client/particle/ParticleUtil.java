@@ -114,14 +114,17 @@ public class ParticleUtil {
     }
 
     public static void spawnRitualAreaEffect(TileEntity entity, Random rand, ParticleColor color, int range){
-        BlockPos pos = entity.getBlockPos();
+        spawnRitualAreaEffect(entity.getBlockPos(), entity.getLevel(), rand, color, range);
+    }
+
+    public static void spawnRitualAreaEffect(BlockPos pos, World world, Random rand, ParticleColor color, int range){
         BlockPos.betweenClosedStream(pos.offset(range, 0, range), pos.offset(-range, 0, -range)).forEach(blockPos -> {
             if(rand.nextInt(10) == 0){
                 for(int i =0; i< rand.nextInt(10); i++) {
                     double x = blockPos.getX() + ParticleUtil.inRange(-0.5, 0.5);
                     double y = blockPos.getY() + ParticleUtil.inRange(-0.5, 0.5);
                     double z = blockPos.getZ() + ParticleUtil.inRange(-0.5, 0.5);
-                    entity.getLevel().addParticle(ParticleLineData.createData(color),
+                    world.addParticle(ParticleLineData.createData(color),
                             x, y, z,
                             x, y  + ParticleUtil.inRange(0.5, 5), z);
                 }

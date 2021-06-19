@@ -14,6 +14,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.geo.render.built.GeoModel;
@@ -97,4 +98,8 @@ public class SpellBowRenderer extends FixedGeoItemRenderer<Wand> {
         super.render(model, animatable, partialTicks, type, matrixStackIn, renderTypeBuffer,vertexBuilder, packedLightIn, packedOverlayIn, red, green, blue, alpha);
     }
 
+    @Override
+    public RenderType getRenderType(Object animatable, float partialTicks, MatrixStack stack, @Nullable IRenderTypeBuffer renderTypeBuffer, @Nullable IVertexBuilder vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
+        return RenderType.entityTranslucent(textureLocation);
+    }
 }

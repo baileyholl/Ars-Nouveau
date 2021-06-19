@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "ars_nouveau:block/potion_melder"
+      "model": "ars_nouveau:block/scribes_table"
     }
   }
 }
