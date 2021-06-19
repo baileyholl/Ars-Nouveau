@@ -34,7 +34,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
     public static final DataParameter<Integer> ACCELERATES = EntityDataManager.defineId(EntityOrbitProjectile.class, DataSerializers.INT);
     public static final DataParameter<Integer> AOE = EntityDataManager.defineId(EntityOrbitProjectile.class, DataSerializers.INT);
     public static final DataParameter<Integer> TOTAL = EntityDataManager.defineId(EntityOrbitProjectile.class, DataSerializers.INT);
-
+    public int extendTimes;
 
     public EntityOrbitProjectile(World worldIn, double x, double y, double z) {
         super(worldIn, x, y, z);
@@ -84,6 +84,10 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
     @Override
     public void tick() {
         this.age++;
+        if(!level.isClientSide && this.age > 60 * 20 + 30 * 20 * extendTimes){
+            this.remove();
+            return;
+        }
         if(!level.isClientSide && spellResolver == null)
             this.remove();
         Entity owner = level.getPlayerByUUID(getOwnerID());
