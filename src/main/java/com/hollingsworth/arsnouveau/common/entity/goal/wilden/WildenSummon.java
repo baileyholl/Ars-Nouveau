@@ -19,7 +19,7 @@ public class WildenSummon extends Goal {
 
     @Override
     public boolean canUse() {
-        return entity.getTarget() instanceof PlayerEntity && entity.summonCooldown <= 0;
+        return entity.isAlive() && entity.getTarget() instanceof PlayerEntity && entity.summonCooldown <= 0;
     }
 
 
@@ -36,9 +36,11 @@ public class WildenSummon extends Goal {
         wolf2.ticksLeft = 400;
         wolf2.setPos(entity.getRandomX(1), entity.getY(), entity.getRandomZ(1));
         this.entity.summonCooldown = 400;
-        wolf.setTarget(entity.getTarget());
+        if(entity.getTarget() != null){
+            wolf.setTarget(entity.getTarget());
+            wolf2.setTarget(entity.getTarget());
+        }
         wolf.setAggressive(true);
-        wolf2.setTarget(entity.getTarget());
         wolf2.setAggressive(true);
         wolf.isWildenSummon = true;
         wolf2.isWildenSummon = true;

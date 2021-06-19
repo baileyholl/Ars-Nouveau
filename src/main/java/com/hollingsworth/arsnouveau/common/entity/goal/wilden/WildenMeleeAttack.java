@@ -18,9 +18,11 @@ public class WildenMeleeAttack extends MeleeAttackGoal {
         this.shouldExecute = shouldExecute;
     }
 
+
+
     @Override
     public boolean canUse() {
-        return this.shouldExecute.get() && super.canUse();
+        return this.mob.getTarget() != null && this.shouldExecute.get() && super.canUse();
     }
 
     @Override
