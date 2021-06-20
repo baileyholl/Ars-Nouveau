@@ -108,7 +108,7 @@ public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
         matrixStack.popPose();
     }
     public static GenericItemRenderer getISTER(){
-        return new GenericItemRenderer(new ScribesModel());
+        return new GenericItemRenderer(new ScribesModel()).withTranslucency();
     }
 
     @Override
