@@ -137,6 +137,8 @@ dependencies {
 
     minecraft 'net.minecraftforge:forge:1.16.5-36.1.4'
     runtimeOnly fg.deobf("curse.maven:exp-407174:3188120")  // Shutup experimental settings
+//    runtimeOnly fg.deobf("curse.maven:exp-231951:3326143")  // Immersive engineering
+//    compileOnly fg.deobf("curse.maven:exp-231951:3326143")
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50:api")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50")
 

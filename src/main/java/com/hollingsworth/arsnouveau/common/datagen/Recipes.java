@@ -148,9 +148,9 @@ public class Recipes extends RecipeProvider {
             ShapedRecipeBuilder.shaped(BlockRegistry.SCRIBES_BLOCK).unlockedBy("has_journal",InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
                     .pattern("xxx")
                     .pattern("yzy")
-                    .pattern("y y").define('x',Ingredient.of(ItemTags.WOODEN_SLABS))
+                    .pattern("y y").define('x',Ingredient.of(BlockRegistry.ARCHWOOD_SLABS))
                     .define('y', Items.STICK)
-                    .define('z', Ingredient.of(ItemTags.LOGS)).save(consumer);
+                    .define('z', Ingredient.of(ARCHWOOD_LOG_TAG)).save(consumer);
 
             ShapedRecipeBuilder.shaped(ItemsRegistry.dullTrinket).unlockedBy("has_journal",InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
                     .pattern(" x ")
