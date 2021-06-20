@@ -161,6 +161,16 @@ public class LootTables {
                         .add(AugmentExtendTime.INSTANCE),
                 "Cures status effects and grants regeneration."
         ));
+
+        RARE_LOOT.add(() -> makeTome("Knocked out of Orbit", new Spell()
+                        .add(MethodOrbit.INSTANCE)
+                        .add(EffectLaunch.INSTANCE)
+                .add(AugmentAmplify.INSTANCE, 2)
+                        .add(EffectDelay.INSTANCE)
+                .add(EffectKnockback.INSTANCE)
+                .add(AugmentAmplify.INSTANCE, 2), "Summons orbiting projectiles that will launch nearby enemies.")
+        );
+
     }
 
     public static ItemStack getRandomItem(List<Supplier<ItemStack>> pool){

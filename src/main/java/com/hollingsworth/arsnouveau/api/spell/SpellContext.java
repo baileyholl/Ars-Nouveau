@@ -48,6 +48,7 @@ public class SpellContext {
 
     public void resetSpells(){
         this.currentIndex = 0;
+        this.isCanceled = false;
     }
 
     public SpellContext withCastingTile(TileEntity tile){
