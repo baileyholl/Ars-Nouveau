@@ -57,7 +57,7 @@ public class KeyHandler {
                 return;
             }
             if(stack.getItem() instanceof SpellBook && stack.hasTag() && MINECRAFT.screen == null){
-                MINECRAFT.setScreen(new GuiRadialMenu(ModKeyBindings.OPEN_SPELL_SELECTION, stack.getTag()));
+                MINECRAFT.setScreen(new GuiRadialMenu(stack.getTag()));
             }
         }
 
