@@ -49,7 +49,6 @@ public class GuiRadialMenu extends Screen {
         this.minecraft = Minecraft.getInstance();
         this.startAnimation = getMinecraft().level.getGameTime() + (double) getMinecraft().getFrameTime();
         this.selectedItem = -1;
-        this.passEvents = true;
     }
 
 

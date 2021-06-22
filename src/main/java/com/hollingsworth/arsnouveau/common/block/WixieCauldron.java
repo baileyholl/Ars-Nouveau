@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
@@ -58,6 +59,11 @@ public class WixieCauldron extends ModBlock{
         if(!world.isClientSide() && world.getBlockEntity(pos) instanceof WixieCauldronTile){
             ((WixieCauldronTile) world.getBlockEntity(pos)).isOff = world.hasNeighborSignal(pos);
         }
+    }
+
+    @Override
+    public PushReaction getPistonPushReaction(BlockState p_149656_1_) {
+        return PushReaction.BLOCK;
     }
 
     @Nullable

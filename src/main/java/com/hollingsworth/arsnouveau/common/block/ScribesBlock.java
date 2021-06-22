@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -52,6 +53,10 @@ public class ScribesBlock extends ModBlock{
     }
     public static final DirectionProperty FACING = HorizontalBlock.FACING;
 
+    @Override
+    public PushReaction getPistonPushReaction(BlockState p_149656_1_) {
+        return PushReaction.BLOCK;
+    }
 
     @Override
     public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {

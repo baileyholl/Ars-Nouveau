@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -36,6 +37,10 @@ public class SummoningCrystal extends ModBlock{
 
     }
 
+    @Override
+    public PushReaction getPistonPushReaction(BlockState p_149656_1_) {
+        return PushReaction.BLOCK;
+    }
 
     @Override
     public void neighborChanged(BlockState p_220069_1_, World world, BlockPos pos, Block p_220069_4_, BlockPos p_220069_5_, boolean p_220069_6_) {

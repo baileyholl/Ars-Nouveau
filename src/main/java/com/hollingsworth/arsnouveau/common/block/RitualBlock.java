@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.material.PushReaction;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -40,6 +41,10 @@ public class RitualBlock extends ModBlock{
         return super.use(state, worldIn, pos, player, handIn, hit);
     }
 
+    @Override
+    public PushReaction getPistonPushReaction(BlockState p_149656_1_) {
+        return PushReaction.BLOCK;
+    }
 
     @Override
     public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
