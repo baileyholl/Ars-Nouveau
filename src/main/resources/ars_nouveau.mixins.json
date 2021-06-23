@@ -3,11 +3,11 @@
   "package": "com.hollingsworth.arsnouveau.common.mixin",
   "compatibilityLevel": "JAVA_8",
   "refmap": "ars_nouveau.refmap.json",
+  "plugin": "com.hollingsworth.arsnouveau.common.mixin.MixinPlugin",
   "mixins": [
     "LightningRedirectMixin",
     "PotionRecipeMixin",
     "ExpInvokerMixin",
-    "ElytraClientPlayer",
     "ElytraPlayerMixin",
     "MixinLivingEntity"
   ],

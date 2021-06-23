@@ -9,6 +9,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.potion.EffectInstance;
@@ -22,6 +23,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -71,9 +74,6 @@ public class LightningEntity extends LightningBoltEntity {
         super.tick();
         if (this.lightningState == 2) {
             Difficulty difficulty = this.level.getDifficulty();
-            if (difficulty == Difficulty.NORMAL || difficulty == Difficulty.HARD) {
-                this.igniteBlocks(4);
-            }
 
             this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.LIGHTNING_BOLT_THUNDER, SoundCategory.WEATHER, 1.0f, 0.8F + this.random.nextFloat() * 0.2F);
             this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.LIGHTNING_BOLT_IMPACT, SoundCategory.WEATHER, 1.0F, 0.5F + this.random.nextFloat() * 0.2F);
@@ -87,7 +87,6 @@ public class LightningEntity extends LightningBoltEntity {
                 --this.boltLivingTime;
                 this.lightningState = 1;
                 this.boltVertex = this.random.nextLong();
-                this.igniteBlocks(0);
             }
         }
 
@@ -139,7 +138,23 @@ public class LightningEntity extends LightningBoltEntity {
     }
 
     public float getDamage(Entity entity){
-        return damage + ampScalar * amps + (entity.isInWaterOrRain() ? wetBonus : 0.0f);
+        float baseDamage = damage + ampScalar * amps + (entity.isInWaterOrRain() ? wetBonus : 0.0f);
+        int multiplier = 1;
+        for(ItemStack i : entity.getArmorSlots()){
+            IEnergyStorage energyStorage = i.getCapability(CapabilityEnergy.ENERGY).orElse(null);
+            if(energyStorage != null){
+                multiplier++;
+            }
+        }
+        if(entity instanceof LivingEntity){
+            IEnergyStorage energyStorage = ((LivingEntity) entity).getMainHandItem().getCapability(CapabilityEnergy.ENERGY).orElse(null);
+            if(energyStorage != null)
+                multiplier++;
+            energyStorage = ((LivingEntity) entity).getOffhandItem().getCapability(CapabilityEnergy.ENERGY).orElse(null);
+            if(energyStorage != null)
+                multiplier++;
+        }
+        return baseDamage * multiplier;
     }
 
     /**
