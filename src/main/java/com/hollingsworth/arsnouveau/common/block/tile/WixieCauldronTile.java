@@ -313,7 +313,7 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
         tickCounter++;
         if (tickCounter >= 120 && !level.isClientSide) {
             converted = true;
-            level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(WixieCauldron.FILLED, false).setValue(WixieCauldron.CONVERTED, true));
+            level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(WixieCauldron.FILLED, false).setValue(SummoningTile.CONVERTED, true));
             EntityWixie wixie = new EntityWixie(level, true, worldPosition);
             wixie.setPos(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ() + 0.5);
             level.addFreshEntity(wixie);

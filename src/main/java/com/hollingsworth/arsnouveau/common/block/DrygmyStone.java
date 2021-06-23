@@ -9,16 +9,12 @@ import net.minecraft.world.IBlockReader;
 
 import javax.annotation.Nullable;
 
-public class DrygmyStone extends ModBlock{
+public class DrygmyStone extends SummonBlock{
 
     public DrygmyStone() {
         super(defaultProperties().noOcclusion(), LibBlockNames.DRYGMY_STONE);
     }
 
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
 
     @Nullable
     @Override

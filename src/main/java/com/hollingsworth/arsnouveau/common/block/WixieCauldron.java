@@ -24,6 +24,8 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.hollingsworth.arsnouveau.common.block.tile.SummoningTile.CONVERTED;
+
 public class WixieCauldron extends ModBlock{
 
     public WixieCauldron() {
@@ -32,7 +34,6 @@ public class WixieCauldron extends ModBlock{
     }
 
     public static final BooleanProperty FILLED = BooleanProperty.create("filled");
-    public static final BooleanProperty CONVERTED = BooleanProperty.create("converted");
 
 
     @Override
@@ -78,7 +79,6 @@ public class WixieCauldron extends ModBlock{
             }
         }
         return state;
-
     }
 
     @Override

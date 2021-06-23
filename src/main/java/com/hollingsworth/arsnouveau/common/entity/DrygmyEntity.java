@@ -33,8 +33,12 @@ public class DrygmyEntity extends CreatureEntity implements IPickupResponder, IA
     public int channelCooldown;
 
 
-    protected DrygmyEntity(EntityType<? extends CreatureEntity> p_i48575_1_, World p_i48575_2_) {
+    public DrygmyEntity(EntityType<? extends CreatureEntity> p_i48575_1_, World p_i48575_2_) {
         super(p_i48575_1_, p_i48575_2_);
+    }
+
+    public DrygmyEntity(World world){
+        super(ModEntities.ENTITY_DRYGMY, world);
     }
 
 

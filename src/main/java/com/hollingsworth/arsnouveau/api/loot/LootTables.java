@@ -171,6 +171,11 @@ public class LootTables {
                 .add(AugmentAmplify.INSTANCE, 2), "Summons orbiting projectiles that will launch nearby enemies.")
         );
 
+        RARE_LOOT.add(() -> makeTome("Takeoff!", new Spell().add(MethodSelf.INSTANCE)
+                .add(EffectLaunch.INSTANCE, 2)
+                .add(EffectGlide.INSTANCE)
+                .add(AugmentDurationDown.INSTANCE), "Launches the caster into the air and grants temporary elytra flight!"));
+
     }
 
     public static ItemStack getRandomItem(List<Supplier<ItemStack>> pool){
