@@ -109,6 +109,10 @@ public class EventHandler {
     public static void onGlideTick(TickEvent.PlayerTickEvent event){
         if(ArsNouveau.caelusLoaded && event.player.hasEffect(ModPotions.GLIDE_EFFECT))
             CaelusHandler.setFlying(event.player);
+
+//        if(!event.player.level.isClientSide && event.player.hasEffect(ModPotions.SHOCKED_EFFECT)){
+//            event.player.hurt(DamageSource.LIGHTNING_BOLT.bypassArmor().bypassMagic().bypassInvul(), 1.0f);
+//        }
     }
 
     @SubscribeEvent
@@ -128,7 +132,7 @@ public class EventHandler {
         }
         LivingEntity entity = e.getEntityLiving();
         if(entity != null  && entity.getEffect(ModPotions.HEX_EFFECT) != null &&
-                (entity.getEffect(Effects.POISON) != null || entity.getEffect(Effects.WITHER) != null || entity.isOnFire())){
+                (entity.getEffect(Effects.POISON) != null || entity.getEffect(Effects.WITHER) != null || entity.isOnFire() || entity.getEffect(ModPotions.SHOCKED_EFFECT) != null)){
             e.setAmount(e.getAmount() + 0.5f + 0.33f*entity.getEffect(ModPotions.HEX_EFFECT).getAmplifier());
 
         }

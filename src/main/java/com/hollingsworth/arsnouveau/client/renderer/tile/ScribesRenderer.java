@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.renderer.tile;
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemRenderer;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.block.BlockState;
@@ -31,55 +32,68 @@ public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
 
     @Override
     public void renderEarly(ScribesTile tile, MatrixStack matrixStack, float ticks, IRenderTypeBuffer iRenderTypeBuffer, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
-        if(tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.PART) != BedPart.HEAD)
-            return;
-        if (tile.stack == null) {
-            return;
-        }
-        double x = tile.getBlockPos().getX();
-        double y = tile.getBlockPos().getY();
-        double z = tile.getBlockPos().getZ();
-        if (tile.entity == null || !ItemStack.matches(tile.entity.getItem(), tile.stack)) {
-            tile.entity = new ItemEntity(tile.getLevel(), x, y, z, tile.stack);
-        }
+        try{
+            if(tile.getLevel().getBlockState(tile.getBlockPos()).getBlock() != BlockRegistry.SCRIBES_BLOCK)
+                return;
+            if(tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.PART) != BedPart.HEAD)
+                return;
+            if (tile.stack == null) {
+                return;
+            }
+            double x = tile.getBlockPos().getX();
+            double y = tile.getBlockPos().getY();
+            double z = tile.getBlockPos().getZ();
+            if (tile.entity == null || !ItemStack.matches(tile.entity.getItem(), tile.stack)) {
+                tile.entity = new ItemEntity(tile.getLevel(), x, y, z, tile.stack);
+            }
 
-
-        ItemEntity entityItem = tile.entity;
-        renderPressedItem(tile, entityItem.getItem().getItem(), matrixStack, iRenderTypeBuffer, packedLightIn, packedOverlayIn);
+            ItemEntity entityItem = tile.entity;
+            renderPressedItem(tile, entityItem.getItem().getItem(), matrixStack, iRenderTypeBuffer, packedLightIn, packedOverlayIn);
+        }catch (Throwable t){
+            t.printStackTrace();
+            // Mercy for HORRIBLE RENDER CHANGING MODS
+        }
     }
 
 
     @Override
     public void render(ScribesTile tile, float partialTicks, MatrixStack stack, IRenderTypeBuffer bufferIn, int packedLightIn) {
-        if(tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.PART) != BedPart.HEAD)
-            return;
-        Direction direction = tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.FACING);
-        stack.pushPose();
+        try{
+            if(tile.getLevel().getBlockState(tile.getBlockPos()).getBlock() != BlockRegistry.SCRIBES_BLOCK)
+                return;
+            if(tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.PART) != BedPart.HEAD)
+                return;
+            Direction direction = tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.FACING);
+            stack.pushPose();
 
-        if(direction == Direction.NORTH){
-            stack.mulPose(Vector3f.YP.rotationDegrees(-90));
-            stack.translate(1, 0, -1);
+            if(direction == Direction.NORTH){
+                stack.mulPose(Vector3f.YP.rotationDegrees(-90));
+                stack.translate(1, 0, -1);
+            }
+
+            if(direction == Direction.SOUTH){
+                stack.mulPose(Vector3f.YP.rotationDegrees(90));
+                stack.translate(-1, 0, 0);
+            }
+
+            if(direction == Direction.WEST){
+                stack.mulPose(Vector3f.YP.rotationDegrees(90));
+                stack.translate(-1, 0, 0);
+
+            }
+
+            if(direction == Direction.EAST){
+                stack.mulPose(Vector3f.YP.rotationDegrees(-90));
+                stack.translate(0, 0, 0);
+
+            }
+
+            super.render(tile, partialTicks, stack, bufferIn, packedLightIn);
+            stack.popPose();
+        }catch (Throwable t){
+            t.printStackTrace();
+            // why must people change the rendering order of tesrs
         }
-
-        if(direction == Direction.SOUTH){
-            stack.mulPose(Vector3f.YP.rotationDegrees(90));
-            stack.translate(-1, 0, 0);
-        }
-
-        if(direction == Direction.WEST){
-            stack.mulPose(Vector3f.YP.rotationDegrees(90));
-            stack.translate(-1, 0, 0);
-
-        }
-
-        if(direction == Direction.EAST){
-            stack.mulPose(Vector3f.YP.rotationDegrees(-90));
-            stack.translate(0, 0, 0);
-
-        }
-
-        super.render(tile, partialTicks, stack, bufferIn, packedLightIn);
-        stack.popPose();
     }
     public void renderPressedItem(ScribesTile tile, Item itemToRender, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int il){
         Direction direction = tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.FACING);
