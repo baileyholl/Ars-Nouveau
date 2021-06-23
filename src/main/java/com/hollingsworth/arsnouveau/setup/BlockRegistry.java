@@ -336,7 +336,7 @@ public class BlockRegistry {
             event.getRegistry().register(TileEntityType.Builder.of(PotionJarTile::new, BlockRegistry.POTION_JAR).build(null).setRegistryName(LibBlockNames.POTION_JAR_BLOCK));
             event.getRegistry().register(TileEntityType.Builder.of(PotionMelderTile::new, BlockRegistry.POTION_MELDER).build(null).setRegistryName(LibBlockNames.POTION_MELDER_BLOCK));
             event.getRegistry().register(TileEntityType.Builder.of(SconceTile::new, BlockRegistry.SCONCE_BLOCK).build(null).setRegistryName(LibBlockNames.SCONCE));
-            event.getRegistry().register(TileEntityType.Builder.of(SconceTile::new, BlockRegistry.DRYGMY_BLOCK).build(null).setRegistryName(LibBlockNames.DRYGMY_STONE));
+            event.getRegistry().register(TileEntityType.Builder.of(DrygmyTile::new, BlockRegistry.DRYGMY_BLOCK).build(null).setRegistryName(LibBlockNames.DRYGMY_STONE));
 
         }
 
@@ -432,6 +432,7 @@ public class BlockRegistry {
             registry.register(getDefaultBlockItem(BlockRegistry.AB_SMOOTH_ALTERNATING, LibBlockNames.AB_SMOOTH_ALTERNATING));
             registry.register(getDefaultBlockItem(BlockRegistry.AB_SMOOTH_ASHLAR, LibBlockNames.AB_SMOOTH_ASHLAR));
             registry.register(getDefaultBlockItem(BlockRegistry.SCONCE_BLOCK, LibBlockNames.SCONCE));
+            registry.register(getDefaultBlockItem(BlockRegistry.DRYGMY_BLOCK, LibBlockNames.DRYGMY_STONE));
         }
 
 

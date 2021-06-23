@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.DrygmyTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockReader;
@@ -23,5 +24,10 @@ public class DrygmyStone extends ModBlock{
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new DrygmyTile();
+    }
+
+    @Override
+    public BlockRenderType getRenderShape(BlockState p_149645_1_) {
+        return BlockRenderType.MODEL;
     }
 }
