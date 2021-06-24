@@ -26,7 +26,7 @@ public class GlyphOccurrencesPolicyValidator extends ScanningSpellValidator<Map<
         }
 
         // Check if over the limit
-        int limit = spellPart.PER_SPELL_LIMIT.get();
+        int limit = spellPart.PER_SPELL_LIMIT == null ? Integer.MAX_VALUE : spellPart.PER_SPELL_LIMIT.get();
         if (partCounts.getOrDefault(spellPart.tag, 0) > limit) {
             validationErrors.add(new GlyphOccurrencesPolicySpellValidationError(position, spellPart, limit));
         }

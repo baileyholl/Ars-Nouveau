@@ -113,6 +113,11 @@ public class ArsNouveauAPI {
         return spell_map.put(id, part);
     }
 
+    public AbstractSpellPart registerSpell(AbstractSpellPart part){
+        return registerSpell(part.getTag(), part);
+    }
+
+
     /**
      * A registration helper for addons. Adds mana costs into the fallback cost map.
      */

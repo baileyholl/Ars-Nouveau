@@ -141,11 +141,12 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
         jsonobject.add("pages", jsonArray);
         return jsonobject;
     }
-    public ForgeConfigSpec CONFIG;
-    public ForgeConfigSpec.IntValue COST;
-    public ForgeConfigSpec.BooleanValue ENABLED;
-    public ForgeConfigSpec.BooleanValue STARTER_SPELL;
-    public ForgeConfigSpec.IntValue PER_SPELL_LIMIT;
+    // Can be null if addons do not create a config. PLEASE REGISTER THESE IN A CONFIG. See RegistryHelper
+    public @Nullable ForgeConfigSpec CONFIG;
+    public @Nullable ForgeConfigSpec.IntValue COST;
+    public @Nullable ForgeConfigSpec.BooleanValue ENABLED;
+    public @Nullable ForgeConfigSpec.BooleanValue STARTER_SPELL;
+    public @Nullable ForgeConfigSpec.IntValue PER_SPELL_LIMIT;
 
     public void buildConfig(ForgeConfigSpec.Builder builder){
         builder.comment("General settings").push("general");
