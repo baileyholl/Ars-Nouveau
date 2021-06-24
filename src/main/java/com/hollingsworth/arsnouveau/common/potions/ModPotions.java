@@ -43,8 +43,8 @@ public class ModPotions {
 
         ItemStack water = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
         BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(AWKWARD), Ingredient.of(BlockRegistry.MANA_BERRY_BUSH),  manaPot));
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(manaPot), Ingredient.of(Items.GLOWSTONE_DUST),  manaPotStrong));
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(manaPot), Ingredient.of(Items.REDSTONE),  manaPotLong));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(manaPot), Ingredient.of(Items.GLOWSTONE_DUST),  manaPotStrong));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(manaPot), Ingredient.of(Items.REDSTONE),  manaPotLong));
 
         BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(water), Ingredient.of(ItemsRegistry.WILDEN_WING), PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LEAPING)));
         BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(water), Ingredient.of(ItemsRegistry.WILDEN_HORN), PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.STRENGTH)));
