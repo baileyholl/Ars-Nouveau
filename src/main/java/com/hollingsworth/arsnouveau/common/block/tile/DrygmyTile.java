@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.entity.DrygmyEntity;
+import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.world.server.ServerWorld;
@@ -25,11 +25,11 @@ public class DrygmyTile extends SummoningTile {
         if (tickCounter >= 120 && !level.isClientSide) {
             converted = true;
             level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(SummoningTile.CONVERTED, true));
-            DrygmyEntity drygmyEntity = new DrygmyEntity(level);
-            drygmyEntity.setPos(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ() + 0.5);
-            level.addFreshEntity(drygmyEntity);
+            EntityDrygmy entityDrygmy = new EntityDrygmy(level);
+            entityDrygmy.setPos(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ() + 0.5);
+            level.addFreshEntity(entityDrygmy);
             ParticleUtil.spawnPoof((ServerWorld) level, worldPosition.above());
-            entityID = drygmyEntity.getId();
+            entityID = entityDrygmy.getId();
             tickCounter = 0;
             return;
         }

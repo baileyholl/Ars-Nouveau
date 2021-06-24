@@ -70,7 +70,7 @@ public class ModEntities {
 
     public static EntityType<LightningEntity> LIGHTNING_ENTITY = null;
     public static EntityType<EntityDummy> ENTITY_DUMMY = null;
-    public static EntityType<DrygmyEntity> ENTITY_DRYGMY = null;
+    public static EntityType<EntityDrygmy> ENTITY_DRYGMY = null;
     public static EntityType<EntityOrbitProjectile> ENTITY_WARD = null;
 
 
@@ -152,7 +152,7 @@ public class ModEntities {
 
             ENTITY_DRYGMY = build(
                     "drygmy",
-                    EntityType.Builder.<DrygmyEntity>of(DrygmyEntity::new, EntityClassification.CREATURE).sized(0.6F, 0.85F).clientTrackingRange(10));
+                    EntityType.Builder.<EntityDrygmy>of(EntityDrygmy::new, EntityClassification.CREATURE).sized(0.6F, 0.85F).clientTrackingRange(10));
             ENTITY_WARD = build(
                     "ward_entity",
                     EntityType.Builder.<EntityOrbitProjectile>of(EntityOrbitProjectile::new, EntityClassification.MISC).sized(0.5f, 0.5f)

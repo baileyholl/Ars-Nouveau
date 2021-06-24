@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.entity.DrygmyEntity;
+import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
@@ -10,12 +10,12 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import javax.annotation.Nullable;
 
-public class DrygmyModel extends AnimatedGeoModel<DrygmyEntity> {
+public class DrygmyModel extends AnimatedGeoModel<EntityDrygmy> {
 
     private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/drygmy.png");
 
     @Override
-    public void setLivingAnimations(DrygmyEntity entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
+    public void setLivingAnimations(EntityDrygmy entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
         IBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
@@ -24,17 +24,17 @@ public class DrygmyModel extends AnimatedGeoModel<DrygmyEntity> {
     }
 
     @Override
-    public ResourceLocation getModelLocation(DrygmyEntity carbuncle) {
+    public ResourceLocation getModelLocation(EntityDrygmy carbuncle) {
         return new ResourceLocation(ArsNouveau.MODID , "geo/drygmy.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(DrygmyEntity carbuncle) {
+    public ResourceLocation getTextureLocation(EntityDrygmy carbuncle) {
         return WILD_TEXTURE;
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(DrygmyEntity carbuncle) {
+    public ResourceLocation getAnimationFileLocation(EntityDrygmy carbuncle) {
         return new ResourceLocation(ArsNouveau.MODID , "animations/drygmy_animations.json");
     }
 

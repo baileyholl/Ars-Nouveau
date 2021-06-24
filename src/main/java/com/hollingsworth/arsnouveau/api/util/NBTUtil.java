@@ -10,6 +10,8 @@ import java.util.List;
 public class NBTUtil {
 
     public static CompoundNBT storeBlockPos(CompoundNBT tag, String prefix, BlockPos pos){
+        if(pos == null)
+            return tag;
         tag.putDouble(prefix + "_x", pos.getX());
         tag.putDouble(prefix + "_y", pos.getY());
         tag.putDouble(prefix + "_z", pos.getZ());
