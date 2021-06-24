@@ -107,12 +107,9 @@ public class EventHandler {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onGlideTick(TickEvent.PlayerTickEvent event){
-        if(ArsNouveau.caelusLoaded && event.player.hasEffect(ModPotions.GLIDE_EFFECT))
+        if(ArsNouveau.caelusLoaded && event.player.hasEffect(ModPotions.GLIDE_EFFECT)) {
             CaelusHandler.setFlying(event.player);
-
-//        if(!event.player.level.isClientSide && event.player.hasEffect(ModPotions.SHOCKED_EFFECT)){
-//            event.player.hurt(DamageSource.LIGHTNING_BOLT.bypassArmor().bypassMagic().bypassInvul(), 1.0f);
-//        }
+        }
     }
 
     @SubscribeEvent

@@ -5,11 +5,12 @@
   "refmap": "ars_nouveau.refmap.json",
   "plugin": "com.hollingsworth.arsnouveau.common.mixin.MixinPlugin",
   "mixins": [
-    "LightningRedirectMixin",
-    "PotionRecipeMixin",
-    "ExpInvokerMixin",
+    "ClientElytraMixin",
     "ElytraPlayerMixin",
-    "MixinLivingEntity"
+    "ExpInvokerMixin",
+    "LightningRedirectMixin",
+    "MixinLivingEntity",
+    "PotionRecipeMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -26,7 +26,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        return true;
+        return !viveCraftLoaded || !mixinClassName.equals("com.hollingsworth.arsnouveau.common.mixin.ClientElytraMixin");
     }
 
     @Override
