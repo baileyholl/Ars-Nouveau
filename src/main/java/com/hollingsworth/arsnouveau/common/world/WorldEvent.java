@@ -233,7 +233,7 @@ public class WorldEvent {
             e.getSpawns().addSpawn(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_SYLPH_TYPE, Config.SYLPH_WEIGHT.get(), 1, 1));
         }
 
-        if(!e.getCategory().equals(Biome.Category.MUSHROOM)){
+        if(!e.getCategory().equals(Biome.Category.MUSHROOM) && !e.getCategory().equals(Biome.Category.NONE)){
             if(e.getClimate().temperature <= 0.35f &&  Config.WGUARDIAN_WEIGHT.get() > 0){
                 e.getSpawns().addSpawn(EntityClassification.MONSTER, new MobSpawnInfo.Spawners(ModEntities.WILDEN_GUARDIAN, Config.WGUARDIAN_WEIGHT.get(), 1, 1));
             }

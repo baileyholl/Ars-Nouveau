@@ -205,6 +205,18 @@ public class GuiRadialMenu extends Screen {
     }
 
     @Override
+    public boolean keyPressed(int key, int scanCode, int modifiers) {
+
+        int adjustedKey = key - 48;
+        if(adjustedKey > 0 && adjustedKey < 10){
+            selectedItem = adjustedKey;
+            mouseClicked(0,0,0);
+            return true;
+        }
+        return super.keyPressed(key, scanCode, modifiers);
+    }
+
+    @Override
     public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
 
         if(this.selectedItem != -1){
