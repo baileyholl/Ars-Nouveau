@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.network;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundNBT;
@@ -29,7 +28,7 @@ public class PacketUpdateBookGUI {
     public void handle(Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(()->{
             if(Minecraft.getInstance().screen instanceof GuiSpellBook)
-                ((GuiSpellBook) ArsNouveau.proxy.getMinecraft().screen).spell_book_tag = tag;
+                ((GuiSpellBook) Minecraft.getInstance().screen).spell_book_tag = tag;
         } );
         ctx.get().setPacketHandled(true);
     }

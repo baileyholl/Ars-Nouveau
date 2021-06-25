@@ -9,14 +9,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
-import org.jline.utils.Log;
 
 import java.util.Optional;
 
@@ -61,11 +59,7 @@ public class Networking {
                 PacketANEffect::encode,
                 PacketANEffect::decode,
                 PacketANEffect.Handler::handle);
-        INSTANCE.registerMessage(nextID(),
-                PacketBeam.class,
-                PacketBeam::encode,
-                PacketBeam::decode,
-                PacketBeam.Handler::handle);
+
         INSTANCE.registerMessage(nextID(),
                 PacketReactiveSpell.class,
                 PacketReactiveSpell::toBytes,
@@ -93,17 +87,6 @@ public class Networking {
                 PacketAnimEntity::decode,
                 PacketAnimEntity.Handler::handle);
 
-        INSTANCE.registerMessage(nextID(),
-                PacketOpenRitualBook.class,
-                PacketOpenRitualBook::toBytes,
-                PacketOpenRitualBook::new,
-                PacketOpenRitualBook::handle);
-
-        INSTANCE.registerMessage(nextID(),
-                PacketSetRitual.class,
-                PacketSetRitual::toBytes,
-                PacketSetRitual::new,
-                PacketSetRitual::handle);
 
         INSTANCE.registerMessage(nextID(),
                 PacketGetPersistentData.class,

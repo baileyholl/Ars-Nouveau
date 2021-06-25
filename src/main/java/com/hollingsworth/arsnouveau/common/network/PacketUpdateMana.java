@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.network;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -41,7 +41,9 @@ public class PacketUpdateMana {
 
     public void handle(Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(()->{
-            ManaCapability.getMana(ArsNouveau.proxy.getPlayer()).ifPresent(mana ->{
+            if(Minecraft.getInstance().player == null)
+                return;
+            ManaCapability.getMana(Minecraft.getInstance().player).ifPresent(mana ->{
                 mana.setMana(this.mana);
                 mana.setMaxMana(this.maxMana);
                 mana.setGlyphBonus(this.glyphBonus);

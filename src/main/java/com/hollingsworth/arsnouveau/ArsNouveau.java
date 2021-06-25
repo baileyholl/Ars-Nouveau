@@ -6,12 +6,14 @@ import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.world.WorldEvent;
-import com.hollingsworth.arsnouveau.setup.*;
+import com.hollingsworth.arsnouveau.setup.APIRegistry;
+import com.hollingsworth.arsnouveau.setup.Config;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.ModSetup;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -30,9 +32,8 @@ public class ArsNouveau {
 
     public static boolean caelusLoaded = false;
 
-    public static IProxy proxy = DistExecutor.runForDist(()-> () -> new ClientProxy(), () -> ()-> new ServerProxy());
-
     public static ItemGroup itemGroup = new ItemGroup(MODID) {
+
         @Override
         public ItemStack makeIcon() {
             return ItemsRegistry.archmageSpellBook.getDefaultInstance();
@@ -44,11 +45,6 @@ public class ArsNouveau {
         APIRegistry.registerSpells();
         MappingUtil.setup();
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SERVER_CONFIG);
-//        FMLPaths.getOrCreateGameRelativePath(FMLPaths.CONFIGDIR.get().resolve("ars_nouveau"), "ars_nouveau");
-//        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SERVER_CONFIG, "ars_nouveau/break.toml");
-
-        // modLoading setup
-
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::sendImc);
@@ -61,23 +57,16 @@ public class ArsNouveau {
         ManaCapability.register();
         APIRegistry.registerApparatusRecipes();
         event.enqueueWork(WorldEvent::registerFeatures);
-
-        //Pre-init code
-        proxy.init();
         Networking.registerMessages();
         event.enqueueWork(ModPotions::addRecipes);
         if(Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
             BiomeManager.addBiome(BiomeManager.BiomeType.COOL, new BiomeManager.BiomeEntry(WorldEvent.archwoodKey, Config.ARCHWOOD_FOREST_WEIGHT.get()));
-
         }
     }
 
     public void clientSetup(final FMLClientSetupEvent event){
-        proxy.init();
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientHandler::init);
-
     }
-
 
     public void sendImc(InterModEnqueueEvent evt) {
         ModSetup.sendIntercoms();
