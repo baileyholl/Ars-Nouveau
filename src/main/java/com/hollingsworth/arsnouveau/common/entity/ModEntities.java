@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.monster.VexEntity;
 import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.passive.horse.AbstractHorseEntity;
@@ -17,6 +16,7 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.LightType;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ObjectHolder;
@@ -76,11 +76,8 @@ public class ModEntities {
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
-        /**
-         * Register this mod's {@link Entity} types.
-         *
-         * @param event The event
-         */
+
+
         @SubscribeEvent
         public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
             SPELL_PROJ = build(
@@ -181,20 +178,7 @@ public class ModEntities {
                     ENTITY_WARD
             );
 
-            GlobalEntityTypeAttributes.put(ENTITY_WHELP_TYPE, EntityWhelp.attributes().build());
-            GlobalEntityTypeAttributes.put(ALLY_VEX, VexEntity.createAttributes().build());
-            GlobalEntityTypeAttributes.put(ENTITY_CARBUNCLE_TYPE, EntityCarbuncle.attributes().build());
-            GlobalEntityTypeAttributes.put(ENTITY_SYLPH_TYPE, EntitySylph.attributes().build());
-            GlobalEntityTypeAttributes.put(ENTITY_DRYGMY, EntitySylph.attributes().build());
-            GlobalEntityTypeAttributes.put(ENTITY_WIXIE_TYPE, EntityWixie.attributes().build());
-            GlobalEntityTypeAttributes.put(WILDEN_HUNTER, WildenHunter.getModdedAttributes().build());
-            GlobalEntityTypeAttributes.put(WILDEN_STALKER, WildenStalker.getModdedAttributes().build());
-            GlobalEntityTypeAttributes.put(SUMMON_WOLF, WolfEntity.createAttributes().build());
-            GlobalEntityTypeAttributes.put(SUMMON_HORSE, AbstractHorseEntity.createBaseHorseAttributes().build());
-            GlobalEntityTypeAttributes.put(WILDEN_GUARDIAN, WildenGuardian.getModdedAttributes().build());
-            GlobalEntityTypeAttributes.put(ENTITY_DUMMY, MobEntity.createMobAttributes()
-                    .add(Attributes.MAX_HEALTH, 20.0D)
-                    .add(Attributes.MOVEMENT_SPEED, 0.25D).build());
+
 
             EntitySpawnPlacementRegistry.register(ENTITY_CARBUNCLE_TYPE, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
             EntitySpawnPlacementRegistry.register(ENTITY_SYLPH_TYPE, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ModEntities::genericGroundSpawn);
@@ -202,6 +186,24 @@ public class ModEntities {
             EntitySpawnPlacementRegistry.register(WILDEN_GUARDIAN, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ModEntities::canMonsterSpawnInLight);
             EntitySpawnPlacementRegistry.register(WILDEN_HUNTER, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ModEntities::canMonsterSpawnInLight);
             EntitySpawnPlacementRegistry.register(WILDEN_STALKER, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, ModEntities::canMonsterSpawnInLight);
+        }
+
+        @SubscribeEvent
+        public static void registerEntities(final EntityAttributeCreationEvent event) {
+            event.put(ENTITY_WHELP_TYPE, EntityWhelp.attributes().build());
+            event.put(ALLY_VEX, VexEntity.createAttributes().build());
+            event.put(ENTITY_CARBUNCLE_TYPE, EntityCarbuncle.attributes().build());
+            event.put(ENTITY_SYLPH_TYPE, EntitySylph.attributes().build());
+            event.put(ENTITY_DRYGMY, EntitySylph.attributes().build());
+            event.put(ENTITY_WIXIE_TYPE, EntityWixie.attributes().build());
+            event.put(WILDEN_HUNTER, WildenHunter.getModdedAttributes().build());
+            event.put(WILDEN_STALKER, WildenStalker.getModdedAttributes().build());
+            event.put(SUMMON_WOLF, WolfEntity.createAttributes().build());
+            event.put(SUMMON_HORSE, AbstractHorseEntity.createBaseHorseAttributes().build());
+            event.put(WILDEN_GUARDIAN, WildenGuardian.getModdedAttributes().build());
+            event.put(ENTITY_DUMMY, MobEntity.createMobAttributes()
+                    .add(Attributes.MAX_HEALTH, 20.0D)
+                    .add(Attributes.MOVEMENT_SPEED, 0.25D).build());
         }
     }
     public static boolean canMonsterSpawnInLight(EntityType<? extends Entity> type, IServerWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
