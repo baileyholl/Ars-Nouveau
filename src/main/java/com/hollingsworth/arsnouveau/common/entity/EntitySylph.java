@@ -58,6 +58,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -231,8 +232,6 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
         addGoalsAfterConstructor();
     }
 
-
-
     @Override
     public void tick() {
         super.tick();
@@ -382,7 +381,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
 
 
     @Override
-    public ItemStack onPickup(ItemStack stack) {
+    public @Nonnull ItemStack onPickup(ItemStack stack) {
         if(!isValidReward(stack))
             return stack;
         SummoningCrystalTile tile = level.getBlockEntity(crystalPos) instanceof SummoningCrystalTile ? (SummoningCrystalTile) level.getBlockEntity(crystalPos) : null;

@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
-import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.common.entity.goal.sylph.FollowMobGoalBackoff;
 import com.hollingsworth.arsnouveau.common.entity.goal.sylph.FollowPlayerGoal;
@@ -14,7 +13,6 @@ import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -34,7 +32,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-public class EntityDrygmy extends CreatureEntity implements IPickupResponder, IAnimatable, ITooltipProvider, IDispellable {
+public class EntityDrygmy extends CreatureEntity implements IAnimatable, ITooltipProvider, IDispellable {
 
     public static final DataParameter<Boolean> CHANNELING = EntityDataManager.defineId(EntityDrygmy.class, DataSerializers.BOOLEAN);
     public static final DataParameter<Boolean> TAMED = EntityDataManager.defineId(EntityDrygmy.class, DataSerializers.BOOLEAN);
@@ -132,12 +130,7 @@ public class EntityDrygmy extends CreatureEntity implements IPickupResponder, IA
     public boolean onDispel(@Nullable LivingEntity caster) {
         return false;
     }
-
-    @Override
-    public ItemStack onPickup(ItemStack stack) {
-        return null;
-    }
-
+    
     @Override
     public void registerControllers(AnimationData animationData) {
         animationData.addAnimationController(new AnimationController<EntityDrygmy>(this, "walkController", 20, this::animationPredicate));

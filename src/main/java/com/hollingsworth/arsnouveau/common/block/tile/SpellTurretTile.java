@@ -18,6 +18,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ public class SpellTurretTile extends TileEntity  implements IPickupResponder, IP
     }
 
     @Override
-    public ItemStack onPickup(ItemStack stack) {
+    public @Nonnull ItemStack onPickup(ItemStack stack) {
         return BlockUtil.insertItemAdjacent(level, worldPosition, stack);
     }
 

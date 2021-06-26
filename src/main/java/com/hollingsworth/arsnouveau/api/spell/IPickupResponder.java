@@ -2,6 +2,8 @@ package com.hollingsworth.arsnouveau.api.spell;
 
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
+
 public interface IPickupResponder extends IInventoryResponder{
 
     /**
@@ -9,5 +11,5 @@ public interface IPickupResponder extends IInventoryResponder{
      * @param stack Itemstack that will attempt to be put into the inventory.
      * @return Returns the resulting itemstack
      */
-    ItemStack onPickup(ItemStack stack);
+    @Nonnull ItemStack onPickup(ItemStack stack);
 }

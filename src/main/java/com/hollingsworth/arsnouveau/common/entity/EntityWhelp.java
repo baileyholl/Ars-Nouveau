@@ -43,6 +43,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -221,7 +222,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     }
 
     @Override
-    public ItemStack onPickup(ItemStack stack) {
+    public @Nonnull ItemStack onPickup(ItemStack stack) {
         SummoningCrystalTile tile = level.getBlockEntity(crystalPos) instanceof SummoningCrystalTile ? (SummoningCrystalTile) level.getBlockEntity(crystalPos) : null;
         return tile == null ? stack : tile.insertItem(stack);
     }

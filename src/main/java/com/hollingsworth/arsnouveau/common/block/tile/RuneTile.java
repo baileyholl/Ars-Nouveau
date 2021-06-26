@@ -24,6 +24,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
 
@@ -133,7 +134,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder {
     }
 
     @Override
-    public ItemStack onPickup(ItemStack stack) {
+    public @Nonnull ItemStack onPickup(ItemStack stack) {
         return BlockUtil.insertItemAdjacent(level, worldPosition, stack);
     }
 }
