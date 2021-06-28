@@ -56,6 +56,9 @@ public class BlockUtil {
         return Math.sqrt(Math.pow(start.x - end.getX(), 2) + Math.pow(start.y - end.getY(), 2) + Math.pow(start.z - end.getZ(), 2));
     }
 
+    public static double distanceFrom(Vector3d start, Vector3d end){
+        return Math.sqrt(Math.pow(start.x - end.x, 2) + Math.pow(start.y - end.y, 2) + Math.pow(start.z - end.z, 2));
+    }
     public static boolean destroyBlockSafely(World world, BlockPos pos, boolean dropBlock, LivingEntity caster){
         if(!(world instanceof ServerWorld))
             return false;

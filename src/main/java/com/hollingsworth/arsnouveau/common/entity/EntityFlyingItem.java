@@ -102,10 +102,11 @@ public class EntityFlyingItem extends EntityFollowProjectile {
         Vector3d vec3d2 = this.getDeltaMovement();
         BlockPos start = entityData.get(from);
         BlockPos end = entityData.get(to);
-        if(BlockUtil.distanceFrom(this.blockPosition(), end) < 1 || this.age > 1000 || BlockUtil.distanceFrom(this.blockPosition(), end) > 14){
+        if(BlockUtil.distanceFrom(this.blockPosition(), end) < 1 || this.age > 1000 || BlockUtil.distanceFrom(this.blockPosition(), end) > 16){
             this.remove();
-            if(level.isClientSide && entityData.get(SPAWN_TOUCH))
-                ParticleUtil.spawnTouch((ClientWorld) level, end);
+            if(level.isClientSide && entityData.get(SPAWN_TOUCH)) {
+                ParticleUtil.spawnTouch((ClientWorld) level, end, new ParticleColor(this.entityData.get(RED),this.entityData.get(GREEN),this.entityData.get(BLUE)));
+            }
             return;
         }
         double posX = getX();
