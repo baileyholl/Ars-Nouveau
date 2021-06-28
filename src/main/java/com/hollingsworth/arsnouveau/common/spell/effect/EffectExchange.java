@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
@@ -88,7 +89,9 @@ public class EffectExchange extends AbstractEffect {
         for(BlockPos pos1 : posList) {
             BlockState state = world.getBlockState(pos1);
 
-            if(!canBlockBeHarvested(augments, world, pos1) || origState.getBlock() != state.getBlock() || world.getBlockState(pos1).getMaterial() != Material.AIR && world.getBlockState(pos1).getBlock() == BlockRegistry.INTANGIBLE_AIR){
+            if(!canBlockBeHarvested(augments, world, pos1) || origState.getBlock() != state.getBlock() ||
+                    world.getBlockState(pos1).getMaterial() != Material.AIR && world.getBlockState(pos1).getBlock() == BlockRegistry.INTANGIBLE_AIR
+            || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, pos1)){
                 continue;
             }
             if(isRealPlayer(shooter) && spellContext.castingTile == null) {
@@ -98,7 +101,7 @@ public class EffectExchange extends AbstractEffect {
                 for(IItemHandler i : handlers){
                     for(int slot = 0; slot < i.getSlots(); slot++){
                         ItemStack stack = i.getStackInSlot(slot);
-                        if(stack.getItem() instanceof BlockItem && world instanceof ServerWorld){
+                        if(stack.getItem() instanceof BlockItem){
                             BlockItem item = (BlockItem)stack.getItem();
                             if(item.getBlock() == origState.getBlock())
                                 continue;
