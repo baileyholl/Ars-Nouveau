@@ -90,4 +90,6 @@ public class LibItemNames {
 
     public static final String CASTER_TOME = "caster_tome";
 
+    public static final String DRYGMY_CHARM = "drygmy_charm";
+    public static final String DRYGMY_SHARD = "drygmy_shard";
 }
