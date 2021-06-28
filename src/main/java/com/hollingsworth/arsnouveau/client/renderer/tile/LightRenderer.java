@@ -33,6 +33,6 @@ public class LightRenderer extends TileEntityRenderer<LightTile> {
                         rand.nextInt(lightTile.blue)
                 )),
                 pos.getX() +0.5 + ParticleUtil.inRange(-0.1, 0.1)  , pos.getY() +0.5  + ParticleUtil.inRange(-0.1, 0.1) , pos.getZ() +0.5 + ParticleUtil.inRange(-0.1, 0.1),
-                0,0,0);;
+                0,0,0);
     }
 }

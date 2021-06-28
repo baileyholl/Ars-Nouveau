@@ -48,6 +48,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.world.SaplingGrowTreeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -134,7 +135,6 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
         ItemStack stack = player.getItemInHand(hand);
         Item item = stack.getItem();
         if(Tags.Items.DYES.contains(item)){
-            System.out.println("contains");
             if(Tags.Items.DYES_GREEN.contains(item) && !getColor().equals("summer")){
                 this.entityData.set(COLOR, "summer");
                 stack.shrink(1);
@@ -155,10 +155,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
                 stack.shrink(1);
                 return ActionResultType.SUCCESS;
             }
-
-
         }
-
 
         if(stack.isEmpty()) {
             int moodScore = entityData.get(MOOD_SCORE);
@@ -247,6 +244,12 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
             }
             this.timeSinceBonemeal++;
         }
+
+        if(!level.isClientSide && level.getGameTime() % 60 == 0 && isTamed() && crystalPos != null && !(level.getBlockEntity(crystalPos) instanceof SummoningCrystalTile)) {
+            this.hurt(DamageSource.playerAttack(FakePlayerFactory.getMinecraft((ServerWorld) level)), 99);
+            return;
+        }
+
         if(this.droppingShards) {
             tamingTime++;
             if(tamingTime % 20 == 0 && !level.isClientSide())

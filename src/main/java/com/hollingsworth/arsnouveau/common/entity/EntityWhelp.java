@@ -30,7 +30,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.particles.ParticleTypes;
 import net.minecraft.pathfinding.FlyingPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.util.*;
@@ -147,16 +146,6 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
             if (!(level.getBlockEntity(crystalPos) instanceof SummoningCrystalTile)) {
                 if (!level.isClientSide) {
                     this.hurt(DamageSource.playerAttack(FakePlayerFactory.getMinecraft((ServerWorld) level)), 99);
-                }
-                if (level.isClientSide) {
-
-                    for (int i = 0; i < 2; i++) {
-                        double d0 = getX(); //+ world.rand.nextFloat();
-                        double d1 = getY();//+ world.rand.nextFloat() ;
-                        double d2 = getZ(); //+ world.rand.nextFloat();
-
-                        level.addParticle(ParticleTypes.ENCHANTED_HIT, d0, d1, d2, 0.0, 0.0, 0.0);
-                    }
                 }
             }
         }

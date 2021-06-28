@@ -236,9 +236,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         }
     }
 
-    /**
-     * Handler for {@link World#setEntityState}
-     */
     @Override
     @OnlyIn(Dist.CLIENT)
     public void handleEntityEvent(byte id) {
@@ -326,11 +323,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         list.add(new PrioritizedGoal(8, new LookAtGoal(this, PlayerEntity.class, 3.0F, 0.01F)));
         list.add(new PrioritizedGoal(8, new NonHoggingLook(this, MobEntity.class, 3.0F, 0.01f)));
         list.add(new PrioritizedGoal(0, new SwimGoal(this)));
-//        list.add(new PrioritizedGoal(4, new GoBackHomeGoal(this, this::getHome, 5, () ->
-//                (this.getHeldStack() == null || this.getHeldStack().isEmpty()) &&
-//                        world.getEntitiesWithinAABB(ItemEntity.class, getBoundingBox().grow(8.0D, 6, 8.0D), (itemEntity) -> !itemEntity.cannotPickup() && itemEntity.isAlive() && isValidItem(itemEntity.getItem())).isEmpty())));
-//        // Roam back in case we have no item and are far from home.
-      //  list.add(new PrioritizedGoal(1, new GoBackHomeGoal(this, this::getHome, 25, () -> (this.getHeldStack() == null || this.getHeldStack().isEmpty()))));
         return list;
     }
 
@@ -344,7 +336,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         list.add(new PrioritizedGoal(0, new SwimGoal(this)));
         return list;
     }
-
 
     @Override
     public void die(DamageSource source) {
@@ -423,8 +414,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
         return ActionResultType.SUCCESS;
     }
-
-
 
     @Override
     public EntityType<?> getType() {
@@ -506,12 +495,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         if(!oldFromPos.equals(new BlockPos(0, 0, 0)) && !FROM_LIST.contains(oldFromPos))
             FROM_LIST.add(oldFromPos);
 
-
-     //   setFromPos(NBTUtil.getBlockPos(tag, "from"));
-//        if (getToPos().equals(new BlockPos(0, 0, 0)))
-//            setToPos(null);
-//        if (getFromPos().equals(new BlockPos(0, 0, 0)))
-//            setFromPos(null);
         backOff = tag.getInt("backoff");
         tamingTime = tag.getInt("taming_time");
         whitelist = tag.getBoolean("whitelist");
@@ -673,11 +656,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     public boolean canCollideWith(Entity p_241849_1_) {
         return true;
     }
-
-
-
-
-
 
     public boolean isValidItem(ItemStack stack){
 
