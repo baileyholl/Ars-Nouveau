@@ -26,7 +26,6 @@ import java.util.Random;
 @ObjectHolder(ArsNouveau.MODID)
 public class ModEntities {
 
-
     public static EntityType<EntityProjectileSpell> SPELL_PROJ = null;
     public static EntityType<EntityAllyVex> ALLY_VEX = null;
     public static EntityType<EntityEvokerFangs> ENTITY_EVOKER_FANGS_ENTITY_TYPE = null;
@@ -150,7 +149,11 @@ public class ModEntities {
                             .sized(1.0f, 2.0f)
                             .setTrackingRange(10)
                             .setShouldReceiveVelocityUpdates(true));
-            LIGHTNING_ENTITY = build("an_lightning", EntityType.Builder.<LightningEntity>of(LightningEntity::new, EntityClassification.MISC).sized(0.0F, 0.0F).clientTrackingRange(16).updateInterval(Integer.MAX_VALUE).setShouldReceiveVelocityUpdates(true).setUpdateInterval(60));
+            LIGHTNING_ENTITY = build("an_lightning", EntityType.Builder.<LightningEntity>of(LightningEntity::new, EntityClassification.MISC)
+                    .sized(0.0F, 0.0F)
+                    .clientTrackingRange(16)
+                    .updateInterval(Integer.MAX_VALUE
+                    ).setShouldReceiveVelocityUpdates(true).setUpdateInterval(60));
 
             ENTITY_DRYGMY = build(
                     "drygmy",

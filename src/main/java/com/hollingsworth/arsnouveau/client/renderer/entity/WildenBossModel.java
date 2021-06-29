@@ -26,6 +26,6 @@ public class WildenBossModel extends AnimatedGeoModel<WildenBoss> {
 
     @Override
     public ResourceLocation getAnimationFileLocation(WildenBoss animatable) {
-        return new ResourceLocation(ArsNouveau.MODID, "animations/wilden_stalker_standing.geo.json");
+        return new ResourceLocation(ArsNouveau.MODID, "animations/wilden_chimera_animations.geo.json");
     }
 }

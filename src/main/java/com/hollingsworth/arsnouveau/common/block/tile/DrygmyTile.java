@@ -11,10 +11,12 @@ import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.mixin.ExpInvokerMixin;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.EntityTags;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
@@ -142,7 +144,12 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
         DamageSource damageSource = DamageSource.playerAttack(fakePlayer);
         int numberItems = 5 + this.bonus;
         int exp = 0;
+
         for(LivingEntity entity : getNearbyEntities()){
+            if(entity.getType().is(EntityTags.DRYGMY_BLACKLIST)) {
+                continue;
+            }
+
             LootTable loottable = this.level.getServer().getLootTables().get(entity.getLootTable());
             LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerWorld)this.level)).withRandom(level.getRandom())
                     .withParameter(LootParameters.THIS_ENTITY, entity).withParameter(LootParameters.ORIGIN, entity.position())
@@ -154,7 +161,16 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
 
             LootContext ctx = lootcontext$builder.create(LootParameterSets.ENTITY);
             stacks.addAll(loottable.getRandomItems(ctx));
-            exp +=  ((ExpInvokerMixin) entity).an_getExperienceReward(fakePlayer);
+            int oldExp = 0;
+            if(entity instanceof MobEntity){
+                oldExp = ((MobEntity) entity).xpReward;
+            }
+            exp += ((ExpInvokerMixin) entity).an_getExperienceReward(fakePlayer);
+
+            if(entity instanceof MobEntity){
+                // EVERY TIME GET EXPERIENCE REWARD IS CALLED IN ZOMBIE ENTITY IS MULTIPLIES BY 2.5X.
+                ((MobEntity) entity).xpReward = oldExp;
+            }
         }
 
         if(stacks.size() > 0) {
