@@ -6,14 +6,12 @@ import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.world.WorldEvent;
-import com.hollingsworth.arsnouveau.setup.APIRegistry;
-import com.hollingsworth.arsnouveau.setup.Config;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import com.hollingsworth.arsnouveau.setup.ModSetup;
+import com.hollingsworth.arsnouveau.setup.*;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -29,7 +27,7 @@ import static com.hollingsworth.arsnouveau.common.datagen.DungeonLootGenerator.G
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class ArsNouveau {
     public static final String MODID = "ars_nouveau";
-
+    public static IProxy proxy = DistExecutor.runForDist(()-> () -> new ClientProxy(), () -> ()-> new ServerProxy());
     public static boolean caelusLoaded = false;
 
     public static ItemGroup itemGroup = new ItemGroup(MODID) {
