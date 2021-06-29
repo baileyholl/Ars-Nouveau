@@ -32,7 +32,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ApparatusRecipeProvider implements IDataProvider {
     private final DataGenerator generator;
@@ -872,10 +871,17 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withPedestalItem(2,Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .build());
-    }
 
-    public static List<Ingredient> listOfIngred(Item[] items) {
-        return Arrays.stream(items).map(Ingredient::of).collect(Collectors.toList());
+        addRecipe(builder()
+                .withResult(ItemsRegistry.DRYGMY_CHARM)
+                .withReagent(ItemsRegistry.DRYGMY_SHARD)
+                .withPedestalItem(Ingredient.of(ItemTags.FISHES))
+                .withPedestalItem(Items.WHEAT)
+                .withPedestalItem(Items.APPLE)
+                .withPedestalItem(Items.CARROT)
+                .withPedestalItem(Ingredient.of(Tags.Items.SEEDS))
+                .withPedestalItem(3, Recipes.MANA_GEM)
+                .build());
     }
 
     public void addRecipe(EnchantingApparatusRecipe recipe){

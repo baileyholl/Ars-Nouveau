@@ -16,6 +16,8 @@ import net.minecraft.world.IBlockReader;
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
+import static com.hollingsworth.arsnouveau.common.block.tile.SummoningTile.CONVERTED;
+
 public class DrygmyStone extends SummonBlock{
     public static VoxelShape shape = Stream.of(
             Block.box(16, 3, 9.5, 16, 6, 11.5),
@@ -47,8 +49,10 @@ public class DrygmyStone extends SummonBlock{
             Block.box(0, 4, 5.5, 0, 8, 7.5),
             Block.box(0, 3, 8.5, 0, 8, 11.5)
     ).reduce((v1, v2) -> VoxelShapes.join(v1, v2, IBooleanFunction.OR)).orElse(VoxelShapes.block());
-    public DrygmyStone() {
+
+    public DrygmyStone(){
         super(defaultProperties().noOcclusion().lightLevel((b) -> 8), LibBlockNames.DRYGMY_STONE);
+        registerDefaultState(defaultBlockState().setValue(CONVERTED, false));
     }
 
 

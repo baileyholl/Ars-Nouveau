@@ -103,7 +103,7 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.RITUAL_BLOCK);
             registerDropSelf(BlockRegistry.SCONCE_BLOCK);
             registerBedCondition(BlockRegistry.SCRIBES_BLOCK, ScribesBlock.PART, BedPart.HEAD);
-
+            registerDrop(BlockRegistry.DRYGMY_BLOCK, Items.MOSSY_COBBLESTONE);
         }
         protected <T extends Comparable<T> & IStringSerializable> void registerBedCondition(Block block, Property<T> prop, T isValue) {
             list.add(block);

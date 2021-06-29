@@ -188,7 +188,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
                 // Cannot use a single expanded bounding box because we don't want this to overlap with an adjacentt inventory that also has a frame.
             for (ItemEntity itementity : this.level.getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(1))) {
-                if (!itementity.removed && !itementity.getItem().isEmpty() && !itementity.hasPickUpDelay()) {
+                if (itementity.isAlive() && !itementity.getItem().isEmpty() && !itementity.hasPickUpDelay()) {
                     if (!isTamed() && itementity.getItem().getItem() != Items.GOLD_NUGGET)
                         return;
                     this.pickUpItem(itementity);

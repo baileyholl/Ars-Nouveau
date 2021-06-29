@@ -211,12 +211,6 @@ public class WorldEvent {
         Registry.register(WorldGenRegistries.PROCESSOR_LIST, new ResourceLocation(ArsNouveau.MODID, "archwood_plains"), ARCHWOOD_PLAINS);
 
     }
-//        "sky_color": 7978751,
-//                "fog_color": 12635903,
-//                "water_color": 4164351,
-//                "water_fog_color": 329011,
-//                "grass_color": 2031484
-
 
     @SubscribeEvent
     public static void biomeLoad(BiomeLoadingEvent e) {
@@ -232,6 +226,7 @@ public class WorldEvent {
             e.getSpawns().addSpawn(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_CARBUNCLE_TYPE, Config.CARBUNCLE_WEIGHT.get(), 1, 1));
             e.getSpawns().addSpawn(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_SYLPH_TYPE, Config.SYLPH_WEIGHT.get(), 1, 1));
         }
+        e.getSpawns().addSpawn(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_DRYGMY, Config.DRYGMY_WEIGHT.get(), 1, 1));
 
         if(!e.getCategory().equals(Biome.Category.MUSHROOM) && !e.getCategory().equals(Biome.Category.NONE)){
             if(e.getClimate().temperature <= 0.35f &&  Config.WGUARDIAN_WEIGHT.get() > 0){
@@ -261,10 +256,6 @@ public class WorldEvent {
 
         if(e.getName().equals(archwoodForest.getRegistryName())){
             addArchwoodForestFeatures(e);
-        }
-        if(e.getName().equals(blazingForest.getRegistryName())){
-            addBlazingForestFeatures(e);
-
         }
     }
 

@@ -259,7 +259,7 @@ public class ItemsRegistry {
                     new SpawnEggItem(ModEntities.WILDEN_STALKER, 0x9B650C,0xEF1818,defaultItemProperties()).setRegistryName(LibItemNames.WILDEN_STALKER_SE),
                     new CasterTome(defaultItemProperties().stacksTo(1), LibItemNames.CASTER_TOME),
                     new DrygmyCharm(LibItemNames.DRYGMY_CHARM),
-                    new ModItem(LibItemNames.DRYGMY_SHARD)
+                    new ModItem(LibItemNames.DRYGMY_SHARD).withTooltip(new TranslationTextComponent("tooltip.ars_nouveau.drygmy_shard"))
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

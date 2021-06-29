@@ -46,10 +46,7 @@ public class EffectExchange extends AbstractEffect {
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         if(rayTraceResult instanceof BlockRayTraceResult){
-
             resolveBlockHit(rayTraceResult, world, shooter, augments,spellContext);
-
-
         }else if(rayTraceResult instanceof EntityRayTraceResult){
             resolveEntityHit(rayTraceResult, world, shooter, augments, spellContext);
         }

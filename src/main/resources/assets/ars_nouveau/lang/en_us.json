@@ -686,5 +686,16 @@
 	"tooltip.ars_nouveau.glyph_disabled": "Disabled. Cannot be used.",
 	"tooltip.ars_nouveau.glyph_level": "A tier %s glyph.",
 	"tooltip.ars_nouveau.caster_level": "Can cast tier %s glyphs or lower.",
-	"tooltip.ars_nouveau.hold_shift": "Hold shift for more info."
+	"tooltip.ars_nouveau.hold_shift": "Hold shift for more info.",
+	"item.ars_nouveau.drygmy_shard": "Drygmy Shards",
+	"item.ars_nouveau.drygmy_charm": "Drygmy Charm",
+	"block.ars_nouveau.drygmy_stone": "Drygmy Henge",
+	"tooltip.ars_nouveau.drygmy_shard": "Obtained by giving a Drygmy a Wilden Horn.",
+	"entity.ars_nouveau.drygmy": "Drygmy",
+	"ars_nouveau.page.drygmy_charm": "Drygmys are often found following and tending to animals around it. They can be found anywhere, though somewhat rarely. Drygmys can be given a home in the world, and will produce items from nearby monsters and animals as if they were slain, without harming them. A wild drygmy may be befriended by throwing a Wilden Horn near it!",
+	"ars_nouveau.page2.drygmy_charm": "A Drygmy can also produce experience gems!",
+	"ars_nouveau.page3.drygmy_charm": "To summon a Drygmy, use a Drymy Charm on a block of Mossy Cobblestone. After a short time, the cobblestone will transform into a Drygmy Henge and summon your Drgymy! To summon additional drygmys, use more charms on the henge. Casting dispel or killing the Drygmy will return your charm.",
+	"ars_nouveau.page4.drygmy_charm": "A Drygmy considers its home to be 10 blocks in every direction from its home. The drygmy will use this area to produce items from any entities nearby. Your drgymy's efficiency is dependent on its happiness. This may be increased for each entity nearby, with a bonus for each unique type in its home.",
+	"ars_nouveau.page5.drygmy_charm": "Each Drygmy working around a henge contributes progress. Once maximum progress has been reached, the henge will generate items and experience gems and deposit them into nearby inventories. Each time this occurs, the henge will require mana to recharge. The number of drops and experience gems is equal to the Drygmy happiness and experience value of the entities. To get started, place a chest and jar of mana next to the Henge."
+
 }

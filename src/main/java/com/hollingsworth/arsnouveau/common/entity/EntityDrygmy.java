@@ -23,6 +23,7 @@ import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
+import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -63,6 +64,7 @@ public class EntityDrygmy extends CreatureEntity implements IAnimatable, IToolti
     private boolean setBehaviors;
     public BlockPos homePos;
     public int tamingTime;
+
     @Override
     protected int getExperienceReward(PlayerEntity player) {
         return 0;
@@ -257,7 +259,7 @@ public class EntityDrygmy extends CreatureEntity implements IAnimatable, IToolti
             return false;
 
         if (!level.isClientSide && isTamed()) {
-            ItemStack stack = new ItemStack(ItemsRegistry.DRYGMY_SHARD);
+            ItemStack stack = new ItemStack(ItemsRegistry.DRYGMY_CHARM);
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
             ParticleUtil.spawnPoof((ServerWorld) level, blockPosition());
             this.remove();

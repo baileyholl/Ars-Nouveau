@@ -9,7 +9,9 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
+import com.hollingsworth.arsnouveau.common.mixin.ExpInvokerMixin;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -51,7 +53,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
         super.tick();
 
         if(level.isClientSide){
-            for(int i = 0; i < 1 + progress / 10; i++){
+            for(int i = 0; i < progress / 10; i++){
                 level.addParticle(
                         GlowParticleData.createData(new ParticleColor(
                                 50,
@@ -74,7 +76,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
             level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
         }
 
-        if(!level.isClientSide && level.getGameTime() % 100 == 0 && !needsMana && progress >= 100 && !getNearbyEntities().isEmpty()){
+        if(!level.isClientSide && level.getGameTime() % 100 == 0 && !needsMana && progress >= getMaxProgress() && !getNearbyEntities().isEmpty()){
             generateItems();
         }
     }
@@ -93,8 +95,15 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
     }
 
     public void giveProgress(){
-        progress += 10;
-        level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+        if(progress < getMaxProgress()){
+            progress += 10;
+            level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+        }
+
+    }
+
+    public int getMaxProgress(){
+        return 150;
     }
 
     public void convertedEffect() {
@@ -121,7 +130,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
 
     public void refreshEntitiesAndBonus(){
         Set<ResourceLocation> uniqueEntities;
-        this.nearbyEntities = level.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(getBlockPos()).inflate(10, 10, 10));
+        this.nearbyEntities = level.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(getBlockPos().north(10).west(10).below(6), getBlockPos().south(10).east(10).above(6)));
         this.nearbyEntities = this.nearbyEntities.stream().filter(l -> !(l instanceof EntityDrygmy) && !(l instanceof PlayerEntity)).collect(Collectors.toList());
         uniqueEntities = nearbyEntities.stream().map(l -> EntityType.getKey(l.getType())).collect(Collectors.toSet());
         this.bonus = uniqueEntities.size() * 3 + nearbyEntities.size();
@@ -132,6 +141,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
         ANFakePlayer fakePlayer = new ANFakePlayer((ServerWorld) level);
         DamageSource damageSource = DamageSource.playerAttack(fakePlayer);
         int numberItems = 5 + this.bonus;
+        int exp = 0;
         for(LivingEntity entity : getNearbyEntities()){
             LootTable loottable = this.level.getServer().getLootTables().get(entity.getLootTable());
             LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerWorld)this.level)).withRandom(level.getRandom())
@@ -144,6 +154,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
 
             LootContext ctx = lootcontext$builder.create(LootParameterSets.ENTITY);
             stacks.addAll(loottable.getRandomItems(ctx));
+            exp +=  ((ExpInvokerMixin) entity).an_getExperienceReward(fakePlayer);
         }
 
         if(stacks.size() > 0) {
@@ -151,10 +162,25 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
                 BlockUtil.insertItemAdjacent(level, worldPosition, stacks.get(level.random.nextInt(stacks.size())));
             }
         }
+
+        exp *= .25;
+        if(exp > 3){
+            int numGreater = (int) (exp / 12);
+            exp -= numGreater * 12;
+            int numLesser = (int) (exp / 3);
+            if ((exp - numLesser * 3) > 0)
+                numLesser++;
+            if(numGreater > 0)
+                BlockUtil.insertItemAdjacent(level, worldPosition, new ItemStack(ItemsRegistry.GREATER_EXPERIENCE_GEM, numGreater));
+            if(numLesser > 0)
+                BlockUtil.insertItemAdjacent(level, worldPosition, new ItemStack(ItemsRegistry.EXPERIENCE_GEM, numLesser));
+        }
+
         this.progress = 0;
         this.needsMana = true;
         level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
     }
+
 
     @Override
     public void load(BlockState state, CompoundNBT compound) {

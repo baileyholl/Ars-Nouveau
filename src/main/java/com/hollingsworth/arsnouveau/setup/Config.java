@@ -43,6 +43,7 @@ public class Config {
     public static ForgeConfigSpec.IntValue REGEN_INTERVAL;
     public static ForgeConfigSpec.IntValue CARBUNCLE_WEIGHT;
     public static ForgeConfigSpec.IntValue SYLPH_WEIGHT;
+    public static ForgeConfigSpec.IntValue DRYGMY_WEIGHT;
 
     public static ForgeConfigSpec.IntValue WGUARDIAN_WEIGHT;
     public static ForgeConfigSpec.IntValue WSTALKER_WEIGHT;
@@ -96,6 +97,8 @@ public class Config {
         SPAWN_BOOK = SERVER_BUILDER.comment("Spawn a book in the players inventory on login").define("spawnBook", true);
         CARBUNCLE_WEIGHT = SERVER_BUILDER.comment("How often Carbuncles spawn").defineInRange("carbuncleWeight",5,0,100);
         SYLPH_WEIGHT = SERVER_BUILDER.comment("How often Sylphs spawn").defineInRange("sylphWeight",5,0,100);
+        DRYGMY_WEIGHT = SERVER_BUILDER.comment("How often Drygmys spawn").defineInRange("drygmyWeight",3,0,100);
+
         WGUARDIAN_WEIGHT = SERVER_BUILDER.comment("How often Wilden Guardians spawn").defineInRange("wguardianWeight",50,0,200);
         WSTALKER_WEIGHT = SERVER_BUILDER.comment("How often Wilden Stalkers spawn").defineInRange("wstalkerWeight",50,0,200);
         WHUNTER_WEIGHT = SERVER_BUILDER.comment("How often Wilden Hunter spawn").defineInRange("whunterWeight",50,0,200);
