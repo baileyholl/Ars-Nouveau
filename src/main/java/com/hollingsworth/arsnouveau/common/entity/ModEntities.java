@@ -67,7 +67,12 @@ public class ModEntities {
                     .sized(1.0f, 2.0f)
                     .setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
-
+    public static EntityType<WildenBoss> WILDEN_BOSS =  build(
+            "wilden_boss",
+            EntityType.Builder.<WildenBoss>of(WildenBoss::new, EntityClassification.MONSTER)
+                    .sized(1.0f, 2.0f)
+                    .setTrackingRange(10)
+                    .setShouldReceiveVelocityUpdates(true));
     public static EntityType<LightningEntity> LIGHTNING_ENTITY = null;
     public static EntityType<EntityDummy> ENTITY_DUMMY = null;
     public static EntityType<EntityDrygmy> ENTITY_DRYGMY = null;
@@ -175,7 +180,8 @@ public class ModEntities {
                     LIGHTNING_ENTITY,
                     ENTITY_DUMMY,
                     ENTITY_DRYGMY,
-                    ENTITY_WARD
+                    ENTITY_WARD,
+                     WILDEN_BOSS
             );
 
 
@@ -204,6 +210,7 @@ public class ModEntities {
             event.put(ENTITY_DUMMY, MobEntity.createMobAttributes()
                     .add(Attributes.MAX_HEALTH, 20.0D)
                     .add(Attributes.MOVEMENT_SPEED, 0.25D).build());
+            event.put(WILDEN_BOSS,WildenGuardian.getModdedAttributes().build() );
         }
     }
     public static boolean canMonsterSpawnInLight(EntityType<? extends Entity> type, IServerWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {

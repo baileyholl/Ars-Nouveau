@@ -59,6 +59,7 @@ public class LootTables {
         UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.warpScroll, 1 + r.nextInt(2)));
         UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.carbuncleShard));
         UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.sylphShard));
+        UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.DRYGMY_SHARD));
         UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.WIXIE_SHARD));
         UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.AMPLIFY_ARROW, 16 + r.nextInt(16)));
         UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.SPLIT_ARROW, 16 + r.nextInt(16)));
