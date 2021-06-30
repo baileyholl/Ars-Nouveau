@@ -4,12 +4,17 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerBossInfo;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
@@ -17,9 +22,19 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class WildenBoss extends MonsterEntity implements IAnimatable{
     private final ServerBossInfo bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenScreen(true);
+    public static final DataParameter<Boolean> HAS_SPIKES = EntityDataManager.defineId(WildenBoss.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Boolean> HAS_HORNS = EntityDataManager.defineId(WildenBoss.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Boolean> HAS_WINGS = EntityDataManager.defineId(WildenBoss.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Integer> PHASE = EntityDataManager.defineId(WildenBoss.class, DataSerializers.INT);
+    public static final DataParameter<Boolean> DEFENSIVE_MODE = EntityDataManager.defineId(WildenBoss.class, DataSerializers.BOOLEAN);
 
     protected WildenBoss(EntityType<? extends MonsterEntity> p_i48553_1_, World p_i48553_2_) {
         super(p_i48553_1_, p_i48553_2_);
+    }
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
     }
 
     @Override
@@ -33,8 +48,9 @@ public class WildenBoss extends MonsterEntity implements IAnimatable{
     }
 
     private<E extends Entity> PlayState groundPredicate(AnimationEvent e){
-        if(e.isMoving()){
-
+        if (e.isMoving()) {
+            e.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
+            return PlayState.CONTINUE;
         }
         return PlayState.STOP;
     }
@@ -68,8 +84,80 @@ public class WildenBoss extends MonsterEntity implements IAnimatable{
     }
 
     AnimationFactory factory = new AnimationFactory(this);
+
     @Override
     public AnimationFactory getFactory() {
         return factory;
     }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(HAS_HORNS, false);
+        this.entityData.define(HAS_SPIKES, false);
+        this.entityData.define(HAS_WINGS, false);
+        this.entityData.define(PHASE, 1);
+        this.entityData.define(DEFENSIVE_MODE, false);
+    }
+
+    public boolean hasHorns(){
+        return entityData.get(HAS_HORNS);
+    }
+
+    public void setHorns(boolean hasHorns){
+        entityData.set(HAS_HORNS, hasHorns);
+    }
+
+    public boolean hasSpikes(){
+        return entityData.get(HAS_SPIKES);
+    }
+
+    public void setSpikes(boolean hasSpikes){
+        entityData.set(HAS_SPIKES, hasSpikes);
+    }
+    public boolean hasWings(){
+        return entityData.get(HAS_WINGS);
+    }
+
+    public void setWings(boolean hasWings){
+        entityData.set(HAS_WINGS, hasWings);
+    }
+
+    public boolean isDefensive(){
+        return entityData.get(DEFENSIVE_MODE);
+    }
+
+    public void setDefensiveMode(boolean defensiveMode){
+        entityData.set(DEFENSIVE_MODE, defensiveMode);
+    }
+
+    public int getPhase(){
+        return entityData.get(PHASE);
+    }
+
+    public void setPhase(int phase){
+        entityData.set(PHASE, phase);
+    }
+
+    @Override
+    public void load(CompoundNBT tag) {
+        super.load(tag);
+        setHorns(tag.getBoolean("horns"));
+        setSpikes(tag.getBoolean("spikes"));
+        setWings(tag.getBoolean("wings"));
+        setPhase(tag.getInt("phase"));
+        setDefensiveMode(tag.getBoolean("defensive"));
+    }
+
+    @Override
+    public boolean save(CompoundNBT tag) {
+        tag.putBoolean("spikes", hasSpikes());
+        tag.putBoolean("horns", hasHorns());
+        tag.putBoolean("wings", hasWings());
+        tag.putInt("phase", getPhase());
+        tag.putBoolean("defensive", isDefensive());
+        return super.save(tag);
+    }
+
+
 }
