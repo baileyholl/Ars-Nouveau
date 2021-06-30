@@ -4,7 +4,9 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.WildenBoss;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
+import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import javax.annotation.Nullable;
 
@@ -20,7 +22,10 @@ public class WildenBossModel extends AnimatedGeoModel<WildenBoss> {
     @Override
     public void setLivingAnimations(WildenBoss entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
-
+        IBone head = this.getAnimationProcessor().getBone("head");
+        EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
+        head.setRotationX(extraData.headPitch * 0.017453292F);
+        head.setRotationY(extraData.netHeadYaw * 0.017453292F);
         this.getBone("wings").setHidden(!entity.hasWings());
         this.getBone("spikes_lower_body").setHidden(!entity.hasSpikes());
         this.getBone("spikes_upper_body").setHidden(!entity.hasSpikes());

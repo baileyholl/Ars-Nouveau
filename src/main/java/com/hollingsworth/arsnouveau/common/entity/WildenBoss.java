@@ -2,7 +2,9 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
@@ -21,7 +23,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class WildenBoss extends MonsterEntity implements IAnimatable{
-    private final ServerBossInfo bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenScreen(true);
+    private final ServerBossInfo bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenScreen(true).setCreateWorldFog(true);
     public static final DataParameter<Boolean> HAS_SPIKES = EntityDataManager.defineId(WildenBoss.class, DataSerializers.BOOLEAN);
     public static final DataParameter<Boolean> HAS_HORNS = EntityDataManager.defineId(WildenBoss.class, DataSerializers.BOOLEAN);
     public static final DataParameter<Boolean> HAS_WINGS = EntityDataManager.defineId(WildenBoss.class, DataSerializers.BOOLEAN);
@@ -35,6 +37,11 @@ public class WildenBoss extends MonsterEntity implements IAnimatable{
     @Override
     protected void registerGoals() {
         super.registerGoals();
+        this.goalSelector.addGoal(0, new SwimGoal(this));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
+        this.goalSelector.addGoal(8, new WaterAvoidingRandomWalkingGoal(this, 1.2d));
+        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
+        this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
     }
 
     @Override
