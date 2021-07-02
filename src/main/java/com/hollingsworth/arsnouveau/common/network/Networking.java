@@ -100,6 +100,13 @@ public class Networking {
                 PacketNoSpamChatMessage::new,
                 PacketNoSpamChatMessage::handle,
                 Optional.of(NetworkDirection.PLAY_TO_CLIENT));
+
+        INSTANCE.registerMessage(nextID(),
+                PacketUpdateFlight.class,
+                PacketUpdateFlight::toBytes,
+                PacketUpdateFlight::new,
+                PacketUpdateFlight::handle);
+
     }
 
     public static void sendToNearby(World world, BlockPos pos, Object toSend){

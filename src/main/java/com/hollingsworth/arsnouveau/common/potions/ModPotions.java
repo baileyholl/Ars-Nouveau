@@ -27,6 +27,8 @@ public class ModPotions {
     public static final ScryingEffect SCRYING_EFFECT = new ScryingEffect();
     public static final GlideEffect GLIDE_EFFECT = new GlideEffect();
     public static final SnareEffect SNARE_EFFECT = new SnareEffect();
+    public static final FlightEffect FLIGHT_EFFECT = new FlightEffect();
+    public static final GravityEffect GRAVITY_EFFECT = new GravityEffect();
 
     @ObjectHolder("mana_regen_potion")
     public static Potion MANA_REGEN_POTION;
@@ -63,7 +65,10 @@ public class ModPotions {
                     SHOCKED_EFFECT,
                     HEX_EFFECT,
                     GLIDE_EFFECT,
-                    SNARE_EFFECT);
+                    SNARE_EFFECT,
+                    FLIGHT_EFFECT,
+                    GRAVITY_EFFECT
+            );
         }
 
         @SubscribeEvent

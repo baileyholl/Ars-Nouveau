@@ -139,7 +139,7 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:exp-407174:3188120")  // Shutup experimental settings
 //    runtimeOnly fg.deobf("curse.maven:exp-231951:3326143")  // Immersive engineering
 //    compileOnly fg.deobf("curse.maven:exp-231951:3326143")
-//    runtimeOnly fg.deobf("curse.maven:exp-268560:3206392")  // Mekanism
+    runtimeOnly fg.deobf("curse.maven:exp-268560:3206392")  // Mekanism
 //    compileOnly fg.deobf("curse.maven:exp-268560:3206392")
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50:api")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50")

@@ -6,11 +6,8 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
-import net.minecraft.entity.Entity;
+import com.hollingsworth.arsnouveau.common.potions.ModPotions;
+import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.FallingBlockEntity;
 import net.minecraft.item.Item;
@@ -20,6 +17,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -51,9 +49,11 @@ public class EffectGravity extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         super.onResolveEntity(rayTraceResult, world, shooter, augments, spellContext);
-        Entity entity = ((EntityRayTraceResult) rayTraceResult).getEntity();
-        entity.setDeltaMovement(entity.getDeltaMovement().add(0, -1.0 - getAmplificationBonus(augments), 0));
-        entity.hurtMarked = true;
+        if(rayTraceResult.getEntity() instanceof LivingEntity){
+            applyConfigPotion((LivingEntity) rayTraceResult.getEntity(), ModPotions.GRAVITY_EFFECT, augments);
+
+
+        }
     }
 
     @Override
@@ -71,18 +71,26 @@ public class EffectGravity extends AbstractEffect {
         return Tier.TWO;
     }
 
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addPotionConfig(builder, 30);
+    }
+
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(
                 AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE,
                 AugmentAOE.INSTANCE,
-                AugmentPierce.INSTANCE
+                AugmentPierce.INSTANCE,
+                AugmentExtendTime.INSTANCE,
+                AugmentDurationDown.INSTANCE
         );
     }
 
     @Override
     public String getBookDescription() {
-        return "Causes blocks and entities to fall.";
+        return "Causes blocks and entities to fall. When applied to an entity, their flight will be disabled and will apply the Gravity effect. While afflicted with Gravity, entities will continue to fall and take double falling damage.";
     }
 }

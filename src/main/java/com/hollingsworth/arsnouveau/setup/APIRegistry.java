@@ -105,6 +105,7 @@ public class APIRegistry {
         registerRitual(new RitualHealing());
         registerRitual(new RitualWarp());
         registerRitual(new ScryingRitual());
+        registerRitual(new RitualFlight());
     }
 
     public static void registerSpell(AbstractSpellPart spellPart) {

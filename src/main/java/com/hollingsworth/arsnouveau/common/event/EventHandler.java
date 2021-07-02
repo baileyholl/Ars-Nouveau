@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.event.DispelEvent;
+import com.hollingsworth.arsnouveau.api.event.FlightRefreshEvent;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.LavaLily;
@@ -10,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.command.ResetCommand;
 import com.hollingsworth.arsnouveau.common.compat.CaelusHandler;
 import com.hollingsworth.arsnouveau.common.items.VoidJar;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
+import com.hollingsworth.arsnouveau.common.ritual.RitualFlight;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.entity.LivingEntity;
@@ -25,6 +27,7 @@ import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -110,8 +113,23 @@ public class EventHandler {
         if(ArsNouveau.caelusLoaded && event.player.hasEffect(ModPotions.GLIDE_EFFECT)) {
             CaelusHandler.setFlying(event.player);
         }
+
+        if(event.player.hasEffect(ModPotions.FLIGHT_EFFECT) && event.player.level.getGameTime() % 20 == 0 && event.player.getEffect(ModPotions.FLIGHT_EFFECT).getDuration() <= 30 * 20){
+            FlightRefreshEvent flightRefreshEvent = new FlightRefreshEvent(event.player);
+            MinecraftForge.EVENT_BUS.post(flightRefreshEvent);
+        }
     }
 
+    @SubscribeEvent
+    public static void onJump(LivingEvent.LivingJumpEvent event){
+        if(!event.getEntityLiving().level.isClientSide  && event.getEntityLiving() instanceof PlayerEntity){
+            PlayerEntity entity = (PlayerEntity) event.getEntityLiving();
+            if(entity.getEffect(ModPotions.FLIGHT_EFFECT) == null && RitualFlight.RitualFlightHandler.canPlayerStillFly(entity)){
+                RitualFlight.RitualFlightHandler.grantFlight(entity);
+            }
+
+        }
+    }
     @SubscribeEvent
     public static void playerDamaged(LivingHurtEvent e){
         if(e.getEntityLiving() != null && e.getEntityLiving().getActiveEffectsMap().containsKey(ModPotions.SHIELD_POTION)

@@ -13,4 +13,5 @@ public class RitualLib {
     public static final String RESTORATION = "restoration";
     public static final String WARP = "warping";
     public static final String SCRYING = "scrying";
+    public static final String FLIGHT = "flight";
 }
