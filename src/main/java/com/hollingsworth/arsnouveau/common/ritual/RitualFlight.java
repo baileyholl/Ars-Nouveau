@@ -33,12 +33,22 @@ public class RitualFlight extends AbstractRitual {
 
     @Override
     public int getManaCost() {
-        return 100;
+        return 200;
     }
 
     @Override
     public String getID() {
         return RitualLib.FLIGHT;
+    }
+
+    @Override
+    public String getLangDescription() {
+        return "Grants nearby players the Flight effect when they jump, allowing them to creatively fly for a short time. If the player is nearby, this ritual will refresh their flight buff. Each time this ritual grants or refreshes flight, it will expend mana from nearby jars.";
+    }
+
+    @Override
+    public String getLangName() {
+        return "Flight";
     }
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)

@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.FallingBlockEntity;
 import net.minecraft.item.Item;
@@ -50,9 +51,13 @@ public class EffectGravity extends AbstractEffect {
     public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
         super.onResolveEntity(rayTraceResult, world, shooter, augments, spellContext);
         if(rayTraceResult.getEntity() instanceof LivingEntity){
-            applyConfigPotion((LivingEntity) rayTraceResult.getEntity(), ModPotions.GRAVITY_EFFECT, augments);
-
-
+            if(augments.contains(AugmentExtendTime.INSTANCE)){
+                applyConfigPotion((LivingEntity) rayTraceResult.getEntity(), ModPotions.GRAVITY_EFFECT, augments);
+            }else{
+                Entity entity = ((EntityRayTraceResult) rayTraceResult).getEntity();
+                entity.setDeltaMovement(entity.getDeltaMovement().add(0, -1.0 - getAmplificationBonus(augments), 0));
+                entity.hurtMarked = true;
+            }
         }
     }
 
@@ -91,6 +96,6 @@ public class EffectGravity extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Causes blocks and entities to fall. When applied to an entity, their flight will be disabled and will apply the Gravity effect. While afflicted with Gravity, entities will continue to fall and take double falling damage.";
+        return "Causes blocks and entities to fall. When augmented with Extend Time, players will have their flight disabled and will obtain the Gravity effect. While afflicted with Gravity, entities will rapidly fall and take double falling damage.";
     }
 }

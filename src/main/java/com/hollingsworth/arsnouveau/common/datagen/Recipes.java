@@ -371,6 +371,13 @@ public class Recipes extends RecipeProvider {
                     .requires(Items.GLOWSTONE)
                     .requires(Recipes.MANA_GEM_BLOCK)
                     .save(consumer);
+
+            shapelessBuilder(getRitualItem(RitualLib.FLIGHT))
+                    .requires(BlockRegistry.VEXING_LOG)
+                    .requires(ItemsRegistry.WILDEN_WING, 3)
+                    .requires(Ingredient.of(Tags.Items.GEMS_DIAMOND), 2)
+                    .requires(Items.ENDER_PEARL)
+                    .save(consumer);
         }
     }
 
