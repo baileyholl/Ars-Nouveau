@@ -52,7 +52,7 @@ public class EffectColdSnap extends AbstractEffect {
         damage(vec, world, shooter, augments, damage, snareSec, livingEntity);
 
         for(Entity e : world.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(livingEntity.blockPosition().north(range).east(range).above(range),  livingEntity.blockPosition().south(range).west(range).below(range)))){
-            if(e.equals(livingEntity) || !(e instanceof LivingEntity))
+            if(e.equals(livingEntity) || !(e instanceof LivingEntity) || e.equals(shooter))
                 continue;
             if(((LivingEntity) e).getEffect(Effects.MOVEMENT_SLOWDOWN) != null || e.isInWaterOrRain()){
                 vec = e.position();
