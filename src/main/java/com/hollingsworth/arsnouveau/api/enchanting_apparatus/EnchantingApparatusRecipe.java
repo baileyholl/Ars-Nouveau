@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
@@ -71,7 +72,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
     }
 
     @Override
-    public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile) {
+    public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile, @Nullable PlayerEntity player) {
         pedestalItems = pedestalItems.stream().filter(itemStack -> !itemStack.isEmpty()).collect(Collectors.toList());
         return doesReagentMatch(reagent) && this.pedestalItems.size() == pedestalItems.size() && doItemsMatch(pedestalItems, this.pedestalItems);
     }
@@ -180,7 +181,11 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
 
     @Override
     public boolean matches(EnchantingApparatusTile tile, World worldIn) {
-        return isMatch(tile.getPedestalItems(), tile.catalystItem, tile);
+        return isMatch(tile.getPedestalItems(), tile.catalystItem, tile, null);
+    }
+
+    public boolean matches(EnchantingApparatusTile tile, World worldIn, @Nullable PlayerEntity playerEntity) {
+        return isMatch(tile.getPedestalItems(), tile.catalystItem, tile, playerEntity);
     }
 
     @Override

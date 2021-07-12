@@ -701,5 +701,7 @@
 	"ars_nouveau.page5.drygmy_charm": "Each Drygmy working around a henge contributes progress. Once maximum progress has been reached, the henge will generate items and experience gems and deposit them into nearby inventories. Each time this occurs, the henge will require mana to recharge. The number of drops and experience gems is equal to the Drygmy happiness and experience value of the entities. To get started, place a chest and jar of mana next to the Henge.",
 	"effect.ars_nouveau.flight": "Flight",
 	"effect.ars_nouveau.gravity": "Gravity",
-	"tooltip.ars_nouveau.tablet": "A tablet used for rituals. Consumed on use."
+	"tooltip.ars_nouveau.tablet": "A tablet used for rituals. Consumed on use.",
+	"ars_nouveau.enchanting.bad_level": "This item must have the previous level of enchantment.",
+	"ars_nouveau.enchanting.incompatible": "This enchantment is incompatible with this item."
 }

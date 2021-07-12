@@ -5,9 +5,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
@@ -16,14 +18,13 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class EnchantmentRecipe extends EnchantingApparatusRecipe{
     public Enchantment enchantment;
@@ -62,11 +63,38 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
         return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, RECIPE_ID));
     }
 
+    public boolean doesReagentMatch(ItemStack stack, PlayerEntity playerEntity){
+        if(stack.isEmpty())
+            return false;
+        Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
+        int level = enchantments.getOrDefault(enchantment, 0);
+        Collection<Enchantment> enchantList = EnchantmentHelper.getEnchantments(stack).keySet();
+        enchantList.remove(enchantment);
+        if(!enchantment.canEnchant(stack) || !EnchantmentHelper.isEnchantmentCompatible(enchantList, enchantment)){
+            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.enchanting.incompatible"));
+            return false;
+        }
+
+        if (!(this.enchantLevel - level == 1)) {
+            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.enchanting.bad_level"));
+            return false;
+        }
+
+        return true;
+    }
+
+    // Override and move reagent match to the end so we can give feedback
+    @Override
+    public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile, @Nullable PlayerEntity player) {
+        pedestalItems = pedestalItems.stream().filter(itemStack -> !itemStack.isEmpty()).collect(Collectors.toList());
+        return this.pedestalItems.size() == pedestalItems.size() && doItemsMatch(pedestalItems, this.pedestalItems) && doesReagentMatch(reagent, player);
+    }
+
     @Override
     public boolean doesReagentMatch(ItemStack stack) {
         Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
         int level = enchantments.getOrDefault(enchantment, 0);
-        return enchantment.canEnchant(stack) && this.enchantLevel - level == 1;
+        return enchantment.canEnchant(stack) && this.enchantLevel - level == 1 && EnchantmentHelper.isEnchantmentCompatible(EnchantmentHelper.getEnchantments(stack).keySet(), enchantment);
     }
 
     @Override

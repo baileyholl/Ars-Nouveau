@@ -1,15 +1,16 @@
 package com.hollingsworth.arsnouveau.api.enchanting_apparatus;
 
-import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public interface IEnchantingRecipe extends IRecipe<EnchantingApparatusTile> {
 
-    boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile);
+    boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile, @Nullable PlayerEntity player);
 
     /**
      * Tile sensitive result
@@ -18,10 +19,6 @@ public interface IEnchantingRecipe extends IRecipe<EnchantingApparatusTile> {
 
     default boolean consumesMana(){
         return manaCost() > 0;
-    }
-
-    default boolean canCraft(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile){
-        return isMatch(pedestalItems, reagent, enchantingApparatusTile) && (!consumesMana() || ManaUtil.hasManaNearby(enchantingApparatusTile.getBlockPos(), enchantingApparatusTile.getLevel(), 10, manaCost()));
     }
 
     int manaCost();

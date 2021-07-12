@@ -54,13 +54,13 @@ public class EnchantingApparatusBlock extends ModBlock{
             return ActionResultType.SUCCESS;
         }
         if(tile.catalystItem == null || tile.catalystItem.isEmpty()){
-            IEnchantingRecipe recipe = tile.getRecipe(player.getMainHandItem());
+            IEnchantingRecipe recipe = tile.getRecipe(player.getMainHandItem(), player);
             if(recipe == null){
                 PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.apparatus.norecipe"));
             }else if(recipe.consumesMana() && !ManaUtil.hasManaNearby(tile.getBlockPos(), tile.getLevel(), 10, recipe.manaCost())){
                 PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.apparatus.nomana"));
             }else{
-                if(tile.attemptCraft(player.getMainHandItem())){
+                if(tile.attemptCraft(player.getMainHandItem(), player)){
                     tile.catalystItem = player.inventory.removeItem(player.inventory.selected, 1);
                 }
             }
@@ -68,7 +68,7 @@ public class EnchantingApparatusBlock extends ModBlock{
             ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.catalystItem);
             world.addFreshEntity(item);
             tile.catalystItem = ItemStack.EMPTY;
-            if(tile.attemptCraft(player.getMainHandItem())){
+            if(tile.attemptCraft(player.getMainHandItem(), player)){
                 tile.catalystItem = player.inventory.removeItem(player.inventory.selected, 1);
             }
         }

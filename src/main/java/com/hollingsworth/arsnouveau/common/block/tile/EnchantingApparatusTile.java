@@ -48,7 +48,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
             return;
 
         if(isCrafting){
-            if(this.getRecipe(catalystItem) == null)
+            if(this.getRecipe(catalystItem, null) == null)
                 this.isCrafting = false;
             counter += 1;
         }
@@ -57,7 +57,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
             counter = 1;
 
             if (this.isCrafting) {
-                IEnchantingRecipe recipe = this.getRecipe(catalystItem);
+                IEnchantingRecipe recipe = this.getRecipe(catalystItem, null);
                 List<ItemStack> pedestalItems = getPedestalItems();
                 if (recipe != null) {
                     pedestalItems.forEach(i -> i = null);
@@ -105,15 +105,15 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
         return pedestalItems;
     }
 
-    public IEnchantingRecipe getRecipe(ItemStack catalyst){
+    public IEnchantingRecipe getRecipe(ItemStack catalyst, @Nullable PlayerEntity playerEntity){
         List<ItemStack> pedestalItems = getPedestalItems();
-        return ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes(level).stream().filter(r-> r.isMatch(pedestalItems, catalyst, this)).findFirst().orElse(null);
+        return ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes(level).stream().filter(r-> r.isMatch(pedestalItems, catalyst, this, playerEntity)).findFirst().orElse(null);
     }
 
-    public boolean attemptCraft(ItemStack catalyst){
+    public boolean attemptCraft(ItemStack catalyst, PlayerEntity playerEntity){
         if(isCrafting)
             return false;
-        IEnchantingRecipe recipe = this.getRecipe(catalyst);
+        IEnchantingRecipe recipe = this.getRecipe(catalyst, playerEntity);
         if(recipe != null) {
             if(recipe.consumesMana()){
                 if(!ManaUtil.hasManaNearby(worldPosition, level, 10, recipe.manaCost()))

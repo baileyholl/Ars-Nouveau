@@ -5,10 +5,12 @@ import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,10 +24,10 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe{
     }
 
     @Override
-    public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile) {
+    public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile, @Nullable PlayerEntity player) {
         int level = EnchantmentHelper.getEnchantments(reagent).getOrDefault(EnchantmentRegistry.REACTIVE_ENCHANTMENT, 0);
         ItemStack parchment = getParchment(pedestalItems);
-        return parchment != null && SpellParchment.getSpellRecipe(parchment) != null && level > 0 && super.isMatch(pedestalItems, reagent, enchantingApparatusTile);
+        return parchment != null && SpellParchment.getSpellRecipe(parchment) != null && level > 0 && super.isMatch(pedestalItems, reagent, enchantingApparatusTile, player);
     }
 
     @Override

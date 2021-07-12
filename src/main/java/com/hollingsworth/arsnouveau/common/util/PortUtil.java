@@ -10,6 +10,8 @@ import net.minecraft.util.text.StringTextComponent;
 
 public class PortUtil {
     public static void sendMessage(Entity playerEntity, ITextComponent component){
+        if(playerEntity == null)
+            return;
         playerEntity.sendMessage(component, Util.NIL_UUID);
     }
 

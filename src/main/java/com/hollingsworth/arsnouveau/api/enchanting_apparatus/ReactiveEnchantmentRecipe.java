@@ -4,10 +4,12 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class ReactiveEnchantmentRecipe extends EnchantmentRecipe{
@@ -17,9 +19,9 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe{
     }
 
     @Override
-    public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile) {
+    public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile, @Nullable PlayerEntity player) {
         ItemStack parchment = getParchment(pedestalItems);
-        return super.isMatch(pedestalItems, reagent, enchantingApparatusTile) && parchment != null && SpellParchment.getSpellRecipe(parchment) != null;
+        return super.isMatch(pedestalItems, reagent, enchantingApparatusTile, player) && parchment != null && SpellParchment.getSpellRecipe(parchment) != null;
     }
 
     public static ItemStack getParchment(List<ItemStack> pedestalItems){
