@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.mixin.ExpInvokerMixin;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.EntityTags;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.block.BlockState;
@@ -55,7 +56,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
         super.tick();
 
         if(level.isClientSide){
-            for(int i = 0; i < progress / 10; i++){
+            for(int i = 0; i < progress; i++){
                 level.addParticle(
                         GlowParticleData.createData(new ParticleColor(
                                 50,
@@ -73,7 +74,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
             refreshEntitiesAndBonus();
         }
 
-        if(!level.isClientSide && level.getGameTime() % 80 == 0 && needsMana && ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 7, 500) != null){
+        if(!level.isClientSide && level.getGameTime() % 80 == 0 && needsMana && ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 7, Config.DRYGMY_MANA_COST.get()) != null){
             this.needsMana = false;
             level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
         }
@@ -98,14 +99,14 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
 
     public void giveProgress(){
         if(progress < getMaxProgress()){
-            progress += 10;
+            progress += 1;
             level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
         }
 
     }
 
     public int getMaxProgress(){
-        return 150;
+        return 15;
     }
 
     public void convertedEffect() {
@@ -135,7 +136,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
         this.nearbyEntities = level.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(getBlockPos().north(10).west(10).below(6), getBlockPos().south(10).east(10).above(6)));
         this.nearbyEntities = this.nearbyEntities.stream().filter(l -> !(l instanceof EntityDrygmy) && !(l instanceof PlayerEntity)).collect(Collectors.toList());
         uniqueEntities = nearbyEntities.stream().map(l -> EntityType.getKey(l.getType())).collect(Collectors.toSet());
-        this.bonus = uniqueEntities.size() * 3 + nearbyEntities.size();
+        this.bonus = uniqueEntities.size() * 3 + Math.min(10, nearbyEntities.size());
     }
 
     public void generateItems(){
@@ -144,7 +145,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
         DamageSource damageSource = DamageSource.playerAttack(fakePlayer);
         int numberItems = 5 + this.bonus;
         int exp = 0;
-
+        // Create the loot table and exp count
         for(LivingEntity entity : getNearbyEntities()){
             if(entity.getType().is(EntityTags.DRYGMY_BLACKLIST)) {
                 continue;
@@ -168,14 +169,19 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
             exp += ((ExpInvokerMixin) entity).an_getExperienceReward(fakePlayer);
 
             if(entity instanceof MobEntity){
-                // EVERY TIME GET EXPERIENCE REWARD IS CALLED IN ZOMBIE ENTITY IS MULTIPLIES BY 2.5X.
+                // EVERY TIME GET EXPERIENCE REWARD IS CALLED IN ZOMBIE ENTITY IT MULTIPLIES BY 2.5X.
                 ((MobEntity) entity).xpReward = oldExp;
             }
         }
-
+        // Pull our items randomly and break once our stack count is over our max item list
+        int itemsPicked = 0;
         if(stacks.size() > 0) {
             for (int i = 0; i < numberItems; i++) {
-                BlockUtil.insertItemAdjacent(level, worldPosition, stacks.get(level.random.nextInt(stacks.size())));
+                ItemStack stack = stacks.get(level.random.nextInt(stacks.size())).copy();
+                itemsPicked += stack.getCount();
+                BlockUtil.insertItemAdjacent(level, worldPosition, stack);
+                if(itemsPicked >= numberItems)
+                    break;
             }
         }
 

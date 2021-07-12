@@ -13,6 +13,7 @@ import com.hollingsworth.arsnouveau.common.entity.goal.sylph.*;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -289,13 +290,13 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
     public boolean enoughManaForTask(){
         if(!(level.getBlockEntity(crystalPos) instanceof SummoningCrystalTile))
             return false;
-        return ((SummoningCrystalTile) level.getBlockEntity(crystalPos)).enoughMana(250);
+        return ((SummoningCrystalTile) level.getBlockEntity(crystalPos)).enoughMana(Config.SYLPH_MANA_COST.get());
     }
 
     public boolean removeManaForDrops(){
         if(!(level.getBlockEntity(crystalPos) instanceof SummoningCrystalTile))
             return false;
-        return ((SummoningCrystalTile) level.getBlockEntity(crystalPos)).removeManaAround(250);
+        return ((SummoningCrystalTile) level.getBlockEntity(crystalPos)).removeManaAround(Config.SYLPH_MANA_COST.get());
     }
 
     public boolean isTamed(){

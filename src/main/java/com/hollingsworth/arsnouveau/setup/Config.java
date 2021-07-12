@@ -45,6 +45,10 @@ public class Config {
     public static ForgeConfigSpec.IntValue SYLPH_WEIGHT;
     public static ForgeConfigSpec.IntValue DRYGMY_WEIGHT;
 
+
+    public static ForgeConfigSpec.IntValue DRYGMY_MANA_COST;
+    public static ForgeConfigSpec.IntValue SYLPH_MANA_COST;
+
     public static ForgeConfigSpec.IntValue WGUARDIAN_WEIGHT;
     public static ForgeConfigSpec.IntValue WSTALKER_WEIGHT;
     public static ForgeConfigSpec.IntValue WHUNTER_WEIGHT;
@@ -98,6 +102,9 @@ public class Config {
         CARBUNCLE_WEIGHT = SERVER_BUILDER.comment("How often Carbuncles spawn").defineInRange("carbuncleWeight",5,0,100);
         SYLPH_WEIGHT = SERVER_BUILDER.comment("How often Sylphs spawn").defineInRange("sylphWeight",5,0,100);
         DRYGMY_WEIGHT = SERVER_BUILDER.comment("How often Drygmys spawn").defineInRange("drygmyWeight",3,0,100);
+
+        DRYGMY_MANA_COST = SERVER_BUILDER.comment("How much mana drygmys consume per generation").defineInRange("drygmyManaCost",500,0,10000);
+        SYLPH_MANA_COST = SERVER_BUILDER.comment("How much mana sylphs consume per generation").defineInRange("sylphManaCost",250,0,10000);
 
         WGUARDIAN_WEIGHT = SERVER_BUILDER.comment("How often Wilden Guardians spawn").defineInRange("wguardianWeight",50,0,200);
         WSTALKER_WEIGHT = SERVER_BUILDER.comment("How often Wilden Stalkers spawn").defineInRange("wstalkerWeight",50,0,200);
