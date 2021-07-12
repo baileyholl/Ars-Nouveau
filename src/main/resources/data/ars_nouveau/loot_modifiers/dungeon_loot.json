@@ -66,8 +66,11 @@
       ]
     }
   ],
-  "common_chance": 0.4,
-  "uncommon_chance": 0.3,
-  "rare_chance": 0.2,
+  "common_chance": 0.3,
+  "uncommon_chance": 0.2,
+  "rare_chance": 0.1,
+  "common_rolls": 3,
+  "uncommon_rolls": 2,
+  "rare_rolls": 1,
   "type": "ars_nouveau:dungeon_loot"
 }

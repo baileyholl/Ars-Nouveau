@@ -55,18 +55,32 @@ public class DungeonLootGenerator extends GlobalLootModifierProvider {
         public double commonChance;
         public double uncommonChance;
         public double rareChance;
-        public DungeonLootEnhancerModifier(final ILootCondition[] conditionsIn, double commonChance, double uncommonChance, double rareChance) {
+
+        public int commonRolls;
+        public int uncommonRolls;
+        public int rareRolls;
+
+
+        public DungeonLootEnhancerModifier(final ILootCondition[] conditionsIn, double commonChance, double uncommonChance, double rareChance, int commonRolls, int uncommonRolls, int rareRolls) {
             super(conditionsIn);
             this.commonChance = commonChance;
             this.uncommonChance = uncommonChance;
             this.rareChance = rareChance;
+
+            this.commonRolls = commonRolls;
+            this.uncommonRolls = uncommonRolls;
+            this.rareRolls = rareRolls;
         }
 
         public DungeonLootEnhancerModifier(final ILootCondition[] conditionsIn) {
             super(conditionsIn);
-            this.commonChance = 0.40;
-            this.uncommonChance = 0.30;
-            this.rareChance =  0.20;
+            this.commonChance = 0.30;
+            this.uncommonChance = 0.2;
+            this.rareChance =  0.1;
+
+            this.commonRolls = 3;
+            this.uncommonRolls = 2;
+            this.rareRolls = 1;
         }
 
         @Override
@@ -81,7 +95,12 @@ public class DungeonLootGenerator extends GlobalLootModifierProvider {
                 return new DungeonLootEnhancerModifier(conditions,
                         object.get("common_chance").getAsDouble(),
                         object.get("uncommon_chance").getAsDouble(),
-                        object.get("rare_chance").getAsDouble());
+                        object.get("rare_chance").getAsDouble(),
+                        object.get("common_rolls").getAsInt(),
+                        object.get("uncommon_rolls").getAsInt(),
+                        object.get("rare_rolls").getAsInt()
+
+                );
             }
 
             @Override
@@ -90,6 +109,10 @@ public class DungeonLootGenerator extends GlobalLootModifierProvider {
                 obj.addProperty("common_chance", instance.commonChance);
                 obj.addProperty("uncommon_chance", instance.uncommonChance);
                 obj.addProperty("rare_chance", instance.rareChance);
+
+                obj.addProperty("common_rolls", instance.commonRolls);
+                obj.addProperty("uncommon_rolls", instance.uncommonRolls);
+                obj.addProperty("rare_rolls", instance.rareRolls);
                 return obj;
             }
         }

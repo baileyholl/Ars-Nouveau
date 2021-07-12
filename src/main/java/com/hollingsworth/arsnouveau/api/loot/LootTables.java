@@ -186,16 +186,16 @@ public class LootTables {
     public static List<ItemStack> getRandomRoll(DungeonLootGenerator.DungeonLootEnhancerModifier modifier){
         List<ItemStack> stacks = new ArrayList<>();
 
-        for(int i = 0; i < 4; i++){
+        for(int i = 0; i < modifier.commonRolls; i++){
             if(r.nextDouble() <= modifier.commonChance)
                 stacks.add(getRandomItem(BASIC_LOOT));
         }
 
-        for(int i = 0; i < 3; i++){
+        for(int i = 0; i < modifier.uncommonRolls; i++){
             if(r.nextDouble() <= modifier.uncommonChance)
                 stacks.add(getRandomItem(UNCOMMON_LOOT));
         }
-        for(int i = 0; i < 2; i++){
+        for(int i = 0; i < modifier.rareRolls; i++){
             if(r.nextDouble() <= modifier.rareChance)
                 stacks.add(getRandomItem(RARE_LOOT));
         }
