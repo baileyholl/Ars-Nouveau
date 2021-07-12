@@ -12,17 +12,18 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.item.Item.Properties;
+public abstract class ItemScroll extends ModItem implements IScribeable {
 
-public class ItemScroll extends ModItem implements IScribeable {
     public ItemScroll(String reg) {
         super(reg);
     }
+
     public ItemScroll(Properties properties, String reg) {
         super(properties, reg);
     }
@@ -31,6 +32,15 @@ public class ItemScroll extends ModItem implements IScribeable {
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         if(!stack.hasTag())
             stack.setTag(new CompoundNBT());
+    }
+
+    public abstract SortPref getSortPref(ItemStack stackToStore, CompoundNBT scrollTag, IItemHandler inventory);
+
+    public enum SortPref {
+        HIGHEST,
+        HIGH,
+        LOW,
+        INVALID
     }
 
     public static String ITEM_PREFIX = "item_";

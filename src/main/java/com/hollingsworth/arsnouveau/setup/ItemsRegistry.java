@@ -9,6 +9,9 @@ import com.hollingsworth.arsnouveau.common.armor.NoviceArmor;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.items.*;
 import com.hollingsworth.arsnouveau.common.items.curios.*;
+import com.hollingsworth.arsnouveau.common.items.itemscrolls.AllowItemScroll;
+import com.hollingsworth.arsnouveau.common.items.itemscrolls.DenyItemScroll;
+import com.hollingsworth.arsnouveau.common.items.itemscrolls.MimicItemScroll;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
@@ -95,8 +98,11 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.SYLPH_CHARM)public static SylphCharm sylphCharm;
     @ObjectHolder(LibItemNames.SYLPH_SHARD)public static ModItem sylphShard;
     @ObjectHolder(LibItemNames.MANA_GEM)public static ModItem manaGem;
-    @ObjectHolder(LibItemNames.ALLOW_ITEM_SCROLL)public static ItemScroll ALLOW_ITEM_SCROLL;
-    @ObjectHolder(LibItemNames.DENY_ITEM_SCROLL)public static ItemScroll DENY_ITEM_SCROLL;
+    @ObjectHolder(LibItemNames.ALLOW_ITEM_SCROLL)public static AllowItemScroll ALLOW_ITEM_SCROLL;
+    @ObjectHolder(LibItemNames.DENY_ITEM_SCROLL)public static DenyItemScroll DENY_ITEM_SCROLL;
+    @ObjectHolder(LibItemNames.MIMIC_ITEM_SCROLL)public static MimicItemScroll MIMIC_ITEM_SCROLL;
+
+
     @ObjectHolder(LibItemNames.BLANK_PARCHMENT)public static ModItem BLANK_PARCHMENT;
     @ObjectHolder(LibItemNames.WAND)public static Wand WAND;
     @ObjectHolder(LibItemNames.VOID_JAR)public static VoidJar VOID_JAR;
@@ -206,8 +212,9 @@ public class ItemsRegistry {
                     new ModItem(LibItemNames.SYLPH_SHARD).withTooltip(new TranslationTextComponent("tooltip.sylph_shard")),
                     new SylphCharm(),
                     new ModItem(LibItemNames.MANA_GEM).withTooltip(new TranslationTextComponent("tooltip.mana_gem")),
-                    new ItemScroll(LibItemNames.ALLOW_ITEM_SCROLL),
-                    new ItemScroll(LibItemNames.DENY_ITEM_SCROLL),
+                    new AllowItemScroll(LibItemNames.ALLOW_ITEM_SCROLL),
+                    new DenyItemScroll(LibItemNames.DENY_ITEM_SCROLL),
+                    new MimicItemScroll(LibItemNames.MIMIC_ITEM_SCROLL),
                     new ModItem(LibItemNames.BLANK_PARCHMENT),
                     new ModItem(LibItemNames.WIXIE_SHARD).withTooltip(new TranslationTextComponent("tooltip.wixie_shard")),
                     new Wand(),
