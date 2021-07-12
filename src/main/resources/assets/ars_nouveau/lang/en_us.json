@@ -314,7 +314,7 @@
 	"ars_nouveau.glyph_desc.fell": "Harvests entire trees, mushrooms, cactus, and other vegetation. Can be amplified with Amplify to break materials of higher hardness. AOE will increase the number of blocks that may be broken at one time.",
 	"ars_nouveau.glyph_desc.flare": "When used on entities that are on fire, Flare causes a burst of damage and will spread fire and deal damage to other nearby entities. Does significantly more damage than Harm. Can be augmented with Extend Time, Amplify, and AOE.",
 	"ars_nouveau.glyph_desc.fortune": "Increases the drop chance from mobs killed by Damage and blocks that are destroyed by Break. Cannot be combined with Extract",
-	"ars_nouveau.glyph_desc.freeze": "Freezes water in a small area or slows a target for a short time. Can be augmented with AOE, Extend Time, or Amplify.",
+	"ars_nouveau.glyph_desc.freeze": "Freezes water or lava in a small area or slows a target for a short time. Can be augmented with AOE, Extend Time, or Amplify.",
 	"ars_nouveau.glyph_desc.glide": "Grants the Glide effect, allowing the wearer to fly as if they were wearing an Elytra. ",
 	"ars_nouveau.glyph_desc.gravity": "Causes blocks and entities to fall. When augmented with Extend Time, players will have their flight disabled and will obtain the Gravity effect. While afflicted with Gravity, entities will rapidly fall and take double falling damage.",
 	"ars_nouveau.glyph_desc.grow": "Causes plants to accelerate in growth, but this does not provide mana for nearby Mana Condensers.",

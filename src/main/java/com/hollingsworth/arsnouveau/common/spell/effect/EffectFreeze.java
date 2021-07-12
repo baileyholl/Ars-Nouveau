@@ -55,7 +55,13 @@ public class EffectFreeze extends AbstractEffect {
         FluidState fluidState = world.getFluidState(p.above());
         if(fluidState.getType() == Fluids.WATER && state.getBlock() instanceof FlowingFluidBlock){
             world.setBlockAndUpdate(p.above(), Blocks.ICE.defaultBlockState());
-        }else if(state.getMaterial() == Material.FIRE){
+        }
+        else if(fluidState.getType() == Fluids.LAVA && state.getBlock() instanceof FlowingFluidBlock){
+            world.setBlockAndUpdate(p.above(), Blocks.OBSIDIAN.defaultBlockState());
+        }else if(fluidState.getType() == Fluids.FLOWING_LAVA && state.getBlock() instanceof FlowingFluidBlock){
+            world.setBlockAndUpdate(p.above(), Blocks.COBBLESTONE.defaultBlockState());
+        }
+        else if(state.getMaterial() == Material.FIRE){
             world.destroyBlock(p.above(), false);
 
         }
@@ -103,6 +109,6 @@ public class EffectFreeze extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Freezes water in a small area or slows a target for a short time. Can be augmented with AOE, Extend Time, or Amplify.";
+        return "Freezes water or lava in a small area or slows a target for a short time. Can be augmented with AOE, Extend Time, or Amplify.";
     }
 }
