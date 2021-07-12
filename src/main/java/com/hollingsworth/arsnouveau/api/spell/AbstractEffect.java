@@ -115,9 +115,8 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public void dealDamage(World world, LivingEntity shooter, float damage, List<AbstractAugment> augments, Entity entity, DamageSource source){
-
         shooter = shooter == null ? FakePlayerFactory.getMinecraft((ServerWorld) world) : shooter;
-        if(entity instanceof LivingEntity && ((LivingEntity) entity).getHealth() <= 0)
+        if(entity instanceof LivingEntity && ((LivingEntity) entity).getHealth() <= 0 || damage <= 0)
             return;
 
         entity.hurt(source, damage);
