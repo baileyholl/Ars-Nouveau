@@ -700,5 +700,6 @@
 	"ars_nouveau.page4.drygmy_charm": "A Drygmy considers its home to be 10 blocks in every direction from its home. The drygmy will use this area to produce items from any entities nearby. Your drgymy's efficiency is dependent on its happiness. This may be increased for each entity nearby, with a bonus for each unique type in its home.",
 	"ars_nouveau.page5.drygmy_charm": "Each Drygmy working around a henge contributes progress. Once maximum progress has been reached, the henge will generate items and experience gems and deposit them into nearby inventories. Each time this occurs, the henge will require mana to recharge. The number of drops and experience gems is equal to the Drygmy happiness and experience value of the entities. To get started, place a chest and jar of mana next to the Henge.",
 	"effect.ars_nouveau.flight": "Flight",
-	"effect.ars_nouveau.gravity": "Gravity"
+	"effect.ars_nouveau.gravity": "Gravity",
+	"tooltip.ars_nouveau.tablet": "A tablet used for rituals. Consumed on use."
 }

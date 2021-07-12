@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.item.ArsNouveauCurio;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.math.vector.Vector3d;
@@ -15,7 +16,9 @@ public class BeltOfLevitation extends ArsNouveauCurio {
 
     @Override
     public void wearableTick(LivingEntity player) {
-
+        if(player instanceof PlayerEntity && ((PlayerEntity) player).abilities.flying){
+            return;
+        }
 
         if(!player.isOnGround() && player.isShiftKeyDown() && !player.level.isClientSide){
             boolean isTooHigh = true;
