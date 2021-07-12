@@ -48,6 +48,7 @@ public class Config {
 
     public static ForgeConfigSpec.IntValue DRYGMY_MANA_COST;
     public static ForgeConfigSpec.IntValue SYLPH_MANA_COST;
+    public static ForgeConfigSpec.IntValue DRYGMY_MAX_PROGRESS;
 
     public static ForgeConfigSpec.IntValue WGUARDIAN_WEIGHT;
     public static ForgeConfigSpec.IntValue WSTALKER_WEIGHT;
@@ -105,6 +106,7 @@ public class Config {
 
         DRYGMY_MANA_COST = SERVER_BUILDER.comment("How much mana drygmys consume per generation").defineInRange("drygmyManaCost",500,0,10000);
         SYLPH_MANA_COST = SERVER_BUILDER.comment("How much mana sylphs consume per generation").defineInRange("sylphManaCost",250,0,10000);
+        DRYGMY_MAX_PROGRESS = SERVER_BUILDER.comment("How many channels must occur before a drygmy produces loot").defineInRange("drygmyMaxProgress",15,0,300);
 
         WGUARDIAN_WEIGHT = SERVER_BUILDER.comment("How often Wilden Guardians spawn").defineInRange("wguardianWeight",50,0,200);
         WSTALKER_WEIGHT = SERVER_BUILDER.comment("How often Wilden Stalkers spawn").defineInRange("wstalkerWeight",50,0,200);

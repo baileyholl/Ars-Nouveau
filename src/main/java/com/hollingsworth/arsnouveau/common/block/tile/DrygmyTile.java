@@ -106,7 +106,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
     }
 
     public int getMaxProgress(){
-        return 15;
+        return Config.DRYGMY_MAX_PROGRESS.get();
     }
 
     public void convertedEffect() {
