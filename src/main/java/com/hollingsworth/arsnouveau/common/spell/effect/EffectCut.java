@@ -67,7 +67,7 @@ public class EffectCut extends AbstractEffect {
                     items.forEach(i -> world.addFreshEntity(new ItemEntity(world, p.getX(), p.getY(),p.getZ(), i)));
                 }
             }
-            PlayerEntity entity = new ANFakePlayer((ServerWorld) world);
+            PlayerEntity entity = ANFakePlayer.getPlayer((ServerWorld) world);
             entity.setItemInHand(Hand.MAIN_HAND, shears);
             entity.setPos(p.getX(), p.getY(), p.getZ());
             world.getBlockState(p).use(world, entity, Hand.MAIN_HAND, rayTraceResult);

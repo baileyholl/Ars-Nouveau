@@ -55,7 +55,7 @@ public class EffectPlaceBlock extends AbstractEffect {
                     return;
 
                BlockItem item = (BlockItem) stack.getItem();
-                FakePlayer fakePlayer = new ANFakePlayer((ServerWorld) world);
+                FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerWorld) world);
                 fakePlayer.setItemInHand(Hand.MAIN_HAND, stack);
 
                 // Special offset for touch
@@ -106,7 +106,7 @@ public class EffectPlaceBlock extends AbstractEffect {
     }
 
     public static ActionResultType attemptPlace(World world, ItemStack stack, BlockItem item, BlockRayTraceResult result){
-        FakePlayer fakePlayer = new ANFakePlayer((ServerWorld) world);
+        FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerWorld) world);
         fakePlayer.setItemInHand(Hand.MAIN_HAND, stack);
         BlockItemUseContext context = BlockItemUseContext.at(new BlockItemUseContext(new ItemUseContext(fakePlayer, Hand.MAIN_HAND, result)), result.getBlockPos(), result.getDirection());
 

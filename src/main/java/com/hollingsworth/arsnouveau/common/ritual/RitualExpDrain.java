@@ -58,7 +58,7 @@ public class RitualExpDrain extends AbstractRitual {
                     ExpInvokerMixin invoker = ((ExpInvokerMixin) m);
                     ParticleUtil.spawnPoof((ServerWorld) world, m.blockPosition());
                     if (invoker.an_shouldDropExperience()) {
-                        int exp = invoker.an_getExperienceReward(new ANFakePlayer((ServerWorld) getWorld())) * 2;
+                        int exp = invoker.an_getExperienceReward(ANFakePlayer.getPlayer((ServerWorld) getWorld())) * 2;
                         if (exp > 0) {
                             int numGreater = (int) (exp / 12);
                             exp -= numGreater * 12;

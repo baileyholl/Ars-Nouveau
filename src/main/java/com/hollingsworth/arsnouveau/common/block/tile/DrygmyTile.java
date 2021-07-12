@@ -56,7 +56,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
         super.tick();
 
         if(level.isClientSide){
-            for(int i = 0; i < progress; i++){
+            for(int i = 0; i < progress/2; i++){
                 level.addParticle(
                         GlowParticleData.createData(new ParticleColor(
                                 50,
@@ -141,7 +141,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
 
     public void generateItems(){
         List<ItemStack> stacks = new ArrayList<>();
-        ANFakePlayer fakePlayer = new ANFakePlayer((ServerWorld) level);
+        ANFakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerWorld) level);
         DamageSource damageSource = DamageSource.playerAttack(fakePlayer);
         int numberItems = 5 + this.bonus;
         int exp = 0;
