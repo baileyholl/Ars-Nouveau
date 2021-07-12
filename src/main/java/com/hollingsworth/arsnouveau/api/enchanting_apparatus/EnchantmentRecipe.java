@@ -11,6 +11,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
@@ -70,7 +71,12 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
         int level = enchantments.getOrDefault(enchantment, 0);
         Collection<Enchantment> enchantList = EnchantmentHelper.getEnchantments(stack).keySet();
         enchantList.remove(enchantment);
-        if(!enchantment.canEnchant(stack) || !EnchantmentHelper.isEnchantmentCompatible(enchantList, enchantment)){
+        if(stack.getItem() != Items.BOOK && stack.getItem() != Items.ENCHANTED_BOOK && !enchantment.canEnchant(stack)){
+            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.enchanting.incompatible"));
+            return false;
+        }
+
+        if(!EnchantmentHelper.isEnchantmentCompatible(enchantList, enchantment)){
             PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.enchanting.incompatible"));
             return false;
         }
@@ -99,7 +105,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
 
     @Override
     public ItemStack assemble(EnchantingApparatusTile inv) {
-        ItemStack stack = inv.catalystItem.copy();
+        ItemStack stack = inv.catalystItem.getItem() == Items.BOOK ? new ItemStack(Items.ENCHANTED_BOOK) : inv.catalystItem.copy();
         Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
         enchantments.put(enchantment, enchantLevel);
         EnchantmentHelper.setEnchantments(enchantments, stack);
