@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
+import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraAttackGoal;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.*;
@@ -22,13 +24,18 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class WildenBoss extends MonsterEntity implements IAnimatable{
+public class WildenBoss extends MonsterEntity implements IAnimatable, IAnimationListener {
     private final ServerBossInfo bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenScreen(true).setCreateWorldFog(true);
     public static final DataParameter<Boolean> HAS_SPIKES = EntityDataManager.defineId(WildenBoss.class, DataSerializers.BOOLEAN);
     public static final DataParameter<Boolean> HAS_HORNS = EntityDataManager.defineId(WildenBoss.class, DataSerializers.BOOLEAN);
     public static final DataParameter<Boolean> HAS_WINGS = EntityDataManager.defineId(WildenBoss.class, DataSerializers.BOOLEAN);
     public static final DataParameter<Integer> PHASE = EntityDataManager.defineId(WildenBoss.class, DataSerializers.INT);
     public static final DataParameter<Boolean> DEFENSIVE_MODE = EntityDataManager.defineId(WildenBoss.class, DataSerializers.BOOLEAN);
+
+    public int summonCooldown;
+    public int diveCooldown;
+    public int spikeCooldown;
+    public int ramCooldown;
 
     protected WildenBoss(EntityType<? extends MonsterEntity> p_i48553_1_, World p_i48553_2_) {
         super(p_i48553_1_, p_i48553_2_);
@@ -38,6 +45,7 @@ public class WildenBoss extends MonsterEntity implements IAnimatable{
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(0, new SwimGoal(this));
+        this.goalSelector.addGoal(5, new ChimeraAttackGoal(this, 1.3D, true));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
         this.goalSelector.addGoal(8, new WaterAvoidingRandomWalkingGoal(this, 1.2d));
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
@@ -48,10 +56,14 @@ public class WildenBoss extends MonsterEntity implements IAnimatable{
     public void registerControllers(AnimationData animationData) {
         animationData.addAnimationController(new AnimationController<WildenBoss>(this, "walkController", 20, this::groundPredicate));
         animationData.addAnimationController(new AnimationController<WildenBoss>(this, "flyController", 20, this::flyPredicate));
+        animationData.addAnimationController(new AnimationController<WildenBoss>(this, "attackController", 1, this::attackPredicate));
     }
 
     private <E extends Entity> PlayState flyPredicate(AnimationEvent event) {
         return PlayState.STOP;
+    }
+    private <E extends Entity> PlayState attackPredicate(AnimationEvent event) {
+        return PlayState.CONTINUE;
     }
 
     private<E extends Entity> PlayState groundPredicate(AnimationEvent e){
@@ -60,6 +72,39 @@ public class WildenBoss extends MonsterEntity implements IAnimatable{
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if(summonCooldown > 0)
+            summonCooldown--;
+        if(diveCooldown > 0)
+            diveCooldown--;
+        if(spikeCooldown > 0)
+            spikeCooldown--;
+        if(ramCooldown > 0)
+            ramCooldown--;
+    }
+
+    public boolean canSwipe(){
+        return true;
+    }
+
+    public boolean canDive(){
+        return diveCooldown <= 0 && hasWings();
+    }
+
+    public boolean canSpike(){
+        return spikeCooldown <= 0 && hasSpikes();
+    }
+
+    public boolean canRam(){
+        return ramCooldown <= 0 && hasHorns();
+    }
+
+    public boolean canSummon(){
+        return summonCooldown <= 0;
     }
 
     @Override
@@ -122,6 +167,7 @@ public class WildenBoss extends MonsterEntity implements IAnimatable{
     public void setSpikes(boolean hasSpikes){
         entityData.set(HAS_SPIKES, hasSpikes);
     }
+
     public boolean hasWings(){
         return entityData.get(HAS_WINGS);
     }
@@ -154,6 +200,10 @@ public class WildenBoss extends MonsterEntity implements IAnimatable{
         setWings(tag.getBoolean("wings"));
         setPhase(tag.getInt("phase"));
         setDefensiveMode(tag.getBoolean("defensive"));
+        summonCooldown = tag.getInt("summonCooldown");
+        diveCooldown = tag.getInt("diveCooldown");
+        spikeCooldown = tag.getInt("spikeCooldown");
+        ramCooldown = tag.getInt("ramCooldown");
     }
 
     @Override
@@ -163,8 +213,31 @@ public class WildenBoss extends MonsterEntity implements IAnimatable{
         tag.putBoolean("wings", hasWings());
         tag.putInt("phase", getPhase());
         tag.putBoolean("defensive", isDefensive());
+        tag.putInt("summonCooldown", summonCooldown);
+        tag.putInt("diveCooldown", diveCooldown);
+        tag.putInt("spikeCooldown", spikeCooldown);
+        tag.putInt("ramCooldown", ramCooldown);
         return super.save(tag);
     }
 
+    @Override
+    public void startAnimation(int arg) {
+        try{
+            if(arg == Animations.ATTACK.ordinal()){
+                AnimationController controller = this.factory.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("attackController");
 
+                if(controller.getCurrentAnimation() != null && (controller.getCurrentAnimation().animationName.equals("claw_swipe"))) {
+                    return;
+                }
+                controller.markNeedsReload();
+                controller.setAnimation(new AnimationBuilder().addAnimation("claw_swipe", false).addAnimation("idle"));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public enum Animations{
+        ATTACK
+    }
 }
