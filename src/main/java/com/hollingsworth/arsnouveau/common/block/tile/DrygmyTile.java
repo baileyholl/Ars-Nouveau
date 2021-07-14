@@ -136,14 +136,14 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
         this.nearbyEntities = level.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(getBlockPos().north(10).west(10).below(6), getBlockPos().south(10).east(10).above(6)));
         this.nearbyEntities = this.nearbyEntities.stream().filter(l -> !(l instanceof EntityDrygmy) && !(l instanceof PlayerEntity)).collect(Collectors.toList());
         uniqueEntities = nearbyEntities.stream().map(l -> EntityType.getKey(l.getType())).collect(Collectors.toSet());
-        this.bonus = uniqueEntities.size() * 3 + Math.min(10, nearbyEntities.size());
+        this.bonus = uniqueEntities.size() * Config.DRYGMY_UNIQUE_BONUS.get() + Math.min(Config.DRYGMY_QUANTITY_CAP.get(), nearbyEntities.size());
     }
 
     public void generateItems(){
         List<ItemStack> stacks = new ArrayList<>();
         ANFakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerWorld) level);
         DamageSource damageSource = DamageSource.playerAttack(fakePlayer);
-        int numberItems = 5 + this.bonus;
+        int numberItems = Config.DRYGMY_BASE_ITEM.get() + this.bonus;
         int exp = 0;
         // Create the loot table and exp count
         for(LivingEntity entity : getNearbyEntities()){

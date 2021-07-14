@@ -19,6 +19,7 @@ public class Config {
     public static final String CATEGORY_GENERAL = "general";
 
     public static final String CATEGORY_SPELLS = "spells";
+    public static final String DRYGMY_CATEGORY = "drygmy_production";
 
     public static ForgeConfigSpec SERVER_CONFIG;
     public static ForgeConfigSpec CLIENT_CONFIG;
@@ -49,6 +50,9 @@ public class Config {
     public static ForgeConfigSpec.IntValue DRYGMY_MANA_COST;
     public static ForgeConfigSpec.IntValue SYLPH_MANA_COST;
     public static ForgeConfigSpec.IntValue DRYGMY_MAX_PROGRESS;
+    public static ForgeConfigSpec.IntValue DRYGMY_BASE_ITEM;
+    public static ForgeConfigSpec.IntValue DRYGMY_UNIQUE_BONUS;
+    public static ForgeConfigSpec.IntValue DRYGMY_QUANTITY_CAP;
 
     public static ForgeConfigSpec.IntValue WGUARDIAN_WEIGHT;
     public static ForgeConfigSpec.IntValue WSTALKER_WEIGHT;
@@ -104,9 +108,7 @@ public class Config {
         SYLPH_WEIGHT = SERVER_BUILDER.comment("How often Sylphs spawn").defineInRange("sylphWeight",5,0,100);
         DRYGMY_WEIGHT = SERVER_BUILDER.comment("How often Drygmys spawn").defineInRange("drygmyWeight",3,0,100);
 
-        DRYGMY_MANA_COST = SERVER_BUILDER.comment("How much mana drygmys consume per generation").defineInRange("drygmyManaCost",500,0,10000);
         SYLPH_MANA_COST = SERVER_BUILDER.comment("How much mana sylphs consume per generation").defineInRange("sylphManaCost",250,0,10000);
-        DRYGMY_MAX_PROGRESS = SERVER_BUILDER.comment("How many channels must occur before a drygmy produces loot").defineInRange("drygmyMaxProgress",15,0,300);
 
         WGUARDIAN_WEIGHT = SERVER_BUILDER.comment("How often Wilden Guardians spawn").defineInRange("wguardianWeight",50,0,200);
         WSTALKER_WEIGHT = SERVER_BUILDER.comment("How often Wilden Stalkers spawn").defineInRange("wstalkerWeight",50,0,200);
@@ -117,7 +119,14 @@ public class Config {
         ARCHWOOD_FOREST_WEIGHT = SERVER_BUILDER.comment("Archwood forest spawn weight").defineInRange("archwoodForest", 3, 0, Integer.MAX_VALUE);
         CRYSTALLIZER_ITEM = SERVER_BUILDER.comment("Crystallizer output item. Do not use a wrong ID!").define("crystallizer_output", "ars_nouveau:mana_gem");
         SERVER_BUILDER.pop();
+        SERVER_BUILDER.push(DRYGMY_CATEGORY);
+        DRYGMY_MANA_COST = SERVER_BUILDER.comment("How much mana drygmys consume per generation").defineInRange("drygmyManaCost",1000,0,10000);
+        DRYGMY_MAX_PROGRESS = SERVER_BUILDER.comment("How many channels must occur before a drygmy produces loot").defineInRange("drygmyMaxProgress",20,0,300);
+        DRYGMY_UNIQUE_BONUS = SERVER_BUILDER.comment("Bonus number of items a drygmy produces per unique mob").defineInRange("drygmyUniqueBonus",2,0,300);
+        DRYGMY_BASE_ITEM = SERVER_BUILDER.comment("Base number of items a drygmy produces per cycle before bonuses.").defineInRange("drygmyBaseItems",1,Integer.MIN_VALUE,Integer.MAX_VALUE);
+        DRYGMY_QUANTITY_CAP = SERVER_BUILDER.comment("Max Bonus number of items a drygmy produces from nearby entities. Each entity equals 1 item.").defineInRange("drygmyQuantityCap",5,0,300);
 
+        SERVER_BUILDER.pop();
         SERVER_BUILDER.comment("Mana").push("mana");
         INIT_MANA_REGEN = SERVER_BUILDER.comment("Base mana regen in seconds").defineInRange("baseRegen", 5, 0, Integer.MAX_VALUE);
         INIT_MAX_MANA = SERVER_BUILDER.comment("Base max mana").defineInRange("baseMax", 100, 0, Integer.MAX_VALUE);
