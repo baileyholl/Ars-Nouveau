@@ -4,10 +4,14 @@ import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 public class DelayedSpellEvent implements ITimedEvent{
     private int duration;
@@ -15,9 +19,9 @@ public class DelayedSpellEvent implements ITimedEvent{
     private final SpellContext context;
     private final RayTraceResult result;
     private final World world;
-    private final LivingEntity shooter;
+    private final @Nullable LivingEntity shooter;
 
-    public DelayedSpellEvent(int delay, Spell spell, RayTraceResult result, World world, LivingEntity shooter, SpellContext context){
+    public DelayedSpellEvent(int delay, Spell spell, RayTraceResult result, World world, @Nullable LivingEntity shooter, SpellContext context){
         this.duration = delay;
         this.spell = spell;
         this.result = result;
@@ -29,10 +33,14 @@ public class DelayedSpellEvent implements ITimedEvent{
     @Override
     public void tick(boolean serverSide) {
         duration--;
-        if(duration <= 0){
+        if(duration <= 0 && serverSide){
             resolveSpell();
-        }else if(!serverSide){
-            ParticleUtil.spawnRitualAreaEffect(new BlockPos(result.getLocation()).above(), world, world.random, context.colors.toParticleColor(), 3);
+        }else if(!serverSide && result != null){
+            BlockPos hitVec = result instanceof EntityRayTraceResult ? ((EntityRayTraceResult) result).getEntity().blockPosition() : new BlockPos(result.getLocation());
+
+            //ParticleUtil.spawnRitualAreaEffect(new BlockPos(result.getLocation()).above(), world, world.random, context.colors.toParticleColor(), 1);
+
+            ParticleUtil.spawnTouch((ClientWorld) world, hitVec, context.colors.toParticleColor());
         }
     }
 

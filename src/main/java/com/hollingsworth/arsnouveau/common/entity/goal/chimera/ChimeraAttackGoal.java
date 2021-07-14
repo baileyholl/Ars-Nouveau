@@ -39,7 +39,7 @@ public class ChimeraAttackGoal extends Goal {
 
     @Override
     public boolean isInterruptable() {
-        return false;
+        return true;
     }
 
     public boolean canUse() {
@@ -76,6 +76,7 @@ public class ChimeraAttackGoal extends Goal {
     public boolean canContinueToUse() {
         LivingEntity livingentity = this.mob.getTarget();
         if (livingentity == null || done) {
+            System.out.println("exit");
             return false;
         } else if (!livingentity.isAlive()) {
             return false;
@@ -107,16 +108,17 @@ public class ChimeraAttackGoal extends Goal {
         this.mob.getLookControl().setLookAt(livingentity, 30.0F, 30.0F);
         if(arrived){
             timeAnimating++;
+            if(timeAnimating == 15){
+                this.attack(livingentity);
+            }
             if(timeAnimating >= 20){
                 this.attack(livingentity);
-                System.out.println("attack");
                 this.done = true;
             }
             return;
         }
 
         double d0 = this.mob.distanceToSqr(livingentity.getX(), livingentity.getY(), livingentity.getZ());
-        System.out.println(d0);
         this.ticksUntilNextPathRecalculation = Math.max(this.ticksUntilNextPathRecalculation - 1, 0);
         if(BlockUtil.distanceFrom(this.mob.position, livingentity.position) <= 3){
             this.arrived = true;
@@ -156,26 +158,10 @@ public class ChimeraAttackGoal extends Goal {
     protected void attack(LivingEntity target) {
         double d0 = 3;
         if (BlockUtil.distanceFrom(target.position, this.mob.position) <= d0 ) {
-            this.resetAttackCooldown();
+            this.ticksUntilNextAttack = 20;
             this.mob.doHurtTarget(target);
         }
 
-    }
-
-    protected void resetAttackCooldown() {
-        this.ticksUntilNextAttack = 20;
-    }
-
-    protected boolean isTimeToAttack() {
-        return this.ticksUntilNextAttack <= 0;
-    }
-
-    protected int getTicksUntilNextAttack() {
-        return this.ticksUntilNextAttack;
-    }
-
-    protected int getAttackInterval() {
-        return 20;
     }
 
     protected double getAttackReachSqr(LivingEntity p_179512_1_) {

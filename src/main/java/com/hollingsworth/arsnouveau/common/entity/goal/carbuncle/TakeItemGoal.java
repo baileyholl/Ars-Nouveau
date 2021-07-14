@@ -17,8 +17,6 @@ import net.minecraftforge.items.IItemHandler;
 
 import java.util.EnumSet;
 
-import net.minecraft.entity.ai.goal.Goal.Flag;
-
 public class TakeItemGoal extends Goal {
     EntityCarbuncle carbuncle;
     BlockPos takePos;
@@ -67,7 +65,7 @@ public class TakeItemGoal extends Goal {
                 if(world instanceof ServerWorld){
                     OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), takePos, 20);
                     event.open();
-                    EventQueue.getInstance().addEvent(event);
+                    EventQueue.getServerInstance().addEvent(event);
                 }
                 break;
             }

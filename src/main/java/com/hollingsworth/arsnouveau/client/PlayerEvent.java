@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.api.util.MappingUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.client.particle.engine.ParticleEngine;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
@@ -52,7 +51,7 @@ public class PlayerEvent {
 
     @SubscribeEvent
     public static void onTick(final TickEvent.RenderTickEvent evt) {
-        ParticleEngine.getInstance().tick();
+
     }
 
     @SubscribeEvent

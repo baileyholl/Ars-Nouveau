@@ -39,18 +39,27 @@ public class EventQueue {
         events.add(event);
     }
 
-    public static EventQueue getInstance(){
-        if(eventQueue == null)
-            eventQueue = new EventQueue();
-        return eventQueue;
+    public static EventQueue getServerInstance(){
+        if(serverQueue == null)
+            serverQueue = new EventQueue();
+        return serverQueue;
     }
+
+    public static EventQueue getClientQueue(){
+        if(clientQueue == null)
+            clientQueue = new EventQueue();
+        return clientQueue;
+    }
+
 
     // Tear down on world unload
     public void clear(){
         this.events = null;
     }
 
-    private static EventQueue eventQueue;
+    // Split these because our integrated servers are CURSED and both tick.
+    private static EventQueue serverQueue;
+    private static EventQueue clientQueue;
     private EventQueue(){
         events = new ArrayList<>();
     }
@@ -61,7 +70,7 @@ public class EventQueue {
         if (e.phase != TickEvent.Phase.END)
             return;
 
-        EventQueue.getInstance().tick(true);
+        EventQueue.getServerInstance().tick(true);
     }
 
     @SubscribeEvent
@@ -70,6 +79,6 @@ public class EventQueue {
         if (e.phase != TickEvent.Phase.END)
             return;
 
-        EventQueue.getInstance().tick(false);
+        EventQueue.getClientQueue().tick(false);
     }
 }

@@ -7,11 +7,17 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketClientDelayEffect;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -35,11 +41,23 @@ public class EffectDelay extends AbstractEffect {
         if(spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
         Spell newSpell =  new Spell(spellContext.getSpell().recipe.subList(spellContext.getCurrentIndex(), spellContext.getSpell().recipe.size()));
-        EventQueue.getInstance().addEvent(
-                new DelayedSpellEvent(GENERIC_INT.get() + EXTEND_TIME.get() * getBuffCount(augments, AugmentExtendTime.class) * 20 - (EXTEND_TIME.get() / 2) * getBuffCount(augments, AugmentDurationDown.class) * 20 ,
-                       newSpell,
-                        rayTraceResult, world, shooter, new SpellContext(newSpell, shooter).withColors(spellContext.colors)));
+        SpellContext newContext = new SpellContext(newSpell, shooter).withColors(spellContext.colors);
+        int duration = GENERIC_INT.get() + EXTEND_TIME.get() * getBuffCount(augments, AugmentExtendTime.class) * 20 - (EXTEND_TIME.get() / 2) * getBuffCount(augments, AugmentDurationDown.class) * 20;
+        EventQueue.getServerInstance().addEvent(
+                new DelayedSpellEvent(duration , newSpell, rayTraceResult, world, shooter, newContext));
+        // Send our packet to the client so we can make particles
+        BlockRayTraceResult blockResult =  rayTraceResult instanceof BlockRayTraceResult ? new BlockRayTraceResult(
+                rayTraceResult.getLocation(),
+                ((BlockRayTraceResult) rayTraceResult).getDirection(),
+                ((BlockRayTraceResult) rayTraceResult).getBlockPos(),
+                ((BlockRayTraceResult) rayTraceResult).isInside())
+                : null;
+        Entity hitEntity = rayTraceResult instanceof EntityRayTraceResult ? ((EntityRayTraceResult) rayTraceResult).getEntity() : null;
+        Networking.sendToNearby(world, new BlockPos(safelyGetHitPos(rayTraceResult)),
+                new PacketClientDelayEffect(duration, shooter, newSpell, newContext, blockResult, hitEntity instanceof  LivingEntity ? (LivingEntity) hitEntity : null));
     }
+
+
 
     @Override
     public void buildConfig(ForgeConfigSpec.Builder builder) {

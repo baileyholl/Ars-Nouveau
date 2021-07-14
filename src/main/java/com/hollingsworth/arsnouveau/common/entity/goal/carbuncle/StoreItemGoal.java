@@ -18,8 +18,6 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.EnumSet;
 
-import net.minecraft.entity.ai.goal.Goal.Flag;
-
 public class StoreItemGoal extends Goal {
 
     private final EntityCarbuncle entityCarbuncle;
@@ -68,7 +66,7 @@ public class StoreItemGoal extends Goal {
                 if (world instanceof ServerWorld) {
                     OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), storePos, 20);
                     event.open();
-                    EventQueue.getInstance().addEvent(event);
+                    EventQueue.getServerInstance().addEvent(event);
                 }
                 entityCarbuncle.setHeldStack(left);
 //                    EntityCarbuncle.this.world.playSound(null, EntityCarbuncle.this.getPosX(), EntityCarbuncle.this.getPosY(), EntityCarbuncle.this.getPosZ(), SoundEvents.ENTITY_ITEM_PICKUP, EntityCarbuncle.this.getSoundCategory(),1.0F, 1.0F);

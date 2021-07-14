@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraAttackGoal;
+import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraSummonGoal;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.*;
@@ -31,6 +32,7 @@ public class WildenBoss extends MonsterEntity implements IAnimatable, IAnimation
     public static final DataParameter<Boolean> HAS_WINGS = EntityDataManager.defineId(WildenBoss.class, DataSerializers.BOOLEAN);
     public static final DataParameter<Integer> PHASE = EntityDataManager.defineId(WildenBoss.class, DataSerializers.INT);
     public static final DataParameter<Boolean> DEFENSIVE_MODE = EntityDataManager.defineId(WildenBoss.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Boolean> PHASE_SWAPPING = EntityDataManager.defineId(WildenBoss.class, DataSerializers.BOOLEAN);
 
     public int summonCooldown;
     public int diveCooldown;
@@ -46,6 +48,7 @@ public class WildenBoss extends MonsterEntity implements IAnimatable, IAnimation
         super.registerGoals();
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(5, new ChimeraAttackGoal(this, 1.3D, true));
+        this.goalSelector.addGoal(3, new ChimeraSummonGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
         this.goalSelector.addGoal(8, new WaterAvoidingRandomWalkingGoal(this, 1.2d));
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
@@ -104,7 +107,11 @@ public class WildenBoss extends MonsterEntity implements IAnimatable, IAnimation
     }
 
     public boolean canSummon(){
-        return summonCooldown <= 0;
+        return getTarget() != null && summonCooldown <= 0;
+    }
+
+    public boolean canAttack(){
+        return getTarget() != null &&
     }
 
     @Override
@@ -150,6 +157,7 @@ public class WildenBoss extends MonsterEntity implements IAnimatable, IAnimation
         this.entityData.define(HAS_WINGS, false);
         this.entityData.define(PHASE, 1);
         this.entityData.define(DEFENSIVE_MODE, false);
+        this.entityData.define(PHASE_SWAPPING, false);
     }
 
     public boolean hasHorns(){
@@ -192,6 +200,14 @@ public class WildenBoss extends MonsterEntity implements IAnimatable, IAnimation
         entityData.set(PHASE, phase);
     }
 
+    public boolean getPhaseSwapping(){
+        return entityData.get(PHASE_SWAPPING);
+    }
+
+    public void setPhaseSwapping(boolean swapping){
+        entityData.set(PHASE_SWAPPING, swapping);
+    }
+
     @Override
     public void load(CompoundNBT tag) {
         super.load(tag);
@@ -232,12 +248,23 @@ public class WildenBoss extends MonsterEntity implements IAnimatable, IAnimation
                 controller.markNeedsReload();
                 controller.setAnimation(new AnimationBuilder().addAnimation("claw_swipe", false).addAnimation("idle"));
             }
+
+            if(arg == Animations.HOWL.ordinal()){
+                AnimationController controller = this.factory.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("attackController");
+
+                if(controller.getCurrentAnimation() != null && (controller.getCurrentAnimation().animationName.equals("howl"))) {
+                    return;
+                }
+                controller.markNeedsReload();
+                controller.setAnimation(new AnimationBuilder().addAnimation("howl", false).addAnimation("idle"));
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
     public enum Animations{
-        ATTACK
+        ATTACK,
+        HOWL
     }
 }

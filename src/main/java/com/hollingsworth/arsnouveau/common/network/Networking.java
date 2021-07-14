@@ -106,7 +106,17 @@ public class Networking {
                 PacketUpdateFlight::toBytes,
                 PacketUpdateFlight::new,
                 PacketUpdateFlight::handle);
+        INSTANCE.registerMessage(nextID(),
+                PacketClientDelayEffect.class,
+                PacketClientDelayEffect::toBytes,
+                PacketClientDelayEffect::new,
+                PacketClientDelayEffect::handle);
 
+        INSTANCE.registerMessage(nextID(),
+                PacketTimedEvent.class,
+                PacketTimedEvent::toBytes,
+                PacketTimedEvent::new,
+                PacketTimedEvent::handle);
     }
 
     public static void sendToNearby(World world, BlockPos pos, Object toSend){
