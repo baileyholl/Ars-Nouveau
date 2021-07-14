@@ -5,7 +5,7 @@ package com.hollingsworth.arsnouveau.api.event;
  */
 public interface ITimedEvent {
 
-    void tick();
+    void tick(boolean serverSide);
 
     /**
      * If this event should be removed from the queue

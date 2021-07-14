@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.event.DelayedSpellEvent;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
@@ -33,11 +34,11 @@ public class EffectDelay extends AbstractEffect {
 
         if(spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
+        Spell newSpell =  new Spell(spellContext.getSpell().recipe.subList(spellContext.getCurrentIndex(), spellContext.getSpell().recipe.size()));
         EventQueue.getInstance().addEvent(
                 new DelayedSpellEvent(GENERIC_INT.get() + EXTEND_TIME.get() * getBuffCount(augments, AugmentExtendTime.class) * 20 - (EXTEND_TIME.get() / 2) * getBuffCount(augments, AugmentDurationDown.class) * 20 ,
-                        spellContext.getSpell().recipe.subList(spellContext.getCurrentIndex(), spellContext.getSpell().recipe.size()),
-                        rayTraceResult, world, shooter));
-
+                       newSpell,
+                        rayTraceResult, world, shooter, new SpellContext(newSpell, shooter).withColors(spellContext.colors)));
     }
 
     @Override

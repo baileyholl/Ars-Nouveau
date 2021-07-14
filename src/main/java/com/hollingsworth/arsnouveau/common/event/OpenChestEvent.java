@@ -33,7 +33,7 @@ public class OpenChestEvent implements ITimedEvent {
     }
 
     @Override
-    public void tick() {
+    public void tick(boolean serverSide) {
         duration--;
         if(duration <= 0){
             attemptClose();
