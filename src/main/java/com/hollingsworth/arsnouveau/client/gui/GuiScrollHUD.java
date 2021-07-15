@@ -34,6 +34,7 @@ public class GuiScrollHUD extends AbstractGui {
             int counter = 0;
             for(ItemStack s : stacks){
                 minecraft.font.drawShadow(matrixStack, s.getHoverName().getString(), offsetLeft, 5f + 10 * counter, 0xFFFFFF);
+                counter++;
             }
         }
     }

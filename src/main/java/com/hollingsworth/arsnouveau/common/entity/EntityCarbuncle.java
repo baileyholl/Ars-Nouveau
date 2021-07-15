@@ -575,38 +575,35 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     }
 
 
-    private SortPref canDepositItem(TileEntity tile, ItemStack stack) {
-        SortPref pref = SortPref.LOW;
+    private ItemScroll.SortPref canDepositItem(TileEntity tile, ItemStack stack) {
+        ItemScroll.SortPref pref = ItemScroll.SortPref.LOW;
         if (tile == null || stack == null || stack.isEmpty())
-            return SortPref.INVALID;
+            return ItemScroll.SortPref.INVALID;
+
+        IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+        if(handler == null)
+            return ItemScroll.SortPref.INVALID;
         for (ItemFrameEntity i : level.getEntitiesOfClass(ItemFrameEntity.class, new AxisAlignedBB(tile.getBlockPos()).inflate(1))) {
             // Check if these frames are attached to the tile
             TileEntity adjTile = level.getBlockEntity(i.blockPosition().relative(i.getDirection().getOpposite()));
             if(adjTile == null || !adjTile.equals(tile))
                 continue;
-            CompoundNBT tag = i.getItem().getTag();
+
             if (i.getItem().isEmpty())
                 continue;
 
-            if (i.getItem().getItem().getItem() == ItemsRegistry.ALLOW_ITEM_SCROLL) {
-                if (!ItemScroll.containsItem(stack, tag))
-                    return SortPref.INVALID;
-                else
-                    pref = SortPref.HIGH;
-            } else if (i.getItem().getItem().getItem() == ItemsRegistry.DENY_ITEM_SCROLL) {
-                if (ItemScroll.containsItem(stack, tag))
-                    return SortPref.INVALID;
-                else
-                    pref = SortPref.LOW;
+            ItemStack stackInFrame = i.getItem();
+
+            if(stackInFrame.getItem() instanceof ItemScroll){
+                pref = ((ItemScroll) stackInFrame.getItem()).getSortPref(stack, stackInFrame.getOrCreateTag(), handler);
+                // If our item frame just contains a normal item
             }else if (i.getItem().getItem() != stack.getItem()) {
-                return SortPref.INVALID;
-            }else if(i.getItem().getItem() == stack.getItem())
-                pref = SortPref.HIGH;
+                return ItemScroll.SortPref.INVALID;
+            }else if(i.getItem().getItem() == stack.getItem()) {
+                pref = ItemScroll.SortPref.HIGHEST;
+            }
         }
-        IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
-        if(handler == null)
-            return SortPref.INVALID;
-        return !ItemStack.matches(ItemHandlerHelper.insertItemStacked(handler, stack.copy(), true), stack) ? pref : SortPref.INVALID;
+        return !ItemStack.matches(ItemHandlerHelper.insertItemStacked(handler, stack.copy(), true), stack) ? pref : ItemScroll.SortPref.INVALID;
     }
 
     @Override
@@ -618,12 +615,14 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         BlockPos returnPos = null;
         if(TO_LIST == null)
             return returnPos;
+        ItemScroll.SortPref foundPref = ItemScroll.SortPref.INVALID;
         for(BlockPos b : TO_LIST){
-            SortPref pref = canDepositItem(level.getBlockEntity(b), stack);
-            if (pref == SortPref.HIGH)
-               return b;
-            else if(pref == SortPref.LOW)
+            ItemScroll.SortPref pref = canDepositItem(level.getBlockEntity(b), stack);
+            // Pick our highest priority
+            if(pref.ordinal() > foundPref.ordinal()){
+                foundPref = pref;
                 returnPos = b;
+            }
         }
         return returnPos;
     }
@@ -704,9 +703,4 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         GREEN
     }
 
-    public enum SortPref {
-        HIGH,
-        LOW,
-        INVALID
-    }
 }

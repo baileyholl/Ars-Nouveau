@@ -12,17 +12,18 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.item.Item.Properties;
+public abstract class ItemScroll extends ModItem implements IScribeable {
 
-public class ItemScroll extends ModItem implements IScribeable {
     public ItemScroll(String reg) {
         super(reg);
     }
+
     public ItemScroll(Properties properties, String reg) {
         super(properties, reg);
     }
@@ -31,6 +32,15 @@ public class ItemScroll extends ModItem implements IScribeable {
     public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         if(!stack.hasTag())
             stack.setTag(new CompoundNBT());
+    }
+
+    public abstract SortPref getSortPref(ItemStack stackToStore, CompoundNBT scrollTag, IItemHandler inventory);
+
+    public enum SortPref {
+        INVALID,
+        LOW,
+        HIGH,
+        HIGHEST
     }
 
     public static String ITEM_PREFIX = "item_";
@@ -49,14 +59,14 @@ public class ItemScroll extends ModItem implements IScribeable {
         return stacks;
     }
 
-    public boolean addItem(ItemStack itemToAdd, CompoundNBT tag){
+    public static boolean addItem(ItemStack itemToAdd, CompoundNBT tag){
         CompoundNBT itemTag = new CompoundNBT();
         itemToAdd.save(itemTag);
         tag.put(getItemKey(itemToAdd), itemTag);
         return true;
     }
 
-    public boolean removeItem(ItemStack itemToRemove, CompoundNBT tag){
+    public static boolean removeItem(ItemStack itemToRemove, CompoundNBT tag){
         tag.remove(getItemKey(itemToRemove));
         return true;
     }
@@ -71,18 +81,21 @@ public class ItemScroll extends ModItem implements IScribeable {
 
     @Override
     public boolean onScribe(World world, BlockPos pos, PlayerEntity player, Hand handIn, ItemStack thisStack) {
-        ItemScroll itemScroll = (ItemScroll) thisStack.getItem();
+        return ItemScroll.scribe(world, pos, player, handIn, thisStack);
+    }
+
+    public static boolean scribe(World world, BlockPos pos, PlayerEntity player, Hand handIn, ItemStack thisStack){
         ItemStack stackToWrite = player.getItemInHand(handIn);
         CompoundNBT tag = thisStack.getTag();
         if(stackToWrite == ItemStack.EMPTY || tag == null)
             return false;
 
-        if(itemScroll.containsItem(stackToWrite, tag)) {
+        if(containsItem(stackToWrite, tag)) {
             PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.scribe.item_removed"));
             return removeItem(stackToWrite, tag);
         }
         PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.scribe.item_added"));
-        return itemScroll.addItem(stackToWrite, tag);
+        return addItem(stackToWrite, tag);
     }
 
     @Override
