@@ -36,21 +36,21 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.ArrayList;
 
-public class WildenBoss extends MonsterEntity implements IAnimatable, IAnimationListener {
+public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimationListener {
     private final ServerBossInfo bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenScreen(true).setCreateWorldFog(true);
-    public static final DataParameter<Boolean> HAS_SPIKES = EntityDataManager.defineId(WildenBoss.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<Boolean> HAS_HORNS = EntityDataManager.defineId(WildenBoss.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<Boolean> HAS_WINGS = EntityDataManager.defineId(WildenBoss.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<Integer> PHASE = EntityDataManager.defineId(WildenBoss.class, DataSerializers.INT);
-    public static final DataParameter<Boolean> DEFENSIVE_MODE = EntityDataManager.defineId(WildenBoss.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<Boolean> PHASE_SWAPPING = EntityDataManager.defineId(WildenBoss.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Boolean> HAS_SPIKES = EntityDataManager.defineId(EntityChimera.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Boolean> HAS_HORNS = EntityDataManager.defineId(EntityChimera.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Boolean> HAS_WINGS = EntityDataManager.defineId(EntityChimera.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Integer> PHASE = EntityDataManager.defineId(EntityChimera.class, DataSerializers.INT);
+    public static final DataParameter<Boolean> DEFENSIVE_MODE = EntityDataManager.defineId(EntityChimera.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Boolean> PHASE_SWAPPING = EntityDataManager.defineId(EntityChimera.class, DataSerializers.BOOLEAN);
 
     public int summonCooldown;
     public int diveCooldown;
     public int spikeCooldown;
     public int ramCooldown;
 
-    protected WildenBoss(EntityType<? extends MonsterEntity> p_i48553_1_, World p_i48553_2_) {
+    protected EntityChimera(EntityType<? extends MonsterEntity> p_i48553_1_, World p_i48553_2_) {
         super(p_i48553_1_, p_i48553_2_);
     }
 
@@ -68,9 +68,9 @@ public class WildenBoss extends MonsterEntity implements IAnimatable, IAnimation
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController<WildenBoss>(this, "walkController", 20, this::groundPredicate));
-        animationData.addAnimationController(new AnimationController<WildenBoss>(this, "flyController", 20, this::flyPredicate));
-        animationData.addAnimationController(new AnimationController<WildenBoss>(this, "attackController", 1, this::attackPredicate));
+        animationData.addAnimationController(new AnimationController<EntityChimera>(this, "walkController", 20, this::groundPredicate));
+        animationData.addAnimationController(new AnimationController<EntityChimera>(this, "flyController", 20, this::flyPredicate));
+        animationData.addAnimationController(new AnimationController<EntityChimera>(this, "attackController", 1, this::attackPredicate));
     }
 
     private <E extends Entity> PlayState flyPredicate(AnimationEvent event) {
@@ -193,7 +193,7 @@ public class WildenBoss extends MonsterEntity implements IAnimatable, IAnimation
             this.setPhaseSwapping(true);
             this.setPhase(this.getPhase() + 1);
             this.setHealth(1.0f);
-            Networking.sendToNearby(level, this, new PacketAnimEntity(this.getId(), WildenBoss.Animations.HOWL.ordinal()));
+            Networking.sendToNearby(level, this, new PacketAnimEntity(this.getId(), EntityChimera.Animations.HOWL.ordinal()));
             this.dead = false;
         }
 

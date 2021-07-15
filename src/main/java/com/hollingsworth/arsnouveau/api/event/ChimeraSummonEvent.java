@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.SummonWolf;
-import com.hollingsworth.arsnouveau.common.entity.WildenBoss;
+import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
@@ -36,11 +36,11 @@ public class ChimeraSummonEvent implements ITimedEvent {
         duration--;
         if(serverSide){
             Entity owner = world.getEntity(ownerID);
-            if(!(owner instanceof WildenBoss)) {
+            if(!(owner instanceof EntityChimera)) {
                 duration = 0;
                 return;
             }
-            WildenBoss boss = (WildenBoss) owner;
+            EntityChimera boss = (EntityChimera) owner;
             if(duration % 20 ==0){
                 System.out.println(phase);
                 if(phase <= 1){

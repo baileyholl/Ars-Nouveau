@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.entity.WildenBoss;
+import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
@@ -10,7 +10,7 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import javax.annotation.Nullable;
 
-public class WildenBossModel extends AnimatedGeoModel<WildenBoss> {
+public class WildenBossModel extends AnimatedGeoModel<EntityChimera> {
 
     private static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/chimera.png");
     private static final ResourceLocation DEFENSIVE_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/chimera_defense.png");
@@ -20,7 +20,7 @@ public class WildenBossModel extends AnimatedGeoModel<WildenBoss> {
 
 
     @Override
-    public void setLivingAnimations(WildenBoss entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
+    public void setLivingAnimations(EntityChimera entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
         IBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
@@ -40,17 +40,17 @@ public class WildenBossModel extends AnimatedGeoModel<WildenBoss> {
     }
 
     @Override
-    public ResourceLocation getModelLocation(WildenBoss entity) {
+    public ResourceLocation getModelLocation(EntityChimera entity) {
         return entity.isDefensive() ? DEFENSIVE_MODEL : NORMAL_MODEL;
     }
 
     @Override
-    public ResourceLocation getTextureLocation(WildenBoss entity) {
+    public ResourceLocation getTextureLocation(EntityChimera entity) {
         return entity.isDefensive() ? DEFENSIVE_TEXTURE : TEXTURE;
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(WildenBoss animatable) {
+    public ResourceLocation getAnimationFileLocation(EntityChimera animatable) {
         return new ResourceLocation(ArsNouveau.MODID, "animations/wilden_chimera_animations.geo.json");
     }
 }

@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity.goal.chimera;
 
 import com.hollingsworth.arsnouveau.api.event.ChimeraSummonEvent;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
-import com.hollingsworth.arsnouveau.common.entity.WildenBoss;
+import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
 import com.hollingsworth.arsnouveau.common.network.PacketTimedEvent;
@@ -13,12 +13,12 @@ import net.minecraft.util.SoundEvents;
 import java.util.EnumSet;
 
 public class ChimeraSummonGoal extends Goal {
-    private WildenBoss mob;
+    private EntityChimera mob;
     public int timeSummoning;
     public boolean done;
     public boolean howling;
 
-    public ChimeraSummonGoal(WildenBoss boss){
+    public ChimeraSummonGoal(EntityChimera boss){
         this.mob = boss;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
@@ -41,7 +41,7 @@ public class ChimeraSummonGoal extends Goal {
     public void tick() {
         super.tick();
         if(!howling) {
-            Networking.sendToNearby(mob.level, mob, new PacketAnimEntity(mob.getId(), WildenBoss.Animations.HOWL.ordinal()));
+            Networking.sendToNearby(mob.level, mob, new PacketAnimEntity(mob.getId(), EntityChimera.Animations.HOWL.ordinal()));
             ChimeraSummonEvent summonEvent = new ChimeraSummonEvent(100, mob.getPhase(), mob.level, mob.blockPosition(), this.mob.getId());
             EventQueue.getServerInstance().addEvent(summonEvent);
             Networking.sendToNearby(mob.level, mob, new PacketTimedEvent(summonEvent));

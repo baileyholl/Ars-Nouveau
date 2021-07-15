@@ -66,9 +66,9 @@ public class ModEntities {
                     .sized(1.0f, 2.0f)
                     .setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
-    public static EntityType<WildenBoss> WILDEN_BOSS =  build(
+    public static EntityType<EntityChimera> WILDEN_BOSS =  build(
             "wilden_boss",
-            EntityType.Builder.<WildenBoss>of(WildenBoss::new, EntityClassification.MONSTER)
+            EntityType.Builder.<EntityChimera>of(EntityChimera::new, EntityClassification.MONSTER)
                     .sized(1.0f, 2.0f)
                     .setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
