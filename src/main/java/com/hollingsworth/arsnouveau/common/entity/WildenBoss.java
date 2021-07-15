@@ -1,8 +1,13 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraAttackGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraSummonGoal;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.*;
@@ -14,9 +19,13 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerBossInfo;
+import net.minecraft.world.server.ServerWorld;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -24,6 +33,8 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
+
+import java.util.ArrayList;
 
 public class WildenBoss extends MonsterEntity implements IAnimatable, IAnimationListener {
     private final ServerBossInfo bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenScreen(true).setCreateWorldFog(true);
@@ -50,7 +61,7 @@ public class WildenBoss extends MonsterEntity implements IAnimatable, IAnimation
         this.goalSelector.addGoal(5, new ChimeraAttackGoal(this, 1.3D, true));
         this.goalSelector.addGoal(3, new ChimeraSummonGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-        this.goalSelector.addGoal(8, new WaterAvoidingRandomWalkingGoal(this, 1.2d));
+//        this.goalSelector.addGoal(8, new WaterAvoidingRandomWalkingGoal(this, 1.2d));
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
     }
@@ -88,6 +99,35 @@ public class WildenBoss extends MonsterEntity implements IAnimatable, IAnimation
             spikeCooldown--;
         if(ramCooldown > 0)
             ramCooldown--;
+
+        if(!level.isClientSide && getPhaseSwapping()){
+            if(this.getTarget() != null)
+                this.getLookControl().setLookAt(this.getTarget(), 0.3f, 0.3f);
+            if(this.getHealth() < this.getMaxHealth()){
+                this.heal((float) (0.3f));
+            }else{
+                this.setPhaseSwapping(false);
+                getRandomUpgrade();
+                ParticleUtil.spawnPoof((ServerWorld) level, blockPosition().above());
+            }
+        }
+        int baseAge =  40;
+        float scaleAge = (float) ParticleUtil.inRange(0.1, 0.2);
+        if(getPhaseSwapping() && level.isClientSide){
+            BlockPos pos = blockPosition();
+            for(int i =0; i< 10; i++){
+                Vector3d particlePos = new Vector3d(pos.getX(), pos.getY() + 1, pos.getZ()).add(0.5, 0.5, 0.5);
+                particlePos = particlePos.add(ParticleUtil.pointInSphere().multiply(3.0, 3.0, 3.0));
+                level.addParticle(ParticleLineData.createData(ParticleColor.makeRandomColor(255, 255, 255, random),scaleAge, baseAge + level.random.nextInt(20)) ,
+                        particlePos.x(), particlePos.y(), particlePos.z(),
+                        pos.getX() + 0.5  , pos.getY() +0.5 , pos.getZ()+ 0.5);
+            }
+        }
+    }
+
+    @Override
+    public void heal(float p_70691_1_) {
+        this.setHealth(this.getHealth() + p_70691_1_);
     }
 
     public boolean canSwipe(){
@@ -111,7 +151,53 @@ public class WildenBoss extends MonsterEntity implements IAnimatable, IAnimation
     }
 
     public boolean canAttack(){
-        return getTarget() != null &&
+        return getTarget() != null && this.getHealth() >= 1 && !this.getPhaseSwapping();
+    }
+
+
+    @Override
+    public boolean isDeadOrDying() {
+        return this.getHealth() <= 0.0 && getPhase() == 3;
+    }
+
+    public void getRandomUpgrade(){
+        ArrayList<Integer> upgrades = new ArrayList<>();
+        if(!this.hasWings())
+            upgrades.add(0);
+        if(!this.hasSpikes())
+            upgrades.add(1);
+        if(!this.hasHorns())
+            upgrades.add(2);
+        if(upgrades.isEmpty())
+            return;
+        int upgrade = upgrades.get(random.nextInt(upgrades.size()));
+        switch(upgrade){
+            case 0:
+                setWings(true);
+                return;
+            case 1:
+                setSpikes(true);
+                return;
+            case 2:
+                setHorns(true);
+                return;
+        }
+    }
+
+    @Override
+    public boolean hurt(DamageSource p_70097_1_, float p_70097_2_) {
+        if(this.getPhaseSwapping())
+            return false;
+        boolean res = super.hurt(p_70097_1_, p_70097_2_);
+        if(!this.level.isClientSide && this.getHealth() <= 0.0 && getPhase() < 3){
+            this.setPhaseSwapping(true);
+            this.setPhase(this.getPhase() + 1);
+            this.setHealth(1.0f);
+            Networking.sendToNearby(level, this, new PacketAnimEntity(this.getId(), WildenBoss.Animations.HOWL.ordinal()));
+            this.dead = false;
+        }
+
+        return res;
     }
 
     @Override
@@ -216,6 +302,7 @@ public class WildenBoss extends MonsterEntity implements IAnimatable, IAnimation
         setWings(tag.getBoolean("wings"));
         setPhase(tag.getInt("phase"));
         setDefensiveMode(tag.getBoolean("defensive"));
+        setPhaseSwapping(tag.getBoolean("swapping"));
         summonCooldown = tag.getInt("summonCooldown");
         diveCooldown = tag.getInt("diveCooldown");
         spikeCooldown = tag.getInt("spikeCooldown");
@@ -233,6 +320,7 @@ public class WildenBoss extends MonsterEntity implements IAnimatable, IAnimation
         tag.putInt("diveCooldown", diveCooldown);
         tag.putInt("spikeCooldown", spikeCooldown);
         tag.putInt("ramCooldown", ramCooldown);
+        tag.putBoolean("swapping", getPhaseSwapping());
         return super.save(tag);
     }
 

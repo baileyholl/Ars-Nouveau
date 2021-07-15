@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.WildenBoss;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
-import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,7 +12,7 @@ import net.minecraft.pathfinding.Path;
 import java.util.EnumSet;
 
 public class ChimeraAttackGoal extends Goal {
-    protected final CreatureEntity mob;
+    protected final WildenBoss mob;
     private final double speedModifier;
     private final boolean followingTargetEvenIfNotSeen;
     private Path path;
@@ -30,7 +29,7 @@ public class ChimeraAttackGoal extends Goal {
     public int timeAnimating = 0;
     public boolean arrived = false;
     public boolean done = false;
-    public ChimeraAttackGoal(CreatureEntity p_i1636_1_, double p_i1636_2_, boolean p_i1636_4_) {
+    public ChimeraAttackGoal(WildenBoss p_i1636_1_, double p_i1636_2_, boolean p_i1636_4_) {
         this.mob = p_i1636_1_;
         this.speedModifier = 1.5f;
         this.followingTargetEvenIfNotSeen = p_i1636_4_;
@@ -44,6 +43,8 @@ public class ChimeraAttackGoal extends Goal {
 
     public boolean canUse() {
         long i = this.mob.level.getGameTime();
+        if(!this.mob.canAttack())
+            return false;
         if (i - this.lastCanUseCheck < 20L) {
             return false;
         } else {
@@ -75,8 +76,9 @@ public class ChimeraAttackGoal extends Goal {
 
     public boolean canContinueToUse() {
         LivingEntity livingentity = this.mob.getTarget();
+        if(!this.mob.canAttack())
+            return false;
         if (livingentity == null || done) {
-            System.out.println("exit");
             return false;
         } else if (!livingentity.isAlive()) {
             return false;

@@ -24,8 +24,8 @@ public class WildenBossModel extends AnimatedGeoModel<WildenBoss> {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
         IBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-        head.setRotationX(extraData.headPitch * 0.017453292F);
-        head.setRotationY(extraData.netHeadYaw * 0.017453292F);
+        head.setRotationX(extraData.headPitch * 0.017453292F + 0.45f);
+        head.setRotationY(extraData.netHeadYaw * 0.012453292F );
         this.getBone("wings").setHidden(!entity.hasWings());
         this.getBone("spikes_lower_body").setHidden(!entity.hasSpikes());
         this.getBone("spikes_upper_body").setHidden(!entity.hasSpikes());
