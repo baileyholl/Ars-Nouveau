@@ -615,12 +615,14 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         BlockPos returnPos = null;
         if(TO_LIST == null)
             return returnPos;
+        ItemScroll.SortPref foundPref = ItemScroll.SortPref.INVALID;
         for(BlockPos b : TO_LIST){
             ItemScroll.SortPref pref = canDepositItem(level.getBlockEntity(b), stack);
-            if (pref == ItemScroll.SortPref.HIGH)
-               return b;
-            else if(pref == ItemScroll.SortPref.LOW)
+            // Pick our highest priority
+            if(pref.ordinal() > foundPref.ordinal()){
+                foundPref = pref;
                 returnPos = b;
+            }
         }
         return returnPos;
     }

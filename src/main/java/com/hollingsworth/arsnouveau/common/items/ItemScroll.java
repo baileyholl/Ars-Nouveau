@@ -37,10 +37,10 @@ public abstract class ItemScroll extends ModItem implements IScribeable {
     public abstract SortPref getSortPref(ItemStack stackToStore, CompoundNBT scrollTag, IItemHandler inventory);
 
     public enum SortPref {
-        HIGHEST,
-        HIGH,
+        INVALID,
         LOW,
-        INVALID
+        HIGH,
+        HIGHEST
     }
 
     public static String ITEM_PREFIX = "item_";
@@ -59,14 +59,14 @@ public abstract class ItemScroll extends ModItem implements IScribeable {
         return stacks;
     }
 
-    public boolean addItem(ItemStack itemToAdd, CompoundNBT tag){
+    public static boolean addItem(ItemStack itemToAdd, CompoundNBT tag){
         CompoundNBT itemTag = new CompoundNBT();
         itemToAdd.save(itemTag);
         tag.put(getItemKey(itemToAdd), itemTag);
         return true;
     }
 
-    public boolean removeItem(ItemStack itemToRemove, CompoundNBT tag){
+    public static boolean removeItem(ItemStack itemToRemove, CompoundNBT tag){
         tag.remove(getItemKey(itemToRemove));
         return true;
     }
@@ -81,18 +81,21 @@ public abstract class ItemScroll extends ModItem implements IScribeable {
 
     @Override
     public boolean onScribe(World world, BlockPos pos, PlayerEntity player, Hand handIn, ItemStack thisStack) {
-        ItemScroll itemScroll = (ItemScroll) thisStack.getItem();
+        return ItemScroll.scribe(world, pos, player, handIn, thisStack);
+    }
+
+    public static boolean scribe(World world, BlockPos pos, PlayerEntity player, Hand handIn, ItemStack thisStack){
         ItemStack stackToWrite = player.getItemInHand(handIn);
         CompoundNBT tag = thisStack.getTag();
         if(stackToWrite == ItemStack.EMPTY || tag == null)
             return false;
 
-        if(itemScroll.containsItem(stackToWrite, tag)) {
+        if(containsItem(stackToWrite, tag)) {
             PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.scribe.item_removed"));
             return removeItem(stackToWrite, tag);
         }
         PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.scribe.item_added"));
-        return itemScroll.addItem(stackToWrite, tag);
+        return addItem(stackToWrite, tag);
     }
 
     @Override

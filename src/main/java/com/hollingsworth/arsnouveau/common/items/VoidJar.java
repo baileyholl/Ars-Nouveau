@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
+import com.hollingsworth.arsnouveau.api.item.IScribeable;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -11,14 +12,19 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class VoidJar extends ItemScroll{
+import static com.hollingsworth.arsnouveau.common.items.ItemScroll.ITEM_PREFIX;
+import static com.hollingsworth.arsnouveau.common.items.ItemScroll.containsItem;
+
+public class VoidJar extends ModItem implements IScribeable {
 
     public VoidJar() {
         super(ItemsRegistry.defaultItemProperties().stacksTo(1), LibItemNames.VOID_JAR);
@@ -61,9 +67,7 @@ public class VoidJar extends ItemScroll{
         if(worldIn.isClientSide)
             return super.use(worldIn, player, handIn);
         ItemStack stack = player.getItemInHand(handIn);
-        CompoundNBT tag = stack.getTag();
-        ItemScroll itemScroll = (ItemScroll) stack.getItem();
-
+        CompoundNBT tag = stack.getOrCreateTag();
 
         if(handIn == Hand.MAIN_HAND){
             ItemStack stackToWrite = player.getOffhandItem();
@@ -73,14 +77,14 @@ public class VoidJar extends ItemScroll{
             }
 
             if(!stackToWrite.isEmpty()){
-                if(itemScroll.containsItem(stackToWrite, tag)) {
+                if(containsItem(stackToWrite, tag)) {
                     PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.scribe.item_removed"));
-                    removeItem(stackToWrite, tag);
+                    ItemScroll.removeItem(stackToWrite, tag);
                     player.startUsingItem(handIn);
                     return ActionResult.fail(stack);
                 }
                 PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.scribe.item_added"));
-                itemScroll.addItem(stackToWrite, tag);
+                ItemScroll.addItem(stackToWrite, tag);
                 player.startUsingItem(handIn);
                 return ActionResult.fail(stack);
             }
@@ -92,14 +96,31 @@ public class VoidJar extends ItemScroll{
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
-        if(stack.hasTag()){
-            if(stack.getTag().getBoolean("on")){
-                tooltip2.add(new TranslationTextComponent("ars_nouveau.on"));
-            }else{
-                tooltip2.add(new TranslationTextComponent("ars_nouveau.off"));
-            }
+        CompoundNBT tag = stack.getTag();
+        if(tag == null)
+            return;
+
+        if(tag.getBoolean("on")){
+            tooltip2.add(new TranslationTextComponent("ars_nouveau.on"));
+        }else{
+            tooltip2.add(new TranslationTextComponent("ars_nouveau.off"));
         }
 
+
         super.appendHoverText(stack, worldIn, tooltip2, flagIn);
+        List<ItemStack> stacks = new ArrayList<>();
+        for(String s : tag.getAllKeys()){
+            if(s.contains(ITEM_PREFIX)){
+                stacks.add(ItemStack.of(tag.getCompound(s)));
+            }
+        }
+        for(ItemStack s : stacks){
+            tooltip2.add(s.getHoverName());
+        }
+    }
+
+    @Override
+    public boolean onScribe(World world, BlockPos pos, PlayerEntity player, Hand handIn, ItemStack thisStack) {
+        return ItemScroll.scribe(world, pos, player, handIn, thisStack);
     }
 }
