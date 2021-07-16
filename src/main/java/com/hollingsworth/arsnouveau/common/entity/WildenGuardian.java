@@ -44,7 +44,8 @@ public class WildenGuardian extends MonsterEntity implements IAnimatable, IAnima
     public static final DataParameter<Boolean> IS_ARMORED = EntityDataManager.defineId(WildenGuardian.class, DataSerializers.BOOLEAN);
     private static final DataParameter<Integer> TARGET_ENTITY = EntityDataManager.defineId(WildenGuardian.class, DataSerializers.INT);
     private static final DataParameter<Integer> CLIENT_TIME = EntityDataManager.defineId(WildenGuardian.class, DataSerializers.INT);
-    protected WildenGuardian(EntityType<? extends MonsterEntity> type, World worldIn) {
+
+    public WildenGuardian(EntityType<? extends MonsterEntity> type, World worldIn) {
         super(type, worldIn);
     }
 

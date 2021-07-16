@@ -38,7 +38,8 @@ public class WildenStalker extends MonsterEntity implements IAnimatable, IAnimat
 
     public static final DataParameter<Boolean> isFlying = EntityDataManager.defineId(WildenStalker.class, DataSerializers.BOOLEAN);
     public int timeFlying;
-    protected WildenStalker(EntityType<? extends MonsterEntity> type, World worldIn) {
+
+    public WildenStalker(EntityType<? extends MonsterEntity> type, World worldIn) {
         super(type, worldIn);
         moveControl = new FlyHelper(this);
     }

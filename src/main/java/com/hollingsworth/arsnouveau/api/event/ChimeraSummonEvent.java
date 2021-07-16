@@ -3,13 +3,13 @@ package com.hollingsworth.arsnouveau.api.event;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.entity.ModEntities;
-import com.hollingsworth.arsnouveau.common.entity.SummonWolf;
-import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
+import com.hollingsworth.arsnouveau.common.entity.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import java.util.Random;
 
 public class ChimeraSummonEvent implements ITimedEvent {
 
@@ -42,22 +42,42 @@ public class ChimeraSummonEvent implements ITimedEvent {
             }
             EntityChimera boss = (EntityChimera) owner;
             if(duration % 20 ==0){
-                System.out.println(phase);
-                if(phase <= 1){
-                    SummonWolf wolf = new SummonWolf(ModEntities.SUMMON_WOLF, world);
-                    wolf.setPos(pos.getX(), pos.getY(), pos.getZ());
-                    wolf.isWildenSummon = true;
-                    wolf.ticksLeft = 100;
-                    if(boss.getTarget() != null){
-                        wolf.setTarget(boss.getTarget());
-                    }
-                    wolf.setAggressive(true);
-                    world.addFreshEntity(wolf);
+                Random random = boss.getRandom();
+                SummonWolf wolf = new SummonWolf(ModEntities.SUMMON_WOLF, world);
+                wolf.setPos(getPos().getX(), getPos().getY(), getPos().getZ());
+                wolf.isWildenSummon = true;
+                wolf.ticksLeft = 100 + phase * 60;
+                if(boss.getTarget() != null){
+                    wolf.setTarget(boss.getTarget());
+                }
+                wolf.setAggressive(true);
+                world.addFreshEntity(wolf);
+
+                if(boss.hasHorns() && boss.level.random.nextInt(8) == 0){
+                    WildenHunter hunter = new WildenHunter(ModEntities.WILDEN_HUNTER, world);
+                    hunter.setPos(getPos().getX(), getPos().getY(), getPos().getZ());
+                    world.addFreshEntity(hunter);
+                }
+
+                if(boss.hasSpikes() && boss.level.random.nextInt(8) == 0){
+                    WildenGuardian guardian = new WildenGuardian(ModEntities.WILDEN_GUARDIAN, world);
+                    guardian.setPos(getPos().getX(), getPos().getY(), getPos().getZ());
+                    world.addFreshEntity(guardian);
+                }
+
+                if(boss.hasWings() && boss.level.random.nextInt(8) == 0){
+                    WildenStalker stalker = new WildenStalker(ModEntities.WILDEN_STALKER, world);
+                    stalker.setPos(getPos().getX(), getPos().getY(), getPos().getZ());
+                    world.addFreshEntity(stalker);
                 }
             }
         }else{
             ParticleUtil.spawnRitualAreaEffect(pos, world, world.random, ParticleUtil.defaultParticleColor(), 1 + phase *2);
         }
+    }
+
+    public BlockPos getPos(){
+        return new BlockPos(pos.getX() + ParticleUtil.inRange(-2.5, 2.5), pos.getY(), pos.getZ() + ParticleUtil.inRange(-2.5, 2.5));
     }
 
     @Override

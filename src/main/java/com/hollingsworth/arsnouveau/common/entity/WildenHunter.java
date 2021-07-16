@@ -28,7 +28,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class  WildenHunter extends MonsterEntity implements IAnimatable, IAnimationListener {
     AnimationFactory manager = new AnimationFactory(this);
-    protected WildenHunter(EntityType<? extends MonsterEntity> type, World worldIn) {
+    public WildenHunter(EntityType<? extends MonsterEntity> type, World worldIn) {
         super(type, worldIn);
     }
     public int ramCooldown = 0;

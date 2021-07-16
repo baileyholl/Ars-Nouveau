@@ -69,7 +69,7 @@ public class ModEntities {
     public static EntityType<EntityChimera> WILDEN_BOSS =  build(
             "wilden_boss",
             EntityType.Builder.<EntityChimera>of(EntityChimera::new, EntityClassification.MONSTER)
-                    .sized(1.0f, 2.0f)
+                    .sized(1.5f, 2.5f)
                     .setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
     public static EntityType<LightningEntity> LIGHTNING_ENTITY = null;

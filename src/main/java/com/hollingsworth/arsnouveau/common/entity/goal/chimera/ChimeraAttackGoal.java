@@ -29,9 +29,9 @@ public class ChimeraAttackGoal extends Goal {
     public int timeAnimating = 0;
     public boolean arrived = false;
     public boolean done = false;
-    public ChimeraAttackGoal(EntityChimera p_i1636_1_, double p_i1636_2_, boolean p_i1636_4_) {
+    public ChimeraAttackGoal(EntityChimera p_i1636_1_, boolean p_i1636_4_) {
         this.mob = p_i1636_1_;
-        this.speedModifier = 1.5f;
+        this.speedModifier = 1.8f;
         this.followingTargetEvenIfNotSeen = p_i1636_4_;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
@@ -163,7 +163,6 @@ public class ChimeraAttackGoal extends Goal {
             this.ticksUntilNextAttack = 20;
             this.mob.doHurtTarget(target);
         }
-
     }
 
     protected double getAttackReachSqr(LivingEntity p_179512_1_) {

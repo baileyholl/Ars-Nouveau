@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraAttackGoal;
+import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraRamGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraSummonGoal;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
@@ -58,12 +59,13 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(0, new SwimGoal(this));
-        this.goalSelector.addGoal(5, new ChimeraAttackGoal(this, 1.3D, true));
+        this.goalSelector.addGoal(5, new ChimeraAttackGoal(this, true));
         this.goalSelector.addGoal(3, new ChimeraSummonGoal(this));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
 //        this.goalSelector.addGoal(8, new WaterAvoidingRandomWalkingGoal(this, 1.2d));
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(3, new ChimeraRamGoal(this));
     }
 
     @Override
@@ -131,19 +133,19 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
     }
 
     public boolean canSwipe(){
-        return true;
+        return !getPhaseSwapping();
     }
 
     public boolean canDive(){
-        return diveCooldown <= 0 && hasWings();
+        return diveCooldown <= 0 && hasWings() && !getPhaseSwapping();
     }
 
     public boolean canSpike(){
-        return spikeCooldown <= 0 && hasSpikes();
+        return spikeCooldown <= 0 && hasSpikes() && !getPhaseSwapping();
     }
 
     public boolean canRam(){
-        return ramCooldown <= 0 && hasHorns();
+        return ramCooldown <= 0 && hasHorns() && !getPhaseSwapping();
     }
 
     public boolean canSummon(){
@@ -162,6 +164,7 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
 
     public void getRandomUpgrade(){
         ArrayList<Integer> upgrades = new ArrayList<>();
+        setHorns(true);
         if(!this.hasWings())
             upgrades.add(0);
         if(!this.hasSpikes())
@@ -185,10 +188,12 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
     }
 
     @Override
-    public boolean hurt(DamageSource p_70097_1_, float p_70097_2_) {
+    public boolean hurt(DamageSource source, float amount) {
+        if (source == DamageSource.CACTUS || source == DamageSource.SWEET_BERRY_BUSH)
+            return false;
         if(this.getPhaseSwapping())
             return false;
-        boolean res = super.hurt(p_70097_1_, p_70097_2_);
+        boolean res = super.hurt(source, amount);
         if(!this.level.isClientSide && this.getHealth() <= 0.0 && getPhase() < 3){
             this.setPhaseSwapping(true);
             this.setPhase(this.getPhase() + 1);
@@ -346,6 +351,13 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
                 controller.markNeedsReload();
                 controller.setAnimation(new AnimationBuilder().addAnimation("howl", false).addAnimation("idle"));
             }
+
+
+            if(arg == Animations.CHARGE.ordinal()){
+                AnimationController controller = this.factory.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("attackController");
+                controller.markNeedsReload();
+                controller.setAnimation(new AnimationBuilder().addAnimation("ready_charge", false).addAnimation("charge", true));
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -353,6 +365,7 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
 
     public enum Animations{
         ATTACK,
-        HOWL
+        HOWL,
+        CHARGE
     }
 }
