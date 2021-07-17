@@ -31,6 +31,10 @@ public class ChimeraSummonGoal extends Goal {
         howling = false;
     }
 
+    @Override
+    public boolean isInterruptable() {
+        return false;
+    }
 
     @Override
     public boolean canContinueToUse() {
@@ -46,6 +50,7 @@ public class ChimeraSummonGoal extends Goal {
     @Override
     public void tick() {
         super.tick();
+
         if(!howling) {
             Networking.sendToNearby(mob.level, mob, new PacketAnimEntity(mob.getId(), EntityChimera.Animations.HOWL.ordinal()));
             ChimeraSummonEvent summonEvent = new ChimeraSummonEvent(60 + mob.getPhase() * 20, mob.getPhase(), mob.level, mob.blockPosition(), this.mob.getId());

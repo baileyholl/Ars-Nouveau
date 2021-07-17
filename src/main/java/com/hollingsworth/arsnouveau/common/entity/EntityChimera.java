@@ -4,14 +4,18 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
-import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraAttackGoal;
-import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraRamGoal;
-import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraSummonGoal;
+import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraDiveGoal;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.*;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.controller.MovementController;
+import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -19,9 +23,12 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.pathfinding.FlyingPathNavigator;
+import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.BossInfo;
 import net.minecraft.world.World;
@@ -45,7 +52,7 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
     public static final DataParameter<Integer> PHASE = EntityDataManager.defineId(EntityChimera.class, DataSerializers.INT);
     public static final DataParameter<Boolean> DEFENSIVE_MODE = EntityDataManager.defineId(EntityChimera.class, DataSerializers.BOOLEAN);
     public static final DataParameter<Boolean> PHASE_SWAPPING = EntityDataManager.defineId(EntityChimera.class, DataSerializers.BOOLEAN);
-
+    public static final DataParameter<Boolean> IS_FLYING = EntityDataManager.defineId(EntityChimera.class, DataSerializers.BOOLEAN);
     public int summonCooldown;
     public int diveCooldown;
     public int spikeCooldown;
@@ -53,19 +60,21 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
 
     protected EntityChimera(EntityType<? extends MonsterEntity> p_i48553_1_, World p_i48553_2_) {
         super(p_i48553_1_, p_i48553_2_);
+        moveControl = new ChimeraMoveController(this, 10, true);
     }
 
     @Override
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(0, new SwimGoal(this));
-        this.goalSelector.addGoal(5, new ChimeraAttackGoal(this, true));
-        this.goalSelector.addGoal(3, new ChimeraSummonGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
+//        this.goalSelector.addGoal(5, new ChimeraAttackGoal(this, true));
+//        this.goalSelector.addGoal(3, new ChimeraSummonGoal(this));
+        this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
 //        this.goalSelector.addGoal(8, new WaterAvoidingRandomWalkingGoal(this, 1.2d));
-        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-        this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
-        this.goalSelector.addGoal(3, new ChimeraRamGoal(this));
+//        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
+//        this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+//        this.goalSelector.addGoal(3, new ChimeraRamGoal(this));
+        this.goalSelector.addGoal(3, new ChimeraDiveGoal(this));
     }
 
     @Override
@@ -93,6 +102,11 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
     @Override
     public void tick() {
         super.tick();
+        this.goalSelector.getRunningGoals().forEach(s -> System.out.println(s.getGoal().toString()));
+        if(this.isFlying() && !this.level.isClientSide){
+            if(this.goalSelector.getRunningGoals().noneMatch(g -> g.getGoal() instanceof ChimeraDiveGoal))
+                setFlying(false);
+        }
         if(summonCooldown > 0)
             summonCooldown--;
         if(diveCooldown > 0)
@@ -132,24 +146,20 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
         this.setHealth(this.getHealth() + p_70691_1_);
     }
 
-    public boolean canSwipe(){
-        return !getPhaseSwapping();
-    }
-
     public boolean canDive(){
-        return diveCooldown <= 0 && hasWings() && !getPhaseSwapping();
+        return diveCooldown <= 0 && hasWings() && !getPhaseSwapping() && !isFlying();
     }
 
     public boolean canSpike(){
-        return spikeCooldown <= 0 && hasSpikes() && !getPhaseSwapping();
+        return spikeCooldown <= 0 && hasSpikes() && !getPhaseSwapping() && !isFlying();
     }
 
     public boolean canRam(){
-        return ramCooldown <= 0 && hasHorns() && !getPhaseSwapping();
+        return ramCooldown <= 0 && hasHorns() && !getPhaseSwapping() && !isFlying();
     }
 
     public boolean canSummon(){
-        return getTarget() != null && summonCooldown <= 0;
+        return getTarget() != null && summonCooldown <= 0 && !isFlying();
     }
 
     public boolean canAttack(){
@@ -164,7 +174,7 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
 
     public void getRandomUpgrade(){
         ArrayList<Integer> upgrades = new ArrayList<>();
-        setHorns(true);
+        setWings(true);
         if(!this.hasWings())
             upgrades.add(0);
         if(!this.hasSpikes())
@@ -249,8 +259,15 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
         this.entityData.define(PHASE, 1);
         this.entityData.define(DEFENSIVE_MODE, false);
         this.entityData.define(PHASE_SWAPPING, false);
+        this.entityData.define(IS_FLYING, false);
+    }
+    public boolean isFlying(){
+        return entityData.get(IS_FLYING);
     }
 
+    public void setFlying(boolean flying){
+        entityData.set(IS_FLYING, flying);
+    }
     public boolean hasHorns(){
         return entityData.get(HAS_HORNS);
     }
@@ -358,14 +375,115 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
                 controller.markNeedsReload();
                 controller.setAnimation(new AnimationBuilder().addAnimation("ready_charge", false).addAnimation("charge", true));
             }
+
+            if(arg == Animations.FLYING.ordinal()){
+                AnimationController controller = this.factory.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("attackController");
+                controller.markNeedsReload();
+                controller.setAnimation(new AnimationBuilder().addAnimation("flying", true));
+            }
+            if(arg == Animations.DIVE_BOMB.ordinal()){
+                AnimationController controller = this.factory.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("attackController");
+                controller.markNeedsReload();
+                controller.setAnimation(new AnimationBuilder().addAnimation("divebomb", true));
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
+    @Override
+    protected void checkFallDamage(double p_184231_1_, boolean p_184231_3_, BlockState p_184231_4_, BlockPos p_184231_5_) {
+        super.checkFallDamage(p_184231_1_, p_184231_3_, p_184231_4_, p_184231_5_);
+        this.fallDistance = 0;
+    }
+
     public enum Animations{
         ATTACK,
         HOWL,
-        CHARGE
+        CHARGE,
+        FLYING,
+        DIVE_BOMB
+    }
+
+    protected PathNavigator createNavigation(World p_175447_1_) {
+        FlyingPathNavigator flyingpathnavigator = new FlyingPathNavigator(this, p_175447_1_);
+        flyingpathnavigator.setCanOpenDoors(true);
+        flyingpathnavigator.setCanFloat(true);
+        flyingpathnavigator.setCanPassDoors(true);
+        return flyingpathnavigator;
+    }
+
+    public static class ChimeraMoveController extends MovementController{
+
+        private final int maxTurn;
+        private final boolean hoversInPlace;
+
+        public ChimeraMoveController(EntityChimera p_i225710_1_, int maxTurn, boolean hoversInPlace) {
+            super(p_i225710_1_);
+            this.maxTurn = maxTurn;
+            this.hoversInPlace = hoversInPlace;
+        }
+
+        @Override
+        public void tick() {
+            EntityChimera chimera = (EntityChimera) this.mob;
+            if(chimera.isFlying()) {
+              flyTick();
+            }else{
+                super.tick();
+            }
+        }
+        // Copy from FlyingMovementController
+        public void flyTick(){
+            EntityChimera chimera = (EntityChimera) this.mob;
+            if (this.operation == MovementController.Action.MOVE_TO) {
+                this.operation = MovementController.Action.WAIT;
+                this.mob.setNoGravity(true);
+                double d0 = this.wantedX - this.mob.getX();
+                double d1 = this.wantedY - this.mob.getY();
+                double d2 = this.wantedZ - this.mob.getZ();
+                double d3 = d0 * d0 + d1 * d1 + d2 * d2;
+                if (d3 < (double)2.5000003E-7F) {
+                    this.mob.setYya(0.0F);
+                    this.mob.setZza(0.0F);
+                    return;
+                }
+
+                float f = (float)(MathHelper.atan2(d2, d0) * (double)(180F / (float)Math.PI)) - 90.0F;
+                this.mob.yRot = this.rotlerp(this.mob.yRot, f, 90.0F);
+                float f1;
+                if (this.mob.isOnGround() && chimera.isFlying()) {
+                    f1 = (float)(this.speedModifier * this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED));
+                } else {
+                    f1 = (float)(this.speedModifier * this.mob.getAttributeValue(Attributes.FLYING_SPEED));
+                }
+
+                this.mob.setSpeed(f1);
+                double d4 = (double)MathHelper.sqrt(d0 * d0 + d2 * d2);
+                float f2 = (float)(-(MathHelper.atan2(d1, d4) * (double)(180F / (float)Math.PI)));
+                this.mob.xRot = this.rotlerp(this.mob.xRot, f2, (float)this.maxTurn);
+                this.mob.setYya(d1 > 0.0D ? f1 : -f1);
+            } else {
+                if (!this.hoversInPlace) {
+                    this.mob.setNoGravity(false);
+                }
+
+                this.mob.setYya(0.0F);
+                this.mob.setZza(0.0F);
+            }
+        }
+    }
+
+
+    public static AttributeModifierMap.MutableAttribute getModdedAttributes(){
+        return MobEntity.createMobAttributes()
+                .add(Attributes.MAX_HEALTH, 25D)
+                .add(Attributes.MOVEMENT_SPEED, 0.25D)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 0.6F)
+                .add(Attributes.ATTACK_KNOCKBACK, 1.0D)
+                .add(Attributes.ATTACK_DAMAGE, 4.5D)
+                .add(Attributes.ARMOR, 2.0D)
+                .add(Attributes.FOLLOW_RANGE, 100D)
+                .add(Attributes.FLYING_SPEED,0.4f );
     }
 }

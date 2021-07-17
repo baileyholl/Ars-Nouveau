@@ -214,7 +214,7 @@ public class ModEntities {
             event.put(ENTITY_DUMMY, MobEntity.createMobAttributes()
                     .add(Attributes.MAX_HEALTH, 20.0D)
                     .add(Attributes.MOVEMENT_SPEED, 0.25D).build());
-            event.put(WILDEN_BOSS,WildenGuardian.getModdedAttributes().build() );
+            event.put(WILDEN_BOSS, EntityChimera.getModdedAttributes().build());
         }
     }
     public static boolean canMonsterSpawnInLight(EntityType<? extends Entity> type, IServerWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
