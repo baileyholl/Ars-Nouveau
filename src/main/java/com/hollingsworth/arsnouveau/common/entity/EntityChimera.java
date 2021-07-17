@@ -57,10 +57,14 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
     public int diveCooldown;
     public int spikeCooldown;
     public int ramCooldown;
+    public boolean diving;
+
+    public FlyingPathNavigator flyingNavigator;
 
     protected EntityChimera(EntityType<? extends MonsterEntity> p_i48553_1_, World p_i48553_2_) {
         super(p_i48553_1_, p_i48553_2_);
         moveControl = new ChimeraMoveController(this, 10, true);
+        initFlyingNavigator();
     }
 
     @Override
@@ -92,7 +96,7 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
     }
 
     private<E extends Entity> PlayState groundPredicate(AnimationEvent e){
-        if (e.isMoving()) {
+        if (e.isMoving() && !isFlying()) {
             e.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
             return PlayState.CONTINUE;
         }
@@ -102,11 +106,19 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
     @Override
     public void tick() {
         super.tick();
-        this.goalSelector.getRunningGoals().forEach(s -> System.out.println(s.getGoal().toString()));
+
+        if(!isFlying())
+            setNoGravity(false);
+
+        if(this.isFlying()) {
+            this.navigation.stop();
+            flyingNavigator.tick();
+        }
         if(this.isFlying() && !this.level.isClientSide){
             if(this.goalSelector.getRunningGoals().noneMatch(g -> g.getGoal() instanceof ChimeraDiveGoal))
                 setFlying(false);
         }
+
         if(summonCooldown > 0)
             summonCooldown--;
         if(diveCooldown > 0)
@@ -147,7 +159,7 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
     }
 
     public boolean canDive(){
-        return diveCooldown <= 0 && hasWings() && !getPhaseSwapping() && !isFlying();
+        return diveCooldown <= 0 && hasWings() && !getPhaseSwapping() && !isFlying() && this.onGround;
     }
 
     public boolean canSpike(){
@@ -241,6 +253,11 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
 
     public boolean canBeAffected(EffectInstance p_70687_1_) {
         return super.canBeAffected(p_70687_1_);
+    }
+
+    @Override
+    protected void jumpFromGround() {
+//        super.jumpFromGround();
     }
 
     AnimationFactory factory = new AnimationFactory(this);
@@ -405,18 +422,30 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
         DIVE_BOMB
     }
 
-    protected PathNavigator createNavigation(World p_175447_1_) {
-        FlyingPathNavigator flyingpathnavigator = new FlyingPathNavigator(this, p_175447_1_);
-        flyingpathnavigator.setCanOpenDoors(true);
-        flyingpathnavigator.setCanFloat(true);
-        flyingpathnavigator.setCanPassDoors(true);
-        return flyingpathnavigator;
+    @Override
+    public PathNavigator getNavigation() {
+        return this.isFlying() ? flyingNavigator : super.getNavigation();
     }
+
+    public void initFlyingNavigator(){
+        FlyingPathNavigator flyingpathnavigator = new FlyingPathNavigator(this, level);
+        flyingpathnavigator.setCanOpenDoors(true);
+        flyingpathnavigator.setCanFloat(false);
+        flyingpathnavigator.setCanPassDoors(true);
+        this.flyingNavigator = flyingpathnavigator;
+    }
+
+    public Vector3d orbitOffset = Vector3d.ZERO;
+    public BlockPos orbitPosition = BlockPos.ZERO;
+
 
     public static class ChimeraMoveController extends MovementController{
 
         private final int maxTurn;
         private final boolean hoversInPlace;
+        private float diveFactor = 1.0f;
+
+
 
         public ChimeraMoveController(EntityChimera p_i225710_1_, int maxTurn, boolean hoversInPlace) {
             super(p_i225710_1_);
@@ -428,14 +457,17 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
         public void tick() {
             EntityChimera chimera = (EntityChimera) this.mob;
             if(chimera.isFlying()) {
-              flyTick();
+                if (chimera.diving) {
+                    diveTick();
+                } else {
+                    flyTick();
+                }
             }else{
                 super.tick();
             }
         }
         // Copy from FlyingMovementController
         public void flyTick(){
-            EntityChimera chimera = (EntityChimera) this.mob;
             if (this.operation == MovementController.Action.MOVE_TO) {
                 this.operation = MovementController.Action.WAIT;
                 this.mob.setNoGravity(true);
@@ -452,7 +484,7 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
                 float f = (float)(MathHelper.atan2(d2, d0) * (double)(180F / (float)Math.PI)) - 90.0F;
                 this.mob.yRot = this.rotlerp(this.mob.yRot, f, 90.0F);
                 float f1;
-                if (this.mob.isOnGround() && chimera.isFlying()) {
+                if (this.mob.isOnGround()) {
                     f1 = (float)(this.speedModifier * this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED));
                 } else {
                     f1 = (float)(this.speedModifier * this.mob.getAttributeValue(Attributes.FLYING_SPEED));
@@ -471,6 +503,72 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
                 this.mob.setYya(0.0F);
                 this.mob.setZza(0.0F);
             }
+
+        }
+
+        public void diveTick(){
+//            this.speedFactor = 0.4f;
+            EntityChimera mob = (EntityChimera) this.mob;
+
+            double posX = mob.getX();
+            double posY = mob.getY();
+            double posZ = mob.getZ();
+            double motionX = mob.getDeltaMovement().x;
+            double motionY = mob.getDeltaMovement().y;
+            double motionZ = mob.getDeltaMovement().z;
+            BlockPos dest = new BlockPos(mob.orbitOffset);
+          //  mob.getLookControl().setLookAt(dest.getX(), dest.getY(), dest.getZ());
+            double speedMod = 1.3;
+            if (dest.getX() != 0 || dest.getY() != 0 || dest.getZ() != 0){
+                double targetX = dest.getX()+0.5;
+                double targetY = dest.getY()+0.5;
+                double targetZ = dest.getZ()+0.5;
+                Vector3d targetVector = new Vector3d(targetX-posX,targetY-posY,targetZ-posZ);
+                double length = targetVector.length();
+                targetVector = targetVector.scale(0.3/length);
+                double weight  = 0;
+                if (length <= 3){
+                    weight = 0.9*((3.0-length)/3.0);
+                }
+
+                motionX = (0.9-weight)*motionX+(speedMod + weight)*targetVector.x;
+                motionY = (0.9-weight)*motionY+(speedMod + weight)*targetVector.y;
+                motionZ = (0.9-weight)*motionZ+(speedMod + weight)*targetVector.z;
+            }
+
+            posX += motionX;
+            posY += motionY;
+            posZ += motionZ;
+
+            float xDiff = (float)(mob.orbitOffset.x - mob.getX());
+            float yDiff = (float)(mob.orbitOffset.y - mob.getY());
+            float zDiff = (float)(mob.orbitOffset.z - mob.getZ());
+            double d0 = MathHelper.sqrt(xDiff * xDiff + zDiff * zDiff);
+//            double d1 = 1.0D - (double)MathHelper.abs(yDiff * 0.7F) / d0;
+//            xDiff = (float)((double)xDiff * d1);
+//            zDiff = (float)((double)zDiff * d1);
+//            d0 = MathHelper.sqrt(xDiff * xDiff + zDiff * zDiff);
+//            double d2 = MathHelper.sqrt(xDiff * xDiff + zDiff * zDiff + yDiff * yDiff);
+////            float f3 = mob.yRot;
+            float f4 = (float)MathHelper.atan2((double)zDiff, (double)xDiff);
+            float f5 = MathHelper.wrapDegrees(mob.yRot + 90.0F);
+            float f6 = MathHelper.wrapDegrees(f4 * (180F / (float)Math.PI));
+            mob.yRot = MathHelper.approachDegrees(f5, f6, 4.0F) - 90.0F;
+            mob.yBodyRot = mob.yRot;
+////            if (MathHelper.degreesDifferenceAbs(f3, mob.yRot) < 3.0F) {
+////                this.diveFactor = MathHelper.approach(this.diveFactor, 1.8F, 0.005F * (1.8F / this.diveFactor));
+////            } else {
+////                this.diveFactor = MathHelper.approach(this.diveFactor, 0.2F, 0.025F);
+////            }
+//
+            float f7 = (float)(-(MathHelper.atan2((double)(-yDiff), d0) * (double)(180F / (float)Math.PI)));
+            mob.xRot = f7;
+//            float f8 = mob.yRot + 90.0F;
+//            double d3 = (double)(this.diveFactor * MathHelper.cos(f8 * ((float)Math.PI / 180F))) * Math.abs((double)xDiff / d2);
+//            double d4 = (double)(this.diveFactor  * MathHelper.sin(f8 * ((float)Math.PI / 180F))) * Math.abs((double)zDiff / d2);
+//            double d5 = (double)(this.diveFactor * MathHelper.sin(f7 * ((float)Math.PI / 180F))) * Math.abs((double)yDiff / d2);
+            //mob.setPos(posX, posY, posZ);
+            mob.setDeltaMovement(motionX, motionY, motionZ);
         }
     }
 
