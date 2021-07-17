@@ -378,6 +378,11 @@ public class Recipes extends RecipeProvider {
                     .requires(Ingredient.of(Tags.Items.GEMS_DIAMOND), 2)
                     .requires(Items.ENDER_PEARL)
                     .save(consumer);
+
+            shapelessBuilder(ItemsRegistry.MIMIC_ITEM_SCROLL)
+                    .requires(ItemsRegistry.ALLOW_ITEM_SCROLL)
+                    .requires(Items.CHEST)
+                    .save(consumer);
         }
     }
 
