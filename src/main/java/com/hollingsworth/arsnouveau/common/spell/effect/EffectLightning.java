@@ -10,19 +10,14 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.IEnergyStorage;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -46,21 +41,8 @@ public class EffectLightning extends AbstractEffect {
         lightningBoltEntity.extendTimes = getDurationModifier(augments);
         lightningBoltEntity.ampScalar = AMP_VALUE.get().floatValue();
         lightningBoltEntity.wetBonus = GENERIC_DOUBLE.get().floatValue();
+        lightningBoltEntity.setDamage(DAMAGE.get().floatValue());
         (world).addFreshEntity(lightningBoltEntity);
-        int multiplier = 1;
-        long power = 0;
-        if(rayTraceResult instanceof EntityRayTraceResult){
-            Entity entity = ((EntityRayTraceResult) rayTraceResult).getEntity();
-            for(ItemStack i : entity.getArmorSlots()){
-                IEnergyStorage energyStorage = i.getCapability(CapabilityEnergy.ENERGY).orElse(null);
-                System.out.println(energyStorage);
-                if(energyStorage != null){
-                    multiplier++;
-                    power += energyStorage.getEnergyStored();
-                }
-            }
-        }
-        lightningBoltEntity.damage = DAMAGE.get().floatValue();
     }
 
     @Override

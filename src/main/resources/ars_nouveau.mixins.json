@@ -8,7 +8,6 @@
     "ClientElytraMixin",
     "ElytraPlayerMixin",
     "ExpInvokerMixin",
-    "LightningRedirectMixin",
     "MixinLivingEntity",
     "PotionRecipeMixin"
   ],

@@ -43,7 +43,7 @@ public class LightningEntity extends LightningBoltEntity {
 
     public int amps;
     public int extendTimes;
-    public float damage;
+
     public float ampScalar;
     public float wetBonus;
 
@@ -99,7 +99,10 @@ public class LightningEntity extends LightningBoltEntity {
 
                 for(Entity entity : list) {
                     if (!net.minecraftforge.event.ForgeEventFactory.onEntityStruckByLightning(entity, this)) {
+                        float origDamage = this.getDamage();
+                        this.setDamage(this.getDamage(entity));
                         entity.thunderHit((ServerWorld) this.level, this);
+                        this.setDamage(origDamage);
                         if(!level.isClientSide && !hitEntities.contains(entity.getId()) && entity instanceof LivingEntity){
                             EffectInstance effectInstance = ((LivingEntity) entity).getEffect(ModPotions.SHOCKED_EFFECT);
                             int amp = effectInstance != null ? effectInstance.getAmplifier() : -1;
@@ -137,8 +140,9 @@ public class LightningEntity extends LightningBoltEntity {
         }
     }
 
+
     public float getDamage(Entity entity){
-        float baseDamage = damage + ampScalar * amps + (entity.isInWaterOrRain() ? wetBonus : 0.0f);
+        float baseDamage = getDamage() + ampScalar * amps + (entity.isInWaterOrRain() ? wetBonus : 0.0f);
         int multiplier = 1;
         for(ItemStack i : entity.getArmorSlots()){
             IEnergyStorage energyStorage = i.getCapability(CapabilityEnergy.ENERGY).orElse(null);

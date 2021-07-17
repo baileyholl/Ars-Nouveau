@@ -11,7 +11,7 @@ buildscript {
 
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
         classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
     }
 
@@ -25,7 +25,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 
-version = '1.19.6'
+version = '1.19.7'
 group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'ars_nouveau-1.16.5'
 
@@ -135,7 +135,7 @@ repositories {
 }
 dependencies {
 
-    minecraft 'net.minecraftforge:forge:1.16.5-36.1.4'
+    minecraft 'net.minecraftforge:forge:1.16.5-36.1.62'
     runtimeOnly fg.deobf("curse.maven:exp-407174:3188120")  // Shutup experimental settings
 //    runtimeOnly fg.deobf("curse.maven:exp-231951:3326143")  // Immersive engineering
 //    compileOnly fg.deobf("curse.maven:exp-231951:3326143")
