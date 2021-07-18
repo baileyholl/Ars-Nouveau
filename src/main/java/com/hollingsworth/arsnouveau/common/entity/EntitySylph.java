@@ -306,7 +306,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if(source == DamageSource.CACTUS || source == DamageSource.SWEET_BERRY_BUSH)
+        if(source == DamageSource.CACTUS || source == DamageSource.SWEET_BERRY_BUSH || source == DamageSource.DROWN)
             return false;
         return super.hurt(source, amount);
     }
