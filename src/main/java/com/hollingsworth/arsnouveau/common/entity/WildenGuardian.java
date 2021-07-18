@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import com.hollingsworth.arsnouveau.common.entity.goal.guardian.LaserAttackGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.wilden.WildenMeleeAttack;
@@ -138,15 +139,14 @@ public class WildenGuardian extends MonsterEntity implements IAnimatable, IAnima
     protected void actuallyHurt(DamageSource damageSrc, float damageAmount) {
         if(!level.isClientSide && armorCooldown == 0){
             setArmored(true);
-            armorCooldown = 500;
-            armorTimeRemaining = 250;
+            armorCooldown = 200;
+            armorTimeRemaining = 100;
         }
         if(!level.isClientSide && isArmored()){
             damageAmount *= 0.25;
 
-            if(damageSrc.getEntity() != null ){
+            if(damageSrc.getEntity() != null && BlockUtil.distanceFrom(damageSrc.getEntity().position, this.position) <= 3.0){
                 damageSrc.getEntity().hurt(DamageSource.thorns(this), 3.0f);
-
             }
 
         }
