@@ -144,4 +144,27 @@ public class Spell {
     public boolean isValid(){
         return this.recipe != null && !this.recipe.isEmpty();
     }
+
+    public static class Builder{
+        private Spell spell;
+
+        public Builder(){
+            this.spell = new Spell();
+        }
+
+        public Builder add(AbstractSpellPart spellPart){
+            this.spell.add(spellPart);
+            return this;
+        }
+
+        public Builder add(AbstractSpellPart spellPart, int count){
+            for(int i = 0; i < count; i++)
+                this.spell.add(spellPart);
+            return this;
+        }
+
+        public Spell build(){
+            return spell;
+        }
+    }
 }

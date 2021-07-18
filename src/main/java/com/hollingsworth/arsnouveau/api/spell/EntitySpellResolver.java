@@ -14,6 +14,10 @@ public class EntitySpellResolver extends SpellResolver {
         super(spell_recipe, context);
     }
 
+    public EntitySpellResolver(SpellContext context){
+        super(context);
+    }
+
     @Override
     boolean enoughMana(LivingEntity entity) {
         return true;

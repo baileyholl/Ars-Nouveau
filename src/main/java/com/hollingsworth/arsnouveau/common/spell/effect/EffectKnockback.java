@@ -37,8 +37,8 @@ public class EffectKnockback extends AbstractEffect {
         }
     }
 
-    public void knockback(LivingEntity target, LivingEntity entityKnockingAway, float strength){
-        target.knockback(strength,MathHelper.sin(entityKnockingAway.yRot * ((float)Math.PI / 180F)), (double)(-MathHelper.cos(entityKnockingAway.yRot * ((float)Math.PI / 180F))));
+    public void knockback(LivingEntity target, LivingEntity shooter, float strength){
+        target.knockback(strength,MathHelper.sin(shooter.yRot * ((float)Math.PI / 180F)), (double)(-MathHelper.cos(shooter.yRot * ((float)Math.PI / 180F))));
     }
 
     @Override

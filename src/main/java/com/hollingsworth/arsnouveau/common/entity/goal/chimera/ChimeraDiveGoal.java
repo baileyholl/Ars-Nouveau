@@ -56,8 +56,10 @@ public class ChimeraDiveGoal extends Goal {
         if(startedFlying && ticksFlying < 60){
             boss.setFlying(true);
             boss.flyingNavigator.moveTo(hoverPos.getX(), hoverPos.getY(), hoverPos.getZ(), 1.0f);
-            if(boss.getTarget() != null)
+            if(boss.getTarget() != null) {
+                this.boss.lookAt(boss.getTarget(), 30f, 30f);
                 this.boss.getLookControl().setLookAt(boss.getTarget(), 30.0F, 30.0F);
+            }
         }
         ticksFlying++;
         if(ticksFlying > 60){

@@ -22,11 +22,10 @@ public class WildenBossModel extends AnimatedGeoModel<EntityChimera> {
     @Override
     public void setLivingAnimations(EntityChimera entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
-        if(entity.isFlying())
-            return;
+
         IBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-        head.setRotationX(extraData.headPitch * 0.017453292F + 0.45f);
+        head.setRotationX(extraData.headPitch * 0.037453292F + 0.45f);
         head.setRotationY(extraData.netHeadYaw * 0.012453292F );
         this.getBone("wings").setHidden(!entity.hasWings());
         this.getBone("spikes_lower_body").setHidden(!entity.hasSpikes());

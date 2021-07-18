@@ -142,10 +142,10 @@ public class WildenGuardian extends MonsterEntity implements IAnimatable, IAnima
             armorCooldown = 200;
             armorTimeRemaining = 100;
         }
-        if(!level.isClientSide && isArmored()){
-            damageAmount *= 0.25;
+        if(!level.isClientSide && isArmored() && !damageSrc.isBypassArmor()){
+            damageAmount *= 0.75;
 
-            if(damageSrc.getEntity() != null && BlockUtil.distanceFrom(damageSrc.getEntity().position, this.position) <= 3.0){
+            if(damageSrc.getEntity() != null && BlockUtil.distanceFrom(damageSrc.getEntity().position, this.position) <= 2.0 && !damageSrc.msgId.equals("thorns")){
                 damageSrc.getEntity().hurt(DamageSource.thorns(this), 3.0f);
             }
 

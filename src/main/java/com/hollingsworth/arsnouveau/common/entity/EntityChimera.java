@@ -1,24 +1,34 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.entity.ISummon;
+import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
+import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
-import com.hollingsworth.arsnouveau.common.entity.goal.chimera.ChimeraDiveGoal;
+import com.hollingsworth.arsnouveau.common.entity.goal.chimera.*;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import com.hollingsworth.arsnouveau.common.spell.effect.EffectDelay;
+import com.hollingsworth.arsnouveau.common.spell.effect.EffectKnockback;
+import com.hollingsworth.arsnouveau.common.spell.effect.EffectLaunch;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.MovementController;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -27,6 +37,8 @@ import net.minecraft.pathfinding.FlyingPathNavigator;
 import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -64,6 +76,7 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
     protected EntityChimera(EntityType<? extends MonsterEntity> p_i48553_1_, World p_i48553_2_) {
         super(p_i48553_1_, p_i48553_2_);
         moveControl = new ChimeraMoveController(this, 10, true);
+        maxUpStep = 2.0f;
         initFlyingNavigator();
     }
 
@@ -71,35 +84,39 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(0, new SwimGoal(this));
-//        this.goalSelector.addGoal(5, new ChimeraAttackGoal(this, true));
-//        this.goalSelector.addGoal(3, new ChimeraSummonGoal(this));
+        this.goalSelector.addGoal(5, new ChimeraAttackGoal(this, true));
+        this.goalSelector.addGoal(3, new ChimeraSummonGoal(this));
         this.targetSelector.addGoal(0, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-//        this.goalSelector.addGoal(8, new WaterAvoidingRandomWalkingGoal(this, 1.2d));
-//        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-//        this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
-//        this.goalSelector.addGoal(3, new ChimeraRamGoal(this));
+        this.goalSelector.addGoal(8, new WaterAvoidingRandomWalkingGoal(this, 1.2d));
+        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
+        this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(3, new ChimeraRamGoal(this));
         this.goalSelector.addGoal(3, new ChimeraDiveGoal(this));
+        this.goalSelector.addGoal(3, new ChimeraSpikeGoal(this));
     }
 
     @Override
     public void registerControllers(AnimationData animationData) {
         animationData.addAnimationController(new AnimationController<EntityChimera>(this, "walkController", 20, this::groundPredicate));
-        animationData.addAnimationController(new AnimationController<EntityChimera>(this, "flyController", 20, this::flyPredicate));
         animationData.addAnimationController(new AnimationController<EntityChimera>(this, "attackController", 1, this::attackPredicate));
     }
 
-    private <E extends Entity> PlayState flyPredicate(AnimationEvent event) {
-        return PlayState.STOP;
-    }
+
     private <E extends Entity> PlayState attackPredicate(AnimationEvent event) {
         return PlayState.CONTINUE;
     }
 
     private<E extends Entity> PlayState groundPredicate(AnimationEvent e){
+        if (isDefensive()) {
+            e.getController().setAnimation(new AnimationBuilder().addAnimation("crouch"));
+            return PlayState.CONTINUE;
+        }
+
         if (e.isMoving() && !isFlying()) {
             e.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
             return PlayState.CONTINUE;
         }
+
         return PlayState.STOP;
     }
 
@@ -129,12 +146,20 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
             ramCooldown--;
 
         if(!level.isClientSide && getPhaseSwapping()){
-            if(this.getTarget() != null)
-                this.getLookControl().setLookAt(this.getTarget(), 0.3f, 0.3f);
+//            if(this.getTarget() != null)
+//                this.getLookControl().setLookAt(this.getTarget(), 30f, 30f);
             if(this.getHealth() < this.getMaxHealth()){
                 this.heal((float) (0.3f));
             }else{
                 this.setPhaseSwapping(false);
+                for(LivingEntity e : level.getEntitiesOfClass(PlayerEntity.class, new AxisAlignedBB(this.blockPosition()).inflate(5))){
+
+                    EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(
+                            new Spell.Builder().add(MethodTouch.INSTANCE)
+                                    .add(EffectLaunch.INSTANCE).add(AugmentAmplify.INSTANCE, 2).add(EffectDelay.INSTANCE).add(EffectKnockback.INSTANCE).add(AugmentAmplify.INSTANCE, 2).build()
+                    , this));
+                    resolver.onCastOnEntity(ItemStack.EMPTY, this, e, Hand.MAIN_HAND);
+                }
                 getRandomUpgrade();
                 ParticleUtil.spawnPoof((ServerWorld) level, blockPosition().above());
             }
@@ -159,23 +184,23 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
     }
 
     public boolean canDive(){
-        return diveCooldown <= 0 && hasWings() && !getPhaseSwapping() && !isFlying() && this.onGround;
+        return diveCooldown <= 0 && hasWings() && !getPhaseSwapping() && !isFlying() && this.onGround && !isDefensive();
     }
 
     public boolean canSpike(){
-        return spikeCooldown <= 0 && hasSpikes() && !getPhaseSwapping() && !isFlying();
+        return spikeCooldown <= 0 && hasSpikes() && !getPhaseSwapping() && !isFlying() && this.onGround;
     }
 
     public boolean canRam(){
-        return ramCooldown <= 0 && hasHorns() && !getPhaseSwapping() && !isFlying();
+        return ramCooldown <= 0 && hasHorns() && !getPhaseSwapping() && !isFlying() && !isDefensive();
     }
 
     public boolean canSummon(){
-        return getTarget() != null && summonCooldown <= 0 && !isFlying();
+        return getTarget() != null && summonCooldown <= 0 && !isFlying() && !getPhaseSwapping();
     }
 
     public boolean canAttack(){
-        return getTarget() != null && this.getHealth() >= 1 && !this.getPhaseSwapping();
+        return getTarget() != null && this.getHealth() >= 1 && !this.getPhaseSwapping() && !isFlying() && !isDefensive();
     }
 
 
@@ -186,7 +211,6 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
 
     public void getRandomUpgrade(){
         ArrayList<Integer> upgrades = new ArrayList<>();
-        setWings(true);
         if(!this.hasWings())
             upgrades.add(0);
         if(!this.hasSpikes())
@@ -209,18 +233,41 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
         }
     }
 
+
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (source == DamageSource.CACTUS || source == DamageSource.SWEET_BERRY_BUSH)
+        if (source == DamageSource.CACTUS || source == DamageSource.SWEET_BERRY_BUSH || source == DamageSource.IN_WALL || source == DamageSource.LAVA)
             return false;
         if(this.getPhaseSwapping())
             return false;
+
+        Entity entity = source.getEntity();
+        if(entity instanceof LivingEntity && !entity.equals(this)){
+            if(isDefensive() && !source.msgId.equals("thorns")){
+                if(!source.isBypassArmor()){
+                    entity.hurt(DamageSource.thorns(this), 6.0f);
+                }
+            }
+
+            LivingEntity entity1 = (LivingEntity) entity;
+            // Omit our summoned sources that might aggro or accidentally hurt us
+            if(entity1 instanceof WildenStalker || entity1 instanceof WildenGuardian || entity instanceof WildenHunter
+                    || (entity instanceof ISummon && ((ISummon) entity).getOwnerID() != null && ((ISummon) entity).getOwnerID().equals(this.getUUID()))
+            || (entity1 instanceof SummonWolf && ((SummonWolf) entity1).isWildenSummon))
+                return false;
+        }
+
+        if(isDefensive())
+            return false;
+
         boolean res = super.hurt(source, amount);
         if(!this.level.isClientSide && this.getHealth() <= 0.0 && getPhase() < 3){
             this.setPhaseSwapping(true);
             this.setPhase(this.getPhase() + 1);
             this.setHealth(1.0f);
             Networking.sendToNearby(level, this, new PacketAnimEntity(this.getId(), EntityChimera.Animations.HOWL.ordinal()));
+            this.setFlying(false);
+            this.setDefensiveMode(false);
             this.dead = false;
         }
 
@@ -517,6 +564,8 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
             double motionY = mob.getDeltaMovement().y;
             double motionZ = mob.getDeltaMovement().z;
             BlockPos dest = new BlockPos(mob.orbitOffset);
+
+
           //  mob.getLookControl().setLookAt(dest.getX(), dest.getY(), dest.getZ());
             double speedMod = 1.3;
             if (dest.getX() != 0 || dest.getY() != 0 || dest.getZ() != 0){
@@ -535,40 +584,37 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
                 motionY = (0.9-weight)*motionY+(speedMod + weight)*targetVector.y;
                 motionZ = (0.9-weight)*motionZ+(speedMod + weight)*targetVector.z;
             }
+            mob.setDeltaMovement(motionX, motionY, motionZ);
 
-            posX += motionX;
-            posY += motionY;
-            posZ += motionZ;
+            if (mob.horizontalCollision) {
+                mob.yRot += 180.0F;
 
-            float xDiff = (float)(mob.orbitOffset.x - mob.getX());
-            float yDiff = (float)(mob.orbitOffset.y - mob.getY());
-            float zDiff = (float)(mob.orbitOffset.z - mob.getZ());
-            double d0 = MathHelper.sqrt(xDiff * xDiff + zDiff * zDiff);
-//            double d1 = 1.0D - (double)MathHelper.abs(yDiff * 0.7F) / d0;
-//            xDiff = (float)((double)xDiff * d1);
-//            zDiff = (float)((double)zDiff * d1);
-//            d0 = MathHelper.sqrt(xDiff * xDiff + zDiff * zDiff);
-//            double d2 = MathHelper.sqrt(xDiff * xDiff + zDiff * zDiff + yDiff * yDiff);
-////            float f3 = mob.yRot;
-            float f4 = (float)MathHelper.atan2((double)zDiff, (double)xDiff);
+            }
+
+            float f = (float)(mob.orbitOffset.x - mob.getX());
+            float f1 = (float)(mob.orbitOffset.y - mob.getY());
+            float f2 = (float)(mob.orbitOffset.z - mob.getZ());
+            double d0 = MathHelper.sqrt(f * f + f2 * f2);
+            double d1 = 1.0D - (double)MathHelper.abs(f1 * 0.7F) / d0;
+            f = (float)((double)f * d1);
+            f2 = (float)((double)f2 * d1);
+            d0 = MathHelper.sqrt(f * f + f2 * f2);
+            double d2 = MathHelper.sqrt(f * f + f2 * f2 + f1 * f1);
+            float f3 = mob.yRot;
+            float f4 = (float)MathHelper.atan2((double)f2, (double)f);
             float f5 = MathHelper.wrapDegrees(mob.yRot + 90.0F);
             float f6 = MathHelper.wrapDegrees(f4 * (180F / (float)Math.PI));
             mob.yRot = MathHelper.approachDegrees(f5, f6, 4.0F) - 90.0F;
             mob.yBodyRot = mob.yRot;
-////            if (MathHelper.degreesDifferenceAbs(f3, mob.yRot) < 3.0F) {
-////                this.diveFactor = MathHelper.approach(this.diveFactor, 1.8F, 0.005F * (1.8F / this.diveFactor));
-////            } else {
-////                this.diveFactor = MathHelper.approach(this.diveFactor, 0.2F, 0.025F);
-////            }
-//
-            float f7 = (float)(-(MathHelper.atan2((double)(-yDiff), d0) * (double)(180F / (float)Math.PI)));
+            if (MathHelper.degreesDifferenceAbs(f3, mob.yRot) < 3.0F) {
+                this.diveFactor = MathHelper.approach(this.diveFactor, 1.8F, 0.005F * (1.8F / this.diveFactor));
+            } else {
+                this.diveFactor = MathHelper.approach(this.diveFactor, 0.2F, 0.025F);
+            }
+
+            float f7 = (float)(-(MathHelper.atan2((double)(-f1), d0) * (double)(180F / (float)Math.PI)));
             mob.xRot = f7;
-//            float f8 = mob.yRot + 90.0F;
-//            double d3 = (double)(this.diveFactor * MathHelper.cos(f8 * ((float)Math.PI / 180F))) * Math.abs((double)xDiff / d2);
-//            double d4 = (double)(this.diveFactor  * MathHelper.sin(f8 * ((float)Math.PI / 180F))) * Math.abs((double)zDiff / d2);
-//            double d5 = (double)(this.diveFactor * MathHelper.sin(f7 * ((float)Math.PI / 180F))) * Math.abs((double)yDiff / d2);
-            //mob.setPos(posX, posY, posZ);
-            mob.setDeltaMovement(motionX, motionY, motionZ);
+            float f8 = mob.yRot + 90.0F;
         }
     }
 
