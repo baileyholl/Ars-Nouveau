@@ -57,8 +57,7 @@ public class ChimeraDiveGoal extends Goal {
             boss.setFlying(true);
             boss.flyingNavigator.moveTo(hoverPos.getX(), hoverPos.getY(), hoverPos.getZ(), 1.0f);
             if(boss.getTarget() != null) {
-                this.boss.lookAt(boss.getTarget(), 30f, 30f);
-                this.boss.getLookControl().setLookAt(boss.getTarget(), 30.0F, 30.0F);
+                EntityChimera.faceBlock(boss.getTarget().blockPosition(), boss);
             }
         }
         ticksFlying++;
@@ -85,7 +84,7 @@ public class ChimeraDiveGoal extends Goal {
                 boss.orbitOffset = new Vector3d(divePos.getX() + 0.5, divePos.getY(), divePos.getZ() + 0.5);
             }
         }
-        if((isDiving && (boss.isOnGround() || BlockUtil.distanceFrom(boss.position, divePos) <= 1.0d) ||  BlockUtil.distanceFrom(boss.position, boss.orbitPosition) <= 1.7d)) {
+        if((isDiving && (boss.isOnGround() || BlockUtil.distanceFrom(boss.position, divePos) <= 1.0d) ||  BlockUtil.distanceFrom(boss.position, boss.orbitOffset) <= 1.7d)) {
             makeExplosion();
             endGoal();
         }
@@ -103,7 +102,7 @@ public class ChimeraDiveGoal extends Goal {
         boss.getNavigation().stop();
         boss.setFlying(false);
 
-        boss.diveCooldown = 200;
+        boss.diveCooldown = 80;
         boss.getNavigation().stop();
         boss.getNavigation().setCanFloat(false);
         boss.diving = false;

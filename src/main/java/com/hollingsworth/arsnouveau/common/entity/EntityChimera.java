@@ -17,10 +17,7 @@ import com.hollingsworth.arsnouveau.common.spell.effect.EffectKnockback;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectLaunch;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.MovementController;
@@ -54,6 +51,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimationListener {
@@ -211,6 +209,7 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
 
     public void getRandomUpgrade(){
         ArrayList<Integer> upgrades = new ArrayList<>();
+        setWings(true);
         if(!this.hasWings())
             upgrades.add(0);
         if(!this.hasSpikes())
@@ -483,8 +482,6 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
     }
 
     public Vector3d orbitOffset = Vector3d.ZERO;
-    public BlockPos orbitPosition = BlockPos.ZERO;
-
 
     public static class ChimeraMoveController extends MovementController{
 
@@ -585,37 +582,63 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
                 motionZ = (0.9-weight)*motionZ+(speedMod + weight)*targetVector.z;
             }
             mob.setDeltaMovement(motionX, motionY, motionZ);
-
-            if (mob.horizontalCollision) {
-                mob.yRot += 180.0F;
-
-            }
-
-            float f = (float)(mob.orbitOffset.x - mob.getX());
-            float f1 = (float)(mob.orbitOffset.y - mob.getY());
-            float f2 = (float)(mob.orbitOffset.z - mob.getZ());
-            double d0 = MathHelper.sqrt(f * f + f2 * f2);
-            double d1 = 1.0D - (double)MathHelper.abs(f1 * 0.7F) / d0;
-            f = (float)((double)f * d1);
-            f2 = (float)((double)f2 * d1);
-            d0 = MathHelper.sqrt(f * f + f2 * f2);
-            double d2 = MathHelper.sqrt(f * f + f2 * f2 + f1 * f1);
-            float f3 = mob.yRot;
-            float f4 = (float)MathHelper.atan2((double)f2, (double)f);
-            float f5 = MathHelper.wrapDegrees(mob.yRot + 90.0F);
-            float f6 = MathHelper.wrapDegrees(f4 * (180F / (float)Math.PI));
-            mob.yRot = MathHelper.approachDegrees(f5, f6, 4.0F) - 90.0F;
-            mob.yBodyRot = mob.yRot;
-            if (MathHelper.degreesDifferenceAbs(f3, mob.yRot) < 3.0F) {
-                this.diveFactor = MathHelper.approach(this.diveFactor, 1.8F, 0.005F * (1.8F / this.diveFactor));
-            } else {
-                this.diveFactor = MathHelper.approach(this.diveFactor, 0.2F, 0.025F);
-            }
-
-            float f7 = (float)(-(MathHelper.atan2((double)(-f1), d0) * (double)(180F / (float)Math.PI)));
-            mob.xRot = f7;
-            float f8 = mob.yRot + 90.0F;
+            faceBlock(new BlockPos(mob.orbitOffset), mob);
         }
+    }
+
+    public static void faceBlock(@Nullable final BlockPos block, final LivingEntity citizen)
+    {
+        if (block == null)
+        {
+            return;
+        }
+
+        final double xDifference = block.getX() - citizen.blockPosition().getX();
+        final double zDifference = block.getZ() - citizen.blockPosition().getZ();
+        final double yDifference = block.getY() - (citizen.blockPosition().getY() + citizen.getEyeHeight());
+
+        final double squareDifference = Math.sqrt(xDifference * xDifference + zDifference * zDifference);
+        final double intendedRotationYaw = (Math.atan2(zDifference, xDifference) * 180.0D / Math.PI) - 90.0;
+        final double intendedRotationPitch = -(Math.atan2(yDifference, squareDifference) * 180.0D / Math.PI);
+//        citizen.setOwnRotation((float) updateRotation(citizen.getRotationYaw(), intendedRotationYaw, ROTATION_MOVEMENT),
+//                (float) updateRotation(citizen.getRotationPitch(), intendedRotationPitch, ROTATION_MOVEMENT));
+
+
+        citizen.yRot = (float) (updateRotation(citizen.yRot, intendedRotationYaw, 360.0) % 360.0F);
+        citizen.xRot = (float) (updateRotation(citizen.xRot, intendedRotationPitch, 360.0) % 360.0F);
+        final double goToX = xDifference;
+        final double goToZ = zDifference;
+
+        //Have to move the entity minimally into the direction to render his new rotation.
+
+    }
+    public static double updateRotation(final double currentRotation, final double intendedRotation, final double maxIncrement)
+    {
+        double wrappedAngle = MathHelper.wrapDegrees(intendedRotation - currentRotation);
+
+        if (wrappedAngle > maxIncrement)
+        {
+            wrappedAngle = maxIncrement;
+        }
+
+        if (wrappedAngle < -maxIncrement)
+        {
+            wrappedAngle = -maxIncrement;
+        }
+
+        return currentRotation + wrappedAngle;
+    }
+    protected static float getXRotD(BlockPos wantedPos, LivingEntity mob) {
+        double d0 = wantedPos.getX() - mob.getX();
+        double d1 = wantedPos.getY() - mob.getEyeY();
+        double d2 = wantedPos.getZ() - mob.getZ();
+        double d3 = (double)MathHelper.sqrt(d0 * d0 + d2 * d2);
+        return (float)(-(MathHelper.atan2(d1, d3) * (double)(180F / (float)Math.PI)));
+    }
+    protected static float rotateTowards(float min, float p_220675_2_, float p_220675_3_) {
+        float f = MathHelper.degreesDifference(min, p_220675_2_);
+        float f1 = MathHelper.clamp(f, -p_220675_3_, p_220675_3_);
+        return min + f1;
     }
 
 

@@ -76,7 +76,7 @@ public class ModEntities {
     public static EntityType<EntityDummy> ENTITY_DUMMY = null;
     public static EntityType<EntityDrygmy> ENTITY_DRYGMY = null;
     public static EntityType<EntityOrbitProjectile> ENTITY_WARD = null;
-
+    public static EntityType<EntityChimeraProjectile> ENTITY_CHIMERA_SPIKE = null;
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
@@ -162,6 +162,10 @@ public class ModEntities {
                     "ward_entity",
                     EntityType.Builder.<EntityOrbitProjectile>of(EntityOrbitProjectile::new, EntityClassification.MISC).sized(0.5f, 0.5f)
                             .clientTrackingRange(20).updateInterval(20).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityOrbitProjectile::new));
+            ENTITY_CHIMERA_SPIKE = build(
+                    "spike",
+                    EntityType.Builder.<EntityChimeraProjectile>of(EntityChimeraProjectile::new, EntityClassification.MISC)
+                            .clientTrackingRange(20).updateInterval(20).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityChimeraProjectile::new));
 
             event.getRegistry().registerAll(
                     SPELL_PROJ,
@@ -184,7 +188,8 @@ public class ModEntities {
                     ENTITY_DUMMY,
                     ENTITY_DRYGMY,
                     ENTITY_WARD,
-                     WILDEN_BOSS
+                     WILDEN_BOSS,
+                    ENTITY_CHIMERA_SPIKE
             );
 
 

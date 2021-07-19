@@ -45,5 +45,7 @@ public class ModRenderers {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_DRYGMY, DrygmyRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_WARD,  renderManager -> new RenderRitualProjectile(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.WILDEN_BOSS, WildenBossRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_CHIMERA_SPIKE, ChimeraProjectileRenderer::new);
+
     }
 }
