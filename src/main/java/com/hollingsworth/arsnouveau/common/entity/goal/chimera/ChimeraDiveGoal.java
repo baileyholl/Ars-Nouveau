@@ -115,7 +115,7 @@ public class ChimeraDiveGoal extends Goal {
     }
 
     public void makeExplosion(){
-        boss.level.explode(boss, boss.getX() + 0.5, boss.getY() + 0.5, boss.getZ() + 0.5, 2.5f, Explosion.Mode.NONE);
+        boss.level.explode(boss, boss.getX() + 0.5, boss.getY() + 0.5, boss.getZ() + 0.5, 4.5f, Explosion.Mode.BREAK);
         Networking.sendToNearby(boss.level, boss, new PacketAnimEntity(boss.getId(), EntityChimera.Animations.HOWL.ordinal()));
     }
 

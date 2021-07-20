@@ -8,7 +8,9 @@ import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.pathfinding.Path;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.EnumSet;
@@ -60,10 +62,7 @@ public class ChimeraRamGoal extends Goal {
         }
         timeCharging++;
 
-        Path path = boss.getNavigation().createPath(this.boss.getTarget().blockPosition().above(),  1);
-        if(path == null) {
-            return;
-        }
+
         if(timeCharging <= 25 && !isCharging){
             LivingEntity livingentity = this.boss.getTarget();
 
@@ -75,7 +74,16 @@ public class ChimeraRamGoal extends Goal {
             isCharging = true;
         }
         if(isCharging) {
-            System.out.println("move");
+            if(boss.getNavigation() == null || boss.getTarget() == null) {
+                attack();
+                return;
+            }
+            breakBlocks();
+            Path path = boss.getNavigation().createPath(this.boss.getTarget().blockPosition().above(),  1);
+            if(path == null) {
+                return;
+            }
+            breakBlocks();
             boss.getNavigation().moveTo(path, 2.0f);
             attack();
         }
@@ -83,6 +91,21 @@ public class ChimeraRamGoal extends Goal {
         if(hasHit && BlockUtil.distanceFrom(boss.position, boss.getTarget().position) <= 2.0f){
             endRam();
         }
+    }
+
+    public void breakBlocks(){
+        Direction facing = boss.getDirection();
+        BlockPos facingPos = boss.blockPosition().above().relative(facing);
+        for(int i = 0; i < 2; i++){
+            facingPos = facingPos.above(i);
+            boss.level.destroyBlock(facingPos.above(), true);
+            boss.level.destroyBlock(facingPos.east(), true);
+            boss.level.destroyBlock(facingPos.west(), true);
+            boss.level.destroyBlock(facingPos.south(), true);
+            boss.level.destroyBlock(facingPos.north(), true);
+        }
+
+
     }
 
     @Override

@@ -27,6 +27,7 @@ public class PortUtil {
         }
     }
 
+    @Deprecated
     public static void sendMessage(Entity playerEntity, String message){
         sendMessage(playerEntity, new StringTextComponent(message));
     }

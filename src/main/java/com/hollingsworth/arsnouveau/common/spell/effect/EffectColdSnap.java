@@ -14,12 +14,14 @@ import net.minecraft.item.Item;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
+import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -54,12 +56,12 @@ public class EffectColdSnap extends AbstractEffect {
         for(Entity e : world.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(livingEntity.blockPosition().north(range).east(range).above(range),  livingEntity.blockPosition().south(range).west(range).below(range)))){
             if(e.equals(livingEntity) || !(e instanceof LivingEntity) || e.equals(shooter))
                 continue;
-            if(((LivingEntity) e).getEffect(Effects.MOVEMENT_SLOWDOWN) != null || e.isInWaterOrRain()){
+            if(canDamage((LivingEntity) e)){
                 vec = e.position();
                 damage(vec, world, shooter, augments, damage, snareSec, (LivingEntity) e);
 
             }else{
-                ((LivingEntity) e).addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 20*snareSec, getAmplificationBonus(augments)));
+                ((LivingEntity) e).addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 20 * snareSec, getAmplificationBonus(augments)));
             }
         }
 
@@ -70,7 +72,9 @@ public class EffectColdSnap extends AbstractEffect {
     }
 
     public void damage(Vector3d vec, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, float damage, int snareTime, LivingEntity livingEntity){
-        dealDamage(world, shooter, damage, augments, livingEntity, buildDamageSource(world, shooter).setMagic());
+        EntityDamageSource damageSource = new EntityDamageSource("cold", shooter == null ? FakePlayerFactory.getMinecraft((ServerWorld) world) : shooter);
+        damageSource.setMagic();
+        dealDamage(world, shooter, damage, augments, livingEntity, damageSource);
         ((ServerWorld)world).sendParticles(ParticleTypes.SPIT, vec.x, vec.y +0.5, vec.z,50,
                 ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1),ParticleUtil.inRange(-0.1, 0.1), 0.3);
         livingEntity.addEffect(new EffectInstance(ModPotions.SNARE_EFFECT, 20 * snareTime));
