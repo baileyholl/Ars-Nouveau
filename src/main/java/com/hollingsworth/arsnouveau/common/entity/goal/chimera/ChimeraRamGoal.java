@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.chimera;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
@@ -8,7 +9,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.pathfinding.Path;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.EnumSet;
@@ -17,7 +17,7 @@ import java.util.List;
 public class ChimeraRamGoal extends Goal {
     EntityChimera boss;
     int timeCharging;
-    BlockPos chargePos;
+
     boolean finished;
     boolean startedCharge;
     boolean isCharging;
@@ -37,23 +37,21 @@ public class ChimeraRamGoal extends Goal {
     public void start() {
         super.start();
         timeCharging = 0;
-        chargePos = null;
         finished = false;
         startedCharge = false;
         isCharging = false;
-        hasHit = true;
+        hasHit = false;
+        boss.isRamming = true;
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        if(this.boss.getTarget() == null) {
+        if(timeCharging >= 105) {
             endRam();
         }
-        chargePos = boss.getTarget().blockPosition();
-        Path path = boss.getNavigation().createPath(chargePos.getX() + 0.5, chargePos.getY(), chargePos.getZ() + 0.5, 1);
-        if(path == null || !path.canReach()) {
+        if(this.boss.getTarget() == null) {
             endRam();
         }
         if(!startedCharge){
@@ -62,44 +60,45 @@ public class ChimeraRamGoal extends Goal {
         }
         timeCharging++;
 
+        Path path = boss.getNavigation().createPath(this.boss.getTarget().blockPosition().above(),  1);
+        if(path == null) {
+            return;
+        }
         if(timeCharging <= 25 && !isCharging){
             LivingEntity livingentity = this.boss.getTarget();
+
             this.boss.getLookControl().setLookAt(livingentity, 30.0F, 30.0F);
             this.boss.getNavigation().stop();
         }
 
         if(timeCharging > 25 ){
             isCharging = true;
-            chargePos = boss.getTarget().blockPosition();
         }
-        if(isCharging && chargePos != null) {
-            boss.getNavigation().moveTo( path, 2.0f);
+        if(isCharging) {
+            System.out.println("move");
+            boss.getNavigation().moveTo(path, 2.0f);
             attack();
         }
-        if(chargePos != null)
-            System.out.println(BlockUtil.distanceFrom(boss.position, chargePos) );
 
-        if(hasHit && chargePos != null && BlockUtil.distanceFrom(boss.position, chargePos) <= 2.0f){
-            endRam();
-            chargePos = null;
-        }
-
-        if(chargePos != null && BlockUtil.distanceFrom(boss.position, chargePos) <= 1.0f){
+        if(hasHit && BlockUtil.distanceFrom(boss.position, boss.getTarget().position) <= 2.0f){
             endRam();
         }
+    }
 
-        if(timeCharging >= 90) {
-            endRam();
-            attack();
-        }
+    @Override
+    public void stop() {
+        super.stop();
+        boss.isRamming = false;
     }
 
     public void endRam(){
         finished = true;
         if(boss.level.random.nextInt(3) != 0) {
-            boss.ramCooldown = 300;
+            boss.ramCooldown = (int) (400 + ParticleUtil.inRange(-100, 100 + boss.getCooldownModifier()));
         }
+        boss.isRamming = false;
         Networking.sendToNearby(boss.level, boss, new PacketAnimEntity(boss.getId(), EntityChimera.Animations.ATTACK.ordinal()));
+        attack();
     }
 
     protected void attack() {
@@ -115,7 +114,7 @@ public class ChimeraRamGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return super.canContinueToUse() && !finished;
+        return !finished;
     }
 
     @Override

@@ -18,7 +18,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 public class EntityChimeraProjectile extends AbstractArrowEntity implements IAnimatable {
-
+    int groundMax;
     public EntityChimeraProjectile(double p_i48547_2_, double p_i48547_4_, double p_i48547_6_, World p_i48547_8_) {
         super(ModEntities.ENTITY_CHIMERA_SPIKE, p_i48547_2_, p_i48547_4_, p_i48547_6_, p_i48547_8_);
     }
@@ -33,6 +33,16 @@ public class EntityChimeraProjectile extends AbstractArrowEntity implements IAni
 
     public EntityChimeraProjectile(EntityType<EntityChimeraProjectile> entityChimeraProjectileEntityType, World world) {
         super(entityChimeraProjectileEntityType, world);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if(groundMax == 0)
+            groundMax = 60 + random.nextInt(60);
+        if(!level.isClientSide && this.inGroundTime >= groundMax){
+            this.remove();
+        }
     }
 
     @Override

@@ -41,6 +41,7 @@ public class ChimeraSummonEvent implements ITimedEvent {
                 return;
             }
             EntityChimera boss = (EntityChimera) owner;
+            boolean summonedWilden = false;
             if(duration % 20 ==0){
                 Random random = boss.getRandom();
                 SummonWolf wolf = new SummonWolf(ModEntities.SUMMON_WOLF, world);
@@ -53,22 +54,26 @@ public class ChimeraSummonEvent implements ITimedEvent {
                 wolf.setAggressive(true);
                 world.addFreshEntity(wolf);
 
-                if(boss.hasHorns() && boss.level.random.nextInt(8) == 0){
-                    WildenHunter hunter = new WildenHunter(ModEntities.WILDEN_HUNTER, world);
-                    hunter.setPos(getPos().getX(), getPos().getY(), getPos().getZ());
-                    world.addFreshEntity(hunter);
-                }
-
-                if(boss.hasSpikes() && boss.level.random.nextInt(8) == 0){
-                    WildenGuardian guardian = new WildenGuardian(ModEntities.WILDEN_GUARDIAN, world);
-                    guardian.setPos(getPos().getX(), getPos().getY(), getPos().getZ());
-                    world.addFreshEntity(guardian);
-                }
-
-                if(boss.hasWings() && boss.level.random.nextInt(8) == 0){
+                int randBound = 10;
+                if(!summonedWilden && boss.hasWings() && boss.level.random.nextInt(randBound) == 0){
                     WildenStalker stalker = new WildenStalker(ModEntities.WILDEN_STALKER, world);
                     stalker.setPos(getPos().getX(), getPos().getY(), getPos().getZ());
                     world.addFreshEntity(stalker);
+                    summonedWilden = true;
+                }
+
+                if(boss.hasHorns() && boss.level.random.nextInt(randBound) == 0){
+                    WildenHunter hunter = new WildenHunter(ModEntities.WILDEN_HUNTER, world);
+                    hunter.setPos(getPos().getX(), getPos().getY(), getPos().getZ());
+                    world.addFreshEntity(hunter);
+                    summonedWilden = true;
+                }
+
+                if(!summonedWilden && boss.hasSpikes() && boss.level.random.nextInt(randBound) == 0){
+                    WildenGuardian guardian = new WildenGuardian(ModEntities.WILDEN_GUARDIAN, world);
+                    guardian.setPos(getPos().getX(), getPos().getY(), getPos().getZ());
+                    world.addFreshEntity(guardian);
+                    summonedWilden = true;
                 }
             }
         }else{
@@ -77,7 +82,8 @@ public class ChimeraSummonEvent implements ITimedEvent {
     }
 
     public BlockPos getPos(){
-        return new BlockPos(pos.getX() + ParticleUtil.inRange(-2.5, 2.5), pos.getY(), pos.getZ() + ParticleUtil.inRange(-2.5, 2.5));
+        double spawnArea = 2.5 + phase *2;
+        return new BlockPos(pos.getX() + ParticleUtil.inRange(-spawnArea, spawnArea), pos.getY(), pos.getZ() + ParticleUtil.inRange(-spawnArea, spawnArea));
     }
 
     @Override

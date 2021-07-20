@@ -15,9 +15,7 @@ import net.minecraft.world.server.ServerWorld;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-/**
- * Created by Bailey on 12/26/2016.
- */
+
 public class ParticleUtil {
     public static Random r = new Random();
 

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.chimera;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
@@ -102,15 +103,13 @@ public class ChimeraDiveGoal extends Goal {
         boss.getNavigation().stop();
         boss.setFlying(false);
 
-        boss.diveCooldown = 80;
+        boss.diveCooldown = (int) (300 + ParticleUtil.inRange(-100, 100) + boss.getCooldownModifier());
         boss.getNavigation().stop();
         boss.getNavigation().setCanFloat(false);
         boss.diving = false;
         boss.setNoGravity(false);
         boss.setDeltaMovement(0,0,0);
-
         boss.getNavigation().moveTo(this.boss.getTarget() != null ? this.boss.getTarget() : this.boss, 0.0f);
-
         finished = true;
 
     }
