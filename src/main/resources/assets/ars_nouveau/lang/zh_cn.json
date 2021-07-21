@@ -703,5 +703,7 @@
 	"effect.ars_nouveau.gravity": "重力",
 	"tooltip.ars_nouveau.tablet": "用于仪式的木板。一次性物品。",
 	"ars_nouveau.enchanting.bad_level": "此物品必须先有上一级附魔。",
-	"ars_nouveau.enchanting.incompatible": "该附魔与此物品不兼容。"
+	"ars_nouveau.enchanting.incompatible": "该附魔与此物品不兼容。",
+	"entity.ars_nouveau.wilden_boss": "荒野奇美拉",
+	"ars_nouveau.chimera.rage": "奇美拉要开始狂暴了。"
 }
