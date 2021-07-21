@@ -65,7 +65,7 @@ public class EffectFlare extends AbstractEffect {
     @Override
     public void buildConfig(ForgeConfigSpec.Builder builder) {
         super.buildConfig(builder);
-        addDamageConfig(builder, 6.0);
+        addDamageConfig(builder, 7.0);
         addAmpConfig(builder, 3.0);
         addExtendTimeConfig(builder, 1);
     }
