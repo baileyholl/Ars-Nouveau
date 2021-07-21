@@ -45,9 +45,9 @@ public class EntityChimeraProjectile extends AbstractArrowEntity implements IAni
     @Override
     public void tick() {
         super.tick();
-        if(groundMax == 0)
-            groundMax = 60 + random.nextInt(60);
-        if(!level.isClientSide && this.inGroundTime >= groundMax){
+//        if(groundMax == 0)
+//            groundMax = 60 + random.nextInt(60);
+        if(!level.isClientSide && this.inGroundTime >= 1){
             this.remove();
         }
     }
@@ -59,7 +59,7 @@ public class EntityChimeraProjectile extends AbstractArrowEntity implements IAni
 
     private <E extends Entity> PlayState attackPredicate(AnimationEvent e) {
         e.getController().setAnimation(new AnimationBuilder().addAnimation("spike_spin"));
-        return PlayState.STOP;
+        return PlayState.CONTINUE;
     }
 
     @Override

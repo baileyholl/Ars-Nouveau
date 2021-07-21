@@ -65,8 +65,8 @@ public class ChimeraRamGoal extends Goal {
 
         if(timeCharging <= 25 && !isCharging){
             LivingEntity livingentity = this.boss.getTarget();
-
-            this.boss.getLookControl().setLookAt(livingentity, 30.0F, 30.0F);
+            if(livingentity != null)
+                this.boss.getLookControl().setLookAt(livingentity, 30.0F, 30.0F);
             this.boss.getNavigation().stop();
         }
 

@@ -18,7 +18,6 @@ public class ChimeraDiveGoal extends Goal {
     int ticksFlying;
     boolean isDiving;
     BlockPos divePos;
-    boolean startedFlying;
     BlockPos startPos;
     BlockPos hoverPos;
     public ChimeraDiveGoal(EntityChimera boss){
@@ -38,30 +37,28 @@ public class ChimeraDiveGoal extends Goal {
         divePos = null;
         ticksFlying = 0;
         isDiving = false;
-        startedFlying = false;
+
         startPos = boss.blockPosition();
         hoverPos = startPos.above(8);
+
+        boss.setFlying(true);
+        boss.getNavigation().setCanFloat(true);
+        Networking.sendToNearby(boss.level, boss, new PacketAnimEntity(boss.getId(), EntityChimera.Animations.FLYING.ordinal()));
     }
 
 
     @Override
     public void tick() {
         super.tick();
-
-        if(!startedFlying){
-            startedFlying = true;
-            boss.setFlying(true);
-            boss.getNavigation().setCanFloat(true);
-            Networking.sendToNearby(boss.level, boss, new PacketAnimEntity(boss.getId(), EntityChimera.Animations.FLYING.ordinal()));
-        }
-        if(startedFlying && ticksFlying < 60){
+        ticksFlying++;
+        if(ticksFlying < 60){
             boss.setFlying(true);
             boss.flyingNavigator.moveTo(hoverPos.getX(), hoverPos.getY(), hoverPos.getZ(), 1.0f);
             if(boss.getTarget() != null) {
                 EntityChimera.faceBlock(boss.getTarget().blockPosition(), boss);
             }
         }
-        ticksFlying++;
+
         if(ticksFlying > 60){
             isDiving = true;
             boss.diving = true;
@@ -81,7 +78,7 @@ public class ChimeraDiveGoal extends Goal {
                 Networking.sendToNearby(boss.level, boss, new PacketAnimEntity(boss.getId(), EntityChimera.Animations.DIVE_BOMB.ordinal()));
             }
             if(divePos != null) {
-                boss.flyingNavigator.moveTo(divePos.getX() + 0.5, divePos.getY(), divePos.getZ(), 5f);
+                boss.flyingNavigator.moveTo(divePos.getX() + 0.5, divePos.getY(), divePos.getZ(), 4f);
                 boss.orbitOffset = new Vector3d(divePos.getX() + 0.5, divePos.getY(), divePos.getZ() + 0.5);
             }
         }
@@ -115,7 +112,7 @@ public class ChimeraDiveGoal extends Goal {
     }
 
     public void makeExplosion(){
-        boss.level.explode(boss, boss.getX() + 0.5, boss.getY() + 0.5, boss.getZ() + 0.5, 4.5f, Explosion.Mode.BREAK);
+        boss.level.explode(boss, boss.getX() + 0.5, boss.getY(), boss.getZ() + 0.5, 3.5f, Explosion.Mode.BREAK);
         Networking.sendToNearby(boss.level, boss, new PacketAnimEntity(boss.getId(), EntityChimera.Animations.HOWL.ordinal()));
     }
 

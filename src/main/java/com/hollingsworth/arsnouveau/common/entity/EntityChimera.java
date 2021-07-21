@@ -45,6 +45,8 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -142,7 +144,14 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
      //   this.goalSelector.getRunningGoals().forEach(g -> System.out.println(g.getGoal().toString()));
         if(isDefensive())
             setDeltaMovement(0,0,0);
+        if(level.isClientSide && isFlying() && random.nextInt(18) == 0){
 
+            this.level.playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.BAT_LOOP, this.getSoundSource(),
+                    0.95F + this.random.nextFloat() * 0.05F,
+                    0.3f + this.random.nextFloat() * 0.05F,
+                    false);
+
+        }
         // If our target is CHEATING, we are going to run the rage goal
         if(!level.isClientSide){
 
@@ -153,17 +162,24 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
                 }
             }
         }
-        if(!level.isClientSide && !isFlying())
+        if(!isFlying()) {
             setNoGravity(false);
+        }
 
         if(this.isFlying()) {
             this.navigation.stop();
             flyingNavigator.tick();
         }
         if(!this.level.isClientSide){
+            // Reset our states if something bad happens
             if(this.isFlying()){
                 if(this.goalSelector.getRunningGoals().noneMatch(g -> g.getGoal() instanceof ChimeraDiveGoal))
                     setFlying(false);
+            }
+
+            if(this.isDefensive()){
+                if(this.goalSelector.getRunningGoals().noneMatch(g -> g.getGoal() instanceof ChimeraSpikeGoal))
+                    setDefensiveMode(false);
             }
         }
 
@@ -215,10 +231,29 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
         }
     }
 
+    protected void playStepSound(BlockPos p_180429_1_, BlockState p_180429_2_) {
+        this.playSound(SoundEvents.POLAR_BEAR_STEP, 0.15F + (random.nextFloat() * 0.3f), 0.8F + random.nextFloat() * 0.1f);
+    }
+
+    @Override
+    public boolean isSilent() {
+        return false;
+    }
+
+    @Override
+    protected SoundEvent getHurtSound(DamageSource p_184601_1_) {
+        return SoundEvents.POLAR_BEAR_HURT;
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return SoundEvents.POLAR_BEAR_DEATH;
+    }
+
     public void gainPhaseBuffs(){
         this.addEffect(new EffectInstance(Effects.REGENERATION, 100 + 100 * getPhase(), 3));
-        this.addEffect(new EffectInstance(Effects.DAMAGE_BOOST, 300 + 300 * getPhase()));
-        this.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 300 + 300 * getPhase()));
+        this.addEffect(new EffectInstance(Effects.DAMAGE_BOOST, 300 + 300 * getPhase(), getPhase()));
+        this.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 300 + 300 * getPhase(), getPhase()));
     }
 
     public void resetCooldowns(){
