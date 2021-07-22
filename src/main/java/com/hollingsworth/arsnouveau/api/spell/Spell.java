@@ -47,7 +47,7 @@ public class Spell {
 
     }
 
-    public
+    
 
     public List<AbstractAugment> getAugments(int startPosition, @Nullable LivingEntity caster){
         ArrayList<AbstractAugment> augments = new ArrayList<>();
