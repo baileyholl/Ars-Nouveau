@@ -1,0 +1,20 @@
+{
+    "name": "Changelog 1.2.0",
+    "icon": "ars_nouveau:spell_turret",
+    "category": "release_notes",
+	"sortnum":98,
+    "pages": [
+        {
+            "type": "text",
+            "text": "¡Ars Nouveau 1.2.0, Redstone! $(li)Añade la Torreta de Hechizos.$(li)Añade el hechizo de Señal de Redstone.$(li)Los proyectiles no irán en un ángulo aleatorio al ser disparados.$(li)Disipar ahora devuelve tu amuleto cuando es usado en Sylphs, Carbuncles, y Whelps. $(li)Se ha arreglado un bug donde los jugadores quedaban atrapadoe en Portales de Teletrasnportación. $(li)Los hechizos pueden ser disparados a través de portales.$(li)Hay soporte para la Prensa de Glifos en JEI."       
+        },
+		 {
+            "type": "text",
+            "text": "$(li)Los Whelphs ahora son inteligentes y no gastan maná cuando usan Tocar.$(li)Se han mejorado las partículas.$(li)Los Frascos de Maná ahora muestran algo plateado cuando les queda menos de 1 cubo, y ahora proven señales de redstona a comparadores.$(li)La generación pasiva de los Cristalizadores han sido nerfeados, mientras que la generación activa ahora es más barata.$(li)Las recetas que usaban el Cubo de Maná ahora usan Gemas de Maná.$(li)Los Pregaminos de Teletransportación son más caros."       
+        },
+		{
+            "type": "relations",
+            "entries":["apparatus/spell_turret"]        
+        }
+    ]
+}

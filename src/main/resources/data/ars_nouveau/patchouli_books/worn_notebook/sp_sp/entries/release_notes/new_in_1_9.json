@@ -1,0 +1,19 @@
+{
+    "name": "Changelog 1.9.0",
+    "icon": "ars_nouveau:wixie_charm",
+    "category": "release_notes",
+	"sortnum":90,
+    "pages": [
+        {
+            "type": "text",
+            "text": "¡Ars Nouveau 1.9.0, Árboles, Autofabricación, madre mía! $(li)¡Se han añadido las Wixies, una amiga que puede autofabricar!$(li)Se han añadido 4 nuevos árboles de Archwood$(li)Se ha añadido la Vara de Hechizos$(li)Se ha arreglado Interactuar con objetos en los Whelps. ¡Ahora es posible hacer granjas de pasteles!$(li)Nuevas variantes de piedra decorativas$(li)Nuevas texturas de bloques."       
+        },{
+            "type": "text",
+            "text": "$(li)Fuerza es ahora un hechizo de nivel 3.$(li)Regeneración se detiene a nivel de poción 5.$(li)Los Nenúfares de Lava y los Acumuladores Volcánicos ya no serán colocados en el aire."       
+        },
+		{
+            "type": "relations",
+            "entries":["apparatus/wixie_charm", "resources/archwood","apparatus/wand"]        
+        }
+    ]
+}

@@ -1,0 +1,24 @@
+{
+    "name": "Usar Hechizos",
+    "icon": "ars_nouveau:novice_spell_book",
+	"sortnum":1,
+    "category": "getting_started",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Para empezar a usar hechizos, primero debes obtener un Grimorio. Un grimorio te permitirá crear, almacenar, y lanzar hechizos usando maná. Un Grimorio de mayor nivel proveerá espacios de hechizos adicionales, permitiéndote fabricar hechizos más complejos. $(br) Para fabricar tu primer hechizo, primero debes seleccionar la $(bold)Form$() que tomará el hechizo. Un glifo de $(bold)Form$() siempre debe ser el primer glifo en un hechizo."       
+        },
+        {
+            "type": "text",
+            "text": "Luego, añade cualquier número de $(bold)Effects$() a la cadena. Los efectos determinan $(italic)what$() hará el hechizo y serán ejecutados en el orden en el que estén en el libro al objetivo o lugar donde golpee el hechizo. Un $(bold)Augment$() puede ser usado para modificar la manera en la que se comportan el Efecto y la Forma. Los $(bold)Augments$() deben ser colocados después de un Efecto o Forma. Un Aumento solo aplicará a los glifos a su $(bold)left$(). Múltiples Aumentos pueden ser aplicados en el mismo Efecto o Forma encadenando varios Aumentos segudos."       
+        },
+        {
+            "type": "text",
+            "text": "Si te gustaría configurar un hechizo en una pestaña diferente, selecciona una pestaña del lado derecho y repite el proceso. Varias teclas pueden ser configuradas para usar el Grimorio. $(br)Abirr Grimorio: $(k:ars_nouveau.open_book) $(br)Selección Rápida: $(k:ars_nouveau.selection_hud) $(br)Siguiente Hechizo: $(k:ars_nouveau.next_slot) $(br)Hechizo Anterior: $(k:ars_nouveau.previous_slot)"       
+        },
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:novice_spell_book"
+		}
+    ]
+}

@@ -1,0 +1,15 @@
+{
+    "name": "Changelog 1.11.5",
+    "icon": "ars_nouveau:carbuncle_charm",
+    "category": "release_notes",
+	"sortnum":79,
+    "pages": [
+        {
+            "type": "text",
+            "text": "¡Ars Nouveau 1.11.5 Arreglos!$(li)Perforar ahora puede ser usado con hechizos como Romper, Cortar, Aplastar, y Cosechar.$(li)Nuevas texturas animadas de la Archwood$(li)Los Carbuncles ahora tienen más facilidad para salir si se atrapan $(li)Arregla el lag con la Prensa de Glifos$(li)Se ha arreglado un crasheo con la Mesa de Escriba$(li)Se ha arreglado un creasheo con los Carbuncles y la Ballas."       
+        },{
+            "type": "text",
+            "text": "$(li)Hay más soporte de tags para las recetas del aparato.$(li)Las gemas de maná ya nos se puden usar en los Faros"       
+        }
+    ]
+}

@@ -1,0 +1,15 @@
+{
+    "name": "Changelog 1.10.1",
+    "icon": "ars_nouveau:red_archwood_log",
+    "category": "release_notes",
+	"sortnum":84,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Ars Nouveau 1.10.1 $(li)El Acumulador Volcánico ahora puede consumir Archwood Llameante.$(li)Se han añadido recetas faltantes para el Bloque de Gema de Maná.$(li)Las Sylphs ya no aparecen en el vacío.$(li)Se ha cambiado la receta del Glifo de Extraer a un Bloque de Esmeralda.$(li)La sección de Empezando a sido reescrita."       
+        },{
+            "type": "relations",
+            "entries":["machines/volcanic_accumulator"]        
+        }
+    ]
+}

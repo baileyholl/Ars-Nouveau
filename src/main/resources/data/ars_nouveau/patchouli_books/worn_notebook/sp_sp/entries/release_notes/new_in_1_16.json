@@ -1,0 +1,15 @@
+{
+    "name": "Changelog 1.16",
+    "icon": "ars_nouveau:ritual",
+    "category": "release_notes",
+	"sortnum":73,
+    "pages": [
+        {
+            "type": "text",
+            "text": "¡Ars Nouveau 1.16, Rituales!$(li)¡Se añadieron los rituales!$(li)Se añadió un Candelabro Mágico decorativo$(li)Se añadieron 8 rituales, y hay más por llegar."       
+        },{
+            "type": "relations",
+            "entries":["resources/sconce","machines/ritual", "rituals/ritual_howto"]        
+        }
+    ]
+}

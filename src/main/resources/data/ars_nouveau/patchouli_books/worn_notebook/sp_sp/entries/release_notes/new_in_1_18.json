@@ -1,0 +1,15 @@
+{
+    "name": "Changelog 1.18",
+    "icon": "ars_nouveau:arcane_relay",
+    "category": "release_notes",
+	"sortnum":70,
+    "pages": [
+        {
+            "type": "text",
+            "text": "¡Ars Nouveau 1.18, Configuraciones!$(li)¡Se añadieron nuevas configuraciones a todos los glifos, incluyendo valores de daño, duraciín, y más!$(li)Los Relés y los Escupidores ahora tienen un alcance de 30 bloques.$(li)Los frascos ya no tienen capacidad infinita$(li)Se ha arreglado el ADE con las torretas $(li)El candelabro ya no apunta en direcciones incorrectas$(li)Se ha arreglado la barra de buscar hechizos$(li)Se ha añadido soporte de redstone para el Brasero de Rituales"       
+        },{
+            "type": "text",
+            "text": "$(li)Las tabletas de rituales ahora son soltadas si no empiezas el ritual y rompes el brasero.$(li)Las partículas ya no se generan si el juego está en pausa.$(li)El Ritual de Restauración ahora daña a los no-muertos como es debido.$(li)El objeto que suelta el Cristalizador ahora puede ser cambiado.$(li)Se ha añadido una configuración para limitar el número específico en la configuración de glifos$(li)Ahora cualquier hechizo puede ser un Hechizo Inicial.$(li)¡Nuevos consejos y ayudas a la hora de crear hechizos!"       
+        }
+    ]
+}

@@ -1,0 +1,12 @@
+{
+    "name": "Changelog 1.9.4",
+    "icon": "ars_nouveau:glyph_conjure_water",
+    "category": "release_notes",
+	"sortnum":88,
+    "pages": [
+        {
+            "type": "text",
+            "text": "¡Ars Nouveau 1.9.4 $(li)Conjurara Agua ahora extingue a las entidades$(li)Los portales ahora se pueden hacer de cualquier tipo de Piedra Arcana$(li)¡Los Carbuncles ahora saltan! $(li)Los Amuletos de Carbuncle, torretas, y escupidores ahora son más baratos$(li)¡Se han añadido 2 nuevos colores nuevos de Carbuncle!$(li)Se ha añadido información adicional a los Carbuncles$(li)Los Acumuladores Volcánicos ahora sacan materiales de cofres cercanos."       
+        }
+    ]
+}

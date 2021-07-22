@@ -1,0 +1,12 @@
+{
+    "name": "Changelog 1.9.5",
+    "icon": "ars_nouveau:wixie_charm",
+    "category": "release_notes",
+	"sortnum":87,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Ars Nouveau 1.9.5 Código de Espagueti de Madre$(li)La fabricación de la Wixie ahora puede ser desactivado con redstone.$(li)Ahora el efecto Romper siempre soltará objetos de otros mods$(li)Ahora el Caldero de Wixie puede soltar objetos$(li)Gravedad ya no afecta a la bedrock$(li)Refined Storage ya no causará más crasheos."       
+        }
+    ]
+}

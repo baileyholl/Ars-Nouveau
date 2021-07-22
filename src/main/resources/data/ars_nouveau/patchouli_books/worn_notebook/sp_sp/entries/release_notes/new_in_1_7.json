@@ -1,0 +1,19 @@
+{
+    "name": "Changelog 1.7.0",
+    "icon": "ars_nouveau:glyph_flare",
+    "category": "release_notes",
+	"sortnum":92,
+    "pages": [
+        {
+            "type": "text",
+            "text": "¡Ars Nouveau 1.7.0, Más Hechizos! $(li)Se añadió Llamarada $(li)Se añadió Chasquido Frío$(li)Se añadió Gravedad$(li)Se añadió Fabricar$(li)Se añadió Conjurar Agua$(li)Dañar ahora aplica veneno con Extender Tiempo$(li)Curar ahora aplica regeneración con Extender Tiempo$(li)Luz ahora aplica Brillo a otras entidades.$(li)¡Nuevos assets mejorados, por Ridanisaurus Rid!"       
+        },{
+            "type": "text",
+            "text": "$(li)Se añade configuración para deshabilitar hechizos y ajustar costes de maná.$(li)Dañar ahora hace menos daño.$(li)Fundir ahora es un hechizo de nivel 2 y cuesta más maná.$(li)Retrasar ya no se activa tan pronto.$(li)Los Relés y Escupidores ahora pueden ser tocados con la varita mientras se está agachado para despejar las conexiones."       
+        },
+		{
+            "type": "relations",
+            "entries":["spells/flare", "spells/cold_snap","spells/gravity", "spells/conjure_water","spells/craft","spells/harm","spells/heal","spells/light"]        
+        }
+    ]
+}

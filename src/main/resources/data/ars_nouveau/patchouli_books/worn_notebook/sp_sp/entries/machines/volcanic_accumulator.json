@@ -1,0 +1,33 @@
+{
+    "name": "Acumulador Volcánico",
+    "icon": "ars_nouveau:volcanic_accumulator",
+    "category": "machines",
+    "pages": [
+        {
+            "type": "text",
+            "text": "El Acumulador Volcánico genera maná consumiendo Archwood Flameante, o pasivamente basado en el número de bloques de lava debajo suya. Cuando el Acumulador Volcánico genera maná, también produce $(item)heat$(), usado para crear Nenúfares de Lava y convertir piedra en lava. El Acumulador Volcánico llena automáticamente frascos cercanos, empezando con el que tenga más cerca."
+        },{
+            "type": "text",
+			"title": "Generación Activa",
+            "text": "Objetos deArchwood Flameante cercanos serán quemados a cambio de una buena cantidad de maná y una moderada cantidad de $(item)heat$()."
+        },
+		{
+            "type": "text",
+			"title": "Generación Pasiva",
+            "text": "Lava en un espacio de 3x3 bajo el Acumulador Volcánico generará maná pasivamentey. Cada bloque de lava proveerá maná adicional y una pequeña cantidad de $(item)heat$()."
+        },{
+            "type": "text",
+			"title": "Calor",
+            "text": "El Acumulador Volcánico ocasionalmente volverá Bloques de Piedra en Bloques de Magma, y Bloques de Magma en Lava, si están bajo el Acumulador Volcánico en un área de 3x3. Esta conversión depende del número de $(item)heat$() que haya producido con el tiempo. El Acumulador Volcánico creará Nenúfares de Lava adyacente a él si no hay nada en esos espacios. Los Nenúfares de Lava pueden ser recogidos y usados como decoración."
+        },
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:volcanic_accumulator",
+			"recipe2":"ars_nouveau:lava_lily"
+		},
+		{
+            "type": "text",
+            "text": "El color del Nenúfar de Lava cambia si está colocado sobre lava, magma, o cualquier otro bloque."
+        }
+    ]
+}

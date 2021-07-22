@@ -1,0 +1,15 @@
+{
+    "name": "Arbusto de Ballas de Origen",
+    "icon": "ars_nouveau:mana_berry",
+    "category": "resources",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Un Arbusto de Ballas de Origen puede ser encontrado en biomas de Taiga y de Bosque de Archwood, y producen Ballas de Origen. Una Balla de Origen puede ser usada para fabricar una Poción de Regeneración de Maná o consumida como una comida. Los Carbuncles cosecharan automáticamente Arbustos de Ballas de Origen crecidos, haciéndolos útiles para automatizar tempranamente con el Condensador de Maná."
+        },
+		{
+            "type": "relations",
+            "entries":["apparatus/carbuncle_charm"]        
+        }
+    ]
+}

@@ -1,0 +1,31 @@
+{
+    "name": "Condensador de Maná",
+    "icon": "ars_nouveau:mana_condenser",
+    "category": "machines",
+    "pages": [
+        {
+            "type": "text",
+            "text": "El Condensador de Maná prové maná del mundo a Frascos de Maná tque estén colocados debajo suya. Este maná es creado por eventos especiales del mundo que ocurran cerca suya. Estos eventos incluyen cultivos creciendo, animales procreando, y monstruos que mueran cerca. Nota, los Condensadores de Maná dejarán de funcionar si hay otro Condensador de Maná demasiado cerca."
+        },
+		{
+		"type":"multiblock",
+		"multiblock":{
+			"mapping":{
+				"C":"ars_nouveau:mana_condenser",
+				"0":"ars_nouveau:mana_jar"
+			},
+			"pattern":[
+				["C"],
+				["0"],
+				[" "]
+			],
+			"symmetrical": true
+		},
+		"text":""
+		},
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:mana_condenser"
+		}
+    ]
+}

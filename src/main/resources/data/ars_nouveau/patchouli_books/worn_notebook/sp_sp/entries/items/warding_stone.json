@@ -1,0 +1,15 @@
+{
+    "name": "Piedra Guardiana",
+    "icon": "ars_nouveau:warding_stone",
+    "category": "machines",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Un bloque que puede actuar como valla para los monstruos. Al ser colocada en el suelo, los monstruos no podrán caminar sobre la piedra mientras que los jugadores sí pueden."
+        },
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:warding_stone"
+		}
+    ]
+}

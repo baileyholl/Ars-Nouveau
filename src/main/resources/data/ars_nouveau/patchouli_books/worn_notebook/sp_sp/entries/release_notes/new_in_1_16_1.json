@@ -1,0 +1,15 @@
+{
+    "name": "Changelog 1.16.1",
+    "icon": "ars_nouveau:ritual",
+    "category": "release_notes",
+	"sortnum":72,
+    "pages": [
+        {
+            "type": "text",
+            "text": "¡Ars Nouveau 1.16.1, Más Rituales!$(li)Se añadieron los rituales de Teletransportación, Desintegración, y Restauración.$(li)Los Carbuncles ya no mirán fijamente a las Ballas$(li)Se han añadido recetas adicionales para los objetos de los Wilden."       
+        },{
+            "type": "relations",
+            "entries":["rituals/restoration","rituals/disintegration","rituals/warping"]        
+        }
+    ]
+}

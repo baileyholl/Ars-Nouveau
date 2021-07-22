@@ -1,0 +1,15 @@
+{
+    "name": "Changelog 1.13.2",
+    "icon": "ars_nouveau:carbuncle_charm",
+    "category": "release_notes",
+	"sortnum":77,
+    "pages": [
+        {
+            "type": "text",
+            "text": "¡Ars Nouveau 1.13.2 Colores!$(li)Las Sylphs y los Carbuncles ahora pueden ser telidos de diferentes colores.$(li)Se ha arreglado Runa + Parpadeo en servidores.$(li)Se ha arrehlado un crasheo con la autofabricaicón de pociones$(li)Añade una lista negra de dimensiones para los Wilden$(li)Se han añadido 6 nuevas variantes de Ladrillos Arcanos"       
+        },{
+            "type": "relations",
+            "entries":["apparatus/sylph_charm","apparatus/carbuncle_charm"]        
+        }
+    ]
+}

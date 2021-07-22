@@ -1,0 +1,23 @@
+{
+    "name": "Mena Arcana",
+    "icon": "ars_nouveau:arcane_ore",
+    "category": "resources",
+    "pages": [
+        {
+            "type": "text",
+            "text": "La Mena Arcana es ligeramente más común que el oro y prové Gemas de Maná. Las Gemas de Maná pueden ser usadas para fabricar objetos, desbloquear nuevos hechizos, y para dispositivos. Las Gemas de Maná también pueden ser creadas y renobadas usando el Cristalizador."
+        },
+		{
+            "type":"smelting",
+			"recipe":"ars_nouveau:mana_gem"
+		},
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:arcane_stone"
+		},
+		{
+            "type": "relations",
+            "entries":["machines/crystallizer"]        
+        }
+    ]
+}

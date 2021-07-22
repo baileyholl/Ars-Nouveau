@@ -1,0 +1,15 @@
+{
+    "name": "Changelog 1.10.5",
+    "icon": "ars_nouveau:sylph_charm",
+    "category": "release_notes",
+	"sortnum":82,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Ars Nouveau 1.10.5 SYLPHS INTELIGENTES $(li)Ahora las Sylphs aceptan el Pergamino de Objeto: Denegar$(li)Ahora los Carbuncles encuentran pepitas de oro mejor :($(li)La sección del Amuleto de Sylph ha sido reescrita.$(li)Mas soprte de tags de objetos para la archwood.$(li)Se ha mejorado la búsqueda de hechizos en el Grimorio.$(li)Los modelos y texturas de la armadura han sido acualizadas.$(li)La habilidad pasiva del Acumulador Volcánico ha sido mejorada."       
+        },{
+            "type": "relations",
+            "entries":["apparatus/sylph_charm"]        
+        }
+    ]
+}

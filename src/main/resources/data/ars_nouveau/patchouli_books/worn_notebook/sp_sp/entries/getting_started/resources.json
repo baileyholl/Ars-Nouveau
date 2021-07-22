@@ -1,0 +1,16 @@
+{
+    "name": "Generación del Mundo",
+    "icon": "ars_nouveau:mana_gem",
+	"sortnum":8,
+    "category": "getting_started",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Varios recursos pueden aparecer en el mundo, cada uno con sus propiedades mágicas. Las Gemas de Maná pueden ser encontradas bajo tierra, pero también pueden ser fabricadas y renovadas usando el Cristalizador. Los árboles de Archwood vienen en varias variantes decorativas y pueden ser usados para fabricar la Vara de Hechizos. Las Ballas de Origen, encontradas en Taigas, son esenciales para fabricar pociones de Regeneración de Maná."       
+        },
+		{
+            "type": "relations",
+            "entries":["machines/crystallizer", "resources/archwood","resources/mana_berry"]        
+        }
+    ]
+}

@@ -1,0 +1,15 @@
+{
+    "name": "Nenúfares de Lava",
+    "icon": "ars_nouveau:lava_lily",
+    "category": "resources",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Un bloque decorativo que puede ser colocado en un bloque o líquido. La textura de este bloque varía si es colocado en Lava, un Bloque de Magma, o cualquier otro bloque."
+        },
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:lava_lily"
+		}
+    ]
+}
