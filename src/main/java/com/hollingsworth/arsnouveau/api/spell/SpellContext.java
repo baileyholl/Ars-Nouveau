@@ -5,12 +5,11 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.tileentity.TileEntity;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class SpellContext {
-
-    private int manaCost;
 
     private boolean isCanceled;
 
@@ -40,7 +39,7 @@ public class SpellContext {
         this.colors = ParticleUtil.defaultParticleColorWrapper();
     }
 
-
+    // TODO: Rename to nextPart
     public AbstractSpellPart nextSpell(){
         this.currentIndex++;
         return getSpell().recipe.get(currentIndex - 1);
@@ -72,14 +71,6 @@ public class SpellContext {
 
     public int getCurrentIndex(){return currentIndex;}
 
-    public int getManaCost() {
-        return manaCost;
-    }
-
-    public void setManaCost(int manaCost) {
-        this.manaCost = manaCost;
-    }
-
     public boolean isCanceled() {
         return isCanceled;
     }
@@ -88,20 +79,28 @@ public class SpellContext {
         isCanceled = canceled;
     }
 
-    public Spell getSpell() {
+    public @Nonnull Spell getSpell() {
         return spell == null ? Spell.EMPTY : spell;
     }
-
 
     @Nullable
     public LivingEntity getCaster() {
         return caster;
     }
 
-    public enum CasterType{
-        ENTITY,
-        RUNE,
-        TURRET,
-        OTHER
+    /**
+     * The type of caster that created the spell. Used for removing or changing behaviors of effects that would otherwise cause problems, like GUI opening effects.
+     */
+    public static class CasterType{
+        public static final CasterType RUNE = new CasterType("rune");
+        public static final CasterType TURRET = new CasterType("turret");
+        public static final CasterType ENTITY = new CasterType("entity");
+        public static final CasterType OTHER = new CasterType("other");
+
+        public String id;
+        public CasterType(String id){
+            this.id = id;
+        }
     }
+
 }

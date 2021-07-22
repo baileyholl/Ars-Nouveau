@@ -12,6 +12,9 @@ import net.minecraftforge.common.MinecraftForge;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
+/**
+ * For entities summoned by spells.
+ */
 public interface ISummon {
     // How many ticks the summon has left
     int getTicksLeft();

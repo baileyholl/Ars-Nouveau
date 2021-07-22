@@ -176,7 +176,6 @@ public class ItemsRegistry {
                     new SpellBook(ISpellTier.Tier.TWO).setRegistryName(LibItemNames.APPRENTICE_SPELL_BOOK),
                     new SpellBook(ISpellTier.Tier.THREE).setRegistryName(LibItemNames.ARCHMAGE_SPELL_BOOK),
                     new SpellBook(ISpellTier.Tier.THREE).setRegistryName(LibItemNames.CREATIVE_SPELL_BOOK),
-                    new RingOfAmplify(),
                     new BeltOfLevitation(),
                     new WarpScroll(),
                     new JarOfLight(),

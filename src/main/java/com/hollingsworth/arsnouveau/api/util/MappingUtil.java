@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.api.util;
 
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-
+//TODO Remove in favor of AT
 public class MappingUtil {
     private static String ITEM_ENTITY_AGE;
 

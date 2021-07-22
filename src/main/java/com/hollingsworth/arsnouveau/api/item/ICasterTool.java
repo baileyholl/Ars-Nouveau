@@ -19,14 +19,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
+/**
+ * An interface for caster items that provides default behavior for scribing, displaying mana, and tooltips
+ */
 public interface ICasterTool extends IScribeable, IDisplayMana {
     @Override
     default boolean onScribe(World world, BlockPos pos, PlayerEntity player, Hand handIn, ItemStack stack) {
         ItemStack heldStack = player.getItemInHand(handIn);
         ISpellCaster caster = getSpellCaster(stack);
-
-        if(caster == null)
-            return false;
 
         if(!((heldStack.getItem() instanceof SpellBook) || (heldStack.getItem() instanceof SpellParchment)) || heldStack.getTag() == null)
             return false;

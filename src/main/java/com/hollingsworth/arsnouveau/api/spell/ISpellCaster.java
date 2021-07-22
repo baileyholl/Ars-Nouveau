@@ -22,6 +22,10 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 import java.util.Map;
 
+/**
+ * An interface for handling NBT as it relates to items that may cast spells.
+ * See SpellCaster for implementation.
+ */
 public interface ISpellCaster {
 
     @Nonnull Spell getSpell();

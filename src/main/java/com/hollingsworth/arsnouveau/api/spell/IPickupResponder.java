@@ -4,6 +4,10 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
+/**
+ * Used by spellcasting entities or blocks that support receiving items.
+ * See #EffectPickup
+ */
 public interface IPickupResponder extends IInventoryResponder{
 
     /**

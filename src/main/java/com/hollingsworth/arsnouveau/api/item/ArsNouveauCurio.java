@@ -4,7 +4,8 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.items.ModItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
-
+//TODO Remove in favor of curio tick method
+@Deprecated
 public abstract class ArsNouveauCurio extends ModItem {
 
 
