@@ -49,7 +49,7 @@ public class SpellResolver {
         this.spellValidator =  ArsNouveauAPI.getInstance().getSpellCastingSpellValidator();
     }
 
-    @Deprecated
+    @Deprecated // Removed in favor of Spell constructor
     public SpellResolver(AbstractSpellPart[] spellParts, SpellContext context){
         this(new ArrayList<>(Arrays.asList(spellParts)), context);
     }
@@ -69,7 +69,7 @@ public class SpellResolver {
         this.castType = method;
     }
 
-    @Deprecated
+    @Deprecated // Removed in favor of Spell constructor
     public SpellResolver(List<AbstractSpellPart> spell, boolean silent, SpellContext context){
         this(spell, context);
         this.silent = silent;
