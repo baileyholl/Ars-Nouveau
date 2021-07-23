@@ -137,7 +137,7 @@ public class ChimeraRamGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return !finished;
+        return !finished && !boss.getPhaseSwapping();
     }
 
     @Override

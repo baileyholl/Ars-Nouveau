@@ -705,5 +705,6 @@
 	"ars_nouveau.enchanting.bad_level": "This item must have the previous level of enchantment.",
 	"ars_nouveau.enchanting.incompatible": "This enchantment is incompatible with this item.",
 	"entity.ars_nouveau.wilden_boss": "Wilden Chimera",
-	"ars_nouveau.chimera.rage": "The chimera begins raging."
+	"ars_nouveau.chimera.rage": "The chimera begins raging.",
+	"entity.ars_nouveau.spike": "Chimera Spike"
 }

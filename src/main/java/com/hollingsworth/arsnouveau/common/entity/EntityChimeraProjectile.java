@@ -16,7 +16,6 @@ import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
-import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
@@ -58,8 +57,8 @@ public class EntityChimeraProjectile extends AbstractArrowEntity implements IAni
     }
 
     private <E extends Entity> PlayState attackPredicate(AnimationEvent e) {
-        e.getController().setAnimation(new AnimationBuilder().addAnimation("spike_spin"));
-        return PlayState.CONTINUE;
+//        e.getController().setAnimation(new AnimationBuilder().addAnimation("spike_spin"));
+        return PlayState.STOP;
     }
 
     @Override

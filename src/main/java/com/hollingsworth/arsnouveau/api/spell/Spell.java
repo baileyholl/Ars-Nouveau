@@ -47,8 +47,6 @@ public class Spell {
 
     }
 
-    
-
     public List<AbstractAugment> getAugments(int startPosition, @Nullable LivingEntity caster){
         ArrayList<AbstractAugment> augments = new ArrayList<>();
         if(recipe == null || recipe.isEmpty())

@@ -52,6 +52,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.BossInfo;
+import net.minecraft.world.Difficulty;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerBossInfo;
 import net.minecraft.world.server.ServerWorld;
@@ -66,7 +67,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import java.util.ArrayList;
 
 public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimationListener {
-    private final ServerBossInfo bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenScreen(true).setCreateWorldFog(true);
+    private final ServerBossInfo bossEvent = (ServerBossInfo)(new ServerBossInfo(this.getDisplayName(), BossInfo.Color.PURPLE, BossInfo.Overlay.PROGRESS)).setDarkenScreen(true).setCreateWorldFog(true).setPlayBossMusic(true);
     public static final DataParameter<Boolean> HAS_SPIKES = EntityDataManager.defineId(EntityChimera.class, DataSerializers.BOOLEAN);
     public static final DataParameter<Boolean> HAS_HORNS = EntityDataManager.defineId(EntityChimera.class, DataSerializers.BOOLEAN);
     public static final DataParameter<Boolean> HAS_WINGS = EntityDataManager.defineId(EntityChimera.class, DataSerializers.BOOLEAN);
@@ -92,6 +93,7 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
         setPersistenceRequired();
         initFlyingNavigator();
         rageTimer = 300;
+
     }
 
     @Override
@@ -163,7 +165,15 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
             }
         }
         if(!isFlying()) {
-            setNoGravity(false);
+            setNoGravity(this.isInLava());
+        }
+
+        if(!level.isClientSide && this.isInLava() && this.level.getGameTime() % 10 == 0){
+            this.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 20, 4));
+            this.addEffect(new EffectInstance(Effects.DAMAGE_RESISTANCE, 20, 3));
+            this.addEffect(new EffectInstance(Effects.FIRE_RESISTANCE, 20));
+            this.addEffect(new EffectInstance(Effects.REGENERATION, 20, 3));
+
         }
 
         if(this.isFlying()) {
@@ -186,16 +196,20 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
         if(!level.isClientSide) {
             if (summonCooldown > 0)
                 summonCooldown--;
-            if (diveCooldown > 0)
+            if (diveCooldown > 0) {
                 diveCooldown--;
+                if(this.isInLava() || this.isInWater())
+                    spikeCooldown -= 2;
+            }
             if (spikeCooldown > 0) {
                 spikeCooldown--;
+
             }
             if (ramCooldown > 0)
                 ramCooldown--;
         }
 
-        if(!level.isClientSide && getPhaseSwapping()){
+        if(!level.isClientSide && getPhaseSwapping() && !this.dead){
             if(this.getHealth() < this.getMaxHealth()){
                 this.heal(2.0f);
             }else{
@@ -294,7 +308,7 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
 
     @Override
     public boolean isDeadOrDying() {
-        return this.getHealth() <= 0.0 && getPhase() == 3;
+        return getPhase() > 3;
     }
 
     public void getRandomUpgrade(){
@@ -324,7 +338,7 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (source == DamageSource.CACTUS || source == DamageSource.SWEET_BERRY_BUSH || source == DamageSource.IN_WALL || source == DamageSource.LAVA)
+        if (source == DamageSource.CACTUS || source == DamageSource.SWEET_BERRY_BUSH || source == DamageSource.IN_WALL || source == DamageSource.LAVA || source == DamageSource.DROWN)
             return false;
         if (source.msgId.equals("cold"))
             amount = amount / 2;
@@ -354,12 +368,17 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
         if(!this.level.isClientSide && this.getHealth() <= 0.0 && getPhase() < 3){
             this.setPhaseSwapping(true);
             this.setPhase(this.getPhase() + 1);
+            this.getNavigation().stop();
             this.setHealth(1.0f);
             Networking.sendToNearby(level, this, new PacketAnimEntity(this.getId(), EntityChimera.Animations.HOWL.ordinal()));
             this.setFlying(false);
             this.setDefensiveMode(false);
             this.isRamming = false;
             this.dead = false;
+        }
+        if(!this.level.isClientSide && this.getHealth() <= 0.0 && getPhase() == 3){
+            this.dead = true;
+            this.setPhase(4);
         }
 
         return res;
@@ -377,7 +396,11 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
 
     @Override
     public void checkDespawn() {
-        super.checkDespawn();
+        if (this.level.getDifficulty() == Difficulty.PEACEFUL && this.shouldDespawnInPeaceful()) {
+            this.remove();
+        } else {
+            this.noActionTime = 0;
+        }
     }
 
 

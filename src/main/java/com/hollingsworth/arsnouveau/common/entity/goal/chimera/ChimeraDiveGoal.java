@@ -118,7 +118,7 @@ public class ChimeraDiveGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return !finished && boss.getHealth() > 1;
+        return !finished && !boss.getPhaseSwapping();
     }
 
     @Override

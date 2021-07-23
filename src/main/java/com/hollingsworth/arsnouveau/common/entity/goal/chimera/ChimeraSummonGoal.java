@@ -39,7 +39,7 @@ public class ChimeraSummonGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return !done;
+        return !done && !mob.getPhaseSwapping();
     }
 
     @Override
