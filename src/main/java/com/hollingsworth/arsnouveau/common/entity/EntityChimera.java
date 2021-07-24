@@ -19,6 +19,7 @@ import com.hollingsworth.arsnouveau.common.spell.effect.EffectDelay;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectKnockback;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectLaunch;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -29,6 +30,7 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.monster.MonsterEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -86,14 +88,18 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
 
     public FlyingPathNavigator flyingNavigator;
 
-    protected EntityChimera(EntityType<? extends MonsterEntity> p_i48553_1_, World p_i48553_2_) {
-        super(p_i48553_1_, p_i48553_2_);
+    public EntityChimera(EntityType<? extends MonsterEntity> type, World level) {
+        super(type, level);
         moveControl = new ChimeraMoveController(this, 10, true);
         maxUpStep = 2.0f;
         setPersistenceRequired();
         initFlyingNavigator();
         rageTimer = 300;
+        this.xpReward = 75;
+    }
 
+    public EntityChimera(World level) {
+        this(ModEntities.WILDEN_BOSS, level);
     }
 
     @Override
@@ -232,17 +238,35 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
         }
 
         if(getPhaseSwapping() && level.isClientSide){
-            int baseAge =  40;
-            float scaleAge = (float) ParticleUtil.inRange(0.1, 0.2);
-            BlockPos pos = blockPosition();
-            for(int i =0; i< 10 * (Math.min(1, getPhase())); i++){
-                Vector3d particlePos = new Vector3d(pos.getX(), pos.getY() + 1, pos.getZ()).add(0.5, 0.5, 0.5);
-                particlePos = particlePos.add(ParticleUtil.pointInSphere().multiply(3.0, 3.0, 3.0));
-                level.addParticle(ParticleLineData.createData(ParticleColor.makeRandomColor(255, 255, 255, random),scaleAge, baseAge + level.random.nextInt(20)) ,
-                        particlePos.x(), particlePos.y(), particlePos.z(),
-                        pos.getX() + 0.5  , pos.getY() +0.5 , pos.getZ()+ 0.5);
-            }
+            spawnPhaseParticles(blockPosition(), level, getPhase());
         }
+    }
+
+    public static void spawnPhaseParticles(BlockPos pos, World level, int multiplier){
+        if(!level.isClientSide)
+            return;
+        int baseAge =  40;
+        float scaleAge = (float) ParticleUtil.inRange(0.1, 0.2);
+        for(int i =0; i< 10 * (Math.min(1, multiplier)); i++){
+            Vector3d particlePos = new Vector3d(pos.getX(), pos.getY() + 1, pos.getZ()).add(0.5, 0.5, 0.5);
+            particlePos = particlePos.add(ParticleUtil.pointInSphere().multiply(3.0, 3.0, 3.0));
+            level.addParticle(ParticleLineData.createData(ParticleColor.makeRandomColor(255, 255, 255, level.random),scaleAge, baseAge + level.random.nextInt(20)) ,
+                    particlePos.x(), particlePos.y(), particlePos.z(),
+                    pos.getX() + 0.5  , pos.getY() +0.5 , pos.getZ()+ 0.5);
+        }
+    }
+
+    protected void dropCustomDeathLoot(DamageSource p_213333_1_, int p_213333_2_, boolean p_213333_3_) {
+        super.dropCustomDeathLoot(p_213333_1_, p_213333_2_, p_213333_3_);
+        ItemEntity itementity = this.spawnAtLocation(ItemsRegistry.WILDEN_TRIBUTE);
+        if (itementity != null) {
+            itementity.setExtendedLifetime();
+        }
+    }
+
+    @Override
+    protected boolean shouldDropLoot() {
+        return true;
     }
 
     protected void playStepSound(BlockPos p_180429_1_, BlockState p_180429_2_) {
@@ -287,7 +311,7 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
     }
 
     public boolean canSpike(){
-        return !isRamming && spikeCooldown <= 0 && hasSpikes() && !getPhaseSwapping() && !isFlying() && this.onGround;
+        return !isRamming && spikeCooldown <= 0 && hasSpikes() && !getPhaseSwapping() && !isFlying() && this.onGround && this.getTarget() != null;
     }
 
     public boolean canRam(){
@@ -377,8 +401,8 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
             this.dead = false;
         }
         if(!this.level.isClientSide && this.getHealth() <= 0.0 && getPhase() == 3){
-            this.dead = true;
             this.setPhase(4);
+            super.die(source);
         }
 
         return res;

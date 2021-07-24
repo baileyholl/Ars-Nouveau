@@ -93,4 +93,6 @@ public class LibItemNames {
     public static final String DRYGMY_CHARM = "drygmy_charm";
     public static final String DRYGMY_SHARD = "drygmy_shard";
     public static final String MIMIC_ITEM_SCROLL = "mimic_scroll";
+
+    public static final String WILDEN_TRIBUTE = "wilden_tribute";
 }

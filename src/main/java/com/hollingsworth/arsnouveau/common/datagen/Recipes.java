@@ -383,6 +383,37 @@ public class Recipes extends RecipeProvider {
                     .requires(ItemsRegistry.ALLOW_ITEM_SCROLL)
                     .requires(Items.CHEST)
                     .save(consumer);
+
+            shapelessBuilder(getRitualItem(RitualLib.WILDEN_SUMMON))
+                    .requires(BlockRegistry.VEXING_LOG)
+                    .requires(ItemsRegistry.WILDEN_HORN, 1)
+                    .requires(ItemsRegistry.WILDEN_SPIKE, 1)
+                    .requires(ItemsRegistry.WILDEN_WING, 1)
+                    .requires(Items.LAPIS_BLOCK)
+                    .save(consumer);
+            shapelessBuilder(getRitualItem(RitualLib.WILDEN_SUMMON))
+                    .requires(BlockRegistry.VEXING_LOG)
+                    .requires(ItemsRegistry.WILDEN_HORN, 3)
+                    .requires(Items.LAPIS_BLOCK)
+                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "wilden_summon_2"));
+            shapelessBuilder(getRitualItem(RitualLib.WILDEN_SUMMON))
+                    .requires(BlockRegistry.VEXING_LOG)
+                    .requires(ItemsRegistry.WILDEN_SPIKE, 3)
+                    .requires(Items.LAPIS_BLOCK)
+                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "wilden_summon_3"));
+            shapelessBuilder(getRitualItem(RitualLib.WILDEN_SUMMON))
+                    .requires(BlockRegistry.VEXING_LOG)
+                    .requires(ItemsRegistry.WILDEN_WING, 3)
+                    .requires(Items.LAPIS_BLOCK)
+                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "wilden_summon_4"));
+
+            shapelessBuilder(getRitualItem(RitualLib.WILDEN_SUMMON))
+                    .requires(BlockRegistry.VEXING_LOG)
+                    .requires(Items.EMERALD_BLOCK, 1)
+                    .requires(Items.IRON_SWORD, 1)
+                    .requires(Items.BOW, 1)
+                    .requires(Items.LAPIS_BLOCK)
+                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "wilden_summon_5"));
         }
     }
 

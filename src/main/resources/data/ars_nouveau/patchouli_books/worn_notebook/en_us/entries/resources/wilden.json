@@ -18,6 +18,14 @@
 			"type": "entity",
 		  "entity": "ars_nouveau:wilden_guardian",
 		  "text":"Found in cold biomes, a Defender is a slow moving heavy hitter with a ranged attack."
+		},{
+			"type": "entity",
+		  "entity": "ars_nouveau:wilden_boss",
+		  "text":"Summoned with a Ritual of Wilden Tribute, the chimera is a powerful and destructive mid-level boss."
+		},
+		{
+			"type":"text",
+			"text":"The Chimera is a worthy fight for a caster with Tier 2 spells and equipment. The Chimera resists cold damage, and a variety of spells including buffs, dispel, and mobility are suggested."
 		}
     ]
 }

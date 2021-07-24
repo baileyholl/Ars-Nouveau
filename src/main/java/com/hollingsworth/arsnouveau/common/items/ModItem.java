@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -14,10 +15,9 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.item.Item.Properties;
-
 public class ModItem extends Item {
     public List<ITextComponent> tooltip;
+    public Rarity rarity;
     public ModItem(Properties properties) {
         super(properties);
     }
@@ -35,6 +35,16 @@ public class ModItem extends Item {
         tooltip = new ArrayList<>();
         tooltip.add(tip);
         return this;
+    }
+
+    public ModItem withRarity(Rarity rarity){
+        this.rarity = rarity;
+        return this;
+    }
+
+    @Override
+    public Rarity getRarity(ItemStack stack) {
+        return rarity != null ? rarity : super.getRarity(stack);
     }
 
     public ItemStack getStack(){

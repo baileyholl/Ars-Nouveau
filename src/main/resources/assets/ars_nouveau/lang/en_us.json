@@ -432,6 +432,7 @@
 	"ars_nouveau.ritual_desc.scrying": "Grants vision of a given block through any other block for a given time. White particles signify you are very close, green is semi-far, and blue particles are blocks very far from you.  To complete the ritual, throw any block of your choice before starting. You may also add a Glyph of Extend Time to increase the duration to 15 minutes.",
 	"ars_nouveau.ritual_desc.sunrise": "Sets the time to day.",
 	"ars_nouveau.ritual_desc.warping": "Warps all nearby entities to the location on a warp scroll. Before starting the ritual, you must first augment the ritual with an inscribed Warp Scroll.",
+	"ars_nouveau.ritual_desc.wilden_summon": "Without augments, this ritual will summon a random variety of Wilden monsters for a short duration. When augmented with a Wilden Spike, Wilden Horn, and a Wilden Wing, this ritual will summon the Wilden Chimera, a challenging and destructive monster. Note: If summoning the chimera, this ritual will destroy blocks around the brazier.",
 	"item.ars_nouveau.glyph_accelerate": "Glyph of Accelerate",
 	"item.ars_nouveau.glyph_amplify": "Glyph of Amplify",
 	"item.ars_nouveau.glyph_aoe": "Glyph of AOE",
@@ -509,6 +510,7 @@
 	"item.ars_nouveau.ritual_scrying": "Tablet of Scrying",
 	"item.ars_nouveau.ritual_sunrise": "Tablet of Sunrise",
 	"item.ars_nouveau.ritual_warping": "Tablet of Warping",
+	"item.ars_nouveau.ritual_wilden_summon": "Tablet of Summon Wilden",
   
 	"ars_nouveau.book.name": "Worn Notebook",
 	"ars_nouveau.book.landing_text": "Ars Nouveau provides spell crafting, magical devices, powerful trinkets, and magical entity automation. To help  development or report issues, join the community: https://discord.gg/y7TMXZu Thank you for playing.",
@@ -706,5 +708,8 @@
 	"ars_nouveau.enchanting.incompatible": "This enchantment is incompatible with this item.",
 	"entity.ars_nouveau.wilden_boss": "Wilden Chimera",
 	"ars_nouveau.chimera.rage": "The chimera begins raging.",
-	"entity.ars_nouveau.spike": "Chimera Spike"
+	"entity.ars_nouveau.spike": "Chimera Spike",
+	"tooltip.ars_nouveau.wilden_tribute": "Obtained by defeating the Wilden Chimera. See Ritual of Summon Wilden.",
+	"item.ars_nouveau.wilden_tribute": "Wilden Tribute",
+	"item.ars_nouveau.mimic_scroll": "Mimic Scroll"
 }

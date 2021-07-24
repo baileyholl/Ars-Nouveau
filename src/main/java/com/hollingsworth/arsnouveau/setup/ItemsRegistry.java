@@ -18,11 +18,10 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Food;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemTier;
-import net.minecraft.item.SpawnEggItem;
+import net.minecraft.item.*;
 import net.minecraft.potion.EffectInstance;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -131,6 +130,7 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.CASTER_TOME)public static CasterTome CASTER_TOME;
     @ObjectHolder(LibItemNames.DRYGMY_CHARM)public static DrygmyCharm DRYGMY_CHARM;
     @ObjectHolder(LibItemNames.DRYGMY_SHARD)public static ModItem DRYGMY_SHARD;
+    @ObjectHolder(LibItemNames.WILDEN_TRIBUTE)public static ModItem WILDEN_TRIBUTE;
 
     public static Food MANA_BERRY_FOOD = (new Food.Builder()).nutrition(2).saturationMod(0.1F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).alwaysEat().build();
 
@@ -265,7 +265,8 @@ public class ItemsRegistry {
                     new SpawnEggItem(ModEntities.WILDEN_STALKER, 0x9B650C,0xEF1818,defaultItemProperties()).setRegistryName(LibItemNames.WILDEN_STALKER_SE),
                     new CasterTome(defaultItemProperties().stacksTo(1), LibItemNames.CASTER_TOME),
                     new DrygmyCharm(LibItemNames.DRYGMY_CHARM),
-                    new ModItem(LibItemNames.DRYGMY_SHARD).withTooltip(new TranslationTextComponent("tooltip.ars_nouveau.drygmy_shard"))
+                    new ModItem(LibItemNames.DRYGMY_SHARD).withTooltip(new TranslationTextComponent("tooltip.ars_nouveau.drygmy_shard")),
+                    new ModItem(LibItemNames.WILDEN_TRIBUTE).withRarity(Rarity.EPIC).withTooltip(new TranslationTextComponent("tooltip.ars_nouveau.wilden_tribute").withStyle(Style.EMPTY.withItalic(true).withColor(TextFormatting.BLUE)))
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

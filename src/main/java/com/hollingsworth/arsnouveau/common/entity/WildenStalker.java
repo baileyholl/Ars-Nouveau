@@ -44,6 +44,11 @@ public class WildenStalker extends MonsterEntity implements IAnimatable, IAnimat
         moveControl = new FlyHelper(this);
     }
 
+    public WildenStalker(World worldIn) {
+        this(ModEntities.WILDEN_STALKER, worldIn);
+    }
+
+
     @Override
     protected void registerGoals() {
         super.registerGoals();

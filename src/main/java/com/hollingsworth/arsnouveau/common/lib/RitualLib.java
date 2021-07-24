@@ -14,4 +14,5 @@ public class RitualLib {
     public static final String WARP = "warping";
     public static final String SCRYING = "scrying";
     public static final String FLIGHT = "flight";
+    public static final String WILDEN_SUMMON = "wilden_summon";
 }

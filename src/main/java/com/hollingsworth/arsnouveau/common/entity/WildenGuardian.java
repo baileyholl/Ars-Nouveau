@@ -50,6 +50,9 @@ public class WildenGuardian extends MonsterEntity implements IAnimatable, IAnima
         super(type, worldIn);
     }
 
+    public WildenGuardian(World worldIn) {
+        this(ModEntities.WILDEN_GUARDIAN, worldIn);
+    }
 
     @Override
     protected void registerGoals() {
