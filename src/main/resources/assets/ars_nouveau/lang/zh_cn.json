@@ -432,6 +432,7 @@
 	"ars_nouveau.ritual_desc.scrying": "使玩家能在一定时间内透视看到特定方块。透视时看见白色粒子表明玩家和目标方块距离很近，绿色表明距离较远，蓝色表明距离非常远。要进行仪式，需要在仪式开始前投入你想要探知的目标方块。你也可以使用延长时效魔符进行增强，使仪式的持续时间增加到 15 分钟。",
 	"ars_nouveau.ritual_desc.sunrise": "将时间设为白天。",
 	"ars_nouveau.ritual_desc.warping": "将附近所有实体折越到折越卷轴上的位置。开始仪式前，你必须先使用已记录位置的折越卷轴对仪式进行增强。",
+	"ars_nouveau.ritual_desc.wilden_summon": "未被增强时，仪式会在短时间内召唤随机种类的荒野怪物。在同时使用荒野尖刺、荒野之角和荒野膜翼增强后，仪式会改为召唤出一种具有挑战性和破坏性的怪物——荒野奇美拉。注意：如果召唤了奇美拉，仪式会摧毁火盆附近的方块。",
 	"item.ars_nouveau.glyph_accelerate": "魔符：加速",
 	"item.ars_nouveau.glyph_amplify": "魔符：强化",
 	"item.ars_nouveau.glyph_aoe": "魔符：范围效果",
@@ -509,6 +510,7 @@
 	"item.ars_nouveau.ritual_scrying": "探知之板",
 	"item.ars_nouveau.ritual_sunrise": "升阳之板",
 	"item.ars_nouveau.ritual_warping": "折越之板",
+	"item.ars_nouveau.ritual_wilden_summon": "荒野召唤之板",
 	
 	"ars_nouveau.book.name": "破旧的笔记本",
 	"ars_nouveau.book.landing_text": "新生魔艺提供了法术制作、魔法设备、强力饰品和魔法实体自动化。如果你想帮助开发或者报告问题，请加入我们的社区：https://discord.gg/y7TMXZu。感谢你的游玩。",
@@ -706,5 +708,8 @@
 	"ars_nouveau.enchanting.incompatible": "该附魔与此物品不兼容。",
 	"entity.ars_nouveau.wilden_boss": "荒野奇美拉",
 	"ars_nouveau.chimera.rage": "奇美拉要开始狂暴了。",
-	"entity.ars_nouveau.spike": "奇美拉之刺"
+	"entity.ars_nouveau.spike": "奇美拉之刺",
+	"tooltip.ars_nouveau.wilden_tribute": "通过打败荒野奇美拉得到。请参阅荒野召唤仪式。",
+	"item.ars_nouveau.wilden_tribute": "荒野供物",
+	"item.ars_nouveau.mimic_scroll": "拟态卷轴"
 }

@@ -18,6 +18,15 @@
 			"type": "entity",
 		  "entity": "ars_nouveau:wilden_guardian",
 		  "text":"守卫者可在寒冷群系发现，其移动速度较慢，能进行高伤害的远程攻击。"
+		},{
+			"type": "entity",
+		  "entity": "ars_nouveau:wilden_boss",
+		  "text":"奇美拉是一种强大且具有破坏性的中 boss，需要通过荒野供物仪式召唤。"
+		},
+		{
+			"type":"text",
+			"text":"对于带有 2 级法术和装备的施法者来说，奇美拉是一个相称的对手。奇美拉具有寒冷抗性，建议使用能带来正面增益、解除魔法和增加移动性的法术。"
+		
 		}
     ]
 }
