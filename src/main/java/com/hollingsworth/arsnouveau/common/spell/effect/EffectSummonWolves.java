@@ -29,7 +29,6 @@ public class EffectSummonWolves extends AbstractEffect {
 
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        super.onResolve(rayTraceResult, world, shooter, augments, spellContext);
         if(!canSummon(shooter))
             return;
         Vector3d hit = rayTraceResult.getLocation();

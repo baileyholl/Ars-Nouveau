@@ -1,11 +1,11 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
-import com.hollingsworth.arsnouveau.api.item.ISpellStatModifier;
+import com.hollingsworth.arsnouveau.api.item.ISpellModifier;
 
 import javax.annotation.Nonnull;
 import java.util.Set;
 
-public abstract class AbstractAugment extends AbstractSpellPart implements ISpellStatModifier {
+public abstract class AbstractAugment extends AbstractSpellPart implements ISpellModifier {
 
     public AbstractAugment(String tag, String description) {
         super(tag, description);

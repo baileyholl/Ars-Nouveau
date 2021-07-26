@@ -5,8 +5,6 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.common.entity.EntityDummy;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.item.Item;
@@ -31,7 +29,6 @@ public class EffectSummonDecoy extends AbstractEffect {
 
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        super.onResolve(rayTraceResult, world, shooter, augments, spellContext);
         if(shooter != null){
             Vector3d pos = safelyGetHitPos(rayTraceResult);
             EntityDummy dummy = new EntityDummy(world);

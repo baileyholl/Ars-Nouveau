@@ -43,6 +43,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     // Apply the effect at the destination position.
+    @Deprecated // Marked for removal
     public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext){
         if(rayTraceResult instanceof BlockRayTraceResult)
             onResolveBlock((BlockRayTraceResult) rayTraceResult, world, shooter, augments, spellContext);
@@ -50,11 +51,24 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         if(rayTraceResult instanceof EntityRayTraceResult)
             onResolveEntity((EntityRayTraceResult) rayTraceResult, world, shooter, augments, spellContext);
     }
-
+    @Deprecated // Marked for removal
     public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext){}
 
-
+    @Deprecated // Marked for removal
     public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext){}
+
+    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext){
+        onResolve(rayTraceResult, world, shooter, spellStats.augments, spellContext);
+    }
+
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext){
+        onResolveEntity(rayTraceResult, world, shooter, spellStats.augments, spellContext);
+    }
+
+    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext){
+        onResolveBlock(rayTraceResult, world, shooter, spellStats.augments, spellContext);
+    }
+
 
     @Deprecated // Use config-sensitive method
     public void applyPotion(LivingEntity entity, Effect potionEffect, List<AbstractAugment> augmentTypes){

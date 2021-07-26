@@ -1,40 +1,16 @@
 package com.hollingsworth.arsnouveau.api.util;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.ISpellBonus;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+@Deprecated
 public class SpellRecipeUtil {
-
-    /**
-     * Returns the list of augments that come from equipment
-     */
-    public static List<AbstractAugment> getEquippedAugments(@Nonnull LivingEntity caster){
-        ArrayList<AbstractAugment> augments = new ArrayList<>();
-        CuriosUtil.getAllWornItems(caster).ifPresent(e ->{
-            for(int i = 0; i < e.getSlots(); i++){
-                Item item = e.getStackInSlot(i).getItem();
-                if(item instanceof ISpellBonus)
-                    augments.addAll(((ISpellBonus) item).getList( e.getStackInSlot(i)));
-            }
-
-        });
-        caster.getArmorSlots().forEach(itemStack -> {
-            if(itemStack.getItem() instanceof ISpellBonus)
-                augments.addAll(((ISpellBonus) itemStack.getItem()).getList( itemStack));
-        });
-        return augments;
-    }
 
     @Deprecated // Marked for removal for Spell object methods.
     public static ArrayList<AbstractSpellPart> getSpellsFromString(String spellString){

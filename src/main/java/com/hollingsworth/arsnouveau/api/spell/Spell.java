@@ -7,8 +7,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil.getEquippedAugments;
-
 public class Spell {
     public static final Spell EMPTY = new Spell();
 
@@ -59,9 +57,7 @@ public class Spell {
                 break;
             }
         }
-        // Add augment bonuses from equipment
-        if(caster != null)
-            augments.addAll(getEquippedAugments(caster));
+
         return augments;
     }
 

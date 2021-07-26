@@ -95,4 +95,5 @@ public class LibItemNames {
     public static final String MIMIC_ITEM_SCROLL = "mimic_scroll";
 
     public static final String WILDEN_TRIBUTE = "wilden_tribute";
+    public static final String SUMMON_FOCUS = "summon_focus";
 }

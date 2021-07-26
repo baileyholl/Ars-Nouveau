@@ -711,5 +711,11 @@
 	"entity.ars_nouveau.spike": "Chimera Spike",
 	"tooltip.ars_nouveau.wilden_tribute": "Obtained by defeating the Wilden Chimera. See Ritual of Summon Wilden.",
 	"item.ars_nouveau.wilden_tribute": "Wilden Tribute",
-	"item.ars_nouveau.mimic_scroll": "Mimic Scroll"
+	"item.ars_nouveau.mimic_scroll": "Mimic Scroll",
+	"tooltip.ars_nouveau.spell_damage": "Spell Damage: %s",
+	"tooltip.ars_nouveau.duration_modifier": "Duration Modifier: %s",
+	"tooltip.ars_nouveau.amp_modifier": "Amplification Modifier: %s",
+	"item.ars_nouveau.summon_focus": "Focus of Summoning",
+	"tooltip.ars_nouveau.summon_focus": "",
+	"curios.identifier.an_focus": "Spell Focus"
 }

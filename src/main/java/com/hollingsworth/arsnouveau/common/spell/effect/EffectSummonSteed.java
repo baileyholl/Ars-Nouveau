@@ -35,7 +35,6 @@ public class EffectSummonSteed extends AbstractEffect {
 
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        super.onResolve(rayTraceResult, world, shooter, augments, spellContext);
         int ticks = 20 * (GENERIC_INT.get() +  EXTEND_TIME.get() * getDurationModifier(augments));
 
         if(!canSummon(shooter))

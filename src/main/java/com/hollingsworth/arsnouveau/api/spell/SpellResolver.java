@@ -38,15 +38,14 @@ public class SpellResolver {
         this.castType = cast;
         this.spell = new Spell(spell);
         this.spellContext = context;
-        ArsNouveauAPI api = ArsNouveauAPI.getInstance();
-        this.spellValidator = api.getSpellCastingSpellValidator();
+        this.spellValidator = ArsNouveauAPI.getInstance().getSpellCastingSpellValidator();
     }
 
     public SpellResolver(SpellContext spellContext){
         this.spell = spellContext.getSpell();
         this.castType = spellContext.getSpell().getCastMethod();
         this.spellContext = spellContext;
-        this.spellValidator =  ArsNouveauAPI.getInstance().getSpellCastingSpellValidator();
+        this.spellValidator = ArsNouveauAPI.getInstance().getSpellCastingSpellValidator();
     }
 
     @Deprecated // Removed in favor of Spell constructor
@@ -139,11 +138,17 @@ public class SpellResolver {
             if(spellContext.isCanceled())
                 break;
             AbstractSpellPart part = spellContext.nextSpell();
+            SpellStats.Builder builder = new SpellStats.Builder();
+            SpellStats stats = builder
+                    .setAugments(spell.getAugments(i, shooter))
+                    .addItemsFromEntity(shooter)
+                    .build(part, result, world, shooter, spellContext);
             if(part instanceof AbstractEffect){
-                ((AbstractEffect) part).onResolve(result, world, shooter, spell.getAugments(i, shooter), spellContext);
+                ((AbstractEffect) part).onResolve(result, world, shooter, stats, spellContext);
             }
         }
     }
+
 
     // Safely unwrap the living entity in the case that the caster is null, aka being cast by a non-player.
     public static LivingEntity getUnwrappedCaster(World world, LivingEntity shooter, SpellContext spellContext){
