@@ -1,0 +1,16 @@
+
+{
+  "name": "item.ars_nouveau.summon_focus",
+  "icon": "ars_nouveau:summon_focus",
+  "category": "equipment",
+  "pages": [
+    {
+      "type": "text",
+      "text": "一种特殊的施法核心。能使通过法术召唤的生物持续更长的时间，有更强的力量和速度，被敌人杀死时还会对其造成伤害。此外，施展自身和环绕之球等以自己为目标的法术时，同样的法术会被复制并对附近的召唤物施放。"
+    },
+    {
+      "type": "apparatus_recipe",
+      "recipe": "ars_nouveau:summon_focus"
+    }
+  ]
+}  
