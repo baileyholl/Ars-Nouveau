@@ -711,5 +711,11 @@
 	"entity.ars_nouveau.spike": "奇美拉之刺",
 	"tooltip.ars_nouveau.wilden_tribute": "通过打败荒野奇美拉得到。请参阅荒野召唤仪式。",
 	"item.ars_nouveau.wilden_tribute": "荒野供物",
-	"item.ars_nouveau.mimic_scroll": "拟态卷轴"
+	"item.ars_nouveau.mimic_scroll": "拟态卷轴",
+	"tooltip.ars_nouveau.spell_damage": "法术伤害：%s",
+	"tooltip.ars_nouveau.duration_modifier": "持续时间修正：%s",
+	"tooltip.ars_nouveau.amp_modifier": "强化修正：%s",
+	"item.ars_nouveau.summon_focus": "召唤之核心",
+	"tooltip.ars_nouveau.summon_focus": "提升你的召唤物的持续时间和强度。",
+	"curios.identifier.an_focus": "法术核心"
 }
