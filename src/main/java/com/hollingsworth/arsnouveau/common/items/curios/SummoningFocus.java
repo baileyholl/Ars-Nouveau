@@ -10,7 +10,6 @@ import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.common.items.ModItem;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodOrbit;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,7 +20,6 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -63,12 +61,6 @@ public class SummoningFocus extends ModItem implements ISpellModifierItem {
         return builder;
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip2, flagIn);
-//        tooltip2.add(new TranslationTextComponent("tooltip.ars_nouveau.summon_focus"));
-//        getSimpleStats(new SpellStats.Builder()).build().addTooltip(tooltip2);
-    }
 
     public static boolean containsThis(World world, Entity entity){
         if(!world.isClientSide && entity instanceof PlayerEntity) {
