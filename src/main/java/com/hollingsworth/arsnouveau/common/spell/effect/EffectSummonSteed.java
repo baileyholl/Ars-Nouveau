@@ -47,6 +47,7 @@ public class EffectSummonSteed extends AbstractEffect {
             horse.tameWithName((PlayerEntity) shooter);
             world.addFreshEntity(horse);
             horse.getHorseInventory().setItem(0, new ItemStack(Items.SADDLE));
+            horse.setOwnerID(shooter.getUUID());
             horse.setDropChance(EquipmentSlotType.CHEST, 0.0F);
         }
         applySummoningSickness(shooter, 30 * 20);

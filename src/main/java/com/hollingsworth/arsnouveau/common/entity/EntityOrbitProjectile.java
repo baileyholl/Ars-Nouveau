@@ -12,7 +12,6 @@ import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
@@ -22,14 +21,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-import javax.annotation.Nullable;
-import java.util.Optional;
-import java.util.UUID;
-
 public class EntityOrbitProjectile extends EntityProjectileSpell{
     public Entity wardedEntity;
     int ticksLeft;
-    private static final DataParameter<Optional<UUID>> OWNER_UUID = EntityDataManager.defineId(EntityOrbitProjectile.class, DataSerializers.OPTIONAL_UUID);
+    private static final DataParameter<Integer> OWNER_UUID = EntityDataManager.defineId(EntityOrbitProjectile.class, DataSerializers.INT);
     public static final DataParameter<Integer> OFFSET = EntityDataManager.defineId(EntityOrbitProjectile.class, DataSerializers.INT);
     public static final DataParameter<Integer> ACCELERATES = EntityDataManager.defineId(EntityOrbitProjectile.class, DataSerializers.INT);
     public static final DataParameter<Integer> AOE = EntityDataManager.defineId(EntityOrbitProjectile.class, DataSerializers.INT);
@@ -90,9 +85,10 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
         }
         if(!level.isClientSide && spellResolver == null)
             this.remove();
-        Entity owner = level.getPlayerByUUID(getOwnerID());
+        Entity owner = level.getEntity(getOwnerID());
 //        this.remove();
         if(!level.isClientSide && owner == null) {
+            System.out.println("removing");
             this.remove();
             return;
         }
@@ -134,21 +130,6 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
             this.hasImpulse = true;
         }
         if(level.isClientSide && this.age > 2) {
-
-//            level.addParticle(GlowParticleData.createData(ParticleUtil.defaultParticleColor()),
-//                    (float) (getX()) - Math.sin((ClientInfo.ticksInGame + getOffset()) / 8D) ,
-//                    (float) (getY()) + 1  ,
-//                    (float) (getZ()) - Math.cos((ClientInfo.ticksInGame + getOffset()) / 8D) ,
-//                    0, 0, 0);
-//            for(int i = 0; i < 3; i++){
-//                level.addParticle(GlowParticleData.createData(ParticleUtil.defaultParticleColor()),
-//                        (float) (getX()) ,
-//                        (float) (getY())  ,
-//                        (float) (getZ()) ,
-//                        0, 0, 0);
-//            }
-
-
                 double deltaX = getX() - xOld;
                 double deltaY = getY() - yOld;
                 double deltaZ = getZ() - zOld;
@@ -193,7 +174,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(OWNER_UUID, Optional.of(Util.NIL_UUID));
+        this.entityData.define(OWNER_UUID, 0);
         this.entityData.define(OFFSET, 0);
         this.entityData.define(ACCELERATES, 0);
         this.entityData.define(AOE, 0);
@@ -208,7 +189,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
         tag.putInt("aoe", getAoe());
         tag.putInt("accelerate", getAccelerates());
         tag.putInt("total", getTotal());
-        writeOwner(tag);
+        tag.putInt("ownerID", getOwnerID());
     }
 
     @Override
@@ -218,8 +199,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
         setOffset(tag.getInt("offset"));
         setAoe(tag.getInt("aoe"));
         setAccelerates(tag.getInt("accelerate"));
-        if(getOwnerID() != null)
-            setOwnerID(tag.getUUID("owner"));
+        setOwnerID(tag.getInt("ownerID"));
         setTotal(tag.getInt("total"));
     }
 
@@ -237,10 +217,6 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
         super(ModEntities.ENTITY_WARD, world);
     }
 
-    void writeOwner(CompoundNBT tag){
-        if(getOwnerID() != null)
-            tag.putUUID("owner", getOwnerID());
-    }
     public int getTicksLeft() {
         return ticksLeft;
     }
@@ -249,13 +225,11 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
         this.ticksLeft = ticks;
     }
 
-    @Nullable
-    public UUID getOwnerID() {
-        return !this.getEntityData().get(OWNER_UUID).isPresent() ? this.getUUID() : this.getEntityData().get(OWNER_UUID).get();
+    public int getOwnerID() {
+        return this.getEntityData().get(OWNER_UUID);
     }
 
-
-    public void setOwnerID(UUID uuid) {
-        this.getEntityData().set(OWNER_UUID, Optional.ofNullable(uuid));
+    public void setOwnerID(int uuid) {
+        this.getEntityData().set(OWNER_UUID,uuid);
     }
 }

@@ -35,7 +35,7 @@ public class MethodOrbit extends AbstractCastMethod {
         for(int i = 0; i < total; i++){
             EntityOrbitProjectile wardProjectile = new EntityOrbitProjectile(world, shooter);
             wardProjectile.wardedEntity = shooter;
-            wardProjectile.setOwnerID(shooter.getUUID());
+            wardProjectile.setOwnerID(shooter.getId());
             wardProjectile.spellResolver = resolver;
             wardProjectile.setOffset(i);
             wardProjectile.pierceLeft = getBuffCount(augments, AugmentPierce.class);

@@ -104,9 +104,10 @@ public class SpellResolver {
     }
 
     public boolean postEvent(LivingEntity entity){
-        return SpellUtil.postEvent(new SpellCastEvent(entity, spell));
+        return SpellUtil.postEvent(new SpellCastEvent(entity, spell, spellContext));
     }
 
+    // TODO: Remove world arg
     public void onCast(ItemStack stack, LivingEntity livingEntity, World world){
         if(canCast(livingEntity) && !postEvent(livingEntity))
             castType.onCast(stack, livingEntity, world, spell.getAugments( 0, livingEntity), spellContext, this);

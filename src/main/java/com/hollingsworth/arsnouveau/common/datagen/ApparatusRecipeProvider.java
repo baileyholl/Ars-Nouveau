@@ -882,6 +882,16 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withPedestalItem(Ingredient.of(Tags.Items.SEEDS))
                 .withPedestalItem(3, Recipes.MANA_GEM)
                 .build());
+
+        addRecipe(builder()
+                .withResult(ItemsRegistry.SUMMONING_FOCUS)
+                .withReagent(Recipes.MANA_GEM_BLOCK)
+                .withPedestalItem(ItemsRegistry.WILDEN_HORN)
+                .withPedestalItem(ItemsRegistry.WILDEN_SPIKE)
+                .withPedestalItem(ItemsRegistry.WILDEN_WING)
+                .withPedestalItem(ItemsRegistry.WILDEN_TRIBUTE)
+                .withPedestalItem(Ingredient.of(Tags.Items.INGOTS_GOLD))
+                .build());
     }
 
     public void addRecipe(EnchantingApparatusRecipe recipe){

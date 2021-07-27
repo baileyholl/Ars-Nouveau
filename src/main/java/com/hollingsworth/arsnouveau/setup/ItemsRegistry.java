@@ -131,6 +131,7 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.DRYGMY_CHARM)public static DrygmyCharm DRYGMY_CHARM;
     @ObjectHolder(LibItemNames.DRYGMY_SHARD)public static ModItem DRYGMY_SHARD;
     @ObjectHolder(LibItemNames.WILDEN_TRIBUTE)public static ModItem WILDEN_TRIBUTE;
+    @ObjectHolder(LibItemNames.SUMMON_FOCUS)public static SummoningFocus SUMMONING_FOCUS;
 
     public static Food MANA_BERRY_FOOD = (new Food.Builder()).nutrition(2).saturationMod(0.1F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).alwaysEat().build();
 
@@ -266,7 +267,9 @@ public class ItemsRegistry {
                     new CasterTome(defaultItemProperties().stacksTo(1), LibItemNames.CASTER_TOME),
                     new DrygmyCharm(LibItemNames.DRYGMY_CHARM),
                     new ModItem(LibItemNames.DRYGMY_SHARD).withTooltip(new TranslationTextComponent("tooltip.ars_nouveau.drygmy_shard")),
-                    new ModItem(LibItemNames.WILDEN_TRIBUTE).withRarity(Rarity.EPIC).withTooltip(new TranslationTextComponent("tooltip.ars_nouveau.wilden_tribute").withStyle(Style.EMPTY.withItalic(true).withColor(TextFormatting.BLUE))),
+                    new ModItem(defaultItemProperties().fireResistant(), LibItemNames.WILDEN_TRIBUTE).withRarity(Rarity.EPIC)
+                            .withTooltip(new TranslationTextComponent("tooltip.ars_nouveau.wilden_tribute")
+                            .withStyle(Style.EMPTY.withItalic(true).withColor(TextFormatting.BLUE))),
                     new SummoningFocus(defaultItemProperties().stacksTo(1), LibItemNames.SUMMON_FOCUS)
 
             };

@@ -716,6 +716,6 @@
 	"tooltip.ars_nouveau.duration_modifier": "Duration Modifier: %s",
 	"tooltip.ars_nouveau.amp_modifier": "Amplification Modifier: %s",
 	"item.ars_nouveau.summon_focus": "Focus of Summoning",
-	"tooltip.ars_nouveau.summon_focus": "",
+	"tooltip.ars_nouveau.summon_focus": "Increases the duration and power of your summons.",
 	"curios.identifier.an_focus": "Spell Focus"
 }
