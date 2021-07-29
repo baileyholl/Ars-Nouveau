@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.RedstoneAir;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
@@ -17,13 +15,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Set;
 
 public class EffectRedstone extends AbstractEffect {
@@ -34,31 +30,28 @@ public class EffectRedstone extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof BlockRayTraceResult){
-            BlockState state = BlockRegistry.REDSTONE_AIR.defaultBlockState();
-            int signalModifier = getAmplificationBonus(augments) + 10;
-            if(signalModifier < 1)
-                signalModifier = 1;
-            if(signalModifier > 15)
-                signalModifier = 15;
-            state = state.setValue(RedstoneAir.POWER, signalModifier);
-            BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getBlockPos().relative(((BlockRayTraceResult) rayTraceResult).getDirection());
-            if(!(world.getBlockState(pos).getMaterial() == Material.AIR && world.getBlockState(pos).getBlock() != BlockRegistry.REDSTONE_AIR)){
-                return;
-            }
-            int timeBonus = getBuffCount(augments, AugmentExtendTime.class);
-            world.setBlockAndUpdate(pos, state);
-            world.getBlockTicks().scheduleTick(pos, state.getBlock(), GENERIC_INT.get() + timeBonus * BONUS_TIME.get());
-
-            BlockPos hitPos = pos.relative(((BlockRayTraceResult) rayTraceResult).getDirection().getOpposite());
-
-            BlockUtil.safelyUpdateState(world, pos);
-            world.updateNeighborsAt(pos, state.getBlock());
-            world.updateNeighborsAt(hitPos, state.getBlock());
+    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        BlockState state = BlockRegistry.REDSTONE_AIR.defaultBlockState();
+        int signalModifier = (int) spellStats.getAmpMultiplier() + 10;
+        if(signalModifier < 1)
+            signalModifier = 1;
+        if(signalModifier > 15)
+            signalModifier = 15;
+        state = state.setValue(RedstoneAir.POWER, signalModifier);
+        BlockPos pos = rayTraceResult.getBlockPos().relative(rayTraceResult.getDirection());
+        if(!(world.getBlockState(pos).getMaterial() == Material.AIR && world.getBlockState(pos).getBlock() != BlockRegistry.REDSTONE_AIR)){
+            return;
         }
-    }
+        int timeBonus = (int) spellStats.getDurationMultiplier();
+        world.setBlockAndUpdate(pos, state);
+        world.getBlockTicks().scheduleTick(pos, state.getBlock(), GENERIC_INT.get() + timeBonus * BONUS_TIME.get());
 
+        BlockPos hitPos = pos.relative(rayTraceResult.getDirection().getOpposite());
+
+        BlockUtil.safelyUpdateState(world, pos);
+        world.updateNeighborsAt(pos, state.getBlock());
+        world.updateNeighborsAt(hitPos, state.getBlock());
+    }
 
     public ForgeConfigSpec.IntValue BONUS_TIME;
     @Override
@@ -88,5 +81,11 @@ public class EffectRedstone extends AbstractEffect {
     @Override
     public int getManaCost() {
         return 0;
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.MANIPULATION);
     }
 }

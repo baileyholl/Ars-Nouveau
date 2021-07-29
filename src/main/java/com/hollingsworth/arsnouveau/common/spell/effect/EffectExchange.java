@@ -6,7 +6,10 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
-import com.hollingsworth.arsnouveau.common.spell.augment.*;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -20,7 +23,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -44,17 +46,8 @@ public class EffectExchange extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof BlockRayTraceResult){
-            resolveBlockHit(rayTraceResult, world, shooter, augments,spellContext);
-        }else if(rayTraceResult instanceof EntityRayTraceResult){
-            resolveEntityHit(rayTraceResult, world, shooter, augments, spellContext);
-        }
-    }
-
-    public void resolveEntityHit(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext){
-        EntityRayTraceResult entityRayTraceResult = (EntityRayTraceResult) rayTraceResult;
-        Entity entity = entityRayTraceResult.getEntity();
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        Entity entity = rayTraceResult.getEntity();
         if(shooter != null){
             Vector3d origLoc = shooter.position;
             if(isNotFakePlayer(shooter)) {
@@ -66,10 +59,9 @@ public class EffectExchange extends AbstractEffect {
         }
     }
 
-    public void resolveBlockHit(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext){
-        int aoeBuff = getBuffCount(augments, AugmentAOE.class);
-        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getBlockPos(), (BlockRayTraceResult)rayTraceResult,aoeBuff, getBuffCount(augments, AugmentPierce.class));
-        BlockRayTraceResult result = (BlockRayTraceResult) rayTraceResult;
+    @Override
+    public void onResolveBlock(BlockRayTraceResult result, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, result.getBlockPos(), result,  spellStats.getBuffCount(AugmentAOE.INSTANCE),  spellStats.getBuffCount(AugmentPierce.INSTANCE));
         BlockState origState = world.getBlockState(result.getBlockPos());
         PlayerEntity playerEntity = getPlayer(shooter, (ServerWorld) world);
         List<ItemStack> list = playerEntity.inventory.items;
@@ -86,9 +78,9 @@ public class EffectExchange extends AbstractEffect {
         for(BlockPos pos1 : posList) {
             BlockState state = world.getBlockState(pos1);
 
-            if(!canBlockBeHarvested(augments, world, pos1) || origState.getBlock() != state.getBlock() ||
+            if(!canBlockBeHarvested(spellStats, world, pos1) || origState.getBlock() != state.getBlock() ||
                     world.getBlockState(pos1).getMaterial() != Material.AIR && world.getBlockState(pos1).getBlock() == BlockRegistry.INTANGIBLE_AIR
-            || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, pos1)){
+                    || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, pos1)){
                 continue;
             }
             if(isRealPlayer(shooter) && spellContext.castingTile == null) {
@@ -118,11 +110,7 @@ public class EffectExchange extends AbstractEffect {
 
             }
         }
-
     }
-
-
-
 
     public Block swapFromInv(List<ItemStack> inventory, BlockState origState, World world, BlockPos pos1, BlockRayTraceResult result, LivingEntity shooter, int slots, Block firstBlock){
         for(int i = 0; i < slots; i++){
@@ -190,5 +178,11 @@ public class EffectExchange extends AbstractEffect {
     @Override
     public int getManaCost() {
         return 50;
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.MANIPULATION);
     }
 }

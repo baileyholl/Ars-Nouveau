@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityDummy;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
@@ -16,7 +14,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Set;
 
 public class EffectSummonDecoy extends AbstractEffect {
@@ -26,20 +23,16 @@ public class EffectSummonDecoy extends AbstractEffect {
         super(GlyphLib.EffectDecoyID, "Summon Decoy");
     }
 
-
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         if(shooter != null){
             Vector3d pos = safelyGetHitPos(rayTraceResult);
             EntityDummy dummy = new EntityDummy(world);
-            dummy.ticksLeft = 20 * (GENERIC_INT.get() + getDurationModifier(augments) * EXTEND_TIME.get());
-//            dummy.setUUID(shooter.getUUID());
-            dummy.setPos(pos.x, pos.y +1, pos.z);
+            dummy.ticksLeft = (int) (20 * (GENERIC_INT.get() + spellStats.getDurationMultiplier() * EXTEND_TIME.get()));
+            dummy.setPos(pos.x, pos.y + 1, pos.z);
             dummy.setOwnerID(shooter.getUUID());
-            summonLivingEntity(rayTraceResult, world, shooter, augments, spellContext, dummy);
-            world.getEntitiesOfClass(MobEntity.class, dummy.getBoundingBox().inflate(20, 10, 20)).forEach(l ->{
-                l.setTarget(dummy);
-            });
+            summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, dummy);
+            world.getEntitiesOfClass(MobEntity.class, dummy.getBoundingBox().inflate(20, 10, 20)).forEach(l -> l.setTarget(dummy));
         }
     }
 
@@ -76,5 +69,11 @@ public class EffectSummonDecoy extends AbstractEffect {
     @Override
     public Item getCraftingReagent() {
         return Items.ARMOR_STAND;
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.CONJURATION);
     }
 }

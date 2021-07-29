@@ -3,15 +3,11 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.event.DelayedSpellEvent;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.Spell;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketClientDelayEffect;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -24,7 +20,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Set;
 
 public class EffectDelay extends AbstractEffect {
@@ -34,30 +29,32 @@ public class EffectDelay extends AbstractEffect {
         super(GlyphLib.EffectDelayID, "Delay");
     }
 
-    @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+    public void sendPacket(World world, RayTraceResult rayTraceResult, @Nullable LivingEntity shooter, SpellContext spellContext, SpellStats spellStats,BlockRayTraceResult blockResult, LivingEntity hitEntity){
         spellContext.setCanceled(true);
-
         if(spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
         Spell newSpell =  new Spell(spellContext.getSpell().recipe.subList(spellContext.getCurrentIndex(), spellContext.getSpell().recipe.size()));
         SpellContext newContext = new SpellContext(newSpell, shooter).withColors(spellContext.colors);
-        int duration = GENERIC_INT.get() + EXTEND_TIME.get() * getBuffCount(augments, AugmentExtendTime.class) * 20 - (EXTEND_TIME.get() / 2) * getBuffCount(augments, AugmentDurationDown.class) * 20;
+        int duration = GENERIC_INT.get() + EXTEND_TIME.get() * getBuffCount(spellStats.getAugments(), AugmentExtendTime.class) * 20 - (EXTEND_TIME.get() / 2) * getBuffCount(spellStats.getAugments(), AugmentDurationDown.class) * 20;
         EventQueue.getServerInstance().addEvent(
                 new DelayedSpellEvent(duration , newSpell, rayTraceResult, world, shooter, newContext));
-        // Send our packet to the client so we can make particles
-        BlockRayTraceResult blockResult =  rayTraceResult instanceof BlockRayTraceResult ? new BlockRayTraceResult(
-                rayTraceResult.getLocation(),
-                ((BlockRayTraceResult) rayTraceResult).getDirection(),
-                ((BlockRayTraceResult) rayTraceResult).getBlockPos(),
-                ((BlockRayTraceResult) rayTraceResult).isInside())
-                : null;
-        Entity hitEntity = rayTraceResult instanceof EntityRayTraceResult ? ((EntityRayTraceResult) rayTraceResult).getEntity() : null;
         Networking.sendToNearby(world, new BlockPos(safelyGetHitPos(rayTraceResult)),
-                new PacketClientDelayEffect(duration, shooter, newSpell, newContext, blockResult, hitEntity instanceof  LivingEntity ? (LivingEntity) hitEntity : null));
+                new PacketClientDelayEffect(duration, shooter, newSpell, newContext, blockResult, hitEntity));
     }
 
 
+    @Override
+    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        sendPacket(world, rayTraceResult, shooter, spellContext, spellStats, rayTraceResult, null);
+    }
+
+    @Override
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        if(!(rayTraceResult.getEntity() instanceof LivingEntity))
+            return;
+
+        sendPacket(world, rayTraceResult, shooter, spellContext, spellStats, null,  (LivingEntity) rayTraceResult.getEntity());
+    }
 
     @Override
     public void buildConfig(ForgeConfigSpec.Builder builder) {
@@ -91,5 +88,11 @@ public class EffectDelay extends AbstractEffect {
     @Override
     public Item getCraftingReagent() {
         return Items.REPEATER;
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.MANIPULATION);
     }
 }

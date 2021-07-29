@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
@@ -38,40 +36,35 @@ public class EffectHarvest extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof BlockRayTraceResult){
-            BlockRayTraceResult ray = (BlockRayTraceResult) rayTraceResult;
-            if(world.isClientSide)
-                return;
-            for(BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter, ray.getBlockPos(), ray, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))){
-                BlockState state = world.getBlockState(blockpos);
+    public void onResolveBlock(BlockRayTraceResult ray, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        for(BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter, ray.getBlockPos(), ray, spellStats)){
+            BlockState state = world.getBlockState(blockpos);
 
-                if(state.getBlock() instanceof FarmlandBlock || world.getBlockState(blockpos.above()).getBlock() instanceof CropsBlock){
-                    blockpos = blockpos.above();
-                    state = world.getBlockState(blockpos);
-                }
-
-                if(!(state.getBlock() instanceof CropsBlock))
-                    continue;
-                CropsBlock cropsBlock = (CropsBlock)world.getBlockState(blockpos).getBlock();
-
-                if(!cropsBlock.isMaxAge(state) || !(world instanceof ServerWorld))
-                    continue;
-
-                List<ItemStack> cropDrops = Block.getDrops(state, (ServerWorld)world, blockpos, world.getBlockEntity(blockpos));
-
-                if(hasBuff(augments, AugmentFortune.class)){
-                    cropDrops = state.getDrops(LootUtil.getFortuneContext((ServerWorld) world, blockpos, shooter, getBuffCount(augments, AugmentFortune.class)));
-                }
-                BlockPos finalBlockpos = blockpos;
-                cropDrops.forEach(d -> {
-                    if(d.getItem() == BlockRegistry.MANA_BLOOM_CROP.asItem()){
-                        return;
-                    }
-                    world.addFreshEntity(new ItemEntity(world, finalBlockpos.getX(), finalBlockpos.getY(), finalBlockpos.getZ(), d));
-                });
-                world.setBlockAndUpdate(blockpos,cropsBlock.getStateForAge(1));
+            if(state.getBlock() instanceof FarmlandBlock || world.getBlockState(blockpos.above()).getBlock() instanceof CropsBlock){
+                blockpos = blockpos.above();
+                state = world.getBlockState(blockpos);
             }
+
+            if(!(state.getBlock() instanceof CropsBlock))
+                continue;
+            CropsBlock cropsBlock = (CropsBlock)world.getBlockState(blockpos).getBlock();
+
+            if(!cropsBlock.isMaxAge(state) || !(world instanceof ServerWorld))
+                continue;
+
+            List<ItemStack> cropDrops = Block.getDrops(state, (ServerWorld)world, blockpos, world.getBlockEntity(blockpos));
+
+            if(spellStats.hasBuff(AugmentFortune.INSTANCE)){
+                cropDrops = state.getDrops(LootUtil.getFortuneContext((ServerWorld) world, blockpos, shooter, spellStats.getBuffCount(AugmentFortune.INSTANCE)));
+            }
+            BlockPos finalBlockpos = blockpos;
+            cropDrops.forEach(d -> {
+                if(d.getItem() == BlockRegistry.MANA_BLOOM_CROP.asItem()){
+                    return;
+                }
+                world.addFreshEntity(new ItemEntity(world, finalBlockpos.getX(), finalBlockpos.getY(), finalBlockpos.getZ(), d));
+            });
+            world.setBlockAndUpdate(blockpos,cropsBlock.getStateForAge(1));
         }
     }
 
@@ -116,5 +109,11 @@ public class EffectHarvest extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "When used on grown crops, this spell will obtain the fully grown product without destroying the plant.";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ELEMENTAL_EARTH);
     }
 }

@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.SummonHorse;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
@@ -22,7 +20,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Set;
 
 public class EffectSummonSteed extends AbstractEffect {
@@ -34,13 +31,14 @@ public class EffectSummonSteed extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        int ticks = 20 * (GENERIC_INT.get() +  EXTEND_TIME.get() * getDurationModifier(augments));
+    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
 
         if(!canSummon(shooter))
             return;
+
+        int ticks = (int) (20 * (GENERIC_INT.get() +  EXTEND_TIME.get() * spellStats.getDurationMultiplier()));
         Vector3d hit = rayTraceResult.getLocation();
-        for(int i = 0; i < 1 + getBuffCount(augments, AugmentAOE.class); i++){
+        for(int i = 0; i < 1 + spellStats.getBuffCount(AugmentAOE.INSTANCE); i++){
             SummonHorse horse = new SummonHorse(ModEntities.SUMMON_HORSE, world);
             horse.setPos(hit.x(), hit.y(), hit.z());
             horse.ticksLeft = ticks;
@@ -88,5 +86,11 @@ public class EffectSummonSteed extends AbstractEffect {
     @Override
     public Item getCraftingReagent() {
         return Items.LEATHER;
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.CONJURATION);
     }
 }

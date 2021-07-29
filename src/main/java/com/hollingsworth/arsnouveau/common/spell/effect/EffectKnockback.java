@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import net.minecraft.entity.LivingEntity;
@@ -28,10 +26,10 @@ public class EffectKnockback extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
-            LivingEntity target = (LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity();
-            float strength = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * getAmplificationBonus(augments));
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        if(rayTraceResult.getEntity() instanceof LivingEntity && shooter != null){
+            LivingEntity target = (LivingEntity) rayTraceResult.getEntity();
+            float strength = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
             knockback(target, shooter, strength);
             target.hurtMarked = true;
         }
@@ -78,5 +76,11 @@ public class EffectKnockback extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "Knocks a target away a short distance from the caster";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ELEMENTAL_AIR);
     }
 }

@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -28,16 +26,15 @@ public class EffectHarm extends AbstractEffect {
     private EffectHarm() {super(GlyphLib.EffectHarmID, "Harm" ); }
 
     @Override
-    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        super.onResolveEntity(rayTraceResult, world, shooter, augments, spellContext);
-        double damage = DAMAGE.get() + AMP_VALUE.get() * getAmplificationBonus(augments);
-        Entity entity = ((EntityRayTraceResult) rayTraceResult).getEntity();
-        int time = getBuffCount(augments, AugmentExtendTime.class);
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        double damage = DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
+        Entity entity = rayTraceResult.getEntity();
+        int time = (int) spellStats.getDurationMultiplier();
         if(time > 0){
             if(entity instanceof LivingEntity)
-                applyConfigPotion((LivingEntity) entity, Effects.POISON, augments);
+                applyConfigPotion((LivingEntity) entity, Effects.POISON, spellStats);
         }else{
-            dealDamage(world, shooter, (float) damage, augments, entity, DamageSource.playerAttack(getPlayer(shooter, (ServerWorld) world)));
+            dealDamage(world, shooter, (float) damage, spellStats, entity, DamageSource.playerAttack(getPlayer(shooter, (ServerWorld) world)));
         }
     }
 
@@ -89,5 +86,11 @@ public class EffectHarm extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "A spell you start with. Damages a target. May be increased by Amplify, or applies the Poison debuff when using Extend Time. Note, multiple Harms without a delay will not apply due to invincibility on hit.";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ELEMENTAL_EARTH);
     }
 }

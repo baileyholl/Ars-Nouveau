@@ -1,9 +1,8 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.ILightable;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -25,7 +24,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Random;
 
 public class SconceTile extends TileEntity implements ILightable, ITickableTileEntity {
@@ -79,15 +77,14 @@ public class SconceTile extends TileEntity implements ILightable, ITickableTileE
     }
 
     @Override
-    public void onLight(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+    public void onLight(RayTraceResult rayTraceResult, World world, LivingEntity shooter, SpellStats stats, SpellContext spellContext) {
         this.red = spellContext.colors.r;
         this.green = spellContext.colors.g;
         this.blue = spellContext.colors.b;
         lit = true;
-        System.out.println("lit");
         if(rayTraceResult instanceof BlockRayTraceResult) {
             BlockState state = world.getBlockState(((BlockRayTraceResult) rayTraceResult).getBlockPos());
-            world.setBlock(getBlockPos(), state.setValue(SconceBlock.LIGHT_LEVEL, Math.min(Math.max(0, 15 - AbstractEffect.getBuffCount(augments, AugmentDampen.class)), 15)), 3);
+            world.setBlock(getBlockPos(), state.setValue(SconceBlock.LIGHT_LEVEL, Math.min(Math.max(0, 15 - stats.getBuffCount(AugmentDampen.INSTANCE)), 15)), 3);
             world.sendBlockUpdated(((BlockRayTraceResult) rayTraceResult).getBlockPos(), state,
                     state.setValue(SconceBlock.LIGHT_LEVEL, 15), 3);
         }

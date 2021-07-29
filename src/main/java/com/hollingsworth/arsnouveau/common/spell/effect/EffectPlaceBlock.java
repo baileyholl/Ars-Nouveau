@@ -2,10 +2,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.IPlaceBlockResponder;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
@@ -40,13 +37,9 @@ public class EffectPlaceBlock extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(!(rayTraceResult instanceof BlockRayTraceResult))
-            return;
-        int aoeBuff = getBuffCount(augments, AugmentAOE.class);
-
-        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getBlockPos(), (BlockRayTraceResult)rayTraceResult,aoeBuff, getBuffCount(augments, AugmentPierce.class));
-        BlockRayTraceResult result = (BlockRayTraceResult) rayTraceResult;
+    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
+        BlockRayTraceResult result = rayTraceResult;
         for(BlockPos pos1 : posList) {
             BlockPos hitPos = result.isInside() ? pos1 : pos1.relative(result.getDirection());
             if(spellContext.castingTile instanceof IPlaceBlockResponder){
@@ -54,7 +47,7 @@ public class EffectPlaceBlock extends AbstractEffect {
                 if(stack.isEmpty() || !(stack.getItem() instanceof BlockItem))
                     return;
 
-               BlockItem item = (BlockItem) stack.getItem();
+                BlockItem item = (BlockItem) stack.getItem();
                 FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerWorld) world);
                 fakePlayer.setItemInHand(Hand.MAIN_HAND, stack);
 
@@ -67,10 +60,7 @@ public class EffectPlaceBlock extends AbstractEffect {
                 Direction direction = isTouch ? result.getDirection().getOpposite() : result.getDirection();
                 BlockItemUseContext context = BlockItemUseContext.at(new BlockItemUseContext(new ItemUseContext(fakePlayer, Hand.MAIN_HAND, result)),
                         hitPos.relative(direction), direction);
-
                 item.place(context);
-
-
             }else if(shooter instanceof IPlaceBlockResponder){
                 ItemStack stack = ((IPlaceBlockResponder) shooter).onPlaceBlock();
                 if(stack.isEmpty() || !(stack.getItem() instanceof BlockItem))
@@ -109,7 +99,6 @@ public class EffectPlaceBlock extends AbstractEffect {
         FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerWorld) world);
         fakePlayer.setItemInHand(Hand.MAIN_HAND, stack);
         BlockItemUseContext context = BlockItemUseContext.at(new BlockItemUseContext(new ItemUseContext(fakePlayer, Hand.MAIN_HAND, result)), result.getBlockPos(), result.getDirection());
-
         return item.place(context);
     }
 
@@ -133,5 +122,11 @@ public class EffectPlaceBlock extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "Places blocks from the casters inventory. If a player is casting this, this spell will place blocks from the hot bar first.";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.MANIPULATION);
     }
 }

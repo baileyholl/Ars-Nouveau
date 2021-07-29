@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.ANExplosion;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
@@ -26,7 +24,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Set;
 
 public class EffectExplosion extends AbstractEffect {
@@ -37,23 +34,19 @@ public class EffectExplosion extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult == null)
-            return;
-
+    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         Vector3d vec = safelyGetHitPos(rayTraceResult);
-
-        double intensity = BASE.get() + AMP_VALUE.get()*getBuffCount(augments, AugmentAmplify.class) + AOE_BONUS.get()*getBuffCount(augments, AugmentAOE.class);
-        int dampen = getBuffCount(augments, AugmentDampen.class);
+        double intensity = BASE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier() + AOE_BONUS.get() * spellStats.getBuffCount(AugmentAOE.INSTANCE);
+        int dampen = spellStats.getBuffCount(AugmentDampen.INSTANCE);
         intensity -= 0.5 * dampen;
-        Explosion.Mode mode = hasBuff(augments, AugmentDampen.class) ? Explosion.Mode.NONE  : Explosion.Mode.DESTROY;
-        mode = hasBuff(augments, AugmentExtract.class) ? Explosion.Mode.BREAK : mode;
-        explode(world, shooter, null, null, vec.x, vec.y, vec.z, (float) intensity, false, mode, augments);
+        Explosion.Mode mode = dampen > 0 ? Explosion.Mode.NONE  : Explosion.Mode.DESTROY;
+        mode = spellStats.hasBuff(AugmentExtract.INSTANCE) ? Explosion.Mode.BREAK : mode;
+        explode(world, shooter, null, null, vec.x, vec.y, vec.z, (float) intensity, false, mode, spellStats.getAmpMultiplier());
     }
 
     public Explosion explode(World world, @Nullable Entity e, @Nullable DamageSource source, @Nullable ExplosionContext context,
-                             double x, double y, double z, float radius, boolean p_230546_11_, Explosion.Mode p_230546_12_, List<AbstractAugment> augments) {
-        ANExplosion explosion = new ANExplosion(world, e, source, context, x, y, z, radius, p_230546_11_, p_230546_12_, getAmplificationBonus(augments));
+                             double x, double y, double z, float radius, boolean p_230546_11_, Explosion.Mode p_230546_12_, double amp) {
+        ANExplosion explosion = new ANExplosion(world, e, source, context, x, y, z, radius, p_230546_11_, p_230546_12_, amp);
         explosion.baseDamage = DAMAGE.get();
         explosion.ampDamageScalar = AMP_DAMAGE.get();
         if (net.minecraftforge.event.ForgeEventFactory.onExplosionStart(world, explosion)) return explosion;
@@ -120,5 +113,11 @@ public class EffectExplosion extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "Causes an explosion at the location. Amplify increases the damage and size by a small amount, while AOE will increase the size of the explosion by a large amount, but not damage.";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ELEMENTAL_FIRE);
     }
 }

@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -15,6 +13,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
@@ -26,17 +25,16 @@ public class EffectLeap extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
-            EntityRayTraceResult rayTraceResult1 = (EntityRayTraceResult) rayTraceResult;
-            LivingEntity e = (LivingEntity) rayTraceResult1.getEntity();
-
-            double bonus = GENERIC_DOUBLE.get() + AMP_VALUE.get() * getAmplificationBonus(augments);
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        if(rayTraceResult.getEntity() instanceof LivingEntity){
+            LivingEntity e = (LivingEntity) rayTraceResult.getEntity();
+            double bonus = GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
             e.setDeltaMovement(e.getLookAngle().x * bonus, e.getLookAngle().y * bonus, e.getLookAngle().z * bonus);
             e.fallDistance = 0;
             e.hurtMarked = true;
         }
     }
+
 
     @Override
     public void buildConfig(ForgeConfigSpec.Builder builder) {
@@ -69,5 +67,11 @@ public class EffectLeap extends AbstractEffect {
     @Override
     public int getManaCost() {
         return 25;
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ELEMENTAL_AIR);
     }
 }

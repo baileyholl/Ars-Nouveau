@@ -1,11 +1,10 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowingFluidBlock;
@@ -38,16 +37,21 @@ public class EffectFreeze extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        super.onResolveBlock(rayTraceResult, world, shooter, augments, spellContext);
+    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         BlockPos pos = rayTraceResult.getBlockPos();
-        for(BlockPos p : SpellUtil.calcAOEBlocks(shooter, pos, rayTraceResult, getBuffCount(augments, AugmentAOE.class))){
+        for(BlockPos p : SpellUtil.calcAOEBlocks(shooter, pos, rayTraceResult, spellStats.getBuffCount(AugmentAOE.INSTANCE), spellStats.getBuffCount(AugmentPierce.INSTANCE))){
             extinguishOrFreeze(world, p);
             for(Direction d : Direction.values()){
                 extinguishOrFreeze(world, p.relative(d));
             }
         }
+    }
 
+    @Override
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        if(!(rayTraceResult.getEntity() instanceof LivingEntity))
+            return;
+        applyConfigPotion((LivingEntity) (rayTraceResult).getEntity(), Effects.MOVEMENT_SLOWDOWN, spellStats);
     }
 
     public void extinguishOrFreeze(World world, BlockPos p){
@@ -66,15 +70,6 @@ public class EffectFreeze extends AbstractEffect {
 
         }
     }
-
-    @Override
-    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        super.onResolveEntity(rayTraceResult, world, shooter, augments, spellContext);
-        if(!(rayTraceResult.getEntity() instanceof LivingEntity))
-            return;
-        applyConfigPotion((LivingEntity) (rayTraceResult).getEntity(), Effects.MOVEMENT_SLOWDOWN, augments);
-    }
-
 
     @Override
     public void buildConfig(ForgeConfigSpec.Builder builder) {
@@ -104,11 +99,18 @@ public class EffectFreeze extends AbstractEffect {
     public Set<AbstractAugment> getCompatibleAugments() {
         Set<AbstractAugment> augments = new HashSet<>(POTION_AUGMENTS);
         augments.add(AugmentAOE.INSTANCE);
+        augments.add(AugmentPierce.INSTANCE);
         return augments;
     }
 
     @Override
     public String getBookDescription() {
-        return "Freezes water or lava in a small area or slows a target for a short time. Can be augmented with AOE, Extend Time, or Amplify.";
+        return "Freezes water or lava in a small area or slows a target for a short time.";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ELEMENTAL_WATER);
     }
 }

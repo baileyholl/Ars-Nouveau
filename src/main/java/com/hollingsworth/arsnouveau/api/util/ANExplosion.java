@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public class ANExplosion extends Explosion {
-    int amps;
+    public double amps;
     public double baseDamage;
     public double ampDamageScalar;
     public ANExplosion(World p_i45752_1_, @Nullable Entity p_i45752_2_, double p_i45752_3_, double p_i45752_5_, double p_i45752_7_, float p_i45752_9_, List<BlockPos> p_i45752_10_) {
@@ -40,7 +40,7 @@ public class ANExplosion extends Explosion {
     }
 
     public ANExplosion(World p_i231610_1_, @Nullable Entity p_i231610_2_, @Nullable DamageSource p_i231610_3_, @Nullable ExplosionContext p_i231610_4_, double p_i231610_5_, double p_i231610_7_, double p_i231610_9_, float p_i231610_11_, boolean p_i231610_12_, Mode p_i231610_13_,
-                       int numAmps) {
+                       double numAmps) {
         super(p_i231610_1_, p_i231610_2_, p_i231610_3_, p_i231610_4_, p_i231610_5_, p_i231610_7_, p_i231610_9_, p_i231610_11_, p_i231610_12_, p_i231610_13_);
         amps = numAmps;
     }

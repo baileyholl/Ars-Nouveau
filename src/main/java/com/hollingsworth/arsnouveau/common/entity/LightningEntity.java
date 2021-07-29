@@ -41,7 +41,7 @@ public class LightningEntity extends LightningBoltEntity {
     @Nullable
     private ServerPlayerEntity caster;
 
-    public int amps;
+    public float amps;
     public int extendTimes;
 
     public float ampScalar;

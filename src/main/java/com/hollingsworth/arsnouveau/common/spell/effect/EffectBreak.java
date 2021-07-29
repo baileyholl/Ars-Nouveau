@@ -1,16 +1,12 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
@@ -25,7 +21,6 @@ import net.minecraft.world.server.ServerWorld;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static com.hollingsworth.arsnouveau.api.util.BlockUtil.destroyBlockSafely;
@@ -52,45 +47,39 @@ public class EffectBreak extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(!world.isClientSide && rayTraceResult instanceof BlockRayTraceResult){
-            BlockPos pos = new BlockPos(((BlockRayTraceResult) rayTraceResult).getBlockPos());
-            BlockState state;
+    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        BlockPos pos = rayTraceResult.getBlockPos();
+        BlockState state;
 
-            int aoeBuff = getBuffCount(augments, AugmentAOE.class);
-            int pierceBuff = getBuffCount(augments, AugmentPierce.class);
-            List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult, aoeBuff, pierceBuff);
-            ItemStack stack = getStack(shooter);
+        int aoeBuff = spellStats.getBuffCount(AugmentAOE.INSTANCE);
+        int pierceBuff = spellStats.getBuffCount(AugmentPierce.INSTANCE);
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, rayTraceResult, aoeBuff, pierceBuff);
+        ItemStack stack = getStack(shooter);
 
-            Map<Enchantment, Integer> map =  EnchantmentHelper.getEnchantments(stack);
+        for(BlockPos pos1 : posList) {
+            state = world.getBlockState(pos1);
 
-            for(BlockPos pos1 : posList) {
-                state = world.getBlockState(pos1);
-
-                if(!canBlockBeHarvested(augments, world, pos1) || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, pos1)){
-                    continue;
-                }
-                if (hasBuff(augments, AugmentExtract.class)) {
-                    stack.enchant(Enchantments.SILK_TOUCH, 1);
-                    state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerWorld) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
-
-                    destroyBlockSafely(world, pos1, false, shooter);
-
-                } else if (hasBuff(augments, AugmentFortune.class)) {
-                    int bonus = getBuffCount(augments, AugmentFortune.class);
-                    stack.enchant(Enchantments.BLOCK_FORTUNE, bonus);
-                    //Block.spawnDrops(world.getBlockState(pos1), world, pos1, world.getTileEntity(pos1), shooter,stack);
-                    state.getBlock().popExperience((ServerWorld) world, pos1, state.getExpDrop(world, pos1, bonus, 0));
-                    state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerWorld) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
-                    destroyBlockSafely(world, pos1, false, shooter);
-                } else {
-                    state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerWorld) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
-                    destroyBlockSafely(world, pos1, false, shooter);
-                    state.getBlock().popExperience((ServerWorld) world, pos1, state.getExpDrop(world, pos1, 0, 0));
-                }
+            if(!canBlockBeHarvested(spellStats, world, pos1) || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, pos1)){
+                continue;
+            }
+            if(spellStats.hasBuff(AugmentExtract.INSTANCE)) {
+                stack.enchant(Enchantments.SILK_TOUCH, 1);
+                state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerWorld) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
+                destroyBlockSafely(world, pos1, false, shooter);
+            }else if(spellStats.hasBuff(AugmentFortune.INSTANCE)) {
+                int bonus = spellStats.getBuffCount(AugmentFortune.INSTANCE);
+                stack.enchant(Enchantments.BLOCK_FORTUNE, bonus);
+                state.getBlock().popExperience((ServerWorld) world, pos1, state.getExpDrop(world, pos1, bonus, 0));
+                state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerWorld) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
+                destroyBlockSafely(world, pos1, false, shooter);
+            } else {
+                state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerWorld) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
+                destroyBlockSafely(world, pos1, false, shooter);
+                state.getBlock().popExperience((ServerWorld) world, pos1, state.getExpDrop(world, pos1, 0, 0));
             }
         }
     }
+
 
     @Override
     public boolean defaultedStarterGlyph() {
@@ -128,5 +117,11 @@ public class EffectBreak extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "A spell you start with. Breaks blocks of an average hardness. Can be amplified to increase the harvest level.";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ELEMENTAL_EARTH);
     }
 }

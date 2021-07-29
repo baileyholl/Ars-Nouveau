@@ -2,9 +2,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.entity.Entity;
@@ -37,20 +35,19 @@ public class EffectCut extends AbstractEffect {
         super(GlyphLib.EffectCutID, "Cut");
     }
 
-
     @Override
-    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         Entity entity = rayTraceResult.getEntity();
         if(entity instanceof IForgeShearable){
             IForgeShearable shearable = (IForgeShearable) entity;
             ItemStack shears = new ItemStack(Items.SHEARS);
-            applyEnchantments(augments, shears);
+            applyEnchantments(spellStats.getAugments(), shears);
             if(shearable.isShearable(shears, world, entity.blockPosition())){
-                List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerWorld) world), shears, world, entity.blockPosition(), getBuffCount(augments, AugmentFortune.class));
+                List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerWorld) world), shears, world, entity.blockPosition(), spellStats.getBuffCount(AugmentFortune.INSTANCE));
                 items.forEach(i->world.addFreshEntity(new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), i)));
             }
         }else{
-            dealDamage(world, shooter, (float) (DAMAGE.get() + AMP_VALUE.get() * getAmplificationBonus(augments)), augments, entity, DamageSource.playerAttack(getPlayer(shooter, (ServerWorld) world)));
+            dealDamage(world, shooter, (float) (DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier()), spellStats, entity, DamageSource.playerAttack(getPlayer(shooter, (ServerWorld) world)));
         }
     }
 
@@ -103,5 +100,11 @@ public class EffectCut extends AbstractEffect {
     @Override
     public Item getCraftingReagent() {
         return Items.SHEARS;
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.MANIPULATION);
     }
 }

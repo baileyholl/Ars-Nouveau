@@ -2,6 +2,8 @@ package com.hollingsworth.arsnouveau.common.spell.augment;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
+import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 
@@ -29,6 +31,12 @@ public class AugmentAmplify extends AbstractAugment {
     @Override
     public Tier getTier() {
         return Tier.ONE;
+    }
+
+    @Override
+    public SpellStats.Builder applyModifiers(SpellStats.Builder builder, AbstractSpellPart spellPart) {
+        builder.addAmplification(1.0);
+        return super.applyModifiers(builder, spellPart);
     }
 
     @Override

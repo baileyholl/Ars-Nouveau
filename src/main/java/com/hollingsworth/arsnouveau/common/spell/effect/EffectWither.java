@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
@@ -15,7 +13,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Set;
 
 public class EffectWither extends AbstractEffect {
@@ -26,12 +23,11 @@ public class EffectWither extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        super.onResolveEntity(rayTraceResult, world, shooter, augments, spellContext);
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         Entity entity = rayTraceResult.getEntity();
         if(!(entity instanceof LivingEntity))
             return;
-        applyConfigPotion((LivingEntity) entity, Effects.WITHER,augments);
+        applyConfigPotion((LivingEntity) entity, Effects.WITHER, spellStats);
     }
 
     @Override
@@ -43,7 +39,7 @@ public class EffectWither extends AbstractEffect {
 
     @Override
     public int getManaCost() {
-        return 50;
+        return 100;
     }
 
     @Override
@@ -65,5 +61,11 @@ public class EffectWither extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "Applies the Wither debuff.";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ABJURATION);
     }
 }

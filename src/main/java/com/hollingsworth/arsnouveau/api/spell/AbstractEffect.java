@@ -46,10 +46,20 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     @Deprecated // Marked for removal
     public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext){
         if(rayTraceResult instanceof BlockRayTraceResult)
-            onResolveBlock((BlockRayTraceResult) rayTraceResult, world, shooter, augments, spellContext);
+            onResolveBlock((BlockRayTraceResult) rayTraceResult,
+                    world,
+                    shooter,
+                    new SpellStats.Builder().setAugments(augments)
+                            .build(this, rayTraceResult, world, shooter, spellContext),
+                    spellContext);
 
         if(rayTraceResult instanceof EntityRayTraceResult)
-            onResolveEntity((EntityRayTraceResult) rayTraceResult, world, shooter, augments, spellContext);
+            onResolveEntity((EntityRayTraceResult) rayTraceResult,
+                    world,
+                    shooter,
+                    new SpellStats.Builder().setAugments(augments)
+                            .build(this, rayTraceResult, world, shooter, spellContext),
+                    spellContext);
     }
     @Deprecated // Marked for removal
     public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext){}
@@ -58,15 +68,15 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext){}
 
     public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext){
-        onResolve(rayTraceResult, world, shooter, spellStats.augments, spellContext);
+        onResolve(rayTraceResult, world, shooter, spellStats.getAugments(), spellContext);
     }
 
     public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext){
-        onResolveEntity(rayTraceResult, world, shooter, spellStats.augments, spellContext);
+        onResolveEntity(rayTraceResult, world, shooter, spellStats.getAugments(), spellContext);
     }
 
     public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext){
-        onResolveBlock(rayTraceResult, world, shooter, spellStats.augments, spellContext);
+        onResolveBlock(rayTraceResult, world, shooter, spellStats.getAugments(), spellContext);
     }
 
 
@@ -75,8 +85,13 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         applyPotion(entity, potionEffect, augmentTypes, 30, 8);
     }
 
+    @Deprecated // Use stats sensitive method
     public void applyConfigPotion(LivingEntity entity, Effect potionEffect, List<AbstractAugment> augmentTypes){
         applyPotion(entity, potionEffect, augmentTypes, POTION_TIME == null ? 30 : POTION_TIME.get(), EXTEND_TIME == null ? 8 : EXTEND_TIME.get());
+    }
+
+    public void applyConfigPotion(LivingEntity entity, Effect potionEffect, SpellStats spellStats){
+        applyPotion(entity, potionEffect, spellStats, POTION_TIME == null ? 30 : POTION_TIME.get(), EXTEND_TIME == null ? 8 : EXTEND_TIME.get());
     }
 
     public boolean canSummon(LivingEntity playerEntity){
@@ -86,7 +101,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         playerEntity.addEffect(new EffectInstance(ModPotions.SUMMONING_SICKNESS, time));
     }
 
-    public void summonLivingEntity(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext, ISummon summon){
+    public void summonLivingEntity(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats augments, SpellContext spellContext, ISummon summon){
         if(shooter != null)
             summon.setOwnerID(shooter.getUUID());
         if(summon.getLivingEntity() != null)
@@ -95,11 +110,20 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         MinecraftForge.EVENT_BUS.post(new SummonEvent(rayTraceResult, world, shooter, augments, spellContext, summon));
     }
 
+    @Deprecated
     public void applyPotionWithCap(LivingEntity entity, Effect potionEffect, List<AbstractAugment> augmentTypes, int baseDuration, int durationBuffBase, int cap){
         if(entity == null)
             return;
         int duration = baseDuration + durationBuffBase * getDurationModifier(augmentTypes);
         int amp = Math.min(cap, getAmplificationBonus(augmentTypes));
+        entity.addEffect(new EffectInstance(potionEffect, duration * 20, amp));
+    }
+
+    public void applyPotionWithCap(LivingEntity entity, Effect potionEffect, SpellStats stats, int baseDuration, int durationBuffBase, int cap){
+        if(entity == null)
+            return;
+        int duration = (int) (baseDuration + durationBuffBase * stats.getDurationMultiplier());
+        int amp = Math.min(cap, (int)stats.getAmpMultiplier());
         entity.addEffect(new EffectInstance(potionEffect, duration * 20, amp));
     }
 
@@ -112,6 +136,15 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         entity.addEffect(new EffectInstance(potionEffect, duration * 20, amp));
     }
 
+    public void applyPotion(LivingEntity entity, Effect potionEffect, SpellStats stats, int baseDurationSeconds, int durationBuffSeconds){
+        if(entity == null)
+            return;
+        int ticks = baseDurationSeconds * 20 + stats.getDurationInTicks();
+        int amp = (int) stats.getAmpMultiplier();
+        entity.addEffect(new EffectInstance(potionEffect, ticks, amp));
+    }
+
+    @Deprecated
     public int getDurationModifier( List<AbstractAugment> augmentTypes){
         return getBuffCount(augmentTypes, AugmentExtendTime.class) - getBuffCount(augmentTypes, AugmentDurationDown.class);
     }
@@ -120,6 +153,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         return entity instanceof PlayerEntity ? (PlayerEntity) entity : FakePlayerFactory.getMinecraft(world);
     }
 
+    @Deprecated
     public int getBaseHarvestLevel(List<AbstractAugment> augments){
         return 2 + getAmplificationBonus(augments);
     }
@@ -128,6 +162,37 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         return world.getBlockState(pos).getDestroySpeed(world, pos) >= 0 && getBaseHarvestLevel(augments) >= world.getBlockState(pos).getHarvestLevel();
     }
 
+
+    public int getBaseHarvestLevel(SpellStats stats){
+        return (int) (2 + stats.getAmpMultiplier());
+    }
+
+    public boolean canBlockBeHarvested(SpellStats stats, World world, BlockPos pos){
+        return world.getBlockState(pos).getDestroySpeed(world, pos) >= 0 && getBaseHarvestLevel(stats) >= world.getBlockState(pos).getHarvestLevel();
+    }
+
+    public void dealDamage(World world, LivingEntity shooter, float baseDamage, SpellStats stats, Entity entity, DamageSource source){
+        shooter = shooter == null ? FakePlayerFactory.getMinecraft((ServerWorld) world) : shooter;
+        float totalDamage = (float) (baseDamage + stats.getDamageModifier());
+        if(entity instanceof LivingEntity && ((LivingEntity) entity).getHealth() <= 0 || totalDamage <= 0)
+            return;
+
+        entity.hurt(source, totalDamage);
+        if(!(entity instanceof LivingEntity) )
+            return;
+        LivingEntity mob = (LivingEntity) entity;
+        if(mob.getHealth() <= 0 && !mob.removed && stats.hasBuff(AugmentFortune.INSTANCE)){
+            int looting = stats.getBuffCount(AugmentFortune.INSTANCE);
+            LootContext.Builder lootContext = LootUtil.getLootingContext((ServerWorld)world,shooter, mob, looting, DamageSource.playerAttack((PlayerEntity) shooter));
+            ResourceLocation lootTable = mob.getLootTable();
+            LootTable loottable = world.getServer().getLootTables().get(lootTable);
+            List<ItemStack> items = loottable.getRandomItems(lootContext.create(LootParameterSets.ALL_PARAMS));
+            items.forEach(mob::spawnAtLocation);
+        }
+    }
+
+
+    @Deprecated // Use stats sensitive dealDamage
     public void dealDamage(World world, LivingEntity shooter, float damage, List<AbstractAugment> augments, Entity entity, DamageSource source){
         shooter = shooter == null ? FakePlayerFactory.getMinecraft((ServerWorld) world) : shooter;
         if(entity instanceof LivingEntity && ((LivingEntity) entity).getHealth() <= 0 || damage <= 0)

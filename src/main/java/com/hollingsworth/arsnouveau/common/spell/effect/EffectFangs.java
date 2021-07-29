@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityEvokerFangs;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.block.BlockState;
@@ -31,14 +29,8 @@ public class EffectFangs extends AbstractEffect {
         super(GlyphLib.EffectFangsID, "Fangs");
     }
 
-
-
     @Override
-    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        super.onResolveBlock(rayTraceResult, world, shooter, augments, spellContext);
-    }
-
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         if(shooter == null && spellContext.castingTile != null) {
             shooter = FakePlayerFactory.getMinecraft((ServerWorld) world);
             BlockPos pos = spellContext.castingTile.getBlockPos();
@@ -49,7 +41,7 @@ public class EffectFangs extends AbstractEffect {
             return;
         Vector3d vec = rayTraceResult.getLocation();
 
-        double damage = DAMAGE.get() + AMP_VALUE.get() * getAmplificationBonus(augments);
+        double damage = DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
         double targetX = vec.x;
         double targetY = vec.y;
         double targetZ = vec.z;
@@ -57,24 +49,26 @@ public class EffectFangs extends AbstractEffect {
         double d0 = Math.min(targetY, shooter.getY());
         double d1 = Math.max(targetY, shooter.getY()) + 1.0D;
         float f = (float)MathHelper.atan2(targetZ - shooter.getZ(), targetX - shooter.getX());
-
+        int accelerate = spellStats.getBuffCount(AugmentAccelerate.INSTANCE);
+        double durationModifier = spellStats.getDurationMultiplier();
+        // Create fangs in an AOE around the caster
         if(rayTraceResult instanceof EntityRayTraceResult && shooter.equals(((EntityRayTraceResult) rayTraceResult).getEntity())){
             for(int i = 0; i < 5; ++i) {
                 float f1 = f + (float)i * (float)Math.PI * 0.4F;
-                int j =  ( i + getDurationModifier(augments)) / (1 + getBuffCount(augments, AugmentAccelerate.class));
+                int j = (int) (( i + durationModifier) / (1 + accelerate));
                 spawnFangs(world, shooter.getX() + (double)MathHelper.cos(f1) * 1.5D, shooter.getZ() + (double)MathHelper.sin(f1) * 1.5D, d0, d1, f1, j,shooter, (float) damage);
             }
 
             for(int k = 0; k < 8; ++k) {
                 float f2 = f + (float)k * (float)Math.PI * 2.0F / 8.0F + 1.2566371F;
-                int j =  ( k + getDurationModifier(augments)) / (1 + getBuffCount(augments, AugmentAccelerate.class));
+                int j = (int) (( k + durationModifier) / (1 + accelerate));
                 spawnFangs(world, shooter.getX() + (double)MathHelper.cos(f2) * 2.5D, shooter.getZ() + (double)MathHelper.sin(f2) * 2.5D, d0, d1, f2, j, shooter, (float) damage);
             }
             return;
         }
         for(int l = 0; l < 16; ++l) {
             double d2 = 1.25D * (double)(l + 1);
-            int j =  ( l + getDurationModifier(augments)) / (1 + getBuffCount(augments, AugmentAccelerate.class));
+            int j = (int) (( l + durationModifier) / (1 + accelerate));
             this.spawnFangs(world, shooter.getX() + (double)MathHelper.cos(f) * d2, shooter.getZ() + (double)MathHelper.sin(f) * d2, d0, d1, f, j, shooter, (float) damage);
         }
     }
@@ -157,6 +151,12 @@ public class EffectFangs extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Summons Evoker Fangs in the direction where the spell was targeted.";
+        return "Summons Evoker Fangs in the direction where the spell was targeted. Using fangs on your self will spawn them in an area around you.";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.CONJURATION);
     }
 }

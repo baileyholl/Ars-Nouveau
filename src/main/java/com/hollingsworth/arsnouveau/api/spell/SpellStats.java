@@ -21,32 +21,82 @@ import java.util.List;
  * A wrapper for spell modifiers as they exist for a single effect before resolving.
  */
 public class SpellStats {
-    public double amplification;
+    private double amplification;
 
-    public double damageModifier;
-    /**
-     * Duration in ticks
-     */
-    public double durationModifier;
+    private double damageModifier;
 
-    public List<AbstractAugment> augments;
+    private double durationMultiplier;
 
-    public List<ItemStack> modifierItems;
+    private List<AbstractAugment> augments;
+
+    private List<ItemStack> modifierItems;
 
     private SpellStats(){
         augments = new ArrayList<>();
         modifierItems = new ArrayList<>();
     }
 
+    public int getDurationInTicks(){
+        return (int) (20.0D * durationMultiplier);
+    }
+
+    public int getBuffCount(AbstractAugment abstractAugment){
+        return (int) augments.stream().filter(abstractAugment::equals).count();
+    }
+
+    public boolean hasBuff(AbstractAugment abstractAugment){
+        return getBuffCount(abstractAugment) > 0;
+    }
+
     public List<ITextComponent> addTooltip(List<ITextComponent> components){
         if(this.damageModifier != 0.0d)
             components.add(new TranslationTextComponent("tooltip.ars_nouveau.spell_damage", this.damageModifier).setStyle(Style.EMPTY.withColor(TextFormatting.BLUE)));
-        if(this.durationModifier != 0.0d)
-            components.add(new TranslationTextComponent("tooltip.ars_nouveau.duration_modifier", this.durationModifier).setStyle(Style.EMPTY.withColor(TextFormatting.GREEN)));
+        if(this.durationMultiplier != 0.0d)
+            components.add(new TranslationTextComponent("tooltip.ars_nouveau.duration_modifier", this.durationMultiplier).setStyle(Style.EMPTY.withColor(TextFormatting.GREEN)));
         if(this.amplification != 0.0d)
             components.add(new TranslationTextComponent("tooltip.ars_nouveau.amp_modifier", this.amplification).setStyle(Style.EMPTY.withColor(TextFormatting.RED)));
 
         return components;
+    }
+
+    public double getAmpMultiplier() {
+        return amplification;
+    }
+
+    public void setAmpMultiplier(double amplification) {
+        this.amplification = amplification;
+    }
+
+    public double getDamageModifier() {
+        return damageModifier;
+    }
+
+    public void setDamageModifier(double damageModifier) {
+        this.damageModifier = damageModifier;
+    }
+
+    public double getDurationMultiplier() {
+        return durationMultiplier;
+    }
+
+    public void setDurationMultiplier(double durationMultiplier) {
+        this.durationMultiplier = durationMultiplier;
+    }
+
+    public List<AbstractAugment> getAugments() {
+        return augments;
+    }
+
+    public void setAugments(List<AbstractAugment> augments) {
+        this.augments = augments;
+    }
+
+    public List<ItemStack> getModifierItems() {
+        return modifierItems;
+    }
+
+    public void setModifierItems(List<ItemStack> modifierItems) {
+        this.modifierItems = modifierItems;
     }
 
     public static class Builder{
@@ -96,7 +146,7 @@ public class SpellStats {
         }
 
         /**
-         * Pulls all items from hands, curios, and armor. 
+         * Pulls all items from hands, curios, and armor.
          */
         public Builder addItemsFromEntity(@Nullable LivingEntity entity){
             if(entity == null)
@@ -130,12 +180,12 @@ public class SpellStats {
         }
 
         public Builder setDurationModifier(double duration){
-            spellStats.durationModifier = duration;
+            spellStats.durationMultiplier = duration;
             return this;
         }
 
         public Builder addDurationModifier(double duration){
-            spellStats.durationModifier += duration;
+            spellStats.durationMultiplier += duration;
             return this;
         }
 

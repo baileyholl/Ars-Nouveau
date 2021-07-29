@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import net.minecraft.entity.Entity;
@@ -29,16 +27,16 @@ public class EffectSnare extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        super.onResolveEntity(rayTraceResult, world, shooter, augments, spellContext);
-        Entity livingEntity = ((EntityRayTraceResult) rayTraceResult).getEntity();
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        Entity livingEntity = rayTraceResult.getEntity();
         if(!(livingEntity instanceof LivingEntity))
             return;
 
-        ((LivingEntity)livingEntity).addEffect(new EffectInstance(ModPotions.SNARE_EFFECT,  POTION_TIME.get() * 20  + 20 * EXTEND_TIME.get() * getBuffCount(augments, AugmentExtendTime.class), 20));
+        ((LivingEntity)livingEntity).addEffect(new EffectInstance(ModPotions.SNARE_EFFECT, (int) (POTION_TIME.get() * 20  + 20 * EXTEND_TIME.get() * spellStats.getDurationMultiplier()), 20));
         livingEntity.setDeltaMovement(0,0,0);
         livingEntity.hurtMarked = true;
     }
+
 
     @Override
     public void buildConfig(ForgeConfigSpec.Builder builder) {
@@ -70,6 +68,12 @@ public class EffectSnare extends AbstractEffect {
 
     @Override
     public int getManaCost() {
-        return 80;
+        return 100;
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ELEMENTAL_EARTH);
     }
 }

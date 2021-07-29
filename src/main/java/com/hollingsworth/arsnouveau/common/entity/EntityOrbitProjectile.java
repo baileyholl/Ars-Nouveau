@@ -88,7 +88,6 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
         Entity owner = level.getEntity(getOwnerID());
 //        this.remove();
         if(!level.isClientSide && owner == null) {
-            System.out.println("removing");
             this.remove();
             return;
         }

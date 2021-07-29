@@ -3,9 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.event.DispelEvent;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -30,26 +28,28 @@ public class EffectDispel extends AbstractEffect {
         super(GlyphLib.EffectDispelID, "Dispel");
     }
 
+
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof EntityRayTraceResult){
-            if(((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
-                LivingEntity entity = (LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity();
-                Collection<EffectInstance> effects = entity.getActiveEffects();
-                EffectInstance[] array = effects.toArray(new EffectInstance[effects.size()]);
-                for(EffectInstance e : array){
-                    if(e.isCurativeItem(new ItemStack(Items.MILK_BUCKET)))
-                        entity.removeEffect(e.getEffect());
-                }
-                if(entity instanceof IDispellable && entity.isAlive() && entity.getHealth() > 0 && !entity.removed){
-                    ((IDispellable) entity).onDispel(shooter);
-                }
-                MinecraftForge.EVENT_BUS.post(new DispelEvent(rayTraceResult, world, shooter, augments, spellContext));
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        if(rayTraceResult.getEntity() instanceof LivingEntity){
+            LivingEntity entity = (LivingEntity) rayTraceResult.getEntity();
+            Collection<EffectInstance> effects = entity.getActiveEffects();
+            EffectInstance[] array = effects.toArray(new EffectInstance[effects.size()]);
+            for(EffectInstance e : array){
+                if(e.isCurativeItem(new ItemStack(Items.MILK_BUCKET)))
+                    entity.removeEffect(e.getEffect());
             }
-            return;
+            if(entity instanceof IDispellable && entity.isAlive() && entity.getHealth() > 0 && !entity.removed){
+                ((IDispellable) entity).onDispel(shooter);
+            }
+            MinecraftForge.EVENT_BUS.post(new DispelEvent(rayTraceResult, world, shooter, spellStats.getAugments(), spellContext));
         }
-        if(rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getBlockPos()) instanceof IDispellable){
-            ((IDispellable) world.getBlockState(((BlockRayTraceResult) rayTraceResult).getBlockPos())).onDispel(shooter);
+    }
+
+    @Override
+    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        if(world.getBlockState(rayTraceResult.getBlockPos()) instanceof IDispellable){
+            ((IDispellable) world.getBlockState(rayTraceResult.getBlockPos())).onDispel(shooter);
         }
     }
 
@@ -79,5 +79,11 @@ public class EffectDispel extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "Removes any potion effects on the target. When used on a witch at half health, the witch will vanish in return for a Wixie shard. Will also dispel tamed Whelps, Carbuncles, and Sylphs back into their charm.";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ABJURATION);
     }
 }

@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -19,7 +17,6 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Set;
 
 public class EffectCraft extends AbstractEffect {
@@ -33,7 +30,7 @@ public class EffectCraft extends AbstractEffect {
     private static final ITextComponent CONTAINER_NAME = new TranslationTextComponent("container.crafting");
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         if(shooter instanceof PlayerEntity && isRealPlayer(shooter)){
             PlayerEntity playerEntity = (PlayerEntity) shooter;
             playerEntity.openMenu(new SimpleNamedContainerProvider((id, inventory, player) -> {
@@ -77,5 +74,11 @@ public class EffectCraft extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "Opens the crafting menu.";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.MANIPULATION);
     }
 }

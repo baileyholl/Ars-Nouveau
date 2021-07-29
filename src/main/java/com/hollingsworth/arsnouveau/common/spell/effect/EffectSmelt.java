@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
@@ -28,6 +26,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -40,26 +39,21 @@ public class EffectSmelt extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(!(rayTraceResult instanceof BlockRayTraceResult))
-            return;
-
-
-        int aoeBuff = getBuffCount(augments, AugmentAOE.class);
-        int pierceBuff = getBuffCount(augments, AugmentPierce.class);
+    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        int aoeBuff = spellStats.getBuffCount(AugmentAOE.INSTANCE);
+        int pierceBuff = spellStats.getBuffCount(AugmentPierce.INSTANCE);
         int maxItemSmelt = 3 + 4 * aoeBuff + 4 * pierceBuff;
-
-        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, ((BlockRayTraceResult) rayTraceResult).getBlockPos(), (BlockRayTraceResult)rayTraceResult,aoeBuff, pierceBuff);
-        List<ItemEntity> itemEntities = world.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(((BlockRayTraceResult) rayTraceResult).getBlockPos()).inflate(aoeBuff + 1.0));
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
+        List<ItemEntity> itemEntities = world.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(rayTraceResult.getBlockPos()).inflate(aoeBuff + 1.0));
         smeltItems(world, itemEntities, maxItemSmelt);
 
         for(BlockPos pos : posList) {
-            if(!canBlockBeHarvested(augments, world, pos))
+            if(!canBlockBeHarvested(spellStats, world, pos))
                 continue;
             smeltBlock(world, pos, shooter);
         }
-
     }
+
 
     public void smeltBlock(World world, BlockPos pos, LivingEntity shooter){
         BlockState state = world.getBlockState(pos);
@@ -134,5 +128,11 @@ public class EffectSmelt extends AbstractEffect {
     @Override
     public Item getCraftingReagent() {
         return Items.BLAST_FURNACE;
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ELEMENTAL_FIRE);
     }
 }

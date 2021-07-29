@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
@@ -27,18 +25,18 @@ public class EffectHeal extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
-            LivingEntity entity = ((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity());
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        if(rayTraceResult.getEntity() instanceof LivingEntity){
+            LivingEntity entity = ((LivingEntity) rayTraceResult.getEntity());
             if(entity.removed || entity.getHealth() <= 0)
                 return;
 
-            float healVal = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * getBuffCount(augments, AugmentAmplify.class));
-            if(getBuffCount(augments, AugmentExtendTime.class) > 0){
-                applyPotionWithCap(entity, Effects.REGENERATION, augments, 5, 5, 5);
+            float healVal = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
+            if(spellStats.hasBuff(AugmentExtendTime.INSTANCE)){
+                applyPotionWithCap(entity, Effects.REGENERATION, spellStats, 5, 5, 5);
             }else{
                 if(entity.isInvertedHealAndHarm()){
-                    dealDamage(world, shooter, healVal, augments, entity, buildDamageSource(world, shooter).setMagic());
+                    dealDamage(world, shooter, healVal, spellStats, entity, buildDamageSource(world, shooter).setMagic());
                 }else{
                     entity.heal(healVal);
                 }
@@ -87,5 +85,11 @@ public class EffectHeal extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "Heals a small amount of health for the target. When used with Extend Time, the Regeneration buff is applied instead, up to level 5. When used on Undead, the spell will deal an equal amount of magic damage.";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ABJURATION);
     }
 }

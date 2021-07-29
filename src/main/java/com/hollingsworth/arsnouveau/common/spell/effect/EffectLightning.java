@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.LightningEntity;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
@@ -21,7 +19,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Set;
 
 public class EffectLightning extends AbstractEffect {
@@ -31,14 +28,14 @@ public class EffectLightning extends AbstractEffect {
         super(GlyphLib.EffectLightningID, "Lightning");
     }
 
-
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+    @Override
+    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         Vector3d pos = safelyGetHitPos(rayTraceResult);
         LightningEntity lightningBoltEntity = new LightningEntity(ModEntities.LIGHTNING_ENTITY,world);
         lightningBoltEntity.setPos(pos.x(), pos.y(), pos.z());
         lightningBoltEntity.setCause(shooter instanceof ServerPlayerEntity ? (ServerPlayerEntity) shooter : null);
-        lightningBoltEntity.amps = getAmplificationBonus(augments);
-        lightningBoltEntity.extendTimes = getDurationModifier(augments);
+        lightningBoltEntity.amps = (float) spellStats.getAmpMultiplier();
+        lightningBoltEntity.extendTimes = (int) spellStats.getDurationMultiplier();
         lightningBoltEntity.ampScalar = AMP_VALUE.get().floatValue();
         lightningBoltEntity.wetBonus = GENERIC_DOUBLE.get().floatValue();
         lightningBoltEntity.setDamage(DAMAGE.get().floatValue());
@@ -82,5 +79,11 @@ public class EffectLightning extends AbstractEffect {
     public String getBookDescription() {
         return "Summons a lightning bolt at the location. Entities struck will be given the Shocked effect. Shocked causes all additional lightning damage to deal bonus damage, and increases the level of Shocked up to III. Lightning also deals bonus damage to entities that are wet or wearing RF powered items. " +
                 "Can be augmented with Amplify, Dampen, and Extend Time.";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ELEMENTAL_AIR);
     }
 }

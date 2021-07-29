@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.SummonWolf;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -17,7 +15,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Set;
 
 public class EffectSummonWolves extends AbstractEffect {
@@ -28,11 +25,11 @@ public class EffectSummonWolves extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         if(!canSummon(shooter))
             return;
         Vector3d hit = rayTraceResult.getLocation();
-        int ticks = 20 * (GENERIC_INT.get() + EXTEND_TIME.get() * getDurationModifier(augments));
+        int ticks = (int) (20 * (GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier()));
         for(int i = 0; i < 2; i++){
             SummonWolf wolf = new SummonWolf(ModEntities.SUMMON_WOLF, world);
             wolf.ticksLeft = ticks;
@@ -41,7 +38,7 @@ public class EffectSummonWolves extends AbstractEffect {
             wolf.setAggressive(true);
             wolf.setTame(true);
             wolf.tame((PlayerEntity) shooter);
-            summonLivingEntity(rayTraceResult, world, shooter, augments, spellContext, wolf);
+            summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, wolf);
         }
         applySummoningSickness(shooter, ticks);
     }
@@ -79,5 +76,11 @@ public class EffectSummonWolves extends AbstractEffect {
     @Override
     public Item getCraftingReagent() {
         return ItemsRegistry.WILDEN_HORN;
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.CONJURATION);
     }
 }

@@ -2,9 +2,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
@@ -39,19 +37,21 @@ public class EffectFell extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockRayTraceResult ray, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+    public void onResolveBlock(BlockRayTraceResult ray, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         BlockPos blockPos = ray.getBlockPos();
         BlockState state = world.getBlockState(blockPos);
         if (isTree(state)) {
-            Set<BlockPos> list = getTree(world, blockPos, GENERIC_INT.get()+ AOE_BONUS.get() * getBuffCount(augments, AugmentAOE.class));
+            Set<BlockPos> list = getTree(world, blockPos, GENERIC_INT.get()+ AOE_BONUS.get() * spellStats.getBuffCount(AugmentAOE.INSTANCE));
             list.forEach(listPos -> {
                 if (!BlockUtil.destroyRespectsClaim(shooter, world, listPos))
                     return;
-                if (hasBuff(augments, AugmentExtract.class)) {
+                if (spellStats.hasBuff(AugmentExtract.INSTANCE)) {
                     world.getBlockState(listPos).getDrops(LootUtil.getSilkContext((ServerWorld) world, listPos, shooter)).forEach(i -> world.addFreshEntity(new ItemEntity(world, listPos.getX(), listPos.getY(), listPos.getZ(), i)));
                     BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, false);
-                } else if (hasBuff(augments, AugmentFortune.class)) {
-                    world.getBlockState(listPos).getDrops(LootUtil.getFortuneContext((ServerWorld) world, listPos, shooter, getBuffCount(augments, AugmentFortune.class))).forEach(i -> world.addFreshEntity(new ItemEntity(world, listPos.getX(), listPos.getY(), listPos.getZ(), i)));
+                } else if (spellStats.hasBuff(AugmentFortune.INSTANCE)) {
+                    world.getBlockState(listPos)
+                            .getDrops(LootUtil.getFortuneContext((ServerWorld) world, listPos, shooter, spellStats.getBuffCount(AugmentFortune.INSTANCE)))
+                            .forEach(i -> world.addFreshEntity(new ItemEntity(world, listPos.getX(), listPos.getY(), listPos.getZ(), i)));
                     BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, false);
                 } else {
                     BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, true);
@@ -127,5 +127,11 @@ public class EffectFell extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "Harvests entire trees, mushrooms, cactus, and other vegetation. Can be amplified with Amplify to break materials of higher hardness. AOE will increase the number of blocks that may be broken at one time.";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ELEMENTAL_EARTH);
     }
 }

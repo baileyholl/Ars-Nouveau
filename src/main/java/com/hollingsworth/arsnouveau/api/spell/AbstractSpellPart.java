@@ -63,7 +63,8 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
     public ISpellTier.Tier getTier() {
         return ISpellTier.Tier.ONE;
     }
-
+    // TODO: Move to SpellStats
+    @Deprecated
     public static int getBuffCount(List<AbstractAugment> augments, Class<? extends AbstractSpellPart> spellClass){
         return (int) augments.stream().filter(spellClass::isInstance).count();
     }
@@ -87,7 +88,15 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
      * Syntax support to easily make a set for {@link AbstractSpellPart#getCompatibleAugments()}
      */
     protected Set<AbstractAugment> augmentSetOf(AbstractAugment... augments) {
-        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(augments)));
+        return setOf(augments);
+    }
+
+    public @Nonnull Set<SpellSchool> getSchools(){
+        return setOf();
+    }
+
+    protected <T> Set<T> setOf(T... list) {
+        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(list)));
     }
 
     @Override

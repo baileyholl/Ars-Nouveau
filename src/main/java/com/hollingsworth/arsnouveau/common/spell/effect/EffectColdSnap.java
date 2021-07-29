@@ -2,9 +2,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
@@ -44,7 +42,7 @@ public class EffectColdSnap extends AbstractEffect {
             return;
         LivingEntity livingEntity = (LivingEntity) entity;
         Vector3d vec = safelyGetHitPos(rayTraceResult);
-        float damage = (float) (DAMAGE.get() + AMP_VALUE.get()*getAmplificationBonus(augments));
+        float damage = (float) (DAMAGE.get() + AMP_VALUE.get() * getAmplificationBonus(augments));
         int range = 3 + getBuffCount(augments, AugmentAOE.class);
         int snareSec = POTION_TIME.get() + EXTEND_TIME.get() * getDurationModifier(augments);
 
@@ -119,5 +117,11 @@ public class EffectColdSnap extends AbstractEffect {
     @Override
     public Tier getTier() {
         return Tier.TWO;
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ELEMENTAL_WATER);
     }
 }

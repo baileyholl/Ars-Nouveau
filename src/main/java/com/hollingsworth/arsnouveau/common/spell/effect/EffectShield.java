@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
@@ -26,9 +24,9 @@ public class EffectShield extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
-            applyConfigPotion(((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity()), ModPotions.SHIELD_POTION, augments);
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        if(rayTraceResult.getEntity() instanceof LivingEntity){
+            applyConfigPotion(((LivingEntity) rayTraceResult.getEntity()), ModPotions.SHIELD_POTION, spellStats);
         }
     }
 
@@ -46,7 +44,7 @@ public class EffectShield extends AbstractEffect {
 
     @Override
     public int getManaCost() {
-        return 30;
+        return 50;
     }
 
     @Nullable
@@ -69,5 +67,11 @@ public class EffectShield extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "Applies the Shield buff. This buff will reduce a flat amount of damage taken from magical and physical sources. Does not reduce damage from environmental sources.";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ABJURATION);
     }
 }

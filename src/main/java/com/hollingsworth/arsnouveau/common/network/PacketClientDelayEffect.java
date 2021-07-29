@@ -36,8 +36,9 @@ public class PacketClientDelayEffect {
         shooterID = buf.readInt();
         color = ParticleColor.IntWrapper.deserialize(buf.readUtf());
         hitEntityID = buf.readInt();
-        if(hitEntityID == -1)
+        if(hitEntityID == -1) {
             hitPos = buf.readBlockHitResult();
+        }
     }
 
     //Encoder
@@ -48,8 +49,9 @@ public class PacketClientDelayEffect {
         buf.writeUtf(color.serialize());
         buf.writeInt(hitEntityID);
 
-        if(hitEntityID == -1)
+        if(hitEntityID == -1) {
             buf.writeBlockHitResult(hitPos);
+        }
        // buf.writeBlockHitResult();
     }
 
