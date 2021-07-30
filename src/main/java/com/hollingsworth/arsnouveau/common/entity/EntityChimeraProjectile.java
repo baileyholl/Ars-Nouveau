@@ -70,7 +70,7 @@ public class EntityChimeraProjectile extends AbstractArrowEntity implements IAni
     protected void onHitEntity(EntityRayTraceResult rayTraceResult) {
         Entity entity = rayTraceResult.getEntity();
 
-        int damage = 5;
+        float damage = 7.5f;
 
         Entity entity1 = this.getOwner();
         DamageSource damagesource;
@@ -125,7 +125,7 @@ public class EntityChimeraProjectile extends AbstractArrowEntity implements IAni
                     entity.removeEffect(e.getEffect());
             }
             entity.addEffect(new EffectInstance(Effects.WEAKNESS, 200, 2));
-            entity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 100));
+            entity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 100, 2));
         }
 
     }

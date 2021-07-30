@@ -53,7 +53,9 @@ public class ChimeraDiveGoal extends Goal {
         ticksFlying++;
         if(ticksFlying < 60){
             boss.setFlying(true);
+            boss.getNavigation().setCanFloat(true);
             boss.flyingNavigator.moveTo(hoverPos.getX(), hoverPos.getY(), hoverPos.getZ(), 1.0f);
+            boss.setDeltaMovement(boss.getDeltaMovement().add(0, 0.005, 0));
             if(boss.getTarget() != null) {
                 EntityChimera.faceBlock(boss.getTarget().blockPosition(), boss);
             }
@@ -112,7 +114,7 @@ public class ChimeraDiveGoal extends Goal {
     }
 
     public void makeExplosion(){
-        boss.level.explode(boss, boss.getX() + 0.5, boss.getY(), boss.getZ() + 0.5, 3.5f, Explosion.Mode.BREAK);
+        boss.level.explode(boss, boss.getX() + 0.5, boss.getY(), boss.getZ() + 0.5, 4.5f, Explosion.Mode.BREAK);
         Networking.sendToNearby(boss.level, boss, new PacketAnimEntity(boss.getId(), EntityChimera.Animations.HOWL.ordinal()));
     }
 
