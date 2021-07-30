@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.client.patchouli;
 
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
+import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.crafting.RecipeManager;
@@ -31,6 +33,16 @@ public class GlyphPressProcessor implements IComponentProcessor {
             return IVariable.from(recipe.reagent);
         if(s.equals("tier"))
             return IVariable.wrap(new TranslationTextComponent("ars_nouveau.spell_tier." + recipe.tier.toString().toLowerCase()).getString());
+        if(s.equals("schools")) {
+            AbstractSpellPart part = ((Glyph) recipe.output.getItem()).spellPart;
+            StringBuilder str = new StringBuilder("");
+            for(SpellSchool spellSchool : part.getSchools()){
+                str.append(spellSchool.getTextComponent().getString()).append(",");
+            }
+            if(!part.getSchools().isEmpty())
+                str = new StringBuilder(str.substring(0, str.length() - 1));
+            return IVariable.wrap(str.toString());
+        }
         if(s.equals("mana_cost") ){
             if(recipe.output.getItem() instanceof Glyph){
                 int cost =  ((Glyph) recipe.output.getItem()).spellPart.getManaCost();

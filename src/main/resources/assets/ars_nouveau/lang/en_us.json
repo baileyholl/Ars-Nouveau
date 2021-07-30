@@ -717,5 +717,12 @@
 	"tooltip.ars_nouveau.amp_modifier": "Amplification Modifier: %s",
 	"item.ars_nouveau.summon_focus": "Focus of Summoning",
 	"tooltip.ars_nouveau.summon_focus": "Increases the duration and power of your summons.",
-	"curios.identifier.an_focus": "Spell Focus"
+	"curios.identifier.an_focus": "Spell Focus",
+	"ars_nouveau.school.manipulation": "Manipulation",
+	"ars_nouveau.school.abjuration": "Abjuration",
+	"ars_nouveau.school.conjuration": "Conjuration",
+	"ars_nouveau.school.air": "Elemental Air",
+	"ars_nouveau.school.earth": "Elemental Earth",
+	"ars_nouveau.school.fire": "Elemental Fire",
+	"ars_nouveau.school.water": "Elemental Water"
 }

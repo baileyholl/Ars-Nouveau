@@ -1,17 +1,20 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
@@ -33,8 +36,8 @@ public class EffectPhantomBlock extends AbstractEffect {
             pos =  rayTraceResult.isInside() ? pos : pos.relative(( rayTraceResult).getDirection());
             if(!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, pos))
                 continue;
-
-            if (world.getBlockState(pos).getMaterial().isReplaceable()) {
+            BlockState state = world.getBlockState(pos);
+            if (state.getMaterial().isReplaceable() && world.isUnobstructed(BlockRegistry.PHANTOM_BLOCK.defaultBlockState(), pos, ISelectionContext.of(ANFakePlayer.getPlayer((ServerWorld) world)))) {
                 world.setBlockAndUpdate(pos, BlockRegistry.PHANTOM_BLOCK.defaultBlockState());
             }
         }
