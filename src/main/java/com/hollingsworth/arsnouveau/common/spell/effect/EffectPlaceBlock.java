@@ -73,7 +73,7 @@ public class EffectPlaceBlock extends AbstractEffect {
             }else if(shooter instanceof PlayerEntity){
                 PlayerEntity playerEntity = (PlayerEntity) shooter;
                 NonNullList<ItemStack> list =  playerEntity.inventory.items;
-                if(world.getBlockState(hitPos).getMaterial() != Material.AIR)
+                if(!world.getBlockState(hitPos).getMaterial().isReplaceable())
                     continue;
                 for(int i = 0; i < 9; i++){
                     ItemStack stack = list.get(i);
