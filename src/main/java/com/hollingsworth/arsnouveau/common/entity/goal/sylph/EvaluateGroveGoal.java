@@ -32,10 +32,6 @@ public class EvaluateGroveGoal extends Goal {
     }
 
     public static int getScore(BlockState state){
-        if(state.is(KINDA_LIKES))
-            return 1;
-        if(state.is(GREATLY_LIKES))
-            return 2;
 
         if(state.getMaterial() == Material.AIR)
             return 0;
@@ -61,7 +57,11 @@ public class EvaluateGroveGoal extends Goal {
 
         if(state.getBlock() instanceof IGrowable)
             return 1;
-
+        
+        if(state.is(KINDA_LIKES))
+            return 1;
+        if(state.is(GREATLY_LIKES))
+            return 2;
         return 0;
     }
 
