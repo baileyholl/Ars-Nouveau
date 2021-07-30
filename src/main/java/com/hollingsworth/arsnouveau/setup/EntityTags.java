@@ -8,5 +8,6 @@ import net.minecraft.util.ResourceLocation;
 
 public class EntityTags {
     public static final ITag.INamedTag<EntityType<?>> DRYGMY_BLACKLIST = EntityTypeTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "drygmy_blacklist"));
-
+    public static final ITag.INamedTag<EntityType<?>> DISINTEGRATION_WHITELIST = EntityTypeTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "disintegration_whitelist"));
+    public static final ITag.INamedTag<EntityType<?>> DISINTEGRATION_BLACKLIST = EntityTypeTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "disintegration_blacklist"));
 }

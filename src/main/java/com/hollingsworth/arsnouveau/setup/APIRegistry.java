@@ -98,7 +98,7 @@ public class APIRegistry {
         registerRitual(new RitualMoonfall());
         registerRitual(new RitualCloudshaper());
         registerRitual(new RitualSunrise());
-        registerRitual(new RitualExpDrain());
+        registerRitual(new RitualDisintegration());
         registerRitual(new RitualPillagerRaid());
         registerRitual(new RitualOvergrowth());
         registerRitual(new RitualBreed());

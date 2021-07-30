@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.common.mixin.ExpInvokerMixin;
+import com.hollingsworth.arsnouveau.setup.EntityTags;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.LivingEntity;
@@ -21,7 +22,7 @@ import net.minecraft.world.server.ServerWorld;
 
 import java.util.List;
 
-public class RitualExpDrain extends AbstractRitual {
+public class RitualDisintegration extends AbstractRitual {
 
 
     @Override
@@ -50,9 +51,11 @@ public class RitualExpDrain extends AbstractRitual {
         if(!world.isClientSide && world.getGameTime() % 60 == 0){
             boolean didWorkOnce = false;
             List<LivingEntity> entityList = world.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(getPos()).inflate(5.0),
-                    (m) -> m.getClassification(false).equals(EntityClassification.MONSTER) && !(m instanceof PlayerEntity));
+                    (m) -> (m.getClassification(false).equals(EntityClassification.MONSTER) || m.getType().is(EntityTags.DISINTEGRATION_WHITELIST)) && !(m instanceof PlayerEntity));
             for(LivingEntity m : entityList) {
-
+                if(m.getType().is(EntityTags.DISINTEGRATION_BLACKLIST)) {
+                    continue;
+                }
                 m.remove();
                 if (m.removed) {
                     ExpInvokerMixin invoker = ((ExpInvokerMixin) m);
