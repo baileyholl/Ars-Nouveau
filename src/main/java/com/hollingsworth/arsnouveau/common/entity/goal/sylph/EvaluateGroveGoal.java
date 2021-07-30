@@ -1,10 +1,13 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.sylph;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.EntitySylph;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ITag;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -15,6 +18,8 @@ public class EvaluateGroveGoal extends Goal {
 
     private final EntitySylph sylph;
     private final int ticksToNextEval;
+    public static ITag.INamedTag<Block> KINDA_LIKES =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "sylph/kinda_likes"));
+    public static ITag.INamedTag<Block> GREATLY_LIKES =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "sylph/greatly_likes"));
 
     public EvaluateGroveGoal(EntitySylph sylph, int tickFreq){
         this.sylph = sylph;
@@ -27,6 +32,11 @@ public class EvaluateGroveGoal extends Goal {
     }
 
     public static int getScore(BlockState state){
+        if(state.is(KINDA_LIKES))
+            return 1;
+        if(state.is(GREATLY_LIKES))
+            return 2;
+
         if(state.getMaterial() == Material.AIR)
             return 0;
 

@@ -76,7 +76,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
     public static final DataParameter<Boolean> TAMED = EntityDataManager.defineId(EntitySylph.class, DataSerializers.BOOLEAN);
     /*Strictly used for after a tame event*/
     public int tamingTime = 0;
-    public boolean droppingShards; // Stricly used by non-tamed spawns for giving shards
+    public boolean droppingShards; // Strictly used by non-tamed spawns for giving shards
     public static final DataParameter<Integer> MOOD_SCORE = EntityDataManager.defineId(EntitySylph.class, DataSerializers.INT);
     public static final DataParameter<String> COLOR = EntityDataManager.defineId(EntitySylph.class, DataSerializers.STRING);
     public List<ItemStack> ignoreItems;
@@ -103,11 +103,11 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
     public AnimationFactory getFactory() {
         return manager;
     }
+
     @Override
     protected int getExperienceReward(PlayerEntity player) {
         return 0;
     }
-
 
     @Override
     protected ActionResultType mobInteract(PlayerEntity player, Hand hand) {
