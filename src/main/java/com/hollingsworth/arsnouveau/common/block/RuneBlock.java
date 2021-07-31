@@ -65,7 +65,7 @@ public class RuneBlock extends ModBlock{
             return ActionResultType.SUCCESS;
         }
         ((RuneTile)worldIn.getBlockEntity(pos)).setRecipe(recipe);
-        PortUtil.sendMessage(player, "Spell set.");
+        PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.spell_set"));
         return super.use(state, worldIn, pos, player, handIn, hit);
     }
 

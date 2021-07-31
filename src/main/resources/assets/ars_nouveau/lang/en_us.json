@@ -732,5 +732,7 @@
 	"block.ars_nouveau.as_gold_herring":"Gilded Brick: Herring",
 	"block.ars_nouveau.as_gold_mosaic":"Gilded Brick: Mosaic",
 	"block.ars_nouveau.as_gold_stone":"Gilded Arcane Stone",
-	"block.ars_nouveau.as_gold_slab":"Gilded Slab"
+	"block.ars_nouveau.as_gold_slab":"Gilded Slab",
+	"block.agronomic_sourcelink.disabled": "Another Agronomic Sourcelink is nearby...",
+	"ars_nouveau.spell_set": "Spell set."
 }

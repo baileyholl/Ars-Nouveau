@@ -15,7 +15,6 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
@@ -51,7 +50,7 @@ public class DominionWand extends ModItem{
 
         if((getPos(stack) == null || getPos(stack).equals(new BlockPos(0,0,0))) && getEntityID(stack) == -1){
             setEntityID(stack, target.getId());
-            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.dominion_wand.stored_entity").getString());
+            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.dominion_wand.stored_entity"));
             return  ActionResultType.SUCCESS;
         }
         World world = playerEntity.getCommandSenderWorld();
@@ -97,7 +96,7 @@ public class DominionWand extends ModItem{
 
         if(getEntityID(stack) == - 1 && (getPos(stack) == null || getPos(stack).equals(new BlockPos(0,0,0)))){
             setPosTag(stack, pos);
-            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.dominion_wand.position_set").getString());
+            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.dominion_wand.position_set"));
             return ActionResultType.SUCCESS;
         }
 
