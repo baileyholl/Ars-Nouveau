@@ -724,5 +724,13 @@
 	"ars_nouveau.school.air": "Elemental Air",
 	"ars_nouveau.school.earth": "Elemental Earth",
 	"ars_nouveau.school.fire": "Elemental Fire",
-	"ars_nouveau.school.water": "Elemental Water"
+	"ars_nouveau.school.water": "Elemental Water",
+	"block.ars_nouveau.as_gold_alt":"Gilded Brick: Alternative",
+	"block.ars_nouveau.as_gold_ashlar":"Gilded Brick: Ashlar",
+	"block.ars_nouveau.as_gold_basket":"Gilded Brick: Basket",
+	"block.ars_nouveau.as_gold_clover":"Gilded Brick: Clover",
+	"block.ars_nouveau.as_gold_herring":"Gilded Brick: Herring",
+	"block.ars_nouveau.as_gold_mosaic":"Gilded Brick: Mosaic",
+	"block.ars_nouveau.as_gold_stone":"Gilded Arcane Stone",
+	"block.ars_nouveau.as_gold_slab":"Gilded Slab"
 }

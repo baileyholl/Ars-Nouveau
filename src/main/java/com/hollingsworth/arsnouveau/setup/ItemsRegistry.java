@@ -52,7 +52,6 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.MARVELOUS_CLAY) public static ModItem marvelousClay;
     @ObjectHolder(LibItemNames.MYTHICAL_CLAY) public static ModItem mythicalClay;
 
-    @ObjectHolder(LibItemNames.ARCANE_BRICK) public static ModItem arcaneBrick;
     @ObjectHolder(LibItemNames.MANA_BLOOM) public static ModItem manaBloom;
 
 
@@ -157,7 +156,6 @@ public class ItemsRegistry {
                     new CompostableItem(LibItemNames.MANA_BLOOM, 0.65F).withTooltip(new TranslationTextComponent("ars_nouveau.tooltip.mana_bloom")),
                     new ModItem(LibItemNames.MANA_FIBER),
                     new ModItem(LibItemNames.MUNDANE_BELT).withTooltip(new TranslationTextComponent("ars_nouveau.tooltip.dull")),
-                    new ModItem(LibItemNames.ARCANE_BRICK).withTooltip(new TranslationTextComponent("tooltip.arcane_brick")),
                     new ModItem(LibItemNames.RING_OF_POTENTIAL).withTooltip(new TranslationTextComponent("ars_nouveau.tooltip.dull")),
                     new BeltOfUnstableGifts(LibItemNames.BELT_OF_UNSTABLE_GIFTS),
                     new ModItem(defaultItemProperties().stacksTo(1), LibItemNames.BUCKET_OF_MANA),

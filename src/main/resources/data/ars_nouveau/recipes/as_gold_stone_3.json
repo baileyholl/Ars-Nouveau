@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "ars_nouveau:as_gold_stone"
+  },
+  "result": "ars_nouveau:as_gold_basket",
+  "count": 1
+}

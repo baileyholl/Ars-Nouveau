@@ -206,6 +206,16 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.DRYGMY_STONE) public static TileEntityType<DrygmyTile> DRYGMY_TILE;
 
 
+    @ObjectHolder(LibBlockNames.AS_GOLD_ALT) public static ModBlock AS_GOLD_ALT;
+    @ObjectHolder(LibBlockNames.AS_GOLD_ASHLAR) public static ModBlock AS_GOLD_ASHLAR;
+    @ObjectHolder(LibBlockNames.AS_GOLD_BASKET) public static ModBlock AS_GOLD_BASKET;
+    @ObjectHolder(LibBlockNames.AS_GOLD_CLOVER) public static ModBlock AS_GOLD_CLOVER;
+    @ObjectHolder(LibBlockNames.AS_GOLD_HERRING) public static ModBlock AS_GOLD_HERRING;
+    @ObjectHolder(LibBlockNames.AS_GOLD_MOSAIC) public static ModBlock AS_GOLD_MOSAIC;
+    @ObjectHolder(LibBlockNames.AS_GOLD_SLAB) public static ModBlock AS_GOLD_SLAB;
+    @ObjectHolder(LibBlockNames.AS_GOLD_STONE) public static ModBlock AS_GOLD_STONE;
+
+
     @ObjectHolder("an_stateprovider") public static BlockStateProviderType stateProviderType;
 
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
@@ -300,6 +310,16 @@ public class BlockRegistry {
             registry.register(new ModBlock(LibBlockNames.AB_SMOOTH_MOSAIC));
             registry.register(new ModBlock(LibBlockNames.AB_SMOOTH_ALTERNATING));
             registry.register(new ModBlock(LibBlockNames.AB_SMOOTH_ASHLAR));
+
+            registry.register(new ModBlock(LibBlockNames.AS_GOLD_ALT));
+            registry.register(new ModBlock(LibBlockNames.AS_GOLD_ASHLAR));
+            registry.register(new ModBlock(LibBlockNames.AS_GOLD_BASKET));
+            registry.register(new ModBlock(LibBlockNames.AS_GOLD_CLOVER));
+            registry.register(new ModBlock(LibBlockNames.AS_GOLD_HERRING));
+            registry.register(new ModBlock(LibBlockNames.AS_GOLD_MOSAIC));
+            registry.register(new ModBlock(LibBlockNames.AS_GOLD_SLAB));
+            registry.register(new ModBlock(LibBlockNames.AS_GOLD_STONE));
+
             registry.register(new SconceBlock(LibBlockNames.SCONCE));
             registry.register(new DrygmyStone());
         }
@@ -433,6 +453,15 @@ public class BlockRegistry {
             registry.register(getDefaultBlockItem(BlockRegistry.AB_SMOOTH_ASHLAR, LibBlockNames.AB_SMOOTH_ASHLAR));
             registry.register(getDefaultBlockItem(BlockRegistry.SCONCE_BLOCK, LibBlockNames.SCONCE));
             registry.register(getDefaultBlockItem(BlockRegistry.DRYGMY_BLOCK, LibBlockNames.DRYGMY_STONE));
+
+            registry.register(getDefaultBlockItem(BlockRegistry.AS_GOLD_ALT, LibBlockNames.AS_GOLD_ALT));
+            registry.register(getDefaultBlockItem(BlockRegistry.AS_GOLD_ASHLAR, LibBlockNames.AS_GOLD_ASHLAR));
+            registry.register(getDefaultBlockItem(BlockRegistry.AS_GOLD_BASKET, LibBlockNames.AS_GOLD_BASKET));
+            registry.register(getDefaultBlockItem(BlockRegistry.AS_GOLD_CLOVER, LibBlockNames.AS_GOLD_CLOVER));
+            registry.register(getDefaultBlockItem(BlockRegistry.AS_GOLD_HERRING, LibBlockNames.AS_GOLD_HERRING));
+            registry.register(getDefaultBlockItem(BlockRegistry.AS_GOLD_MOSAIC, LibBlockNames.AS_GOLD_MOSAIC));
+            registry.register(getDefaultBlockItem(BlockRegistry.AS_GOLD_SLAB, LibBlockNames.AS_GOLD_SLAB));
+            registry.register(getDefaultBlockItem(BlockRegistry.AS_GOLD_STONE, LibBlockNames.AS_GOLD_STONE));
         }
 
 

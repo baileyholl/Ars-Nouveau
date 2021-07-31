@@ -85,5 +85,15 @@ public class LibBlockNames {
     public final static String AB_SMOOTH_ASHLAR = "sas_ashlar";
     public final static String SCONCE = "sconce";
 
+    public final static String AS_GOLD_ALT = "as_gold_alt";
+    public final static String AS_GOLD_ASHLAR = "as_gold_ashlar";
+    public final static String AS_GOLD_BASKET = "as_gold_basket";
+    public final static String AS_GOLD_CLOVER= "as_gold_clover";
+    public final static String AS_GOLD_HERRING = "as_gold_herring";
+    public final static String AS_GOLD_MOSAIC = "as_gold_mosaic";
+
+    public final static String AS_GOLD_SLAB = "as_gold_slab";
+    public final static String AS_GOLD_STONE = "as_gold_stone";
+
     public static final String DRYGMY_STONE = "drygmy_stone";
 }

@@ -71,6 +71,14 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
         getBuilder(ItemsRegistry.EXPERIENCE_GEM.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(ItemsRegistry.EXPERIENCE_GEM));
         getBuilder(ItemsRegistry.GREATER_EXPERIENCE_GEM.getRegistryName().getPath()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", itemTexture(ItemsRegistry.GREATER_EXPERIENCE_GEM));
 
+        getBuilder(LibBlockNames.AS_GOLD_ALT).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AS_GOLD_ALT));
+        getBuilder(LibBlockNames.AS_GOLD_ASHLAR).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AS_GOLD_ASHLAR));
+        getBuilder(LibBlockNames.AS_GOLD_BASKET).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AS_GOLD_BASKET));
+        getBuilder(LibBlockNames.AS_GOLD_CLOVER).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AS_GOLD_CLOVER));
+        getBuilder(LibBlockNames.AS_GOLD_HERRING).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AS_GOLD_HERRING));
+        getBuilder(LibBlockNames.AS_GOLD_MOSAIC).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AS_GOLD_MOSAIC));
+        getBuilder(LibBlockNames.AS_GOLD_SLAB).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AS_GOLD_SLAB));
+        getBuilder(LibBlockNames.AS_GOLD_STONE).parent(BlockStatesDatagen.getUncheckedModel(LibBlockNames.AS_GOLD_STONE));
     }
 
 

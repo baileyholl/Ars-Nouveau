@@ -414,6 +414,21 @@ public class Recipes extends RecipeProvider {
                     .requires(Items.BOW, 1)
                     .requires(Items.LAPIS_BLOCK)
                     .save(consumer, new ResourceLocation(ArsNouveau.MODID, "wilden_summon_5"));
+
+            ShapedRecipeBuilder.shaped(BlockRegistry.AS_GOLD_STONE, 8).unlockedBy("has_journal",InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx").define('y',Tags.Items.NUGGETS_GOLD).define('x',  BlockRegistry.ARCANE_STONE).save(consumer);
+
+            STONECUTTER_COUNTER = 1;
+            makeStonecutter(consumer, BlockRegistry.AS_GOLD_STONE, BlockRegistry.AS_GOLD_ALT, LibBlockNames.AS_GOLD_STONE);
+            makeStonecutter(consumer, BlockRegistry.AS_GOLD_STONE, BlockRegistry.AS_GOLD_ASHLAR, LibBlockNames.AS_GOLD_STONE);
+            makeStonecutter(consumer, BlockRegistry.AS_GOLD_STONE, BlockRegistry.AS_GOLD_BASKET, LibBlockNames.AS_GOLD_STONE);
+            makeStonecutter(consumer, BlockRegistry.AS_GOLD_STONE, BlockRegistry.AS_GOLD_CLOVER, LibBlockNames.AS_GOLD_STONE);
+            makeStonecutter(consumer, BlockRegistry.AS_GOLD_STONE, BlockRegistry.AS_GOLD_HERRING, LibBlockNames.AS_GOLD_STONE);
+            makeStonecutter(consumer, BlockRegistry.AS_GOLD_STONE, BlockRegistry.AS_GOLD_MOSAIC, LibBlockNames.AS_GOLD_STONE);
+            makeStonecutter(consumer, BlockRegistry.AS_GOLD_STONE, BlockRegistry.AS_GOLD_SLAB, LibBlockNames.AS_GOLD_STONE);
+
         }
     }
 
