@@ -34,7 +34,12 @@ public class SourcelinkTile extends AbstractManaTile implements IAnimatable {
 
     @Override
     public int getTransferRate() {
-        return 0;
+        return 1000;
+    }
+
+    @Override
+    public int getMaxMana() {
+        return 1000;
     }
 
     @Override
