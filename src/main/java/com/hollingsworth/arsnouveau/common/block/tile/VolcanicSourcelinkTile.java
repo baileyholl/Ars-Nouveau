@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -35,22 +36,32 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
         super.tick();
         if(level.isClientSide)
             return;
-        if(level.getGameTime() % 20 == 0 && this.canAcceptMana()){
+        if(level.getGameTime() % 40 == 0 && this.canAcceptMana()){
             for(ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(worldPosition).inflate(1.0))){
                 int mana = 0;
-                if(ForgeHooks.getBurnTime(i.getItem(), null) > 0){
-                    mana = 10;
-                }
-                if(i.getItem().getItem().is(Recipes.ARCHWOOD_LOG_TAG)){
-                    mana = 30;
+                int progress = 0;
+                int burnTime = ForgeHooks.getBurnTime(i.getItem(), null) ;
+                if(burnTime > 0){
+                    mana = burnTime / 100;
+                    progress = 1;
                 }
                 if(i.getItem().getItem() == BlockRegistry.BLAZING_LOG.asItem()){
-                    mana = 50;
+                    mana += 40;
+                    progress += 2;
+                }else if(i.getItem().getItem().is(Recipes.ARCHWOOD_LOG_TAG)){
+                    mana += 20;
+                    progress += 1;
                 }
 
                 if(mana > 0) {
+                    this.progress += progress;
                     this.addMana(mana);
+                    ItemStack containerItem = i.getItem().getContainerItem();
                     i.getItem().shrink(1);
+                    if(!containerItem.isEmpty()){
+                        level.addFreshEntity(new ItemEntity(level, i.getX(), i.getY(), i.getZ(), containerItem));
+                    }
+
                     Networking.sendToNearby(level, getBlockPos(),
                             new PacketANEffect(PacketANEffect.EffectType.BURST, i.blockPosition(), new ParticleColor.IntWrapper(255, 0, 0)));
                 }
@@ -71,30 +82,23 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
 
 
         BlockPos magmaPos = getBlockInArea(Blocks.MAGMA_BLOCK, 1);
-        if(magmaPos != null && progress >= 500){
+        if(magmaPos != null && progress >= 200){
             level.setBlockAndUpdate(magmaPos, Blocks.LAVA.defaultBlockState());
-            progress -= 500;
+            progress -= 200;
             return;
         }
 
         BlockPos stonePos = getBlockInArea(Blocks.STONE, 1);
-        if(stonePos != null && progress >= 300){
+        if(stonePos != null && progress >= 150){
             level.setBlockAndUpdate(stonePos, Blocks.MAGMA_BLOCK.defaultBlockState());
-            progress -= 300;
-            return;
-        }
-
-        magmaPos = getBlockInArea(Blocks.MAGMA_BLOCK, 1);
-        if(magmaPos != null && progress >= 500){
-            level.setBlockAndUpdate(magmaPos, Blocks.LAVA.defaultBlockState());
-            progress -= 500;
+            progress -= 150;
             return;
         }
 
         stonePos = getTagInArea(Tags.Blocks.STONE, 1);
-        if(stonePos != null && progress >= 300){
+        if(stonePos != null && progress >= 150){
             level.setBlockAndUpdate(stonePos, Blocks.MAGMA_BLOCK.defaultBlockState());
-            progress -= 300;
+            progress -= 150;
             return;
         }
     }
