@@ -49,7 +49,7 @@ public class BlockRegistry {
     public static TileEntityType<PhantomBlockTile> PHANTOM_TILE;
 
     @ObjectHolder(ArsNouveau.MODID + ":mana_condenser")
-    public static TileEntityType<ManaCondenserTile> MANA_CONDENSER_TILE;
+    public static TileEntityType<AgronomicSourcelinkTile> MANA_CONDENSER_TILE;
 
     @ObjectHolder(ArsNouveau.MODID + ":enchanting_apparatus")
     public static TileEntityType<EnchantingApparatusTile> ENCHANTING_APP_TILE;
@@ -64,7 +64,7 @@ public class BlockRegistry {
 
 
     @ObjectHolder(ArsNouveau.MODID + ":mana_condenser")
-    public static ManaCondenserBlock MANA_CONDENSER;
+    public static AgronomicSourcelinkBlock MANA_CONDENSER;
 
     @ObjectHolder(ArsNouveau.MODID + ":mana_jar")
     public static ManaJar MANA_JAR;
@@ -138,8 +138,8 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.INTANGIBLE_AIR) public static  TileEntityType<IntangibleAirTile> INTANGIBLE_AIR_TYPE;
 
 
-    @ObjectHolder(LibBlockNames.VOLCANIC_ACCUMULATOR) public static VolcanicAccumulator VOLCANIC_BLOCK;
-    @ObjectHolder(LibBlockNames.VOLCANIC_ACCUMULATOR) public static  TileEntityType<VolcanicTile> VOLCANIC_TILE;
+    @ObjectHolder(LibBlockNames.VOLCANIC_ACCUMULATOR) public static VolcanicSourcelinkBlock VOLCANIC_BLOCK;
+    @ObjectHolder(LibBlockNames.VOLCANIC_ACCUMULATOR) public static  TileEntityType<VolcanicSourcelinkTile> VOLCANIC_TILE;
     @ObjectHolder(LibBlockNames.LAVA_LILY) public static LavaLily LAVA_LILY;
     @ObjectHolder(LibBlockNames.MANA_BERRY_BUSH) public static ManaBerryBush MANA_BERRY_BUSH;
 
@@ -215,6 +215,12 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.AS_GOLD_SLAB) public static ModBlock AS_GOLD_SLAB;
     @ObjectHolder(LibBlockNames.AS_GOLD_STONE) public static ModBlock AS_GOLD_STONE;
 
+    @ObjectHolder(LibBlockNames.ALCHEMICAL_SOURCELINK) public static AlchemicalSourcelinkBlock ALCHEMICAL_BLOCK;
+    @ObjectHolder(LibBlockNames.ALCHEMICAL_SOURCELINK) public static TileEntityType<AlchemicalSourcelinkTile> ALCHEMICAL_TILE;
+
+    @ObjectHolder(LibBlockNames.VITALIC_SOURCELINK) public static VitalicSourcelinkBlock VITALIC_BLOCK;
+    @ObjectHolder(LibBlockNames.VITALIC_SOURCELINK) public static TileEntityType<VitalicSourcelinkTile> VITALIC_TILE;
+
 
     @ObjectHolder("an_stateprovider") public static BlockStateProviderType stateProviderType;
 
@@ -227,7 +233,7 @@ public class BlockRegistry {
             IForgeRegistry<Block> registry = blockRegistryEvent.getRegistry();
             registry.register(new PhantomBlock());
             registry.register(new LightBlock());
-            registry.register(new ManaCondenserBlock());
+            registry.register(new AgronomicSourcelinkBlock());
             registry.register(new ManaJar());
             registry.register(new WardBlock());
             registry.register(new GlyphPressBlock());
@@ -253,7 +259,7 @@ public class BlockRegistry {
             registry.register(new SpellTurret());
             registry.register(new RedstoneAir());
             registry.register(new IntangibleAirBlock());
-            registry.register(new VolcanicAccumulator());
+            registry.register(new VolcanicSourcelinkBlock());
             registry.register(new LavaLily());
             registry.register(new ManaBerryBush(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH)));
             registry.register(new SaplingBlock(new MagicTree(WorldEvent.CASCADING_TREE),SAP_PROP).setRegistryName(LibBlockNames.CASCADING_SAPLING));
@@ -322,6 +328,8 @@ public class BlockRegistry {
 
             registry.register(new SconceBlock(LibBlockNames.SCONCE));
             registry.register(new DrygmyStone());
+            registry.register(new AlchemicalSourcelinkBlock());
+            registry.register(new VitalicSourcelinkBlock());
         }
         static Block.Properties woodProp = AbstractBlock.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD);
         public static MagicLeaves createLeavesBlock() {
@@ -333,7 +341,7 @@ public class BlockRegistry {
         @SubscribeEvent
         public static void onTileEntityRegistry(final RegistryEvent.Register<TileEntityType<?>> event){
             event.getRegistry().register(TileEntityType.Builder.of(PhantomBlockTile::new, BlockRegistry.PHANTOM_BLOCK).build(null).setRegistryName("phantom_block"));
-            event.getRegistry().register(TileEntityType.Builder.of(ManaCondenserTile::new, BlockRegistry.MANA_CONDENSER).build(null).setRegistryName("mana_condenser"));
+            event.getRegistry().register(TileEntityType.Builder.of(AgronomicSourcelinkTile::new, BlockRegistry.MANA_CONDENSER).build(null).setRegistryName("mana_condenser"));
             event.getRegistry().register(TileEntityType.Builder.of(ManaJarTile::new, BlockRegistry.MANA_JAR).build(null).setRegistryName("mana_jar"));
             event.getRegistry().register(TileEntityType.Builder.of(LightTile::new, BlockRegistry.LIGHT_BLOCK).build(null).setRegistryName("light_block"));
             event.getRegistry().register(TileEntityType.Builder.of(GlyphPressTile::new, BlockRegistry.GLYPH_PRESS_BLOCK).build(null).setRegistryName("glyph_press"));
@@ -349,7 +357,7 @@ public class BlockRegistry {
             event.getRegistry().register(TileEntityType.Builder.of(CrystallizerTile::new, BlockRegistry.CRYSTALLIZER_BLOCK).build(null).setRegistryName(LibBlockNames.CRYSTALLIZER));
             event.getRegistry().register(TileEntityType.Builder.of(SpellTurretTile::new, BlockRegistry.SPELL_TURRET).build(null).setRegistryName(LibBlockNames.SPELL_TURRET));
             event.getRegistry().register(TileEntityType.Builder.of(IntangibleAirTile::new, BlockRegistry.INTANGIBLE_AIR).build(null).setRegistryName(LibBlockNames.INTANGIBLE_AIR));
-            event.getRegistry().register(TileEntityType.Builder.of(VolcanicTile::new, BlockRegistry.VOLCANIC_BLOCK).build(null).setRegistryName(LibBlockNames.VOLCANIC_ACCUMULATOR));
+            event.getRegistry().register(TileEntityType.Builder.of(VolcanicSourcelinkTile::new, BlockRegistry.VOLCANIC_BLOCK).build(null).setRegistryName(LibBlockNames.VOLCANIC_ACCUMULATOR));
             event.getRegistry().register(TileEntityType.Builder.of(WixieCauldronTile::new, BlockRegistry.WIXIE_CAULDRON).build(null).setRegistryName(LibBlockNames.WIXIE_CAULDRON));
             event.getRegistry().register(TileEntityType.Builder.of(CreativeManaJarTile::new, BlockRegistry.CREATIVE_MANA_JAR).build(null).setRegistryName(LibBlockNames.CREATIVE_MANA_JAR));
             event.getRegistry().register(TileEntityType.Builder.of(RitualTile::new, BlockRegistry.RITUAL_BLOCK).build(null).setRegistryName(LibBlockNames.RITUAL_CIRCLE));
@@ -357,6 +365,8 @@ public class BlockRegistry {
             event.getRegistry().register(TileEntityType.Builder.of(PotionMelderTile::new, BlockRegistry.POTION_MELDER).build(null).setRegistryName(LibBlockNames.POTION_MELDER_BLOCK));
             event.getRegistry().register(TileEntityType.Builder.of(SconceTile::new, BlockRegistry.SCONCE_BLOCK).build(null).setRegistryName(LibBlockNames.SCONCE));
             event.getRegistry().register(TileEntityType.Builder.of(DrygmyTile::new, BlockRegistry.DRYGMY_BLOCK).build(null).setRegistryName(LibBlockNames.DRYGMY_STONE));
+            event.getRegistry().register(TileEntityType.Builder.of(AlchemicalSourcelinkTile::new, BlockRegistry.ALCHEMICAL_BLOCK).build(null).setRegistryName(LibBlockNames.ALCHEMICAL_SOURCELINK));
+            event.getRegistry().register(TileEntityType.Builder.of(VitalicSourcelinkTile::new, BlockRegistry.VITALIC_BLOCK).build(null).setRegistryName(LibBlockNames.VITALIC_SOURCELINK));
 
         }
 
@@ -366,7 +376,7 @@ public class BlockRegistry {
             IForgeRegistry<Item> registry = itemRegistryEvent.getRegistry();
             registry.register(new BlockItem(BlockRegistry.PHANTOM_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName("phantom_block"));
             registry.register(new BlockItem(BlockRegistry.LIGHT_BLOCK, new Item.Properties()).setRegistryName("light_block"));
-            registry.register(new BlockItem(BlockRegistry.MANA_CONDENSER, ItemsRegistry.defaultItemProperties().setISTER(()-> ManaCondenserRenderer.ISRender::new)).setRegistryName("mana_condenser"));
+            registry.register(new AnimBlockItem(BlockRegistry.MANA_CONDENSER, ItemsRegistry.defaultItemProperties().setISTER(()-> AgronomicRenderer::getISTER)).setRegistryName("mana_condenser"));
             registry.register(new BlockItem(BlockRegistry.MANA_JAR, ItemsRegistry.defaultItemProperties()).setRegistryName("mana_jar"));
             registry.register(new BlockItem(BlockRegistry.WARD_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName("warding_stone"));
             registry.register(new AnimBlockItem(BlockRegistry.GLYPH_PRESS_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(() -> PressRenderer::getISTER)).setRegistryName("glyph_press"));
@@ -462,6 +472,9 @@ public class BlockRegistry {
             registry.register(getDefaultBlockItem(BlockRegistry.AS_GOLD_MOSAIC, LibBlockNames.AS_GOLD_MOSAIC));
             registry.register(getDefaultBlockItem(BlockRegistry.AS_GOLD_SLAB, LibBlockNames.AS_GOLD_SLAB));
             registry.register(getDefaultBlockItem(BlockRegistry.AS_GOLD_STONE, LibBlockNames.AS_GOLD_STONE));
+            registry.register(new AnimBlockItem(BlockRegistry.ALCHEMICAL_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(() -> PotionMelderRenderer::getISTER)).setRegistryName(LibBlockNames.ALCHEMICAL_SOURCELINK));
+            registry.register(new AnimBlockItem(BlockRegistry.VITALIC_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(() -> PotionMelderRenderer::getISTER)).setRegistryName(LibBlockNames.VITALIC_SOURCELINK));
+
         }
 
 

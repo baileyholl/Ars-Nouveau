@@ -96,4 +96,11 @@ public class LibBlockNames {
     public final static String AS_GOLD_STONE = "as_gold_stone";
 
     public static final String DRYGMY_STONE = "drygmy_stone";
+
+    //TODO Rename next major version
+    public static final String MANA_CONDENSER = "mana_condenser";
+
+    public static final String ALCHEMICAL_SOURCELINK = "alchemical_sourcelink";
+    public static final String VITALIC_SOURCELINK = "vitalic_sourcelink";
+    public static final String MYCELIC_SOURCELINK = "mycelic_sourcelink";
 }

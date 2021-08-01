@@ -1,34 +1,28 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.block.tile.VolcanicTile;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import com.hollingsworth.arsnouveau.common.block.tile.VolcanicSourcelinkTile;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
-public class VolcanicModel extends AnimatedGeoModel<VolcanicTile> {
+public class VolcanicModel extends AnimatedGeoModel<VolcanicSourcelinkTile> {
+
+    public static final ResourceLocation MODEL = new ResourceLocation(ArsNouveau.MODID , "geo/volcanic_sourcelink.geo.json");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/blocks/volcanic_sourcelink.png");
+    public static final ResourceLocation ANIMATION = new ResourceLocation(ArsNouveau.MODID , "animations/volcanic_sourcelink_animations.json");
+
     @Override
-    public ResourceLocation getModelLocation(VolcanicTile volcanicTile) {
-        return new ResourceLocation(ArsNouveau.MODID , "geo/volcanic_accumulator.geo.json");
+    public ResourceLocation getModelLocation(VolcanicSourcelinkTile volcanicSourcelinkTile) {
+        return MODEL;
     }
 
     @Override
-    public ResourceLocation getTextureLocation(VolcanicTile volcanicTile) {
-        if(volcanicTile == null || volcanicTile.getLevel().getBlockState(volcanicTile.getBlockPos().below()).getBlock() == Blocks.LAVA){
-            return new ResourceLocation(ArsNouveau.MODID, "textures/blocks/volcanic/volcanic_accumulator_core_source.png");
-        }
-        Block block = volcanicTile.getLevel().getBlockState(volcanicTile.getBlockPos().below()).getBlock();
-        if(block == Blocks.MAGMA_BLOCK){
-            return new ResourceLocation(ArsNouveau.MODID, "textures/blocks/volcanic/volcanic_accumulator_core_magma.png");
-        }
-
-
-        return new ResourceLocation(ArsNouveau.MODID, "textures/blocks/volcanic/volcanic_accumulator_core_stone.png");
+    public ResourceLocation getTextureLocation(VolcanicSourcelinkTile volcanicSourcelinkTile) {
+        return TEXTURE;
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(VolcanicTile volcanicTile) {
-        return new ResourceLocation(ArsNouveau.MODID , "animations/volcanic_accumulator_animations.json");
+    public ResourceLocation getAnimationFileLocation(VolcanicSourcelinkTile volcanicSourcelinkTile) {
+        return ANIMATION;
     }
 }

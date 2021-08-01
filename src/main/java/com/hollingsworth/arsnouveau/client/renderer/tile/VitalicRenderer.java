@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemRenderer;
-import com.hollingsworth.arsnouveau.common.block.tile.VolcanicSourcelinkTile;
+import com.hollingsworth.arsnouveau.common.block.tile.VitalicSourcelinkTile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.Minecraft;
@@ -17,15 +17,15 @@ import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
 import java.util.Random;
 
-public class VolcanicRenderer extends GeoBlockRenderer<VolcanicSourcelinkTile> {
+public class VitalicRenderer extends GeoBlockRenderer<VitalicSourcelinkTile> {
 
-    public VolcanicRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn, new VolcanicModel());
+    public VitalicRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+        super(rendererDispatcherIn, new VitalicModel());
     }
 
 
     @Override
-    public void renderLate(VolcanicSourcelinkTile animatable, MatrixStack stackIn, float ticks, IRenderTypeBuffer renderTypeBuffer, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
+    public void renderLate(VitalicSourcelinkTile animatable, MatrixStack stackIn, float ticks, IRenderTypeBuffer renderTypeBuffer, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
         World world = animatable.getLevel();
         BlockPos pos = animatable.getBlockPos();
         Random rand = world.random;
@@ -50,6 +50,6 @@ public class VolcanicRenderer extends GeoBlockRenderer<VolcanicSourcelinkTile> {
 //        }
     }
     public static GenericItemRenderer getISTER(){
-        return new GenericItemRenderer(new VolcanicModel());
+        return new GenericItemRenderer(new VitalicModel());
     }
 }
