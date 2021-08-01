@@ -1,0 +1,51 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "item_1": [
+    {
+      "item": "ars_nouveau:glyph_extend_time"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:glyph_extend_time"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "ars_nouveau:glyph_extend_time"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "ars_nouveau:glyph_extend_time"
+    }
+  ],
+  "item_5": [
+    {
+      "item": "ars_nouveau:glyph_extend_time"
+    }
+  ],
+  "item_6": [
+    {
+      "item": "ars_nouveau:glyph_extend_time"
+    }
+  ],
+  "item_7": [
+    {
+      "item": "ars_nouveau:glyph_extend_time"
+    }
+  ],
+  "item_8": [
+    {
+      "item": "ars_nouveau:glyph_extend_time"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "ars_nouveau:potion_flask"
+    }
+  ],
+  "output": {
+    "item": "ars_nouveau:potion_flask_extend_time"
+  }
+}

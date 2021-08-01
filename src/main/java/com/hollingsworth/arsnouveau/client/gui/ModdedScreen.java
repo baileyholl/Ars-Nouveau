@@ -16,7 +16,7 @@ public class ModdedScreen extends Screen {
 
     public int maxScale;
     public float scaleFactor;
-    public List<String> tooltip;
+    public List<ITextComponent> tooltip;
 
     public ModdedScreen(ITextComponent titleIn) {
         super(titleIn);
@@ -25,18 +25,18 @@ public class ModdedScreen extends Screen {
     @Override
     public void init() {
         super.init();
-        MainWindow res = getMinecraft().getMainWindow();
-        double oldGuiScale = res.calcGuiScale(minecraft.gameSettings.guiScale, minecraft.getForceUnicodeFont());
+        MainWindow res = getMinecraft().getWindow();
+        double oldGuiScale = res.calculateScale(minecraft.options.guiScale, minecraft.isEnforceUnicode());
         maxScale = getMaxAllowedScale();
         int persistentScale = Math.min(0, maxScale);;
-        double newGuiScale = res.calcGuiScale(persistentScale, minecraft.getForceUnicodeFont());
+        double newGuiScale = res.calculateScale(persistentScale, minecraft.isEnforceUnicode());
 
         if(persistentScale > 0 && newGuiScale != oldGuiScale) {
-            scaleFactor = (float) newGuiScale / (float) res.getGuiScaleFactor();
+            scaleFactor = (float) newGuiScale / (float) res.getGuiScale();
 
             res.setGuiScale(newGuiScale);
-            width = res.getScaledWidth();
-            height = res.getScaledHeight();
+            width = res.getGuiScaledWidth();
+            height = res.getGuiScaledHeight();
             res.setGuiScale(oldGuiScale);
         } else scaleFactor = 1;
     }
@@ -46,14 +46,8 @@ public class ModdedScreen extends Screen {
         return mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h;
     }
     public final void drawTooltip(MatrixStack stack, int mouseX, int mouseY) {
-        if(tooltip != null) {
-            FontRenderer font = Minecraft.getInstance().fontRenderer;
-            this.renderTooltip(stack,new StringTextComponent(tooltip.get(0)), mouseX, mouseY);
-
-        } else if(tooltip != null && !tooltip.isEmpty()) {
-            List<String> wrappedTooltip = new ArrayList<>();
-            for (String s : tooltip)
-                Collections.addAll(wrappedTooltip, s.split("\n"));
+        if (tooltip != null && !tooltip.isEmpty()) {
+            this.renderWrappedToolTip(stack, tooltip, mouseX, mouseY, font);
         }
     }
 
@@ -73,7 +67,7 @@ public class ModdedScreen extends Screen {
     }
 
     int getMaxAllowedScale() {
-        return getMinecraft().getMainWindow().calcGuiScale(0, minecraft.getForceUnicodeFont());
+        return getMinecraft().getWindow().calculateScale(0, minecraft.isEnforceUnicode());
     }
 
 }

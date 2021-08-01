@@ -1,9 +1,10 @@
 package com.hollingsworth.arsnouveau.common.spell.method;
 
-import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
@@ -23,14 +24,17 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class MethodProjectile extends AbstractCastMethod {
+    public static MethodProjectile INSTANCE = new MethodProjectile();
 
-    public MethodProjectile() {
-        super(ModConfig.MethodProjectileID, "Projectile");
+    private MethodProjectile() {
+        super(GlyphLib.MethodProjectileID, "Projectile");
     }
 
     @Override
@@ -38,72 +42,72 @@ public class MethodProjectile extends AbstractCastMethod {
         return 10;
     }
 
-    public void summonProjectiles(World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext context){
+    public void summonProjectiles(World world, LivingEntity shooter, List<AbstractAugment> augments, SpellResolver resolver){
         ArrayList<EntityProjectileSpell> projectiles = new ArrayList<>();
         int numPierce = getBuffCount(augments, AugmentPierce.class);
-        EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, shooter, this.resolver, numPierce);
+        EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, shooter, resolver, numPierce);
         projectiles.add(projectileSpell);
         int numSplits = getBuffCount(augments, AugmentSplit.class);
 
         for(int i =1; i < numSplits + 1; i++){
-            Direction offset =shooter.getHorizontalFacing().rotateY();
+            Direction offset =shooter.getDirection().getClockWise();
             if(i%2==0) offset = offset.getOpposite();
              // Alternate sides
-            BlockPos projPos = shooter.getPosition().offset(offset, i);
-            projPos = projPos.add(0, 1.5, 0);
-            EntityProjectileSpell spell = new EntityProjectileSpell(world, shooter, this.resolver, numPierce);
-            spell.setPosition(projPos.getX(), projPos.getY(), projPos.getZ());
+            BlockPos projPos = shooter.blockPosition().relative(offset, i);
+            projPos = projPos.offset(0, 1.5, 0);
+            EntityProjectileSpell spell = new EntityProjectileSpell(world, shooter,  resolver, numPierce);
+            spell.setPos(projPos.getX(), projPos.getY(), projPos.getZ());
             projectiles.add(spell);
         }
 
         float velocity = 1.0f + getBuffCount(augments, AugmentAccelerate.class);
 
         for(EntityProjectileSpell proj : projectiles) {
-            proj.shoot(shooter, shooter.rotationPitch, shooter.rotationYaw, 0.0F, velocity, 0.8f);
-            ParticleColor.IntWrapper wrapper = context.colors;
+            proj.shoot(shooter, shooter.xRot, shooter.yRot, 0.0F, velocity, 0.8f);
+            ParticleColor.IntWrapper wrapper = resolver.spellContext.colors;
             wrapper.makeVisible();
             proj.setColor(wrapper);
-            world.addEntity(proj);
+            world.addFreshEntity(proj);
         }
     }
 
     // Summons the projectiles directly above the block, facing downwards.
-    public void summonProjectiles(World world, BlockPos pos, LivingEntity shooter, List<AbstractAugment> augments){
+    public void summonProjectiles(World world, BlockPos pos, LivingEntity shooter, List<AbstractAugment> augments, SpellResolver resolver){
         ArrayList<EntityProjectileSpell> projectiles = new ArrayList<>();
         int numPierce = getBuffCount(augments, AugmentPierce.class);
-        EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, shooter, this.resolver, numPierce);
-        projectileSpell.setPosition(pos.getX(), pos.getY() + 1, pos.getZ());
+        EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, shooter,  resolver, numPierce);
+        projectileSpell.setPos(pos.getX(), pos.getY() + 1, pos.getZ());
         projectiles.add(projectileSpell);
 
         int numSplits = getBuffCount(augments, AugmentSplit.class);
 
         for(int i =1; i < numSplits + 1; i++){
-            Direction offset = shooter.getHorizontalFacing().rotateY();
+            Direction offset = shooter.getDirection().getClockWise();
             if(i%2==0) offset = offset.getOpposite();
             // Alternate sides
-            BlockPos projPos = pos.offset(offset, i);
-            projPos = projPos.add(0, 1.5, 0);
-            EntityProjectileSpell spell = new EntityProjectileSpell(world, shooter, this.resolver, numPierce);
-            spell.setPosition(projPos.getX(), projPos.getY(), projPos.getZ());
+            BlockPos projPos = pos.relative(offset, i);
+            projPos = projPos.offset(0, 1.5, 0);
+            EntityProjectileSpell spell = new EntityProjectileSpell(world, shooter, resolver, numPierce);
+            spell.setPos(projPos.getX(), projPos.getY(), projPos.getZ());
             projectiles.add(spell);
         }
         for(EntityProjectileSpell proj : projectiles) {
-            proj.setMotion(new Vector3d(0, -0.1, 0));
-            world.addEntity(proj);
+            proj.setDeltaMovement(new Vector3d(0, -0.1, 0));
+            world.addFreshEntity(proj);
         }
     }
 
     @Override
-    public void onCast(ItemStack stack, LivingEntity shooter, World world, List<AbstractAugment> augments, SpellContext context) {
-        summonProjectiles(world, shooter, augments, context);
+    public void onCast(ItemStack stack, LivingEntity shooter, World world, List<AbstractAugment> augments, SpellContext context, SpellResolver resolver) {
+        summonProjectiles(world, shooter, augments, resolver);
         resolver.expendMana(shooter);
     }
 
     @Override
-    public void onCastOnBlock(ItemUseContext context, List<AbstractAugment> augments, SpellContext spellContext) {
-        World world = context.getWorld();
+    public void onCastOnBlock(ItemUseContext context, List<AbstractAugment> augments, SpellContext spellContext, SpellResolver resolver) {
+        World world = context.getLevel();
         PlayerEntity shooter = context.getPlayer();
-        summonProjectiles(world, shooter, augments, spellContext);
+        summonProjectiles(world, shooter, augments, resolver);
         resolver.expendMana(shooter);
     }
 
@@ -111,36 +115,42 @@ public class MethodProjectile extends AbstractCastMethod {
      * Cast by entities.
      */
     @Override
-    public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments, SpellContext spellContext) {
-        caster.lookAt(EntityAnchorArgument.Type.EYES, blockRayTraceResult.getHitVec().add(0, 0, 0));
-        summonProjectiles(caster.getEntityWorld(), blockRayTraceResult.getPos(), caster, augments);
+    public void onCastOnBlock(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments, SpellContext spellContext, SpellResolver resolver) {
+        caster.lookAt(EntityAnchorArgument.Type.EYES, blockRayTraceResult.getLocation().add(0, 0, 0));
+        summonProjectiles(caster.getCommandSenderWorld(), blockRayTraceResult.getBlockPos(), caster, augments, resolver);
         resolver.expendMana(caster);
     }
 
     @Override
-    public void onCastOnEntity(ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments, SpellContext spellContext) {
-        summonProjectiles(caster.getEntityWorld(), caster, augments, spellContext);
+    public void onCastOnEntity(ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments, SpellContext spellContext, SpellResolver resolver) {
+        summonProjectiles(caster.getCommandSenderWorld(), caster, augments, resolver);
         resolver.expendMana(caster);
     }
 
     @Override
-    public boolean wouldCastSuccessfully(@Nullable ItemStack stack, LivingEntity playerEntity, World world, List<AbstractAugment> augments) {
+    public boolean wouldCastSuccessfully(@Nullable ItemStack stack, LivingEntity playerEntity, World world, List<AbstractAugment> augments, SpellResolver resolver) {
         return true;
     }
 
     @Override
-    public boolean wouldCastOnBlockSuccessfully(ItemUseContext context, List<AbstractAugment> augments) {
+    public boolean wouldCastOnBlockSuccessfully(ItemUseContext context, List<AbstractAugment> augments, SpellResolver resolver) {
         return true;
     }
 
     @Override
-    public boolean wouldCastOnBlockSuccessfully(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments) {
+    public boolean wouldCastOnBlockSuccessfully(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments, SpellResolver resolver) {
         return true;
     }
 
     @Override
-    public boolean wouldCastOnEntitySuccessfully(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments) {
+    public boolean wouldCastOnEntitySuccessfully(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments, SpellResolver resolver) {
         return true;
+    }
+
+    @Nonnull
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf(AugmentPierce.INSTANCE, AugmentSplit.INSTANCE, AugmentAccelerate.INSTANCE);
     }
 
     @Override
@@ -151,5 +161,10 @@ public class MethodProjectile extends AbstractCastMethod {
     @Override
     public Item getCraftingReagent() {
         return Items.BOW;
+    }
+
+    @Override
+    public boolean defaultedStarterGlyph() {
+        return true;
     }
 }

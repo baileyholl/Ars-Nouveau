@@ -74,4 +74,33 @@ public class LibBlockNames {
     public final static String STRIPPED_AWWOOD_PURPLE = "stripped_purple_archwood_wood";
     public final static String MANA_GEM_BLOCK = "mana_gem_block";
 
+    public final static String POTION_JAR_BLOCK = "potion_jar";
+    public final static String POTION_MELDER_BLOCK = "potion_melder";
+
+    public final static String AB_SMOOTH_BASKET = "sas_basket";
+    public final static String AB_SMOOTH_CLOVER = "sas_clover";
+    public final static String AB_SMOOTH_HERRING = "sas_herring";
+    public final static String AB_SMOOTH_MOSAIC= "sas_mosaic";
+    public final static String AB_SMOOTH_ALTERNATING = "sas_alternating";
+    public final static String AB_SMOOTH_ASHLAR = "sas_ashlar";
+    public final static String SCONCE = "sconce";
+
+    public final static String AS_GOLD_ALT = "as_gold_alt";
+    public final static String AS_GOLD_ASHLAR = "as_gold_ashlar";
+    public final static String AS_GOLD_BASKET = "as_gold_basket";
+    public final static String AS_GOLD_CLOVER= "as_gold_clover";
+    public final static String AS_GOLD_HERRING = "as_gold_herring";
+    public final static String AS_GOLD_MOSAIC = "as_gold_mosaic";
+
+    public final static String AS_GOLD_SLAB = "as_gold_slab";
+    public final static String AS_GOLD_STONE = "as_gold_stone";
+
+    public static final String DRYGMY_STONE = "drygmy_stone";
+
+    //TODO Rename next major version
+    public static final String MANA_CONDENSER = "mana_condenser";
+
+    public static final String ALCHEMICAL_SOURCELINK = "alchemical_sourcelink";
+    public static final String VITALIC_SOURCELINK = "vitalic_sourcelink";
+    public static final String MYCELIC_SOURCELINK = "mycelic_sourcelink";
 }

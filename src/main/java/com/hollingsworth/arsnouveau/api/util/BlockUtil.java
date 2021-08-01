@@ -13,6 +13,7 @@ import net.minecraft.tileentity.TileEntity;
 
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
@@ -30,7 +31,7 @@ import java.util.function.Predicate;
 public class BlockUtil {
 
     public static boolean isTreeBlock(Block block){
-        return block.isIn(BlockTags.LEAVES) || block.isIn(BlockTags.LOGS);
+        return block.is(BlockTags.LEAVES) || block.is(BlockTags.LOGS);
     }
 
     public static boolean containsStateInRadius(World world, BlockPos start, int radius, Class clazz){
@@ -51,13 +52,20 @@ public class BlockUtil {
         return Math.sqrt(Math.pow(start.getX() - end.getX(), 2) + Math.pow(start.getY() - end.getY(), 2) + Math.pow(start.getZ() - end.getZ(), 2));
     }
 
+    public static double distanceFrom(Vector3d start, BlockPos end){
+        return Math.sqrt(Math.pow(start.x - end.getX(), 2) + Math.pow(start.y - end.getY(), 2) + Math.pow(start.z - end.getZ(), 2));
+    }
+
+    public static double distanceFrom(Vector3d start, Vector3d end){
+        return Math.sqrt(Math.pow(start.x - end.x, 2) + Math.pow(start.y - end.y, 2) + Math.pow(start.z - end.z, 2));
+    }
     public static boolean destroyBlockSafely(World world, BlockPos pos, boolean dropBlock, LivingEntity caster){
         if(!(world instanceof ServerWorld))
             return false;
         PlayerEntity playerEntity = caster instanceof PlayerEntity ? (PlayerEntity) caster : FakePlayerFactory.getMinecraft((ServerWorld) world);
         if(MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos),playerEntity)))
             return false;
-        world.getBlockState(pos).getBlock().onBlockHarvested(world, pos, world.getBlockState(pos), playerEntity);
+        world.getBlockState(pos).getBlock().playerWillDestroy(world, pos, world.getBlockState(pos), playerEntity);
         return world.destroyBlock(pos, dropBlock);
 
     }
@@ -69,7 +77,7 @@ public class BlockUtil {
 
     public static void safelyUpdateState(World world, BlockPos pos, BlockState state){
         if(!World.isOutsideBuildHeight(pos))
-            world.notifyBlockUpdate(pos, state, state, 3);
+            world.sendBlockUpdated(pos, state, state, 3);
     }
 
     public static void safelyUpdateState(World world, BlockPos pos){
@@ -102,11 +110,11 @@ public class BlockUtil {
         } else {
             FluidState ifluidstate = world.getFluidState(pos);
             if (isMoving) {
-                TileEntity tileentity = blockstate.hasTileEntity() ? world.getTileEntity(pos) : null;
-                Block.spawnDrops(blockstate, world, pos, tileentity, entityIn, ItemStack.EMPTY);
+                TileEntity tileentity = blockstate.hasTileEntity() ? world.getBlockEntity(pos) : null;
+                Block.dropResources(blockstate, world, pos, tileentity, entityIn, ItemStack.EMPTY);
             }
 
-            return world.setBlockState(pos, ifluidstate.getBlockState(), 3);
+            return world.setBlock(pos, ifluidstate.createLegacyBlock(), 3);
         }
     }
 
@@ -114,7 +122,7 @@ public class BlockUtil {
         if(world == null || pos == null)return new ArrayList<>();
         ArrayList<IItemHandler> iInventories = new ArrayList<>();
         for(Direction d : Direction.values()){
-            TileEntity tileEntity = world.getTileEntity(pos.offset(d));
+            TileEntity tileEntity = world.getBlockEntity(pos.relative(d));
             if(tileEntity == null)
                 continue;
 

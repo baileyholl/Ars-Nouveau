@@ -375,7 +375,7 @@
   "ars_nouveau.glyph_desc.lightning": "해당 위치에 번개를 내리칩니다.",
   "ars_nouveau.glyph_desc.phantom_block": "잠시 뒤 사라지는 일시적인 블록을 설치합니다.",
   "ars_nouveau.glyph_desc.pickup": "일정 범위 내의 아이템을 줍습니다. 광역으로 범위를 늘릴 수 있습니다.",
-  "ars_nouveau.glyph_desc.pierce": "투사체 주문에 적용 시, 투사체가 몹이나 블록을 맞춘 후 추가적으로 더 나아갑니다.",
+  "ars_nouveau.glyph_desc.pierce": "투사체 주문에 적용 시, 투사체가 몹이나 블록을 맞춘 후 추가적으로 더 나아갑니다. 또한 파괴 같은 주문이 후방에 있는 블록에도 적용됩니다. 광역과 결합하여 더 깊게 나아갈 수 있습니다.",
   "ars_nouveau.glyph_desc.place_block": "발동자의 인벤토리에 있는 블록을 설치합니다. 플레이어가 발동할 시, 핫바에 있는 블록이 우선적으로 설치됩니다.",
   "ars_nouveau.glyph_desc.projectile": "기본 주문입니다. 대상이나 블록에 맞을 시 주문이 발동하는 투사체를 생성합니다.",
   "ars_nouveau.glyph_desc.pull": "발동자 쪽으로 대상을 당깁니다.",

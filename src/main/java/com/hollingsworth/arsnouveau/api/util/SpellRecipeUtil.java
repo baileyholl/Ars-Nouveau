@@ -1,40 +1,18 @@
 package com.hollingsworth.arsnouveau.api.util;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.ISpellBonus;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+@Deprecated
 public class SpellRecipeUtil {
 
-    /**
-     * Returns the list of augments that come from equipment
-     */
-    public static List<AbstractAugment> getEquippedAugments(@Nonnull LivingEntity caster){
-        ArrayList<AbstractAugment> augments = new ArrayList<>();
-        CuriosUtil.getAllWornItems(caster).ifPresent(e ->{
-            for(int i = 0; i < e.getSlots(); i++){
-                Item item = e.getStackInSlot(i).getItem();
-                if(item instanceof ISpellBonus)
-                    augments.addAll(((ISpellBonus) item).getList( e.getStackInSlot(i)));
-            }
-
-        });
-        caster.getArmorInventoryList().forEach(itemStack -> {
-            if(itemStack.getItem() instanceof ISpellBonus)
-                augments.addAll(((ISpellBonus) itemStack.getItem()).getList( itemStack));
-        });
-        return augments;
-    }
-
+    @Deprecated // Marked for removal for Spell object methods.
     public static ArrayList<AbstractSpellPart> getSpellsFromString(String spellString){
         List<String> spellStrings = Arrays.asList(spellString.split(","));
         ArrayList<AbstractSpellPart> spells = new ArrayList<>();
@@ -49,6 +27,7 @@ public class SpellRecipeUtil {
     /**
      * Parses the NBT stored string, which is stored as an array of spell IDs. ex: [touch, harm, , , ,]
      */
+    @Deprecated // Marked for removal for Spell object methods.
     public static List<AbstractSpellPart> getSpellsFromTagString(String recipeStr){
         ArrayList<AbstractSpellPart> recipe = new ArrayList<>();
         if (recipeStr.length() <= 3) // Account for empty strings and '[,]'
@@ -61,6 +40,7 @@ public class SpellRecipeUtil {
         return recipe;
     }
 
+    @Deprecated // Marked for removal for Spell object methods.
     public static String serializeForNBT(List<AbstractSpellPart> abstractSpellPart){
         List<String> tags = new ArrayList<>();
         for(AbstractSpellPart slot : abstractSpellPart){
@@ -68,16 +48,8 @@ public class SpellRecipeUtil {
         }
         return tags.toString();
     }
-
+    @Deprecated // Marked for removal
     public static String getDisplayString(List<AbstractSpellPart> abstractSpellPart){
-        StringBuilder str = new StringBuilder();
-        for (int i = 0; i < abstractSpellPart.size(); i++) {
-            AbstractSpellPart spellPart = abstractSpellPart.get(i);
-            str.append(spellPart.name);
-            if(i < abstractSpellPart.size() - 1){
-                str.append(" -> ");
-            }
-        }
-        return str.toString();
+        return new Spell(abstractSpellPart).getDisplayString();
     }
 }

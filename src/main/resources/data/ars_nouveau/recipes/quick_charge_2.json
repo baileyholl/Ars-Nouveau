@@ -1,0 +1,31 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:quick_charge",
+  "level": 2,
+  "mana": 4000,
+  "item_1": [
+    {
+      "item": "ars_nouveau:glyph_projectile"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:glyph_haste"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "ars_nouveau:glyph_haste"
+    }
+  ],
+  "item_4": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_5": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ]
+}

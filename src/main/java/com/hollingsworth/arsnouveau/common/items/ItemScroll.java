@@ -12,15 +12,18 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ItemScroll extends ModItem implements IScribeable {
+public abstract class ItemScroll extends ModItem implements IScribeable {
+
     public ItemScroll(String reg) {
         super(reg);
     }
+
     public ItemScroll(Properties properties, String reg) {
         super(properties, reg);
     }
@@ -31,6 +34,15 @@ public class ItemScroll extends ModItem implements IScribeable {
             stack.setTag(new CompoundNBT());
     }
 
+    public abstract SortPref getSortPref(ItemStack stackToStore, CompoundNBT scrollTag, IItemHandler inventory);
+
+    public enum SortPref {
+        INVALID,
+        LOW,
+        HIGH,
+        HIGHEST
+    }
+
     public static String ITEM_PREFIX = "item_";
 
     public List<ItemStack> getItems(ItemStack stack){
@@ -39,22 +51,22 @@ public class ItemScroll extends ModItem implements IScribeable {
         if(tag == null)
             return stacks;
 
-        for(String s : tag.keySet()){
+        for(String s : tag.getAllKeys()){
             if(s.contains(ITEM_PREFIX)){
-                stacks.add(ItemStack.read(tag.getCompound(s)));
+                stacks.add(ItemStack.of(tag.getCompound(s)));
             }
         }
         return stacks;
     }
 
-    public boolean addItem(ItemStack itemToAdd, CompoundNBT tag){
+    public static boolean addItem(ItemStack itemToAdd, CompoundNBT tag){
         CompoundNBT itemTag = new CompoundNBT();
-        itemToAdd.write(itemTag);
+        itemToAdd.save(itemTag);
         tag.put(getItemKey(itemToAdd), itemTag);
         return true;
     }
 
-    public boolean removeItem(ItemStack itemToRemove, CompoundNBT tag){
+    public static boolean removeItem(ItemStack itemToRemove, CompoundNBT tag){
         tag.remove(getItemKey(itemToRemove));
         return true;
     }
@@ -69,33 +81,36 @@ public class ItemScroll extends ModItem implements IScribeable {
 
     @Override
     public boolean onScribe(World world, BlockPos pos, PlayerEntity player, Hand handIn, ItemStack thisStack) {
-        ItemScroll itemScroll = (ItemScroll) thisStack.getItem();
-        ItemStack stackToWrite = player.getHeldItem(handIn);
+        return ItemScroll.scribe(world, pos, player, handIn, thisStack);
+    }
+
+    public static boolean scribe(World world, BlockPos pos, PlayerEntity player, Hand handIn, ItemStack thisStack){
+        ItemStack stackToWrite = player.getItemInHand(handIn);
         CompoundNBT tag = thisStack.getTag();
         if(stackToWrite == ItemStack.EMPTY || tag == null)
             return false;
 
-        if(itemScroll.containsItem(stackToWrite, tag)) {
+        if(containsItem(stackToWrite, tag)) {
             PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.scribe.item_removed"));
             return removeItem(stackToWrite, tag);
         }
         PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.scribe.item_added"));
-        return itemScroll.addItem(stackToWrite, tag);
+        return addItem(stackToWrite, tag);
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
         CompoundNBT tag = stack.getTag();
         if(tag == null)
             return;
         List<ItemStack> stacks = new ArrayList<>();
-        for(String s : tag.keySet()){
+        for(String s : tag.getAllKeys()){
             if(s.contains(ITEM_PREFIX)){
-                stacks.add(ItemStack.read(tag.getCompound(s)));
+                stacks.add(ItemStack.of(tag.getCompound(s)));
             }
         }
         for(ItemStack s : stacks){
-            tooltip2.add(s.getDisplayName());
+            tooltip2.add(s.getHoverName());
         }
     }
 }

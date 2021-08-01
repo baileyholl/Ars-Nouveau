@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.augment;
 
-import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -8,8 +8,10 @@ import net.minecraft.item.Items;
 import javax.annotation.Nullable;
 
 public class AugmentFortune extends AbstractAugment {
-    public AugmentFortune() {
-        super(ModConfig.AugmentFortuneID, "Fortune");
+    public static AugmentFortune INSTANCE = new AugmentFortune();
+
+    private AugmentFortune() {
+        super(GlyphLib.AugmentFortuneID, "Fortune");
     }
 
     @Override

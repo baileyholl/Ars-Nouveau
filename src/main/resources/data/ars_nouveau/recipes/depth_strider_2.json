@@ -1,0 +1,36 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:depth_strider",
+  "level": 2,
+  "mana": 6000,
+  "item_1": [
+    {
+      "item": "ars_nouveau:glyph_aquatic"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:glyph_aquatic"
+    }
+  ],
+  "item_3": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_4": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_5": [
+    {
+      "item": "minecraft:prismarine_shard"
+    }
+  ],
+  "item_6": [
+    {
+      "item": "minecraft:prismarine_shard"
+    }
+  ]
+}

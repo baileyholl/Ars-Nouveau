@@ -11,19 +11,22 @@ import com.hollingsworth.arsnouveau.common.network.PacketSetBookMode;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.client.util.InputMappings;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.MovementInput;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -33,168 +36,184 @@ import org.lwjgl.opengl.GL11;
 public class GuiRadialMenu extends Screen {
     private static final float PRECISION = 5.0f;
 
-    private KeyBinding keybinding;
-
     private boolean closing;
-    private boolean doneClosing;
-
     private double startAnimation;
-
     private CompoundNBT tag;
     private int selectedItem;
 
 
-    public GuiRadialMenu(KeyBinding keybinding, CompoundNBT book_tag) {
+    public GuiRadialMenu(CompoundNBT book_tag) {
         super(new StringTextComponent(""));
-        this.keybinding = keybinding;
         this.tag = book_tag;
         this.closing = false;
-        this.doneClosing = false;
-
-        Minecraft mc = Minecraft.getInstance();
-        this.startAnimation = mc.world.getGameTime() + (double) mc.getRenderPartialTicks();
-
+        this.minecraft = Minecraft.getInstance();
+        this.startAnimation = getMinecraft().level.getGameTime() + (double) getMinecraft().getFrameTime();
         this.selectedItem = -1;
+    }
+
+
+    public GuiRadialMenu(){
+        super(new StringTextComponent(""));
     }
 
     @SubscribeEvent
     public static void overlayEvent(RenderGameOverlayEvent.Pre event) {
-        if (Minecraft.getInstance().currentScreen instanceof GuiRadialMenu) {
+        if (Minecraft.getInstance().screen instanceof GuiRadialMenu) {
             if (event.getType() == RenderGameOverlayEvent.ElementType.CROSSHAIRS) {
                 event.setCanceled(true);
             }
         }
     }
+    @SubscribeEvent
+    public static void updateInputEvent(InputUpdateEvent event) {
+        if (Minecraft.getInstance().screen instanceof GuiRadialMenu) {
 
-    @Override
-    public boolean shouldCloseOnEsc() {
-        return true;
-    }
+            GameSettings settings = Minecraft.getInstance().options;
+            MovementInput eInput = event.getMovementInput();
+            eInput.up = InputMappings.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyUp.getKey().getValue());
+            eInput.down = InputMappings.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyDown.getKey().getValue());
+            eInput.left = InputMappings.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyLeft.getKey().getValue());
+            eInput.right = InputMappings.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyRight.getKey().getValue());
 
-    @Override
-    public void render(MatrixStack ms,int mouseX, int mouseY, float partialTicks) {
-        super.render(ms,mouseX, mouseY, partialTicks);
-        //List<Category> categories = mainHandCategories();
-
-        if (true) {
-            final float OPEN_ANIMATION_LENGTH = 2.5f;
-            long worldTime = Minecraft.getInstance().world.getGameTime();
-            float animationTime = (float) (worldTime + partialTicks - startAnimation);
-            float openAnimation = closing ? 1.0f - animationTime / OPEN_ANIMATION_LENGTH : animationTime / OPEN_ANIMATION_LENGTH;
-            if (closing && openAnimation <= 0.0f) {
-                doneClosing = true;
+            eInput.forwardImpulse = eInput.up == eInput.down ? 0.0F : (eInput.up ? 1.0F : -1.0F);
+            eInput.leftImpulse = eInput.left == eInput.right ? 0.0F : (eInput.left ? 1.0F : -1.0F);
+            eInput.jumping = InputMappings.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyJump.getKey().getValue());
+            eInput.shiftKeyDown = InputMappings.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyShift.getKey().getValue());
+            if (Minecraft.getInstance().player.isMovingSlowly()) {
+                eInput.leftImpulse = (float)((double)eInput.leftImpulse * 0.3D);
+                eInput.forwardImpulse = (float)((double)eInput.forwardImpulse * 0.3D);
             }
-
-            float animProgress = MathHelper.clamp(openAnimation, 0, 1);
-            float radiusIn = Math.max(0.1f, 45 * animProgress);
-            float radiusOut = radiusIn * 2;
-            float itemRadius = (radiusIn + radiusOut) * 0.5f;
-            float animTop = (1 - animProgress) * height / 2.0f;
-            int x = width / 2;
-            int y = height / 2;
-
-            int numberOfSlices = 10;
-
-            double a = Math.toDegrees(Math.atan2(mouseY - y, mouseX - x));
-            double d = Math.sqrt(Math.pow(mouseX - x, 2) + Math.pow(mouseY - y, 2));
-            float s0 = (((0 - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
-            if (a < s0) {
-                a += 360;
-            }
-
-            RenderSystem.pushMatrix();
-            RenderSystem.disableAlphaTest();
-            RenderSystem.enableBlend();
-            RenderSystem.disableTexture();
-            RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-
-            RenderSystem.translated(0, animTop, 0);
-
-            Tessellator tessellator = Tessellator.getInstance();
-            BufferBuilder buffer = tessellator.getBuffer();
-            buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-            boolean hasMouseOver = false;
-            int mousedOverSlot = -1;
-            //Category mousedOverCategory = null;
-
-            if (!closing) {
-                selectedItem = -1;
-                for (int i = 0; i < numberOfSlices; i++) {
-                    float s = (((i - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
-                    float e = (((i + 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
-                    if (a >= s && a < e && d >= radiusIn && d < radiusOut) {
-                        selectedItem = i;
-                        break;
-                    }
-                }
-            }
-
-
-            for (int i = 0; i < numberOfSlices; i++) {
-                float s = (((i - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
-                float e = (((i + 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
-                if (selectedItem == i) {
-                    drawSlice(buffer, x, y, 10, radiusIn, radiusOut, s, e, 63, 161, 191, 60);
-                    hasMouseOver = true;
-                    mousedOverSlot = selectedItem;
-                }
-                else
-                    drawSlice(buffer, x, y, 10, radiusIn, radiusOut, s, e, 0, 0, 0, 64);
-            }
-
-            tessellator.draw();
-            RenderSystem.enableTexture();
-
-            if (hasMouseOver && mousedOverSlot != -1) {
-                int adjusted =  (mousedOverSlot+ 6) % 10;
-                adjusted = adjusted == 0 ? 10 : adjusted;
-                drawCenteredString(ms,font, SpellBook.getSpellName(tag,  adjusted), width/2,(height - font.FONT_HEIGHT) / 2,16777215);
-            }
-
-            RenderHelper.enableStandardItemLighting();
-            RenderSystem.popMatrix();
-            for(int i = 0; i< numberOfSlices; i++){
-                ItemStack stack = new ItemStack(Blocks.DIRT);
-                float angle1 = ((i / (float) numberOfSlices) - 0.25f) * 2 * (float) Math.PI;
-                float posX = x - 8 + itemRadius * (float) Math.cos(angle1);
-                float posY = y - 8 + itemRadius * (float) Math.sin(angle1);
-
-                String resourceIcon = "";
-                String castType = "";
-                for(AbstractSpellPart p : SpellBook.getRecipeFromTag(tag, i +1).recipe){
-                    if(p instanceof AbstractCastMethod)
-                        castType = p.getIcon();
-
-                    if(p instanceof AbstractEffect){
-                        resourceIcon = p.getIcon();
-                        break;
-                    }
-                }
-                RenderSystem.disableRescaleNormal();
-                RenderHelper.disableStandardItemLighting();
-                RenderSystem.disableLighting();
-                RenderSystem.disableDepthTest();
-                if(!resourceIcon.isEmpty()) {
-                    GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + resourceIcon),
-                            (int) posX, (int) posY, 0, 0, 16, 16, 16, 16,ms);
-                    GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + castType),
-                            (int) posX +3 , (int) posY - 10, 0, 0, 10, 10, 10, 10,ms);
-                }
-                this.itemRenderer.renderItemOverlayIntoGUI(font, stack, (int) posX + 5, (int) posY, String.valueOf(i + 1));
-
-            }
-
-
-            if (mousedOverSlot != -1) {
-                int adjusted = (mousedOverSlot + 6) % 10;
-                adjusted = adjusted == 0 ? 10 : adjusted;
-                selectedItem = adjusted;
-            }
-
         }
     }
 
 
+    @Override
+    public void render(MatrixStack ms,int mouseX, int mouseY, float partialTicks) {
+        super.render(ms,mouseX, mouseY, partialTicks);
+        final float OPEN_ANIMATION_LENGTH = 2.5f;
+        long worldTime = Minecraft.getInstance().level.getGameTime();
+        float animationTime = (float) (worldTime + partialTicks - startAnimation);
+        float openAnimation = closing ? 1.0f - animationTime / OPEN_ANIMATION_LENGTH : animationTime / OPEN_ANIMATION_LENGTH;
+
+
+        float animProgress = MathHelper.clamp(openAnimation, 0, 1);
+        float radiusIn = Math.max(0.1f, 45 * animProgress);
+        float radiusOut = radiusIn * 2;
+        float itemRadius = (radiusIn + radiusOut) * 0.5f;
+        float animTop = (1 - animProgress) * height / 2.0f;
+        int x = width / 2;
+        int y = height / 2;
+
+        int numberOfSlices = 10;
+
+        double a = Math.toDegrees(Math.atan2(mouseY - y, mouseX - x));
+        double d = Math.sqrt(Math.pow(mouseX - x, 2) + Math.pow(mouseY - y, 2));
+        float s0 = (((0 - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
+        if (a < s0) {
+            a += 360;
+        }
+
+        RenderSystem.pushMatrix();
+        RenderSystem.disableAlphaTest();
+        RenderSystem.enableBlend();
+        RenderSystem.disableTexture();
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+        RenderSystem.translated(0, animTop, 0);
+
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder buffer = tessellator.getBuilder();
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        boolean hasMouseOver = false;
+        int mousedOverSlot = -1;
+        //Category mousedOverCategory = null;
+
+        if (!closing) {
+            selectedItem = -1;
+            for (int i = 0; i < numberOfSlices; i++) {
+                float s = (((i - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
+                float e = (((i + 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
+                if (a >= s && a < e && d >= radiusIn && d < radiusOut) {
+                    selectedItem = i;
+                    break;
+                }
+            }
+        }
+
+
+        for (int i = 0; i < numberOfSlices; i++) {
+            float s = (((i - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
+            float e = (((i + 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
+            if (selectedItem == i) {
+                drawSlice(buffer, x, y, 10, radiusIn, radiusOut, s, e, 63, 161, 191, 60);
+                hasMouseOver = true;
+                mousedOverSlot = selectedItem;
+            }
+            else
+                drawSlice(buffer, x, y, 10, radiusIn, radiusOut, s, e, 0, 0, 0, 64);
+        }
+
+        tessellator.end();
+        RenderSystem.enableTexture();
+
+        if (hasMouseOver && mousedOverSlot != -1) {
+            int adjusted =  (mousedOverSlot+ 6) % 10;
+            adjusted = adjusted == 0 ? 10 : adjusted;
+            drawCenteredString(ms,font, SpellBook.getSpellName(tag,  adjusted), width/2,(height - font.lineHeight) / 2,16777215);
+        }
+
+        RenderHelper.turnBackOn();
+        RenderSystem.popMatrix();
+        for(int i = 0; i< numberOfSlices; i++){
+            ItemStack stack = new ItemStack(Blocks.DIRT);
+            float angle1 = ((i / (float) numberOfSlices) - 0.25f) * 2 * (float) Math.PI;
+            float posX = x - 8 + itemRadius * (float) Math.cos(angle1);
+            float posY = y - 8 + itemRadius * (float) Math.sin(angle1);
+
+            String resourceIcon = "";
+            String castType = "";
+            for(AbstractSpellPart p : SpellBook.getRecipeFromTag(tag, i +1).recipe){
+                if(p instanceof AbstractCastMethod)
+                    castType = p.getIcon();
+
+                if(p instanceof AbstractEffect){
+                    resourceIcon = p.getIcon();
+                    break;
+                }
+            }
+            RenderSystem.disableRescaleNormal();
+            RenderHelper.turnOff();
+            RenderSystem.disableLighting();
+            RenderSystem.disableDepthTest();
+            if(!resourceIcon.isEmpty()) {
+                GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + resourceIcon),
+                        (int) posX, (int) posY, 0, 0, 16, 16, 16, 16,ms);
+                GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + castType),
+                        (int) posX +3 , (int) posY - 10, 0, 0, 10, 10, 10, 10,ms);
+            }
+            this.itemRenderer.renderGuiItemDecorations(font, stack, (int) posX + 5, (int) posY, String.valueOf(i + 1));
+
+        }
+
+
+        if (mousedOverSlot != -1) {
+            int adjusted = (mousedOverSlot + 6) % 10;
+            adjusted = adjusted == 0 ? 10 : adjusted;
+            selectedItem = adjusted;
+        }
+
+    }
+
+    @Override
+    public boolean keyPressed(int key, int scanCode, int modifiers) {
+        int adjustedKey = key - 48;
+        if(adjustedKey >= 0 && adjustedKey < 10){
+            selectedItem = adjustedKey == 0 ? 10 : adjustedKey;
+            mouseClicked(0,0,0);
+            return true;
+        }
+        return super.keyPressed(key, scanCode, modifiers);
+    }
 
     @Override
     public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
@@ -202,7 +221,7 @@ public class GuiRadialMenu extends Screen {
         if(this.selectedItem != -1){
             SpellBook.setMode(tag, selectedItem);
             Networking.INSTANCE.sendToServer(new PacketSetBookMode(tag));
-            minecraft.player.closeScreen();
+            minecraft.player.closeContainer();
         }
         return true;
     }
@@ -230,10 +249,10 @@ public class GuiRadialMenu extends Screen {
             float pos2InX = x + radiusIn * (float) Math.cos(angle2);
             float pos2InY = y + radiusIn * (float) Math.sin(angle2);
 
-            buffer.pos(pos1OutX, pos1OutY, z).color(r, g, b, a).endVertex();
-            buffer.pos(pos1InX, pos1InY, z).color(r, g, b, a).endVertex();
-            buffer.pos(pos2InX, pos2InY, z).color(r, g, b, a).endVertex();
-            buffer.pos(pos2OutX, pos2OutY, z).color(r, g, b, a).endVertex();
+            buffer.vertex(pos1OutX, pos1OutY, z).color(r, g, b, a).endVertex();
+            buffer.vertex(pos1InX, pos1InY, z).color(r, g, b, a).endVertex();
+            buffer.vertex(pos2InX, pos2InY, z).color(r, g, b, a).endVertex();
+            buffer.vertex(pos2OutX, pos2OutY, z).color(r, g, b, a).endVertex();
         }
     }
 
@@ -241,6 +260,8 @@ public class GuiRadialMenu extends Screen {
     public boolean isPauseScreen() {
         return false;
     }
+
+
 }
 
 /*

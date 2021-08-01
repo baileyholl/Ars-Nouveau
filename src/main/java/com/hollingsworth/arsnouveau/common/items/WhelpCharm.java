@@ -16,15 +16,15 @@ public class WhelpCharm extends ModItem{
     /**
      * Called when this item is used when targetting a Block
      */
-    public ActionResultType onItemUse(ItemUseContext context) {
-        World world = context.getWorld();
-        BlockPos blockpos = context.getPos();
-        if(world.getTileEntity(blockpos) instanceof SummoningCrystalTile){
+    public ActionResultType useOn(ItemUseContext context) {
+        World world = context.getLevel();
+        BlockPos blockpos = context.getClickedPos();
+        if(world.getBlockEntity(blockpos) instanceof SummoningCrystalTile){
             EntityWhelp whelp = new EntityWhelp(world, blockpos);
-            whelp.setPosition(blockpos.getX(), blockpos.getY() + 1, blockpos.getZ());
-            world.addEntity(whelp);
-            ((SummoningCrystalTile) world.getTileEntity(blockpos)).summon(whelp);
-            context.getItem().shrink(1);
+            whelp.setPos(blockpos.getX(), blockpos.getY() + 1, blockpos.getZ());
+            world.addFreshEntity(whelp);
+            ((SummoningCrystalTile) world.getBlockEntity(blockpos)).summon(whelp);
+            context.getItemInHand().shrink(1);
         }
         return ActionResultType.SUCCESS;
     }

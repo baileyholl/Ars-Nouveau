@@ -10,6 +10,8 @@ import java.util.List;
 public class NBTUtil {
 
     public static CompoundNBT storeBlockPos(CompoundNBT tag, String prefix, BlockPos pos){
+        if(pos == null)
+            return tag;
         tag.putDouble(prefix + "_x", pos.getX());
         tag.putDouble(prefix + "_y", pos.getY());
         tag.putDouble(prefix + "_z", pos.getZ());
@@ -36,9 +38,9 @@ public class NBTUtil {
         if(tag == null)
             return stacks;
 
-        for(String s : tag.keySet()){
+        for(String s : tag.getAllKeys()){
             if(s.contains(prefix)){
-                stacks.add(ItemStack.read(tag.getCompound(s)));
+                stacks.add(ItemStack.of(tag.getCompound(s)));
             }
         }
         return stacks;
@@ -47,7 +49,7 @@ public class NBTUtil {
     public static void writeItems(CompoundNBT tag, String prefix, List<ItemStack> items){
         for(ItemStack item : items) {
             CompoundNBT itemTag = new CompoundNBT();
-            item.write(itemTag);
+            item.save(itemTag);
             tag.put(getItemKey(item, prefix), itemTag);
         }
     }

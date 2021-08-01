@@ -1,24 +1,33 @@
 buildscript {
     repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url 'https://files.minecraftforge.net/maven' }
         jcenter()
         mavenCentral()
         maven { url 'https://modmaven.dev/' }
+        maven {
+            name "Sponge"
+            url "https://repo.spongepowered.org/repository/maven-public/"
+        }
+
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
+        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
     }
+
 }
 
 apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'org.spongepowered.mixin'
+
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 
-version = '1.11.4'
+version = '1.20.1'
 group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'ars_nouveau-1.16.4'
+archivesBaseName = 'ars_nouveau-1.16.5'
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
@@ -31,7 +40,7 @@ minecraft {
     // Use non-default mappings at your own risk. they may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
 
-    mappings channel: 'snapshot', version: '20201028-1.16.3'
+    mappings channel: 'official', version: '1.16.5'
 	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     
@@ -45,7 +54,9 @@ minecraft {
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            properties 'mixin.env.disableRefMap': 'true'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+            arg "-mixin.config="+"ars_nouveau"+".mixins.json"
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
@@ -61,7 +72,9 @@ minecraft {
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            properties 'mixin.env.disableRefMap': 'true'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+            arg "-mixin.config="+"ars_nouveau"+".mixins.json"
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
@@ -77,7 +90,8 @@ minecraft {
 
             // Recommended logging data for a userdev environment
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            properties 'mixin.env.disableRefMap': 'true'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
@@ -92,7 +106,7 @@ minecraft {
     }
 }
 repositories {
-    mavenCentral()
+
     maven {
         url = "https://maven.theillusivec4.top/"
     }
@@ -109,23 +123,39 @@ repositories {
     maven {
         url "https://maven.blamejared.com"
     }
-    maven { url 'https://repo.repsy.io/mvn/gandiber/geckolib' }
-
+    maven {
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+    maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
+    jcenter()
+    mavenCentral()
 }
 dependencies {
 
-    minecraft 'net.minecraftforge:forge:1.16.4-35.1.13'
-    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.2-45:api")
-    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.2-45")
-
+    minecraft 'net.minecraftforge:forge:1.16.5-36.1.62'
+    runtimeOnly fg.deobf("curse.maven:exp-407174:3188120")  // Shutup experimental settings
+//    runtimeOnly fg.deobf("curse.maven:exp-231951:3326143")  // Immersive engineering
+//    compileOnly fg.deobf("curse.maven:exp-231951:3326143")
+    runtimeOnly fg.deobf("curse.maven:exp-268560:3206392")  // Mekanism
+//    compileOnly fg.deobf("curse.maven:exp-268560:3206392")
+    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50:api")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50")
     compileOnly fg.deobf("mezz.jei:jei-1.16.2:7.3.2.25:api")
     runtimeOnly fg.deobf("mezz.jei:jei-1.16.2:7.3.2.25")
 
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.1.0:api")
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.1.0")
-    implementation fg.deobf('software.bernie.geckolib:forge-1.16.4-geckolib:3.0.0')
+    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.16.5:3.0.41')
     
     compileOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.4:7.1.0.84")
+
+  //  runtimeOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:1.16.5-2.1.3.0")
+    compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:1.16.5-2.1.3.0:api")
+    annotationProcessor 'org.spongepowered:mixin:0.8.2:processor'
+
 
 }
 
@@ -140,7 +170,8 @@ jar {
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
             "Implementation-Vendor" :"examplemodsareus",
-            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+            "MixinConfigs": "ars_nouveau.mixins.json"
         ])
     }
 }
@@ -163,6 +194,20 @@ publishing {
     repositories {
         maven {
             url "file:///${project.projectDir}/mcmodsrepo"
+        }
+    }
+}
+
+mixin {
+    add sourceSets.main, "ars_nouveau.refmap.json"
+}
+
+// Prevent Mixin annotation processor from getting into IDEA's annotation processor settings
+// Copied from Botania
+if (System.getProperty("idea.sync.active") == "true") {
+    afterEvaluate {
+        tasks.withType(JavaCompile).all {
+            it.options.annotationProcessorPath = files()
         }
     }
 }

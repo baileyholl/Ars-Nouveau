@@ -1,0 +1,46 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:fortune",
+  "level": 1,
+  "mana": 6000,
+  "item_1": [
+    {
+      "item": "ars_nouveau:glyph_fortune"
+    }
+  ],
+  "item_2": [
+    {
+      "tag": "forge:gems/diamond"
+    }
+  ],
+  "item_3": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_4": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_5": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_6": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_7": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_8": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ]
+}

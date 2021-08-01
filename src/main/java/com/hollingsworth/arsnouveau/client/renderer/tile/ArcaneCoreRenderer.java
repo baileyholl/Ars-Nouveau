@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcaneCoreTile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
@@ -29,16 +30,19 @@ public class ArcaneCoreRenderer extends TileEntityRenderer<ArcaneCoreTile> {
 
     @Override
     public void render(ArcaneCoreTile tileEntityIn, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffers, int light, int overlay) {
-        ms.push();
+        ms.pushPose();
         ms.translate(0.5, -0.5, 0.5);
-        IVertexBuilder buffer = buffers.getBuffer(model.getRenderType(texture));
-        model.render(ms, buffer, light, overlay, 1, 1, 1, 1);
-        ms.pop();
-        World world = tileEntityIn.getWorld();
-        Random rand = world.rand;
-        BlockPos pos = tileEntityIn.getPos();
+        IVertexBuilder buffer = buffers.getBuffer(model.renderType(texture));
+        model.renderToBuffer(ms, buffer, light, overlay, 1, 1, 1, 1);
+        ms.popPose();
+        World world = tileEntityIn.getLevel();
+        Random rand = world.random;
+        BlockPos pos = tileEntityIn.getBlockPos();
         ParticleColor color = new ParticleColor(50 +rand.nextInt(175),50+ rand.nextInt(175), 50+rand.nextInt(175));
         ParticleColor randColor = new ParticleColor(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
+        if(Minecraft.getInstance().isPaused())
+            return;
+
         for(int i = 0; i < 2; i++) {
             world.addParticle(
                     GlowParticleData.createData(randColor),
@@ -52,13 +56,13 @@ public class ArcaneCoreRenderer extends TileEntityRenderer<ArcaneCoreTile> {
         public ISRender(){ }
 
         @Override
-        public void func_239207_a_(ItemStack stack, ItemCameraTransforms.TransformType p_239207_2_, MatrixStack ms, IRenderTypeBuffer buffers, int light, int overlay) {
-            ms.push();
+        public void renderByItem(ItemStack stack, ItemCameraTransforms.TransformType p_239207_2_, MatrixStack ms, IRenderTypeBuffer buffers, int light, int overlay) {
+            ms.pushPose();
             ms.scale(0.75f, 0.75f, 0.75f);
             ms.translate(0.75, -0.40, 0.6);
-            IVertexBuilder buffer = buffers.getBuffer(model.getRenderType(texture));
-            model.render(ms, buffer, light, overlay, 1, 1, 1, 1);
-            ms.pop();
+            IVertexBuilder buffer = buffers.getBuffer(model.renderType(texture));
+            model.renderToBuffer(ms, buffer, light, overlay, 1, 1, 1, 1);
+            ms.popPose();
         }
     }
 

@@ -1,15 +1,17 @@
 {
-  "name": "捡起",
+  "name": "拾取",
   "icon": "ars_nouveau:glyph_pickup",
-  "category": "spells",
+  "category": "spells_1",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",
-      "text": "捡起附近地面上的物品。与「AOE」组合可增加拾取范围。"
+      "text": "ars_nouveau.glyph_desc.pickup"
     },
     {
       "type": "glyph_recipe",
-      "tier": "1",
+      "recipe": "ars_nouveau:glyph_pickup",
+      "tier": "一",
       "mana_cost": "低",
       "clay_type": "ars_nouveau:magic_clay",
       "reagent": "minecraft:hopper"

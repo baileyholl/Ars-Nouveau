@@ -1,0 +1,31 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "item_1": [
+    {
+      "tag": "forge:storage_blocks/gold"
+    }
+  ],
+  "item_2": [
+    {
+      "tag": "forge:storage_blocks/gold"
+    }
+  ],
+  "item_3": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_4": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "minecraft:shield"
+    }
+  ],
+  "output": {
+    "item": "ars_nouveau:enchanters_shield"
+  }
+}

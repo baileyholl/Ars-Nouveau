@@ -1,0 +1,46 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:sweeping",
+  "level": 3,
+  "mana": 5000,
+  "item_1": [
+    {
+      "item": "ars_nouveau:glyph_aoe"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:glyph_aoe"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "ars_nouveau:glyph_aoe"
+    }
+  ],
+  "item_4": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_5": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_6": [
+    {
+      "tag": "forge:storage_blocks/lapis"
+    }
+  ],
+  "item_7": [
+    {
+      "tag": "forge:storage_blocks/lapis"
+    }
+  ],
+  "item_8": [
+    {
+      "tag": "forge:storage_blocks/lapis"
+    }
+  ]
+}

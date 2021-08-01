@@ -1,0 +1,46 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:efficiency",
+  "level": 3,
+  "mana": 5000,
+  "item_1": [
+    {
+      "tag": "forge:storage_blocks/redstone"
+    }
+  ],
+  "item_2": [
+    {
+      "tag": "forge:storage_blocks/redstone"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "minecraft:golden_pickaxe"
+    }
+  ],
+  "item_4": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_5": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_6": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_7": [
+    {
+      "tag": "forge:obsidian"
+    }
+  ],
+  "item_8": [
+    {
+      "tag": "forge:obsidian"
+    }
+  ]
+}

@@ -7,8 +7,18 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ArcanePedestalTile extends AnimatedTile implements IInventory {
+    private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     public int frames;
     public ItemEntity entity;
     public ItemStack stack;
@@ -19,24 +29,24 @@ public class ArcanePedestalTile extends AnimatedTile implements IInventory {
 
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        stack = ItemStack.read((CompoundNBT)compound.get("itemStack"));
-        super.read(state, compound);
+    public void load(BlockState state, CompoundNBT compound) {
+        stack = ItemStack.of((CompoundNBT)compound.get("itemStack"));
+        super.load(state, compound);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         if(stack != null) {
             CompoundNBT reagentTag = new CompoundNBT();
-            stack.write(reagentTag);
+            stack.save(reagentTag);
             compound.put("itemStack", reagentTag);
         }
 
-        return super.write(compound);
+        return super.save(compound);
     }
 
     @Override
-    public int getSizeInventory() {
+    public int getContainerSize() {
         return 1;
     }
 
@@ -46,33 +56,33 @@ public class ArcanePedestalTile extends AnimatedTile implements IInventory {
     }
 
     @Override
-    public ItemStack getStackInSlot(int slot) {
+    public ItemStack getItem(int slot) {
         return stack == null ? ItemStack.EMPTY : stack;
     }
 
     @Override
-    public ItemStack decrStackSize(int index, int count) {
-        ItemStack toReturn = getStackInSlot(0).copy();
+    public ItemStack removeItem(int index, int count) {
+        ItemStack toReturn = getItem(0).copy();
         stack.shrink(1);
         updateBlock();
         return toReturn;
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int index) {
-        ItemStack toReturn = getStackInSlot(0).copy();
+    public ItemStack removeItemNoUpdate(int index) {
+        ItemStack toReturn = getItem(0).copy();
         stack.shrink(1);
         updateBlock();
         return toReturn;
     }
 
     @Override
-    public boolean isItemValidForSlot(int index, ItemStack s) {
+    public boolean canPlaceItem(int index, ItemStack s) {
         return stack == null || stack.isEmpty();
     }
 
     @Override
-    public void setInventorySlotContents(int index, ItemStack s) {
+    public void setItem(int index, ItemStack s) {
 
         if(stack == null || stack.isEmpty()) {
             stack = s;
@@ -81,18 +91,33 @@ public class ArcanePedestalTile extends AnimatedTile implements IInventory {
     }
 
     @Override
-    public boolean isUsableByPlayer(PlayerEntity player) {
+    public boolean stillValid(PlayerEntity player) {
         return true;
     }
 
 
     @Override
-    public void clear() {
+    public void clearContent() {
         this.stack = ItemStack.EMPTY;
     }
 
     @Override
     public void tick() {
 
+    }
+
+    @Nonnull
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, final @Nullable Direction side) {
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return itemHandler.cast();
+        }
+        return super.getCapability(cap, side);
+    }
+
+    @Override
+    protected void invalidateCaps() {
+        itemHandler.invalidate();
+        super.invalidateCaps();
     }
 }

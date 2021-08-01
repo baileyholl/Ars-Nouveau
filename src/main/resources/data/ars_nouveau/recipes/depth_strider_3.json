@@ -1,0 +1,46 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:depth_strider",
+  "level": 3,
+  "mana": 9000,
+  "item_1": [
+    {
+      "item": "ars_nouveau:glyph_aquatic"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:glyph_aquatic"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "ars_nouveau:glyph_aquatic"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "ars_nouveau:glyph_aquatic"
+    }
+  ],
+  "item_5": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_6": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_7": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_8": [
+    {
+      "item": "minecraft:heart_of_the_sea"
+    }
+  ]
+}

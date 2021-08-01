@@ -2,6 +2,8 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import net.minecraft.client.renderer.entity.HorseRenderer;
+import net.minecraft.client.renderer.entity.LightningBoltRenderer;
 import net.minecraft.client.renderer.entity.TippedArrowRenderer;
 import net.minecraft.client.renderer.entity.WolfRenderer;
 import net.minecraft.util.ResourceLocation;
@@ -15,6 +17,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 public class ModRenderers {
     @SubscribeEvent
     public static void register(final FMLClientSetupEvent event) {
+
         RenderingRegistry.registerEntityRenderingHandler( ModEntities.SPELL_PROJ,
                 renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         RenderingRegistry.registerEntityRenderingHandler( ModEntities.ENTITY_FOLLOW_PROJ,
@@ -25,16 +28,24 @@ public class ModRenderers {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_CARBUNCLE_TYPE, CarbuncleRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_SYLPH_TYPE, SylphRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_WIXIE_TYPE, WixieRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_WILDEN, WildenRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.WILDEN_STALKER,renderManager -> new GenericRenderer(renderManager, new WildenStalkerModel()));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.WILDEN_GUARDIAN, WildenGuardianRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.WILDEN_HUNTER, WildenRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.SUMMON_WOLF, WolfRenderer::new);
-
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.SUMMON_HORSE, HorseRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.LIGHTNING_ENTITY, LightningBoltRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_FLYING_ITEM,
                 RenderFlyingItem::new);
 
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_RITUAL,
                 renderManager -> new RenderRitualProjectile(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_SPELL_ARROW, TippedArrowRenderer::new);
-
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_WIXIE_TYPE, WixieRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_DUMMY, DummyRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_DRYGMY, DrygmyRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_WARD,  renderManager -> new RenderRitualProjectile(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.WILDEN_BOSS, WildenBossRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_CHIMERA_SPIKE, ChimeraProjectileRenderer::new);
 
     }
 }

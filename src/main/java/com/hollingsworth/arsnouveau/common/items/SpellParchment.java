@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.IScribeable;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -14,6 +15,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -41,35 +43,28 @@ public class SpellParchment extends ModItem implements IScribeable {
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag p_77624_4_) {
+    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag p_77624_4_) {
         if(!stack.hasTag() || stack.getTag().getString("spell").equals(""))
             return;
 
-        StringBuilder tip = new StringBuilder();
         List<AbstractSpellPart> spellsFromTagString = SpellRecipeUtil.getSpellsFromTagString(stack.getTag().getString("spell"));
-        for (int i = 0; i < spellsFromTagString.size(); i++) {
-            AbstractSpellPart spellPart = spellsFromTagString.get(i);
-            tip.append(spellPart.name);
-            if(i < spellsFromTagString.size() - 1){
-                tip.append(" -> ");
-            }
-        }
-        tooltip.add(new StringTextComponent(tip.toString()));
+        Spell spell = new Spell(spellsFromTagString);
+        tooltip.add(new StringTextComponent(spell.getDisplayString()));
     }
 
     @Override
     public boolean onScribe(World world, BlockPos pos, PlayerEntity player, Hand handIn, ItemStack thisStack) {
 
-        if(!(player.getHeldItem(handIn).getItem() instanceof SpellBook))
+        if(!(player.getItemInHand(handIn).getItem() instanceof SpellBook))
             return false;
 
-        if(SpellBook.getMode(player.getHeldItem(handIn).getTag()) == 0){
-            PortUtil.sendMessage(player, new StringTextComponent("Set your spell book to a spell."));
+        if(SpellBook.getMode(player.getItemInHand(handIn).getTag()) == 0){
+            PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.spell_parchment.no_spell"));
             return false;
         }
 
-        SpellParchment.setSpell(thisStack, SpellBook.getRecipeString(player.getHeldItem(handIn).getTag(), SpellBook.getMode(player.getHeldItem(handIn).getTag())));
-        PortUtil.sendMessage(player,new StringTextComponent("Spell inscribed."));
+        SpellParchment.setSpell(thisStack, SpellBook.getRecipeString(player.getItemInHand(handIn).getTag(), SpellBook.getMode(player.getItemInHand(handIn).getTag())));
+        PortUtil.sendMessage(player,new TranslationTextComponent("ars_nouveau.spell_parchment.inscribed"));
         return false;
     }
 }

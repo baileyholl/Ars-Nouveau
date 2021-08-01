@@ -1,12 +1,9 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.ModConfig;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.GlyphLib;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
@@ -17,42 +14,59 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.Tags;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
+import java.util.Set;
 
 public class EffectCrush extends AbstractEffect {
-    public EffectCrush() {
-        super(ModConfig.EffectCrushID, "Crush");
+
+    public static EffectCrush INSTANCE = new EffectCrush();
+
+    private EffectCrush() {
+        super(GlyphLib.EffectCrushID, "Crush");
     }
 
     @Override
-    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        for(BlockPos p : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getPos(), rayTraceResult, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))){
+    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        for(BlockPos p : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats.getBuffCount(AugmentAOE.INSTANCE), spellStats.getBuffCount(AugmentPierce.INSTANCE))){
             BlockState state = world.getBlockState(p);
-            if(state.getBlock().isIn(Tags.Blocks.COBBLESTONE) || state.getBlock().isIn(Tags.Blocks.STONE)){
-                world.setBlockState(p, Blocks.GRAVEL.getDefaultState());
-            }else if(state.getBlock().isIn(Tags.Blocks.GRAVEL)){
-                world.setBlockState(p, Blocks.SAND.getDefaultState());
+            if(state.getBlock().is(Tags.Blocks.COBBLESTONE) || state.getBlock().is(Tags.Blocks.STONE)){
+                world.setBlockAndUpdate(p, Blocks.GRAVEL.defaultBlockState());
+            }else if(state.getBlock().is(Tags.Blocks.GRAVEL)){
+                world.setBlockAndUpdate(p, Blocks.SAND.defaultBlockState());
             }
         }
-
     }
 
     @Override
-    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(!(rayTraceResult.getEntity() instanceof LivingEntity))
-            return;
-        LivingEntity livingEntity = (LivingEntity) rayTraceResult.getEntity();
-        dealDamage(world, shooter, (livingEntity.isSwimming() ? 8.0f : 3.0f) + getAmplificationBonus(augments),augments, livingEntity, DamageSource.DROWN);
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        dealDamage(world, shooter, (float) ((rayTraceResult.getEntity().isSwimming() ? DAMAGE.get() * 3.0 : DAMAGE.get()) + AMP_VALUE.get() * spellStats.getAmpMultiplier()), spellStats, rayTraceResult.getEntity(), DamageSource.DROWN);
+    }
+
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addDamageConfig(builder, 3.0);
+        addAmpConfig(builder, 1.0);
+    }
+
+    @Nonnull
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf(
+                AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE,
+                AugmentAOE.INSTANCE, AugmentPierce.INSTANCE,
+                AugmentFortune.INSTANCE
+        );
     }
 
     @Override
     public String getBookDescription() {
         return "Turns stone into gravel, and gravel into sand. Will also harm entities and deals bonus damage to entities that are swimming.";
     }
-
 
     @Override
     public Item getCraftingReagent() {
@@ -67,5 +81,11 @@ public class EffectCrush extends AbstractEffect {
     @Override
     public Tier getTier() {
         return Tier.TWO;
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ELEMENTAL_EARTH);
     }
 }

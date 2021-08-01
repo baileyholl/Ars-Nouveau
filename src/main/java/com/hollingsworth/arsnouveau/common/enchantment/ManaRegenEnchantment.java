@@ -13,14 +13,10 @@ public class ManaRegenEnchantment extends Enchantment {
     }
 
     @Override
-    public int getMinEnchantability(int enchantmentLevel) {
-        return 20;
+    public int getMinCost(int enchantmentLevel) {
+        return 1+11*(enchantmentLevel-1);
     }
 
-    @Override
-    public int getMaxEnchantability(int enchantmentLevel) {
-        return 50;
-    }
 
     @Override
     public int getMaxLevel() {

@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.common.block.ManaJar;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +29,11 @@ public class ManaJarTile extends AbstractManaTile implements ITickableTileEntity
 
     @Override
     public void tick() {
-        if(world.isRemote) {
+        if(level.isClientSide) {
             // world.addParticle(ParticleTypes.DRIPPING_WATER, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0, 0, 0);
             return;
         }
-        BlockState state = world.getBlockState(pos);
+        BlockState state = level.getBlockState(worldPosition);
         int fillState = 0;
         if(this.getCurrentMana() > 0 && this.getCurrentMana() < 1000)
             fillState = 1;
@@ -40,7 +41,7 @@ public class ManaJarTile extends AbstractManaTile implements ITickableTileEntity
             fillState = (this.getCurrentMana() / 1000) + 1;
         }
 
-        world.setBlockState(pos, state.with(ManaJar.fill, fillState),3);
+        level.setBlock(worldPosition, state.setValue(ManaJar.fill, fillState),3);
     }
 
 
@@ -52,7 +53,7 @@ public class ManaJarTile extends AbstractManaTile implements ITickableTileEntity
     @Override
     public List<String> getTooltip() {
         List<String> list = new ArrayList<>();
-        list.add( (getCurrentMana()*100) / this.getMaxMana() + "% full");
+        list.add(new TranslationTextComponent("ars_nouveau.mana_jar.fullness", (getCurrentMana()*100) / this.getMaxMana()).getString());
         return list;
     }
 }

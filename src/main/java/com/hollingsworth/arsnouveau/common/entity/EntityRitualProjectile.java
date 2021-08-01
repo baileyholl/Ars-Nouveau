@@ -1,9 +1,12 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleSparkleData;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityType;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.IPacket;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -18,40 +21,55 @@ public class EntityRitualProjectile extends ColoredProjectile{
         super(worldIn, x, y, z);
     }
 
+    public EntityRitualProjectile(World worldIn, BlockPos pos) {
+        super(worldIn, pos.getX(), pos.getY(), pos.getZ());
+    }
+
     public EntityRitualProjectile(EntityType<EntityRitualProjectile> entityAOEProjectileEntityType, World world) {
         super(entityAOEProjectileEntityType, world);
     }
     @Override
     public void tick() {
-        if(!world.isRemote() && (tilePos == null || !(world.getTileEntity(tilePos) instanceof RitualTile) || ((RitualTile) world.getTileEntity(tilePos)).ritual == null )) {
+        if(!level.isClientSide() && (tilePos == null || !(level.getBlockEntity(tilePos) instanceof RitualTile) || ((RitualTile) level.getBlockEntity(tilePos)).ritual == null )) {
             this.remove();
-            System.out.println("removing");
             return;
         }
 
 
-        lastTickPosX = getPosX();
-        lastTickPosY = getPosY();
-        lastTickPosZ = getPosZ();
+        xOld = getX();
+        yOld = getY();
+        zOld = getZ();
       //  this.setPosition(Math.sin(world.getGameTime()/10D)/9d+ getPosX(), getPosY(), Math.cos(world.getGameTime()/10D)/9d + getPosZ());
        // this.setPosition(getpost);
-        this.setPosition(getPosX(), getPosY() + Math.sin(world.getGameTime()/10D)/10, getPosZ());
-        prevPosX = getPosX();
-        prevPosY = getPosY();
-        prevPosZ = getPosZ();
+        this.setPos(getX(), getY() + Math.sin(level.getGameTime()/10D)/10, getZ());
+        xo = getX();
+        yo = getY();
+        zo = getZ();
 
-        System.out.println(this.getPositionVec());
-        if(world.isRemote) {
+
+        if(level.isClientSide) {
             int counter = 0;
             for (double j = 0; j < 3; j++) {
 
-                counter += world.rand.nextInt(3);
-                if (counter % (Minecraft.getInstance().gameSettings.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().gameSettings.particles.getId()) == 0) {
-                    world.addParticle(ParticleSparkleData.createData(getParticleColor()),
-                            (float) (getPositionVec().getX()) + Math.sin(world.getGameTime()/3D),
-                            (float) (getPositionVec().getY()),
-                            (float) (getPositionVec().getZ()) + Math.cos(world.getGameTime()/3D),
-                            0.0225f * (rand.nextFloat() ), 0.0225f * (rand.nextFloat()), 0.0225f * (rand.nextFloat() ));
+                counter += level.random.nextInt(3);
+                if (counter % (Minecraft.getInstance().options.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles.getId()) == 0) {
+                    level.addParticle(ParticleSparkleData.createData(getParticleColor()),
+                            (float) (position().x()) + Math.sin(level.getGameTime()/3D),
+                            (float) (position().y()),
+                            (float) (position().z()) + Math.cos(level.getGameTime()/3D),
+                            0.0225f * (random.nextFloat() ), 0.0225f * (random.nextFloat()), 0.0225f * (random.nextFloat() ));
+                }
+            }
+
+            for (double j = 0; j < 3; j++) {
+
+                counter += level.random.nextInt(3);
+                if (counter % (Minecraft.getInstance().options.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles.getId()) == 0) {
+                    level.addParticle(ParticleSparkleData.createData(new ParticleColor(2, 0, 144)),
+                            (float) (position().x()) - Math.sin(level.getGameTime()/3D),
+                            (float) (position().y()),
+                            (float) (position().z()) - Math.cos(level.getGameTime()/3D),
+                            0.0225f * (random.nextFloat() ), 0.0225f * (random.nextFloat()), 0.0225f * (random.nextFloat() ));
                 }
             }
 //
@@ -89,15 +107,13 @@ public class EntityRitualProjectile extends ColoredProjectile{
 
 
 
-
-
     @Override
     public EntityType<?> getType() {
         return ModEntities.ENTITY_RITUAL;
     }
 
     @Override
-    public IPacket<?> createSpawnPacket() {
+    public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
@@ -105,5 +121,18 @@ public class EntityRitualProjectile extends ColoredProjectile{
         super(ModEntities.ENTITY_RITUAL, world);
     }
 
+    @Override
+    public boolean save(CompoundNBT tag) {
+        if(tilePos != null)
+            tag.put("ritpos", NBTUtil.writeBlockPos(tilePos));
+        return super.save(tag);
+    }
 
+    @Override
+    public void load(CompoundNBT compound) {
+        super.load(compound);
+        if(compound.contains("ritpos")){
+            tilePos = NBTUtil.readBlockPos(compound.getCompound("ritpos"));
+        }
+    }
 }

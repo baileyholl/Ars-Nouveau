@@ -1,0 +1,20 @@
+{
+    "name": "Changelog 1.1.0",
+    "icon": "ars_nouveau:spell_parchment",
+    "category": "release_notes",
+	"sortnum":99,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Ars Nouveau is now in 1.0! Esta é uma grande mudança de versão com impacto na progressão e nos itens existentes. $ (li) O Minério Arcano se tornou muito mais raro. $ (li) Tijolos arcanos não são mais usados e podem ser convertidos nos novos materiais. Mana Gems e Arcane Stone irão substituí-lo. $ (li) Adicionado o Cristalizador, uma maneira de obter joias de Mana de maneira renovável. "       
+        },
+		 {
+            "type": "text",
+            "text": "$ (li) A maioria das receitas foi alterada. $ (li) Blocos decorativos adicionais foram adicionados ao Stonecutter. $ (li) Adicionado o feitiço Atraso. $ (li) Os feitiços agora podem usar o mesmo efeito várias vezes. $ (li) Leap agora usa seu vetor Y-look. $ (br) Ainda há muito conteúdo em andamento, incluindo geração adicional de mana, curiosidades e equipamentos, novas entidades e inimigos com recompensas de feitiço únicas!"       
+        },
+		{
+            "type": "relations",
+            "entries":["machines/crystallizer"]        
+        }
+    ]
+}

@@ -24,18 +24,18 @@ public class GoBackHomeGoal extends DistanceRestrictedGoal {
 
     @Override
     public void tick() {
-        if(positionFrom != null && BlockUtil.distanceFrom(entity.getPosition(), this.positionFrom) > 5){
-            entity.getNavigator().tryMoveToXYZ(this.positionFrom.getX(), this.positionFrom.getY(), this.positionFrom.getZ(), 1.5);
+        if(positionFrom != null && BlockUtil.distanceFrom(entity.blockPosition(), this.positionFrom) > 5){
+            entity.getNavigation().moveTo(this.positionFrom.getX(), this.positionFrom.getY(), this.positionFrom.getZ(), 1.5);
         }
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
-        return positionFrom != null && BlockUtil.distanceFrom(entity.getPosition(), this.positionFrom) > 5 && shouldGo.get();
+    public boolean canContinueToUse() {
+        return positionFrom != null && BlockUtil.distanceFrom(entity.blockPosition(), this.positionFrom) > 5 && shouldGo.get();
     }
 
     @Override
-    public boolean shouldExecute() {
-        return entity.world.rand.nextFloat() < 0.02f && positionFrom != null && !this.isInRange(entity.getPosition()) && shouldGo.get();
+    public boolean canUse() {
+        return entity.level.random.nextFloat() < 0.02f && positionFrom != null && !this.isInRange(entity.blockPosition()) && shouldGo.get();
     }
 }

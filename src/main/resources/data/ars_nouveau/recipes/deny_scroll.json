@@ -5,7 +5,7 @@
       "item": "ars_nouveau:blank_parchment"
     },
     {
-      "item": "minecraft:cobblestone"
+      "tag": "forge:cobblestone"
     }
   ],
   "result": {

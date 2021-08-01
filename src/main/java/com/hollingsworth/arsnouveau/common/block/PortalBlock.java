@@ -36,14 +36,14 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 public class PortalBlock extends ModBlock{
-    protected static final VoxelShape SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 14.0D, 12.0D, 14.0D);
+    protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 14.0D, 12.0D, 14.0D);
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
         return SHAPE;
     }
 
     public PortalBlock() {
-        super(Block.Properties.create(Material.PORTAL).doesNotBlockMovement().hardnessAndResistance(-1.0F, 3600000.0F).noDrops(),LibBlockNames.PORTAL);
-        this.setDefaultState(this.stateContainer.getBaseState().with(AXIS, Direction.Axis.X));
+        super(Block.Properties.of(Material.PORTAL).noCollission().strength(-1.0F, 3600000.0F).noDrops(),LibBlockNames.PORTAL);
+        this.registerDefaultState(this.stateDefinition.any().setValue(AXIS, Direction.Axis.X));
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -70,9 +70,9 @@ public class PortalBlock extends ModBlock{
     }
 
     @Override
-    public void onProjectileCollision(World worldIn, BlockState state, BlockRayTraceResult hit, ProjectileEntity projectile) {
-        if(worldIn.getTileEntity(hit.getPos()) instanceof PortalTile){
-            ((PortalTile) worldIn.getTileEntity(hit.getPos())).warp(projectile);
+    public void onProjectileHit(World worldIn, BlockState state, BlockRayTraceResult hit, ProjectileEntity projectile) {
+        if(worldIn.getBlockEntity(hit.getBlockPos()) instanceof PortalTile){
+            ((PortalTile) worldIn.getBlockEntity(hit.getBlockPos())).warp(projectile);
         }
     }
 
@@ -82,9 +82,9 @@ public class PortalBlock extends ModBlock{
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-        if(worldIn.getTileEntity(pos) instanceof PortalTile && !(entityIn instanceof PlayerEntity)){
-            ((PortalTile) worldIn.getTileEntity(pos)).warp(entityIn);
+    public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+        if(worldIn.getBlockEntity(pos) instanceof PortalTile && !(entityIn instanceof PlayerEntity)){
+            ((PortalTile) worldIn.getBlockEntity(pos)).warp(entityIn);
             entityIn.fallDistance = 0;
         }
     }
@@ -108,11 +108,11 @@ public class PortalBlock extends ModBlock{
         switch(rot) {
             case COUNTERCLOCKWISE_90:
             case CLOCKWISE_90:
-                switch((Direction.Axis)state.get(AXIS)) {
+                switch((Direction.Axis)state.getValue(AXIS)) {
                     case Z:
-                        return state.with(AXIS, Direction.Axis.X);
+                        return state.setValue(AXIS, Direction.Axis.X);
                     case X:
-                        return state.with(AXIS, Direction.Axis.Z);
+                        return state.setValue(AXIS, Direction.Axis.Z);
                     default:
                         return state;
                 }
@@ -128,13 +128,13 @@ public class PortalBlock extends ModBlock{
      * returns its solidified counterpart.
      * Note that this method should ideally consider only the specific face passed in.
      */
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
         Direction.Axis direction$axis = facing.getAxis();
-        Direction.Axis direction$axis1 = stateIn.get(AXIS);
+        Direction.Axis direction$axis1 = stateIn.getValue(AXIS);
         boolean flag = direction$axis1 != direction$axis && direction$axis.isHorizontal();
-        return !flag && facingState.getBlock() != this && !(new Size(worldIn, currentPos, direction$axis1)).func_208508_f() ? Blocks.AIR.getDefaultState() : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+        return !flag && facingState.getBlock() != this && !(new Size(worldIn, currentPos, direction$axis1)).isComplete() ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(AXIS);
     }
 
@@ -150,7 +150,7 @@ public class PortalBlock extends ModBlock{
     }
 
     @Override
-    public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
+    public boolean canBeReplaced(BlockState state, BlockItemUseContext useContext) {
         return false;
     }
 
@@ -158,7 +158,7 @@ public class PortalBlock extends ModBlock{
     public static BlockPattern.PatternHelper createPatternHelper(IWorld world, BlockPos pos) {
         Direction.Axis direction$axis = Direction.Axis.Z;
         Size portalblock$size = new Size(world, pos, Direction.Axis.X);
-        LoadingCache<BlockPos, CachedBlockInfo> loadingcache = BlockPattern.createLoadingCache(world, true);
+        LoadingCache<BlockPos, CachedBlockInfo> loadingcache = BlockPattern.createLevelCache(world, true);
         if (!portalblock$size.isValid()) {
             direction$axis = Direction.Axis.X;
             portalblock$size = new Size(world, pos, Direction.Axis.Z);
@@ -168,16 +168,16 @@ public class PortalBlock extends ModBlock{
             return new BlockPattern.PatternHelper(pos, Direction.NORTH, Direction.UP, loadingcache, 1, 1, 1);
         } else {
             int[] aint = new int[Direction.AxisDirection.values().length];
-            Direction direction = portalblock$size.rightDir.rotateYCCW();
-            BlockPos blockpos = portalblock$size.bottomLeft.up(portalblock$size.getHeight() - 1);
+            Direction direction = portalblock$size.rightDir.getCounterClockWise();
+            BlockPos blockpos = portalblock$size.bottomLeft.above(portalblock$size.getHeight() - 1);
 
             for(Direction.AxisDirection direction$axisdirection : Direction.AxisDirection.values()) {
-                BlockPattern.PatternHelper blockpattern$patternhelper = new BlockPattern.PatternHelper(direction.getAxisDirection() == direction$axisdirection ? blockpos : blockpos.offset(portalblock$size.rightDir, portalblock$size.getWidth() - 1), Direction.getFacingFromAxis(direction$axisdirection, direction$axis), Direction.UP, loadingcache, portalblock$size.getWidth(), portalblock$size.getHeight(), 1);
+                BlockPattern.PatternHelper blockpattern$patternhelper = new BlockPattern.PatternHelper(direction.getAxisDirection() == direction$axisdirection ? blockpos : blockpos.relative(portalblock$size.rightDir, portalblock$size.getWidth() - 1), Direction.get(direction$axisdirection, direction$axis), Direction.UP, loadingcache, portalblock$size.getWidth(), portalblock$size.getHeight(), 1);
 
                 for(int i = 0; i < portalblock$size.getWidth(); ++i) {
                     for(int j = 0; j < portalblock$size.getHeight(); ++j) {
-                        CachedBlockInfo cachedblockinfo = blockpattern$patternhelper.translateOffset(i, j, 1);
-                        if (!cachedblockinfo.getBlockState().isAir()) {
+                        CachedBlockInfo cachedblockinfo = blockpattern$patternhelper.getBlock(i, j, 1);
+                        if (!cachedblockinfo.getState().isAir()) {
                             ++aint[direction$axisdirection.ordinal()];
                         }
                     }
@@ -192,7 +192,7 @@ public class PortalBlock extends ModBlock{
                 }
             }
 
-            return new BlockPattern.PatternHelper(direction.getAxisDirection() == direction$axisdirection1 ? blockpos : blockpos.offset(portalblock$size.rightDir, portalblock$size.getWidth() - 1), Direction.getFacingFromAxis(direction$axisdirection1, direction$axis), Direction.UP, loadingcache, portalblock$size.getWidth(), portalblock$size.getHeight(), 1);
+            return new BlockPattern.PatternHelper(direction.getAxisDirection() == direction$axisdirection1 ? blockpos : blockpos.relative(portalblock$size.rightDir, portalblock$size.getWidth() - 1), Direction.get(direction$axisdirection1, direction$axis), Direction.UP, loadingcache, portalblock$size.getWidth(), portalblock$size.getHeight(), 1);
         }
     }
 
@@ -219,13 +219,13 @@ public class PortalBlock extends ModBlock{
                 this.rightDir = Direction.SOUTH;
             }
 
-            for(BlockPos blockpos = pos; pos.getY() > blockpos.getY() - 21 && pos.getY() > 0 && this.canReplace(worldIn.getBlockState(pos.down())); pos = pos.down()) {
+            for(BlockPos blockpos = pos; pos.getY() > blockpos.getY() - 21 && pos.getY() > 0 && this.canReplace(worldIn.getBlockState(pos.below())); pos = pos.below()) {
                 ;
             }
 
             int i = this.getDistanceUntilEdge(pos, this.leftDir) - 1;
             if (i >= 0) {
-                this.bottomLeft = pos.offset(this.leftDir, i);
+                this.bottomLeft = pos.relative(this.leftDir, i);
                 this.width = this.getDistanceUntilEdge(this.bottomLeft, this.rightDir);
                 if (this.width < 2 || this.width > 21) {
                     this.bottomLeft = null;
@@ -242,18 +242,18 @@ public class PortalBlock extends ModBlock{
         protected int getDistanceUntilEdge(BlockPos pos, Direction directionIn) {
             int i;
             for(i = 0; i < 22; ++i) {
-                BlockPos blockpos = pos.offset(directionIn, i);
-                if (!this.canReplace(this.world.getBlockState(blockpos)) || !isPortalFrame(this.world, blockpos.down())) {
+                BlockPos blockpos = pos.relative(directionIn, i);
+                if (!this.canReplace(this.world.getBlockState(blockpos)) || !isPortalFrame(this.world, blockpos.below())) {
                     break;
                 }
             }
 
-            BlockPos framePos = pos.offset(directionIn, i);
+            BlockPos framePos = pos.relative(directionIn, i);
             return isPortalFrame(this.world, framePos) ? i : 0;
         }
 
         public boolean isPortalFrame(IWorld world, BlockPos pos){
-            return world.getBlockState(pos).getBlock().isIn(Recipes.DECORATIVE_AN);
+            return world.getBlockState(pos).getBlock().is(Recipes.DECORATIVE_AN);
         }
 
         public int getHeight() {
@@ -268,7 +268,7 @@ public class PortalBlock extends ModBlock{
             label56:
             for(this.height = 0; this.height < 21; ++this.height) {
                 for(int i = 0; i < this.width; ++i) {
-                    BlockPos blockpos = this.bottomLeft.offset(this.rightDir, i).up(this.height);
+                    BlockPos blockpos = this.bottomLeft.relative(this.rightDir, i).above(this.height);
                     BlockState blockstate = this.world.getBlockState(blockpos);
                     if (!this.canReplace(blockstate)) {
                         break label56;
@@ -280,12 +280,12 @@ public class PortalBlock extends ModBlock{
                     }
 
                     if (i == 0) {
-                        BlockPos framePos = blockpos.offset(this.leftDir);
+                        BlockPos framePos = blockpos.relative(this.leftDir);
                         if (!isPortalFrame(this.world, framePos)) {
                             break label56;
                         }
                     } else if (i == this.width - 1) {
-                        BlockPos framePos = blockpos.offset(this.rightDir);
+                        BlockPos framePos = blockpos.relative(this.rightDir);
                         if (!isPortalFrame(this.world, framePos)) {
                             break label56;
                         }
@@ -294,7 +294,7 @@ public class PortalBlock extends ModBlock{
             }
 
             for(int j = 0; j < this.width; ++j) {
-                BlockPos framePos = this.bottomLeft.offset(this.rightDir, j).up(this.height);
+                BlockPos framePos = this.bottomLeft.relative(this.rightDir, j).above(this.height);
                 if (!isPortalFrame(this.world, framePos)) {
                     this.height = 0;
                     break;
@@ -322,12 +322,12 @@ public class PortalBlock extends ModBlock{
 
         public void placePortalBlocks(BlockPos warpPos, String dimId) {
             for(int i = 0; i < this.width; ++i) {
-                BlockPos blockpos = this.bottomLeft.offset(this.rightDir, i);
+                BlockPos blockpos = this.bottomLeft.relative(this.rightDir, i);
 
                 for(int j = 0; j < this.height; ++j) {
-                    this.world.setBlockState(blockpos.up(j), BlockRegistry.PORTAL_BLOCK.getDefaultState().with(PortalBlock.AXIS, this.axis), 18);
-                    if(this.world.getTileEntity(blockpos.up(j)) instanceof PortalTile){
-                        PortalTile tile = (PortalTile) this.world.getTileEntity(blockpos.up(j));
+                    this.world.setBlock(blockpos.above(j), BlockRegistry.PORTAL_BLOCK.defaultBlockState().setValue(PortalBlock.AXIS, this.axis), 18);
+                    if(this.world.getBlockEntity(blockpos.above(j)) instanceof PortalTile){
+                        PortalTile tile = (PortalTile) this.world.getBlockEntity(blockpos.above(j));
                         tile.warpPos = warpPos;
                         tile.dimID = dimId;
                     }
@@ -340,7 +340,7 @@ public class PortalBlock extends ModBlock{
             return this.portalBlockCount >= this.width * this.height;
         }
 
-        public boolean func_208508_f() {
+        public boolean isComplete() {
             return this.isValid() && this.rightSize();
         }
     }

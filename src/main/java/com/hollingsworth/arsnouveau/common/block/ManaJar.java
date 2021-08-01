@@ -23,12 +23,14 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class ManaJar extends ManaBlock {
 
     public static final Property<Integer> fill = IntegerProperty.create("fill", 0, 11);
 
     public ManaJar() {
-        super(ModBlock.defaultProperties().notSolid(),"mana_jar");
+        super(ModBlock.defaultProperties().noOcclusion(),"mana_jar");
     }
 
     public ManaJar(Properties properties, String registryName){
@@ -47,12 +49,12 @@ public class ManaJar extends ManaBlock {
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState p_149645_1_) {
+    public BlockRenderType getRenderShape(BlockState p_149645_1_) {
         return BlockRenderType.MODEL;
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<net.minecraft.block.Block, BlockState> builder) { builder.add(ManaJar.fill); }
+    protected void createBlockStateDefinition(StateContainer.Builder<net.minecraft.block.Block, BlockState> builder) { builder.add(ManaJar.fill); }
 
     @Nullable
     @Override
@@ -61,26 +63,26 @@ public class ManaJar extends ManaBlock {
     }
 
     @Override
-    public boolean hasComparatorInputOverride(BlockState state) {
+    public boolean hasAnalogOutputSignal(BlockState state) {
         return true;
     }
 
     @Override
-    public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
-        ManaJarTile tile = (ManaJarTile) worldIn.getTileEntity(pos);
+    public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
+        ManaJarTile tile = (ManaJarTile) worldIn.getBlockEntity(pos);
         if (tile == null || tile.getCurrentMana() <= 0) return 0;
         int step = (tile.getMaxMana() - 1) / 14;
         return (tile.getCurrentMana() - 1) / step + 1;
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        return super.onBlockActivated(state,worldIn,pos,player,handIn,hit);
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        return super.use(state,worldIn,pos,player,handIn,hit);
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
 
         if(stack.getTag() == null)
             return;

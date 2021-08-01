@@ -16,8 +16,8 @@ public class ResetCommand {
 
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
         dispatcher.register(Commands.literal("ars-reset").
-                requires(sender -> sender.hasPermissionLevel(2))
-                .executes(context -> resetPlayers(context.getSource(), ImmutableList.of(context.getSource().assertIsEntity())))
+                requires(sender -> sender.hasPermission(2))
+                .executes(context -> resetPlayers(context.getSource(), ImmutableList.of(context.getSource().getEntityOrException())))
                 .then(Commands.argument("targets", EntityArgument.entities())
                         .executes(context -> resetPlayers(context.getSource(), EntityArgument.getEntities(context, "targets")))));
     }
@@ -31,7 +31,7 @@ public class ResetCommand {
                 iMana.setGlyphBonus(0);
             });
         }
-        source.sendFeedback(new TranslationTextComponent("ars_nouveau.reset.cleared"), true);
+        source.sendSuccess(new TranslationTextComponent("ars_nouveau.reset.cleared"), true);
         return 1;
     }
 }

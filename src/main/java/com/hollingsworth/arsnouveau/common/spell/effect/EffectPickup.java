@@ -1,10 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.ModConfig;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.GlyphLib;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.items.VoidJar;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import net.minecraft.entity.LivingEntity;
@@ -18,31 +15,35 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class EffectPickup extends AbstractEffect {
-    public EffectPickup() {
-        super(ModConfig.EffectPickupID, "Item Pickup");
+    public static EffectPickup INSTANCE = new EffectPickup();
+
+    private EffectPickup() {
+        super(GlyphLib.EffectPickupID, "Item Pickup");
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        BlockPos pos = new BlockPos(rayTraceResult.getHitVec());
-        int expansion = 5 + getBuffCount(augments, AugmentAOE.class);
+    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        BlockPos pos = new BlockPos(rayTraceResult.getLocation());
+        int expansion = 2 + spellStats.getBuffCount(AugmentAOE.INSTANCE);
 
-        List<ItemEntity> entityList = world.getEntitiesWithinAABB(ItemEntity.class, new AxisAlignedBB(pos.east(expansion).north(expansion).up(expansion),
-                pos.west(expansion).south(expansion).down(expansion)));
+        List<ItemEntity> entityList = world.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(pos.east(expansion).north(expansion).above(expansion),
+                pos.west(expansion).south(expansion).below(expansion)));
         for(ItemEntity i : entityList){
 
             if(isRealPlayer(shooter) && spellContext.castingTile == null){
                 ItemStack stack = i.getItem();
                 PlayerEntity player = (PlayerEntity) shooter;
                 VoidJar.tryVoiding(player, stack);
-                if(!player.addItemStackToInventory(stack)){
-                    i.setPosition(player.getPosX(), player.getPosY(), player.getPosZ());
+                if(!player.addItem(stack)){
+                    i.setPos(player.getX(), player.getY(), player.getZ());
                 }
-//                i.onCollideWithPlayer((PlayerEntity) shooter);
+
             }else if(shooter instanceof IPickupResponder){
                 i.setItem(((IPickupResponder) shooter).onPickup(i.getItem()));
             }else if(spellContext.castingTile instanceof IPickupResponder){
@@ -54,6 +55,12 @@ public class EffectPickup extends AbstractEffect {
     @Override
     public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
         return true;
+    }
+
+    @Nonnull
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf(AugmentAOE.INSTANCE);
     }
 
     @Override
@@ -70,5 +77,11 @@ public class EffectPickup extends AbstractEffect {
     @Override
     public int getManaCost() {
         return 10;
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.MANIPULATION);
     }
 }

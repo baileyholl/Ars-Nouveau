@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.ModConfig;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.GlyphLib;
+import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
@@ -12,29 +12,34 @@ import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeConfigSpec;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class EffectPull extends AbstractEffect {
+    public static EffectPull INSTANCE = new EffectPull();
 
-    public EffectPull() {
-        super(ModConfig.EffectPullID, "Pull");
+    private EffectPull() {
+        super(GlyphLib.EffectPullID, "Pull");
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof EntityRayTraceResult){
-            Entity target = ((EntityRayTraceResult) rayTraceResult).getEntity();
-            Vector3d vec3d = new Vector3d(shooter.getPosX() - target.getPosX(), shooter.getPosY() - target.getPosY(), shooter.getPosZ() - target.getPosZ());
-            double d1 = 7;
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        Entity target = rayTraceResult.getEntity();
+        Vector3d vec3d = new Vector3d(shooter.getX() - target.getX(), shooter.getY() - target.getY(), shooter.getZ() - target.getZ());
+        double d2 = GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
+        target.setDeltaMovement(target.getDeltaMovement().add(vec3d.normalize().scale(d2 )));
+        target.hurtMarked = true;
+    }
 
-            double d2 = 1.0D + 0.5 * getAmplificationBonus(augments);
-            //target.setMotion(target.getMotion().add(vec3d.normalize().scale(d2 * d2 * 0.1D)));
-            target.setMotion(target.getMotion().add(vec3d.normalize().scale(d2 )));
-            target.velocityChanged = true;
-            //target.move(MoverType.PLAYER, target.getMotion());
-        }
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addGenericDouble(builder, 1.0, "Base movement velocity", "base_value");
+        addAmpConfig(builder, 0.5);
     }
 
     @Override
@@ -58,8 +63,20 @@ public class EffectPull extends AbstractEffect {
         return Items.FISHING_ROD;
     }
 
+    @Nonnull
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf(AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE);
+    }
+
     @Override
     public String getBookDescription() {
         return "Pulls the target closer to the caster";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ELEMENTAL_AIR);
     }
 }

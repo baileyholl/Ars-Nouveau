@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
 import com.hollingsworth.arsnouveau.api.spell.IPlaceBlockResponder;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -14,8 +15,10 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.items.IItemHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,32 +31,32 @@ public class SpellTurretTile extends TileEntity  implements IPickupResponder, IP
     }
 
     @Override
-    public ItemStack onPickup(ItemStack stack) {
-        return BlockUtil.insertItemAdjacent(world, pos, stack);
+    public @Nonnull ItemStack onPickup(ItemStack stack) {
+        return BlockUtil.insertItemAdjacent(level, worldPosition, stack);
     }
 
     @Override
     public ItemStack onPlaceBlock() {
-        return BlockUtil.getItemAdjacent(world, pos, (stack) -> stack.getItem() instanceof BlockItem);
+        return BlockUtil.getItemAdjacent(level, worldPosition, (stack) -> stack.getItem() instanceof BlockItem);
     }
 
     @Override
     public List<IItemHandler> getInventory() {
-        return BlockUtil.getAdjacentInventories(world, pos);
+        return BlockUtil.getAdjacentInventories(level, worldPosition);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT tag) {
+    public CompoundNBT save(CompoundNBT tag) {
         if(recipe != null)
             tag.putString("spell", SpellRecipeUtil.serializeForNBT(recipe));
 
-        return super.write(tag);
+        return super.save(tag);
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT tag) {
+    public void load(BlockState state, CompoundNBT tag) {
         this.recipe = SpellRecipeUtil.getSpellsFromTagString(tag.getString("spell"));
-        super.read(state, tag);
+        super.load(state, tag);
     }
 
     @Override
@@ -61,23 +64,23 @@ public class SpellTurretTile extends TileEntity  implements IPickupResponder, IP
         if(this.recipe == null || this.recipe.isEmpty())
             return new ArrayList<>();
         List<String> list = new ArrayList<>();
-        list.add("Casting: " + SpellRecipeUtil.getDisplayString(recipe));
+        list.add(new TranslationTextComponent("ars_nouveau.spell_turret.casting").getString() + new Spell(recipe).getDisplayString());
         return list;
     }
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     @Nullable
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 3, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 3, this.getUpdateTag());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         super.onDataPacket(net, pkt);
-        handleUpdateTag(world.getBlockState(pos), pkt.getNbtCompound());
+        handleUpdateTag(level.getBlockState(worldPosition), pkt.getTag());
     }
 }

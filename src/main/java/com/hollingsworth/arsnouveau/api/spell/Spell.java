@@ -7,9 +7,8 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil.getEquippedAugments;
-
 public class Spell {
+    public static final Spell EMPTY = new Spell();
 
     public List<AbstractSpellPart> recipe;
     private int cost;
@@ -24,8 +23,26 @@ public class Spell {
         this.cost = 0;
     }
 
+    public Spell add(AbstractSpellPart spellPart){
+        recipe.add(spellPart);
+        return this;
+    }
+
+    public Spell add(AbstractSpellPart spellPart, int count){
+        for(int i = 0; i < count; i++)
+            recipe.add(spellPart);
+        return this;
+    }
+
     public int getSpellSize(){
         return recipe.size();
+    }
+
+    public @Nullable AbstractCastMethod getCastMethod(){
+        if(this.recipe == null || this.recipe.isEmpty())
+            return null;
+        return this.recipe.get(0) instanceof AbstractCastMethod ? (AbstractCastMethod) recipe.get(0) : null;
+
     }
 
     public List<AbstractAugment> getAugments(int startPosition, @Nullable LivingEntity caster){
@@ -40,9 +57,7 @@ public class Spell {
                 break;
             }
         }
-        // Add augment bonuses from equipment
-        if(caster != null)
-            augments.addAll(getEquippedAugments(caster));
+
         return augments;
     }
 
@@ -70,6 +85,10 @@ public class Spell {
 
     public void setCost(int cost){
         this.cost = cost;
+    }
+
+    public boolean isEmpty(){
+        return recipe == null || recipe.isEmpty();
     }
 
     public String serialize(){
@@ -106,10 +125,10 @@ public class Spell {
                     break;
             }
             if(num > 1){
-                str.append(spellPart.name).append(" x").append(num);
+                str.append(spellPart.getLocaleName()).append(" x").append(num);
                 i += num - 1;
             }else{
-                str.append(spellPart.name);
+                str.append(spellPart.getLocaleName());
             }
             if(i < recipe.size() - 1){
                 str.append(" -> ");
@@ -120,5 +139,28 @@ public class Spell {
 
     public boolean isValid(){
         return this.recipe != null && !this.recipe.isEmpty();
+    }
+
+    public static class Builder{
+        private Spell spell;
+
+        public Builder(){
+            this.spell = new Spell();
+        }
+
+        public Builder add(AbstractSpellPart spellPart){
+            this.spell.add(spellPart);
+            return this;
+        }
+
+        public Builder add(AbstractSpellPart spellPart, int count){
+            for(int i = 0; i < count; i++)
+                this.spell.add(spellPart);
+            return this;
+        }
+
+        public Spell build(){
+            return spell;
+        }
     }
 }

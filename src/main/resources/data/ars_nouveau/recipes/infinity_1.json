@@ -1,0 +1,46 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:infinity",
+  "level": 1,
+  "mana": 9000,
+  "item_1": [
+    {
+      "item": "ars_nouveau:glyph_projectile"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:glyph_projectile"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "ars_nouveau:glyph_projectile"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "ars_nouveau:glyph_projectile"
+    }
+  ],
+  "item_5": [
+    {
+      "item": "ars_nouveau:glyph_projectile"
+    }
+  ],
+  "item_6": [
+    {
+      "item": "ars_nouveau:glyph_projectile"
+    }
+  ],
+  "item_7": [
+    {
+      "item": "ars_nouveau:glyph_projectile"
+    }
+  ],
+  "item_8": [
+    {
+      "tag": "forge:storage_blocks/diamond"
+    }
+  ]
+}

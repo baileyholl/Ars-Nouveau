@@ -7,12 +7,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.AxisAlignedBB;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 
-public class ScribesTile extends TileEntity implements ITickableTileEntity {
+public class ScribesTile extends TileEntity implements IAnimatable {
 
     public ItemEntity entity; // For rendering
     public ItemStack stack;
@@ -24,40 +27,56 @@ public class ScribesTile extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public void tick() {
-
+    public void load(BlockState state, CompoundNBT compound) {
+        stack = ItemStack.of((CompoundNBT)compound.get("itemStack"));
+        super.load(state,compound);
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        stack = ItemStack.read((CompoundNBT)compound.get("itemStack"));
-        super.read(state,compound);
-    }
-
-    @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public CompoundNBT save(CompoundNBT compound) {
         if(stack != null) {
             CompoundNBT reagentTag = new CompoundNBT();
-            stack.write(reagentTag);
+            stack.save(reagentTag);
             compound.put("itemStack", reagentTag);
         }
 
-        return super.write(compound);
+        return super.save(compound);
     }
 
     @Override
     @Nullable
     public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 3, this.getUpdateTag());
+        return new SUpdateTileEntityPacket(this.worldPosition, 3, this.getUpdateTag());
     }
     @Override
     public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+        return this.save(new CompoundNBT());
     }
 
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         super.onDataPacket(net, pkt);
-        handleUpdateTag(world.getBlockState(pos),pkt.getNbtCompound());
+        handleUpdateTag(level.getBlockState(worldPosition),pkt.getTag());
+    }
+
+    @Override
+    public void registerControllers(AnimationData data) {
+
+    }
+
+    @Override
+    public AxisAlignedBB getRenderBoundingBox() {
+        return INFINITE_EXTENT_AABB;
+    }
+
+    AnimationFactory factory = new AnimationFactory(this);
+    @Override
+    public AnimationFactory getFactory() {
+        return factory;
+    }
+
+    @Override
+    public double getViewDistance() {
+        return 256;
     }
 }

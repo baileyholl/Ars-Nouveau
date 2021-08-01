@@ -1,0 +1,17 @@
+{
+    "name": "Nuevos Hechizos",
+    "icon": "ars_nouveau:blank_glyph",
+	"sortnum":4,
+    "category": "getting_started",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Acceder a nuevos hechizos requiere una pequeña cantidad de preparación, recursos, y estructuras base. Puedes aprender nuevos hechizos obteniendo objetos llamados Glifos. Los Glifos son creados en la Prensa de Glifos usando Arcilla Mágica, un reactivo, y maná del mundo. Una vez hayas obtenido un glifo, simplemente úsalo con un Grimorio en tu inventario para inscribir el glifo en el libro."       
+        },
+		{
+            "type": "relations",
+            "entries":["machines/glyph_press", "getting_started/world_mana"],
+			"text":"Para aprender a crear nuevos glifos, mira la seccción de la Prensa de Glifos."
+        }
+    ]
+}

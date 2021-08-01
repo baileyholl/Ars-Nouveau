@@ -1,0 +1,20 @@
+{
+    "name": "Changelog 1.2.0",
+    "icon": "ars_nouveau:spell_turret",
+    "category": "release_notes",
+	"sortnum":98,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Ars Nouveau 1.2.0, Redstone! $ (li) Adiciona a Torre do Feitiço. $ (li) Adiciona o feitiço Sinal de Redstone. $ (li) Projéteis não têm mais ângulo aleatório quando disparados. $ (li) Dispel agora retorna seu charme quando usado em Silfos, Carbúnculos e Filhotes. $ (li) Correção de bug com Warp Portals bloqueando jogadores. $ (li) Feitiços podem ser lançados através de portais. $ (li) Suporte JEI para a Glyph Press."       
+        },
+		 {
+            "type": "text",
+            "text": "$ (li) Whelps agora são inteligentes e não desperdiçam mais mana ao usar Touch. $ (li) As partículas agora desfocam melhor. $ (li) Mana Jars agora exibem uma lasca em menos de 1 balde e agora fornecem saída de comparação. $ ( li) A geração passiva em Cristalizadores foi nerfada, enquanto a geração ativa agora é menos cara. $ (li) As receitas usando o Mana Bucket agora usam a Mana Gem. $ (li) Warp Scrolls são mais caros."       
+        },
+		{
+            "type": "relations",
+            "entries":["apparatus/spell_turret"]        
+        }
+    ]
+}

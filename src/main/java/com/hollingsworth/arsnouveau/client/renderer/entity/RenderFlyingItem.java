@@ -20,14 +20,14 @@ public class RenderFlyingItem extends EntityRenderer<EntityFlyingItem> {
     @Override
     public void render(EntityFlyingItem entityIn, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer bufferIn, int packedLightIn) {
         super.render(entityIn, entityYaw, partialTicks, matrixStack, bufferIn, packedLightIn);
-        matrixStack.push();
+        matrixStack.pushPose();
         matrixStack.scale(0.35f, 0.35f, 0.35F);
-        Minecraft.getInstance().getItemRenderer().renderItem(entityIn.getStack(), ItemCameraTransforms.TransformType.FIXED, 15728880, OverlayTexture.NO_OVERLAY, matrixStack, bufferIn);
-        matrixStack.pop();
+        Minecraft.getInstance().getItemRenderer().renderStatic(entityIn.getStack(), ItemCameraTransforms.TransformType.FIXED, 15728880, OverlayTexture.NO_OVERLAY, matrixStack, bufferIn);
+        matrixStack.popPose();
     }
 
     @Override
-    public ResourceLocation getEntityTexture(EntityFlyingItem entity) {
+    public ResourceLocation getTextureLocation(EntityFlyingItem entity) {
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png");
     }
 }

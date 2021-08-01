@@ -1,0 +1,16 @@
+{
+    "name": "Empezando la Automatización",
+    "icon": "ars_nouveau:spell_turret",
+	"sortnum":10,
+    "category": "getting_started",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Todods los hechizos deben ser usados en la automatización a través de hechiceros como los Whelps o las Torretas de Hechizos. ¡Úsalos para crear cosechas automáticas, granjas de árboles, canteras, granjas de pasteles, industrias de cristal, y más! Para transportar objetos, fabricación automática, o generación de recursos, mira una variedad de entidades mágicas que pueden ser invocadas usando Amuletos."       
+        },
+		{
+            "type": "relations",
+            "entries":["apparatus/whelp_charm", "apparatus/spell_turret","apparatus/carbuncle_charm","apparatus/wixie_charm"]        
+        }
+    ]
+}

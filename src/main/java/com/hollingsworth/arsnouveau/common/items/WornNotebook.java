@@ -17,13 +17,13 @@ import javax.annotation.Nonnull;
 public class WornNotebook extends ModItem{
 
     public WornNotebook() {
-        super(ItemsRegistry.defaultItemProperties().maxStackSize(1), LibItemNames.WORN_NOTEBOOK);
+        super(ItemsRegistry.defaultItemProperties().stacksTo(1), LibItemNames.WORN_NOTEBOOK);
     }
 
     @Nonnull
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack stack = playerIn.getHeldItem(handIn);
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack stack = playerIn.getItemInHand(handIn);
 
 //        System.out.println( BookRegistry.INSTANCE.books);
 //        Book book = BookRegistry.INSTANCE.books.get(ItemsRegistry.wornNotebook.getRegistryName());

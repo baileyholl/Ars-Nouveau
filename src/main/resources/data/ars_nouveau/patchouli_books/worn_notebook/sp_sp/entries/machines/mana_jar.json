@@ -1,0 +1,16 @@
+{
+    "name": "Frasco de Maná",
+    "icon": "ars_nouveau:mana_jar",
+    "category": "machines",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Los Frascos de Maná almacenan el maná del mundo de recolectores de maná cercanos los cuales son usados para crear hechizos y accesorios alimentando dispositivos como Prensas de Glifos y Aparatos de Encantamiento. El maná puede ser movido usando un cubo, o el frasco puede ser extraido y movido a otro lugar. Para usar los Frascos de Man,a, simplemente coloca el frasco cerca del dispositivo que desees. Los Frascos de Maná proveerás una señal a Comparadores de redstone basádnose en su nivel de capacidad."
+        },
+
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:mana_jar"
+		}
+    ]
+}

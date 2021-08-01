@@ -18,22 +18,22 @@ public class OpenChestEvent implements ITimedEvent {
     }
 
     public void open(){
-        World world = fakePlayer.world;
-        if(world.getTileEntity(pos) instanceof ChestTileEntity){
-            ((ChestTileEntity) world.getTileEntity(pos)).openInventory(fakePlayer);
+        World world = fakePlayer.level;
+        if(world.getBlockEntity(pos) instanceof ChestTileEntity){
+            ((ChestTileEntity) world.getBlockEntity(pos)).startOpen(fakePlayer);
 
         }
     }
 
     public void attemptClose(){
-        World world = fakePlayer.world;
-        if(world.getTileEntity(pos) instanceof ChestTileEntity){
-            ((ChestTileEntity) world.getTileEntity(pos)).closeInventory(fakePlayer);
+        World world = fakePlayer.level;
+        if(world.getBlockEntity(pos) instanceof ChestTileEntity){
+            ((ChestTileEntity) world.getBlockEntity(pos)).stopOpen(fakePlayer);
         }
     }
 
     @Override
-    public void tick() {
+    public void tick(boolean serverSide) {
         duration--;
         if(duration <= 0){
             attemptClose();

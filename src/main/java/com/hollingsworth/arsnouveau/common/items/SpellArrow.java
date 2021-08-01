@@ -17,6 +17,7 @@ import net.minecraft.item.ArrowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -45,11 +46,11 @@ public class SpellArrow extends ArrowItem {
         if(mana == null)
             return new ArrowEntity(world, shooter);
         EntitySpellArrow spellArrow = new EntitySpellArrow(world, shooter);
-        if(!(shooter instanceof PlayerEntity) || !(( shooter).getHeldItemMainhand().getItem() instanceof ICasterTool))
+        if(!(shooter instanceof PlayerEntity) || !(( shooter).getMainHandItem().getItem() instanceof ICasterTool))
             return super.createArrow(world, stack, shooter);
         PlayerEntity entity = (PlayerEntity)shooter;
-        ICasterTool caster = (ICasterTool) entity.getHeldItemMainhand().getItem();
-        ISpellCaster spellCaster = caster.getSpellCaster(entity.getHeldItemMainhand());
+        ICasterTool caster = (ICasterTool) entity.getMainHandItem().getItem();
+        ISpellCaster spellCaster = caster.getSpellCaster(entity.getMainHandItem());
         Spell spell = spellCaster.getSpell();
         modifySpell(spell);
         spell.setCost(spell.getCastingCost() - part.getManaCost() * numParts);
@@ -61,8 +62,8 @@ public class SpellArrow extends ArrowItem {
 
 
     @Override
-    public void addInformation(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new StringTextComponent("Augments spells when used with an Enchanter's Bow."));
+    public void appendHoverText(ItemStack stack, World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        tooltip.add(new TranslationTextComponent("ars_nouveau.spell_arrow.desc"));
         Spell spell = new Spell();
         for(int i = 0; i < numParts; i++){
             spell.recipe.add(part);

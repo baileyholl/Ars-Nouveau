@@ -11,13 +11,8 @@ public class ManaBoost extends Enchantment {
         setRegistryName(ArsNouveau.MODID, "mana_boost");
     }
     @Override
-    public int getMinEnchantability(int enchantmentLevel) {
-        return 20;
-    }
-
-    @Override
-    public int getMaxEnchantability(int enchantmentLevel) {
-        return 50;
+    public int getMinCost(int enchantmentLevel) {
+        return 1+11*(enchantmentLevel-1);
     }
 
     @Override

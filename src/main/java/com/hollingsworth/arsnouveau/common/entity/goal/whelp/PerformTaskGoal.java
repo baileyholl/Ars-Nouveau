@@ -7,6 +7,8 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.EnumSet;
 
+import net.minecraft.entity.ai.goal.Goal.Flag;
+
 public class PerformTaskGoal extends Goal {
 
     EntityWhelp kobold;
@@ -15,41 +17,49 @@ public class PerformTaskGoal extends Goal {
 
     public PerformTaskGoal(EntityWhelp kobold) {
         this.kobold = kobold;
-        this.setMutexFlags(EnumSet.of(Flag.MOVE));
+        this.setFlags(EnumSet.of(Flag.MOVE));
+    }
+
+
+    @Override
+    public void stop() {
+        super.stop();
+        timePerformingTask = 0;
     }
 
     @Override
-    public void startExecuting() {
-        super.startExecuting();
+    public void start() {
+        super.start();
         taskLoc = this.kobold.getTaskLoc();
         timePerformingTask = 0;
-        if (this.kobold.getNavigator() != null && taskLoc != null)
-            this.kobold.getNavigator().setPath(this.kobold.getNavigator().getPathToPos(taskLoc, 1), 1.2f);
+        if (this.kobold.getNavigation() != null && taskLoc != null)
+            this.kobold.getNavigation().moveTo(this.kobold.getNavigation().createPath(taskLoc, 1), 1.2f);
     }
 
     @Override
     public void tick() {
         super.tick();
+
         timePerformingTask++;
         if (kobold == null || taskLoc == null)
             return;
 
-        if (BlockUtil.distanceFrom(kobold.getPosition(), taskLoc) <= 2) {
+        if (BlockUtil.distanceFrom(kobold.blockPosition(), taskLoc) <= 2) {
             kobold.castSpell(taskLoc);
-            kobold.getNavigator().clearPath();
+            kobold.getNavigation().stop();
             timePerformingTask = 0;
-        } else if (kobold.getNavigator() != null) {
-            this.kobold.getNavigator().setPath(this.kobold.getNavigator().getPathToPos(taskLoc.up(2), 0), 1.2f);
+        } else if (kobold.getNavigation() != null) {
+            this.kobold.getNavigation().moveTo(this.kobold.getNavigation().createPath(taskLoc.above(2), 0), 1.2f);
         }
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
+    public boolean canContinueToUse() {
         return kobold.ticksSinceLastSpell > 60 && this.taskLoc != null && timePerformingTask < 300;
     }
 
     @Override
-    public boolean shouldExecute() {
+    public boolean canUse() {
         return kobold.canPerformAnotherTask() && kobold.enoughManaForTask();
     }
 }

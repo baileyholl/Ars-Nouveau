@@ -8,6 +8,8 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockDisplayReader;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class ModBlock extends Block {
 
 
@@ -21,7 +23,7 @@ public class ModBlock extends Block {
     }
 
     public static Block.Properties defaultProperties(){
-        return Block.Properties.create(Material.ROCK).sound(SoundType.STONE).hardnessAndResistance(2.0f, 6.0f);
+        return Block.Properties.of(Material.STONE).sound(SoundType.STONE).strength(2.0f, 6.0f);
     }
 
     @Override

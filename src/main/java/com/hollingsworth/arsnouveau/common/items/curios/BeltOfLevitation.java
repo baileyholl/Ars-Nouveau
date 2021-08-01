@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.item.ArsNouveauCurio;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.util.math.vector.Vector3d;
@@ -15,34 +16,36 @@ public class BeltOfLevitation extends ArsNouveauCurio {
 
     @Override
     public void wearableTick(LivingEntity player) {
+        if(player instanceof PlayerEntity && ((PlayerEntity) player).abilities.flying){
+            return;
+        }
 
-
-        if(!player.isOnGround() && player.isSneaking() && !player.world.isRemote){
+        if(!player.isOnGround() && player.isShiftKeyDown() && !player.level.isClientSide){
             boolean isTooHigh = true;
-            World world = player.getEntityWorld();
+            World world = player.getCommandSenderWorld();
             for(int i = 1; i < 6; i ++){
-                if(world.getBlockState(player.getPosition().down(i)).getMaterial() != Material.AIR) {
+                if(world.getBlockState(player.blockPosition().below(i)).getMaterial() != Material.AIR) {
                     isTooHigh = false;
                     break;
                 }
             }
 
             if(!isTooHigh) {
-                player.addPotionEffect(new EffectInstance(Effects.LEVITATION, 5, 2));
+                player.addEffect(new EffectInstance(Effects.LEVITATION, 5, 2));
             }else {
-                player.addPotionEffect(new EffectInstance(Effects.SLOW_FALLING, 5, 2));
+                player.addEffect(new EffectInstance(Effects.SLOW_FALLING, 5, 2));
             }
             player.fallDistance = 0.0f;
         }
-        if(player.world.isRemote){
-            Vector3d oldMotion = player.getMotion();
-            double y = oldMotion.getY();
-            Vector3d motion = player.getMotion().scale(1.1);
+        if(player.level.isClientSide){
+            Vector3d oldMotion = player.getDeltaMovement();
+            double y = oldMotion.y();
+            Vector3d motion = player.getDeltaMovement().scale(1.1);
             if(Math.sqrt(motion.length()) > 0.6){
                 return;
             }
-            player.setVelocity(motion.x, y, motion.z);
-            player.velocityChanged = true;
+            player.lerpMotion(motion.x, y, motion.z);
+            player.hurtMarked = true;
         }
     }
 }

@@ -9,7 +9,7 @@ public class BlockTagProvider extends BlockTagsProvider {
     }
 
     @Override
-    protected void registerTags() {
+    protected void addTags() {
 //        getOrCreateBuilder(Tags.Blocks.ORES).add(BlockRegistry.ARCANE_ORE);
     }
 }

@@ -8,6 +8,12 @@
 	"ars_nouveau:ab_herring",
 	"ars_nouveau:ab_basket",
 	"ars_nouveau:ab_alternating",
-	"ars_nouveau:ab_smooth_slab"
+	"ars_nouveau:ab_smooth_slab",
+	"ars_nouveau:sas_basket",
+	"ars_nouveau:sas_clover",
+	"ars_nouveau:sas_herring",
+	"ars_nouveau:sas_mosaic",
+	"ars_nouveau:sas_alternating",
+	"ars_nouveau:sas_ashlar"
   ]
 }

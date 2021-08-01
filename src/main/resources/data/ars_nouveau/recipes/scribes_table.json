@@ -7,13 +7,13 @@
   ],
   "key": {
     "x": {
-      "tag": "minecraft:wooden_slabs"
+      "item": "ars_nouveau:archwood_slab"
     },
     "y": {
       "item": "minecraft:stick"
     },
     "z": {
-      "tag": "minecraft:logs"
+      "tag": "forge:logs/archwood"
     }
   },
   "result": {

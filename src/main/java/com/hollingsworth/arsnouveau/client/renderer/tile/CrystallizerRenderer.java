@@ -25,13 +25,13 @@ public class CrystallizerRenderer extends TileEntityRenderer<CrystallizerTile> {
 
     @Override
     public void render(CrystallizerTile crystallizerTile, float f, MatrixStack ms, IRenderTypeBuffer buffers, int light, int overlay) {
-        World world = crystallizerTile.getWorld();
-        BlockPos pos  = crystallizerTile.getPos();
+        World world = crystallizerTile.getLevel();
+        BlockPos pos  = crystallizerTile.getBlockPos();
 
-        double x = crystallizerTile.getPos().getX();
-        double y = crystallizerTile.getPos().getY();
-        double z = crystallizerTile.getPos().getZ();
-        ms.push();
+        double x = crystallizerTile.getBlockPos().getX();
+        double y = crystallizerTile.getBlockPos().getY();
+        double z = crystallizerTile.getBlockPos().getZ();
+        ms.pushPose();
         ms.translate(0.5, -0.5, 0.5);
       //  model.render(ms, buffer, light, overlay, 1, 1, 1, 1, 1);
         boolean draining = crystallizerTile.draining;
@@ -39,12 +39,12 @@ public class CrystallizerRenderer extends TileEntityRenderer<CrystallizerTile> {
         int randBound = draining ? 3 : 6;
         int numParticles = draining ? 2 : 1;
         float scaleAge = draining ?(float) ParticleUtil.inRange(0.1, 0.2) : (float) ParticleUtil.inRange(0.05, 0.15);
-        if(world.rand.nextInt( randBound)  == 0){
+        if(world.random.nextInt( randBound)  == 0 && !Minecraft.getInstance().isPaused()){
             for(int i =0; i< numParticles; i++){
                 Vector3d particlePos = new Vector3d(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0.5, 0.5);
                 particlePos = particlePos.add(ParticleUtil.pointInSphere());
-                world.addParticle(ParticleLineData.createData(new ParticleColor(255,25,180) ,scaleAge, baseAge+world.rand.nextInt(20)) ,
-                        particlePos.getX(), particlePos.getY(), particlePos.getZ(),
+                world.addParticle(ParticleLineData.createData(new ParticleColor(255,25,180) ,scaleAge, baseAge+world.random.nextInt(20)) ,
+                        particlePos.x(), particlePos.y(), particlePos.z(),
                         pos.getX() + 0.5  , pos.getY() +0.5 , pos.getZ()+ 0.5);
             }
         }
@@ -52,16 +52,16 @@ public class CrystallizerRenderer extends TileEntityRenderer<CrystallizerTile> {
         if(crystallizerTile.stack == null)
             return;
 
-        if (crystallizerTile.entity == null || !ItemStack.areItemStacksEqual(crystallizerTile.entity.getItem(), crystallizerTile.stack)) {
-            crystallizerTile.entity = new ItemEntity(crystallizerTile.getWorld(), x ,y, z, crystallizerTile.stack);
+        if (crystallizerTile.entity == null || !ItemStack.matches(crystallizerTile.entity.getItem(), crystallizerTile.stack)) {
+            crystallizerTile.entity = new ItemEntity(crystallizerTile.getLevel(), x ,y, z, crystallizerTile.stack);
         }
-        crystallizerTile.entity.setPosition(x,y+1,z);
+        crystallizerTile.entity.setPos(x,y+1,z);
         ItemEntity entityItem = crystallizerTile.entity;
-        ms.pop();
-        ms.push();
+        ms.popPose();
+        ms.pushPose();
         ms.scale(0.5f, 0.5f, 0.5f);
         ms.translate(1D, 1f, 1D);
-        Minecraft.getInstance().getItemRenderer().renderItem(entityItem.getItem(), ItemCameraTransforms.TransformType.FIXED, 15728880, overlay, ms, buffers);
-        ms.pop();
+        Minecraft.getInstance().getItemRenderer().renderStatic(entityItem.getItem(), ItemCameraTransforms.TransformType.FIXED, 15728880, overlay, ms, buffers);
+        ms.popPose();
     }
 }

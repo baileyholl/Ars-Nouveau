@@ -1,0 +1,36 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:piercing",
+  "level": 2,
+  "mana": 5000,
+  "item_1": [
+    {
+      "item": "ars_nouveau:glyph_pierce"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:glyph_pierce"
+    }
+  ],
+  "item_3": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_4": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_5": [
+    {
+      "tag": "forge:storage_blocks/lapis"
+    }
+  ],
+  "item_6": [
+    {
+      "tag": "forge:storage_blocks/lapis"
+    }
+  ]
+}

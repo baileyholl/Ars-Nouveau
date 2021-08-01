@@ -17,28 +17,28 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.minecraft.entity.ai.goal.Goal.Flag;
+
 public class FindNextItemGoal extends Goal {
     EntityWixie wixie;
     BlockPos movePos;
     ItemStack getStack;
     boolean found;
-    int ticksSinceCast;
-    boolean hasCast;
 
     public FindNextItemGoal(EntityWixie wixie){
         this.wixie = wixie;
-        this.setMutexFlags(EnumSet.of(Flag.LOOK, Flag.MOVE));
+        this.setFlags(EnumSet.of(Flag.LOOK, Flag.MOVE));
     }
 
     @Override
-    public void startExecuting() {
-        World world = wixie.getEntityWorld();
-        WixieCauldronTile tile = (WixieCauldronTile) world.getTileEntity(wixie.cauldronPos);
+    public void start() {
+        World world = wixie.getCommandSenderWorld();
+        WixieCauldronTile tile = (WixieCauldronTile) world.getBlockEntity(wixie.cauldronPos);
         if(tile == null || tile.inventories == null) {
             found = true;
             return;
         }
-        getStack = tile.craftManager.getNextItem();//tile.getNextRequiredItem();
+        getStack = tile.craftManager.getNextItem();
         if(getStack.isEmpty()){
             found = true;
             return;
@@ -46,10 +46,10 @@ public class FindNextItemGoal extends Goal {
         Set<Item> itemSet = new HashSet<>();
         itemSet.add(getStack.getItem());
         for(BlockPos b : tile.inventories){
-            if(!(world.getTileEntity(b) instanceof IInventory))
+            if(!(world.getBlockEntity(b) instanceof IInventory))
                 continue;
-            IInventory i = (IInventory) world.getTileEntity(b);
-            if(i.hasAny(itemSet)){
+            IInventory i = (IInventory) world.getBlockEntity(b);
+            if(i.hasAnyOf(itemSet)){
                 movePos = b;
                 break;
             }
@@ -58,44 +58,45 @@ public class FindNextItemGoal extends Goal {
     }
 
     @Override
-    public boolean shouldExecute() {
+    public boolean canUse() {
         if(wixie.cauldronPos == null)
             return false;
-
-        TileEntity tileEntity = wixie.world.getTileEntity(wixie.cauldronPos);
+        TileEntity tileEntity = wixie.level.getBlockEntity(wixie.cauldronPos);
         return wixie.inventoryBackoff == 0 && tileEntity instanceof WixieCauldronTile
-                && ((WixieCauldronTile) tileEntity).hasMana && !((WixieCauldronTile) tileEntity).isCraftingDone() && !((WixieCauldronTile) tileEntity).isOff;
+                && ((WixieCauldronTile) tileEntity).hasMana && !((WixieCauldronTile) tileEntity).isCraftingDone() && !((WixieCauldronTile) tileEntity).isOff &&  !((WixieCauldronTile) tileEntity).craftManager.getNextItem().isEmpty();
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
-        return !found;
+    public boolean canContinueToUse() {
+        return !found && movePos != null;
     }
 
     @Override
     public void tick() {
 
-        if(!found && movePos != null && BlockUtil.distanceFrom(wixie.getPosition(), movePos.up()) < 1.5D){
-            WixieCauldronTile tile = (WixieCauldronTile) wixie.getEntityWorld().getTileEntity(wixie.cauldronPos);
-            World world = wixie.getEntityWorld();
+        if(!found && movePos != null && BlockUtil.distanceFrom(wixie.blockPosition(), movePos.above()) < 1.5D){
+
+            WixieCauldronTile tile = (WixieCauldronTile) wixie.getCommandSenderWorld().getBlockEntity(wixie.cauldronPos);
+            World world = wixie.getCommandSenderWorld();
             if(tile == null) {
                 found = true;
                 return;
             }
 
             for(BlockPos b : tile.inventories){
-                if(!(world.getTileEntity(b) instanceof IInventory))
+
+                if(!(world.getBlockEntity(b) instanceof IInventory))
                     continue;
-                IInventory i = (IInventory) world.getTileEntity(b);
-                for(int j = 0; j < i.getSizeInventory(); j++) {
-                    if (i.getStackInSlot(j).getItem() == getStack.getItem()) {
+                IInventory i = (IInventory) world.getBlockEntity(b);
+                for(int j = 0; j < i.getContainerSize(); j++) {
+                    if (i.getItem(j).getItem() == getStack.getItem()) {
                         found = true;
-                        ItemStack stackToGive = i.getStackInSlot(j).copy();
+                        ItemStack stackToGive = i.getItem(j).copy();
                         tile.spawnFlyingItem(b,stackToGive);
                         stackToGive.setCount(1);
                         tile.giveItem(stackToGive);
-                        i.getStackInSlot(j).shrink(1);
-                        Networking.sendToNearby(world, wixie, new PacketAnimEntity(wixie.getEntityId(), EntityWixie.Animations.SUMMON_ITEM.ordinal()));
+                        i.getItem(j).shrink(1);
+                        Networking.sendToNearby(world, wixie, new PacketAnimEntity(wixie.getId(), EntityWixie.Animations.SUMMON_ITEM.ordinal()));
                         wixie.inventoryBackoff = 60;
                         break;
                     }
@@ -111,7 +112,7 @@ public class FindNextItemGoal extends Goal {
     }
 
     public void setPath(double x, double y, double z, double speedIn){
-        wixie.getNavigator().setPath( wixie.getNavigator().getPathToPos(x+0.5, y+0.5, z+0.5, 0), speedIn);
+        wixie.getNavigation().moveTo( wixie.getNavigation().createPath(x+0.5, y+0.5, z+0.5, 0), speedIn);
     }
 
 }

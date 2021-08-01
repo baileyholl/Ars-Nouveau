@@ -1,17 +1,19 @@
 {
   "name": "熔炼",
   "icon": "ars_nouveau:glyph_smelt",
-  "category": "spells",
+  "category": "spells_2",
+  "sortnum": 2,
   "pages": [
     {
       "type": "text",
-      "text": "熔炼方块和物品。「AOE」可增加同时熔炼的物品数和方块范围，「倍化」可熔炼更高硬度的方块。"
+      "text": "ars_nouveau.glyph_desc.smelt"
     },
     {
       "type": "glyph_recipe",
-      "tier": "1",
-      "mana_cost": "中",
-      "clay_type": "ars_nouveau:magic_clay",
+      "recipe": "ars_nouveau:glyph_smelt",
+      "tier": "二",
+      "mana_cost": "高",
+      "clay_type": "ars_nouveau:marvelous_clay",
       "reagent": "minecraft:blast_furnace"
     }
   ]

@@ -1,0 +1,17 @@
+{
+  "variants": {
+    "fill=0": { "model": "ars_nouveau:block/potion_jar/potion_jar_0" },
+	"fill=1": { "model": "ars_nouveau:block/potion_jar/potion_jar_sliver" },
+	"fill=2": { "model": "ars_nouveau:block/potion_jar/potion_jar10" },
+	"fill=3": { "model": "ars_nouveau:block/potion_jar/potion_jar20" },
+	"fill=4": { "model": "ars_nouveau:block/potion_jar/potion_jar30" },
+	"fill=5": { "model": "ars_nouveau:block/potion_jar/potion_jar40" },
+	"fill=6": { "model": "ars_nouveau:block/potion_jar/potion_jar50" },
+	"fill=7": { "model": "ars_nouveau:block/potion_jar/potion_jar60" },
+	"fill=8": { "model": "ars_nouveau:block/potion_jar/potion_jar70" },
+	"fill=9": { "model": "ars_nouveau:block/potion_jar/potion_jar80" },
+	"fill=10": { "model": "ars_nouveau:block/potion_jar/potion_jar90" },
+	"fill=11": { "model": "ars_nouveau:block/potion_jar/potion_jar100" }
+	
+  }
+}

@@ -23,7 +23,7 @@ public class GlyphRecipeProvider implements IDataProvider {
         this.generator = generatorIn;
     }
     @Override
-    public void act(DirectoryCache cache) throws IOException {
+    public void run(DirectoryCache cache) throws IOException {
         List<Glyph> glyphList = ArsNouveauAPI.getInstance().getGlyphMap().values().stream().collect(Collectors.toList());
         Path output = this.generator.getOutputFolder();
         for(Glyph g : glyphList){

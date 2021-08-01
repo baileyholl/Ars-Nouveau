@@ -1,0 +1,46 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "ars_nouveau:reactive",
+  "level": 2,
+  "mana": 6000,
+  "item_1": [
+    {
+      "item": "minecraft:blaze_powder"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "minecraft:blaze_powder"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "minecraft:blaze_powder"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "minecraft:blaze_powder"
+    }
+  ],
+  "item_5": [
+    {
+      "tag": "forge:storage_blocks/gold"
+    }
+  ],
+  "item_6": [
+    {
+      "item": "ars_nouveau:glyph_extend_time"
+    }
+  ],
+  "item_7": [
+    {
+      "item": "ars_nouveau:glyph_aoe"
+    }
+  ],
+  "item_8": [
+    {
+      "item": "ars_nouveau:glyph_dampen"
+    }
+  ]
+}

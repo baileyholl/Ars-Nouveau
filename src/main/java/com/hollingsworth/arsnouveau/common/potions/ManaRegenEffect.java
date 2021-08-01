@@ -6,7 +6,7 @@ import net.minecraft.potion.EffectType;
 
 public class ManaRegenEffect extends Effect {
     protected ManaRegenEffect() {
-        super(EffectType.BENEFICIAL, 2039587);
+        super(EffectType.BENEFICIAL, 8080895);
         setRegistryName(ArsNouveau.MODID, "mana_regen");
     }
 }

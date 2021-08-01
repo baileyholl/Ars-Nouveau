@@ -32,9 +32,9 @@ public class BonemealGoal extends DistanceRestrictedGoal {
     public final Predicate<BlockState> IS_GRASS = BlockStateMatcher.forBlock(Blocks.GRASS_BLOCK);
 
     public BonemealGoal(EntitySylph sylph){
-        super(()->sylph.getPosition(), 0);
+        super(()->sylph.blockPosition(), 0);
         this.sylph = sylph;
-        this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK, Goal.Flag.JUMP));
+        this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK, Goal.Flag.JUMP));
     }
 
     public BonemealGoal(EntitySylph sylph, Supplier<BlockPos> from, int distanceFrom){
@@ -43,7 +43,7 @@ public class BonemealGoal extends DistanceRestrictedGoal {
     }
 
     @Override
-    public void resetTask() {
+    public void stop() {
         this.timeGrowing = 0;
         this.growPos = null;
     }
@@ -54,11 +54,11 @@ public class BonemealGoal extends DistanceRestrictedGoal {
         if(this.growPos == null) {
             return;
         }
-        if(BlockUtil.distanceFrom(sylph.getPosition(), this.growPos) > 1.2){
-            sylph.getNavigator().tryMoveToXYZ(this.growPos.getX(), this.growPos.getY(), this.growPos.getZ(), 1.2);
+        if(BlockUtil.distanceFrom(sylph.blockPosition(), this.growPos) > 1.2){
+            sylph.getNavigation().moveTo(this.growPos.getX(), this.growPos.getY(), this.growPos.getZ(), 1.2);
         }else{
-            ServerWorld world = (ServerWorld) sylph.world;
-            world.spawnParticle(ParticleTypes.COMPOSTER, this.growPos.getX() +0.5, this.growPos.getY()+1.1, this.growPos.getZ()+0.5, 1, ParticleUtil.inRange(-0.2, 0.2),0,ParticleUtil.inRange(-0.2, 0.2),0.01);
+            ServerWorld world = (ServerWorld) sylph.level;
+            world.sendParticles(ParticleTypes.COMPOSTER, this.growPos.getX() +0.5, this.growPos.getY()+1.1, this.growPos.getZ()+0.5, 1, ParticleUtil.inRange(-0.2, 0.2),0,ParticleUtil.inRange(-0.2, 0.2),0.01);
             this.timeGrowing--;
             if(this.timeGrowing <= 0){
                 sylph.timeSinceBonemeal = 0;
@@ -69,27 +69,27 @@ public class BonemealGoal extends DistanceRestrictedGoal {
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
+    public boolean canContinueToUse() {
         return this.timeGrowing > 0 && growPos != null && sylph.timeSinceBonemeal >= (60 * 20 * 5) && isInRange(growPos);
     }
 
     @Override
-    public boolean shouldExecute() {
-        return isInRange(sylph.getPosition()) && sylph.timeSinceBonemeal >= (60 * 20 * 5) && sylph.world.rand.nextInt(5) == 0;
+    public boolean canUse() {
+        return  sylph.level.random.nextInt(5) == 0 && sylph.timeSinceBonemeal >= (60 * 20 * 5) && isInRange(sylph.blockPosition());
     }
 
     @Override
-    public void startExecuting() {
-        World world = sylph.world;
+    public void start() {
+        World world = sylph.level;
         int range = 4;
-        if(this.IS_GRASS.test(world.getBlockState(sylph.getPosition().down())) && world.getBlockState(sylph.getPosition()).getMaterial() == Material.AIR){
-            this.growPos = sylph.getPosition().down();
+        if(this.IS_GRASS.test(world.getBlockState(sylph.blockPosition().below())) && world.getBlockState(sylph.blockPosition()).getMaterial() == Material.AIR){
+            this.growPos = sylph.blockPosition().below();
 
         }else{
             List<BlockPos> list = new ArrayList<>();
-            BlockPos.getAllInBox(sylph.getPosition().add(range, range, range), sylph.getPosition().add(-range, -range, -range)).forEach(bp ->{
-                bp = bp.toImmutable();
-                if(IS_GRASS.test(world.getBlockState(bp)) && world.getBlockState(bp.up()).getMaterial() == Material.AIR)
+            BlockPos.betweenClosedStream(sylph.blockPosition().offset(range, range, range), sylph.blockPosition().offset(-range, -range, -range)).forEach(bp ->{
+                bp = bp.immutable();
+                if(IS_GRASS.test(world.getBlockState(bp)) && world.getBlockState(bp.above()).getMaterial() == Material.AIR)
                     list.add(bp);
             });
             Collections.shuffle(list);

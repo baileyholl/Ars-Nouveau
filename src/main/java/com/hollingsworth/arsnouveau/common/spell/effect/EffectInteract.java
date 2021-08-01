@@ -1,8 +1,10 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.ModConfig;
+import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -14,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.ShearsItem;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
@@ -22,64 +25,91 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IForgeShearable;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
+import net.minecraftforge.items.CapabilityItemHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class EffectInteract extends AbstractEffect {
-    public EffectInteract() {
-        super(ModConfig.EffectInteractID, "Interact");
+    public static EffectInteract INSTANCE = new EffectInteract();
+
+    private EffectInteract() {
+        super(GlyphLib.EffectInteractID, "Interact");
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof BlockRayTraceResult){
-            if(isRealPlayer(shooter))
-                world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos()).onBlockActivated(world, (PlayerEntity)shooter, Hand.MAIN_HAND, (BlockRayTraceResult)rayTraceResult);
-            else if(world instanceof ServerWorld){
-                FakePlayer player = new ANFakePlayer((ServerWorld) world);
-                ItemStack stack = shooter instanceof IInteractResponder ? shooter.getHeldItemOffhand().copy() : ItemStack.EMPTY;
-                player.setHeldItem(Hand.MAIN_HAND, stack);
-                world.getBlockState(((BlockRayTraceResult) rayTraceResult).getPos()).onBlockActivated(world, player, Hand.MAIN_HAND, (BlockRayTraceResult)rayTraceResult);
-            }
-        }
-        if(rayTraceResult instanceof EntityRayTraceResult){
-            Entity e = ((EntityRayTraceResult) rayTraceResult).getEntity();
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        Entity e = rayTraceResult.getEntity();
+        if(e instanceof AnimalEntity){
+            if(shooter instanceof PlayerEntity){
+                ((AnimalEntity) e).mobInteract((PlayerEntity) shooter, Hand.MAIN_HAND);
 
-            if(e instanceof AnimalEntity){
-                if(shooter instanceof PlayerEntity){
-                    ((AnimalEntity) e).func_230254_b_((PlayerEntity) shooter, Hand.MAIN_HAND);
-
-                }else if (shooter instanceof IInteractResponder){
-                    FakePlayer fakePlayer = FakePlayerFactory.getMinecraft((ServerWorld)world);
-                    fakePlayer.inventory.clear();
-                    fakePlayer.setPosition(e.getPosX(), e.getPosY(), e.getPosZ());
-                    ItemStack stack = ((IInteractResponder) shooter).getHeldItem().copy();
-                    fakePlayer.setHeldItem(Hand.MAIN_HAND, stack);
-                    e.processInitialInteract( fakePlayer, Hand.MAIN_HAND);
-                    List<ItemStack> items = new ArrayList<>();
-                    if(e instanceof IForgeShearable && fakePlayer.getHeldItemMainhand().getItem() instanceof ShearsItem && ((IForgeShearable) e).isShearable(fakePlayer.getHeldItemMainhand(), world, e.getPosition())){
-                        items.addAll(((IForgeShearable) e).onSheared(fakePlayer, fakePlayer.getHeldItemMainhand(), world, e.getPosition(),
-                                EnchantmentHelper.getEnchantmentLevel(net.minecraft.enchantment.Enchantments.FORTUNE,fakePlayer.getHeldItemMainhand())));
-                    }
-                    items.addAll(fakePlayer.inventory.mainInventory);
-                    items.addAll(fakePlayer.inventory.armorInventory);
-                    items.addAll(fakePlayer.inventory.offHandInventory);
-                    returnItems(rayTraceResult, world, shooter, augments, spellContext, items);
+            }else if (shooter instanceof IInteractResponder){
+                FakePlayer fakePlayer = FakePlayerFactory.getMinecraft((ServerWorld)world);
+                fakePlayer.inventory.clearContent();
+                fakePlayer.setPos(e.getX(), e.getY(), e.getZ());
+                ItemStack stack = ((IInteractResponder) shooter).getHeldItem().copy();
+                fakePlayer.setItemInHand(Hand.MAIN_HAND, stack);
+                e.interact( fakePlayer, Hand.MAIN_HAND);
+                List<ItemStack> items = new ArrayList<>();
+                if(e instanceof IForgeShearable && fakePlayer.getMainHandItem().getItem() instanceof ShearsItem && ((IForgeShearable) e).isShearable(fakePlayer.getMainHandItem(), world, e.blockPosition())){
+                    items.addAll(((IForgeShearable) e).onSheared(fakePlayer, fakePlayer.getMainHandItem(), world, e.blockPosition(),
+                            EnchantmentHelper.getItemEnchantmentLevel(net.minecraft.enchantment.Enchantments.BLOCK_FORTUNE,fakePlayer.getMainHandItem())));
                 }
+                items.addAll(fakePlayer.inventory.items);
+                items.addAll(fakePlayer.inventory.armor);
+                items.addAll(fakePlayer.inventory.offhand);
+                returnItems(rayTraceResult, world, shooter, items);
             }
         }
     }
 
-    public void returnItems(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext, List<ItemStack> items){
+    @Override
+    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        BlockPos blockPos = rayTraceResult.getBlockPos();
+        BlockState blockState = world.getBlockState(blockPos);
+        if(!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, blockPos))
+            return;
+
+        // Stop duping shears on blocks that create a new itemstack on right click
+        if(world.getBlockEntity(blockPos) != null && world.getBlockEntity(blockPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent())
+            return;
+
+        if (isRealPlayer(shooter)) {
+            blockState.use(world, (PlayerEntity) shooter, Hand.MAIN_HAND, rayTraceResult);
+        } else {
+            FakePlayer player = ANFakePlayer.getPlayer((ServerWorld) world);
+            // NOTE: Get IInteractResponder held item if we have one
+            ItemStack stack = shooter instanceof IInteractResponder ? ((IInteractResponder) shooter).getHeldItem().copy() : ItemStack.EMPTY;
+            player.setItemInHand(Hand.MAIN_HAND, stack);
+
+            blockState.use(world, player, Hand.MAIN_HAND, rayTraceResult);
+
+            // NOTE: Return all items that were used by the fake player
+            // NOTE: Returning of items should probably not only be done for shears. But for now it's better than not returning shears
+            List<ItemStack> items = new ArrayList<>();
+            if (player.getMainHandItem().getItem() instanceof ShearsItem) {
+                items.addAll(player.inventory.items);
+                items.addAll(player.inventory.armor);
+                items.addAll(player.inventory.offhand);
+                returnItems(rayTraceResult, world, shooter, items);
+            }
+
+
+        }
+    }
+
+    public void returnItems(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<ItemStack> items){
         for(ItemStack i : items){
             if(shooter instanceof IPickupResponder){
                 ItemStack leftOver = ((IPickupResponder) shooter).onPickup(i);
                 if(!leftOver.isEmpty())
-                    world.addEntity(new ItemEntity(world, rayTraceResult.getHitVec().x, rayTraceResult.getHitVec().y, rayTraceResult.getHitVec().z, leftOver));
+                    world.addFreshEntity(new ItemEntity(world, rayTraceResult.getLocation().x, rayTraceResult.getLocation().y, rayTraceResult.getLocation().z, leftOver));
             }else{
-                world.addEntity(new ItemEntity(world, rayTraceResult.getHitVec().x, rayTraceResult.getHitVec().y, rayTraceResult.getHitVec().z, i));
+                world.addFreshEntity(new ItemEntity(world, rayTraceResult.getLocation().x, rayTraceResult.getLocation().y, rayTraceResult.getLocation().z, i));
             }
         }
     }
@@ -95,6 +125,12 @@ public class EffectInteract extends AbstractEffect {
         return Items.LEVER;
     }
 
+    @Nonnull
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return augmentSetOf();
+    }
+
     @Override
     public String getBookDescription() {
         return "Interacts with blocks or entities as it were a player. Useful for reaching levers, chests, or animals.";
@@ -103,5 +139,11 @@ public class EffectInteract extends AbstractEffect {
     @Override
     public int getManaCost() {
         return 10;
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.MANIPULATION);
     }
 }

@@ -31,18 +31,18 @@ public class IntangibleAirRenderer extends TileEntityRenderer<IntangibleAirTile>
         super(rendererDispatcherIn);
     }
     static class DummyRender extends net.minecraft.client.renderer.RenderType{
-        public static final RenderType RenderBlock = makeType("MiningLaserRenderBlock",
+        public static final RenderType RenderBlock = create("MiningLaserRenderBlock",
                 DefaultVertexFormats.BLOCK, GL11.GL_QUADS, 256,
-                RenderType.State.getBuilder()
-                        .shadeModel(SHADE_ENABLED)
-                        .lightmap(LIGHTMAP_ENABLED)
-                        .texture(BLOCK_SHEET_MIPPED)
-                        .layer(field_239235_M_)
-                        .transparency(TRANSLUCENT_TRANSPARENCY)
-                        .depthTest(DEPTH_LEQUAL)
-                        .cull(CULL_ENABLED)
-                        .writeMask(COLOR_WRITE)
-                        .build(false));
+                RenderType.State.builder()
+                        .setShadeModelState(SMOOTH_SHADE)
+                        .setLightmapState(LIGHTMAP)
+                        .setTextureState(BLOCK_SHEET_MIPPED)
+                        .setLayeringState(VIEW_OFFSET_Z_LAYERING)
+                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                        .setDepthTestState(LEQUAL_DEPTH_TEST)
+                        .setCullState(CULL)
+                        .setWriteMaskState(COLOR_WRITE)
+                        .createCompositeState(false));
 
         public DummyRender(String nameIn, VertexFormat formatIn, int drawModeIn, int bufferSizeIn, boolean useDelegateIn, boolean needsSortingIn, Runnable setupTaskIn, Runnable clearTaskIn) {
             super(nameIn, formatIn, drawModeIn, bufferSizeIn, useDelegateIn, needsSortingIn, setupTaskIn, clearTaskIn);
@@ -56,7 +56,7 @@ public class IntangibleAirRenderer extends TileEntityRenderer<IntangibleAirTile>
             float f1;
             float f2;
 
-            if (bakedquad.hasTintIndex()) {
+            if (bakedquad.isTinted()) {
                 f = red * 1f;
                 f1 = green * 1f;
                 f2 = blue * 1f;
@@ -72,28 +72,28 @@ public class IntangibleAirRenderer extends TileEntityRenderer<IntangibleAirTile>
 
     @Override
     public void render(IntangibleAirTile tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
-        BlockState renderState = Block.getStateById(tileEntityIn.stateID);
+        BlockState renderState = Block.stateById(tileEntityIn.stateID);
         if(renderState == null)
             return;
         double scale = ((double)tileEntityIn.duration)/(double)tileEntityIn.maxLength;
 
-        BlockRendererDispatcher blockrendererdispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
-        Minecraft.getInstance().getTextureManager().bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
-        IBakedModel ibakedmodel = blockrendererdispatcher.getModelForState(renderState);
+        BlockRendererDispatcher blockrendererdispatcher = Minecraft.getInstance().getBlockRenderer();
+        Minecraft.getInstance().getTextureManager().bind(PlayerContainer.BLOCK_ATLAS);
+        IBakedModel ibakedmodel = blockrendererdispatcher.getBlockModel(renderState);
         BlockColors blockColors = Minecraft.getInstance().getBlockColors();
-        int color = blockColors.getColor(renderState, tileEntityIn.getWorld(), tileEntityIn.getPos(), 0);
+        int color = blockColors.getColor(renderState, tileEntityIn.getLevel(), tileEntityIn.getBlockPos(), 0);
         float f = (float) (color >> 16 & 255) / 255.0F;
         float f1 = (float) (color >> 8 & 255) / 255.0F;
         float f2 = (float) (color & 255) / 255.0F;
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
 
 
         for (Direction direction : Direction.values()) {
-            if (!(tileEntityIn.getWorld().getBlockState(tileEntityIn.getPos().offset(direction)).getBlock() instanceof IntangibleAirBlock)) {
-                renderModelBrightnessColorQuads(matrixStackIn.getLast(), bufferIn.getBuffer(DummyRender.RenderBlock), f, f1, f2, (float)scale, ibakedmodel.getQuads(renderState, direction, new Random(MathHelper.getPositionRandom(tileEntityIn.getPos())), EmptyModelData.INSTANCE), combinedLightIn, combinedOverlayIn);
+            if (!(tileEntityIn.getLevel().getBlockState(tileEntityIn.getBlockPos().relative(direction)).getBlock() instanceof IntangibleAirBlock)) {
+                renderModelBrightnessColorQuads(matrixStackIn.last(), bufferIn.getBuffer(DummyRender.RenderBlock), f, f1, f2, (float)scale, ibakedmodel.getQuads(renderState, direction, new Random(MathHelper.getSeed(tileEntityIn.getBlockPos())), EmptyModelData.INSTANCE), combinedLightIn, combinedOverlayIn);
             }
         }
 
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
     }
 }

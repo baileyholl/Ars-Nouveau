@@ -1,0 +1,21 @@
+{
+    "name": "Changelog 1.11.3",
+    "icon": "ars_nouveau:glyph_summon_vex",
+    "category": "release_notes",
+	"sortnum":80,
+    "pages": [
+        {
+            "type": "text",
+            "text": "¡Ars Nouveau 1.11.3 Arreglos!$(li)Las Torretas de Hechizos y las Runas ahora pueden usar Pergaminos de Teletrasnportación de inventarios adyacentes con Parpadeo$(li)Se han arreglado los crasheos con los Carbuncles $(li)El Aparato de Encantar a sido reinventado y hay nuevo feedback en cuanto a las recetas$(li)¡Los Vexes solo atacarán a enemigos, no a los Carbuncles!$(li)Se ha añadido la mecánica de Enfermadad de Invocación, más contenido relacionado pronto."       
+        }, {
+            "type": "text",
+            "text": "$(li)Se ha añadido un comando para resetear los bonus de maná de los glifos $(li)El Aparato de Encantar ha sido reinventado para recibir feedback como la Prensa de Glifos.$(li)Se ha arreglado un error con los Carbuncles fallando al filtrar cuando hay marcos adyacentes $(li)Los Grimorios ahora pueden ser encantados$(li)Se han arreglado el Arcos y la Vara ya que perdían su nombre $(li)Disipar ahora imita leche y respeta efectos de mods.$(li)Las Flores de Maná y sus semillas ahora se pueden meter en el Compostador"       
+        },{
+            "type": "text",
+            "text": "$(li)La Archwood ahora puede ser fundida en Carbón Vegetal"       
+        },{
+            "type": "relations",
+            "entries":["items/spell_bow","spells/blink"]        
+        }
+    ]
+}

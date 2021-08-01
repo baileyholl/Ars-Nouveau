@@ -23,21 +23,21 @@ public class EntityEvokerFangs extends EvokerFangsEntity {
     private boolean clientSideAttackStarted;
     private LivingEntity caster;
     private UUID casterUuid;
-    float bonusDamage;
 
+    float damage;
     public EntityEvokerFangs(EntityType<? extends EvokerFangsEntity> p_i50170_1_, World p_i50170_2_) {
         super(p_i50170_1_, p_i50170_2_);
     }
 
 
 
-    public EntityEvokerFangs(World worldIn, double x, double y, double z, float p_i47276_8_, int p_i47276_9_, LivingEntity casterIn, float bonusDamage) {
+    public EntityEvokerFangs(World worldIn, double x, double y, double z, float p_i47276_8_, int p_i47276_9_, LivingEntity casterIn, float damage) {
         this(EntityType.EVOKER_FANGS, worldIn);
         this.warmupDelayTicks = p_i47276_9_;
-        this.setCaster(casterIn);
-        this.rotationYaw = p_i47276_8_ * (180F / (float)Math.PI);
-        this.setPosition(x, y, z);
-        this.bonusDamage = bonusDamage;
+        this.setOwner(casterIn);
+        this.yRot = p_i47276_8_ * (180F / (float)Math.PI);
+        this.setPos(x, y, z);
+        this.damage = damage;
     }
 
 
@@ -46,34 +46,34 @@ public class EntityEvokerFangs extends EvokerFangsEntity {
      */
     public void tick() {
         // Entity.super
-        if (!this.world.isRemote) {
-            this.setFlag(6, this.isGlowing());
+        if (!this.level.isClientSide) {
+            this.setSharedFlag(6, this.isGlowing());
         }
         this.baseTick();
-        if (this.world.isRemote) {
+        if (this.level.isClientSide) {
             if (this.clientSideAttackStarted) {
                 --this.lifeTicks;
                 if (this.lifeTicks == 14) {
                     for(int i = 0; i < 12; ++i) {
-                        double d0 = this.getPosX() + (this.rand.nextDouble() * 2.0D - 1.0D) * (double)this.getWidth() * 0.5D;
-                        double d1 = this.getPosY() + 0.05D + this.rand.nextDouble();
-                        double d2 = this.getPosZ() + (this.rand.nextDouble() * 2.0D - 1.0D) * (double)this.getWidth() * 0.5D;
-                        double d3 = (this.rand.nextDouble() * 2.0D - 1.0D) * 0.3D;
-                        double d4 = 0.3D + this.rand.nextDouble() * 0.3D;
-                        double d5 = (this.rand.nextDouble() * 2.0D - 1.0D) * 0.3D;
-                        this.world.addParticle(ParticleTypes.CRIT, d0, d1 + 1.0D, d2, d3, d4, d5);
+                        double d0 = this.getX() + (this.random.nextDouble() * 2.0D - 1.0D) * (double)this.getBbWidth() * 0.5D;
+                        double d1 = this.getY() + 0.05D + this.random.nextDouble();
+                        double d2 = this.getZ() + (this.random.nextDouble() * 2.0D - 1.0D) * (double)this.getBbWidth() * 0.5D;
+                        double d3 = (this.random.nextDouble() * 2.0D - 1.0D) * 0.3D;
+                        double d4 = 0.3D + this.random.nextDouble() * 0.3D;
+                        double d5 = (this.random.nextDouble() * 2.0D - 1.0D) * 0.3D;
+                        this.level.addParticle(ParticleTypes.CRIT, d0, d1 + 1.0D, d2, d3, d4, d5);
                     }
                 }
             }
         } else if (--this.warmupDelayTicks < 0) {
             if (this.warmupDelayTicks == -8) {
-                for(LivingEntity livingentity : this.world.getEntitiesWithinAABB(LivingEntity.class, this.getBoundingBox().grow(0.2D, 0.0D, 0.2D))) {
+                for(LivingEntity livingentity : this.level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(0.2D, 0.0D, 0.2D))) {
                     this.damage(livingentity);
                 }
             }
 
             if (!this.sentSpikeEvent) {
-                this.world.setEntityState(this, (byte)4);
+                this.level.broadcastEntityEvent(this, (byte)4);
                 this.sentSpikeEvent = true;
             }
 
@@ -85,47 +85,45 @@ public class EntityEvokerFangs extends EvokerFangsEntity {
     }
 
     private void damage(LivingEntity p_190551_1_) {
-        LivingEntity livingentity = this.getCaster();
-        float damage = 6.0f + bonusDamage;
+        LivingEntity livingentity = this.getOwner();
         if (p_190551_1_.isAlive() && !p_190551_1_.isInvulnerable() && p_190551_1_ != livingentity) {
             if (livingentity == null) {
-                p_190551_1_.attackEntityFrom(DamageSource.MAGIC, damage);
+                p_190551_1_.hurt(DamageSource.MAGIC, damage);
             } else {
-                if (livingentity.isOnSameTeam(p_190551_1_)) {
+                if (livingentity.isAlliedTo(p_190551_1_)) {
                     return;
                 }
-                p_190551_1_.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, livingentity), damage);
+                p_190551_1_.hurt(DamageSource.indirectMagic(this, livingentity), damage);
             }
         }
     }
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
-    protected void readAdditional(CompoundNBT compound) {
+    protected void readAdditionalSaveData(CompoundNBT compound) {
         this.warmupDelayTicks = compound.getInt("Warmup");
-        if (compound.hasUniqueId("OwnerUUID")) {
-            this.casterUuid = compound.getUniqueId("OwnerUUID");
+        if (compound.hasUUID("OwnerUUID")) {
+            this.casterUuid = compound.getUUID("OwnerUUID");
         }
 
     }
 
-    protected void writeAdditional(CompoundNBT compound) {
+    protected void addAdditionalSaveData(CompoundNBT compound) {
         compound.putInt("Warmup", this.warmupDelayTicks);
         if (this.casterUuid != null) {
-            compound.putUniqueId("OwnerUUID", this.casterUuid);
+            compound.putUUID("OwnerUUID", this.casterUuid);
         }
 
     }
-    /**
-     * Handler for {@link World#setEntityState}
-     */
+
+
     @OnlyIn(Dist.CLIENT)
-    public void handleStatusUpdate(byte id) {
-        super.handleStatusUpdate(id);
+    public void handleEntityEvent(byte id) {
+        super.handleEntityEvent(id);
         if (id == 4) {
             this.clientSideAttackStarted = true;
             if (!this.isSilent()) {
-                this.world.playSound(this.getPosX(), this.getPosY(), this.getPosZ(), SoundEvents.ENTITY_EVOKER_FANGS_ATTACK, this.getSoundCategory(), 1.0F, this.rand.nextFloat() * 0.2F + 0.85F, false);
+                this.level.playLocalSound(this.getX(), this.getY(), this.getZ(), SoundEvents.EVOKER_FANGS_ATTACK, this.getSoundSource(), 1.0F, this.random.nextFloat() * 0.2F + 0.85F, false);
             }
         }
 

@@ -14,7 +14,7 @@ public class PacketWarpPosition {
     double y;
     double z;
     public PacketWarpPosition( Entity entity,double x, double y, double z){
-        this.entityID = entity.getEntityId();
+        this.entityID = entity.getId();
         this.x = x;
         this.y = y;
         this.z = z;
@@ -49,11 +49,11 @@ public class PacketWarpPosition {
                 @Override
                 public void run() {
                     Minecraft mc = Minecraft.getInstance();
-                    ClientWorld world = mc.world;
-                    Entity e = world.getEntityByID(message.entityID);
+                    ClientWorld world = mc.level;
+                    Entity e = world.getEntity(message.entityID);
                     if(e == null)
                         return;
-                    e.setPosition(message.x, message.y, message.z);
+                    e.setPos(message.x, message.y, message.z);
                 }
             });
             ctx.get().setPacketHandled(true);

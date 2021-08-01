@@ -2,9 +2,6 @@ package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.client.particle.engine.ParticleEngine;
-import com.hollingsworth.arsnouveau.client.particle.engine.TimedBeam;
-import com.hollingsworth.arsnouveau.client.particle.engine.TimedHelix;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.network.PacketBuffer;
@@ -96,26 +93,15 @@ public class PacketANEffect {
                 @Override
                 public void run() {
                     Minecraft mc = Minecraft.getInstance();
-                    ClientWorld world = mc.world;
+                    ClientWorld world = mc.level;
                     switch (message.type){
-                        case TIMED_GLOW:{
-                            BlockPos fromPos = new BlockPos(message.x + 0.5, message.y + 0.5, message.z + 0.5);
-                            BlockPos destPos = new BlockPos(message.args[0], message.args[1],message.args[2]);
-                            int delay = message.args[3];
-                            ParticleEngine.getInstance().addEffect(new TimedBeam(fromPos, destPos, delay, world));
-                            break;
-                        }
-                        case TIMED_HELIX:{
 
-                            ParticleEngine.getInstance().addEffect(new TimedHelix(new BlockPos(message.x, message.y - 1, message.z), 3, GlowParticleData.createData(new ParticleColor(255,25,180)), world));
-                            break;
-                        }
                         case BURST:{
                             for(int i =0; i < 10; i++){
                                 double d0 = message.x +0.5; //+ world.rand.nextFloat();
                                 double d1 = message.y +1.2;//+ world.rand.nextFloat() ;
                                 double d2 = message.z +.5 ; //+ world.rand.nextFloat();
-                                world.addParticle(GlowParticleData.createData(new ParticleColor(message.red, message.green, message.blue)),d0, d1, d2, (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3, (world.rand.nextFloat() * 1 - 0.5)/3);
+                                world.addParticle(GlowParticleData.createData(new ParticleColor(message.red, message.green, message.blue)),d0, d1, d2, (world.random.nextFloat() * 1 - 0.5)/3, (world.random.nextFloat() * 1 - 0.5)/3, (world.random.nextFloat() * 1 - 0.5)/3);
                             }
                             break;
                         }

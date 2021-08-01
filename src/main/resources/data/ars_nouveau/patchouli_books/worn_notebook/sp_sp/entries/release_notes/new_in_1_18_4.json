@@ -1,0 +1,12 @@
+{
+    "name": "Changelog 1.18.4",
+    "icon": "ars_nouveau:caster_tome",
+    "category": "release_notes",
+	"sortnum":68,
+    "pages": [
+        {
+            "type": "text",
+            "text": "¡Ars Nouveau 1.18.4, Tomos!$(li)Añade Tomos de Hechicero únicos encontrados en mazmorras$(li)Se han añadido los objetos del Ars Nouveau a las recompensas de las mazmorras$(li)Ya no hay conflicot entre Planear y Caelus API$(li)Congelar ahora soporta ADE y congela múltiples bloques$(li)Duración Baja ahora funciona en Retrasar"       
+        }
+    ]
+}

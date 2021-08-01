@@ -1,0 +1,19 @@
+{
+    "name": "Dominion Wand",
+    "icon": "ars_nouveau:dominion_wand",
+    "category": "automation",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Uma ferramenta para configurar Relés Arcanos e entidades de automação. Para definir um caminho de transferência, use a varinha no objeto de onde você gostaria de obter mana e, em seguida, use-a no bloco para o qual gostaria de enviar mana. Por exemplo: Mana Jar para Arcane Relay, Arcane Relay para Arcane Relay ou Arcane Relay para Mana Jar. Para limpar as conexões, esgueire-se e use esta varinha em um relé."
+        },
+    {
+      "type": "apparatus_recipe",
+      "recipe": "ars_nouveau:dominion_wand"
+    },
+		{
+            "type": "relations",
+            "entries":["apparatus/arcane_relay", "apparatus/whelp_charm"]        
+        }
+    ]
+}

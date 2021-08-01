@@ -15,6 +15,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayer;
 
+import java.lang.ref.WeakReference;
 import java.util.OptionalInt;
 import java.util.UUID;
 
@@ -25,13 +26,27 @@ public class ANFakePlayer extends FakePlayer {
     public static final GameProfile PROFILE =
             new GameProfile(UUID.fromString("7400926d-1007-4e53-880f-b43e67f2bf29"), "Ars_Nouveau");
 
-    public ANFakePlayer(ServerWorld world) {
+
+    private ANFakePlayer(ServerWorld world) {
         super(world, PROFILE);
         connection = new FakePlayNetHandler(world.getServer(), this);
     }
+    private static WeakReference<ANFakePlayer> FAKE_PLAYER = null;
+
+    public static ANFakePlayer getPlayer(ServerWorld world)
+    {
+        ANFakePlayer ret = FAKE_PLAYER != null ? FAKE_PLAYER.get() : null;
+        if (ret == null)
+        {
+            ret = new ANFakePlayer(world);
+            FAKE_PLAYER = new WeakReference<ANFakePlayer>(ret);
+        }
+        return ret;
+    }
+
 
     @Override
-    public OptionalInt openContainer(INamedContainerProvider container) {
+    public OptionalInt openMenu(INamedContainerProvider container) {
         return OptionalInt.empty();
     }
 
@@ -45,9 +60,9 @@ public class ANFakePlayer extends FakePlayer {
         }
 
         @Override
-        public void sendPacket(IPacket<?> packetIn) {}
+        public void send(IPacket<?> packetIn) {}
 
         @Override
-        public void sendPacket(IPacket<?> packetIn, GenericFutureListener<? extends Future<? super Void>> futureListeners) { }
+        public void send(IPacket<?> packetIn, GenericFutureListener<? extends Future<? super Void>> futureListeners) { }
     }
 }

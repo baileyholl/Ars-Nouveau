@@ -17,18 +17,18 @@ public class BeltOfUnstableGifts extends ArsNouveauCurio {
         super(registry);
     }
     public static ArrayList<Effect> effectTable = new ArrayList<>(Arrays.asList(
-            Effects.SLOW_FALLING, Effects.NIGHT_VISION, Effects.CONDUIT_POWER, Effects.ABSORPTION, Effects.STRENGTH,
-            Effects.FIRE_RESISTANCE, Effects.HASTE, Effects.HEALTH_BOOST,  Effects.SPEED, Effects.REGENERATION, Effects.RESISTANCE,
+            Effects.SLOW_FALLING, Effects.NIGHT_VISION, Effects.CONDUIT_POWER, Effects.ABSORPTION, Effects.DAMAGE_BOOST,
+            Effects.FIRE_RESISTANCE, Effects.DIG_SPEED, Effects.MOVEMENT_SPEED, Effects.REGENERATION, Effects.DAMAGE_RESISTANCE,
             ModPotions.SHIELD_POTION
             ));
 
     @Override
     public void wearableTick(LivingEntity wearer) {
-        World world = wearer.getEntityWorld();
-        if(world.isRemote())
+        World world = wearer.getCommandSenderWorld();
+        if(world.isClientSide())
             return;
         if(world.getGameTime() % (20 * 6)  == 0){
-            wearer.addPotionEffect(new EffectInstance(effectTable.get(new Random().nextInt(effectTable.size())), 6 * 20, new Random().nextInt(3)));
+            wearer.addEffect(new EffectInstance(effectTable.get(new Random().nextInt(effectTable.size())), 6 * 20, new Random().nextInt(3)));
         }
     }
 }

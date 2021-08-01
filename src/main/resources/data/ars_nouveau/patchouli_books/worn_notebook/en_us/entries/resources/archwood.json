@@ -5,7 +5,7 @@
     "pages": [
         {
             "type": "text",
-            "text": "Archwood Trees have a small chance to spawn in any biome, and come in four types. Required for crafting Casting Wands."
+            "text": "ars_nouveau.page1.archwood"
         },
 		{
             "type":"crafting",

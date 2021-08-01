@@ -6,6 +6,8 @@ import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -34,8 +36,8 @@ public class GuiSpellSlot extends GuiImageButton {
             if(parent.isMouseInRelativeRange(parX, parY, x, y, width, height)){
                 String name = SpellBook.getSpellName(parent.spell_book_tag, slotNum);
                 if(!name.isEmpty()){
-                    List<String> tip = new ArrayList<>();
-                    tip.add(name);
+                    List<ITextComponent> tip = new ArrayList<>();
+                    tip.add(new StringTextComponent(name));
                     parent.tooltip = tip;
                 }
             }
@@ -45,7 +47,7 @@ public class GuiSpellSlot extends GuiImageButton {
             //GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, width, height);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, image_width, image_height, stack);
-            drawCenteredString(stack,Minecraft.getInstance().fontRenderer, String.valueOf(this.slotNum), x + 8, y + 3,  16777215); // White
+            drawCenteredString(stack,Minecraft.getInstance().font, String.valueOf(this.slotNum), x + 8, y + 3,  16777215); // White
 
         }
     }

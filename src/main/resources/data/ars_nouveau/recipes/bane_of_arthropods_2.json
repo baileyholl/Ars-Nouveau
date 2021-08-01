@@ -1,0 +1,31 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:bane_of_arthropods",
+  "level": 2,
+  "mana": 3500,
+  "item_1": [
+    {
+      "item": "minecraft:spider_eye"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "minecraft:spider_eye"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "minecraft:spider_eye"
+    }
+  ],
+  "item_4": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_5": [
+    {
+      "tag": "forge:storage_blocks/lapis"
+    }
+  ]
+}

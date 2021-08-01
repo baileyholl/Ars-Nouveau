@@ -1,6 +1,6 @@
 {
   "type": "ars_nouveau:glyph_recipe",
   "tier": "THREE",
-  "input": "minecraft:conduit",
+  "input": "minecraft:heart_of_the_sea",
   "output": "ars_nouveau:glyph_lightning"
 }

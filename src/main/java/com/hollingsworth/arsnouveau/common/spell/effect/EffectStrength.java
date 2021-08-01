@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.ModConfig;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.GlyphLib;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -11,20 +9,32 @@ import net.minecraft.potion.Effects;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeConfigSpec;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Set;
 
 public class EffectStrength extends AbstractEffect {
-    public EffectStrength() {
-        super(ModConfig.EffectStrength, "Strength");
+    public static EffectStrength INSTANCE = new EffectStrength();
+
+    private EffectStrength() {
+        super(GlyphLib.EffectStrength, "Strength");
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        if(rayTraceResult instanceof EntityRayTraceResult && ((EntityRayTraceResult) rayTraceResult).getEntity() instanceof LivingEntity){
-            applyPotion((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity(), Effects.STRENGTH, augments);
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        if(rayTraceResult.getEntity() instanceof LivingEntity){
+            applyPotionWithCap((LivingEntity) rayTraceResult.getEntity(), Effects.DAMAGE_BOOST, spellStats, POTION_TIME.get(), EXTEND_TIME.get(), 2);
         }
+    }
+
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        addPotionConfig(builder, 30);
+        addExtendTimeConfig(builder, 8);
     }
 
     @Override
@@ -43,13 +53,25 @@ public class EffectStrength extends AbstractEffect {
         return Items.BLAZE_POWDER;
     }
 
+    @Nonnull
+    @Override
+    public Set<AbstractAugment> getCompatibleAugments() {
+        return POTION_AUGMENTS;
+    }
+
     @Override
     public String getBookDescription() {
-        return "Applies the Strength buff.";
+        return "Applies the Strength buff up to level 3.";
     }
 
     @Override
     public Tier getTier() {
         return Tier.THREE;
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ABJURATION);
     }
 }

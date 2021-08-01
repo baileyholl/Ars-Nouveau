@@ -25,7 +25,7 @@ public class PortalTileRenderer<T extends PortalTile> extends TileEntityRenderer
     public static final ResourceLocation END_PORTAL_TEXTURE = new ResourceLocation("textures/entity/end_portal.png");
     private static final Random RANDOM = new Random(31100L);
     private static final List<RenderType> RENDER_TYPES = IntStream.range(0, 16).mapToObj((p_228882_0_) -> {
-        return RenderType.getEndPortal(p_228882_0_ + 1);
+        return RenderType.endPortal(p_228882_0_ + 1);
     }).collect(ImmutableList.toImmutableList());
 
     public PortalTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
@@ -34,14 +34,14 @@ public class PortalTileRenderer<T extends PortalTile> extends TileEntityRenderer
 
     public void render(T tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
         RANDOM.setSeed(31100L);
-        double d0 = tileEntityIn.getPos().distanceSq(this.renderDispatcher.renderInfo.getProjectedView(), true);
+        double d0 = tileEntityIn.getBlockPos().distSqr(this.renderer.camera.getPosition(), true);
         int i = this.getPasses(d0);
         float f = this.getOffset();
-        Matrix4f matrix4f = matrixStackIn.getLast().getMatrix();
-        this.renderCube(tileEntityIn, f, tileEntityIn.getWorld().getCelestialAngleRadians(partialTicks), matrix4f, bufferIn.getBuffer(RENDER_TYPES.get(0)));
+        Matrix4f matrix4f = matrixStackIn.last().pose();
+        this.renderCube(tileEntityIn, f, tileEntityIn.getLevel().getSunAngle(partialTicks), matrix4f, bufferIn.getBuffer(RENDER_TYPES.get(0)));
 
         for(int j = 1; j < i; ++j) {
-            this.renderCube(tileEntityIn, f, tileEntityIn.getWorld().getCelestialAngleRadians(partialTicks) / (float)(12.0f  - j), matrix4f, bufferIn.getBuffer(RENDER_TYPES.get(j)));
+            this.renderCube(tileEntityIn, f, tileEntityIn.getLevel().getSunAngle(partialTicks) / (float)(12.0f  - j), matrix4f, bufferIn.getBuffer(RENDER_TYPES.get(j)));
         }
 
     }
@@ -66,10 +66,10 @@ public class PortalTileRenderer<T extends PortalTile> extends TileEntityRenderer
 //            p_228884_3_.pos(p_228884_2_, p_228884_4_, p_228884_7_, p_228884_11_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
 //        }
         if(direction == Direction.EAST || direction == Direction.WEST || direction == Direction.SOUTH || direction == Direction.NORTH){
-            iBuilder.pos(matrix, p_228884_4_, p_228884_6_, p_228884_8_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
-            iBuilder.pos(matrix, p_228884_5_, p_228884_6_, p_228884_9_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
-            iBuilder.pos(matrix, p_228884_5_, p_228884_7_, p_228884_10_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
-            iBuilder.pos(matrix, p_228884_4_, p_228884_7_, p_228884_11_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
+            iBuilder.vertex(matrix, p_228884_4_, p_228884_6_, p_228884_8_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
+            iBuilder.vertex(matrix, p_228884_5_, p_228884_6_, p_228884_9_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
+            iBuilder.vertex(matrix, p_228884_5_, p_228884_7_, p_228884_10_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
+            iBuilder.vertex(matrix, p_228884_4_, p_228884_7_, p_228884_11_).color(p_228884_12_, p_228884_13_, p_228884_14_, 1.0F).endVertex();
 
         }
 

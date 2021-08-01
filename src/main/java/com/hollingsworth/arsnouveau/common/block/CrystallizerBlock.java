@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 
 public class CrystallizerBlock extends ModBlock{
     public CrystallizerBlock() {
-        super(defaultProperties().notSolid(), LibBlockNames.CRYSTALLIZER);
+        super(defaultProperties().noOcclusion(), LibBlockNames.CRYSTALLIZER);
     }
 
     @Override
@@ -31,28 +31,28 @@ public class CrystallizerBlock extends ModBlock{
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState p_149645_1_) {
+    public BlockRenderType getRenderShape(BlockState p_149645_1_) {
         return BlockRenderType.MODEL;
     }
 
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(!(worldIn.getTileEntity(pos) instanceof CrystallizerTile))
-            return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
-        ItemStack stack = ((CrystallizerTile) worldIn.getTileEntity(pos)).stack;
-        worldIn.addEntity(new ItemEntity(worldIn, player.getPosX(), player.getPosY(), player.getPosZ(), stack.copy()));
-        ((CrystallizerTile) worldIn.getTileEntity(pos)).stack = ItemStack.EMPTY;
-        return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if(!(worldIn.getBlockEntity(pos) instanceof CrystallizerTile))
+            return super.use(state, worldIn, pos, player, handIn, hit);
+        ItemStack stack = ((CrystallizerTile) worldIn.getBlockEntity(pos)).stack;
+        worldIn.addFreshEntity(new ItemEntity(worldIn, player.getX(), player.getY(), player.getZ(), stack.copy()));
+        ((CrystallizerTile) worldIn.getBlockEntity(pos)).stack = ItemStack.EMPTY;
+        return super.use(state, worldIn, pos, player, handIn, hit);
     }
 
     @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        super.onBlockHarvested(worldIn, pos, state, player);
-        if(!(worldIn.getTileEntity(pos) instanceof CrystallizerTile))
+    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.playerWillDestroy(worldIn, pos, state, player);
+        if(!(worldIn.getBlockEntity(pos) instanceof CrystallizerTile))
             return;
-        ItemStack stack = ((CrystallizerTile) worldIn.getTileEntity(pos)).stack;
-        worldIn.addEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack.copy()));
-        ((CrystallizerTile) worldIn.getTileEntity(pos)).stack = ItemStack.EMPTY;
+        ItemStack stack = ((CrystallizerTile) worldIn.getBlockEntity(pos)).stack;
+        worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack.copy()));
+        ((CrystallizerTile) worldIn.getBlockEntity(pos)).stack = ItemStack.EMPTY;
     }
 }

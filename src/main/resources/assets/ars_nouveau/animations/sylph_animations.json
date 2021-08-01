@@ -11,8 +11,8 @@
 						"0.0": {
 							"vector": [0, 0, 0]
 						},
-						"0.8": {
-							"vector": [0, 1440, 0]
+						"0.68": {
+							"vector": [0, 1800, 0]
 						},
 						"3.2": {
 							"vector": [0, 2880, 0]
@@ -119,14 +119,21 @@
 							"vector": [0, 0, 0]
 						},
 						"0.8": {
-							"vector": [0, 10, 0]
+							"vector": [0, 10, 0],
+							"easing": "easeInOutSine"
+						},
+						"1.04": {
+							"vector": [0, 10, 0],
+							"easing": "linear"
 						},
 						"3.2": {
-							"vector": [0, 0, 0]
+							"vector": [0, 0, 0],
+							"easing": "easeInSine"
 						}
 					}
 				}
 			}
 		}
-	}
+	},
+	"geckolib_format_version": 2
 }

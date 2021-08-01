@@ -18,8 +18,11 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static com.hollingsworth.arsnouveau.common.entity.goal.sylph.EvaluateGroveGoal.getScore;
+
+import net.minecraft.entity.ai.goal.Goal.Flag;
 
 public class GenerateDropsGoal extends Goal {
     EntitySylph sylph;
@@ -27,11 +30,11 @@ public class GenerateDropsGoal extends Goal {
     int timeGathering;
     public GenerateDropsGoal(EntitySylph sylph){
         this.sylph = sylph;
-        this.setMutexFlags(EnumSet.of(Flag.MOVE));
+        this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
     @Override
-    public void resetTask() {
+    public void stop() {
         timeGathering = 100;
         locList = null;
     }
@@ -41,7 +44,7 @@ public class GenerateDropsGoal extends Goal {
     }
 
     public int getTimerByMood(){
-        int mood = sylph.getDataManager().get(EntitySylph.MOOD_SCORE);
+        int mood = sylph.getEntityData().get(EntitySylph.MOOD_SCORE);
         if(mood >= 1000)
             return 20;
 
@@ -59,14 +62,14 @@ public class GenerateDropsGoal extends Goal {
 
     @Override
     public void tick() {
-        World world = sylph.getEntityWorld();
+        World world = sylph.getCommandSenderWorld();
         timeGathering--;
 
         if(locList == null || timeGathering <= 0)
             return;
 
         for(BlockPos growPos : locList) {
-            ((ServerWorld) world).spawnParticle(ParticleTypes.COMPOSTER, growPos.getX() + 0.5, growPos.getY() + 0.5, growPos.getZ() + 0.5, 1, ParticleUtil.inRange(-0.2, 0.2), 0, ParticleUtil.inRange(-0.2, 0.2), 0.01);
+            ((ServerWorld) world).sendParticles(ParticleTypes.COMPOSTER, growPos.getX() + 0.5, growPos.getY() + 0.5, growPos.getZ() + 0.5, 1, ParticleUtil.inRange(-0.2, 0.2), 0, ParticleUtil.inRange(-0.2, 0.2), 0.01);
         }
         timeGathering--;
 
@@ -79,7 +82,6 @@ public class GenerateDropsGoal extends Goal {
                 if(block == null)
                     return;
 
-                // Reroll 1 time if the drops are empty or dirt i.e. grass.
                 for(ItemStack s : getDrops(blockDropDistribution)){
                     sylph.onPickup(s);
                 }
@@ -87,46 +89,47 @@ public class GenerateDropsGoal extends Goal {
 
         }
     }
-    // Keep rerolling on empty or dirt drops.
-    public List<ItemStack> getDrops(DropDistribution<BlockState> blockDropDistribution){
-        World world = sylph.getEntityWorld();
-        Supplier<List<ItemStack>> getDrops = () -> Block.getDrops(blockDropDistribution.nextDrop(), (ServerWorld) world, sylph.getPosition(), null);
 
-        List<ItemStack> drops = getDrops.get();
-        int numRerolls = 0;
+    public List<ItemStack> getDrops(DropDistribution<BlockState> blockDropDistribution){
+        World world = sylph.getCommandSenderWorld();
+        Supplier<List<ItemStack>> getDrops = () -> Block.getDrops(blockDropDistribution.nextDrop(), (ServerWorld) world, sylph.blockPosition(), null);
+
+        List<ItemStack> successfulDrops;
         boolean bonusReroll = false;
-        while(numRerolls < (bonusReroll ? 7 : 4) && (drops.isEmpty() || drops.get(0).getItem() ==  Blocks.DIRT.asItem() || (!drops.isEmpty() && !sylph.isValidReward(drops.get(0))))){
-            drops = getDrops.get();
-            if(!drops.isEmpty() && !sylph.isValidReward(drops.get(0)))
-                bonusReroll = true;
-            numRerolls++;
+        for(int numRerolls = 0; numRerolls < (bonusReroll ? 16 : 8); numRerolls++) {
+            List<ItemStack> drops = getDrops.get();
+            if (drops.isEmpty()) continue;
+            successfulDrops = drops.stream().filter(s -> sylph.isValidReward(s)).collect(Collectors.toCollection(ArrayList::new));
+            bonusReroll = true;
+            if (successfulDrops.isEmpty()) continue;
+            return successfulDrops;
         }
-        return drops;
+        return new ArrayList<>();
     }
 
     @Override
-    public boolean shouldContinueExecuting() {
+    public boolean canContinueToUse() {
         return sylph.timeUntilGather <= 0  && timeGathering >= 0 && locList != null && sylph.crystalPos != null;
     }
 
     @Override
-    public boolean shouldExecute() {
+    public boolean canUse() {
         return sylph.crystalPos != null  && sylph.genTable != null && sylph.timeUntilGather <= 0 && (sylph.drops == null || sylph.drops.isEmpty()) && sylph.enoughManaForTask();
     }
 
     @Override
-    public void startExecuting() {
-        World world = sylph.getEntityWorld();
+    public void start() {
+        World world = sylph.getCommandSenderWorld();
         if(locList == null){
             locList = new ArrayList<>();
-            for(BlockPos b : BlockPos.getAllInBoxMutable(sylph.getPosition().north(4).west(4).down(3),sylph.getPosition().south(4).east(4).up(3))){
+            for(BlockPos b : BlockPos.betweenClosed(sylph.blockPosition().north(4).west(4).below(3),sylph.blockPosition().south(4).east(4).above(3))){
                 if(b.getY() >= 256)
                     continue;
                 BlockState state = world.getBlockState(b);
                 int points = getScore(state);
                 if(points == 0)
                     continue;
-                locList.add(b.toImmutable());
+                locList.add(b.immutable());
             }
             Collections.shuffle(locList);
             if(locList.size() > 6)

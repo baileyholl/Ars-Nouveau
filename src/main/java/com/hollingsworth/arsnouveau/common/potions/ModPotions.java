@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.common.potions;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.recipe.PotionIngredient;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
@@ -18,8 +20,15 @@ import net.minecraftforge.registries.ObjectHolder;
 public class ModPotions {
 
     public static final ShieldEffect SHIELD_POTION = new ShieldEffect();
+    public static final ShockedEffect SHOCKED_EFFECT = new ShockedEffect();
     public static final ManaRegenEffect MANA_REGEN_EFFECT = new ManaRegenEffect();
     public static final SummoningSicknessEffect SUMMONING_SICKNESS = new SummoningSicknessEffect();
+    public static final HexEffect HEX_EFFECT = new HexEffect();
+    public static final ScryingEffect SCRYING_EFFECT = new ScryingEffect();
+    public static final GlideEffect GLIDE_EFFECT = new GlideEffect();
+    public static final SnareEffect SNARE_EFFECT = new SnareEffect();
+    public static final FlightEffect FLIGHT_EFFECT = new FlightEffect();
+    public static final GravityEffect GRAVITY_EFFECT = new GravityEffect();
 
     @ObjectHolder("mana_regen_potion")
     public static Potion MANA_REGEN_POTION;
@@ -29,13 +38,19 @@ public class ModPotions {
     @ObjectHolder("mana_regen_potion_strong")
     public static Potion STRONG_MANA_REGEN_POTION;
     public static void addRecipes() {
-        ItemStack AWKWARD = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), Potions.AWKWARD);
-        ItemStack manaPot = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), ModPotions.MANA_REGEN_POTION);
-        ItemStack manaPotLong = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), ModPotions.LONG_MANA_REGEN_POTION);
-        ItemStack manaPotStrong = PotionUtils.addPotionToItemStack(new ItemStack(Items.POTION), ModPotions.STRONG_MANA_REGEN_POTION);
-        BrewingRecipeRegistry.addRecipe(new SimpleBrewingRecipe(Ingredient.fromItems(BlockRegistry.MANA_BERRY_BUSH),  manaPot));
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.fromStacks(manaPot), Ingredient.fromItems(Items.GLOWSTONE_DUST),  manaPotStrong));
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.fromStacks(manaPot), Ingredient.fromItems(Items.REDSTONE),  manaPotLong));
+        ItemStack AWKWARD = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.AWKWARD);
+        ItemStack manaPot = PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotions.MANA_REGEN_POTION);
+        ItemStack manaPotLong = PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotions.LONG_MANA_REGEN_POTION);
+        ItemStack manaPotStrong = PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotions.STRONG_MANA_REGEN_POTION);
+
+        ItemStack water = PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.WATER);
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(AWKWARD), Ingredient.of(BlockRegistry.MANA_BERRY_BUSH),  manaPot));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(manaPot), Ingredient.of(Items.GLOWSTONE_DUST),  manaPotStrong));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(manaPot), Ingredient.of(Items.REDSTONE),  manaPotLong));
+
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(water), Ingredient.of(ItemsRegistry.WILDEN_WING), PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LEAPING)));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(water), Ingredient.of(ItemsRegistry.WILDEN_HORN), PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.STRENGTH)));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(water), Ingredient.of(ItemsRegistry.WILDEN_SPIKE), PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LONG_WATER_BREATHING)));
     }
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -43,9 +58,17 @@ public class ModPotions {
         @SubscribeEvent
         public static void registerEffects(final RegistryEvent.Register<Effect> event) {
             final IForgeRegistry<Effect> registry = event.getRegistry();
-            registry.register(SHIELD_POTION);
-            registry.register(MANA_REGEN_EFFECT);
-            registry.register(SUMMONING_SICKNESS);
+            registry.registerAll(SCRYING_EFFECT,
+                    SHIELD_POTION,
+                    MANA_REGEN_EFFECT,
+                    SUMMONING_SICKNESS,
+                    SHOCKED_EFFECT,
+                    HEX_EFFECT,
+                    GLIDE_EFFECT,
+                    SNARE_EFFECT,
+                    FLIGHT_EFFECT,
+                    GRAVITY_EFFECT
+            );
         }
 
         @SubscribeEvent

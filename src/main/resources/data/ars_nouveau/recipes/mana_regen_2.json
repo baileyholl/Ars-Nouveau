@@ -1,0 +1,46 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "ars_nouveau:mana_regen",
+  "level": 2,
+  "mana": 3500,
+  "item_1": [
+    {
+      "item": "ars_nouveau:mana_berry"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "ars_nouveau:mana_berry"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "ars_nouveau:glyph_extend_time"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "ars_nouveau:glyph_extend_time"
+    }
+  ],
+  "item_5": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_6": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_7": [
+    {
+      "tag": "forge:storage_blocks/lapis"
+    }
+  ],
+  "item_8": [
+    {
+      "tag": "forge:storage_blocks/lapis"
+    }
+  ]
+}

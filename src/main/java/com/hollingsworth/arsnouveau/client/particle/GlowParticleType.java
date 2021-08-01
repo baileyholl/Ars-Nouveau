@@ -10,7 +10,7 @@ public class GlowParticleType extends ParticleType<ColorParticleTypeData> {
     }
 
     @Override
-    public Codec<ColorParticleTypeData> func_230522_e_() {
+    public Codec<ColorParticleTypeData> codec() {
         return ColorParticleTypeData.CODEC;
     }
 }

@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 public class ArcanePedestal extends ModBlock{
 
     public ArcanePedestal() {
-        super(ModBlock.defaultProperties().notSolid(),LibBlockNames.ARCANE_PEDESTAL);
+        super(ModBlock.defaultProperties().noOcclusion(),LibBlockNames.ARCANE_PEDESTAL);
     }
 
     @Override
@@ -31,42 +31,42 @@ public class ArcanePedestal extends ModBlock{
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         if(handIn != Hand.MAIN_HAND)
             return ActionResultType.PASS;
-        if(!world.isRemote) {
-            ArcanePedestalTile tile = (ArcanePedestalTile) world.getTileEntity(pos);
-            if (tile.stack != null && player.getHeldItem(handIn).isEmpty()) {
-                if(world.getBlockState(pos.up()).getMaterial() != Material.AIR)
+        if(!world.isClientSide) {
+            ArcanePedestalTile tile = (ArcanePedestalTile) world.getBlockEntity(pos);
+            if (tile.stack != null && player.getItemInHand(handIn).isEmpty()) {
+                if(world.getBlockState(pos.above()).getMaterial() != Material.AIR)
                     return ActionResultType.SUCCESS;
-                ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.stack);
-                world.addEntity(item);
+                ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
+                world.addFreshEntity(item);
                 tile.stack = null;
-            } else if (!player.inventory.getCurrentItem().isEmpty()) {
+            } else if (!player.inventory.getSelected().isEmpty()) {
                 if(tile.stack != null){
-                    ItemEntity item = new ItemEntity(world, player.getPosX(), player.getPosY(), player.getPosZ(), tile.stack);
-                    world.addEntity(item);
+                    ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
+                    world.addFreshEntity(item);
                 }
 
-                tile.stack = player.inventory.decrStackSize(player.inventory.currentItem, 1);
+                tile.stack = player.inventory.removeItem(player.inventory.selected, 1);
 
             }
-            world.notifyBlockUpdate(pos, state, state, 2);
+            world.sendBlockUpdated(pos, state, state, 2);
         }
         return  ActionResultType.SUCCESS;
     }
 
     @Override
-    public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
-        super.onBlockHarvested(worldIn, pos, state, player);
-        if(worldIn.getTileEntity(pos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) worldIn.getTileEntity(pos)).stack != null){
-            worldIn.addEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), ((ArcanePedestalTile) worldIn.getTileEntity(pos)).stack));
+    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.playerWillDestroy(worldIn, pos, state, player);
+        if(worldIn.getBlockEntity(pos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) worldIn.getBlockEntity(pos)).stack != null){
+            worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), ((ArcanePedestalTile) worldIn.getBlockEntity(pos)).stack));
         }
     }
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return Block.makeCuboidShape(1D, 0.0D, 1.0D, 15, 16, 15);
+        return Block.box(1D, 0.0D, 1.0D, 15, 16, 15);
     }
 
     @Nullable

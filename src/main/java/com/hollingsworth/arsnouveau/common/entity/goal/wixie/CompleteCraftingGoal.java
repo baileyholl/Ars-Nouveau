@@ -18,30 +18,30 @@ public class CompleteCraftingGoal extends Goal {
     }
 
     @Override
-    public void startExecuting() {
+    public void start() {
         ticksNearby = 0;
         hasCast = false;
     }
 
     @Override
-    public boolean shouldExecute() {
+    public boolean canUse() {
         if(wixie.cauldronPos == null)
             return false;
 
-        TileEntity tileEntity = wixie.world.getTileEntity(wixie.cauldronPos);
+        TileEntity tileEntity = wixie.level.getBlockEntity(wixie.cauldronPos);
         return tileEntity instanceof WixieCauldronTile && ((WixieCauldronTile) tileEntity).isCraftingDone();
     }
 
     @Override
     public void tick() {
-        if(BlockUtil.distanceFrom(wixie.getPosition(), wixie.cauldronPos.up()) < 1.5D){
+        if(BlockUtil.distanceFrom(wixie.blockPosition(), wixie.cauldronPos.above()) < 1.5D){
             ticksNearby++;
             if(!hasCast){
-                Networking.sendToNearby(wixie.world, wixie, new PacketAnimEntity(wixie.getEntityId(), EntityWixie.Animations.CAST.ordinal()));
+                Networking.sendToNearby(wixie.level, wixie, new PacketAnimEntity(wixie.getId(), EntityWixie.Animations.CAST.ordinal()));
                 wixie.inventoryBackoff = 40;
             }
             if(ticksNearby >= 40){
-                TileEntity tileEntity = wixie.world.getTileEntity(wixie.cauldronPos);
+                TileEntity tileEntity = wixie.level.getBlockEntity(wixie.cauldronPos);
                 if(tileEntity instanceof WixieCauldronTile && ((WixieCauldronTile) tileEntity).isCraftingDone()){
                     ((WixieCauldronTile) tileEntity).attemptFinish();
                 }
@@ -55,6 +55,6 @@ public class CompleteCraftingGoal extends Goal {
 
 
     public void setPath(double x, double y, double z, double speedIn){
-        wixie.getNavigator().setPath( wixie.getNavigator().getPathToPos(x+0.5, y+1.5, z+0.5, 0), speedIn);
+        wixie.getNavigation().moveTo( wixie.getNavigation().createPath(x+0.5, y+1.5, z+0.5, 0), speedIn);
     }
 }

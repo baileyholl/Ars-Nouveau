@@ -61,7 +61,7 @@ public class ModelLayerRenderer<T extends Entity & IAnimatable> extends GeoLayer
 
     @Override
     public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, Entity entity, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
-        matrixStackIn.push();
+        matrixStackIn.pushPose();
         EntityModelData entityModelData = new EntityModelData();
         entityModelData.headPitch = headPitch;
         entityModelData.netHeadYaw = netHeadYaw;
@@ -79,15 +79,15 @@ public class ModelLayerRenderer<T extends Entity & IAnimatable> extends GeoLayer
 
         Quaternion quaternion = Vector3f.ZP.rotationDegrees(carbuncle.getRotationZ());
 
-        matrixStackIn.rotate(quaternion);
+        matrixStackIn.mulPose(quaternion);
        // matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180f));
 
 
-        Minecraft.getInstance().textureManager.bindTexture(getTextureLocation((T) entity));
+        Minecraft.getInstance().textureManager.bind(getTextureLocation((T) entity));
         Color renderColor = getRenderColor((T) entity, partialTicks, matrixStackIn, bufferIn, null, packedLightIn);
         RenderType renderType = getRenderType((T) entity, partialTicks, matrixStackIn, bufferIn, null, packedLightIn, getTextureLocation((T) entity));
         render(model, (T) entity, partialTicks, renderType, matrixStackIn, bufferIn, null, packedLightIn, OverlayTexture.NO_OVERLAY, (float) renderColor.getRed() / 255f, (float) renderColor.getGreen() / 255f, (float) renderColor.getBlue() / 255f, (float) renderColor.getAlpha() / 255);
-        matrixStackIn.pop();
+        matrixStackIn.popPose();
     }
 
 }

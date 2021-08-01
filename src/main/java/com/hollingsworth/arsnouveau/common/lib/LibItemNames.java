@@ -66,4 +66,34 @@ public class LibItemNames {
     public static final String PIERCE_ARROW = "pierce_arrow";
     public static final String AMPLIFY_ARROW = "amplify_arrow";
     public static final String SPLIT_ARROW = "split_arrow";
+
+    public static final String WILDEN_HORN = "wilden_horn";
+    public static final String WILDEN_SPIKE = "wilden_spike";
+    public static final String WILDEN_WING = "wilden_wing";
+
+    public static final String POTION_FLASK ="potion_flask";
+    public static final String POTION_FLASK_EXTEND_TIME ="potion_flask_extend_time";
+    public static final String POTION_FLASK_AMPLIFY ="potion_flask_amplify";
+    public static final String EXP_GEM ="experience_gem";
+    public static final String GREATER_EXP_GEM ="greater_experience_gem";
+
+
+    public static final String ENCHANTERS_SWORD = "enchanters_sword";
+    public static final String ENCHANTERS_SHIELD = "enchanters_shield";
+
+    public static final String CARBUNCLE_SE = "carbuncle_se";
+    public static final String SYLPH_SE = "sylph_se";
+
+    public static final String WILDEN_HUNTER_SE = "wilden_hunter_se";
+    public static final String WILDEN_STALKER_SE = "wilden_stalker_se";
+    public static final String WILDEN_GUARDIAN_SE = "wilden_guardian_se";
+
+    public static final String CASTER_TOME = "caster_tome";
+
+    public static final String DRYGMY_CHARM = "drygmy_charm";
+    public static final String DRYGMY_SHARD = "drygmy_shard";
+    public static final String MIMIC_ITEM_SCROLL = "mimic_scroll";
+
+    public static final String WILDEN_TRIBUTE = "wilden_tribute";
+    public static final String SUMMON_FOCUS = "summon_focus";
 }

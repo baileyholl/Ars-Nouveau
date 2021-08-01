@@ -1,0 +1,18 @@
+{
+    "name": "Brasero de Ritual",
+    "icon": "ars_nouveau:ritual",
+    "category": "machines",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Un brasero que puede ser usado como decoración o para realizar rituales. Para encender el brasero como decoración, lanza el hechizo de Luz sobre él. El color del brasero corresponderá con el color del hechizo. Aplicar una señal de redstone hará que se desactive el ritual. Si quieres información de como hacer rituales, mira la sección dedicada a rituales."
+        },
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:ritual"
+		},{
+            "type": "relations",
+            "entries":["rituals/ritual_howto"]        
+        }
+    ]
+}

@@ -9,7 +9,7 @@ import net.minecraft.world.IBlockReader;
 
 public class ArcaneCore extends ModBlock{
     public ArcaneCore() {
-        super(defaultProperties().notSolid().setLightLevel((state) -> 15),LibBlockNames.ARCANE_CORE);
+        super(defaultProperties().noOcclusion().lightLevel((state) -> 15),LibBlockNames.ARCANE_CORE);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class ArcaneCore extends ModBlock{
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState p_149645_1_) {
+    public BlockRenderType getRenderShape(BlockState p_149645_1_) {
         return BlockRenderType.MODEL;
     }
 

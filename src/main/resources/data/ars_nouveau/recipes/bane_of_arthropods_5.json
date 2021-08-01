@@ -1,0 +1,46 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:bane_of_arthropods",
+  "level": 5,
+  "mana": 8000,
+  "item_1": [
+    {
+      "item": "minecraft:fermented_spider_eye"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "minecraft:fermented_spider_eye"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "minecraft:fermented_spider_eye"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "minecraft:fermented_spider_eye"
+    }
+  ],
+  "item_5": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_6": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_7": [
+    {
+      "tag": "forge:storage_blocks/lapis"
+    }
+  ],
+  "item_8": [
+    {
+      "tag": "forge:storage_blocks/lapis"
+    }
+  ]
+}

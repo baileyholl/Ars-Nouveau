@@ -15,7 +15,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
@@ -36,18 +36,18 @@ public class WarpScroll extends ModItem{
 
     @Override
     public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
-        if(!entity.getEntityWorld().isRemote && entity.getEntityWorld().getBlockState(entity.getPosition().down()).getBlock().isIn(Recipes.DECORATIVE_AN)){
+        if(!entity.getCommandSenderWorld().isClientSide && entity.getCommandSenderWorld().getBlockState(entity.blockPosition().below()).getBlock().is(Recipes.DECORATIVE_AN)){
 
             if(getPos(stack) != null
-                    && getDimension(stack).equals(entity.getEntityWorld().getDimensionKey().getRegistryName().toString())
-                    && ManaUtil.hasManaNearby(entity.getPosition(), entity.getEntityWorld(), 10, 9000)
-                    && BlockRegistry.PORTAL_BLOCK.trySpawnPortal(entity.getEntityWorld(), entity.getPosition(), getPos(stack), getDimension(stack))
-                    && ManaUtil.takeManaNearby(entity.getPosition(), entity.getEntityWorld(), 10, 9000) != null){
-                BlockPos pos = entity.getPosition();
-                ServerWorld world = (ServerWorld) entity.getEntityWorld();
-                world.spawnParticle(ParticleTypes.PORTAL, pos.getX(),  pos.getY() + 1,  pos.getZ(),
-                        10,(world.rand.nextDouble() - 0.5D) * 2.0D, -world.rand.nextDouble(), (world.rand.nextDouble() - 0.5D) * 2.0D, 0.1f);
-                world.playSound(null, pos, SoundEvents.ENTITY_ILLUSIONER_CAST_SPELL, SoundCategory.NEUTRAL, 1.0f, 1.0f);
+                    && getDimension(stack).equals(entity.getCommandSenderWorld().dimension().getRegistryName().toString())
+                    && ManaUtil.hasManaNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000)
+                    && BlockRegistry.PORTAL_BLOCK.trySpawnPortal(entity.getCommandSenderWorld(), entity.blockPosition(), getPos(stack), getDimension(stack))
+                    && ManaUtil.takeManaNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000) != null){
+                BlockPos pos = entity.blockPosition();
+                ServerWorld world = (ServerWorld) entity.getCommandSenderWorld();
+                world.sendParticles(ParticleTypes.PORTAL, pos.getX(),  pos.getY() + 1,  pos.getZ(),
+                        10,(world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
+                world.playSound(null, pos, SoundEvents.ILLUSIONER_CAST_SPELL, SoundCategory.NEUTRAL, 1.0f, 1.0f);
                 stack.shrink(1);
                 return true;
             }
@@ -57,33 +57,33 @@ public class WarpScroll extends ModItem{
         return false;
     }
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World world, PlayerEntity player, Hand hand) {
-        ItemStack stack = player.getHeldItem(hand);
+    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+        ItemStack stack = player.getItemInHand(hand);
         BlockPos pos = getPos(stack);
-        if(hand == Hand.OFF_HAND && player.getHeldItemMainhand().getItem() instanceof SpellBook)
+        if(hand == Hand.OFF_HAND)
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
 
-        if(world.isRemote())
+        if(world.isClientSide())
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
 
         if(pos != null ){
-            if(getDimension(stack) == null || !getDimension(stack).equals(player.getEntityWorld().getDimensionKey().getRegistryName().toString())){
-                player.sendMessage(new StringTextComponent("Using this scroll from a different dimension would be a bad idea."), Util.DUMMY_UUID);
-                return ActionResult.resultFail(stack);
+            if(getDimension(stack) == null || !getDimension(stack).equals(player.getCommandSenderWorld().dimension().getRegistryName().toString())){
+                player.sendMessage(new TranslationTextComponent("ars_nouveau.warp_scroll.wrong_dim"), Util.NIL_UUID);
+                return ActionResult.fail(stack);
             }
-            player.teleportKeepLoaded(pos.getX() +0.5, pos.getY(), pos.getZ() +0.5);
+            player.teleportToWithTicket(pos.getX() +0.5, pos.getY(), pos.getZ() +0.5);
             stack.shrink(1);
-            return ActionResult.resultPass(stack);
+            return ActionResult.pass(stack);
         }
-        if(player.isSneaking()){
+        if(player.isShiftKeyDown()){
             ItemStack newWarpStack = new ItemStack(ItemsRegistry.warpScroll);
             newWarpStack.setTag(new CompoundNBT());
-            setTeleportTag(newWarpStack, player.getPosition(), player.getEntityWorld().getDimensionKey().getRegistryName().toString());
-            if(!player.addItemStackToInventory(newWarpStack)){
-                player.sendMessage(new StringTextComponent("There is no room in your inventory."), Util.DUMMY_UUID);
-                return ActionResult.resultFail(stack);
+            setTeleportTag(newWarpStack, player.blockPosition(), player.getCommandSenderWorld().dimension().getRegistryName().toString());
+            if(!player.addItem(newWarpStack)){
+                player.sendMessage(new TranslationTextComponent("ars_nouveau.warp_scroll.inv_full"), Util.NIL_UUID);
+                return ActionResult.fail(stack);
             }else{
-                player.sendMessage(new StringTextComponent("You record your location to your Warp Scroll."), Util.DUMMY_UUID);
+                player.sendMessage(new TranslationTextComponent("ars_nouveau.warp_scroll.recorded"), Util.NIL_UUID);
                 stack.shrink(1);
             }
         }
@@ -111,12 +111,12 @@ public class WarpScroll extends ModItem{
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag p_77624_4_) {
+    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag p_77624_4_) {
         BlockPos pos = getPos(stack);
         if(pos == null){
-            tooltip.add(new StringTextComponent("No location set."));
+            tooltip.add(new TranslationTextComponent("ars_nouveau.warp_scroll.no_location"));
             return;
         }
-        tooltip.add(new StringTextComponent("X: " + pos.getX() + " Y: " + pos.getY() + " Z:" + pos.getZ()));
+        tooltip.add(new TranslationTextComponent("ars_nouveau.position", pos.getX(), pos.getY(), pos.getZ()));
     }
 }

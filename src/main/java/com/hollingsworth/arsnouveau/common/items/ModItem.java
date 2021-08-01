@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Rarity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -16,6 +17,7 @@ import java.util.List;
 
 public class ModItem extends Item {
     public List<ITextComponent> tooltip;
+    public Rarity rarity;
     public ModItem(Properties properties) {
         super(properties);
     }
@@ -35,6 +37,16 @@ public class ModItem extends Item {
         return this;
     }
 
+    public ModItem withRarity(Rarity rarity){
+        this.rarity = rarity;
+        return this;
+    }
+
+    @Override
+    public Rarity getRarity(ItemStack stack) {
+        return rarity != null ? rarity : super.getRarity(stack);
+    }
+
     public ItemStack getStack(){
         return new ItemStack(this);
     }
@@ -43,7 +55,7 @@ public class ModItem extends Item {
      * allows items to add custom lines of information to the mouseover description
      */
     @OnlyIn(Dist.CLIENT)
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
         if(tooltip != null && !tooltip.isEmpty()){
             tooltip2.addAll(tooltip);
         }

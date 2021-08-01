@@ -1,0 +1,46 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:smite",
+  "level": 5,
+  "mana": 8000,
+  "item_1": [
+    {
+      "item": "minecraft:bone_block"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "minecraft:bone_block"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "minecraft:bone_block"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "minecraft:bone_block"
+    }
+  ],
+  "item_5": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_6": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_7": [
+    {
+      "tag": "forge:storage_blocks/lapis"
+    }
+  ],
+  "item_8": [
+    {
+      "tag": "forge:storage_blocks/lapis"
+    }
+  ]
+}

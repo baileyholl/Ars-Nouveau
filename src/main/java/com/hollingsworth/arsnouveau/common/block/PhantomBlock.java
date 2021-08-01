@@ -13,7 +13,7 @@ import javax.annotation.Nullable;
 public class PhantomBlock extends ModBlock {
 
     public PhantomBlock() {
-        super(defaultProperties().setLightLevel(bs -> 7).notSolid().variableOpacity(), "phantom_block");
+        super(defaultProperties().lightLevel(bs -> 7).noOcclusion().dynamicShape(), "phantom_block");
     }
 
     @Override

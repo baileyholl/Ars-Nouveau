@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:green_archwood_log"
+    },
+    {
+      "item": "minecraft:golden_apple"
+    },
+    {
+      "item": "ars_nouveau:glyph_heal"
+    }
+  ],
+  "result": {
+    "item": "ars_nouveau:ritual_restoration"
+  }
+}

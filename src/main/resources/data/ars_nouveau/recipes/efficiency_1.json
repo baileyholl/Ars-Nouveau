@@ -1,0 +1,26 @@
+{
+  "type": "ars_nouveau:enchantment",
+  "enchantment": "minecraft:efficiency",
+  "level": 1,
+  "mana": 2000,
+  "item_1": [
+    {
+      "item": "minecraft:sugar"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "minecraft:iron_pickaxe"
+    }
+  ],
+  "item_3": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ],
+  "item_4": [
+    {
+      "tag": "forge:storage_blocks/mana"
+    }
+  ]
+}
