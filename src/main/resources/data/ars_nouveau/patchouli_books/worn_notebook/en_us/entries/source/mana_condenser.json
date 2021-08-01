@@ -5,7 +5,7 @@
     "pages": [
         {
             "type": "text",
-            "text": "The Agronomic Sourcelink generates source from nearby crop growth. Note, this growth must be naturally occuring. Forcing the growth with bonemeal or magic will not provide source. Mana Blooms provide additional source per growth. Source will be output from the Sourcelink to nearby jars within 5 blocks."
+            "text": "ars_nouveau.page1.agronomic_sourcelink"
         },
 		{
             "type":"crafting",
