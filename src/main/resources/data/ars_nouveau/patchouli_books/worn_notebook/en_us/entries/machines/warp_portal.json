@@ -24,7 +24,7 @@
 			],
 			"symmetrical": true
 		},
-		"text":"A magical portal that can send players, mobs, spells, and items to any location in the same dimension."
+		"text":"ars_nouveau.page2.warp_portal"
 		},{
             "type": "relations",
             "entries":["items/warp_scroll"]        
