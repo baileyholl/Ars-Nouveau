@@ -1,0 +1,16 @@
+{
+    "name": "block.ars_nouveau.mana_jar",
+    "icon": "ars_nouveau:mana_jar",
+    "category": "source",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Source Jars store source gathered from nearby Sourcelinks. Source is used in glyphs and rituals by powering devices like the Glyph Press and Enchanting Apparatus. Source may be moved using a bucket, or the jar can be picked up and moved. To use Source in a jar, simply place the jar near your desired device. Source Jars will provide a signal to Redstone Comparators based on their fill level."
+        },
+
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:mana_jar"
+		}
+    ]
+}

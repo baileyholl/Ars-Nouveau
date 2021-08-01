@@ -1,7 +1,7 @@
 {
     "name": "block.ars_nouveau.mana_condenser",
     "icon": "ars_nouveau:mana_condenser",
-    "category": "machines",
+    "category": "source",
     "pages": [
         {
             "type": "text",
