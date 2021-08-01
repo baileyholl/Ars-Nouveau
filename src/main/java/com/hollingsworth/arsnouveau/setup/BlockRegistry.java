@@ -472,8 +472,8 @@ public class BlockRegistry {
             registry.register(getDefaultBlockItem(BlockRegistry.AS_GOLD_MOSAIC, LibBlockNames.AS_GOLD_MOSAIC));
             registry.register(getDefaultBlockItem(BlockRegistry.AS_GOLD_SLAB, LibBlockNames.AS_GOLD_SLAB));
             registry.register(getDefaultBlockItem(BlockRegistry.AS_GOLD_STONE, LibBlockNames.AS_GOLD_STONE));
-            registry.register(new AnimBlockItem(BlockRegistry.ALCHEMICAL_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(() -> PotionMelderRenderer::getISTER)).setRegistryName(LibBlockNames.ALCHEMICAL_SOURCELINK));
-            registry.register(new AnimBlockItem(BlockRegistry.VITALIC_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(() -> PotionMelderRenderer::getISTER)).setRegistryName(LibBlockNames.VITALIC_SOURCELINK));
+            registry.register(new AnimBlockItem(BlockRegistry.ALCHEMICAL_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(() -> AlchemicalRenderer::getISTER)).setRegistryName(LibBlockNames.ALCHEMICAL_SOURCELINK));
+            registry.register(new AnimBlockItem(BlockRegistry.VITALIC_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(() -> VitalicRendererd::getISTER)).setRegistryName(LibBlockNames.VITALIC_SOURCELINK));
 
         }
 

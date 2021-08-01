@@ -1,17 +1,18 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.common.datagen.Recipes;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.LavaFluid;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.tags.ITag;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.Tags;
 import software.bernie.geckolib3.core.IAnimatable;
 
@@ -35,26 +36,24 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
         if(level.isClientSide)
             return;
         if(level.getGameTime() % 20 == 0 && this.canAcceptMana()){
-            int numSource = (int) BlockPos.betweenClosedStream(this.getBlockPos().below().offset(1, 0, 1), this.getBlockPos().below().offset(-1, 0, -1))
-                    .filter(b -> level.getFluidState(b).getType() instanceof LavaFluid).map(b -> level.getFluidState(b))
-                    .filter(FluidState::isSource).count();
-
             for(ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(worldPosition).inflate(1.0))){
+                int mana = 0;
+                if(ForgeHooks.getBurnTime(i.getItem(), null) > 0){
+                    mana = 10;
+                }
+                if(i.getItem().getItem().is(Recipes.ARCHWOOD_LOG_TAG)){
+                    mana = 30;
+                }
                 if(i.getItem().getItem() == BlockRegistry.BLAZING_LOG.asItem()){
-                    int mana = 100;
+                    mana = 50;
+                }
+
+                if(mana > 0) {
                     this.addMana(mana);
-                    this.progress += 5;
                     i.getItem().shrink(1);
                     Networking.sendToNearby(level, getBlockPos(),
                             new PacketANEffect(PacketANEffect.EffectType.BURST, i.blockPosition(), new ParticleColor.IntWrapper(255, 0, 0)));
-                    break;
                 }
-
-            }
-
-            if(numSource > 0){
-                this.addMana(numSource*2);
-                progress += 1 + numSource/2;
             }
         }
     }
@@ -64,7 +63,7 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
             return;
         AtomicBoolean set = new AtomicBoolean(false);
         BlockPos.withinManhattanStream(worldPosition, 1, 0,1).forEach(p ->{
-            if(!set.get() && level.getBlockState(p).isAir()){
+            if(!set.get() && level.getBlockState(p).isAir() && level.getFluidState(p.below()).getType() == Fluids.LAVA || level.getFluidState(p.below()).getType() == Fluids.FLOWING_LAVA){
                 level.setBlockAndUpdate(p, BlockRegistry.LAVA_LILY.getState(level, p));
                 set.set(true);
             }

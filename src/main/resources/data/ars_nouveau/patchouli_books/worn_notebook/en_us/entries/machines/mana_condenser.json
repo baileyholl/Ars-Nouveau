@@ -1,28 +1,12 @@
 {
-    "name": "Mana Condenser",
+    "name": "block.ars_nouveau.mana_condenser",
     "icon": "ars_nouveau:mana_condenser",
     "category": "machines",
     "pages": [
         {
             "type": "text",
-            "text": "The Mana Condenser provides World Mana to Mana Jars that are placed beneath it. This mana is collected from special world events that occur near it. These events include crop growth, animal breeding, and monsters that die nearby. Note, Mana Condensers will stop working in the event that another Mana Condenser is placed too close."
+            "text": "The Agronomic Sourcelink generates source from nearby crop growth. Note, this growth must be naturally occuring. Forcing the growth with bonemeal or magic will not provide source. Mana Blooms provide additional source per growth. Source will be output from the Sourcelink to nearby jars within 5 blocks."
         },
-		{
-		"type":"multiblock",
-		"multiblock":{
-			"mapping":{
-				"C":"ars_nouveau:mana_condenser",
-				"0":"ars_nouveau:mana_jar"
-			},
-			"pattern":[
-				["C"],
-				["0"],
-				[" "]
-			],
-			"symmetrical": true
-		},
-		"text":""
-		},
 		{
             "type":"crafting",
 			"recipe":"ars_nouveau:mana_condenser"

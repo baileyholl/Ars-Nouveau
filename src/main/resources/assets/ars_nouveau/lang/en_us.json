@@ -734,5 +734,7 @@
 	"block.ars_nouveau.as_gold_stone":"Gilded Arcane Stone",
 	"block.ars_nouveau.as_gold_slab":"Gilded Slab",
 	"block.agronomic_sourcelink.disabled": "Another Agronomic Sourcelink is nearby...",
-	"ars_nouveau.spell_set": "Spell set."
+	"ars_nouveau.spell_set": "Spell set.",
+	"block.ars_nouveau.vitalic_sourcelink": "Vitalic Sourcelink",
+	"block.ars_nouveau.alchemical_sourcelink": "Alchemical Sourcelink"
 }
