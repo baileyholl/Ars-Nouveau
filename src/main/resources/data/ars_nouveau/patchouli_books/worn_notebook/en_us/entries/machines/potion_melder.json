@@ -1,7 +1,7 @@
 {
-    "name": "Potion Melder",
+    "name": "block.ars_nouveau.potion_melder",
     "icon": "ars_nouveau:potion_melder",
-    "category": "automation",
+    "category": "machines",
     "pages": [
         {
             "type": "text",

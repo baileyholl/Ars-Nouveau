@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "text",
-      "text": "A special casting focus. Grants summons from spells additional duration, strength, speed, and deals damage to enemies that kill them. Additionally, casting spells that target you like Self and Orbit will cast a copy of the spell on your nearby summons."
+      "text": "ars_nouveau.page1.summon_focus"
     },
     {
       "type": "apparatus_recipe",
