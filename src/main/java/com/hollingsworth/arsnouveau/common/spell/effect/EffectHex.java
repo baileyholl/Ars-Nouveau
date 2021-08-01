@@ -28,7 +28,7 @@ public class EffectHex extends AbstractEffect {
         Entity entity = rayTraceResult.getEntity();
         if(!(entity instanceof LivingEntity))
             return;
-        applyPotionWithCap((LivingEntity) entity, ModPotions.HEX_EFFECT, spellStats, POTION_TIME.get(), EXTEND_TIME.get(), 5);
+        applyPotionWithCap((LivingEntity) entity, ModPotions.HEX_EFFECT, spellStats, POTION_TIME.get(), EXTEND_TIME.get(), 4);
     }
 
     @Override

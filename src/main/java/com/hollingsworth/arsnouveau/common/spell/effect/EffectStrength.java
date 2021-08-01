@@ -26,7 +26,7 @@ public class EffectStrength extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         if(rayTraceResult.getEntity() instanceof LivingEntity){
-            applyPotionWithCap((LivingEntity) rayTraceResult.getEntity(), Effects.DAMAGE_BOOST, spellStats, POTION_TIME.get(), EXTEND_TIME.get(), 3);
+            applyPotionWithCap((LivingEntity) rayTraceResult.getEntity(), Effects.DAMAGE_BOOST, spellStats, POTION_TIME.get(), EXTEND_TIME.get(), 2);
         }
     }
 

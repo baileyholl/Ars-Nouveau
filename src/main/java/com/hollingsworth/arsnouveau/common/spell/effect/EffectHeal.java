@@ -33,7 +33,7 @@ public class EffectHeal extends AbstractEffect {
 
             float healVal = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
             if(spellStats.hasBuff(AugmentExtendTime.INSTANCE)){
-                applyPotionWithCap(entity, Effects.REGENERATION, spellStats, 5, 5, 5);
+                applyPotionWithCap(entity, Effects.REGENERATION, spellStats, 5, 5, 4);
             }else{
                 if(entity.isInvertedHealAndHarm()){
                     dealDamage(world, shooter, healVal, spellStats, entity, buildDamageSource(world, shooter).setMagic());
