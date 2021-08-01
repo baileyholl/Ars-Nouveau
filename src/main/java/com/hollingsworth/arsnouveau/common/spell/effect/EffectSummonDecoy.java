@@ -25,7 +25,7 @@ public class EffectSummonDecoy extends AbstractEffect {
 
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        if(shooter != null){
+        if(isRealPlayer(shooter)){
             Vector3d pos = safelyGetHitPos(rayTraceResult);
             EntityDummy dummy = new EntityDummy(world);
             dummy.ticksLeft = (int) (20 * (GENERIC_INT.get() + spellStats.getDurationMultiplier() * EXTEND_TIME.get()));

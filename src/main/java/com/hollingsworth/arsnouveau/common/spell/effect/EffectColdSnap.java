@@ -23,7 +23,6 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Set;
 
 public class EffectColdSnap extends AbstractEffect {
@@ -35,44 +34,42 @@ public class EffectColdSnap extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        super.onResolveEntity(rayTraceResult, world, shooter, augments, spellContext);
-        Entity entity = ((EntityRayTraceResult) rayTraceResult).getEntity();
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        Entity entity = rayTraceResult.getEntity();
         if(!(entity instanceof LivingEntity))
             return;
         LivingEntity livingEntity = (LivingEntity) entity;
         Vector3d vec = safelyGetHitPos(rayTraceResult);
-        float damage = (float) (DAMAGE.get() + AMP_VALUE.get() * getAmplificationBonus(augments));
-        int range = 3 + getBuffCount(augments, AugmentAOE.class);
-        int snareSec = POTION_TIME.get() + EXTEND_TIME.get() * getDurationModifier(augments);
+        float damage = (float) (DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
+        int range = 3 + spellStats.getBuffCount(AugmentAOE.INSTANCE);
+        int snareSec = (int) (POTION_TIME.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier());
 
         if(!canDamage(livingEntity))
             return;
 
-        damage(vec, world, shooter, augments, damage, snareSec, livingEntity);
+        damage(vec, world, shooter, spellStats, damage, snareSec, livingEntity);
 
         for(Entity e : world.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(livingEntity.blockPosition().north(range).east(range).above(range),  livingEntity.blockPosition().south(range).west(range).below(range)))){
             if(e.equals(livingEntity) || !(e instanceof LivingEntity) || e.equals(shooter))
                 continue;
             if(canDamage((LivingEntity) e)){
                 vec = e.position();
-                damage(vec, world, shooter, augments, damage, snareSec, (LivingEntity) e);
+                damage(vec, world, shooter, spellStats, damage, snareSec, (LivingEntity) e);
 
             }else{
-                ((LivingEntity) e).addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 20 * snareSec, getAmplificationBonus(augments)));
+                ((LivingEntity) e).addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 20 * snareSec, (int) spellStats.getAmpMultiplier()));
             }
         }
-
     }
 
     public boolean canDamage(LivingEntity livingEntity){
         return livingEntity.isInWaterOrRain() || livingEntity.getEffect(Effects.MOVEMENT_SLOWDOWN) != null;
     }
 
-    public void damage(Vector3d vec, World world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, float damage, int snareTime, LivingEntity livingEntity){
+    public void damage(Vector3d vec, World world, @Nullable LivingEntity shooter, SpellStats stats, float damage, int snareTime, LivingEntity livingEntity){
         EntityDamageSource damageSource = new EntityDamageSource("cold", shooter == null ? FakePlayerFactory.getMinecraft((ServerWorld) world) : shooter);
         damageSource.setMagic();
-        dealDamage(world, shooter, damage, augments, livingEntity, damageSource);
+        dealDamage(world, shooter, damage, stats, livingEntity, damageSource);
         ((ServerWorld)world).sendParticles(ParticleTypes.SPIT, vec.x, vec.y +0.5, vec.z,50,
                 ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1),ParticleUtil.inRange(-0.1, 0.1), 0.3);
         livingEntity.addEffect(new EffectInstance(ModPotions.SNARE_EFFECT, 20 * snareTime));

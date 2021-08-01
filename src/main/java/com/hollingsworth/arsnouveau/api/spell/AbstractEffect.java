@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.api.event.SummonEvent;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
@@ -173,17 +174,20 @@ public abstract class AbstractEffect extends AbstractSpellPart {
 
     public void dealDamage(World world, LivingEntity shooter, float baseDamage, SpellStats stats, Entity entity, DamageSource source){
         shooter = shooter == null ? FakePlayerFactory.getMinecraft((ServerWorld) world) : shooter;
+
+
         float totalDamage = (float) (baseDamage + stats.getDamageModifier());
         if(entity instanceof LivingEntity && ((LivingEntity) entity).getHealth() <= 0 || totalDamage <= 0)
             return;
 
         entity.hurt(source, totalDamage);
+        PlayerEntity playerContext = shooter instanceof PlayerEntity ? (PlayerEntity) shooter : ANFakePlayer.getPlayer((ServerWorld) world);
         if(!(entity instanceof LivingEntity) )
             return;
         LivingEntity mob = (LivingEntity) entity;
         if(mob.getHealth() <= 0 && !mob.removed && stats.hasBuff(AugmentFortune.INSTANCE)){
             int looting = stats.getBuffCount(AugmentFortune.INSTANCE);
-            LootContext.Builder lootContext = LootUtil.getLootingContext((ServerWorld)world,shooter, mob, looting, DamageSource.playerAttack((PlayerEntity) shooter));
+            LootContext.Builder lootContext = LootUtil.getLootingContext((ServerWorld)world,shooter, mob, looting, DamageSource.playerAttack(playerContext));
             ResourceLocation lootTable = mob.getLootTable();
             LootTable loottable = world.getServer().getLootTables().get(lootTable);
             List<ItemStack> items = loottable.getRandomItems(lootContext.create(LootParameterSets.ALL_PARAMS));
@@ -215,7 +219,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public DamageSource buildDamageSource(World world, LivingEntity shooter){
-        shooter = shooter == null ? FakePlayerFactory.getMinecraft((ServerWorld) world) : shooter;
+        shooter = !(shooter instanceof PlayerEntity) ? FakePlayerFactory.getMinecraft((ServerWorld) world) : shooter;
         return DamageSource.playerAttack((PlayerEntity) shooter);
     }
 
