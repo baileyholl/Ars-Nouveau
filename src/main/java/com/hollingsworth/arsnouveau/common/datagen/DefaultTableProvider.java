@@ -113,6 +113,8 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.AS_GOLD_MOSAIC);
             registerDropSelf(BlockRegistry.AS_GOLD_SLAB);
             registerDropSelf(BlockRegistry.AS_GOLD_STONE);
+            registerDropSelf(BlockRegistry.VITALIC_BLOCK);
+            registerDropSelf(BlockRegistry.ALCHEMICAL_BLOCK);
         }
         protected <T extends Comparable<T> & IStringSerializable> void registerBedCondition(Block block, Property<T> prop, T isValue) {
             list.add(block);

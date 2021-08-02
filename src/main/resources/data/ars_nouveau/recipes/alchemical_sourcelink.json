@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "gzg",
+    "mym",
+    "gmg"
+  ],
+  "key": {
+    "g": {
+      "tag": "forge:ingots/gold"
+    },
+    "m": {
+      "tag": "forge:gems/mana"
+    },
+    "y": {
+      "item": "ars_nouveau:potion_jar"
+    },
+    "z": {
+      "item": "minecraft:brewing_stand"
+    }
+  },
+  "result": {
+    "item": "ars_nouveau:alchemical_sourcelink"
+  }
+}

@@ -47,10 +47,10 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
                 }
                 if(i.getItem().getItem() == BlockRegistry.BLAZING_LOG.asItem()){
                     mana += 40;
-                    progress += 2;
+                    progress += 5;
                 }else if(i.getItem().getItem().is(Recipes.ARCHWOOD_LOG_TAG)){
                     mana += 20;
-                    progress += 1;
+                    progress += 3;
                 }
 
                 if(mana > 0) {
@@ -64,6 +64,7 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
 
                     Networking.sendToNearby(level, getBlockPos(),
                             new PacketANEffect(PacketANEffect.EffectType.BURST, i.blockPosition(), new ParticleColor.IntWrapper(255, 0, 0)));
+                    return;
                 }
             }
         }

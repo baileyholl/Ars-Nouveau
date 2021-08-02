@@ -12,6 +12,7 @@ public class LibBlockNames {
     public static final String PORTAL = "portal";
     public static final String CRYSTALLIZER = "crystallizer";
     public static final String ARCANE_CORE = "arcane_core";
+    // TODO Rename next major version
     public static final String MANA_GEM = "mana_gem";
     public final static String ARCANE_STONE = "arcane_stone";
     public final static String AB_MOSAIC = "ab_mosaic";
@@ -22,10 +23,13 @@ public class LibBlockNames {
     public static final String REDSTONE_AIR = "redstone_air";
 
     public static final String INTANGIBLE_AIR = "intangible_air";
+    // TODO Rename next major version
     public static final String VOLCANIC_ACCUMULATOR = "volcanic_accumulator";
     public static final String LAVA_LILY = "lava_lily";
+    // TODO Rename next major version
     public static final String MANA_BERRY_BUSH = "mana_berry_bush";
     public static final String WIXIE_CAULDRON = "wixie_cauldron";
+    // TODO Rename next major version
     public static final String CREATIVE_MANA_JAR = "creative_mana_jar";
     public final static String AB_SMOOTH = "ab_smooth";
     public final static String AB_CLOVER = "ab_clover";
@@ -72,6 +76,7 @@ public class LibBlockNames {
     public final static String STRIPPED_AWWOOD_RED = "stripped_red_archwood_wood";
     public final static String STRIPPED_AWLOG_PURPLE = "stripped_purple_archwood_log";
     public final static String STRIPPED_AWWOOD_PURPLE = "stripped_purple_archwood_wood";
+    // TODO Rename next major version
     public final static String MANA_GEM_BLOCK = "mana_gem_block";
 
     public final static String POTION_JAR_BLOCK = "potion_jar";
