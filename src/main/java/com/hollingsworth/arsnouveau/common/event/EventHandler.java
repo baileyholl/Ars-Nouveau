@@ -124,7 +124,7 @@ public class EventHandler {
     public static void onJump(LivingEvent.LivingJumpEvent event){
         if(!event.getEntityLiving().level.isClientSide  && event.getEntityLiving() instanceof PlayerEntity){
             PlayerEntity entity = (PlayerEntity) event.getEntityLiving();
-            if(entity.getEffect(ModPotions.FLIGHT_EFFECT) == null && RitualFlight.RitualFlightHandler.canPlayerStillFly(entity)){
+            if(entity.getEffect(ModPotions.FLIGHT_EFFECT) == null && RitualFlight.RitualFlightHandler.canPlayerStillFly(entity) != null){
                 RitualFlight.RitualFlightHandler.grantFlight(entity);
             }
 
