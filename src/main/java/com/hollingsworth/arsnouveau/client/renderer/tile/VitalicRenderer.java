@@ -36,7 +36,7 @@ public class VitalicRenderer extends GeoBlockRenderer<VitalicSourcelinkTile> {
                     GlowParticleData.createData(new ParticleColor(
                             rand.nextInt(255),
                             rand.nextInt(50),
-                            rand.nextInt(50)
+                            rand.nextInt(255)
                     )),
                     pos.getX() +0.5  , pos.getY() +0.3  + ParticleUtil.inRange(-0.1, 0.35) , pos.getZ() +0.5 ,
                     0,0,0);;

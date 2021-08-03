@@ -34,6 +34,8 @@ public class Recipes extends RecipeProvider {
     public static ITag.INamedTag<Item> MANA_GEM_BLOCK_TAG = ItemTags.bind("forge:storage_blocks/mana");
     public static ITag.INamedTag<Item> ARCHWOOD_LOG_TAG = ItemTags.bind("forge:logs/archwood");
     public static ITag.INamedTag<Block> DECORATIVE_AN =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "an_decorative"));
+    public static ITag.INamedTag<Block> MAGIC_SAPLINGS =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "magic_saplings"));
+    public static ITag.INamedTag<Block> MAGIC_PLANTS =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "magic_plants"));
 
     public static Ingredient MANA_GEM = Ingredient.of(MANA_GEM_TAG);
     public static Ingredient MANA_GEM_BLOCK = Ingredient.of(MANA_GEM_BLOCK_TAG);
@@ -70,8 +72,6 @@ public class Recipes extends RecipeProvider {
                     .requires(Items.DIAMOND, 2)
                     .requires(Items.BLAZE_POWDER, 2)
                     .save(consumer);
-
-
 
             ShapelessRecipeBuilder.shapeless(ItemsRegistry.manaFiber, 4).unlockedBy("has_journal", InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
                     .requires(ItemsRegistry.manaBloom)
@@ -433,6 +433,11 @@ public class Recipes extends RecipeProvider {
                     .pattern("gzg")
                     .pattern("mym")
                     .pattern("gmg").define('g', Tags.Items.INGOTS_GOLD).define('m', MANA_GEM).define('y', BlockRegistry.POTION_JAR).define('z', Blocks.BREWING_STAND).save(consumer);
+            
+            ShapedRecipeBuilder.shaped(BlockRegistry.VITALIC_BLOCK).unlockedBy("has_journal",InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
+                    .pattern("gsg")
+                    .pattern("wia")
+                    .pattern("gsg").define('g', Tags.Items.INGOTS_GOLD).define('s', MANA_GEM).define('w', Items.WHEAT).define('i', Items.IRON_SWORD).define('a', Items.APPLE).save(consumer);
 
         }
     }

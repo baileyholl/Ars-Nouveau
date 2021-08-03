@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "gsg",
+    "wia",
+    "gsg"
+  ],
+  "key": {
+    "g": {
+      "tag": "forge:ingots/gold"
+    },
+    "s": {
+      "tag": "forge:gems/mana"
+    },
+    "w": {
+      "item": "minecraft:wheat"
+    },
+    "i": {
+      "item": "minecraft:iron_sword"
+    },
+    "a": {
+      "item": "minecraft:apple"
+    }
+  },
+  "result": {
+    "item": "ars_nouveau:vitalic_sourcelink"
+  }
+}
