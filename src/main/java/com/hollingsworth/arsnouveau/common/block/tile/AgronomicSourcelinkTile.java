@@ -2,10 +2,10 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.mana.SourcelinkEventQueue;
-import com.hollingsworth.arsnouveau.common.block.ManaBloomCrop;
+import com.hollingsworth.arsnouveau.common.datagen.Recipes;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.world.SaplingGrowTreeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -14,7 +14,6 @@ public class AgronomicSourcelinkTile extends SourcelinkTile {
 
     public AgronomicSourcelinkTile() {
         super(BlockRegistry.MANA_CONDENSER_TILE);
-        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @Override
@@ -34,8 +33,17 @@ public class AgronomicSourcelinkTile extends SourcelinkTile {
 
     @SubscribeEvent
     public static void cropGrow(BlockEvent.CropGrowEvent.Post event) {
-        int mana = 50;
-        if(event.getWorld().getBlockState(event.getPos()).getBlock() instanceof ManaBloomCrop) {
+        int mana = 10;
+        if(event.getWorld().getBlockState(event.getPos()).getBlock().is(Recipes.MAGIC_PLANTS)) {
+            mana += 20;
+        }
+        SourcelinkEventQueue.addManaEvent(event.getWorld(), AgronomicSourcelinkTile.class, mana, event, event.getPos());
+    }
+
+    @SubscribeEvent
+    public static void treeGrow(SaplingGrowTreeEvent event) {
+        int mana = 25;
+        if(event.getWorld().getBlockState(event.getPos()).getBlock().is(Recipes.MAGIC_SAPLINGS)) {
             mana += 25;
         }
         SourcelinkEventQueue.addManaEvent(event.getWorld(), AgronomicSourcelinkTile.class, mana, event, event.getPos());
