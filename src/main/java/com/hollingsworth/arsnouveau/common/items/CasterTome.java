@@ -31,7 +31,7 @@ public class CasterTome extends ModItem implements ICasterTool {
 
     @Override
     public boolean onScribe(World world, BlockPos pos, PlayerEntity player, Hand handIn, ItemStack stack) {
-        return false;
+        return player.isCreative() && ICasterTool.super.onScribe(world, pos, player, handIn, stack);
     }
 
 
