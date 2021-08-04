@@ -17,9 +17,9 @@ import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 import java.util.Random;
 
 public class AgronomicRenderer extends GeoBlockRenderer<AgronomicSourcelinkTile> {
-
+    public static SourcelinkModel model =  new SourcelinkModel("agronomic");
     public AgronomicRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn, new AgronomicSourcelinkModel());
+        super(rendererDispatcherIn, model);
     }
 
 
@@ -49,6 +49,6 @@ public class AgronomicRenderer extends GeoBlockRenderer<AgronomicSourcelinkTile>
 //        }
     }
     public static GenericItemRenderer getISTER(){
-        return new GenericItemRenderer(new AgronomicSourcelinkModel());
+        return new GenericItemRenderer(model);
     }
 }
