@@ -12,6 +12,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
@@ -19,6 +20,9 @@ public class VitalicSourcelinkTile extends SourcelinkTile{
     public VitalicSourcelinkTile(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
     }
+
+    // Test for a quark tag that has disabled baby growth.
+    private static final String TAG_POISONED = "quark:poison_potato_applied";
 
     public VitalicSourcelinkTile(){
         super(BlockRegistry.VITALIC_TILE);
@@ -36,6 +40,9 @@ public class VitalicSourcelinkTile extends SourcelinkTile{
             for(AnimalEntity entity : level.getLoadedEntitiesOfClass(AnimalEntity.class, new AxisAlignedBB(worldPosition).inflate(6))){
                 if(entity.isBaby()){
                     if(entity.getAge() < 0){
+                        if(ModList.get().isLoaded("quark") && entity.getPersistentData().contains(TAG_POISONED)){
+                            return;
+                        }
                         entity.setAge(Math.min(0,entity.getAge() + 500));
                         this.addMana(10);
                         ParticleUtil.spawnFollowProjectile(level, entity.blockPosition(), this.worldPosition);
