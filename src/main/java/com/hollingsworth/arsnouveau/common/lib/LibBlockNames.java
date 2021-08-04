@@ -107,5 +107,5 @@ public class LibBlockNames {
 
     public static final String ALCHEMICAL_SOURCELINK = "alchemical_sourcelink";
     public static final String VITALIC_SOURCELINK = "vitalic_sourcelink";
-    public static final String MYCELIC_SOURCELINK = "mycelic_sourcelink";
+    public static final String MYCELIAL_SOURCELINK = "mycelial_sourcelink";
 }

@@ -221,6 +221,8 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.VITALIC_SOURCELINK) public static VitalicSourcelinkBlock VITALIC_BLOCK;
     @ObjectHolder(LibBlockNames.VITALIC_SOURCELINK) public static TileEntityType<VitalicSourcelinkTile> VITALIC_TILE;
 
+    @ObjectHolder(LibBlockNames.MYCELIAL_SOURCELINK) public static MycelialSourcelinkBlock MYCELIAL_BLOCK;
+    @ObjectHolder(LibBlockNames.MYCELIAL_SOURCELINK) public static TileEntityType<MycelialSourcelinkTile> MYCELIAL_TILE;
 
     @ObjectHolder("an_stateprovider") public static BlockStateProviderType stateProviderType;
 
@@ -330,6 +332,7 @@ public class BlockRegistry {
             registry.register(new DrygmyStone());
             registry.register(new AlchemicalSourcelinkBlock());
             registry.register(new VitalicSourcelinkBlock());
+            registry.register(new MycelialSourcelinkBlock());
         }
         static Block.Properties woodProp = AbstractBlock.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD);
         public static MagicLeaves createLeavesBlock() {
@@ -367,6 +370,7 @@ public class BlockRegistry {
             event.getRegistry().register(TileEntityType.Builder.of(DrygmyTile::new, BlockRegistry.DRYGMY_BLOCK).build(null).setRegistryName(LibBlockNames.DRYGMY_STONE));
             event.getRegistry().register(TileEntityType.Builder.of(AlchemicalSourcelinkTile::new, BlockRegistry.ALCHEMICAL_BLOCK).build(null).setRegistryName(LibBlockNames.ALCHEMICAL_SOURCELINK));
             event.getRegistry().register(TileEntityType.Builder.of(VitalicSourcelinkTile::new, BlockRegistry.VITALIC_BLOCK).build(null).setRegistryName(LibBlockNames.VITALIC_SOURCELINK));
+            event.getRegistry().register(TileEntityType.Builder.of(MycelialSourcelinkTile::new, BlockRegistry.MYCELIAL_BLOCK).build(null).setRegistryName(LibBlockNames.MYCELIAL_SOURCELINK));
 
         }
 
@@ -474,6 +478,7 @@ public class BlockRegistry {
             registry.register(getDefaultBlockItem(BlockRegistry.AS_GOLD_STONE, LibBlockNames.AS_GOLD_STONE));
             registry.register(new AnimBlockItem(BlockRegistry.ALCHEMICAL_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(() -> AlchemicalRenderer::getISTER)).setRegistryName(LibBlockNames.ALCHEMICAL_SOURCELINK));
             registry.register(new AnimBlockItem(BlockRegistry.VITALIC_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(() -> VitalicRenderer::getISTER)).setRegistryName(LibBlockNames.VITALIC_SOURCELINK));
+            registry.register(new AnimBlockItem(BlockRegistry.MYCELIAL_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(() -> VitalicRenderer::getISTER)).setRegistryName(LibBlockNames.MYCELIAL_SOURCELINK));
 
         }
 
