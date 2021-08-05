@@ -750,7 +750,7 @@
 	"ars_nouveau.page1.archwood": "Archwood Trees have a small chance to spawn in any biome, and come in four types. Rarely, you may stumble upon an Archwood Forest, a biome full of magical creatures, naturally spawning lights, and Archwood trees. Can be used as decoration, rituals, or for crafting wands.",
 	"ars_nouveau.page1.decorative": "Purely decorative blocks. To see the full list, place Arcane Stone in a Stonecutter.",
 	"ars_nouveau.page1.lava_lily":"A decorative block that can be placed on any liquid or block. The texture of this block varies if it is placed on Lava, a Magma Block, or any other block.",
-	"ars_nouveau.page1.mana_berry":"A Source Berry Bush can be found in Taiga and Archwood Forest biomes, and produces Source Berries. A Source Berry can be used to craft a Potion of Mana Regeneration or consumed as food. Carbuncles will automatically harvest fully grown Source Berry Bushes, making them useful for early automation of the Agronomic Sourcelink",
+	"ars_nouveau.page1.mana_berry":"A Source Berry Bush can be found in Taiga and Archwood Forest biomes, and produces Source Berries. A Source Berry can be used to craft a Potion of Mana Regeneration or consumed as food. Carbuncles will automatically harvest fully grown Source Berry Bushes, making them useful for early automation of the Agronomic Sourcelink. Source Berry foods will also grant Mana Regeneration.",
 	"ars_nouveau.page1.sconce":"A decorative light. To ignite, cast Light on the sconce. The color of the flame corresponds with your spell color.",
 	"ars_nouveau.page1.wilden":"An ancient race that mastered shapeshifting magic, Wilden are hostile creatures that can be commonly found at night. While Wilden Defenders may only be found in cold biomes, Stalkers and Pack Hunters can be found in any biome.",
 	"ars_nouveau.page2.wilden":"An aggressive and fast hunter that can summon allied wolves.",
@@ -771,7 +771,9 @@
 	"ars_nouveau.page1.dominion_wand": "A tool for configuring Source Relays and automation entities. To set a transfer path, use the wand on the object that you would like to take source from, and then use it on the block you would like to send source to. For example: Source Jar to Source Relay, Source Relay to Source Relay, or Source Relay to Source Jar. To clear connections, sneak and use this wand on a relay.",
 	"ars_nouveau.page1.alchemical_sourcelink": "Generates source by consuming potions from adjacent potion jars. The amount of source varies per potion and is dependent on the complexity of the potion. Bonus source is given for the length and level of the potion with multipliers for each effect a potion contains. Utilizing Wixies and Potion Melders is recommended for creating highly complex potions.",
 	"ars_nouveau.page1.vitalic_sourcelink": "Generates a moderate amount of source from nearby mob death and animal breeding. Additionally, the Vitalic Sourcelink will generate passive mana from nearby baby animals and will accelerate their growth.",
-	"ars_nouveau.page1.mycelial_sourcelink": "Generates a moderate amount of source from nearby food, generating more for more nourishing food. Additionally, the Mycelial Sourcelink will convert Grass or Dirt in the 3x3 below it into Mycelium and will grow mushrooms around it given that the space is empty.",
-	"block.ars_nouveau.mycelial_sourcelink": "Mycelial Sourcelink"
-
+	"ars_nouveau.page1.mycelial_sourcelink": "Generates a moderate amount of source from nearby food, generating more for more nourishing food. Source Berry food is worth far more than other mundane foods. Additionally, the Mycelial Sourcelink will convert Grass or Dirt in the 3x3 below it into Mycelium and will grow mushrooms around it given that the space is empty.",
+	"block.ars_nouveau.mycelial_sourcelink": "Mycelial Sourcelink",
+	"item.ars_nouveau.source_berry_pie": "Source Berry Pie",
+	"item.ars_nouveau.source_berry_roll": "Source Berry Roll",
+	"tooltip.ars_nouveau.source_food": "Grants mana regeneration when consumed."
 }

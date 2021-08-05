@@ -35,6 +35,7 @@ public class Recipes extends RecipeProvider {
     public static ITag.INamedTag<Block> DECORATIVE_AN =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "an_decorative"));
     public static ITag.INamedTag<Block> MAGIC_SAPLINGS =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "magic_saplings"));
     public static ITag.INamedTag<Block> MAGIC_PLANTS =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "magic_plants"));
+    public static ITag.INamedTag<Item> MAGIC_FOOD = ItemTags.bind("ars_nouveau:magic_food");
 
     public static Ingredient MANA_GEM = Ingredient.of(MANA_GEM_TAG);
     public static Ingredient MANA_GEM_BLOCK = Ingredient.of(MANA_GEM_BLOCK_TAG);
@@ -456,6 +457,17 @@ public class Recipes extends RecipeProvider {
                     .define('s', MANA_GEM)
                     .define('i', Items.WHEAT).save(consumer);
 
+            shapelessBuilder(ItemsRegistry.SOURCE_BERRY_PIE)
+                    .requires(Items.EGG)
+                    .requires(Items.SUGAR)
+                    .requires(ItemsRegistry.manaBloom)
+                    .requires(BlockRegistry.MANA_BERRY_BUSH, 3)
+                    .save(consumer);
+
+            shapelessBuilder(ItemsRegistry.SOURCE_BERRY_ROLL)
+                    .requires(Items.WHEAT, 3)
+                    .requires(BlockRegistry.MANA_BERRY_BUSH)
+                    .save(consumer);
         }
     }
 

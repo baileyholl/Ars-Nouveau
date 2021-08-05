@@ -1,12 +1,14 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.common.datagen.Recipes;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Food;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityType;
@@ -35,13 +37,17 @@ public class MycelialSourcelinkTile extends SourcelinkTile{
                 if(i.getItem().getItem().isEdible()){
                     int mana = 0;
                     Food food = i.getItem().getItem().getFoodProperties();
-                    mana += 5 * food.getNutrition();
+                    mana += 8 * food.getNutrition();
                     mana += 25 * food.getSaturationModifier();
                     progress += 1;
+                    if(i.getItem().getItem().is(Recipes.MAGIC_FOOD) || (i.getItem().getItem() instanceof BlockItem && Recipes.MAGIC_PLANTS.contains(((BlockItem) i.getItem().getItem()).getBlock()))){
+                        progress += 4;
+                        mana += 10;
+                        mana *= 1.5;
+                    }
                     this.addMana(mana);
                     ItemStack containerItem = i.getItem().getContainerItem();
                     i.getItem().shrink(1);
-                    System.out.println(mana);
                     if(!containerItem.isEmpty()){
                         level.addFreshEntity(new ItemEntity(level, i.getX(), i.getY(), i.getZ(), containerItem));
                     }
