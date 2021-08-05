@@ -136,6 +136,7 @@ repositories {
 dependencies {
 
     minecraft 'net.minecraftforge:forge:1.16.5-36.1.62'
+    runtimeOnly fg.deobf("curse.maven:exp-248787:3395800")  // Appleskin
     runtimeOnly fg.deobf("curse.maven:exp-407174:3188120")  // Shutup experimental settings
 //    runtimeOnly fg.deobf("curse.maven:exp-231951:3326143")  // Immersive engineering
 //    compileOnly fg.deobf("curse.maven:exp-231951:3326143")
