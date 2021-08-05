@@ -96,7 +96,7 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .build());
 
         addRecipe(builder()
-                .withResult(BlockRegistry.MANA_BLOOM_CROP)
+                .withResult(BlockRegistry.MAGE_BLOOM_CROP)
                 .withReagent(Ingredient.of(Tags.Items.SEEDS))
                 .withPedestalItem(4, Recipes.MANA_GEM)
                 .build());
@@ -188,7 +188,7 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withResult(ItemsRegistry.sylphCharm)
                 .withReagent(ItemsRegistry.sylphShard)
                 .withPedestalItem(Recipes.MANA_GEM)
-                .withPedestalItem(BlockRegistry.MANA_BLOOM_CROP)
+                .withPedestalItem(BlockRegistry.MAGE_BLOOM_CROP)
                 .withPedestalItem(ItemsRegistry.manaBloom)
                 .withPedestalItem(Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem( Items.OAK_SAPLING)

@@ -59,7 +59,7 @@ public class EffectHarvest extends AbstractEffect {
             }
             BlockPos finalBlockpos = blockpos;
             cropDrops.forEach(d -> {
-                if(d.getItem() == BlockRegistry.MANA_BLOOM_CROP.asItem()){
+                if(d.getItem() == BlockRegistry.MAGE_BLOOM_CROP.asItem()){
                     return;
                 }
                 world.addFreshEntity(new ItemEntity(world, finalBlockpos.getX(), finalBlockpos.getY(), finalBlockpos.getZ(), d));

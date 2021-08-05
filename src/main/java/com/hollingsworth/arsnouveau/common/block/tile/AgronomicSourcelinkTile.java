@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.Mod;
 public class AgronomicSourcelinkTile extends SourcelinkTile {
 
     public AgronomicSourcelinkTile() {
-        super(BlockRegistry.MANA_CONDENSER_TILE);
+        super(BlockRegistry.AGRONOMIC_SOURCELINK_TILE);
     }
 
     @Override

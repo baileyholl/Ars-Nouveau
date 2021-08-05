@@ -37,7 +37,7 @@ public class LootTables extends BaseLootTableProvider{
         putStandardLoot(BlockRegistry.ARCANE_ORE);
         putStandardLoot(BlockRegistry.GLYPH_PRESS_BLOCK);
         putStandardLoot(BlockRegistry.WARD_BLOCK);
-        putStandardLoot(BlockRegistry.MANA_CONDENSER);
+        putStandardLoot(BlockRegistry.AGRONOMIC_SOURCELINK);
         putStandardLoot(BlockRegistry.ENCHANTING_APP_BLOCK);
         putStandardLoot(BlockRegistry.ARCANE_PEDESTAL);
         putStandardLoot(BlockRegistry.SCRIBES_BLOCK);

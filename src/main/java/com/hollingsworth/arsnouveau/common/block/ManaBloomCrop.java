@@ -20,8 +20,6 @@ import net.minecraft.world.IBlockReader;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public class ManaBloomCrop extends CropsBlock {
     public static final IntegerProperty AGE_0_4 = IntegerProperty.create("age", 0, 4);
     public ManaBloomCrop() {
@@ -35,7 +33,7 @@ public class ManaBloomCrop extends CropsBlock {
     }
     @Override
     protected IItemProvider getBaseSeedId() {
-        return BlockRegistry.MANA_BLOOM_CROP;
+        return BlockRegistry.MAGE_BLOOM_CROP;
     }
 
 

@@ -449,7 +449,7 @@ public class Recipes extends RecipeProvider {
                     .define('s', MANA_GEM)
                     .define('i', Items.MUSHROOM_STEW).save(consumer);
 
-            ShapedRecipeBuilder.shaped(BlockRegistry.MANA_CONDENSER).unlockedBy("has_journal",InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
+            ShapedRecipeBuilder.shaped(BlockRegistry.AGRONOMIC_SOURCELINK).unlockedBy("has_journal",InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
                     .pattern(" s ")
                     .pattern("gig")
                     .pattern(" s ")

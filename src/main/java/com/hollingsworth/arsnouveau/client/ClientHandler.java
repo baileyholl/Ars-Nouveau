@@ -30,7 +30,7 @@ public class ClientHandler {
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.SCRIBES_TABLE_TILE, ScribesRenderer::new);
 
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.ARCANE_RELAY_TILE, RelayRenderer::new);
-        ClientRegistry.bindTileEntityRenderer(BlockRegistry.MANA_CONDENSER_TILE, AgronomicRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(BlockRegistry.AGRONOMIC_SOURCELINK_TILE, AgronomicRenderer::new);
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.LIGHT_TILE, LightRenderer::new);
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.PORTAL_TILE_TYPE, PortalTileRenderer::new);
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.ARCANE_RELAY_SPLITTER_TILE, RelaySplitterRenderer::new);
@@ -53,7 +53,7 @@ public class ClientHandler {
         RenderTypeLookup.setRenderLayer(BlockRegistry.ENCHANTING_APP_BLOCK, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.LIGHT_BLOCK, RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.PHANTOM_BLOCK, RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_BLOOM_CROP, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.MAGE_BLOOM_CROP, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.SCRIBES_BLOCK, RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.ARCANE_RELAY, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.RUNE_BLOCK, RenderType.cutout());
