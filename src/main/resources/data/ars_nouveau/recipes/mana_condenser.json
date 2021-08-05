@@ -1,19 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "xxx",
-    " y ",
-    "zzz"
+    " s ",
+    "gig",
+    " s "
   ],
   "key": {
-    "x": {
-      "tag": "forge:ingots/iron"
+    "g": {
+      "tag": "forge:ingots/gold"
     },
-    "y": {
-      "item": "minecraft:hopper"
+    "s": {
+      "tag": "forge:gems/mana"
     },
-    "z": {
-      "item": "ars_nouveau:arcane_stone"
+    "i": {
+      "item": "minecraft:wheat"
     }
   },
   "result": {

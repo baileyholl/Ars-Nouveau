@@ -10,7 +10,6 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.data.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -126,14 +125,6 @@ public class Recipes extends RecipeProvider {
                     .pattern("xyx")
                     .pattern("xxx").define('x', Tags.Items.NUGGETS_IRON).define('y', MANA_GEM).save(consumer);;
 
-            ShapedRecipeBuilder.shaped(BlockRegistry.MANA_CONDENSER).unlockedBy("has_journal",
-                    InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
-                    .pattern("xxx")
-                    .pattern(" y ")
-                    .pattern("zzz")
-                    .define('x',  Tags.Items.INGOTS_IRON)
-                    .define('y', Items.HOPPER)
-                    .define('z', BlockRegistry.ARCANE_STONE).save(consumer);;
 
             ShapelessRecipeBuilder.shapeless(BlockRegistry.WARD_BLOCK, 2).unlockedBy("has_journal",
                     InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
@@ -218,9 +209,13 @@ public class Recipes extends RecipeProvider {
                     .save(consumer);
 
             ShapedRecipeBuilder.shaped(BlockRegistry.VOLCANIC_BLOCK).unlockedBy("has_journal",InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
-                    .pattern("vxv")
-                    .pattern("xyx")
-                    .pattern("zzz").define('v', MANA_GEM).define('x', Items.LAVA_BUCKET).define('y', BlockRegistry.MANA_JAR).define('z', Items.GOLD_INGOT).save(consumer);
+                    .pattern(" s ")
+                    .pattern("gig")
+                    .pattern(" s ")
+                    .define('g', Tags.Items.INGOTS_GOLD)
+                    .define('s', MANA_GEM)
+                    .define('i', Items.LAVA_BUCKET).save(consumer);
+
             ShapelessRecipeBuilder.shapeless(BlockRegistry.LAVA_LILY, 8).unlockedBy("has_journal", InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
                     .requires(Items.LILY_PAD, 1).requires(MANA_GEM, 8)
                     .save(consumer);
@@ -430,14 +425,36 @@ public class Recipes extends RecipeProvider {
             makeStonecutter(consumer, BlockRegistry.AS_GOLD_STONE, BlockRegistry.AS_GOLD_MOSAIC, LibBlockNames.AS_GOLD_STONE);
             makeStonecutter(consumer, BlockRegistry.AS_GOLD_STONE, BlockRegistry.AS_GOLD_SLAB, LibBlockNames.AS_GOLD_STONE);
             ShapedRecipeBuilder.shaped(BlockRegistry.ALCHEMICAL_BLOCK).unlockedBy("has_journal",InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
-                    .pattern("gzg")
-                    .pattern("mym")
-                    .pattern("gmg").define('g', Tags.Items.INGOTS_GOLD).define('m', MANA_GEM).define('y', BlockRegistry.POTION_JAR).define('z', Blocks.BREWING_STAND).save(consumer);
-            
+                    .pattern(" s ")
+                    .pattern("gig")
+                    .pattern(" s ")
+                    .define('g', Tags.Items.INGOTS_GOLD)
+                    .define('s', MANA_GEM)
+                    .define('i', Items.BREWING_STAND).save(consumer);
+
             ShapedRecipeBuilder.shaped(BlockRegistry.VITALIC_BLOCK).unlockedBy("has_journal",InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
-                    .pattern("gsg")
-                    .pattern("wia")
-                    .pattern("gsg").define('g', Tags.Items.INGOTS_GOLD).define('s', MANA_GEM).define('w', Items.WHEAT).define('i', Items.IRON_SWORD).define('a', Items.APPLE).save(consumer);
+                    .pattern(" s ")
+                    .pattern("gig")
+                    .pattern(" s ")
+                    .define('g', Tags.Items.INGOTS_GOLD)
+                    .define('s', MANA_GEM)
+                    .define('i', Items.GLISTERING_MELON_SLICE).save(consumer);
+
+            ShapedRecipeBuilder.shaped(BlockRegistry.MYCELIAL_BLOCK).unlockedBy("has_journal",InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
+                    .pattern(" s ")
+                    .pattern("gig")
+                    .pattern(" s ")
+                    .define('g', Tags.Items.INGOTS_GOLD)
+                    .define('s', MANA_GEM)
+                    .define('i', Items.MUSHROOM_STEW).save(consumer);
+
+            ShapedRecipeBuilder.shaped(BlockRegistry.MANA_CONDENSER).unlockedBy("has_journal",InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
+                    .pattern(" s ")
+                    .pattern("gig")
+                    .pattern(" s ")
+                    .define('g', Tags.Items.INGOTS_GOLD)
+                    .define('s', MANA_GEM)
+                    .define('i', Items.WHEAT).save(consumer);
 
         }
     }

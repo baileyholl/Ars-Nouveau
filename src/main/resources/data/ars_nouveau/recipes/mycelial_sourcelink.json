@@ -13,10 +13,10 @@
       "tag": "forge:gems/mana"
     },
     "i": {
-      "item": "minecraft:glistering_melon_slice"
+      "item": "minecraft:mushroom_stew"
     }
   },
   "result": {
-    "item": "ars_nouveau:vitalic_sourcelink"
+    "item": "ars_nouveau:mycelial_sourcelink"
   }
 }
