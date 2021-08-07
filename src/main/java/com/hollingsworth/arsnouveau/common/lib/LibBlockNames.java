@@ -123,5 +123,7 @@ public class LibBlockNames {
     public static final String VITALIC_SOURCELINK = "vitalic_sourcelink";
     public static final String MYCELIAL_SOURCELINK = "mycelial_sourcelink";
 
+    public static final String RELAY_WARP = "relay_warp";
+    public static final String RELAY_DEPOSIT = "relay_deposit";
 
 }

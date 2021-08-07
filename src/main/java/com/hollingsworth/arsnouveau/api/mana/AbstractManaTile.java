@@ -98,6 +98,8 @@ public abstract class AbstractManaTile extends TileEntity implements IManaTile, 
 
     public int transferMana(IManaTile from, IManaTile to, int fromTransferRate){
         int transferRate = getTransferRate(from, to, fromTransferRate);
+        if(transferRate == 0)
+            return 0;
         from.removeMana(transferRate);
         to.addMana(transferRate);
         return transferRate;

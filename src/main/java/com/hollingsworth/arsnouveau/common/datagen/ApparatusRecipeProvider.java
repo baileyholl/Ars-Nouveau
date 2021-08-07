@@ -147,14 +147,6 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withPedestalItem( ItemsRegistry.noviceSpellBook)
                 .build());
 
-
-        addRecipe(builder()
-                .withResult(BlockRegistry.ARCANE_RELAY)
-                .withReagent(  BlockRegistry.MANA_JAR)
-                .withPedestalItem(6,Ingredient.of(Tags.Items.INGOTS_GOLD))
-                .withPedestalItem(2, Recipes.MANA_GEM)
-                .build());
-
         addRecipe(builder()
                 .withResult(ItemsRegistry.carbuncleCharm)
                 .withReagent(ItemsRegistry.carbuncleShard)
@@ -177,12 +169,6 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withPedestalItem(4, Recipes.MANA_GEM)
                 .build());
 
-        addRecipe(builder()
-                .withResult(BlockRegistry.ARCANE_RELAY_SPLITTER)
-                .withReagent( BlockRegistry.ARCANE_RELAY)
-                .withPedestalItem(4,Ingredient.of(Tags.Items.GEMS_QUARTZ))
-                .withPedestalItem(4,Ingredient.of(Tags.Items.INGOTS_GOLD))
-                .build());
 
         addRecipe(builder()
                 .withResult(ItemsRegistry.sylphCharm)
@@ -891,6 +877,26 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withPedestalItem(ItemsRegistry.WILDEN_WING)
                 .withPedestalItem(ItemsRegistry.WILDEN_TRIBUTE)
                 .withPedestalItem(Ingredient.of(Tags.Items.INGOTS_GOLD))
+                .build());
+
+        addRecipe(builder()
+                .withResult(BlockRegistry.ARCANE_RELAY_SPLITTER)
+                .withReagent(BlockRegistry.ARCANE_RELAY)
+                .withPedestalItem(4,Ingredient.of(Tags.Items.GEMS_QUARTZ))
+                .withPedestalItem(4,Ingredient.of(Tags.Items.GEMS_LAPIS))
+                .build());
+
+        addRecipe(builder()
+                .withResult(BlockRegistry.RELAY_WARP)
+                .withReagent(BlockRegistry.ARCANE_RELAY)
+                .withPedestalItem(4, Ingredient.of(Tags.Items.ENDER_PEARLS))
+                .withPedestalItem(4, Ingredient.of(Items.POPPED_CHORUS_FRUIT))
+                .build());
+
+        addRecipe(builder()
+                .withResult(BlockRegistry.RELAY_DEPOSIT)
+                .withReagent(BlockRegistry.ARCANE_RELAY)
+                .withPedestalItem(4,Ingredient.of(Items.HOPPER))
                 .build());
     }
 

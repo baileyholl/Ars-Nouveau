@@ -468,6 +468,14 @@ public class Recipes extends RecipeProvider {
                     .requires(Items.WHEAT, 3)
                     .requires(BlockRegistry.MANA_BERRY_BUSH)
                     .save(consumer);
+            ShapedRecipeBuilder.shaped(BlockRegistry.ARCANE_RELAY).unlockedBy("has_journal",InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
+                    .pattern("g g")
+                    .pattern("gMg")
+                    .pattern("g g")
+                    .define('g', Tags.Items.INGOTS_GOLD)
+                    .define('M', MANA_GEM_BLOCK)
+                    .save(consumer);
+
         }
     }
 

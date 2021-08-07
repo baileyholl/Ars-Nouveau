@@ -64,7 +64,7 @@
 	"block.ars_nouveau.summoning_crystal": "Summoning Crystal",
 	"block.ars_nouveau.portal": "Warp Portal",
 	"block.ars_nouveau.arcane_relay": "Source Relay",
-	"block.ars_nouveau.arcane_relay_splitter": "Source Splitter",
+	"block.ars_nouveau.arcane_relay_splitter": "Source Relay: Splitter",
 	"block.ars_nouveau.arcane_core": "Arcane Core",
 	"block.ars_nouveau.crystallizer": "Crystallizer",
 	"ars_nouveau.page.jar_of_light": "Summons a light that will follow the user as they move. Can be summoned and dismissed at any time.",
@@ -775,5 +775,9 @@
 	"block.ars_nouveau.mycelial_sourcelink": "Mycelial Sourcelink",
 	"item.ars_nouveau.source_berry_pie": "Source Berry Pie",
 	"item.ars_nouveau.source_berry_roll": "Source Berry Roll",
-	"tooltip.ars_nouveau.source_food": "Grants mana regeneration when consumed."
+	"tooltip.ars_nouveau.source_food": "Grants mana regeneration when consumed.",
+	"block.ars_nouveau.relay_warp": "Source Relay: Warper",
+	"block.ars_nouveau.relay_deposit": "Source Relay: Depositor",
+	"ars_nouveau.page.relay_deposit": "Operates similar to the Source Relay, but will deposit to jars it is not linked to within 5 blocks. See the instructions on the Source Relay for use.",
+	"ars_nouveau.page.relay_warp": "Operates similar to the Source Relay: Splitter but can teleport source an endless distance between other Warp relays. For distances beyond 30 blocks, there is a chance that some source will be lost during warp."
 }

@@ -22,6 +22,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -166,5 +168,14 @@ public class ManaUtil {
     public static BlockPos canGiveManaClosest(BlockPos pos, World world, int range){
         Optional<BlockPos> loc = BlockPos.findClosestMatch(pos, range, range, (b) ->  world.getBlockEntity(b) instanceof ManaJarTile && ((ManaJarTile) world.getBlockEntity(b)).canAcceptMana());
         return loc.orElse(null);
+    }
+
+    public static List<BlockPos> canGiveManaAny(BlockPos pos, World world, int range){
+        List<BlockPos> posList = new ArrayList<>();
+        BlockPos.withinManhattanStream(pos, range, range, range).forEach(b ->{
+            if(world.getBlockEntity(b) instanceof ManaJarTile && ((ManaJarTile) world.getBlockEntity(b)).canAcceptMana())
+                posList.add(b.immutable());
+        });
+        return posList;
     }
 }

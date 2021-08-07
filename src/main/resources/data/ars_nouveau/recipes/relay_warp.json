@@ -2,42 +2,42 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "item_1": [
     {
-      "tag": "forge:gems/quartz"
+      "tag": "forge:ender_pearls"
     }
   ],
   "item_2": [
     {
-      "tag": "forge:gems/quartz"
+      "tag": "forge:ender_pearls"
     }
   ],
   "item_3": [
     {
-      "tag": "forge:gems/quartz"
+      "tag": "forge:ender_pearls"
     }
   ],
   "item_4": [
     {
-      "tag": "forge:gems/quartz"
+      "tag": "forge:ender_pearls"
     }
   ],
   "item_5": [
     {
-      "tag": "forge:gems/lapis"
+      "item": "minecraft:popped_chorus_fruit"
     }
   ],
   "item_6": [
     {
-      "tag": "forge:gems/lapis"
+      "item": "minecraft:popped_chorus_fruit"
     }
   ],
   "item_7": [
     {
-      "tag": "forge:gems/lapis"
+      "item": "minecraft:popped_chorus_fruit"
     }
   ],
   "item_8": [
     {
-      "tag": "forge:gems/lapis"
+      "item": "minecraft:popped_chorus_fruit"
     }
   ],
   "reagent": [
@@ -46,6 +46,6 @@
     }
   ],
   "output": {
-    "item": "ars_nouveau:arcane_relay_splitter"
+    "item": "ars_nouveau:relay_warp"
   }
 }

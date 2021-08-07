@@ -8,7 +8,7 @@
       "text": "ars_nouveau.page.arcane_relay"
     },
     {
-      "type": "apparatus_recipe",
+      "type": "crafting",
       "recipe": "ars_nouveau:arcane_relay"
     }
   ]

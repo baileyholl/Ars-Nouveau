@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 
@@ -19,6 +20,10 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
 
     public ArcaneRelaySplitterTile() {
         super(BlockRegistry.ARCANE_RELAY_SPLITTER_TILE);
+    }
+
+    public ArcaneRelaySplitterTile(TileEntityType<?> type){
+        super(type);
     }
 
     @Override
@@ -50,12 +55,16 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
             }
             AbstractManaTile fromTile = (AbstractManaTile) level.getBlockEntity(fromPos);
             if(transferMana(fromTile, this, ratePer) > 0){
-                ParticleUtil.spawnFollowProjectile(level, fromPos, worldPosition);
+                createParticles(fromPos, worldPosition);
             }
         }
         for(BlockPos s : stale)
             fromList.remove(s);
 
+    }
+
+    public void createParticles(BlockPos from, BlockPos to){
+        ParticleUtil.spawnFollowProjectile(level, from, to);
     }
 
     public void processToList(){
@@ -71,12 +80,11 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
             AbstractManaTile toTile = (AbstractManaTile) level.getBlockEntity(toPos);
             int transfer = transferMana(this, toTile, ratePer);
             if(transfer > 0){
-                ParticleUtil.spawnFollowProjectile(level, worldPosition, toPos);
+                createParticles(worldPosition, toPos);
             }
         }
         for(BlockPos s : stale)
             toList.remove(s);
-
     }
 
     @Override

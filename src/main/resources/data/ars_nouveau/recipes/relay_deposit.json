@@ -1,0 +1,31 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "item_1": [
+    {
+      "item": "minecraft:hopper"
+    }
+  ],
+  "item_2": [
+    {
+      "item": "minecraft:hopper"
+    }
+  ],
+  "item_3": [
+    {
+      "item": "minecraft:hopper"
+    }
+  ],
+  "item_4": [
+    {
+      "item": "minecraft:hopper"
+    }
+  ],
+  "reagent": [
+    {
+      "item": "ars_nouveau:arcane_relay"
+    }
+  ],
+  "output": {
+    "item": "ars_nouveau:relay_deposit"
+  }
+}
