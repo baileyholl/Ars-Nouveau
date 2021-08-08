@@ -43,9 +43,9 @@ public class Recipes extends RecipeProvider {
     @Override
     protected void buildShapelessRecipes(Consumer<IFinishedRecipe> consumer) {
         {
-            makeArmor("novice", consumer, ItemsRegistry.manaFiber);
-            makeArmor("apprentice", consumer, ItemsRegistry.blazeFiber);
-            makeArmor("archmage", consumer, ItemsRegistry.endFiber);
+            makeArmor("novice", consumer, ItemsRegistry.MAGE_FIBER);
+            makeArmor("apprentice", consumer, ItemsRegistry.BLAZE_FIBER);
+            makeArmor("archmage", consumer, ItemsRegistry.END_FIBER);
 
             CookingRecipeBuilder.smelting(Ingredient.of(BlockRegistry.ARCANE_ORE), ItemsRegistry.manaGem,0.5f, 200)
                     .unlockedBy("has_ore", InventoryChangeTrigger.Instance.hasItems(BlockRegistry.ARCANE_ORE)).save(consumer);
@@ -73,21 +73,21 @@ public class Recipes extends RecipeProvider {
                     .requires(Items.BLAZE_POWDER, 2)
                     .save(consumer);
 
-            ShapelessRecipeBuilder.shapeless(ItemsRegistry.manaFiber, 4).unlockedBy("has_journal", InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
-                    .requires(ItemsRegistry.manaBloom)
+            ShapelessRecipeBuilder.shapeless(ItemsRegistry.MAGE_FIBER, 4).unlockedBy("has_journal", InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
+                    .requires(ItemsRegistry.MAGE_BLOOM)
                     .save(consumer);
 
             ShapelessRecipeBuilder.shapeless(ItemsRegistry.runicChalk, 1).unlockedBy("has_journal", InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
-                    .requires(ItemsRegistry.magicClay).requires(Items.BONE_MEAL).requires(ItemsRegistry.manaFiber)
+                    .requires(ItemsRegistry.magicClay).requires(Items.BONE_MEAL).requires(ItemsRegistry.MAGE_FIBER)
                     .save(consumer);
 
-            ShapelessRecipeBuilder.shapeless(ItemsRegistry.blazeFiber, 2).unlockedBy("has_journal", InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
-                    .requires(ItemsRegistry.manaFiber, 2)
+            ShapelessRecipeBuilder.shapeless(ItemsRegistry.BLAZE_FIBER, 2).unlockedBy("has_journal", InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
+                    .requires(ItemsRegistry.MAGE_FIBER, 2)
                     .requires(Items.BLAZE_POWDER)
                     .save(consumer);
 
-            ShapelessRecipeBuilder.shapeless(ItemsRegistry.endFiber, 2).unlockedBy("has_journal", InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
-                    .requires(ItemsRegistry.blazeFiber, 2)
+            ShapelessRecipeBuilder.shapeless(ItemsRegistry.END_FIBER, 2).unlockedBy("has_journal", InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
+                    .requires(ItemsRegistry.BLAZE_FIBER, 2)
                     .requires(Items.POPPED_CHORUS_FRUIT)
                     .save(consumer);
 
@@ -188,7 +188,7 @@ public class Recipes extends RecipeProvider {
             ShapedRecipeBuilder.shaped(ItemsRegistry.BLANK_PARCHMENT, 1).unlockedBy("has_journal",InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
                     .pattern("yyy")
                     .pattern("yxy")
-                    .pattern("yyy").define('x', Items.PAPER).define('y', ItemsRegistry.manaFiber).save(consumer);
+                    .pattern("yyy").define('x', Items.PAPER).define('y', ItemsRegistry.MAGE_FIBER).save(consumer);
 
             ShapelessRecipeBuilder.shapeless(ItemsRegistry.spellParchment, 1).unlockedBy("has_journal", InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
                     .requires(ItemsRegistry.BLANK_PARCHMENT, 1)
@@ -319,7 +319,7 @@ public class Recipes extends RecipeProvider {
 
             shapelessBuilder(getRitualItem(RitualLib.OVERGROWTH))
                     .requires(BlockRegistry.FLOURISHING_LOG)
-                    .requires(ItemsRegistry.manaBloom, 3)
+                    .requires(ItemsRegistry.MAGE_BLOOM, 3)
                     .requires(ArsNouveauAPI.getInstance().getGlyphItem(EffectGrow.INSTANCE), 2)
                     .save(consumer);
 
@@ -460,7 +460,7 @@ public class Recipes extends RecipeProvider {
             shapelessBuilder(ItemsRegistry.SOURCE_BERRY_PIE)
                     .requires(Items.EGG)
                     .requires(Items.SUGAR)
-                    .requires(ItemsRegistry.manaBloom)
+                    .requires(ItemsRegistry.MAGE_BLOOM)
                     .requires(BlockRegistry.MANA_BERRY_BUSH, 3)
                     .save(consumer);
 

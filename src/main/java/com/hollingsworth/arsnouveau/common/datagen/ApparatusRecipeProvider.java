@@ -175,7 +175,7 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withReagent(ItemsRegistry.sylphShard)
                 .withPedestalItem(Recipes.MANA_GEM)
                 .withPedestalItem(BlockRegistry.MAGE_BLOOM_CROP)
-                .withPedestalItem(ItemsRegistry.manaBloom)
+                .withPedestalItem(ItemsRegistry.MAGE_BLOOM)
                 .withPedestalItem(Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem( Items.OAK_SAPLING)
                 .withPedestalItem( Items.SPRUCE_SAPLING)
@@ -261,7 +261,7 @@ public class ApparatusRecipeProvider implements IDataProvider {
         addRecipe(builder()
                 .withResult(new ItemStack(ItemsRegistry.POTION_FLASK))
                 .withReagent(Ingredient.of(Items.GLASS_BOTTLE))
-                .withPedestalItem(2, ItemsRegistry.blazeFiber)
+                .withPedestalItem(2, ItemsRegistry.BLAZE_FIBER)
                 .withPedestalItem(Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
                 .build());

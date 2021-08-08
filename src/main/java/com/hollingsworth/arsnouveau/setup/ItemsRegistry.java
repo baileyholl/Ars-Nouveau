@@ -52,12 +52,12 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.MARVELOUS_CLAY) public static ModItem marvelousClay;
     @ObjectHolder(LibItemNames.MYTHICAL_CLAY) public static ModItem mythicalClay;
 
-    @ObjectHolder(LibItemNames.MANA_BLOOM) public static ModItem manaBloom;
+    @ObjectHolder(LibItemNames.MANA_BLOOM) public static ModItem MAGE_BLOOM;
 
 
-    @ObjectHolder(LibItemNames.MANA_FIBER) public static ModItem manaFiber;
-    @ObjectHolder(LibItemNames.BLAZE_FIBER) public static ModItem blazeFiber;
-    @ObjectHolder(LibItemNames.END_FIBER) public static ModItem endFiber;
+    @ObjectHolder(LibItemNames.MANA_FIBER) public static ModItem MAGE_FIBER;
+    @ObjectHolder(LibItemNames.BLAZE_FIBER) public static ModItem BLAZE_FIBER;
+    @ObjectHolder(LibItemNames.END_FIBER) public static ModItem END_FIBER;
 
     @ObjectHolder(LibItemNames.MUNDANE_BELT) public static ModItem mundaneBelt;
     @ObjectHolder(LibItemNames.JAR_OF_LIGHT) public static JarOfLight jarOfLight;
@@ -92,7 +92,6 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.CARBUNCLE_SHARD)public static ModItem carbuncleShard;
 
 
-    @ObjectHolder(LibItemNames.EARTH_ELEMENTAL_SHARD)public static ModItem earthElementalShard;
     @ObjectHolder(LibItemNames.SYLPH_CHARM)public static SylphCharm sylphCharm;
     @ObjectHolder(LibItemNames.SYLPH_SHARD)public static ModItem sylphShard;
     @ObjectHolder(LibItemNames.MANA_GEM)public static ModItem manaGem;
