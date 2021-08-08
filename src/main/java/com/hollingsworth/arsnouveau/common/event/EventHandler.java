@@ -60,6 +60,7 @@ public class EventHandler {
        if(!e.getEntityLiving().level.isClientSide && e.getEntityLiving() instanceof PlayerEntity && e.getEntityLiving().isBlocking()){
            if(e.getEntityLiving().isHolding(ItemsRegistry.ENCHANTERS_SHIELD)){
                e.getEntityLiving().addEffect(new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 200, 1));
+               e.getEntityLiving().addEffect(new EffectInstance(ModPotions.SPELL_DAMAGE_EFFECT, 200, 1));
            }
        }
     }
