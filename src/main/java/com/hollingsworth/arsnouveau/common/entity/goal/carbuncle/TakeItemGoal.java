@@ -21,6 +21,9 @@ public class TakeItemGoal extends Goal {
     EntityCarbuncle carbuncle;
     BlockPos takePos;
     boolean unreachable;
+    double extendedReach;
+    double startDistance;
+    int ticksRunning;
     public TakeItemGoal(EntityCarbuncle carbuncle){
       //  super(carbuncle::getPosition, 3, carbuncle::setStuck);
         this.setFlags(EnumSet.of(Flag.MOVE));
@@ -35,6 +38,8 @@ public class TakeItemGoal extends Goal {
         super.stop();
         takePos = null;
         unreachable = false;
+        extendedReach = 0.0;
+        startDistance = 0.0;
     }
 
     @Override
@@ -42,8 +47,12 @@ public class TakeItemGoal extends Goal {
         super.start();
         takePos = carbuncle.getValidTakePos();
         unreachable = false;
-        if(carbuncle.isTamed() && takePos != null && carbuncle.getHeldStack().isEmpty())
+        extendedReach = 0.0;
+        ticksRunning = 0;
+        if(carbuncle.isTamed() && takePos != null && carbuncle.getHeldStack().isEmpty()) {
+            startDistance = BlockUtil.distanceFrom(carbuncle.position, takePos);
             setPath(takePos.getX(), takePos.getY(), takePos.getZ(), 1.2D);
+        }
     }
 
 
@@ -81,7 +90,11 @@ public class TakeItemGoal extends Goal {
 
     @Override
     public void tick() {
-        if(carbuncle.getHeldStack().isEmpty() && takePos != null && BlockUtil.distanceFrom(carbuncle.blockPosition(), takePos) < 2d){
+        ticksRunning++;
+        if(ticksRunning > startDistance * 50){
+            extendedReach = 0.5;
+        }
+        if(carbuncle.getHeldStack().isEmpty() && takePos != null && BlockUtil.distanceFrom(carbuncle.blockPosition(), takePos) <= 2d + extendedReach){
             World world = carbuncle.level;
             TileEntity tileEntity = world.getBlockEntity(takePos);
             if(tileEntity == null)

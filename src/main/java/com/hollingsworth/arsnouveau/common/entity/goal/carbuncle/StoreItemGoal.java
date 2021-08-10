@@ -23,6 +23,9 @@ public class StoreItemGoal extends Goal {
     private final EntityCarbuncle entityCarbuncle;
     BlockPos storePos;
     boolean unreachable;
+    double extendedReach;
+    double startDistance;
+    int ticksRunning;
     public StoreItemGoal(EntityCarbuncle entityCarbuncle) {
         //super(entityCarbuncle::getPosition, 3, entityCarbuncle::setStuck);
         this.entityCarbuncle = entityCarbuncle;
@@ -34,22 +37,31 @@ public class StoreItemGoal extends Goal {
     public void stop() {
         storePos = null;
         unreachable = false;
+        extendedReach = 0.0;
+        startDistance = 0.0;
     }
 
     @Override
     public void start() {
         super.start();
+        extendedReach = 0.0;
+        ticksRunning = 0;
         storePos = entityCarbuncle.getValidStorePos(entityCarbuncle.getHeldStack());
         if (storePos!= null && !entityCarbuncle.getHeldStack().isEmpty()) {
             Path path = entityCarbuncle.getNavigation().createPath(storePos, 1);
             entityCarbuncle.getNavigation().moveTo(path, 1.2D);
+            startDistance = BlockUtil.distanceFrom(entityCarbuncle.position, storePos);
             //entityCarbuncle.getNavigator().tryMoveToXYZ(entityCarbuncle.toPos.getX(), entityCarbuncle.toPos.getY(), entityCarbuncle.toPos.getZ(), 1.2D);
         }
     }
 
     @Override
     public void tick() {
-        if (!entityCarbuncle.getHeldStack().isEmpty() && storePos != null && BlockUtil.distanceFrom(entityCarbuncle.blockPosition(), storePos) < 2D) {
+        ticksRunning++;
+        if(ticksRunning > startDistance * 50){
+            extendedReach = 0.5;
+        }
+        if (!entityCarbuncle.getHeldStack().isEmpty() && storePos != null && BlockUtil.distanceFrom(entityCarbuncle.blockPosition(), storePos) <= 2D + extendedReach) {
             World world = entityCarbuncle.level;
             TileEntity tileEntity = world.getBlockEntity(storePos);
             if(tileEntity == null)
@@ -80,7 +92,6 @@ public class StoreItemGoal extends Goal {
         if (storePos != null && !entityCarbuncle.getHeldStack().isEmpty()) {
             setPath(storePos.getX(), storePos.getY(), storePos.getZ(), 1.2D);
             entityCarbuncle.getEntityData().set(EntityCarbuncle.HOP, true);
-            super.tick();
         }
 
     }
