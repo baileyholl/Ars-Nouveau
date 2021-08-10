@@ -49,10 +49,14 @@ public class BlockUtil {
     }
 
     public static double distanceFrom(BlockPos start, BlockPos end){
+        if(start == null || end == null)
+            return 0;
         return Math.sqrt(Math.pow(start.getX() - end.getX(), 2) + Math.pow(start.getY() - end.getY(), 2) + Math.pow(start.getZ() - end.getZ(), 2));
     }
 
     public static double distanceFrom(Vector3d start, BlockPos end){
+        if(start == null || end == null)
+            return 0;
         return Math.sqrt(Math.pow(start.x - end.getX(), 2) + Math.pow(start.y - end.getY(), 2) + Math.pow(start.z - end.getZ(), 2));
     }
 
