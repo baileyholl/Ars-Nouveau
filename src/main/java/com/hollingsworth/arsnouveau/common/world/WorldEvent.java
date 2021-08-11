@@ -105,7 +105,20 @@ public class WorldEvent {
                             new RuleEntry(new RandomBlockMatchRuleTest(Blocks.WHEAT, 0.3F), AlwaysTrueRuleTest.INSTANCE, Blocks.CARROTS.defaultBlockState()), new RuleEntry(new RandomBlockMatchRuleTest(Blocks.WHEAT, 0.2F), AlwaysTrueRuleTest.INSTANCE, Blocks.POTATOES.defaultBlockState()), new RuleEntry(new RandomBlockMatchRuleTest(Blocks.WHEAT, 0.1F), AlwaysTrueRuleTest.INSTANCE, Blocks.BEETROOTS.defaultBlockState())))));
 
 
-
+    public static final Feature<BlockStateFeatureConfig> LIGHTS = new SingleBlockFeature(BlockStateFeatureConfig.CODEC) {
+        public void onStatePlace(ISeedReader seed, ChunkGenerator chunkGenerator, Random rand, BlockPos pos, BlockStateFeatureConfig config) {
+            if(seed instanceof WorldGenRegion){
+                WorldGenRegion world = (WorldGenRegion) seed;
+                Random random = world.getRandom();
+                if(world.getBlockEntity(pos) instanceof LightTile){
+                    LightTile tile = (LightTile) world.getBlockEntity(pos);
+                    tile.red = Math.max(10, random.nextInt(255));
+                    tile.green = Math.max(10, random.nextInt(255));
+                    tile.blue = Math.max(10, random.nextInt(255));
+                }
+            }
+        }
+    };
     public static void registerFeatures() {
         BlockClusterFeatureConfig BERRY_BUSH_PATCH_CONFIG = (new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(BlockRegistry.MANA_BERRY_BUSH.defaultBlockState()), SimpleBlockPlacer.INSTANCE)).tries(64).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK)).noProjection().build();
 
@@ -143,22 +156,7 @@ public class WorldEvent {
                 .decorated(Placement.COUNT_EXTRA.configured(new AtSurfaceWithExtraConfig(1, 0.01f, 1)));
 
 
-        Feature<BlockStateFeatureConfig> LIGHTS = new SingleBlockFeature(BlockStateFeatureConfig.CODEC) {
 
-
-            public void onStatePlace(ISeedReader seed, ChunkGenerator chunkGenerator, Random rand, BlockPos pos, BlockStateFeatureConfig config) {
-                if(seed instanceof WorldGenRegion){
-                    WorldGenRegion world = (WorldGenRegion) seed;
-                    Random random = world.getRandom();
-                    if(world.getBlockEntity(pos) instanceof LightTile){
-                        LightTile tile = (LightTile) world.getBlockEntity(pos);
-                        tile.red = Math.max(10, random.nextInt(255));
-                        tile.green = Math.max(10, random.nextInt(255));
-                        tile.blue = Math.max(10, random.nextInt(255));
-                    }
-                }
-            }
-        };
 
         ConfiguredFeature<?, ?> RANDOM_LIGHTS = LIGHTS.configured(new BlockStateFeatureConfig(BlockRegistry.LIGHT_BLOCK.defaultBlockState()))
                 .decorated(Features.Placements.HEIGHTMAP_SQUARE)
@@ -181,6 +179,7 @@ public class WorldEvent {
 
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, FeatureLib.BLAZE_COMMON_LOC, BLAZE_COMMON);
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, FeatureLib.BLAZE_SEMI_LOC, BLAZE_SEMI);
+//        Registry.register(Registry.FEATURE, FeatureLib.LIGHTS, LIGHTS);
 //        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.VEXING_SAPLING.getRegistryName(), VEX_COMMON);
 //        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.CASCADING_SAPLING.getRegistryName(), CASCADE_COMMON);
 //        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.FLOURISHING_SAPLING.getRegistryName(), FLOURISHING_COMMON);
@@ -283,9 +282,6 @@ public class WorldEvent {
                 Objects.requireNonNull(WorldGenRegistries.CONFIGURED_FEATURE.get(VANILLA_BIG_TREES))).build();
         e.getGeneration().addFeature(GenerationStage.Decoration.LOCAL_MODIFICATIONS,
                 Objects.requireNonNull(WorldGenRegistries.CONFIGURED_FEATURE.get(RANDOM_LIGHTS_LOC))).build();
-
-//        e.getSpawns().addSpawn(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_CARBUNCLE_TYPE,20, 2, 4));
-//        e.getSpawns().addSpawn(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.ENTITY_SYLPH_TYPE, 20, 2, 4));
     }
 
     public static Biome archwoodForest = BiomeMaker.theVoidBiome().setRegistryName(ArsNouveau.MODID, "archwood_forest");
@@ -300,15 +296,12 @@ public class WorldEvent {
             biomeRegistryEvent.getRegistry().registerAll(archwoodForest);
             BiomeDictionary.addTypes(archwoodKey, BiomeDictionary.Type.OVERWORLD);
         }
-
+        @SubscribeEvent
+        public static void featureRegistry(final RegistryEvent.Register<Feature<?>> registryEvent) {
+            registryEvent.getRegistry().register(LIGHTS.setRegistryName(FeatureLib.LIGHTS));
+        }
         private static RegistryKey<Biome> k(Biome b) {
             return RegistryKey.create(Registry.BIOME_REGISTRY, Objects.requireNonNull(b.getRegistryName()));
         }
     }
-
-
-
-
-
-
 }

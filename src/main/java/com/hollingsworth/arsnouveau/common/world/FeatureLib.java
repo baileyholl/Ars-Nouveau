@@ -10,4 +10,5 @@ public class FeatureLib {
 
     public static final ResourceLocation RANDOM_LIGHTS_LOC = new ResourceLocation(ArsNouveau.MODID, "random_lights");
     public static final ResourceLocation VANILLA_BIG_TREES = new ResourceLocation(ArsNouveau.MODID, "vanilla_bigtrees");
+    public static final ResourceLocation LIGHTS = new ResourceLocation(ArsNouveau.MODID, "lights");
 }

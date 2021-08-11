@@ -8,7 +8,6 @@ buildscript {
             name "Sponge"
             url "https://repo.spongepowered.org/repository/maven-public/"
         }
-
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
@@ -136,6 +135,7 @@ repositories {
 dependencies {
 
     minecraft 'net.minecraftforge:forge:1.16.5-36.1.62'
+    runtimeOnly fg.deobf("curse.maven:exp-406201:3419814") //Blame
     runtimeOnly fg.deobf("curse.maven:exp-248787:3395800")  // Appleskin
     runtimeOnly fg.deobf("curse.maven:exp-407174:3188120")  // Shutup experimental settings
 //    runtimeOnly fg.deobf("curse.maven:exp-231951:3326143")  // Immersive engineering
