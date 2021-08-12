@@ -77,6 +77,7 @@ public class ModEntities {
     public static EntityType<EntityDrygmy> ENTITY_DRYGMY = null;
     public static EntityType<EntityOrbitProjectile> ENTITY_WARD = null;
     public static EntityType<EntityChimeraProjectile> ENTITY_CHIMERA_SPIKE = null;
+    public static EntityType<FamiliarCarbuncle> ENTITY_FAMILIAR_CARBUNCLE = null;
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
@@ -167,6 +168,9 @@ public class ModEntities {
                     EntityType.Builder.<EntityChimeraProjectile>of(EntityChimeraProjectile::new, EntityClassification.MISC)
                             .clientTrackingRange(20).updateInterval(20).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityChimeraProjectile::new));
 
+            ENTITY_FAMILIAR_CARBUNCLE =  build("familiar_carbuncle", EntityType.Builder.<FamiliarCarbuncle>of(FamiliarCarbuncle::new, EntityClassification.CREATURE)
+                            .sized(0.7F, 0.63F).setTrackingRange(10));
+
             event.getRegistry().registerAll(
                     SPELL_PROJ,
                     ENTITY_EVOKER_FANGS_ENTITY_TYPE,
@@ -189,7 +193,8 @@ public class ModEntities {
                     ENTITY_DRYGMY,
                     ENTITY_WARD,
                      WILDEN_BOSS,
-                    ENTITY_CHIMERA_SPIKE
+                    ENTITY_CHIMERA_SPIKE,
+                    ENTITY_FAMILIAR_CARBUNCLE
             );
 
 
@@ -220,6 +225,7 @@ public class ModEntities {
                     .add(Attributes.MAX_HEALTH, 20.0D)
                     .add(Attributes.MOVEMENT_SPEED, 0.25D).build());
             event.put(WILDEN_BOSS, EntityChimera.getModdedAttributes().build());
+            event.put(ENTITY_FAMILIAR_CARBUNCLE, EntityCarbuncle.attributes().build());
         }
     }
     public static boolean canMonsterSpawnInLight(EntityType<? extends Entity> type, IServerWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {
