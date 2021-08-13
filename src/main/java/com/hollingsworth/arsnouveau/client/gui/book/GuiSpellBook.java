@@ -5,11 +5,7 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
-import com.hollingsworth.arsnouveau.client.gui.buttons.CraftingButton;
-import com.hollingsworth.arsnouveau.client.gui.buttons.CreateSpellButton;
-import com.hollingsworth.arsnouveau.client.gui.buttons.GlyphButton;
-import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
-import com.hollingsworth.arsnouveau.client.gui.buttons.GuiSpellSlot;
+import com.hollingsworth.arsnouveau.client.gui.buttons.*;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -31,7 +27,9 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import vazkii.patchouli.api.PatchouliAPI;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class GuiSpellBook extends BaseBook {
@@ -161,6 +159,7 @@ public class GuiSpellBook extends BaseBook {
 
         addButton(new GuiImageButton(bookLeft - 15, bookTop + 22, 0, 0, 23, 20, 23,20, "textures/gui/worn_book_bookmark.png",this::onDocumentationClick));
         addButton(new GuiImageButton(bookLeft - 15, bookTop + 46, 0, 0, 23, 20, 23,20, "textures/gui/color_wheel_bookmark.png",this::onColorClick));
+        addButton(new GuiImageButton(bookLeft - 15, bookTop + 70, 0, 0, 23, 20, 23,20, "textures/gui/color_wheel_bookmark.png",this::onFamiliarClick));
         this.nextButton = addButton(new ChangePageButton(bookRight -20, bookBottom -10, true, this::onPageIncrease, true));
         this.previousButton = addButton(new ChangePageButton(bookLeft - 5 , bookBottom -10, false, this::onPageDec, true));
 
@@ -298,6 +297,10 @@ public class GuiSpellBook extends BaseBook {
     public void onColorClick(Button button){
         ParticleColor.IntWrapper color = SpellBook.getSpellColor(spell_book_tag, selected_cast_slot);
         Minecraft.getInstance().setScreen(new GuiColorScreen(color.r, color.g, color.b, selected_cast_slot));
+    }
+
+    public void onFamiliarClick(Button button){
+        Minecraft.getInstance().setScreen(new GuiFamiliarScreen(api, new ArrayList<>(ArsNouveauAPI.getInstance().getFamiliarMap().values())));
     }
 
     public void onCraftingSlotClick(Button button){

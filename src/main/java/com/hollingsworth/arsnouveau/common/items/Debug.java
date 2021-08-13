@@ -20,7 +20,7 @@ public class Debug extends ModItem{
         if(!world.isClientSide){
             FamiliarCarbuncle carbuncle = new FamiliarCarbuncle(ModEntities.ENTITY_FAMILIAR_CARBUNCLE, world);
             carbuncle.setPos(playerIn.blockPosition().getX(), playerIn.position.y, playerIn.position.z);
-            carbuncle.setOwnerID(playerIn.getId());
+            carbuncle.setOwnerID(playerIn.getUUID());
             world.addFreshEntity(carbuncle);
         }
         return ActionResult.success(playerIn.getItemInHand(handIn));

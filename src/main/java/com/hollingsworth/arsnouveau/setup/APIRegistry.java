@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.ReactiveEnchantmentRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.SpellWriteRecipe;
+import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliar;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.ritual.*;
@@ -107,6 +108,10 @@ public class APIRegistry {
         registerRitual(new ScryingRitual());
         registerRitual(new RitualFlight());
         registerRitual(new RitualWildenSummoning());
+    }
+
+    public static void registerFamiliar(AbstractFamiliar familiar){
+        ArsNouveauAPI.getInstance().registerFamiliar(familiar);
     }
 
     public static void registerSpell(AbstractSpellPart spellPart) {

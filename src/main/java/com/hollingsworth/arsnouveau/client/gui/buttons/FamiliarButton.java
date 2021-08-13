@@ -1,37 +1,32 @@
 package com.hollingsworth.arsnouveau.client.gui.buttons;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliar;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
+import com.hollingsworth.arsnouveau.client.gui.book.GuiFamiliarScreen;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-@OnlyIn(Dist.CLIENT)
-public class GlyphButton extends Button {
+public class FamiliarButton extends Button {
 
     public boolean isCraftingSlot;
     public String resourceIcon;
     public String spell_id; //Reference to a spell ID for spell crafting
-    private int id;
     public String tooltip = "tooltip";
     public List<SpellValidationError> validationErrors;
 
-    GuiSpellBook parent;
+    GuiFamiliarScreen parent;
 
-    public GlyphButton(GuiSpellBook parent, int x, int y, boolean isCraftingSlot, String resource_image, String spell_id) {
+    public FamiliarButton(GuiFamiliarScreen parent, int x, int y, boolean isCraftingSlot, AbstractFamiliar familiar) {
         super(x, y,  16, 16, ITextComponent.nullToEmpty(""), parent::onGlyphClick);
         this.parent = parent;
         this.x = x;
@@ -39,15 +34,9 @@ public class GlyphButton extends Button {
         this.width = 16;
         this.height = 16;
         this.isCraftingSlot = isCraftingSlot;
-        this.resourceIcon = resource_image;
-        this.spell_id = spell_id;
-        this.id = 0;
-        this.validationErrors = new LinkedList<>();
+        this.resourceIcon = familiar.id + ".png";
     }
 
-    public int getId() {
-        return id;
-    }
 
     @Override
     public boolean isHovered() {
@@ -55,7 +44,7 @@ public class GlyphButton extends Button {
     }
 
     @Override
-    public void render(MatrixStack ms,int mouseX, int mouseY, float partialTicks) {
+    public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
         if (visible)
         {
             if(this.resourceIcon != null && !this.resourceIcon.equals("")) {
@@ -73,13 +62,13 @@ public class GlyphButton extends Button {
             if(parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)){
                 if(parent.api.getSpell_map().containsKey(this.spell_id)) {
                     List<ITextComponent> tip = new ArrayList<>();
-                    AbstractSpellPart spellPart = parent.api.getSpell_map().get(this.spell_id);
-                    tip.add(new TranslationTextComponent(spellPart.getLocalizationKey()));
-                    for (SpellValidationError ve : validationErrors) {
-                        tip.add(ve.makeTextComponentAdding().withStyle(TextFormatting.RED));
-                    }
+//                    AbstractSpellPart spellPart = parent.api.getSpell_map().get(this.spell_id);
+//                    tip.add(new TranslationTextComponent(spellPart.getLocalizationKey()));
+//                    for (SpellValidationError ve : validationErrors) {
+//                        tip.add(ve.makeTextComponentAdding().withStyle(TextFormatting.RED));
+//                    }
                     if(Screen.hasShiftDown()){
-                        tip.add(spellPart.getBookDescLang());
+                        tip.add(new TranslationTextComponent(""));
                     }else{
                         tip.add(new TranslationTextComponent("tooltip.ars_nouveau.hold_shift"));
                     }

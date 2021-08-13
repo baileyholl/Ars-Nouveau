@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.api;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
+import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliar;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.PotionIngredient;
 import com.hollingsworth.arsnouveau.api.recipe.VanillaPotionRecipe;
@@ -60,6 +61,8 @@ public class ArsNouveauAPI {
     private HashMap<String, AbstractSpellPart> spell_map;
 
     private HashMap<String, AbstractRitual> ritualMap;
+
+    private HashMap<String, AbstractFamiliar> familiarMap;
 
     /**
      * Contains the list of glyph item instances used by the glyph press.
@@ -131,6 +134,10 @@ public class ArsNouveauAPI {
         return ritualMap.put(id, ritual);
     }
 
+    public AbstractFamiliar registerFamiliar(AbstractFamiliar familiar){
+        return familiarMap.put(familiar.id, familiar);
+    }
+
     public @Nullable AbstractRitual getRitual(String id){
         if(!ritualMap.containsKey(id))
             return null;
@@ -175,9 +182,12 @@ public class ArsNouveauAPI {
         return ritualParchmentMap;
     }
 
-
     public List<IEnchantingRecipe> getEnchantingApparatusRecipes() {
         return enchantingApparatusRecipes;
+    }
+
+    public Map<String, AbstractFamiliar> getFamiliarMap(){
+        return this.familiarMap;
     }
 
     public List<IEnchantingRecipe> getEnchantingApparatusRecipes(World world) {
@@ -256,6 +266,7 @@ public class ArsNouveauAPI {
         ritualParchmentMap = new HashMap<>();
         craftingSpellValidator = new StandardSpellValidator(false);
         castingSpellValidator = new StandardSpellValidator(true);
+        familiarMap = new HashMap<>();
     }
 
     /** Retrieves a handle to the singleton instance. */

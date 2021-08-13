@@ -34,9 +34,7 @@ public class FamiliarFollowGoal extends FamiliarBaseGoal{
             return false;
         } else if (entity.level.dimension() != player.level.dimension()) {
             return false;
-        } else if (!entity.canFollow()) {
-            return false;
-        } else if (entity.distanceToSqr(player) < (minDist * minDist)) {
+        }else if (entity.distanceToSqr(player) < (minDist * minDist)) {
             return false;
         }
         theOwner = player;
@@ -45,7 +43,7 @@ public class FamiliarFollowGoal extends FamiliarBaseGoal{
 
     @Override
     public boolean canContinueToUse() {
-        return !entity.getNavigation().isDone() && entity.distanceToSqr(theOwner) > (maxDist * maxDist) && entity.canFollow() && theOwner.level.dimension() == entity.level.dimension();
+        return !entity.getNavigation().isDone() && entity.distanceToSqr(theOwner) > (maxDist * maxDist) && theOwner.level.dimension() == entity.level.dimension();
     }
 
     @Override
@@ -59,13 +57,9 @@ public class FamiliarFollowGoal extends FamiliarBaseGoal{
         entity.getLookControl().setLookAt(theOwner, 6, entity.getMaxHeadXRot() / 10F);
 
         if (!entity.isPassenger()) {
-            if (entity.distanceToSqr(theOwner) >= 144.0) {
+            if (entity.distanceToSqr(theOwner) >= 144.0 && entity.canTeleport()) {
                 BlockPos targetPos = theOwner.blockPosition();
-
-                if (tryPathTo(entity, targetPos.getX(), targetPos.getY() , targetPos.getZ())) {
-                    return;
-                }
-
+                teleportTo(entity, targetPos.getX(), targetPos.getY() , targetPos.getZ());
             } else {
                 entity.getNavigation().moveTo(theOwner, moveSpeed);
             }
@@ -77,9 +71,8 @@ public class FamiliarFollowGoal extends FamiliarBaseGoal{
         return entity.getRandom().nextInt(max - min + 1) + min;
     }
 
-    private boolean tryPathTo(Entity target, int x, int y, int z) {
+    private void teleportTo(Entity target, int x, int y, int z) {
         entity.setPos(x,y + 0.5,z);
         entity.getNavigation().stop();
-        return true;
     }
 }
