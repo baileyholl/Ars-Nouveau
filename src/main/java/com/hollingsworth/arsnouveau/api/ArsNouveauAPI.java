@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.api;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
-import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliar;
+import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.PotionIngredient;
 import com.hollingsworth.arsnouveau.api.recipe.VanillaPotionRecipe;
@@ -12,10 +12,11 @@ import com.hollingsworth.arsnouveau.api.ritual.RitualContext;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.api.spell.ISpellValidator;
-import com.hollingsworth.arsnouveau.common.spell.validation.StandardSpellValidator;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
+import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
+import com.hollingsworth.arsnouveau.common.spell.validation.StandardSpellValidator;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.item.Item;
@@ -62,12 +63,14 @@ public class ArsNouveauAPI {
 
     private HashMap<String, AbstractRitual> ritualMap;
 
-    private HashMap<String, AbstractFamiliar> familiarMap;
+    private HashMap<String, AbstractFamiliarHolder> familiarHolderMap;
 
     /**
      * Contains the list of glyph item instances used by the glyph press.
      */
     private HashMap<String, Glyph> glyphMap;
+
+    private HashMap<String, FamiliarScript> familiarScriptMap;
 
     /**
      * Contains the list of parchment item instances created during registration
@@ -110,6 +113,9 @@ public class ArsNouveauAPI {
         return getGlyphItem(spell.tag);
     }
 
+    public Item getFamiliarItem(String id){
+        return familiarScriptMap.get(id);
+    }
 
     public AbstractSpellPart registerSpell(String id, AbstractSpellPart part){
         glyphMap.put(id, new Glyph(getSpellRegistryName(id), part));
@@ -134,8 +140,9 @@ public class ArsNouveauAPI {
         return ritualMap.put(id, ritual);
     }
 
-    public AbstractFamiliar registerFamiliar(AbstractFamiliar familiar){
-        return familiarMap.put(familiar.id, familiar);
+    public AbstractFamiliarHolder registerFamiliar(AbstractFamiliarHolder familiar){
+        this.familiarScriptMap.put(familiar.id, new FamiliarScript(familiar));
+        return familiarHolderMap.put(familiar.id, familiar);
     }
 
     public @Nullable AbstractRitual getRitual(String id){
@@ -186,8 +193,8 @@ public class ArsNouveauAPI {
         return enchantingApparatusRecipes;
     }
 
-    public Map<String, AbstractFamiliar> getFamiliarMap(){
-        return this.familiarMap;
+    public Map<String, AbstractFamiliarHolder> getFamiliarHolderMap(){
+        return this.familiarHolderMap;
     }
 
     public List<IEnchantingRecipe> getEnchantingApparatusRecipes(World world) {
@@ -195,8 +202,6 @@ public class ArsNouveauAPI {
         RecipeManager manager = world.getRecipeManager();
         for(IRecipe i : manager.getRecipes()){
             if(i instanceof EnchantingApparatusRecipe){
-                EnchantingApparatusRecipe recipe = (EnchantingApparatusRecipe) i;
-                //recipes.add(new EnchantingApparatusRecipe(recipe.result.copy(), recipe.reagent, recipe.pedestalItems, "custom"));
                 recipes.add((IEnchantingRecipe) i);
             }
         }
@@ -266,7 +271,8 @@ public class ArsNouveauAPI {
         ritualParchmentMap = new HashMap<>();
         craftingSpellValidator = new StandardSpellValidator(false);
         castingSpellValidator = new StandardSpellValidator(true);
-        familiarMap = new HashMap<>();
+        familiarHolderMap = new HashMap<>();
+        familiarScriptMap = new HashMap<>();
     }
 
     /** Retrieves a handle to the singleton instance. */

@@ -793,5 +793,6 @@
 	"item.minecraft.tipped_arrow.effect.spell_damage_strong": "Arrow of Spell Damage",
 	"item.minecraft.tipped_arrow.effect.spell_damage": "Arrow of Spell Damage",
 	"item.minecraft.tipped_arrow.effect.spell_damage_long": "Arrow of Spell Damage",
-	"effect.ars_nouveau.spell_damage": "Spell Damage"
+	"effect.ars_nouveau.spell_damage": "Spell Damage",
+	"ars_nouveau.spell_book_gui.familiar": "Familiars"
 }

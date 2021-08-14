@@ -159,7 +159,7 @@ public class GuiSpellBook extends BaseBook {
 
         addButton(new GuiImageButton(bookLeft - 15, bookTop + 22, 0, 0, 23, 20, 23,20, "textures/gui/worn_book_bookmark.png",this::onDocumentationClick));
         addButton(new GuiImageButton(bookLeft - 15, bookTop + 46, 0, 0, 23, 20, 23,20, "textures/gui/color_wheel_bookmark.png",this::onColorClick));
-        addButton(new GuiImageButton(bookLeft - 15, bookTop + 70, 0, 0, 23, 20, 23,20, "textures/gui/color_wheel_bookmark.png",this::onFamiliarClick));
+       // addButton(new GuiImageButton(bookLeft - 15, bookTop + 70, 0, 0, 23, 20, 23,20, "textures/gui/color_wheel_bookmark.png",this::onFamiliarClick));
         this.nextButton = addButton(new ChangePageButton(bookRight -20, bookBottom -10, true, this::onPageIncrease, true));
         this.previousButton = addButton(new ChangePageButton(bookLeft - 5 , bookBottom -10, false, this::onPageDec, true));
 
@@ -300,7 +300,7 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void onFamiliarClick(Button button){
-        Minecraft.getInstance().setScreen(new GuiFamiliarScreen(api, new ArrayList<>(ArsNouveauAPI.getInstance().getFamiliarMap().values())));
+        Minecraft.getInstance().setScreen(new GuiFamiliarScreen(api, new ArrayList<>(ArsNouveauAPI.getInstance().getFamiliarHolderMap().values())));
     }
 
     public void onCraftingSlotClick(Button button){
