@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
@@ -55,7 +56,7 @@ public class PacketClientDelayEffect {
        // buf.writeBlockHitResult();
     }
 
-    public PacketClientDelayEffect(int duration, @Nullable LivingEntity shooter, Spell spell, SpellContext context, @Nullable BlockRayTraceResult hitPos, @Nullable LivingEntity hitEntity){
+    public PacketClientDelayEffect(int duration, @Nullable LivingEntity shooter, Spell spell, SpellContext context, @Nullable BlockRayTraceResult hitPos, @Nullable Entity hitEntity){
         this.duration = duration;
         this.shooterID = shooter == null ? -1 : shooter.getId();
         this.color = context.colors;
@@ -67,7 +68,7 @@ public class PacketClientDelayEffect {
     public void handle(Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(()->{
             World world = ArsNouveau.proxy.getClientWorld();
-            LivingEntity hitEntity = (LivingEntity) world.getEntity(hitEntityID);
+            Entity hitEntity = world.getEntity(hitEntityID);
             RayTraceResult result;
             if(hitEntityID == -1){
                 result = hitPos;
