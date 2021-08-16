@@ -780,7 +780,6 @@
 	"block.ars_nouveau.relay_deposit": "Source Relay: Depositor",
 	"ars_nouveau.page.relay_deposit": "Operates similar to the Source Relay, but will deposit to jars it is not linked to within 5 blocks. See the instructions on the Source Relay for use.",
 	"ars_nouveau.page.relay_warp": "Operates similar to the Source Relay: Splitter but can teleport source an endless distance between other Warp relays. For distances beyond 30 blocks, there is a chance that some source will be lost during warp.",
-
 	"item.minecraft.splash_potion.effect.spell_damage_strong": "Splash Potion of Spell Damage",
 	"item.minecraft.splash_potion.effect.spell_damage": "Splash Potion of Spell Damage",
 	"item.minecraft.splash_potion.effect.spell_damage_long": "Splash Potion of Spell Damage",
@@ -794,5 +793,8 @@
 	"item.minecraft.tipped_arrow.effect.spell_damage": "Arrow of Spell Damage",
 	"item.minecraft.tipped_arrow.effect.spell_damage_long": "Arrow of Spell Damage",
 	"effect.ars_nouveau.spell_damage": "Spell Damage",
-	"ars_nouveau.spell_book_gui.familiar": "Familiars"
+	"ars_nouveau.spell_book_gui.familiar": "Familiars",
+	"ars_nouveau.spell_book_gui.close": "Close",
+	"effect.ars_nouveau.familiar_sickness": "Familiar Sickness",
+	"ars_nouveau.familiar.sickness": "You must wait before summoning another familiar."
 }

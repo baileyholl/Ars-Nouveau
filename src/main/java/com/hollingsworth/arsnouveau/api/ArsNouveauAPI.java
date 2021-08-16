@@ -196,7 +196,9 @@ public class ArsNouveauAPI {
     public Map<String, AbstractFamiliarHolder> getFamiliarHolderMap(){
         return this.familiarHolderMap;
     }
-
+    public Map<String, FamiliarScript> getFamiliarScriptMap(){
+        return this.familiarScriptMap;
+    }
     public List<IEnchantingRecipe> getEnchantingApparatusRecipes(World world) {
         List<IEnchantingRecipe> recipes = new ArrayList<>(enchantingApparatusRecipes);
         RecipeManager manager = world.getRecipeManager();

@@ -8,8 +8,7 @@ import com.hollingsworth.arsnouveau.api.enchanting_apparatus.SpellWriteRecipe;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
-import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import com.hollingsworth.arsnouveau.common.familiars.CarbuncleFamiliar;
 import com.hollingsworth.arsnouveau.common.ritual.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
@@ -110,8 +109,9 @@ public class APIRegistry {
         registerRitual(new ScryingRitual());
         registerRitual(new RitualFlight());
         registerRitual(new RitualWildenSummoning());
-        registerFamiliar(new AbstractFamiliarHolder("carbuncle", (e) -> e instanceof EntityCarbuncle,
-                () -> new ItemStack(ArsNouveauAPI.getInstance().getFamiliarItem("carbuncle")), () -> ModEntities.ENTITY_FAMILIAR_CARBUNCLE));
+        registerRitual(new RitualBinding());
+
+        registerFamiliar(new CarbuncleFamiliar());
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar){

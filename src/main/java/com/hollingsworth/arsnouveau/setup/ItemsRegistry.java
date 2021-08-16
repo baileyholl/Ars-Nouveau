@@ -288,6 +288,10 @@ public class ItemsRegistry {
                 ITEMS.add(ritualParchment);
             }
 
+            for(FamiliarScript script : ArsNouveauAPI.getInstance().getFamiliarScriptMap().values()){
+                registry.register(script);
+                ITEMS.add(script);
+            }
 
             for (final Item item : items) {
                 registry.register(item);

@@ -1,25 +1,28 @@
 package com.hollingsworth.arsnouveau.api.familiar;
 
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
 
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
-public class AbstractFamiliarHolder {
+public abstract class AbstractFamiliarHolder {
 
     public Predicate<Entity> isEntity;
-    public Supplier<ItemStack> outputRitualItem;
-    public Supplier<EntityType> summonEntity;
     public String id;
 
-    public AbstractFamiliarHolder(String id, Predicate<Entity> isConversionEntity, Supplier<ItemStack> outputRitualItem, Supplier<EntityType> getSummonEntity){
+
+    public AbstractFamiliarHolder(String id, Predicate<Entity> isConversionEntity){
         this.id = id;
         this.isEntity = isConversionEntity;
-        this.outputRitualItem = outputRitualItem;
-        this.summonEntity = getSummonEntity;
+    }
+
+    public abstract IFamiliar getSummonEntity(World world);
+
+    public ItemStack getOutputItem(){
+        return new ItemStack(ArsNouveauAPI.getInstance().getFamiliarItem(getId()));
     }
 
     public String getImagePath(){
@@ -30,11 +33,19 @@ public class AbstractFamiliarHolder {
         return this.id;
     }
 
-    public TranslationTextComponent getDescription(){
+    public TranslationTextComponent getLangDescription(){
         return new TranslationTextComponent("ars_nouveau.familiar_desc." + this.id);
     }
 
-    public TranslationTextComponent getName(){
+    public TranslationTextComponent getLangName(){
         return new TranslationTextComponent("ars_nouveau.familiar_name." + this.id);
+    }
+
+    public String getBookName(){
+        return "";
+    }
+
+    public String getBookDescription(){
+        return "";
     }
 }

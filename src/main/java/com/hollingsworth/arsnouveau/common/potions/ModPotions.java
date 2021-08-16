@@ -18,6 +18,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
+import java.util.ArrayList;
+
 @ObjectHolder(ArsNouveau.MODID)
 public class ModPotions {
 
@@ -32,6 +34,7 @@ public class ModPotions {
     public static final FlightEffect FLIGHT_EFFECT = new FlightEffect();
     public static final GravityEffect GRAVITY_EFFECT = new GravityEffect();
     public static final Effect SPELL_DAMAGE_EFFECT = new PublicEffect(EffectType.BENEFICIAL, new ParticleColor(30, 200, 200).getColor()).setRegistryName(ArsNouveau.MODID, LibPotions.SPELL_DAMAGE);
+    public static final Effect FAMILIAR_SICKNESS_EFFECT = new PublicEffect(EffectType.NEUTRAL, new ParticleColor(30, 200, 200).getColor(), new ArrayList<>()).setRegistryName(ArsNouveau.MODID, LibPotions.FAMILIAR_SICKNESS);
 
     @ObjectHolder(LibPotions.MANA_REGEN) public static Potion MANA_REGEN_POTION;
     @ObjectHolder(LibPotions.MANA_REGEN_LONG) public static Potion LONG_MANA_REGEN_POTION;
@@ -83,7 +86,8 @@ public class ModPotions {
                     SNARE_EFFECT,
                     FLIGHT_EFFECT,
                     GRAVITY_EFFECT,
-                    SPELL_DAMAGE_EFFECT
+                    SPELL_DAMAGE_EFFECT,
+                    FAMILIAR_SICKNESS_EFFECT
             );
         }
 

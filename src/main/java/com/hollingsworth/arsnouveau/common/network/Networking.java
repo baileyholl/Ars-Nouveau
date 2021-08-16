@@ -117,6 +117,11 @@ public class Networking {
                 PacketTimedEvent::toBytes,
                 PacketTimedEvent::new,
                 PacketTimedEvent::handle);
+        INSTANCE.registerMessage(nextID(),
+                PacketSummonFamiliar.class,
+                PacketSummonFamiliar::toBytes,
+                PacketSummonFamiliar::new,
+                PacketSummonFamiliar::handle);
     }
 
     public static void sendToNearby(World world, BlockPos pos, Object toSend){

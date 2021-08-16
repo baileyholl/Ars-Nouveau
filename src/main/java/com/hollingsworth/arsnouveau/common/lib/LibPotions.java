@@ -9,4 +9,6 @@ public class LibPotions {
     public static final String SPELL_DAMAGE = "spell_damage";
     public static final String SPELL_DAMAGE_LONG = "spell_damage_long";
     public static final String SPELL_DAMAGE_STRONG = "spell_damage_strong";
+
+    public static final String FAMILIAR_SICKNESS = "familiar_sickness";
 }

@@ -13,4 +13,14 @@ public interface IFamiliar {
     default Entity getThisEntity(){
         return (Entity) this;
     }
+
+    /**
+     * Called if another familiar is summoned in the world, not including this one.
+     * Used for maintaining the familiar limit in the world.
+     */
+    default void onFamiliarSpawned(UUID summoner){
+        if(summoner.equals(getOwnerID())){
+            this.getThisEntity().remove();
+        }
+    }
 }

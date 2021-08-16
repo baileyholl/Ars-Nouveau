@@ -18,11 +18,10 @@ public class FamiliarButton extends Button {
 
     public boolean isCraftingSlot;
     public String resourceIcon;
-    public String spell_id; //Reference to a spell ID for spell crafting
     public String tooltip = "tooltip";
 
     GuiFamiliarScreen parent;
-    AbstractFamiliarHolder familiarHolder;
+    public AbstractFamiliarHolder familiarHolder;
     public FamiliarButton(GuiFamiliarScreen parent, int x, int y, boolean isCraftingSlot, AbstractFamiliarHolder familiar) {
         super(x, y,  16, 16, ITextComponent.nullToEmpty(""), parent::onGlyphClick);
         this.parent = parent;
@@ -52,14 +51,10 @@ public class FamiliarButton extends Button {
             if(parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)){
 
                 List<ITextComponent> tip = new ArrayList<>();
-//                    AbstractSpellPart spellPart = parent.api.getSpell_map().get(this.spell_id);
-//                    tip.add(new TranslationTextComponent(spellPart.getLocalizationKey()));
-//                    for (SpellValidationError ve : validationErrors) {
-//                        tip.add(ve.makeTextComponentAdding().withStyle(TextFormatting.RED));
-//                    }
                 if(Screen.hasShiftDown()){
-                    tip.add(familiarHolder.getDescription());
+                    tip.add(familiarHolder.getLangDescription());
                 }else{
+                    tip.add(familiarHolder.getLangName());
                     tip.add(new TranslationTextComponent("tooltip.ars_nouveau.hold_shift"));
                 }
 
@@ -68,7 +63,6 @@ public class FamiliarButton extends Button {
             }
 
         }
-        //super.render(mouseX, mouseY, partialTicks);
     }
 
 }
