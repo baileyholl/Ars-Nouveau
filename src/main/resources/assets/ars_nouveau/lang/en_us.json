@@ -628,7 +628,7 @@
 	"ars_nouveau.spell.validation.adding.augment_compatibility": "%s cannot be augmented by %s",
 	"ars_nouveau.spell.validation.adding.glyph_tier": "%s is too powerful for your current spell book.",
 
-	"ars_nouveau.spell.no_mana": "Not enough Source.",
+	"ars_nouveau.spell.no_mana": "Not enough Mana.",
 	"block.ars_nouveau.potion_jar": "Potion Jar",
 	"block.ars_nouveau.potion_melder": "Potion Melder",
 	"item.ars_nouveau.potion_flask_extend_time": "Enchanted Potion Flask: Extend Time",

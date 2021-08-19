@@ -36,20 +36,20 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
         super.tick();
         if(level.isClientSide)
             return;
-        if(level.getGameTime() % 40 == 0 && this.canAcceptMana()){
+        if(level.getGameTime() % 20 == 0 && this.canAcceptMana()){
             for(ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(worldPosition).inflate(1.0))){
                 int mana = 0;
                 int progress = 0;
                 int burnTime = ForgeHooks.getBurnTime(i.getItem(), null) ;
                 if(burnTime > 0){
-                    mana = burnTime / 100;
+                    mana = burnTime / 75;
                     progress = 1;
                 }
                 if(i.getItem().getItem() == BlockRegistry.BLAZING_LOG.asItem()){
-                    mana += 40;
+                    mana += 50;
                     progress += 5;
                 }else if(i.getItem().getItem().is(Recipes.ARCHWOOD_LOG_TAG)){
-                    mana += 20;
+                    mana += 30;
                     progress += 3;
                 }
 
