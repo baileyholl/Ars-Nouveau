@@ -92,9 +92,11 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public void applyConfigPotion(LivingEntity entity, Effect potionEffect, SpellStats spellStats){
-        applyPotion(entity, potionEffect, spellStats, POTION_TIME == null ? 30 : POTION_TIME.get(), EXTEND_TIME == null ? 8 : EXTEND_TIME.get());
+        applyConfigPotion(entity, potionEffect, spellStats, true);
     }
-
+    public void applyConfigPotion(LivingEntity entity, Effect potionEffect, SpellStats spellStats, boolean showParticles){
+        applyPotion(entity, potionEffect, spellStats, POTION_TIME == null ? 30 : POTION_TIME.get(), EXTEND_TIME == null ? 8 : EXTEND_TIME.get(), showParticles);
+    }
     public boolean canSummon(LivingEntity playerEntity){
         return isRealPlayer(playerEntity) && playerEntity.getEffect(ModPotions.SUMMONING_SICKNESS) == null;
     }
@@ -137,13 +139,15 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         entity.addEffect(new EffectInstance(potionEffect, duration * 20, amp));
     }
 
-    public void applyPotion(LivingEntity entity, Effect potionEffect, SpellStats stats, int baseDurationSeconds, int durationBuffSeconds){
+    public void applyPotion(LivingEntity entity, Effect potionEffect, SpellStats stats, int baseDurationSeconds, int durationBuffSeconds, boolean showParticles){
         if(entity == null)
             return;
-        int ticks = baseDurationSeconds * 20 + stats.getDurationInTicks();
+        int ticks = baseDurationSeconds * 20 + durationBuffSeconds * stats.getDurationInTicks();
         int amp = (int) stats.getAmpMultiplier();
-        entity.addEffect(new EffectInstance(potionEffect, ticks, amp));
+        entity.addEffect(new EffectInstance(potionEffect, ticks, amp, false, showParticles, true));
     }
+
+
 
     @Deprecated
     public int getDurationModifier( List<AbstractAugment> augmentTypes){
