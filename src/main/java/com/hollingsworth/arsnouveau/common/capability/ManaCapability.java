@@ -108,6 +108,8 @@ public class ManaCapability {
                 getMana(event.getPlayer()).ifPresent(newMaxMana -> {
                     newMaxMana.setMaxMana(oldMaxMana.getMaxMana());
                     newMaxMana.setMana(oldMaxMana.getCurrentMana());
+                    newMaxMana.setBookTier(oldMaxMana.getBookTier());
+                    newMaxMana.setGlyphBonus(oldMaxMana.getGlyphBonus());
                 });
             });
         }

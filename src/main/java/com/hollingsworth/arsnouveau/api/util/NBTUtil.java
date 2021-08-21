@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class NBTUtil {
@@ -51,6 +52,28 @@ public class NBTUtil {
             CompoundNBT itemTag = new CompoundNBT();
             item.save(itemTag);
             tag.put(getItemKey(item, prefix), itemTag);
+        }
+    }
+
+
+    public static List<String> readStrings(CompoundNBT tag, String prefix){
+        List<String> strings = new ArrayList<>();
+        if(tag == null)
+            return strings;
+
+        for(String s : tag.getAllKeys()){
+            if(s.contains(prefix)){
+                strings.add(tag.getString(s));
+            }
+        }
+        return strings;
+    }
+
+    public static void writeStrings(CompoundNBT tag, String prefix, Collection<String> strings){
+        int i = 0;
+        for(String s : strings){
+            tag.putString(prefix + "_" + i, s);
+            i++;
         }
     }
 
