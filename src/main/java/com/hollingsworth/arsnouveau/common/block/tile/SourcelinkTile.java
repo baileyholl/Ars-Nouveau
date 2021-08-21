@@ -46,7 +46,7 @@ public class SourcelinkTile extends AbstractManaTile implements IAnimatable {
     public void tick() {
         if(level.isClientSide)
             return;
-        if(!registered && usesEventQueue()){
+        if(level.getGameTime() % 120 == 0 && usesEventQueue()){
             SourcelinkEventQueue.addPosition(level, this.worldPosition);
             registered = true;
         }
