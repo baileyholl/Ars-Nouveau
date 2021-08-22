@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.common.entity.familiar.*;
+import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarEntity;
 import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
@@ -78,6 +80,12 @@ public class ModEntities {
     public static EntityType<EntityOrbitProjectile> ENTITY_WARD = null;
     public static EntityType<EntityChimeraProjectile> ENTITY_CHIMERA_SPIKE = null;
     public static EntityType<FamiliarCarbuncle> ENTITY_FAMILIAR_CARBUNCLE = null;
+
+    public static EntityType<FamiliarWixie> ENTITY_FAMILIAR_WIXIE = null;
+    public static EntityType<FamiliarBookwyrm> ENTITY_FAMILIAR_BOOKWYRM = null;
+    public static EntityType<FamiliarDrygmy> ENTITY_FAMILIAR_DRYGMY = null;
+    public static EntityType<FamiliarSylph> ENTITY_FAMILIAR_SYLPH = null;
+    public static EntityType<FamiliarJabberwog> ENTITY_FAMILIAR_JABBERWOG = null;
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
@@ -168,9 +176,19 @@ public class ModEntities {
                     EntityType.Builder.<EntityChimeraProjectile>of(EntityChimeraProjectile::new, EntityClassification.MISC)
                             .clientTrackingRange(20).updateInterval(20).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityChimeraProjectile::new));
 
-            ENTITY_FAMILIAR_CARBUNCLE =  build("familiar_carbuncle", EntityType.Builder.<FamiliarCarbuncle>of(FamiliarCarbuncle::new, EntityClassification.CREATURE)
+            ENTITY_FAMILIAR_CARBUNCLE =  build("familiar_carbuncle", EntityType.Builder.of(FamiliarCarbuncle::new, EntityClassification.CREATURE)
                             .sized(0.7F, 0.63F).setTrackingRange(10));
 
+            ENTITY_FAMILIAR_BOOKWYRM =  build("familiar_bookwyrm", EntityType.Builder.of(FamiliarBookwyrm::new, EntityClassification.CREATURE)
+                    .sized(0.7F, 0.63F).setTrackingRange(10));
+            ENTITY_FAMILIAR_DRYGMY =  build("familiar_drygmy", EntityType.Builder.of(FamiliarDrygmy::new, EntityClassification.CREATURE)
+                    .sized(0.7F, 0.63F).setTrackingRange(10));
+            ENTITY_FAMILIAR_SYLPH =  build("familiar_sylph", EntityType.Builder.of(FamiliarSylph::new, EntityClassification.CREATURE)
+                    .sized(0.7F, 0.63F).setTrackingRange(10));
+            ENTITY_FAMILIAR_JABBERWOG =  build("familiar_jabberwog", EntityType.Builder.of(FamiliarJabberwog::new, EntityClassification.CREATURE)
+                    .sized(0.7F, 0.63F).setTrackingRange(10));
+            ENTITY_FAMILIAR_WIXIE =  build("familiar_wixie", EntityType.Builder.of(FamiliarWixie::new, EntityClassification.CREATURE)
+                    .sized(0.7F, 0.63F).setTrackingRange(10));
             event.getRegistry().registerAll(
                     SPELL_PROJ,
                     ENTITY_EVOKER_FANGS_ENTITY_TYPE,
@@ -194,7 +212,12 @@ public class ModEntities {
                     ENTITY_WARD,
                      WILDEN_BOSS,
                     ENTITY_CHIMERA_SPIKE,
-                    ENTITY_FAMILIAR_CARBUNCLE
+                    ENTITY_FAMILIAR_CARBUNCLE,
+                    ENTITY_FAMILIAR_BOOKWYRM,
+                    ENTITY_FAMILIAR_JABBERWOG,
+                    ENTITY_FAMILIAR_WIXIE,
+                    ENTITY_FAMILIAR_SYLPH,
+                    ENTITY_FAMILIAR_DRYGMY
             );
 
 
@@ -225,7 +248,12 @@ public class ModEntities {
                     .add(Attributes.MAX_HEALTH, 20.0D)
                     .add(Attributes.MOVEMENT_SPEED, 0.25D).build());
             event.put(WILDEN_BOSS, EntityChimera.getModdedAttributes().build());
-            event.put(ENTITY_FAMILIAR_CARBUNCLE, EntityCarbuncle.attributes().build());
+            event.put(ENTITY_FAMILIAR_CARBUNCLE, FamiliarEntity.attributes().build());
+            event.put(ENTITY_FAMILIAR_BOOKWYRM, FamiliarEntity.attributes().build());
+            event.put(ENTITY_FAMILIAR_JABBERWOG, FamiliarEntity.attributes().build());
+            event.put(ENTITY_FAMILIAR_WIXIE, FamiliarEntity.attributes().build());
+            event.put(ENTITY_FAMILIAR_SYLPH, FamiliarEntity.attributes().build());
+            event.put(ENTITY_FAMILIAR_DRYGMY, FamiliarEntity.attributes().build());
         }
     }
     public static boolean canMonsterSpawnInLight(EntityType<? extends Entity> type, IServerWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {

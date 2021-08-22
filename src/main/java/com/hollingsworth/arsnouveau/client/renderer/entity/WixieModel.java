@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
 import net.minecraft.util.ResourceLocation;
+import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
@@ -10,13 +10,13 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import javax.annotation.Nullable;
 
-public class WixieModel extends AnimatedGeoModel<EntityWixie> {
+public class WixieModel extends AnimatedGeoModel<IAnimatable> {
 
     private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/wixie.png");
 
 
     @Override
-    public void setLivingAnimations(EntityWixie entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
+    public void setLivingAnimations(IAnimatable entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
         IBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
@@ -25,17 +25,17 @@ public class WixieModel extends AnimatedGeoModel<EntityWixie> {
     }
 
     @Override
-    public ResourceLocation getModelLocation(EntityWixie entityWixie) {
+    public ResourceLocation getModelLocation(IAnimatable entityWixie) {
         return new ResourceLocation(ArsNouveau.MODID , "geo/wixie.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(EntityWixie entityWixie) {
+    public ResourceLocation getTextureLocation(IAnimatable entityWixie) {
         return WILD_TEXTURE;
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(EntityWixie entityWixie) {
+    public ResourceLocation getAnimationFileLocation(IAnimatable entityWixie) {
         return new ResourceLocation(ArsNouveau.MODID , "animations/wixie_animations.json");
     }
 }

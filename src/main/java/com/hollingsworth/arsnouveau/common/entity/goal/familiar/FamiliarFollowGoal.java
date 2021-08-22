@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.familiar;
 
-import com.hollingsworth.arsnouveau.common.entity.goal.FamiliarEntity;
+import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;

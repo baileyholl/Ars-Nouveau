@@ -10,6 +10,7 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -19,16 +20,14 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class SylphRenderer extends GeoEntityRenderer<EntitySylph> {
-
+public class SylphRenderer extends GeoEntityRenderer {
 
     public SylphRenderer(EntityRendererManager manager) {
         super(manager, new SylphModel());
     }
 
-
     @Override
-    public void render(EntitySylph entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+    public void render(LivingEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
         World world = entityIn.getCommandSenderWorld();
         Random rand = ParticleUtil.r;
@@ -50,15 +49,16 @@ public class SylphRenderer extends GeoEntityRenderer<EntitySylph> {
         }
     }
 
-
-
     @Override
-    public ResourceLocation getTextureLocation(EntitySylph entity) {
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_" + (entity.getColor().isEmpty() ? "summer" : entity.getColor())+ ".png");
+    public ResourceLocation getTextureLocation(LivingEntity entity) {
+        if(entity instanceof EntitySylph){
+            return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_" + (((EntitySylph) entity).getColor().isEmpty() ? "summer" : ((EntitySylph) entity).getColor())+ ".png");
+        }
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_summer.png");
     }
 
     @Override
-    public RenderType getRenderType(EntitySylph animatable, float partialTicks, MatrixStack stack, @Nullable IRenderTypeBuffer renderTypeBuffer, @Nullable IVertexBuilder vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
+    public RenderType getRenderType(Object animatable, float partialTicks, MatrixStack stack, @Nullable IRenderTypeBuffer renderTypeBuffer, @Nullable IVertexBuilder vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
         return RenderType.entityCutoutNoCull(textureLocation);
     }
 }

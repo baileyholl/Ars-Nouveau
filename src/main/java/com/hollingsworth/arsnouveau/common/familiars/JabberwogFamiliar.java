@@ -3,14 +3,14 @@ package com.hollingsworth.arsnouveau.common.familiars;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
 import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
-import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarCarbuncle;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarCarbuncle;
 import net.minecraft.world.World;
 
-public class CarbuncleFamiliar extends AbstractFamiliarHolder {
+public class JabberwogFamiliar extends AbstractFamiliarHolder {
 
-    public CarbuncleFamiliar(){
-        super("carbuncle", (e) -> e instanceof EntityCarbuncle);
+    public JabberwogFamiliar(){
+        super("jabberwog", (e) -> e instanceof EntityCarbuncle);
     }
 
     @Override

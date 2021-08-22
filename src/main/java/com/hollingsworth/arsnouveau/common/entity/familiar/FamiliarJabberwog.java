@@ -1,28 +1,24 @@
-package com.hollingsworth.arsnouveau.common.entity;
+package com.hollingsworth.arsnouveau.common.entity.familiar;
 
-import com.hollingsworth.arsnouveau.common.entity.goal.FamiliarEntity;
+import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 
-public class FamiliarCarbuncle extends FamiliarEntity {
+public class FamiliarJabberwog extends FlyingFamiliarEntity {
 
-    public FamiliarCarbuncle(EntityType<? extends CreatureEntity> ent, World world) {
+    public FamiliarJabberwog(EntityType<? extends CreatureEntity> ent, World world) {
         super(ent, world);
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @Override
     public void tick() {
         super.tick();
-        if(!level.isClientSide && level.getGameTime() % 60 == 0 && getOwner() != null){
-            getOwner().addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 600, 1, false, false, true));
-            this.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 600, 1, false, false, true));
-        }
     }
 
     @Override
@@ -36,6 +32,6 @@ public class FamiliarCarbuncle extends FamiliarEntity {
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_FAMILIAR_CARBUNCLE;
+        return ModEntities.ENTITY_FAMILIAR_JABBERWOG;
     }
 }

@@ -47,6 +47,9 @@ public class ModRenderers {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.WILDEN_BOSS, WildenBossRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_CHIMERA_SPIKE, ChimeraProjectileRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_FAMILIAR_CARBUNCLE, FamiliarCarbyRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_FAMILIAR_DRYGMY, DrygmyRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_FAMILIAR_SYLPH, SylphRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_FAMILIAR_WIXIE, WixieRenderer::new);
 
     }
 }

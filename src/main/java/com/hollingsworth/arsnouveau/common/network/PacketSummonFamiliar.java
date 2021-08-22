@@ -9,7 +9,6 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -60,7 +59,7 @@ public class PacketSummonFamiliar {
                 owner.level.addFreshEntity(familiarEntity.getThisEntity());
                 ParticleUtil.spawnPoof((ServerWorld) owner.level, familiarEntity.getThisEntity().blockPosition());
                 if(owner instanceof LivingEntity){
-                    ((LivingEntity) owner).addEffect(new EffectInstance(ModPotions.FAMILIAR_SICKNESS_EFFECT, 20 * 300, 0, false, false, true));
+//                    ((LivingEntity) owner).addEffect(new EffectInstance(ModPotions.FAMILIAR_SICKNESS_EFFECT, 20 * 300, 0, false, false, true));
                 }
             }
         });

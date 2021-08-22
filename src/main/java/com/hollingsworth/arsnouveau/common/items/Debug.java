@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.common.entity.FamiliarCarbuncle;
+import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarCarbuncle;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;

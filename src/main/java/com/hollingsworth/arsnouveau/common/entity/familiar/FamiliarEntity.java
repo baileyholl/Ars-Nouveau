@@ -1,10 +1,11 @@
-package com.hollingsworth.arsnouveau.common.entity.goal;
+package com.hollingsworth.arsnouveau.common.entity.familiar;
 
 import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
 import com.hollingsworth.arsnouveau.common.entity.goal.familiar.FamiliarFollowGoal;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.LookAtGoal;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.player.PlayerEntity;
@@ -14,6 +15,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -110,5 +112,20 @@ public class FamiliarEntity extends CreatureEntity implements IAnimatable, IFami
     @Override
     public IPacket<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
+    }
+
+    public static AttributeModifierMap.MutableAttribute attributes() {
+        return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 40d)
+                .add(Attributes.MOVEMENT_SPEED, 0.2d).add(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.getDefaultValue());
+    }
+
+    @Override
+    public boolean canTrample(BlockState state, BlockPos pos, float fallDistance) {
+        return false;
+    }
+
+    @Override
+    protected boolean canRide(Entity p_184228_1_) {
+        return false;
     }
 }
