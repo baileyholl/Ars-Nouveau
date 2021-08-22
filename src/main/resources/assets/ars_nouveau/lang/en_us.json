@@ -796,5 +796,8 @@
 	"ars_nouveau.spell_book_gui.familiar": "Familiars",
 	"ars_nouveau.spell_book_gui.close": "Close",
 	"effect.ars_nouveau.familiar_sickness": "Familiar Sickness",
-	"ars_nouveau.familiar.sickness": "You must wait before summoning another familiar."
+	"ars_nouveau.familiar.sickness": "You must wait before summoning another familiar.",
+	"ars_nouveau.gui.notebook": "Documentation",
+	"ars_nouveau.gui.color": "Color Picker",
+	"ars_nouveau.gui.familiar": "Familiars"
 }
