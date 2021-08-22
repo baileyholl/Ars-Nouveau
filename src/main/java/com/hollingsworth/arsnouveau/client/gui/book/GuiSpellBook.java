@@ -2,6 +2,8 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.familiar.FamiliarCap;
+import com.hollingsworth.arsnouveau.api.familiar.IFamiliarCap;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
@@ -28,6 +30,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import vazkii.patchouli.api.PatchouliAPI;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -159,7 +162,7 @@ public class GuiSpellBook extends BaseBook {
 
         addButton(new GuiImageButton(bookLeft - 15, bookTop + 22, 0, 0, 23, 20, 23,20, "textures/gui/worn_book_bookmark.png",this::onDocumentationClick));
         addButton(new GuiImageButton(bookLeft - 15, bookTop + 46, 0, 0, 23, 20, 23,20, "textures/gui/color_wheel_bookmark.png",this::onColorClick));
-//        addButton(new GuiImageButton(bookLeft - 15, bookTop + 70, 0, 0, 23, 20, 23,20, "textures/gui/color_wheel_bookmark.png",this::onFamiliarClick));
+        addButton(new GuiImageButton(bookLeft - 15, bookTop + 70, 0, 0, 23, 20, 23,20, "textures/gui/color_wheel_bookmark.png",this::onFamiliarClick));
         this.nextButton = addButton(new ChangePageButton(bookRight -20, bookBottom -10, true, this::onPageIncrease, true));
         this.previousButton = addButton(new ChangePageButton(bookLeft - 5 , bookBottom -10, false, this::onPageDec, true));
 
@@ -300,7 +303,14 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void onFamiliarClick(Button button){
-        Minecraft.getInstance().setScreen(new GuiFamiliarScreen(api, new ArrayList<>(ArsNouveauAPI.getInstance().getFamiliarHolderMap().values())));
+        Collection<String> familiarHolders = new ArrayList<>();
+        IFamiliarCap cap = FamiliarCap.getFamiliarCap(ArsNouveau.proxy.getPlayer()).orElse(null);
+        if(cap != null){
+            familiarHolders = cap.getUnlockedFamiliars();
+            System.out.println(familiarHolders);
+        }
+        Collection<String> finalFamiliarHolders = familiarHolders;
+        Minecraft.getInstance().setScreen(new GuiFamiliarScreen(api, ArsNouveauAPI.getInstance().getFamiliarHolderMap().values().stream().filter(f -> finalFamiliarHolders.contains(f.id)).collect(Collectors.toList())));
     }
 
     public void onCraftingSlotClick(Button button){
