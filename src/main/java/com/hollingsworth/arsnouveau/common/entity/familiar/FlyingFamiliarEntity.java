@@ -22,9 +22,18 @@ public class FlyingFamiliarEntity extends FamiliarEntity{
         return flyingpathnavigator;
     }
 
-
     @Override
     public boolean canTeleport() {
         return true;
+    }
+
+    @Override
+    protected int calculateFallDamage(float p_225508_1_, float p_225508_2_) {
+        return 0;
+    }
+
+    @Override
+    public boolean causeFallDamage(float p_225503_1_, float p_225503_2_) {
+        return false;
     }
 }

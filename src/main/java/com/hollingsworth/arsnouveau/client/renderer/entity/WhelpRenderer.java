@@ -1,32 +1,29 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.entity.EntityWhelp;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.util.ResourceLocation;
+import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
-public class WhelpRenderer extends MobRenderer<EntityWhelp, WhelpModel> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/kobold_texture.png");
+import javax.annotation.Nullable;
+
+public class WhelpRenderer extends GeoEntityRenderer {
 
     public WhelpRenderer(EntityRendererManager manager) {
-        super(manager, new WhelpModel(), 0.2f);
+        super(manager, new WhelpModel());
     }
 
     @Override
-    public void render(EntityWhelp p_225623_1_, float p_225623_2_, float p_225623_3_, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int p_225623_6_) {
-/*        matrixStack.push();
-        matrixStack.translate(0, -0.5, 0);
-        matrixStack.pop();*/
-        super.render(p_225623_1_, p_225623_2_, p_225623_3_, matrixStack, iRenderTypeBuffer, p_225623_6_);
+    public ResourceLocation getTextureLocation(Object entity) {
+        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/drygmy.png");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(EntityWhelp entity) {
-        return TEXTURE;
+    public RenderType getRenderType(Object animatable, float partialTicks, MatrixStack stack, @Nullable IRenderTypeBuffer renderTypeBuffer, @Nullable IVertexBuilder vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
+        return RenderType.entityCutoutNoCull(textureLocation);
     }
-
-
 }

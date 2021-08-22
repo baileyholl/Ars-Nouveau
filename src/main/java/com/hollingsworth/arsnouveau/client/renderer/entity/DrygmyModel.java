@@ -39,6 +39,4 @@ public class DrygmyModel extends AnimatedGeoModel<IAnimatable> {
     public ResourceLocation getAnimationFileLocation(IAnimatable drygmy) {
         return ANIMATIONS;
     }
-
-
 }

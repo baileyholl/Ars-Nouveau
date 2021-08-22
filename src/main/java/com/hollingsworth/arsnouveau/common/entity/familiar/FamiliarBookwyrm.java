@@ -8,7 +8,7 @@ import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 
-public class FamiliarBookwyrm extends FamiliarEntity {
+public class FamiliarBookwyrm extends FlyingFamiliarEntity {
 
     public FamiliarBookwyrm(EntityType<? extends CreatureEntity> ent, World world) {
         super(ent, world);
@@ -22,11 +22,8 @@ public class FamiliarBookwyrm extends FamiliarEntity {
 
     @Override
     public PlayState walkPredicate(AnimationEvent event) {
-        if(event.isMoving()){
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("hop"));
-            return PlayState.CONTINUE;
-        }
-        return PlayState.STOP;
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
+        return PlayState.CONTINUE;
     }
 
     @Override

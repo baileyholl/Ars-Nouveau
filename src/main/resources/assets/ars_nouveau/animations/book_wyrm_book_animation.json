@@ -1,0 +1,25 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"book_idle": {
+			"loop": true,
+			"animation_length": 5.72,
+			"bones": {
+				"book_wyrm": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"5.72": {
+							"vector": [0, -360, 0]
+						}
+					},
+					"position": {
+						"vector": [0, "math.sin(query.anim_time * 100) * 1", 0]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

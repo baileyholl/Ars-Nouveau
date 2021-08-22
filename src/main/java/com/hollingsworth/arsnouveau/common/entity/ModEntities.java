@@ -110,7 +110,7 @@ public class ModEntities {
                     EntityType.Builder.<EntityAllyVex>of(EntityAllyVex::new, EntityClassification.MISC)
                             .sized(0.4F, 0.8F).fireImmune());
            ENTITY_WHELP_TYPE = build("whelp", EntityType.Builder.<EntityWhelp>of(EntityWhelp::new, EntityClassification.MISC)
-                   .sized(0.6F, 0.63F).setTrackingRange(10)
+                   .sized(1.1f, 1.2f).setTrackingRange(10)
                    .setShouldReceiveVelocityUpdates(true));
 
            ENTITY_FOLLOW_PROJ = build(
@@ -180,9 +180,9 @@ public class ModEntities {
                             .sized(0.7F, 0.63F).setTrackingRange(10));
 
             ENTITY_FAMILIAR_BOOKWYRM =  build("familiar_bookwyrm", EntityType.Builder.of(FamiliarBookwyrm::new, EntityClassification.CREATURE)
-                    .sized(0.7F, 0.63F).setTrackingRange(10));
+                    .sized(2f, 0.63F).setTrackingRange(10));
             ENTITY_FAMILIAR_DRYGMY =  build("familiar_drygmy", EntityType.Builder.of(FamiliarDrygmy::new, EntityClassification.CREATURE)
-                    .sized(0.7F, 0.63F).setTrackingRange(10));
+                    .sized(0.6f, 0.85f).setTrackingRange(10));
             ENTITY_FAMILIAR_SYLPH =  build("familiar_sylph", EntityType.Builder.of(FamiliarSylph::new, EntityClassification.CREATURE)
                     .sized(0.7F, 0.63F).setTrackingRange(10));
             ENTITY_FAMILIAR_JABBERWOG =  build("familiar_jabberwog", EntityType.Builder.of(FamiliarJabberwog::new, EntityClassification.CREATURE)

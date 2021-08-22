@@ -41,6 +41,13 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.items.IItemHandler;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,7 +55,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlaceBlockResponder, IDispellable, ITooltipProvider, IWandable, IInteractResponder {
+public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlaceBlockResponder, IDispellable, ITooltipProvider, IWandable, IInteractResponder, IAnimatable {
 
     public static final DataParameter<String> SPELL_STRING = EntityDataManager.defineId(EntityWhelp.class, DataSerializers.STRING);
     public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.defineId(EntityWhelp.class, DataSerializers.ITEM_STACK);
@@ -353,5 +360,21 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     @Override
     public List<IItemHandler> getInventory() {
         return BlockUtil.getAdjacentInventories(level, crystalPos);
+    }
+
+    @Override
+    public void registerControllers(AnimationData data) {
+        data.addAnimationController(new AnimationController<>(this, "walkController", 1, this::idle));
+    }
+
+    public PlayState idle(AnimationEvent event) {
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
+        return PlayState.CONTINUE;
+    }
+
+    AnimationFactory factory = new AnimationFactory(this);
+    @Override
+    public AnimationFactory getFactory() {
+        return factory;
     }
 }
