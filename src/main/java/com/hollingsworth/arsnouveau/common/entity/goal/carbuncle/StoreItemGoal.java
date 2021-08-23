@@ -83,15 +83,12 @@ public class StoreItemGoal extends Goal {
                 entityCarbuncle.setHeldStack(left);
 //                    EntityCarbuncle.this.world.playSound(null, EntityCarbuncle.this.getPosX(), EntityCarbuncle.this.getPosY(), EntityCarbuncle.this.getPosZ(), SoundEvents.ENTITY_ITEM_PICKUP, EntityCarbuncle.this.getSoundCategory(),1.0F, 1.0F);
                 entityCarbuncle.backOff = 5;
-
-                entityCarbuncle.getEntityData().set(EntityCarbuncle.HOP, false);
                 return;
             }
         }
 
         if (storePos != null && !entityCarbuncle.getHeldStack().isEmpty()) {
             setPath(storePos.getX(), storePos.getY(), storePos.getZ(), 1.2D);
-            entityCarbuncle.getEntityData().set(EntityCarbuncle.HOP, true);
         }
 
     }

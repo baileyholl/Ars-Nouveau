@@ -77,7 +77,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
     public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.ITEM_STACK);
     public static final DataParameter<Boolean> TAMED = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<Boolean> HOP = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.BOOLEAN);
     public static final DataParameter<String> COLOR = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.STRING);
     public int backOff; // Used to stop inventory store/take spam when chests are full or empty.
     public int tamingTime;
@@ -101,8 +100,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController<EntityCarbuncle>(this, "walkController", 20, this::animationPredicate));
-        animationData.addAnimationController(new AnimationController<EntityCarbuncle>(this, "idleController", 20, this::idlePredicate));
+        animationData.addAnimationController(new AnimationController<>(this, "walkController", 1, this::animationPredicate));
+        animationData.addAnimationController(new AnimationController<>(this, "idleController", 20, this::idlePredicate));
     }
 
     @Override
@@ -119,16 +118,16 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
 
     private PlayState idlePredicate(AnimationEvent event) {
-        if (level.getGameTime() % 20 == 0 && level.random.nextInt(3) == 0 && !this.entityData.get(HOP)) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
-        }
+//        if (level.getGameTime() % 20 == 0 && level.random.nextInt(3) == 0 && !this.entityData.get(HOP)) {
+//            event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
+//        }
 
-        return PlayState.CONTINUE;
+        return PlayState.STOP;
     }
 
     private PlayState animationPredicate(AnimationEvent event) {
-        if (this.entityData.get(HOP)) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("hop"));
+        if (event.isMoving()) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -172,11 +171,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
         if (!level.isClientSide) {
             lastAABBCalc++;
-            if (this.navigation.isDone()) {
-                EntityCarbuncle.this.entityData.set(HOP, false);
-            } else {
-                EntityCarbuncle.this.entityData.set(HOP, true);
-            }
         }
 
         if (this.backOff > 0 && !level.isClientSide)
@@ -192,7 +186,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
                     if (!isTamed() && itementity.getItem().getItem() != Items.GOLD_NUGGET)
                         return;
                     this.pickUpItem(itementity);
-                    this.entityData.set(HOP, false);
                     if(getHeldStack() != null && !getHeldStack().isEmpty())
                         break;
                 }
@@ -425,7 +418,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         super.defineSynchedData();
         this.entityData.define(HELD_ITEM, ItemStack.EMPTY);
         this.entityData.define(TAMED, false);
-        this.entityData.define(HOP, false);
         this.entityData.define(TO_POS, 0);
         this.entityData.define(FROM_POS, 0);
         this.entityData.define(COLOR, COLORS.ORANGE.name());
@@ -499,7 +491,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         tamingTime = tag.getInt("taming_time");
         whitelist = tag.getBoolean("whitelist");
         blacklist = tag.getBoolean("blacklist");
-        this.entityData.set(HOP, tag.getBoolean("hop"));
 
         // Remove goals and read them AFTER our tamed param is set because we can't ACCESS THEM OTHERWISE
         if (!setBehaviors)
@@ -540,15 +531,9 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             NBTUtil.storeBlockPos(tag, "to_" +counter, p);
             counter ++;
         }
-
-//        if (getToPos() != null)
-//            NBTUtil.storeBlockPos(tag, "to", getToPos());
-//        if (getFromPos() != null)
-//            NBTUtil.storeBlockPos(tag, "from", getFromPos());
         tag.putInt("backoff", backOff);
         tag.putBoolean("tamed", this.entityData.get(TAMED));
         tag.putInt("taming_time", tamingTime);
-        tag.putBoolean("hop", this.entityData.get(HOP));
         tag.putBoolean("whitelist", whitelist);
         tag.putBoolean("blacklist", blacklist);
         if (allowedItems != null && !allowedItems.isEmpty())

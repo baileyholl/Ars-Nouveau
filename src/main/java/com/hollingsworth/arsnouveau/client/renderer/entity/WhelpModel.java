@@ -24,8 +24,8 @@ public class WhelpModel extends AnimatedGeoModel<IAnimatable> {
 		super.setLivingAnimations(entity, uniqueID, customPredicate);
 		IBone head = this.getAnimationProcessor().getBone("head");
 		EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-		head.setRotationX(extraData.headPitch * 0.017453292F);
-		head.setRotationY(extraData.netHeadYaw * 0.017453292F);
+		head.setRotationX(extraData.headPitch * 0.010453292F);
+		head.setRotationY(extraData.netHeadYaw * 0.015453292F);
 	}
 
 	@Override

@@ -12,8 +12,6 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Predicate;
 
-import net.minecraft.entity.ai.goal.Goal.Flag;
-
 public class FindItem extends Goal {
     private EntityCarbuncle entityCarbuncle;
 
@@ -75,11 +73,8 @@ public class FindItem extends Goal {
                     continue;
                 Path path = entityCarbuncle.getNavigation().createPath(entity, 0);
                 if(path != null && path.canReach()) {
-
                     this.pathingEntity = entity;
                     pathToTarget(pathingEntity, 1.2f);
-
-                    entityCarbuncle.getEntityData().set(EntityCarbuncle.HOP, true);
                     break;
                 }
             }
@@ -100,7 +95,6 @@ public class FindItem extends Goal {
         ItemStack itemstack = entityCarbuncle.getHeldStack();
         if (itemstack.isEmpty()) {
             pathToTarget(pathingEntity, 1.2f);
-            entityCarbuncle.getEntityData().set(EntityCarbuncle.HOP, true);
         }
     }
     public void pathToTarget(Entity entity, double speed){
