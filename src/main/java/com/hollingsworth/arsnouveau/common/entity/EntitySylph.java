@@ -230,6 +230,12 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
     }
 
     @Override
+    public void remove() {
+        super.remove();
+        MinecraftForge.EVENT_BUS.unregister(this);
+    }
+
+    @Override
     public void tick() {
         super.tick();
         if(!this.level.isClientSide){

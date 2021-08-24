@@ -99,6 +99,12 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
     }
 
     @Override
+    public void remove() {
+        super.remove();
+        MinecraftForge.EVENT_BUS.unregister(this);
+    }
+
+    @Override
     public void tick() {
         super.tick();
         if(!level.isClientSide && (cauldronPos == null || !(level.getBlockEntity(cauldronPos) instanceof WixieCauldronTile)))
