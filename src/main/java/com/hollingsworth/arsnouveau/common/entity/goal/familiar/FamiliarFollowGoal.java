@@ -43,7 +43,10 @@ public class FamiliarFollowGoal extends FamiliarBaseGoal{
 
     @Override
     public boolean canContinueToUse() {
-        return !entity.getNavigation().isDone() && entity.distanceToSqr(theOwner) > (maxDist * maxDist) && theOwner.level.dimension() == entity.level.dimension();
+        boolean stillRunning = !entity.getNavigation().isDone() && entity.distanceToSqr(theOwner) > (maxDist * maxDist) && theOwner.level.dimension() == entity.level.dimension();
+        if(!stillRunning)
+            entity.getNavigation().stop();
+        return stillRunning;
     }
 
     @Override

@@ -53,7 +53,7 @@ public class FamiliarEntity extends CreatureEntity implements IAnimatable, IFami
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(3, new FamiliarFollowGoal(this, 2, 4, 2));
+        this.goalSelector.addGoal(3, new FamiliarFollowGoal(this, 2, 6, 4));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0f));
     }
@@ -73,6 +73,9 @@ public class FamiliarEntity extends CreatureEntity implements IAnimatable, IFami
     }
 
     public @Nullable LivingEntity getOwner(){
+        if(level.isClientSide)
+            return null;
+
         return (LivingEntity) ((ServerWorld)level).getEntity(getOwnerID());
     }
 

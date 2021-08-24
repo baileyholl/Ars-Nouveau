@@ -31,6 +31,9 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
     protected AbstractSpellPart(String tag, String name){
         this.tag = tag;
         this.name = name;
+        for(SpellSchool spellSchool : getSchools()){
+            spellSchool.addSpellPart(this);
+        }
     }
     // Final mana cost
     public int getAdjustedManaCost(List<AbstractAugment> augmentTypes){
