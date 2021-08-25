@@ -115,7 +115,7 @@ public class APIRegistry {
         registerFamiliar(new DrygmyFamiliar());
         registerFamiliar(new SylphFamiliar());
         registerFamiliar(new WixieFamiliar());
-        registerFamiliar(new JabberwogFamiliar());
+//        registerFamiliar(new JabberwogFamiliar());
         registerFamiliar(new BookwyrmFamiliar());
 
     }

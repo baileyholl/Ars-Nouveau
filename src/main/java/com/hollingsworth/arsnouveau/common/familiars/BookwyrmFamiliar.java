@@ -24,7 +24,7 @@ public class BookwyrmFamiliar extends AbstractFamiliarHolder {
 
     @Override
     public String getBookDescription() {
-        return "A Bookwyrm will reduce the cost of all spells cast, and increases any spell damage by 1.";
+        return "A Bookwyrm will reduce the cost of all spells cast, and increases any spell damage by 1. Obtained by performing the Ritual of Binding near a Bookwyrm.";
     }
 
     @Override

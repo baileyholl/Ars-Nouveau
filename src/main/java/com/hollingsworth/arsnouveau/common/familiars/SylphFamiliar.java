@@ -24,6 +24,6 @@ public class SylphFamiliar extends AbstractFamiliarHolder {
 
     @Override
     public String getBookDescription() {
-        return "Sylphs will reduce the cost of Elemental Earth glyphs by half, and grants bonus saturation when consuming food.";
+        return "Sylphs will reduce the cost of Elemental Earth glyphs by half, and grants bonus saturation when consuming food. Obtained by performing the Ritual of Binding near a Sylph.";
     }
 }

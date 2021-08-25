@@ -33,17 +33,22 @@ public class ScryingRitual extends AbstractRitual {
         if(!getWorld().isClientSide && getProgress() >= 15){
             List<ServerPlayerEntity> players =  getWorld().getEntitiesOfClass(ServerPlayerEntity.class, new AxisAlignedBB(getPos()).inflate(5.0));
             if(players.size() > 0){
+                ItemStack item = getConsumedItems().stream().filter(i -> i.getItem() instanceof BlockItem).findFirst().orElse(ItemStack.EMPTY);
+                int modifier = didConsumeItem(ArsNouveauAPI.getInstance().getGlyphItem(AugmentExtendTime.INSTANCE)) ? 3 : 1;
                 for(ServerPlayerEntity playerEntity : players){
-                    playerEntity.addEffect(new EffectInstance(ModPotions.SCRYING_EFFECT, 60 * 20 * 5 * (didConsumeItem(ArsNouveauAPI.getInstance().getGlyphItem(AugmentExtendTime.INSTANCE)) ? 3 : 1), 0));
-                    CompoundNBT tag = playerEntity.getPersistentData().getCompound(PlayerEntity.PERSISTED_NBT_TAG);
-                    ItemStack item = getConsumedItems().stream().filter(i -> i.getItem() instanceof BlockItem).findFirst().orElse(ItemStack.EMPTY);
-                    tag.putString("an_scrying", item.getItem().getRegistryName().toString());
-                    playerEntity.getPersistentData().put(PlayerEntity.PERSISTED_NBT_TAG, tag);
-                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->playerEntity), new PacketGetPersistentData(tag));
-                    setFinished();
+                    ScryingRitual.grantScrying(playerEntity, item, 60 * 20 * 5 * modifier);
                 }
             }
+            setFinished();
         }
+    }
+
+    public static void grantScrying(ServerPlayerEntity playerEntity, ItemStack stack, int ticks){
+        playerEntity.addEffect(new EffectInstance(ModPotions.SCRYING_EFFECT, ticks));
+        CompoundNBT tag = playerEntity.getPersistentData().getCompound(PlayerEntity.PERSISTED_NBT_TAG);
+        tag.putString("an_scrying", stack.getItem().getRegistryName().toString());
+        playerEntity.getPersistentData().put(PlayerEntity.PERSISTED_NBT_TAG, tag);
+        Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->playerEntity), new PacketGetPersistentData(tag));
     }
 
     @Override

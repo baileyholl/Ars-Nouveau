@@ -101,7 +101,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     @Override
     public void registerControllers(AnimationData animationData) {
         animationData.addAnimationController(new AnimationController<>(this, "walkController", 1, this::animationPredicate));
-        animationData.addAnimationController(new AnimationController<>(this, "idleController", 20, this::idlePredicate));
     }
 
     @Override
@@ -116,14 +115,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         return super.hurt(source, amount);
     }
 
-
-    private PlayState idlePredicate(AnimationEvent event) {
-//        if (level.getGameTime() % 20 == 0 && level.random.nextInt(3) == 0 && !this.entityData.get(HOP)) {
-//            event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
-//        }
-
-        return PlayState.STOP;
-    }
 
     private PlayState animationPredicate(AnimationEvent event) {
         if (event.isMoving()) {

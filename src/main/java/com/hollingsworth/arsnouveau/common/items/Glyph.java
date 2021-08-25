@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.items;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
 import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
@@ -54,6 +55,10 @@ public class Glyph extends ModItem{
                 tooltip2.add(new TranslationTextComponent("tooltip.ars_nouveau.glyph_disabled"));
             }else if(spellPart != null){
                 tooltip2.add(new TranslationTextComponent("tooltip.ars_nouveau.glyph_level", spellPart.getTier().ordinal() + 1).setStyle(Style.EMPTY.withColor(TextFormatting.BLUE)));
+                tooltip2.add(new TranslationTextComponent("ars_nouveau.schools"));
+                for(SpellSchool s : spellPart.getSchools()){
+                    tooltip2.add(s.getTextComponent());
+                }
             }
         }
     }

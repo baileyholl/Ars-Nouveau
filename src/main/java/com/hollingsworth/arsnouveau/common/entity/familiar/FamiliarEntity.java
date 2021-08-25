@@ -77,7 +77,11 @@ public class FamiliarEntity extends CreatureEntity implements IAnimatable, IFami
     @Override
     public void tick() {
         super.tick();
-
+        if(level.getGameTime() % 20 ==0 && !level.isClientSide){
+            if(((ServerWorld)level).getEntity(getOwnerID()) == null){
+                this.remove();
+            }
+        }
     }
 
     @Override

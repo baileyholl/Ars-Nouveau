@@ -25,6 +25,6 @@ public class CarbuncleFamiliar extends AbstractFamiliarHolder {
 
     @Override
     public String getBookDescription() {
-        return "A Carbuncle familiar that will grant you Speed 2.";
+        return "A Carbuncle familiar that will grant you Speed 2. Additionally, using a Golden Nugget on the carbuncle will consume it and grant the owner a short duration of Scrying for Gold Ore. Obtained by performing the Ritual of Binding near a Carbuncle.";
     }
 }

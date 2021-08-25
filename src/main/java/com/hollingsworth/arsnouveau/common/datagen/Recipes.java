@@ -475,7 +475,12 @@ public class Recipes extends RecipeProvider {
                     .define('g', Tags.Items.INGOTS_GOLD)
                     .define('M', MANA_GEM_BLOCK)
                     .save(consumer);
-
+            shapelessBuilder(getRitualItem(RitualLib.BINDING))
+                    .requires(BlockRegistry.VEXING_LOG)
+                    .requires(ItemsRegistry.BLANK_PARCHMENT)
+                    .requires(Items.ENDER_PEARL, 1)
+                    .requires(MANA_GEM, 3)
+                    .save(consumer);
         }
     }
 

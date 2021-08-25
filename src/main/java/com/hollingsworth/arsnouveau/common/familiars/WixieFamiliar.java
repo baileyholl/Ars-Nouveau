@@ -24,6 +24,6 @@ public class WixieFamiliar extends AbstractFamiliarHolder {
 
     @Override
     public String getBookDescription() {
-        return "Wixies will increases the duration of potions that you consume. Additionally, the Wixie will apply harmful potions to enemies during combat.";
+        return "Wixies will increases the duration of potions that you consume. Additionally, the Wixie will apply harmful potions to enemies during combat. Obtained by performing the Ritual of Binding near a Wixie.";
     }
 }

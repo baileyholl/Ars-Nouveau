@@ -24,6 +24,6 @@ public class DrygmyFamiliar extends AbstractFamiliarHolder {
 
     @Override
     public String getBookDescription() {
-        return "A Drygmy familiar will increase the damage of Earth spells by 2, and has a chance to increase the amount of looting when slaying enemies.";
+        return "A Drygmy familiar will increase the damage of Earth spells by 2, and has a chance to increase the amount of looting when slaying enemies. Obtained by performing the Ritual of Binding near a Drygmy.";
     }
 }
