@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.DrygmyTile;
+import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
 import com.hollingsworth.arsnouveau.common.entity.goal.UntamedFindItemGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.drygmy.CollectEssenceGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.sylph.FollowMobGoalBackoff;
@@ -23,7 +24,6 @@ import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.ai.goal.PrioritizedGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
-import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -144,7 +144,7 @@ public class EntityDrygmy extends CreatureEntity implements IAnimatable, IToolti
     }
 
     private PlayState animationPredicate(AnimationEvent event) {
-        if(isChanneling() || this.entityData.get(BEING_TAMED)){
+        if(isChanneling() || this.entityData.get(BEING_TAMED) || (level.isClientSide && PatchouliHandler.isPatchouliWorld())){
             event.getController().setAnimation(new AnimationBuilder().addAnimation("channel"));
             return PlayState.CONTINUE;
         }

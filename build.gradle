@@ -142,7 +142,8 @@ dependencies {
 //    compileOnly fg.deobf("curse.maven:exp-231951:3326143")
     runtimeOnly fg.deobf("curse.maven:exp-268560:3206392")  // Mekanism
 //    compileOnly fg.deobf("curse.maven:exp-268560:3206392")
-    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50:api")
+//    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50:api")
+    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50")
     compileOnly fg.deobf("mezz.jei:jei-1.16.2:7.3.2.25:api")
     runtimeOnly fg.deobf("mezz.jei:jei-1.16.2:7.3.2.25")
