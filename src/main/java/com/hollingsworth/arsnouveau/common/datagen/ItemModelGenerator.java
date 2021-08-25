@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.common.base.Preconditions;
+import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
@@ -29,6 +30,12 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
             }else if(i instanceof RitualTablet){
                 try {
                     getBuilder("ritual_" + ((RitualTablet) i).ritual.getID()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", ritualTexture(i));
+                }catch (Exception e){
+                    System.out.println("No texture for " + i.toString());
+                }
+            }else if(i instanceof FamiliarScript) {
+                try {
+                    getBuilder("familiar_" + ((FamiliarScript) i).familiar.getId()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", ritualTexture(i));
                 }catch (Exception e){
                     System.out.println("No texture for " + i.toString());
                 }

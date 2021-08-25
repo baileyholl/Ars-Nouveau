@@ -25,6 +25,6 @@ public class CarbuncleFamiliar extends AbstractFamiliarHolder {
 
     @Override
     public String getBookDescription() {
-        return "A carbuncle familiar that will passively grant you speed. Can be obtained by performing the Ritual of Binding with a Carbuncle nearby.";
+        return "A Carbuncle familiar that will grant you Speed 2.";
     }
 }

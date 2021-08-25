@@ -20,11 +20,11 @@ public class JabberwogFamiliar extends AbstractFamiliarHolder {
 
     @Override
     public String getBookName() {
-        return "Carbuncle";
+        return "Jabberwog";
     }
 
     @Override
     public String getBookDescription() {
-        return "A carbuncle familiar that will passively grant you speed. Can be obtained by performing the Ritual of Binding with a Carbuncle nearby.";
+        return "";
     }
 }

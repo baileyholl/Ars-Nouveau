@@ -16,4 +16,14 @@ public class WixieFamiliar extends AbstractFamiliarHolder {
     public IFamiliar getSummonEntity(World world) {
         return new FamiliarWixie(ModEntities.ENTITY_FAMILIAR_WIXIE, world);
     }
+
+    @Override
+    public String getBookName() {
+        return "Wixie";
+    }
+
+    @Override
+    public String getBookDescription() {
+        return "Wixies will increases the duration of potions that you consume. Additionally, the Wixie will apply harmful potions to enemies during combat.";
+    }
 }

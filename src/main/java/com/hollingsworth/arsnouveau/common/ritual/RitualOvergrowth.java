@@ -77,7 +77,7 @@ public class RitualOvergrowth extends AbstractRitual {
 
     @Override
     public String getLangDescription() {
-        return "Occasionally bone meals blocks in the area around it. This ritual requires Mana to operate. If augmented with a Bone Block, this ritual will instead force baby animals to grow faster.";
+        return "Occasionally bone meals blocks in the area around it. This ritual requires source to operate. If augmented with a Bone Block, this ritual will instead force baby animals to grow faster.";
     }
 
     @Override

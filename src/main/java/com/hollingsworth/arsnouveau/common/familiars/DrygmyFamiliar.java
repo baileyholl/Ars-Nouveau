@@ -16,4 +16,14 @@ public class DrygmyFamiliar extends AbstractFamiliarHolder {
     public IFamiliar getSummonEntity(World world) {
         return new FamiliarDrygmy(ModEntities.ENTITY_FAMILIAR_DRYGMY, world);
     }
+
+    @Override
+    public String getBookName() {
+        return "Drygmy";
+    }
+
+    @Override
+    public String getBookDescription() {
+        return "A Drygmy familiar will increase the damage of Earth spells by 2, and has a chance to increase the amount of looting when slaying enemies.";
+    }
 }

@@ -68,7 +68,7 @@ public class RitualHealing extends AbstractRitual {
 
     @Override
     public String getLangDescription() {
-        return "Heals nearby entities or harms undead over time. Additionally, Zombie Villagers will be instantly cured, and the resulting villager will offer discounts if a player was nearby. This ritual requires mana to operate.";
+        return "Heals nearby entities or harms undead over time. Additionally, Zombie Villagers will be instantly cured, and the resulting villager will offer discounts if a player was nearby. This ritual requires source to operate.";
     }
 
     @Override

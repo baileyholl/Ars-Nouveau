@@ -43,7 +43,7 @@ public class RitualFlight extends AbstractRitual {
 
     @Override
     public String getLangDescription() {
-        return "Grants nearby players the Flight effect when they jump, allowing them to creatively fly for a short time. If the player is nearby, this ritual will refresh their flight buff. Each time this ritual grants or refreshes flight, it will expend mana from nearby jars.";
+        return "Grants nearby players the Flight effect when they jump, allowing them to creatively fly for a short time. If the player is nearby, this ritual will refresh their flight buff. Each time this ritual grants or refreshes flight, it will expend source from nearby jars.";
     }
 
     @Override

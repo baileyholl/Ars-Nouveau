@@ -41,6 +41,10 @@ public abstract class AbstractFamiliarHolder {
         return new TranslationTextComponent("ars_nouveau.familiar_name." + this.id);
     }
 
+    public String getEntityKey(){
+        return this.id;
+    }
+
     public String getBookName(){
         return "";
     }

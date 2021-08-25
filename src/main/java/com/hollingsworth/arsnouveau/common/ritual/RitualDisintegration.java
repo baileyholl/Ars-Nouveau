@@ -93,7 +93,7 @@ public class RitualDisintegration extends AbstractRitual {
 
     @Override
     public String getLangDescription() {
-        return "Destroys nearby monsters and converts them into Experience Gems worth twice as much experience. Monsters destroyed this way will not drop items. This ritual consumes mana each time a monster is destroyed.";
+        return "Destroys nearby monsters and converts them into Experience Gems worth twice as much experience. Monsters destroyed this way will not drop items. This ritual consumes source each time a monster is destroyed.";
     }
 
     @Override

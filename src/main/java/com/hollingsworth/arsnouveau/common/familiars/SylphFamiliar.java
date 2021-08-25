@@ -16,4 +16,14 @@ public class SylphFamiliar extends AbstractFamiliarHolder {
     public IFamiliar getSummonEntity(World world) {
         return new FamiliarSylph(ModEntities.ENTITY_FAMILIAR_SYLPH, world);
     }
+
+    @Override
+    public String getBookName() {
+        return "Sylph";
+    }
+
+    @Override
+    public String getBookDescription() {
+        return "Sylphs will reduce the cost of Elemental Earth glyphs by half, and grants bonus saturation when consuming food.";
+    }
 }

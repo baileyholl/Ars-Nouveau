@@ -16,4 +16,19 @@ public class BookwyrmFamiliar extends AbstractFamiliarHolder {
     public IFamiliar getSummonEntity(World world) {
         return new FamiliarBookwyrm(ModEntities.ENTITY_FAMILIAR_BOOKWYRM, world);
     }
+
+    @Override
+    public String getBookName() {
+        return "Bookwyrm";
+    }
+
+    @Override
+    public String getBookDescription() {
+        return "A Bookwyrm will reduce the cost of all spells cast, and increases any spell damage by 1.";
+    }
+
+    @Override
+    public String getEntityKey() {
+        return "whelp";
+    }
 }

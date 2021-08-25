@@ -61,7 +61,7 @@ public class RitualBinding extends AbstractRitual {
 
     @Override
     public String getLangDescription() {
-        return "";
+        return "The Ritual of Binding converts nearby eligible entities into Bound Scripts, used for summoning a Familiar. For more information, see the section on Familiars.";
     }
 
     @Override

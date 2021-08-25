@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import net.minecraft.data.DataGenerator;
@@ -44,6 +45,30 @@ public class PatchouliProvider implements IDataProvider {
             Path path = getRitualPath(output, r.getID());
             IDataProvider.save(GSON, cache, getRitualPage(r), path);
         }
+
+        for(AbstractFamiliarHolder r : ArsNouveauAPI.getInstance().getFamiliarHolderMap().values()){
+            Path path = getFamiliarPath(output, r.getId());
+            IDataProvider.save(GSON, cache, getFamiliarPage(r), path);
+        }
+    }
+
+    public JsonObject getFamiliarPage(AbstractFamiliarHolder familiarHolder){
+        JsonObject object = new JsonObject();
+        object.addProperty("name", "entity.ars_nouveau." + familiarHolder.getId());
+        object.addProperty("icon", "ars_nouveau:familiar_" + familiarHolder.getId());
+        object.addProperty("category", "familiars");
+        JsonArray pages = new JsonArray();
+
+        JsonObject page = new JsonObject();
+        page.addProperty("type", "text");
+        page.addProperty("text", "ars_nouveau.familiar_desc." + familiarHolder.getId());
+        pages.add(page);
+        JsonObject page2 = new JsonObject();
+        page2.addProperty("type", "entity");
+        page2.addProperty("entity", "ars_nouveau:" + familiarHolder.getEntityKey());
+        pages.add(page2);
+        object.add("pages", pages);
+        return object;
     }
 
     public JsonObject getRitualPage(AbstractRitual ritual){
@@ -123,6 +148,10 @@ public class PatchouliProvider implements IDataProvider {
 
     private static Path getRitualPath(Path pathIn, String str){
         return pathIn.resolve("data/ars_nouveau/patchouli/rituals/" + str + ".json");
+    }
+
+    private static Path getFamiliarPath(Path pathIn, String str){
+        return pathIn.resolve("data/ars_nouveau/patchouli/familiars/" + str + ".json");
     }
     @Override
     public String getName() {

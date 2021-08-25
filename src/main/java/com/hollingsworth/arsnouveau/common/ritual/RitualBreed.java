@@ -33,7 +33,7 @@ public class RitualBreed extends AbstractRitual {
 
     @Override
     public String getLangDescription() {
-        return "Periodically causes nearby animals to breed if possible. This ritual requires mana to operate, and will have no effect if there are twenty or more animals nearby.";
+        return "Periodically causes nearby animals to breed if possible. This ritual requires source to operate, and will have no effect if there are twenty or more animals nearby.";
     }
 
     @Override
