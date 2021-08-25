@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public abstract class AbstractSpellPart implements ISpellTier, Comparable<AbstractSpellPart> {
-
+    // TODO: Clarify that this is the default cost.
     public abstract int getManaCost();
     public String tag;
     public String name;

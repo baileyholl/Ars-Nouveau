@@ -111,7 +111,6 @@ public class SpellStats {
             SpellModifierEvent modifierEvent = new SpellModifierEvent(shooter, builder, spellPart, rayTraceResult, world, spellContext);
             MinecraftForge.EVENT_BUS.post(modifierEvent);
             builder = modifierEvent.builder;
-
             for(AbstractAugment abstractAugment : spellStats.augments){
                 abstractAugment.applyModifiers(builder, spellPart);
             }

@@ -1,6 +1,11 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
+import com.hollingsworth.arsnouveau.api.entity.IDispellable;
+import com.hollingsworth.arsnouveau.api.event.MaxManaCalcEvent;
 import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.entity.goal.familiar.FamOwnerHurtByTargetGoal;
+import com.hollingsworth.arsnouveau.common.entity.goal.familiar.FamOwnerHurtTargetGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.familiar.FamiliarFollowGoal;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
@@ -18,6 +23,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.NetworkHooks;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -30,22 +37,54 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-public class FamiliarEntity extends CreatureEntity implements IAnimatable, IFamiliar {
+public class FamiliarEntity extends CreatureEntity implements IAnimatable, IFamiliar, IDispellable {
 
     private static final DataParameter<Optional<UUID>> OWNER_UUID = EntityDataManager.defineId(FamiliarEntity.class, DataSerializers.OPTIONAL_UUID);
 
     public FamiliarEntity(EntityType<? extends CreatureEntity> p_i48575_1_, World p_i48575_2_) {
         super(p_i48575_1_, p_i48575_2_);
+        MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
+    }
+
+    @Override
+    public boolean removeWhenFarAway(double p_213397_1_) {
+        return false;
+    }
+
+    @Override
+    public void onRemovedFromWorld() {
+        super.onRemovedFromWorld();
+    }
+
+    @SubscribeEvent
+    public void maxManaCalc(MaxManaCalcEvent event) {
+        if(!isAlive())
+            return;
+        if(getOwner() != null && getOwner().equals(event.getEntity())){
+            event.setMax((int) (event.getMax() -  event.getMax() * getManaReserveModifier()));
+        }
+    }
+
+    public double getManaReserveModifier(){
+        return 0.15;
     }
 
     @Override
     public void tick() {
         super.tick();
+
     }
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
         if(source == DamageSource.DROWN || source == DamageSource.IN_WALL || source == DamageSource.FLY_INTO_WALL || source == DamageSource.FALL)
+            return false;
+        if(source.getEntity() == null)
             return false;
         return super.hurt(source, amount);
     }
@@ -56,6 +95,8 @@ public class FamiliarEntity extends CreatureEntity implements IAnimatable, IFami
         this.goalSelector.addGoal(3, new FamiliarFollowGoal(this, 2, 6, 4));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0f));
+        this.targetSelector.addGoal(1, new FamOwnerHurtByTargetGoal(this));
+        this.targetSelector.addGoal(2, new FamOwnerHurtTargetGoal(this));
     }
 
     public PlayState walkPredicate(AnimationEvent event) {
@@ -119,7 +160,8 @@ public class FamiliarEntity extends CreatureEntity implements IAnimatable, IFami
 
     public static AttributeModifierMap.MutableAttribute attributes() {
         return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 40d)
-                .add(Attributes.MOVEMENT_SPEED, 0.2d).add(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.getDefaultValue());
+                .add(Attributes.MOVEMENT_SPEED, 0.2d).add(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.getDefaultValue())
+                .add(Attributes.FOLLOW_RANGE, 16D);
     }
 
     @Override
@@ -129,6 +171,16 @@ public class FamiliarEntity extends CreatureEntity implements IAnimatable, IFami
 
     @Override
     protected boolean canRide(Entity p_184228_1_) {
+        return false;
+    }
+
+    @Override
+    public boolean onDispel(@Nullable LivingEntity caster) {
+        if(!level.isClientSide && getOwner() != null && getOwner().equals(caster)){
+            this.remove();
+            ParticleUtil.spawnPoof((ServerWorld) level, blockPosition());
+            return true;
+        }
         return false;
     }
 }

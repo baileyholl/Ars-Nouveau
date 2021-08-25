@@ -178,8 +178,6 @@ public abstract class AbstractEffect extends AbstractSpellPart {
 
     public void dealDamage(World world, LivingEntity shooter, float baseDamage, SpellStats stats, Entity entity, DamageSource source){
         shooter = shooter == null ? FakePlayerFactory.getMinecraft((ServerWorld) world) : shooter;
-
-
         float totalDamage = (float) (baseDamage + stats.getDamageModifier());
         if(entity instanceof LivingEntity && ((LivingEntity) entity).getHealth() <= 0 || totalDamage <= 0)
             return;

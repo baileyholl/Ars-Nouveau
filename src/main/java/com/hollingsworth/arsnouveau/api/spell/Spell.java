@@ -84,7 +84,7 @@ public class Spell {
     }
 
     public void setCost(int cost){
-        this.cost = cost;
+        this.cost = Math.max(0, cost);
     }
 
     public boolean isEmpty(){
