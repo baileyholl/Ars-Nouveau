@@ -3,24 +3,27 @@ package com.hollingsworth.arsnouveau.common.entity.goal.wixie;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
+import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
-import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.tileentity.TileEntity;
 
-public class CompleteCraftingGoal extends Goal {
+public class CompleteCraftingGoal extends ExtendedRangeGoal {
     EntityWixie wixie;
     int ticksNearby;
     boolean hasCast;
 
     public CompleteCraftingGoal(EntityWixie wixie){
+        super(10);
         this.wixie = wixie;
     }
 
     @Override
     public void start() {
+        super.start();
         ticksNearby = 0;
         hasCast = false;
+        this.startDistance = BlockUtil.distanceFrom(wixie.position, wixie.cauldronPos.above());
     }
 
     @Override
@@ -34,7 +37,8 @@ public class CompleteCraftingGoal extends Goal {
 
     @Override
     public void tick() {
-        if(BlockUtil.distanceFrom(wixie.blockPosition(), wixie.cauldronPos.above()) < 1.5D){
+        super.tick();
+        if(BlockUtil.distanceFrom(wixie.position(), wixie.cauldronPos.above()) < 1.5D + this.extendedRange){
             ticksNearby++;
             if(!hasCast){
                 Networking.sendToNearby(wixie.level, wixie, new PacketAnimEntity(wixie.getId(), EntityWixie.Animations.CAST.ordinal()));

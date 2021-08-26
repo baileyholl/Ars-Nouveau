@@ -5,9 +5,9 @@ import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
+import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
-import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.Potions;
 import net.minecraft.tileentity.TileEntity;
@@ -16,26 +16,27 @@ import net.minecraft.world.World;
 
 import java.util.EnumSet;
 
-import net.minecraft.entity.ai.goal.Goal.Flag;
-
-public class FindPotionGoal extends Goal {
+public class FindPotionGoal extends ExtendedRangeGoal {
     EntityWixie wixie;
     BlockPos movePos;
     boolean found;
     Potion potionNeeded;
 
     public FindPotionGoal(EntityWixie wixie){
+        super(15);
         this.wixie = wixie;
         this.setFlags(EnumSet.of(Flag.LOOK, Flag.MOVE));
     }
 
     @Override
     public void start() {
+        super.start();
         TileEntity tileEntity = wixie.level.getBlockEntity(wixie.cauldronPos);
         found = false;
         if(tileEntity instanceof WixieCauldronTile) {
             potionNeeded = ((WixieCauldronTile) tileEntity).getNeededPotion();
             movePos = ((WixieCauldronTile) tileEntity).findNeededPotion(potionNeeded, 300);
+            this.startDistance = BlockUtil.distanceFrom(wixie.position, movePos);
         }else{
             found = true;
         }
@@ -48,10 +49,11 @@ public class FindPotionGoal extends Goal {
 
     @Override
     public void tick() {
+        super.tick();
         if(found)
             return;
 
-        if(movePos != null && BlockUtil.distanceFrom(wixie.blockPosition(), movePos.above()) < 1.5D){
+        if(movePos != null && BlockUtil.distanceFrom(wixie.position(), movePos.above()) < 2.0 + this.extendedRange){
             WixieCauldronTile tile = (WixieCauldronTile) wixie.getCommandSenderWorld().getBlockEntity(wixie.cauldronPos);
             World world = wixie.getCommandSenderWorld();
             if(tile == null) {
@@ -104,6 +106,7 @@ public class FindPotionGoal extends Goal {
 
     @Override
     public void stop() {
+        super.stop();
         potionNeeded = Potions.EMPTY;
         found = false;
     }
