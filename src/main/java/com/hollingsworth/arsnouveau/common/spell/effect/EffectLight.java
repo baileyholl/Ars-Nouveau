@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.SconceBlock;
@@ -10,7 +11,6 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -59,7 +59,7 @@ public class EffectLight extends AbstractEffect {
             return;
         }
 
-        if (world.getBlockState(pos).getMaterial() == Material.AIR && world.isUnobstructed(BlockRegistry.LIGHT_BLOCK.defaultBlockState(), pos, ISelectionContext.empty())) {
+        if (world.getBlockState(pos).getMaterial().isReplaceable() && world.isUnobstructed(BlockRegistry.LIGHT_BLOCK.defaultBlockState(), pos, ISelectionContext.of(ANFakePlayer.getPlayer((ServerWorld) world)))) {
             world.setBlockAndUpdate(pos, BlockRegistry.LIGHT_BLOCK.defaultBlockState().setValue(SconceBlock.LIGHT_LEVEL, Math.max(0,Math.min(15, 14 + (int) spellStats.getAmpMultiplier()))));
             LightTile tile = ((LightTile)world.getBlockEntity(pos));
             if(tile != null){
