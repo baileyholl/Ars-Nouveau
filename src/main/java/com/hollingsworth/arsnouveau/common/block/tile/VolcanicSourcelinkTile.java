@@ -42,14 +42,14 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
                 int progress = 0;
                 int burnTime = ForgeHooks.getBurnTime(i.getItem(), null) ;
                 if(burnTime > 0){
-                    mana = burnTime / 75;
+                    mana = burnTime / 12;
                     progress = 1;
                 }
                 if(i.getItem().getItem() == BlockRegistry.BLAZING_LOG.asItem()){
-                    mana += 50;
+                    mana += 100;
                     progress += 5;
                 }else if(i.getItem().getItem().is(Recipes.ARCHWOOD_LOG_TAG)){
-                    mana += 30;
+                    mana += 50;
                     progress += 3;
                 }
 

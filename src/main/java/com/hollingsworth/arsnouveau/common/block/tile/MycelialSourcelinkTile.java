@@ -37,13 +37,13 @@ public class MycelialSourcelinkTile extends SourcelinkTile{
                 if(i.getItem().getItem().isEdible()){
                     int mana = 0;
                     Food food = i.getItem().getItem().getFoodProperties();
-                    mana += 8 * food.getNutrition();
-                    mana += 25 * food.getSaturationModifier();
+                    mana += 11 * food.getNutrition();
+                    mana += 30 * food.getSaturationModifier();
                     progress += 1;
                     if(i.getItem().getItem().is(Recipes.MAGIC_FOOD) || (i.getItem().getItem() instanceof BlockItem && Recipes.MAGIC_PLANTS.contains(((BlockItem) i.getItem().getItem()).getBlock()))){
                         progress += 4;
                         mana += 10;
-                        mana *= 1.5;
+                        mana *= 2;
                     }
                     this.addMana(mana);
                     ItemStack containerItem = i.getItem().getContainerItem();
