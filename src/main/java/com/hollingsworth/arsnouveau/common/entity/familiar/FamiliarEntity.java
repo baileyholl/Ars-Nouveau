@@ -118,7 +118,7 @@ public class FamiliarEntity extends CreatureEntity implements IAnimatable, IFami
     }
 
     public @Nullable LivingEntity getOwner(){
-        if(level.isClientSide)
+        if(level.isClientSide || getOwnerID() == null)
             return null;
 
         return (LivingEntity) ((ServerWorld)level).getEntity(getOwnerID());
@@ -140,7 +140,8 @@ public class FamiliarEntity extends CreatureEntity implements IAnimatable, IFami
     @Override
     public void addAdditionalSaveData(CompoundNBT tag) {
         super.addAdditionalSaveData(tag);
-        tag.putUUID("ownerID", getOwnerID());
+        if(getOwner() != null)
+            tag.putUUID("ownerID", getOwnerID());
     }
 
     @Override
@@ -149,8 +150,8 @@ public class FamiliarEntity extends CreatureEntity implements IAnimatable, IFami
         setOwnerID(tag.getUUID("ownerID"));
     }
 
-    public UUID getOwnerID() {
-        return this.getEntityData().get(OWNER_UUID).get();
+    public @Nullable UUID getOwnerID() {
+        return this.getEntityData().get(OWNER_UUID).orElse(null);
     }
 
     public void setOwnerID(UUID uuid) {
