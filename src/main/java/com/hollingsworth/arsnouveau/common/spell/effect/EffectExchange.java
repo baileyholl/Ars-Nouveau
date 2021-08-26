@@ -123,7 +123,7 @@ public class EffectExchange extends AbstractEffect {
                     firstBlock = item.getBlock();
                 }else if(item.getBlock() != firstBlock)
                     continue;
-                if(attemptPlace(stack, world, pos1, result, shooter))
+                if(attemptPlace(stack, world, new BlockPos(pos1), result, shooter))
                     break;
             }
         }
@@ -142,7 +142,9 @@ public class EffectExchange extends AbstractEffect {
         destroyBlockSafelyWithoutSound(world, pos1, false, shooter);
 
         if(placeState != null){
-            item.place(context);
+            world.setBlock(pos1, placeState, 3);
+            stack.shrink(1);
+//            item.place(context);
             return true;
         }
         return false;
