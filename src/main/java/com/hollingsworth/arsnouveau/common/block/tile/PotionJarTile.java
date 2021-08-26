@@ -74,7 +74,7 @@ public class PotionJarTile extends TileEntity implements ITickableTileEntity, IT
     }
 
     public boolean canAcceptNewPotion(){
-        return this.amount <= 0 && !this.isLocked || this.potion == Potions.EMPTY;
+        return this.amount <= 0 && !this.isLocked || (this.potion == Potions.EMPTY && !this.isLocked);
     }
 
     @Override
@@ -131,7 +131,7 @@ public class PotionJarTile extends TileEntity implements ITickableTileEntity, IT
 
     public void addAmount(int fill){
         setAmount(Math.min(getMaxFill(), getAmount() + fill));
-        if(getAmount() <= 0)
+        if(getAmount() <= 0 && !this.isLocked)
             this.potion = Potions.EMPTY;
         level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
     }
