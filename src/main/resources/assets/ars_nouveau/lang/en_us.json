@@ -82,10 +82,10 @@
 
 	"ars_nouveau.page.ring_of_greater_discount": "Provides a slightly larger discount over the Lesser Ring of Discount.",
 	"ars_nouveau.page.belt_of_unstable_gifts": "Occasionally grants a random positive potion effect for a short duration. These effects can vary in strength.",
-	"ars_nouveau.page.whelp_charm": "Bookwyrms are helpful creatures with the ability to cast spells using source from source jars. Given a spell inscribed on Spell Parchment, Bookwyrms will cast spells in the area surrounding their Summoning Crystal. To summon a Bookwyrm, use a Bookwyrm Charm on a summoning crystal.",
-	"ars_nouveau.page2.whelp_charm": "In the event that they die, they will drop their charm.",
+	"ars_nouveau.page.whelp_charm": "Bookwyrms are helpful creatures with the ability to cast spells using source from source jars. Given a spell inscribed on Spell Parchment, Bookwyrms will cast spells in the area surrounding their Summoning Crystal. To summon a Bookwyrm, use a Bookwyrm Charm on a summoning crystal. Bookwyrms can be dyed using white, black, blue, green, red, or purple dye.",
+	"ars_nouveau.page2.whelp_charm": "In the event that they die or are dispelled, they will drop their charm.",
 	"ars_nouveau.page3.whelp_charm": "Bookwyrms can cast spells that begin with Touch or Projectile. You may give them a spell that is written on Spell Parchment. Currently, Bookwyrms will only target blocks surrounding their crystal. Spell casting will consume source from jars that are in the vicinity of the Summoning Crystal. By default, Bookwyrms will only cast a spell if EVERY spell effect will do something. Harvest will only be cast on trees or fully grown crops, or Grow on crops that are not full grown.",
-	"ars_nouveau.page4.whelp_charm": "To disable this strict mode, use a Dominion Wand, however using multiple specialized Bookwyrms is recommended. While Bookwyrms cannot pickup blocks on their own, they may store items in chests that are next to the Summoning Crystal using the Item Pickup spell. Conversely, Bookwyrms may place blocks and interact with the world using Items. You may give an item or block to the Bookwyrm, and it will use the item directly from the chests adjacent to the Summoning Crystal. Use Dispel on a Bookwyrm to get your charm back!",
+	"ars_nouveau.page4.whelp_charm": "To disable this strict mode, use a Dominion Wand, however using multiple specialized Bookwyrms is recommended. While Bookwyrms cannot pickup blocks on their own, they may store items in chests that are next to the Summoning Crystal using the Item Pickup spell. Conversely, Bookwyrms may place blocks and interact with the world using Items. You may give an item or block to the Bookwyrm, and it will use the item directly from the chests adjacent to the Summoning Crystal.",
 
 	"ars_nouveau.page.carbuncle_charm": "Carbuncles naturally appear in wooded areas in search of golden nuggets. While carbuncles are normally afraid of humans, they will allow someone to approach if they are holding a gold nugget. When a carbuncle has picked up a golden nugget, it will vanish from this world and leave behind Carbuncle Shards.",
 	"ars_nouveau.page2.carbuncle_charm": "While wild carbuncles cannot be tamed, their shards may be used to summon a carbuncle.",
@@ -826,5 +826,10 @@
 	"ars_nouveau.familiar.owned": "You already own this familiar.",
 	"ars_nouveau.familiar.unlocked": "Familiar unlocked.",
 	"ars_nouveau.familiar.script": "Used for obtaining familiars. Obtained from the Ritual of Binding.",
-	"ars_nouveau.schools": "Schools: "
+	"ars_nouveau.schools": "Schools: ",
+	"entity.ars_nouveau.familiar_bookwyrm": "Bookwyrm",
+	"entity.ars_nouveau.familiar_carbuncle": "Carbuncle",
+	"entity.ars_nouveau.familiar_sylph": "Sylph",
+	"entity.ars_nouveau.familiar_wixie": "Wixie",
+	"entity.ars_nouveau.familiar_drygmy": "Drygmy"
 }

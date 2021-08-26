@@ -25,6 +25,7 @@ import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
@@ -39,6 +40,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.items.IItemHandler;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -52,6 +54,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -60,7 +63,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     public static final DataParameter<String> SPELL_STRING = EntityDataManager.defineId(EntityWhelp.class, DataSerializers.STRING);
     public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.defineId(EntityWhelp.class, DataSerializers.ITEM_STACK);
     public static final DataParameter<Boolean> STRICT_MODE = EntityDataManager.defineId(EntityWhelp.class, DataSerializers.BOOLEAN);
-
+    public static final DataParameter<String> COLOR = EntityDataManager.defineId(EntityWhelp.class, DataSerializers.STRING);
 
     public BlockPos crystalPos;
     public int ticksSinceLastSpell;
@@ -96,6 +99,15 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
             return ActionResultType.SUCCESS;
 
         ItemStack stack = player.getItemInHand(hand);
+
+        if (player.getMainHandItem().getItem().is(Tags.Items.DYES)) {
+            DyeColor color = DyeColor.getColor(stack);
+            if(color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(COLORS).contains(color.getName()))
+                return ActionResultType.SUCCESS;
+            this.entityData.set(COLOR, color.getName());
+            player.getMainHandItem().shrink(1);
+            return ActionResultType.SUCCESS;
+        }
 
         if(stack.getItem() instanceof DominionWand)
             return ActionResultType.FAIL;
@@ -156,6 +168,13 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
                 }
             }
         }
+    }
+
+    @Override
+    public boolean hurt(DamageSource source, float p_70097_2_) {
+        if(source == DamageSource.DROWN)
+            return false;
+        return super.hurt(source, p_70097_2_);
     }
 
     @Override
@@ -272,6 +291,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         }
         tag.putInt("backoff", backoffTicks);
         tag.putBoolean("strict", this.entityData.get(STRICT_MODE));
+        tag.putString("color", this.entityData.get(COLOR));
     }
 
     public String getRecipeString(){
@@ -319,6 +339,9 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         setRecipeString(SpellRecipeUtil.serializeForNBT(spellRecipe));
         this.entityData.set(STRICT_MODE, tag.getBoolean("strict"));
         this.backoffTicks = tag.getInt("backoff");
+        if (tag.contains("color"))
+            this.entityData.set(COLOR, tag.getString("color"));
+
     }
 
     /**
@@ -340,6 +363,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         this.entityData.define(HELD_ITEM, ItemStack.EMPTY);
         this.entityData.define(SPELL_STRING, "");
         this.entityData.define(STRICT_MODE, true);
+        this.entityData.define(COLOR, "blue");
     }
 
     @Override
@@ -377,4 +401,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     public AnimationFactory getFactory() {
         return factory;
     }
+
+    public static String[] COLORS = {"purple", "green", "blue", "black", "red", "white"};
+
 }
