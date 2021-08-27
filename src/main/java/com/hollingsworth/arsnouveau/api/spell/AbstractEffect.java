@@ -51,6 +51,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
                     world,
                     shooter,
                     new SpellStats.Builder().setAugments(augments)
+                            .addItemsFromEntity(shooter)
                             .build(this, rayTraceResult, world, shooter, spellContext),
                     spellContext);
 
@@ -59,6 +60,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
                     world,
                     shooter,
                     new SpellStats.Builder().setAugments(augments)
+                            .addItemsFromEntity(shooter)
                             .build(this, rayTraceResult, world, shooter, spellContext),
                     spellContext);
     }
