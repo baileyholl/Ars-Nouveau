@@ -132,6 +132,7 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.SUMMON_FOCUS)public static SummoningFocus SUMMONING_FOCUS;
     @ObjectHolder(LibItemNames.SOURCE_BERRY_PIE)public static ModItem SOURCE_BERRY_PIE;
     @ObjectHolder(LibItemNames.SOURCE_BERRY_ROLL)public static ModItem SOURCE_BERRY_ROLL;
+    @ObjectHolder(LibItemNames.ENCHANTERS_MIRROR)public static EnchantersMirror ENCHANTERS_MIRROR;
 
     public static Food SOURCE_BERRY_FOOD = (new Food.Builder()).nutrition(2).saturationMod(0.1F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).alwaysEat().build();
     public static Food SOURCE_PIE_FOOD = (new Food.Builder()).nutrition(9).saturationMod(0.9F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 60 * 20, 1), 1.0f).alwaysEat().build();
@@ -273,8 +274,8 @@ public class ItemsRegistry {
                             .withStyle(Style.EMPTY.withItalic(true).withColor(TextFormatting.BLUE))),
                     new SummoningFocus(defaultItemProperties().stacksTo(1), LibItemNames.SUMMON_FOCUS),
                     new ModItem(defaultItemProperties().food(SOURCE_PIE_FOOD), LibItemNames.SOURCE_BERRY_PIE).withTooltip(new TranslationTextComponent("tooltip.ars_nouveau.source_food")),
-                    new ModItem(defaultItemProperties().food(SOURCE_ROLL_FOOD), LibItemNames.SOURCE_BERRY_ROLL).withTooltip(new TranslationTextComponent("tooltip.ars_nouveau.source_food"))
-
+                    new ModItem(defaultItemProperties().food(SOURCE_ROLL_FOOD), LibItemNames.SOURCE_BERRY_ROLL).withTooltip(new TranslationTextComponent("tooltip.ars_nouveau.source_food")),
+                    new EnchantersMirror(defaultItemProperties().stacksTo(1), LibItemNames.ENCHANTERS_MIRROR)
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

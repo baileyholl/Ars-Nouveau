@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -898,6 +899,16 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withReagent(BlockRegistry.ARCANE_RELAY)
                 .withPedestalItem(4,Ingredient.of(Items.HOPPER))
                 .build());
+
+        addRecipe(builder()
+                .withResult(ItemsRegistry.ENCHANTERS_MIRROR)
+                .withReagent(Recipes.MANA_GEM_BLOCK)
+                .withPedestalItem(2, Ingredient.of(Tags.Items.GLASS))
+                .withPedestalItem(2, ArsNouveauAPI.getInstance().getGlyphItem(MethodSelf.INSTANCE))
+                .withPedestalItem(2, Recipes.ARCHWOOD_LOG)
+                .withPedestalItem(2, Ingredient.of(Tags.Items.INGOTS_GOLD))
+                .build());
+
     }
 
     public void addRecipe(EnchantingApparatusRecipe recipe){

@@ -88,7 +88,7 @@ public class ForageManaBerries extends Goal {
     }
 
     public BlockPos getNearbyManaBerry(){
-        Optional<BlockPos> p = BlockPos.findClosestMatch(entity.blockPosition(), 6,3, (b)-> world.getBlockState(b).getBlock() instanceof ManaBerryBush && world.getBlockState(b).getValue(AGE) == 3);
+        Optional<BlockPos> p = BlockPos.findClosestMatch(entity.blockPosition(), 10,3, (b)-> world.getBlockState(b).getBlock() instanceof ManaBerryBush && world.getBlockState(b).getValue(AGE) == 3);
         return p.orElse(null);
     }
 }

@@ -98,4 +98,5 @@ public class LibItemNames {
     public static final String SUMMON_FOCUS = "summon_focus";
     public static final String SOURCE_BERRY_ROLL = "source_berry_roll";
     public static final String SOURCE_BERRY_PIE = "source_berry_pie";
+    public static final String ENCHANTERS_MIRROR = "enchanters_mirror";
 }
