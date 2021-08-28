@@ -1,7 +1,4 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;// Made with Blockbench 3.6.6
-// Exported for Minecraft version 1.15
-// Paste this class into your mod and generate all required imports
-
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.util.ResourceLocation;

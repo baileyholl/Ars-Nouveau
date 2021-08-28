@@ -84,6 +84,7 @@ public class ClientHandler {
         RenderTypeLookup.setRenderLayer(BlockRegistry.MYCELIAL_BLOCK, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.RELAY_WARP, RenderType.cutout());
         RenderTypeLookup.setRenderLayer(BlockRegistry.RELAY_DEPOSIT, RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(BlockRegistry.BOOKWYRM_LECTERN, RenderType.cutout());
         evt.enqueueWork(() -> {
             ItemModelsProperties.register(ItemsRegistry.ENCHANTERS_SHIELD,new ResourceLocation(ArsNouveau.MODID,"blocking"), (p_239421_0_, p_239421_1_, p_239421_2_) -> {
                 return p_239421_2_ != null && p_239421_2_.isUsingItem() && p_239421_2_.getUseItem() == p_239421_0_ ? 1.0F : 0.0F;

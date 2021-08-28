@@ -27,6 +27,13 @@ public class WhelpRenderer extends GeoEntityRenderer {
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_" + color +".png");
     }
 
+    @Override
+    public void render(LivingEntity entity, float entityYaw, float partialTicks, MatrixStack stack, IRenderTypeBuffer bufferIn, int packedLightIn) {
+        stack.pushPose();
+        stack.scale(0.5f, 0.5f, 0.5f);
+        super.render(entity, entityYaw, partialTicks, stack, bufferIn, packedLightIn);
+        stack.popPose();
+    }
 
     @Override
     public ResourceLocation getTextureLocation(LivingEntity entity) {

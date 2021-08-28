@@ -126,4 +126,6 @@ public class LibBlockNames {
     public static final String RELAY_WARP = "relay_warp";
     public static final String RELAY_DEPOSIT = "relay_deposit";
 
+    public static final String BOOKWYRM_LECTERN = "bookwyrm_lectern";
+
 }

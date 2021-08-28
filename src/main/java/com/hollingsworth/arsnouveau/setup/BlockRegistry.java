@@ -181,6 +181,10 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.RELAY_WARP) public static RelayWarpBlock RELAY_WARP;
     @ObjectHolder(LibBlockNames.RELAY_WARP) public static TileEntityType<RelayWarpTile> RELAY_WARP_TILE;
 
+
+    @ObjectHolder(LibBlockNames.BOOKWYRM_LECTERN) public static BookwyrmLectern BOOKWYRM_LECTERN;
+    @ObjectHolder(LibBlockNames.BOOKWYRM_LECTERN) public static TileEntityType<BookwyrmLecternTile> BOOKWYRM_LECTERN_TILE;
+
     @ObjectHolder(LibBlockNames.STATE_PROVIDER) public static BlockStateProviderType stateProviderType;
 
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
@@ -290,6 +294,7 @@ public class BlockRegistry {
             registry.register(new MycelialSourcelinkBlock());
             registry.register(new RelayDepositBlock());
             registry.register(new RelayWarpBlock());
+            registry.register(new BookwyrmLectern(ModBlock.defaultProperties().noOcclusion(), LibBlockNames.BOOKWYRM_LECTERN));
         }
         static Block.Properties woodProp = AbstractBlock.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD);
         public static MagicLeaves createLeavesBlock() {
@@ -330,6 +335,7 @@ public class BlockRegistry {
             event.getRegistry().register(TileEntityType.Builder.of(MycelialSourcelinkTile::new, BlockRegistry.MYCELIAL_BLOCK).build(null).setRegistryName(LibBlockNames.MYCELIAL_SOURCELINK));
             event.getRegistry().register(TileEntityType.Builder.of(RelayDepositTile::new, BlockRegistry.RELAY_DEPOSIT).build(null).setRegistryName(LibBlockNames.RELAY_DEPOSIT));
             event.getRegistry().register(TileEntityType.Builder.of(RelayWarpTile::new, BlockRegistry.RELAY_WARP).build(null).setRegistryName(LibBlockNames.RELAY_WARP));
+            event.getRegistry().register(TileEntityType.Builder.of(BookwyrmLecternTile::new, BlockRegistry.BOOKWYRM_LECTERN).build(null).setRegistryName(LibBlockNames.BOOKWYRM_LECTERN));
 
         }
 
@@ -440,9 +446,8 @@ public class BlockRegistry {
             registry.register(new AnimBlockItem(BlockRegistry.ALCHEMICAL_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(() -> AlchemicalRenderer::getISTER)).setRegistryName(LibBlockNames.ALCHEMICAL_SOURCELINK));
             registry.register(new AnimBlockItem(BlockRegistry.VITALIC_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(() -> VitalicRenderer::getISTER)).setRegistryName(LibBlockNames.VITALIC_SOURCELINK));
             registry.register(new AnimBlockItem(BlockRegistry.MYCELIAL_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(() -> MycelialRenderer::getISTER)).setRegistryName(LibBlockNames.MYCELIAL_SOURCELINK));
-
+            registry.register(getDefaultBlockItem(BlockRegistry.BOOKWYRM_LECTERN, LibBlockNames.BOOKWYRM_LECTERN));
         }
-
 
         public static Item getDefaultBlockItem(Block block, String registry){
             return new BlockItem(block, ItemsRegistry.defaultItemProperties()).setRegistryName(registry);
@@ -452,8 +457,6 @@ public class BlockRegistry {
         public static void registerBlockProvider(final RegistryEvent.Register<BlockStateProviderType<?>> e) {
             e.getRegistry().register(new BlockStateProviderType<>(SupplierBlockStateProvider.CODEC).setRegistryName(ArsNouveau.MODID, LibBlockNames.STATE_PROVIDER));
         }
-
-
     }
 
     private static Boolean allowsSpawnOnLeaves(BlockState state, IBlockReader reader, BlockPos pos, EntityType<?> entity) {
