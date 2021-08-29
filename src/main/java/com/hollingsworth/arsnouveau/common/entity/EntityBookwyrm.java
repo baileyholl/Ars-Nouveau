@@ -57,31 +57,31 @@ import java.util.Arrays;
 import java.util.List;
 
 
-public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlaceBlockResponder, IDispellable, ITooltipProvider, IWandable, IInteractResponder, IAnimatable {
+public class EntityBookwyrm extends FlyingEntity implements IPickupResponder, IPlaceBlockResponder, IDispellable, ITooltipProvider, IWandable, IInteractResponder, IAnimatable {
 
-    public static final DataParameter<String> SPELL_STRING = EntityDataManager.defineId(EntityWhelp.class, DataSerializers.STRING);
-    public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.defineId(EntityWhelp.class, DataSerializers.ITEM_STACK);
-    public static final DataParameter<Boolean> STRICT_MODE = EntityDataManager.defineId(EntityWhelp.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<String> COLOR = EntityDataManager.defineId(EntityWhelp.class, DataSerializers.STRING);
+    public static final DataParameter<String> SPELL_STRING = EntityDataManager.defineId(EntityBookwyrm.class, DataSerializers.STRING);
+    public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.defineId(EntityBookwyrm.class, DataSerializers.ITEM_STACK);
+    public static final DataParameter<Boolean> STRICT_MODE = EntityDataManager.defineId(EntityBookwyrm.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<String> COLOR = EntityDataManager.defineId(EntityBookwyrm.class, DataSerializers.STRING);
 
     public BlockPos lecternPos;
     public int ticksSinceLastSpell;
     public Spell spellRecipe;
     private int backoffTicks;
 
-    protected EntityWhelp(EntityType<? extends FlyingEntity> p_i48568_1_, World p_i48568_2_) {
+    protected EntityBookwyrm(EntityType<? extends FlyingEntity> p_i48568_1_, World p_i48568_2_) {
         super(p_i48568_1_, p_i48568_2_);
         this.moveControl =  new FlyingMovementController(this, 10, true);
     }
 
 
-    public EntityWhelp setRecipe(Spell spell){
+    public EntityBookwyrm setRecipe(Spell spell){
         this.spellRecipe = spell;
         return this;
     }
 
-    public EntityWhelp(World p_i50190_2_) {
-        super(ModEntities.ENTITY_WHELP_TYPE, p_i50190_2_);
+    public EntityBookwyrm(World p_i50190_2_) {
+        super(ModEntities.ENTITY_BOOKWYRM_TYPE, p_i50190_2_);
         this.moveControl = new FlyingMovementController(this, 10, true);
     }
 
@@ -137,7 +137,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
         PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.whelp.strict_mode", this.entityData.get(STRICT_MODE)));
     }
 
-    public EntityWhelp(World world, BlockPos lecternPos){
+    public EntityBookwyrm(World world, BlockPos lecternPos){
         this(world);
         this.lecternPos = lecternPos;
     }
@@ -250,7 +250,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
             return false;
 
         if(!level.isClientSide){
-            ItemStack stack = new ItemStack(ItemsRegistry.whelpCharm);
+            ItemStack stack = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM);
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
             ParticleUtil.spawnPoof((ServerWorld)level, blockPosition());
             this.remove();
@@ -260,7 +260,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_WHELP_TYPE;
+        return ModEntities.ENTITY_BOOKWYRM_TYPE;
     }
 
     @Override
@@ -378,7 +378,7 @@ public class EntityWhelp extends FlyingEntity implements IPickupResponder, IPlac
     @Override
     public void die(DamageSource source) {
         if(!level.isClientSide){
-            ItemStack stack = new ItemStack(ItemsRegistry.whelpCharm);
+            ItemStack stack = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM);
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
         }
 

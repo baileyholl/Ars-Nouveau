@@ -31,7 +31,7 @@ public class ModEntities {
     public static EntityType<EntityProjectileSpell> SPELL_PROJ = null;
     public static EntityType<EntityAllyVex> ALLY_VEX = null;
     public static EntityType<EntityEvokerFangs> ENTITY_EVOKER_FANGS_ENTITY_TYPE = null;
-    public static EntityType<EntityWhelp> ENTITY_WHELP_TYPE = null;
+    public static EntityType<EntityBookwyrm> ENTITY_BOOKWYRM_TYPE = null;
     public static EntityType<EntityCarbuncle> ENTITY_CARBUNCLE_TYPE = build("carbuncle", EntityType.Builder.<EntityCarbuncle>of(EntityCarbuncle::new, EntityClassification.CREATURE)
             .sized(0.7F, 0.63F).setTrackingRange(10)
             .setShouldReceiveVelocityUpdates(true));;
@@ -109,8 +109,8 @@ public class ModEntities {
                     "ally_vex",
                     EntityType.Builder.<EntityAllyVex>of(EntityAllyVex::new, EntityClassification.MISC)
                             .sized(0.4F, 0.8F).fireImmune());
-           ENTITY_WHELP_TYPE = build("whelp", EntityType.Builder.<EntityWhelp>of(EntityWhelp::new, EntityClassification.MISC)
-                   .sized(1.1f, 1.2f).setTrackingRange(10)
+           ENTITY_BOOKWYRM_TYPE = build("whelp", EntityType.Builder.<EntityBookwyrm>of(EntityBookwyrm::new, EntityClassification.MISC)
+                   .sized(0.7f, 0.9f).setTrackingRange(10)
                    .setShouldReceiveVelocityUpdates(true));
 
            ENTITY_FOLLOW_PROJ = build(
@@ -180,7 +180,7 @@ public class ModEntities {
                             .sized(0.7F, 0.63F).setTrackingRange(10));
 
             ENTITY_FAMILIAR_BOOKWYRM =  build("familiar_bookwyrm", EntityType.Builder.of(FamiliarBookwyrm::new, EntityClassification.CREATURE)
-                    .sized(2f, 0.63F).setTrackingRange(10));
+                    .sized(0.7f, 0.9f).setTrackingRange(10));
             ENTITY_FAMILIAR_DRYGMY =  build("familiar_drygmy", EntityType.Builder.of(FamiliarDrygmy::new, EntityClassification.CREATURE)
                     .sized(0.6f, 0.85f).setTrackingRange(10));
             ENTITY_FAMILIAR_SYLPH =  build("familiar_sylph", EntityType.Builder.of(FamiliarSylph::new, EntityClassification.CREATURE)
@@ -193,7 +193,7 @@ public class ModEntities {
                     SPELL_PROJ,
                     ENTITY_EVOKER_FANGS_ENTITY_TYPE,
                     ALLY_VEX,
-                    ENTITY_WHELP_TYPE,
+                    ENTITY_BOOKWYRM_TYPE,
                     ENTITY_CARBUNCLE_TYPE,
                     ENTITY_SYLPH_TYPE,
                     ENTITY_FOLLOW_PROJ,
@@ -233,7 +233,7 @@ public class ModEntities {
 
         @SubscribeEvent
         public static void registerEntities(final EntityAttributeCreationEvent event) {
-            event.put(ENTITY_WHELP_TYPE, EntityWhelp.attributes().build());
+            event.put(ENTITY_BOOKWYRM_TYPE, EntityBookwyrm.attributes().build());
             event.put(ALLY_VEX, VexEntity.createAttributes().build());
             event.put(ENTITY_CARBUNCLE_TYPE, EntityCarbuncle.attributes().build());
             event.put(ENTITY_SYLPH_TYPE, EntitySylph.attributes().build());

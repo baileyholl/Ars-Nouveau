@@ -79,7 +79,7 @@ public class ItemsRegistry {
 
     @ObjectHolder(LibItemNames.SPELL_PARCHMENT) public static SpellParchment spellParchment;
 
-    @ObjectHolder(LibItemNames.WHELP_CHARM) public static WhelpCharm whelpCharm;
+    @ObjectHolder(LibItemNames.BOOKWYRM_CHARM) public static BookwyrmCharm BOOKWYRM_CHARM;
     @ObjectHolder(LibItemNames.DOMINION_WAND) public static DominionWand DOMINION_ROD;
 
     @ObjectHolder(LibItemNames.AMULET_OF_MANA_BOOST)public static AbstractManaCurio amuletOfManaBoost;
@@ -147,7 +147,7 @@ public class ItemsRegistry {
 
             Item[] items = {
                     new Debug(),
-                    new WhelpCharm(),
+                    new BookwyrmCharm(),
                     new DominionWand(),
                     new RunicChalk(),
                     new ModItem(LibItemNames.BLANK_GLYPH),

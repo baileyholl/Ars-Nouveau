@@ -141,7 +141,7 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .build());
 
         addRecipe(builder()
-                .withResult(ItemsRegistry.whelpCharm)
+                .withResult(ItemsRegistry.BOOKWYRM_CHARM)
                 .withReagent( Items.EGG)
                 .withPedestalItem(4,Ingredient.of(Tags.Items.INGOTS_GOLD))
                 .withPedestalItem(3, Recipes.MANA_GEM)

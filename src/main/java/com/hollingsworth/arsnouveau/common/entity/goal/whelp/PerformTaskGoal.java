@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.whelp;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.common.entity.EntityWhelp;
+import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
 import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
 import net.minecraft.util.math.BlockPos;
 
@@ -9,11 +9,11 @@ import java.util.EnumSet;
 
 public class PerformTaskGoal extends ExtendedRangeGoal {
 
-    EntityWhelp wyrm;
+    EntityBookwyrm wyrm;
     BlockPos taskLoc;
     int timePerformingTask;
 
-    public PerformTaskGoal(EntityWhelp wyrm) {
+    public PerformTaskGoal(EntityBookwyrm wyrm) {
         super(10);
         this.wyrm = wyrm;
         this.setFlags(EnumSet.of(Flag.MOVE));

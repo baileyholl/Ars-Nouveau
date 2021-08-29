@@ -10,7 +10,7 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import javax.annotation.Nullable;
 
-public class WhelpModel extends AnimatedGeoModel<IAnimatable> {
+public class BookwyrmModel extends AnimatedGeoModel<IAnimatable> {
 
 	private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_blue.png");
 	public static final ResourceLocation NORMAL_MODEL = new ResourceLocation(ArsNouveau.MODID , "geo/book_wyrm_dragon.geo.json");

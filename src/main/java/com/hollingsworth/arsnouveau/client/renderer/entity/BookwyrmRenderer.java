@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.entity.EntityWhelp;
+import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -13,15 +13,15 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
-public class WhelpRenderer extends GeoEntityRenderer {
+public class BookwyrmRenderer extends GeoEntityRenderer {
 
     public static ResourceLocation BLUE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_blue.png");;
-    public WhelpRenderer(EntityRendererManager manager) {
-        super(manager, new WhelpModel());
+    public BookwyrmRenderer(EntityRendererManager manager) {
+        super(manager, new BookwyrmModel());
     }
 
-    public ResourceLocation getColor(EntityWhelp e){
-        String color = e.getEntityData().get(EntityWhelp.COLOR).toLowerCase();
+    public ResourceLocation getColor(EntityBookwyrm e){
+        String color = e.getEntityData().get(EntityBookwyrm.COLOR).toLowerCase();
         if(color.isEmpty())
             return BLUE;
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_" + color +".png");
@@ -37,10 +37,10 @@ public class WhelpRenderer extends GeoEntityRenderer {
 
     @Override
     public ResourceLocation getTextureLocation(LivingEntity entity) {
-        if(!(entity instanceof EntityWhelp))
+        if(!(entity instanceof EntityBookwyrm))
             return new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_blue.png");
 
-        return getColor((EntityWhelp) entity);
+        return getColor((EntityBookwyrm) entity);
     }
 
     @Override

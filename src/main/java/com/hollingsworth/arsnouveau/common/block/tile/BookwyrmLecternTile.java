@@ -9,8 +9,8 @@ import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.BookwyrmLectern;
 import com.hollingsworth.arsnouveau.common.block.ManaBlock;
+import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
-import com.hollingsworth.arsnouveau.common.entity.EntityWhelp;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -52,7 +52,7 @@ public class BookwyrmLecternTile extends SummoningTile implements IWandable {
         if (tickCounter >= 120 && !level.isClientSide) {
             converted = true;
             level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(SummoningTile.CONVERTED, true));
-            EntityWhelp bookwyrm = new EntityWhelp(level, worldPosition);
+            EntityBookwyrm bookwyrm = new EntityBookwyrm(level, worldPosition);
             bookwyrm.setPos(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ() + 0.5);
             level.addFreshEntity(bookwyrm);
             ParticleUtil.spawnPoof((ServerWorld) level, worldPosition.above());
@@ -69,13 +69,19 @@ public class BookwyrmLecternTile extends SummoningTile implements IWandable {
     }
 
     public void changeTier(PlayerEntity entity){
-        if(tier == 1){
+        if(tier == 1 || tier == 0){
             tier = 2;
-            entity.sendMessage(new TranslationTextComponent("ars_nouveau.summoning_crystal.5x5"), Util.NIL_UUID);
+            entity.sendMessage(new TranslationTextComponent("ars_nouveau.summoning_crystal.set", "5 x 5"), Util.NIL_UUID);
         }else if(tier == 2){
             tier = 3;
-            entity.sendMessage(new TranslationTextComponent("ars_nouveau.summoning_crystal.9x9"), Util.NIL_UUID);
+            entity.sendMessage(new TranslationTextComponent("ars_nouveau.summoning_crystal.set", "9 x 9"), Util.NIL_UUID);
         }else if(tier == 3){
+            tier = 4;
+            entity.sendMessage(new TranslationTextComponent("ars_nouveau.summoning_crystal.set", "13 x 13"), Util.NIL_UUID);
+        }else if(tier == 4){
+            tier = 5;
+            entity.sendMessage(new TranslationTextComponent("ars_nouveau.summoning_crystal.set", "17 x 17"), Util.NIL_UUID);
+        }else if(tier == 5){
             tier = 1;
             entity.sendMessage(new TranslationTextComponent("ars_nouveau.summoning_crystal.adjacent"), Util.NIL_UUID);
         }
@@ -93,7 +99,7 @@ public class BookwyrmLecternTile extends SummoningTile implements IWandable {
         return ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 7, spell.getCastingCost() / 4) != null;
     }
 
-    public @Nullable BlockPos getNextTaskLoc(@Nullable Spell spell, EntityWhelp caster){
+    public @Nullable BlockPos getNextTaskLoc(@Nullable Spell spell, EntityBookwyrm caster){
         if(isOff || spell == null)
             return null;
 
@@ -123,7 +129,7 @@ public class BookwyrmLecternTile extends SummoningTile implements IWandable {
             if(block instanceof BookwyrmLectern || block instanceof ContainerBlock || block instanceof ManaBlock || block instanceof IInventory)
                 continue;
 
-            if(caster.getEntityData().get(EntityWhelp.STRICT_MODE)){
+            if(caster.getEntityData().get(EntityBookwyrm.STRICT_MODE)){
                 SpellResolver resolver = new SpellResolver(new SpellContext(spell, caster));
                 if(!resolver.wouldCastOnBlockSuccessfully(new BlockRayTraceResult(new Vector3d(taskPos.getX(), taskPos.getY(), taskPos.getZ()), Direction.UP,taskPos, false ), caster)) {
                     continue;
@@ -149,6 +155,12 @@ public class BookwyrmLecternTile extends SummoningTile implements IWandable {
         }
         if(tier == 3){
             BlockPos.betweenClosedStream(getBlockPos().north(4).east(4).below(1), getBlockPos().south(4).west(4).below()).forEach(t -> positions.add(new BlockPos(t)));
+        }
+        if(tier == 4){
+            BlockPos.betweenClosedStream(getBlockPos().north(6).east(6).below(1), getBlockPos().south(6).west(6).below()).forEach(t -> positions.add(new BlockPos(t)));
+        }
+        if(tier == 5){
+            BlockPos.betweenClosedStream(getBlockPos().north(8).east(8).below(1), getBlockPos().south(8).west(8).below()).forEach(t -> positions.add(new BlockPos(t)));
         }
         return positions;
     }

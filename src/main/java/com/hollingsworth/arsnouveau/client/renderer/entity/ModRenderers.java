@@ -49,8 +49,8 @@ public class ModRenderers {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_FAMILIAR_DRYGMY, DrygmyRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_FAMILIAR_SYLPH, SylphRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_FAMILIAR_WIXIE, WixieRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_WHELP_TYPE, WhelpRenderer::new);
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_FAMILIAR_BOOKWYRM, WhelpRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_BOOKWYRM_TYPE, BookwyrmRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_FAMILIAR_BOOKWYRM, BookwyrmRenderer::new);
 
     }
 }
