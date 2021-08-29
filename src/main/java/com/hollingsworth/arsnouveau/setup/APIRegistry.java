@@ -118,6 +118,7 @@ public class APIRegistry {
 //        registerFamiliar(new JabberwogFamiliar());
         registerFamiliar(new BookwyrmFamiliar());
 
+        registerSpell(new EffectFirework());
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar){

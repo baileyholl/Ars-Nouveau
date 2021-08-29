@@ -74,4 +74,5 @@ public class GlyphLib {
     public static final String MethodUnderfootID = "underfoot";
     public static final String EffectGlideID = "glide";
     public static final String MethodOrbitID = "orbit";
+    public static final String EffectFireworkID = "firework";
 }
