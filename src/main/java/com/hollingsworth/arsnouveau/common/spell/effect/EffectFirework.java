@@ -2,22 +2,22 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.google.common.collect.Lists;
 import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
-import com.hollingsworth.arsnouveau.api.spell.SpellStats;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.FireworkRocketEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.Direction;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -36,28 +36,84 @@ public class EffectFirework extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         super.onResolveEntity(rayTraceResult, world, shooter, spellStats, spellContext);
-        if(rayTraceResult.getEntity() instanceof LivingEntity){
-            FireworkRocketEntity fireworkrocketentity = new FireworkRocketEntity(world, getFirework((int)spellStats.getDurationMultiplier(),(int) spellStats.getAmpMultiplier()), (LivingEntity) rayTraceResult.getEntity());
-            fireworkrocketentity.setOwner(shooter);
-            world.addFreshEntity(fireworkrocketentity);
+        if(!(rayTraceResult.getEntity() instanceof LivingEntity)){
+            return;
+        }
+
+        ItemStack firework = getCorrectFirework(spellContext, spellStats, shooter);
+        for(int i = 0; i < spellStats.getBuffCount(AugmentSplit.INSTANCE) + 1; i++) {
+            spawnFireworkOnEntity(rayTraceResult, world,shooter, firework);
         }
     }
 
     @Override
     public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         super.onResolveBlock(rayTraceResult, world, shooter, spellStats, spellContext);
+        ItemStack firework = getCorrectFirework(spellContext, spellStats, shooter);
         for(int i = 0; i < spellStats.getBuffCount(AugmentSplit.INSTANCE) + 1; i++) {
-            Vector3d pos = rayTraceResult.getLocation();
-            FireworkRocketEntity fireworkrocketentity = new FireworkRocketEntity(world, shooter,
-                    pos.x + i * ParticleUtil.inRange(-0.3, 0.3), pos.y, pos.z + i *ParticleUtil.inRange(-0.3, 0.3),
-                    getFirework((int) spellStats.getDurationMultiplier(), (int) spellStats.getAmpMultiplier()));
-            world.addFreshEntity(fireworkrocketentity);
+            spawnFireworkOnBlock(rayTraceResult, world, shooter, i, firework, spellContext);
         }
+    }
+
+    public ItemStack getCorrectFirework(SpellContext spellContext, SpellStats spellStats, LivingEntity shooter){
+        ItemStack firework = getFirework((int) spellStats.getDurationMultiplier(), (int) spellStats.getAmpMultiplier());
+        if(spellContext.castingTile instanceof IInventoryResponder){
+            ItemStack foundStack = ((IInventoryResponder) spellContext.castingTile).getItem(new ItemStack(Items.FIREWORK_ROCKET));
+            if(!foundStack.isEmpty())
+                firework = foundStack;
+        }else if(shooter instanceof IInventoryResponder){
+            ItemStack foundStack = ((IInventoryResponder) shooter).getItem(new ItemStack(Items.FIREWORK_ROCKET));
+            if(!foundStack.isEmpty())
+                firework = foundStack;
+        }else if(shooter instanceof PlayerEntity){
+            PlayerEntity playerEntity = (PlayerEntity) shooter;
+            NonNullList<ItemStack> list =  playerEntity.inventory.items;
+            for(int i = 0; i < 9; i++){
+                ItemStack stack = list.get(i);
+                if(stack.getItem() == Items.FIREWORK_ROCKET){
+                    firework = stack.copy();
+                }
+            }
+        }
+        return firework;
+    }
+
+    public void spawnFireworkOnBlock(BlockRayTraceResult rayTraceResult, World world, LivingEntity shooter, int i, ItemStack fireworkStack, SpellContext context){
+        FireworkRocketEntity fireworkrocketentity;
+        if(context.getType() == SpellContext.CasterType.TURRET){
+            BlockPos pos = rayTraceResult.getBlockPos();
+            Direction direction = rayTraceResult.getDirection().getOpposite();
+            fireworkrocketentity = new FireworkRocketEntity(world, fireworkStack, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, true);
+            fireworkrocketentity.shoot(direction.getStepX(), direction.getStepY(), direction.getStepZ(), 0.5F, 1.0F);
+        }else{
+            BlockPos pos = rayTraceResult.getBlockPos().relative(rayTraceResult.getDirection());
+            fireworkrocketentity = new FireworkRocketEntity(world, shooter,
+                    pos.getX() + 0.5 + i *ParticleUtil.inRange(-0.3, 0.3), pos.getY() + 0.5, pos.getZ() + 0.5 + i *ParticleUtil.inRange(-0.3, 0.3),
+                    fireworkStack);
+        }
+        world.addFreshEntity(fireworkrocketentity);
+    }
+
+    public void spawnFireworkOnEntity(EntityRayTraceResult rayTraceResult, World world, LivingEntity shooter, ItemStack firework){
+        FireworkRocketEntity fireworkrocketentity = new FireworkRocketEntity(world, firework, (LivingEntity) rayTraceResult.getEntity());
+        fireworkrocketentity.setOwner(shooter);
+        world.addFreshEntity(fireworkrocketentity);
     }
 
     @Override
     public int getManaCost() {
         return 50;
+    }
+
+    @Override
+    public String getBookDescription() {
+        return "Creates a firework at the location or entity. Amplify will add Firework Stars, while Extend Time will add additional flight time. If a firework exists in the casters inventory, the created firework will mimic the held one. Spell Turrets with Touch will create fireworks as if they were dispensed.";
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.ELEMENTAL_FIRE);
     }
 
     @Nonnull
