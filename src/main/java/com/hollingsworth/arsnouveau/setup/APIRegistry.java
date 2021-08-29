@@ -119,6 +119,8 @@ public class APIRegistry {
         registerFamiliar(new BookwyrmFamiliar());
 
         registerSpell(new EffectFirework());
+        registerSpell(new EffectToss());
+        registerSpell(new EffectBounce());
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar){

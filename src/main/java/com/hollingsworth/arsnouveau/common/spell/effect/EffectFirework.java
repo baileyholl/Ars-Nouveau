@@ -8,13 +8,11 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.FireworkRocketEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.EntityRayTraceResult;
@@ -57,25 +55,8 @@ public class EffectFirework extends AbstractEffect {
 
     public ItemStack getCorrectFirework(SpellContext spellContext, SpellStats spellStats, LivingEntity shooter){
         ItemStack firework = getFirework((int) spellStats.getDurationMultiplier(), (int) spellStats.getAmpMultiplier());
-        if(spellContext.castingTile instanceof IInventoryResponder){
-            ItemStack foundStack = ((IInventoryResponder) spellContext.castingTile).getItem(new ItemStack(Items.FIREWORK_ROCKET));
-            if(!foundStack.isEmpty())
-                firework = foundStack;
-        }else if(shooter instanceof IInventoryResponder){
-            ItemStack foundStack = ((IInventoryResponder) shooter).getItem(new ItemStack(Items.FIREWORK_ROCKET));
-            if(!foundStack.isEmpty())
-                firework = foundStack;
-        }else if(shooter instanceof PlayerEntity){
-            PlayerEntity playerEntity = (PlayerEntity) shooter;
-            NonNullList<ItemStack> list =  playerEntity.inventory.items;
-            for(int i = 0; i < 9; i++){
-                ItemStack stack = list.get(i);
-                if(stack.getItem() == Items.FIREWORK_ROCKET){
-                    firework = stack.copy();
-                }
-            }
-        }
-        return firework;
+        ItemStack foundStack = getItemFromCaster(shooter, spellContext, Items.FIREWORK_ROCKET);
+        return !foundStack.isEmpty() ? foundStack : firework;
     }
 
     public void spawnFireworkOnBlock(BlockRayTraceResult rayTraceResult, World world, LivingEntity shooter, int i, ItemStack fireworkStack, SpellContext context){
