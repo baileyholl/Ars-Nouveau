@@ -2,22 +2,22 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "item_1": [
     {
-      "tag": "forge:ingots/gold"
+      "tag": "forge:ingots/iron"
     }
   ],
   "item_2": [
     {
-      "tag": "forge:ingots/gold"
+      "tag": "forge:ingots/iron"
     }
   ],
   "item_3": [
     {
-      "tag": "forge:ingots/gold"
+      "tag": "forge:ingots/iron"
     }
   ],
   "item_4": [
     {
-      "tag": "forge:ingots/gold"
+      "tag": "forge:ingots/iron"
     }
   ],
   "item_5": [
@@ -37,7 +37,12 @@
   ],
   "item_8": [
     {
-      "item": "ars_nouveau:novice_spell_book"
+      "tag": "forge:gems/mana"
+    }
+  ],
+  "item_9": [
+    {
+      "item": "minecraft:book"
     }
   ],
   "reagent": [

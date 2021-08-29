@@ -267,7 +267,7 @@ public class Recipes extends RecipeProvider {
 
             shapelessBuilder(BlockRegistry.SCONCE_BLOCK)
                     .requires(Recipes.MANA_GEM)
-                    .requires(Ingredient.of(Tags.Items.INGOTS_GOLD), 2)
+                    .requires(Ingredient.of(Tags.Items.NUGGETS_GOLD), 2)
                     .save(consumer);
 
             shapelessBuilder(getRitualItem(RitualLib.MOONFALL))

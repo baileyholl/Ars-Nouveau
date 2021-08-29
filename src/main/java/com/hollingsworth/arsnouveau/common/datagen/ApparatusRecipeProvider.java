@@ -135,17 +135,17 @@ public class ApparatusRecipeProvider implements IDataProvider {
         addRecipe(builder()
                 .withResult(BlockRegistry.SUMMONING_CRYSTAL)
                 .withReagent(Recipes.MANA_GEM_BLOCK)
-                .withPedestalItem(2,  Ingredient.of(Tags.Items.GEMS_DIAMOND))
+                .withPedestalItem(2,  Ingredient.of(Tags.Items.INGOTS_IRON))
                 .withPedestalItem(2,Ingredient.of(Tags.Items.INGOTS_GOLD))
                 .withPedestalItem(4, BlockRegistry.ARCANE_STONE)
                 .build());
 
         addRecipe(builder()
                 .withResult(ItemsRegistry.BOOKWYRM_CHARM)
-                .withReagent( Items.EGG)
-                .withPedestalItem(4,Ingredient.of(Tags.Items.INGOTS_GOLD))
-                .withPedestalItem(3, Recipes.MANA_GEM)
-                .withPedestalItem( ItemsRegistry.noviceSpellBook)
+                .withReagent(Items.EGG)
+                .withPedestalItem(4, Ingredient.of(Tags.Items.INGOTS_IRON))
+                .withPedestalItem(4, Recipes.MANA_GEM)
+                .withPedestalItem(Items.BOOK)
                 .build());
 
         addRecipe(builder()

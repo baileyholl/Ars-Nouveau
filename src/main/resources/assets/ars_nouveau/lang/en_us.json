@@ -836,5 +836,6 @@
 	"entity.ars_nouveau.familiar_drygmy": "Drygmy",
 	"ars_nouveau.mirror.invalid": "Invalid spell. Mirrors accept Effects and Augments only.",
 	"item.ars_nouveau.enchanters_mirror": "Enchanter's Mirror",
-	"ars_nouveau.page.enchanters_mirror": "Applies a self spell to the user. Spells cast with this mirror are discounted and gain additional bonus duration to all glyphs. Apply a spell at the Scribe's table that DOES NOT contain a form such as Strength -> Heal."
+	"ars_nouveau.page.enchanters_mirror": "Applies a self spell to the user. Spells cast with this mirror are discounted and gain additional bonus duration to all glyphs. Apply a spell at the Scribe's table that DOES NOT contain a form such as Strength -> Heal.",
+	"block.ars_nouveau.bookwyrm_lectern": "Bookwyrm Lectern"
 }
