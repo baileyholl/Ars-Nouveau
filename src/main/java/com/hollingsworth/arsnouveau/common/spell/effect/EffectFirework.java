@@ -145,6 +145,10 @@ public class EffectFirework extends AbstractEffect {
         return star;
     }
 
+    @Override
+    public Tier getTier() {
+        return Tier.TWO;
+    }
 
     @Nullable
     @Override
