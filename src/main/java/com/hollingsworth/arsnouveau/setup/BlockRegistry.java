@@ -185,6 +185,12 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.BOOKWYRM_LECTERN) public static BookwyrmLectern BOOKWYRM_LECTERN;
     @ObjectHolder(LibBlockNames.BOOKWYRM_LECTERN) public static TileEntityType<BookwyrmLecternTile> BOOKWYRM_LECTERN_TILE;
 
+    @ObjectHolder(LibBlockNames.BASIC_SPELL_TURRET) public static BasicSpellTurret BASIC_SPELL_TURRET;
+    @ObjectHolder(LibBlockNames.BASIC_SPELL_TURRET) public static TileEntityType<BasicSpellTurretTile> BASIC_SPELL_TURRET_TILE;
+
+    @ObjectHolder(LibBlockNames.TIMER_SPELL_TURRET) public static TimerSpellTurret TIMER_SPELL_TURRET;
+    @ObjectHolder(LibBlockNames.TIMER_SPELL_TURRET) public static TileEntityType<TimerSpellTurretTile> TIMER_SPELL_TURRET_TILE;
+
     @ObjectHolder(LibBlockNames.STATE_PROVIDER) public static BlockStateProviderType stateProviderType;
 
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
@@ -295,6 +301,8 @@ public class BlockRegistry {
             registry.register(new RelayDepositBlock());
             registry.register(new RelayWarpBlock());
             registry.register(new BookwyrmLectern(ModBlock.defaultProperties().noOcclusion(), LibBlockNames.BOOKWYRM_LECTERN));
+            registry.register(new BasicSpellTurret());
+            registry.register(new TimerSpellTurret());
         }
         static Block.Properties woodProp = AbstractBlock.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD);
         public static MagicLeaves createLeavesBlock() {
@@ -336,6 +344,8 @@ public class BlockRegistry {
             event.getRegistry().register(TileEntityType.Builder.of(RelayDepositTile::new, BlockRegistry.RELAY_DEPOSIT).build(null).setRegistryName(LibBlockNames.RELAY_DEPOSIT));
             event.getRegistry().register(TileEntityType.Builder.of(RelayWarpTile::new, BlockRegistry.RELAY_WARP).build(null).setRegistryName(LibBlockNames.RELAY_WARP));
             event.getRegistry().register(TileEntityType.Builder.of(BookwyrmLecternTile::new, BlockRegistry.BOOKWYRM_LECTERN).build(null).setRegistryName(LibBlockNames.BOOKWYRM_LECTERN));
+            event.getRegistry().register(TileEntityType.Builder.of(BasicSpellTurretTile::new, BlockRegistry.BASIC_SPELL_TURRET).build(null).setRegistryName(LibBlockNames.BASIC_SPELL_TURRET));
+            event.getRegistry().register(TileEntityType.Builder.of(TimerSpellTurretTile::new, BlockRegistry.TIMER_SPELL_TURRET).build(null).setRegistryName(LibBlockNames.TIMER_SPELL_TURRET));
 
         }
 
@@ -368,7 +378,6 @@ public class BlockRegistry {
             registry.register(getDefaultBlockItem(BlockRegistry.AB_HERRING, LibBlockNames.AB_HERRING));
             registry.register(getDefaultBlockItem(BlockRegistry.AB_MOSAIC, LibBlockNames.AB_MOSAIC));
             registry.register(getDefaultBlockItem(BlockRegistry.ARCANE_STONE, LibBlockNames.ARCANE_STONE));
-            registry.register(new BlockItem(BlockRegistry.SPELL_TURRET, ItemsRegistry.defaultItemProperties().setISTER(()-> SpellTurretRenderer.ISRender::new)).setRegistryName(LibBlockNames.SPELL_TURRET));
             registry.register(new AnimBlockItem(BlockRegistry.VOLCANIC_BLOCK, ItemsRegistry.defaultItemProperties().fireResistant().setISTER(() -> VolcanicRenderer::getISTER)).setRegistryName(LibBlockNames.VOLCANIC_ACCUMULATOR));
             registry.register(new FluidBlockItem(BlockRegistry.LAVA_LILY, ItemsRegistry.defaultItemProperties().fireResistant()).setRegistryName(LibBlockNames.LAVA_LILY));
             registry.register(new BlockItem(BlockRegistry.MANA_BERRY_BUSH, ItemsRegistry.defaultItemProperties().food(ItemsRegistry.SOURCE_BERRY_FOOD)).setRegistryName(LibItemNames.MANA_BERRY));
@@ -447,6 +456,10 @@ public class BlockRegistry {
             registry.register(new AnimBlockItem(BlockRegistry.VITALIC_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(() -> VitalicRenderer::getISTER)).setRegistryName(LibBlockNames.VITALIC_SOURCELINK));
             registry.register(new AnimBlockItem(BlockRegistry.MYCELIAL_BLOCK, ItemsRegistry.defaultItemProperties().setISTER(() -> MycelialRenderer::getISTER)).setRegistryName(LibBlockNames.MYCELIAL_SOURCELINK));
             registry.register(getDefaultBlockItem(BlockRegistry.BOOKWYRM_LECTERN, LibBlockNames.BOOKWYRM_LECTERN));
+            registry.register(new AnimBlockItem(BlockRegistry.TIMER_SPELL_TURRET, ItemsRegistry.defaultItemProperties().setISTER(() -> TimerTurretRenderer::getISTER)).setRegistryName(LibBlockNames.TIMER_SPELL_TURRET));
+            registry.register(new AnimBlockItem(BlockRegistry.BASIC_SPELL_TURRET, ItemsRegistry.defaultItemProperties().setISTER(() -> BasicTurretRenderer::getISTER)).setRegistryName(LibBlockNames.BASIC_SPELL_TURRET));
+            registry.register(new AnimBlockItem(BlockRegistry.SPELL_TURRET, ItemsRegistry.defaultItemProperties().setISTER(()-> ReducerTurretRenderer::getISTER)).setRegistryName(LibBlockNames.SPELL_TURRET));
+
         }
 
         public static Item getDefaultBlockItem(Block block, String registry){

@@ -127,5 +127,6 @@ public class LibBlockNames {
     public static final String RELAY_DEPOSIT = "relay_deposit";
 
     public static final String BOOKWYRM_LECTERN = "bookwyrm_lectern";
-
+    public static final String BASIC_SPELL_TURRET = "basic_spell_turret";
+    public static final String TIMER_SPELL_TURRET = "timer_spell_turret";
 }

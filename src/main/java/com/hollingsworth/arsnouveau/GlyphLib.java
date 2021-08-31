@@ -75,7 +75,7 @@ public class GlyphLib {
     public static final String MethodOrbitID = "orbit";
     public static final String EffectFireworkID = "firework";
     public static final String EffectTossID = "toss";
-    public static final String EffectWindshearID = "windshear";
+    public static final String EffectWindshearID = "wind_shear";
     public static final String EffectEarthshakeID = "earthshake";
     public static final String EffectBounceID = "bounce";
     public static final String EffectSummonUndead = "summon_undead";

@@ -61,6 +61,15 @@ public class Spell {
         return augments;
     }
 
+    public int getInstanceCount(AbstractSpellPart spellPart){
+        int count = 0;
+        for(int i = 0; i < this.recipe.size(); i++){
+            if(this.recipe.get(i).equals(spellPart))
+                count++;
+        }
+        return count;
+    }
+
     public int getBuffsAtIndex(int startPosition, @Nullable LivingEntity caster, Class<? extends AbstractAugment> augmentClass){
         return (int) getAugments(startPosition, caster).stream().filter(a -> a.getClass().equals(augmentClass)).count();
     }

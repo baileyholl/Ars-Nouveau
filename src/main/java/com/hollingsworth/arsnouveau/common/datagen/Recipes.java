@@ -481,6 +481,15 @@ public class Recipes extends RecipeProvider {
                     .requires(Items.ENDER_PEARL, 1)
                     .requires(MANA_GEM, 3)
                     .save(consumer);
+
+            ShapedRecipeBuilder.shaped(BlockRegistry.BASIC_SPELL_TURRET).unlockedBy("has_journal",InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
+                    .pattern("xxx")
+                    .pattern("xzy")
+                    .pattern("yyy")
+                    .define('z', Ingredient.of(Tags.Items.STORAGE_BLOCKS_REDSTONE))
+                    .define('x', MANA_GEM)
+                    .define('y', Ingredient.of(Tags.Items.INGOTS_GOLD))
+                    .save(consumer);
         }
     }
 
