@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.tile.TimerSpellTurretTile;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -60,6 +61,14 @@ public class TimerSpellTurret extends BasicSpellTurret{
             if(!timerSpellTurretTile.isLocked){
                 timerSpellTurretTile.addTime(-20 * (player.isShiftKeyDown() ? 10 : 1));
             }
+        }
+    }
+
+    @Override
+    public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+        if(!world.isClientSide() && world.getBlockEntity(pos) instanceof TimerSpellTurretTile){
+            ((TimerSpellTurretTile) world.getBlockEntity(pos)).isOff = world.hasNeighborSignal(pos);
+            ((TimerSpellTurretTile) world.getBlockEntity(pos)).update();
         }
     }
 

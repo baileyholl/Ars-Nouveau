@@ -1,17 +1,17 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
-import com.hollingsworth.arsnouveau.api.spell.SpellStats;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -24,6 +24,24 @@ import java.util.Set;
 public class EffectToss extends AbstractEffect {
     public EffectToss() {
         super(GlyphLib.EffectTossID, "Toss");
+    }
+
+    @Override
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        super.onResolveEntity(rayTraceResult, world, shooter, spellStats, spellContext);
+        BlockPos pos = rayTraceResult.getEntity().blockPosition();
+        summonStack(shooter, spellContext, world, pos);
+    }
+
+    public void summonStack(LivingEntity shooter, SpellContext context, World world, BlockPos pos){
+        ItemStack stack =  getItemFromCaster(shooter, context, (i) -> {
+            if (!i.isEmpty() && shooter instanceof PlayerEntity) {
+                return !ItemStack.matches(shooter.getMainHandItem(), i);
+            }
+            return true;
+        });
+        world.addFreshEntity(new ItemEntity(world, pos.getX() + 0.5, pos.getY(), pos.getZ()+ 0.5, stack.copy()));
+        stack.setCount(0);
     }
 
     @Override
@@ -53,15 +71,20 @@ public class EffectToss extends AbstractEffect {
 
             }
         } else{
-            ItemStack stack =  getItemFromCaster(shooter, spellContext, (i) -> {
-                if (!i.isEmpty() && shooter instanceof PlayerEntity) {
-                    return !ItemStack.matches(shooter.getMainHandItem(), i);
-                }
-                return true;
-            });
-            world.addFreshEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack.copy()));
-            stack.setCount(0);
+            summonStack(shooter, spellContext, world, pos);
         }
+    }
+
+    @Nullable
+    @Override
+    public Item getCraftingReagent() {
+        return Items.DROPPER;
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.MANIPULATION);
     }
 
     @Override

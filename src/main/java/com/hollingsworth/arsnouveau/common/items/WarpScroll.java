@@ -84,7 +84,7 @@ public class WarpScroll extends ModItem{
             newWarpStack.setTag(new CompoundNBT());
             setTeleportTag(newWarpStack, player.blockPosition(), player.getCommandSenderWorld().dimension().getRegistryName().toString());
             setRotationVector(newWarpStack, player.getRotationVector());
-            boolean didAdd = false;
+            boolean didAdd;
             if(stack.getCount() == 1){
                 stack = newWarpStack;
                 didAdd = true;
