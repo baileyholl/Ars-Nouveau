@@ -11,6 +11,7 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext;
 import net.minecraft.loot.LootParameterSets;
@@ -18,6 +19,7 @@ import net.minecraft.loot.LootTable;
 import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -34,6 +36,7 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 
 
 public abstract class AbstractEffect extends AbstractSpellPart {
@@ -314,5 +317,27 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     public void addDefaultPotionConfig(ForgeConfigSpec.Builder builder){
         addPotionConfig(builder, 30);
         addExtendTimeConfig(builder, 8);
+    }
+
+    public ItemStack getItemFromCaster(@Nullable LivingEntity shooter, SpellContext spellContext, Predicate<ItemStack> predicate){
+        if(spellContext.castingTile instanceof IInventoryResponder){
+            return ((IInventoryResponder) spellContext.castingTile).getItem(predicate);
+        }else if(shooter instanceof IInventoryResponder){
+            return ((IInventoryResponder) shooter).getItem(predicate);
+        }else if(shooter instanceof PlayerEntity){
+            PlayerEntity playerEntity = (PlayerEntity) shooter;
+            NonNullList<ItemStack> list =  playerEntity.inventory.items;
+            for(int i = 0; i < 9; i++){
+                ItemStack stack = list.get(i);
+                if(predicate.test(stack)){
+                    return stack;
+                }
+            }
+        }
+        return ItemStack.EMPTY;
+    }
+
+    public ItemStack getItemFromCaster(@Nullable LivingEntity shooter, SpellContext spellContext, Item item){
+        return getItemFromCaster(shooter, spellContext, (i) -> i.sameItem(new ItemStack(item)));
     }
 }

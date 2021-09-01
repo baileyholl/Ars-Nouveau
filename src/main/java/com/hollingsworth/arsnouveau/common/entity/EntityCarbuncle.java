@@ -56,10 +56,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 
 
 public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDispellable, ITooltipProvider, IWandable {
@@ -160,6 +157,10 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     @Override
     public void tick() {
         super.tick();
+
+        if(!level.isClientSide && level.getGameTime() % 10 == 0 && this.getName().getString().toLowerCase(Locale.ROOT).equals("jeb_")){
+            this.entityData.set(COLOR, carbyColors[level.random.nextInt(carbyColors.length)]);
+        }
 
         if (!level.isClientSide) {
             lastAABBCalc++;

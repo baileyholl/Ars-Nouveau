@@ -63,7 +63,6 @@ public class GlyphLib {
     public static final String EffectFlareID = "flare";
     public static final String EffectGravityID = "gravity";
     public static final String EffectConjureWaterID = "conjure_water";
-    public static final String EffectLeashID = "leash";
     public static final String EffectCutID = "cut";
     public static final String EffectCrushID = "crush";
     public static final String EffectSummonWolvesID = "summon_wolves";
@@ -74,4 +73,11 @@ public class GlyphLib {
     public static final String MethodUnderfootID = "underfoot";
     public static final String EffectGlideID = "glide";
     public static final String MethodOrbitID = "orbit";
+    public static final String EffectFireworkID = "firework";
+    public static final String EffectTossID = "toss";
+    public static final String EffectWindshearID = "wind_shear";
+    public static final String EffectEarthshakeID = "earthshake";
+    public static final String EffectBounceID = "bounce";
+    public static final String EffectSummonUndead = "summon_undead";
+    public static final String EffectEvaporate = "evaporate";
 }

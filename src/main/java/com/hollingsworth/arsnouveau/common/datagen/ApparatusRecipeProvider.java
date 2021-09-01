@@ -184,18 +184,6 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withPedestalItem(Ingredient.of(Tags.Items.SEEDS_WHEAT))
                 .build());
 
-
-        addRecipe(builder()
-                .withResult(BlockRegistry.SPELL_TURRET)
-                .withReagent(Items.DISPENSER)
-                .withPedestalItem(Ingredient.of(Tags.Items.RODS_BLAZE))
-                .withPedestalItem( ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.EffectRedstoneID))
-                .withPedestalItem(Ingredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ))
-                .withPedestalItem(Ingredient.of(Tags.Items.STORAGE_BLOCKS_REDSTONE))
-                .withPedestalItem(Recipes.MANA_GEM_BLOCK)
-                .withPedestalItem(3,Ingredient.of(Tags.Items.INGOTS_GOLD))
-                .build());
-
         addRecipe(builder()
                 .withResult(ItemsRegistry.VOID_JAR)
                 .withReagent(Items.GLASS_BOTTLE)
@@ -909,6 +897,18 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withPedestalItem(2, Ingredient.of(Tags.Items.INGOTS_GOLD))
                 .build());
 
+        addRecipe(builder()
+                .withResult(BlockRegistry.TIMER_SPELL_TURRET)
+                .withReagent(BlockRegistry.BASIC_SPELL_TURRET)
+                .withPedestalItem(Items.CLOCK)
+                .build());
+
+        addRecipe(builder()
+                .withResult(BlockRegistry.SPELL_TURRET)
+                .withReagent(BlockRegistry.BASIC_SPELL_TURRET)
+                .withPedestalItem(Recipes.MANA_GEM_BLOCK)
+                .withPedestalItem(2, Ingredient.of(Tags.Items.RODS_BLAZE))
+                .build());
     }
 
     public void addRecipe(EnchantingApparatusRecipe recipe){

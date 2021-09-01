@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "xxx",
+    "xzy",
+    "yyy"
+  ],
+  "key": {
+    "z": {
+      "tag": "forge:storage_blocks/redstone"
+    },
+    "x": {
+      "tag": "forge:gems/mana"
+    },
+    "y": {
+      "tag": "forge:ingots/gold"
+    }
+  },
+  "result": {
+    "item": "ars_nouveau:basic_spell_turret"
+  }
+}

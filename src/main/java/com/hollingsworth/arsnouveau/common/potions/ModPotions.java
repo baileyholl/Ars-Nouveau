@@ -35,7 +35,7 @@ public class ModPotions {
     public static final GravityEffect GRAVITY_EFFECT = new GravityEffect();
     public static final Effect SPELL_DAMAGE_EFFECT = new PublicEffect(EffectType.BENEFICIAL, new ParticleColor(30, 200, 200).getColor()).setRegistryName(ArsNouveau.MODID, LibPotions.SPELL_DAMAGE);
     public static final Effect FAMILIAR_SICKNESS_EFFECT = new PublicEffect(EffectType.NEUTRAL, new ParticleColor(30, 200, 200).getColor(), new ArrayList<>()).setRegistryName(ArsNouveau.MODID, LibPotions.FAMILIAR_SICKNESS);
-
+    public static final BounceEffect BOUNCE_EFFECT = new BounceEffect();
     @ObjectHolder(LibPotions.MANA_REGEN) public static Potion MANA_REGEN_POTION;
     @ObjectHolder(LibPotions.MANA_REGEN_LONG) public static Potion LONG_MANA_REGEN_POTION;
     @ObjectHolder(LibPotions.MANA_REGEN_STRONG) public static Potion STRONG_MANA_REGEN_POTION;
@@ -87,7 +87,8 @@ public class ModPotions {
                     FLIGHT_EFFECT,
                     GRAVITY_EFFECT,
                     SPELL_DAMAGE_EFFECT,
-                    FAMILIAR_SICKNESS_EFFECT
+                    FAMILIAR_SICKNESS_EFFECT,
+                    BOUNCE_EFFECT
             );
         }
 

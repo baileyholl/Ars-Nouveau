@@ -1,6 +1,6 @@
 {
   "type": "ars_nouveau:glyph_recipe",
-  "tier": "ONE",
+  "tier": "TWO",
   "input": "minecraft:feather",
   "output": "ars_nouveau:glyph_slowfall"
 }

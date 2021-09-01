@@ -37,6 +37,10 @@ public class ApparatusProcessor implements IComponentProcessor {
             return IVariable.wrapList(Arrays.asList(ingredient.getItems()).stream().map(IVariable::from).collect(Collectors.toList()));
         }
 
+        if(key.equals("footer")){
+            return IVariable.wrap(recipe.result.getItem().getDescriptionId());
+        }
+
         return null;
     }
 }

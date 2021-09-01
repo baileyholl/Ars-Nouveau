@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
-import com.hollingsworth.arsnouveau.common.block.SpellTurret;
+import com.hollingsworth.arsnouveau.common.block.BasicSpellTurret;
 import com.hollingsworth.arsnouveau.common.block.tile.SpellTurretTile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
@@ -27,7 +27,7 @@ public class SpellTurretRenderer extends TileEntityRenderer<SpellTurretTile> {
     @Override
     public void render(SpellTurretTile tileEntityIn, float partialTicks, MatrixStack ms, IRenderTypeBuffer buffers, int light, int overlay) {
         ms.pushPose();
-        Direction direction = tileEntityIn.getBlockState().getValue(SpellTurret.FACING);
+        Direction direction = tileEntityIn.getBlockState().getValue(BasicSpellTurret.FACING);
         if(direction == Direction.UP){
             ms.translate(0.5F, 0.5F, -0.5F);
             ms.mulPose(Vector3f.XP.rotationDegrees(90));

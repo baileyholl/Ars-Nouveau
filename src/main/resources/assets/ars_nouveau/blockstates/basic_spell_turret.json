@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "ars_nouveau:block/basic_spell_turret" }
+  }
+}

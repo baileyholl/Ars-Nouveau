@@ -6,6 +6,7 @@ import net.minecraftforge.items.IItemHandler;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * An interface used by effects to manipulate inventory blocks.
@@ -16,17 +17,19 @@ public interface IInventoryResponder {
     /**
      * @return a list of item handlers that belong to this object.
      */
-    @Nonnull
-    default List<IItemHandler> getInventory(){return new ArrayList<>();}
+    @Nonnull default List<IItemHandler> getInventory(){return new ArrayList<>();}
 
     /**
      * @return a specific matching itemstack from the inventories
      */
-    @Nonnull
-    default ItemStack getItem(ItemStack stack){
+    @Nonnull default ItemStack getItem(ItemStack stack){
+        return getItem((i) -> i.sameItem(stack));
+    }
+
+    @Nonnull default ItemStack getItem(Predicate<ItemStack> predicate){
         for(IItemHandler i : getInventory()){
             for(int slots = 0; slots < i.getSlots(); slots ++ ){
-                if(i.getStackInSlot(slots).sameItem(stack))
+                if(predicate.test(i.getStackInSlot(slots)))
                     return i.getStackInSlot(slots);
             }
         }
