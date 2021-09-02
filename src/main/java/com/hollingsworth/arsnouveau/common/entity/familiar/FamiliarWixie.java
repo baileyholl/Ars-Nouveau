@@ -13,7 +13,6 @@ import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.PotionEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
@@ -31,7 +30,7 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
         super(ent, world);
     }
 
-    @SubscribeEvent
+
     public void potionEvent(PotionEvent.PotionAddedEvent event) {
         if(!isAlive())
             return;

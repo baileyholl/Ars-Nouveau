@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.familiar;
 
+import com.hollingsworth.arsnouveau.api.event.FamiliarSummonEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.server.ServerWorld;
@@ -25,10 +26,17 @@ public interface IFamiliar {
      * Called if another familiar is summoned in the world, not including this one.
      * Used for maintaining the familiar limit in the world.
      */
-    default void onFamiliarSpawned(UUID summoner){
-        if(summoner.equals(getOwnerID())){
+    default void onFamiliarSpawned(FamiliarSummonEvent event){
+        if(event.owner.equals(getOwner()) && !event.getEntity().equals(this)){
             this.getThisEntity().remove();
         }
+    }
+
+    default @Nullable LivingEntity getOwner(){
+        if(getThisEntity().level.isClientSide || getOwnerID() == null)
+            return null;
+
+        return (LivingEntity) ((ServerWorld)getThisEntity().level).getEntity(getOwnerID());
     }
 
     default boolean wantsToAttack(LivingEntity ownerLastHurt, LivingEntity owner) {

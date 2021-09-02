@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
-import com.hollingsworth.arsnouveau.api.event.MaxManaCalcEvent;
+import com.hollingsworth.arsnouveau.api.event.FamiliarSummonEvent;
 import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.goal.familiar.FamOwnerHurtByTargetGoal;
@@ -23,8 +23,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.network.NetworkHooks;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -34,16 +32,20 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 public class FamiliarEntity extends CreatureEntity implements IAnimatable, IFamiliar, IDispellable {
 
     private static final DataParameter<Optional<UUID>> OWNER_UUID = EntityDataManager.defineId(FamiliarEntity.class, DataSerializers.OPTIONAL_UUID);
 
+    public static Set<FamiliarEntity> FAMILIAR_SET = Collections.newSetFromMap(new WeakHashMap<>());
+
+    public boolean terminatedFamiliar;
+
     public FamiliarEntity(EntityType<? extends CreatureEntity> p_i48575_1_, World p_i48575_2_) {
         super(p_i48575_1_, p_i48575_2_);
-        MinecraftForge.EVENT_BUS.register(this);
+        if(!level.isClientSide)
+            FAMILIAR_SET.add(this);
     }
 
     @Override
@@ -61,25 +63,27 @@ public class FamiliarEntity extends CreatureEntity implements IAnimatable, IFami
         super.onRemovedFromWorld();
     }
 
-    @SubscribeEvent
-    public void maxManaCalc(MaxManaCalcEvent event) {
-        if(!isAlive())
-            return;
-        if(getOwner() != null && getOwner().equals(event.getEntity())){
-            event.setMax((int) (event.getMax() -  event.getMax() * getManaReserveModifier()));
-        }
-    }
-
     public double getManaReserveModifier(){
         return 0.15;
     }
 
     @Override
+    public boolean isAlive() {
+        return super.isAlive() && !terminatedFamiliar && (level.isClientSide || FamiliarEntity.FAMILIAR_SET.contains(this));
+    }
+
+    @Override
     public void tick() {
         super.tick();
-        if(level.getGameTime() % 20 ==0 && !level.isClientSide){
-            if(((ServerWorld)level).getEntity(getOwnerID()) == null){
+        if(this.terminatedFamiliar){
+            this.remove();
+            FamiliarEntity.FAMILIAR_SET.remove(this);
+        }
+        if(level.getGameTime() % 20 == 0 && !level.isClientSide){
+            if(getOwnerID() == null || ((ServerWorld)level).getEntity(getOwnerID()) == null || terminatedFamiliar){
                 this.remove();
+                this.terminatedFamiliar = true;
+                FAMILIAR_SET.remove(this);
             }
         }
     }
@@ -140,14 +144,17 @@ public class FamiliarEntity extends CreatureEntity implements IAnimatable, IFami
     @Override
     public void addAdditionalSaveData(CompoundNBT tag) {
         super.addAdditionalSaveData(tag);
-        if(getOwner() != null)
+        if(getOwnerID() != null)
             tag.putUUID("ownerID", getOwnerID());
+        tag.putBoolean("terminated", terminatedFamiliar);
     }
 
     @Override
     public void readAdditionalSaveData(CompoundNBT tag) {
         super.readAdditionalSaveData(tag);
-        setOwnerID(tag.getUUID("ownerID"));
+        if(tag.hasUUID("ownerID"))
+            setOwnerID(tag.getUUID("ownerID"));
+        terminatedFamiliar = tag.getBoolean("terminated");
     }
 
     public @Nullable UUID getOwnerID() {
@@ -187,5 +194,19 @@ public class FamiliarEntity extends CreatureEntity implements IAnimatable, IFami
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void remove(boolean keepData) {
+        super.remove(keepData);
+    }
+
+    @Override
+    public void onFamiliarSpawned(FamiliarSummonEvent event) {
+        if(level.isClientSide)
+            return;
+        IFamiliar.super.onFamiliarSpawned(event);
+        if(!event.getEntity().equals(this) && event.owner.equals(this.getOwner()))
+            this.terminatedFamiliar = true;
     }
 }

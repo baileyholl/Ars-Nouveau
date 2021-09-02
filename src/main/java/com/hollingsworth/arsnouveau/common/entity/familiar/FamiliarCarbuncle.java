@@ -33,7 +33,6 @@ public class FamiliarCarbuncle extends FamiliarEntity {
         }
     }
 
-
     @Override
     protected ActionResultType mobInteract(PlayerEntity player, Hand hand) {
         if(!player.level.isClientSide && player.equals(getOwner())){

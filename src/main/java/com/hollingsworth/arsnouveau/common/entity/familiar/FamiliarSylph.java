@@ -11,25 +11,18 @@ import net.minecraft.item.Food;
 import net.minecraft.util.FoodStats;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.WeakHashMap;
-
-public class FamiliarSylph extends FlyingFamiliarEntity {
-    public static final Set<FamiliarSylph> weakHashSet = Collections.newSetFromMap(new WeakHashMap<>());
+public class FamiliarSylph extends FlyingFamiliarEntity implements ISpellCastListener {
 
     public FamiliarSylph(EntityType<? extends CreatureEntity> ent, World world) {
         super(ent, world);
     }
 
-
-    @SubscribeEvent
-    public void castEvent(SpellCastEvent event) {
+    @Override
+    public void onCast(SpellCastEvent event) {
         if(!isAlive())
             return;
 
@@ -44,7 +37,6 @@ public class FamiliarSylph extends FlyingFamiliarEntity {
         }
     }
 
-    @SubscribeEvent
     public void eatEvent(LivingEntityUseItemEvent.Finish event) {
         if(!isAlive())
             return;
@@ -62,6 +54,7 @@ public class FamiliarSylph extends FlyingFamiliarEntity {
             }
         }
     }
+
     @Override
     public void tick() {
         super.tick();
@@ -77,4 +70,5 @@ public class FamiliarSylph extends FlyingFamiliarEntity {
     public EntityType<?> getType() {
         return ModEntities.ENTITY_FAMILIAR_SYLPH;
     }
+
 }
