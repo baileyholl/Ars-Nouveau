@@ -29,7 +29,7 @@ import java.util.List;
 
 public class EnchantingApparatusTile extends AnimatedTile implements IInventory {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
-    public ItemStack catalystItem;
+    public ItemStack catalystItem = ItemStack.EMPTY;
     public ItemEntity entity;
     public long frames = 0;
 
@@ -105,26 +105,30 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
         return pedestalItems;
     }
 
-    public IEnchantingRecipe getRecipe(ItemStack catalyst, @Nullable PlayerEntity playerEntity){
+    public IEnchantingRecipe getRecipe(ItemStack stack, @Nullable PlayerEntity playerEntity){
         List<ItemStack> pedestalItems = getPedestalItems();
-        return ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes(level).stream().filter(r-> r.isMatch(pedestalItems, catalyst, this, playerEntity)).findFirst().orElse(null);
+        return ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes(level).stream().filter(r-> r.isMatch(pedestalItems, stack, this, playerEntity)).findFirst().orElse(null);
     }
 
-    public boolean attemptCraft(ItemStack catalyst, PlayerEntity playerEntity){
+    public boolean attemptCraft(ItemStack catalyst, @Nullable PlayerEntity playerEntity){
         if(isCrafting)
             return false;
-        IEnchantingRecipe recipe = this.getRecipe(catalyst, playerEntity);
-        if(recipe != null) {
-            if(recipe.consumesMana()){
-                if(!ManaUtil.hasManaNearby(worldPosition, level, 10, recipe.manaCost()))
-                    return false;
-                ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 10, recipe.manaCost());
-            }
-            this.isCrafting = true;
-            updateBlock();
-            return true;
+        if (!craftingPossible(catalyst, playerEntity)) {
+            return false;
         }
-        return false;
+        IEnchantingRecipe recipe = this.getRecipe(catalyst, playerEntity);
+        ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 10, recipe.manaCost());
+        this.isCrafting = true;
+        updateBlock();
+        return true;
+    }
+
+    public boolean craftingPossible(ItemStack stack, PlayerEntity playerEntity){
+        if(isCrafting || stack.isEmpty())
+            return false;
+        IEnchantingRecipe recipe = this.getRecipe(stack, playerEntity);
+
+        return recipe != null && (!recipe.consumesMana() || (recipe.consumesMana() && ManaUtil.hasManaNearby(worldPosition, level, 10, recipe.manaCost())));
     }
 
     public void updateBlock(){
@@ -176,33 +180,53 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
 
     @Override
     public int getContainerSize() {
-        return 0;
+        return 1;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return catalystItem.isEmpty();
     }
 
     @Override
     public ItemStack getItem(int index) {
-        return ItemStack.EMPTY;
+        return catalystItem;
+    }
+
+    @Override
+    public boolean canPlaceItem(int slot, ItemStack stack) {
+        if(isCrafting || stack.isEmpty())
+            return false;
+        return catalystItem.isEmpty() && craftingPossible(stack,null);
     }
 
     @Override
     public ItemStack removeItem(int index, int count) {
-        return ItemStack.EMPTY;
+        if(isCrafting)
+            return ItemStack.EMPTY;
+        ItemStack stack = catalystItem.copy();
+        catalystItem.shrink(count);
+        updateBlock();
+        return stack;
     }
 
     @Override
     public ItemStack removeItemNoUpdate(int index) {
-        return ItemStack.EMPTY;
+        if(isCrafting)
+            return ItemStack.EMPTY;
+        return catalystItem;
     }
 
     @Override
     public void setItem(int index, ItemStack stack) {
-
+        if(isCrafting)
+            return;
+        this.catalystItem = stack;
+        updateBlock();
+        attemptCraft(this.catalystItem, null);
     }
+
+
 
     @Override
     public boolean stillValid(PlayerEntity player) {
@@ -211,7 +235,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
 
     @Override
     public void clearContent() {
-
+        this.catalystItem = ItemStack.EMPTY;
     }
 
     @Nonnull
