@@ -22,11 +22,10 @@ public class ArcanePedestalTile extends AnimatedTile implements IInventory {
     public int frames;
     public ItemEntity entity;
     public ItemStack stack;
+
     public ArcanePedestalTile() {
         super(BlockRegistry.ARCANE_PEDESTAL_TILE);
     }
-
-
 
     @Override
     public void load(BlockState state, CompoundNBT compound) {
@@ -83,7 +82,6 @@ public class ArcanePedestalTile extends AnimatedTile implements IInventory {
 
     @Override
     public void setItem(int index, ItemStack s) {
-
         if(stack == null || stack.isEmpty()) {
             stack = s;
             updateBlock();

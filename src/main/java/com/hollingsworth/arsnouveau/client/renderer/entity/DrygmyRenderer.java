@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -12,23 +11,20 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
-public class DrygmyRenderer  extends GeoEntityRenderer<EntityDrygmy> {
-    private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph.png");
+public class DrygmyRenderer extends GeoEntityRenderer {
 
     public DrygmyRenderer(EntityRendererManager manager) {
         super(manager, new DrygmyModel());
     }
 
 
-
-
     @Override
-    public ResourceLocation getTextureLocation(EntityDrygmy entity) {
+    public ResourceLocation getTextureLocation(Object entity) {
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/drygmy.png");
     }
 
     @Override
-    public RenderType getRenderType(EntityDrygmy animatable, float partialTicks, MatrixStack stack, @Nullable IRenderTypeBuffer renderTypeBuffer, @Nullable IVertexBuilder vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
+    public RenderType getRenderType(Object animatable, float partialTicks, MatrixStack stack, @Nullable IRenderTypeBuffer renderTypeBuffer, @Nullable IVertexBuilder vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
         return RenderType.entityCutoutNoCull(textureLocation);
     }
 }

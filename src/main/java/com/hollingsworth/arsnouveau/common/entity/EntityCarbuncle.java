@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
 import com.hollingsworth.arsnouveau.common.entity.goal.GetUnstuckGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.*;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
@@ -55,10 +56,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.*;
 
 
 public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDispellable, ITooltipProvider, IWandable {
@@ -77,7 +75,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
     public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.ITEM_STACK);
     public static final DataParameter<Boolean> TAMED = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<Boolean> HOP = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.BOOLEAN);
     public static final DataParameter<String> COLOR = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.STRING);
     public int backOff; // Used to stop inventory store/take spam when chests are full or empty.
     public int tamingTime;
@@ -101,8 +98,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController<EntityCarbuncle>(this, "walkController", 20, this::animationPredicate));
-        animationData.addAnimationController(new AnimationController<EntityCarbuncle>(this, "idleController", 20, this::idlePredicate));
+        animationData.addAnimationController(new AnimationController<>(this, "walkController", 1, this::animationPredicate));
     }
 
     @Override
@@ -112,23 +108,15 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (source == DamageSource.CACTUS || source == DamageSource.SWEET_BERRY_BUSH)
+        if (source == DamageSource.CACTUS || source == DamageSource.SWEET_BERRY_BUSH || source == DamageSource.DROWN)
             return false;
         return super.hurt(source, amount);
     }
 
 
-    private PlayState idlePredicate(AnimationEvent event) {
-        if (level.getGameTime() % 20 == 0 && level.random.nextInt(3) == 0 && !this.entityData.get(HOP)) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
-        }
-
-        return PlayState.CONTINUE;
-    }
-
     private PlayState animationPredicate(AnimationEvent event) {
-        if (this.entityData.get(HOP)) {
-            event.getController().setAnimation(new AnimationBuilder().addAnimation("hop"));
+        if (event.isMoving() || (level.isClientSide && PatchouliHandler.isPatchouliWorld())) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -170,13 +158,12 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     public void tick() {
         super.tick();
 
+        if(!level.isClientSide && level.getGameTime() % 10 == 0 && this.getName().getString().toLowerCase(Locale.ROOT).equals("jeb_")){
+            this.entityData.set(COLOR, carbyColors[level.random.nextInt(carbyColors.length)]);
+        }
+
         if (!level.isClientSide) {
             lastAABBCalc++;
-            if (this.navigation.isDone()) {
-                EntityCarbuncle.this.entityData.set(HOP, false);
-            } else {
-                EntityCarbuncle.this.entityData.set(HOP, true);
-            }
         }
 
         if (this.backOff > 0 && !level.isClientSide)
@@ -192,7 +179,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
                     if (!isTamed() && itementity.getItem().getItem() != Items.GOLD_NUGGET)
                         return;
                     this.pickUpItem(itementity);
-                    this.entityData.set(HOP, false);
                     if(getHeldStack() != null && !getHeldStack().isEmpty())
                         break;
                 }
@@ -425,7 +411,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         super.defineSynchedData();
         this.entityData.define(HELD_ITEM, ItemStack.EMPTY);
         this.entityData.define(TAMED, false);
-        this.entityData.define(HOP, false);
         this.entityData.define(TO_POS, 0);
         this.entityData.define(FROM_POS, 0);
         this.entityData.define(COLOR, COLORS.ORANGE.name());
@@ -499,7 +484,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         tamingTime = tag.getInt("taming_time");
         whitelist = tag.getBoolean("whitelist");
         blacklist = tag.getBoolean("blacklist");
-        this.entityData.set(HOP, tag.getBoolean("hop"));
 
         // Remove goals and read them AFTER our tamed param is set because we can't ACCESS THEM OTHERWISE
         if (!setBehaviors)
@@ -540,15 +524,9 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             NBTUtil.storeBlockPos(tag, "to_" +counter, p);
             counter ++;
         }
-
-//        if (getToPos() != null)
-//            NBTUtil.storeBlockPos(tag, "to", getToPos());
-//        if (getFromPos() != null)
-//            NBTUtil.storeBlockPos(tag, "from", getFromPos());
         tag.putInt("backoff", backOff);
         tag.putBoolean("tamed", this.entityData.get(TAMED));
         tag.putInt("taming_time", tamingTime);
-        tag.putBoolean("hop", this.entityData.get(HOP));
         tag.putBoolean("whitelist", whitelist);
         tag.putBoolean("blacklist", blacklist);
         if (allowedItems != null && !allowedItems.isEmpty())

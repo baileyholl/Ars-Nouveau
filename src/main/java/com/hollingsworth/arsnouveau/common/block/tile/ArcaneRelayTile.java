@@ -5,8 +5,6 @@ import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
-import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
-import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -36,8 +34,25 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
     public ArcaneRelayTile() {
         super(BlockRegistry.ARCANE_RELAY_TILE);
     }
+
     public ArcaneRelayTile(TileEntityType<?> type){
         super(type);
+    }
+
+    public BlockPos getToPos() {
+        return toPos;
+    }
+
+    public void setToPos(BlockPos toPos) {
+        this.toPos = toPos;
+    }
+
+    public BlockPos getFromPos() {
+        return fromPos;
+    }
+
+    public void setFromPos(BlockPos fromPos) {
+        this.fromPos = fromPos;
     }
 
     private BlockPos toPos;
@@ -119,15 +134,15 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
     }
 
     public void spawnParticles(){
-        if(level.isClientSide){
-            ParticleColor randColor = new ParticleColor(255,55,255);
-            for (int i = 0; i < 6; i++) {
-                level.addParticle(
-                        GlowParticleData.createData(randColor),
-                        worldPosition.getX() + 0.5 + ParticleUtil.inRange(-0.3, 0.3), worldPosition.getY() + 0.5 + ParticleUtil.inRange(-0.3, 0.3), worldPosition.getZ() + 0.5 + ParticleUtil.inRange(-0.3, 0.3),
-                        0, 0, 0);
-            }
-        }
+//        if(level.isClientSide){
+//            ParticleColor randColor = new ParticleColor(255,55,255);
+//            for (int i = 0; i < 6; i++) {
+//                level.addParticle(
+//                        GlowParticleData.createData(randColor),
+//                        worldPosition.getX() + 0.5 + ParticleUtil.inRange(-0.3, 0.3), worldPosition.getY() + 0.5 + ParticleUtil.inRange(-0.3, 0.3), worldPosition.getZ() + 0.5 + ParticleUtil.inRange(-0.3, 0.3),
+//                        0, 0, 0);
+//            }
+//        }
     }
 
     @Override
@@ -136,8 +151,7 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
             spawnParticles();
             return;
         }
-
-        if(level.getGameTime() % 20 != 0 || toPos == null)
+        if(level.getGameTime() % 20 != 0)
             return;
 
         if(fromPos != null){
@@ -155,6 +169,9 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
                 }
             }
         }
+
+        if(toPos == null)
+            return;
         if(!(level.getBlockEntity(toPos) instanceof AbstractManaTile)){
             toPos = null;
             update();
@@ -216,9 +233,15 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
     @Override
     public void registerControllers(AnimationData data) {
         data.addAnimationController(new AnimationController(this, "rotate_controller", 0, this::idlePredicate));
+        data.addAnimationController(new AnimationController(this, "float_controller", 0, this::floatPredicate));
     }
 
     private <P extends IAnimatable> PlayState idlePredicate(AnimationEvent<P> event) {
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("floating", true));
+        return PlayState.CONTINUE;
+    }
+
+    private <P extends IAnimatable> PlayState floatPredicate(AnimationEvent<P> event) {
         event.getController().setAnimation(new AnimationBuilder().addAnimation("rotation", true));
         return PlayState.CONTINUE;
     }

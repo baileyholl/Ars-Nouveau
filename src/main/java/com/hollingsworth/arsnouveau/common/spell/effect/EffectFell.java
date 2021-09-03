@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtract;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
 import net.minecraft.block.Block;
@@ -120,7 +121,8 @@ public class EffectFell extends AbstractEffect {
         return augmentSetOf(
                 AugmentAOE.INSTANCE,
                 AugmentExtract.INSTANCE,
-                AugmentFortune.INSTANCE
+                AugmentFortune.INSTANCE,
+                AugmentAmplify.INSTANCE
         );
     }
 

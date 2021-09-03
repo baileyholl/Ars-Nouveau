@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:purple_archwood_log"
+    },
+    {
+      "item": "ars_nouveau:blank_parchment"
+    },
+    {
+      "item": "minecraft:ender_pearl"
+    },
+    {
+      "tag": "forge:gems/mana"
+    },
+    {
+      "tag": "forge:gems/mana"
+    },
+    {
+      "tag": "forge:gems/mana"
+    }
+  ],
+  "result": {
+    "item": "ars_nouveau:ritual_binding"
+  }
+}

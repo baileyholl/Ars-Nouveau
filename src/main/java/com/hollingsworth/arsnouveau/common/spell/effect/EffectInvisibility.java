@@ -27,7 +27,7 @@ public class EffectInvisibility extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         if(rayTraceResult.getEntity() instanceof LivingEntity){
-            applyConfigPotion((LivingEntity) rayTraceResult.getEntity(), Effects.INVISIBILITY, spellStats);
+            applyConfigPotion((LivingEntity) rayTraceResult.getEntity(), Effects.INVISIBILITY, spellStats, false);
         }
     }
 

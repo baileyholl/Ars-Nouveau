@@ -26,7 +26,6 @@ public class SylphCharm extends ModItem{
             EntitySylph sylph = new EntitySylph(world, true, blockpos);
             sylph.setPos(blockpos.getX(), blockpos.getY() + 1.0, blockpos.getZ());
             world.addFreshEntity(sylph);
-            ((SummoningCrystalTile) world.getBlockEntity(blockpos)).summon(sylph);
             context.getItemInHand().shrink(1);
         }
         return ActionResultType.SUCCESS;

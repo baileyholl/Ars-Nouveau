@@ -89,7 +89,6 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
     public List<ItemStack> drops;
     private boolean setBehaviors;
     private <E extends Entity> PlayState idlePredicate(AnimationEvent event) {
-        //   manager.setAnimationSpeed(1.0f);
         event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
         return PlayState.CONTINUE;
     }
@@ -228,6 +227,11 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
         this.entityData.set(TAMED, isTamed);
         this.crystalPos = pos;
         addGoalsAfterConstructor();
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
@@ -33,9 +34,10 @@ public class EffectGrow  extends AbstractEffect {
     @Override
     public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         for(BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter,  rayTraceResult.getBlockPos(), rayTraceResult, spellStats)){
-            ItemStack stack = new ItemStack(Items.BONE_MEAL);
-            if(world instanceof ServerWorld)
+            ItemStack stack = new ItemStack(Items.BONE_MEAL, 64);
+            if(BlockUtil.destroyRespectsClaim(shooter, world, blockpos) && world instanceof ServerWorld) {
                 BoneMealItem.applyBonemeal(stack, world, blockpos, FakePlayerFactory.getMinecraft((ServerWorld) world));
+            }
         }
     }
 

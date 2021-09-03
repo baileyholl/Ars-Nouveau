@@ -1,6 +1,21 @@
 package com.hollingsworth.arsnouveau.common.lib;
 
 public class LibBlockNames {
+
+    public static final String STATE_PROVIDER = "an_stateprovider";
+
+    public final static String PHANTOM_BLOCK = "phantom_block";
+    public final static String LIGHT_BLOCK = "light_block";
+    public final static String AGRONOMIC_SOURCELINK = "mana_condenser";
+    public final static String ENCHANTING_APPARATUS = "enchanting_apparatus";
+    public final static String GLYPH_PRESS = "glyph_press";
+    public final static String SOURCE_JAR = "mana_jar";
+    public final static String WARDING_STONE = "warding_stone";
+    //TODO: Rename
+    public final static String MAGE_BLOOM = "mana_bloom_crop";
+    // TODO: Rename
+    public final static String ARCANE_ORE = "arcane_ore";
+
     public final static String ARCANE_PEDESTAL = "arcane_pedestal";
     public final static String SUMMONING_CRYSTAL = "summoning_crystal";
     public final static String ARCANE_BRICKS = "arcane_bricks";
@@ -12,7 +27,7 @@ public class LibBlockNames {
     public static final String PORTAL = "portal";
     public static final String CRYSTALLIZER = "crystallizer";
     public static final String ARCANE_CORE = "arcane_core";
-    public static final String MANA_GEM = "mana_gem";
+    // TODO Rename next major version
     public final static String ARCANE_STONE = "arcane_stone";
     public final static String AB_MOSAIC = "ab_mosaic";
     public final static String AB_HERRING = "ab_herring";
@@ -22,10 +37,13 @@ public class LibBlockNames {
     public static final String REDSTONE_AIR = "redstone_air";
 
     public static final String INTANGIBLE_AIR = "intangible_air";
+    // TODO Rename next major version
     public static final String VOLCANIC_ACCUMULATOR = "volcanic_accumulator";
     public static final String LAVA_LILY = "lava_lily";
+    // TODO Rename next major version
     public static final String MANA_BERRY_BUSH = "mana_berry_bush";
     public static final String WIXIE_CAULDRON = "wixie_cauldron";
+    // TODO Rename next major version
     public static final String CREATIVE_MANA_JAR = "creative_mana_jar";
     public final static String AB_SMOOTH = "ab_smooth";
     public final static String AB_CLOVER = "ab_clover";
@@ -72,6 +90,7 @@ public class LibBlockNames {
     public final static String STRIPPED_AWWOOD_RED = "stripped_red_archwood_wood";
     public final static String STRIPPED_AWLOG_PURPLE = "stripped_purple_archwood_log";
     public final static String STRIPPED_AWWOOD_PURPLE = "stripped_purple_archwood_wood";
+    // TODO Rename next major version
     public final static String MANA_GEM_BLOCK = "mana_gem_block";
 
     public final static String POTION_JAR_BLOCK = "potion_jar";
@@ -102,5 +121,12 @@ public class LibBlockNames {
 
     public static final String ALCHEMICAL_SOURCELINK = "alchemical_sourcelink";
     public static final String VITALIC_SOURCELINK = "vitalic_sourcelink";
-    public static final String MYCELIC_SOURCELINK = "mycelic_sourcelink";
+    public static final String MYCELIAL_SOURCELINK = "mycelial_sourcelink";
+
+    public static final String RELAY_WARP = "relay_warp";
+    public static final String RELAY_DEPOSIT = "relay_deposit";
+
+    public static final String BOOKWYRM_LECTERN = "bookwyrm_lectern";
+    public static final String BASIC_SPELL_TURRET = "basic_spell_turret";
+    public static final String TIMER_SPELL_TURRET = "timer_spell_turret";
 }

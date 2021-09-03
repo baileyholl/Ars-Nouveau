@@ -26,6 +26,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -95,10 +96,10 @@ public class PortalBlock extends ModBlock{
     }
 
 
-    public boolean trySpawnPortal(IWorld worldIn, BlockPos pos, BlockPos warpPos, String dimID) {
+    public boolean trySpawnPortal(IWorld worldIn, BlockPos pos, BlockPos warpPos, String dimID, Vector2f rotation, String displayName) {
         Size portalblock$size = this.isPortal(worldIn, pos);
         if (portalblock$size != null) {
-            portalblock$size.placePortalBlocks(warpPos, dimID);
+            portalblock$size.placePortalBlocks(warpPos, dimID, rotation, displayName);
             return true;
         } else {
             return false;
@@ -320,7 +321,7 @@ public class PortalBlock extends ModBlock{
             return this.bottomLeft != null && this.width >= 2 && this.width <= 21 && this.height >= 3 && this.height <= 21;
         }
 
-        public void placePortalBlocks(BlockPos warpPos, String dimId) {
+        public void placePortalBlocks(BlockPos warpPos, String dimId, Vector2f rotation, String displayName) {
             for(int i = 0; i < this.width; ++i) {
                 BlockPos blockpos = this.bottomLeft.relative(this.rightDir, i);
 
@@ -330,6 +331,9 @@ public class PortalBlock extends ModBlock{
                         PortalTile tile = (PortalTile) this.world.getBlockEntity(blockpos.above(j));
                         tile.warpPos = warpPos;
                         tile.dimID = dimId;
+                        tile.rotationVec = rotation;
+                        tile.displayName = displayName;
+                        tile.update();
                     }
                 }
             }

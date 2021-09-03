@@ -36,6 +36,7 @@ public class SpellParchment extends ModItem implements IScribeable {
         stack.getTag().putString("spell", spellRecipe);
     }
 
+    @Deprecated
     public static List<AbstractSpellPart> getSpellRecipe(ItemStack stack){
         if(!stack.hasTag())
             return null;

@@ -60,6 +60,7 @@ public class EventHandler {
        if(!e.getEntityLiving().level.isClientSide && e.getEntityLiving() instanceof PlayerEntity && e.getEntityLiving().isBlocking()){
            if(e.getEntityLiving().isHolding(ItemsRegistry.ENCHANTERS_SHIELD)){
                e.getEntityLiving().addEffect(new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 200, 1));
+               e.getEntityLiving().addEffect(new EffectInstance(ModPotions.SPELL_DAMAGE_EFFECT, 200, 1));
            }
        }
     }
@@ -124,7 +125,7 @@ public class EventHandler {
     public static void onJump(LivingEvent.LivingJumpEvent event){
         if(!event.getEntityLiving().level.isClientSide  && event.getEntityLiving() instanceof PlayerEntity){
             PlayerEntity entity = (PlayerEntity) event.getEntityLiving();
-            if(entity.getEffect(ModPotions.FLIGHT_EFFECT) == null && RitualFlight.RitualFlightHandler.canPlayerStillFly(entity)){
+            if(entity.getEffect(ModPotions.FLIGHT_EFFECT) == null && RitualFlight.RitualFlightHandler.canPlayerStillFly(entity) != null){
                 RitualFlight.RitualFlightHandler.grantFlight(entity);
             }
 

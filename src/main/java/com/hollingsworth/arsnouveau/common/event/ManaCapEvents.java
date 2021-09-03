@@ -75,6 +75,7 @@ public class ManaCapEvents {
             ManaCapability.getMana(playerEntity).ifPresent(mana -> {
                 mana.setMaxMana(ManaUtil.getMaxMana(playerEntity));
                 mana.setGlyphBonus(mana.getGlyphBonus());
+                mana.setBookTier(mana.getBookTier());
                 Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerEntity), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
             });
         }

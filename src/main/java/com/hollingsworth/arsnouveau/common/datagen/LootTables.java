@@ -37,7 +37,7 @@ public class LootTables extends BaseLootTableProvider{
         putStandardLoot(BlockRegistry.ARCANE_ORE);
         putStandardLoot(BlockRegistry.GLYPH_PRESS_BLOCK);
         putStandardLoot(BlockRegistry.WARD_BLOCK);
-        putStandardLoot(BlockRegistry.MANA_CONDENSER);
+        putStandardLoot(BlockRegistry.AGRONOMIC_SOURCELINK);
         putStandardLoot(BlockRegistry.ENCHANTING_APP_BLOCK);
         putStandardLoot(BlockRegistry.ARCANE_PEDESTAL);
         putStandardLoot(BlockRegistry.SCRIBES_BLOCK);
@@ -69,6 +69,8 @@ public class LootTables extends BaseLootTableProvider{
                                 .apply(SetCount.setCount(RandomValueRange.between(0.0F, 1.0F)))
                                 .apply(LootingEnchantBonus.lootingMultiplier(RandomValueRange.between(0.0F, 1.0F)))))
         );
+        putStandardLoot(BlockRegistry.RELAY_WARP);
+        putStandardLoot(BlockRegistry.RELAY_DEPOSIT);
         //LootTable.builder().addLootPool(LootPool.builder().rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(Items.BONE).acceptFunction(SetCount.builder(RandomValueRange.of(0.0F, 2.0F))).acceptFunction(LootingEnchantBonus.builder(RandomValueRange.of(0.0F, 1.0F)))))
        // putStandardLoot(BlockRegistry.ARCANE_BRICKS);
     }

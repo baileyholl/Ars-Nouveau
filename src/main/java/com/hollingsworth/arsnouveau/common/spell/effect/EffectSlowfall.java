@@ -55,7 +55,7 @@ public class EffectSlowfall extends AbstractEffect {
 
     @Override
     public Tier getTier() {
-        return Tier.ONE;
+        return Tier.TWO;
     }
 
     @Nonnull

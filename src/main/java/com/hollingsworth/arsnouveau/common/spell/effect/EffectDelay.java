@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketClientDelayEffect;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -29,7 +30,7 @@ public class EffectDelay extends AbstractEffect {
         super(GlyphLib.EffectDelayID, "Delay");
     }
 
-    public void sendPacket(World world, RayTraceResult rayTraceResult, @Nullable LivingEntity shooter, SpellContext spellContext, SpellStats spellStats,BlockRayTraceResult blockResult, LivingEntity hitEntity){
+    public void sendPacket(World world, RayTraceResult rayTraceResult, @Nullable LivingEntity shooter, SpellContext spellContext, SpellStats spellStats,BlockRayTraceResult blockResult, Entity hitEntity){
         spellContext.setCanceled(true);
         if(spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
@@ -50,10 +51,7 @@ public class EffectDelay extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        if(!(rayTraceResult.getEntity() instanceof LivingEntity))
-            return;
-
-        sendPacket(world, rayTraceResult, shooter, spellContext, spellStats, null,  (LivingEntity) rayTraceResult.getEntity());
+        sendPacket(world, rayTraceResult, shooter, spellContext, spellStats, null, rayTraceResult.getEntity());
     }
 
     @Override

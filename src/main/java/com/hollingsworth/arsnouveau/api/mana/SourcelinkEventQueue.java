@@ -3,25 +3,26 @@ package com.hollingsworth.arsnouveau.api.mana;
 import com.hollingsworth.arsnouveau.common.block.tile.SourcelinkTile;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
+import net.minecraft.world.World;
 import net.minecraftforge.eventbus.api.Event;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class SourcelinkEventQueue {
 
-    public static Set<BlockPos> posList = new HashSet<>();
+    public static Map<String, Set<BlockPos>> posMap = new HashMap<>();
+    public static void addPosition(World world, BlockPos pos){
+        String key = world.dimension().getRegistryName().toString();
+        if(!posMap.containsKey(key))
+            posMap.put(key, new HashSet<>());
 
-    public static void addPosition(BlockPos pos){
-        posList.add(pos);
+        posMap.get(key).add(pos);
     }
 
-    public static void addManaEvent(IWorld world, Class<? extends SourcelinkTile> tileType, int amount, Event event, BlockPos sourcePos){
+    public static void addManaEvent(World world, Class<? extends SourcelinkTile> tileType, int amount, Event event, BlockPos sourcePos){
         List<BlockPos> stalePos = new ArrayList<>();
-        for(BlockPos p : posList){
+        Set<BlockPos> worldList = posMap.getOrDefault(world.dimension().getRegistryName().toString(), new HashSet<>());
+        for(BlockPos p : worldList){
             TileEntity entity = world.getBlockEntity(p);
             if(world.getBlockEntity(p) == null || !(entity instanceof SourcelinkTile)){
                 stalePos.add(p);
@@ -33,7 +34,7 @@ public class SourcelinkEventQueue {
             }
         }
         for(BlockPos p : stalePos){
-            posList.remove(p);
+            worldList.remove(p);
         }
     }
 }

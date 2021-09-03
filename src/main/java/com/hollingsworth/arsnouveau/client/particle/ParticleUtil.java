@@ -3,6 +3,8 @@ package com.hollingsworth.arsnouveau.client.particle;
 
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntity;
@@ -109,6 +111,11 @@ public class ParticleUtil {
             double d2 = loc.getZ() +.5 ;
             world.addParticle(GlowParticleData.createData(particleColor),d0, d1, d2, (world.random.nextFloat() * 1 - 0.5)/5, (world.random.nextFloat() * 1 - 0.5)/5, (world.random.nextFloat() * 1 - 0.5)/5);
         }
+    }
+
+    public static void spawnTouchPacket(World world, BlockPos pos, ParticleColor.IntWrapper color){
+        Networking.sendToNearby(world, pos,
+                new PacketANEffect(PacketANEffect.EffectType.BURST, pos, color));
     }
 
     public static void spawnRitualAreaEffect(TileEntity entity, Random rand, ParticleColor color, int range){

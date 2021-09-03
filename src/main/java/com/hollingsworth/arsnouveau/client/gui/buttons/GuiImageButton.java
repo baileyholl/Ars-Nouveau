@@ -7,7 +7,9 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
@@ -24,7 +26,7 @@ public class GuiImageButton extends Button
 
     int u, v, image_width, image_height;
     GuiSpellBook parent;
-
+    TranslationTextComponent toolTip;
 
 
     public GuiImageButton( int x, int y,int u,int v,int w, int h, int image_width, int image_height, String resource_image, Button.IPressable onPress) {
@@ -42,6 +44,12 @@ public class GuiImageButton extends Button
 
     }
 
+    public GuiImageButton withTooltip(GuiSpellBook parent, TranslationTextComponent toolTip){
+        this.parent = parent;
+        this.toolTip = toolTip;
+        return this;
+    }
+
     @Override
     protected void renderBg(MatrixStack p_230441_1_, Minecraft p_230441_2_, int p_230441_3_, int p_230441_4_) {
 
@@ -52,6 +60,13 @@ public class GuiImageButton extends Button
 //        super.render(ms, parX, parY, partialTicks);
         if (visible)
         {
+            if(parent != null && parent.isMouseInRelativeRange(parX, parY, x, y, width, height) && toolTip != null){
+                if(!toolTip.toString().isEmpty()){
+                    List<ITextComponent> tip = new ArrayList<>();
+                    tip.add(toolTip);
+                    parent.tooltip = tip;
+                }
+            }
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, image_width, image_height,ms);
         }

@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -96,7 +97,7 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .build());
 
         addRecipe(builder()
-                .withResult(BlockRegistry.MANA_BLOOM_CROP)
+                .withResult(BlockRegistry.MAGE_BLOOM_CROP)
                 .withReagent(Ingredient.of(Tags.Items.SEEDS))
                 .withPedestalItem(4, Recipes.MANA_GEM)
                 .build());
@@ -134,25 +135,17 @@ public class ApparatusRecipeProvider implements IDataProvider {
         addRecipe(builder()
                 .withResult(BlockRegistry.SUMMONING_CRYSTAL)
                 .withReagent(Recipes.MANA_GEM_BLOCK)
-                .withPedestalItem(2,  Ingredient.of(Tags.Items.GEMS_DIAMOND))
+                .withPedestalItem(2,  Ingredient.of(Tags.Items.INGOTS_IRON))
                 .withPedestalItem(2,Ingredient.of(Tags.Items.INGOTS_GOLD))
                 .withPedestalItem(4, BlockRegistry.ARCANE_STONE)
                 .build());
 
         addRecipe(builder()
-                .withResult(ItemsRegistry.whelpCharm)
-                .withReagent( Items.EGG)
-                .withPedestalItem(4,Ingredient.of(Tags.Items.INGOTS_GOLD))
-                .withPedestalItem(3, Recipes.MANA_GEM)
-                .withPedestalItem( ItemsRegistry.noviceSpellBook)
-                .build());
-
-
-        addRecipe(builder()
-                .withResult(BlockRegistry.ARCANE_RELAY)
-                .withReagent(  BlockRegistry.MANA_JAR)
-                .withPedestalItem(6,Ingredient.of(Tags.Items.INGOTS_GOLD))
-                .withPedestalItem(2, Recipes.MANA_GEM)
+                .withResult(ItemsRegistry.BOOKWYRM_CHARM)
+                .withReagent(Items.EGG)
+                .withPedestalItem(4, Ingredient.of(Tags.Items.INGOTS_IRON))
+                .withPedestalItem(4, Recipes.MANA_GEM)
+                .withPedestalItem(Items.BOOK)
                 .build());
 
         addRecipe(builder()
@@ -177,36 +170,18 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withPedestalItem(4, Recipes.MANA_GEM)
                 .build());
 
-        addRecipe(builder()
-                .withResult(BlockRegistry.ARCANE_RELAY_SPLITTER)
-                .withReagent( BlockRegistry.ARCANE_RELAY)
-                .withPedestalItem(4,Ingredient.of(Tags.Items.GEMS_QUARTZ))
-                .withPedestalItem(4,Ingredient.of(Tags.Items.INGOTS_GOLD))
-                .build());
 
         addRecipe(builder()
                 .withResult(ItemsRegistry.sylphCharm)
                 .withReagent(ItemsRegistry.sylphShard)
                 .withPedestalItem(Recipes.MANA_GEM)
-                .withPedestalItem(BlockRegistry.MANA_BLOOM_CROP)
-                .withPedestalItem(ItemsRegistry.manaBloom)
+                .withPedestalItem(BlockRegistry.MAGE_BLOOM_CROP)
+                .withPedestalItem(ItemsRegistry.MAGE_BLOOM)
                 .withPedestalItem(Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem( Items.OAK_SAPLING)
                 .withPedestalItem( Items.SPRUCE_SAPLING)
                 .withPedestalItem( Items.BIRCH_SAPLING)
                 .withPedestalItem(Ingredient.of(Tags.Items.SEEDS_WHEAT))
-                .build());
-
-
-        addRecipe(builder()
-                .withResult(BlockRegistry.SPELL_TURRET)
-                .withReagent(Items.DISPENSER)
-                .withPedestalItem(Ingredient.of(Tags.Items.RODS_BLAZE))
-                .withPedestalItem( ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.EffectRedstoneID))
-                .withPedestalItem(Ingredient.of(Tags.Items.STORAGE_BLOCKS_QUARTZ))
-                .withPedestalItem(Ingredient.of(Tags.Items.STORAGE_BLOCKS_REDSTONE))
-                .withPedestalItem(Recipes.MANA_GEM_BLOCK)
-                .withPedestalItem(3,Ingredient.of(Tags.Items.INGOTS_GOLD))
                 .build());
 
         addRecipe(builder()
@@ -275,7 +250,7 @@ public class ApparatusRecipeProvider implements IDataProvider {
         addRecipe(builder()
                 .withResult(new ItemStack(ItemsRegistry.POTION_FLASK))
                 .withReagent(Ingredient.of(Items.GLASS_BOTTLE))
-                .withPedestalItem(2, ItemsRegistry.blazeFiber)
+                .withPedestalItem(2, ItemsRegistry.BLAZE_FIBER)
                 .withPedestalItem(Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(Ingredient.of(Tags.Items.STORAGE_BLOCKS_GOLD))
                 .build());
@@ -891,6 +866,48 @@ public class ApparatusRecipeProvider implements IDataProvider {
                 .withPedestalItem(ItemsRegistry.WILDEN_WING)
                 .withPedestalItem(ItemsRegistry.WILDEN_TRIBUTE)
                 .withPedestalItem(Ingredient.of(Tags.Items.INGOTS_GOLD))
+                .build());
+
+        addRecipe(builder()
+                .withResult(BlockRegistry.ARCANE_RELAY_SPLITTER)
+                .withReagent(BlockRegistry.ARCANE_RELAY)
+                .withPedestalItem(4,Ingredient.of(Tags.Items.GEMS_QUARTZ))
+                .withPedestalItem(4,Ingredient.of(Tags.Items.GEMS_LAPIS))
+                .build());
+
+        addRecipe(builder()
+                .withResult(BlockRegistry.RELAY_WARP)
+                .withReagent(BlockRegistry.ARCANE_RELAY)
+                .withPedestalItem(4, Ingredient.of(Tags.Items.ENDER_PEARLS))
+                .withPedestalItem(4, Ingredient.of(Items.POPPED_CHORUS_FRUIT))
+                .build());
+
+        addRecipe(builder()
+                .withResult(BlockRegistry.RELAY_DEPOSIT)
+                .withReagent(BlockRegistry.ARCANE_RELAY)
+                .withPedestalItem(4,Ingredient.of(Items.HOPPER))
+                .build());
+
+        addRecipe(builder()
+                .withResult(ItemsRegistry.ENCHANTERS_MIRROR)
+                .withReagent(Recipes.MANA_GEM_BLOCK)
+                .withPedestalItem(2, Ingredient.of(Tags.Items.GLASS))
+                .withPedestalItem(2, ArsNouveauAPI.getInstance().getGlyphItem(MethodSelf.INSTANCE))
+                .withPedestalItem(2, Recipes.ARCHWOOD_LOG)
+                .withPedestalItem(2, Ingredient.of(Tags.Items.INGOTS_GOLD))
+                .build());
+
+        addRecipe(builder()
+                .withResult(BlockRegistry.TIMER_SPELL_TURRET)
+                .withReagent(BlockRegistry.BASIC_SPELL_TURRET)
+                .withPedestalItem(Items.CLOCK)
+                .build());
+
+        addRecipe(builder()
+                .withResult(BlockRegistry.SPELL_TURRET)
+                .withReagent(BlockRegistry.BASIC_SPELL_TURRET)
+                .withPedestalItem(Recipes.MANA_GEM_BLOCK)
+                .withPedestalItem(2, Ingredient.of(Tags.Items.RODS_BLAZE))
                 .build());
     }
 

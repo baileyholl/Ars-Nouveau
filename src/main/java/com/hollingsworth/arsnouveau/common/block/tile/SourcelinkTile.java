@@ -21,6 +21,8 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SourcelinkTile extends AbstractManaTile implements IAnimatable {
 
@@ -46,8 +48,8 @@ public class SourcelinkTile extends AbstractManaTile implements IAnimatable {
     public void tick() {
         if(level.isClientSide)
             return;
-        if(!registered && usesEventQueue()){
-            SourcelinkEventQueue.addPosition(this.worldPosition);
+        if(level.getGameTime() % 120 == 0 && usesEventQueue()){
+            SourcelinkEventQueue.addPosition(level, this.worldPosition);
             registered = true;
         }
 
@@ -58,6 +60,16 @@ public class SourcelinkTile extends AbstractManaTile implements IAnimatable {
                 ParticleUtil.spawnFollowProjectile(level, this.worldPosition, jarPos);
             }
         }
+    }
+
+    public List<ArcanePedestalTile> getSurroundingPedestals(){
+        List<ArcanePedestalTile> inventories = new ArrayList<>();
+        for(BlockPos p : BlockPos.betweenClosed(getBlockPos().below().east().north(), getBlockPos().above().west().south())){
+            if(level.getBlockEntity(p) instanceof ArcanePedestalTile){
+                inventories.add((ArcanePedestalTile) level.getBlockEntity(p));
+            }
+        }
+        return inventories;
     }
 
     public void getManaEvent(BlockPos sourcePos, int total){

@@ -66,7 +66,7 @@ public class ScribesTile extends TileEntity implements IAnimatable {
 
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return INFINITE_EXTENT_AABB;
+        return super.getRenderBoundingBox().inflate(2);
     }
 
     AnimationFactory factory = new AnimationFactory(this);

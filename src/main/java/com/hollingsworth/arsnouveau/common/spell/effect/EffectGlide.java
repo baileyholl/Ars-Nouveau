@@ -26,7 +26,6 @@ public class EffectGlide extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        super.onResolveEntity(rayTraceResult, world, shooter, spellStats, spellContext);
         if(rayTraceResult.getEntity() instanceof LivingEntity){
             applyConfigPotion(((LivingEntity) rayTraceResult.getEntity()), ModPotions.GLIDE_EFFECT, spellStats);
         }

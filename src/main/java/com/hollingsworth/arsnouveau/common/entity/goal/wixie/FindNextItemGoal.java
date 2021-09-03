@@ -3,9 +3,9 @@ package com.hollingsworth.arsnouveau.common.entity.goal.wixie;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
+import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
-import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -17,21 +17,21 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.minecraft.entity.ai.goal.Goal.Flag;
-
-public class FindNextItemGoal extends Goal {
+public class FindNextItemGoal extends ExtendedRangeGoal {
     EntityWixie wixie;
     BlockPos movePos;
     ItemStack getStack;
     boolean found;
 
     public FindNextItemGoal(EntityWixie wixie){
+        super(10);
         this.wixie = wixie;
         this.setFlags(EnumSet.of(Flag.LOOK, Flag.MOVE));
     }
 
     @Override
     public void start() {
+        super.start();
         World world = wixie.getCommandSenderWorld();
         WixieCauldronTile tile = (WixieCauldronTile) world.getBlockEntity(wixie.cauldronPos);
         if(tile == null || tile.inventories == null) {
@@ -51,10 +51,16 @@ public class FindNextItemGoal extends Goal {
             IInventory i = (IInventory) world.getBlockEntity(b);
             if(i.hasAnyOf(itemSet)){
                 movePos = b;
+                this.startDistance = BlockUtil.distanceFrom(wixie.position, movePos);
                 break;
             }
         }
         found = false;
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
     }
 
     @Override
@@ -73,8 +79,8 @@ public class FindNextItemGoal extends Goal {
 
     @Override
     public void tick() {
-
-        if(!found && movePos != null && BlockUtil.distanceFrom(wixie.blockPosition(), movePos.above()) < 1.5D){
+        super.tick();
+        if(!found && movePos != null && BlockUtil.distanceFrom(wixie.position(), movePos.above()) < 2.0 + this.extendedRange){
 
             WixieCauldronTile tile = (WixieCauldronTile) wixie.getCommandSenderWorld().getBlockEntity(wixie.cauldronPos);
             World world = wixie.getCommandSenderWorld();

@@ -18,9 +18,10 @@ import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 import java.util.Random;
 
 public class VolcanicRenderer extends GeoBlockRenderer<VolcanicSourcelinkTile> {
+    public static SourcelinkModel model =  new SourcelinkModel("volcanic");
 
     public VolcanicRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn, new VolcanicModel());
+        super(rendererDispatcherIn, model);
     }
 
 
@@ -50,6 +51,6 @@ public class VolcanicRenderer extends GeoBlockRenderer<VolcanicSourcelinkTile> {
 //        }
     }
     public static GenericItemRenderer getISTER(){
-        return new GenericItemRenderer(new VolcanicModel());
+        return new GenericItemRenderer(model);
     }
 }

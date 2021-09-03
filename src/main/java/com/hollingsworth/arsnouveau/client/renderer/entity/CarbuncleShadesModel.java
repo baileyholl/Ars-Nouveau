@@ -6,9 +6,13 @@ import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
-import software.bernie.geckolib3.model.provider.data.EntityModelData;
+import software.bernie.geckolib3.model.provider.GeoModelProvider;
 
 public class CarbuncleShadesModel extends AnimatedGeoModel<EntityCarbuncle> {
+    public GeoModelProvider<EntityCarbuncle> modelProvider;
+    public CarbuncleShadesModel(GeoModelProvider<EntityCarbuncle> geoModelProvider) {
+        this.modelProvider = geoModelProvider;
+    }
 
     @Override
     public ResourceLocation getModelLocation(EntityCarbuncle object) {
@@ -29,14 +33,27 @@ public class CarbuncleShadesModel extends AnimatedGeoModel<EntityCarbuncle> {
     public void setLivingAnimations(EntityCarbuncle entity, Integer uniqueID, AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
         IBone head = this.getAnimationProcessor().getBone("specs");
-        try {
+        IBone carby = ((CarbuncleModel) modelProvider).getBone("carbuncle");
+        IBone parentHead = modelProvider.getModel(modelProvider.getModelLocation(entity)).getBone("head").get();
+        head.setPivotX(parentHead.getPivotX());
+        head.setPivotY(parentHead.getPivotY());
+        head.setPivotZ(parentHead.getPivotZ());
+        head.setRotationX(parentHead.getRotationX());
+        head.setRotationY(parentHead.getRotationY());
+        head.setRotationZ(parentHead.getRotationZ());
+        float scale = 11f;
+        head.setPositionY(carby.getPositionY()/16f);
+        head.setPositionZ(carby.getPositionZ() * -1.2f);
 
-            EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
-            head.setRotationX(-extraData.headPitch * 0.017453292F);
-            head.setRotationY(-extraData.netHeadYaw * 0.017453292F);
 
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        try {
+//
+//            EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
+//            head.setRotationX(-extraData.headPitch * 0.017453292F);
+//            head.setRotationY(-extraData.netHeadYaw * 0.017453292F);
+//
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
     }
 }

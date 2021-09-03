@@ -24,7 +24,6 @@ public class EffectHex extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        super.onResolveEntity(rayTraceResult, world, shooter, spellStats, spellContext);
         Entity entity = rayTraceResult.getEntity();
         if(!(entity instanceof LivingEntity))
             return;

@@ -2,10 +2,11 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.mana.SourcelinkEventQueue;
-import com.hollingsworth.arsnouveau.common.block.ManaBloomCrop;
+import com.hollingsworth.arsnouveau.common.datagen.Recipes;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraft.world.World;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.event.world.SaplingGrowTreeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -13,8 +14,7 @@ import net.minecraftforge.fml.common.Mod;
 public class AgronomicSourcelinkTile extends SourcelinkTile {
 
     public AgronomicSourcelinkTile() {
-        super(BlockRegistry.MANA_CONDENSER_TILE);
-        MinecraftForge.EVENT_BUS.register(this);
+        super(BlockRegistry.AGRONOMIC_SOURCELINK_TILE);
     }
 
     @Override
@@ -34,11 +34,22 @@ public class AgronomicSourcelinkTile extends SourcelinkTile {
 
     @SubscribeEvent
     public static void cropGrow(BlockEvent.CropGrowEvent.Post event) {
-        int mana = 50;
-        if(event.getWorld().getBlockState(event.getPos()).getBlock() instanceof ManaBloomCrop) {
+        int mana = 20;
+        if(event.getWorld().getBlockState(event.getPos()).getBlock().is(Recipes.MAGIC_PLANTS)) {
             mana += 25;
         }
-        SourcelinkEventQueue.addManaEvent(event.getWorld(), AgronomicSourcelinkTile.class, mana, event, event.getPos());
+        if(event.getWorld() instanceof World)
+            SourcelinkEventQueue.addManaEvent((World) event.getWorld(), AgronomicSourcelinkTile.class, mana, event, event.getPos());
+    }
+
+    @SubscribeEvent
+    public static void treeGrow(SaplingGrowTreeEvent event) {
+        int mana = 50;
+        if(event.getWorld().getBlockState(event.getPos()).getBlock().is(Recipes.MAGIC_SAPLINGS)) {
+            mana += 50;
+        }
+        if(event.getWorld() instanceof World)
+            SourcelinkEventQueue.addManaEvent((World) event.getWorld(), AgronomicSourcelinkTile.class, mana, event, event.getPos());
     }
 
     @Override

@@ -29,24 +29,12 @@ public class SpellRecipeUtil {
      */
     @Deprecated // Marked for removal for Spell object methods.
     public static List<AbstractSpellPart> getSpellsFromTagString(String recipeStr){
-        ArrayList<AbstractSpellPart> recipe = new ArrayList<>();
-        if (recipeStr.length() <= 3) // Account for empty strings and '[,]'
-            return recipe;
-        String[] recipeList = recipeStr.substring(1, recipeStr.length() - 1).split(",");
-        for(String id : recipeList){
-            if (ArsNouveauAPI.getInstance().getSpell_map().containsKey(id.trim()))
-                recipe.add(ArsNouveauAPI.getInstance().getSpell_map().get(id.trim()));
-        }
-        return recipe;
+        return Spell.deserialize(recipeStr).recipe;
     }
 
     @Deprecated // Marked for removal for Spell object methods.
     public static String serializeForNBT(List<AbstractSpellPart> abstractSpellPart){
-        List<String> tags = new ArrayList<>();
-        for(AbstractSpellPart slot : abstractSpellPart){
-            tags.add(slot.tag);
-        }
-        return tags.toString();
+        return new Spell(abstractSpellPart).serialize();
     }
     @Deprecated // Marked for removal
     public static String getDisplayString(List<AbstractSpellPart> abstractSpellPart){

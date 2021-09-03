@@ -24,7 +24,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.capabilities.Capability;
@@ -302,7 +301,7 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
         if(recipe == null)
             return false;
 
-        int manaCost = recipe.tier == ISpellTier.Tier.ONE ? 2000 : (recipe.tier == ISpellTier.Tier.TWO ? 4000 : 6000);
+        int manaCost = recipe.tier == ISpellTier.Tier.ONE ? 500 : (recipe.tier == ISpellTier.Tier.TWO ? 1500 : 3000);
         AtomicBoolean valid = new AtomicBoolean(false);
         BlockPos.betweenClosedStream(this.getBlockPos().offset(5, -3, 5), this.getBlockPos().offset(-5, 3, -5)).forEach(blockPos -> {
             if(!valid.get() && level.getBlockEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) level.getBlockEntity(blockPos)).getCurrentMana() >= manaCost) {

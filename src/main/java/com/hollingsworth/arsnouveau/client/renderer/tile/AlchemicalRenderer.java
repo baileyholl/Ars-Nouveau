@@ -19,10 +19,11 @@ import java.util.Random;
 
 public class AlchemicalRenderer extends GeoBlockRenderer<AlchemicalSourcelinkTile> {
 
-    public AlchemicalRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn, new AlchemicalModel());
-    }
+    public static SourcelinkModel model = new SourcelinkModel<>("alchemical");
 
+    public AlchemicalRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+        super(rendererDispatcherIn, model);
+    }
 
     @Override
     public void renderLate(AlchemicalSourcelinkTile animatable, MatrixStack stackIn, float ticks, IRenderTypeBuffer renderTypeBuffer, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
@@ -50,6 +51,6 @@ public class AlchemicalRenderer extends GeoBlockRenderer<AlchemicalSourcelinkTil
 //        }
     }
     public static GenericItemRenderer getISTER(){
-        return new GenericItemRenderer(new AlchemicalModel());
+        return new GenericItemRenderer(model);
     }
 }

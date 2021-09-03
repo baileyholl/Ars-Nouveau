@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public abstract class AbstractSpellPart implements ISpellTier, Comparable<AbstractSpellPart> {
-
+    // TODO: Clarify that this is the default cost.
     public abstract int getManaCost();
     public String tag;
     public String name;
@@ -31,6 +31,9 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
     protected AbstractSpellPart(String tag, String name){
         this.tag = tag;
         this.name = name;
+        for(SpellSchool spellSchool : getSchools()){
+            spellSchool.addSpellPart(this);
+        }
     }
     // Final mana cost
     public int getAdjustedManaCost(List<AbstractAugment> augmentTypes){

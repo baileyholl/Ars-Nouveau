@@ -52,12 +52,12 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.MARVELOUS_CLAY) public static ModItem marvelousClay;
     @ObjectHolder(LibItemNames.MYTHICAL_CLAY) public static ModItem mythicalClay;
 
-    @ObjectHolder(LibItemNames.MANA_BLOOM) public static ModItem manaBloom;
+    @ObjectHolder(LibItemNames.MANA_BLOOM) public static ModItem MAGE_BLOOM;
 
 
-    @ObjectHolder(LibItemNames.MANA_FIBER) public static ModItem manaFiber;
-    @ObjectHolder(LibItemNames.BLAZE_FIBER) public static ModItem blazeFiber;
-    @ObjectHolder(LibItemNames.END_FIBER) public static ModItem endFiber;
+    @ObjectHolder(LibItemNames.MANA_FIBER) public static ModItem MAGE_FIBER;
+    @ObjectHolder(LibItemNames.BLAZE_FIBER) public static ModItem BLAZE_FIBER;
+    @ObjectHolder(LibItemNames.END_FIBER) public static ModItem END_FIBER;
 
     @ObjectHolder(LibItemNames.MUNDANE_BELT) public static ModItem mundaneBelt;
     @ObjectHolder(LibItemNames.JAR_OF_LIGHT) public static JarOfLight jarOfLight;
@@ -79,7 +79,7 @@ public class ItemsRegistry {
 
     @ObjectHolder(LibItemNames.SPELL_PARCHMENT) public static SpellParchment spellParchment;
 
-    @ObjectHolder(LibItemNames.WHELP_CHARM) public static WhelpCharm whelpCharm;
+    @ObjectHolder(LibItemNames.BOOKWYRM_CHARM) public static BookwyrmCharm BOOKWYRM_CHARM;
     @ObjectHolder(LibItemNames.DOMINION_WAND) public static DominionWand DOMINION_ROD;
 
     @ObjectHolder(LibItemNames.AMULET_OF_MANA_BOOST)public static AbstractManaCurio amuletOfManaBoost;
@@ -92,7 +92,6 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.CARBUNCLE_SHARD)public static ModItem carbuncleShard;
 
 
-    @ObjectHolder(LibItemNames.EARTH_ELEMENTAL_SHARD)public static ModItem earthElementalShard;
     @ObjectHolder(LibItemNames.SYLPH_CHARM)public static SylphCharm sylphCharm;
     @ObjectHolder(LibItemNames.SYLPH_SHARD)public static ModItem sylphShard;
     @ObjectHolder(LibItemNames.MANA_GEM)public static ModItem manaGem;
@@ -131,8 +130,13 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.DRYGMY_SHARD)public static ModItem DRYGMY_SHARD;
     @ObjectHolder(LibItemNames.WILDEN_TRIBUTE)public static ModItem WILDEN_TRIBUTE;
     @ObjectHolder(LibItemNames.SUMMON_FOCUS)public static SummoningFocus SUMMONING_FOCUS;
+    @ObjectHolder(LibItemNames.SOURCE_BERRY_PIE)public static ModItem SOURCE_BERRY_PIE;
+    @ObjectHolder(LibItemNames.SOURCE_BERRY_ROLL)public static ModItem SOURCE_BERRY_ROLL;
+    @ObjectHolder(LibItemNames.ENCHANTERS_MIRROR)public static EnchantersMirror ENCHANTERS_MIRROR;
 
-    public static Food MANA_BERRY_FOOD = (new Food.Builder()).nutrition(2).saturationMod(0.1F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).alwaysEat().build();
+    public static Food SOURCE_BERRY_FOOD = (new Food.Builder()).nutrition(2).saturationMod(0.1F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).alwaysEat().build();
+    public static Food SOURCE_PIE_FOOD = (new Food.Builder()).nutrition(9).saturationMod(0.9F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 60 * 20, 1), 1.0f).alwaysEat().build();
+    public static Food SOURCE_ROLL_FOOD = (new Food.Builder()).nutrition(8).saturationMod(0.6F).effect(() -> new EffectInstance(ModPotions.MANA_REGEN_EFFECT, 60 * 20), 1.0f).alwaysEat().build();
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler{
@@ -143,7 +147,7 @@ public class ItemsRegistry {
 
             Item[] items = {
                     new Debug(),
-                    new WhelpCharm(),
+                    new BookwyrmCharm(),
                     new DominionWand(),
                     new RunicChalk(),
                     new ModItem(LibItemNames.BLANK_GLYPH),
@@ -268,8 +272,10 @@ public class ItemsRegistry {
                     new ModItem(defaultItemProperties().fireResistant(), LibItemNames.WILDEN_TRIBUTE).withRarity(Rarity.EPIC)
                             .withTooltip(new TranslationTextComponent("tooltip.ars_nouveau.wilden_tribute")
                             .withStyle(Style.EMPTY.withItalic(true).withColor(TextFormatting.BLUE))),
-                    new SummoningFocus(defaultItemProperties().stacksTo(1), LibItemNames.SUMMON_FOCUS)
-
+                    new SummoningFocus(defaultItemProperties().stacksTo(1), LibItemNames.SUMMON_FOCUS),
+                    new ModItem(defaultItemProperties().food(SOURCE_PIE_FOOD), LibItemNames.SOURCE_BERRY_PIE).withTooltip(new TranslationTextComponent("tooltip.ars_nouveau.source_food")),
+                    new ModItem(defaultItemProperties().food(SOURCE_ROLL_FOOD), LibItemNames.SOURCE_BERRY_ROLL).withTooltip(new TranslationTextComponent("tooltip.ars_nouveau.source_food")),
+                    new EnchantersMirror(defaultItemProperties().stacksTo(1), LibItemNames.ENCHANTERS_MIRROR)
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();
@@ -283,6 +289,10 @@ public class ItemsRegistry {
                 ITEMS.add(ritualParchment);
             }
 
+            for(FamiliarScript script : ArsNouveauAPI.getInstance().getFamiliarScriptMap().values()){
+                registry.register(script);
+                ITEMS.add(script);
+            }
 
             for (final Item item : items) {
                 registry.register(item);

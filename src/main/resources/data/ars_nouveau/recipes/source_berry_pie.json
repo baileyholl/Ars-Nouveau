@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:egg"
+    },
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "ars_nouveau:mana_bloom"
+    },
+    {
+      "item": "ars_nouveau:mana_berry"
+    },
+    {
+      "item": "ars_nouveau:mana_berry"
+    },
+    {
+      "item": "ars_nouveau:mana_berry"
+    }
+  ],
+  "result": {
+    "item": "ars_nouveau:source_berry_pie"
+  }
+}

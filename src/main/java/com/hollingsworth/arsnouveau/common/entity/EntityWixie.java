@@ -29,7 +29,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -84,18 +83,21 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
 
     protected EntityWixie(EntityType<? extends AbstractFlyingCreature> type, World worldIn) {
         super(type, worldIn);
-        MinecraftForge.EVENT_BUS.register(this);
         this.moveControl =  new FlyingMovementController(this, 10, true);
         addGoalsAfterConstructor();
     }
 
     public EntityWixie(World world, boolean isTamed, BlockPos pos) {
         super(ModEntities.ENTITY_WIXIE_TYPE, world);
-        MinecraftForge.EVENT_BUS.register(this);
         this.cauldronPos = pos;
         this.moveControl =  new FlyingMovementController(this, 10, true);
         this.entityData.set(TAMED, isTamed);
         addGoalsAfterConstructor();
+    }
+
+    @Override
+    public void remove() {
+        super.remove();
     }
 
     @Override

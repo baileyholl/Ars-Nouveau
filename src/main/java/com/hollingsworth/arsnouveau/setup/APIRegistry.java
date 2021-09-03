@@ -5,8 +5,10 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.ReactiveEnchantmentRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.SpellWriteRecipe;
+import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.common.familiars.*;
 import com.hollingsworth.arsnouveau.common.ritual.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
@@ -107,6 +109,22 @@ public class APIRegistry {
         registerRitual(new ScryingRitual());
         registerRitual(new RitualFlight());
         registerRitual(new RitualWildenSummoning());
+        registerRitual(new RitualBinding());
+
+        registerFamiliar(new CarbuncleFamiliar());
+        registerFamiliar(new DrygmyFamiliar());
+        registerFamiliar(new SylphFamiliar());
+        registerFamiliar(new WixieFamiliar());
+//        registerFamiliar(new JabberwogFamiliar());
+        registerFamiliar(new BookwyrmFamiliar());
+
+        registerSpell(new EffectFirework());
+        registerSpell(new EffectToss());
+        registerSpell(new EffectBounce());
+    }
+
+    public static void registerFamiliar(AbstractFamiliarHolder familiar){
+        ArsNouveauAPI.getInstance().registerFamiliar(familiar);
     }
 
     public static void registerSpell(AbstractSpellPart spellPart) {

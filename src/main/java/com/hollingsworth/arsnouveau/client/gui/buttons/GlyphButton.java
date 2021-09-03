@@ -45,12 +45,6 @@ public class GlyphButton extends Button {
         this.validationErrors = new LinkedList<>();
     }
 
-    public GlyphButton(GuiSpellBook parent, int x, int y, boolean isCraftingSlot, String resource_image, String spell_id, Integer id) {
-        this(parent, x, y, isCraftingSlot, resource_image, spell_id);
-        this.id = id;
-        this.validationErrors = new LinkedList<>();
-    }
-
     public int getId() {
         return id;
     }

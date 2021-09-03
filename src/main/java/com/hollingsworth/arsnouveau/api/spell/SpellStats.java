@@ -107,22 +107,19 @@ public class SpellStats {
         }
 
         public SpellStats build(AbstractSpellPart spellPart, RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellContext spellContext){
-            SpellStats.Builder builder = this;
-            SpellModifierEvent modifierEvent = new SpellModifierEvent(shooter, builder, spellPart, rayTraceResult, world, spellContext);
-            MinecraftForge.EVENT_BUS.post(modifierEvent);
-            builder = modifierEvent.builder;
-
             for(AbstractAugment abstractAugment : spellStats.augments){
-                abstractAugment.applyModifiers(builder, spellPart);
+                abstractAugment.applyModifiers(this, spellPart);
             }
 
             for(ItemStack stack : spellStats.modifierItems){
                 if(stack.getItem() instanceof ISpellModifierItem) {
                     for (int i = 0; i < stack.getCount(); i++) {
-                        ((ISpellModifierItem) stack.getItem()).applyItemModifiers(stack, builder, spellPart, rayTraceResult, world, shooter, spellContext);
+                        ((ISpellModifierItem) stack.getItem()).applyItemModifiers(stack, this, spellPart, rayTraceResult, world, shooter, spellContext);
                     }
                 }
             }
+            SpellModifierEvent modifierEvent = new SpellModifierEvent(shooter, this, spellPart, rayTraceResult, world, spellContext);
+            MinecraftForge.EVENT_BUS.post(modifierEvent);
             return spellStats;
         }
 

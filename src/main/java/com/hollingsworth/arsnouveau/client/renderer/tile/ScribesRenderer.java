@@ -132,7 +132,7 @@ public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
 
     @Override
     public boolean shouldRenderOffScreen(TileEntity p_188185_1_) {
-        return true;
+        return false;
     }
 
 

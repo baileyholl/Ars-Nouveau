@@ -40,7 +40,7 @@ public class LibItemNames {
     public static final String WARP_SCROLL = "warp_scroll";
     public static final String CREATIVE_SPELL_BOOK = "creative_spell_book";
     public static final String SPELL_PARCHMENT = "spell_parchment";
-    public static final String WHELP_CHARM = "whelp_charm";
+    public static final String BOOKWYRM_CHARM = "whelp_charm";
     public static final String DOMINION_WAND = "dominion_wand";
     public static final String DULL_TRINKET = "dull_trinket";
     public static final String RUNIC_CHALK = "runic_chalk";
@@ -96,4 +96,7 @@ public class LibItemNames {
 
     public static final String WILDEN_TRIBUTE = "wilden_tribute";
     public static final String SUMMON_FOCUS = "summon_focus";
+    public static final String SOURCE_BERRY_ROLL = "source_berry_roll";
+    public static final String SOURCE_BERRY_PIE = "source_berry_pie";
+    public static final String ENCHANTERS_MIRROR = "enchanters_mirror";
 }

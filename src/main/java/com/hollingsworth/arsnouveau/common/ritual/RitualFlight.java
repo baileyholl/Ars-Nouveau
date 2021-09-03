@@ -43,7 +43,7 @@ public class RitualFlight extends AbstractRitual {
 
     @Override
     public String getLangDescription() {
-        return "Grants nearby players the Flight effect when they jump, allowing them to creatively fly for a short time. If the player is nearby, this ritual will refresh their flight buff. Each time this ritual grants or refreshes flight, it will expend mana from nearby jars.";
+        return "Grants nearby players the Flight effect when they jump, allowing them to creatively fly for a short time. If the player is nearby, this ritual will refresh their flight buff. Each time this ritual grants or refreshes flight, it will expend source from nearby jars.";
     }
 
     @Override
@@ -97,18 +97,25 @@ public class RitualFlight extends AbstractRitual {
             return foundPos;
         }
 
-        public static boolean canPlayerStillFly(LivingEntity entity){
-            return getValidPosition(entity.level, entity.blockPosition()) != null;
+        public static @Nullable BlockPos canPlayerStillFly(LivingEntity entity){
+            return getValidPosition(entity.level, entity.blockPosition());
         }
 
         @SubscribeEvent
         public static void refreshFlight(FlightRefreshEvent e){
-            if(!e.getEntityLiving().level.isClientSide && canPlayerStillFly(e.getEntityLiving())){
+            if(!e.getEntityLiving().level.isClientSide) {
+                BlockPos validPos = canPlayerStillFly(e.getEntityLiving());
                 boolean wasFlying = e.getPlayer().abilities.flying;
-                e.getEntityLiving().addEffect(new EffectInstance(ModPotions.FLIGHT_EFFECT, 60 * 20));
-                e.getPlayer().abilities.mayfly = true;
-                e.getPlayer().abilities.flying = wasFlying;
-                Networking.sendToPlayer(new PacketUpdateFlight(true, wasFlying), e.getPlayer());
+                if (validPos != null && wasFlying) {
+                    e.getEntityLiving().addEffect(new EffectInstance(ModPotions.FLIGHT_EFFECT, 60 * 20));
+                    e.getPlayer().abilities.mayfly = true;
+                    e.getPlayer().abilities.flying = wasFlying;
+                    Networking.sendToPlayer(new PacketUpdateFlight(true, wasFlying), e.getPlayer());
+                    TileEntity tile = e.getPlayer().level.getBlockEntity(validPos);
+                    if(tile instanceof RitualTile && ((RitualTile) tile).ritual instanceof RitualFlight){
+                        ((RitualTile) tile).ritual.setNeedsMana(true);
+                    }
+                }
             }
         }
     }

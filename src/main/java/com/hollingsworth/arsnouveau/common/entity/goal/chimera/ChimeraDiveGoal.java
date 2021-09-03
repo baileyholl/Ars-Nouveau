@@ -84,7 +84,7 @@ public class ChimeraDiveGoal extends Goal {
                 boss.orbitOffset = new Vector3d(divePos.getX() + 0.5, divePos.getY(), divePos.getZ() + 0.5);
             }
         }
-        if((isDiving && (boss.isOnGround() || BlockUtil.distanceFrom(boss.position, divePos) <= 1.0d) ||  BlockUtil.distanceFrom(boss.position, boss.orbitOffset) <= 1.7d)) {
+        if((isDiving && (boss.isOnGround() || BlockUtil.distanceFrom(boss.position, divePos) <= 1.0d) ||  (boss.orbitOffset != null && BlockUtil.distanceFrom(boss.position, boss.orbitOffset) <= 1.7d))) {
             makeExplosion();
             endGoal();
         }

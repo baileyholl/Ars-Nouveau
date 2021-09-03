@@ -5,10 +5,10 @@
       "tag": "forge:gems/mana"
     },
     {
-      "tag": "forge:ingots/gold"
+      "tag": "forge:nuggets/gold"
     },
     {
-      "tag": "forge:ingots/gold"
+      "tag": "forge:nuggets/gold"
     }
   ],
   "result": {

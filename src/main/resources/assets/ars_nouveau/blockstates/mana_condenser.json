@@ -1,12 +1,5 @@
 {
   "variants": {
-    "stage=1": { "model": "ars_nouveau:block/mana_condenser1" },
-	"stage=2": { "model": "ars_nouveau:block/mana_condenser2" },
-	"stage=3": { "model": "ars_nouveau:block/mana_condenser3" },
-	"stage=4": { "model": "ars_nouveau:block/mana_condenser4" },
-	"stage=5": { "model": "ars_nouveau:block/mana_condenser5" },
-	"stage=6": { "model": "ars_nouveau:block/mana_condenser6" },
-	"stage=7": { "model": "ars_nouveau:block/mana_condenser7" },
-	"stage=8": { "model": "ars_nouveau:block/mana_condenser8" }
+    "": { "model": "ars_nouveau:block/relay_deposit" }
   }
 }

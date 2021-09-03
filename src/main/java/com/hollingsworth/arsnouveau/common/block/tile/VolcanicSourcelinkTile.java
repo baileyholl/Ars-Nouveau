@@ -36,37 +36,50 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
         super.tick();
         if(level.isClientSide)
             return;
-        if(level.getGameTime() % 40 == 0 && this.canAcceptMana()){
+        if(level.getGameTime() % 20 == 0 && this.canAcceptMana()){
             for(ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(worldPosition).inflate(1.0))){
-                int mana = 0;
-                int progress = 0;
-                int burnTime = ForgeHooks.getBurnTime(i.getItem(), null) ;
-                if(burnTime > 0){
-                    mana = burnTime / 100;
-                    progress = 1;
-                }
-                if(i.getItem().getItem() == BlockRegistry.BLAZING_LOG.asItem()){
-                    mana += 40;
-                    progress += 2;
-                }else if(i.getItem().getItem().is(Recipes.ARCHWOOD_LOG_TAG)){
-                    mana += 20;
-                    progress += 1;
-                }
-
-                if(mana > 0) {
-                    this.progress += progress;
-                    this.addMana(mana);
+                int source = getSourceValue(i.getItem());
+                if(source > 0) {
+                    this.addMana(source);
                     ItemStack containerItem = i.getItem().getContainerItem();
                     i.getItem().shrink(1);
                     if(!containerItem.isEmpty()){
                         level.addFreshEntity(new ItemEntity(level, i.getX(), i.getY(), i.getZ(), containerItem));
                     }
-
                     Networking.sendToNearby(level, getBlockPos(),
                             new PacketANEffect(PacketANEffect.EffectType.BURST, i.blockPosition(), new ParticleColor.IntWrapper(255, 0, 0)));
+                    return;
+                }
+            }
+            for(ArcanePedestalTile i : getSurroundingPedestals()){
+                int sourceValue = getSourceValue(i.getItem(0));
+                if(sourceValue > 0){
+                    this.addMana(sourceValue);
+                    i.removeItem(0, 1);
+                    Networking.sendToNearby(level, getBlockPos(),
+                            new PacketANEffect(PacketANEffect.EffectType.BURST, i.getBlockPos().above(), new ParticleColor.IntWrapper(255, 0, 0)));
                 }
             }
         }
+    }
+
+    public int getSourceValue(ItemStack i){
+        int source = 0;
+        int progress = 0;
+        int burnTime = ForgeHooks.getBurnTime(i, null) ;
+        if(burnTime > 0){
+            source = burnTime / 12;
+            progress = 1;
+        }
+        if(i.getItem().getItem() == BlockRegistry.BLAZING_LOG.asItem()){
+            source += 100;
+            progress += 5;
+        }else if(i.getItem().getItem().is(Recipes.ARCHWOOD_LOG_TAG)){
+            source += 50;
+            progress += 3;
+        }
+        this.progress += progress;
+        return source;
     }
 
     public void doRandomAction(){

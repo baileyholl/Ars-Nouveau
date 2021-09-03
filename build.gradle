@@ -8,7 +8,6 @@ buildscript {
             name "Sponge"
             url "https://repo.spongepowered.org/repository/maven-public/"
         }
-
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
@@ -25,7 +24,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 
-version = '1.20.1'
+version = '1.23.1'
 group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'ars_nouveau-1.16.5'
 
@@ -136,19 +135,22 @@ repositories {
 dependencies {
 
     minecraft 'net.minecraftforge:forge:1.16.5-36.1.62'
+    runtimeOnly fg.deobf("curse.maven:exp-406201:3419814") //Blame
+    runtimeOnly fg.deobf("curse.maven:exp-248787:3395800")  // Appleskin
     runtimeOnly fg.deobf("curse.maven:exp-407174:3188120")  // Shutup experimental settings
 //    runtimeOnly fg.deobf("curse.maven:exp-231951:3326143")  // Immersive engineering
 //    compileOnly fg.deobf("curse.maven:exp-231951:3326143")
     runtimeOnly fg.deobf("curse.maven:exp-268560:3206392")  // Mekanism
 //    compileOnly fg.deobf("curse.maven:exp-268560:3206392")
-    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50:api")
+//    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50:api")
+    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50")
     compileOnly fg.deobf("mezz.jei:jei-1.16.2:7.3.2.25:api")
     runtimeOnly fg.deobf("mezz.jei:jei-1.16.2:7.3.2.25")
 
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.1.0:api")
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.1.0")
-    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.16.5:3.0.41')
+    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.16.5:3.0.45')
     
     compileOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.4:7.1.0.84")
 

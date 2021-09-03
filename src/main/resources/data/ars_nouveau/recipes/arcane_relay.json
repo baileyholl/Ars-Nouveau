@@ -1,51 +1,19 @@
 {
-  "type": "ars_nouveau:enchanting_apparatus",
-  "item_1": [
-    {
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "g g",
+    "gMg",
+    "g g"
+  ],
+  "key": {
+    "g": {
       "tag": "forge:ingots/gold"
+    },
+    "M": {
+      "tag": "forge:storage_blocks/mana"
     }
-  ],
-  "item_2": [
-    {
-      "tag": "forge:ingots/gold"
-    }
-  ],
-  "item_3": [
-    {
-      "tag": "forge:ingots/gold"
-    }
-  ],
-  "item_4": [
-    {
-      "tag": "forge:ingots/gold"
-    }
-  ],
-  "item_5": [
-    {
-      "tag": "forge:ingots/gold"
-    }
-  ],
-  "item_6": [
-    {
-      "tag": "forge:ingots/gold"
-    }
-  ],
-  "item_7": [
-    {
-      "tag": "forge:gems/mana"
-    }
-  ],
-  "item_8": [
-    {
-      "tag": "forge:gems/mana"
-    }
-  ],
-  "reagent": [
-    {
-      "item": "ars_nouveau:mana_jar"
-    }
-  ],
-  "output": {
+  },
+  "result": {
     "item": "ars_nouveau:arcane_relay"
   }
 }

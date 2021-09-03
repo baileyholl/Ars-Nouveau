@@ -18,9 +18,10 @@ import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 import java.util.Random;
 
 public class VitalicRenderer extends GeoBlockRenderer<VitalicSourcelinkTile> {
+    public static SourcelinkModel model =  new SourcelinkModel("vitalic");
 
     public VitalicRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn, new VitalicModel());
+        super(rendererDispatcherIn, model);
     }
 
 
@@ -36,7 +37,7 @@ public class VitalicRenderer extends GeoBlockRenderer<VitalicSourcelinkTile> {
                     GlowParticleData.createData(new ParticleColor(
                             rand.nextInt(255),
                             rand.nextInt(50),
-                            rand.nextInt(50)
+                            rand.nextInt(255)
                     )),
                     pos.getX() +0.5  , pos.getY() +0.3  + ParticleUtil.inRange(-0.1, 0.35) , pos.getZ() +0.5 ,
                     0,0,0);;
@@ -50,6 +51,6 @@ public class VitalicRenderer extends GeoBlockRenderer<VitalicSourcelinkTile> {
 //        }
     }
     public static GenericItemRenderer getISTER(){
-        return new GenericItemRenderer(new VitalicModel());
+        return new GenericItemRenderer(model);
     }
 }

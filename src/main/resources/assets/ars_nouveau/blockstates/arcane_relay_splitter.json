@@ -1,5 +1,5 @@
 {
   "variants": {
-    "": { "model": "ars_nouveau:block/relay/locus1" }
+    "": { "model": "ars_nouveau:block/relay_deposit" }
   }
 }

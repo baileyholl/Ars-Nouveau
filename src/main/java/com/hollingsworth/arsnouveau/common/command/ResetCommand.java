@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.command;
 
 import com.google.common.collect.ImmutableList;
+import com.hollingsworth.arsnouveau.api.familiar.FamiliarCap;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.command.CommandSource;
@@ -10,6 +11,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.text.TranslationTextComponent;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class ResetCommand {
@@ -29,6 +31,9 @@ public class ResetCommand {
             ManaCapability.getMana((LivingEntity) e).ifPresent(iMana -> {
                 iMana.setBookTier(0);
                 iMana.setGlyphBonus(0);
+            });
+            FamiliarCap.getFamiliarCap((LivingEntity) e).ifPresent(ifam ->{
+                ifam.setUnlockedFamiliars(new ArrayList<>());
             });
         }
         source.sendSuccess(new TranslationTextComponent("ars_nouveau.reset.cleared"), true);
