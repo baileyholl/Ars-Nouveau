@@ -35,27 +35,44 @@ public class MycelialSourcelinkTile extends SourcelinkTile{
         if(level.getGameTime() % 40 == 0 && this.canAcceptMana()){
             for(ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(worldPosition).inflate(1.0))){
                 if(i.getItem().getItem().isEdible()){
-                    int mana = 0;
-                    Food food = i.getItem().getItem().getFoodProperties();
-                    mana += 11 * food.getNutrition();
-                    mana += 30 * food.getSaturationModifier();
-                    progress += 1;
-                    if(i.getItem().getItem().is(Recipes.MAGIC_FOOD) || (i.getItem().getItem() instanceof BlockItem && Recipes.MAGIC_PLANTS.contains(((BlockItem) i.getItem().getItem()).getBlock()))){
-                        progress += 4;
-                        mana += 10;
-                        mana *= 2;
-                    }
-                    this.addMana(mana);
+                   int source = getSourceValue(i.getItem());
+                    this.addMana(source);
                     ItemStack containerItem = i.getItem().getContainerItem();
                     i.getItem().shrink(1);
                     if(!containerItem.isEmpty()){
                         level.addFreshEntity(new ItemEntity(level, i.getX(), i.getY(), i.getZ(), containerItem));
                     }
                     Networking.sendToNearby(level, getBlockPos(),
-                            new PacketANEffect(PacketANEffect.EffectType.BURST, i.blockPosition(), new ParticleColor.IntWrapper(255, 0, 0)));
+                            new PacketANEffect(PacketANEffect.EffectType.BURST, i.blockPosition(), new ParticleColor.IntWrapper(255, 255, 255)));
+                }
+            }
+            for(ArcanePedestalTile i : getSurroundingPedestals()){
+                int sourceValue = getSourceValue(i.getItem(0));
+                if(sourceValue > 0){
+                    this.addMana(sourceValue);
+                    i.removeItem(0, 1);
+                    Networking.sendToNearby(level, getBlockPos(),
+                            new PacketANEffect(PacketANEffect.EffectType.BURST, i.getBlockPos().above(), new ParticleColor.IntWrapper(255, 255, 255)));
                 }
             }
         }
+    }
+
+    public int getSourceValue(ItemStack i){
+        if(i.getItem().getItem().isEdible()){
+            int mana = 0;
+            Food food = i.getItem().getItem().getFoodProperties();
+            mana += 11 * food.getNutrition();
+            mana += 30 * food.getSaturationModifier();
+            progress += 1;
+            if(i.getItem().getItem().is(Recipes.MAGIC_FOOD) || (i.getItem().getItem() instanceof BlockItem && Recipes.MAGIC_PLANTS.contains(((BlockItem) i.getItem().getItem()).getBlock()))){
+                progress += 4;
+                mana += 10;
+                mana *= 2;
+            }
+            return mana;
+        }
+        return 0;
     }
 
     @Override
