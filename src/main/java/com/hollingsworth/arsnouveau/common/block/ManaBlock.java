@@ -14,8 +14,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
 public abstract class ManaBlock extends ModBlock{
     public ManaBlock(String registryName) {
         super(registryName);
@@ -39,9 +37,14 @@ public abstract class ManaBlock extends ModBlock{
                     }
                     return super.use(state, worldIn, pos, player, handIn, hit);
                 }else if(player.getItemInHand(handIn).getItem() instanceof BucketItem && ((BucketItem)player.getItemInHand(handIn).getItem()).getFluid() == Fluids.EMPTY){
-                    if(tile.getCurrentMana() >= 1000 && player.addItem(new ItemStack(ItemsRegistry.bucketOfMana))){
-                        tile.removeMana(1000);
-                        player.getItemInHand(handIn).shrink(1);
+                    if(tile.getCurrentMana() >= 1000){
+                        if(player.getItemInHand(handIn).getCount() == 1){
+                            player.setItemInHand(handIn, new ItemStack(ItemsRegistry.bucketOfMana));
+                            tile.removeMana(1000);
+                        }else if(player.addItem(new ItemStack(ItemsRegistry.bucketOfMana))) {
+                            player.getItemInHand(handIn).shrink(1);
+                            tile.removeMana(1000);
+                        }
                     }else if(tile.getCurrentMana() >= 1000 && player.getItemInHand(handIn).getCount() == 1){
                         tile.removeMana(1000);
                         player.setItemInHand(player.getUsedItemHand(),new ItemStack(ItemsRegistry.bucketOfMana));
