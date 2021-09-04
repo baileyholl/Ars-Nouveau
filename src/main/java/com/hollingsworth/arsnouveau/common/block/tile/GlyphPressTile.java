@@ -12,13 +12,10 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -42,67 +39,28 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity, IAnimatable, IAnimationListener, ISidedInventory {
     private final Map<Direction, LazyOptional<IItemHandler>> itemHandlers = new HashMap<>();
-    public long frames;
+    public long frames = 0;
     public boolean isCrafting;
     public ItemStack reagentItem = ItemStack.EMPTY;
     public ItemStack baseMaterial = ItemStack.EMPTY;
-    public ItemStack oldBaseMat;
+    public ItemStack oldBaseMat = ItemStack.EMPTY;
     public ItemEntity entity;
-    public long timeStartedSpraying;
 
     public GlyphPressTile() {
         super(BlockRegistry.GLYPH_PRESS_TILE);
-        frames = 0;
-
-        // Add the sided inventory handlers
         ImmutableList.of(Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST).forEach(this::addItemHandler);
         addItemHandler(null);
     }
 
     @Override
-    public void load(BlockState state,CompoundNBT compound) {
-        reagentItem = ItemStack.of((CompoundNBT)compound.get("itemStack"));
-        baseMaterial = ItemStack.of((CompoundNBT)compound.get("baseMat"));
-        oldBaseMat = ItemStack.of((CompoundNBT)compound.get("oldBase"));
-        isCrafting = compound.getBoolean("crafting");
-        timeStartedSpraying = compound.getLong("spraying");
-        super.load(state, compound);
-    }
-
-    @Override
-    public CompoundNBT save(CompoundNBT compound) {
-        if(reagentItem != null) {
-            CompoundNBT reagentTag = new CompoundNBT();
-            reagentItem.save(reagentTag);
-            compound.put("itemStack", reagentTag);
-        }
-        if(baseMaterial != null){
-            CompoundNBT baseMatTag = new CompoundNBT();
-            baseMaterial.save(baseMatTag);
-            compound.put("baseMat", baseMatTag);
-        }
-
-        if(oldBaseMat != null){
-            CompoundNBT baseMatTag = new CompoundNBT();
-            oldBaseMat.save(baseMatTag);
-            compound.put("oldBase", baseMatTag);
-        }
-        compound.putBoolean("crafting", isCrafting);
-        compound.putLong("spraying", timeStartedSpraying);
-        return super.save(compound);
-    }
-
-
-    @Override
     public void tick() {
-        if(!level.isClientSide && level.getGameTime() % 20 == 0 && reagentItem != null && baseMaterial != null && canCraft(reagentItem.getItem(), baseMaterial.getItem()))
+        if(!level.isClientSide && level.getGameTime() % 20 == 0 && canCraft(reagentItem, baseMaterial))
             craft(FakePlayerFactory.getMinecraft((ServerWorld) level));
 
         if(level.isClientSide || !isCrafting){
@@ -122,33 +80,17 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
                 return;
 
             ItemStack stack = recipe.output.copy();
-            stack = depositItem(stack);
             if(!stack.isEmpty())
                 level.addFreshEntity(new ItemEntity(level, worldPosition.getX() + 0.5, worldPosition.getY()+ 1.5, worldPosition.getZ()+0.5, stack));
-            reagentItem = new ItemStack(null);
-            this.baseMaterial = new ItemStack(null);
-            this.oldBaseMat = new ItemStack(null);
+            reagentItem = ItemStack.EMPTY;
+            this.baseMaterial = ItemStack.EMPTY;
+            this.oldBaseMat = ItemStack.EMPTY;
             counter = 1;
 
         }
         updateBlock();
     }
 
-    public ItemStack depositItem(ItemStack stack){
-        ArrayList<IInventory> iInventories = new ArrayList<>();
-        for(Direction d : Direction.values()){
-            IInventory iInventory =  HopperTileEntity.getContainerAt(level, worldPosition.relative(d));
-            if(iInventory != null && !(iInventory instanceof HopperTileEntity))
-                iInventories.add(iInventory);
-        }
-
-        for(IInventory i : iInventories){
-            if(stack == ItemStack.EMPTY || stack == null)
-                break;
-            stack = HopperTileEntity.addItem(null, i, stack, null);
-        }
-        return stack;
-    }
 
     public void updateBlock(){
         BlockState state = level.getBlockState(worldPosition);
@@ -156,69 +98,14 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
     }
 
 
-    @Override
-    public int getContainerSize() {
-        return 2;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return (reagentItem == null || reagentItem.isEmpty()) && (baseMaterial == null || baseMaterial.isEmpty());
-    }
-
-    @Override
-    public ItemStack getItem(int index) {
-        return index == 0 ? reagentItem : index == 1 ? baseMaterial : ItemStack.EMPTY ;
-    }
-
-    @Override
-    public ItemStack removeItem(int index, int count) {
-        if(index == 0 && reagentItem != null){
-            reagentItem.shrink(count);
-            return reagentItem;
-        }else if(index == 1 && baseMaterial != null){
-            baseMaterial.shrink(count);
-            return  baseMaterial;
-        }
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public ItemStack removeItemNoUpdate(int index) {
-        ItemStack stack = reagentItem;
-        reagentItem.setCount(0);
-        return stack;
-    }
-
-    @Override
-    public void setItem(int index, ItemStack stack) {
-        if(index == 0)
-            reagentItem = stack;
-        if(index == 1)
-            baseMaterial = stack;
-
-        updateBlock();
-    }
-
-    @Override
-    public boolean stillValid(PlayerEntity player) {
-        return true;
-    }
-
-    @Override
-    public void clearContent() {
-        reagentItem = ItemStack.EMPTY;
-        baseMaterial = ItemStack.EMPTY;
-    }
-
     public boolean craft(PlayerEntity playerEntity) {
-        if(isCrafting || baseMaterial == null || baseMaterial == ItemStack.EMPTY)
+        if(isCrafting || baseMaterial == ItemStack.EMPTY)
             return false;
         GlyphPressRecipe recipe = ArsNouveauAPI.getInstance().getGlyphPressRecipe(level, reagentItem.getItem(), getTier(this.baseMaterial.getItem()));
         if(recipe == null)
             return false;
 
-        int manaCost = recipe.tier == ISpellTier.Tier.ONE ? 1500 : (recipe.tier == ISpellTier.Tier.TWO ? 2500 : 5000);
+        int manaCost = recipe.tier == ISpellTier.Tier.ONE ? 1000 : (recipe.tier == ISpellTier.Tier.TWO ? 2000 : 3000);
         BlockPos jar = ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 5, manaCost);
         if(jar != null){
             isCrafting = true;
@@ -228,15 +115,6 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
 
         playerEntity.sendMessage(new TranslationTextComponent("ars_nouveau.glyph_press.no_mana"), Util.NIL_UUID);
         return false;
-    }
-
-    public Item getMatchingClay(ISpellTier.Tier tier){
-        if(tier == ISpellTier.Tier.ONE)
-            return ItemsRegistry.magicClay;
-        else if(tier == ISpellTier.Tier.TWO){
-            return ItemsRegistry.marvelousClay;
-        }
-        return ItemsRegistry.mythicalClay;
     }
 
 
@@ -271,6 +149,71 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
         controller.markNeedsReload();
         controller.setAnimation(new AnimationBuilder().addAnimation("press", false));
     }
+    @Override
+    public int getContainerSize() {
+        return 2;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return reagentItem.isEmpty() && baseMaterial.isEmpty();
+    }
+
+    @Override
+    public ItemStack getItem(int index) {
+        return index == 0 ? reagentItem : index == 1 ? baseMaterial : ItemStack.EMPTY ;
+    }
+
+    @Override
+    public ItemStack removeItem(int index, int count) {
+        if(index == 0){
+            ItemStack stack = reagentItem.copy();
+            stack.setCount(count);
+            reagentItem.shrink(count);
+            updateBlock();
+            return stack;
+        }else if(index == 1){
+            ItemStack stack = baseMaterial.copy();
+            stack.shrink(count);
+            baseMaterial.shrink(count);
+            updateBlock();
+            return stack;
+        }
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public ItemStack removeItemNoUpdate(int index) {
+        ItemStack stack = reagentItem.copy();
+        reagentItem.setCount(0);
+        return stack;
+    }
+
+    @Override
+    public void setItem(int index, ItemStack stack) {
+        if(index == 0)
+            reagentItem = stack;
+        if(index == 1)
+            baseMaterial = stack;
+
+        updateBlock();
+    }
+
+    @Override
+    public int getMaxStackSize() {
+        return 1;
+    }
+
+    @Override
+    public boolean stillValid(PlayerEntity player) {
+        return true;
+    }
+
+    @Override
+    public void clearContent() {
+        reagentItem = ItemStack.EMPTY;
+        baseMaterial = ItemStack.EMPTY;
+    }
 
     @Override
     public int[] getSlotsForFace(Direction side) {
@@ -281,9 +224,9 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
     public boolean canPlaceItemThroughFace(int index, ItemStack itemStackIn, @Nullable Direction direction) {
         if(isCrafting)
             return false;
-        if(index == 0 && (reagentItem == null || reagentItem.isEmpty()) && direction == Direction.UP){ // reagent
-            return baseMaterial != null && canCraft(itemStackIn.getItem(), baseMaterial.getItem());
-        }else if(index == 1 && direction != Direction.UP && direction != Direction.DOWN && (baseMaterial == null || baseMaterial.isEmpty())){
+        if(index == 0 && reagentItem.isEmpty() && direction == Direction.UP){
+            return canCraft(itemStackIn, baseMaterial);
+        }else if(index == 1 && direction != Direction.UP && direction != Direction.DOWN && baseMaterial.isEmpty()){
             return getTier(itemStackIn.getItem()) != null;
         }
         return false;
@@ -294,10 +237,10 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
         return false;
     }
 
-    public boolean canCraft(Item reagent, Item base){
-        if(reagent == null || reagent == Items.AIR || base == null || base == Items.AIR)
+    public boolean canCraft(ItemStack reagent, ItemStack base){
+        if(reagent.isEmpty() || base.isEmpty())
             return false;
-        GlyphPressRecipe recipe = ArsNouveauAPI.getInstance().getGlyphPressRecipe(level, reagent, getTier(base));
+        GlyphPressRecipe recipe = ArsNouveauAPI.getInstance().getGlyphPressRecipe(level, reagent.getItem(), getTier(base.getItem()));
         if(recipe == null)
             return false;
 
@@ -329,4 +272,36 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
         itemHandlers.values().forEach(LazyOptional::invalidate);
         super.invalidateCaps();
     }
+
+    @Override
+    public void load(BlockState state, CompoundNBT compound) {
+        reagentItem = ItemStack.of((CompoundNBT)compound.get("itemStack"));
+        baseMaterial = ItemStack.of((CompoundNBT)compound.get("baseMat"));
+        oldBaseMat = ItemStack.of((CompoundNBT)compound.get("oldBase"));
+        isCrafting = compound.getBoolean("crafting");
+        super.load(state, compound);
+    }
+
+    @Override
+    public CompoundNBT save(CompoundNBT compound) {
+        if(reagentItem != null) {
+            CompoundNBT reagentTag = new CompoundNBT();
+            reagentItem.save(reagentTag);
+            compound.put("itemStack", reagentTag);
+        }
+        if(baseMaterial != null){
+            CompoundNBT baseMatTag = new CompoundNBT();
+            baseMaterial.save(baseMatTag);
+            compound.put("baseMat", baseMatTag);
+        }
+
+        if(oldBaseMat != null){
+            CompoundNBT baseMatTag = new CompoundNBT();
+            oldBaseMat.save(baseMatTag);
+            compound.put("oldBase", baseMatTag);
+        }
+        compound.putBoolean("crafting", isCrafting);
+        return super.save(compound);
+    }
+
 }
