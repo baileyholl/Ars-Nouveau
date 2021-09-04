@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
@@ -76,11 +77,16 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.ITEM_STACK);
     public static final DataParameter<Boolean> TAMED = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.BOOLEAN);
     public static final DataParameter<String> COLOR = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.STRING);
+
     public int backOff; // Used to stop inventory store/take spam when chests are full or empty.
     public int tamingTime;
     public boolean isStuck;
     private int lastAABBCalc;
     private AxisAlignedBB cachedAAB;
+
+    public BlockPos jukeboxPos;
+    public boolean partyCarby;
+
     AnimationFactory manager = new AnimationFactory(this);
 
     public EntityCarbuncle(EntityType<EntityCarbuncle> entityCarbuncleEntityType, World world) {
@@ -99,6 +105,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     @Override
     public void registerControllers(AnimationData animationData) {
         animationData.addAnimationController(new AnimationController<>(this, "walkController", 1, this::animationPredicate));
+        animationData.addAnimationController(new AnimationController<>(this, "danceController", 1, this::dancePredicate));
     }
 
     @Override
@@ -112,7 +119,13 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             return false;
         return super.hurt(source, amount);
     }
-
+    private PlayState dancePredicate(AnimationEvent event) {
+        if (this.partyCarby && this.jukeboxPos != null && BlockUtil.distanceFrom(position, jukeboxPos) <= 8) {
+            event.getController().setAnimation(new AnimationBuilder().addAnimation("dance_master2"));
+            return PlayState.CONTINUE;
+        }
+        return PlayState.STOP;
+    }
 
     private PlayState animationPredicate(AnimationEvent event) {
         if (event.isMoving() || (level.isClientSide && PatchouliHandler.isPatchouliWorld())) {
@@ -263,6 +276,14 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
                 }
             }
         }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void setRecordPlayingNearby(BlockPos pos, boolean hasSound) {
+        super.setRecordPlayingNearby(pos, hasSound);
+        this.jukeboxPos = pos;
+        this.partyCarby = hasSound;
     }
 
     // Cannot add conditional goals in RegisterGoals as it is final and called during the MobEntity super.
