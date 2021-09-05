@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
 import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
 import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
-import net.minecraft.pathfinding.Path;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -24,7 +23,7 @@ public class TakeItemGoal extends ExtendedRangeGoal {
 
 
     public TakeItemGoal(EntityCarbuncle carbuncle){
-        super(15);
+        super(25);
         this.setFlags(EnumSet.of(Flag.MOVE));
         this.carbuncle = carbuncle;
     }
@@ -75,7 +74,10 @@ public class TakeItemGoal extends ExtendedRangeGoal {
     }
 
     public void setPath(double x, double y, double z, double speedIn){
-        carbuncle.getNavigation().tryMoveToBlockPos(new BlockPos(x, y, z), 1.0);
+        carbuncle.getNavigation().tryMoveToBlockPos(new BlockPos(x, y, z), 1.3);
+        if(carbuncle.getNavigation().getPath() != null && !carbuncle.getNavigation().getPath().canReach()) {
+            unreachable = true;
+        }
     }
 
     @Override
@@ -94,8 +96,7 @@ public class TakeItemGoal extends ExtendedRangeGoal {
         }
 
         if(takePos != null && carbuncle.getHeldStack().isEmpty()) {
-            setPath(takePos.getX(), takePos.getY(), takePos.getZ(), 1.2D);
-            super.tick();
+            setPath(takePos.getX(), takePos.getY(), takePos.getZ(), 1.3D);
         }
     }
 
@@ -106,6 +107,6 @@ public class TakeItemGoal extends ExtendedRangeGoal {
 
     @Override
     public boolean canUse() {
-        return !carbuncle.isStuck && carbuncle.getHeldStack() != null &&carbuncle.getHeldStack().isEmpty() && carbuncle.backOff == 0 && carbuncle.isTamed();
+        return !carbuncle.isStuck && carbuncle.getHeldStack() != null && carbuncle.getHeldStack().isEmpty() && carbuncle.backOff == 0 && carbuncle.isTamed();
     }
 }

@@ -35,8 +35,6 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.pathfinding.GroundPathNavigator;
-import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -100,6 +98,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         super(entityCarbuncleEntityType, world);
         maxUpStep = 1.2f;
         addGoalsAfterConstructor();
+        this.moveControl = new MovementHandler(this);
     }
 
     public EntityCarbuncle(World world, boolean tamed) {
@@ -107,7 +106,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         this.setTamed(tamed);
         maxUpStep = 1.2f;
         this.moveControl = new MovementHandler(this);
-
         addGoalsAfterConstructor();
     }
 
@@ -123,6 +121,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             this.pathNavigate.getPathingOptions().setEnterDoors(true);
             this.pathNavigate.getPathingOptions().setCanOpenDoors(true);
             this.pathNavigate.setStuckHandler(PathingStuckHandler.createStuckHandler().withTeleportOnFullStuck().withTeleportSteps(5));
+            this.pathNavigate.getPathingOptions().setCanFitInOneCube(true);
         }
         return pathNavigate;
     }
@@ -674,6 +673,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         for(BlockPos p : FROM_LIST){
             if(level.getBlockEntity(p) == null)
                 continue;
+
             IItemHandler iItemHandler = level.getBlockEntity(p).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
             if(iItemHandler == null)
                 continue;

@@ -25,7 +25,7 @@ public class StoreItemGoal extends ExtendedRangeGoal {
     boolean unreachable;
 
     public StoreItemGoal(EntityCarbuncle entityCarbuncle) {
-        super(15);
+        super(25);
         this.entityCarbuncle = entityCarbuncle;
         this.setFlags(EnumSet.of(Flag.MOVE));
     }
@@ -78,15 +78,16 @@ public class StoreItemGoal extends ExtendedRangeGoal {
         }
 
         if (storePos != null && !entityCarbuncle.getHeldStack().isEmpty()) {
-            setPath(storePos.getX(), storePos.getY(), storePos.getZ(), 1.2D);
+            setPath(storePos.getX(), storePos.getY(), storePos.getZ(), 1.3D);
         }
 
     }
 
     public void setPath(double x, double y, double z, double speedIn){
-        entityCarbuncle.getNavigation().tryMoveToBlockPos(new BlockPos(x, y, z), 1.0);
-        if(entityCarbuncle.getNavigation().getPath() != null && !entityCarbuncle.getNavigation().getPath().canReach())
+        entityCarbuncle.getNavigation().tryMoveToBlockPos(new BlockPos(x, y, z), 1.3);
+        if(entityCarbuncle.getNavigation().getPath() != null && !entityCarbuncle.getNavigation().getPath().canReach()) {
             unreachable = true;
+        }
     }
 
     @Override
