@@ -3,8 +3,9 @@ package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
-import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
+import com.hollingsworth.arsnouveau.common.entity.MoveToGoal;
 import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
+import net.minecraft.pathfinding.GroundPathNavigator;
 import net.minecraft.pathfinding.Path;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundEvents;
@@ -17,14 +18,14 @@ import net.minecraftforge.items.IItemHandler;
 
 import java.util.EnumSet;
 
-public class TakeItemGoal extends ExtendedRangeGoal {
+public class TakeItemGoal extends MoveToGoal {
     EntityCarbuncle carbuncle;
     BlockPos takePos;
     boolean unreachable;
 
 
     public TakeItemGoal(EntityCarbuncle carbuncle){
-        super(15);
+        super(carbuncle, 20);
         this.setFlags(EnumSet.of(Flag.MOVE));
         this.carbuncle = carbuncle;
     }
@@ -43,8 +44,10 @@ public class TakeItemGoal extends ExtendedRangeGoal {
         takePos = carbuncle.getValidTakePos();
         unreachable = false;
         if(carbuncle.isTamed() && takePos != null && carbuncle.getHeldStack().isEmpty()) {
+            Path path = carbuncle.getNavigation().createPath(takePos, 1);
+            GroundPathNavigator navigator = (GroundPathNavigator) carbuncle.getNavigation();
+            navigator.moveTo(path, 1.2D);
             startDistance = BlockUtil.distanceFrom(carbuncle.position, takePos);
-            setPath(takePos.getX(), takePos.getY(), takePos.getZ(), 1.2D);
         }
     }
 
@@ -58,9 +61,7 @@ public class TakeItemGoal extends ExtendedRangeGoal {
             return;
         for(int j = 0; j < iItemHandler.getSlots(); j++){
             if(!iItemHandler.getStackInSlot(j).isEmpty() && carbuncle.isValidItem( iItemHandler.getStackInSlot(j))){
-
                 carbuncle.setHeldStack(iItemHandler.extractItem(j, 64, false));
-
                 carbuncle.level.playSound(null, carbuncle.getX(),carbuncle.getY(), carbuncle.getZ(),
                         SoundEvents.ITEM_PICKUP, carbuncle.getSoundSource(),1.0F, 1.0F);
 
@@ -74,17 +75,10 @@ public class TakeItemGoal extends ExtendedRangeGoal {
         }
     }
 
-    public void setPath(double x, double y, double z, double speedIn){
-        Path path = carbuncle.getNavigation().createPath(x+0.5, y+1, z+0.5, 1);
-        if(path == null || !path.canReach())
-            unreachable = true;
-        carbuncle.getNavigation().moveTo( path, speedIn);
-    }
-
     @Override
     public void tick() {
         super.tick();
-        if(carbuncle.getHeldStack().isEmpty() && takePos != null && BlockUtil.distanceFrom(carbuncle.position(), takePos) <= 2d + this.extendedRange){
+        if(carbuncle.getHeldStack().isEmpty() && takePos != null && this.closeEnoughResetExtension(takePos, carbuncle.baseRange)){
             World world = carbuncle.level;
             TileEntity tileEntity = world.getBlockEntity(takePos);
             if(tileEntity == null)
@@ -97,18 +91,19 @@ public class TakeItemGoal extends ExtendedRangeGoal {
         }
 
         if(takePos != null && carbuncle.getHeldStack().isEmpty()) {
-            setPath(takePos.getX(), takePos.getY(), takePos.getZ(), 1.2D);
-            super.tick();
+            if(!moveTo(takePos, 1.2D)){
+                this.unreachable = true;
+            }
         }
     }
 
     @Override
     public boolean canContinueToUse() {
-        return !unreachable && !carbuncle.isStuck && carbuncle.getHeldStack() != null && carbuncle.getHeldStack().isEmpty() && carbuncle.backOff == 0 && carbuncle.isTamed() && takePos != null;
+        return !unreachable && !carbuncle.isStuck && carbuncle.getHeldStack().isEmpty() && carbuncle.backOff == 0 && carbuncle.isTamed() && takePos != null;
     }
 
     @Override
     public boolean canUse() {
-        return !carbuncle.isStuck && carbuncle.getHeldStack() != null &&carbuncle.getHeldStack().isEmpty() && carbuncle.backOff == 0 && carbuncle.isTamed();
+        return !carbuncle.isStuck &&carbuncle.getHeldStack().isEmpty() && carbuncle.backOff == 0 && carbuncle.isTamed();
     }
 }

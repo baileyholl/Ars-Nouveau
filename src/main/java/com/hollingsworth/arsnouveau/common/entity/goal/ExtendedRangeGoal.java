@@ -15,7 +15,6 @@ public class ExtendedRangeGoal extends Goal {
 
     @Override
     public void tick() {
-        super.tick();
         if(startDistance == 0) {
             extendedRange = 0.0;
             return;
@@ -27,22 +26,21 @@ public class ExtendedRangeGoal extends Goal {
         }
     }
 
-    public void reset(){
+    public void resetExtendedRange(){
         ticksRunning = 0;
         extendedRange = 0;
         startDistance = 0;
     }
 
+
     @Override
     public void start() {
-        super.start();
-        reset();
+        resetExtendedRange();
     }
 
     @Override
     public void stop() {
-        super.stop();
-        reset();
+        resetExtendedRange();
     }
 
 

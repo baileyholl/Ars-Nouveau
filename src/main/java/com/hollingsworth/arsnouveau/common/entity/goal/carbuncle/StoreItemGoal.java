@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
-import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
+import com.hollingsworth.arsnouveau.common.entity.MoveToGoal;
 import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.Path;
@@ -18,14 +18,14 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.EnumSet;
 
-public class StoreItemGoal extends ExtendedRangeGoal {
+public class StoreItemGoal extends MoveToGoal {
 
     private final EntityCarbuncle entityCarbuncle;
     BlockPos storePos;
     boolean unreachable;
 
     public StoreItemGoal(EntityCarbuncle entityCarbuncle) {
-        super(15);
+        super(entityCarbuncle,20);
         this.entityCarbuncle = entityCarbuncle;
         this.setFlags(EnumSet.of(Flag.MOVE));
     }
@@ -51,53 +51,51 @@ public class StoreItemGoal extends ExtendedRangeGoal {
     @Override
     public void tick() {
         super.tick();
-        if (!entityCarbuncle.getHeldStack().isEmpty() && storePos != null && BlockUtil.distanceFrom(entityCarbuncle.position(), storePos) <= 2D + this.extendedRange) {
+        if (!entityCarbuncle.getHeldStack().isEmpty() && storePos != null && closeEnoughResetExtension(storePos, entityCarbuncle.baseRange)) {
             this.entityCarbuncle.getNavigation().stop();
             World world = entityCarbuncle.level;
             TileEntity tileEntity = world.getBlockEntity(storePos);
-            if(tileEntity == null)
-                return;
-
-            IItemHandler iItemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
-            if (iItemHandler != null) {
-                ItemStack oldStack = new ItemStack(entityCarbuncle.getHeldStack().getItem(), entityCarbuncle.getHeldStack().getCount());
-
-                ItemStack left = ItemHandlerHelper.insertItemStacked(iItemHandler, entityCarbuncle.getHeldStack(), false);
-                if (left.equals(oldStack)) {
-                    return;
-                }
-                if (world instanceof ServerWorld) {
-                    OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), storePos, 20);
-                    event.open();
-                    EventQueue.getServerInstance().addEvent(event);
-                }
-                entityCarbuncle.setHeldStack(left);
-                entityCarbuncle.backOff = 5;
+            if(tileEntity == null) {
+                unreachable = true;
                 return;
             }
+
+            IItemHandler iItemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+            if(iItemHandler == null) {
+                unreachable = true;
+                return;
+            }
+
+            ItemStack oldStack = new ItemStack(entityCarbuncle.getHeldStack().getItem(), entityCarbuncle.getHeldStack().getCount());
+
+            ItemStack left = ItemHandlerHelper.insertItemStacked(iItemHandler, entityCarbuncle.getHeldStack(), false);
+            if (left.equals(oldStack)) {
+                return;
+            }
+            if (world instanceof ServerWorld) {
+                OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), storePos, 20);
+                event.open();
+                EventQueue.getServerInstance().addEvent(event);
+            }
+            entityCarbuncle.setHeldStack(left);
+            entityCarbuncle.backOff = 5;
+            return;
+
         }
 
-        if (storePos != null && !entityCarbuncle.getHeldStack().isEmpty()) {
-            setPath(storePos.getX(), storePos.getY(), storePos.getZ(), 1.2D);
+        if (storePos != null && !entityCarbuncle.getHeldStack().isEmpty() && !this.moveTo(storePos, 1.2D)) {
+            this.unreachable = true;
         }
 
-    }
-
-    public void setPath(double x, double y, double z, double speedIn){
-        Path path = entityCarbuncle.getNavigation().createPath(x+0.5, y+1, z+0.5, 1);
-        if(path == null || !path.canReach())
-            unreachable = true;
-
-        entityCarbuncle.getNavigation().moveTo(path, speedIn);
     }
 
     @Override
     public boolean canContinueToUse() {
-        return !unreachable && entityCarbuncle.isTamed() && entityCarbuncle.getHeldStack() != null && !entityCarbuncle.getHeldStack().isEmpty() && entityCarbuncle.backOff == 0 && storePos != null;
+        return !unreachable && entityCarbuncle.isTamed() && !entityCarbuncle.getHeldStack().isEmpty() && entityCarbuncle.backOff == 0 && storePos != null;
     }
 
     @Override
     public boolean canUse() {
-        return entityCarbuncle.isTamed() && entityCarbuncle.getHeldStack() != null && !entityCarbuncle.getHeldStack().isEmpty() && entityCarbuncle.backOff == 0;
+        return entityCarbuncle.isTamed() && !entityCarbuncle.getHeldStack().isEmpty() && entityCarbuncle.backOff == 0;
     }
 }

@@ -56,13 +56,14 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
 
 public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDispellable, ITooltipProvider, IWandable {
 
-
+    public double baseRange = 1.5D;
     private BlockPos fromPos;
     private BlockPos toPos;
     public List<ItemStack> allowedItems; // Items the carbuncle is allowed to take
@@ -104,8 +105,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         this.setupPathing();
     }
 
-    public void setupPathing(){
-        ((GroundPathNavigator)this.getNavigation()).setCanOpenDoors(true);
+    public void setupPathing() {
+        ((GroundPathNavigator) this.getNavigation()).setCanOpenDoors(true);
         setPathfindingMalus(PathNodeType.WATER, -1.0f);
     }
 
@@ -149,6 +150,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             return false;
         return super.hurt(source, amount);
     }
+
     private PlayState dancePredicate(AnimationEvent event) {
         if (this.partyCarby && this.jukeboxPos != null && BlockUtil.distanceFrom(position, jukeboxPos) <= 8) {
             event.getController().setAnimation(new AnimationBuilder().addAnimation("dance_master2"));
@@ -200,7 +202,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     @Override
     public void tick() {
         super.tick();
-        if(!level.isClientSide && level.getGameTime() % 10 == 0 && this.getName().getString().toLowerCase(Locale.ROOT).equals("jeb_")){
+        if (!level.isClientSide && level.getGameTime() % 10 == 0 && this.getName().getString().toLowerCase(Locale.ROOT).equals("jeb_")) {
             this.entityData.set(COLOR, carbyColors[level.random.nextInt(carbyColors.length)]);
         }
 
@@ -215,13 +217,13 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         Direction[] directions = Direction.values();
         if (this.getHeldStack().isEmpty() && !level.isClientSide) {
 
-                // Cannot use a single expanded bounding box because we don't want this to overlap with an adjacentt inventory that also has a frame.
+            // Cannot use a single expanded bounding box because we don't want this to overlap with an adjacentt inventory that also has a frame.
             for (ItemEntity itementity : this.level.getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(1))) {
                 if (itementity.isAlive() && !itementity.getItem().isEmpty() && !itementity.hasPickUpDelay()) {
                     if (!isTamed() && itementity.getItem().getItem() != Items.GOLD_NUGGET)
                         return;
                     this.pickUpItem(itementity);
-                    if(getHeldStack() != null && !getHeldStack().isEmpty())
+                    if (getHeldStack() != null && !getHeldStack().isEmpty())
                         break;
                 }
             }
@@ -283,7 +285,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
     public static AttributeModifierMap.MutableAttribute attributes() {
         return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 6.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.2d);
+                .add(Attributes.MOVEMENT_SPEED, 0.2d).add(Attributes.FOLLOW_RANGE, 48.0D);
     }
 
     @Override
@@ -292,13 +294,13 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             setHeldStack(itemEntity.getItem());
             itemEntity.remove();
             this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.ITEM_PICKUP, this.getSoundSource(), 1.0F, 1.0F);
-            if(!isTamed())
+            if (!isTamed())
                 return;
-            for(ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(3))){
-                if(itemEntity.getItem().getCount() >= itemEntity.getItem().getMaxStackSize())
+            for (ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, this.getBoundingBox().inflate(3))) {
+                if (itemEntity.getItem().getCount() >= itemEntity.getItem().getMaxStackSize())
                     break;
                 int maxTake = getHeldStack().getMaxStackSize() - getHeldStack().getCount();
-                if(i.getItem().sameItem(getHeldStack())){
+                if (i.getItem().sameItem(getHeldStack())) {
                     int toTake = Math.min(i.getItem().getCount(), maxTake);
                     i.getItem().shrink(toTake);
                     getHeldStack().grow(toTake);
@@ -386,8 +388,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         super.die(source);
     }
 
-    public AxisAlignedBB getAABB(){
-        if(cachedAAB == null || lastAABBCalc >= 60) {
+    public AxisAlignedBB getAABB() {
+        if (cachedAAB == null || lastAABBCalc >= 60) {
             cachedAAB = new AxisAlignedBB(blockPosition()).inflate(8);
             lastAABBCalc = 0;
         }
@@ -403,7 +405,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
         if (player.getMainHandItem().getItem().is(Tags.Items.DYES)) {
             DyeColor color = DyeColor.getColor(stack);
-            if(color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(carbyColors).contains(color.getName()))
+            if (color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(carbyColors).contains(color.getName()))
                 return ActionResultType.SUCCESS;
             this.entityData.set(COLOR, color.getName());
             player.getMainHandItem().shrink(1);
@@ -477,8 +479,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         this.setItemSlot(EquipmentSlotType.MAINHAND, stack);
     }
 
-    public ItemStack getHeldStack() {
-        return this.getMainHandItem();
+    public @Nonnull ItemStack getHeldStack() {
+        return getMainHandItem();
     }
 
     @Override
@@ -509,27 +511,27 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         TO_LIST = new ArrayList<>();
         int counter = 0;
 
-        while(NBTUtil.hasBlockPos(tag, "from_" + counter)){
+        while (NBTUtil.hasBlockPos(tag, "from_" + counter)) {
             BlockPos pos = NBTUtil.getBlockPos(tag, "from_" + counter);
-            if(!this.FROM_LIST.contains(pos))
+            if (!this.FROM_LIST.contains(pos))
                 this.FROM_LIST.add(pos);
             counter++;
         }
 
         counter = 0;
-        while(NBTUtil.hasBlockPos(tag, "to_" + counter)){
+        while (NBTUtil.hasBlockPos(tag, "to_" + counter)) {
             BlockPos pos = NBTUtil.getBlockPos(tag, "to_" + counter);
-            if(!this.TO_LIST.contains(pos))
+            if (!this.TO_LIST.contains(pos))
                 this.TO_LIST.add(pos);
             counter++;
         }
 
         BlockPos oldToPos = NBTUtil.getBlockPos(tag, "to");
-        if(!oldToPos.equals(new BlockPos(0, 0, 0)) && !TO_LIST.contains(oldToPos))
+        if (!oldToPos.equals(new BlockPos(0, 0, 0)) && !TO_LIST.contains(oldToPos))
             TO_LIST.add(oldToPos);
         //setToPos(NBTUtil.getBlockPos(tag, "to"));
         BlockPos oldFromPos = NBTUtil.getBlockPos(tag, "from");
-        if(!oldFromPos.equals(new BlockPos(0, 0, 0)) && !FROM_LIST.contains(oldFromPos))
+        if (!oldFromPos.equals(new BlockPos(0, 0, 0)) && !FROM_LIST.contains(oldFromPos))
             FROM_LIST.add(oldFromPos);
 
         backOff = tag.getInt("backoff");
@@ -553,7 +555,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             this.entityData.set(COLOR, tag.getString("color"));
 
         this.entityData.set(TO_POS, TO_LIST.size());
-       this.entityData.set(FROM_POS, FROM_LIST.size());
+        this.entityData.set(FROM_POS, FROM_LIST.size());
     }
 
 
@@ -567,14 +569,14 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         }
 
         int counter = 0;
-        for(BlockPos p : FROM_LIST){
-            NBTUtil.storeBlockPos(tag, "from_" +counter, p);
+        for (BlockPos p : FROM_LIST) {
+            NBTUtil.storeBlockPos(tag, "from_" + counter, p);
             counter++;
         }
         counter = 0;
-        for(BlockPos p : TO_LIST){
-            NBTUtil.storeBlockPos(tag, "to_" +counter, p);
-            counter ++;
+        for (BlockPos p : TO_LIST) {
+            NBTUtil.storeBlockPos(tag, "to_" + counter, p);
+            counter++;
         }
         tag.putInt("backoff", backOff);
         tag.putBoolean("tamed", this.entityData.get(TAMED));
@@ -597,7 +599,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     @Override
     public List<String> getTooltip() {
         List<String> toolTip = new ArrayList<>();
-        if(!isTamed())
+        if (!isTamed())
             return toolTip;
         toolTip.add(new TranslationTextComponent("ars_nouveau.carbuncle.storing", this.entityData.get(TO_POS)).getString());
         toolTip.add(new TranslationTextComponent("ars_nouveau.carbuncle.taking", this.entityData.get(FROM_POS)).getString());
@@ -611,12 +613,12 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             return ItemScroll.SortPref.INVALID;
 
         IItemHandler handler = tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
-        if(handler == null)
+        if (handler == null)
             return ItemScroll.SortPref.INVALID;
         for (ItemFrameEntity i : level.getEntitiesOfClass(ItemFrameEntity.class, new AxisAlignedBB(tile.getBlockPos()).inflate(1))) {
             // Check if these frames are attached to the tile
             TileEntity adjTile = level.getBlockEntity(i.blockPosition().relative(i.getDirection().getOpposite()));
-            if(adjTile == null || !adjTile.equals(tile))
+            if (adjTile == null || !adjTile.equals(tile))
                 continue;
 
             if (i.getItem().isEmpty())
@@ -624,12 +626,12 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
             ItemStack stackInFrame = i.getItem();
 
-            if(stackInFrame.getItem() instanceof ItemScroll){
+            if (stackInFrame.getItem() instanceof ItemScroll) {
                 pref = ((ItemScroll) stackInFrame.getItem()).getSortPref(stack, stackInFrame.getOrCreateTag(), handler);
                 // If our item frame just contains a normal item
-            }else if (i.getItem().getItem() != stack.getItem()) {
+            } else if (i.getItem().getItem() != stack.getItem()) {
                 return ItemScroll.SortPref.INVALID;
-            }else if(i.getItem().getItem() == stack.getItem()) {
+            } else if (i.getItem().getItem() == stack.getItem()) {
                 pref = ItemScroll.SortPref.HIGHEST;
             }
         }
@@ -641,15 +643,15 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         return 0;
     }
 
-    public BlockPos getValidStorePos(ItemStack stack){
+    public BlockPos getValidStorePos(ItemStack stack) {
         BlockPos returnPos = null;
-        if(TO_LIST == null)
+        if (TO_LIST == null)
             return returnPos;
         ItemScroll.SortPref foundPref = ItemScroll.SortPref.INVALID;
-        for(BlockPos b : TO_LIST){
+        for (BlockPos b : TO_LIST) {
             ItemScroll.SortPref pref = canDepositItem(level.getBlockEntity(b), stack);
             // Pick our highest priority
-            if(pref.ordinal() > foundPref.ordinal()){
+            if (pref.ordinal() > foundPref.ordinal()) {
                 foundPref = pref;
                 returnPos = b;
             }
@@ -657,18 +659,18 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         return returnPos;
     }
 
-    public BlockPos getValidTakePos(){
-        if(FROM_LIST == null)
+    public BlockPos getValidTakePos() {
+        if (FROM_LIST == null)
             return null;
 
-        for(BlockPos p : FROM_LIST){
-            if(level.getBlockEntity(p) == null)
+        for (BlockPos p : FROM_LIST) {
+            if (level.getBlockEntity(p) == null)
                 continue;
             IItemHandler iItemHandler = level.getBlockEntity(p).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
-            if(iItemHandler == null)
+            if (iItemHandler == null)
                 continue;
-            for(int j = 0; j < iItemHandler.getSlots(); j++){
-                if(!iItemHandler.getStackInSlot(j).isEmpty() && isValidItem( iItemHandler.getStackInSlot(j)) && getValidStorePos(iItemHandler.getStackInSlot(j)) != null){
+            for (int j = 0; j < iItemHandler.getSlots(); j++) {
+                if (!iItemHandler.getStackInSlot(j).isEmpty() && isValidItem(iItemHandler.getStackInSlot(j)) && getValidStorePos(iItemHandler.getStackInSlot(j)) != null) {
                     return p;
                 }
             }
@@ -686,41 +688,41 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         return true;
     }
 
-    public boolean isValidItem(ItemStack stack){
+    public boolean isValidItem(ItemStack stack) {
 
-        if(!isTamed() && stack.getItem() == Items.GOLD_NUGGET)
+        if (!isTamed() && stack.getItem() == Items.GOLD_NUGGET)
             return true;
 
-        if(getValidStorePos(stack) == null) {
+        if (getValidStorePos(stack) == null) {
             return false;
         }
 
-        if(!whitelist && !blacklist)
+        if (!whitelist && !blacklist)
             return true;
-        if(whitelist){
-            for(ItemStack s : allowedItems) {
+        if (whitelist) {
+            for (ItemStack s : allowedItems) {
                 if (s.sameItem(stack)) {
                     return true;
                 }
             }
             return false;
         }
-        if(blacklist){
-            for(ItemStack s : ignoreItems)
-                if(s.sameItem(stack))
+        if (blacklist) {
+            for (ItemStack s : ignoreItems)
+                if (s.sameItem(stack))
                     return false;
         }
         return true;
     }
 
     public void setFromPos(BlockPos fromPos) {
-        if(!this.FROM_LIST.contains(fromPos))
+        if (!this.FROM_LIST.contains(fromPos))
             this.FROM_LIST.add(fromPos.immutable());
         this.entityData.set(FROM_POS, FROM_LIST.size());
     }
 
     public void setToPos(BlockPos toPos) {
-        if(!this.TO_LIST.contains(toPos))
+        if (!this.TO_LIST.contains(toPos))
             this.TO_LIST.add(toPos.immutable());
         this.entityData.set(TO_POS, TO_LIST.size());
     }

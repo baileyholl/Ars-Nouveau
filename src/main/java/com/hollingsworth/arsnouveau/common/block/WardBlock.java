@@ -39,7 +39,7 @@ public class WardBlock extends ModBlock {
     @Nullable
     @Override
     public PathNodeType getAiPathNodeType(BlockState state, IBlockReader world, BlockPos pos, @Nullable MobEntity entity) {
-        return PathNodeType.LAVA;
+        return PathNodeType.DAMAGE_CACTUS;
     }
 
 
@@ -77,17 +77,4 @@ public class WardBlock extends ModBlock {
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.FACING);
     }
-//
-//    @Override
-//    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-//        builder.add( FACING);
-//    }
-//
-//    public BlockState getStateForPlacement(BlockItemUseContext context) {
-//        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().rotateY());
-//    }
-//
-//    public BlockState rotate(BlockState state, Rotation rot) {
-//        return state.with(FACING, rot.rotate(state.get(FACING)));
-//    }
 }
