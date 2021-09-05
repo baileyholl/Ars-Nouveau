@@ -84,11 +84,9 @@ public class StoreItemGoal extends ExtendedRangeGoal {
     }
 
     public void setPath(double x, double y, double z, double speedIn){
-        Path path = entityCarbuncle.getNavigation().createPath(x+0.5, y+1, z+0.5, 1);
-        if(path == null || !path.canReach())
+        entityCarbuncle.getNavigation().tryMoveToBlockPos(new BlockPos(x, y, z), 1.0);
+        if(entityCarbuncle.getNavigation().getPath() != null && !entityCarbuncle.getNavigation().getPath().canReach())
             unreachable = true;
-
-        entityCarbuncle.getNavigation().moveTo(path, speedIn);
     }
 
     @Override

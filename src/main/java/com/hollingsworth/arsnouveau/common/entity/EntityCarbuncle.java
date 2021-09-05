@@ -9,6 +9,10 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
 import com.hollingsworth.arsnouveau.common.entity.goal.GetUnstuckGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.*;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.AbstractAdvancedPathNavigate;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.MinecoloniesAdvancedPathNavigate;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.MovementHandler;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.PathingStuckHandler;
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
@@ -71,6 +75,9 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     public boolean blacklist;
     public List<BlockPos> TO_LIST = new ArrayList<>();
     public List<BlockPos> FROM_LIST = new ArrayList<>();
+
+    private AbstractAdvancedPathNavigate pathNavigate;
+
     public static final DataParameter<Integer> TO_POS = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.INT);
     public static final DataParameter<Integer> FROM_POS = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.INT);
 
@@ -93,20 +100,31 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         super(entityCarbuncleEntityType, world);
         maxUpStep = 1.2f;
         addGoalsAfterConstructor();
-        this.setupPathing();
     }
 
     public EntityCarbuncle(World world, boolean tamed) {
         super(ModEntities.ENTITY_CARBUNCLE_TYPE, world);
         this.setTamed(tamed);
         maxUpStep = 1.2f;
+        this.moveControl = new MovementHandler(this);
+
         addGoalsAfterConstructor();
-        this.setupPathing();
     }
 
-    public void setupPathing(){
-        ((GroundPathNavigator)this.getNavigation()).setCanOpenDoors(true);
-        setPathfindingMalus(PathNodeType.WATER, -1.0f);
+    @Override
+    public AbstractAdvancedPathNavigate getNavigation()
+    {
+        if (this.pathNavigate == null)
+        {
+            this.pathNavigate = new MinecoloniesAdvancedPathNavigate(this, this.level);
+            this.navigation = pathNavigate;
+            this.pathNavigate.setCanFloat(true);
+            this.pathNavigate.setSwimSpeedFactor(2.0);
+            this.pathNavigate.getPathingOptions().setEnterDoors(true);
+            this.pathNavigate.getPathingOptions().setCanOpenDoors(true);
+            this.pathNavigate.setStuckHandler(PathingStuckHandler.createStuckHandler().withTeleportOnFullStuck().withTeleportSteps(5));
+        }
+        return pathNavigate;
     }
 
     @Override
@@ -122,14 +140,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     @Override
     public boolean canCutCorner(PathNodeType nodeType) {
         return super.canCutCorner(nodeType);
-    }
-
-    @Override
-    public PathNavigator getNavigation() {
-        PathNavigator navigator = super.getNavigation();
-        navigator.getNodeEvaluator().setCanOpenDoors(true);
-        navigator.getNodeEvaluator().setCanPassDoors(true);
-        return navigator;
     }
 
     @Override
