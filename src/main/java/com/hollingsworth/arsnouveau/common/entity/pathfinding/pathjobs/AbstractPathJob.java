@@ -1226,8 +1226,9 @@ public abstract class AbstractPathJob implements Callable<Path>
         {
             localPos = pos.above();
         }
-
-        if (!isPassable(pos.above(), true, parent))
+      //  System.out.println(pos.above());
+        boolean isSmall = pathingOptions.canFitInOneCube();
+        if (isSmall ? !isPassable(pos, true, parent) : !isPassable(pos.above(), true, parent))
         {
             final VoxelShape bb1 = world.getBlockState(pos.below()).getCollisionShape(world, pos.below());
             final VoxelShape bb2 = world.getBlockState(pos.above()).getCollisionShape(world, pos.above());

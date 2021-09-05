@@ -19,10 +19,7 @@ public abstract class AbstractAdvancedPathNavigate extends GroundPathNavigator
      */
     private com.hollingsworth.arsnouveau.common.entity.pathfinding.PathingOptions pathingOptions = new com.hollingsworth.arsnouveau.common.entity.pathfinding.PathingOptions();
 
-    public AbstractAdvancedPathNavigate(
-      final MobEntity entityLiving,
-      final World worldIn)
-    {
+    public AbstractAdvancedPathNavigate(final MobEntity entityLiving, final World worldIn) {
         super(entityLiving, worldIn);
         this.ourEntity = mob;
     }

@@ -62,6 +62,8 @@ public class PathingOptions
      */
     private boolean canOpenDoors = false;
 
+    private boolean canFitInOneCube = false;
+
     public PathingOptions()
     {}
 
@@ -103,6 +105,14 @@ public class PathingOptions
     public void setEnterDoors(final boolean enterDoors)
     {
         this.enterDoors = enterDoors;
+    }
+
+    public void setCanFitInOneCube(final boolean canFitInOneCube){
+        this.canFitInOneCube = false;
+    }
+
+    public boolean canFitInOneCube(){
+        return this.canFitInOneCube;
     }
 
     public PathingOptions withStartSwimCost(final double startSwimCost)
