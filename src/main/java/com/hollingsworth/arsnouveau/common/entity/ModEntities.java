@@ -33,7 +33,7 @@ public class ModEntities {
     public static EntityType<EntityEvokerFangs> ENTITY_EVOKER_FANGS_ENTITY_TYPE = null;
     public static EntityType<EntityBookwyrm> ENTITY_BOOKWYRM_TYPE = null;
     public static EntityType<EntityCarbuncle> ENTITY_CARBUNCLE_TYPE = build("carbuncle", EntityType.Builder.<EntityCarbuncle>of(EntityCarbuncle::new, EntityClassification.CREATURE)
-            .sized(0.7F, 0.63F).setTrackingRange(10)
+            .sized(0.6F, 0.63F).setTrackingRange(10)
             .setShouldReceiveVelocityUpdates(true));;
     public static EntityType<EntityFollowProjectile> ENTITY_FOLLOW_PROJ = null;
     public static EntityType<EntitySylph> ENTITY_SYLPH_TYPE = build("sylph", EntityType.Builder.<EntitySylph>of(EntitySylph::new, EntityClassification.CREATURE)

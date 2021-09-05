@@ -17,10 +17,7 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.PrioritizedGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
+import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.item.ItemFrameEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -34,6 +31,9 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.pathfinding.GroundPathNavigator;
+import net.minecraft.pathfinding.PathNavigator;
+import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -93,6 +93,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         super(entityCarbuncleEntityType, world);
         maxUpStep = 1.2f;
         addGoalsAfterConstructor();
+        this.setupPathing();
     }
 
     public EntityCarbuncle(World world, boolean tamed) {
@@ -100,6 +101,35 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         this.setTamed(tamed);
         maxUpStep = 1.2f;
         addGoalsAfterConstructor();
+        this.setupPathing();
+    }
+
+    public void setupPathing(){
+        ((GroundPathNavigator)this.getNavigation()).setCanOpenDoors(true);
+        setPathfindingMalus(PathNodeType.WATER, -1.0f);
+    }
+
+    @Override
+    public void setPathfindingMalus(PathNodeType nodeType, float value) {
+        super.setPathfindingMalus(nodeType, value);
+    }
+
+    @Override
+    public float getPathfindingMalus(PathNodeType nodeType) {
+        return super.getPathfindingMalus(nodeType);
+    }
+
+    @Override
+    public boolean canCutCorner(PathNodeType nodeType) {
+        return super.canCutCorner(nodeType);
+    }
+
+    @Override
+    public PathNavigator getNavigation() {
+        PathNavigator navigator = super.getNavigation();
+        navigator.getNodeEvaluator().setCanOpenDoors(true);
+        navigator.getNodeEvaluator().setCanPassDoors(true);
+        return navigator;
     }
 
     @Override
@@ -170,7 +200,6 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     @Override
     public void tick() {
         super.tick();
-
         if(!level.isClientSide && level.getGameTime() % 10 == 0 && this.getName().getString().toLowerCase(Locale.ROOT).equals("jeb_")){
             this.entityData.set(COLOR, carbyColors[level.random.nextInt(carbyColors.length)]);
         }
@@ -330,6 +359,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         list.add(new PrioritizedGoal(8, new LookAtGoal(this, PlayerEntity.class, 3.0F, 0.01F)));
         list.add(new PrioritizedGoal(8, new NonHoggingLook(this, MobEntity.class, 3.0F, 0.01f)));
         list.add(new PrioritizedGoal(0, new SwimGoal(this)));
+        list.add(new PrioritizedGoal(1, new OpenDoorGoal(this, true)));
+//        list.add(new PrioritizedGoal(1, new OpenTrapdoorGoal(this, true)));
         return list;
     }
 

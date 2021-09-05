@@ -128,13 +128,17 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+    maven {
+        name 'LDTTeam - Modding'
+        url 'https://ldtteam.jfrog.io/ldtteam/modding/'
+    }
     maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
     jcenter()
     mavenCentral()
 }
 dependencies {
 
-    minecraft 'net.minecraftforge:forge:1.16.5-36.1.62'
+    minecraft 'net.minecraftforge:forge:1.16.5-36.2.4'
     runtimeOnly fg.deobf("curse.maven:exp-406201:3419814") //Blame
     runtimeOnly fg.deobf("curse.maven:exp-248787:3395800")  // Appleskin
     runtimeOnly fg.deobf("curse.maven:exp-407174:3188120")  // Shutup experimental settings
@@ -147,7 +151,7 @@ dependencies {
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50")
     compileOnly fg.deobf("mezz.jei:jei-1.16.2:7.3.2.25:api")
     runtimeOnly fg.deobf("mezz.jei:jei-1.16.2:7.3.2.25")
-
+//    runtimeOnly fg.deobf("curse.maven:exp-449945:3429057")  // Per viam invenire
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.1.0:api")
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.1.0")
     implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.16.5:3.0.45')
