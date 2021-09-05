@@ -75,10 +75,7 @@ public class TakeItemGoal extends ExtendedRangeGoal {
     }
 
     public void setPath(double x, double y, double z, double speedIn){
-        Path path = carbuncle.getNavigation().createPath(x+0.5, y+1, z+0.5, 1);
-        if(path == null || !path.canReach())
-            unreachable = true;
-        carbuncle.getNavigation().moveTo( path, speedIn);
+        carbuncle.getNavigation().tryMoveToBlockPos(new BlockPos(x, y, z), 1.0);
     }
 
     @Override
