@@ -1,0 +1,12 @@
+{
+  "type": "ars_nouveau:dungeon",
+  "generator": {
+    "type": "minecraft:noise",
+    "seed": 0,
+    "settings": "ars_nouveau:none",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "ars_nouveau:none"
+    }
+  }
+}
