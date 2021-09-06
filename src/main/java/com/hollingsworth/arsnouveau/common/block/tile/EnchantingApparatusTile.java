@@ -226,7 +226,10 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
         attemptCraft(this.catalystItem, null);
     }
 
-
+    @Override
+    public int getMaxStackSize() {
+        return 1;
+    }
 
     @Override
     public boolean stillValid(PlayerEntity player) {
