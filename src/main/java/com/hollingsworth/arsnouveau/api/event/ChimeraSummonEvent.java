@@ -96,11 +96,12 @@ public class ChimeraSummonEvent implements ITimedEvent {
     }
 
     @Override
-    public void serialize(CompoundNBT tag) {
+    public CompoundNBT serialize(CompoundNBT tag) {
         ITimedEvent.super.serialize(tag);
         tag.putInt("duration", duration);
         tag.putInt("phase", phase);
         NBTUtil.storeBlockPos(tag, "loc", pos);
+        return tag;
     }
 
     public static final String ID = "chimera";

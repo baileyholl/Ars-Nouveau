@@ -37,6 +37,7 @@ public class EarthquakeEvent implements ITimedEvent {
 
     @Override
     public void tick(boolean serverSide) {
+
 //        counter += 2;
 //        if(counter >= posList.size())
 //            counter = posList.size();

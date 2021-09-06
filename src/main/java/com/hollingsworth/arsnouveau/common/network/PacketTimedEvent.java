@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.api.event.ChimeraSummonEvent;
 import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
+import com.hollingsworth.arsnouveau.common.event.timed.EruptionEvent;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -47,5 +48,6 @@ public class PacketTimedEvent {
 
     static{
         methodMap.put(ChimeraSummonEvent.ID, (nbt) -> ChimeraSummonEvent.get(nbt).onPacketHandled());
+        methodMap.put(EruptionEvent.ID, (nbt) -> EruptionEvent.get(nbt).onPacketHandled());
     }
 }

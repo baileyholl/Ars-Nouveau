@@ -15,10 +15,11 @@ public interface ITimedEvent {
     boolean isExpired();
 
     // Methods for sending a timed event as a packet to the client side
-    default void serialize(CompoundNBT tag){
+    default CompoundNBT serialize(CompoundNBT tag){
         if(getID().isEmpty())
             throw new IllegalStateException("Serialize without ID");
         tag.putString("id", getID());
+        return tag;
     }
 
 
