@@ -123,6 +123,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             this.pathNavigate.getPathingOptions().setCanOpenDoors(true);
             this.pathNavigate.setStuckHandler(PathingStuckHandler.createStuckHandler().withTeleportOnFullStuck().withTeleportSteps(5));
             this.pathNavigate.getPathingOptions().setCanFitInOneCube(true);
+            this.pathNavigate.getPathingOptions().onPathCost = 0.0D;
         }
         return pathNavigate;
     }

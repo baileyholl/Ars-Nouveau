@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.entity.pathfinding.PathingOptions;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ChunkCache;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.Node;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.PathPointExtended;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
@@ -967,7 +968,7 @@ public abstract class AbstractPathJob implements Callable<Path>
         }
 
         final boolean swimStart = isSwimming && !parent.isSwimming();
-        final boolean onRoad = false; // todo here you want to check for a special block to follow.
+        final boolean onRoad = world.getBlockState(pos.below()).getBlock() == BlockRegistry.AB_SMOOTH; // todo here you want to check for a special block to follow.
         final boolean onRails = pathingOptions.canUseRails() && world.getBlockState(corner ? pos.below() : pos).getBlock() instanceof AbstractRailBlock;
         final boolean railsExit = !onRails && parent != null && parent.isOnRails();
         //  Cost may have changed due to a jump up or drop
