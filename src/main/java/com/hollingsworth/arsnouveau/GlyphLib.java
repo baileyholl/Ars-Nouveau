@@ -80,4 +80,6 @@ public class GlyphLib {
     public static final String EffectBounceID = "bounce";
     public static final String EffectSummonUndead = "summon_undead";
     public static final String EffectEvaporate = "evaporate";
+
+    public static final String MethodLingeringID = "lingering";
 }
