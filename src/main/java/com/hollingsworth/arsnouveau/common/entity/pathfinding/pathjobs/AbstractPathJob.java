@@ -630,7 +630,7 @@ public abstract class AbstractPathJob implements Callable<Path>
 
     private void handleDebugOptions(final Node currentNode)
     {
-        if (debugDrawEnabled)
+        if (debugDrawEnabled && debugNodesNotVisited != null && debugNodesVisited != null && currentNode != null)
         {
             addNodeToDebug(currentNode);
         }

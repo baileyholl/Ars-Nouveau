@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.command.arguments.EntityAnchorArgument;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.item.ItemStack;
-import net.minecraft.pathfinding.Path;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -65,8 +64,7 @@ public class ForageManaBerries extends Goal {
         }
 
         if(BlockUtil.distanceFrom(entity.position, pos) >= 2.0){
-            Path path = entity.getNavigation().createPath(pos, 0);
-            entity.getNavigation().moveTo(path, 1.2D);
+            entity.getNavigation().tryMoveToBlockPos(pos, 1.3);
         }else if(world.getBlockState(pos).getBlock() instanceof ManaBerryBush){
             int i = world.getBlockState(pos).getValue(AGE);
             boolean flag = i == 3;
@@ -83,8 +81,9 @@ public class ForageManaBerries extends Goal {
     public boolean canContinueToUse() {
         if(pos == null)
             return false;
-        Path path = entity.getNavigation().createPath(pos, 0);
-        return timeSpent <= 20 * 30 && !entity.isStuck && world.getBlockState(pos).getBlock() instanceof ManaBerryBush && world.getBlockState(pos).getValue(AGE) == 3 && path != null && path.canReach();
+      //  entity.getNavigation().tryMoveToBlockPos(pos, 1.3);
+       //Path path = entity.getNavigation().createPath(pos, 0)=
+        return timeSpent <= 20 * 30 && !entity.isStuck && world.getBlockState(pos).getBlock() instanceof ManaBerryBush && world.getBlockState(pos).getValue(AGE) == 3;
     }
 
     public BlockPos getNearbyManaBerry(){

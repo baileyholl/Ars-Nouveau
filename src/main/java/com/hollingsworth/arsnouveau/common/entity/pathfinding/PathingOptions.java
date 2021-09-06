@@ -108,7 +108,7 @@ public class PathingOptions
     }
 
     public void setCanFitInOneCube(final boolean canFitInOneCube){
-        this.canFitInOneCube = false;
+        this.canFitInOneCube = canFitInOneCube;
     }
 
     public boolean canFitInOneCube(){

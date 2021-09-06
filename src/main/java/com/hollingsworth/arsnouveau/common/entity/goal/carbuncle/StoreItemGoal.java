@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
 import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
 import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
 import net.minecraft.item.ItemStack;
-import net.minecraft.pathfinding.Path;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -42,8 +41,7 @@ public class StoreItemGoal extends ExtendedRangeGoal {
         super.start();
         storePos = entityCarbuncle.getValidStorePos(entityCarbuncle.getHeldStack());
         if (storePos!= null && !entityCarbuncle.getHeldStack().isEmpty()) {
-            Path path = entityCarbuncle.getNavigation().createPath(storePos, 1);
-            entityCarbuncle.getNavigation().moveTo(path, 1.2D);
+            entityCarbuncle.getNavigation().tryMoveToBlockPos(storePos, 1.3);
             startDistance = BlockUtil.distanceFrom(entityCarbuncle.position, storePos);
         }
     }
@@ -78,7 +76,10 @@ public class StoreItemGoal extends ExtendedRangeGoal {
         }
 
         if (storePos != null && !entityCarbuncle.getHeldStack().isEmpty()) {
-            setPath(storePos.getX(), storePos.getY(), storePos.getZ(), 1.3D);
+          //  BlockPos destPos = BlockUtil.scanForBlockNearPoint(entityCarbuncle.level, storePos, 3,3,3,2);
+//            System.out.println(destPos);
+//            if(destPos != null)
+                setPath(storePos.getX(), storePos.getY(), storePos.getZ(), 1.3D);
         }
 
     }

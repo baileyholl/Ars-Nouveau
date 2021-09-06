@@ -5,12 +5,10 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-
 import net.minecraft.fluid.FluidState;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.TileEntity;
-
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
@@ -155,6 +153,93 @@ public class BlockUtil {
             }
         }
         return stack;
+    }
+
+    /**
+     * Find the closest block near the points.
+     *
+     * @param world   the world.
+     * @param point   the point where to search.
+     * @param radiusX x search distance.
+     * @param radiusY y search distance.
+     * @param radiusZ z search distance.
+     * @param height  check if blocks above the found block are air or block.
+     * @return the coordinates of the found block.
+     */
+    @Nullable
+    public static BlockPos scanForBlockNearPoint(final World world, final BlockPos point, final int radiusX, final int radiusY, final int radiusZ, final int height)
+    {
+        @Nullable BlockPos closestCoords = null;
+        double minDistance = Double.MAX_VALUE;
+
+        for (int j = point.getY(); j <= point.getY() + radiusY; j++)
+        {
+            for (int i = point.getX() - radiusX; i <= point.getX() + radiusX; i++)
+            {
+                for (int k = point.getZ() - radiusZ; k <= point.getZ() + radiusZ; k++)
+                {
+                    if (wontSuffocate(world, i, j, k, height))
+                    {
+                        BlockPos tempCoords = new BlockPos(i, j, k);
+
+                        if (world.getBlockState(tempCoords.below()).getMaterial().isSolid() || world.getBlockState(tempCoords.below(2)).getMaterial().isSolid())
+                        {
+                            final double distance = getDistanceSquared(tempCoords, point);
+                            if (closestCoords == null || distance < minDistance)
+                            {
+                                closestCoords = tempCoords;
+                                minDistance = distance;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return closestCoords;
+    }
+    /**
+     * Checks if the blocks above that point are all non-motion blocking
+     *
+     * @param world  the world we check on.
+     * @param x      the x coordinate.
+     * @param y      the y coordinate.
+     * @param z      the z coordinate.
+     * @param height the number of blocks above to check.
+     * @return true if no blocks block motion
+     */
+    private static boolean wontSuffocate(World world, final int x, final int y, final int z, final int height) {
+        for (int dy = 0; dy < height; dy++)
+        {
+            final BlockState state = world.getBlockState(new BlockPos(x, y + dy, z));
+            if (state.getMaterial().blocksMotion())
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    /**
+     * Squared distance between two BlockPos.
+     *
+     * @param block1 position one.
+     * @param block2 position two.
+     * @return squared distance.
+     */
+    public static long getDistanceSquared(BlockPos block1, BlockPos block2)
+    {
+        final long xDiff = (long) block1.getX() - block2.getX();
+        final long yDiff = (long) block1.getY() - block2.getY();
+        final long zDiff = (long) block1.getZ() - block2.getZ();
+
+        final long result = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff;
+        if (result < 0)
+        {
+            throw new IllegalStateException("max-sqrt is to high! Failure to catch overflow with "
+                    + xDiff + " | " + yDiff + " | " + zDiff);
+        }
+        return result;
     }
 
     private BlockUtil(){};

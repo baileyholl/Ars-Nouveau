@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
+import com.hollingsworth.arsnouveau.common.entity.goal.AvoidEntityGoalMC;
 import com.hollingsworth.arsnouveau.common.entity.goal.GetUnstuckGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.*;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.AbstractAdvancedPathNavigate;
@@ -96,7 +97,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
     public EntityCarbuncle(EntityType<EntityCarbuncle> entityCarbuncleEntityType, World world) {
         super(entityCarbuncleEntityType, world);
-        maxUpStep = 1.2f;
+        maxUpStep = 2f;
         addGoalsAfterConstructor();
         this.moveControl = new MovementHandler(this);
     }
@@ -104,7 +105,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     public EntityCarbuncle(World world, boolean tamed) {
         super(ModEntities.ENTITY_CARBUNCLE_TYPE, world);
         this.setTamed(tamed);
-        maxUpStep = 1.2f;
+        maxUpStep = 2f;
         this.moveControl = new MovementHandler(this);
         addGoalsAfterConstructor();
     }
@@ -221,7 +222,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             this.backOff--;
         if (this.dead)
             return;
-        Direction[] directions = Direction.values();
+
         if (this.getHeldStack().isEmpty() && !level.isClientSide) {
 
                 // Cannot use a single expanded bounding box because we don't want this to overlap with an adjacentt inventory that also has a frame.
@@ -378,8 +379,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         list.add(new PrioritizedGoal(1, new FindItem(this)));
         list.add(new PrioritizedGoal(4, new LookAtGoal(this, PlayerEntity.class, 3.0F, 0.02F)));
         list.add(new PrioritizedGoal(4, new LookAtGoal(this, MobEntity.class, 8.0F)));
-        list.add(new PrioritizedGoal(3, new WaterAvoidingRandomWalkingGoal(this, 1.0D)));
-        list.add(new PrioritizedGoal(2, new AvoidPlayerUntamedGoal(this, PlayerEntity.class, 16.0F, 1.6D, 1.4D)));
+        list.add(new PrioritizedGoal(3, new WaterAvoidingRandomWalkingGoal(this, 1.2D)));
+        list.add(new PrioritizedGoal(2, new AvoidEntityGoalMC<>(this, PlayerEntity.class, 16.0F, 2.0D, 1.2D)));
         list.add(new PrioritizedGoal(0, new SwimGoal(this)));
         return list;
     }
