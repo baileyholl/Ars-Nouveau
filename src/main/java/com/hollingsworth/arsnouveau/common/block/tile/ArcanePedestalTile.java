@@ -45,6 +45,11 @@ public class ArcanePedestalTile extends AnimatedTile implements IInventory {
     }
 
     @Override
+    public int getMaxStackSize() {
+        return 1;
+    }
+
+    @Override
     public int getContainerSize() {
         return 1;
     }
