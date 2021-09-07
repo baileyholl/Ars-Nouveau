@@ -4,6 +4,8 @@ import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -25,11 +27,11 @@ public class EntityProjectileSpell extends ColoredProjectile {
     public int age;
     public SpellResolver spellResolver;
     public int pierceLeft;
+    public int numSensitive;
 
     public EntityProjectileSpell(EntityType<? extends ArrowEntity> type, World worldIn, SpellResolver spellResolver, int pierceLeft) {
         super(type, worldIn);
         this.spellResolver = spellResolver;
-        age = 0;
         this.pierceLeft = pierceLeft;
     }
 
@@ -45,8 +47,14 @@ public class EntityProjectileSpell extends ColoredProjectile {
     public EntityProjectileSpell(World world, LivingEntity shooter, SpellResolver spellResolver, int maxPierce) {
         super(world, shooter);
         this.spellResolver = spellResolver;
-        age = 0;
         pierceLeft = maxPierce;
+    }
+
+    public EntityProjectileSpell(World world, SpellResolver resolver){
+        super(world, resolver.spellContext.caster);
+        this.spellResolver = resolver;
+        this.pierceLeft = resolver.spell.getBuffsAtIndex(0, resolver.spellContext.caster, AugmentPierce.INSTANCE);
+        this.numSensitive = resolver.spell.getBuffsAtIndex(0, resolver.spellContext.caster, AugmentSensitive.INSTANCE);
     }
 
     public EntityProjectileSpell(final World world, final LivingEntity shooter) {
@@ -79,7 +87,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
 
         Vector3d vector3d2 = this.position();
         Vector3d vector3d3 = vector3d2.add(vector3d);
-        RayTraceResult raytraceresult = this.level.clip(new RayTraceContext(vector3d2, vector3d3, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this));
+        RayTraceResult raytraceresult = this.level.clip(new RayTraceContext(vector3d2, vector3d3, numSensitive > 0 ? RayTraceContext.BlockMode.OUTLINE : RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this));
         if (raytraceresult != null && raytraceresult.getType() != RayTraceResult.Type.MISS) {
             vector3d3 = raytraceresult.getLocation();
         }

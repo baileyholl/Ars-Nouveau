@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
+import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
@@ -12,10 +13,7 @@ import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.*;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.FMLPlayMessages;
@@ -37,6 +35,10 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
 
     public EntityOrbitProjectile(World worldIn, LivingEntity shooter) {
         super(worldIn, shooter);
+    }
+
+    public EntityOrbitProjectile(World world, SpellResolver resolver){
+        super(world, resolver);
     }
 
     public EntityOrbitProjectile(EntityType<EntityOrbitProjectile> entityWardProjectileEntityType, World world) {
@@ -160,7 +162,10 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
 
     @Override
     protected void onHit(RayTraceResult result) {
-        if(!level.isClientSide &&  result != null && result.getType() == RayTraceResult.Type.ENTITY) {
+        if(level.isClientSide || result == null)
+            return;
+
+        if(result.getType() == RayTraceResult.Type.ENTITY) {
             if (((EntityRayTraceResult) result).getEntity().equals(this.getOwner())) return;
             if(this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(level, (LivingEntity) this.getOwner(), result);
@@ -168,6 +173,14 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
                         new BlockPos(result.getLocation()),getParticleColorWrapper()));
                 attemptRemoval();
             }
+        }else if(numSensitive > 0 && result instanceof BlockRayTraceResult && !this.removed){
+            BlockRayTraceResult blockraytraceresult = (BlockRayTraceResult)result;
+            if(this.spellResolver != null) {
+                this.spellResolver.onResolveEffect(this.level, (LivingEntity) this.getOwner(), blockraytraceresult);
+            }
+            Networking.sendToNearby(level, ((BlockRayTraceResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
+                    new BlockPos(result.getLocation()).below(), getParticleColorWrapper()));
+            attemptRemoval();
         }
     }
     @Override

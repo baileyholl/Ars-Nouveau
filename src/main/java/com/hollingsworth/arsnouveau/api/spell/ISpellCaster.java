@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.IntangibleAirTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PhantomBlockTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -62,8 +63,13 @@ public interface ISpellCaster {
 
         if(worldIn.isClientSide)
             return ActionResult.pass(playerIn.getItemInHand(handIn));
-
-        RayTraceResult result = playerIn.pick(5, 0, false);
+        if(spell == null) {
+            PortUtil.sendMessageNoSpam(playerIn,invalidMessage);
+            return new ActionResult<>(ActionResultType.SUCCESS, stack);
+        }
+        SpellResolver resolver = new SpellResolver(new SpellContext(spell, playerIn)
+                .withColors(getColor()));
+        RayTraceResult result = playerIn.pick(5, 0, resolver.spell.getBuffsAtIndex(0, playerIn, AugmentSensitive.INSTANCE) > 0);
         if(result instanceof BlockRayTraceResult && worldIn.getBlockEntity(((BlockRayTraceResult) result).getBlockPos()) instanceof ScribesTile)
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
         if(result instanceof BlockRayTraceResult && !playerIn.isShiftKeyDown()){
@@ -73,12 +79,6 @@ public interface ISpellCaster {
                 return new ActionResult<>(ActionResultType.SUCCESS, stack);
             }
         }
-        if(spell == null) {
-            PortUtil.sendMessageNoSpam(playerIn,invalidMessage);
-            return new ActionResult<>(ActionResultType.CONSUME, stack);
-        }
-        SpellResolver resolver = new SpellResolver(new SpellContext(spell, playerIn)
-                .withColors(getColor()));
         EntityRayTraceResult entityRes = MathUtil.getLookedAtEntity(playerIn, 25);
 
         if(entityRes != null && entityRes.getEntity() instanceof LivingEntity){
