@@ -34,11 +34,11 @@ public class ModEntities {
     public static EntityType<EntityBookwyrm> ENTITY_BOOKWYRM_TYPE = null;
     public static EntityType<EntityCarbuncle> ENTITY_CARBUNCLE_TYPE = build("carbuncle", EntityType.Builder.<EntityCarbuncle>of(EntityCarbuncle::new, EntityClassification.CREATURE)
             .sized(0.6F, 0.63F).setTrackingRange(10)
-            .setShouldReceiveVelocityUpdates(true));;
+            .setShouldReceiveVelocityUpdates(true));
     public static EntityType<EntityFollowProjectile> ENTITY_FOLLOW_PROJ = null;
     public static EntityType<EntitySylph> ENTITY_SYLPH_TYPE = build("sylph", EntityType.Builder.<EntitySylph>of(EntitySylph::new, EntityClassification.CREATURE)
             .sized(0.6F, 0.98F).setTrackingRange(10)
-            .setShouldReceiveVelocityUpdates(true));;
+            .setShouldReceiveVelocityUpdates(true));
 
     public static EntityType<EntityEarthElemental> ENTITY_EARTH_ELEMENTAL_TYPE = null;
     public static EntityType<EntityWixie> ENTITY_WIXIE_TYPE = null;

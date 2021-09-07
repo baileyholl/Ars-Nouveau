@@ -6,7 +6,6 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.pathfinding.Path;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -71,12 +70,12 @@ public class FindItem extends Goal {
             for(ItemEntity entity : list){
                 if(!entityCarbuncle.isValidItem(entity.getItem()))
                     continue;
-                Path path = entityCarbuncle.getNavigation().createPath(entity, 0);
-                if(path != null && path.canReach()) {
-                    this.pathingEntity = entity;
-                    pathToTarget(pathingEntity, 1.2f);
-                    break;
-                }
+
+               // Path path = entityCarbuncle.getNavigation().createPath(entity, 0);
+                this.pathingEntity = entity;
+                pathToTarget(pathingEntity, 1.2f);
+                break;
+
             }
         }
 
@@ -98,12 +97,14 @@ public class FindItem extends Goal {
         }
     }
     public void pathToTarget(Entity entity, double speed){
-        Path path = entityCarbuncle.getNavigation().createPath(entity, 0);
-        if(path != null && path.canReach()) {
-            entityCarbuncle.getNavigation().moveTo(path, speed);
+//        Path path = entityCarbuncle.getNavigation().createPath(entity, 0);
+//        if(path != null && path.canReach()) {
+        if(entity == null)
+            return;
+        entityCarbuncle.getNavigation().tryMoveToBlockPos(entity.blockPosition(), speed);
           //  entityCarbuncle.setMotion(entityCarbuncle.getMotion().add(ParticleUtil.inRange(-0.1, 0.1),0,ParticleUtil.inRange(-0.1, 0.1)));
-        }
-        if(path != null && !path.canReach()) {
+        //}
+        if(entityCarbuncle.getNavigation().getPath() != null && !entityCarbuncle.getNavigation().getPath().canReach()) {
             itemStuck = true;
         }
     }
