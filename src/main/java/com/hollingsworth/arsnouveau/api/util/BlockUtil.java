@@ -47,7 +47,7 @@ public class BlockUtil {
             }
         }
         return false;
-    }
+    } 
 
     public static double distanceFrom(BlockPos start, BlockPos end){
         if(start == null || end == null)
