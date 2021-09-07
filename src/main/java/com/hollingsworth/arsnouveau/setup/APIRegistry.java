@@ -122,6 +122,8 @@ public class APIRegistry {
         registerSpell(new EffectToss());
         registerSpell(new EffectBounce());
         registerSpell(AugmentSensitive.INSTANCE);
+        registerSpell(EffectWindshear.INSTANCE);
+        registerSpell(EffectEvaporate.INSTANCE);
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar){
