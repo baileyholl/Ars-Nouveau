@@ -127,6 +127,12 @@ public class Networking {
                 PacketSyncFamiliars::toBytes,
                 PacketSyncFamiliars::new,
                 PacketSyncFamiliars::handle);
+
+        INSTANCE.registerMessage(nextID(),
+                PacketTogglePathing.class,
+                PacketTogglePathing::toBytes,
+                PacketTogglePathing::new,
+                PacketTogglePathing::handle);
     }
 
     public static void sendToNearby(World world, BlockPos pos, Object toSend){

@@ -32,7 +32,7 @@ import static com.hollingsworth.arsnouveau.common.entity.pathfinding.PathingCons
  */
 public abstract class AbstractPathJob implements Callable<Path>
 {
-    public static boolean DEBUG_DRAW = true;
+    public static boolean DEBUG_DRAW = false;
     public static Set<Node> lastDebugNodesVisited;
     public static Set<Node> lastDebugNodesNotVisited;
     public static Set<Node> lastDebugNodesPath;

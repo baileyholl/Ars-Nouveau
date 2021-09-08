@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.LavaLily;
 import com.hollingsworth.arsnouveau.common.command.DataDumpCommand;
+import com.hollingsworth.arsnouveau.common.command.PathCommand;
 import com.hollingsworth.arsnouveau.common.command.ResetCommand;
 import com.hollingsworth.arsnouveau.common.compat.CaelusHandler;
 import com.hollingsworth.arsnouveau.common.items.VoidJar;
@@ -183,6 +184,7 @@ public class EventHandler {
     public static void commandRegister(RegisterCommandsEvent event){
         ResetCommand.register(event.getDispatcher());
         DataDumpCommand.register(event.getDispatcher());
+        PathCommand.register(event.getDispatcher());
     }
 
     private EventHandler(){}
