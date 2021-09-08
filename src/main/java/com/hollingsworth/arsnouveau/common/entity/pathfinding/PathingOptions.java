@@ -1,5 +1,9 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
+import net.minecraft.block.BlockState;
+
+import java.util.function.Function;
+
 /**
  * Configuration values for pathing, used by pathjobs and normally set through the navigator
  */
@@ -64,6 +68,8 @@ public class PathingOptions
 
     private boolean canFitInOneCube = false;
 
+    private Function<BlockState, Boolean> isRoad = blockState -> false;
+
     public PathingOptions()
     {}
 
@@ -115,6 +121,10 @@ public class PathingOptions
         return this.canFitInOneCube;
     }
 
+    public Function<BlockState, Boolean> getIsRoad(){
+        return this.isRoad;
+    }
+
     public PathingOptions withStartSwimCost(final double startSwimCost)
     {
         swimCostEnter = startSwimCost;
@@ -160,6 +170,11 @@ public class PathingOptions
     public PathingOptions withToggleCost(final double toggleCost)
     {
         traverseToggleAbleCost = toggleCost;
+        return this;
+    }
+
+    public PathingOptions withRoadState(Function<BlockState, Boolean> function){
+        this.isRoad = function;
         return this;
     }
 

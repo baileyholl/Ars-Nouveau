@@ -19,6 +19,9 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.GrassPathBlock;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -27,6 +30,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.item.ItemFrameEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -36,12 +40,12 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ItemParticleData;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -65,11 +69,9 @@ import java.util.*;
 
 public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDispellable, ITooltipProvider, IWandable {
 
-
-    private BlockPos fromPos;
-    private BlockPos toPos;
     public List<ItemStack> allowedItems; // Items the carbuncle is allowed to take
     public List<ItemStack> ignoreItems; // Items the carbuncle will not take
+    public Block pathBlock;
     public boolean whitelist;
     public boolean blacklist;
     public List<BlockPos> TO_LIST = new ArrayList<>();
@@ -83,6 +85,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.ITEM_STACK);
     public static final DataParameter<Boolean> TAMED = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.BOOLEAN);
     public static final DataParameter<String> COLOR = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.STRING);
+    public static final DataParameter<String> PATH_BLOCK = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.STRING);
 
     public int backOff; // Used to stop inventory store/take spam when chests are full or empty.
     public int tamingTime;
@@ -123,24 +126,14 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             this.pathNavigate.getPathingOptions().setCanOpenDoors(true);
             this.pathNavigate.setStuckHandler(PathingStuckHandler.createStuckHandler().withTeleportOnFullStuck().withTeleportSteps(5));
             this.pathNavigate.getPathingOptions().setCanFitInOneCube(true);
-            this.pathNavigate.getPathingOptions().onPathCost = 0.0D;
+            this.pathNavigate.getPathingOptions().onPathCost = 0.1D;
+            this.pathNavigate.getPathingOptions().withRoadState(this::isOnRoad);
         }
         return pathNavigate;
     }
 
-    @Override
-    public void setPathfindingMalus(PathNodeType nodeType, float value) {
-        super.setPathfindingMalus(nodeType, value);
-    }
-
-    @Override
-    public float getPathfindingMalus(PathNodeType nodeType) {
-        return super.getPathfindingMalus(nodeType);
-    }
-
-    @Override
-    public boolean canCutCorner(PathNodeType nodeType) {
-        return super.canCutCorner(nodeType);
+    public Boolean isOnRoad(BlockState state){
+        return state.getBlock() instanceof GrassPathBlock || (pathBlock != null && pathBlock == state.getBlock());
     }
 
     @Override
@@ -184,6 +177,13 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         this.entityData.set(TAMED, tamed);
     }
 
+    public String pathBlockDesc() {
+        return this.entityData.get(PATH_BLOCK);
+    }
+
+    public void setPathBlockDesc(String name) {
+        this.entityData.set(PATH_BLOCK, name);
+    }
 
     public void attemptTame() {
         if (!isTamed() && this.getHeldStack().getItem() == Items.GOLD_NUGGET) {
@@ -421,6 +421,12 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             return ActionResultType.SUCCESS;
         }
 
+        if(player.getMainHandItem().getItem() instanceof BlockItem){
+            pathBlock = ((BlockItem) player.getMainHandItem().getItem()).getBlock();
+            setPathBlockDesc(pathBlock.getName().getString());
+            PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.carbuncle.path"));
+        }
+
         if (player.getMainHandItem().isEmpty() && this.isTamed()) {
             StringBuilder status = new StringBuilder();
             if (whitelist && allowedItems != null) {
@@ -477,6 +483,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         this.entityData.define(TO_POS, 0);
         this.entityData.define(FROM_POS, 0);
         this.entityData.define(COLOR, COLORS.ORANGE.name());
+        this.entityData.define(PATH_BLOCK, "");
     }
 
     @Override
@@ -565,6 +572,10 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
         this.entityData.set(TO_POS, TO_LIST.size());
        this.entityData.set(FROM_POS, FROM_LIST.size());
+       if(tag.contains("path")){
+           pathBlock = Registry.BLOCK.get(new ResourceLocation(tag.getString("path")));
+           setPathBlockDesc(pathBlock.getName().getString());
+       }
     }
 
 
@@ -599,6 +610,8 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             NBTUtil.writeItems(tag, "ignored_", ignoreItems);
         tag.putBoolean("stuck", isStuck);
         tag.putString("color", this.entityData.get(COLOR));
+        if(pathBlock != null)
+            tag.putString("path", pathBlock.getRegistryName().toString());
     }
 
     public void removeGoals() {
@@ -612,6 +625,9 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             return toolTip;
         toolTip.add(new TranslationTextComponent("ars_nouveau.carbuncle.storing", this.entityData.get(TO_POS)).getString());
         toolTip.add(new TranslationTextComponent("ars_nouveau.carbuncle.taking", this.entityData.get(FROM_POS)).getString());
+        if(pathBlockDesc() != null && !pathBlockDesc().isEmpty()){
+            toolTip.add(new TranslationTextComponent("ars_nouveau.carbuncle.pathing", this.entityData.get(PATH_BLOCK)).getString());
+        }
         return toolTip;
     }
 
