@@ -20,6 +20,10 @@ public class ParticleColor {
         this.color = (r << 16) | (g << 8) | b;
     }
 
+    public ParticleColor(double red, double green, double blue) {
+        this((int)red,(int) green,(int) blue);
+    }
+
     public static ParticleColor makeRandomColor(int r, int g, int b, Random random){
         return new ParticleColor(random.nextInt(r), random.nextInt(g), random.nextInt(b));
     }
