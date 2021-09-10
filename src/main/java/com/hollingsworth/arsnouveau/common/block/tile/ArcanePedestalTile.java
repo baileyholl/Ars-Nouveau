@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 
 public class ArcanePedestalTile extends AnimatedTile implements IInventory {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
-    public int frames;
+    public float frames;
     public ItemEntity entity;
     public ItemStack stack;
 
