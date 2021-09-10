@@ -868,5 +868,6 @@
 	"ars_nouveau.summoning": "Summoning",
 	"ars_nouveau.item_transport": "Item Transport",
 	"ars_nouveau.filtering": "Filtering",
-	"ars_nouveau.pathing": "Pathing"
+	"ars_nouveau.pathing": "Pathing",
+	"block.ars_nouveau.archwood_chest": "Archwood Chest"
 }

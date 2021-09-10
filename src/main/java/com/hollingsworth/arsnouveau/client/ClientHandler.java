@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.client;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.client.renderer.tile.ArchwoodChestRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.tile.*;
 import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -53,6 +54,7 @@ public class ClientHandler {
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.BASIC_SPELL_TURRET_TILE, BasicTurretRenderer::new);
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.SPELL_TURRET_TYPE, ReducerTurretRenderer::new);
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.TIMER_SPELL_TURRET_TILE, TimerTurretRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(BlockRegistry.ARCHWOOD_CHEST_TILE, ArchwoodChestRenderer::new);
 
         RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_JAR, RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.GLYPH_PRESS_BLOCK, RenderType.cutout());

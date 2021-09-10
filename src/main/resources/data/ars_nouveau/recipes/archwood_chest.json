@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "xxx",
+    "x x",
+    "xxx"
+  ],
+  "key": {
+    "x": {
+      "item": "ars_nouveau:archwood_planks"
+    }
+  },
+  "result": {
+    "item": "ars_nouveau:archwood_chest"
+  }
+}

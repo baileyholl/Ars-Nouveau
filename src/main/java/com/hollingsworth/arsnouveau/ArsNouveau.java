@@ -75,6 +75,7 @@ public class ArsNouveau {
 
     public void clientSetup(final FMLClientSetupEvent event){
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientHandler::init);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(TextureEvent::textEvent);
     }
 
     public void sendImc(InterModEnqueueEvent evt) {

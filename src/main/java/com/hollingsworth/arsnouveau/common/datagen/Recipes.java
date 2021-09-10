@@ -490,6 +490,15 @@ public class Recipes extends RecipeProvider {
                     .define('x', MANA_GEM)
                     .define('y', Ingredient.of(Tags.Items.INGOTS_GOLD))
                     .save(consumer);
+
+            ShapedRecipeBuilder.shaped(BlockRegistry.ARCHWOOD_CHEST).unlockedBy("has_journal",InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
+                    .pattern("xxx")
+                    .pattern("x x")
+                    .pattern("xxx")
+                    .define('x', BlockRegistry.ARCHWOOD_PLANK)
+                    .save(consumer);
+
+            shapelessBuilder(Items.CHEST).requires(BlockRegistry.ARCHWOOD_CHEST).save(consumer, new ResourceLocation(ArsNouveau.MODID, "archwood_to_chest"));
         }
     }
 
