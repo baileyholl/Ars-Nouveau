@@ -107,7 +107,7 @@ public class ChimeraRamGoal extends Goal {
     }
 
     public void destroyBlock(BlockPos pos){
-        if(boss.level.getBlockState(pos).getHarvestLevel() < 9999){
+        if(boss.level.getBlockState(pos).getHarvestLevel() < 9999 && boss.level.getBlockState(pos).getDestroySpeed(boss.level, pos) >= 0 ){
             boss.level.destroyBlock(pos, true);
         }
     }
