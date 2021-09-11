@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -123,7 +124,7 @@ public class SpellResolver {
             castType.onCastOnBlock(context, spell.getAugments( 0, context.getPlayer()), spellContext, this);
     }
 
-    public void onCastOnEntity(ItemStack stack, LivingEntity playerIn, LivingEntity target, Hand hand){
+    public void onCastOnEntity(ItemStack stack, LivingEntity playerIn, Entity target, Hand hand){
         if(canCast(playerIn) && !postEvent(playerIn))
             castType.onCastOnEntity(stack, playerIn, target, hand, spell.getAugments(0, playerIn), spellContext, this);
     }

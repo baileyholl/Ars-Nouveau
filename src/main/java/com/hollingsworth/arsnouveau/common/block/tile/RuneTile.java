@@ -9,7 +9,6 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -21,12 +20,11 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class RuneTile extends AnimatedTile implements IPickupResponder {
-    public List<AbstractSpellPart> recipe = new ArrayList<>();
+    public Spell recipe = Spell.EMPTY;
     public boolean isTemporary;
     public boolean isCharged;
     public int ticksUntilCharge;
@@ -40,19 +38,19 @@ public class RuneTile extends AnimatedTile implements IPickupResponder {
     }
 
     public void setRecipe(List<AbstractSpellPart> recipe) {
-        this.recipe = recipe;
+        this.recipe = new Spell(recipe);
     }
 
     public void castSpell(Entity entity){
 
-        if(!this.isCharged || recipe == null || recipe.isEmpty() || !(entity instanceof LivingEntity) || !(level instanceof ServerWorld) || !(recipe.get(0) instanceof MethodTouch))
+        if(!this.isCharged || recipe.isEmpty() || !(level instanceof ServerWorld) || !(recipe.recipe.get(0) instanceof MethodTouch))
             return;
         try {
 
             PlayerEntity playerEntity = uuid != null ? level.getPlayerByUUID(uuid) : FakePlayerFactory.getMinecraft((ServerWorld) level);
             playerEntity = playerEntity == null ?  FakePlayerFactory.getMinecraft((ServerWorld) level) : playerEntity;
-            EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(new Spell(recipe), playerEntity).withCastingTile(this).withType(SpellContext.CasterType.RUNE));
-            resolver.onCastOnEntity(ItemStack.EMPTY, playerEntity, (LivingEntity) entity, Hand.MAIN_HAND);
+            EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(recipe, playerEntity).withCastingTile(this).withType(SpellContext.CasterType.RUNE));
+            resolver.onCastOnEntity(ItemStack.EMPTY, playerEntity, entity, Hand.MAIN_HAND);
             if (this.isTemporary) {
                 level.destroyBlock(worldPosition, false);
                 return;
@@ -70,16 +68,16 @@ public class RuneTile extends AnimatedTile implements IPickupResponder {
 
     public void setParsedSpell(List<AbstractSpellPart> spell){
         if(spell.size() <= 1){
-            this.recipe = null;
+            this.recipe = Spell.EMPTY;
             return;
         }
         spell.set(0, MethodTouch.INSTANCE);
-        this.recipe = spell;
+        this.recipe = new Spell(spell);
     }
 
     @Override
     public CompoundNBT save(CompoundNBT tag) {
-        tag.putString("spell", new Spell(recipe).serialize());
+        tag.putString("spell", recipe.serialize());
         tag.putBoolean("charged", isCharged);
         tag.putBoolean("temp", isTemporary);
         tag.putInt("cooldown", ticksUntilCharge);
@@ -90,7 +88,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder {
 
     @Override
     public void load( BlockState state, CompoundNBT tag) {
-        this.recipe = Spell.deserialize(tag.getString("spell")).recipe;
+        this.recipe = Spell.deserialize(tag.getString("spell"));
         this.isCharged = tag.getBoolean("charged");
         this.isTemporary = tag.getBoolean("temp");
         this.ticksUntilCharge = tag.getInt("cooldown");

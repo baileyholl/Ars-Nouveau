@@ -31,6 +31,10 @@ import static java.lang.Math.abs;
 
 public class BlockUtil {
 
+    public static BlockPos toPos(Vector3d vec){
+        return new BlockPos(vec.x, vec.y, vec.z);
+    }
+
     public static boolean isTreeBlock(Block block){
         return block.is(BlockTags.LEAVES) || block.is(BlockTags.LOGS);
     }
