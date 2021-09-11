@@ -79,9 +79,9 @@ public class EffectIntangible extends AbstractEffect {
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(
                 AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE,
-                AugmentExtendTime.INSTANCE, AugmentDampen.INSTANCE,
+                AugmentExtendTime.INSTANCE,
                 AugmentPierce.INSTANCE,
-                AugmentAOE.INSTANCE
+                AugmentAOE.INSTANCE, AugmentDurationDown.INSTANCE
         );
     }
 
