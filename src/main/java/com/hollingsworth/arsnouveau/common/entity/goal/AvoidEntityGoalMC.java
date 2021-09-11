@@ -72,12 +72,5 @@ public class AvoidEntityGoalMC<T extends LivingEntity> extends Goal {
         this.toAvoid = null;
     }
 
-    public void tick() {
-//        if (this.mob.distanceToSqr(this.toAvoid) < 49.0D) {
-//            this.mob.getNavigation().setSpeedModifier(this.sprintSpeedModifier);
-//        } else {
-//            this.mob.getNavigation().setSpeedModifier(this.walkSpeedModifier);
-//        }
-
-    }
+    public void tick() { }
 }

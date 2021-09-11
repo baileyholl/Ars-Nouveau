@@ -278,6 +278,6 @@ public class BlockUtil {
         return result;
     }
 
-    private BlockUtil(){};
+    private BlockUtil(){}
 
 }

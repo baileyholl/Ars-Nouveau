@@ -105,26 +105,26 @@ public class Recipes extends RecipeProvider {
             ShapedRecipeBuilder.shaped(BlockRegistry.ARCANE_PEDESTAL).unlockedBy("has_journal",InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
                     .pattern("xxx")
                     .pattern(" x ")
-                    .pattern("xxx").define('x', BlockRegistry.ARCANE_STONE).save(consumer);;
+                    .pattern("xxx").define('x', BlockRegistry.ARCANE_STONE).save(consumer);
 
             ShapedRecipeBuilder.shaped(BlockRegistry.ENCHANTING_APP_BLOCK).unlockedBy("has_journal",InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
                     .pattern("xyx")
                     .pattern("x x")
                     .pattern("zzz").define('x', Tags.Items.INGOTS_IRON)
                     .define('y', Tags.Items.GEMS_DIAMOND)
-                    .define('z', BlockRegistry.ARCANE_STONE).save(consumer);;
+                    .define('z', BlockRegistry.ARCANE_STONE).save(consumer);
 
             ShapedRecipeBuilder.shaped(ItemsRegistry.mundaneBelt).unlockedBy("has_journal",InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
                     .pattern("   ")
                     .pattern("xyx")
                     .pattern(" x ")
                     .define('x', Tags.Items.LEATHER)
-                    .define('y', MANA_GEM).save(consumer);;
+                    .define('y', MANA_GEM).save(consumer);
 
             ShapedRecipeBuilder.shaped(ItemsRegistry.ringOfPotential).unlockedBy("has_journal",InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
                     .pattern("xxx")
                     .pattern("xyx")
-                    .pattern("xxx").define('x', Tags.Items.NUGGETS_IRON).define('y', MANA_GEM).save(consumer);;
+                    .pattern("xxx").define('x', Tags.Items.NUGGETS_IRON).define('y', MANA_GEM).save(consumer);
 
 
             ShapelessRecipeBuilder.shapeless(BlockRegistry.WARD_BLOCK, 2).unlockedBy("has_journal",
@@ -135,7 +135,7 @@ public class Recipes extends RecipeProvider {
             ShapedRecipeBuilder.shaped(BlockRegistry.ARCANE_BRICKS, 4).unlockedBy("has_journal",InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
                     .pattern("xx ")
                     .pattern("xx ")
-                    .pattern("   ").define('x', BlockRegistry.ARCANE_STONE).save(consumer);;
+                    .pattern("   ").define('x', BlockRegistry.ARCANE_STONE).save(consumer);
 
 
             ShapedRecipeBuilder.shaped(BlockRegistry.SCRIBES_BLOCK).unlockedBy("has_journal",InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))

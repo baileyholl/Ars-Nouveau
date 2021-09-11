@@ -221,7 +221,6 @@ public class PortalBlock extends ModBlock{
             }
 
             for(BlockPos blockpos = pos; pos.getY() > blockpos.getY() - 21 && pos.getY() > 0 && this.canReplace(worldIn.getBlockState(pos.below())); pos = pos.below()) {
-                ;
             }
 
             int i = this.getDistanceUntilEdge(pos, this.leftDir) - 1;

@@ -16,7 +16,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.server.ServerWorld;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -133,22 +132,10 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
         PortUtil.sendMessage(playerEntity,new TranslationTextComponent("ars_nouveau.connections.cleared"));
     }
 
-    public void spawnParticles(){
-//        if(level.isClientSide){
-//            ParticleColor randColor = new ParticleColor(255,55,255);
-//            for (int i = 0; i < 6; i++) {
-//                level.addParticle(
-//                        GlowParticleData.createData(randColor),
-//                        worldPosition.getX() + 0.5 + ParticleUtil.inRange(-0.3, 0.3), worldPosition.getY() + 0.5 + ParticleUtil.inRange(-0.3, 0.3), worldPosition.getZ() + 0.5 + ParticleUtil.inRange(-0.3, 0.3),
-//                        0, 0, 0);
-//            }
-//        }
-    }
 
     @Override
     public void tick() {
         if(level.isClientSide){
-            spawnParticles();
             return;
         }
         if(level.getGameTime() % 20 != 0)

@@ -106,7 +106,7 @@ public class ParticleUtil {
 
     public static void spawnTouch(ClientWorld world, BlockPos loc, ParticleColor particleColor){
         for(int i =0; i < 10; i++){
-            double d0 = loc.getX() +0.5;;
+            double d0 = loc.getX() +0.5;
             double d1 = loc.getY() +1.0;
             double d2 = loc.getZ() +.5 ;
             world.addParticle(GlowParticleData.createData(particleColor),d0, d1, d2, (world.random.nextFloat() * 1 - 0.5)/5, (world.random.nextFloat() * 1 - 0.5)/5, (world.random.nextFloat() * 1 - 0.5)/5);

@@ -69,7 +69,7 @@ public class RitualTile extends TileEntity implements ITickableTileEntity, ITool
             world.addParticle(
                     GlowParticleData.createData(outerColor),
                     pos.getX() +0.5 + ParticleUtil.inRange(-xzOffset, xzOffset)  , pos.getY() +1 + ParticleUtil.inRange(0, 0.7) , pos.getZ() +0.5 + ParticleUtil.inRange(-xzOffset, xzOffset),
-                    0,ParticleUtil.inRange(0.0, 0.05f),0);;
+                    0,ParticleUtil.inRange(0.0, 0.05f),0);
         }
     }
 

@@ -23,7 +23,7 @@ public class ModdedScreen extends Screen {
         MainWindow res = getMinecraft().getWindow();
         double oldGuiScale = res.calculateScale(minecraft.options.guiScale, minecraft.isEnforceUnicode());
         maxScale = getMaxAllowedScale();
-        int persistentScale = Math.min(0, maxScale);;
+        int persistentScale = Math.min(0, maxScale);
         double newGuiScale = res.calculateScale(persistentScale, minecraft.isEnforceUnicode());
 
         if(persistentScale > 0 && newGuiScale != oldGuiScale) {

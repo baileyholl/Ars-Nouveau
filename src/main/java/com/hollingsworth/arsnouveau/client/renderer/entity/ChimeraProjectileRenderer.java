@@ -24,10 +24,6 @@ public class ChimeraProjectileRenderer extends GeoProjectilesRenderer<EntityChim
             float f10 = -MathHelper.sin(f9 * 3.0F) * f9;
             matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(f10));
         }
-//        matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(45.0F));
-//
-//        matrixStackIn.translate(-4.0D, 0.0D, 0.0D);
-//        matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90f));
         matrixStackIn.popPose();
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
 

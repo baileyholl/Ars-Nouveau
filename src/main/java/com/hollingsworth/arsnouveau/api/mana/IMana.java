@@ -24,5 +24,5 @@ public interface IMana {
 
     default void setGlyphBonus(int bonus){}
 
-    default void setBookTier(int tier){};
+    default void setBookTier(int tier){}
 }

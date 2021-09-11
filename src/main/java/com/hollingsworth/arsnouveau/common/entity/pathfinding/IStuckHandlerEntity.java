@@ -10,7 +10,7 @@ public interface IStuckHandlerEntity
      *
      * @return true if so.
      */
-    default public boolean canBeStuck()
+    default boolean canBeStuck()
     {
         return true;
     }

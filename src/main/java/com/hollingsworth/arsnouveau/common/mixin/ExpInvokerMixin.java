@@ -9,9 +9,9 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface ExpInvokerMixin {
 
     @Invoker("getExperienceReward")
-    public int an_getExperienceReward(PlayerEntity p_70693_1_);
+    int an_getExperienceReward(PlayerEntity p_70693_1_);
 
     @Invoker("shouldDropExperience")
-    public boolean an_shouldDropExperience();
+    boolean an_shouldDropExperience();
 
 }
