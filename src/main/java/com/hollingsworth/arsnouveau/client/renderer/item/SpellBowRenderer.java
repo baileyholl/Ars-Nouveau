@@ -45,7 +45,7 @@ public class SpellBowRenderer extends FixedGeoItemRenderer<Wand> {
             laserPos = laserPos.add(forward);
             laserPos = laserPos.add(down);
             ISpellCaster tool = SpellCaster.deserialize(itemStack);
-                int timeHeld = (int) (72000 - Minecraft.getInstance().player.getUseItemRemainingTicks());
+                int timeHeld = 72000 - Minecraft.getInstance().player.getUseItemRemainingTicks();
                 if(timeHeld > 0 && timeHeld != 72000){
                     float scaleAge = (float) ParticleUtil.inRange(0.05,0.1);
                     if(player.level.random.nextInt( 6)  == 0){

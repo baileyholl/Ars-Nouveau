@@ -26,7 +26,7 @@ public class EffectAquatic extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        applyConfigPotion(((LivingEntity) ((EntityRayTraceResult) rayTraceResult).getEntity()), Effects.WATER_BREATHING, spellStats);
+        applyConfigPotion(((LivingEntity) rayTraceResult.getEntity()), Effects.WATER_BREATHING, spellStats);
     }
 
     @Override

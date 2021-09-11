@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.LadderBlock;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.Direction;

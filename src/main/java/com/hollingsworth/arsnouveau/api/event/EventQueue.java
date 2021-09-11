@@ -21,12 +21,11 @@ public class EventQueue {
         }
 
         List<ITimedEvent> stale = new ArrayList<>();
-        ITimedEvent event;
-        for(int i = 0; i < events.size(); i++){
-            event = events.get(i);
-            if(event.isExpired()){
+
+        for (ITimedEvent event : events) {
+            if (event.isExpired()) {
                 stale.add(event);
-            }else{
+            } else {
                 event.tick(serverSide);
             }
         }

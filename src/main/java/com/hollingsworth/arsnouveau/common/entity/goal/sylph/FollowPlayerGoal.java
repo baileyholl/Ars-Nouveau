@@ -1,8 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.sylph;
 
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.controller.LookController;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.pathfinding.FlyingPathNavigator;
@@ -49,7 +47,7 @@ public class FollowPlayerGoal extends Goal {
      * method as well.
      */
     public boolean canUse() {
-        List<PlayerEntity> list = this.entity.level.getEntitiesOfClass(PlayerEntity.class, this.entity.getBoundingBox().inflate((double)this.areaSize), this.followPredicate);
+        List<PlayerEntity> list = this.entity.level.getEntitiesOfClass(PlayerEntity.class, this.entity.getBoundingBox().inflate(this.areaSize), this.followPredicate);
         if (!list.isEmpty()) {
             for(PlayerEntity mobentity : list) {
                 if (!mobentity.isInvisible()) {

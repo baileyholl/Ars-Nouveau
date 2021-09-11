@@ -3,7 +3,7 @@ import java.util.TreeMap;
 // https://stackoverflow.com/questions/12967896/converting-integers-to-roman-numerals-java
 public class RomanNumber {
 
-    private final static TreeMap<Integer, String> map = new TreeMap<Integer, String>();
+    private final static TreeMap<Integer, String> map = new TreeMap<>();
 
     static {
         map.put(1000, "M");

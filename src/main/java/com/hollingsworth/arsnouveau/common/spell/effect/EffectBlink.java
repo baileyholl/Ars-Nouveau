@@ -113,7 +113,7 @@ public class EffectBlink extends AbstractEffect {
         Vector3d lookVec = new Vector3d(shooter.getLookAngle().x(), 0, shooter.getLookAngle().z());
         Vector3d oldVec = new Vector3d(pos.getX(), pos.getY(), pos.getZ()).add(lookVec.scale(distance));
         Vector3d vec;
-        BlockPos sendPos = null;
+        BlockPos sendPos;
         for(double i = distance; i >= 0; i--){
             vec = oldVec.add(lookVec.scale(i));
             sendPos = new BlockPos(vec);

@@ -39,7 +39,7 @@ public class ANFakePlayer extends FakePlayer {
         if (ret == null)
         {
             ret = new ANFakePlayer(world);
-            FAKE_PLAYER = new WeakReference<ANFakePlayer>(ret);
+            FAKE_PLAYER = new WeakReference<>(ret);
         }
         return ret;
     }

@@ -39,7 +39,7 @@ public class GuiSpellHUD extends FocusableGui implements IGuiEventListener {
             int offsetLeft = 10;
             CompoundNBT tag = stack.getTag();
             int mode = tag.getInt(SpellBook.BOOK_MODE_TAG);
-            String renderString = "";
+            String renderString;
             if(mode != 0){
             renderString = mode + " " + SpellBook.getSpellName(stack.getTag());
             }else{

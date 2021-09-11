@@ -54,7 +54,7 @@ public class EntityEarthElemental extends CreatureEntity  {
     }
 
     /**
-     * Handler for {@link World#setEntityState}
+     * Handler for
      */
     @OnlyIn(Dist.CLIENT)
     public void handleEntityEvent(byte id) {

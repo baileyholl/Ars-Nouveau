@@ -105,7 +105,7 @@ public class BlockUtil {
     }
 
     private static boolean destroyBlockWithoutSound(World world, BlockPos pos, boolean dropBlock) {
-        return destroyBlockWithoutSound(world, pos, dropBlock, (Entity)null);
+        return destroyBlockWithoutSound(world, pos, dropBlock, null);
     }
 
     private static boolean destroyBlockWithoutSound(World world, BlockPos pos, boolean isMoving, @Nullable Entity entityIn){

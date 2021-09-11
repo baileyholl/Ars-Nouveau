@@ -6,10 +6,10 @@ import net.minecraft.client.particle.SpriteTexturedParticle;
 import net.minecraft.client.world.ClientWorld;
 
 public class ParticleSparkle extends SpriteTexturedParticle {
-    public float colorR = 0;
-    public float colorG = 0;
-    public float colorB = 0;
-    public float initScale = 0;
+    public float colorR;
+    public float colorG;
+    public float colorB;
+    public float initScale;
     public float initAlpha = 0;
 
     protected ParticleSparkle(ClientWorld worldIn, double x, double y, double z, double vx, double vy, double vz, float r, float g, float b, float scale, int lifetime, IAnimatedSprite sprite) {

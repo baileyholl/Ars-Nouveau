@@ -54,9 +54,9 @@ public class ANExplosion extends Explosion {
             for(int k = 0; k < 16; ++k) {
                 for(int l = 0; l < 16; ++l) {
                     if (j == 0 || j == 15 || k == 0 || k == 15 || l == 0 || l == 15) {
-                        double d0 = (double)((float)j / 15.0F * 2.0F - 1.0F);
-                        double d1 = (double)((float)k / 15.0F * 2.0F - 1.0F);
-                        double d2 = (double)((float)l / 15.0F * 2.0F - 1.0F);
+                        double d0 = (float)j / 15.0F * 2.0F - 1.0F;
+                        double d1 = (float)k / 15.0F * 2.0F - 1.0F;
+                        double d2 = (float)l / 15.0F * 2.0F - 1.0F;
                         double d3 = Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
                         d0 = d0 / d3;
                         d1 = d1 / d3;
@@ -96,35 +96,34 @@ public class ANExplosion extends Explosion {
         int i1 = MathHelper.floor(this.y + (double)f2 + 1.0D);
         int j2 = MathHelper.floor(this.z - (double)f2 - 1.0D);
         int j1 = MathHelper.floor(this.z + (double)f2 + 1.0D);
-        List<Entity> list = this.level.getEntities(this.source, new AxisAlignedBB((double)k1, (double)i2, (double)j2, (double)l1, (double)i1, (double)j1));
+        List<Entity> list = this.level.getEntities(this.source, new AxisAlignedBB(k1, i2, j2, l1, i1, j1));
         net.minecraftforge.event.ForgeEventFactory.onExplosionDetonate(this.level, this, list, f2);
         Vector3d vector3d = new Vector3d(this.x, this.y, this.z);
 
-        for(int k2 = 0; k2 < list.size(); ++k2) {
-            Entity entity = list.get(k2);
+        for (Entity entity : list) {
             if (!entity.ignoreExplosion()) {
-                double d12 = (double)(MathHelper.sqrt(entity.distanceToSqr(vector3d)) / f2);
+                double d12 = MathHelper.sqrt(entity.distanceToSqr(vector3d)) / f2;
                 if (d12 <= 1.0D) {
                     double d5 = entity.getX() - this.x;
                     double d7 = (entity instanceof TNTEntity ? entity.getY() : entity.getEyeY()) - this.y;
                     double d9 = entity.getZ() - this.z;
-                    double d13 = (double)MathHelper.sqrt(d5 * d5 + d7 * d7 + d9 * d9);
+                    double d13 = MathHelper.sqrt(d5 * d5 + d7 * d7 + d9 * d9);
                     if (d13 != 0.0D) {
                         d5 = d5 / d13;
                         d7 = d7 / d13;
                         d9 = d9 / d13;
-                        double d14 = (double)getSeenPercent(vector3d, entity);
+                        double d14 = getSeenPercent(vector3d, entity);
                         double d10 = (1.0D - d12) * d14;
-                        float damage = (float) Math.min(Math.max(0.0f,(float)((int)((d10 * d10 + d10) / 2.0D * 7.0D * (double)f2 + 1.0D))), baseDamage + this.amps * ampDamageScalar);
+                        float damage = (float) Math.min(Math.max(0.0f, (float) ((int) ((d10 * d10 + d10) / 2.0D * 7.0D * (double) f2 + 1.0D))), baseDamage + this.amps * ampDamageScalar);
                         entity.hurt(this.getDamageSource(), damage);
                         double d11 = d10;
                         if (entity instanceof LivingEntity) {
-                            d11 = ProtectionEnchantment.getExplosionKnockbackAfterDampener((LivingEntity)entity, d10);
+                            d11 = ProtectionEnchantment.getExplosionKnockbackAfterDampener((LivingEntity) entity, d10);
                         }
 
                         entity.setDeltaMovement(entity.getDeltaMovement().add(d5 * d11, d7 * d11, d9 * d11));
                         if (entity instanceof PlayerEntity) {
-                            PlayerEntity playerentity = (PlayerEntity)entity;
+                            PlayerEntity playerentity = (PlayerEntity) entity;
                             if (!playerentity.isSpectator() && (!playerentity.isCreative() || !playerentity.abilities.flying)) {
                                 this.hitPlayers.put(playerentity, new Vector3d(d5 * d10, d7 * d10, d9 * d10));
                             }

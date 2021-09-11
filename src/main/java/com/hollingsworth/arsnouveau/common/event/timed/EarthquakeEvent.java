@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.event.timed;
 
 import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
-import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.entity.item.FallingBlockEntity;
 import net.minecraft.util.math.BlockPos;

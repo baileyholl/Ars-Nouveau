@@ -3,12 +3,10 @@ package com.hollingsworth.arsnouveau.api.util;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.ProjectileHelper;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -38,10 +36,7 @@ public class MathUtil {
         Vector3d vec3d2 = vec3d.add(vec3d1.x * range, vec3d1.y * range, vec3d1.z * range);
         float f = 1.0F;
         AxisAlignedBB axisalignedbb = entity.getBoundingBox().expandTowards(vec3d1.scale(range)).inflate(1.0D, 1.0D, 1.0D);
-        EntityRayTraceResult entityraytraceresult = MathUtil.traceEntities(entity, vec3d, vec3d2, axisalignedbb, (p_215312_0_) -> {
-            return !p_215312_0_.isSpectator() && p_215312_0_.isPickable();
-        }, range);
-        return entityraytraceresult;
+        return MathUtil.traceEntities(entity, vec3d, vec3d2, axisalignedbb, (e) -> !e.isSpectator() && e.isPickable(), range);
     }
     // ProjectileHelper#TraceEntities
     // Fuck mojang why the hell is this client only
@@ -52,7 +47,7 @@ public class MathUtil {
         Vector3d vec3d = null;
 
         for(Entity entity1 : world.getEntities(shooter, boundingBox, filter)) {
-            AxisAlignedBB axisalignedbb = entity1.getBoundingBox().inflate((double)entity1.getPickRadius());
+            AxisAlignedBB axisalignedbb = entity1.getBoundingBox().inflate(entity1.getPickRadius());
             Optional<Vector3d> optional = axisalignedbb.clip(startVec, endVec);
             if (axisalignedbb.contains(startVec)) {
                 if (d0 >= 0.0D) {

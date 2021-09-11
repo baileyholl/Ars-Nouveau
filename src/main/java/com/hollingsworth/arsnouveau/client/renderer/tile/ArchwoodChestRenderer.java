@@ -46,7 +46,7 @@ public class ArchwoodChestRenderer<T extends TileEntity & IChestLid> extends Til
     public ArchwoodChestRenderer(TileEntityRendererDispatcher p_i226008_1_) {
         super(p_i226008_1_);
         Calendar calendar = Calendar.getInstance();
-        if (calendar.get(2) + 1 == 12 && calendar.get(5) >= 24 && calendar.get(5) <= 26) {
+        if (calendar.get(Calendar.MONTH) + 1 == 12 && calendar.get(Calendar.DATE) >= 24 && calendar.get(Calendar.DATE) <= 26) {
             this.xmasTextures = true;
         }
 

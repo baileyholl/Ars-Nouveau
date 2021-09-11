@@ -130,7 +130,7 @@ public class ChimeraRamGoal extends Goal {
             if(enemy.equals(boss))
                 continue;
             this.boss.doHurtTarget(enemy);
-            enemy.knockback(3.0f, (double) MathHelper.sin(boss.yRot * ((float)Math.PI / 180F)), (double)(-MathHelper.cos(boss.yRot * ((float)Math.PI / 180F))));
+            enemy.knockback(3.0f, MathHelper.sin(boss.yRot * ((float)Math.PI / 180F)), -MathHelper.cos(boss.yRot * ((float)Math.PI / 180F)));
             hasHit = true;
         }
     }

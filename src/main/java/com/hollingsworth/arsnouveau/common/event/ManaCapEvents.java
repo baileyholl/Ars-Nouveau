@@ -50,14 +50,12 @@ public class ManaCapEvents {
         if(e.getOriginal().level.isClientSide)
             return;
 
-        ManaCapability.getMana((LivingEntity) e.getEntity()).ifPresent(newMana -> {
-            ManaCapability.getMana(e.getOriginal()).ifPresent(origMana -> {
-                newMana.setMaxMana(origMana.getMaxMana());
-                newMana.setGlyphBonus(origMana.getGlyphBonus());
-                newMana.setBookTier(origMana.getBookTier());
-                Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity)  e.getEntity()), new PacketUpdateMana(newMana.getCurrentMana(), newMana.getMaxMana(), newMana.getGlyphBonus(), newMana.getBookTier()));
-            });
-        });
+        ManaCapability.getMana((LivingEntity) e.getEntity()).ifPresent(newMana -> ManaCapability.getMana(e.getOriginal()).ifPresent(origMana -> {
+            newMana.setMaxMana(origMana.getMaxMana());
+            newMana.setGlyphBonus(origMana.getGlyphBonus());
+            newMana.setBookTier(origMana.getBookTier());
+            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity)  e.getEntity()), new PacketUpdateMana(newMana.getCurrentMana(), newMana.getMaxMana(), newMana.getGlyphBonus(), newMana.getBookTier()));
+        }));
     }
 
     @SubscribeEvent

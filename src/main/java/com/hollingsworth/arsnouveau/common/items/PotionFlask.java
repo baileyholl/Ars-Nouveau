@@ -149,10 +149,6 @@ public abstract class PotionFlask extends ModItem {
         return UseAction.DRINK;
     }
 
-    /**
-     * Called to trigger the item's "innate" right click behavior. To handle when this item is used on a Block, see
-     * {@link #onItemUse}.
-     */
     public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
 

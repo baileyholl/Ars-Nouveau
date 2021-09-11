@@ -42,9 +42,8 @@ public class RitualWildenSummoning extends AbstractRitual {
                 }
             }else{
                 if(getProgress() >= 8){
-                    BlockPos.betweenClosedStream(getPos().east(5).north(5).above(), getPos().west(5).south(5).above(5)).forEach(p ->{
-                        BlockUtil.destroyBlockSafelyWithoutSound(getWorld(), p, true);
-                    });
+                    BlockPos.betweenClosedStream(getPos().east(5).north(5).above(), getPos().west(5).south(5).above(5))
+                            .forEach(p -> BlockUtil.destroyBlockSafelyWithoutSound(getWorld(), p, true));
                     EntityChimera chimera = new EntityChimera(getWorld());
                     summon(chimera, getPos().above());
                     setFinished();

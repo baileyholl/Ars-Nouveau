@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.familiar.*;
-import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarEntity;
 import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;

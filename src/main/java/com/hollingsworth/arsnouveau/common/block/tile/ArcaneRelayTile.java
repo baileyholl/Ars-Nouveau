@@ -108,7 +108,7 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
         // Let relays take from us, no action needed.
         if(this.setSendTo(storedPos.immutable())) {
             PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.connections.send", DominionWand.getPosString(storedPos)));
-            ParticleUtil.beam(storedPos, worldPosition, (ServerWorld) level);
+            ParticleUtil.beam(storedPos, worldPosition, level);
         }else{
             PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.connections.fail"));
         }

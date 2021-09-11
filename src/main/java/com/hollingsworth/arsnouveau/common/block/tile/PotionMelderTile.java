@@ -188,14 +188,14 @@ public class PotionMelderTile extends TileEntity implements IAnimatable, ITickab
         Set<EffectInstance> set = new HashSet<>();
         set.addAll(jar1.getCustomEffects());
         set.addAll(jar2.getCustomEffects());
-        return new ArrayList<EffectInstance>(set);
+        return new ArrayList<>(set);
     }
 
     public List<EffectInstance> getCombinedResult(PotionJarTile jar1, PotionJarTile jar2){
         Set<EffectInstance> set = new HashSet<>();
         set.addAll(jar1.getFullEffects());
         set.addAll(jar2.getFullEffects());
-        return new ArrayList<EffectInstance>(set);
+        return new ArrayList<>(set);
     }
     private <E extends TileEntity  & IAnimatable > PlayState idlePredicate(AnimationEvent<E> event) {
         event.getController().setAnimation(new AnimationBuilder().addAnimation("spin", true));

@@ -117,9 +117,9 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController<EntityChimera>(this, "walkController", 20, this::groundPredicate));
-        animationData.addAnimationController(new AnimationController<EntityChimera>(this, "attackController", 1, this::attackPredicate));
-        animationData.addAnimationController(new AnimationController<EntityChimera>(this, "crouchController", 1, this::crouchPredicate));
+        animationData.addAnimationController(new AnimationController<>(this, "walkController", 20, this::groundPredicate));
+        animationData.addAnimationController(new AnimationController<>(this, "attackController", 1, this::attackPredicate));
+        animationData.addAnimationController(new AnimationController<>(this, "crouchController", 1, this::crouchPredicate));
     }
 
 
@@ -688,7 +688,7 @@ public class EntityChimera extends MonsterEntity implements IAnimatable, IAnimat
                 }
 
                 this.mob.setSpeed(f1);
-                double d4 = (double)MathHelper.sqrt(d0 * d0 + d2 * d2);
+                double d4 = MathHelper.sqrt(d0 * d0 + d2 * d2);
                 float f2 = (float)(-(MathHelper.atan2(d1, d4) * (double)(180F / (float)Math.PI)));
                 this.mob.xRot = this.rotlerp(this.mob.xRot, f2, (float)this.maxTurn);
                 this.mob.setYya(d1 > 0.0D ? f1 : -f1);

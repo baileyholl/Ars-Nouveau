@@ -72,7 +72,7 @@ public class ForageManaBerries extends Goal {
             int j = 1 + world.random.nextInt(2);
             ManaBerryBush.popResource(world, pos, new ItemStack(BlockRegistry.MANA_BERRY_BUSH, j + (flag ? 1 : 0)));
             world.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundCategory.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
-            world.setBlock(pos, world.getBlockState(pos).setValue(AGE, Integer.valueOf(1)), 2);
+            world.setBlock(pos, world.getBlockState(pos).setValue(AGE, 1), 2);
             pos = null;
         }
     }

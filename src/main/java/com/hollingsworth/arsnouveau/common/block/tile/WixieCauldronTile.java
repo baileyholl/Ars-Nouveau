@@ -21,7 +21,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -195,7 +194,7 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
 
             PotionIngredient potionIngred = (PotionIngredient) recipe.recipe.get(0);
             Ingredient itemIngred = recipe.recipe.get(1);
-            List<ItemStack> needed = new ArrayList<ItemStack>(Arrays.asList(itemIngred.getItems()));
+            List<ItemStack> needed = new ArrayList<>(Arrays.asList(itemIngred.getItems()));
             craftManager = new CraftingProgress(PotionUtils.getPotion(potionIngred.getStack()),needed, PotionUtils.getPotion(recipe.outputStack));
             level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
             //BrewingRecipe
@@ -460,7 +459,7 @@ public class WixieCauldronTile extends TileEntity implements ITickableTileEntity
         }
 
         public CraftingProgress(ItemStack outputStack, List<ItemStack> neededItems, IRecipe recipe){
-            CraftingInventory inventory = new CraftingInventory(new Container((ContainerType)null, -1) {
+            CraftingInventory inventory = new CraftingInventory(new Container(null, -1) {
                 public boolean stillValid(PlayerEntity playerIn) {
                     return false;
                 }

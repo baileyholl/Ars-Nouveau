@@ -37,7 +37,7 @@ public class EffectIntangible extends AbstractEffect {
         BlockPos pos = rayTraceResult.getBlockPos();
         int duration = (int) (GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier());
 
-        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, (BlockRayTraceResult)rayTraceResult, spellStats);
+        List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, rayTraceResult, spellStats);
         for(BlockPos pos1 : posList) {
             if (world.getBlockEntity(pos1) != null || world.getBlockState(pos1).getMaterial() == Material.AIR
                     || world.getBlockState(pos1).getBlock() == Blocks.BEDROCK || !canBlockBeHarvested(spellStats, world, pos) || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, pos1))

@@ -89,7 +89,7 @@ public class EntityChimeraProjectile extends AbstractArrowEntity implements IAni
             entity.setSecondsOnFire(5);
         }
 
-        if (entity.hurt(damagesource, (float)damage)) {
+        if (entity.hurt(damagesource, damage)) {
             if (isEnderman) {
                 return;
             }
@@ -119,7 +119,7 @@ public class EntityChimeraProjectile extends AbstractArrowEntity implements IAni
         if(!level.isClientSide){
 
             Collection<EffectInstance> effects = entity.getActiveEffects();
-            EffectInstance[] array = effects.toArray(new EffectInstance[effects.size()]);
+            EffectInstance[] array = effects.toArray(new EffectInstance[0]);
             for (EffectInstance e : array) {
                 if (e.getEffect().isBeneficial())
                     entity.removeEffect(e.getEffect());

@@ -2,14 +2,9 @@ package com.hollingsworth.arsnouveau.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.MainWindow;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ModdedScreen extends Screen {

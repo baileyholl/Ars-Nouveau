@@ -63,8 +63,8 @@ public class Spell {
 
     public int getInstanceCount(AbstractSpellPart spellPart){
         int count = 0;
-        for(int i = 0; i < this.recipe.size(); i++){
-            if(this.recipe.get(i).equals(spellPart))
+        for (AbstractSpellPart abstractSpellPart : this.recipe) {
+            if (abstractSpellPart.equals(spellPart))
                 count++;
         }
         return count;

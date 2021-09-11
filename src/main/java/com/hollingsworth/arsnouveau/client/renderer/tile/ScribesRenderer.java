@@ -103,7 +103,7 @@ public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
         BlockState state = tile.getLevel().getBlockState(tile.getBlockPos());
         if(!(state.getBlock() instanceof ScribesBlock))
             return;
-        float y = ((Direction)state.getValue(ScribesBlock.FACING)).getClockWise().toYRot();
+        float y = state.getValue(ScribesBlock.FACING).getClockWise().toYRot();
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(-y + 90f));
         matrixStack.mulPose(Vector3f.XP.rotationDegrees(90f));
         matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180F));

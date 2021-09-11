@@ -187,9 +187,9 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
 
         exp *= .25;
         if(exp > 3){
-            int numGreater = (int) (exp / 12);
+            int numGreater = exp / 12;
             exp -= numGreater * 12;
-            int numLesser = (int) (exp / 3);
+            int numLesser = exp / 3;
             if ((exp - numLesser * 3) > 0)
                 numLesser++;
             if(numGreater > 0)

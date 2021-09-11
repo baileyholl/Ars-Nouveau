@@ -24,36 +24,27 @@ public class AvoidEntityGoalMC<T extends LivingEntity> extends Goal {
     protected final PathNavigator pathNav;
     protected final Class<T> avoidClass;
     protected final Predicate<LivingEntity> avoidPredicate;
-    protected final Predicate<LivingEntity> predicateOnAvoidEntity;
+
     private final EntityPredicate avoidEntityTargeting;
 
-    public AvoidEntityGoalMC(EntityCarbuncle p_i46404_1_, Class<T> p_i46404_2_, float p_i46404_3_, double p_i46404_4_, double p_i46404_6_) {
-        this(p_i46404_1_, p_i46404_2_, (p_200828_0_) -> {
-            return true;
-        }, p_i46404_3_, p_i46404_4_, p_i46404_6_, EntityPredicates.NO_CREATIVE_OR_SPECTATOR::test);
+    public AvoidEntityGoalMC(EntityCarbuncle carby, Class<T> avoidClass, float maxDist, double walkModifier, double sprintModifier) {
+        this(carby, avoidClass, (p_200828_0_) -> true, maxDist, walkModifier, sprintModifier, EntityPredicates.NO_CREATIVE_OR_SPECTATOR::test);
     }
 
-    public AvoidEntityGoalMC(EntityCarbuncle p_i48859_1_, Class<T> p_i48859_2_, Predicate<LivingEntity> p_i48859_3_, float p_i48859_4_, double p_i48859_5_, double p_i48859_7_, Predicate<LivingEntity> p_i48859_9_) {
-        this.mob = p_i48859_1_;
-        this.avoidClass = p_i48859_2_;
-        this.avoidPredicate = p_i48859_3_;
-        this.maxDist = p_i48859_4_;
-        this.walkSpeedModifier = p_i48859_5_;
-        this.sprintSpeedModifier = p_i48859_7_;
-        this.predicateOnAvoidEntity = p_i48859_9_;
-        this.pathNav = p_i48859_1_.getNavigation();
+    public AvoidEntityGoalMC(EntityCarbuncle carby, Class<T> avoidClass, Predicate<LivingEntity> avoidPredicate, float maxDist, double walkModifier, double sprintModifier, Predicate<LivingEntity> selectPredicate) {
+        this.mob = carby;
+        this.avoidClass = avoidClass;
+        this.avoidPredicate = avoidPredicate;
+        this.maxDist = maxDist;
+        this.walkSpeedModifier = walkModifier;
+        this.sprintSpeedModifier = sprintModifier;
+        this.pathNav = carby.getNavigation();
         this.setFlags(EnumSet.of(Goal.Flag.MOVE));
-        this.avoidEntityTargeting = (new EntityPredicate()).range((double)p_i48859_4_).selector(p_i48859_9_.and(p_i48859_3_));
-    }
-
-    public AvoidEntityGoalMC(EntityCarbuncle p_i48860_1_, Class<T> p_i48860_2_, float p_i48860_3_, double p_i48860_4_, double p_i48860_6_, Predicate<LivingEntity> p_i48860_8_) {
-        this(p_i48860_1_, p_i48860_2_, (p_203782_0_) -> {
-            return true;
-        }, p_i48860_3_, p_i48860_4_, p_i48860_6_, p_i48860_8_);
+        this.avoidEntityTargeting = (new EntityPredicate()).range(maxDist).selector(selectPredicate.and(avoidPredicate));
     }
 
     public boolean canUse() {
-        this.toAvoid = this.mob.level.getNearestLoadedEntity(this.avoidClass, this.avoidEntityTargeting, this.mob, this.mob.getX(), this.mob.getY(), this.mob.getZ(), this.mob.getBoundingBox().inflate((double)this.maxDist, 3.0D, (double)this.maxDist));
+        this.toAvoid = this.mob.level.getNearestLoadedEntity(this.avoidClass, this.avoidEntityTargeting, this.mob, this.mob.getX(), this.mob.getY(), this.mob.getZ(), this.mob.getBoundingBox().inflate(this.maxDist, 3.0D, this.maxDist));
         if (this.toAvoid == null) {
             return false;
         } else {

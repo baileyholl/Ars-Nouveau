@@ -7,9 +7,6 @@ import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
 import com.hollingsworth.arsnouveau.common.entity.goal.wixie.CompleteCraftingGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.wixie.FindNextItemGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.wixie.FindPotionGoal;
-import com.hollingsworth.arsnouveau.common.entity.pathfinding.AbstractAdvancedPathNavigate;
-import com.hollingsworth.arsnouveau.common.entity.pathfinding.MinecoloniesAdvancedPathNavigate;
-import com.hollingsworth.arsnouveau.common.entity.pathfinding.PathingStuckHandler;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -74,9 +71,9 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController<EntityWixie>(this, "idleController", 20, this::idlePredicate));
-        animationData.addAnimationController(new AnimationController<EntityWixie>(this, "castController", 1, this::castPredicate));
-        animationData.addAnimationController(new AnimationController<EntityWixie>(this, "summonController", 1, this::summonPredicate));
+        animationData.addAnimationController(new AnimationController<>(this, "idleController", 20, this::idlePredicate));
+        animationData.addAnimationController(new AnimationController<>(this, "castController", 1, this::castPredicate));
+        animationData.addAnimationController(new AnimationController<>(this, "summonController", 1, this::summonPredicate));
     }
 
     @Override

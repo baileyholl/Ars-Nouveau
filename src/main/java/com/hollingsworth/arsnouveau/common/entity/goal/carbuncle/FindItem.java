@@ -18,13 +18,9 @@ public class FindItem extends Goal {
     boolean itemStuck;
 
     int timeFinding;
-    private final Predicate<ItemEntity> TRUSTED_TARGET_SELECTOR = (itemEntity) -> {
-        return !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && entityCarbuncle.isValidItem(itemEntity.getItem());
-    };
+    private final Predicate<ItemEntity> TRUSTED_TARGET_SELECTOR = (itemEntity) -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && entityCarbuncle.isValidItem(itemEntity.getItem());
 
-    private final Predicate<ItemEntity> NONTAMED_TARGET_SELECTOR = (itemEntity -> {
-        return !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && itemEntity.getItem().getItem() == Items.GOLD_NUGGET;
-    });
+    private final Predicate<ItemEntity> NONTAMED_TARGET_SELECTOR = (itemEntity -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && itemEntity.getItem().getItem() == Items.GOLD_NUGGET);
 
     @Override
     public void stop() {

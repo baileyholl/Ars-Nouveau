@@ -5,9 +5,7 @@ import com.google.common.collect.Maps;
 import com.hollingsworth.arsnouveau.common.block.tile.SconceTile;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.Property;
@@ -21,13 +19,10 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
 import java.util.Map;
-
-import static com.hollingsworth.arsnouveau.common.block.ScribesBlock.getFacingFromEntity;
 
 public class SconceBlock extends ModBlock{
     private static final Map<Direction, VoxelShape> AABBS =

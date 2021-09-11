@@ -38,7 +38,7 @@ public class SpellBookRenderer extends GeoItemRenderer<SpellBook> {
             RenderSystem.pushMatrix();
             IRenderTypeBuffer.Impl irendertypebuffer$impl = Minecraft.getInstance().renderBuffers().bufferSource();
             RenderHelper.setupForFlatItems();
-            render((SpellBook) itemStack.getItem(), stack, bufferIn, 15728880, itemStack, transformType);
+            render(itemStack.getItem(), stack, bufferIn, 15728880, itemStack, transformType);
             irendertypebuffer$impl.endBatch();
             RenderSystem.enableDepthTest();
             RenderHelper.setupFor3DItems();

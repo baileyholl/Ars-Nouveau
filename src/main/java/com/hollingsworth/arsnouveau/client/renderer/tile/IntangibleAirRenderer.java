@@ -57,9 +57,9 @@ public class IntangibleAirRenderer extends TileEntityRenderer<IntangibleAirTile>
             float f2;
 
             if (bakedquad.isTinted()) {
-                f = red * 1f;
-                f1 = green * 1f;
-                f2 = blue * 1f;
+                f = red;
+                f1 = green;
+                f2 = blue;
             } else {
                 f = 1f;
                 f1 = 1f;

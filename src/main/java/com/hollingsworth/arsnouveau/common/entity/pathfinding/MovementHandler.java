@@ -93,7 +93,7 @@ public class MovementHandler extends MovementController
             final BlockState blockstate = this.mob.level.getBlockState(blockpos);
             final Block block = blockstate.getBlock();
             final VoxelShape voxelshape = blockstate.getCollisionShape(this.mob.level, blockpos);
-            if ((yDif > (double) 0.6 && xDif * xDif + zDif * zDif < (double) Math.max(1.0F, this.mob.getBbWidth()))
+            if ((yDif > 0.6 && xDif * xDif + zDif * zDif < (double) Math.max(1.0F, this.mob.getBbWidth()))
                   || (!voxelshape.isEmpty() && this.mob.getY() < voxelshape.max(Direction.Axis.Y) + (double) blockpos.getY() && !block.is(BlockTags.DOORS) && !block.is(
               BlockTags.FENCES) && !block.is(BlockTags.FENCE_GATES))
                        && !block.isLadder(blockstate, this.mob.level, blockpos, this.mob))
