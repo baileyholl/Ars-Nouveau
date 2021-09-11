@@ -22,11 +22,11 @@ public class AugmentSensitive extends AbstractAugment {
 
     @Override
     public String getBookDescription() {
-        return "Causes forms to target blocks they normally cannot target. Projectile and Orbit will target grass, and Touch will target fluids.";
+        return "Causes forms to target blocks they normally cannot target. Projectile and Orbit will target grass, and Touch will target fluids and air.";
     }
 
     @Override
     public int getManaCost() {
-        return 0;
+        return 10;
     }
 }

@@ -36,8 +36,4 @@ public class SpellRecipeUtil {
     public static String serializeForNBT(List<AbstractSpellPart> abstractSpellPart){
         return new Spell(abstractSpellPart).serialize();
     }
-    @Deprecated // Marked for removal
-    public static String getDisplayString(List<AbstractSpellPart> abstractSpellPart){
-        return new Spell(abstractSpellPart).getDisplayString();
-    }
 }

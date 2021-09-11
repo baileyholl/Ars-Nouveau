@@ -69,7 +69,8 @@ public interface ISpellCaster {
         }
         SpellResolver resolver = new SpellResolver(new SpellContext(spell, playerIn)
                 .withColors(getColor()));
-        RayTraceResult result = playerIn.pick(5, 0, resolver.spell.getBuffsAtIndex(0, playerIn, AugmentSensitive.INSTANCE) > 0);
+        boolean isSensitive = resolver.spell.getBuffsAtIndex(0, playerIn, AugmentSensitive.INSTANCE) > 0;
+        RayTraceResult result = playerIn.pick(5, 0, isSensitive);
         if(result instanceof BlockRayTraceResult && worldIn.getBlockEntity(((BlockRayTraceResult) result).getBlockPos()) instanceof ScribesTile)
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
         if(result instanceof BlockRayTraceResult && !playerIn.isShiftKeyDown()){
@@ -86,7 +87,7 @@ public interface ISpellCaster {
             return new ActionResult<>(ActionResultType.CONSUME, stack);
         }
 
-        if(result.getType() == RayTraceResult.Type.BLOCK){
+        if(result.getType() == RayTraceResult.Type.BLOCK || (isSensitive && result instanceof BlockRayTraceResult)){
             ItemUseContext context = new ItemUseContext(playerIn, handIn, (BlockRayTraceResult) result);
             resolver.onCastOnBlock(context);
             return new ActionResult<>(ActionResultType.CONSUME, stack);

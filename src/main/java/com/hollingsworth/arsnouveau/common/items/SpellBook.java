@@ -110,7 +110,8 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
         });
         SpellResolver resolver = new SpellResolver(new SpellContext(getCurrentRecipe(stack), playerIn)
                 .withColors(SpellBook.getSpellColor(stack.getOrCreateTag(), SpellBook.getMode(stack.getOrCreateTag()))));
-        RayTraceResult result = playerIn.pick(5, 0, resolver.spell.getBuffsAtIndex(0, playerIn, AugmentSensitive.INSTANCE) > 0);
+        boolean isSensitive = resolver.spell.getBuffsAtIndex(0, playerIn, AugmentSensitive.INSTANCE) > 0;
+        RayTraceResult result = playerIn.pick(5, 0, isSensitive);
         if(result instanceof BlockRayTraceResult && worldIn.getBlockEntity(((BlockRayTraceResult) result).getBlockPos()) instanceof ScribesTile)
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
         if(result instanceof BlockRayTraceResult && !playerIn.isShiftKeyDown()){
@@ -139,7 +140,7 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
             return new ActionResult<>(ActionResultType.CONSUME, stack);
         }
 
-        if(result.getType() == RayTraceResult.Type.BLOCK){
+        if(result.getType() == RayTraceResult.Type.BLOCK || (isSensitive && result instanceof BlockRayTraceResult)){
             ItemUseContext context = new ItemUseContext(playerIn, handIn, (BlockRayTraceResult) result);
             resolver.onCastOnBlock(context);
             return new ActionResult<>(ActionResultType.CONSUME, stack);
@@ -266,7 +267,7 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(final ItemStack stack, @Nullable final World world, final List<ITextComponent> tooltip, final ITooltipFlag flag) {
         super.appendHoverText(stack, world, tooltip, flag);
-        if(stack != null && stack.hasTag()) {
+        if(stack.hasTag()) {
             tooltip.add(new StringTextComponent(SpellBook.getSpellName(stack.getTag())));
 
             tooltip.add(new TranslationTextComponent("ars_nouveau.spell_book.select", KeyBinding.createNameSupplier(ModKeyBindings.OPEN_SPELL_SELECTION.getKeyBinding().getName()).get().getString()));
