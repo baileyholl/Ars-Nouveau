@@ -17,11 +17,11 @@ public class ArcanePedestalRenderer extends TileEntityRenderer<ArcanePedestalTil
         super(p_i226006_1_);
     }
 
-    public void renderFloatingItem(ArcanePedestalTile tileEntityIn, ItemEntity entityItem, double x, double y, double z, MatrixStack stack, IRenderTypeBuffer iRenderTypeBuffer, float partialFrames){
+    public void renderFloatingItem(ArcanePedestalTile tileEntityIn, ItemEntity entityItem, double x, double y, double z, MatrixStack stack, IRenderTypeBuffer iRenderTypeBuffer){
         stack.pushPose();
-        tileEntityIn.frames++;
+        tileEntityIn.frames += 1.5f * Minecraft.getInstance().getDeltaFrameTime();
         entityItem.setYHeadRot(tileEntityIn.frames);
-        ObfuscationReflectionHelper.setPrivateValue(ItemEntity.class, entityItem, (int) (800f - (tileEntityIn.frames + partialFrames)/2f), MappingUtil.getItemEntityAge());
+        ObfuscationReflectionHelper.setPrivateValue(ItemEntity.class, entityItem, (int) tileEntityIn.frames, MappingUtil.getItemEntityAge());
         Minecraft.getInstance().getEntityRenderDispatcher().render(entityItem, 0.5,1,0.5, entityItem.yRot, 2.0f,stack, iRenderTypeBuffer,15728880);
         Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entityItem);
         stack.popPose();
@@ -44,6 +44,6 @@ public class ArcanePedestalRenderer extends TileEntityRenderer<ArcanePedestalTil
         x = x + .5;
         y = y + 0.9;
         z = z +.5;
-        renderFloatingItem(tileEntityIn, entityItem, x, y , z, matrixStack, iRenderTypeBuffer, v);
+        renderFloatingItem(tileEntityIn, entityItem, x, y , z, matrixStack, iRenderTypeBuffer);
     }
 }
