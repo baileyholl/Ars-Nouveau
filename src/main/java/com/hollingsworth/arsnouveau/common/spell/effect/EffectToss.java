@@ -38,7 +38,7 @@ public class EffectToss extends AbstractEffect {
             if (!i.isEmpty() && shooter instanceof PlayerEntity) {
                 return !ItemStack.matches(shooter.getMainHandItem(), i);
             }
-            return true;
+            return false;
         });
         world.addFreshEntity(new ItemEntity(world, pos.getX() + 0.5, pos.getY(), pos.getZ()+ 0.5, stack.copy()));
         stack.setCount(0);

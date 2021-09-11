@@ -110,7 +110,6 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
         });
         SpellResolver resolver = new SpellResolver(new SpellContext(getCurrentRecipe(stack), playerIn)
                 .withColors(SpellBook.getSpellColor(stack.getOrCreateTag(), SpellBook.getMode(stack.getOrCreateTag()))));
-
         RayTraceResult result = playerIn.pick(5, 0, resolver.spell.getBuffsAtIndex(0, playerIn, AugmentSensitive.INSTANCE) > 0);
         if(result instanceof BlockRayTraceResult && worldIn.getBlockEntity(((BlockRayTraceResult) result).getBlockPos()) instanceof ScribesTile)
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
@@ -140,7 +139,7 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
             return new ActionResult<>(ActionResultType.CONSUME, stack);
         }
 
-        if(result instanceof BlockRayTraceResult){
+        if(result.getType() == RayTraceResult.Type.BLOCK){
             ItemUseContext context = new ItemUseContext(playerIn, handIn, (BlockRayTraceResult) result);
             resolver.onCastOnBlock(context);
             return new ActionResult<>(ActionResultType.CONSUME, stack);

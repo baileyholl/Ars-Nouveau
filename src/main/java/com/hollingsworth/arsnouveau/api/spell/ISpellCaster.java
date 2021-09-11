@@ -86,7 +86,7 @@ public interface ISpellCaster {
             return new ActionResult<>(ActionResultType.CONSUME, stack);
         }
 
-        if(result instanceof BlockRayTraceResult){
+        if(result.getType() == RayTraceResult.Type.BLOCK){
             ItemUseContext context = new ItemUseContext(playerIn, handIn, (BlockRayTraceResult) result);
             resolver.onCastOnBlock(context);
             return new ActionResult<>(ActionResultType.CONSUME, stack);
