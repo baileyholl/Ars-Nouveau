@@ -98,14 +98,18 @@ public class ChimeraRamGoal extends Goal {
         BlockPos facingPos = boss.blockPosition().above().relative(facing);
         for(int i = 0; i < 2; i++){
             facingPos = facingPos.above(i);
-            boss.level.destroyBlock(facingPos.above(), true);
-            boss.level.destroyBlock(facingPos.east(), true);
-            boss.level.destroyBlock(facingPos.west(), true);
-            boss.level.destroyBlock(facingPos.south(), true);
-            boss.level.destroyBlock(facingPos.north(), true);
+            destroyBlock(facingPos.above());
+            destroyBlock(facingPos.east());
+            destroyBlock(facingPos.west());
+            destroyBlock(facingPos.south());
+            destroyBlock(facingPos.north());
         }
+    }
 
-
+    public void destroyBlock(BlockPos pos){
+        if(boss.level.getBlockState(pos).getHarvestLevel() < 9999){
+            boss.level.destroyBlock(pos, true);
+        }
     }
 
     @Override
