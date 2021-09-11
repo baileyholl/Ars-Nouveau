@@ -869,5 +869,9 @@
 	"ars_nouveau.item_transport": "Item Transport",
 	"ars_nouveau.filtering": "Filtering",
 	"ars_nouveau.pathing": "Pathing",
-	"block.ars_nouveau.archwood_chest": "Archwood Chest"
+	"block.ars_nouveau.archwood_chest": "Archwood Chest",
+	"ars_nouveau.page1.archwood_forest": "The Archwood Forest is a somewhat rare biome filled with magical lights and archwood trees. It contains an increased amount of gold and source gem ore. Additionally, magical creatures such as Carbuncles, Sylphs, and Drygmys have a much higher chance of spawning.",
+	"ars_nouveau.wilden": "Wilden",
+	"ars_nouveau.decorative": "Decorative Blocks",
+	"ars_nouveau.archwood_trees": "Archwood Trees"
 }
