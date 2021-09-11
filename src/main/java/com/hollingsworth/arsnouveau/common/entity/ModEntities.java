@@ -86,7 +86,7 @@ public class ModEntities {
     public static EntityType<FamiliarDrygmy> ENTITY_FAMILIAR_DRYGMY = null;
     public static EntityType<FamiliarSylph> ENTITY_FAMILIAR_SYLPH = null;
     public static EntityType<FamiliarJabberwog> ENTITY_FAMILIAR_JABBERWOG = null;
-
+    public static EntityType<EntityLingeringSpell> LINGER_SPELL = null;
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
 
@@ -100,6 +100,13 @@ public class ModEntities {
                             .setTrackingRange(20)
                             .setShouldReceiveVelocityUpdates(true)
                             .setUpdateInterval(120).setCustomClientFactory(EntityProjectileSpell::new));
+            LINGER_SPELL = build(
+                    "linger",
+                    EntityType.Builder.<EntityLingeringSpell>of(EntityLingeringSpell::new, EntityClassification.MISC)
+                            .sized(0.5f, 0.5f)
+                            .setTrackingRange(20)
+                            .setShouldReceiveVelocityUpdates(true)
+                            .setUpdateInterval(120).setCustomClientFactory(EntityLingeringSpell::new));
             ENTITY_EVOKER_FANGS_ENTITY_TYPE = build(
                     "fangs",
                     EntityType.Builder.<EntityEvokerFangs>of(EntityEvokerFangs::new, EntityClassification.MISC)
@@ -217,7 +224,8 @@ public class ModEntities {
                     ENTITY_FAMILIAR_JABBERWOG,
                     ENTITY_FAMILIAR_WIXIE,
                     ENTITY_FAMILIAR_SYLPH,
-                    ENTITY_FAMILIAR_DRYGMY
+                    ENTITY_FAMILIAR_DRYGMY,
+                    LINGER_SPELL
             );
 
 

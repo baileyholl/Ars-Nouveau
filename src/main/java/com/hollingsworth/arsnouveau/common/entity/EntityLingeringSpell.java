@@ -3,20 +3,26 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.*;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.FMLPlayMessages;
 
 public class EntityLingeringSpell extends EntityProjectileSpell{
 
     public static final DataParameter<Integer> ACCELERATES = EntityDataManager.defineId(EntityLingeringSpell.class, DataSerializers.INT);
     public static final DataParameter<Integer> AOE = EntityDataManager.defineId(EntityLingeringSpell.class, DataSerializers.INT);
     public static final DataParameter<Boolean> LANDED = EntityDataManager.defineId(EntityLingeringSpell.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Boolean> SENSITIVE = EntityDataManager.defineId(EntityLingeringSpell.class, DataSerializers.BOOLEAN);
+    public double extendedTime;
 
     public EntityLingeringSpell(EntityType<? extends EntityProjectileSpell> type, World worldIn) {
         super(type, worldIn);
@@ -37,17 +43,52 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
 
     @Override
     public void tick() {
-        if(!getLanded()){
-            super.tick();
+
+        boolean isOnGround = level.getBlockState(blockPosition()).getMaterial().blocksMotion();
+        if(!level.isClientSide) {
+            this.setLanded(isOnGround);
+            if(spellResolver == null) {
+                this.remove();
+                return;
+            }
+        }
+        int aoe =  getAoe();
+        if(!level.isClientSide && age % (20 - 2* getAccelerates()) == 0){
+            if(isSensitive()){
+                for(BlockPos p : BlockPos.betweenClosed(blockPosition().east(aoe).north(aoe), blockPosition().west(aoe).south(aoe))){
+                    spellResolver.onResolveEffect(level, getOwner() instanceof LivingEntity ? (LivingEntity) getOwner() : null, new
+                            BlockRayTraceResult(new Vector3d(p.getX(), p.getY(), p.getZ()), Direction.UP, p, false));
+                }
+            }else {
+                for(Entity entity : level.getEntities(null, new AxisAlignedBB(this.blockPosition()).inflate(getAoe()))) {
+                    spellResolver.onResolveEffect(level, getOwner() instanceof LivingEntity ? (LivingEntity) getOwner() : null, new EntityRayTraceResult(entity));
+                }
+            }
         }
 
-        if(level.isClientSide && getLanded()){
-            ParticleUtil.spawnRitualAreaEffect(getOnPos(), level, random, getParticleColor(), 3 + getAoe());
+        if(!isOnGround){
+            this.setDeltaMovement(0, -0.2, 0);
+            super.tick();
+        }else{
+            age++;
+        }
+        if(age > 70 + extendedTime * 20)
+            this.remove();
+        if(level.isClientSide){
+            ParticleUtil.spawnRitualAreaEffect(getOnPos(), level, random, getParticleColor(), getAoe(), 5, 20);
+            ParticleUtil.spawnLight(level, getParticleColor(), position.add(0, 0.5, 0),10);
         }
 
 
     }
 
+    public EntityLingeringSpell(FMLPlayMessages.SpawnEntity packet, World world){
+        super(ModEntities.LINGER_SPELL, world);
+    }
+    @Override
+    public EntityType<?> getType() {
+        return ModEntities.LINGER_SPELL;
+    }
     @Override
     protected void onHit(RayTraceResult result) {
         if (!level.isClientSide && result instanceof BlockRayTraceResult && !this.removed) {
@@ -69,7 +110,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
     }
 
     public int getAoe(){
-        return entityData.get(AOE);
+        return (this.isSensitive() ? 1 : 3) + entityData.get(AOE) ;
     }
 
     public void setLanded(boolean landed){
@@ -80,11 +121,31 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
         return entityData.get(LANDED);
     }
 
+    public void setSensitive(boolean sensitive){
+        entityData.set(SENSITIVE, sensitive);
+    }
+
+    public boolean isSensitive(){
+        return entityData.get(SENSITIVE);
+    }
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
         entityData.define(ACCELERATES, 0);
         entityData.define(AOE, 0);
         entityData.define(LANDED, false);
+        entityData.define(SENSITIVE, false);
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundNBT tag) {
+        super.addAdditionalSaveData(tag);
+        tag.putBoolean("sensitive", isSensitive());
+    }
+
+    @Override
+    public void load(CompoundNBT compound) {
+        super.load(compound);
+        setSensitive(compound.getBoolean("sensitive"));
     }
 }
