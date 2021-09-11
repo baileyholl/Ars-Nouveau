@@ -869,5 +869,6 @@
 	"ars_nouveau.summoning": "召唤",
 	"ars_nouveau.item_transport": "物品运输",
 	"ars_nouveau.filtering": "过滤",
-	"ars_nouveau.pathing": "寻路"
+	"ars_nouveau.pathing": "寻路",
+	"block.ars_nouveau.archwood_chest": "至高木箱子"
 }
