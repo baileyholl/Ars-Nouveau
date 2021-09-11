@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
-
+//TODO: Change to SourceUtil and method names
 public class ManaUtil {
 
     public static int getPlayerDiscounts(LivingEntity e){
@@ -114,15 +114,12 @@ public class ManaUtil {
      */
     @Nullable
     public static BlockPos takeManaNearby(BlockPos pos, World world, int range, int mana){
-        final BlockPos[] pos1 = {null};
-        BlockPos.betweenClosedStream(pos.offset(range, 2, range), pos.offset(-range, -2, -range)).forEach(blockPos -> {
-            blockPos = blockPos.immutable();
-            if(pos1[0] == null && world.getBlockEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getBlockEntity(blockPos)).getCurrentMana() >= mana) {
-                ((ManaJarTile) world.getBlockEntity(blockPos)).removeMana(mana);
-                pos1[0] = blockPos;
-            }
-        });
-        return pos1[0];
+        Optional<BlockPos> loc = BlockPos.findClosestMatch(pos, range, range, (b) -> world.getBlockEntity(b) instanceof ManaJarTile && ((ManaJarTile) world.getBlockEntity(b)).getCurrentMana() >= mana);
+        if(!loc.isPresent())
+            return null;
+        ManaJarTile tile = (ManaJarTile) world.getBlockEntity(loc.get());
+        tile.removeMana(mana);
+        return loc.get();
     }
 
     public static @Nullable BlockPos takeManaNearbyWithParticles(BlockPos pos, World world, int range, int mana){
@@ -138,30 +135,9 @@ public class ManaUtil {
      * Searches for nearby mana jars that have enough mana.
      * Returns the position where the mana was taken, or null if none were found.
      */
-    @Nullable
     public static boolean hasManaNearby(BlockPos pos, World world, int range, int mana){
-        final boolean[] hasMana = {false};
-        BlockPos.betweenClosedStream(pos.offset(range, range, range), pos.offset(-range, -range, -range)).forEach(blockPos -> {
-            blockPos = blockPos.immutable();
-            if(!hasMana[0] && world.getBlockEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getBlockEntity(blockPos)).getCurrentMana() >= mana) {
-                hasMana[0] = true;
-            }
-        });
-        return hasMana[0];
-    }
-
-    @Nullable
-    public static BlockPos canGiveMana(BlockPos pos, World world, int range){
-        final boolean[] hasMana = {false};
-        final BlockPos[] loc = {null};
-        BlockPos.betweenClosedStream(pos.offset(range, range, range), pos.offset(-range, -range, -range)).forEach(blockPos -> {
-            blockPos = blockPos.immutable();
-            if(!hasMana[0] && world.getBlockEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) world.getBlockEntity(blockPos)).canAcceptMana()) {
-                hasMana[0] = true;
-                loc[0] = blockPos;
-            }
-        });
-        return  loc[0];
+        Optional<BlockPos> loc = BlockPos.findClosestMatch(pos, range, range, (b) -> world.getBlockEntity(b) instanceof ManaJarTile && ((ManaJarTile) world.getBlockEntity(b)).getCurrentMana() >= mana);
+        return loc.isPresent();
     }
 
     @Nullable

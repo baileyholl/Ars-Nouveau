@@ -43,7 +43,7 @@ public class WarpScroll extends ModItem{
                     && getDimension(stack).equals(entity.getCommandSenderWorld().dimension().getRegistryName().toString())
                     && ManaUtil.hasManaNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000)
                     && BlockRegistry.PORTAL_BLOCK.trySpawnPortal(entity.getCommandSenderWorld(), entity.blockPosition(), getPos(stack), getDimension(stack), getRotationVector(stack), displayName)
-                    && ManaUtil.takeManaNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000) != null){
+                    && ManaUtil.takeManaNearbyWithParticles(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000) != null){
                 BlockPos pos = entity.blockPosition();
                 ServerWorld world = (ServerWorld) entity.getCommandSenderWorld();
                 world.sendParticles(ParticleTypes.PORTAL, pos.getX(),  pos.getY() + 1,  pos.getZ(),
