@@ -98,9 +98,12 @@ public class EffectExchange extends AbstractEffect {
                                 firstBlock = item.getBlock();
                             }else if(item.getBlock() != firstBlock)
                                 continue;
-                            if(attemptPlace(stack, world, pos1, result, shooter)) {
+                            ItemStack extracted = i.extractItem(slot, 1, false);
+                            if(attemptPlace(extracted, world, pos1, result, shooter)) {
                                 shouldBreak = true;
                                 break;
+                            }else{
+                                i.insertItem(slot, extracted, false);
                             }
                         }
                     }
@@ -144,7 +147,6 @@ public class EffectExchange extends AbstractEffect {
         if(placeState != null){
             world.setBlock(pos1, placeState, 3);
             stack.shrink(1);
-//            item.place(context);
             return true;
         }
         return false;

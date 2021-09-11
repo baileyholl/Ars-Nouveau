@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.mana.IMana;
 import com.hollingsworth.arsnouveau.api.spell.*;
-import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.entity.EntityLingeringSpell;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
@@ -29,8 +27,6 @@ public class EffectLinger extends AbstractEffect {
     @Override
     public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         super.onResolve(rayTraceResult, world, shooter, spellStats, spellContext);
-        IMana mana = ManaCapability.getMana(shooter).orElse(null);
-        System.out.println(mana.getMaxMana());
         Vector3d hit = safelyGetHitPos(rayTraceResult);
         EntityLingeringSpell entityLingeringSpell = new EntityLingeringSpell(world, shooter);
         spellContext.setCanceled(true);
@@ -44,7 +40,6 @@ public class EffectLinger extends AbstractEffect {
         entityLingeringSpell.spellResolver = new SpellResolver(new SpellContext(newSpell, shooter).withColors(spellContext.colors));
         entityLingeringSpell.setPos(hit.x, hit.y, hit.z);
         entityLingeringSpell.setColor(spellContext.colors);
-     //   entityLingeringSpell.setLanded(true);
         world.addFreshEntity(entityLingeringSpell);
     }
 
@@ -68,6 +63,6 @@ public class EffectLinger extends AbstractEffect {
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return setOf(AugmentSensitive.INSTANCE, AugmentAOE.INSTANCE, AugmentSensitive.INSTANCE);
+        return setOf(AugmentSensitive.INSTANCE, AugmentAOE.INSTANCE, AugmentAccelerate.INSTANCE);
     }
 }
