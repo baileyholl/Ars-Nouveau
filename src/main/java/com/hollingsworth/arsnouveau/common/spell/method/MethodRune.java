@@ -30,7 +30,7 @@ public class MethodRune extends AbstractCastMethod {
     public static MethodRune INSTANCE = new MethodRune();
 
     private MethodRune() {
-        super(GlyphLib.MethodRuneID, "Rune");
+        super(GlyphLib.EffectRuneID, "Rune");
     }
 
     @Override

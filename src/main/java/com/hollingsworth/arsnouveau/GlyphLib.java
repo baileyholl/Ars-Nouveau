@@ -4,7 +4,7 @@ public class GlyphLib {
     public static final String MethodProjectileID = "projectile";
     public static final String MethodTouchID = "touch";
     public static final String MethodSelfID = "self";
-    public static final String MethodRuneID = "rune";
+    public static final String EffectRuneID = "rune";
 
     public static final String MethodBeamID = "beam";
     public static final String EffectBreakID = "break";
