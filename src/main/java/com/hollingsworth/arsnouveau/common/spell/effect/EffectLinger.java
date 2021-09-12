@@ -3,9 +3,7 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityLingeringSpell;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
+import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -32,17 +30,22 @@ public class EffectLinger extends AbstractEffect {
         spellContext.setCanceled(true);
         if(spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
-        Spell newSpell =  new Spell(spellContext.getSpell().recipe.subList(spellContext.getCurrentIndex(), spellContext.getSpell().recipe.size()));
+        Spell newSpell = new Spell(spellContext.getSpell().recipe.subList(spellContext.getCurrentIndex(), spellContext.getSpell().recipe.size()));
         entityLingeringSpell.setAoe(spellStats.getBuffCount(AugmentAOE.INSTANCE));
         entityLingeringSpell.setSensitive(spellStats.hasBuff(AugmentSensitive.INSTANCE));
         entityLingeringSpell.setAccelerates(spellStats.getBuffCount(AugmentAccelerate.INSTANCE));
-        entityLingeringSpell.setAccelerates((int) spellStats.getDurationMultiplier());
+        entityLingeringSpell.extendedTime = spellStats.getDurationMultiplier();
         entityLingeringSpell.spellResolver = new SpellResolver(new SpellContext(newSpell, shooter).withColors(spellContext.colors));
         entityLingeringSpell.setPos(hit.x, hit.y, hit.z);
         entityLingeringSpell.setColor(spellContext.colors);
         world.addFreshEntity(entityLingeringSpell);
     }
 
+
+    @Override
+    public String getBookDescription() {
+        return "Creates a lingering field that applies spells on nearby entities for a short time. Applying Sensitive will make this spell target blocks instead. AOE will expand the effective range, Accelerate will cast spells faster, and Extend Time will increase the duration.";
+    }
 
     @Nullable
     @Override
@@ -63,6 +66,12 @@ public class EffectLinger extends AbstractEffect {
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return setOf(AugmentSensitive.INSTANCE, AugmentAOE.INSTANCE, AugmentAccelerate.INSTANCE);
+        return setOf(AugmentSensitive.INSTANCE, AugmentAOE.INSTANCE, AugmentAccelerate.INSTANCE, AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
+    }
+
+    @Nonnull
+    @Override
+    public Set<SpellSchool> getSchools() {
+        return setOf(SpellSchools.MANIPULATION);
     }
 }
