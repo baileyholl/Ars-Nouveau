@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Set;
 
 public class EffectRune extends AbstractEffect {
@@ -27,11 +28,11 @@ public class EffectRune extends AbstractEffect {
     public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         super.onResolveBlock(rayTraceResult, world, shooter, spellStats, spellContext);
         BlockPos pos = rayTraceResult.getBlockPos();
-        pos = rayTraceResult.isInside() ? pos : pos.relative(( rayTraceResult).getDirection());;
+        pos = rayTraceResult.isInside() ? pos : pos.relative(( rayTraceResult).getDirection());
         spellContext.setCanceled(true);
         if(spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
-        Spell newSpell = new Spell(spellContext.getSpell().recipe.subList(spellContext.getCurrentIndex(), spellContext.getSpell().recipe.size()));
+        Spell newSpell = new Spell(new ArrayList<>(spellContext.getSpell().recipe.subList(spellContext.getCurrentIndex(), spellContext.getSpell().recipe.size())));
         if(world.getBlockState(pos).getMaterial().isReplaceable()){
             world.setBlockAndUpdate(pos, BlockRegistry.RUNE_BLOCK.defaultBlockState());
             if(world.getBlockEntity(pos) instanceof RuneTile){
@@ -42,6 +43,7 @@ public class EffectRune extends AbstractEffect {
                 runeTile.isTemporary = true;
                 newSpell.recipe.add(0, MethodTouch.INSTANCE);
                 runeTile.recipe = newSpell;
+                runeTile.color = spellContext.colors.toParticleColor();
             }
         }
     }

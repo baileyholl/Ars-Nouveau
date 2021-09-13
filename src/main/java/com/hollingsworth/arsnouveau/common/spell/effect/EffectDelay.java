@@ -21,6 +21,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Set;
 
 public class EffectDelay extends AbstractEffect {
@@ -34,7 +35,7 @@ public class EffectDelay extends AbstractEffect {
         spellContext.setCanceled(true);
         if(spellContext.getCurrentIndex() >= spellContext.getSpell().recipe.size())
             return;
-        Spell newSpell =  new Spell(spellContext.getSpell().recipe.subList(spellContext.getCurrentIndex(), spellContext.getSpell().recipe.size()));
+        Spell newSpell =  new Spell(new ArrayList<>(spellContext.getSpell().recipe.subList(spellContext.getCurrentIndex(), spellContext.getSpell().recipe.size())));
         SpellContext newContext = new SpellContext(newSpell, shooter).withColors(spellContext.colors);
         int duration = GENERIC_INT.get() + EXTEND_TIME.get() * getBuffCount(spellStats.getAugments(), AugmentExtendTime.class) * 20 - (EXTEND_TIME.get() / 2) * getBuffCount(spellStats.getAugments(), AugmentDurationDown.class) * 20;
         EventQueue.getServerInstance().addEvent(

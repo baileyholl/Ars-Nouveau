@@ -3,6 +3,8 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.RuneBlock;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -18,18 +20,22 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.items.IItemHandler;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
 
-public class RuneTile extends AnimatedTile implements IPickupResponder {
+public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimatable {
     public Spell recipe = Spell.EMPTY;
     public boolean isTemporary;
     public boolean isCharged;
     public int ticksUntilCharge;
     public UUID uuid;
-
+    public ParticleColor color = ParticleUtil.defaultParticleColor();
+    
     public RuneTile() {
         super(BlockRegistry.RUNE_TILE);
         isCharged = true;
@@ -83,6 +89,8 @@ public class RuneTile extends AnimatedTile implements IPickupResponder {
         tag.putInt("cooldown", ticksUntilCharge);
         if(uuid != null)
             tag.putUUID("uuid", uuid);
+        if(color != null)
+            tag.putString("color", color.toWrapper().serialize());
         return super.save(tag);
     }
 
@@ -94,6 +102,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder {
         this.ticksUntilCharge = tag.getInt("cooldown");
         if(tag.contains("uuid"))
             this.uuid = tag.getUUID("uuid");
+        this.color = ParticleColor.IntWrapper.deserialize(tag.getString("color")).toParticleColor();
         super.load(state, tag);
     }
 
@@ -131,5 +140,15 @@ public class RuneTile extends AnimatedTile implements IPickupResponder {
     @Override
     public @Nonnull ItemStack onPickup(ItemStack stack) {
         return BlockUtil.insertItemAdjacent(level, worldPosition, stack);
+    }
+
+    @Override
+    public void registerControllers(AnimationData data) {
+
+    }
+    AnimationFactory factory = new AnimationFactory(this);
+    @Override
+    public AnimationFactory getFactory() {
+        return factory;
     }
 }
