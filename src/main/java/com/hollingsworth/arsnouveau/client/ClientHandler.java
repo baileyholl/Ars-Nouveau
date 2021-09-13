@@ -54,6 +54,8 @@ public class ClientHandler {
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.SPELL_TURRET_TYPE, ReducerTurretRenderer::new);
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.TIMER_SPELL_TURRET_TILE, TimerTurretRenderer::new);
         ClientRegistry.bindTileEntityRenderer(BlockRegistry.ARCHWOOD_CHEST_TILE, ArchwoodChestRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(BlockRegistry.RUNE_TILE, RuneRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(BlockRegistry.PHANTOM_TILE, MageBlockRenderer::new);
 
         RenderTypeLookup.setRenderLayer(BlockRegistry.MANA_JAR, RenderType.translucent());
         RenderTypeLookup.setRenderLayer(BlockRegistry.GLYPH_PRESS_BLOCK, RenderType.cutout());

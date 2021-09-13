@@ -63,6 +63,8 @@ public class ParticleColor {
     }
 
     public static ParticleColor deserialize(String string){
+        if(string == null || string.isEmpty())
+            return ParticleUtil.defaultParticleColor();
         String[] arr = string.split(",");
         return new ParticleColor(Integer.parseInt(arr[0].trim()), Integer.parseInt(arr[1].trim()), Integer.parseInt(arr[2].trim()));
     }

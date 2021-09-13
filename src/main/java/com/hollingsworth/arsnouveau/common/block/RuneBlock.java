@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -99,6 +100,10 @@ public class RuneBlock extends ModBlock{
         return true;
     }
 
+    @Override
+    public BlockRenderType getRenderShape(BlockState p_149645_1_) {
+        return BlockRenderType.ENTITYBLOCK_ANIMATED;
+    }
 
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {

@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.PhantomBlockTile;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -24,6 +25,11 @@ public class PhantomBlock extends ModBlock {
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new PhantomBlockTile();
+    }
+
+    @Override
+    public BlockRenderType getRenderShape(BlockState p_149645_1_) {
+        return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
     @Override
