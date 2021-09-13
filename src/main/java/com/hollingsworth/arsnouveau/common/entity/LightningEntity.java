@@ -71,7 +71,7 @@ public class LightningEntity extends LightningBoltEntity {
      * Called to update the entity's position/logic.
      */
     public void tick() {
-        super.tick();
+        this.baseTick();
         if (this.lightningState == 2) {
             Difficulty difficulty = this.level.getDifficulty();
 
