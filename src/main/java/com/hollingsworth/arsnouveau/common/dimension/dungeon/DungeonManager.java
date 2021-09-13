@@ -58,8 +58,6 @@ public class DungeonManager extends WorldSavedData {
 
     @Override
     public void load(CompoundNBT tag) {
-        System.out.println("LOAD");
-        System.out.println(tag.toString());
         this.event = tag.contains("event") ? new DungeonEvent(world, tag.getCompound("event")) : new DungeonEvent(world);
     }
 

@@ -29,6 +29,7 @@ public class DungeonEvent {
     private String currentTemplate = "";
     private Template.BlockInfo centeredInfo;
     int buildIndex;
+    int currentWave;
     List<BlockPos> rewardLoc = new ArrayList<>();
     List<BlockPos> currentBuild = new ArrayList<>();
     boolean setBuild;
@@ -71,6 +72,9 @@ public class DungeonEvent {
     }
 
     public void reward() {
+        for(BlockPos p : rewardLoc){
+            world.setBlock(p, Blocks.CHEST.defaultBlockState(), 2);
+        }
         switchState(State.BUILDING);
     }
 
@@ -95,6 +99,7 @@ public class DungeonEvent {
             if (combatOverTicks >= 100) {
                 combatOverTicks = 0;
                 switchState(State.REWARD);
+                currentWave++;
             }
             // switchState(State.REWARD);
         }
@@ -114,6 +119,10 @@ public class DungeonEvent {
             return;
         }
         if(!setBuild) {
+            for(BlockPos p : rewardLoc){
+                world.setBlock(p, Blocks.AIR.defaultBlockState(), 2);
+            }
+            rewardLoc.clear();
             this.currentTemplate = this.currentTemplate.equals("ars_nouveau:test") ? "ars_nouveau:dirt" : "ars_nouveau:test";
             Template template = templatemanager.getOrCreate(new ResourceLocation(this.currentTemplate));
             if (template.palettes.isEmpty())
@@ -126,7 +135,7 @@ public class DungeonEvent {
         }
         Template template = templatemanager.getOrCreate(new ResourceLocation(this.currentTemplate));
         List<Template.BlockInfo> pallette = template.palettes.get(0).blocks();
-        System.out.println(currentBuild.size());
+        rewardLoc.add(new BlockPos(0, 102, 0));
         for(int i = 0; i < Math.max(1,pallette.size() / 100); i++){
             boolean foundNonAir = false;
             while(!foundNonAir){
@@ -244,7 +253,12 @@ public class DungeonEvent {
             this.currentBuild.add(NBTUtil.getBlockPos(tag, "current_b" + counter));
             counter++;
         }
-
+        counter = 0;
+        while(NBTUtil.hasBlockPos(tag, "reward_loc_" + counter)){
+            this.rewardLoc.add(NBTUtil.getBlockPos(tag, "reward_loc_" + counter));
+            counter++;
+        }
+        this.currentWave = tag.getInt("wave");
     }
 
     public CompoundNBT save(CompoundNBT tag) {
@@ -255,8 +269,12 @@ public class DungeonEvent {
         tag.putString("template", currentTemplate);
         tag.putBoolean("setBuild", setBuild);
         tag.putInt("buildIndex", buildIndex);
+        tag.putInt("wave", currentWave);
         for(int i = 0; i < currentBuild.size(); i++){
             NBTUtil.storeBlockPos(tag, "current_b" + i, currentBuild.get(i));
+        }
+        for(int i = 0; i < rewardLoc.size(); i++){
+            NBTUtil.storeBlockPos(tag, "reward_loc_" + i, rewardLoc.get(i));
         }
 
         return tag;
