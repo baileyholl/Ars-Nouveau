@@ -6,6 +6,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.effect.LightningBoltEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -61,6 +62,8 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
                 }
             }else {
                 for(Entity entity : level.getEntities(null, new AxisAlignedBB(this.blockPosition()).inflate(getAoe()))) {
+                    if(entity.equals(this) || entity instanceof EntityLingeringSpell || entity instanceof LightningBoltEntity)
+                        continue;
                     spellResolver.onResolveEffect(level, getOwner() instanceof LivingEntity ? (LivingEntity) getOwner() : null, new EntityRayTraceResult(entity));
                 }
             }

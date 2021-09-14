@@ -10,6 +10,7 @@ import net.minecraft.item.Items;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -68,6 +69,12 @@ public class EffectLinger extends AbstractEffect {
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         return setOf(AugmentSensitive.INSTANCE, AugmentAOE.INSTANCE, AugmentAccelerate.INSTANCE, AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
+    }
+
+    @Override
+    public void buildConfig(ForgeConfigSpec.Builder builder) {
+        super.buildConfig(builder);
+        PER_SPELL_LIMIT = builder.comment("The maximum number of times this glyph may appear in a single spell").defineInRange("per_spell_limit", 1, 1,1);
     }
 
     @Nonnull
