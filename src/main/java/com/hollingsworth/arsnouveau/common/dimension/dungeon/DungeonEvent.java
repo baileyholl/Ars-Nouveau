@@ -4,7 +4,6 @@ import com.google.common.collect.Sets;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
@@ -34,11 +33,14 @@ public class DungeonEvent {
     List<BlockPos> currentBuild = new ArrayList<>();
     boolean setBuild;
     private final ServerBossInfo raidEvent = new ServerBossInfo(new StringTextComponent("Test"), BossInfo.Color.RED, BossInfo.Overlay.NOTCHED_10);
+    public CombatManager combatManager;
+    public int spawnDelayTicks;
 
     public DungeonEvent(ServerWorld world) {
         this.world = world;
         this.state = State.BUILDING;
         this.raidEvent.setPercent(0.0F);
+        combatManager = new CombatManager();
     }
 
 
@@ -49,9 +51,7 @@ public class DungeonEvent {
         if (state == State.BUILDING) {
             build();
         }
-        if (state == State.SPAWNING) {
-            spawn();
-        }
+
         if (state == State.COMBAT) {
             combat();
         }
@@ -78,21 +78,25 @@ public class DungeonEvent {
         switchState(State.BUILDING);
     }
 
-    public void spawn() {
-        this.totalHealth = 0;
-        attackers = new HashSet<>();
-        for (int i = 0; i < 5; i++) {
-            ZombieEntity entity = new ZombieEntity(world);
-            entity.setPos(0, 105, 0);
-            world.addFreshEntity(entity);
-            entity.getPersistentData().put("an_dungeon", new CompoundNBT());
-            addAttacker(entity, true);
-        }
-        switchState(State.COMBAT);
-    }
 
     public void combat() {
-
+        System.out.println(combatManager.budget);
+        for(int i = 0; i < 5; i++) {
+            if (spawnDelayTicks == 0 && combatManager.budget > 0) {
+                LivingEntity entity = combatManager.getNextEntity(world);
+                entity.setPos(0, 105, 0);
+                world.addFreshEntity(entity);
+                entity.getPersistentData().put("an_dungeon", new CompoundNBT());
+                addAttacker(entity, true);
+                if(i >= 4){
+                    spawnDelayTicks = 100;
+                }
+            }else{
+                break;
+            }
+        }
+        if(spawnDelayTicks > 0)
+            spawnDelayTicks--;
         updateBossbar();
         if (getHealthOfLivingRaiders() == 0) {
             combatOverTicks++;
@@ -100,8 +104,9 @@ public class DungeonEvent {
                 combatOverTicks = 0;
                 switchState(State.REWARD);
                 currentWave++;
+                combatManager.budget = 500 + 50 * currentWave;
+                spawnDelayTicks = 0;
             }
-            // switchState(State.REWARD);
         }
     }
 
@@ -154,7 +159,7 @@ public class DungeonEvent {
                 }else{
                     this.buildIndex = 0;
                     Collections.reverse(currentBuild);
-                    switchState(State.SPAWNING);
+                    switchState(State.COMBAT);
                     return;
                 }
             }
@@ -259,6 +264,8 @@ public class DungeonEvent {
             counter++;
         }
         this.currentWave = tag.getInt("wave");
+        this.combatManager = new CombatManager(tag.getCompound("combatManager"));
+        this.spawnDelayTicks = tag.getInt("spawnTicks");
     }
 
     public CompoundNBT save(CompoundNBT tag) {
@@ -276,7 +283,8 @@ public class DungeonEvent {
         for(int i = 0; i < rewardLoc.size(); i++){
             NBTUtil.storeBlockPos(tag, "reward_loc_" + i, rewardLoc.get(i));
         }
-
+        tag.put("combatManager", combatManager.serialize());
+        tag.putInt("spawnTicks", spawnDelayTicks);
         return tag;
     }
 
