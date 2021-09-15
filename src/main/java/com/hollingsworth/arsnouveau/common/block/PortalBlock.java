@@ -59,10 +59,10 @@ public class PortalBlock extends ModBlock{
             int j = rand.nextInt(2) * 2 - 1;
             if (worldIn.getBlockState(pos.west()).getBlock() != this && worldIn.getBlockState(pos.east()).getBlock() != this) {
                 d0 = (double)pos.getX() + 0.5D + 0.25D * (double)j;
-                d3 = (double)(rand.nextFloat() * 2.0F * (float)j);
+                d3 = rand.nextFloat() * 2.0F * (float)j;
             } else {
                 d2 = (double)pos.getZ() + 0.5D + 0.25D * (double)j;
-                d5 = (double)(rand.nextFloat() * 2.0F * (float)j);
+                d5 = rand.nextFloat() * 2.0F * (float)j;
             }
 
             worldIn.addParticle(ParticleTypes.PORTAL, d0, d1, d2, d3, d4, d5);
@@ -109,7 +109,7 @@ public class PortalBlock extends ModBlock{
         switch(rot) {
             case COUNTERCLOCKWISE_90:
             case CLOCKWISE_90:
-                switch((Direction.Axis)state.getValue(AXIS)) {
+                switch(state.getValue(AXIS)) {
                     case Z:
                         return state.setValue(AXIS, Direction.Axis.X);
                     case X:
@@ -221,7 +221,6 @@ public class PortalBlock extends ModBlock{
             }
 
             for(BlockPos blockpos = pos; pos.getY() > blockpos.getY() - 21 && pos.getY() > 0 && this.canReplace(worldIn.getBlockState(pos.below())); pos = pos.below()) {
-                ;
             }
 
             int i = this.getDistanceUntilEdge(pos, this.leftDir) - 1;

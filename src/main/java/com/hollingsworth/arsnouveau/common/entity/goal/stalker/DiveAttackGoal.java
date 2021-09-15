@@ -32,7 +32,7 @@ public class DiveAttackGoal extends Goal {
             return false;
         } else if (!livingentity.isAlive()) {
             return false;
-        } else if (!(livingentity instanceof PlayerEntity) || !((PlayerEntity)livingentity).isSpectator() && !((PlayerEntity)livingentity).isCreative()) {
+        } else if (!(livingentity instanceof PlayerEntity) || !livingentity.isSpectator() && !((PlayerEntity)livingentity).isCreative()) {
             return this.canUse();
         } else {
             return false;
@@ -52,7 +52,7 @@ public class DiveAttackGoal extends Goal {
     public void tick() {
         LivingEntity livingentity = stalker.getTarget();
         stalker.orbitOffset = new Vector3d(livingentity.getX(), livingentity.getY(0.5D), livingentity.getZ());
-        if (stalker.getBoundingBox().inflate((double)0.2F).intersects(livingentity.getBoundingBox())) {
+        if (stalker.getBoundingBox().inflate(0.2F).intersects(livingentity.getBoundingBox())) {
             stalker.doHurtTarget(livingentity);
             stalker.setFlying(false);
 //            if (!PhantomEntity.this.isSilent()) {

@@ -21,12 +21,12 @@ public class EventQueue {
         }
 
         List<ITimedEvent> stale = new ArrayList<>();
-        ITimedEvent event;
+        // Enhanced-for or iterator will cause a concurrent modification.
         for(int i = 0; i < events.size(); i++){
-            event = events.get(i);
-            if(event.isExpired()){
+            ITimedEvent event = events.get(i);
+            if (event.isExpired()) {
                 stale.add(event);
-            }else{
+            } else {
                 event.tick(serverSide);
             }
         }

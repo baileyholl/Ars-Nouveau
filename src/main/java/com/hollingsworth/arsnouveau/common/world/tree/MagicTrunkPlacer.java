@@ -38,8 +38,6 @@ public class MagicTrunkPlacer extends AbstractTrunkPlacer {
         int x = pos.getX();
         int y = pos.getY();
         int z = pos.getZ();
-        int xOffset = x;
-        int zOffset = z;
         int yOffset = y + foliageHeight - 1;
 
         int numBranches = 0;
@@ -51,7 +49,7 @@ public class MagicTrunkPlacer extends AbstractTrunkPlacer {
 
         for(int i = 0; i < foliageHeight; ++i) {
             int j2 = y + i;
-            BlockPos blockpos1 = new BlockPos(xOffset, j2, zOffset);
+            BlockPos blockpos1 = new BlockPos(x, j2, z);
             if (TreeFeature.isAirOrLeaves(world, blockpos1)) {
                 placeLog(world, rand, blockpos1, posSet, boundingBox, baseTreeFeatureConfig);
                 placeLog(world, rand, blockpos1.east(), posSet, boundingBox, baseTreeFeatureConfig);
@@ -177,7 +175,7 @@ public class MagicTrunkPlacer extends AbstractTrunkPlacer {
             }
         }
 
-        list.add(new FoliagePlacer.Foliage(new BlockPos(xOffset, yOffset, zOffset), 0, true));
+        list.add(new FoliagePlacer.Foliage(new BlockPos(x, yOffset, z), 0, true));
         return list;
     }
 

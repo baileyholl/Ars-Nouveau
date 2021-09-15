@@ -147,12 +147,10 @@ public class FamiliarCap implements IFamiliarCap {
          */
         @SubscribeEvent
         public static void playerClone(final PlayerEvent.Clone event) {
-            getFamiliarCap(event.getOriginal()).ifPresent(oldFamiliarCap -> {
-                getFamiliarCap(event.getPlayer()).ifPresent(newFamiliarCap -> {
-                    newFamiliarCap.setUnlockedFamiliars(oldFamiliarCap.getUnlockedFamiliars());
-                    FamiliarCap.syncFamiliars(event.getPlayer());
-                });
-            });
+            getFamiliarCap(event.getOriginal()).ifPresent(oldFamiliarCap -> getFamiliarCap(event.getPlayer()).ifPresent(newFamiliarCap -> {
+                newFamiliarCap.setUnlockedFamiliars(oldFamiliarCap.getUnlockedFamiliars());
+                FamiliarCap.syncFamiliars(event.getPlayer());
+            }));
         }
 
         @SubscribeEvent

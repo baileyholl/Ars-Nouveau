@@ -32,7 +32,7 @@ public class BonemealGoal extends DistanceRestrictedGoal {
     public final Predicate<BlockState> IS_GRASS = BlockStateMatcher.forBlock(Blocks.GRASS_BLOCK);
 
     public BonemealGoal(EntitySylph sylph){
-        super(()->sylph.blockPosition(), 0);
+        super(sylph::blockPosition, 0);
         this.sylph = sylph;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK, Goal.Flag.JUMP));
     }

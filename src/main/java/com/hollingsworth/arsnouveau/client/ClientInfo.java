@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientInfo {
-    private ClientInfo(){};
+    private ClientInfo(){}
 
     public static CompoundNBT persistentData = new CompoundNBT();
     public static int ticksInGame = 0;

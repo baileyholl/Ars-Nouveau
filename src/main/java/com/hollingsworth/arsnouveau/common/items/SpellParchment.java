@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
+// TODO: Make a 'caster' with same serializations.
 public class SpellParchment extends ModItem implements IScribeable {
     public SpellParchment() {
         super(LibItemNames.SPELL_PARCHMENT);
@@ -33,22 +33,22 @@ public class SpellParchment extends ModItem implements IScribeable {
     }
 
     public static void setSpell(ItemStack stack, String spellRecipe){
-        stack.getTag().putString("spell", spellRecipe);
+        stack.getOrCreateTag().putString("spell", spellRecipe);
     }
 
     @Deprecated
     public static List<AbstractSpellPart> getSpellRecipe(ItemStack stack){
         if(!stack.hasTag())
             return null;
-        return SpellRecipeUtil.getSpellsFromTagString(stack.getTag().getString("spell"));
+        return SpellRecipeUtil.getSpellsFromTagString(stack.getOrCreateTag().getString("spell"));
     }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag p_77624_4_) {
-        if(!stack.hasTag() || stack.getTag().getString("spell").equals(""))
+        if(!stack.hasTag() || stack.getOrCreateTag().getString("spell").equals(""))
             return;
 
-        List<AbstractSpellPart> spellsFromTagString = SpellRecipeUtil.getSpellsFromTagString(stack.getTag().getString("spell"));
+        List<AbstractSpellPart> spellsFromTagString = SpellRecipeUtil.getSpellsFromTagString(stack.getOrCreateTag().getString("spell"));
         Spell spell = new Spell(spellsFromTagString);
         tooltip.add(new StringTextComponent(spell.getDisplayString()));
     }
@@ -59,12 +59,12 @@ public class SpellParchment extends ModItem implements IScribeable {
         if(!(player.getItemInHand(handIn).getItem() instanceof SpellBook))
             return false;
 
-        if(SpellBook.getMode(player.getItemInHand(handIn).getTag()) == 0){
+        if(SpellBook.getMode(player.getItemInHand(handIn).getOrCreateTag()) == 0){
             PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.spell_parchment.no_spell"));
             return false;
         }
 
-        SpellParchment.setSpell(thisStack, SpellBook.getRecipeString(player.getItemInHand(handIn).getTag(), SpellBook.getMode(player.getItemInHand(handIn).getTag())));
+        SpellParchment.setSpell(thisStack, SpellBook.getRecipeString(player.getItemInHand(handIn).getOrCreateTag(), SpellBook.getMode(player.getItemInHand(handIn).getOrCreateTag())));
         PortUtil.sendMessage(player,new TranslationTextComponent("ars_nouveau.spell_parchment.inscribed"));
         return false;
     }

@@ -64,7 +64,7 @@ public class EntitySpellArrow extends ArrowEntity {
         if (this.xRotO == 0.0F && this.yRotO == 0.0F) {
             float f = MathHelper.sqrt(getHorizontalDistanceSqr(vector3d));
             this.yRot = (float) (MathHelper.atan2(vector3d.x, vector3d.z) * (double) (180F / (float) Math.PI));
-            this.xRot = (float) (MathHelper.atan2(vector3d.y, (double) f) * (double) (180F / (float) Math.PI));
+            this.xRot = (float) (MathHelper.atan2(vector3d.y, f) * (double) (180F / (float) Math.PI));
             this.yRotO = this.yRot;
             this.xRotO = this.xRot;
         }
@@ -140,7 +140,7 @@ public class EntitySpellArrow extends ArrowEntity {
             this.yRot = (float) (MathHelper.atan2(d3, d0) * (double) (180F / (float) Math.PI));
         }
 
-        this.xRot = (float) (MathHelper.atan2(d4, (double) f1) * (double) (180F / (float) Math.PI));
+        this.xRot = (float) (MathHelper.atan2(d4, f1) * (double) (180F / (float) Math.PI));
         this.xRot = lerpRotation(this.xRotO, this.xRot);
         this.yRot = lerpRotation(this.yRotO, this.yRot);
         float f2 = 0.99F;
@@ -154,7 +154,7 @@ public class EntitySpellArrow extends ArrowEntity {
             f2 = this.getWaterInertia();
         }
 
-        this.setDeltaMovement(vector3d.scale((double) f2));
+        this.setDeltaMovement(vector3d.scale(f2));
         if (!this.isNoGravity() && !isNoClip) {
             Vector3d vector3d4 = this.getDeltaMovement();
             this.setDeltaMovement(vector3d4.x, vector3d4.y - (double) 0.05F, vector3d4.z);
@@ -205,7 +205,7 @@ public class EntitySpellArrow extends ArrowEntity {
         int i = MathHelper.ceil(MathHelper.clamp((double) f * this.getBaseDamage(), 0.0D, 2.147483647E9D));
 
         if (this.isCritArrow()) {
-            long j = (long) this.random.nextInt(i / 2 + 2);
+            long j = this.random.nextInt(i / 2 + 2);
             i = (int) Math.min(j + (long) i, 2147483647L);
         }
 

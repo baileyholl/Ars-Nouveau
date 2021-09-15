@@ -15,7 +15,8 @@ import javax.annotation.Nullable;
 
 public class BookwyrmRenderer extends GeoEntityRenderer {
 
-    public static ResourceLocation BLUE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_blue.png");;
+    public static ResourceLocation BLUE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/book_wyrm_blue.png");
+
     public BookwyrmRenderer(EntityRendererManager manager) {
         super(manager, new BookwyrmModel());
     }

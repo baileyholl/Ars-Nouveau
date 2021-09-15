@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.block.OreBlock;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.ToolType;
@@ -11,7 +12,7 @@ import java.util.Random;
 public class ArcaneOre extends OreBlock {
     public ArcaneOre() {
         super(ModBlock.defaultProperties().strength(3.0F, 3.0F).harvestTool(ToolType.PICKAXE).requiresCorrectToolForDrops());
-        setRegistryName("arcane_ore");
+        setRegistryName(LibBlockNames.ARCANE_ORE);
     }
 
     @Override

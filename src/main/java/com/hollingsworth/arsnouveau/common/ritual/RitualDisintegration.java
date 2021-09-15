@@ -63,9 +63,9 @@ public class RitualDisintegration extends AbstractRitual {
                     if (invoker.an_shouldDropExperience()) {
                         int exp = invoker.an_getExperienceReward(ANFakePlayer.getPlayer((ServerWorld) getWorld())) * 2;
                         if (exp > 0) {
-                            int numGreater = (int) (exp / 12);
+                            int numGreater = exp / 12;
                             exp -= numGreater * 12;
-                            int numLesser = (int) (exp / 3);
+                            int numLesser = exp / 3;
                             if ((exp - numLesser * 3) > 0)
                                 numLesser++;
                             world.addFreshEntity(new ItemEntity(world, m.blockPosition().getX(), m.blockPosition().getY(), m.blockPosition().getZ(), new ItemStack(ItemsRegistry.GREATER_EXPERIENCE_GEM, numGreater)));

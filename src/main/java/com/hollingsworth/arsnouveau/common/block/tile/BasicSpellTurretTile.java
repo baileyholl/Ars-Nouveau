@@ -120,13 +120,6 @@ public class BasicSpellTurretTile extends TileEntity implements IPickupResponder
     @Override
     public void startAnimation(int arg) {
         this.playRecoil = true;
-//        try {
-//            AnimationController controller = this.factory.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("castController");
-//            controller.markNeedsReload();
-//            controller.setAnimation(new AnimationBuilder().addAnimation("recoil", false));
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
     }
 
     public boolean update(){

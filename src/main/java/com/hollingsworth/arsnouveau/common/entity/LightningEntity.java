@@ -71,7 +71,7 @@ public class LightningEntity extends LightningBoltEntity {
      * Called to update the entity's position/logic.
      */
     public void tick() {
-        super.tick();
+        this.baseTick();
         if (this.lightningState == 2) {
             Difficulty difficulty = this.level.getDifficulty();
 
@@ -108,7 +108,7 @@ public class LightningEntity extends LightningBoltEntity {
                             int amp = effectInstance != null ? effectInstance.getAmplifier() : -1;
                             ((LivingEntity) entity).addEffect(new EffectInstance(ModPotions.SHOCKED_EFFECT, 200 + 10*20*extendTimes, Math.min(2, amp + 1)));
                         }
-                        if(!level.isClientSide && !hitEntities.contains(entity))
+                        if(!level.isClientSide && !hitEntities.contains(entity.getId()))
                             hitEntities.add(entity.getId());
 
                     }

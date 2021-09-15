@@ -38,10 +38,10 @@ public class ShockedEffect extends Effect {
             }
         }
 
-        IEnergyStorage energyStorage = ((LivingEntity) entity).getMainHandItem().getCapability(CapabilityEnergy.ENERGY).orElse(null);
+        IEnergyStorage energyStorage = entity.getMainHandItem().getCapability(CapabilityEnergy.ENERGY).orElse(null);
         if(energyStorage != null)
             multiplier++;
-        energyStorage = ((LivingEntity) entity).getOffhandItem().getCapability(CapabilityEnergy.ENERGY).orElse(null);
+        energyStorage = entity.getOffhandItem().getCapability(CapabilityEnergy.ENERGY).orElse(null);
         if(energyStorage != null)
             multiplier++;
         if(multiplier > 0){

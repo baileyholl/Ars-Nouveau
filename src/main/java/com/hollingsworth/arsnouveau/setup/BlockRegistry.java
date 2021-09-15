@@ -190,6 +190,8 @@ public class BlockRegistry {
 
     @ObjectHolder(LibBlockNames.TIMER_SPELL_TURRET) public static TimerSpellTurret TIMER_SPELL_TURRET;
     @ObjectHolder(LibBlockNames.TIMER_SPELL_TURRET) public static TileEntityType<TimerSpellTurretTile> TIMER_SPELL_TURRET_TILE;
+    @ObjectHolder(LibBlockNames.ARCHWOOD_CHEST) public static  ArchwoodChest ARCHWOOD_CHEST;
+    @ObjectHolder(LibBlockNames.ARCHWOOD_CHEST) public static  TileEntityType<ArchwoodChestTile> ARCHWOOD_CHEST_TILE;
 
     @ObjectHolder(LibBlockNames.STATE_PROVIDER) public static BlockStateProviderType stateProviderType;
 
@@ -303,6 +305,7 @@ public class BlockRegistry {
             registry.register(new BookwyrmLectern(ModBlock.defaultProperties().noOcclusion(), LibBlockNames.BOOKWYRM_LECTERN));
             registry.register(new BasicSpellTurret());
             registry.register(new TimerSpellTurret());
+            registry.register(new ArchwoodChest().setRegistryName(LibBlockNames.ARCHWOOD_CHEST));
         }
         static Block.Properties woodProp = AbstractBlock.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD);
         public static MagicLeaves createLeavesBlock() {
@@ -346,6 +349,7 @@ public class BlockRegistry {
             event.getRegistry().register(TileEntityType.Builder.of(BookwyrmLecternTile::new, BlockRegistry.BOOKWYRM_LECTERN).build(null).setRegistryName(LibBlockNames.BOOKWYRM_LECTERN));
             event.getRegistry().register(TileEntityType.Builder.of(BasicSpellTurretTile::new, BlockRegistry.BASIC_SPELL_TURRET).build(null).setRegistryName(LibBlockNames.BASIC_SPELL_TURRET));
             event.getRegistry().register(TileEntityType.Builder.of(TimerSpellTurretTile::new, BlockRegistry.TIMER_SPELL_TURRET).build(null).setRegistryName(LibBlockNames.TIMER_SPELL_TURRET));
+            event.getRegistry().register(TileEntityType.Builder.of(ArchwoodChestTile::new, BlockRegistry.ARCHWOOD_CHEST).build(null).setRegistryName(LibBlockNames.ARCHWOOD_CHEST));
 
         }
 
@@ -459,6 +463,7 @@ public class BlockRegistry {
             registry.register(new AnimBlockItem(BlockRegistry.TIMER_SPELL_TURRET, ItemsRegistry.defaultItemProperties().setISTER(() -> TimerTurretRenderer::getISTER)).setRegistryName(LibBlockNames.TIMER_SPELL_TURRET));
             registry.register(new AnimBlockItem(BlockRegistry.BASIC_SPELL_TURRET, ItemsRegistry.defaultItemProperties().setISTER(() -> BasicTurretRenderer::getISTER)).setRegistryName(LibBlockNames.BASIC_SPELL_TURRET));
             registry.register(new AnimBlockItem(BlockRegistry.SPELL_TURRET, ItemsRegistry.defaultItemProperties().setISTER(()-> ReducerTurretRenderer::getISTER)).setRegistryName(LibBlockNames.SPELL_TURRET));
+            registry.register(new BlockItem(BlockRegistry.ARCHWOOD_CHEST, ItemsRegistry.defaultItemProperties().setISTER(() -> ArchwoodChestRenderer::getRenderer)).setRegistryName(LibBlockNames.ARCHWOOD_CHEST));
 
         }
 

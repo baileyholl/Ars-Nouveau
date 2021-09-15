@@ -12,8 +12,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.world.World;
 
-import net.minecraft.item.Item.Properties;
-
 public class FluidBlockItem extends BlockItem {
     public FluidBlockItem(Block blockIn, Properties builder) {
         super(blockIn, builder);
@@ -28,7 +26,7 @@ public class FluidBlockItem extends BlockItem {
 
     /**
      * Called to trigger the item's "innate" right click behavior. To handle when this item is used on a Block, see
-     * {@link #onItemUse}.
+     * .
      */
     public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
         BlockRayTraceResult blockraytraceresult = getPlayerPOVHitResult(worldIn, playerIn, RayTraceContext.FluidMode.ANY);

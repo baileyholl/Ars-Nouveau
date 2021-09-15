@@ -32,9 +32,7 @@ public class ResetCommand {
                 iMana.setBookTier(0);
                 iMana.setGlyphBonus(0);
             });
-            FamiliarCap.getFamiliarCap((LivingEntity) e).ifPresent(ifam ->{
-                ifam.setUnlockedFamiliars(new ArrayList<>());
-            });
+            FamiliarCap.getFamiliarCap((LivingEntity) e).ifPresent(ifam -> ifam.setUnlockedFamiliars(new ArrayList<>()));
         }
         source.sendSuccess(new TranslationTextComponent("ars_nouveau.reset.cleared"), true);
         return 1;

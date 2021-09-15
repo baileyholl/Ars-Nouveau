@@ -106,7 +106,7 @@ public class ParticleUtil {
 
     public static void spawnTouch(ClientWorld world, BlockPos loc, ParticleColor particleColor){
         for(int i =0; i < 10; i++){
-            double d0 = loc.getX() +0.5;;
+            double d0 = loc.getX() +0.5;
             double d1 = loc.getY() +1.0;
             double d2 = loc.getZ() +.5 ;
             world.addParticle(GlowParticleData.createData(particleColor),d0, d1, d2, (world.random.nextFloat() * 1 - 0.5)/5, (world.random.nextFloat() * 1 - 0.5)/5, (world.random.nextFloat() * 1 - 0.5)/5);
@@ -123,9 +123,12 @@ public class ParticleUtil {
     }
 
     public static void spawnRitualAreaEffect(BlockPos pos, World world, Random rand, ParticleColor color, int range){
+        spawnRitualAreaEffect(pos, world, rand, color, range, 10, 10);
+    }
+    public static void spawnRitualAreaEffect(BlockPos pos, World world, Random rand, ParticleColor color, int range, int chance, int numParticles){
         BlockPos.betweenClosedStream(pos.offset(range, 0, range), pos.offset(-range, 0, -range)).forEach(blockPos -> {
-            if(rand.nextInt(10) == 0){
-                for(int i =0; i< rand.nextInt(10); i++) {
+            if(rand.nextInt(chance) == 0){
+                for(int i =0; i< rand.nextInt(numParticles); i++) {
                     double x = blockPos.getX() + ParticleUtil.inRange(-0.5, 0.5);
                     double y = blockPos.getY() + ParticleUtil.inRange(-0.5, 0.5);
                     double z = blockPos.getZ() + ParticleUtil.inRange(-0.5, 0.5);
@@ -136,7 +139,6 @@ public class ParticleUtil {
             }
         });
     }
-
     public static void spawnRitualSkyEffect(TileEntity tileEntity, Random rand, ParticleColor.IntWrapper color){
 
         int min = -5;
@@ -211,6 +213,15 @@ public class ParticleUtil {
             world.addParticle(ParticleLineData.createData(color),
                     particlePos.x(), particlePos.y(), particlePos.z(),
                     pos.getX()  +0.5, pos.getY() + 1  , pos.getZ() +0.5);
+        }
+    }
+
+    public static void spawnLight(World world, ParticleColor color, Vector3d vec, int intensity){
+        for(int i =0; i < intensity; i++) {
+            world.addParticle(
+                    GlowParticleData.createData(color),
+                    vec.x() + ParticleUtil.inRange(-0.1, 0.1), vec.y() + ParticleUtil.inRange(-0.1, 0.1), vec.z() + ParticleUtil.inRange(-0.1, 0.1),
+                    0, 0, 0);
         }
     }
 }

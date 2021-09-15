@@ -18,10 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
@@ -36,6 +33,16 @@ public class EffectSmelt extends AbstractEffect {
 
     private EffectSmelt() {
         super(GlyphLib.EffectSmeltID, "Smelt");
+    }
+
+    @Override
+    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        super.onResolveEntity(rayTraceResult, world, shooter, spellStats, spellContext);
+        int aoeBuff = spellStats.getBuffCount(AugmentAOE.INSTANCE);
+        int pierceBuff = spellStats.getBuffCount(AugmentPierce.INSTANCE);
+        int maxItemSmelt = 3 + 4 * aoeBuff + 4 * pierceBuff;
+        List<ItemEntity> itemEntities = world.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(rayTraceResult.getEntity().blockPosition()).inflate(aoeBuff + 1.0));
+        smeltItems(world, itemEntities, maxItemSmelt);
     }
 
     @Override

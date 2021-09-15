@@ -104,14 +104,12 @@ public class ManaCapability {
          */
         @SubscribeEvent
         public static void playerClone(final PlayerEvent.Clone event) {
-            getMana(event.getOriginal()).ifPresent(oldMaxMana -> {
-                getMana(event.getPlayer()).ifPresent(newMaxMana -> {
-                    newMaxMana.setMaxMana(oldMaxMana.getMaxMana());
-                    newMaxMana.setMana(oldMaxMana.getCurrentMana());
-                    newMaxMana.setBookTier(oldMaxMana.getBookTier());
-                    newMaxMana.setGlyphBonus(oldMaxMana.getGlyphBonus());
-                });
-            });
+            getMana(event.getOriginal()).ifPresent(oldMaxMana -> getMana(event.getPlayer()).ifPresent(newMaxMana -> {
+                newMaxMana.setMaxMana(oldMaxMana.getMaxMana());
+                newMaxMana.setMana(oldMaxMana.getCurrentMana());
+                newMaxMana.setBookTier(oldMaxMana.getBookTier());
+                newMaxMana.setGlyphBonus(oldMaxMana.getGlyphBonus());
+            }));
         }
     }
 }

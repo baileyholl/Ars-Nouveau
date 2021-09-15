@@ -40,8 +40,4 @@ public class ArcaneRelay extends ModBlock {
         return BlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
-//    @Override
-//    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-//        return Block.box(1D, 1.0D, 1.0D, 15, 15, 15);
-//    }
 }

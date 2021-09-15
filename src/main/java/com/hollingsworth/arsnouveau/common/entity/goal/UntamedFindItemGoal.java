@@ -45,7 +45,7 @@ public class UntamedFindItemGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return timeFinding <= 20 * 30 && !itemStuck  && !(pathingEntity == null || pathingEntity.removed || ((ItemEntity)pathingEntity).getItem().isEmpty()) && canUse();
+        return timeFinding <= 20 * 30 && !itemStuck  && !(pathingEntity == null || pathingEntity.removed || pathingEntity.getItem().isEmpty()) && canUse();
     }
 
     @Override

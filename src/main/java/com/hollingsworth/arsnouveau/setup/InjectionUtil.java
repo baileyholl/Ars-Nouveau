@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.setup;
 
 
 /**
- * Utility methods for automatic injection systems like {@link ObjectHolder} and {@link CapabilityInject}.
+ * Utility methods for automatic injection systems.
  *
  * @author Choonster
  */

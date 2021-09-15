@@ -9,9 +9,9 @@ import net.minecraftforge.common.util.INBTSerializable;
 import javax.annotation.Nullable;
 
 /**
- * A simple implementation of {@link ICapabilityProvider} and {@link INBTSerializable} that supports a single {@link Capability} handler instance.
+ * A simple implementation of ICapabilityProvider and {@link INBTSerializable} that supports a single {@link Capability} handler instance.
  * <p>
- * Uses the {@link Capability}'s {@link IStorage} to serialise/deserialise NBT.
+ * Uses the {@link Capability}'s {IStorage to serialise/deserialise NBT.
  *
  * @author Choonster
  */

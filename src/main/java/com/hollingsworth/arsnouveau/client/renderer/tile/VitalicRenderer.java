@@ -40,7 +40,7 @@ public class VitalicRenderer extends GeoBlockRenderer<VitalicSourcelinkTile> {
                             rand.nextInt(255)
                     )),
                     pos.getX() +0.5  , pos.getY() +0.3  + ParticleUtil.inRange(-0.1, 0.35) , pos.getZ() +0.5 ,
-                    0,0,0);;
+                    0,0,0);
         }
         int time = (int) (ClientInfo.ticksInGame + ticks);
 

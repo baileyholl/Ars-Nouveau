@@ -34,7 +34,7 @@ public class EffectDispel extends AbstractEffect {
         if(rayTraceResult.getEntity() instanceof LivingEntity){
             LivingEntity entity = (LivingEntity) rayTraceResult.getEntity();
             Collection<EffectInstance> effects = entity.getActiveEffects();
-            EffectInstance[] array = effects.toArray(new EffectInstance[effects.size()]);
+            EffectInstance[] array = effects.toArray(new EffectInstance[0]);
             for(EffectInstance e : array){
                 if(e.isCurativeItem(new ItemStack(Items.MILK_BUCKET)))
                     entity.removeEffect(e.getEffect());

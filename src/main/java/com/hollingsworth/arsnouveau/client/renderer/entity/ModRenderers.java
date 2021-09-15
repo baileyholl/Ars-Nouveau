@@ -51,6 +51,7 @@ public class ModRenderers {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_FAMILIAR_WIXIE, WixieRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_BOOKWYRM_TYPE, BookwyrmRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_FAMILIAR_BOOKWYRM, BookwyrmRenderer::new);
-
+        RenderingRegistry.registerEntityRenderingHandler( ModEntities.LINGER_SPELL,
+                renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
     }
 }

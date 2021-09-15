@@ -16,6 +16,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOpenSpellBook;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.client.settings.KeyBinding;
@@ -107,8 +108,10 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
                 iMana.setGlyphBonus(SpellBook.getUnlockedSpells(stack.getTag()).size());
             }
         });
-
-        RayTraceResult result = playerIn.pick(5, 0, false);
+        SpellResolver resolver = new SpellResolver(new SpellContext(getCurrentRecipe(stack), playerIn)
+                .withColors(SpellBook.getSpellColor(stack.getOrCreateTag(), SpellBook.getMode(stack.getOrCreateTag()))));
+        boolean isSensitive = resolver.spell.getBuffsAtIndex(0, playerIn, AugmentSensitive.INSTANCE) > 0;
+        RayTraceResult result = playerIn.pick(5, 0, isSensitive);
         if(result instanceof BlockRayTraceResult && worldIn.getBlockEntity(((BlockRayTraceResult) result).getBlockPos()) instanceof ScribesTile)
             return new ActionResult<>(ActionResultType.SUCCESS, stack);
         if(result instanceof BlockRayTraceResult && !playerIn.isShiftKeyDown()){
@@ -124,13 +127,12 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
             return new ActionResult<>(ActionResultType.CONSUME, stack);
         }
         // Crafting mode
-        if(getMode(stack.getTag()) == 0 && playerIn instanceof ServerPlayerEntity) {
+        if(getMode(stack.getOrCreateTag()) == 0 && playerIn instanceof ServerPlayerEntity) {
             ServerPlayerEntity player = (ServerPlayerEntity) playerIn;
-            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->player), new PacketOpenSpellBook(stack.getTag(), getTier().ordinal(), getUnlockedSpellString(player.getItemInHand(handIn).getTag())));
+            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->player), new PacketOpenSpellBook(stack.getTag(), getTier().ordinal(), getUnlockedSpellString(player.getItemInHand(handIn).getOrCreateTag())));
             return new ActionResult<>(ActionResultType.CONSUME, stack);
         }
-        SpellResolver resolver = new SpellResolver(new SpellContext(getCurrentRecipe(stack), playerIn)
-                .withColors(SpellBook.getSpellColor(stack.getTag(), SpellBook.getMode(stack.getTag()))));
+
         EntityRayTraceResult entityRes = MathUtil.getLookedAtEntity(playerIn, 25);
 
         if(entityRes != null && entityRes.getEntity() instanceof LivingEntity){
@@ -138,7 +140,7 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
             return new ActionResult<>(ActionResultType.CONSUME, stack);
         }
 
-        if(result.getType() == RayTraceResult.Type.BLOCK){
+        if(result.getType() == RayTraceResult.Type.BLOCK || (isSensitive && result instanceof BlockRayTraceResult)){
             ItemUseContext context = new ItemUseContext(playerIn, handIn, (BlockRayTraceResult) result);
             resolver.onCastOnBlock(context);
             return new ActionResult<>(ActionResultType.CONSUME, stack);
@@ -265,7 +267,7 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(final ItemStack stack, @Nullable final World world, final List<ITextComponent> tooltip, final ITooltipFlag flag) {
         super.appendHoverText(stack, world, tooltip, flag);
-        if(stack != null && stack.hasTag()) {
+        if(stack.hasTag()) {
             tooltip.add(new StringTextComponent(SpellBook.getSpellName(stack.getTag())));
 
             tooltip.add(new TranslationTextComponent("ars_nouveau.spell_book.select", KeyBinding.createNameSupplier(ModKeyBindings.OPEN_SPELL_SELECTION.getKeyBinding().getName()).get().getString()));

@@ -4,7 +4,7 @@ public class GlyphLib {
     public static final String MethodProjectileID = "projectile";
     public static final String MethodTouchID = "touch";
     public static final String MethodSelfID = "self";
-    public static final String MethodRuneID = "rune";
+    public static final String EffectRuneID = "rune";
 
     public static final String MethodBeamID = "beam";
     public static final String EffectBreakID = "break";
@@ -80,6 +80,9 @@ public class GlyphLib {
     public static final String EffectBounceID = "bounce";
     public static final String EffectSummonUndead = "summon_undead";
     public static final String EffectEvaporate = "evaporate";
+    public static final String AugmentSensitiveID = "sensitive";
+    public static final String EffectLingerID = "linger";
+
 
     public static final String MethodLingeringID = "lingering";
 }

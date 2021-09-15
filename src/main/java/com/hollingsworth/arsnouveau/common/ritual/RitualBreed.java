@@ -12,7 +12,7 @@ public class RitualBreed extends AbstractRitual {
     @Override
     protected void tick() {
         if(getWorld().isClientSide){
-            ParticleUtil.spawnRitualAreaEffect(tile, rand, getCenterColor(), 5);
+            ParticleUtil.spawnRitualAreaEffect(getPos(), getWorld(), rand, getCenterColor(), 5);
         }else{
             if(getWorld().getGameTime() % 200 == 0){
                 List<AnimalEntity> animals = getWorld().getEntitiesOfClass(AnimalEntity.class, new AxisAlignedBB(getPos()).inflate(5));

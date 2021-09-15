@@ -166,6 +166,6 @@ public class ChimeraAttackGoal extends Goal {
     }
 
     protected double getAttackReachSqr(LivingEntity p_179512_1_) {
-        return (double)(this.mob.getBbWidth() * 2.0F * this.mob.getBbWidth() * 2.0F + p_179512_1_.getBbWidth());
+        return this.mob.getBbWidth() * 2.0F * this.mob.getBbWidth() * 2.0F + p_179512_1_.getBbWidth();
     }
 }

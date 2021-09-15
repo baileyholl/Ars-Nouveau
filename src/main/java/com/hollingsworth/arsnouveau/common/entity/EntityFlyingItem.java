@@ -115,7 +115,7 @@ public class EntityFlyingItem extends EntityFollowProjectile {
 
 
 
-        double time = 1 - normalize((double)age, 0.0, 80);
+        double time = 1 - normalize(age, 0.0, 80);
 
         EasingType type = EasingType.NONE;
 
@@ -184,7 +184,7 @@ public class EntityFlyingItem extends EntityFollowProjectile {
         BlockPos end = entityData.get(to);
         double startY = start.getY();
         double endY = end.getY() +4.0;
-        double time = 1 - normalize((double)age, 0.0, 100);
+        double time = 1 - normalize(age, 0.0, 100);
 
         double yOffset = -3.0;
         EasingType type = EasingType.NONE;

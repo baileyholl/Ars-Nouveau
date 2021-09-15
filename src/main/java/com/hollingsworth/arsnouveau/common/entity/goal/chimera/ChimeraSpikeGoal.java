@@ -50,7 +50,7 @@ public class ChimeraSpikeGoal extends Goal {
                     double d0 = boss.getTarget().getX() - boss.getX();
                     double d1 = boss.getTarget().getY(0.3333333333333333D) - abstractarrowentity.getY();
                     double d2 = boss.getTarget().getZ() - boss.getZ();
-                    double d3 = (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
+                    double d3 = MathHelper.sqrt(d0 * d0 + d2 * d2);
                     abstractarrowentity.shoot(d0, d1 + d3 * (double) 0.2F, d2, 1.6F, 1.0f);
                     this.boss.level.addFreshEntity(abstractarrowentity);
                 }

@@ -31,6 +31,10 @@ import static java.lang.Math.abs;
 
 public class BlockUtil {
 
+    public static BlockPos toPos(Vector3d vec){
+        return new BlockPos(vec.x, vec.y, vec.z);
+    }
+
     public static boolean isTreeBlock(Block block){
         return block.is(BlockTags.LEAVES) || block.is(BlockTags.LOGS);
     }
@@ -47,7 +51,7 @@ public class BlockUtil {
             }
         }
         return false;
-    }
+    } 
 
     public static double distanceFrom(BlockPos start, BlockPos end){
         if(start == null || end == null)
@@ -105,7 +109,7 @@ public class BlockUtil {
     }
 
     private static boolean destroyBlockWithoutSound(World world, BlockPos pos, boolean dropBlock) {
-        return destroyBlockWithoutSound(world, pos, dropBlock, (Entity)null);
+        return destroyBlockWithoutSound(world, pos, dropBlock, null);
     }
 
     private static boolean destroyBlockWithoutSound(World world, BlockPos pos, boolean isMoving, @Nullable Entity entityIn){
@@ -159,35 +163,125 @@ public class BlockUtil {
     }
 
 
-    public static List<BlockPos> getLine(int x0, int y0, int x1, int y1, float wd)
-    {
-        List<BlockPos> vects = new ArrayList<>();
-        int dx = abs(x1-x0), sx = x0 < x1 ? 1 : -1;
-        int dy = abs(y1-y0), sy = y0 < y1 ? 1 : -1;
-        int err = dx-dy, e2, x2, y2;                          /* error value e_xy */
-        float ed = dx+dy == 0 ? 1 : MathHelper.sqrt((float) dx * dx + (float) dy * dy);
 
-        for (wd = (wd+1)/2; ; ) {                                   /* pixel loop */
-            vects.add(new BlockPos(x0,0, y0));
-            e2 = err; x2 = x0;
-            if (2*e2 >= -dx) {                                           /* x step */
-                for (e2 += dy, y2 = y0; e2 < ed*wd && (y1 != y2 || dx > dy); e2 += dx) {
-                    vects.add(new BlockPos(x0,0, y2 += sy));
+    public static List<BlockPos> getLine(int x0, int y0, int x1, int y1, float wd) {
+        List<BlockPos> vects = new ArrayList<>();
+        int dx = abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
+        int dy = abs(y1 - y0), sy = y0 < y1 ? 1 : -1;
+        int err = dx - dy, e2, x2, y2;                          /* error value e_xy */
+        float ed = dx + dy == 0 ? 1 : MathHelper.sqrt((float) dx * dx + (float) dy * dy);
+
+        for (wd = (wd + 1) / 2; ; ) {                                   /* pixel loop */
+            vects.add(new BlockPos(x0, 0, y0));
+            e2 = err;
+            x2 = x0;
+            if (2 * e2 >= -dx) {                                           /* x step */
+                for (e2 += dy, y2 = y0; e2 < ed * wd && (y1 != y2 || dx > dy); e2 += dx) {
+                    vects.add(new BlockPos(x0, 0, y2 += sy));
                 }
                 if (x0 == x1) break;
-                e2 = err; err -= dy; x0 += sx;
+                e2 = err;
+                err -= dy;
+                x0 += sx;
             }
-            if (2*e2 <= dy) {                                            /* y step */
-                for (e2 = dx-e2; e2 < ed*wd && (x1 != x2 || dx < dy); e2 += dy) {
+            if (2 * e2 <= dy) {                                            /* y step */
+                for (e2 = dx - e2; e2 < ed * wd && (x1 != x2 || dx < dy); e2 += dy) {
                     vects.add(new BlockPos(x2 += sx, 0, y0));
                 }
                 if (y0 == y1) break;
-                err += dx; y0 += sy;
+                err += dx;
+                y0 += sy;
             }
         }
         return vects;
     }
+    /**
+     * Find the closest block near the points.
+     *
+     * @param world   the world.
+     * @param point   the point where to search.
+     * @param radiusX x search distance.
+     * @param radiusY y search distance.
+     * @param radiusZ z search distance.
+     * @param height  check if blocks above the found block are air or block.
+     * @return the coordinates of the found block.
+     */
+    @Nullable
+    public static BlockPos scanForBlockNearPoint(final World world, final BlockPos point, final int radiusX, final int radiusY, final int radiusZ, final int height)
+    {
+        @Nullable BlockPos closestCoords = null;
+        double minDistance = Double.MAX_VALUE;
 
-    private BlockUtil(){};
+        for (int j = point.getY(); j <= point.getY() + radiusY; j++)
+        {
+            for (int i = point.getX() - radiusX; i <= point.getX() + radiusX; i++)
+            {
+                for (int k = point.getZ() - radiusZ; k <= point.getZ() + radiusZ; k++)
+                {
+                    if (wontSuffocate(world, i, j, k, height))
+                    {
+                        BlockPos tempCoords = new BlockPos(i, j, k);
+
+                        if (world.getBlockState(tempCoords.below()).getMaterial().isSolid() || world.getBlockState(tempCoords.below(2)).getMaterial().isSolid())
+                        {
+                            final double distance = getDistanceSquared(tempCoords, point);
+                            if (closestCoords == null || distance < minDistance)
+                            {
+                                closestCoords = tempCoords;
+                                minDistance = distance;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return closestCoords;
+    }
+    /**
+     * Checks if the blocks above that point are all non-motion blocking
+     *
+     * @param world  the world we check on.
+     * @param x      the x coordinate.
+     * @param y      the y coordinate.
+     * @param z      the z coordinate.
+     * @param height the number of blocks above to check.
+     * @return true if no blocks block motion
+     */
+    private static boolean wontSuffocate(World world, final int x, final int y, final int z, final int height) {
+        for (int dy = 0; dy < height; dy++)
+        {
+            final BlockState state = world.getBlockState(new BlockPos(x, y + dy, z));
+            if (state.getMaterial().blocksMotion())
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    /**
+     * Squared distance between two BlockPos.
+     *
+     * @param block1 position one.
+     * @param block2 position two.
+     * @return squared distance.
+     */
+    public static long getDistanceSquared(BlockPos block1, BlockPos block2)
+    {
+        final long xDiff = (long) block1.getX() - block2.getX();
+        final long yDiff = (long) block1.getY() - block2.getY();
+        final long zDiff = (long) block1.getZ() - block2.getZ();
+
+        final long result = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff;
+        if (result < 0)
+        {
+            throw new IllegalStateException("max-sqrt is to high! Failure to catch overflow with "
+                    + xDiff + " | " + yDiff + " | " + zDiff);
+        }
+        return result;
+    }
+
+    private BlockUtil(){}
 
 }

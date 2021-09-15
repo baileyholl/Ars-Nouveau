@@ -20,7 +20,7 @@ public class RitualHealing extends AbstractRitual {
     @Override
     protected void tick() {
         if(getWorld().isClientSide){
-            ParticleUtil.spawnRitualAreaEffect(tile, rand, getCenterColor(), 5);
+            ParticleUtil.spawnRitualAreaEffect(getPos(), getWorld(), rand, getCenterColor(), 5);
         }else{
             if(getWorld().getGameTime() % 100 == 0){
                 List<LivingEntity> entities = getWorld().getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(getPos()).inflate(5));

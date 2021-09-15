@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.familiar.*;
-import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarEntity;
 import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
@@ -34,11 +33,11 @@ public class ModEntities {
     public static EntityType<EntityBookwyrm> ENTITY_BOOKWYRM_TYPE = null;
     public static EntityType<EntityCarbuncle> ENTITY_CARBUNCLE_TYPE = build("carbuncle", EntityType.Builder.<EntityCarbuncle>of(EntityCarbuncle::new, EntityClassification.CREATURE)
             .sized(0.6F, 0.63F).setTrackingRange(10)
-            .setShouldReceiveVelocityUpdates(true));;
+            .setShouldReceiveVelocityUpdates(true));
     public static EntityType<EntityFollowProjectile> ENTITY_FOLLOW_PROJ = null;
     public static EntityType<EntitySylph> ENTITY_SYLPH_TYPE = build("sylph", EntityType.Builder.<EntitySylph>of(EntitySylph::new, EntityClassification.CREATURE)
             .sized(0.6F, 0.98F).setTrackingRange(10)
-            .setShouldReceiveVelocityUpdates(true));;
+            .setShouldReceiveVelocityUpdates(true));
 
     public static EntityType<EntityEarthElemental> ENTITY_EARTH_ELEMENTAL_TYPE = null;
     public static EntityType<EntityWixie> ENTITY_WIXIE_TYPE = null;
@@ -51,7 +50,7 @@ public class ModEntities {
             EntityType.Builder.<WildenHunter>of(WildenHunter::new, EntityClassification.MONSTER)
                     .sized(1.0f, 2.0f)
                     .setTrackingRange(10)
-                    .setShouldReceiveVelocityUpdates(true));;
+                    .setShouldReceiveVelocityUpdates(true));
     public static EntityType<EntitySpellArrow> ENTITY_SPELL_ARROW = null;
     public static EntityType<SummonWolf> SUMMON_WOLF = null;
 
@@ -60,7 +59,7 @@ public class ModEntities {
             EntityType.Builder.<WildenStalker>of(WildenStalker::new, EntityClassification.MONSTER)
                     .sized(1.0f, 2.0f)
                     .setTrackingRange(10)
-                    .setShouldReceiveVelocityUpdates(true));;
+                    .setShouldReceiveVelocityUpdates(true));
     public static EntityType<SummonHorse> SUMMON_HORSE = null;
     public static EntityType<WildenGuardian> WILDEN_GUARDIAN =  build(
             "wilden_guardian",
@@ -86,7 +85,7 @@ public class ModEntities {
     public static EntityType<FamiliarDrygmy> ENTITY_FAMILIAR_DRYGMY = null;
     public static EntityType<FamiliarSylph> ENTITY_FAMILIAR_SYLPH = null;
     public static EntityType<FamiliarJabberwog> ENTITY_FAMILIAR_JABBERWOG = null;
-
+    public static EntityType<EntityLingeringSpell> LINGER_SPELL = null;
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
 
@@ -100,6 +99,13 @@ public class ModEntities {
                             .setTrackingRange(20)
                             .setShouldReceiveVelocityUpdates(true)
                             .setUpdateInterval(120).setCustomClientFactory(EntityProjectileSpell::new));
+            LINGER_SPELL = build(
+                    "linger",
+                    EntityType.Builder.<EntityLingeringSpell>of(EntityLingeringSpell::new, EntityClassification.MISC)
+                            .sized(0.5f, 0.5f)
+                            .setTrackingRange(20)
+                            .setShouldReceiveVelocityUpdates(true)
+                            .setUpdateInterval(120).setCustomClientFactory(EntityLingeringSpell::new));
             ENTITY_EVOKER_FANGS_ENTITY_TYPE = build(
                     "fangs",
                     EntityType.Builder.<EntityEvokerFangs>of(EntityEvokerFangs::new, EntityClassification.MISC)
@@ -217,7 +223,8 @@ public class ModEntities {
                     ENTITY_FAMILIAR_JABBERWOG,
                     ENTITY_FAMILIAR_WIXIE,
                     ENTITY_FAMILIAR_SYLPH,
-                    ENTITY_FAMILIAR_DRYGMY
+                    ENTITY_FAMILIAR_DRYGMY,
+                    LINGER_SPELL
             );
 
 

@@ -31,12 +31,12 @@ public class ParticleVortex extends ParticleGlow{
         } else {
             this.yd -= 0.04D * (double)this.gravity;
             this.move(this.xd, this.yd, this.zd);
-            this.xd *= (double)0.98F;
-            this.yd *= (double)0.98F;
-            this.zd *= (double)0.98F;
+            this.xd *= 0.98F;
+            this.yd *= 0.98F;
+            this.zd *= 0.98F;
             if (this.onGround) {
-                this.xd *= (double)0.7F;
-                this.zd *= (double)0.7F;
+                this.xd *= 0.7F;
+                this.zd *= 0.7F;
             }
 
         }

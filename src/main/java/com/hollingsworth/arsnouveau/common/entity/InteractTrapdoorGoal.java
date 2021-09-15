@@ -64,7 +64,7 @@ public class InteractTrapdoorGoal extends Goal {
                 for(int i = 0; i < Math.min(path.getNextNodeIndex() + 2, path.getNodeCount()); ++i) {
                     PathPoint pathpoint = path.getNode(i);
                     this.doorPos = new BlockPos(pathpoint.x, pathpoint.y, pathpoint.z);
-                    if (!(this.mob.distanceToSqr((double)this.doorPos.getX(), this.mob.getY(), (double)this.doorPos.getZ()) > 2.25D)) {
+                    if (!(this.mob.distanceToSqr(this.doorPos.getX(), this.mob.getY(), this.doorPos.getZ()) > 2.25D)) {
                         this.hasDoor = isWoodenTrapdoor();
                         if (this.hasDoor) {
                             return true;

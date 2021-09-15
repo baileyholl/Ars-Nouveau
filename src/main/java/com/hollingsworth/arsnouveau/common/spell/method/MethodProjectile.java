@@ -9,8 +9,10 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
 import net.minecraft.command.arguments.EntityAnchorArgument;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -44,8 +46,7 @@ public class MethodProjectile extends AbstractCastMethod {
 
     public void summonProjectiles(World world, LivingEntity shooter, List<AbstractAugment> augments, SpellResolver resolver){
         ArrayList<EntityProjectileSpell> projectiles = new ArrayList<>();
-        int numPierce = getBuffCount(augments, AugmentPierce.class);
-        EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, shooter, resolver, numPierce);
+        EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, resolver);
         projectiles.add(projectileSpell);
         int numSplits = getBuffCount(augments, AugmentSplit.class);
 
@@ -55,7 +56,7 @@ public class MethodProjectile extends AbstractCastMethod {
              // Alternate sides
             BlockPos projPos = shooter.blockPosition().relative(offset, i);
             projPos = projPos.offset(0, 1.5, 0);
-            EntityProjectileSpell spell = new EntityProjectileSpell(world, shooter,  resolver, numPierce);
+            EntityProjectileSpell spell = new EntityProjectileSpell(world, resolver);
             spell.setPos(projPos.getX(), projPos.getY(), projPos.getZ());
             projectiles.add(spell);
         }
@@ -74,8 +75,7 @@ public class MethodProjectile extends AbstractCastMethod {
     // Summons the projectiles directly above the block, facing downwards.
     public void summonProjectiles(World world, BlockPos pos, LivingEntity shooter, List<AbstractAugment> augments, SpellResolver resolver){
         ArrayList<EntityProjectileSpell> projectiles = new ArrayList<>();
-        int numPierce = getBuffCount(augments, AugmentPierce.class);
-        EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, shooter,  resolver, numPierce);
+        EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, resolver);
         projectileSpell.setPos(pos.getX(), pos.getY() + 1, pos.getZ());
         projectiles.add(projectileSpell);
 
@@ -87,7 +87,7 @@ public class MethodProjectile extends AbstractCastMethod {
             // Alternate sides
             BlockPos projPos = pos.relative(offset, i);
             projPos = projPos.offset(0, 1.5, 0);
-            EntityProjectileSpell spell = new EntityProjectileSpell(world, shooter, resolver, numPierce);
+            EntityProjectileSpell spell = new EntityProjectileSpell(world, resolver);
             spell.setPos(projPos.getX(), projPos.getY(), projPos.getZ());
             projectiles.add(spell);
         }
@@ -122,7 +122,7 @@ public class MethodProjectile extends AbstractCastMethod {
     }
 
     @Override
-    public void onCastOnEntity(ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments, SpellContext spellContext, SpellResolver resolver) {
+    public void onCastOnEntity(ItemStack stack, LivingEntity caster, Entity target, Hand hand, List<AbstractAugment> augments, SpellContext spellContext, SpellResolver resolver) {
         summonProjectiles(caster.getCommandSenderWorld(), caster, augments, resolver);
         resolver.expendMana(caster);
     }
@@ -143,19 +143,19 @@ public class MethodProjectile extends AbstractCastMethod {
     }
 
     @Override
-    public boolean wouldCastOnEntitySuccessfully(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments, SpellResolver resolver) {
+    public boolean wouldCastOnEntitySuccessfully(@Nullable ItemStack stack, LivingEntity caster, Entity target, Hand hand, List<AbstractAugment> augments, SpellResolver resolver) {
         return true;
     }
 
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentPierce.INSTANCE, AugmentSplit.INSTANCE, AugmentAccelerate.INSTANCE);
+        return augmentSetOf(AugmentPierce.INSTANCE, AugmentSplit.INSTANCE, AugmentAccelerate.INSTANCE, AugmentSensitive.INSTANCE);
     }
 
     @Override
     public String getBookDescription() {
-        return "A spell you start with. Summons a projectile that applies spell effects when this projectile hits a target or block.";
+        return "A spell you start with. Summons a projectile that applies spell effects when this projectile hits a target or block. Sensitive will allow Projectils to break plants or other materials that do not block motion.";
     }
 
     @Override

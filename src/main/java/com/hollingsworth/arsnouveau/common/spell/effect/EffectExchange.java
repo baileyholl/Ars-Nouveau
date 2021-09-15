@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
@@ -98,9 +99,12 @@ public class EffectExchange extends AbstractEffect {
                                 firstBlock = item.getBlock();
                             }else if(item.getBlock() != firstBlock)
                                 continue;
-                            if(attemptPlace(stack, world, pos1, result, shooter)) {
+                            ItemStack extracted = i.extractItem(slot, 1, false);
+                            if(attemptPlace(extracted, world, pos1, result, shooter)) {
                                 shouldBreak = true;
                                 break;
+                            }else{
+                                i.insertItem(slot, extracted, false);
                             }
                         }
                     }
@@ -140,11 +144,13 @@ public class EffectExchange extends AbstractEffect {
         BlockState placeState = item.getBlock().getStateForPlacement(context);
         Block.dropResources(world.getBlockState(pos1), world, pos1, world.getBlockEntity(pos1), shooter,tool);
         destroyBlockSafelyWithoutSound(world, pos1, false, shooter);
-
         if(placeState != null){
             world.setBlock(pos1, placeState, 3);
+            item.getBlock().setPlacedBy(world, pos1, placeState, shooter, stack);
+            BlockItem.updateCustomBlockEntityTag(world,
+                    shooter instanceof PlayerEntity ? (PlayerEntity) shooter :
+                            ANFakePlayer.getPlayer((ServerWorld) world), pos1, stack);
             stack.shrink(1);
-//            item.place(context);
             return true;
         }
         return false;

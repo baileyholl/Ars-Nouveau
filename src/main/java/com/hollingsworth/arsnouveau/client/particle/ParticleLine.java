@@ -7,16 +7,16 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.world.World;
 
 public class ParticleLine extends SpriteTexturedParticle {
-    public float colorR = 0;
-    public float colorG = 0;
-    public float colorB = 0;
-    public float initScale = 0;
-    public float initX = 0;
-    public float initY = 0;
-    public float initZ = 0;
-    public float destX = 0;
-    public float destY = 0;
-    public float destZ = 0;
+    public float colorR;
+    public float colorG;
+    public float colorB;
+    public float initScale;
+    public float initX;
+    public float initY;
+    public float initZ;
+    public float destX;
+    public float destY;
+    public float destZ;
     protected ParticleLine(World worldIn, double x, double y, double z, double vx, double vy, double vz, float r, float g, float b, float scale, int lifetime, IAnimatedSprite sprite) {
         super((ClientWorld) worldIn, x,y,z,0,0,0);
         this.colorR = r;

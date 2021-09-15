@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 public class WildenGuardianModel extends AnimatedGeoModel<WildenGuardian> {
 
     public static final ResourceLocation WARDER_NEUTRAL = new ResourceLocation(ArsNouveau.MODID , "geo/wilden_warder_neutral.geo.json");
-    public static final ResourceLocation WARDER_ARMORED = new ResourceLocation(ArsNouveau.MODID , "geo/wilden_warder_defense.geo.json");;
+    public static final ResourceLocation WARDER_ARMORED = new ResourceLocation(ArsNouveau.MODID , "geo/wilden_warder_defense.geo.json");
     public static final ResourceLocation TEXT =  new ResourceLocation(ArsNouveau.MODID, "textures/entity/warder.png");
     public static final ResourceLocation ANIM =  new ResourceLocation(ArsNouveau.MODID, "animations/wilden_warder_animation_neutral.geo.json");
 

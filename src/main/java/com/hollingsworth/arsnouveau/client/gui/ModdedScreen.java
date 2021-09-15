@@ -2,14 +2,9 @@ package com.hollingsworth.arsnouveau.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.MainWindow;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ModdedScreen extends Screen {
@@ -28,7 +23,7 @@ public class ModdedScreen extends Screen {
         MainWindow res = getMinecraft().getWindow();
         double oldGuiScale = res.calculateScale(minecraft.options.guiScale, minecraft.isEnforceUnicode());
         maxScale = getMaxAllowedScale();
-        int persistentScale = Math.min(0, maxScale);;
+        int persistentScale = Math.min(0, maxScale);
         double newGuiScale = res.calculateScale(persistentScale, minecraft.isEnforceUnicode());
 
         if(persistentScale > 0 && newGuiScale != oldGuiScale) {

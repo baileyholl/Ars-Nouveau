@@ -240,8 +240,8 @@ public class EntityDrygmy extends CreatureEntity implements IAnimatable, IToolti
 
     @Override
     public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController<EntityDrygmy>(this, "walkController", 20, this::animationPredicate));
-        animationData.addAnimationController(new AnimationController<EntityDrygmy>(this, "idleController", 20, this::idlePredicate));
+        animationData.addAnimationController(new AnimationController<>(this, "walkController", 20, this::animationPredicate));
+        animationData.addAnimationController(new AnimationController<>(this, "idleController", 20, this::idlePredicate));
     }
 
     @Override

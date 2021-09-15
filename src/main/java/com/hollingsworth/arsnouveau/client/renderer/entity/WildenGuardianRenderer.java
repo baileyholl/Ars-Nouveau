@@ -37,7 +37,7 @@ public class WildenGuardianRenderer  extends GeoEntityRenderer<WildenGuardian> {
                 LivingEntity livingentity = livingEntityIn.getTargetedEntity();
                 if (livingentity != null) {
                     Vector3d vector3d = this.getPosition(livingentity, (double)livingentity.getBbHeight() * 0.5D, 1.0F);
-                    Vector3d vector3d1 = this.getPosition(livingEntityIn, (double)livingEntityIn.getEyeHeight(), 1.0F);
+                    Vector3d vector3d1 = this.getPosition(livingEntityIn, livingEntityIn.getEyeHeight(), 1.0F);
                     return camera.isVisible(new AxisAlignedBB(vector3d1.x, vector3d1.y, vector3d1.z, vector3d.x, vector3d.y, vector3d.z));
                 }
             }
@@ -56,9 +56,9 @@ public class WildenGuardianRenderer  extends GeoEntityRenderer<WildenGuardian> {
             float f2 = f1 * 0.5F % 1.0F;
             float f3 = entityIn.getEyeHeight() / 2;
             matrixStackIn.pushPose();
-            matrixStackIn.translate(0.0D, (double)f3, 0.0D);
+            matrixStackIn.translate(0.0D, f3, 0.0D);
             Vector3d vector3d = this.getPosition(livingentity, (double)livingentity.getBbHeight() * 0.5D, partialTicks);
-            Vector3d vector3d1 = this.getPosition(entityIn, (double)f3, partialTicks);
+            Vector3d vector3d1 = this.getPosition(entityIn, f3, partialTicks);
             Vector3d vector3d2 = vector3d.subtract(vector3d1);
             float f4 = (float)(vector3d2.length() + 1.0D);
             vector3d2 = vector3d2.normalize();

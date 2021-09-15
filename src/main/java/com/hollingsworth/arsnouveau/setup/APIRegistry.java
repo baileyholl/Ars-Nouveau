@@ -71,7 +71,6 @@ public class APIRegistry {
         registerSpell(EffectPickup.INSTANCE);
         registerSpell(EffectInteract.INSTANCE);
         registerSpell(EffectPlaceBlock.INSTANCE);
-        registerSpell(MethodRune.INSTANCE);
         registerSpell(EffectSnare.INSTANCE);
         registerSpell(EffectSmelt.INSTANCE);
         registerSpell(EffectLeap.INSTANCE);
@@ -96,6 +95,7 @@ public class APIRegistry {
         registerSpell(MethodUnderfoot.INSTANCE);
         registerSpell(EffectGlide.INSTANCE);
         registerSpell(MethodOrbit.INSTANCE);
+        registerSpell(EffectRune.INSTANCE);
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());
         registerRitual(new RitualCloudshaper());
@@ -121,6 +121,10 @@ public class APIRegistry {
         registerSpell(new EffectFirework());
         registerSpell(new EffectToss());
         registerSpell(new EffectBounce());
+        registerSpell(AugmentSensitive.INSTANCE);
+        registerSpell(EffectWindshear.INSTANCE);
+        registerSpell(EffectEvaporate.INSTANCE);
+        registerSpell(EffectLinger.INSTANCE);
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar){

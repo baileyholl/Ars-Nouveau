@@ -236,7 +236,7 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
 
     @Nullable
     public UUID getOwnerId() {
-        return this.entityData.get(OWNER_UNIQUE_ID).orElse((UUID)null);
+        return this.entityData.get(OWNER_UNIQUE_ID).orElse(null);
     }
 
     public void setOwnerId(@Nullable UUID p_184754_1_) {

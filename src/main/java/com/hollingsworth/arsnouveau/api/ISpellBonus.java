@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface ISpellBonus {
-    public static final String LEVEL = "level";
-    public static final String AUGMENT = "augment";
+    String LEVEL = "level";
+    String AUGMENT = "augment";
     /*
      * Augment to be applied to EVERY effect type
      */

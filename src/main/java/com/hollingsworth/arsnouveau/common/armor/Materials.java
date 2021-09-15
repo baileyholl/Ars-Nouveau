@@ -40,7 +40,7 @@ public class Materials {
             this.enchantability = enchantability;
             this.soundEvent = soundEvent;
             this.toughness = toughness;
-            this.repairMaterial = new LazyValue<Ingredient>(supplier);
+            this.repairMaterial = new LazyValue<>(supplier);
         }
 
         private final SoundEvent soundEvent;

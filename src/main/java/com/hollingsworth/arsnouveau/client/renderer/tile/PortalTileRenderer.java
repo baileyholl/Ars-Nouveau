@@ -24,9 +24,7 @@ public class PortalTileRenderer<T extends PortalTile> extends TileEntityRenderer
     public static final ResourceLocation END_SKY_TEXTURE = new ResourceLocation("textures/environment/end_sky.png");
     public static final ResourceLocation END_PORTAL_TEXTURE = new ResourceLocation("textures/entity/end_portal.png");
     private static final Random RANDOM = new Random(31100L);
-    private static final List<RenderType> RENDER_TYPES = IntStream.range(0, 16).mapToObj((p_228882_0_) -> {
-        return RenderType.endPortal(p_228882_0_ + 1);
-    }).collect(ImmutableList.toImmutableList());
+    private static final List<RenderType> RENDER_TYPES = IntStream.range(0, 16).mapToObj((p_228882_0_) -> RenderType.endPortal(p_228882_0_ + 1)).collect(ImmutableList.toImmutableList());
 
     public PortalTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);

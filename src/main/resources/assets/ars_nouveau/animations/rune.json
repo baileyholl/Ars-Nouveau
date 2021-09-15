@@ -1,0 +1,31 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"gem_float": {
+			"loop": true,
+			"bones": {
+				"gem1": {
+					"position": {
+						"vector": [0, "math.sin(query.anim_time * 65) * 1", 0]
+					}
+				},
+				"gem2": {
+					"position": {
+						"vector": [0, "math.cos(query.anim_time * 65) * 1", 0]
+					}
+				},
+				"gem3": {
+					"position": {
+						"vector": [0, "math.sin(query.anim_time * 65) * 1", 0]
+					}
+				},
+				"gem4": {
+					"position": {
+						"vector": [0, "math.cos(query.anim_time * 65) * 1", 0]
+					}
+				}
+			}
+		}
+	},
+	"geckolib_format_version": 2
+}

@@ -24,7 +24,7 @@ public class RitualOvergrowth extends AbstractRitual {
 
 
         if(getWorld().isClientSide){
-            ParticleUtil.spawnRitualAreaEffect(tile, rand, getCenterColor(), 5);
+            ParticleUtil.spawnRitualAreaEffect(getPos(), getWorld(), rand, getCenterColor(), 5);
         }else{
             if(getWorld().getGameTime() % 200 != 0)
                 return;

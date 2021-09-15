@@ -89,7 +89,6 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
 
     @Override
     public void tick() {
-        spawnParticles();
         if(level.getGameTime() % 20 != 0 || toList.isEmpty() || level.isClientSide)
             return;
 

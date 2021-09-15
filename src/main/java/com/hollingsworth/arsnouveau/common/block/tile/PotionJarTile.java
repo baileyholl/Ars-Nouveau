@@ -174,8 +174,7 @@ public class PotionJarTile extends TileEntity implements ITickableTileEntity, IT
     }
 
     public List<EffectInstance> getCustomEffects(){
-        List<EffectInstance> thisEffects = new ArrayList<>(customEffects);
-        return thisEffects;
+        return new ArrayList<>(customEffects);
     }
 
     //If the effect list of jars or flasks are equal

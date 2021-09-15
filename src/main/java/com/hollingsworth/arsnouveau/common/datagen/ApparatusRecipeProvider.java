@@ -77,9 +77,6 @@ public class ApparatusRecipeProvider implements IDataProvider {
     }
 
     public void addEntries(){
-//        addRecipe(new EnchantingApparatusRecipe(ItemsRegistry.beltOfLevitation, ItemsRegistry.mundaneBelt, new Item[]
-//                {Items.GOLD_INGOT,Items.GOLD_INGOT,Items.GOLD_INGOT, Items.GOLD_INGOT,
-//                Items.FEATHER,Items.FEATHER,Items.FEATHER, ArsNouveauAPI.getInstance().getGlyphItem(ModConfig.EffectLaunchID)},  ArsNouveauAPI.PatchouliCategories.equipment.name()));
         addRecipe(builder().withResult(ItemsRegistry.beltOfLevitation)
                 .withReagent(ItemsRegistry.mundaneBelt)
                 .withPedestalItem(4, Ingredient.of(Tags.Items.INGOTS_GOLD))

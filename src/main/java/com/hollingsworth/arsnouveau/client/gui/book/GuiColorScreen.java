@@ -51,37 +51,39 @@ public class GuiColorScreen extends BaseBook {
     public void addPresets(){
         // Default
         addButton(new GuiImageButton(bookRight - 131, bookTop + 44, 0,0,48, 11, 48, 11,
-                "textures/gui/default_color_icon.png", (_2) -> {setFromPreset(255, 25, 180);}));
+                "textures/gui/default_color_icon.png", (_2) -> setFromPreset(255, 25, 180)));
         // Purple
         addButton(new GuiImageButton(bookRight - 131, bookTop + 68, 0,0,48, 11, 48, 11,
-                "textures/gui/purple_color_icon.png", (_2) -> {setFromPreset(80, 25, 255);}));
+                "textures/gui/purple_color_icon.png", (_2) -> setFromPreset(80, 25, 255)));
 
         // Blue
         addButton(new GuiImageButton(bookRight - 131, bookTop + 92, 0,0,48, 11, 48, 11,
-                "textures/gui/blue_color_icon.png", (_2) -> {setFromPreset(30, 25, 255);}));
+                "textures/gui/blue_color_icon.png", (_2) -> setFromPreset(30, 25, 255)));
 
         // Red
         addButton(new GuiImageButton(bookRight - 131, bookTop + 116, 0,0,48, 11, 48, 11,
-                "textures/gui/red_color_icon.png", (_2) -> {setFromPreset(255, 25, 25);}));
+                "textures/gui/red_color_icon.png", (_2) -> setFromPreset(255, 25, 25)));
 
         // Green
         addButton(new GuiImageButton(bookRight - 131, bookTop + 140, 0,0,48, 11, 48, 11,
-                "textures/gui/green_color_icon.png", (_2) -> {setFromPreset(25, 255, 25);}));
+                "textures/gui/green_color_icon.png", (_2) -> setFromPreset(25, 255, 25)));
 
         // Yellow
         addButton(new GuiImageButton(bookRight - 73, bookTop + 44, 0,0,48, 11, 48, 11,
-                "textures/gui/yellow_color_icon.png", (_2) -> {setFromPreset(255, 255, 25);}));
+                "textures/gui/yellow_color_icon.png", (_2) -> setFromPreset(255, 255, 25)));
         // White
         addButton(new GuiImageButton(bookRight - 73, bookTop + 68, 0,0,48, 11, 48, 11,
-                "textures/gui/white_color_icon.png", (_2) -> {setFromPreset(255, 255, 255);}));
+                "textures/gui/white_color_icon.png", (_2) -> setFromPreset(255, 255, 255)));
 
         // Orange
         addButton(new GuiImageButton(bookRight - 73, bookTop + 92, 0,0,48, 11, 48, 11,
-                "textures/gui/orange_color_icon.png", (_2) -> {setFromPreset(255, 90, 1);}));
+                "textures/gui/orange_color_icon.png", (_2) -> setFromPreset(255, 90, 1)));
 
         // Cyan
         addButton(new GuiImageButton(bookRight - 73, bookTop + 116, 0,0,48, 11, 48, 11,
-                "textures/gui/cyan_color_icon.png", (_2) -> {setFromPreset(25, 255, 255);}));
+                "textures/gui/cyan_color_icon.png", (_2) -> setFromPreset(25, 255, 255)));
+
+
 
 
     }
@@ -117,11 +119,37 @@ public class GuiColorScreen extends BaseBook {
         minecraft.font.draw(stack, new TranslationTextComponent("ars_nouveau.color_gui.cyan").getString(), 228, 118,  color);
        // minecraft.fontRenderer.drawString(stack, "Ice", 218, 115,  0);
         minecraft.font.draw(stack, new TranslationTextComponent("ars_nouveau.color_gui.save").getString(), 67, 160,  color);
+        int xOffset = 10;
+
+
+//
+//        fillGradient(stack,
+//                0, 0,
+//                50,
+//                100,
+//                1073741824, 1073741824);
+//        int r = (int)red & 0xFF;
+//        int g = (int)green & 0xFF;
+//        int b = (int)blue & 0xFF;
+//        int a = 1 & 0xFF;
+//
+//        int rgb = (r << 24) + (g << 16) + (b << 8) + (a);
+//       //System.out.println(rgb);
+//        System.out.println(red);
+//        fill(stack,
+//                0, 0,
+//                50,
+//                100,
+//                new ParticleColor(red, green, blue).getColor());
+
+    }
+
+    @Override
+    public void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
+        super.drawForegroundElements(mouseX, mouseY, partialTicks);
     }
 
     protected SliderPercentageOption buildSlider(String key, Function<GameSettings, Double> getter, BiConsumer<GameSettings, Double> setter){
-        return new SliderPercentageOption(key, 1.0D, 255.0D, 1.0F, getter, setter, (settings, optionValues) -> {
-            return new StringTextComponent(key + (int)optionValues.get(settings));
-        });
+        return new SliderPercentageOption(key, 1.0D, 255.0D, 1.0F, getter, setter, (settings, optionValues) -> new StringTextComponent(key + (int)optionValues.get(settings)));
     }
 }

@@ -32,7 +32,7 @@ public class ManaBerryBush extends BushBlock implements IGrowable {
 
     public ManaBerryBush(AbstractBlock.Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(AGE, Integer.valueOf(0)));
+        this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0));
         setRegistryName(LibBlockNames.MANA_BERRY_BUSH);
     }
 
@@ -62,7 +62,7 @@ public class ManaBerryBush extends BushBlock implements IGrowable {
     public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
         int i = state.getValue(AGE);
         if (i < 3 && worldIn.getRawBrightness(pos.above(), 0) >= 9 && net.minecraftforge.common.ForgeHooks.onCropsGrowPre(worldIn, pos, state,random.nextInt(5) == 0)) {
-            worldIn.setBlock(pos, state.setValue(AGE, Integer.valueOf(i + 1)), 2);
+            worldIn.setBlock(pos, state.setValue(AGE, i + 1), 2);
             net.minecraftforge.common.ForgeHooks.onCropsGrowPost(worldIn, pos, state);
         }
 
@@ -70,7 +70,7 @@ public class ManaBerryBush extends BushBlock implements IGrowable {
 
     public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
         if (entityIn instanceof LivingEntity && entityIn.getType() != EntityType.FOX && entityIn.getType() != EntityType.BEE && entityIn.getType() != ModEntities.ENTITY_CARBUNCLE_TYPE) {
-            entityIn.makeStuckInBlock(state, new Vector3d((double)0.8F, 0.75D, (double)0.8F));
+            entityIn.makeStuckInBlock(state, new Vector3d(0.8F, 0.75D, 0.8F));
             if (!worldIn.isClientSide && state.getValue(AGE) > 0 && (entityIn.xOld != entityIn.getX() || entityIn.zOld != entityIn.getZ())) {
                 double d0 = Math.abs(entityIn.getX() - entityIn.xOld);
                 double d1 = Math.abs(entityIn.getZ() - entityIn.zOld);
@@ -90,8 +90,8 @@ public class ManaBerryBush extends BushBlock implements IGrowable {
         } else if (i > 1) {
             int j = 1 + worldIn.random.nextInt(2);
             popResource(worldIn, pos, new ItemStack(BlockRegistry.MANA_BERRY_BUSH, j + (flag ? 1 : 0)));
-            worldIn.playSound((PlayerEntity)null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundCategory.BLOCKS, 1.0F, 0.8F + worldIn.random.nextFloat() * 0.4F);
-            worldIn.setBlock(pos, state.setValue(AGE, Integer.valueOf(1)), 2);
+            worldIn.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundCategory.BLOCKS, 1.0F, 0.8F + worldIn.random.nextFloat() * 0.4F);
+            worldIn.setBlock(pos, state.setValue(AGE, 1), 2);
             return ActionResultType.sidedSuccess(worldIn.isClientSide);
         } else {
             return super.use(state, worldIn, pos, player, handIn, hit);
@@ -115,6 +115,6 @@ public class ManaBerryBush extends BushBlock implements IGrowable {
 
     public void performBonemeal(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state) {
         int i = Math.min(3, state.getValue(AGE) + 1);
-        worldIn.setBlock(pos, state.setValue(AGE, Integer.valueOf(i)), 2);
+        worldIn.setBlock(pos, state.setValue(AGE, i), 2);
     }
 }

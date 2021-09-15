@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.event.timed;
 
 import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
-import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.entity.item.FallingBlockEntity;
 import net.minecraft.util.math.BlockPos;
@@ -20,10 +19,10 @@ public class EarthquakeEvent implements ITimedEvent {
     public EarthquakeEvent(World world, BlockPos origin, BlockPos destination){
         this.origin = origin;
         this.world = world;
-        for(BlockPos vec : BlockUtil.getLine(origin.getX(), origin.getZ(), destination.getX(), destination.getZ(), 2f)){
-            System.out.println(vec.toString());
-            BlockPos adjustedPos = new BlockPos(vec.getX(), origin.getY(), vec.getZ());
-            posList.add(adjustedPos);
+        //for(BlockPos vec : BlockUtil.getLine(origin.getX(), origin.getZ(), destination.getX(), destination.getZ(), 2f)){
+            //System.out.println(vec.toString());
+            //BlockPos adjustedPos = new BlockPos(vec.getX(), origin.getY(), vec.getZ());
+           // posList.add(adjustedPos);
 //            for(BlockPos p : BlockPos.withinManhattan(adjustedPos.north(4).east(4), 3, 3, 3)){
 //                posList.add(p);
 //            }
@@ -32,7 +31,7 @@ public class EarthquakeEvent implements ITimedEvent {
 //                    posList.add(p.immutable());
 //            }
           //  posList.add(new BlockPos(vec.getX(), origin.getY(), vec.getZ()));
-        }
+        //}
     }
 
     @Override

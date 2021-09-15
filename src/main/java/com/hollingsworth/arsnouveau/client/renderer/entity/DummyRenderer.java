@@ -180,7 +180,7 @@ public class DummyRenderer extends LivingRenderer<EntityDummy, PlayerModel<Entit
             float f4 = MathHelper.lerp(f, 0.0F, f3);
             p_225621_2_.mulPose(Vector3f.XP.rotationDegrees(f4));
             if (p_225621_1_.isVisuallySwimming()) {
-                p_225621_2_.translate(0.0D, -1.0D, (double)0.3F);
+                p_225621_2_.translate(0.0D, -1.0D, 0.3F);
             }
         } else {
             super.setupRotations(p_225621_1_, p_225621_2_, p_225621_3_, p_225621_4_, p_225621_5_);

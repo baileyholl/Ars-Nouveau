@@ -107,7 +107,7 @@ public class PacketANEffect {
                         }
                     }
 
-                };
+                }
             });
             ctx.get().setPacketHandled(true);
 

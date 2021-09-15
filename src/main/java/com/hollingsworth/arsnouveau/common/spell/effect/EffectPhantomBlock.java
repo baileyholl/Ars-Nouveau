@@ -5,8 +5,8 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import com.hollingsworth.arsnouveau.common.block.tile.PhantomBlockTile;
+import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
@@ -26,7 +26,7 @@ public class EffectPhantomBlock extends AbstractEffect {
     public static EffectPhantomBlock INSTANCE = new EffectPhantomBlock();
 
     private EffectPhantomBlock() {
-        super(GlyphLib.EffectPhantomBlockID, "Phantom");
+        super(GlyphLib.EffectPhantomBlockID, "Mageblock");
     }
 
 
@@ -39,6 +39,13 @@ public class EffectPhantomBlock extends AbstractEffect {
             BlockState state = world.getBlockState(pos);
             if (state.getMaterial().isReplaceable() && world.isUnobstructed(BlockRegistry.PHANTOM_BLOCK.defaultBlockState(), pos, ISelectionContext.of(ANFakePlayer.getPlayer((ServerWorld) world)))) {
                 world.setBlockAndUpdate(pos, BlockRegistry.PHANTOM_BLOCK.defaultBlockState());
+                if(world.getBlockEntity(pos) instanceof PhantomBlockTile) {
+                    PhantomBlockTile tile = (PhantomBlockTile) world.getBlockEntity(pos);
+                    tile.color = spellContext.colors.toParticleColor();
+                    tile.lengthModifier = spellStats.getDurationMultiplier();
+                    tile.isPermanent = spellStats.hasBuff(AugmentAmplify.INSTANCE);
+                    world.sendBlockUpdated(pos, world.getBlockState(pos), world.getBlockState(pos), 2);
+                }
             }
         }
     }
@@ -58,12 +65,12 @@ public class EffectPhantomBlock extends AbstractEffect {
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentAOE.INSTANCE, AugmentPierce.INSTANCE);
+        return augmentSetOf(AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentAmplify.INSTANCE, AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
     }
 
     @Override
     public String getBookDescription() {
-        return "Creates a temporary block that will disappear after a short time.";
+        return "Creates a temporary block that will disappear after a short time. Amplify will cause the block to be permanent. ";
     }
 
     @Nonnull

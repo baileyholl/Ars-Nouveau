@@ -34,6 +34,7 @@ import net.minecraft.world.gen.feature.template.*;
 import net.minecraft.world.gen.foliageplacer.BlobFoliagePlacer;
 import net.minecraft.world.gen.placement.AtSurfaceWithExtraConfig;
 import net.minecraft.world.gen.placement.Placement;
+import net.minecraft.world.gen.placement.TopSolidRangeConfig;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -100,12 +101,13 @@ public class WorldEvent {
                             new RuleEntry(new RandomBlockMatchRuleTest(Blocks.OAK_PLANKS, 0.1F), AlwaysTrueRuleTest.INSTANCE, Blocks.COBWEB.defaultBlockState()),
                             new RuleEntry(new RandomBlockMatchRuleTest(Blocks.OAK_STAIRS, 0.1F), AlwaysTrueRuleTest.INSTANCE, Blocks.COBWEB.defaultBlockState()),
                             new RuleEntry(new RandomBlockMatchRuleTest(Blocks.STRIPPED_OAK_LOG, 0.02F), AlwaysTrueRuleTest.INSTANCE, Blocks.COBWEB.defaultBlockState()),
-                            new RuleEntry(new BlockStateMatchRuleTest(Blocks.GLASS_PANE.defaultBlockState().setValue(PaneBlock.NORTH, Boolean.valueOf(true)).setValue(PaneBlock.SOUTH, Boolean.valueOf(true))), AlwaysTrueRuleTest.INSTANCE, Blocks.BROWN_STAINED_GLASS_PANE.defaultBlockState().setValue(PaneBlock.NORTH, Boolean.valueOf(true)).setValue(PaneBlock.SOUTH, Boolean.valueOf(true))),
-                            new RuleEntry(new BlockStateMatchRuleTest(Blocks.GLASS_PANE.defaultBlockState().setValue(PaneBlock.EAST, Boolean.valueOf(true)).setValue(PaneBlock.WEST, Boolean.valueOf(true))), AlwaysTrueRuleTest.INSTANCE, Blocks.BROWN_STAINED_GLASS_PANE.defaultBlockState().setValue(PaneBlock.EAST, Boolean.valueOf(true)).setValue(PaneBlock.WEST, Boolean.valueOf(true))),
+                            new RuleEntry(new BlockStateMatchRuleTest(Blocks.GLASS_PANE.defaultBlockState().setValue(PaneBlock.NORTH, Boolean.TRUE).setValue(PaneBlock.SOUTH, Boolean.TRUE)), AlwaysTrueRuleTest.INSTANCE, Blocks.BROWN_STAINED_GLASS_PANE.defaultBlockState().setValue(PaneBlock.NORTH, Boolean.TRUE).setValue(PaneBlock.SOUTH, Boolean.TRUE)),
+                            new RuleEntry(new BlockStateMatchRuleTest(Blocks.GLASS_PANE.defaultBlockState().setValue(PaneBlock.EAST, Boolean.TRUE).setValue(PaneBlock.WEST, Boolean.TRUE)), AlwaysTrueRuleTest.INSTANCE, Blocks.BROWN_STAINED_GLASS_PANE.defaultBlockState().setValue(PaneBlock.EAST, Boolean.TRUE).setValue(PaneBlock.WEST, Boolean.TRUE)),
                             new RuleEntry(new RandomBlockMatchRuleTest(Blocks.WHEAT, 0.3F), AlwaysTrueRuleTest.INSTANCE, Blocks.CARROTS.defaultBlockState()), new RuleEntry(new RandomBlockMatchRuleTest(Blocks.WHEAT, 0.2F), AlwaysTrueRuleTest.INSTANCE, Blocks.POTATOES.defaultBlockState()), new RuleEntry(new RandomBlockMatchRuleTest(Blocks.WHEAT, 0.1F), AlwaysTrueRuleTest.INSTANCE, Blocks.BEETROOTS.defaultBlockState())))));
 
-
+    public static final ResourceLocation EXTRA_ARCANE_ORE = new ResourceLocation(ArsNouveau.MODID, "arcane_ore_extra");
     public static final Feature<BlockStateFeatureConfig> LIGHTS = new SingleBlockFeature(BlockStateFeatureConfig.CODEC) {
+
         public void onStatePlace(ISeedReader seed, ChunkGenerator chunkGenerator, Random rand, BlockPos pos, BlockStateFeatureConfig config) {
             if(seed instanceof WorldGenRegion){
                 WorldGenRegion world = (WorldGenRegion) seed;
@@ -164,9 +166,10 @@ public class WorldEvent {
 
 
 
-        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.ARCANE_ORE.getRegistryName(),
-                Feature.ORE.configured(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE,
-                        BlockRegistry.ARCANE_ORE.defaultBlockState(), 5)).range(60).squared().count(5));
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.ARCANE_ORE.getRegistryName(), Feature.ORE.configured(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE,
+                BlockRegistry.ARCANE_ORE.defaultBlockState(), 5)).range(60).squared().count(5));
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, EXTRA_ARCANE_ORE, Feature.ORE.configured(new OreFeatureConfig(OreFeatureConfig.FillerBlockType.NATURAL_STONE, BlockRegistry.ARCANE_ORE.defaultBlockState(), 9))
+                .decorated(Placement.RANGE.configured(new TopSolidRangeConfig(32, 32, 80))).squared().count(20));
 
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.MANA_BERRY_BUSH.getRegistryName(),
                 Feature.RANDOM_PATCH.configured(BERRY_BUSH_PATCH_CONFIG).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE));
@@ -179,12 +182,7 @@ public class WorldEvent {
 
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, FeatureLib.BLAZE_COMMON_LOC, BLAZE_COMMON);
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, FeatureLib.BLAZE_SEMI_LOC, BLAZE_SEMI);
-//        Registry.register(Registry.FEATURE, FeatureLib.LIGHTS, LIGHTS);
-//        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.VEXING_SAPLING.getRegistryName(), VEX_COMMON);
-//        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.CASCADING_SAPLING.getRegistryName(), CASCADE_COMMON);
-//        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, BlockRegistry.FLOURISHING_SAPLING.getRegistryName(), FLOURISHING_COMMON);
 
-     //   Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(ArsNouveau.MODID, "archwood_trees"), FLOURISHING_COMMON);
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, ARCHWOOD_TREES, Feature.RANDOM_SELECTOR.configured(new MultipleRandomFeatureConfig(ImmutableList.of(
                 VEX_COMMON.weighted(0.15f),
                 BLAZE_COMMON.weighted(0.15f),
@@ -282,6 +280,10 @@ public class WorldEvent {
                 Objects.requireNonNull(WorldGenRegistries.CONFIGURED_FEATURE.get(VANILLA_BIG_TREES))).build();
         e.getGeneration().addFeature(GenerationStage.Decoration.LOCAL_MODIFICATIONS,
                 Objects.requireNonNull(WorldGenRegistries.CONFIGURED_FEATURE.get(RANDOM_LIGHTS_LOC))).build();
+        if (Config.SPAWN_ORE.get()) {
+            e.getGeneration().addFeature(GenerationStage.Decoration.UNDERGROUND_ORES,
+                    Objects.requireNonNull(WorldGenRegistries.CONFIGURED_FEATURE.get(EXTRA_ARCANE_ORE))).build();
+        }
     }
 
     public static Biome archwoodForest = BiomeMaker.theVoidBiome().setRegistryName(ArsNouveau.MODID, "archwood_forest");
