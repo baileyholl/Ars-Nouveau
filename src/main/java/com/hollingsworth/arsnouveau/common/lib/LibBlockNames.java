@@ -130,4 +130,5 @@ public class LibBlockNames {
     public static final String BASIC_SPELL_TURRET = "basic_spell_turret";
     public static final String TIMER_SPELL_TURRET = "timer_spell_turret";
     public static final String ARCHWOOD_CHEST = "archwood_chest";
+    public static final String SPELL_PRISM = "spell_prism";
 }

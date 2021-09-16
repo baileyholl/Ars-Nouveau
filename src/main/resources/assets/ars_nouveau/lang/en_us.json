@@ -876,5 +876,7 @@
 	"ars_nouveau.page1.archwood_forest": "The Archwood Forest is a somewhat rare biome filled with magical lights and archwood trees. It contains an increased amount of gold and source gem ore. Additionally, magical creatures such as Carbuncles, Sylphs, and Drygmys have a much higher chance of spawning.",
 	"ars_nouveau.wilden": "Wilden",
 	"ars_nouveau.decorative": "Decorative Blocks",
-	"ars_nouveau.archwood_trees": "Archwood Trees"
+	"ars_nouveau.archwood_trees": "Archwood Trees",
+	"block.ars_nouveau.spell_prism": "Spell Prism",
+	"ars_nouveau.page1.spell_prism": "When a projectile spell hits this block, it is redirected the direction the block is facing. Spell Prisms will send a signal to nearby Observers if a spell is redirected."
 }

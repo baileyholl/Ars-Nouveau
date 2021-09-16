@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
+import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -17,11 +18,10 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -47,11 +47,6 @@ public class SpellResolver {
         this.castType = spellContext.getSpell().getCastMethod();
         this.spellContext = spellContext;
         this.spellValidator = ArsNouveauAPI.getInstance().getSpellCastingSpellValidator();
-    }
-
-    @Deprecated // Removed in favor of Spell constructor
-    public SpellResolver(AbstractSpellPart[] spellParts, SpellContext context){
-        this(new ArrayList<>(Arrays.asList(spellParts)), context);
     }
 
     public SpellResolver withSilent(boolean isSilent){
@@ -136,6 +131,11 @@ public class SpellResolver {
     public static void resolveEffects(World world, LivingEntity shooter, RayTraceResult result, Spell spell, SpellContext spellContext){
         spellContext.resetSpells();
         shooter = getUnwrappedCaster(world, shooter, spellContext);
+        SpellResolveEvent.Pre spellResolveEvent = new SpellResolveEvent.Pre(world, shooter, result, spell, spellContext);
+        MinecraftForge.EVENT_BUS.post(spellResolveEvent);
+        if(spellResolveEvent.isCanceled())
+            return;
+
         for(int i = 0; i < spell.recipe.size(); i++){
             if(spellContext.isCanceled())
                 break;
@@ -149,6 +149,7 @@ public class SpellResolver {
                 ((AbstractEffect) part).onResolve(result, world, shooter, stats, spellContext);
             }
         }
+        MinecraftForge.EVENT_BUS.post(new SpellResolveEvent.Post(world, shooter, result, spell, spellContext));
     }
 
 

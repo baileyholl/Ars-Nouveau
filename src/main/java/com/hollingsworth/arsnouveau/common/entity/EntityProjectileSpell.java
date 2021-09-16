@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
+import com.hollingsworth.arsnouveau.common.block.SpellPrismBlock;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
@@ -19,6 +20,7 @@ import net.minecraft.network.IPacket;
 import net.minecraft.util.math.*;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -224,6 +226,13 @@ public class EntityProjectileSpell extends ColoredProjectile {
 
             BlockRayTraceResult blockraytraceresult = (BlockRayTraceResult)result;
             BlockState state = level.getBlockState(((BlockRayTraceResult) result).getBlockPos());
+
+            if(state.getBlock() instanceof SpellPrismBlock){
+                SpellPrismBlock.redirectSpell((ServerWorld) level, blockraytraceresult.getBlockPos(), this);
+                return;
+            }
+
+
             if(state.getMaterial() == Material.PORTAL){
                 state.getBlock().entityInside(state, level, ((BlockRayTraceResult) result).getBlockPos(),this);
                 return;

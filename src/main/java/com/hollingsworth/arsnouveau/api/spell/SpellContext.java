@@ -96,7 +96,6 @@ public class SpellContext {
         public static final CasterType TURRET = new CasterType("turret");
         public static final CasterType ENTITY = new CasterType("entity");
         public static final CasterType OTHER = new CasterType("other");
-
         public String id;
         public CasterType(String id){
             this.id = id;

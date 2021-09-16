@@ -1,0 +1,26 @@
+{
+  "variants": {
+	"facing=east": {
+      "model": "ars_nouveau:block/spell_prism",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "ars_nouveau:block/spell_prism"
+    },
+    "facing=south": {
+      "model": "ars_nouveau:block/spell_prism",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "ars_nouveau:block/spell_prism",
+      "y": 270
+    },
+	  "facing=down": {
+      "model": "ars_nouveau:block/spell_prism",
+      "x": 90
+    }, "facing=up": {
+      "model": "ars_nouveau:block/spell_prism",
+      "x": -90
+    }
+  }
+}
