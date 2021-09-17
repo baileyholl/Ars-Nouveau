@@ -878,5 +878,5 @@
 	"ars_nouveau.decorative": "Decorative Blocks",
 	"ars_nouveau.archwood_trees": "Archwood Trees",
 	"block.ars_nouveau.spell_prism": "Spell Prism",
-	"ars_nouveau.page1.spell_prism": "When a projectile spell hits this block, it is redirected the direction the block is facing. Spell Prisms will send a signal to nearby Observers if a spell is redirected."
+	"ars_nouveau.page.spell_prism": "When a projectile spell hits this block, it is redirected the direction the block is facing. Spell Prisms will send a signal to nearby Observers if a spell is redirected."
 }

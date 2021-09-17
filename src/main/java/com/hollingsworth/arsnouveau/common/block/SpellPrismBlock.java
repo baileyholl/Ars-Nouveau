@@ -49,9 +49,9 @@ public class SpellPrismBlock extends ModBlock{
 
     public static IPosition getDispensePosition(IBlockSource coords) {
         Direction direction = coords.getBlockState().getValue(FACING);
-        double d0 = coords.x() + 0.5D * (double)direction.getStepX();
-        double d1 = coords.y() + 0.5D * (double)direction.getStepY();
-        double d2 = coords.z() + 0.5D * (double)direction.getStepZ();
+        double d0 = coords.x() + 0.3D * (double)direction.getStepX();
+        double d1 = coords.y() + 0.3D * (double)direction.getStepY();
+        double d2 = coords.z() + 0.3D * (double)direction.getStepZ();
         return new Position(d0, d1, d2);
     }
     @Override
