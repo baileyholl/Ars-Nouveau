@@ -31,7 +31,7 @@ public class EffectLight extends AbstractEffect {
     public static EffectLight INSTANCE = new EffectLight();
 
     private EffectLight() {
-        super(GlyphLib.EffectLightID, "Light");
+        super(GlyphLib.EffectLightID, "Conjure Magelight");
     }
 
     @Override

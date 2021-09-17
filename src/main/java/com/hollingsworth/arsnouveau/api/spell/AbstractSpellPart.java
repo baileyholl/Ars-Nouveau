@@ -58,7 +58,7 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
 
     // Check for mana reduction exploit
     public boolean dampenIsAllowed(){
-        return false;
+        return getCompatibleAugments().contains(AugmentDampen.INSTANCE);
     }
 
     public String getName(){return this.name;}

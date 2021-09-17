@@ -89,7 +89,7 @@ public class EffectCut extends AbstractEffect {
 
     @Override
     public String getBookDescription() {
-        return "Shears entities and blocks, or damages non-shearable entities for a small amount. Costs nothing.";
+        return "Simulates using shears on entities and blocks, or damages non-shearable entities for a small amount. For simulating breaking with shears, see Break and Sensitive. Costs nothing.";
     }
 
     @Override

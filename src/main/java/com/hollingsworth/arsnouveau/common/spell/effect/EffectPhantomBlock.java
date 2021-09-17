@@ -26,7 +26,7 @@ public class EffectPhantomBlock extends AbstractEffect {
     public static EffectPhantomBlock INSTANCE = new EffectPhantomBlock();
 
     private EffectPhantomBlock() {
-        super(GlyphLib.EffectPhantomBlockID, "Mageblock");
+        super(GlyphLib.EffectPhantomBlockID, "Conjure Mageblock");
     }
 
 

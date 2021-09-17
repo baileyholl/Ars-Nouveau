@@ -54,7 +54,7 @@ public class EffectBreak extends AbstractEffect {
         int aoeBuff = spellStats.getBuffCount(AugmentAOE.INSTANCE);
         int pierceBuff = spellStats.getBuffCount(AugmentPierce.INSTANCE);
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, pos, rayTraceResult, aoeBuff, pierceBuff);
-        ItemStack stack = getStack(shooter);
+        ItemStack stack = spellStats.hasBuff(AugmentSensitive.INSTANCE) ? new ItemStack(Items.SHEARS) : getStack(shooter);
 
         for(BlockPos pos1 : posList) {
             state = world.getBlockState(pos1);
@@ -110,13 +110,14 @@ public class EffectBreak extends AbstractEffect {
                 AugmentPierce.INSTANCE,
                 AugmentAOE.INSTANCE,
                 AugmentExtract.INSTANCE,
-                AugmentFortune.INSTANCE
+                AugmentFortune.INSTANCE,
+                AugmentSensitive.INSTANCE
         );
     }
 
     @Override
     public String getBookDescription() {
-        return "A spell you start with. Breaks blocks of an average hardness. Can be amplified to increase the harvest level.";
+        return "A spell you start with. Breaks blocks of an average hardness. Can be amplified to increase the harvest level. Sensitive will simulate breaking blocks with Shears instead of a pickaxe.";
     }
 
     @Nonnull
