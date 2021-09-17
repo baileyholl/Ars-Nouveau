@@ -69,8 +69,8 @@ import java.util.*;
 
 public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDispellable, ITooltipProvider, IWandable {
 
-    public List<ItemStack> allowedItems; // Items the carbuncle is allowed to take
-    public List<ItemStack> ignoreItems; // Items the carbuncle will not take
+    public List<ItemStack> allowedItems = new ArrayList<>(); // Items the carbuncle is allowed to take
+    public List<ItemStack> ignoreItems = new ArrayList<>(); // Items the carbuncle will not take
     public Block pathBlock;
     public boolean whitelist;
     public boolean blacklist;
@@ -714,6 +714,29 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         return true;
     }
 
+    /**
+     * Returns the maximum stack size an inventory can accept for a particular stack. Does all needed validity checks.
+     */
+    public int getMaxTake(ItemStack stack){
+        if(!isValidItem(stack)){
+            return -1;
+        }
+        BlockPos validStorePos = getValidStorePos(stack);
+        if(validStorePos == null)
+            return -1;
+        IItemHandler handler = level.getBlockEntity(validStorePos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+        if(handler == null)
+            return -1;
+        for(int i = 0; i < handler.getSlots(); i++){
+            if(handler.isItemValid(i, stack)){
+                int maxRoom = handler.getStackInSlot(i).getMaxStackSize() - handler.getStackInSlot(i).getCount();
+                if(maxRoom > 0)
+                    return maxRoom;
+            }
+        }
+        return -1;
+    }
+
     public boolean isValidItem(ItemStack stack){
 
         if(!isTamed() && stack.getItem() == Items.GOLD_NUGGET)
@@ -733,11 +756,9 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
             }
             return false;
         }
-        if(blacklist){
-            for(ItemStack s : ignoreItems)
-                if(s.sameItem(stack))
-                    return false;
-        }
+        for(ItemStack s : ignoreItems)
+            if(s.sameItem(stack))
+                return false;
         return true;
     }
 

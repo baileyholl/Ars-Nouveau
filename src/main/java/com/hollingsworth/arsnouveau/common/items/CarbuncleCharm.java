@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
 public class CarbuncleCharm extends ModItem{
@@ -16,10 +16,12 @@ public class CarbuncleCharm extends ModItem{
      * Called when this item is used when targetting a Block
      */
     public ActionResultType useOn(ItemUseContext context) {
+        if(context.getLevel().isClientSide)
+            return ActionResultType.SUCCESS;
         World world = context.getLevel();
-        BlockPos blockpos = context.getClickedPos();
         EntityCarbuncle carbuncle = new EntityCarbuncle(world, true);
-        carbuncle.setPos(blockpos.getX(), blockpos.getY() + 1, blockpos.getZ());
+        Vector3d vec = context.getClickLocation();
+        carbuncle.setPos(vec.x, vec.y, vec.z);
         world.addFreshEntity(carbuncle);
         context.getItemInHand().shrink(1);
         return ActionResultType.SUCCESS;

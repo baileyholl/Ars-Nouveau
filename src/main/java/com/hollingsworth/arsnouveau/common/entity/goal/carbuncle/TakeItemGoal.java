@@ -56,9 +56,13 @@ public class TakeItemGoal extends ExtendedRangeGoal {
         if(iItemHandler == null)
             return;
         for(int j = 0; j < iItemHandler.getSlots(); j++){
-            if(!iItemHandler.getStackInSlot(j).isEmpty() && carbuncle.isValidItem( iItemHandler.getStackInSlot(j))){
+            if(!iItemHandler.getStackInSlot(j).isEmpty()){
+                int count = carbuncle.getMaxTake(iItemHandler.getStackInSlot(j));
+                if(count <= 0)
+                    continue;
+                carbuncle.getValidStorePos(iItemHandler.getStackInSlot(j));
 
-                carbuncle.setHeldStack(iItemHandler.extractItem(j, 64, false));
+                carbuncle.setHeldStack(iItemHandler.extractItem(j, count, false));
 
                 carbuncle.level.playSound(null, carbuncle.getX(),carbuncle.getY(), carbuncle.getZ(),
                         SoundEvents.ITEM_PICKUP, carbuncle.getSoundSource(),1.0F, 1.0F);
