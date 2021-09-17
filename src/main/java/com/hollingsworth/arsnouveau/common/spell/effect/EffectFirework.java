@@ -27,6 +27,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class EffectFirework extends AbstractEffect {
+
+    public static EffectFirework INSTANCE = new EffectFirework();
+
     public EffectFirework() {
         super(GlyphLib.EffectFireworkID, "Firework");
     }

@@ -16,7 +16,9 @@ import java.util.Set;
 
 public class EffectBounce extends AbstractEffect {
 
-    public EffectBounce() {
+    public static EffectBounce INSTANCE = new EffectBounce();
+
+    private EffectBounce() {
         super(GlyphLib.EffectBounceID, "Bounce");
     }
 

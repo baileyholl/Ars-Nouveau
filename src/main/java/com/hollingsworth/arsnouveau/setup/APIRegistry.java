@@ -118,9 +118,9 @@ public class APIRegistry {
 //        registerFamiliar(new JabberwogFamiliar());
         registerFamiliar(new BookwyrmFamiliar());
 
-        registerSpell(new EffectFirework());
-        registerSpell(new EffectToss());
-        registerSpell(new EffectBounce());
+        registerSpell(EffectFirework.INSTANCE);
+        registerSpell(EffectToss.INSTANCE);
+        registerSpell(EffectBounce.INSTANCE);
         registerSpell(AugmentSensitive.INSTANCE);
         registerSpell(EffectWindshear.INSTANCE);
         registerSpell(EffectEvaporate.INSTANCE);

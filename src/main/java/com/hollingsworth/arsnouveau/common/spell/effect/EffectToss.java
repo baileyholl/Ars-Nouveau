@@ -22,6 +22,9 @@ import javax.annotation.Nullable;
 import java.util.Set;
 
 public class EffectToss extends AbstractEffect {
+
+    public static EffectToss INSTANCE = new EffectToss();
+
     public EffectToss() {
         super(GlyphLib.EffectTossID, "Toss");
     }
@@ -33,14 +36,14 @@ public class EffectToss extends AbstractEffect {
         summonStack(shooter, spellContext, world, pos);
     }
 
-    public void summonStack(LivingEntity shooter, SpellContext context, World world, BlockPos pos){
-        ItemStack stack =  getItemFromCaster(shooter, context, (i) -> {
+    public void summonStack(LivingEntity shooter, SpellContext context, World world, BlockPos pos) {
+        ItemStack stack = getItemFromCaster(shooter, context, (i) -> {
             if (!i.isEmpty() && shooter instanceof PlayerEntity) {
                 return !ItemStack.matches(shooter.getMainHandItem(), i);
             }
             return false;
         });
-        world.addFreshEntity(new ItemEntity(world, pos.getX() + 0.5, pos.getY(), pos.getZ()+ 0.5, stack.copy()));
+        world.addFreshEntity(new ItemEntity(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, stack.copy()));
         stack.setCount(0);
     }
 
@@ -48,29 +51,36 @@ public class EffectToss extends AbstractEffect {
     public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         super.onResolveBlock(rayTraceResult, world, shooter, spellStats, spellContext);
         BlockPos pos = rayTraceResult.getBlockPos().relative(rayTraceResult.getDirection());
-        if(world.getBlockEntity(rayTraceResult.getBlockPos()) != null && world.getBlockEntity(rayTraceResult.getBlockPos()).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()){
+        if (world.getBlockEntity(rayTraceResult.getBlockPos()) != null && world.getBlockEntity(rayTraceResult.getBlockPos()).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
             TileEntity tileEntity = world.getBlockEntity(rayTraceResult.getBlockPos());
             IItemHandler iItemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
 
-            if(iItemHandler != null){
-               getItemFromCaster(shooter, spellContext, (i) ->{
-                   if(i.isEmpty())
-                       return false;
-                   if(shooter instanceof PlayerEntity){
-                       if(ItemStack.matches(shooter.getMainHandItem(), i))
-                           return false;
-                   }
-                    ItemStack orig = i.copy();
-                    ItemStack left = ItemHandlerHelper.insertItemStacked(iItemHandler, orig, false);
-                    if(left.sameItem(orig)){
-                        return false;
-                    }
-                    i.setCount(left.getCount());
-                    return true;
-                });
-
+            if (iItemHandler == null) {
+                return;
             }
-        } else{
+
+            ItemStack casterStack = getItemFromCaster(shooter, spellContext, (i) -> {
+
+                if (i.isEmpty())
+                    return false;
+                if (shooter instanceof PlayerEntity) {
+                    return !ItemStack.matches(shooter.getMainHandItem(), i);
+                }
+                return true;
+            });
+            ItemStack stack = extractStackFromCaster(shooter, spellContext, (stack1) ->{
+                if(stack1.isEmpty())
+                    return false;
+                for(int i = 0; i < iItemHandler.getSlots(); i++){
+                    if(iItemHandler.isItemValid(i, casterStack)){
+                        return true;
+                    }
+                }
+                return false;
+            }, 64);
+            ItemStack left = ItemHandlerHelper.insertItemStacked(iItemHandler, stack, false);
+            insertStackToCaster(shooter, spellContext, left);
+        } else {
             summonStack(shooter, spellContext, world, pos);
         }
     }

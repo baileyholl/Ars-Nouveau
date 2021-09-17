@@ -4,12 +4,14 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.api.event.SummonEvent;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
+import com.hollingsworth.arsnouveau.common.items.VoidJar;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -326,7 +328,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
             return ((IInventoryResponder) shooter).getItem(predicate);
         }else if(shooter instanceof PlayerEntity){
             PlayerEntity playerEntity = (PlayerEntity) shooter;
-            NonNullList<ItemStack> list =  playerEntity.inventory.items;
+            NonNullList<ItemStack> list = playerEntity.inventory.items;
             for(int i = 0; i < 9; i++){
                 ItemStack stack = list.get(i);
                 if(predicate.test(stack)){
@@ -339,5 +341,48 @@ public abstract class AbstractEffect extends AbstractSpellPart {
 
     public ItemStack getItemFromCaster(@Nullable LivingEntity shooter, SpellContext spellContext, Item item){
         return getItemFromCaster(shooter, spellContext, (i) -> i.sameItem(new ItemStack(item)));
+    }
+
+    public ItemStack extractStackFromCaster(@Nullable LivingEntity shooter, SpellContext spellContext, Predicate<ItemStack> predicate, int maxExtract){
+        IInventoryResponder responder = null;
+        if(spellContext.castingTile instanceof IInventoryResponder) {
+            responder = (IInventoryResponder) spellContext.castingTile;
+        }else if(shooter instanceof IInventoryResponder){
+            responder = (IInventoryResponder) shooter;
+        }
+        if(responder != null){
+            return responder.extractItem(predicate, maxExtract);
+        }else if(shooter instanceof PlayerEntity){
+            PlayerEntity playerEntity = (PlayerEntity) shooter;
+            NonNullList<ItemStack> list = playerEntity.inventory.items;
+            for(int i = 0; i < 9; i++){
+                ItemStack stack = list.get(i);
+                if(predicate.test(stack)){
+                    return stack.split(maxExtract);
+                }
+            }
+        }
+        return ItemStack.EMPTY;
+    }
+
+    public ItemStack insertStackToCaster(@Nullable LivingEntity shooter, SpellContext spellContext, ItemStack stack){
+        IPickupResponder responder = null;
+        if(spellContext.castingTile instanceof IPickupResponder) {
+            responder = (IPickupResponder) spellContext.castingTile;
+        }else if(shooter instanceof IInventoryResponder){
+            responder = (IPickupResponder) shooter;
+        }
+        if(responder != null){
+            return responder.onPickup(stack);
+        }
+        if(isRealPlayer(shooter)){
+            PlayerEntity player = (PlayerEntity) shooter;
+            VoidJar.tryVoiding(player, stack);
+            if(!player.addItem(stack)){
+                ItemEntity i = new ItemEntity(shooter.level,player.getX(), player.getY(), player.getZ(), stack);
+                shooter.level.addFreshEntity(i);
+            }
+        }
+        return stack;
     }
 }
