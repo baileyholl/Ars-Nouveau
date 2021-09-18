@@ -36,6 +36,8 @@ import java.util.List;
 import java.util.Random;
 
 public class RuneBlock extends ModBlock{
+
+    public static VoxelShape shape =  Block.box(0.0D, 0.0D, 0.0D, 16D, 0.5D, 16D);
     public RuneBlock() {
         super(defaultProperties().noCollission().noOcclusion().strength(0f,0f), LibBlockNames.RUNE);
     }
@@ -92,7 +94,7 @@ public class RuneBlock extends ModBlock{
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return Block.box(0.0D, 0.0D, 0.0D, 16D, 0.5D, 16D);
+        return shape;
     }
 
     @Override

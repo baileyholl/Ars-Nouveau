@@ -1284,42 +1284,31 @@ public abstract class AbstractPathJob implements Callable<Path>
      * @param block the block we are checking.
      * @return true if the block does not block movement.
      */
-    protected boolean isPassable(final BlockState block, final BlockPos pos, final Node parent)
-    {
-        if (block.getMaterial() != Material.AIR)
-        {
-            if (block.getMaterial().blocksMotion())
-            {
-                if (block.getBlock() instanceof TrapDoorBlock)
-                {
+    protected boolean isPassable(final BlockState block, final BlockPos pos, final Node parent) {
+        if (block.getMaterial() != Material.AIR) {
+            if (block.getMaterial().blocksMotion() && !canPassShape(block.getCollisionShape(world, pos))) {
+                if (block.getBlock() instanceof TrapDoorBlock) {
                     final BlockPos parentPos = parent == null ? start : parent.pos;
                     final BlockPos dir = pos.subtract(parentPos);
-                    if (dir.getY() != 0 && dir.getX() == 0 && dir.getZ() == 0)
-                    {
+                    if (dir.getY() != 0 && dir.getX() == 0 && dir.getZ() == 0) {
                         return true;
                     }
 
                     final Direction facing = block.getValue(TrapDoorBlock.FACING);
-                    if (dir.getX() != 0)
-                    {
+                    if (dir.getX() != 0) {
                         return facing == Direction.NORTH || facing == Direction.SOUTH;
                     }
                     return facing == Direction.EAST || facing == Direction.WEST;
-                }
-                else
-                {
+                } else {
                     return pathingOptions.canEnterDoors() && (block.getBlock() instanceof DoorBlock || block.getBlock() instanceof FenceGateBlock)
                              || block.getBlock() instanceof PressurePlateBlock
                              || block.getBlock() instanceof AbstractSignBlock
                              || block.getBlock() instanceof AbstractBannerBlock;
                 }
             }
-            else if (block.getBlock() instanceof FireBlock)
-            {
+            else if (block.getBlock() instanceof FireBlock){
                 return false;
-            }
-            else
-            {
+            } else {
                 final VoxelShape shape = block.getCollisionShape(world, pos);
                 return isLadder(block.getBlock(), pos) ||
                          ((shape.isEmpty() || shape.max(Direction.Axis.Y) <= 0.1)
@@ -1330,6 +1319,10 @@ public abstract class AbstractPathJob implements Callable<Path>
         }
 
         return true;
+    }
+
+    public boolean canPassShape(VoxelShape shape){
+        return shape.isEmpty() || shape.max(Direction.Axis.Y) <= 0.1;
     }
 
     protected boolean isPassable(final BlockPos pos, final boolean head, final Node parent)

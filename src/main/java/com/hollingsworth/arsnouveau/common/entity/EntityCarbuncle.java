@@ -100,7 +100,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
     public EntityCarbuncle(EntityType<EntityCarbuncle> entityCarbuncleEntityType, World world) {
         super(entityCarbuncleEntityType, world);
-        maxUpStep = 2f;
+        maxUpStep = 1.2f;
         addGoalsAfterConstructor();
         this.moveControl = new MovementHandler(this);
     }
@@ -108,7 +108,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     public EntityCarbuncle(World world, boolean tamed) {
         super(ModEntities.ENTITY_CARBUNCLE_TYPE, world);
         this.setTamed(tamed);
-        maxUpStep = 2f;
+        maxUpStep = 1.2f;
         this.moveControl = new MovementHandler(this);
         addGoalsAfterConstructor();
     }
