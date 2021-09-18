@@ -18,6 +18,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class ManaCapEvents {
+    public static double MEAN_TPS = 20.0;
 
     @SubscribeEvent
     public static void playerOnTick(TickEvent.PlayerTickEvent e) {
@@ -29,7 +30,7 @@ public class ManaCapEvents {
             return;
 
         if (mana.getCurrentMana() != mana.getMaxMana()) {
-            double regenPerSecond = ManaUtil.getManaRegen(e.player) / (20.0 / Config.REGEN_INTERVAL.get());
+            double regenPerSecond = ManaUtil.getManaRegen(e.player) / Math.max(1, ((int)MEAN_TPS / Config.REGEN_INTERVAL.get()));
             mana.addMana(regenPerSecond);
             Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
         }
@@ -77,5 +78,24 @@ public class ManaCapEvents {
                 Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerEntity), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
             });
         }
+    }
+
+    @SubscribeEvent
+    public static void onTick(TickEvent.PlayerTickEvent e) {
+        if(e.player.level.isClientSide)
+            return;
+        if(e.player.level.getGameTime() % 600 == 0 && e.player.getServer() != null) {
+
+            double meanTickTime = mean(e.player.getServer().tickTimes) * 1.0E-6D;
+            double meanTPS = Math.min(1000.0 / meanTickTime, 20);
+            ManaCapEvents.MEAN_TPS = Math.max(1, meanTPS);
+        }
+    }
+    private static long mean(long[] values)
+    {
+        long sum = 0L;
+        for (long v : values)
+            sum += v;
+        return sum / values.length;
     }
 }

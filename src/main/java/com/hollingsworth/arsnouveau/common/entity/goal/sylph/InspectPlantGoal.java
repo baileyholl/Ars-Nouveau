@@ -17,8 +17,6 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Supplier;
 
-import net.minecraft.entity.ai.goal.Goal.Flag;
-
 public class InspectPlantGoal extends DistanceRestrictedGoal {
     MobEntity entity;
     BlockPos pos;
@@ -62,7 +60,7 @@ public class InspectPlantGoal extends DistanceRestrictedGoal {
 
     @Override
     public boolean canUse() {
-        return entity.getCommandSenderWorld().random.nextInt(100) <= 2;
+        return entity.getCommandSenderWorld().random.nextInt(100) <= 2 && entity.level.getGameTime() % 10 == 0;
     }
 
     @Override
@@ -77,7 +75,7 @@ public class InspectPlantGoal extends DistanceRestrictedGoal {
         if(list.isEmpty())
             return;
         pos = list.get(entity.level.random.nextInt(list.size()));
-        this.timeLooking = 60;
+        this.timeLooking = 120;
         this.timePerforming = 240;
     }
 }

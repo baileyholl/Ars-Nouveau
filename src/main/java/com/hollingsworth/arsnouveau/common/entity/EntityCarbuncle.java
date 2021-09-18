@@ -87,7 +87,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     public static final DataParameter<String> COLOR = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.STRING);
     public static final DataParameter<String> PATH_BLOCK = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.STRING);
 
-    public int backOff; // Used to stop inventory store/take spam when chests are full or empty.
+    private int backOff; // Used to stop inventory store/take spam when chests are full or empty.
     public int tamingTime;
     public boolean isStuck;
     private int lastAABBCalc;
@@ -775,6 +775,14 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     }
 
     public static String[] carbyColors = {"purple", "orange", "blue", "red", "yellow", "green"};
+
+    public int getBackOff() {
+        return backOff;
+    }
+
+    public void setBackOff(int backOff) {
+        this.backOff = backOff;
+    }
 
     public enum COLORS {
         ORANGE,

@@ -70,7 +70,7 @@ public class StoreItemGoal extends ExtendedRangeGoal {
                     EventQueue.getServerInstance().addEvent(event);
                 }
                 entityCarbuncle.setHeldStack(left);
-                entityCarbuncle.backOff = 5;
+                entityCarbuncle.setBackOff(5 + entityCarbuncle.level.random.nextInt(20));
                 return;
             }
         }
@@ -93,11 +93,11 @@ public class StoreItemGoal extends ExtendedRangeGoal {
 
     @Override
     public boolean canContinueToUse() {
-        return !unreachable && entityCarbuncle.isTamed() && entityCarbuncle.getHeldStack() != null && !entityCarbuncle.getHeldStack().isEmpty() && entityCarbuncle.backOff == 0 && storePos != null;
+        return !unreachable && entityCarbuncle.isTamed() && entityCarbuncle.getHeldStack() != null && !entityCarbuncle.getHeldStack().isEmpty() && entityCarbuncle.getBackOff() == 0 && storePos != null;
     }
 
     @Override
     public boolean canUse() {
-        return entityCarbuncle.isTamed() && entityCarbuncle.getHeldStack() != null && !entityCarbuncle.getHeldStack().isEmpty() && entityCarbuncle.backOff == 0;
+        return entityCarbuncle.isTamed() && entityCarbuncle.getHeldStack() != null && !entityCarbuncle.getHeldStack().isEmpty() && entityCarbuncle.getBackOff() == 0;
     }
 }

@@ -106,11 +106,11 @@ public class TakeItemGoal extends ExtendedRangeGoal {
 
     @Override
     public boolean canContinueToUse() {
-        return !unreachable && !carbuncle.isStuck && carbuncle.getHeldStack() != null && carbuncle.getHeldStack().isEmpty() && carbuncle.backOff == 0 && carbuncle.isTamed() && takePos != null;
+        return !unreachable && !carbuncle.isStuck && carbuncle.getHeldStack() != null && carbuncle.getHeldStack().isEmpty() && carbuncle.getBackOff() == 0 && carbuncle.isTamed() && takePos != null;
     }
 
     @Override
     public boolean canUse() {
-        return !carbuncle.isStuck && carbuncle.getHeldStack() != null && carbuncle.getHeldStack().isEmpty() && carbuncle.backOff == 0 && carbuncle.isTamed();
+        return !carbuncle.isStuck && carbuncle.getHeldStack() != null && carbuncle.getHeldStack().isEmpty() && carbuncle.getBackOff() == 0 && carbuncle.isTamed();
     }
 }

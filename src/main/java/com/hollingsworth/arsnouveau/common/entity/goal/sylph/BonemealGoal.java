@@ -70,12 +70,12 @@ public class BonemealGoal extends DistanceRestrictedGoal {
 
     @Override
     public boolean canContinueToUse() {
-        return this.timeGrowing > 0 && growPos != null && sylph.timeSinceBonemeal >= (60 * 20 * 5) && isInRange(growPos);
+        return this.timeGrowing > 0 && growPos != null && sylph.timeSinceBonemeal >= (60 * 20 * 8) && isInRange(growPos);
     }
 
     @Override
     public boolean canUse() {
-        return  sylph.level.random.nextInt(5) == 0 && sylph.timeSinceBonemeal >= (60 * 20 * 5) && isInRange(sylph.blockPosition());
+        return  sylph.level.random.nextInt(5) == 0 && sylph.timeSinceBonemeal >= (60 * 20 * 8) && isInRange(sylph.blockPosition());
     }
 
     @Override
