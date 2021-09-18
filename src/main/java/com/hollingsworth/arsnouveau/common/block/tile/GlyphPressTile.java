@@ -145,7 +145,9 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
 
     @Override
     public void startAnimation(int arg) {
-        AnimationController controller = this.manager.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("controller");
+        AnimationData data = this.manager.getOrCreateAnimationData(this.hashCode());
+        data.setResetSpeedInTicks(0.0);
+        AnimationController controller = data.getAnimationControllers().get("controller");
         controller.markNeedsReload();
         controller.setAnimation(new AnimationBuilder().addAnimation("press", false));
     }
