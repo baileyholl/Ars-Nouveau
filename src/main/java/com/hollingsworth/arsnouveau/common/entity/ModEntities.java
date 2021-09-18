@@ -86,6 +86,11 @@ public class ModEntities {
     public static EntityType<FamiliarSylph> ENTITY_FAMILIAR_SYLPH = null;
     public static EntityType<FamiliarJabberwog> ENTITY_FAMILIAR_JABBERWOG = null;
     public static EntityType<EntityLingeringSpell> LINGER_SPELL = null;
+    public static EntityType<WealdWalker> ENTITY_CASCADING_WEALD = null;
+    public static EntityType<WealdWalker> ENTITY_FLOURISHING_WEALD = null;
+    public static EntityType<WealdWalker> ENTITY_BLAZING_WEALD = null;
+    public static EntityType<WealdWalker> ENTITY_VEXING_WEALD = null;
+
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus= Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
 
@@ -195,6 +200,14 @@ public class ModEntities {
                     .sized(0.7F, 0.63F).setTrackingRange(10));
             ENTITY_FAMILIAR_WIXIE =  build("familiar_wixie", EntityType.Builder.of(FamiliarWixie::new, EntityClassification.CREATURE)
                     .sized(0.7F, 0.63F).setTrackingRange(10));
+            ENTITY_CASCADING_WEALD =  build("cascading_weald_walker", EntityType.Builder.of(WealdWalker::new, EntityClassification.CREATURE)
+                    .sized(1.4F, 3F).setTrackingRange(10));
+            ENTITY_FLOURISHING_WEALD =  build("flourishing_weald_walker", EntityType.Builder.of(WealdWalker::new, EntityClassification.CREATURE)
+                    .sized(1.4F, 3F).setTrackingRange(10));
+            ENTITY_BLAZING_WEALD =  build("blazing_weald_walker", EntityType.Builder.of(WealdWalker::new, EntityClassification.CREATURE)
+                    .sized(1.4F, 3F).setTrackingRange(10));
+            ENTITY_VEXING_WEALD =  build("vexing_weald_walker", EntityType.Builder.of(WealdWalker::new, EntityClassification.CREATURE)
+                    .sized(1.4F, 3F).setTrackingRange(10));
             event.getRegistry().registerAll(
                     SPELL_PROJ,
                     ENTITY_EVOKER_FANGS_ENTITY_TYPE,
@@ -224,7 +237,11 @@ public class ModEntities {
                     ENTITY_FAMILIAR_WIXIE,
                     ENTITY_FAMILIAR_SYLPH,
                     ENTITY_FAMILIAR_DRYGMY,
-                    LINGER_SPELL
+                    LINGER_SPELL,
+                    ENTITY_CASCADING_WEALD,
+                    ENTITY_BLAZING_WEALD,
+                    ENTITY_VEXING_WEALD,
+                    ENTITY_FLOURISHING_WEALD
             );
 
 
@@ -261,6 +278,10 @@ public class ModEntities {
             event.put(ENTITY_FAMILIAR_WIXIE, FamiliarEntity.attributes().build());
             event.put(ENTITY_FAMILIAR_SYLPH, FamiliarEntity.attributes().build());
             event.put(ENTITY_FAMILIAR_DRYGMY, FamiliarEntity.attributes().build());
+            event.put(ENTITY_CASCADING_WEALD, WealdWalker.attributes().build());
+            event.put(ENTITY_BLAZING_WEALD, WealdWalker.attributes().build());
+            event.put(ENTITY_FLOURISHING_WEALD, WealdWalker.attributes().build());
+            event.put(ENTITY_VEXING_WEALD, WealdWalker.attributes().build());
         }
     }
     public static boolean canMonsterSpawnInLight(EntityType<? extends Entity> type, IServerWorld worldIn, SpawnReason reason, BlockPos pos, Random randomIn) {

@@ -1,0 +1,114 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 64,
+				"texture_height": 64,
+				"visible_bounds_width": 3,
+				"visible_bounds_height": 3.5,
+				"visible_bounds_offset": [0, 1.25, 0]
+			},
+			"bones": [
+				{
+					"name": "weald_waddler",
+					"pivot": [0, 0, 0]
+				},
+				{
+					"name": "head",
+					"parent": "weald_waddler",
+					"pivot": [0, 7, 0],
+					"cubes": [
+						{
+							"origin": [-8, 8, -8],
+							"size": [16, 8, 16],
+							"uv": {
+								"north": {"uv": [40, 32], "uv_size": [16, 8]},
+								"east": {"uv": [40, 40], "uv_size": [16, 8]},
+								"south": {"uv": [0, 41], "uv_size": [16, 8]},
+								"west": {"uv": [16, 41], "uv_size": [16, 8]},
+								"up": {"uv": [20, 0], "uv_size": [16, 16]},
+								"down": {"uv": [20, 32], "uv_size": [16, -16]}
+							}
+						},
+						{
+							"origin": [-5, 16, -4],
+							"size": [10, 3, 5],
+							"uv": {
+								"north": {"uv": [50, 48], "uv_size": [10, 3]},
+								"east": {"uv": [30, 49], "uv_size": [5, 3]},
+								"south": {"uv": [50, 51], "uv_size": [10, 3]},
+								"west": {"uv": [50, 54], "uv_size": [5, 3]},
+								"up": {"uv": [45, 18], "uv_size": [10, 5]},
+								"down": {"uv": [45, 28], "uv_size": [10, -5]}
+							}
+						},
+						{
+							"origin": [-10, 6, 1],
+							"size": [20, 16, 9],
+							"uv": {
+								"north": {"uv": [0, 0], "uv_size": [20, 16]},
+								"east": {"uv": [36, 0], "uv_size": [9, 16]},
+								"south": {"uv": [0, 16], "uv_size": [20, 16]},
+								"west": {"uv": [36, 16], "uv_size": [9, 16]},
+								"up": {"uv": [0, 32], "uv_size": [20, 9]},
+								"down": {"uv": [20, 41], "uv_size": [20, -9]}
+							}
+						},
+						{
+							"origin": [-6, 22, 1],
+							"size": [12, 3, 9],
+							"uv": {
+								"north": {"uv": [45, 28], "uv_size": [12, 3]},
+								"east": {"uv": [18, 52], "uv_size": [9, 3]},
+								"south": {"uv": [18, 49], "uv_size": [12, 3]},
+								"west": {"uv": [27, 52], "uv_size": [9, 3]},
+								"up": {"uv": [45, 0], "uv_size": [12, 9]},
+								"down": {"uv": [45, 18], "uv_size": [12, -9]}
+							}
+						}
+					]
+				},
+				{
+					"name": "leg_right",
+					"parent": "weald_waddler",
+					"pivot": [0, 8, 0],
+					"cubes": [
+						{
+							"origin": [-7, 0, -3],
+							"size": [6, 8, 6],
+							"uv": {
+								"north": {"uv": [32, 41], "uv_size": [6, 8]},
+								"east": {"uv": [38, 48], "uv_size": [6, 8]},
+								"south": {"uv": [44, 48], "uv_size": [6, 8]},
+								"west": {"uv": [0, 49], "uv_size": [6, 8]},
+								"up": {"uv": [6, 49], "uv_size": [6, 6]},
+								"down": {"uv": [12, 55], "uv_size": [6, -6]}
+							}
+						}
+					]
+				},
+				{
+					"name": "leg_left",
+					"parent": "weald_waddler",
+					"pivot": [0, 8, 0],
+					"cubes": [
+						{
+							"origin": [1, 0, -3],
+							"size": [6, 8, 6],
+							"uv": {
+								"north": {"uv": [38, 41], "uv_size": [-6, 8]},
+								"east": {"uv": [6, 49], "uv_size": [-6, 8]},
+								"south": {"uv": [50, 48], "uv_size": [-6, 8]},
+								"west": {"uv": [44, 48], "uv_size": [-6, 8]},
+								"up": {"uv": [12, 49], "uv_size": [-6, 6]},
+								"down": {"uv": [18, 55], "uv_size": [-6, -6]}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}
