@@ -422,7 +422,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
 
         if(player.getMainHandItem().getItem() instanceof BlockItem){
             pathBlock = ((BlockItem) player.getMainHandItem().getItem()).getBlock();
-            setPathBlockDesc(pathBlock.getName().getString());
+            setPathBlockDesc(new TranslationTextComponent(pathBlock.getDescriptionId()).getString());
             PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.carbuncle.path"));
         }
 
@@ -573,7 +573,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
        this.entityData.set(FROM_POS, FROM_LIST.size());
        if(tag.contains("path")){
            pathBlock = Registry.BLOCK.get(new ResourceLocation(tag.getString("path")));
-           setPathBlockDesc(pathBlock.getName().getString());
+           setPathBlockDesc(new TranslationTextComponent(pathBlock.getDescriptionId()).getString());
        }
     }
 
