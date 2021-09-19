@@ -30,8 +30,7 @@ import static com.hollingsworth.arsnouveau.common.entity.pathfinding.PathingCons
 /**
  * Abstract class for Jobs that run in the multithreaded path finder.
  */
-public abstract class AbstractPathJob implements Callable<Path>
-{
+public abstract class AbstractPathJob implements Callable<Path> {
     public static boolean DEBUG_DRAW = false;
     public static Set<Node> lastDebugNodesVisited;
     public static Set<Node> lastDebugNodesNotVisited;
@@ -68,17 +67,17 @@ public abstract class AbstractPathJob implements Callable<Path>
     public Map<Integer, Node> nodesVisited = new HashMap<>();
 
     //  Debug Rendering
-    protected        boolean            debugDrawEnabled     = false;
-    
-    protected        Set<Node>          debugNodesVisited    = null;
-    
-    protected        Set<Node>          debugNodesNotVisited = null;
-    
-    protected        Set<Node>          debugNodesPath       = null;
+    protected boolean debugDrawEnabled = false;
+
+    protected Set<Node> debugNodesVisited = null;
+
+    protected Set<Node> debugNodesNotVisited = null;
+
+    protected Set<Node> debugNodesPath = null;
     //  May be faster, but can produce strange results
-    private final    boolean            allowJumpPointSearchTypeWalk;
-    private          int                totalNodesAdded      = 0;
-    public          int                totalNodesVisited    = 0;
+    private final boolean allowJumpPointSearchTypeWalk;
+    private int totalNodesAdded = 0;
+    public int totalNodesVisited = 0;
 
     /**
      * Are there xz restrictions.
@@ -117,8 +116,7 @@ public abstract class AbstractPathJob implements Callable<Path>
      * @param range  maximum path range.
      * @param entity the entity.
      */
-    public AbstractPathJob(final World world, final BlockPos start, final BlockPos end, final int range, final LivingEntity entity)
-    {
+    public AbstractPathJob(final World world, final BlockPos start, final BlockPos end, final int range, final LivingEntity entity) {
         this(world, start, end, range, new PathResult<AbstractPathJob>(), entity);
     }
 
@@ -133,8 +131,7 @@ public abstract class AbstractPathJob implements Callable<Path>
      * @param entity the entity.
      * @see AbstractPathJob#AbstractPathJob(World, BlockPos, BlockPos, int, LivingEntity)
      */
-    public AbstractPathJob(final World world, final BlockPos start, final BlockPos end, final int range, final PathResult result, final LivingEntity entity)
-    {
+    public AbstractPathJob(final World world, final BlockPos start, final BlockPos end, final int range, final PathResult result, final LivingEntity entity) {
         final int minX = Math.min(start.getX(), end.getX()) - (range / 2);
         final int minZ = Math.min(start.getZ(), end.getZ()) - (range / 2);
         final int maxX = Math.max(start.getX(), end.getX()) + (range / 2);
@@ -177,14 +174,13 @@ public abstract class AbstractPathJob implements Callable<Path>
      * @param entity           the entity.
      */
     public AbstractPathJob(final World world,
-        final BlockPos start,
-        final BlockPos startRestriction,
-        final BlockPos endRestriction,
-        final int range,
-        final boolean hardRestriction,
-        final PathResult<AbstractPathJob> result,
-        final LivingEntity entity)
-    {
+                           final BlockPos start,
+                           final BlockPos startRestriction,
+                           final BlockPos endRestriction,
+                           final int range,
+                           final boolean hardRestriction,
+                           final PathResult<AbstractPathJob> result,
+                           final LivingEntity entity) {
         this(world, start, startRestriction, endRestriction, range, Vector3i.ZERO, hardRestriction, result, entity);
     }
 
@@ -205,15 +201,14 @@ public abstract class AbstractPathJob implements Callable<Path>
      * @param entity           the entity.
      */
     public AbstractPathJob(final World world,
-        final BlockPos start,
-        final BlockPos startRestriction,
-        final BlockPos endRestriction,
-        final int range,
-        final Vector3i grow,
-        final boolean hardRestriction,
-        final PathResult<AbstractPathJob> result,
-        final LivingEntity entity)
-    {
+                           final BlockPos start,
+                           final BlockPos startRestriction,
+                           final BlockPos endRestriction,
+                           final int range,
+                           final Vector3i grow,
+                           final boolean hardRestriction,
+                           final PathResult<AbstractPathJob> result,
+                           final LivingEntity entity) {
         this.minX = Math.min(startRestriction.getX(), endRestriction.getX()) - grow.getX();
         this.minZ = Math.min(startRestriction.getZ(), endRestriction.getZ()) - grow.getZ();
         this.maxX = Math.max(startRestriction.getX(), endRestriction.getX()) + grow.getX();
@@ -242,8 +237,7 @@ public abstract class AbstractPathJob implements Callable<Path>
         this.entity = new WeakReference<>(entity);
     }
 
-    protected boolean onLadderGoingUp(final Node currentNode, final BlockPos dPos)
-    {
+    protected boolean onLadderGoingUp(final Node currentNode, final BlockPos dPos) {
         return currentNode.isLadder() && (dPos.getY() >= 0 || dPos.getX() != 0 || dPos.getZ() != 0);
     }
 
@@ -255,26 +249,22 @@ public abstract class AbstractPathJob implements Callable<Path>
      * @param entity Entity for the pathfinding operation.
      * @return ChunkCoordinates for starting location.
      */
-    public static BlockPos prepareStart(final LivingEntity entity)
-    {
+    public static BlockPos prepareStart(final LivingEntity entity) {
         BlockPos.Mutable pos = new BlockPos.Mutable(MathHelper.floor(entity.getX()),
-          MathHelper.floor(entity.getY()),
-          MathHelper.floor(entity.getZ()));
+                MathHelper.floor(entity.getY()),
+                MathHelper.floor(entity.getZ()));
         BlockState bs = entity.level.getBlockState(pos);
 
         // 1 Up when we're standing within this collision shape
         final VoxelShape collisionShape = bs.getCollisionShape(entity.level, pos);
-        if (bs.getMaterial().blocksMotion() && collisionShape.max(Direction.Axis.Y) > 0)
-        {
+        if (bs.getMaterial().blocksMotion() && collisionShape.max(Direction.Axis.Y) > 0) {
             final double relPosX = Math.abs(entity.getX() % 1);
             final double relPosZ = Math.abs(entity.getZ() % 1);
 
-            for (final AxisAlignedBB box : collisionShape.toAabbs())
-            {
+            for (final AxisAlignedBB box : collisionShape.toAabbs()) {
                 if (relPosX >= box.minX && relPosX <= box.maxX
-                      && relPosZ >= box.minZ && relPosZ <= box.maxZ
-                      && box.maxY > 0)
-                {
+                        && relPosZ >= box.minZ && relPosZ <= box.maxZ
+                        && box.maxY > 0) {
                     pos.set(pos.getX(), pos.getY() + 1, pos.getZ());
                     bs = entity.level.getBlockState(pos);
                     break;
@@ -283,49 +273,37 @@ public abstract class AbstractPathJob implements Callable<Path>
         }
 
         BlockState down = entity.level.getBlockState(pos.below());
-        while (!bs.getMaterial().blocksMotion() && !down.getMaterial().blocksMotion() && !down.getBlock().isLadder(down, entity.getCommandSenderWorld(), pos.below(), entity) && bs.getFluidState().isEmpty())
-        {
+        while (!bs.getMaterial().blocksMotion() && !down.getMaterial().blocksMotion() && !down.getBlock().isLadder(down, entity.getCommandSenderWorld(), pos.below(), entity) && bs.getFluidState().isEmpty()) {
             pos.move(Direction.DOWN, 1);
             bs = down;
             down = entity.level.getBlockState(pos.below());
 
-            if (pos.getY() < 0)
-            {
+            if (pos.getY() < 0) {
                 return entity.blockPosition();
             }
         }
 
         final Block b = bs.getBlock();
 
-        if (entity.isInWater())
-        {
-            while (!bs.getFluidState().isEmpty())
-            {
+        if (entity.isInWater()) {
+            while (!bs.getFluidState().isEmpty()) {
                 pos.set(pos.getX(), pos.getY() + 1, pos.getZ());
                 bs = entity.level.getBlockState(pos);
             }
-        }
-        else if (b instanceof FenceBlock || b instanceof WallBlock || bs.getMaterial().isSolid())
-        {
+        } else if (b instanceof FenceBlock || b instanceof WallBlock || bs.getMaterial().isSolid()) {
             //Push away from fence
             final double dX = entity.getX() - Math.floor(entity.getX());
             final double dZ = entity.getZ() - Math.floor(entity.getZ());
 
-            if (dX < 0.25)
-            {
+            if (dX < 0.25) {
                 pos.set(pos.getX() - 1, pos.getY(), pos.getZ());
-            }
-            else if (dX > 0.75)
-            {
+            } else if (dX > 0.75) {
                 pos.set(pos.getX() + 1, pos.getY(), pos.getZ());
             }
 
-            if (dZ < 0.25)
-            {
+            if (dZ < 0.25) {
                 pos.set(pos.getX(), pos.getY(), pos.getZ() - 1);
-            }
-            else if (dZ > 0.75)
-            {
+            } else if (dZ > 0.75) {
                 pos.set(pos.getX(), pos.getY(), pos.getZ() + 1);
             }
         }
@@ -340,35 +318,22 @@ public abstract class AbstractPathJob implements Callable<Path>
      * @param pos   the position.
      * @param p     the path.
      */
-    private static void setLadderFacing(final IWorldReader world, final BlockPos pos, final PathPointExtended p)
-    {
+    private static void setLadderFacing(final IWorldReader world, final BlockPos pos, final PathPointExtended p) {
         final BlockState state = world.getBlockState(pos);
         final Block block = state.getBlock();
-        if (block instanceof VineBlock)
-        {
-            if (state.getValue(VineBlock.SOUTH))
-            {
+        if (block instanceof VineBlock) {
+            if (state.getValue(VineBlock.SOUTH)) {
                 p.setLadderFacing(Direction.NORTH);
-            }
-            else if (state.getValue(VineBlock.WEST))
-            {
+            } else if (state.getValue(VineBlock.WEST)) {
                 p.setLadderFacing(Direction.EAST);
-            }
-            else if (state.getValue(VineBlock.NORTH))
-            {
+            } else if (state.getValue(VineBlock.NORTH)) {
                 p.setLadderFacing(Direction.SOUTH);
-            }
-            else if (state.getValue(VineBlock.EAST))
-            {
+            } else if (state.getValue(VineBlock.EAST)) {
                 p.setLadderFacing(Direction.WEST);
             }
-        }
-        else if (block instanceof LadderBlock)
-        {
+        } else if (block instanceof LadderBlock) {
             p.setLadderFacing(state.getValue(LadderBlock.FACING));
-        }
-        else
-        {
+        } else {
             p.setLadderFacing(Direction.UP);
         }
     }
@@ -381,11 +346,10 @@ public abstract class AbstractPathJob implements Callable<Path>
      * @param pos        the position.
      * @return true if on a ladder.
      */
-    private static boolean onALadder(final Node node,  final Node nextInPath, final BlockPos pos)
-    {
+    private static boolean onALadder(final Node node, final Node nextInPath, final BlockPos pos) {
         return nextInPath != null && node.isLadder()
-                 &&
-                 (nextInPath.pos.getX() == pos.getX() && nextInPath.pos.getZ() == pos.getZ());
+                &&
+                (nextInPath.pos.getX() == pos.getX() && nextInPath.pos.getZ() == pos.getZ());
     }
 
     /**
@@ -395,11 +359,10 @@ public abstract class AbstractPathJob implements Callable<Path>
      * @param pos BlockPos to generate key from
      * @return key for node in map
      */
-    private static int computeNodeKey(final BlockPos pos)
-    {
+    private static int computeNodeKey(final BlockPos pos) {
         return ((pos.getX() & 0xFFF) << 20)
-                 | ((pos.getY() & 0xFF) << 12)
-                 | (pos.getZ() & 0xFFF);
+                | ((pos.getY() & 0xFF) << 12)
+                | (pos.getZ() & 0xFFF);
     }
 
     /**
@@ -415,57 +378,44 @@ public abstract class AbstractPathJob implements Callable<Path>
      * @return cost to move from the parent to the new position.
      */
     protected double computeCost(
-      final BlockPos dPos,
-      final boolean isSwimming,
-      final boolean onPath,
-      final boolean onRails,
-      final boolean railsExit,
-      final boolean swimStart,
-      final boolean corner,
-      final BlockPos blockPos)
-    {
+            final BlockPos dPos,
+            final boolean isSwimming,
+            final boolean onPath,
+            final boolean onRails,
+            final boolean railsExit,
+            final boolean swimStart,
+            final boolean corner,
+            final BlockPos blockPos) {
         double cost = Math.sqrt(dPos.getX() * dPos.getX() + dPos.getY() * dPos.getY() + dPos.getZ() * dPos.getZ());
 
-        if (dPos.getY() != 0 && !(Math.abs(dPos.getY()) <= 1 && world.getBlockState(blockPos).getBlock() instanceof StairsBlock))
-        {
-            if (dPos.getY() > 0)
-            {
+        if (dPos.getY() != 0 && !(Math.abs(dPos.getY()) <= 1 && world.getBlockState(blockPos).getBlock() instanceof StairsBlock)) {
+            if (dPos.getY() > 0) {
                 cost *= pathingOptions.jumpCost * Math.abs(dPos.getY());
-            }
-            else
-            {
+            } else {
                 cost *= pathingOptions.dropCost * Math.abs(dPos.getY());
             }
         }
 
-        if (world.getBlockState(blockPos).hasProperty(BlockStateProperties.OPEN))
-        {
+        if (world.getBlockState(blockPos).hasProperty(BlockStateProperties.OPEN)) {
             cost *= pathingOptions.traverseToggleAbleCost;
         }
 
-        if (onPath)
-        {
+        if (onPath) {
             cost *= pathingOptions.onPathCost;
         }
 
-        if (onRails)
-        {
+        if (onRails) {
             cost *= pathingOptions.onRailCost;
         }
 
-        if (railsExit)
-        {
+        if (railsExit) {
             cost *= pathingOptions.railsExitCost;
         }
 
-        if (isSwimming)
-        {
-            if (swimStart)
-            {
+        if (isSwimming) {
+            if (swimStart) {
                 cost *= pathingOptions.swimCostEnter;
-            }
-            else
-            {
+            } else {
                 cost *= pathingOptions.swimCost;
             }
         }
@@ -473,13 +423,11 @@ public abstract class AbstractPathJob implements Callable<Path>
         return cost;
     }
 
-    private static boolean nodeClosed( final Node node)
-    {
+    private static boolean nodeClosed(final Node node) {
         return node != null && node.isClosed();
     }
 
-    private static boolean calculateSwimming(final IWorldReader world, final BlockPos pos,  final Node node)
-    {
+    private static boolean calculateSwimming(final IWorldReader world, final BlockPos pos, final Node node) {
         return (node == null) ? isWater(world, pos.below()) : node.isSwimming();
     }
 
@@ -489,43 +437,37 @@ public abstract class AbstractPathJob implements Callable<Path>
      * @param pos the pos in the world.
      * @return true if so.
      */
-    private static boolean isWater(final IWorldReader world, final BlockPos pos)
-    {
+    private static boolean isWater(final IWorldReader world, final BlockPos pos) {
         return isWater(world, pos, null, null);
     }
 
     /**
      * Check if the block at this position is actually some kind of waterly fluid.
-     * @param pos the pos in the world.
-     * @param pState existing blockstate or null
+     *
+     * @param pos         the pos in the world.
+     * @param pState      existing blockstate or null
      * @param pFluidState existing fluidstate or null
      * @return true if so.
      */
-    private static boolean isWater(final IWorldReader world, final BlockPos pos,  BlockState pState,  FluidState pFluidState)
-    {
+    private static boolean isWater(final IWorldReader world, final BlockPos pos, BlockState pState, FluidState pFluidState) {
         BlockState state = pState;
-        if (state == null)
-        {
+        if (state == null) {
             state = world.getBlockState(pos);
         }
 
-        if (state.canOcclude())
-        {
+        if (state.canOcclude()) {
             return false;
         }
-        if (state.getBlock() == Blocks.WATER)
-        {
+        if (state.getBlock() == Blocks.WATER) {
             return true;
         }
 
         FluidState fluidState = pFluidState;
-        if (fluidState == null)
-        {
+        if (fluidState == null) {
             fluidState = world.getFluidState(pos);
         }
 
-        if (fluidState == null || fluidState.isEmpty())
-        {
+        if (fluidState == null || fluidState.isEmpty()) {
             return false;
         }
 
@@ -533,8 +475,7 @@ public abstract class AbstractPathJob implements Callable<Path>
         return fluid == Fluids.WATER || fluid == Fluids.FLOWING_WATER;
     }
 
-    public PathResult getResult()
-    {
+    public PathResult getResult() {
         return result;
     }
 
@@ -544,14 +485,10 @@ public abstract class AbstractPathJob implements Callable<Path>
      * @return path to follow or null.
      */
     @Override
-    public final Path call()
-    {
-        try
-        {
+    public final Path call() {
+        try {
             return search();
-        }
-        catch (final Exception e)
-        {
+        } catch (final Exception e) {
             // Log everything, so exceptions of the pathfinding-thread show in Log
             Log.getLogger().warn("Pathfinding Exception", e);
         }
@@ -564,17 +501,14 @@ public abstract class AbstractPathJob implements Callable<Path>
      *
      * @return Path of a path to the given location, a best-effort, or null.
      */
-    
-    protected Path search()
-    {
+
+    protected Path search() {
         Node bestNode = getAndSetupStartNode();
 
         double bestNodeResultScore = Double.MAX_VALUE;
 
-        while (!nodesOpen.isEmpty())
-        {
-            if (Thread.currentThread().isInterrupted())
-            {
+        while (!nodesOpen.isEmpty()) {
+            if (Thread.currentThread().isInterrupted()) {
                 return null;
             }
 
@@ -583,8 +517,7 @@ public abstract class AbstractPathJob implements Callable<Path>
             totalNodesVisited++;
 
             // Limiting max amount of nodes mapped
-            if (totalNodesVisited > maxRange * maxRange)
-            {
+            if (totalNodesVisited > maxRange * maxRange) {
                 break;
             }
             currentNode.setCounterVisited(totalNodesVisited);
@@ -593,8 +526,7 @@ public abstract class AbstractPathJob implements Callable<Path>
             currentNode.setClosed();
 
             final boolean isViablePosition = isInRestrictedArea(currentNode.pos) && isWalkableSurface(world.getBlockState(currentNode.pos.below()), currentNode.pos.below()) == SurfaceType.WALKABLE;
-            if (isViablePosition && isAtDestination(currentNode))
-            {
+            if (isViablePosition && isAtDestination(currentNode)) {
                 bestNode = currentNode;
                 result.setPathReachesDestination(true);
                 break;
@@ -602,16 +534,14 @@ public abstract class AbstractPathJob implements Callable<Path>
 
             //  If this is the closest node to our destination, treat it as our best node
             final double nodeResultScore =
-              getNodeResultScore(currentNode);
-            if (isViablePosition && nodeResultScore < bestNodeResultScore && !currentNode.isCornerNode())
-            {
+                    getNodeResultScore(currentNode);
+            if (isViablePosition && nodeResultScore < bestNodeResultScore && !currentNode.isCornerNode()) {
                 bestNode = currentNode;
                 bestNodeResultScore = nodeResultScore;
             }
 
             // if xz soft-restricted we can walk outside the restricted area to be able to find ways around back to the area
-            if (!hardXzRestriction || isViablePosition)
-            {
+            if (!hardXzRestriction || isViablePosition) {
                 walkCurrentNode(currentNode);
             }
         }
@@ -623,95 +553,77 @@ public abstract class AbstractPathJob implements Callable<Path>
         return path;
     }
 
-    private void handleDebugOptions(final Node currentNode)
-    {
-        if (debugDrawEnabled && debugNodesNotVisited != null && debugNodesVisited != null && currentNode != null)
-        {
+    private void handleDebugOptions(final Node currentNode) {
+        if (debugDrawEnabled && debugNodesNotVisited != null && debugNodesVisited != null && currentNode != null) {
             addNodeToDebug(currentNode);
         }
     }
 
-    private void addNodeToDebug(final Node currentNode)
-    {
+    private void addNodeToDebug(final Node currentNode) {
         debugNodesNotVisited.remove(currentNode);
         debugNodesVisited.add(currentNode);
     }
 
-    private void addPathNodeToDebug(final Node node)
-    {
+    private void addPathNodeToDebug(final Node node) {
         debugNodesVisited.remove(node);
         debugNodesPath.add(node);
     }
 
-    private void walkCurrentNode(final Node currentNode)
-    {
+    private void walkCurrentNode(final Node currentNode) {
         BlockPos dPos = BLOCKPOS_IDENTITY;
-        if (currentNode.parent != null)
-        {
+        if (currentNode.parent != null) {
             dPos = currentNode.pos.subtract(currentNode.parent.pos);
         }
 
         //  On a ladder, we can go 1 straight-up
-        if (onLadderGoingUp(currentNode, dPos))
-        {
+        if (onLadderGoingUp(currentNode, dPos)) {
             walk(currentNode, BLOCKPOS_UP);
         }
 
         //  We can also go down 1, if the lower block is a ladder
-        if (onLadderGoingDown(currentNode, dPos))
-        {
+        if (onLadderGoingDown(currentNode, dPos)) {
             walk(currentNode, BLOCKPOS_DOWN);
         }
 
         // Only explore downwards when dropping
-        if ((currentNode.parent == null || !currentNode.parent.pos.equals(currentNode.pos.below())) && currentNode.isCornerNode())
-        {
+        if ((currentNode.parent == null || !currentNode.parent.pos.equals(currentNode.pos.below())) && currentNode.isCornerNode()) {
             walk(currentNode, BLOCKPOS_DOWN);
             return;
         }
 
         // Walk downwards node if passable
-        if (isPassable(currentNode.pos.below(), false, currentNode.parent))
-        {
+        if (isPassable(currentNode.pos.below(), false, currentNode.parent)) {
             walk(currentNode, BLOCKPOS_DOWN);
         }
 
         // N
-        if (dPos.getZ() <= 0)
-        {
+        if (dPos.getZ() <= 0) {
             walk(currentNode, BLOCKPOS_NORTH);
         }
 
         // E
-        if (dPos.getX() >= 0)
-        {
+        if (dPos.getX() >= 0) {
             walk(currentNode, BLOCKPOS_EAST);
         }
 
         // S
-        if (dPos.getZ() >= 0)
-        {
+        if (dPos.getZ() >= 0) {
             walk(currentNode, BLOCKPOS_SOUTH);
         }
 
         // W
-        if (dPos.getX() <= 0)
-        {
+        if (dPos.getX() <= 0) {
             walk(currentNode, BLOCKPOS_WEST);
         }
     }
 
-    protected boolean onLadderGoingDown(final Node currentNode, final BlockPos dPos)
-    {
+    protected boolean onLadderGoingDown(final Node currentNode, final BlockPos dPos) {
         return (dPos.getY() <= 0 || dPos.getX() != 0 || dPos.getZ() != 0) && isLadder(currentNode.pos.below());
     }
 
-    private void handleDebugDraw()
-    {
-        if (debugDrawEnabled)
-        {
-            synchronized (debugNodeMonitor)
-            {
+    private void handleDebugDraw() {
+        if (debugDrawEnabled) {
+            synchronized (debugNodeMonitor) {
                 lastDebugNodesNotVisited = debugNodesNotVisited;
                 lastDebugNodesVisited = debugNodesVisited;
                 lastDebugNodesPath = debugNodesPath;
@@ -719,18 +631,14 @@ public abstract class AbstractPathJob implements Callable<Path>
         }
     }
 
-    
-    private Node getAndSetupStartNode()
-    {
-        final Node startNode = new Node(start,
-          computeHeuristic(start));
 
-        if (isLadder(start))
-        {
+    private Node getAndSetupStartNode() {
+        final Node startNode = new Node(start,
+                computeHeuristic(start));
+
+        if (isLadder(start)) {
             startNode.setLadder();
-        }
-        else if (isLiquid(world.getBlockState(start.below())))
-        {
+        } else if (isLiquid(world.getBlockState(start.below()))) {
             startNode.setSwimming();
         }
 
@@ -746,11 +654,11 @@ public abstract class AbstractPathJob implements Callable<Path>
 
     /**
      * Check if this is a liquid state for swimming.
+     *
      * @param state the state to check.
      * @return true if so.
      */
-    public boolean isLiquid(final BlockState state)
-    {
+    public boolean isLiquid(final BlockState state) {
         return state.getMaterial().isLiquid() || (!state.getMaterial().blocksMotion() && !state.getFluidState().isEmpty());
     }
 
@@ -760,20 +668,17 @@ public abstract class AbstractPathJob implements Callable<Path>
      * @param targetNode the node to path to.
      * @return the path.
      */
-    
-    private Path finalizePath(final Node targetNode)
-    {
+
+    private Path finalizePath(final Node targetNode) {
         //  Compute length of path, since we need to allocate an array.  This is cheaper/faster than building a List
         //  and converting it.  Yes, we have targetNode.steps, but I do not want to rely on that being accurate (I might
         //  fudge that value later on for cutoff purposes
         int pathLength = 1;
         int railsLength = 0;
-         Node node = targetNode;
-        while (node.parent != null)
-        {
+        Node node = targetNode;
+        while (node.parent != null) {
             ++pathLength;
-            if (node.isOnRails())
-            {
+            if (node.isOnRails()) {
                 ++railsLength;
             }
             node = node.parent;
@@ -781,18 +686,15 @@ public abstract class AbstractPathJob implements Callable<Path>
 
         final PathPoint[] points = new PathPoint[pathLength];
         points[0] = new PathPointExtended(node.pos);
-        if (debugDrawEnabled)
-        {
+        if (debugDrawEnabled) {
             addPathNodeToDebug(node);
         }
 
-         Node nextInPath = null;
-         PathPoint next = null;
+        Node nextInPath = null;
+        PathPoint next = null;
         node = targetNode;
-        while (node.parent != null)
-        {
-            if (debugDrawEnabled)
-            {
+        while (node.parent != null) {
+            if (debugDrawEnabled) {
                 addPathNodeToDebug(node);
             }
 
@@ -800,48 +702,37 @@ public abstract class AbstractPathJob implements Callable<Path>
 
             final BlockPos pos = node.pos;
 
-            if (node.isSwimming())
-            {
+            if (node.isSwimming()) {
                 //  Not truly necessary but helps prevent them spinning in place at swimming nodes
                 pos.offset(BLOCKPOS_DOWN);
             }
 
             final PathPointExtended p = new PathPointExtended(pos);
-            if (railsLength >= 8)
-            {
+            if (railsLength >= 8) {
                 p.setOnRails(node.isOnRails());
-                if (p.isOnRails() && (!node.parent.isOnRails() || node.parent.parent == null))
-                {
+                if (p.isOnRails() && (!node.parent.isOnRails() || node.parent.parent == null)) {
                     p.setRailsEntry();
-                }
-                else if (p.isOnRails() && points.length > pathLength + 1)
-                {
+                } else if (p.isOnRails() && points.length > pathLength + 1) {
                     final PathPointExtended point = ((PathPointExtended) points[pathLength + 1]);
-                    if (!point.isOnRails())
-                    {
+                    if (!point.isOnRails()) {
                         point.setRailsExit();
                     }
                 }
             }
 
             //  Climbing on a ladder?
-            if (nextInPath != null && onALadder(node, nextInPath, pos))
-            {
+            if (nextInPath != null && onALadder(node, nextInPath, pos)) {
                 p.setOnLadder(true);
-                if (nextInPath.pos.getY() > pos.getY())
-                {
+                if (nextInPath.pos.getY() > pos.getY()) {
                     //  We only care about facing if going up
                     //In the case of BlockVines (Which does not have Direction) we have to check the metadata of the vines... bitwise...
                     setLadderFacing(world, pos, p);
                 }
-            }
-            else if (onALadder(node.parent, node.parent, pos))
-            {
+            } else if (onALadder(node.parent, node.parent, pos)) {
                 p.setOnLadder(true);
             }
 
-            if (next != null)
-            {
+            if (next != null) {
                 next.cameFrom = p;
             }
             next = p;
@@ -860,8 +751,7 @@ public abstract class AbstractPathJob implements Callable<Path>
      * @param finalNode
      * @return
      */
-    protected BlockPos getPathTargetPos(final Node finalNode)
-    {
+    protected BlockPos getPathTargetPos(final Node finalNode) {
         return finalNode.pos;
     }
 
@@ -901,46 +791,39 @@ public abstract class AbstractPathJob implements Callable<Path>
      * @param dPos   Delta from parent, expected in range of [-1..1].
      * @return true if a node was added or updated when attempting to move in the given direction.
      */
-    protected final boolean walk(final Node parent, BlockPos dPos)
-    {
+    protected final boolean walk(final Node parent, BlockPos dPos) {
         BlockPos pos = parent.pos.offset(dPos);
 
         //  Can we traverse into this node?  Fix the y up
         final int newY = getGroundHeight(parent, pos);
 
-        if (newY < 0)
-        {
+        if (newY < 0) {
             return false;
         }
 
         boolean corner = false;
-        if (pos.getY() != newY)
-        {
-            if (parent.isCornerNode() && (dPos.getX() != 0 || dPos.getZ() != 0))
-            {
+        if (pos.getY() != newY) {
+            if (parent.isCornerNode() && (dPos.getX() != 0 || dPos.getZ() != 0)) {
                 return false;
             }
 
             // if the new position is above the current node, we're taking the node directly above
             if (!parent.isCornerNode() && newY - parent.pos.getY() > 0 && (parent.parent == null || !parent.parent.pos.equals(parent.pos.offset(new BlockPos(0,
-              newY - pos.getY(),
-              0)))))
-            {
+                    newY - pos.getY(),
+                    0))))) {
                 dPos = new BlockPos(0, newY - pos.getY(), 0);
                 pos = parent.pos.offset(dPos);
                 corner = true;
             }
             // If we're going down, take the air-corner before going to the lower node
             else if (!parent.isCornerNode() && newY - parent.pos.getY() < 0 && (dPos.getX() != 0 || dPos.getZ() != 0) && (parent.parent == null || !parent.pos.below()
-                                                                                                                                               .equals(parent.parent.pos)))
-            {
+                    .equals(parent.parent.pos))) {
                 dPos = new BlockPos(dPos.getX(), 0, dPos.getZ());
                 pos = parent.pos.offset(dPos);
                 corner = true;
             }
             // Fix up normal y
-            else
-            {
+            else {
                 dPos = dPos.offset(0, newY - pos.getY(), 0);
                 pos = new BlockPos(pos.getX(), newY, pos.getZ());
             }
@@ -948,16 +831,14 @@ public abstract class AbstractPathJob implements Callable<Path>
 
         int nodeKey = computeNodeKey(pos);
         Node node = nodesVisited.get(nodeKey);
-        if (nodeClosed(node))
-        {
+        if (nodeClosed(node)) {
             //  Early out on closed nodes (closed = expanded from)
             return false;
         }
 
         final boolean isSwimming = calculateSwimming(world, pos, node);
 
-        if (isSwimming && !pathingOptions.canSwim())
-        {
+        if (isSwimming && !pathingOptions.canSwim()) {
             return false;
         }
 
@@ -971,14 +852,11 @@ public abstract class AbstractPathJob implements Callable<Path>
         final double cost = parent.getCost() + stepCost;
         final double score = cost + heuristic;
 
-        if (node == null)
-        {
+        if (node == null) {
             node = createNode(parent, pos, nodeKey, isSwimming, heuristic, cost, score);
             node.setOnRails(onRails);
             node.setCornerNode(corner);
-        }
-        else if (updateCurrentNode(parent, node, heuristic, cost, score))
-        {
+        } else if (updateCurrentNode(parent, node, heuristic, cost, score)) {
             return false;
         }
 
@@ -992,33 +870,26 @@ public abstract class AbstractPathJob implements Callable<Path>
         return true;
     }
 
-    private void performJumpPointSearch(final Node parent, final BlockPos dPos, final Node node)
-    {
-        if (allowJumpPointSearchTypeWalk && node.getHeuristic() <= parent.getHeuristic())
-        {
+    private void performJumpPointSearch(final Node parent, final BlockPos dPos, final Node node) {
+        if (allowJumpPointSearchTypeWalk && node.getHeuristic() <= parent.getHeuristic()) {
             walk(node, dPos);
         }
     }
 
-    
+
     private Node createNode(
-      final Node parent, final BlockPos pos, final int nodeKey,
-      final boolean isSwimming, final double heuristic, final double cost, final double score)
-    {
+            final Node parent, final BlockPos pos, final int nodeKey,
+            final boolean isSwimming, final double heuristic, final double cost, final double score) {
         final Node node;
         node = new Node(parent, pos, cost, heuristic, score);
         nodesVisited.put(nodeKey, node);
-        if (debugDrawEnabled)
-        {
+        if (debugDrawEnabled) {
             debugNodesNotVisited.add(node);
         }
 
-        if (isLadder(pos))
-        {
+        if (isLadder(pos)) {
             node.setLadder();
-        }
-        else if (isSwimming)
-        {
+        } else if (isSwimming) {
             node.setSwimming();
         }
 
@@ -1027,16 +898,13 @@ public abstract class AbstractPathJob implements Callable<Path>
         return node;
     }
 
-    private boolean updateCurrentNode(final Node parent, final Node node, final double heuristic, final double cost, final double score)
-    {
+    private boolean updateCurrentNode(final Node parent, final Node node, final double heuristic, final double cost, final double score) {
         //  This node already exists
-        if (score >= node.getScore())
-        {
+        if (score >= node.getScore()) {
             return true;
         }
 
-        if (!nodesOpen.remove(node))
-        {
+        if (!nodesOpen.remove(node)) {
             return true;
         }
 
@@ -1055,75 +923,60 @@ public abstract class AbstractPathJob implements Callable<Path>
      * @param pos    coordinate of block.
      * @return y height of first open, viable block above ground, or -1 if blocked or too far a drop.
      */
-    protected int getGroundHeight(final Node parent, final BlockPos pos)
-    {
+    protected int getGroundHeight(final Node parent, final BlockPos pos) {
         //  Check (y+1) first, as it's always needed, either for the upper body (level),
         //  lower body (headroom drop) or lower body (jump up)
-        if (checkHeadBlock(parent, pos))
-        {
+        if (checkHeadBlock(parent, pos)) {
             return handleTargetNotPassable(parent, pos.above(), world.getBlockState(pos.above()));
         }
 
         //  Now check the block we want to move to
         final BlockState target = world.getBlockState(pos);
-        if (!isPassable(target, pos, parent))
-        {
+        if (!isPassable(target, pos, parent)) {
             return handleTargetNotPassable(parent, pos, target);
         }
 
         //  Do we have something to stand on in the target space?
         final BlockState below = world.getBlockState(pos.below());
         final SurfaceType walkability = isWalkableSurface(below, pos);
-        if (walkability == SurfaceType.WALKABLE)
-        {
+        if (walkability == SurfaceType.WALKABLE) {
             //  Level path
             return pos.getY();
-        }
-        else if (walkability == SurfaceType.NOT_PASSABLE)
-        {
+        } else if (walkability == SurfaceType.NOT_PASSABLE) {
             return -1;
         }
 
         return handleNotStanding(parent, pos, below);
     }
 
-    private int handleNotStanding( final Node parent, final BlockPos pos, final BlockState below)
-    {
+    private int handleNotStanding(final Node parent, final BlockPos pos, final BlockState below) {
         final boolean isSwimming = parent != null && parent.isSwimming();
 
-        if (isLiquid(below))
-        {
+        if (isLiquid(below)) {
             return handleInLiquid(pos, below, isSwimming);
         }
 
-        if (isLadder(below.getBlock(), pos.below()))
-        {
+        if (isLadder(below.getBlock(), pos.below())) {
             return pos.getY();
         }
 
         return checkDrop(parent, pos, isSwimming);
     }
 
-    private int checkDrop( final Node parent, final BlockPos pos, final boolean isSwimming)
-    {
+    private int checkDrop(final Node parent, final BlockPos pos, final boolean isSwimming) {
         final boolean canDrop = parent != null && !parent.isLadder();
         //  Nothing to stand on
         if (!canDrop || isSwimming || ((parent.pos.getX() != pos.getX() || parent.pos.getZ() != pos.getZ()) && isPassable(parent.pos.below(), false, parent)
-                                         && isWalkableSurface(world.getBlockState(parent.pos.below()), parent.pos.below()) == SurfaceType.DROPABLE))
-        {
+                && isWalkableSurface(world.getBlockState(parent.pos.below()), parent.pos.below()) == SurfaceType.DROPABLE)) {
             return -1;
         }
 
-        for (int i = 2; i <= 10; i++)
-        {
+        for (int i = 2; i <= 10; i++) {
             final BlockState below = world.getBlockState(pos.below(i));
-            if (isWalkableSurface(below, pos) == SurfaceType.WALKABLE && i <= 3 || isLiquid(below))
-            {
+            if (isWalkableSurface(below, pos) == SurfaceType.WALKABLE && i <= 3 || isLiquid(below)) {
                 //  Level path
                 return pos.getY() - i + 1;
-            }
-            else if (below.getMaterial() != Material.AIR)
-            {
+            } else if (below.getMaterial() != Material.AIR) {
                 return -1;
             }
         }
@@ -1131,16 +984,13 @@ public abstract class AbstractPathJob implements Callable<Path>
         return -1;
     }
 
-    private int handleInLiquid(final BlockPos pos, final BlockState below, final boolean isSwimming)
-    {
-        if (isSwimming)
-        {
+    private int handleInLiquid(final BlockPos pos, final BlockState below, final boolean isSwimming) {
+        if (isSwimming) {
             //  Already swimming in something, or allowed to swim and this is water
             return pos.getY();
         }
 
-        if (pathingOptions.canSwim() && below.getMaterial() == Material.WATER)
-        {
+        if (pathingOptions.canSwim() && below.getMaterial() == Material.WATER) {
             //  This is water, and we are allowed to swim
             return pos.getY();
         }
@@ -1149,33 +999,27 @@ public abstract class AbstractPathJob implements Callable<Path>
         return -1;
     }
 
-    private int handleTargetNotPassable( final Node parent, final BlockPos pos, final BlockState target)
-    {
+    private int handleTargetNotPassable(final Node parent, final BlockPos pos, final BlockState target) {
         final boolean canJump = parent != null && !parent.isLadder() && !parent.isSwimming();
         //  Need to try jumping up one, if we can
-        if (!canJump || isWalkableSurface(target, pos) != SurfaceType.WALKABLE)
-        {
+        if (!canJump || isWalkableSurface(target, pos) != SurfaceType.WALKABLE) {
             return -1;
         }
 
         //  Check for headroom in the target space
-        if (!isPassable(pos.above(2), false, parent))
-        {
+        if (!isPassable(pos.above(2), false, parent)) {
             final VoxelShape bb1 = world.getBlockState(pos).getCollisionShape(world, pos);
             final VoxelShape bb2 = world.getBlockState(pos.above(2)).getCollisionShape(world, pos.above(2));
-            if ((pos.above(2).getY() + getStartY(bb2, 1)) - (pos.getY() + getEndY(bb1, 0)) < 2)
-            {
+            if ((pos.above(2).getY() + getStartY(bb2, 1)) - (pos.getY() + getEndY(bb1, 0)) < 2) {
                 return -1;
             }
         }
 
         //  Check for jump room from the origin space
-        if (!isPassable(parent.pos.above(2), false, parent))
-        {
+        if (!isPassable(parent.pos.above(2), false, parent)) {
             final VoxelShape bb1 = world.getBlockState(pos).getCollisionShape(world, pos);
             final VoxelShape bb2 = world.getBlockState(parent.pos.above(2)).getCollisionShape(world, parent.pos.above(2));
-            if ((parent.pos.above(2).getY() + getStartY(bb2, 1)) - (pos.getY() + getEndY(bb1, 0)) < 2)
-            {
+            if ((parent.pos.above(2).getY() + getStartY(bb2, 1)) - (pos.getY() + getEndY(bb1, 0)) < 2) {
                 return -1;
             }
         }
@@ -1186,15 +1030,13 @@ public abstract class AbstractPathJob implements Callable<Path>
         double parentY = parentBB.max(Direction.Axis.Y);
         double parentMaxY = parentY + parent.pos.below().getY();
         final double targetMaxY = target.getCollisionShape(world, pos).max(Direction.Axis.Y) + pos.getY();
-        if (targetMaxY - parentMaxY < MAX_JUMP_HEIGHT)
-        {
+        if (targetMaxY - parentMaxY < MAX_JUMP_HEIGHT) {
             return pos.getY() + 1;
         }
         if (target.getBlock() instanceof StairsBlock
-              && parentY - HALF_A_BLOCK < MAX_JUMP_HEIGHT
-              && target.getValue(StairsBlock.HALF) == Half.BOTTOM
-              && getXZFacing(parent.pos, pos) == target.getValue(StairsBlock.FACING))
-        {
+                && parentY - HALF_A_BLOCK < MAX_JUMP_HEIGHT
+                && target.getValue(StairsBlock.HALF) == Half.BOTTOM
+                && getXZFacing(parent.pos, pos) == target.getValue(StairsBlock.FACING)) {
             return pos.getY() + 1;
         }
         return -1;
@@ -1207,47 +1049,38 @@ public abstract class AbstractPathJob implements Callable<Path>
      * @param neighbor the block its facing.
      * @return the directions its facing.
      */
-    public static Direction getXZFacing(final BlockPos pos, final BlockPos neighbor)
-    {
+    public static Direction getXZFacing(final BlockPos pos, final BlockPos neighbor) {
         final BlockPos vector = neighbor.subtract(pos);
         return Direction.getNearest(vector.getX(), 0, vector.getZ());
     }
 
-    private boolean checkHeadBlock( final Node parent, final BlockPos pos)
-    {
+    private boolean checkHeadBlock(final Node parent, final BlockPos pos) {
         BlockPos localPos = pos;
         final VoxelShape bb = world.getBlockState(localPos).getCollisionShape(world, localPos);
-        if (bb.max(Direction.Axis.Y) < 1)
-        {
+        if (bb.max(Direction.Axis.Y) < 1) {
             localPos = pos.above();
         }
-      //  System.out.println(pos.above());
+        //  System.out.println(pos.above());
         boolean isSmall = pathingOptions.canFitInOneCube();
-        if (isSmall ? !isPassable(pos, true, parent) : !isPassable(pos.above(), true, parent))
-        {
+        if (isSmall ? !isPassable(pos, true, parent) : !isPassable(pos.above(), true, parent)) {
             final VoxelShape bb1 = world.getBlockState(pos.below()).getCollisionShape(world, pos.below());
             final VoxelShape bb2 = world.getBlockState(pos.above()).getCollisionShape(world, pos.above());
-            if ((pos.above().getY() + getStartY(bb2, 1)) - (pos.below().getY() + getEndY(bb1, 0)) < 2)
-            {
+            if ((pos.above().getY() + getStartY(bb2, 1)) - (pos.below().getY() + getEndY(bb1, 0)) < 2) {
                 return true;
             }
-            if (parent != null)
-            {
+            if (parent != null) {
                 final VoxelShape bb3 = world.getBlockState(parent.pos.below()).getCollisionShape(world, pos.below());
-                if ((pos.above().getY() + getStartY(bb2, 1)) - (parent.pos.below().getY() + getEndY(bb3, 0)) < 1.75)
-                {
+                if ((pos.above().getY() + getStartY(bb2, 1)) - (parent.pos.below().getY() + getEndY(bb3, 0)) < 1.75) {
                     return true;
                 }
             }
         }
 
-        if (parent != null)
-        {
+        if (parent != null) {
             final BlockState hereState = world.getBlockState(localPos.below());
             final VoxelShape bb1 = world.getBlockState(pos).getCollisionShape(world, pos);
             final VoxelShape bb2 = world.getBlockState(localPos.above()).getCollisionShape(world, localPos.above());
-            if ((localPos.above().getY() + getStartY(bb2, 1)) - (pos.getY() + getEndY(bb1, 0) ) >= 2)
-            {
+            if ((localPos.above().getY() + getStartY(bb2, 1)) - (pos.getY() + getEndY(bb1, 0)) >= 2) {
                 return false;
             }
 
@@ -1258,23 +1091,23 @@ public abstract class AbstractPathJob implements Callable<Path>
 
     /**
      * Get the start y of a voxelshape.
-     * @param bb the voxelshape.
+     *
+     * @param bb  the voxelshape.
      * @param def the default if empty.
      * @return the start y.
      */
-    private double getStartY(final VoxelShape bb, final int def)
-    {
+    private double getStartY(final VoxelShape bb, final int def) {
         return bb.isEmpty() ? def : bb.min(Direction.Axis.Y);
     }
 
     /**
      * Get the end y of a voxelshape.
-     * @param bb the voxelshape.
+     *
+     * @param bb  the voxelshape.
      * @param def the default if empty.
      * @return the end y.
      */
-    private double getEndY(final VoxelShape bb, final int def)
-    {
+    private double getEndY(final VoxelShape bb, final int def) {
         return bb.isEmpty() ? def : bb.max(Direction.Axis.Y);
     }
 
@@ -1301,39 +1134,36 @@ public abstract class AbstractPathJob implements Callable<Path>
                     return facing == Direction.EAST || facing == Direction.WEST;
                 } else {
                     return pathingOptions.canEnterDoors() && (block.getBlock() instanceof DoorBlock || block.getBlock() instanceof FenceGateBlock)
-                             || block.getBlock() instanceof PressurePlateBlock
-                             || block.getBlock() instanceof AbstractSignBlock
-                             || block.getBlock() instanceof AbstractBannerBlock;
+                            || block.getBlock() instanceof PressurePlateBlock
+                            || block.getBlock() instanceof AbstractSignBlock
+                            || block.getBlock() instanceof AbstractBannerBlock;
                 }
-            }
-            else if (block.getBlock() instanceof FireBlock){
+            } else if (block.getBlock() instanceof FireBlock) {
                 return false;
             } else {
                 final VoxelShape shape = block.getCollisionShape(world, pos);
                 return isLadder(block.getBlock(), pos) ||
-                         ((shape.isEmpty() || shape.max(Direction.Axis.Y) <= 0.1)
-                         && !isLiquid((block))
-                         && (block.getBlock() != Blocks.SNOW || block.getValue(SnowBlock.LAYERS) == 1)
-                         && block.getBlock() != Blocks.SWEET_BERRY_BUSH);
+                        ((shape.isEmpty() || shape.max(Direction.Axis.Y) <= 0.1)
+                                && !isLiquid((block))
+                                && (block.getBlock() != Blocks.SNOW || block.getValue(SnowBlock.LAYERS) == 1)
+                                && block.getBlock() != Blocks.SWEET_BERRY_BUSH);
             }
         }
 
         return true;
     }
 
-    public boolean canPassShape(VoxelShape shape){
+    public boolean canPassShape(VoxelShape shape) {
         return shape.isEmpty() || shape.max(Direction.Axis.Y) <= 0.1;
     }
 
-    protected boolean isPassable(final BlockPos pos, final boolean head, final Node parent)
-    {
+    protected boolean isPassable(final BlockPos pos, final boolean head, final Node parent) {
         final BlockState state = world.getBlockState(pos);
         final VoxelShape shape = state.getCollisionShape(world, pos);
-        if (shape.isEmpty() || shape.max(Direction.Axis.Y) <= 0.1)
-        {
+        if (shape.isEmpty() || shape.max(Direction.Axis.Y) <= 0.1) {
             return !head
-                     || !(state.getBlock() instanceof CarpetBlock)
-                     || isLadder(state.getBlock(), pos);
+                    || !(state.getBlock() instanceof CarpetBlock)
+                    || isLadder(state.getBlock(), pos);
         }
         return isPassable(state, pos, parent);
     }
@@ -1345,43 +1175,37 @@ public abstract class AbstractPathJob implements Callable<Path>
      * @param pos        the position.
      * @return true if the block at that location can be walked on.
      */
-    
-    protected SurfaceType isWalkableSurface(final BlockState blockState, final BlockPos pos)
-    {
+
+    protected SurfaceType isWalkableSurface(final BlockState blockState, final BlockPos pos) {
         final Block block = blockState.getBlock();
         if (block instanceof FenceBlock
-              || block instanceof FenceGateBlock
-              || block instanceof WallBlock
-              || block instanceof FireBlock
-              || block instanceof CampfireBlock
-              || block instanceof BambooBlock
-              || block instanceof DoorBlock
-              || block instanceof MagmaBlock
-              || (blockState.getShape(world, pos).max(Direction.Axis.Y) > 1.0))
-        {
+                || block instanceof FenceGateBlock
+                || block instanceof WallBlock
+                || block instanceof FireBlock
+                || block instanceof CampfireBlock
+                || block instanceof BambooBlock
+                || block instanceof DoorBlock
+                || block instanceof MagmaBlock
+                || (blockState.getShape(world, pos).max(Direction.Axis.Y) > 1.0)) {
             return SurfaceType.NOT_PASSABLE;
         }
 
         final FluidState fluid = world.getFluidState(pos);
-        if (blockState.getBlock() == Blocks.LAVA || (fluid != null && !fluid.isEmpty() && (fluid.getType() == Fluids.LAVA || fluid.getType() == Fluids.FLOWING_LAVA)))
-        {
+        if (blockState.getBlock() == Blocks.LAVA || (fluid != null && !fluid.isEmpty() && (fluid.getType() == Fluids.LAVA || fluid.getType() == Fluids.FLOWING_LAVA))) {
             return SurfaceType.NOT_PASSABLE;
         }
 
-        if (isWater(world, pos, blockState,fluid))
-        {
+        if (isWater(world, pos, blockState, fluid)) {
             return SurfaceType.WALKABLE;
         }
 
-        if (block instanceof AbstractSignBlock)
-        {
+        if (block instanceof AbstractSignBlock) {
             return SurfaceType.DROPABLE;
         }
 
         if (blockState.getMaterial().isSolid()
-              || (blockState.getBlock() == Blocks.SNOW && blockState.getValue(SnowBlock.LAYERS) > 1)
-              || block instanceof CarpetBlock)
-        {
+                || (blockState.getBlock() == Blocks.SNOW && blockState.getValue(SnowBlock.LAYERS) > 1)
+                || block instanceof CarpetBlock) {
             return SurfaceType.WALKABLE;
         }
 
@@ -1395,13 +1219,11 @@ public abstract class AbstractPathJob implements Callable<Path>
      * @param pos   location of the block.
      * @return true if the block is a ladder.
      */
-    protected boolean isLadder(final Block block, final BlockPos pos)
-    {
+    protected boolean isLadder(final Block block, final BlockPos pos) {
         return block.isLadder(this.world.getBlockState(pos), world, pos, entity.get());
     }
 
-    protected boolean isLadder(final BlockPos pos)
-    {
+    protected boolean isLadder(final BlockPos pos) {
         return isLadder(world.getBlockState(pos).getBlock(), pos);
     }
 
@@ -1410,16 +1232,14 @@ public abstract class AbstractPathJob implements Callable<Path>
      *
      * @param pathingOptions the pathing options to set.
      */
-    public void setPathingOptions(final PathingOptions pathingOptions)
-    {
+    public void setPathingOptions(final PathingOptions pathingOptions) {
         this.pathingOptions = pathingOptions;
     }
 
     /**
      * Check if we can walk on a surface, drop into, or neither.
      */
-    protected enum SurfaceType
-    {
+    protected enum SurfaceType {
         WALKABLE,
         DROPABLE,
         NOT_PASSABLE
@@ -1427,13 +1247,12 @@ public abstract class AbstractPathJob implements Callable<Path>
 
     /**
      * Check if in restricted area.
+     *
      * @param pos the pos to check.
      * @return true if so.
      */
-    public boolean isInRestrictedArea(final BlockPos pos)
-    {
-        if (!xzRestricted)
-        {
+    public boolean isInRestrictedArea(final BlockPos pos) {
+        if (!xzRestricted) {
             return true;
         }
         return pos.getX() <= maxX && pos.getZ() <= maxZ && pos.getZ() >= minZ && pos.getX() >= minX;
