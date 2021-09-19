@@ -60,12 +60,12 @@ public abstract class AbstractPathJob implements Callable<Path>
     /**
      * Queue of all open nodes.
      */
-    private final Queue<Node> nodesOpen = new PriorityQueue<>(500);
+    public Queue<Node> nodesOpen = new PriorityQueue<>(500);
 
     /**
      * Queue of all the visited nodes.
      */
-    private final Map<Integer, Node> nodesVisited = new HashMap<>();
+    public Map<Integer, Node> nodesVisited = new HashMap<>();
 
     //  Debug Rendering
     protected        boolean            debugDrawEnabled     = false;
@@ -78,7 +78,7 @@ public abstract class AbstractPathJob implements Callable<Path>
     //  May be faster, but can produce strange results
     private final    boolean            allowJumpPointSearchTypeWalk;
     private          int                totalNodesAdded      = 0;
-    private          int                totalNodesVisited    = 0;
+    public          int                totalNodesVisited    = 0;
 
     /**
      * Are there xz restrictions.

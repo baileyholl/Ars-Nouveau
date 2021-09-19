@@ -1,12 +1,15 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
 import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.PathResult;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.util.math.BlockPos;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Predicate;
@@ -18,6 +21,7 @@ public class FindItem extends Goal {
     boolean itemStuck;
 
     int timeFinding;
+    List<BlockPos> destList = new ArrayList<>();
     private final Predicate<ItemEntity> TRUSTED_TARGET_SELECTOR = (itemEntity) -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && entityCarbuncle.isValidItem(itemEntity.getItem());
 
     private final Predicate<ItemEntity> NONTAMED_TARGET_SELECTOR = (itemEntity -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && itemEntity.getItem().getItem() == Items.GOLD_NUGGET);
@@ -27,6 +31,7 @@ public class FindItem extends Goal {
         super.stop();
         itemStuck = false;
         timeFinding = 0;
+        destList = new ArrayList<>();
     }
 
     public FindItem(EntityCarbuncle entityCarbuncle) {
@@ -50,7 +55,6 @@ public class FindItem extends Goal {
 
     @Override
     public boolean canUse() {
-        //System.out.println(nearbyItems());
         return !entityCarbuncle.isStuck && entityCarbuncle.getHeldStack().isEmpty() && !nearbyItems().isEmpty();
     }
 
@@ -58,49 +62,36 @@ public class FindItem extends Goal {
     public void start() {
         super.start();
         timeFinding = 0;
-
         itemStuck = false;
         ItemStack itemstack = entityCarbuncle.getHeldStack();
         List<ItemEntity> list = nearbyItems();
+        destList = new ArrayList<>();
         if (itemstack.isEmpty() && !list.isEmpty() && !itemStuck) {
             for(ItemEntity entity : list){
                 if(!entityCarbuncle.isValidItem(entity.getItem()))
                     continue;
-
-               // Path path = entityCarbuncle.getNavigation().createPath(entity, 0);
-                this.pathingEntity = entity;
-                pathToTarget(pathingEntity, 1.2f);
-                break;
-
+                destList.add(entity.blockPosition());
             }
         }
-
-        if(pathingEntity == null)
+        if(destList.isEmpty()) {
             itemStuck = true;
-
+            return;
+        }
+        entityCarbuncle.getNavigation().moveToClosestPosition(destList, 1.2f);
     }
 
     @Override
     public void tick() {
         super.tick();
-        timeFinding += 1;
-        if(pathingEntity == null || pathingEntity.removed)
-            return;
-
+        timeFinding++;
         ItemStack itemstack = entityCarbuncle.getHeldStack();
         if (itemstack.isEmpty()) {
-            pathToTarget(pathingEntity, 1.2f);
+            pathToTarget();
         }
     }
-    public void pathToTarget(Entity entity, double speed){
-//        Path path = entityCarbuncle.getNavigation().createPath(entity, 0);
-//        if(path != null && path.canReach()) {
-        if(entity == null)
-            return;
-        entityCarbuncle.getNavigation().tryMoveToBlockPos(entity.blockPosition(), speed);
-          //  entityCarbuncle.setMotion(entityCarbuncle.getMotion().add(ParticleUtil.inRange(-0.1, 0.1),0,ParticleUtil.inRange(-0.1, 0.1)));
-        //}
-        if(entityCarbuncle.getNavigation().getPath() != null && !entityCarbuncle.getNavigation().getPath().canReach()) {
+    public void pathToTarget(){
+        PathResult result = entityCarbuncle.getNavigation().moveToClosestPosition(destList, 1.2f);
+        if(result.isDone() && !result.isPathReachingDestination()) {
             itemStuck = true;
         }
     }

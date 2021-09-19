@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
-import com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs.*;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs.AbstractPathJob;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs.PathJobMoveToLocation;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs.PathJobMoveToPathable;
 import com.hollingsworth.arsnouveau.common.util.Log;
 import net.minecraft.block.LadderBlock;
 import net.minecraft.entity.Entity;
@@ -20,6 +22,7 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Minecolonies async PathNavigate.
@@ -259,6 +262,21 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
             (int) ourEntity.getAttribute(Attributes.FOLLOW_RANGE).getValue(),
             ourEntity),
           desiredPos, speedFactor);
+    }
+
+    public PathResult moveToClosestPosition(List<BlockPos> positions, double speedFactor){
+        if (pathResult != null && pathResult.getJob() instanceof PathJobMoveToLocation && (
+                        pathResult.isComputing()
+                                || (destination != null && positions.contains(destination)))
+                                || (originalDestination != null && positions.contains(originalDestination)
+                )
+        ) {
+            return pathResult;
+        }
+        final BlockPos start = AbstractPathJob.prepareStart(ourEntity);
+        return setPathJob(new PathJobMoveToPathable(ourEntity.level, start, positions,
+                (int) ourEntity.getAttribute(Attributes.FOLLOW_RANGE).getValue(),
+                ourEntity), null, speedFactor);
     }
 
     @Override

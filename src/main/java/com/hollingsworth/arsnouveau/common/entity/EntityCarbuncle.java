@@ -10,7 +10,6 @@ import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
 import com.hollingsworth.arsnouveau.common.entity.goal.AvoidEntityGoalMC;
 import com.hollingsworth.arsnouveau.common.entity.goal.GetUnstuckGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.carbuncle.*;
-import com.hollingsworth.arsnouveau.common.entity.pathfinding.AbstractAdvancedPathNavigate;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.MinecoloniesAdvancedPathNavigate;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.MovementHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.PathingStuckHandler;
@@ -77,7 +76,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     public List<BlockPos> TO_LIST = new ArrayList<>();
     public List<BlockPos> FROM_LIST = new ArrayList<>();
 
-    private AbstractAdvancedPathNavigate pathNavigate;
+    private MinecoloniesAdvancedPathNavigate pathNavigate;
 
     public static final DataParameter<Integer> TO_POS = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.INT);
     public static final DataParameter<Integer> FROM_POS = EntityDataManager.defineId(EntityCarbuncle.class, DataSerializers.INT);
@@ -114,7 +113,7 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
     }
 
     @Override
-    public AbstractAdvancedPathNavigate getNavigation()
+    public MinecoloniesAdvancedPathNavigate getNavigation()
     {
         if (this.pathNavigate == null)
         {
