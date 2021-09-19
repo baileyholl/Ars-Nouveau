@@ -197,6 +197,7 @@
 				}
 			}
 		},
+		"idle":{},
 		"cast": {
 			"animation_length": 1.36,
 			"bones": {
