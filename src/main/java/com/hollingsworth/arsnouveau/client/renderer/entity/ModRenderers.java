@@ -53,9 +53,9 @@ public class ModRenderers {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_FAMILIAR_BOOKWYRM, BookwyrmRenderer::new);
         RenderingRegistry.registerEntityRenderingHandler( ModEntities.LINGER_SPELL,
                 renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_CASCADING_WEALD, (v) -> new WealdWalkerRenderer(v, "cascading_weald_walker"));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_BLAZING_WEALD, (v) -> new WealdWalkerRenderer(v, "blazing_weald_walker"));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_FLOURISHING_WEALD, (v) -> new WealdWalkerRenderer(v, "flourishing_weald_walker"));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_VEXING_WEALD, (v) -> new WealdWalkerRenderer(v, "vexing_weald_walker"));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_CASCADING_WEALD, (v) -> new WealdWalkerRenderer(v, "cascading_weald"));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_BLAZING_WEALD, (v) -> new WealdWalkerRenderer(v, "blazing_weald"));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_FLOURISHING_WEALD, (v) -> new WealdWalkerRenderer(v, "flourishing_weald"));
+        RenderingRegistry.registerEntityRenderingHandler(ModEntities.ENTITY_VEXING_WEALD, (v) -> new WealdWalkerRenderer(v, "vexing_weald"));
     }
 }

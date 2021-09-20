@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.common.entity.WealdWalker;
 import net.minecraft.util.ResourceLocation;
-import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
@@ -10,7 +10,7 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import javax.annotation.Nullable;
 
-public class WealdWalkerModel extends AnimatedGeoModel<IAnimatable> {
+public class WealdWalkerModel extends AnimatedGeoModel<WealdWalker> {
     String type;
     public WealdWalkerModel(String type){
         super();
@@ -18,7 +18,7 @@ public class WealdWalkerModel extends AnimatedGeoModel<IAnimatable> {
     }
 
     @Override
-    public void setLivingAnimations(IAnimatable entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
+    public void setLivingAnimations(WealdWalker entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
         IBone head = this.getAnimationProcessor().getBone("head");
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
@@ -27,17 +27,17 @@ public class WealdWalkerModel extends AnimatedGeoModel<IAnimatable> {
     }
 
     @Override
-    public ResourceLocation getModelLocation(IAnimatable entitySylph) {
-        return new ResourceLocation(ArsNouveau.MODID , "geo/" + type + ".geo.json");
+    public ResourceLocation getModelLocation(WealdWalker walker) {
+        return walker.isBaby() ? new ResourceLocation(ArsNouveau.MODID , "geo/" + type + "_waddler.geo.json") : new ResourceLocation(ArsNouveau.MODID , "geo/" + type + "_walker.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(IAnimatable entitySylph) {
-        return new ResourceLocation(ArsNouveau.MODID, "textures/entity/" + type + ".png");
+    public ResourceLocation getTextureLocation(WealdWalker walker) {
+        return walker.isBaby() ? new ResourceLocation(ArsNouveau.MODID , "textures/entity/" + type + "_waddler.png") :new ResourceLocation(ArsNouveau.MODID, "textures/entity/" + type + "_walker.png");
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(IAnimatable entitySylph) {
-        return new ResourceLocation(ArsNouveau.MODID , "animations/weald_walker_animations.json");
+    public ResourceLocation getAnimationFileLocation(WealdWalker walker) {
+        return walker.isBaby() ? new ResourceLocation(ArsNouveau.MODID , "animations/weald_waddler_animations.json") :new ResourceLocation(ArsNouveau.MODID , "animations/weald_walker_animations.json");
     }
 }
