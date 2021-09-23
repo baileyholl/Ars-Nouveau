@@ -24,6 +24,8 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
     public static final DataParameter<Boolean> LANDED = EntityDataManager.defineId(EntityLingeringSpell.class, DataSerializers.BOOLEAN);
     public static final DataParameter<Boolean> SENSITIVE = EntityDataManager.defineId(EntityLingeringSpell.class, DataSerializers.BOOLEAN);
     public double extendedTime;
+    public int maxProcs = 100;
+    public int totalProcs;
 
     public EntityLingeringSpell(EntityType<? extends EntityProjectileSpell> type, World worldIn) {
         super(type, worldIn);
@@ -61,11 +63,18 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
                             BlockRayTraceResult(new Vector3d(p.getX(), p.getY(), p.getZ()), Direction.UP, p, false));
                 }
             }else {
+                int i = 0;
                 for(Entity entity : level.getEntities(null, new AxisAlignedBB(this.blockPosition()).inflate(getAoe()))) {
                     if(entity.equals(this) || entity instanceof EntityLingeringSpell || entity instanceof LightningBoltEntity)
                         continue;
                     spellResolver.onResolveEffect(level, getOwner() instanceof LivingEntity ? (LivingEntity) getOwner() : null, new EntityRayTraceResult(entity));
+                    i++;
+                    if(i > 5)
+                        break;
                 }
+                totalProcs += i;
+                if(totalProcs>= maxProcs)
+                    this.remove();
             }
         }
 
