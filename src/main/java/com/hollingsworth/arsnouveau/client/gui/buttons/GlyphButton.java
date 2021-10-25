@@ -16,6 +16,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -63,7 +64,8 @@ public class GlyphButton extends Button {
                 if (validationErrors.isEmpty()) {
                     GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                 } else {
-                    GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.25F);
+                    GL11.glAlphaFunc(GL11.GL_GREATER, 0.01f);
+                    GL11.glColor4f(1.0F, 1.0F, 1.0F, validationErrors.stream().min(Comparator.comparing(SpellValidationError::getAlpha)).get().getAlpha());
                 }
 
                 GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + this.resourceIcon), x, y, 0, 0, 16, 16,16,16 , ms);

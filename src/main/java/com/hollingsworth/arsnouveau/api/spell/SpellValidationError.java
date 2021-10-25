@@ -13,6 +13,13 @@ import java.util.List;
  * This interface is not intended to be implemented by clients of the API.
  */
 public interface SpellValidationError {
+
+    /**
+     * Returns the maximum alpha value this glyph should have,
+     * if there are several validation errors the lowest value is used.
+     */
+    float getAlpha();
+
     /**
      * Returns the position this validation error refers to, or <code>-1</code> if the error indicates a problem with
      * the entire spell.

@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellbook;
 import com.hollingsworth.arsnouveau.common.spell.validation.CombinedSpellValidator;
 import com.hollingsworth.arsnouveau.common.spell.validation.GlyphMaxTierValidator;
+import com.hollingsworth.arsnouveau.common.spell.validation.GlyphUnlockedValidator;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
@@ -77,7 +78,7 @@ public class GuiSpellBook extends BaseBook {
         allEffects = new ArrayList<>();
 
         // Pre-partition the known spell glyphs
-        for (AbstractSpellPart part : this.unlockedSpells) {
+        for (AbstractSpellPart part : ArsNouveauAPI.getInstance().getSpell_map().values()) {
             if (part instanceof AbstractCastMethod) {
                 this.castMethods.add(part);
             } else if (part instanceof AbstractAugment) {
@@ -94,7 +95,8 @@ public class GuiSpellBook extends BaseBook {
         this.validationErrors = new LinkedList<>();
         this.spellValidator = new CombinedSpellValidator(
                 api.getSpellCraftingSpellValidator(),
-                new GlyphMaxTierValidator(tier)
+                new GlyphMaxTierValidator(tier),
+                new GlyphUnlockedValidator(this.unlockedSpells)
         );
     }
 

@@ -74,6 +74,11 @@ public class BaseSpellValidationError implements SpellValidationError {
     }
 
     @Override
+    public float getAlpha() {
+        return 0.5F;
+    }
+
+    @Override
     public int getPosition() {
         return position;
     }

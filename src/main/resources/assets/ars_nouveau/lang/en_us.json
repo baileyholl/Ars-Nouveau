@@ -655,6 +655,7 @@
 	"ars_nouveau.spell.validation.exists.glyph_occurrences_policy": "%s appears too many times.",
 	"ars_nouveau.spell.validation.exists.augment_compatibility": "%s cannot be augmented by %s",
 	"ars_nouveau.spell.validation.exists.glyph_tier": "%s is too powerful for your current spell book.",
+	"ars_nouveau.spell.validation.exists.glyph_unlock": "%s is not yet unlocked in your current spell book.",
 
 	"ars_nouveau.spell.validation.adding._comment": "__ These messages appear when attempting to add a glyph that would make a spell invalid. __",
 	"ars_nouveau.spell.validation.adding.non_empty_spell": "The spell may not be empty.",
@@ -665,6 +666,7 @@
 	"ars_nouveau.spell.validation.adding.glyph_occurrences_policy": "%s has appeared its maximum number of times.",
 	"ars_nouveau.spell.validation.adding.augment_compatibility": "%s cannot be augmented by %s",
 	"ars_nouveau.spell.validation.adding.glyph_tier": "%s is too powerful for your current spell book.",
+    "ars_nouveau.spell.validation.adding.glyph_unlock": "%s is not yet unlocked in your current spell book.",
 
 	"ars_nouveau.spell.no_mana": "Not enough Mana.",
 	"block.ars_nouveau.potion_jar": "Potion Jar",
