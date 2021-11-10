@@ -9,7 +9,6 @@ import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -97,7 +96,7 @@ public class BasicSpellTurret extends ModBlock{
         Direction direction = world.getBlockState(pos).getValue(DispenserBlock.FACING);
         FakePlayer fakePlayer = FakePlayerFactory.getMinecraft(world);
         fakePlayer.setPos(pos.getX(), pos.getY(), pos.getZ());
-        EntityProjectileSpell spell = new EntityProjectileSpell(world, fakePlayer,resolver, tile.spell.getBuffsAtIndex(0, fakePlayer, AugmentPierce.class));
+        EntityProjectileSpell spell = new EntityProjectileSpell(world,resolver);
         spell.setOwner(fakePlayer);
         spell.setPos(iposition.x(), iposition.y(), iposition.z());
         spell.shoot(direction.getStepX(), ((float)direction.getStepY()), direction.getStepZ(), 0.5f, 0);

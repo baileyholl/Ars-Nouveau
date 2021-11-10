@@ -46,6 +46,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
         super(world, x, y, z);
     }
 
+    @Deprecated
     public EntityProjectileSpell(World world, LivingEntity shooter, SpellResolver spellResolver, int maxPierce) {
         super(world, shooter);
         this.spellResolver = spellResolver;
