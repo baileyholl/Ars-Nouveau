@@ -10,7 +10,7 @@ import java.util.List;
 public class Spell {
     public static final Spell EMPTY = new Spell();
 
-    public List<AbstractSpellPart> recipe;
+    public List<AbstractSpellPart> recipe = new ArrayList<>();
     private int cost;
 
     public Spell(List<AbstractSpellPart> recipe){
@@ -18,13 +18,21 @@ public class Spell {
         this.cost = getInitialCost();
     }
 
-    public Spell(){
-        this.recipe = new ArrayList<>();
-        this.cost = 0;
+    public Spell(){ }
+
+    public Spell(AbstractSpellPart... spellParts){
+        super();
+        add(spellParts);
     }
 
     public Spell add(AbstractSpellPart spellPart){
         recipe.add(spellPart);
+        return this;
+    }
+
+    public Spell add(AbstractSpellPart... spellParts){
+        for(AbstractSpellPart part : spellParts)
+            add(part);
         return this;
     }
 

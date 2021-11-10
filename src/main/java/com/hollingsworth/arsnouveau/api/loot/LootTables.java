@@ -77,7 +77,8 @@ public class LootTables {
                 .add(AugmentPierce.INSTANCE, 3)
         ,"Builds a small hut around the user."));
         RARE_LOOT.add(() -> makeTome("Glow Trap", new Spell()
-                .add(MethodRune.INSTANCE)
+                .add(MethodTouch.INSTANCE)
+                .add(EffectRune.INSTANCE)
                 .add(EffectSnare.INSTANCE)
                 .add(AugmentExtendTime.INSTANCE)
                 .add(EffectLight.INSTANCE)
@@ -156,7 +157,8 @@ public class LootTables {
                 "A classic."
         ));
         RARE_LOOT.add(() -> makeTome("Rune of Renewing", new Spell()
-                        .add(MethodRune.INSTANCE)
+                        .add(MethodTouch.INSTANCE)
+                        .add(EffectRune.INSTANCE)
                         .add(EffectDispel.INSTANCE)
                         .add(EffectHeal.INSTANCE)
                         .add(AugmentExtendTime.INSTANCE),
