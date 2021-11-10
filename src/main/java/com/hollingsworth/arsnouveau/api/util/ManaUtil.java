@@ -36,7 +36,7 @@ public class ManaUtil {
             for(int i = 0; i < items.getSlots(); i++){
                 Item item = items.getStackInSlot(i).getItem();
                 if(item instanceof IManaEquipment)
-                    discounts.addAndGet(((IManaEquipment) item).getManaDiscount());
+                    discounts.addAndGet(((IManaEquipment) item).getManaDiscount(items.getStackInSlot(i)));
             }
         });
         return discounts.get();
@@ -50,7 +50,7 @@ public class ManaUtil {
         int max = Config.INIT_MAX_MANA.get();
         for(ItemStack i : e.getAllSlots()){
             if(i.getItem() instanceof IManaEquipment){
-                max += (((IManaEquipment) i.getItem()).getMaxManaBoost());
+                max += (((IManaEquipment) i.getItem()).getMaxManaBoost(i));
             }
             max += ( Config.MANA_BOOST_BONUS.get() * EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, i));
         }
@@ -60,7 +60,7 @@ public class ManaUtil {
             for(int i = 0; i < items.getSlots(); i++){
                 Item item = items.getStackInSlot(i).getItem();
                 if(item instanceof IManaEquipment)
-                    max += (((IManaEquipment) item).getMaxManaBoost());
+                    max += (((IManaEquipment) item).getMaxManaBoost(items.getStackInSlot(i)));
             }
         }
 
@@ -83,7 +83,7 @@ public class ManaUtil {
         for(ItemStack i : e.getAllSlots()){
             if(i.getItem() instanceof MagicArmor){
                 MagicArmor armor = ((MagicArmor) i.getItem());
-                regen += armor.getManaRegenBonus();
+                regen += armor.getManaRegenBonus(i);
             }
             regen += Config.MANA_REGEN_ENCHANT_BONUS.get() * EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, i);
         }
@@ -92,7 +92,7 @@ public class ManaUtil {
             for(int i = 0; i < items.getSlots(); i++){
                 Item item = items.getStackInSlot(i).getItem();
                 if(item instanceof IManaEquipment)
-                    regen += ((IManaEquipment) item).getManaRegenBonus();
+                    regen += ((IManaEquipment) item).getManaRegenBonus(items.getStackInSlot(i));
             }
         }
 
