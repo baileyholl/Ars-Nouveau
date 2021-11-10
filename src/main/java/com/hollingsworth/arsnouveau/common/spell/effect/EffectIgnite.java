@@ -4,10 +4,7 @@ import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.material.Material;
@@ -44,7 +41,9 @@ public class EffectIgnite  extends AbstractEffect {
 
     @Override
     public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        if(world.getBlockState((rayTraceResult).getBlockPos().above()).getMaterial() == Material.AIR) {
+        if(spellStats.hasBuff(AugmentSensitive.INSTANCE))
+            return;
+        if(world.getBlockState((rayTraceResult).getBlockPos().above()).getMaterial().isReplaceable()) {
             Direction face = (rayTraceResult).getDirection();
             for (BlockPos pos : SpellUtil.calcAOEBlocks(shooter, (rayTraceResult).getBlockPos(), rayTraceResult, spellStats)) {
                 BlockPos blockpos1 = pos.relative(face);
@@ -87,12 +86,12 @@ public class EffectIgnite  extends AbstractEffect {
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf(AugmentExtendTime.INSTANCE , AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentDampen.INSTANCE);
+        return augmentSetOf(AugmentExtendTime.INSTANCE , AugmentAOE.INSTANCE, AugmentPierce.INSTANCE, AugmentDurationDown.INSTANCE, AugmentSensitive.INSTANCE);
     }
 
     @Override
     public String getBookDescription() {
-        return "Sets blocks and mobs on fire for a short time";
+        return "Sets blocks and mobs on fire for a short time. Sensitive will stop this spell from igniting blocks.";
     }
 
     @Nonnull
