@@ -1,7 +1,13 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.entity.familiar.*;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
+import com.hollingsworth.arsnouveau.common.spell.effect.*;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
@@ -200,13 +206,35 @@ public class ModEntities {
                     .sized(0.7F, 0.63F).setTrackingRange(10));
             ENTITY_FAMILIAR_WIXIE =  build("familiar_wixie", EntityType.Builder.of(FamiliarWixie::new, EntityClassification.CREATURE)
                     .sized(0.7F, 0.63F).setTrackingRange(10));
-            ENTITY_CASCADING_WEALD =  build("cascading_weald_walker", EntityType.Builder.of(WealdWalker::new, EntityClassification.CREATURE)
+            ENTITY_CASCADING_WEALD =  build("cascading_weald_walker", EntityType.Builder.<WealdWalker>of((type, world) ->{
+                WealdWalker walker = new WealdWalker(type, world);
+                walker.spell = new Spell(MethodProjectile.INSTANCE, EffectFreeze.INSTANCE, EffectColdSnap.INSTANCE);
+                walker.color = new ParticleColor(50, 50, 250);
+                return walker;
+            }, EntityClassification.CREATURE)
                     .sized(1.4F, 3F).setTrackingRange(10));
-            ENTITY_FLOURISHING_WEALD =  build("flourishing_weald_walker", EntityType.Builder.of(WealdWalker::new, EntityClassification.CREATURE)
+
+
+            ENTITY_FLOURISHING_WEALD =  build("flourishing_weald_walker", EntityType.Builder.<WealdWalker>of((type, world) ->{
+                WealdWalker walker = new WealdWalker(type, world);
+                walker.spell = new Spell(MethodProjectile.INSTANCE, EffectHarm.INSTANCE, AugmentAmplify.INSTANCE, AugmentAmplify.INSTANCE, EffectSnare.INSTANCE);
+                walker.color = new ParticleColor(50, 250, 55);
+                return walker;
+            }, EntityClassification.CREATURE)
                     .sized(1.4F, 3F).setTrackingRange(10));
-            ENTITY_BLAZING_WEALD =  build("blazing_weald_walker", EntityType.Builder.of(WealdWalker::new, EntityClassification.CREATURE)
+            ENTITY_BLAZING_WEALD =  build("blazing_weald_walker", EntityType.Builder.<WealdWalker>of((type, world) ->{
+                WealdWalker walker = new WealdWalker(type, world);
+                walker.spell = new Spell(MethodProjectile.INSTANCE, EffectIgnite.INSTANCE, AugmentSensitive.INSTANCE, EffectFlare.INSTANCE);
+                walker.color = new ParticleColor(250, 15, 15);
+                return walker;
+            }, EntityClassification.CREATURE)
                     .sized(1.4F, 3F).setTrackingRange(10));
-            ENTITY_VEXING_WEALD =  build("vexing_weald_walker", EntityType.Builder.of(WealdWalker::new, EntityClassification.CREATURE)
+            ENTITY_VEXING_WEALD =  build("vexing_weald_walker", EntityType.Builder.<WealdWalker>of((type, world) ->{
+                WealdWalker walker = new WealdWalker(type, world);
+                walker.spell = new Spell(MethodProjectile.INSTANCE, EffectHex.INSTANCE, EffectWither.INSTANCE, AugmentAmplify.INSTANCE, AugmentAmplify.INSTANCE);
+                walker.color = new ParticleColor(250, 50, 250);
+                return walker;
+            }, EntityClassification.CREATURE)
                     .sized(1.4F, 3F).setTrackingRange(10));
             event.getRegistry().registerAll(
                     SPELL_PROJ,

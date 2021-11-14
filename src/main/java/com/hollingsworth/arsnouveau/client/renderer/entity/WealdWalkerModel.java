@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.WealdWalker;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
@@ -24,6 +25,12 @@ public class WealdWalkerModel extends AnimatedGeoModel<WealdWalker> {
         EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
         head.setRotationX(extraData.headPitch * 0.010453292F);
         head.setRotationY(extraData.netHeadYaw * 0.015453292F);
+        if(entity.getEntityData().get(WealdWalker.CASTING)){
+            IBone frontLeftLeg = this.getAnimationProcessor().getBone("leg_right");
+            IBone frontRightLeg = this.getAnimationProcessor().getBone("leg_left");
+            frontLeftLeg.setRotationX(MathHelper.cos(entity.animationPosition * 0.6662F) * 1.4F * entity.animationSpeed);
+            frontRightLeg.setRotationX(MathHelper.cos(entity.animationPosition * 0.6662F + (float)Math.PI) * 1.4F * entity.animationSpeed);
+        }
     }
 
     @Override

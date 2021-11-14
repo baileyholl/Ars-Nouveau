@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -11,11 +12,12 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.function.Predicate;
 
 public class SpellUtil {
 
@@ -129,5 +131,30 @@ public class SpellUtil {
         builder.add(origin);
 
         return builder;
+    }
+
+    public static Set<BlockPos> DFSBlockstates(World world, BlockPos start, int maxBlocks, Predicate<BlockState> isMatch){
+        return DFSBlockstates(world, Collections.singleton(start), maxBlocks, isMatch);
+    }
+
+    private static Set<BlockPos> DFSBlockstates(World world, Collection<BlockPos> start, int maxBlocks, Predicate<BlockState> isMatch) {
+        LinkedList<BlockPos> searchQueue = new LinkedList<>(start);
+        HashSet<BlockPos> searched = new HashSet<>(start);
+        HashSet<BlockPos> found = new HashSet<>();
+
+        while(!searchQueue.isEmpty() && found.size() < maxBlocks) {
+            BlockPos current = searchQueue.removeFirst();
+            BlockState state = world.getBlockState(current);
+            if (isMatch.test(state)) {
+                found.add(current);
+                BlockPos.betweenClosedStream(current.offset(1, 1, 1), current.offset(-1, -1, -1)).forEach(neighborMutable -> {
+                    if (searched.contains(neighborMutable)) return;
+                    BlockPos neighbor = neighborMutable.immutable();
+                    searched.add(neighbor);
+                    searchQueue.add(neighbor);
+                });
+            }
+        }
+        return found;
     }
 }

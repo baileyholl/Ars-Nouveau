@@ -110,7 +110,7 @@ public class APIRegistry {
         registerRitual(new RitualFlight());
         registerRitual(new RitualWildenSummoning());
         registerRitual(new RitualBinding());
-
+        registerRitual(new RitualAwakening());
         registerFamiliar(new CarbuncleFamiliar());
         registerFamiliar(new DrygmyFamiliar());
         registerFamiliar(new SylphFamiliar());

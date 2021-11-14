@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
+import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtract;
@@ -43,6 +44,7 @@ public class EffectFell extends AbstractEffect {
         BlockState state = world.getBlockState(blockPos);
         if (isTree(state)) {
             Set<BlockPos> list = getTree(world, blockPos, GENERIC_INT.get()+ AOE_BONUS.get() * spellStats.getBuffCount(AugmentAOE.INSTANCE));
+            world.levelEvent(2001, blockPos, Block.getId(state));
             list.forEach(listPos -> {
                 if (!BlockUtil.destroyRespectsClaim(shooter, world, listPos))
                     return;
@@ -58,7 +60,6 @@ public class EffectFell extends AbstractEffect {
                     BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, true);
                 }
             });
-            world.levelEvent(2001, blockPos, Block.getId(state));
         }
     }
 
@@ -75,29 +76,9 @@ public class EffectFell extends AbstractEffect {
     }
 
     public Set<BlockPos> getTree(World world, BlockPos start, int maxBlocks) {
-        return getTree(world, Collections.singleton(start), maxBlocks);
+        return SpellUtil.DFSBlockstates(world, start, maxBlocks, this::isTree);
     }
 
-    public Set<BlockPos> getTree(World world, Collection<BlockPos> start, int maxBlocks) {
-        LinkedList<BlockPos> searchQueue = new LinkedList<>(start);
-        HashSet<BlockPos> searched = new HashSet<>(start);
-        HashSet<BlockPos> found = new HashSet<>();
-
-        while(!searchQueue.isEmpty() && found.size() < maxBlocks) {
-            BlockPos current = searchQueue.removeFirst();
-            BlockState state = world.getBlockState(current);
-            if (isTree(state)) {
-                found.add(current);
-                BlockPos.betweenClosedStream(current.offset(1, 1, 1), current.offset(-1, -1, -1)).forEach(neighborMutable -> {
-                    if (searched.contains(neighborMutable)) return;
-                    BlockPos neighbor = neighborMutable.immutable();
-                    searched.add(neighbor);
-                    searchQueue.add(neighbor);
-                });
-            }
-        }
-        return found;
-    }
 
     @Override
     public int getManaCost() {

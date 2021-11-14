@@ -508,6 +508,15 @@ public class Recipes extends RecipeProvider {
                     .save(consumer);
 
             shapelessBuilder(Items.CHEST).requires(BlockRegistry.ARCHWOOD_CHEST).save(consumer, new ResourceLocation(ArsNouveau.MODID, "archwood_to_chest"));
+
+            shapelessBuilder(getRitualItem(RitualLib.AWAKENING))
+                    .requires(BlockRegistry.FLOURISHING_LOG)
+                    .requires(BlockRegistry.BLAZING_SAPLING)
+                    .requires(BlockRegistry.CASCADING_SAPLING)
+                    .requires(BlockRegistry.FLOURISHING_SAPLING)
+                    .requires(BlockRegistry.VEXING_SAPLING)
+                    .requires(MANA_GEM, 4)
+                    .save(consumer);
         }
     }
 
