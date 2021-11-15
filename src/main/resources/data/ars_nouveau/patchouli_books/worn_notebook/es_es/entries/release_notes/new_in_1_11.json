@@ -1,0 +1,18 @@
+{
+    "name": "Changelog 1.11.0",
+    "icon": "ars_nouveau:spell_bow",
+    "category": "release_notes",
+	"sortnum":81,
+    "pages": [
+        {
+            "type": "text",
+            "text": "Ars Nouveau 1.11 Grimoiros $(li)Se ha añadido el Arco de Encantador y las Flechas de Aumento$(li)El hechizo Talar ha sido añadido - es como Cosechar solo que en árboles.$(li)¡Talar ahora puede cosechar cactus, setas, melones, calabazas, y más!$(li)Nuevos modelos del libro y de la GUI$(li)Los Carbuncles y el hechizo Cortar ya no causan crasheos$(li)Varios arreglos de bugs con fortuna en la mano secundario o en torretas"       
+        }, {
+            "type": "text",
+            "text": "$(li)Cosechar ya no tala árboles (ahora se usa Talar)."       
+        },{
+            "type": "relations",
+            "entries":["items/spell_bow","spells/fell"]        
+        }
+    ]
+}

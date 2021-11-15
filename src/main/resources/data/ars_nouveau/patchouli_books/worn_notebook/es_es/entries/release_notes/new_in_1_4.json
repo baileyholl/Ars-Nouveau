@@ -1,0 +1,24 @@
+{
+    "name": "Changelog 1.4.0",
+    "icon": "ars_nouveau:glyph_exchange",
+    "category": "release_notes",
+	"sortnum":95,
+    "pages": [
+        {
+            "type": "text",
+            "text": "¡Ars Nouveau 1.4.0, Glifos! $(li)¡Se añadió el Glifo de Intercambio - cambia bloques y entidades!$(li)Añade el Glifo de Intangible - convierte bloques en aire temporalmente.$(li)Se añadió el Glifo de Descomposición.$(li)Se añadió el Glifo de Duración baja, reduce los efectos de la poción y los efectos basados en tiempo.$(li)Se añadió el Glifo de Invisibilidad.$(li)Se ha nerfeado la distancia base de Brinco. "       
+        },
+		 {
+            "type": "text",
+            "text": "$(li)Los Carbuncles ya no deambulan si no se les asigna un cofre.$(li)No se podía clicar a los Carbuncles con la Varita de Dominio.$(li)Se arregló la brujería duplicada por Colocar Bloque.$(li)Se arreglaron efectos de partículas aleatorios.$(li)Se ha incrementado el rango de Recoger Objeto.$(li)El daño de Dañar + Amplificar ha sido reducido.$(li)Los Fangs ahora hacen demasiado daño."       
+        },{
+            "type": "text",
+            "text": "$(li)La duración base de Retrasar a sido incrementada.$(li)Fortuna es ahora más cara.$(li)ADE es ligeramente más barato.$(li)Amplificar es ligeramente más caro.$(li)Arregla bugs direccionales con Torretas de Hechizos usando Tocar."       
+        },
+		{
+            "type": "relations",
+            "entries":["spells/wither", "spells/intangible","spells/invisibility", "spells/duration_down", 
+			"spells/exchange"]        
+        }
+    ]
+}

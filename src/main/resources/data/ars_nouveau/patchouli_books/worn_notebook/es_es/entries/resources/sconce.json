@@ -1,0 +1,15 @@
+{
+    "name": "Candelabro Mágico",
+    "icon": "ars_nouveau:sconce",
+    "category": "resources",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Una luz decorativa. Para encenderlo, lanza Luz sobre el candelabro. El color de la llama corresponde con el color del hechizo."
+        },
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:sconce"
+		}
+    ]
+}

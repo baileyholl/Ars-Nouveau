@@ -1,0 +1,33 @@
+{
+    "name": "Portal de Teletransportación",
+    "icon": "ars_nouveau:warp_scroll",
+    "category": "machines",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Los Portales de Teletransportación, como los Pergaminos de Teletransportación, proven una teletransportación unidireccional a cualquier lugar, siempre y cuando estén en la misma dimensión. Para construir un Portal de Teletransportación, construye un marco con Ladrillos Arcanos o sus variantes con la forma de un portal al Nether y coloca un Frasco de Maná lleno cerca. Luego, lanza un Pergamino de Teletransportación con un lugar inscrito al marco. Si hay suficiente maná cerca, el portal será creado."
+        },
+		{
+		"type":"multiblock",
+		"multiblock":{
+			"mapping":{
+				"B":"ars_nouveau:arcane_bricks",
+				"P":"ars_nouveau:portal",
+				"0":"ars_nouveau:portal"
+			},
+			"pattern":[
+				[" BB "],
+				["BPPB"],
+				["B0PB"],
+				["BPPB"],
+				[" BB "]
+			],
+			"symmetrical": true
+		},
+		"text":"Un portal mágico que puede enviar jugadores, criaturas, hechizos, y objetos a cualquier lugar en la misma dimensión."
+		},{
+            "type": "relations",
+            "entries":["items/warp_scroll"]        
+        }
+    ]
+}

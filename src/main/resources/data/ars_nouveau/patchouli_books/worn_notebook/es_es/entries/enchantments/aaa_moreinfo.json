@@ -1,0 +1,18 @@
+{
+  "name": "Como Encantar",
+  "sortnum":-1,
+  "icon": "ars_nouveau:enchanting_apparatus",
+  "category": "enchantments",
+  "pages": [
+    {
+      "type": "text",
+      "text": "El Aparato de Encantar añade nuevos encantamientos o mejora algunas ya existentes usando maná y objetos. Para empezar, selecciona un encantamiento de nivel 1 y añade sus objetos a los pedestales. Coloca un Frasco de Maná cerca, y usa el objeto que quieras encantar en el aparato. El aparato solo aplicará encantamientos que sean válidos al objeto al que se lo has dado."
+    }, {
+      "type": "text",
+      "text": "Para aplicar un encantamiento de nivel 2 o superior, el objeto debe tener el nivel anterior. Por ejemplo, para aplicar Golpeo 3, el objeto debe tener Golpeo 2."
+    }, {
+            "type": "relations",
+            "entries":["machines/enchanting_apparatus", "machines/mana_jar"]        
+        }
+  ]
+}

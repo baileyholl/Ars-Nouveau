@@ -1,0 +1,15 @@
+{
+    "name": "Changelog 1.19",
+    "icon": "ars_nouveau:drygmy_charm",
+    "category": "release_notes",
+	"sortnum":67,
+    "pages": [
+        {
+            "type": "text",
+            "text": "¡Ars Nouveau 1.19.0, Drygmys!$(li)¡Se han añadido a los Drygmys! ¡Una nueva invocación que generá recompensas de enemigos!$(li)Los atajos del teclado de Ars Nouveau ahora respetan los botones del teclado.$(li)Golpear 0-9 en el menú radial seleccionará el espacio adecuado.$(li)Las Sylphs ahora se vuelen amuletos cuando su Cristal de Invocaicón es destruido."       
+        },{
+            "type": "relations",
+            "entries":["apparatus/drygmy_charm"]        
+        }
+    ]
+}

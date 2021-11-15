@@ -1,0 +1,15 @@
+{
+    "name": "Changelog 1.18.1",
+    "icon": "ars_nouveau:glyph_glide",
+    "category": "release_notes",
+	"sortnum":69,
+    "pages": [
+        {
+            "type": "text",
+            "text": "¡Ars Nouveau 1.18.1, Planear!$(li)¡Se ha añadido el Hechizo de Planear, es igual que volar con las Elytra!$(li)Ahora al crear un hechizo te indica loa Aumentos válidos$(li)Se ha añadido una lista negra de Datapacks para las Sylphs$(li)Arregla el ADE en las torretas cuando usan Colocar Bloque, Romper$(li)Los Arcos, Varas, y espadas ahora muestran el color de hechizo correcto$(li)Se ha arreglado la fabricación de pociones con la Wixie cuando existen múltiples recetas"       
+        },{
+            "type": "text",
+            "text": "$(li)Ahora Fundir muestra la cantidad de bloques fundidos correctamente$(li)Invocar Caballo ahora cuesta cuero y se pueden invocar varios caballos con ADE.$(li)Se han añadido huevos de generación$(li)Ahora Retrasar es más barato$(li)Atrapar ahora tiene un efecto de poción propio y es más potente.$(li)Las Sylhps ya no atraviesan bloques."       
+        }
+    ]
+}

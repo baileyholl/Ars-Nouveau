@@ -1,0 +1,35 @@
+{
+    "name": "Fundidor de Poción",
+    "icon": "ars_nouveau:potion_melder",
+    "category": "automation",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Convierte 3 dosis de una poción de 2 Frascos de Poción adyacentes, y saca una sola dosis de una poción mezclada a un Frasco de Poción debajo suya. El Fundidor de Poción necesita maná en cada mezcla."
+        },
+    {
+      "type": "apparatus_recipe",
+      "recipe": "ars_nouveau:potion_melder"
+    },{
+	"type":"multiblock",
+	"multiblock":{
+		"mapping":{
+			"C":"ars_nouveau:potion_jar",
+			"0":"ars_nouveau:potion_melder",
+			"J":"ars_nouveau:mana_jar"
+		},
+		"pattern":[
+			["   "],
+			["C0C"],
+			[" C "]
+		],
+		"symmetrical": true
+	},
+	"text":"Toma de 2 frascos adyacentes y sale hacia abajo en un radio de 3:1."
+	},
+		{
+            "type": "relations",
+            "entries":["machines/potion_jar"]        
+        }
+    ]
+}

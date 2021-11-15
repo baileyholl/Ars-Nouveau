@@ -1,0 +1,20 @@
+{
+    "name": "Mesa de Escriba",
+    "icon": "ars_nouveau:scribes_table",
+    "category": "machines",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Es posible copiar tus hechizos a un nuevo libro, tanto como respaldo o como una manera de compartirlo con tus amigos. Primero, coloca un libro de hechizos en la Mesa de Escriba. Luego, mientras estés agachado, usa otro libro de hechizos en la mesa. Esto copiará los hechizos del libro que estás sosteniendo al libro que está en la mesa. "
+        },
+		{
+		"type":"text",
+		"text":"También puedes escribir un hechizo específico en un Pergamino de Hechizos el cual es usado para enseñarle a los sirvientes mágicos como lanzar hechizos. Para hacer esto, coloca un Pergamino de Hechizos en la mesa. Luego, con tu libro de hechizos en la mano, elige el hechizo que desees como si fueses a lanzarlo. Luego, usa el libro en la mesa mientras te agachas. Tu pergamino ahora contendrá ese hechizo."
+		},
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:spell_parchment",
+			"recipe2":"ars_nouveau:scribes_table"
+		}
+    ]
+}

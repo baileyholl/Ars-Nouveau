@@ -1,0 +1,15 @@
+{
+    "name": "Bloques Decorativos",
+    "icon": "ars_nouveau:arcane_bricks",
+    "category": "resources",
+    "pages": [
+        {
+            "type": "text",
+            "text": "Bloques puramente decorativos. Para ver la lista completa, coloca una Piedra Arcana en un Cortapiedras."
+        },
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:arcane_bricks"
+		}
+    ]
+}

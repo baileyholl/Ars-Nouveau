@@ -1,0 +1,12 @@
+{
+    "name": "Changelog 1.9.3",
+    "icon": "ars_nouveau:glyph_break",
+    "category": "release_notes",
+	"sortnum":89,
+    "pages": [
+        {
+            "type": "text",
+            "text": "¡Ars Nouveau 1.9.3, Bugs! $(li)Hechizos de niveles altos no aparecerán en libros de hechizos bajos$(li)El Tarro de Vacío ahora respeta Recoger Objeto$(li)Romper ahora requiere un Amplificar para poder minar obsidiana$(li)Se ha añadido un botón para despejar hechizos."       
+        }
+    ]
+}

@@ -1,0 +1,16 @@
+{
+    "name": "Fabricación del Aparato",
+    "icon": "ars_nouveau:enchanting_apparatus",
+	"sortnum":6,
+    "category": "getting_started",
+    "pages": [
+        {
+            "type": "text",
+            "text": "El Aparato de Encantar es usado para fabricar máquinas especiales, adornos, y equipamiento usado en el progreso de Ars Nouveau. Fabricando con el Aparato de Encantar requiere 8 Pedestales Arcanos, un Núcleo Arcano, y el bloque de Aparato de Encantar. Una vez hayas montado el aparato, deberías de fabricar tu primera Semilla de Flor de Maná."       
+        },
+		{
+            "type": "relations",
+            "entries":["machines/enchanting_apparatus", "apparatus/mana_bloom_crop"]        
+        }
+    ]
+}

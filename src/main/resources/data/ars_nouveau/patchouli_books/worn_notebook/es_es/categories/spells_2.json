@@ -1,0 +1,6 @@
+{
+	"name": "Hechizos de Nivel 2",
+	"description": "Hechizos que pueden ser lanzados por un Grimorio de Aprendiz",
+	"icon": "ars_nouveau:glyph_aoe",
+	"sortnum":3
+}

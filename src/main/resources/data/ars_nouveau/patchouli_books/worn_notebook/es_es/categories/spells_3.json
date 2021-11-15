@@ -1,0 +1,6 @@
+{
+	"name": "Hechizos de Nivel 3",
+	"description": "Hechizos que pueden ser lanzados usando un Grimorio de Archimago",
+	"icon": "ars_nouveau:glyph_lightning",
+	"sortnum":4
+}
