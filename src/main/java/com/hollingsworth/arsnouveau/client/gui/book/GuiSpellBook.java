@@ -360,9 +360,15 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void clear(Button button){
+        boolean allWereEmpty = true;
+
         for (CraftingButton slot : craftingCells) {
+            if(!slot.spellTag.equals("")) allWereEmpty = false;
             slot.clear();
         }
+
+        if (allWereEmpty) spell_name.setValue("");
+
         validate();
     }
 
