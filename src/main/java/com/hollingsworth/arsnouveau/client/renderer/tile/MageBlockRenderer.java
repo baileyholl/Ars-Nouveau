@@ -25,8 +25,11 @@ public class MageBlockRenderer extends GeoBlockRenderer<PhantomBlockTile> {
     public void render(GeoModel model, PhantomBlockTile animatable, float partialTicks, RenderType type, MatrixStack matrixStackIn, @Nullable IRenderTypeBuffer renderTypeBuffer, @Nullable IVertexBuilder vertexBuilder,
                        int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         ParticleColor color = animatable.color;
+        matrixStackIn.pushPose();
+        matrixStackIn.translate(0, -0.01, 0);
         super.render(model, animatable, partialTicks, type, matrixStackIn, renderTypeBuffer, vertexBuilder, packedLightIn, packedOverlayIn,
                 color.getRed(), color.getGreen(), color.getBlue(), alpha);
+        matrixStackIn.popPose();
     }
 
     public static GenericItemRenderer getISTER() {
