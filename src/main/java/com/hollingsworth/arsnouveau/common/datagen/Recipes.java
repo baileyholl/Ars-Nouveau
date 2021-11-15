@@ -493,9 +493,10 @@ public class Recipes extends RecipeProvider {
 
             ShapedRecipeBuilder.shaped(BlockRegistry.ARCHWOOD_CHEST).unlockedBy("has_journal",InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
                     .pattern("xxx")
-                    .pattern("x x")
+                    .pattern("xyx")
                     .pattern("xxx")
                     .define('x', BlockRegistry.ARCHWOOD_PLANK)
+                    .define('y', Items.GOLD_NUGGET)
                     .save(consumer);
 
             ShapedRecipeBuilder.shaped(BlockRegistry.SPELL_PRISM).unlockedBy("has_journal",InventoryChangeTrigger.Instance.hasItems(ItemsRegistry.wornNotebook))
