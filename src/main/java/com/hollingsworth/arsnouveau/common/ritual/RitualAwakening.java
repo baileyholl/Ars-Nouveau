@@ -86,7 +86,7 @@ public class RitualAwakening extends AbstractRitual {
                 findTree(world);
                 if(entity != null){
                     ParticleUtil.spawnPoof((ServerWorld) world, foundPos);
-                    WealdWalker walker = new WealdWalker(entity, world);
+                    WealdWalker walker =  entity.create(world);
                     walker.setPos(foundPos.getX(), foundPos.getY(), foundPos.getZ());
                     world.addFreshEntity(walker);
                     setFinished();
