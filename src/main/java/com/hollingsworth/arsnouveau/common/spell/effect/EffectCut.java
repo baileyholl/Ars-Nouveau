@@ -4,6 +4,8 @@ import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
+import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -21,6 +23,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.IForgeShearable;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -66,6 +69,10 @@ public class EffectCut extends AbstractEffect {
             }
             PlayerEntity entity = ANFakePlayer.getPlayer((ServerWorld) world);
             entity.setItemInHand(Hand.MAIN_HAND, shears);
+            // TODO Replace with AN shears
+            if(world.getBlockEntity(p) != null && (world.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent() ||
+                    world.getBlockEntity(p) instanceof ArcanePedestalTile || world.getBlockEntity(p) instanceof ScribesTile))
+                continue;
             entity.setPos(p.getX(), p.getY(), p.getZ());
             world.getBlockState(p).use(world, entity, Hand.MAIN_HAND, rayTraceResult);
         }
