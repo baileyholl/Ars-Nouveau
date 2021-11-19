@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.common.block.PortalBlock;
 
+import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import net.minecraft.block.BlockState;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketWarpPosition;
@@ -32,6 +33,7 @@ public class PortalTile extends TileEntity implements ITickableTileEntity, ITool
     public String dimID;
     public Vector2f rotationVec;
     public String displayName;
+    public boolean isHorizontal;
 
     public PortalTile() {
         super(PORTAL_TILE_TYPE);
@@ -46,6 +48,7 @@ public class PortalTile extends TileEntity implements ITickableTileEntity, ITool
             Networking.sendToNearby(level, e, new PacketWarpPosition(e.getId(), e.getX(), e.getY(), e.getZ(), e.xRot, e.yRot));
             ((ServerWorld) level).sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
                     4, (this.level.random.nextDouble() - 0.5D) * 2.0D, -this.level.random.nextDouble(), (this.level.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
+            System.out.println(e);
         }
     }
 
@@ -57,6 +60,7 @@ public class PortalTile extends TileEntity implements ITickableTileEntity, ITool
         this.warpPos = NBTUtil.getBlockPos(compound, "warp");
         this.rotationVec = new Vector2f(compound.getFloat("xRot"), compound.getFloat("yRot"));
         this.displayName = compound.getString("display");
+        this.isHorizontal = compound.getBoolean("horizontal");
     }
 
     @Override
@@ -72,6 +76,7 @@ public class PortalTile extends TileEntity implements ITickableTileEntity, ITool
         if (displayName != null) {
             compound.putString("display", displayName);
         }
+        compound.putBoolean("horizontal", isHorizontal);
         return super.save(compound);
     }
 
@@ -80,6 +85,8 @@ public class PortalTile extends TileEntity implements ITickableTileEntity, ITool
         if (!level.isClientSide && warpPos != null && !(level.getBlockState(warpPos).getBlock() instanceof PortalBlock)) {
             List<Entity> entities = level.getEntitiesOfClass(Entity.class, new AxisAlignedBB(worldPosition));
             for (Entity e : entities) {
+                if(e instanceof EntityFollowProjectile)
+                    continue;
                 level.playSound(null, warpPos, SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundCategory.NEUTRAL, 1.0f, 1.0f);
                 e.teleportTo(warpPos.getX(), warpPos.getY(), warpPos.getZ());
                 ((ServerWorld) level).sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
@@ -88,7 +95,9 @@ public class PortalTile extends TileEntity implements ITickableTileEntity, ITool
                     e.xRot = rotationVec.x;
                     e.yRot = rotationVec.y;
                     Networking.sendToNearby(e.level, e, new PacketWarpPosition(e.getId(), warpPos.getX(), warpPos.getY(), warpPos.getZ(), e.xRot, e.yRot));
+
                 }
+                System.out.println(e);
             }
         }
     }

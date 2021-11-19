@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.google.common.cache.LoadingCache;
+import com.hollingsworth.arsnouveau.api.util.FlatPortalAreaHelper;
 import com.hollingsworth.arsnouveau.common.block.tile.PortalTile;
 import com.hollingsworth.arsnouveau.common.datagen.Recipes;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
@@ -9,7 +9,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.pattern.BlockPattern;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -19,7 +18,6 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.CachedBlockInfo;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -105,6 +103,27 @@ public class PortalBlock extends ModBlock{
             return false;
         }
     }
+
+    public boolean trySpawnHoriztonalPortal(World worldIn, BlockPos pos, BlockPos warpPos, String dimID, Vector2f rotation, String displayName){
+        FlatPortalAreaHelper helper = new FlatPortalAreaHelper().init(worldIn, pos, null, (bs) -> bs.is(Recipes.DECORATIVE_AN));
+        if(helper.isValidFrame()){
+            BlockPos.betweenClosed(helper.lowerCorner, helper.lowerCorner.relative(Direction.Axis.X, helper.xSize - 1).relative(Direction.Axis.Z, helper.zSize - 1)).forEach((blockPos) -> {
+                worldIn.setBlock(blockPos, BlockRegistry.PORTAL_BLOCK.defaultBlockState().setValue(PortalBlock.AXIS, Direction.Axis.X), 18);
+                if(worldIn.getBlockEntity(blockPos) instanceof PortalTile){
+                    PortalTile tile = (PortalTile) worldIn.getBlockEntity(blockPos);
+                    tile.warpPos = warpPos;
+                    tile.dimID = dimID;
+                    tile.rotationVec = rotation;
+                    tile.displayName = displayName;
+                    tile.isHorizontal = true;
+                    tile.update();
+                }
+            });
+            return true;
+        }
+        return false;
+    }
+
     public BlockState rotate(BlockState state, Rotation rot) {
         switch(rot) {
             case COUNTERCLOCKWISE_90:
@@ -133,6 +152,16 @@ public class PortalBlock extends ModBlock{
         Direction.Axis direction$axis = facing.getAxis();
         Direction.Axis direction$axis1 = stateIn.getValue(AXIS);
         boolean flag = direction$axis1 != direction$axis && direction$axis.isHorizontal();
+        if(worldIn.getBlockEntity(currentPos) instanceof PortalTile){
+            if(((PortalTile) worldIn.getBlockEntity(currentPos)).isHorizontal){
+                FlatPortalAreaHelper frameTester = new FlatPortalAreaHelper();
+                frameTester.init((World) worldIn, currentPos, null, (bs) -> bs.is(Recipes.DECORATIVE_AN));
+                if(!frameTester.isValidFrame()){
+                    return Blocks.AIR.defaultBlockState();
+                }
+                return  super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+            }
+        }
         return !flag && facingState.getBlock() != this && !(new Size(worldIn, currentPos, direction$axis1)).isComplete() ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
@@ -153,48 +182,6 @@ public class PortalBlock extends ModBlock{
     @Override
     public boolean canBeReplaced(BlockState state, BlockItemUseContext useContext) {
         return false;
-    }
-
-
-    public static BlockPattern.PatternHelper createPatternHelper(IWorld world, BlockPos pos) {
-        Direction.Axis direction$axis = Direction.Axis.Z;
-        Size portalblock$size = new Size(world, pos, Direction.Axis.X);
-        LoadingCache<BlockPos, CachedBlockInfo> loadingcache = BlockPattern.createLevelCache(world, true);
-        if (!portalblock$size.isValid()) {
-            direction$axis = Direction.Axis.X;
-            portalblock$size = new Size(world, pos, Direction.Axis.Z);
-        }
-
-        if (!portalblock$size.isValid()) {
-            return new BlockPattern.PatternHelper(pos, Direction.NORTH, Direction.UP, loadingcache, 1, 1, 1);
-        } else {
-            int[] aint = new int[Direction.AxisDirection.values().length];
-            Direction direction = portalblock$size.rightDir.getCounterClockWise();
-            BlockPos blockpos = portalblock$size.bottomLeft.above(portalblock$size.getHeight() - 1);
-
-            for(Direction.AxisDirection direction$axisdirection : Direction.AxisDirection.values()) {
-                BlockPattern.PatternHelper blockpattern$patternhelper = new BlockPattern.PatternHelper(direction.getAxisDirection() == direction$axisdirection ? blockpos : blockpos.relative(portalblock$size.rightDir, portalblock$size.getWidth() - 1), Direction.get(direction$axisdirection, direction$axis), Direction.UP, loadingcache, portalblock$size.getWidth(), portalblock$size.getHeight(), 1);
-
-                for(int i = 0; i < portalblock$size.getWidth(); ++i) {
-                    for(int j = 0; j < portalblock$size.getHeight(); ++j) {
-                        CachedBlockInfo cachedblockinfo = blockpattern$patternhelper.getBlock(i, j, 1);
-                        if (!cachedblockinfo.getState().isAir()) {
-                            ++aint[direction$axisdirection.ordinal()];
-                        }
-                    }
-                }
-            }
-
-            Direction.AxisDirection direction$axisdirection1 = Direction.AxisDirection.POSITIVE;
-
-            for(Direction.AxisDirection direction$axisdirection2 : Direction.AxisDirection.values()) {
-                if (aint[direction$axisdirection2.ordinal()] < aint[direction$axisdirection1.ordinal()]) {
-                    direction$axisdirection1 = direction$axisdirection2;
-                }
-            }
-
-            return new BlockPattern.PatternHelper(direction.getAxisDirection() == direction$axisdirection1 ? blockpos : blockpos.relative(portalblock$size.rightDir, portalblock$size.getWidth() - 1), Direction.get(direction$axisdirection1, direction$axis), Direction.UP, loadingcache, portalblock$size.getWidth(), portalblock$size.getHeight(), 1);
-        }
     }
 
     public static class Size {
@@ -227,7 +214,7 @@ public class PortalBlock extends ModBlock{
             if (i >= 0) {
                 this.bottomLeft = pos.relative(this.leftDir, i);
                 this.width = this.getDistanceUntilEdge(this.bottomLeft, this.rightDir);
-                if (this.width < 2 || this.width > 21) {
+                if (this.width < 1 || this.width > 21) {
                     this.bottomLeft = null;
                     this.width = 0;
                 }
@@ -301,7 +288,7 @@ public class PortalBlock extends ModBlock{
                 }
             }
 
-            if (this.height <= 21 && this.height >= 3) {
+            if (this.height <= 21 && this.height >= 1) {
                 return this.height;
             } else {
                 this.bottomLeft = null;
@@ -317,7 +304,7 @@ public class PortalBlock extends ModBlock{
         }
 
         public boolean isValid() {
-            return this.bottomLeft != null && this.width >= 2 && this.width <= 21 && this.height >= 3 && this.height <= 21;
+            return this.bottomLeft != null && this.width >= 1 && this.width <= 21 && this.height >= 1 && this.height <= 21;
         }
 
         public void placePortalBlocks(BlockPos warpPos, String dimId, Vector2f rotation, String displayName) {

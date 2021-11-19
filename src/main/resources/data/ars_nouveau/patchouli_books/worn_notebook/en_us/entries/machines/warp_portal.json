@@ -6,6 +6,9 @@
         {
             "type": "text",
             "text": "ars_nouveau.page1.warp_portal"
+        },{
+            "type": "text",
+            "text": "ars_nouveau.page2.warp_portal"
         },
 		{
 		"type":"multiblock",
@@ -24,7 +27,7 @@
 			],
 			"symmetrical": true
 		},
-		"text":"ars_nouveau.page2.warp_portal"
+		"text":"ars_nouveau.page3.warp_portal"
 		},{
             "type": "relations",
             "entries":["items/warp_scroll"]        

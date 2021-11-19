@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
-import com.hollingsworth.arsnouveau.common.datagen.Recipes;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -37,12 +36,14 @@ public class WarpScroll extends ModItem{
 
     @Override
     public boolean onEntityItemUpdate(ItemStack stack, ItemEntity entity) {
-        if(!entity.getCommandSenderWorld().isClientSide && entity.getCommandSenderWorld().getBlockState(entity.blockPosition().below()).getBlock().is(Recipes.DECORATIVE_AN)){
+        //entity.getCommandSenderWorld().getBlockState(entity.blockPosition().below()).getBlock().is(Recipes.DECORATIVE_AN)
+        if(!entity.getCommandSenderWorld().isClientSide){
             String displayName = stack.hasCustomHoverName() ? stack.getHoverName().getString() : "";
             if(getPos(stack) != BlockPos.ZERO
                     && getDimension(stack).equals(entity.getCommandSenderWorld().dimension().getRegistryName().toString())
                     && ManaUtil.hasManaNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000)
-                    && BlockRegistry.PORTAL_BLOCK.trySpawnPortal(entity.getCommandSenderWorld(), entity.blockPosition(), getPos(stack), getDimension(stack), getRotationVector(stack), displayName)
+                    && (BlockRegistry.PORTAL_BLOCK.trySpawnPortal(entity.getCommandSenderWorld(), entity.blockPosition(), getPos(stack), getDimension(stack), getRotationVector(stack), displayName)
+                    || BlockRegistry.PORTAL_BLOCK.trySpawnHoriztonalPortal(entity.getCommandSenderWorld(), entity.blockPosition(), getPos(stack), getDimension(stack), getRotationVector(stack), displayName))
                     && ManaUtil.takeManaNearbyWithParticles(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000) != null){
                 BlockPos pos = entity.blockPosition();
                 ServerWorld world = (ServerWorld) entity.getCommandSenderWorld();
@@ -50,6 +51,7 @@ public class WarpScroll extends ModItem{
                         10,(world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
                 world.playSound(null, pos, SoundEvents.ILLUSIONER_CAST_SPELL, SoundCategory.NEUTRAL, 1.0f, 1.0f);
                 stack.shrink(1);
+                System.out.println("deleted");
                 return true;
             }
 
