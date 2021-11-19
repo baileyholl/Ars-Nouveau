@@ -24,13 +24,17 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class EntityProjectileSpell extends ColoredProjectile {
 
     public int age;
     public SpellResolver spellResolver;
     public int pierceLeft;
     public int numSensitive;
-
+    public Set<BlockPos> hitList = new HashSet<>();
+    @Deprecated
     public EntityProjectileSpell(EntityType<? extends ArrowEntity> type, World worldIn, SpellResolver spellResolver, int pierceLeft) {
         super(type, worldIn);
         this.spellResolver = spellResolver;
@@ -223,7 +227,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
             }
         }
 
-        if (!level.isClientSide && result instanceof BlockRayTraceResult  && !this.removed) {
+        if (!level.isClientSide && result instanceof BlockRayTraceResult  && !this.removed && !hitList.contains(((BlockRayTraceResult) result).getBlockPos())) {
 
             BlockRayTraceResult blockraytraceresult = (BlockRayTraceResult)result;
             BlockState state = level.getBlockState(((BlockRayTraceResult) result).getBlockPos());
@@ -240,6 +244,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
             }
 
             if(this.spellResolver != null) {
+                this.hitList.add(blockraytraceresult.getBlockPos());
                 this.spellResolver.onResolveEffect(this.level, (LivingEntity) this.getOwner(), blockraytraceresult);
             }
             Networking.sendToNearby(level, ((BlockRayTraceResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
