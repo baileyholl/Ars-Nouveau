@@ -50,7 +50,9 @@ public class MycelialSourcelinkTile extends SourcelinkTile{
                 int sourceValue = getSourceValue(i.getItem(0));
                 if(sourceValue > 0){
                     this.addMana(sourceValue);
+                    ItemStack containerItem = i.getItem(0).getContainerItem();
                     i.removeItem(0, 1);
+                    i.setItem(0, containerItem);
                     Networking.sendToNearby(level, getBlockPos(),
                             new PacketANEffect(PacketANEffect.EffectType.BURST, i.getBlockPos().above(), new ParticleColor.IntWrapper(255, 255, 255)));
                 }
