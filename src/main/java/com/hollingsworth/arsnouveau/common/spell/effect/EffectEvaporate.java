@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -39,7 +40,7 @@ public class EffectEvaporate extends AbstractEffect {
     }
 
     public void evaporate(World world, BlockPos p){
-        if(!world.getFluidState(p).isEmpty()){
+        if(!world.getFluidState(p).isEmpty() && world.getBlockState(p).getBlock() instanceof FlowingFluidBlock){
             world.setBlock(p, Blocks.AIR.defaultBlockState(), 3);
         }
     }
