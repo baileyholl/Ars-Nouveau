@@ -37,14 +37,15 @@ public class EffectToss extends AbstractEffect {
     }
 
     public void summonStack(LivingEntity shooter, SpellContext context, World world, BlockPos pos) {
-        ItemStack stack = getItemFromCaster(shooter, context, (i) -> {
+        ItemStack casterStack = extractStackFromCaster(shooter, context, (i) -> {
             if (!i.isEmpty() && shooter instanceof PlayerEntity) {
                 return !ItemStack.matches(shooter.getMainHandItem(), i);
             }
             return false;
-        });
-        world.addFreshEntity(new ItemEntity(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, stack.copy()));
-        stack.setCount(0);
+        }, 64);
+
+        world.addFreshEntity(new ItemEntity(world, pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, casterStack.copy()));
+        casterStack.setCount(0);
     }
 
     @Override
