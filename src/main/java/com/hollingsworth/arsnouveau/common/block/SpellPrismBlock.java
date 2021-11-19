@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
 import net.minecraft.block.*;
 import net.minecraft.dispenser.IBlockSource;
 import net.minecraft.dispenser.IPosition;
@@ -38,7 +39,9 @@ public class SpellPrismBlock extends ModBlock{
         IPosition iposition = getDispensePosition(new ProxyBlockSource(world, pos));
         Direction direction = world.getBlockState(pos).getValue(DispenserBlock.FACING);
         spell.setPos(iposition.x(), iposition.y(), iposition.z());
-        spell.shoot(direction.getStepX(), ((float)direction.getStepY()), direction.getStepZ(), 0.5f, 0);
+        float velocity = 0.5f + 0.1f * Math.min(2, spell.spellResolver.spell.getBuffsAtIndex(0, null, AugmentAccelerate.INSTANCE));
+
+        spell.shoot(direction.getStepX(), ((float)direction.getStepY()), direction.getStepZ(), velocity, 0);
         for(Direction d : Direction.values()){
             if(world.getBlockState(pos.relative(d)).getBlock() instanceof ObserverBlock){
                 world.getBlockTicks().scheduleTick(pos.relative(d), world.getBlockState(pos.relative(d)).getBlock(), 2);
