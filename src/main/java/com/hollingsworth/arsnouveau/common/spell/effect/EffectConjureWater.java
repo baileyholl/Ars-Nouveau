@@ -6,7 +6,9 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.IWaterLoggable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.fluid.Fluids;
@@ -46,12 +48,17 @@ public class EffectConjureWater extends AbstractEffect {
         if(world.dimensionType().ultraWarm())
             return;
         for(BlockPos pos1 : posList) {
-            BlockPos hitPos = pos1.relative(rayTraceResult.getDirection());
-            if(!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, pos1))
-                continue;
+            Block block = world.getBlockState(pos1).getBlock();
+            if(block instanceof IWaterLoggable && ((IWaterLoggable) block).canPlaceLiquid(world, pos1, world.getBlockState(pos1), Fluids.WATER)){
+                ((IWaterLoggable) block).placeLiquid(world, pos1, world.getBlockState(pos1), Fluids.WATER.getSource(true));
+            }else{
+                BlockPos hitPos = pos1.relative(rayTraceResult.getDirection());
+                if(!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, pos1))
+                    continue;
 
-            if(world.getBlockState(hitPos).canBeReplaced(Fluids.WATER)){
-                world.setBlockAndUpdate(hitPos, Blocks.WATER.defaultBlockState());
+                if(world.getBlockState(hitPos).canBeReplaced(Fluids.WATER)){
+                    world.setBlockAndUpdate(hitPos, Blocks.WATER.defaultBlockState());
+                }
             }
         }
     }
