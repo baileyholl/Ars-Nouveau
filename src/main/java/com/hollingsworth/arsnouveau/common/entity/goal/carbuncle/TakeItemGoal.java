@@ -68,9 +68,12 @@ public class TakeItemGoal extends ExtendedRangeGoal {
                         SoundEvents.ITEM_PICKUP, carbuncle.getSoundSource(),1.0F, 1.0F);
 
                 if(world instanceof ServerWorld){
-                    OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), takePos, 20);
-                    event.open();
-                    EventQueue.getServerInstance().addEvent(event);
+                    // Potential bug with OpenJDK causing irreproducible noClassDef errors
+                    try {
+                        OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), takePos, 20);
+                        event.open();
+                        EventQueue.getServerInstance().addEvent(event);
+                    }catch (Throwable ignored){}
                 }
                 break;
             }

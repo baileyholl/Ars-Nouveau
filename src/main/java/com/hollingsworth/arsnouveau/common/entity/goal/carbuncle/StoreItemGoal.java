@@ -65,9 +65,12 @@ public class StoreItemGoal extends ExtendedRangeGoal {
                     return;
                 }
                 if (world instanceof ServerWorld) {
-                    OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), storePos, 20);
-                    event.open();
-                    EventQueue.getServerInstance().addEvent(event);
+                    // Potential bug with OpenJDK causing irreproducible noClassDef errors
+                    try {
+                        OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), storePos, 20);
+                        event.open();
+                        EventQueue.getServerInstance().addEvent(event);
+                    }catch (Throwable ignored){ }
                 }
                 entityCarbuncle.setHeldStack(left);
                 entityCarbuncle.setBackOff(5 + entityCarbuncle.level.random.nextInt(20));
@@ -76,9 +79,6 @@ public class StoreItemGoal extends ExtendedRangeGoal {
         }
 
         if (storePos != null && !entityCarbuncle.getHeldStack().isEmpty()) {
-          //  BlockPos destPos = BlockUtil.scanForBlockNearPoint(entityCarbuncle.level, storePos, 3,3,3,2);
-//            System.out.println(destPos);
-//            if(destPos != null)
                 setPath(storePos.getX(), storePos.getY(), storePos.getZ(), 1.3D);
         }
 
