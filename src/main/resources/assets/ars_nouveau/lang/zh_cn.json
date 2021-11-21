@@ -94,7 +94,6 @@
 	"ars_nouveau.page4.carbuncle_charm": "要让卡班克尔向目标箱子放置物品，先对卡班克尔，再对目标容器使用支配之杖。要从容器中拿出物品，则是先对容器，再对卡班克尔使用支配之杖。卡班克尔会在你想要的任意多个容器之间移动物品。看向一只卡班克尔会显示当前从/向几个箱子处拿取和放置物品。对卡班克尔潜行使用支配之杖会重置这些指示。",
 	"ars_nouveau.page5.carbuncle_charm": "你可以使用物品卷轴和物品展示框指示物品的种类。可以向卡班克尔交予一个物品卷轴：允许或物品卷轴：禁止，之后它只会拾取并运输符合其中过滤条件的物品。或者，你也可以在卡班克尔要互动的容器上摆放一个物品展示框。你可以在展示框内摆放物品卷轴或直接摆放物品，卡班克尔在与该容器互动时也会遵循展示框中的过滤条件。",
 	"ars_nouveau.page6.carbuncle_charm": "对卡班克尔使用某种方块后，其在区域间移动时便倾向于走在这种方块上。不过，这种方块不在路上时它们不会走上去。自然情况下，卡班克尔倾向于走在土径上。",
-
 	
 	"ars_nouveau.page.summoning_crystal": "召唤水晶可以向希尔芙之类的特殊魔法生物提供魔源、资源和任务。在召唤水晶旁放置箱子可以给被召唤的生物提供存放物品的地方。",
 	"ars_nouveau.page2.summoning_crystal": "希尔芙这样的生物需要魔源才能与世界进行交互。在召唤水晶附近放置魔源罐可为魔法生物提供魔源。如果你想要开始第一次自动化，请参阅希尔芙护符的条目。",
@@ -333,7 +332,7 @@
 	"ars_nouveau.glyph_desc.haste": "给目标造成速度增益。",
 	"ars_nouveau.glyph_desc.heal": "对目标治疗少量生命。当与延长时效一起使用则会改为造成再生状态，最高 5 级。对亡灵生物使用时，会造成与治疗量等价的魔法伤害。",
 	"ars_nouveau.glyph_desc.hex": "对目标造成最高 5 级的脆弱诅咒。当目标在中毒、凋零或燃烧时，脆弱诅咒会少量增加其受到的任何伤害。此外，脆弱诅咒还会将目标魔力和生命再生的速度减少一半。",
-	"ars_nouveau.glyph_desc.ignite": "使方块或生物短时间着火",
+	"ars_nouveau.glyph_desc.ignite": "使方块或生物短时间着火。敏感构件能防止点着方块。",
 	"ars_nouveau.glyph_desc.intangible": "使方块暂时变成空气。使用强化法术增强后，便可以处理高挖掘等级方块。无形还能被范围效果、缩短时效和延长时效增强。",
 	"ars_nouveau.glyph_desc.interact": "模仿玩家与方块或实体交互。对于触及拉杆、箱子和动物很有用。",
 	"ars_nouveau.glyph_desc.invisibility": "使实体短时间隐形。",
@@ -440,6 +439,7 @@
 	"ars_nouveau.glyph_name.underfoot": "脚下",
 	"ars_nouveau.glyph_name.wind_shear": "风切",
 	"ars_nouveau.glyph_name.wither": "凋零",
+	"ars_nouveau.ritual_desc.awakening": "唤醒附近的至高木，使它们成为林地行者。林地行者可以守护世界中的指定位置，阻止敌对生物的进犯。它们会随时间自动恢复生命，但还是会死亡，死亡后会变成林地蹒跚者。创造林地行者时，需要在至高木的树根附近进行本仪式。",
 	"ars_nouveau.ritual_desc.binding": "绑定仪式能将附近合适的实体转换为绑定手稿，这些手稿可用于召唤使魔。要了解更多信息，请参阅使魔一章。",
 	"ars_nouveau.ritual_desc.burrowing": "在仪式火盆相邻的 4 格挖出 4 个直通基岩的洞。仪式中破坏的任何方块都会掉落。",
 	"ars_nouveau.ritual_desc.challenge": "在村庄内使用时召唤一次灾厄村民袭击。额外使用一个绿宝石进行增强可以将袭击难度提升至最大值，使得较简单的游戏难度下也有办法获得不死图腾。这一增强在困难难度下没有效果。",
@@ -531,6 +531,7 @@
 	"item.ars_nouveau.glyph_underfoot": "魔符：脚下",
 	"item.ars_nouveau.glyph_wind_shear": "魔符：风切",
 	"item.ars_nouveau.glyph_wither": "魔符：凋零",
+	"item.ars_nouveau.ritual_awakening": "唤醒之板",
 	"item.ars_nouveau.ritual_binding": "绑定之板",
 	"item.ars_nouveau.ritual_burrowing": "掘穴之板",
 	"item.ars_nouveau.ritual_challenge": "挑战之板",
@@ -879,5 +880,18 @@
 	"ars_nouveau.decorative": "装饰性方块",
 	"ars_nouveau.archwood_trees": "至高木",
 	"block.ars_nouveau.spell_prism": "法术棱镜",
-	"ars_nouveau.page.spell_prism": "当弹射物法术射向此方块时，该法术会被重定向，向着此方块的面朝方向射出。法术转向时，法术棱镜会向附近的侦测器发出信号。"
+	"ars_nouveau.page.spell_prism": "当弹射物法术射向此方块时，该法术会被重定向，向着此方块的面朝方向射出。法术转向时，法术棱镜会向附近的侦测器发出信号。",
+	"ars_nouveau.weald_walker.home": "正在守护：%s",
+	"ars_nouveau.nothing": "无",
+	"ars_nouveau.weald_walker": "林地行者",
+	"entity.ars_nouveau.cascading_weald_walker": "奔流林地行者",
+	"entity.ars_nouveau.flourishing_weald_walker": "繁茂林地行者",
+	"entity.ars_nouveau.blazing_weald_walker": "烈焰林地行者",
+	"entity.ars_nouveau.vexing_weald_walker": "恼人林地行者",
+	"ars_nouveau.page1.weald_walker": "林地行者是一种可活动的至高木，其行为主要是从敌对怪物中保护自己的家园。可以用唤醒仪式创造林地行者。被召唤出来后，它们会无目的地随机漫步，除非有人给它们指定家的位置。要给林地行者指定家的位置，需要先对林地行者，再对你想要保护的方块使用支配之杖。",
+	"ars_nouveau.page2.weald_walker": "能对附近敌人施展爆燃，而且会小心不点燃任何方块。",
+	"ars_nouveau.page3.weald_walker": "能对附近敌人施展冻结和寒流。",
+	"ars_nouveau.page4.weald_walker": "能对附近敌人施展强化过的伤害和禁锢。",
+	"ars_nouveau.page5.weald_walker": "能对附近敌人施展脆弱诅咒和强化过的凋零。",
+	"ars_nouveau.page1.weald_waddler": "如果林地行者死亡，它会变成林地蹒跚者。林地蹒跚者又会慢慢长大，变回林地行者，对其使用骨粉可以加速这个过程。林地蹒跚者在长大前无法战斗，也不能自保。"
 }
