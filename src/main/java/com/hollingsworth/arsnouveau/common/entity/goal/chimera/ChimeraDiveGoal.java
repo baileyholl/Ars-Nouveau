@@ -114,7 +114,8 @@ public class ChimeraDiveGoal extends Goal {
     }
 
     public void makeExplosion(){
-        boss.level.explode(boss, boss.getX() + 0.5, boss.getY(), boss.getZ() + 0.5, 4.5f, Explosion.Mode.BREAK);
+        Explosion.Mode mode = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.boss.level, this.boss) ? Explosion.Mode.BREAK : Explosion.Mode.NONE;
+        boss.level.explode(boss, boss.getX() + 0.5, boss.getY(), boss.getZ() + 0.5, 4.5f, mode);
         Networking.sendToNearby(boss.level, boss, new PacketAnimEntity(boss.getId(), EntityChimera.Animations.HOWL.ordinal()));
     }
 

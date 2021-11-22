@@ -88,12 +88,15 @@ public class ChimeraRamGoal extends Goal {
             attack();
         }
 
-        if(hasHit && BlockUtil.distanceFrom(boss.position, boss.getTarget().position) <= 2.0f){
+        if(boss != null && boss.getTarget() != null && hasHit && BlockUtil.distanceFrom(boss.position, boss.getTarget().position) <= 2.0f){
             endRam();
         }
     }
 
     public void breakBlocks(){
+        if(!net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.boss.level, this.boss)){
+            return;
+        }
         Direction facing = boss.getDirection();
         BlockPos facingPos = boss.blockPosition().above().relative(facing);
         for(int i = 0; i < 2; i++){
