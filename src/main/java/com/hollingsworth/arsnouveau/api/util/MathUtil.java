@@ -56,4 +56,15 @@ public class MathUtil {
 
         return entity == null ? null : new EntityRayTraceResult(entity, vec3d);
     }
+
+    public static long NIGHT_TIME = 13000L;
+    public static long DAY_TIME = 1000L;
+
+    public static long getNextDaysTime(World world, long timeOfDay){
+        long lengthOfDay = 24000L;
+        long dayTime = world.getDayTime();
+        long newTime = (dayTime + lengthOfDay);
+        newTime -= newTime % lengthOfDay;
+        return newTime + timeOfDay;
+    }
 }

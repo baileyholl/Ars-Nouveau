@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.ritual;
 
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
+import com.hollingsworth.arsnouveau.api.util.MathUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
@@ -14,7 +15,7 @@ public class RitualSunrise extends AbstractRitual {
             incrementProgress();
             if (getProgress() >= 18) {
                 ServerWorld world = (ServerWorld) getWorld();
-                world.setDayTime(1000);
+                world.setDayTime(MathUtil.getNextDaysTime(world, MathUtil.DAY_TIME));
                 setFinished();
             }
         }
