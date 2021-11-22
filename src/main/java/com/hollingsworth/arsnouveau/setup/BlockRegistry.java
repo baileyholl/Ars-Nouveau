@@ -359,6 +359,8 @@ public class BlockRegistry {
         public static void onItemsRegistry(final RegistryEvent.Register<Item> itemRegistryEvent) {
 
             IForgeRegistry<Item> registry = itemRegistryEvent.getRegistry();
+            Item berry = new BlockItem(BlockRegistry.MANA_BERRY_BUSH, ItemsRegistry.defaultItemProperties().food(ItemsRegistry.SOURCE_BERRY_FOOD)).setRegistryName(LibItemNames.MANA_BERRY);
+            ComposterBlock.COMPOSTABLES.putIfAbsent(berry, 0.3f);
             registry.register(new BlockItem(BlockRegistry.PHANTOM_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.PHANTOM_BLOCK));
             registry.register(new BlockItem(BlockRegistry.LIGHT_BLOCK, new Item.Properties()).setRegistryName(LibBlockNames.LIGHT_BLOCK));
             registry.register(new AnimBlockItem(BlockRegistry.AGRONOMIC_SOURCELINK, ItemsRegistry.defaultItemProperties().setISTER(()-> AgronomicRenderer::getISTER)).setRegistryName(LibBlockNames.AGRONOMIC_SOURCELINK));
@@ -386,7 +388,7 @@ public class BlockRegistry {
             registry.register(getDefaultBlockItem(BlockRegistry.ARCANE_STONE, LibBlockNames.ARCANE_STONE));
             registry.register(new AnimBlockItem(BlockRegistry.VOLCANIC_BLOCK, ItemsRegistry.defaultItemProperties().fireResistant().setISTER(() -> VolcanicRenderer::getISTER)).setRegistryName(LibBlockNames.VOLCANIC_ACCUMULATOR));
             registry.register(new FluidBlockItem(BlockRegistry.LAVA_LILY, ItemsRegistry.defaultItemProperties().fireResistant()).setRegistryName(LibBlockNames.LAVA_LILY));
-            registry.register(new BlockItem(BlockRegistry.MANA_BERRY_BUSH, ItemsRegistry.defaultItemProperties().food(ItemsRegistry.SOURCE_BERRY_FOOD)).setRegistryName(LibItemNames.MANA_BERRY));
+            registry.register(berry);
             registry.register(new BlockItem(BlockRegistry.WIXIE_CAULDRON, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.WIXIE_CAULDRON));
             registry.register(new BlockItem(BlockRegistry.CREATIVE_MANA_JAR, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.CREATIVE_MANA_JAR));
             registry.register(new AnimBlockItem(BlockRegistry.RELAY_WARP, ItemsRegistry.defaultItemProperties().setISTER(() -> GenericRenderer.getISTER("source_warp"))).setRegistryName(LibBlockNames.RELAY_WARP));
