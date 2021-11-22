@@ -190,6 +190,8 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
 
     @Override
     public ItemStack getItem(int index) {
+        if(isCrafting)
+            return ItemStack.EMPTY;
         return catalystItem;
     }
 
