@@ -43,8 +43,12 @@ public class SpellPrismBlock extends ModBlock{
 
         spell.shoot(direction.getStepX(), ((float)direction.getStepY()), direction.getStepZ(), velocity, 0);
         for(Direction d : Direction.values()){
-            if(world.getBlockState(pos.relative(d)).getBlock() instanceof ObserverBlock){
-                world.getBlockTicks().scheduleTick(pos.relative(d), world.getBlockState(pos.relative(d)).getBlock(), 2);
+            BlockPos adjacentPos = pos.relative(d);
+            if(world.getBlockState(adjacentPos).getBlock() instanceof ObserverBlock){
+                BlockState observer = world.getBlockState(adjacentPos);
+                if(adjacentPos.relative(observer.getValue(FACING)).equals(pos)) { // Make sure the observer is facing us.
+                    world.getBlockTicks().scheduleTick(pos.relative(d), world.getBlockState(pos.relative(d)).getBlock(), 2);
+                }
             }
         }
     }
