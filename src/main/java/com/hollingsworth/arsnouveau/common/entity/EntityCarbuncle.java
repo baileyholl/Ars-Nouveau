@@ -726,18 +726,24 @@ public class EntityCarbuncle extends CreatureEntity implements IAnimatable, IDis
         IItemHandler handler = level.getBlockEntity(validStorePos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
         if(handler == null)
             return -1;
+
         for(int i = 0; i < handler.getSlots(); i++){
-            if(handler.isItemValid(i, stack)){
-                int maxRoom = handler.getStackInSlot(i).getMaxStackSize() - handler.getStackInSlot(i).getCount();
+            ItemStack handlerStack = handler.getStackInSlot(i);
+            if(ItemHandlerHelper.canItemStacksStack(handler.getStackInSlot(i), stack) || handlerStack.isEmpty()){
+                if(handlerStack.isEmpty())
+                    return handler.getSlotLimit(i);
+
+                int maxRoom = handlerStack.getMaxStackSize() - handlerStack.getCount();
                 if(maxRoom > 0)
-                    return maxRoom;
+                    return Math.min(maxRoom, handler.getSlotLimit(i));
             }
         }
         return -1;
     }
 
     public boolean isValidItem(ItemStack stack){
-
+        if(stack.isEmpty())
+            return false;
         if(!isTamed() && stack.getItem() == Items.GOLD_NUGGET)
             return true;
 
