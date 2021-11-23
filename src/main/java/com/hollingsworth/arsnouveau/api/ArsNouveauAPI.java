@@ -253,6 +253,8 @@ public class ArsNouveauAPI {
      * onto caster items, which generally have a built-in cast method.
      */
     public ISpellValidator getSpellCraftingSpellValidator() {
+        if(craftingSpellValidator == null)
+            craftingSpellValidator = new StandardSpellValidator(false);
         return craftingSpellValidator;
     }
 
@@ -261,6 +263,8 @@ public class ArsNouveauAPI {
      * This validator enforces all rules, asserting that a spell can be cast.
      */
     public ISpellValidator getSpellCastingSpellValidator() {
+        if(castingSpellValidator == null) // Lazy init this because we need configs to load.
+            castingSpellValidator = new StandardSpellValidator(true);
         return castingSpellValidator;
     }
 
@@ -271,8 +275,6 @@ public class ArsNouveauAPI {
         enchantingApparatusRecipes = new ArrayList<>();
         ritualMap = new HashMap<>();
         ritualParchmentMap = new HashMap<>();
-        craftingSpellValidator = new StandardSpellValidator(false);
-        castingSpellValidator = new StandardSpellValidator(true);
         familiarHolderMap = new HashMap<>();
         familiarScriptMap = new HashMap<>();
     }
