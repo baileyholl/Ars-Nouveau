@@ -21,7 +21,6 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
@@ -80,16 +79,21 @@ public class RuneBlock extends ModBlock{
     @Override
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
         super.tick(state, worldIn, pos, rand);
-        List<Entity> entities = worldIn.getEntitiesOfClass(Entity.class, new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX(), pos.getY() +1, pos.getZ()).inflate(1));
-        if(!entities.isEmpty() && worldIn.getBlockEntity(pos) instanceof RuneTile)
-            ((RuneTile) worldIn.getBlockEntity(pos)).castSpell(entities.get(0));
+
+        if(worldIn.getBlockEntity(pos) instanceof RuneTile && ((RuneTile) worldIn.getBlockEntity(pos)).touchedEntity != null) {
+            RuneTile rune = ((RuneTile) worldIn.getBlockEntity(pos));
+            rune.castSpell(rune.touchedEntity);
+            rune.touchedEntity = null;
+        }
     }
 
     @Override
     public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
         super.entityInside(state, worldIn, pos, entityIn);
-        if(worldIn.getBlockEntity(pos) instanceof RuneTile)
+        if(worldIn.getBlockEntity(pos) instanceof RuneTile) {
+            ((RuneTile) worldIn.getBlockEntity(pos)).touchedEntity = entityIn;
             worldIn.getBlockTicks().scheduleTick(pos, this, 1);
+        }
     }
 
     @Override

@@ -35,7 +35,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
     public int ticksUntilCharge;
     public UUID uuid;
     public ParticleColor color = ParticleUtil.defaultParticleColor();
-    
+    public Entity touchedEntity;
     public RuneTile() {
         super(BlockRegistry.RUNE_TILE);
         isCharged = true;
@@ -48,7 +48,8 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
     }
 
     public void castSpell(Entity entity){
-
+        if(entity == null)
+            return;
         if(!this.isCharged || recipe.isEmpty() || !(level instanceof ServerWorld) || !(recipe.recipe.get(0) instanceof MethodTouch))
             return;
         try {
