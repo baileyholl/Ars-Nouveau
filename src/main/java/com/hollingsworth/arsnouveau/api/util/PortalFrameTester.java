@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.util;
 
+import com.hollingsworth.arsnouveau.common.block.PortalBlock;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -99,6 +100,6 @@ public abstract class PortalFrameTester {
     }
 
     public static boolean validStateInsidePortal(BlockState blockState,  Predicate<BlockState>  foundations) {
-        return blockState.isAir() || blockState.getMaterial().isReplaceable();
+        return blockState.isAir() || blockState.getMaterial().isReplaceable() || blockState.getBlock() instanceof PortalBlock;
     }
 }

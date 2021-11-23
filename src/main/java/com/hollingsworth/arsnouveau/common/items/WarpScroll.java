@@ -51,7 +51,6 @@ public class WarpScroll extends ModItem{
                         10,(world.random.nextDouble() - 0.5D) * 2.0D, -world.random.nextDouble(), (world.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
                 world.playSound(null, pos, SoundEvents.ILLUSIONER_CAST_SPELL, SoundCategory.NEUTRAL, 1.0f, 1.0f);
                 stack.shrink(1);
-                System.out.println("deleted");
                 return true;
             }
 
