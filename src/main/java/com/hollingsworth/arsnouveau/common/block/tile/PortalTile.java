@@ -48,7 +48,6 @@ public class PortalTile extends TileEntity implements ITickableTileEntity, ITool
             Networking.sendToNearby(level, e, new PacketWarpPosition(e.getId(), e.getX(), e.getY(), e.getZ(), e.xRot, e.yRot));
             ((ServerWorld) level).sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
                     4, (this.level.random.nextDouble() - 0.5D) * 2.0D, -this.level.random.nextDouble(), (this.level.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
-            System.out.println(e);
         }
     }
 
@@ -97,7 +96,6 @@ public class PortalTile extends TileEntity implements ITickableTileEntity, ITool
                     Networking.sendToNearby(e.level, e, new PacketWarpPosition(e.getId(), warpPos.getX(), warpPos.getY(), warpPos.getZ(), e.xRot, e.yRot));
 
                 }
-                System.out.println(e);
             }
         }
     }
