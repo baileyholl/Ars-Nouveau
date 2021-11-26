@@ -13,9 +13,9 @@ public class SpellContext {
 
     private boolean isCanceled;
 
-    private final Spell spell;
+    private Spell spell;
 
-    public final @Nullable LivingEntity caster;
+    public @Nullable LivingEntity caster;
 
     private int currentIndex;
 
@@ -52,6 +52,16 @@ public class SpellContext {
 
     public SpellContext withCastingTile(TileEntity tile){
         this.castingTile = tile;
+        return this;
+    }
+
+    public SpellContext withSpell(Spell spell){
+        this.spell = spell;
+        return this;
+    }
+
+    public SpellContext withCaster(@Nullable LivingEntity caster){
+        this.caster = caster;
         return this;
     }
 
