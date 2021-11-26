@@ -14,9 +14,12 @@ import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +36,7 @@ public class EnchantingApparatusRecipeCategory implements IRecipeCategory<Enchan
 
     public EnchantingApparatusRecipeCategory(IGuiHelper helper){
         this.helper = helper;
-        background = helper.createBlankDrawable(60,30);
+        background = helper.createBlankDrawable(60,50);
         icon = helper.createDrawableIngredient(new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK));
         this.cachedArrows = CacheBuilder.newBuilder()
                 .maximumSize(25)
@@ -62,7 +65,7 @@ public class EnchantingApparatusRecipeCategory implements IRecipeCategory<Enchan
 
     @Override
     public IDrawable getBackground() {
-        return helper.createBlankDrawable(100,60);
+        return helper.createBlankDrawable(100,75);
     }
 
     @Override
@@ -74,6 +77,9 @@ public class EnchantingApparatusRecipeCategory implements IRecipeCategory<Enchan
     public void draw(EnchantingApparatusRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
         IDrawableAnimated arrow = this.cachedArrows.getUnchecked(40);
         arrow.draw( matrixStack,55, 22);
+        FontRenderer renderer = Minecraft.getInstance().font;
+        if(recipe.consumesMana())
+            renderer.draw(matrixStack, new TranslationTextComponent("ars_nouveau.source", recipe.manaCost), 0.0f,65f, 10);
     }
 
     @Override

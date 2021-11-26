@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
+// TODO: Rewrite
 public class EnchantingApparatusRecipe implements IEnchantingRecipe{
 
     public Ingredient reagent; // Used in the arcane pedestal
@@ -41,14 +41,17 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
     }
 
     public EnchantingApparatusRecipe(ResourceLocation id,   List<Ingredient> pedestalItems, Ingredient reagent,ItemStack result){
+        this(id, pedestalItems, reagent, result, 0);
+    }
+
+    public EnchantingApparatusRecipe(ResourceLocation id,   List<Ingredient> pedestalItems, Ingredient reagent,ItemStack result, int cost){
         this.reagent = reagent;
         this.pedestalItems = pedestalItems;
         this.result = result;
         this.category = "";
-        manaCost = 0;
+        manaCost = cost;
         this.id = id;
     }
-
     public EnchantingApparatusRecipe(){
         reagent = Ingredient.EMPTY;
         result = ItemStack.EMPTY;
@@ -142,6 +145,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         }
 
         jsonobject.add("output", resultObj);
+        jsonobject.addProperty("sourceCost", manaCost);
         return jsonobject;
     }
 
@@ -217,19 +221,20 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
     public IRecipeType<?> getType() {
         return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, "enchanting_apparatus"));
     }
-
+    // TODO: Rewrite. Make items an array.
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<EnchantingApparatusRecipe> {
 
         @Override
         public EnchantingApparatusRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
             Ingredient reagent = Ingredient.fromJson(JSONUtils.getAsJsonArray(json, "reagent"));
             ItemStack output = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(json, "output"));
+            int cost = json.has("sourceCost") ? JSONUtils.getAsInt(json, "sourceCost") : 0;
             List<Ingredient> stacks = new ArrayList<>();
             for(int i = 1; i < 9; i++){
                 if(json.has("item_"+i))
                     stacks.add(Ingredient.fromJson(JSONUtils.getAsJsonArray(json, "item_" + i)));
             }
-            return new EnchantingApparatusRecipe(recipeId, stacks, reagent, output);
+            return new EnchantingApparatusRecipe(recipeId, stacks, reagent, output, cost);
         }
 
         @Nullable
@@ -246,7 +251,8 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
                     break;
                 }
             }
-            return new EnchantingApparatusRecipe(recipeId, stacks, reagent, output);
+            int cost = buffer.readInt();
+            return new EnchantingApparatusRecipe(recipeId, stacks, reagent, output, cost);
         }
 
         @Override
@@ -257,6 +263,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
             for(Ingredient i : recipe.pedestalItems){
                 i.toNetwork(buf);
             }
+            buf.writeInt(recipe.manaCost);
         }
     }
 }

@@ -894,5 +894,6 @@
 	"ars_nouveau.page3.weald_walker": "Casts Freeze and Cold Snap at nearby enemies.",
 	"ars_nouveau.page4.weald_walker": "Casts an amplified Harm with a Snare effect at nearby enemies.",
 	"ars_nouveau.page5.weald_walker": "Casts Hex and an amplified Wither at nearby enemies.",
-	"ars_nouveau.page1.weald_waddler": "If a Weald Walker dies, it will be turned into a Weald Waddler. Weald Waddlers will slowly grow back into Weald Walkers, and can be sped up by giving them bonemeal. A Weald Waddler cannot fight or protect itself until it has grown back to a Walker."
+	"ars_nouveau.page1.weald_waddler": "If a Weald Walker dies, it will be turned into a Weald Waddler. Weald Waddlers will slowly grow back into Weald Walkers, and can be sped up by giving them bonemeal. A Weald Waddler cannot fight or protect itself until it has grown back to a Walker.",
+	"ars_nouveau.source": "Source: %s"
 }
