@@ -169,8 +169,7 @@ public class BasicSpellTurret extends ModBlock{
             BasicSpellTurretTile tile = (BasicSpellTurretTile) worldIn.getBlockEntity(pos);
             tile.spell = spell;
             tile.color = SpellCaster.deserialize(stack).getColor();
-            System.out.println(tile.color.r);
-            System.out.println(tile.color.g);
+            tile.color.makeVisible();
             PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.alert.spell_set"));
             worldIn.sendBlockUpdated(pos, state, state, 2);
         }

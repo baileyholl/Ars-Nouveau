@@ -42,6 +42,7 @@ public class ReactiveEvents {
         if(EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT, s) * .25 >= Math.random() && s.hasTag() && s.getTag().contains("spell")){
             Spell spell = Spell.deserialize(s.getOrCreateTag().getString("spell"));
             ParticleColor.IntWrapper color = ParticleColor.IntWrapper.deserialize(s.getOrCreateTag().getString("spell_color"));
+            color.makeVisible();
             SpellResolver resolver = new SpellResolver(new SpellContext(spell, playerIn).withColors(color)).withSilent(true);
             RayTraceResult result = playerIn.pick(5, 0, false);
 

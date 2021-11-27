@@ -104,13 +104,14 @@ public class ParticleColor {
 
         public static @Nonnull ParticleColor.IntWrapper deserialize(String string){
             ParticleColor.IntWrapper color = ParticleUtil.defaultParticleColorWrapper();
+            if(string == null || string.isEmpty())
+                return color;
+
             try{
                 String[] arr = string.split(",");
                 color = new ParticleColor.IntWrapper(Integer.parseInt(arr[0].trim()), Integer.parseInt(arr[1].trim()), Integer.parseInt(arr[2].trim()));
                 return color;
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+            }catch (Exception ignored){ }
             return color;
         }
     }
