@@ -38,7 +38,6 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Random;
 
 public class BasicSpellTurret extends ModBlock{
@@ -73,7 +72,9 @@ public class BasicSpellTurret extends ModBlock{
         Direction direction = world.getBlockState(pos).getValue(FACING);
         FakePlayer fakePlayer = ANFakePlayer.getPlayer(world);
         fakePlayer.setPos(pos.getX(), pos.getY(), pos.getZ());
-        EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(tile.spell, fakePlayer).withCastingTile(world.getBlockEntity(pos)).withType(SpellContext.CasterType.TURRET));
+        EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(tile.spell, fakePlayer)
+                .withCastingTile(world.getBlockEntity(pos)).withType(SpellContext.CasterType.TURRET)
+                .withColors(tile.color));
         if(resolver.castType instanceof MethodProjectile){
             shootProjectile(world,pos,tile, resolver);
             return;
@@ -158,15 +159,18 @@ public class BasicSpellTurret extends ModBlock{
             ItemStack stack = player.getItemInHand(handIn);
             if(!(stack.getItem() instanceof SpellParchment) || worldIn.isClientSide)
                 return ActionResultType.SUCCESS;
-            List<AbstractSpellPart> recipe = SpellParchment.getSpellRecipe(stack);
-            if(recipe == null || recipe.isEmpty())
+            Spell spell = SpellParchment.getSpell(stack);
+            if(spell.isEmpty())
                 return ActionResultType.SUCCESS;
-            if(!(recipe.get(0) instanceof MethodTouch || recipe.get(0) instanceof MethodProjectile)){
+            if(!(spell.recipe.get(0) instanceof MethodTouch || spell.recipe.get(0) instanceof MethodProjectile)){
                 PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.alert.turret_type"));
                 return ActionResultType.SUCCESS;
             }
-
-            ((BasicSpellTurretTile)worldIn.getBlockEntity(pos)).spell = new Spell(recipe);
+            BasicSpellTurretTile tile = (BasicSpellTurretTile) worldIn.getBlockEntity(pos);
+            tile.spell = spell;
+            tile.color = SpellCaster.deserialize(stack).getColor();
+            System.out.println(tile.color.r);
+            System.out.println(tile.color.g);
             PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.alert.spell_set"));
             worldIn.sendBlockUpdated(pos, state, state, 2);
         }

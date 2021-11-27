@@ -9,7 +9,6 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
-import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketGetPersistentData;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
@@ -70,7 +69,7 @@ public class PlayerEvent {
         ItemStack stack = event.getItemStack();
         int level = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT, stack);
         if(level > 0 && stack.hasTag() && stack.getTag().contains("spell")){
-            Spell spell = new Spell(SpellParchment.getSpellRecipe(stack));
+            Spell spell = Spell.deserialize(stack.getTag().getString("spell"));
             event.getToolTip().add(new StringTextComponent(spell.getDisplayString()));
         }
     }

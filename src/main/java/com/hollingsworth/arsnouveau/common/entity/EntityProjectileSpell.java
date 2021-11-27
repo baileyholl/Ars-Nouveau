@@ -14,7 +14,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.util.math.*;
@@ -34,12 +33,6 @@ public class EntityProjectileSpell extends ColoredProjectile {
     public int pierceLeft;
     public int numSensitive;
     public Set<BlockPos> hitList = new HashSet<>();
-    @Deprecated
-    public EntityProjectileSpell(EntityType<? extends ArrowEntity> type, World worldIn, SpellResolver spellResolver, int pierceLeft) {
-        super(type, worldIn);
-        this.spellResolver = spellResolver;
-        this.pierceLeft = pierceLeft;
-    }
 
     public EntityProjectileSpell(final EntityType<? extends EntityProjectileSpell> entityType, final World world) {
         super(entityType, world);
@@ -50,18 +43,13 @@ public class EntityProjectileSpell extends ColoredProjectile {
         super(world, x, y, z);
     }
 
-    @Deprecated
-    public EntityProjectileSpell(World world, LivingEntity shooter, SpellResolver spellResolver, int maxPierce) {
-        super(world, shooter);
-        this.spellResolver = spellResolver;
-        pierceLeft = maxPierce;
-    }
-
     public EntityProjectileSpell(World world, SpellResolver resolver){
         super(world, resolver.spellContext.caster);
         this.spellResolver = resolver;
         this.pierceLeft = resolver.spell.getBuffsAtIndex(0, resolver.spellContext.caster, AugmentPierce.INSTANCE);
         this.numSensitive = resolver.spell.getBuffsAtIndex(0, resolver.spellContext.caster, AugmentSensitive.INSTANCE);
+        resolver.spellContext.colors.makeVisible();
+        setColor(resolver.spellContext.colors);
     }
 
     public EntityProjectileSpell(final World world, final LivingEntity shooter) {

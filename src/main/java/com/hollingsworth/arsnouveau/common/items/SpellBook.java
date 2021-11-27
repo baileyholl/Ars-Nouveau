@@ -49,7 +49,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
+// TODO: Convert to ICasterTool
 public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplayMana, IAnimatable {
 
     public static final String BOOK_MODE_TAG = "mode";

@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
-import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
@@ -65,9 +64,6 @@ public class MethodProjectile extends AbstractCastMethod {
 
         for(EntityProjectileSpell proj : projectiles) {
             proj.shoot(shooter, shooter.xRot, shooter.yRot, 0.0F, velocity, 0.8f);
-            ParticleColor.IntWrapper wrapper = resolver.spellContext.colors;
-            wrapper.makeVisible();
-            proj.setColor(wrapper);
             world.addFreshEntity(proj);
         }
     }
@@ -155,7 +151,7 @@ public class MethodProjectile extends AbstractCastMethod {
 
     @Override
     public String getBookDescription() {
-        return "A spell you start with. Summons a projectile that applies spell effects when this projectile hits a target or block. Sensitive will allow Projectils to break plants or other materials that do not block motion.";
+        return "A spell you start with. Summons a projectile that applies spell effects when this projectile hits a target or block. Sensitive will allow Projectiles to break plants or other materials that do not block motion.";
     }
 
     @Override

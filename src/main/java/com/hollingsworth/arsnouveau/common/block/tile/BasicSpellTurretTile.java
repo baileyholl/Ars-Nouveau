@@ -5,6 +5,8 @@ import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
 import com.hollingsworth.arsnouveau.api.spell.IPlaceBlockResponder;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.BlockItem;
@@ -32,6 +34,7 @@ import java.util.List;
 public class BasicSpellTurretTile extends TileEntity implements IPickupResponder, IPlaceBlockResponder, ITooltipProvider, IAnimatable, IAnimationListener {
     public @Nonnull Spell spell = Spell.EMPTY;
     boolean playRecoil;
+    public ParticleColor.IntWrapper color = ParticleUtil.defaultParticleColor().toWrapper();
     public BasicSpellTurretTile(TileEntityType<?> p_i48289_1_) {
         super(p_i48289_1_);
     }
@@ -62,12 +65,16 @@ public class BasicSpellTurretTile extends TileEntity implements IPickupResponder
     @Override
     public CompoundNBT save(CompoundNBT tag) {
         tag.putString("spell", spell.serialize());
+        tag.putString("color", color.serialize());
         return super.save(tag);
     }
 
     @Override
     public void load(BlockState state, CompoundNBT tag) {
         this.spell = Spell.deserialize(tag.getString("spell"));
+        if(tag.contains("color")){
+            this.color = ParticleColor.IntWrapper.deserialize(tag.getString("color"));
+        }
         super.load(state, tag);
     }
 

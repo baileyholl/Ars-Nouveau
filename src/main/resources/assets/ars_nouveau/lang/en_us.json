@@ -346,7 +346,7 @@
 	"ars_nouveau.glyph_desc.pickup": "Picks up nearby items in a medium radius where this spell is activated. The range may be expanded with AOE.",
 	"ars_nouveau.glyph_desc.pierce": "When applied to the Projectile spell, projectiles may continue through their path an additional time after hitting a mob or block. Causes certain effects to also target the block behind them, like Break. Combines with AOE to provide depth.",
 	"ars_nouveau.glyph_desc.place_block": "Places blocks from the casters inventory. If a player is casting this, this spell will place blocks from the hot bar first.",
-	"ars_nouveau.glyph_desc.projectile": "A spell you start with. Summons a projectile that applies spell effects when this projectile hits a target or block. Sensitive will allow Projectils to break plants or other materials that do not block motion.",
+	"ars_nouveau.glyph_desc.projectile": "A spell you start with. Summons a projectile that applies spell effects when this projectile hits a target or block. Sensitive will allow Projectiles to break plants or other materials that do not block motion.",
 	"ars_nouveau.glyph_desc.pull": "Pulls the target closer to the caster",
 	"ars_nouveau.glyph_desc.redstone_signal": "Creates a brief redstone signal on a block, like a button. The signal starts at strength 10, and may be increased with Amplify, or decreased with Dampen. The duration may be extended with Extend Time.",
 	"ars_nouveau.glyph_desc.rune": "Places a rune on the ground that will cast the spell on targets that touch the rune. Unlike runes placed by Runic Chalk, these runes are temporary and cannot be recharged. When using Item Pickup, items are deposited into adjacent inventories.",

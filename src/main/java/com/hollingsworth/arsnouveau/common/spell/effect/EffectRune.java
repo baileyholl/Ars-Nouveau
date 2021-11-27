@@ -42,7 +42,7 @@ public class EffectRune extends AbstractEffect {
                 }
                 runeTile.isTemporary = true;
                 newSpell.recipe.add(0, MethodTouch.INSTANCE);
-                runeTile.recipe = newSpell;
+                runeTile.spell = newSpell;
                 runeTile.color = spellContext.colors.toParticleColor();
             }
         }

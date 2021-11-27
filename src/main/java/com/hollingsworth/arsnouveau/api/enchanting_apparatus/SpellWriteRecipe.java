@@ -11,7 +11,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.hollingsworth.arsnouveau.api.enchanting_apparatus.ReactiveEnchantmentRecipe.getParchment;
@@ -20,14 +20,14 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe{
 
 
     public SpellWriteRecipe(){
-        this.pedestalItems = Arrays.asList(new Ingredient[]{Ingredient.of(ItemsRegistry.spellParchment)});
+        this.pedestalItems = Collections.singletonList(Ingredient.of(ItemsRegistry.spellParchment));
     }
 
     @Override
     public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile, @Nullable PlayerEntity player) {
         int level = EnchantmentHelper.getEnchantments(reagent).getOrDefault(EnchantmentRegistry.REACTIVE_ENCHANTMENT, 0);
         ItemStack parchment = getParchment(pedestalItems);
-        return parchment != null && SpellParchment.getSpellRecipe(parchment) != null && level > 0 && super.isMatch(pedestalItems, reagent, enchantingApparatusTile, player);
+        return !parchment.isEmpty() && !SpellParchment.getSpell(parchment).isEmpty() && level > 0 && super.isMatch(pedestalItems, reagent, enchantingApparatusTile, player);
     }
 
     @Override
@@ -37,9 +37,9 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe{
 
     @Override
     public ItemStack getResult(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile) {
-        CompoundNBT tag = reagent.getTag();
+        CompoundNBT tag = reagent.getOrCreateTag();
         ItemStack parchment = getParchment(pedestalItems);
-        tag.putString("spell", parchment.getTag().getString("spell"));
+        tag.putString("spell", parchment.getOrCreateTag().getString("spell"));
         reagent.setTag(tag);
         return reagent.copy();
     }

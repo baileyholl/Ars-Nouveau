@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
 import com.hollingsworth.arsnouveau.common.items.RunicChalk;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
@@ -31,7 +31,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Random;
 
 public class RuneBlock extends ModBlock{
@@ -63,15 +62,15 @@ public class RuneBlock extends ModBlock{
         }
         if(!(stack.getItem() instanceof SpellParchment) || worldIn.isClientSide)
             return ActionResultType.SUCCESS;
-        List<AbstractSpellPart> recipe = SpellParchment.getSpellRecipe(stack);
-        if(recipe == null || recipe.isEmpty())
+        Spell spell = SpellParchment.getSpell(stack);
+        if(spell.isEmpty())
             return ActionResultType.SUCCESS;
 
-        if(!(recipe.get(0) instanceof MethodTouch)){
+        if(!(spell.recipe.get(0) instanceof MethodTouch)){
             PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.rune.touch"));
             return ActionResultType.SUCCESS;
         }
-        ((RuneTile)worldIn.getBlockEntity(pos)).setRecipe(recipe);
+        ((RuneTile)worldIn.getBlockEntity(pos)).setSpell(spell);
         PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.spell_set"));
         return super.use(state, worldIn, pos, player, handIn, hit);
     }

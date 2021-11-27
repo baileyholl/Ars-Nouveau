@@ -1,12 +1,12 @@
 package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.util.MathUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
-import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketReactiveSpell;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -24,8 +24,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.List;
-
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class ReactiveEvents {
 
@@ -39,18 +37,19 @@ public class ReactiveEvents {
             castSpell((PlayerEntity) entity, s);
         }
     }
-
+    // TODO: Replace ray casting with unified casting on look vector
     public static void castSpell(PlayerEntity playerIn, ItemStack s){
         if(EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT, s) * .25 >= Math.random() && s.hasTag() && s.getTag().contains("spell")){
-            List<AbstractSpellPart> list = SpellParchment.getSpellRecipe(s);
-            SpellResolver resolver = new SpellResolver(list, true, new SpellContext(list, playerIn));
+            Spell spell = Spell.deserialize(s.getOrCreateTag().getString("spell"));
+            ParticleColor.IntWrapper color = ParticleColor.IntWrapper.deserialize(s.getOrCreateTag().getString("spell_color"));
+            SpellResolver resolver = new SpellResolver(new SpellContext(spell, playerIn).withColors(color)).withSilent(true);
             RayTraceResult result = playerIn.pick(5, 0, false);
 
             EntityRayTraceResult entityRes = MathUtil.getLookedAtEntity(playerIn, 25);
             ItemStack stack = playerIn.getMainHandItem();
             Hand handIn = Hand.MAIN_HAND;
             if(entityRes != null && entityRes.getEntity() instanceof LivingEntity){
-                resolver.onCastOnEntity(stack, playerIn, (LivingEntity) entityRes.getEntity(), handIn);
+                resolver.onCastOnEntity(stack, playerIn, entityRes.getEntity(), handIn);
                 return;
             }
 

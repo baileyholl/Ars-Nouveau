@@ -27,6 +27,7 @@ import java.util.Map;
  * An interface for handling NBT as it relates to items that may cast spells.
  * See SpellCaster for implementation.
  */
+//TODO: Rework for spellbook
 public interface ISpellCaster {
 
     @Nonnull Spell getSpell();
@@ -48,11 +49,12 @@ public interface ISpellCaster {
     void setFlavorText(String str);
 
     String getFlavorText();
-
-    ParticleColor.IntWrapper getColor();
+    //TODO: Make color a slotted map
+    @Nonnull ParticleColor.IntWrapper getColor();
 
     Map<Integer, Spell> getSpells();
 
+    //TODO: Add map of names for spells
 
     default Spell getSpell(World world, PlayerEntity playerEntity, Hand hand, ISpellCaster caster){
         return caster.getSpell();
@@ -101,4 +103,9 @@ public interface ISpellCaster {
         return castSpell(worldIn, playerIn, handIn, invalidMessage, getSpell(worldIn, playerIn, handIn, this));
     }
 
+    default void copySlotFrom(ISpellCaster caster){
+        setColor(caster.getColor());
+        setSpell(caster.getSpell());
+        setFlavorText(caster.getFlavorText());
+    }
 }

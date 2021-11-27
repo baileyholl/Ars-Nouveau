@@ -105,16 +105,15 @@ public class EntityBookwyrm extends FlyingEntity implements IPickupResponder, IP
             return ActionResultType.FAIL;
 
         if(stack.getItem() instanceof SpellParchment){
-            List<AbstractSpellPart> spellParts = SpellParchment.getSpellRecipe(stack);
-            if(new EntitySpellResolver(new SpellContext(spellParts, this)).canCast(this)) {
-                this.spellRecipe = new Spell(SpellParchment.getSpellRecipe(stack));
+            Spell spell = SpellParchment.getSpell(stack);
+            if(new EntitySpellResolver(new SpellContext(spell, this)).canCast(this)) {
+                this.spellRecipe = spell;
                 setRecipeString(spellRecipe.serialize());
                 player.sendMessage(new TranslationTextComponent("ars_nouveau.whelp.spell_set"), Util.NIL_UUID);
-                return ActionResultType.SUCCESS;
             } else{
                 player.sendMessage(new TranslationTextComponent("ars_nouveau.whelp.invalid"), Util.NIL_UUID);
-                return ActionResultType.SUCCESS;
             }
+            return ActionResultType.SUCCESS;
         }else if(stack.isEmpty()){
             if(spellRecipe == null || spellRecipe.recipe.size() == 0){
                 player.sendMessage(new TranslationTextComponent("ars_nouveau.whelp.desc"), Util.NIL_UUID);

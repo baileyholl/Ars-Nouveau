@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.api.util;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.api.spell.Spell;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,16 +23,4 @@ public class SpellRecipeUtil {
         return spells;
     }
 
-    /**
-     * Parses the NBT stored string, which is stored as an array of spell IDs. ex: [touch, harm, , , ,]
-     */
-    @Deprecated // Marked for removal for Spell object methods.
-    public static List<AbstractSpellPart> getSpellsFromTagString(String recipeStr){
-        return Spell.deserialize(recipeStr).recipe;
-    }
-
-    @Deprecated // Marked for removal for Spell object methods.
-    public static String serializeForNBT(List<AbstractSpellPart> abstractSpellPart){
-        return new Spell(abstractSpellPart).serialize();
-    }
 }

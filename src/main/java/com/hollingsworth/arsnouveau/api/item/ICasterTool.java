@@ -35,8 +35,12 @@ public interface ICasterTool extends IScribeable, IDisplayMana {
         if(heldStack.getItem() instanceof SpellBook) {
             spell = SpellBook.getRecipeFromTag(heldStack.getTag(), SpellBook.getMode(heldStack.getTag()));
             caster.setColor(SpellBook.getSpellColor(heldStack.getTag(), SpellBook.getMode(heldStack.getTag())));
-        }else if(heldStack.getItem() instanceof SpellParchment){
-            spell = new Spell(SpellParchment.getSpellRecipe(heldStack));
+            caster.setFlavorText(SpellBook.getSpellName(heldStack.getTag()));
+        }else if(heldStack.getItem() instanceof ICasterTool){
+            SpellCaster heldCaster = SpellCaster.deserialize(heldStack);
+            spell = heldCaster.getSpell();
+            caster.setColor(heldCaster.getColor());
+            caster.setFlavorText(heldCaster.getFlavorText());
         }
         if(isScribedSpellValid(caster, player, handIn, stack, spell)){
             success = setSpell(caster, player, handIn, stack, spell);
@@ -83,7 +87,7 @@ public interface ICasterTool extends IScribeable, IDisplayMana {
             return;
         ISpellCaster caster = getSpellCaster(stack);
 
-        if(caster.getSpell() == null || caster.getSpell().isEmpty()){
+        if(caster.getSpell().isEmpty()){
             tooltip2.add(new TranslationTextComponent("ars_nouveau.tooltip.can_inscribe"));
             return;
         }
