@@ -203,6 +203,13 @@ public class WealdWalker extends AgeableEntity implements IAnimatable, IAnimatio
     }
 
     @Override
+    public boolean hurt(DamageSource source, float amount) {
+        if (source == DamageSource.CACTUS || source == DamageSource.SWEET_BERRY_BUSH || source == DamageSource.DROWN)
+            return false;
+        return super.hurt(source, amount);
+    }
+
+    @Override
     public void readAdditionalSaveData(CompoundNBT tag) {
         super.readAdditionalSaveData(tag);
         entityData.set(BABY, tag.getBoolean("isBaby"));
