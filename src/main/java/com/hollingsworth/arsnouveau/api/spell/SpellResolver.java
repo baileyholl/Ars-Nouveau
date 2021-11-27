@@ -129,7 +129,7 @@ public class SpellResolver {
     }
 
     public static void resolveEffects(World world, LivingEntity shooter, RayTraceResult result, Spell spell, SpellContext spellContext){
-        spellContext.resetSpells();
+        spellContext.resetCastCounter();
         shooter = getUnwrappedCaster(world, shooter, spellContext);
         SpellResolveEvent.Pre spellResolveEvent = new SpellResolveEvent.Pre(world, shooter, result, spell, spellContext);
         MinecraftForge.EVENT_BUS.post(spellResolveEvent);
@@ -140,6 +140,8 @@ public class SpellResolver {
             if(spellContext.isCanceled())
                 break;
             AbstractSpellPart part = spellContext.nextSpell();
+            if(part == null)
+                return;
             SpellStats.Builder builder = new SpellStats.Builder();
             SpellStats stats = builder
                     .setAugments(spell.getAugments(i, shooter))

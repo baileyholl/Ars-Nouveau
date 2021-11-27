@@ -31,7 +31,7 @@ public class SpellContext {
         this(new Spell(spell), caster);
     }
 
-    public SpellContext(Spell spell, @Nullable LivingEntity caster){
+    public SpellContext(@Nonnull Spell spell, @Nullable LivingEntity caster){
         this.spell = spell;
         this.caster = caster;
         this.isCanceled = false;
@@ -40,14 +40,28 @@ public class SpellContext {
     }
 
     // TODO: Rename to nextPart
-    public AbstractSpellPart nextSpell(){
+    public @Nullable AbstractSpellPart nextSpell(){
         this.currentIndex++;
-        return getSpell().recipe.get(currentIndex - 1);
+        AbstractSpellPart part = null;
+        try {
+            part = getSpell().recipe.get(currentIndex - 1);
+        }catch (ArrayIndexOutOfBoundsException e){ // This can happen if a new spell context is created but does not reset the bounds.
+            System.out.println("=======");
+            System.out.println("Invalid spell cast found! This is a bug and should be reported!");
+            System.out.println(spell.getDisplayString());
+            System.out.println("Casting player: ");
+            System.out.println(caster);
+            System.out.println("Casting tile:");
+            System.out.println(castingTile);
+            System.out.println("=======");
+        }
+        return part;
     }
 
-    public void resetSpells(){
+    public SpellContext resetCastCounter(){
         this.currentIndex = 0;
         this.isCanceled = false;
+        return this;
     }
 
     public SpellContext withCastingTile(TileEntity tile){
@@ -55,8 +69,9 @@ public class SpellContext {
         return this;
     }
 
-    public SpellContext withSpell(Spell spell){
+    public SpellContext withSpellResetCounter(Spell spell){
         this.spell = spell;
+        resetCastCounter();
         return this;
     }
 
