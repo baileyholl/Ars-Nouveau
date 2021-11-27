@@ -39,6 +39,10 @@ public class SpellPrismBlock extends ModBlock{
         IPosition iposition = getDispensePosition(new ProxyBlockSource(world, pos));
         Direction direction = world.getBlockState(pos).getValue(DispenserBlock.FACING);
         spell.setPos(iposition.x(), iposition.y(), iposition.z());
+        if(spell.spellResolver == null) {
+            spell.remove();
+            return;
+        }
         float velocity = 0.5f + 0.1f * Math.min(2, spell.spellResolver.spell.getBuffsAtIndex(0, null, AugmentAccelerate.INSTANCE));
 
         spell.shoot(direction.getStepX(), ((float)direction.getStepY()), direction.getStepZ(), velocity, 0);
