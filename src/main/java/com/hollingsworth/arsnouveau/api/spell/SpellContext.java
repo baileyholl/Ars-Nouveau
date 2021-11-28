@@ -45,7 +45,7 @@ public class SpellContext {
         AbstractSpellPart part = null;
         try {
             part = getSpell().recipe.get(currentIndex - 1);
-        }catch (ArrayIndexOutOfBoundsException e){ // This can happen if a new spell context is created but does not reset the bounds.
+        }catch (Throwable e){ // This can happen if a new spell context is created but does not reset the bounds.
             System.out.println("=======");
             System.out.println("Invalid spell cast found! This is a bug and should be reported!");
             System.out.println(spell.getDisplayString());
@@ -54,6 +54,7 @@ public class SpellContext {
             System.out.println("Casting tile:");
             System.out.println(castingTile);
             System.out.println("=======");
+            e.printStackTrace();
         }
         return part;
     }
