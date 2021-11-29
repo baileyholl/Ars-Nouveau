@@ -18,6 +18,7 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,7 +59,7 @@ public class GlyphPressRecipeCategory implements IRecipeCategory<GlyphPressRecip
 
     @Override
     public String getTitle() {
-        return "Glyph Press";
+        return new TranslationTextComponent("block.ars_nouveau.glyph_press").getString();
     }
 
     @Override
