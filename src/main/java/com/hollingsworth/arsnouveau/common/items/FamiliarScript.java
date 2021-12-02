@@ -13,10 +13,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 import net.minecraft.world.item.Item.Properties;
+import org.jetbrains.annotations.Nullable;
 
 public class FamiliarScript extends ModItem{
     public AbstractFamiliarHolder familiar;

@@ -10,17 +10,15 @@ import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.RitualBlock;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.phys.AABB;
@@ -36,13 +34,11 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
-
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class RitualTile extends BlockEntity implements TickableBlockEntity, ITooltipProvider, IAnimatable, ILightable {
+public class RitualTile extends ModdedTile implements ITooltipProvider, IAnimatable, ILightable, ITickable {
     public AbstractRitual ritual;
     AnimationFactory manager = new AnimationFactory(this);
     public boolean isDecorative;
@@ -50,8 +46,13 @@ public class RitualTile extends BlockEntity implements TickableBlockEntity, IToo
     int blue;
     int green;
     public boolean isOff;
-    public RitualTile() {
-        super(BlockRegistry.RITUAL_TILE);
+
+    public RitualTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+        super(tileEntityTypeIn, pos, state);
+    }
+
+    public RitualTile(BlockPos p, BlockState s){
+        super(BlockRegistry.RITUAL_TILE, p, s);
     }
 
     public void makeParticle(ParticleColor centerColor, ParticleColor outerColor, int intensity){
@@ -124,21 +125,6 @@ public class RitualTile extends BlockEntity implements TickableBlockEntity, IToo
         return ritual.canStart();
     }
 
-    @Override
-    @Nullable
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 3, this.getUpdateTag());
-    }
-
-    @Override
-    public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
-    }
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
-        handleUpdateTag(level.getBlockState(worldPosition),pkt.getTag());
-    }
 
     public void startRitual(){
         if(ritual == null || !ritual.canStart() || ritual.isRunning())
@@ -148,8 +134,8 @@ public class RitualTile extends BlockEntity implements TickableBlockEntity, IToo
     }
 
     @Override
-    public void load(BlockState state, CompoundTag tag) {
-        super.load(state, tag);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         String ritualID = tag.getString("ritualID");
         if(!ritualID.isEmpty()){
             ritual = ArsNouveauAPI.getInstance().getRitual(ritualID);

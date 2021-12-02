@@ -27,16 +27,13 @@ import com.mojang.math.Vector3f;
 import net.minecraft.world.level.Level;
 
 import java.util.Calendar;
-
-import static net.minecraft.client.renderer.Atlases.CHEST_SHEET;
-
 import net.minecraft.world.level.block.AbstractChestBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
-public clasnet.minecraft.client.renderer.SheetsckEntity & LidBlockEntity> extends BlockEntityRenderer<T> {
+public class ArchwoodChestRenderer<T extends BlockEntity & LidBlockEntity> implements BlockEntityRenderer<T> {
 
     private final ModelPart lid;
     private final ModelPart bottom;
