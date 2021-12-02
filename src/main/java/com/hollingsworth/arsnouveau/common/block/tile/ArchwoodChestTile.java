@@ -2,39 +2,39 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.client.renderer.tile.ArchwoodChestRenderer;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.ChestTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class ArchwoodChestTile extends ChestTileEntity {
+public class ArchwoodChestTile extends ChestBlockEntity {
 
     public ArchwoodChestTile(){
         super(BlockRegistry.ARCHWOOD_CHEST_TILE);
     }
 
-    public ArchwoodChestTile(TileEntityType type){
+    public ArchwoodChestTile(BlockEntityType type){
         super(type);
     }
 
     @OnlyIn(Dist.CLIENT)
     public static void setISTER(Item.Properties props, Block block) {
-        props.setISTER(() -> () -> new ItemStackTileEntityRenderer() {
-            private final TileEntity tile = new ArchwoodChestTile();
+        props.setISTER(() -> () -> new BlockEntityWithoutLevelRenderer() {
+            private final BlockEntity tile = new ArchwoodChestTile();
             //render
             @Override
-            public void renderByItem(ItemStack stack, ItemCameraTransforms.TransformType transformType, MatrixStack matrix, IRenderTypeBuffer buffer, int x, int y) {
+            public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack matrix, MultiBufferSource buffer, int x, int y) {
                 ArchwoodChestRenderer.invBlock = block;
-                TileEntityRendererDispatcher.instance.renderItem(tile, matrix, buffer, x, y);
+                BlockEntityRenderDispatcher.instance.renderItem(tile, matrix, buffer, x, y);
                 ArchwoodChestRenderer.invBlock = null;
             }
 

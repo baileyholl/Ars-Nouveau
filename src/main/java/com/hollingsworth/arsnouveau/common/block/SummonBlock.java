@@ -1,15 +1,17 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.StateContainer;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.StateDefinition;
 
 import javax.annotation.Nullable;
 
 import static com.hollingsworth.arsnouveau.common.block.tile.SummoningTile.CONVERTED;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class SummonBlock extends ModBlock{
     public SummonBlock(Properties properties, String registry) {
@@ -22,9 +24,9 @@ public class SummonBlock extends ModBlock{
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = super.getStateForPlacement(context);
-        CompoundNBT tag = context.getItemInHand().getTag();
+        CompoundTag tag = context.getItemInHand().getTag();
         if(tag != null && tag.contains("BlockEntityTag")){
             tag = tag.getCompound("BlockEntityTag");
             if(tag.contains("converted") && tag.getBoolean("converted")){
@@ -35,7 +37,7 @@ public class SummonBlock extends ModBlock{
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(CONVERTED);
     }
 

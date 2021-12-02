@@ -9,14 +9,14 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketGetPersistentData;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.List;
@@ -31,11 +31,11 @@ public class ScryingRitual extends AbstractRitual {
 
 
         if(!getWorld().isClientSide && getProgress() >= 15){
-            List<ServerPlayerEntity> players =  getWorld().getEntitiesOfClass(ServerPlayerEntity.class, new AxisAlignedBB(getPos()).inflate(5.0));
+            List<ServerPlayer> players =  getWorld().getEntitiesOfClass(ServerPlayer.class, new AABB(getPos()).inflate(5.0));
             if(players.size() > 0){
                 ItemStack item = getConsumedItems().stream().filter(i -> i.getItem() instanceof BlockItem).findFirst().orElse(ItemStack.EMPTY);
                 int modifier = didConsumeItem(ArsNouveauAPI.getInstance().getGlyphItem(AugmentExtendTime.INSTANCE)) ? 3 : 1;
-                for(ServerPlayerEntity playerEntity : players){
+                for(ServerPlayer playerEntity : players){
                     ScryingRitual.grantScrying(playerEntity, item, 60 * 20 * 5 * modifier);
                 }
             }
@@ -43,11 +43,11 @@ public class ScryingRitual extends AbstractRitual {
         }
     }
 
-    public static void grantScrying(ServerPlayerEntity playerEntity, ItemStack stack, int ticks){
-        playerEntity.addEffect(new EffectInstance(ModPotions.SCRYING_EFFECT, ticks));
-        CompoundNBT tag = playerEntity.getPersistentData().getCompound(PlayerEntity.PERSISTED_NBT_TAG);
+    public static void grantScrying(ServerPlayer playerEntity, ItemStack stack, int ticks){
+        playerEntity.addEffect(new MobEffectInstance(ModPotions.SCRYING_EFFECT, ticks));
+        CompoundTag tag = playerEntity.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
         tag.putString("an_scrying", stack.getItem().getRegistryName().toString());
-        playerEntity.getPersistentData().put(PlayerEntity.PERSISTED_NBT_TAG, tag);
+        playerEntity.getPersistentData().put(Player.PERSISTED_NBT_TAG, tag);
         Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->playerEntity), new PacketGetPersistentData(tag));
     }
 

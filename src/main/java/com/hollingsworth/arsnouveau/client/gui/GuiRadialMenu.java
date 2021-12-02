@@ -8,23 +8,23 @@ import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetBookMode;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.GameSettings;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.client.Options;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.util.InputMappings;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.MovementInput;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.client.player.Input;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputUpdateEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -38,12 +38,12 @@ public class GuiRadialMenu extends Screen {
 
     private boolean closing;
     private double startAnimation;
-    private CompoundNBT tag;
+    private CompoundTag tag;
     private int selectedItem;
 
 
-    public GuiRadialMenu(CompoundNBT book_tag) {
-        super(new StringTextComponent(""));
+    public GuiRadialMenu(CompoundTag book_tag) {
+        super(new TextComponent(""));
         this.tag = book_tag;
         this.closing = false;
         this.minecraft = Minecraft.getInstance();
@@ -53,7 +53,7 @@ public class GuiRadialMenu extends Screen {
 
 
     public GuiRadialMenu(){
-        super(new StringTextComponent(""));
+        super(new TextComponent(""));
     }
 
     @SubscribeEvent
@@ -68,17 +68,17 @@ public class GuiRadialMenu extends Screen {
     public static void updateInputEvent(InputUpdateEvent event) {
         if (Minecraft.getInstance().screen instanceof GuiRadialMenu) {
 
-            GameSettings settings = Minecraft.getInstance().options;
-            MovementInput eInput = event.getMovementInput();
-            eInput.up = InputMappings.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyUp.getKey().getValue());
-            eInput.down = InputMappings.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyDown.getKey().getValue());
-            eInput.left = InputMappings.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyLeft.getKey().getValue());
-            eInput.right = InputMappings.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyRight.getKey().getValue());
+            Options settings = Minecraft.getInstance().options;
+            Input eInput = event.getMovementInput();
+            eInput.up = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyUp.getKey().getValue());
+            eInput.down = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyDown.getKey().getValue());
+            eInput.left = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyLeft.getKey().getValue());
+            eInput.right = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyRight.getKey().getValue());
 
             eInput.forwardImpulse = eInput.up == eInput.down ? 0.0F : (eInput.up ? 1.0F : -1.0F);
             eInput.leftImpulse = eInput.left == eInput.right ? 0.0F : (eInput.left ? 1.0F : -1.0F);
-            eInput.jumping = InputMappings.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyJump.getKey().getValue());
-            eInput.shiftKeyDown = InputMappings.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyShift.getKey().getValue());
+            eInput.jumping = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyJump.getKey().getValue());
+            eInput.shiftKeyDown = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyShift.getKey().getValue());
             if (Minecraft.getInstance().player.isMovingSlowly()) {
                 eInput.leftImpulse = (float)((double)eInput.leftImpulse * 0.3D);
                 eInput.forwardImpulse = (float)((double)eInput.forwardImpulse * 0.3D);
@@ -88,7 +88,7 @@ public class GuiRadialMenu extends Screen {
 
 
     @Override
-    public void render(MatrixStack ms,int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack ms,int mouseX, int mouseY, float partialTicks) {
         super.render(ms,mouseX, mouseY, partialTicks);
         final float OPEN_ANIMATION_LENGTH = 2.5f;
         long worldTime = Minecraft.getInstance().level.getGameTime();
@@ -96,7 +96,7 @@ public class GuiRadialMenu extends Screen {
         float openAnimation = closing ? 1.0f - animationTime / OPEN_ANIMATION_LENGTH : animationTime / OPEN_ANIMATION_LENGTH;
 
 
-        float animProgress = MathHelper.clamp(openAnimation, 0, 1);
+        float animProgress = Mth.clamp(openAnimation, 0, 1);
         float radiusIn = Math.max(0.1f, 45 * animProgress);
         float radiusOut = radiusIn * 2;
         float itemRadius = (radiusIn + radiusOut) * 0.5f;
@@ -121,9 +121,9 @@ public class GuiRadialMenu extends Screen {
 
         RenderSystem.translated(0, animTop, 0);
 
-        Tessellator tessellator = Tessellator.getInstance();
+        Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.getBuilder();
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+        buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR);
         boolean hasMouseOver = false;
         int mousedOverSlot = -1;
         //Category mousedOverCategory = null;
@@ -162,7 +162,7 @@ public class GuiRadialMenu extends Screen {
             drawCenteredString(ms,font, SpellBook.getSpellName(tag,  adjusted), width/2,(height - font.lineHeight) / 2,16777215);
         }
 
-        RenderHelper.turnBackOn();
+        Lighting.turnBackOn();
         RenderSystem.popMatrix();
         for(int i = 0; i< numberOfSlices; i++){
             ItemStack stack = new ItemStack(Blocks.DIRT);
@@ -182,7 +182,7 @@ public class GuiRadialMenu extends Screen {
                 }
             }
             RenderSystem.disableRescaleNormal();
-            RenderHelper.turnOff();
+            Lighting.turnOff();
             RenderSystem.disableLighting();
             RenderSystem.disableDepthTest();
             if(!resourceIcon.isEmpty()) {
@@ -229,7 +229,7 @@ public class GuiRadialMenu extends Screen {
     private void drawSlice(
             BufferBuilder buffer, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int r, int g, int b, int a) {
         float angle = endAngle - startAngle;
-        int sections = Math.max(1, MathHelper.ceil(angle / PRECISION));
+        int sections = Math.max(1, Mth.ceil(angle / PRECISION));
 
         startAngle = (float) Math.toRadians(startAngle);
         endAngle = (float) Math.toRadians(endAngle);

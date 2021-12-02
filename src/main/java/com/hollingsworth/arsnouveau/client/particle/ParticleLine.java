@@ -1,12 +1,12 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
-import net.minecraft.client.particle.IAnimatedSprite;
-import net.minecraft.client.particle.IParticleRenderType;
-import net.minecraft.client.particle.SpriteTexturedParticle;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.world.World;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.level.Level;
 
-public class ParticleLine extends SpriteTexturedParticle {
+public class ParticleLine extends TextureSheetParticle {
     public float colorR;
     public float colorG;
     public float colorB;
@@ -17,8 +17,8 @@ public class ParticleLine extends SpriteTexturedParticle {
     public float destX;
     public float destY;
     public float destZ;
-    protected ParticleLine(World worldIn, double x, double y, double z, double vx, double vy, double vz, float r, float g, float b, float scale, int lifetime, IAnimatedSprite sprite) {
-        super((ClientWorld) worldIn, x,y,z,0,0,0);
+    protected ParticleLine(Level worldIn, double x, double y, double z, double vx, double vy, double vz, float r, float g, float b, float scale, int lifetime, SpriteSet sprite) {
+        super((ClientLevel) worldIn, x,y,z,0,0,0);
         this.colorR = r;
         this.colorG = g;
         this.colorB = b;
@@ -71,7 +71,7 @@ public class ParticleLine extends SpriteTexturedParticle {
     }
 
     @Override
-    public IParticleRenderType getRenderType() {
+    public ParticleRenderType getRenderType() {
         return RenderTypes.EMBER_RENDER;
     }
 

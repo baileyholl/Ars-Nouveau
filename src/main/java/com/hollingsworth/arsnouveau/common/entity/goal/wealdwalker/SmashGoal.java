@@ -2,8 +2,8 @@ package com.hollingsworth.arsnouveau.common.entity.goal.wealdwalker;
 
 import com.hollingsworth.arsnouveau.common.entity.WealdWalker;
 import com.hollingsworth.arsnouveau.common.entity.goal.AnimatedAttackGoal;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.util.Mth;
 
 import java.util.function.Supplier;
 
@@ -29,7 +29,7 @@ public class SmashGoal extends AnimatedAttackGoal {
     @Override
     protected void attack(LivingEntity target) {
         super.attack(target);
-        target.knockback(1.2F, MathHelper.sin(walker.yRot * ((float)Math.PI / 180F)), -MathHelper.cos(walker.yRot * ((float)Math.PI / 180F)));
+        target.knockback(1.2F, Mth.sin(walker.yRot * ((float)Math.PI / 180F)), -Mth.cos(walker.yRot * ((float)Math.PI / 180F)));
         walker.smashCooldown = 60;
     }
 

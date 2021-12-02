@@ -16,28 +16,28 @@ import com.hollingsworth.arsnouveau.common.entity.goal.sylph.FollowPlayerGoal;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.PrioritizedGoal;
-import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.WrappedGoal;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -52,13 +52,13 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-public class EntityDrygmy extends CreatureEntity implements IAnimatable, ITooltipProvider, IDispellable {
+public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltipProvider, IDispellable {
 
-    public static final DataParameter<Boolean> CHANNELING = EntityDataManager.defineId(EntityDrygmy.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<Boolean> TAMED = EntityDataManager.defineId(EntityDrygmy.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<Boolean> BEING_TAMED = EntityDataManager.defineId(EntityDrygmy.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<Boolean> HOLDING_ESSENCE = EntityDataManager.defineId(EntityDrygmy.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<Integer> CHANNELING_ENTITY = EntityDataManager.defineId(EntityDrygmy.class, DataSerializers.INT);
+    public static final EntityDataAccessor<Boolean> CHANNELING = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> BEING_TAMED = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> HOLDING_ESSENCE = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Integer> CHANNELING_ENTITY = SynchedEntityData.defineId(EntityDrygmy.class, EntityDataSerializers.INT);
 
     public int channelCooldown;
     private boolean setBehaviors;
@@ -66,16 +66,16 @@ public class EntityDrygmy extends CreatureEntity implements IAnimatable, IToolti
     public int tamingTime;
 
     @Override
-    protected int getExperienceReward(PlayerEntity player) {
+    protected int getExperienceReward(Player player) {
         return 0;
     }
 
-    public EntityDrygmy(EntityType<? extends CreatureEntity> p_i48575_1_, World p_i48575_2_) {
+    public EntityDrygmy(EntityType<? extends PathfinderMob> p_i48575_1_, Level p_i48575_2_) {
         super(p_i48575_1_, p_i48575_2_);
         addGoalsAfterConstructor();
     }
 
-    public EntityDrygmy(World world, boolean tamed){
+    public EntityDrygmy(Level world, boolean tamed){
         super(ModEntities.ENTITY_DRYGMY, world);
         setTamed(tamed);
         addGoalsAfterConstructor();
@@ -104,7 +104,7 @@ public class EntityDrygmy extends CreatureEntity implements IAnimatable, IToolti
         }
 
         if(!level.isClientSide && level.getGameTime() % 60 == 0 && isTamed() && homePos != null && !(level.getBlockEntity(homePos) instanceof DrygmyTile)) {
-            this.hurt(DamageSource.playerAttack(FakePlayerFactory.getMinecraft((ServerWorld) level)), 99);
+            this.hurt(DamageSource.playerAttack(FakePlayerFactory.getMinecraft((ServerLevel) level)), 99);
             return;
         }
 
@@ -112,7 +112,7 @@ public class EntityDrygmy extends CreatureEntity implements IAnimatable, IToolti
             Entity entity = level.getEntity(getChannelEntity());
             if(entity == null || entity.removed)
                 return;
-            Vector3d vec = entity.position;
+            Vec3 vec = entity.position;
             level.addParticle(GlowParticleData.createData(new ParticleColor(50, 255, 20)),
                     (float) (vec.x) - Math.sin((ClientInfo.ticksInGame ) / 8D) ,
                     (float) (vec.y) + Math.sin(ClientInfo.ticksInGame/5d)/8D + 0.5  ,
@@ -134,7 +134,7 @@ public class EntityDrygmy extends CreatureEntity implements IAnimatable, IToolti
                 ItemStack stack = new ItemStack(ItemsRegistry.DRYGMY_SHARD, 1 + level.random.nextInt(2));
                 level.addFreshEntity(new ItemEntity(level, getX(), getY() + 0.5, getZ(), stack));
                 this.remove(false);
-                level.playSound(null, getX(), getY(), getZ(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundCategory.NEUTRAL, 1f, 1f);
+                level.playSound(null, getX(), getY(), getZ(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1f, 1f);
             }
         }
     }
@@ -160,12 +160,12 @@ public class EntityDrygmy extends CreatureEntity implements IAnimatable, IToolti
         if(this.level.isClientSide())
             return;
 
-        for(PrioritizedGoal goal : getGoals()){
+        for(WrappedGoal goal : getGoals()){
             this.goalSelector.addGoal(goal.getPriority(), goal.getGoal());
         }
     }
 
-    public List<PrioritizedGoal> getGoals(){
+    public List<WrappedGoal> getGoals(){
         return this.entityData.get(TAMED) ? getTamedGoals() : getUntamedGoals();
     }
 
@@ -213,22 +213,22 @@ public class EntityDrygmy extends CreatureEntity implements IAnimatable, IToolti
 
     @Override
     protected void registerGoals() { }
-    public List<PrioritizedGoal> getTamedGoals(){
-        List<PrioritizedGoal> list = new ArrayList<>();
-        list.add(new PrioritizedGoal(3, new LookRandomlyGoal(this)));
-        list.add(new PrioritizedGoal(2, new CollectEssenceGoal(this)));
-        list.add(new PrioritizedGoal(0, new SwimGoal(this)));
+    public List<WrappedGoal> getTamedGoals(){
+        List<WrappedGoal> list = new ArrayList<>();
+        list.add(new WrappedGoal(3, new RandomLookAroundGoal(this)));
+        list.add(new WrappedGoal(2, new CollectEssenceGoal(this)));
+        list.add(new WrappedGoal(0, new FloatGoal(this)));
         return list;
     }
 
-    public List<PrioritizedGoal> getUntamedGoals(){
-        List<PrioritizedGoal> list = new ArrayList<>();
-        list.add(new PrioritizedGoal(3, new FollowMobGoalBackoff(this, 1.0D, 3.0F, 7.0F, 0.5f)));
-        list.add(new PrioritizedGoal(5, new FollowPlayerGoal(this, 1.0D, 3.0F, 7.0F)));
-        list.add(new PrioritizedGoal(2, new LookRandomlyGoal(this)));
-        list.add(new PrioritizedGoal(2, new WaterAvoidingRandomWalkingGoal(this, 1.0D)));
-        list.add(new PrioritizedGoal(0, new SwimGoal(this)));
-        list.add(new PrioritizedGoal(1, new UntamedFindItemGoal(this,
+    public List<WrappedGoal> getUntamedGoals(){
+        List<WrappedGoal> list = new ArrayList<>();
+        list.add(new WrappedGoal(3, new FollowMobGoalBackoff(this, 1.0D, 3.0F, 7.0F, 0.5f)));
+        list.add(new WrappedGoal(5, new FollowPlayerGoal(this, 1.0D, 3.0F, 7.0F)));
+        list.add(new WrappedGoal(2, new RandomLookAroundGoal(this)));
+        list.add(new WrappedGoal(2, new WaterAvoidingRandomStrollGoal(this, 1.0D)));
+        list.add(new WrappedGoal(0, new FloatGoal(this)));
+        list.add(new WrappedGoal(1, new UntamedFindItemGoal(this,
                 () -> !this.isTamed() && !this.entityData.get(BEING_TAMED)
                 ,(itemEntity -> !itemEntity.hasPickUpDelay() && itemEntity.isAlive() && itemEntity.getItem().getItem() == ItemsRegistry.WILDEN_HORN))));
         return list;
@@ -261,7 +261,7 @@ public class EntityDrygmy extends CreatureEntity implements IAnimatable, IToolti
         if (!level.isClientSide && isTamed()) {
             ItemStack stack = new ItemStack(ItemsRegistry.DRYGMY_CHARM);
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
-            ParticleUtil.spawnPoof((ServerWorld) level, blockPosition());
+            ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
             this.remove();
         }
         return this.isTamed();
@@ -279,7 +279,7 @@ public class EntityDrygmy extends CreatureEntity implements IAnimatable, IToolti
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT tag) {
+    public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         NBTUtil.storeBlockPos(tag, "home", homePos);
         tag.putBoolean("tamed", this.entityData.get(TAMED));
@@ -289,7 +289,7 @@ public class EntityDrygmy extends CreatureEntity implements IAnimatable, IToolti
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT tag) {
+    public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if(NBTUtil.hasBlockPos(tag, "home"))
             this.homePos = NBTUtil.getBlockPos(tag, "home");

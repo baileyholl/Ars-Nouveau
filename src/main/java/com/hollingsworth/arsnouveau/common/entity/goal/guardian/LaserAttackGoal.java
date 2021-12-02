@@ -1,12 +1,12 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.guardian;
 
 import com.hollingsworth.arsnouveau.common.entity.WildenGuardian;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.Difficulty;
 
 import java.util.EnumSet;
@@ -76,7 +76,7 @@ public class LaserAttackGoal extends Goal {
 
                 livingentity.hurt(DamageSource.indirectMagic(this.guardian, this.guardian), f);
                 livingentity.hurt(DamageSource.mobAttack(this.guardian), (float)this.guardian.getAttributeValue(Attributes.ATTACK_DAMAGE));
-                livingentity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 100, 2));
+                livingentity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 2));
 
 
                 this.guardian.setTarget(null);

@@ -5,13 +5,13 @@ import com.hollingsworth.arsnouveau.api.client.IDisplayMana;
 import com.hollingsworth.arsnouveau.api.mana.IMana;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
 
-public class GuiManaHUD extends AbstractGui {
+public class GuiManaHUD extends GuiComponent {
     private static final Minecraft minecraft = Minecraft.getInstance();
 
     public boolean shouldDisplayBar(){
@@ -21,7 +21,7 @@ public class GuiManaHUD extends AbstractGui {
                 || (offHand.getItem() instanceof IDisplayMana && ((IDisplayMana) offHand.getItem()).shouldDisplay(offHand));
     }
 
-    public void drawHUD(MatrixStack ms, float pt) {
+    public void drawHUD(PoseStack ms, float pt) {
         if(!shouldDisplayBar())
             return;
 

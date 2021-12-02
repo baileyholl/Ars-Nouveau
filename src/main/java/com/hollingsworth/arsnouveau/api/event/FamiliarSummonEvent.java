@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.api.event;
 
-import net.minecraft.entity.Entity;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.event.entity.EntityEvent;
 
 public class FamiliarSummonEvent extends EntityEvent {

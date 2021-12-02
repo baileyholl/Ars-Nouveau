@@ -2,22 +2,22 @@ package com.hollingsworth.arsnouveau.api.event;
 
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.eventbus.api.Event;
 
 import javax.annotation.Nullable;
 
 public class SpellResolveEvent extends Event {
-    public World world;
+    public Level world;
     public @Nullable LivingEntity shooter;
-    public RayTraceResult rayTraceResult;
+    public HitResult rayTraceResult;
     public Spell spell;
     public SpellContext context;
 
 
-    public SpellResolveEvent(World world, LivingEntity shooter, RayTraceResult result, Spell spell, SpellContext spellContext){
+    public SpellResolveEvent(Level world, LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext){
         this.world = world;
         this.shooter = shooter;
         this.rayTraceResult = result;
@@ -29,7 +29,7 @@ public class SpellResolveEvent extends Event {
      * Fired before a spell is resolved. Can be cancelled to stop resolving.
      */
     public static class Pre extends SpellResolveEvent{
-        public Pre(World world, LivingEntity shooter, RayTraceResult result, Spell spell, SpellContext spellContext){
+        public Pre(Level world, LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext){
             super(world, shooter, result, spell, spellContext);
         }
 
@@ -44,7 +44,7 @@ public class SpellResolveEvent extends Event {
      */
     public static class Post extends SpellResolveEvent{
 
-        public Post(World world, LivingEntity shooter, RayTraceResult result, Spell spell, SpellContext spellContext) {
+        public Post(Level world, LivingEntity shooter, HitResult result, Spell spell, SpellContext spellContext) {
             super(world, shooter, result, spell, spellContext);
         }
 

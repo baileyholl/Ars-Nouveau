@@ -4,16 +4,16 @@ import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityEvokerFangs;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.Direction;
 import net.minecraft.util.math.*;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
@@ -21,6 +21,12 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
+
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 
 public class EffectFangs extends AbstractEffect {
     public static EffectFangs INSTANCE = new EffectFangs();
@@ -30,16 +36,16 @@ public class EffectFangs extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         if(shooter == null && spellContext.castingTile != null) {
-            shooter = FakePlayerFactory.getMinecraft((ServerWorld) world);
+            shooter = FakePlayerFactory.getMinecraft((ServerLevel) world);
             BlockPos pos = spellContext.castingTile.getBlockPos();
             shooter.setPos(pos.getX(), pos.getY(), pos.getZ());
         }
 
         if(shooter == null)
             return;
-        Vector3d vec = rayTraceResult.getLocation();
+        Vec3 vec = rayTraceResult.getLocation();
 
         double damage = DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
         double targetX = vec.x;
@@ -48,28 +54,28 @@ public class EffectFangs extends AbstractEffect {
 
         double d0 = Math.min(targetY, shooter.getY());
         double d1 = Math.max(targetY, shooter.getY()) + 1.0D;
-        float f = (float)MathHelper.atan2(targetZ - shooter.getZ(), targetX - shooter.getX());
+        float f = (float)Mth.atan2(targetZ - shooter.getZ(), targetX - shooter.getX());
         int accelerate = spellStats.getBuffCount(AugmentAccelerate.INSTANCE);
         double durationModifier = spellStats.getDurationMultiplier();
         // Create fangs in an AOE around the caster
-        if(rayTraceResult instanceof EntityRayTraceResult && shooter.equals(((EntityRayTraceResult) rayTraceResult).getEntity())){
+        if(rayTraceResult instanceof EntityHitResult && shooter.equals(((EntityHitResult) rayTraceResult).getEntity())){
             for(int i = 0; i < 5; ++i) {
                 float f1 = f + (float)i * (float)Math.PI * 0.4F;
                 int j = (int) (( i + durationModifier) / (1 + accelerate));
-                spawnFangs(world, shooter.getX() + (double)MathHelper.cos(f1) * 1.5D, shooter.getZ() + (double)MathHelper.sin(f1) * 1.5D, d0, d1, f1, j,shooter, (float) damage);
+                spawnFangs(world, shooter.getX() + (double)Mth.cos(f1) * 1.5D, shooter.getZ() + (double)Mth.sin(f1) * 1.5D, d0, d1, f1, j,shooter, (float) damage);
             }
 
             for(int k = 0; k < 8; ++k) {
                 float f2 = f + (float)k * (float)Math.PI * 2.0F / 8.0F + 1.2566371F;
                 int j = (int) (( k + durationModifier) / (1 + accelerate));
-                spawnFangs(world, shooter.getX() + (double)MathHelper.cos(f2) * 2.5D, shooter.getZ() + (double)MathHelper.sin(f2) * 2.5D, d0, d1, f2, j, shooter, (float) damage);
+                spawnFangs(world, shooter.getX() + (double)Mth.cos(f2) * 2.5D, shooter.getZ() + (double)Mth.sin(f2) * 2.5D, d0, d1, f2, j, shooter, (float) damage);
             }
             return;
         }
         for(int l = 0; l < 16; ++l) {
             double d2 = 1.25D * (double)(l + 1);
             int j = (int) (( l + durationModifier) / (1 + accelerate));
-            this.spawnFangs(world, shooter.getX() + (double)MathHelper.cos(f) * d2, shooter.getZ() + (double)MathHelper.sin(f) * d2, d0, d1, f, j, shooter, (float) damage);
+            this.spawnFangs(world, shooter.getX() + (double)Mth.cos(f) * d2, shooter.getZ() + (double)Mth.sin(f) * d2, d0, d1, f, j, shooter, (float) damage);
         }
     }
 
@@ -81,7 +87,7 @@ public class EffectFangs extends AbstractEffect {
     }
 
     @Override
-    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
+    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, List<AbstractAugment> augments) {
         return nonAirAnythingSuccess(rayTraceResult, world);
     }
 
@@ -90,7 +96,7 @@ public class EffectFangs extends AbstractEffect {
         return true;
     }
 
-    private void spawnFangs(World world, double xAngle, double zAngle, double yStart, double yEnd, float rotationYaw, int tickDelay, LivingEntity caster, float damage) {
+    private void spawnFangs(Level world, double xAngle, double zAngle, double yStart, double yEnd, float rotationYaw, int tickDelay, LivingEntity caster, float damage) {
         BlockPos blockpos = new BlockPos(xAngle, yEnd, zAngle);
         boolean flag = false;
         double d0 = 0.0D;
@@ -112,7 +118,7 @@ public class EffectFangs extends AbstractEffect {
             }
 
             blockpos = blockpos.below();
-            if (blockpos.getY() < MathHelper.floor(yStart) - 1) {
+            if (blockpos.getY() < Mth.floor(yStart) - 1) {
                 break;
             }
         }

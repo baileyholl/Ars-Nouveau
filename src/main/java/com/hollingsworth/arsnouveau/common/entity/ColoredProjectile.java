@@ -1,29 +1,29 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.level.Level;
 
-public abstract class ColoredProjectile extends ArrowEntity {
-    public static final DataParameter<Integer> RED = EntityDataManager.defineId(ColoredProjectile.class, DataSerializers.INT);
-    public static final DataParameter<Integer> GREEN = EntityDataManager.defineId(ColoredProjectile.class, DataSerializers.INT);
-    public static final DataParameter<Integer> BLUE = EntityDataManager.defineId(ColoredProjectile.class, DataSerializers.INT);
+public abstract class ColoredProjectile extends Arrow {
+    public static final EntityDataAccessor<Integer> RED = SynchedEntityData.defineId(ColoredProjectile.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> GREEN = SynchedEntityData.defineId(ColoredProjectile.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> BLUE = SynchedEntityData.defineId(ColoredProjectile.class, EntityDataSerializers.INT);
 
-    public ColoredProjectile(EntityType<? extends ArrowEntity> type, World worldIn) {
+    public ColoredProjectile(EntityType<? extends Arrow> type, Level worldIn) {
         super(type, worldIn);
     }
 
-    public ColoredProjectile(World worldIn, double x, double y, double z) {
+    public ColoredProjectile(Level worldIn, double x, double y, double z) {
         super(worldIn, x, y, z);
     }
 
-    public ColoredProjectile(World worldIn, LivingEntity shooter) {
+    public ColoredProjectile(Level worldIn, LivingEntity shooter) {
         super(worldIn, shooter);
     }
 
@@ -42,7 +42,7 @@ public abstract class ColoredProjectile extends ArrowEntity {
     }
 
     @Override
-    public void load(CompoundNBT compound) {
+    public void load(CompoundTag compound) {
         super.load(compound);
         entityData.set(RED, compound.getInt("red"));
         entityData.set(GREEN, compound.getInt("green"));
@@ -50,7 +50,7 @@ public abstract class ColoredProjectile extends ArrowEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT compound) {
+    public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putInt("red", entityData.get(RED));
         compound.putInt("green", entityData.get(GREEN));

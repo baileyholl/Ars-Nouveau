@@ -6,9 +6,9 @@ import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.api.mana.SourcelinkEventQueue;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class VitalicSourcelinkTile extends SourcelinkTile{
-    public VitalicSourcelinkTile(TileEntityType<?> tileEntityTypeIn) {
+    public VitalicSourcelinkTile(BlockEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
     }
 
@@ -37,7 +37,7 @@ public class VitalicSourcelinkTile extends SourcelinkTile{
     public void tick() {
         super.tick();
         if(!level.isClientSide && level.getGameTime() % 60 == 0){
-            for(AnimalEntity entity : level.getLoadedEntitiesOfClass(AnimalEntity.class, new AxisAlignedBB(worldPosition).inflate(6))){
+            for(Animal entity : level.getLoadedEntitiesOfClass(Animal.class, new AABB(worldPosition).inflate(6))){
                 if(entity.isBaby()){
                     if(entity.getAge() < 0){
                         if(ModList.get().isLoaded("quark") && entity.getPersistentData().contains(TAG_POISONED)){

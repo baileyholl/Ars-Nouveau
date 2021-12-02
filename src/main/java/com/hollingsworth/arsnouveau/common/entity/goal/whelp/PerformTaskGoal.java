@@ -3,9 +3,11 @@ package com.hollingsworth.arsnouveau.common.entity.goal.whelp;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
 import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 
 import java.util.EnumSet;
+
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 public class PerformTaskGoal extends ExtendedRangeGoal {
 

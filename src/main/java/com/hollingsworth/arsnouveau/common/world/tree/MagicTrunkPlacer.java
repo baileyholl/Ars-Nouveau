@@ -1,22 +1,22 @@
 package com.hollingsworth.arsnouveau.common.world.tree;
 
 import com.google.common.collect.Lists;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MutableBoundingBox;
-import net.minecraft.world.gen.IWorldGenerationReader;
-import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
-import net.minecraft.world.gen.feature.TreeFeature;
-import net.minecraft.world.gen.foliageplacer.FoliagePlacer;
-import net.minecraft.world.gen.trunkplacer.AbstractTrunkPlacer;
-import net.minecraft.world.gen.trunkplacer.TrunkPlacerType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.LevelSimulatedRW;
+import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
+import net.minecraft.world.level.levelgen.feature.TreeFeature;
+import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;
+import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacer;
+import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
 
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-public class MagicTrunkPlacer extends AbstractTrunkPlacer {
+public class MagicTrunkPlacer extends TrunkPlacer {
     public MagicTrunkPlacer(int baseHeight, int height_rand_a, int height_rand_b) {
         super(baseHeight, height_rand_a, height_rand_b);
     }
@@ -27,9 +27,9 @@ public class MagicTrunkPlacer extends AbstractTrunkPlacer {
     }
 
     @Override
-    public List<FoliagePlacer.Foliage> placeTrunk(IWorldGenerationReader world, Random rand, int foliageHeight, BlockPos pos, Set<BlockPos> posSet,
-                                                      MutableBoundingBox boundingBox, BaseTreeFeatureConfig baseTreeFeatureConfig) {
-        List<FoliagePlacer.Foliage> list = Lists.newArrayList();
+    public List<FoliagePlacer.FoliageAttachment> placeTrunk(LevelSimulatedRW world, Random rand, int foliageHeight, BlockPos pos, Set<BlockPos> posSet,
+                                                      BoundingBox boundingBox, TreeConfiguration baseTreeFeatureConfig) {
+        List<FoliagePlacer.FoliageAttachment> list = Lists.newArrayList();
         BlockPos blockpos = pos.below();
         setDirtAt(world, blockpos);
         setDirtAt(world, blockpos.east());
@@ -175,12 +175,12 @@ public class MagicTrunkPlacer extends AbstractTrunkPlacer {
             }
         }
 
-        list.add(new FoliagePlacer.Foliage(new BlockPos(x, yOffset, z), 0, true));
+        list.add(new FoliagePlacer.FoliageAttachment(new BlockPos(x, yOffset, z), 0, true));
         return list;
     }
 
 
-    public void addBranch(IWorldGenerationReader world,BlockPos pos, Set<BlockPos> posSet, MutableBoundingBox boundingBox,int height, Direction d, Random random, BaseTreeFeatureConfig baseTreeFeatureConfig){
+    public void addBranch(LevelSimulatedRW world,BlockPos pos, Set<BlockPos> posSet, BoundingBox boundingBox,int height, Direction d, Random random, TreeConfiguration baseTreeFeatureConfig){
         pos = pos.above(height);
         addLog(world, pos.relative(d), posSet, boundingBox, random, baseTreeFeatureConfig);
         addLog(world, pos.relative(d).above(1), posSet, boundingBox, random, baseTreeFeatureConfig);
@@ -230,11 +230,11 @@ public class MagicTrunkPlacer extends AbstractTrunkPlacer {
 
     }
 
-    public boolean addLog(IWorldGenerationReader world,BlockPos pos, Set<BlockPos> posSet, MutableBoundingBox mutableBoundingBox, Random random, BaseTreeFeatureConfig baseTreeFeatureConfig){
+    public boolean addLog(LevelSimulatedRW world,BlockPos pos, Set<BlockPos> posSet, BoundingBox mutableBoundingBox, Random random, TreeConfiguration baseTreeFeatureConfig){
         return addBlock(world, pos, posSet, mutableBoundingBox, baseTreeFeatureConfig.trunkProvider.getState(random, pos));
     }
 
-    public boolean addBlock(IWorldGenerationReader world,BlockPos pos, Set<BlockPos> posSet, MutableBoundingBox mutableBoundingBox, BlockState state){
+    public boolean addBlock(LevelSimulatedRW world,BlockPos pos, Set<BlockPos> posSet, BoundingBox mutableBoundingBox, BlockState state){
         if(TreeFeature.validTreePos(world, pos)) {
             setBlock(world, pos, state, mutableBoundingBox);
             posSet.add(pos.immutable());
@@ -243,11 +243,11 @@ public class MagicTrunkPlacer extends AbstractTrunkPlacer {
             return false;
         }
     }
-    public void addHollowLine(IWorldGenerationReader world, BlockPos pos, Set<BlockPos> posSet, MutableBoundingBox mutableBoundingBox, Direction d, int length,Random rand, BaseTreeFeatureConfig baseTreeFeatureConfig){
+    public void addHollowLine(LevelSimulatedRW world, BlockPos pos, Set<BlockPos> posSet, BoundingBox mutableBoundingBox, Direction d, int length,Random rand, TreeConfiguration baseTreeFeatureConfig){
         addHollowLine(world, pos, posSet, mutableBoundingBox, d, length, rand, baseTreeFeatureConfig, 1.0f);
     }
 
-    public void addHollowLine(IWorldGenerationReader world, BlockPos pos, Set<BlockPos> posSet, MutableBoundingBox mutableBoundingBox, Direction d, int length,Random rand, BaseTreeFeatureConfig baseTreeFeatureConfig, float chance){
+    public void addHollowLine(LevelSimulatedRW world, BlockPos pos, Set<BlockPos> posSet, BoundingBox mutableBoundingBox, Direction d, int length,Random rand, TreeConfiguration baseTreeFeatureConfig, float chance){
         Direction left = d.getClockWise();
         Direction right = left.getOpposite();
 
@@ -262,21 +262,21 @@ public class MagicTrunkPlacer extends AbstractTrunkPlacer {
 
         }
     }
-    public void addLineLeaves(IWorldGenerationReader world, BlockPos pos, Set<BlockPos> posSet, MutableBoundingBox mutableBoundingBox, Direction d, int length,Random rand, BaseTreeFeatureConfig baseTreeFeatureConfig){
+    public void addLineLeaves(LevelSimulatedRW world, BlockPos pos, Set<BlockPos> posSet, BoundingBox mutableBoundingBox, Direction d, int length,Random rand, TreeConfiguration baseTreeFeatureConfig){
         if(length % 2 == 0)
             addLineLeavesEven(world, pos, posSet, mutableBoundingBox, d, length, rand, baseTreeFeatureConfig, 1.0f);
         else
             addLineLeavesOdd(world, pos, posSet, mutableBoundingBox, d, length, rand,baseTreeFeatureConfig, 1.0f);
     }
 
-    public void addLineLeaves(IWorldGenerationReader world, BlockPos pos, Set<BlockPos> posSet, MutableBoundingBox mutableBoundingBox, Direction d, int length,Random rand, BaseTreeFeatureConfig baseTreeFeatureConfig, float chance){
+    public void addLineLeaves(LevelSimulatedRW world, BlockPos pos, Set<BlockPos> posSet, BoundingBox mutableBoundingBox, Direction d, int length,Random rand, TreeConfiguration baseTreeFeatureConfig, float chance){
         if(length % 2 == 0)
             addLineLeavesEven(world, pos, posSet, mutableBoundingBox, d, length, rand, baseTreeFeatureConfig, chance);
         else
             addLineLeavesOdd(world, pos, posSet, mutableBoundingBox, d, length, rand,baseTreeFeatureConfig, chance);
     }
 
-    public void addLineLeavesEven(IWorldGenerationReader world, BlockPos pos, Set<BlockPos> posSet, MutableBoundingBox mutableBoundingBox, Direction d, int length, Random rand, BaseTreeFeatureConfig baseTreeFeatureConfig, float chance){
+    public void addLineLeavesEven(LevelSimulatedRW world, BlockPos pos, Set<BlockPos> posSet, BoundingBox mutableBoundingBox, Direction d, int length, Random rand, TreeConfiguration baseTreeFeatureConfig, float chance){
         Direction left = d.getClockWise();
         Direction right = left.getOpposite();
 
@@ -289,7 +289,7 @@ public class MagicTrunkPlacer extends AbstractTrunkPlacer {
         }
     }
 
-    public void addLineLeavesOdd(IWorldGenerationReader world, BlockPos pos, Set<BlockPos> posSet, MutableBoundingBox mutableBoundingBox, Direction d, int length,Random rand, BaseTreeFeatureConfig baseTreeFeatureConfig, float chance){
+    public void addLineLeavesOdd(LevelSimulatedRW world, BlockPos pos, Set<BlockPos> posSet, BoundingBox mutableBoundingBox, Direction d, int length,Random rand, TreeConfiguration baseTreeFeatureConfig, float chance){
         Direction left = d.getClockWise();
         Direction right = left.getOpposite();
         length += 2;
@@ -307,7 +307,7 @@ public class MagicTrunkPlacer extends AbstractTrunkPlacer {
     }
 
 
-    public boolean addRoots(IWorldGenerationReader world, Random rand, BlockPos pos, Set<BlockPos> posSet, MutableBoundingBox mutableBoundingBox, BaseTreeFeatureConfig baseTreeFeatureConfig) {
+    public boolean addRoots(LevelSimulatedRW world, Random rand, BlockPos pos, Set<BlockPos> posSet, BoundingBox mutableBoundingBox, TreeConfiguration baseTreeFeatureConfig) {
         BlockState state = baseTreeFeatureConfig.trunkProvider.getState(rand,pos);
         if (rand.nextDouble() < 0.75 && TreeFeature.validTreePos(world, pos)) {
             setBlock(world, pos, state, mutableBoundingBox);

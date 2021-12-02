@@ -9,11 +9,11 @@ import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DirectoryCache;
-import net.minecraft.data.IDataProvider;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.item.Items;
+import net.minecraft.data.HashCache;
+import net.minecraft.data.DataProvider;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.Items;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PatchouliProvider implements IDataProvider {
+public class PatchouliProvider implements DataProvider {
     private final DataGenerator generator;
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
     private static final Logger LOGGER = LogManager.getLogger();
@@ -33,22 +33,22 @@ public class PatchouliProvider implements IDataProvider {
 
     List<Enchantment> enchants = new ArrayList<>();
     @Override
-    public void run(DirectoryCache cache) throws IOException {
+    public void run(HashCache cache) throws IOException {
         addEntries();
         Path output = this.generator.getOutputFolder();
         for(Enchantment g : enchants){
             Path path = getPath(output, g.getRegistryName().getPath());
-            IDataProvider.save(GSON, cache, getPage(g), path);
+            DataProvider.save(GSON, cache, getPage(g), path);
         }
 
         for(AbstractRitual r : ArsNouveauAPI.getInstance().getRitualMap().values()){
             Path path = getRitualPath(output, r.getID());
-            IDataProvider.save(GSON, cache, getRitualPage(r), path);
+            DataProvider.save(GSON, cache, getRitualPage(r), path);
         }
 
         for(AbstractFamiliarHolder r : ArsNouveauAPI.getInstance().getFamiliarHolderMap().values()){
             Path path = getFamiliarPath(output, r.getId());
-            IDataProvider.save(GSON, cache, getFamiliarPage(r), path);
+            DataProvider.save(GSON, cache, getFamiliarPage(r), path);
         }
     }
 

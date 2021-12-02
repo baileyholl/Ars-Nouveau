@@ -3,23 +3,31 @@ package com.hollingsworth.arsnouveau.common.entity.goal.sylph;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.EntitySylph;
 import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.tags.Tag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.BushBlock;
+import net.minecraft.world.level.block.LeavesBlock;
+import net.minecraft.world.level.block.StemGrownBlock;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class EvaluateGroveGoal extends Goal {
 
     private final EntitySylph sylph;
     private final int ticksToNextEval;
-    public static ITag.INamedTag<Block> KINDA_LIKES =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "sylph/kinda_likes"));
-    public static ITag.INamedTag<Block> GREATLY_LIKES =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "sylph/greatly_likes"));
+    public static Tag.Named<Block> KINDA_LIKES =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "sylph/kinda_likes"));
+    public static Tag.Named<Block> GREATLY_LIKES =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "sylph/greatly_likes"));
 
     public EvaluateGroveGoal(EntitySylph sylph, int tickFreq){
         this.sylph = sylph;
@@ -55,7 +63,7 @@ public class EvaluateGroveGoal extends Goal {
         if(state.getMaterial() == Material.PLANT || state.getMaterial() == Material.REPLACEABLE_PLANT)
             return 1;
 
-        if(state.getBlock() instanceof IGrowable)
+        if(state.getBlock() instanceof BonemealableBlock)
             return 1;
         
         if(state.is(KINDA_LIKES))
@@ -67,7 +75,7 @@ public class EvaluateGroveGoal extends Goal {
 
     @Override
     public void start() {
-        World world = sylph.getCommandSenderWorld();
+        Level world = sylph.getCommandSenderWorld();
         Map<BlockState, Integer> defaultMap = new HashMap<>();
         Map<BlockState, Integer> dropMap = new HashMap<>();
         int score = 0;

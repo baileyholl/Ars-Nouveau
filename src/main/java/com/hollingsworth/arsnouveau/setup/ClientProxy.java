@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.setup;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 public class ClientProxy implements  IProxy {
 
@@ -12,12 +12,12 @@ public class ClientProxy implements  IProxy {
     }
 
     @Override
-    public World getClientWorld() {
+    public Level getClientWorld() {
         return Minecraft.getInstance().level;
     }
 
     @Override
-    public PlayerEntity getPlayer(){return Minecraft.getInstance().player;}
+    public Player getPlayer(){return Minecraft.getInstance().player;}
 
     @Override
     public Minecraft getMinecraft(){return Minecraft.getInstance();}

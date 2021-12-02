@@ -9,22 +9,28 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.*;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
+
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.world.level.block.NetherWartBlock;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class EffectHarvest extends AbstractEffect {
     public static EffectHarvest INSTANCE = new EffectHarvest();
@@ -33,17 +39,17 @@ public class EffectHarvest extends AbstractEffect {
         super(GlyphLib.EffectHarvestID, "Harvest");
     }
 
-    public void harvestNetherwart(BlockPos pos, BlockState state, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext){
+    public void harvestNetherwart(BlockPos pos, BlockState state, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext){
         if(state.getValue(NetherWartBlock.AGE) != 3)
             return;
         processAndSpawnDrops(pos, state, world, shooter, spellStats, spellContext);
         world.setBlockAndUpdate(pos, state.setValue(NetherWartBlock.AGE, 0));
     }
 
-    public void processAndSpawnDrops(BlockPos pos, BlockState state, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext){
-        List<ItemStack> cropDrops = Block.getDrops(state, (ServerWorld)world, pos, world.getBlockEntity(pos));
+    public void processAndSpawnDrops(BlockPos pos, BlockState state, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext){
+        List<ItemStack> cropDrops = Block.getDrops(state, (ServerLevel)world, pos, world.getBlockEntity(pos));
         if(spellStats.hasBuff(AugmentFortune.INSTANCE)){
-            cropDrops = state.getDrops(LootUtil.getFortuneContext((ServerWorld) world, pos, shooter, spellStats.getBuffCount(AugmentFortune.INSTANCE)));
+            cropDrops = state.getDrops(LootUtil.getFortuneContext((ServerLevel) world, pos, shooter, spellStats.getBuffCount(AugmentFortune.INSTANCE)));
         }
         for(ItemStack i : cropDrops){
             if(i.getItem() instanceof BlockItem && ((BlockItem) i.getItem()).getBlock() == state.getBlock()){
@@ -60,11 +66,11 @@ public class EffectHarvest extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockRayTraceResult ray, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveBlock(BlockHitResult ray, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         for(BlockPos blockpos : SpellUtil.calcAOEBlocks(shooter, ray.getBlockPos(), ray, spellStats)){
             BlockState state = world.getBlockState(blockpos);
 
-            if(state.getBlock() instanceof FarmlandBlock || world.getBlockState(blockpos.above()).getBlock() instanceof CropsBlock || world.getBlockState(blockpos.above()).getBlock() instanceof NetherWartBlock){
+            if(state.getBlock() instanceof FarmBlock || world.getBlockState(blockpos.above()).getBlock() instanceof CropBlock || world.getBlockState(blockpos.above()).getBlock() instanceof NetherWartBlock){
                 blockpos = blockpos.above();
                 state = world.getBlockState(blockpos);
             }
@@ -73,11 +79,11 @@ public class EffectHarvest extends AbstractEffect {
                 return;
             }
 
-            if(!(state.getBlock() instanceof CropsBlock))
+            if(!(state.getBlock() instanceof CropBlock))
                 continue;
-            CropsBlock cropsBlock = (CropsBlock)world.getBlockState(blockpos).getBlock();
+            CropBlock cropsBlock = (CropBlock)world.getBlockState(blockpos).getBlock();
 
-            if(!cropsBlock.isMaxAge(state) || !(world instanceof ServerWorld))
+            if(!cropsBlock.isMaxAge(state) || !(world instanceof ServerLevel))
                 continue;
 
             processAndSpawnDrops(blockpos, state, world, shooter, spellStats, spellContext);
@@ -86,25 +92,25 @@ public class EffectHarvest extends AbstractEffect {
     }
 
     @Override
-    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
-        if(!(rayTraceResult instanceof BlockRayTraceResult))
+    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, List<AbstractAugment> augments) {
+        if(!(rayTraceResult instanceof BlockHitResult))
             return false;
 
-        BlockPos pos = ((BlockRayTraceResult) rayTraceResult).getBlockPos();
+        BlockPos pos = ((BlockHitResult) rayTraceResult).getBlockPos();
         BlockState state = world.getBlockState(pos);
 
-        if(state.getBlock() instanceof FarmlandBlock || world.getBlockState(pos.above()).getBlock() instanceof CropsBlock || world.getBlockState(pos.above()).getBlock() instanceof NetherWartBlock ){
+        if(state.getBlock() instanceof FarmBlock || world.getBlockState(pos.above()).getBlock() instanceof CropBlock || world.getBlockState(pos.above()).getBlock() instanceof NetherWartBlock ){
             pos = pos.above();
             state = world.getBlockState(pos);
         }
         if(state.getBlock() instanceof NetherWartBlock && state.getValue(NetherWartBlock.AGE) == 3)
             return true;
-        if(!(state.getBlock() instanceof CropsBlock))
+        if(!(state.getBlock() instanceof CropBlock))
             return false;
 
 
-        CropsBlock cropsBlock = (CropsBlock)world.getBlockState(pos).getBlock();
-        return cropsBlock.isMaxAge(state) && world instanceof ServerWorld;
+        CropBlock cropsBlock = (CropBlock)world.getBlockState(pos).getBlock();
+        return cropsBlock.isMaxAge(state) && world instanceof ServerLevel;
     }
 
 

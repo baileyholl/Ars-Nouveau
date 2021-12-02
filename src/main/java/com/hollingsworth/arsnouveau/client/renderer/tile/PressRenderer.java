@@ -4,30 +4,30 @@ import com.hollingsworth.arsnouveau.api.util.MappingUtil;
 import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.GlyphPressTile;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import com.mojang.math.Vector3f;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
 public class PressRenderer extends GeoBlockRenderer<GlyphPressTile> {
 
-    public PressRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+    public PressRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn, new PressModel());
     }
 
-    public void renderFloatingItem(GlyphPressTile tileEntityIn, ItemEntity entityItem, double x, double y, double z, MatrixStack stack, IRenderTypeBuffer iRenderTypeBuffer){
+    public void renderFloatingItem(GlyphPressTile tileEntityIn, ItemEntity entityItem, double x, double y, double z, PoseStack stack, MultiBufferSource iRenderTypeBuffer){
         stack.pushPose();
         tileEntityIn.frames++;
         entityItem.setYHeadRot(tileEntityIn.frames);
@@ -37,19 +37,19 @@ public class PressRenderer extends GeoBlockRenderer<GlyphPressTile> {
         stack.popPose();
     }
 
-    public void renderPressedItem(double x, double y, double z, Item itemToRender, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int il){
+    public void renderPressedItem(double x, double y, double z, Item itemToRender, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int i, int il){
         matrixStack.pushPose();
         Direction direction1 = Direction.from2DDataValue((1 + Direction.NORTH.get2DDataValue()) % 4);
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(-direction1.toYRot()));
         matrixStack.mulPose(Vector3f.XP.rotationDegrees(90.0F));
         matrixStack.translate(0, 0D, -0.2d);
         matrixStack.scale(0.35f, 0.35f, 0.35F);
-        Minecraft.getInstance().getItemRenderer().renderStatic(new ItemStack(itemToRender), ItemCameraTransforms.TransformType.NONE, 150, il , matrixStack, iRenderTypeBuffer);
+        Minecraft.getInstance().getItemRenderer().renderStatic(new ItemStack(itemToRender), ItemTransforms.TransformType.NONE, 150, il , matrixStack, iRenderTypeBuffer);
         matrixStack.popPose();
     }
 
     @Override
-    public void renderEarly(GlyphPressTile tileEntityIn, MatrixStack matrixStack, float ticks, IRenderTypeBuffer iRenderTypeBuffer, IVertexBuilder vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
+    public void renderEarly(GlyphPressTile tileEntityIn, PoseStack matrixStack, float ticks, MultiBufferSource iRenderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
         double x = tileEntityIn.getBlockPos().getX();
         double y = tileEntityIn.getBlockPos().getY();
         double z = tileEntityIn.getBlockPos().getZ();
@@ -74,7 +74,7 @@ public class PressRenderer extends GeoBlockRenderer<GlyphPressTile> {
 
         if(tileEntityIn.counter > 70 && tileEntityIn.counter < 120){
             BlockPos pos = tileEntityIn.getBlockPos();
-            World world = tileEntityIn.getLevel();
+            Level world = tileEntityIn.getLevel();
             if(world.getGameTime() % 3 != 0)
                 return;
             for (int i = 0; i < 1; i++) {

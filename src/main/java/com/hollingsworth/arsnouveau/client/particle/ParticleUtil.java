@@ -5,14 +5,14 @@ import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -30,7 +30,7 @@ public class ParticleUtil {
     }
 
     // https://karthikkaranth.me/blog/generating-random-points-in-a-sphere/
-    public static Vector3d pointInSphere(){
+    public static Vec3 pointInSphere(){
         double u = Math.random();
         double v = Math.random();
         double theta = u * 2.0 * Math.PI;
@@ -43,17 +43,17 @@ public class ParticleUtil {
         double x = r * sinPhi * cosTheta;
         double y = r * sinPhi * sinTheta;
         double z = r * cosPhi;
-        return new Vector3d(x,y,z);
+        return new Vec3(x,y,z);
     }
 
-    public static void spawnFollowProjectile(World world, BlockPos from, BlockPos to){
+    public static void spawnFollowProjectile(Level world, BlockPos from, BlockPos to){
         if(world.getChunkSource().isEntityTickingChunk(new ChunkPos(from)) && world.getChunkSource().isEntityTickingChunk(new ChunkPos(to))){
             EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, from, to);
             world.addFreshEntity(aoeProjectile);
         }
     }
 
-    public static void beam(BlockPos toThisBlock, BlockPos fromThisBlock, World world){
+    public static void beam(BlockPos toThisBlock, BlockPos fromThisBlock, Level world){
 
         double x2 = getCenterOfBlock(toThisBlock.getX());
         double z2 = getCenterOfBlock(toThisBlock.getZ());
@@ -77,8 +77,8 @@ public class ParticleUtil {
             d4 += 1.8D - d5 + r.nextDouble() * (1.5D - d5);
             if(world.isClientSide)
                 world.addParticle(ParticleTypes.ENCHANT, x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4, 0.0D, 0.0D, 0.0D);
-            if(world instanceof ServerWorld){
-                ((ServerWorld)world).sendParticles(ParticleTypes.WITCH,x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4,r.nextInt(4), 0,0.0,0, 0.0);
+            if(world instanceof ServerLevel){
+                ((ServerLevel)world).sendParticles(ParticleTypes.WITCH,x1 + d0 * d4, y1 + d1 * d4, z1 + d2 * d4,r.nextInt(4), 0,0.0,0, 0.0);
             }
         }
     }
@@ -91,7 +91,7 @@ public class ParticleUtil {
         return new ParticleColor.IntWrapper(255, 25, 180);
     }
 
-    public static void spawnPoof(ServerWorld world, BlockPos pos){
+    public static void spawnPoof(ServerLevel world, BlockPos pos){
         for(int i =0; i < 10; i++){
             double d0 = pos.getX() +0.5;
             double d1 = pos.getY() +1.2;
@@ -100,11 +100,11 @@ public class ParticleUtil {
         }
     }
 
-    public static void spawnTouch(ClientWorld world, BlockPos loc){
+    public static void spawnTouch(ClientLevel world, BlockPos loc){
         spawnTouch(world, loc, defaultParticleColor());
     }
 
-    public static void spawnTouch(ClientWorld world, BlockPos loc, ParticleColor particleColor){
+    public static void spawnTouch(ClientLevel world, BlockPos loc, ParticleColor particleColor){
         for(int i =0; i < 10; i++){
             double d0 = loc.getX() +0.5;
             double d1 = loc.getY() +1.0;
@@ -113,19 +113,19 @@ public class ParticleUtil {
         }
     }
 
-    public static void spawnTouchPacket(World world, BlockPos pos, ParticleColor.IntWrapper color){
+    public static void spawnTouchPacket(Level world, BlockPos pos, ParticleColor.IntWrapper color){
         Networking.sendToNearby(world, pos,
                 new PacketANEffect(PacketANEffect.EffectType.BURST, pos, color));
     }
 
-    public static void spawnRitualAreaEffect(TileEntity entity, Random rand, ParticleColor color, int range){
+    public static void spawnRitualAreaEffect(BlockEntity entity, Random rand, ParticleColor color, int range){
         spawnRitualAreaEffect(entity.getBlockPos(), entity.getLevel(), rand, color, range);
     }
 
-    public static void spawnRitualAreaEffect(BlockPos pos, World world, Random rand, ParticleColor color, int range){
+    public static void spawnRitualAreaEffect(BlockPos pos, Level world, Random rand, ParticleColor color, int range){
         spawnRitualAreaEffect(pos, world, rand, color, range, 10, 10);
     }
-    public static void spawnRitualAreaEffect(BlockPos pos, World world, Random rand, ParticleColor color, int range, int chance, int numParticles){
+    public static void spawnRitualAreaEffect(BlockPos pos, Level world, Random rand, ParticleColor color, int range, int chance, int numParticles){
         BlockPos.betweenClosedStream(pos.offset(range, 0, range), pos.offset(-range, 0, -range)).forEach(blockPos -> {
             if(rand.nextInt(chance) == 0){
                 for(int i =0; i< rand.nextInt(numParticles); i++) {
@@ -139,7 +139,7 @@ public class ParticleUtil {
             }
         });
     }
-    public static void spawnRitualSkyEffect(TileEntity tileEntity, Random rand, ParticleColor.IntWrapper color){
+    public static void spawnRitualSkyEffect(BlockEntity tileEntity, Random rand, ParticleColor.IntWrapper color){
 
         int min = -5;
         int max = 5;
@@ -156,7 +156,7 @@ public class ParticleUtil {
 
     }
 
-    public static void spawnRitualSkyEffect(AbstractRitual ritual, TileEntity tileEntity, Random rand, ParticleColor.IntWrapper color){
+    public static void spawnRitualSkyEffect(AbstractRitual ritual, BlockEntity tileEntity, Random rand, ParticleColor.IntWrapper color){
         int scalar = 20;
         if(ritual.getContext().progress >= 5)
             scalar = 10;
@@ -169,7 +169,7 @@ public class ParticleUtil {
         }
     }
 
-    public static void spawnFallingSkyEffect(TileEntity tileEntity, Random rand, ParticleColor.IntWrapper color){
+    public static void spawnFallingSkyEffect(BlockEntity tileEntity, Random rand, ParticleColor.IntWrapper color){
         int min = -5;
         int max = 5;
         BlockPos nearPos = new BlockPos(tileEntity.getBlockPos().getX() + rand.nextInt(max - min) + min, tileEntity.getBlockPos().getY() + 8,  tileEntity.getBlockPos().getZ() + rand.nextInt(max - min) + min);
@@ -185,7 +185,7 @@ public class ParticleUtil {
 
     }
 
-    public static void spawnFallingSkyEffect(AbstractRitual ritual, TileEntity tileEntity, Random rand, ParticleColor.IntWrapper color){
+    public static void spawnFallingSkyEffect(AbstractRitual ritual, BlockEntity tileEntity, Random rand, ParticleColor.IntWrapper color){
         int scalar = 20;
         if(ritual.getContext().progress >= 5)
             scalar = 10;
@@ -198,17 +198,17 @@ public class ParticleUtil {
         }
     }
 
-    public static void spawnParticleSphere(World world, BlockPos pos){
+    public static void spawnParticleSphere(Level world, BlockPos pos){
         if(!world.isClientSide)
             return;
         spawnParticleSphere(world, pos, ParticleColor.makeRandomColor(255, 255, 255, world.random));
     }
 
-    public static void spawnParticleSphere(World world, BlockPos pos, ParticleColor color){
+    public static void spawnParticleSphere(Level world, BlockPos pos, ParticleColor color){
         if(!world.isClientSide)
             return;
         for(int i =0; i< 5; i++){
-            Vector3d particlePos = new Vector3d(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0, 0.5);
+            Vec3 particlePos = new Vec3(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0, 0.5);
             particlePos = particlePos.add(ParticleUtil.pointInSphere());
             world.addParticle(ParticleLineData.createData(color),
                     particlePos.x(), particlePos.y(), particlePos.z(),
@@ -216,7 +216,7 @@ public class ParticleUtil {
         }
     }
 
-    public static void spawnLight(World world, ParticleColor color, Vector3d vec, int intensity){
+    public static void spawnLight(Level world, ParticleColor color, Vec3 vec, int intensity){
         for(int i =0; i < intensity; i++) {
             world.addParticle(
                     GlowParticleData.createData(color),

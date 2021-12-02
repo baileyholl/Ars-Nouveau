@@ -4,14 +4,14 @@ import com.hollingsworth.arsnouveau.api.mana.IManaTile;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
 
 import java.util.List;
 
 public class RelayDepositTile extends ArcaneRelayTile{
 
-    public RelayDepositTile(TileEntityType<?> type){
+    public RelayDepositTile(BlockEntityType<?> type){
         super(type);
     }
 

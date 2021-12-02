@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.world.gen.blockstateprovider.BlockStateProviderType;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
 
 public class SupplierBlockStateProvider extends AbstractSupplierBlockStateProvider{
     public SupplierBlockStateProvider(String path) {

@@ -5,15 +5,15 @@ import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -24,7 +24,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class CrystallizerTile extends AbstractManaTile implements IInventory {
+public class CrystallizerTile extends AbstractManaTile implements Container {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     public ItemStack stack = ItemStack.EMPTY;
     public ItemEntity entity;
@@ -72,16 +72,16 @@ public class CrystallizerTile extends AbstractManaTile implements IInventory {
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT tag) {
-        stack = ItemStack.of((CompoundNBT)tag.get("itemStack"));
+    public void load(BlockState state, CompoundTag tag) {
+        stack = ItemStack.of((CompoundTag)tag.get("itemStack"));
         draining = tag.getBoolean("draining");
         super.load(state, tag);
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
+    public CompoundTag save(CompoundTag tag) {
         if(stack != null) {
-            CompoundNBT reagentTag = new CompoundNBT();
+            CompoundTag reagentTag = new CompoundTag();
             stack.save(reagentTag);
             tag.put("itemStack", reagentTag);
         }
@@ -130,7 +130,7 @@ public class CrystallizerTile extends AbstractManaTile implements IInventory {
     }
 
     @Override
-    public boolean stillValid(PlayerEntity player) {
+    public boolean stillValid(Player player) {
         return true;
     }
 

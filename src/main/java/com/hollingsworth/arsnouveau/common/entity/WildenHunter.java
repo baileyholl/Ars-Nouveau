@@ -5,19 +5,19 @@ import com.hollingsworth.arsnouveau.common.entity.goal.wilden.WildenMeleeAttack;
 import com.hollingsworth.arsnouveau.common.entity.goal.wilden.WildenRamAttack;
 import com.hollingsworth.arsnouveau.common.entity.goal.wilden.WildenSummon;
 import com.hollingsworth.arsnouveau.setup.Config;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.Level;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -26,14 +26,20 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class  WildenHunter extends MonsterEntity implements IAnimatable, IAnimationListener {
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+
+public class  WildenHunter extends Monster implements IAnimatable, IAnimationListener {
     AnimationFactory manager = new AnimationFactory(this);
 
-    public WildenHunter(EntityType<? extends MonsterEntity> type, World worldIn) {
+    public WildenHunter(EntityType<? extends Monster> type, Level worldIn) {
         super(type, worldIn);
     }
 
-    public WildenHunter(World worldIn) {
+    public WildenHunter(Level worldIn) {
         this(ModEntities.WILDEN_HUNTER, worldIn);
     }
 
@@ -45,13 +51,13 @@ public class  WildenHunter extends MonsterEntity implements IAnimatable, IAnimat
         this.goalSelector.addGoal(5, new WildenMeleeAttack(this, 1.3D, true, WildenHunter.Animations.ATTACK.ordinal(), () -> true));
         this.goalSelector.addGoal(3, new WildenRamAttack(this, 2D, true));
         this.goalSelector.addGoal(3, new WildenSummon(this));
-        this.goalSelector.addGoal(1, new SwimGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
-        this.goalSelector.addGoal(8, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-        this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(1, new FloatGoal(this));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
+        this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         if(Config.HUNTER_ATTACK_ANIMALS.get())
-            this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AnimalEntity.class, 10, true, false, (entity) -> !(entity instanceof SummonWolf) || !((SummonWolf) entity).isWildenSummon));
+            this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Animal.class, 10, true, false, (entity) -> !(entity instanceof SummonWolf) || !((SummonWolf) entity).isWildenSummon));
 
     }
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
@@ -63,7 +69,7 @@ public class  WildenHunter extends MonsterEntity implements IAnimatable, IAnimat
     }
 
     @Override
-    protected int getExperienceReward(PlayerEntity player) {
+    protected int getExperienceReward(Player player) {
         return 5;
     }
 
@@ -84,8 +90,8 @@ public class  WildenHunter extends MonsterEntity implements IAnimatable, IAnimat
         return SoundEvents.WOLF_GROWL;
     }
 
-    public static AttributeModifierMap.MutableAttribute getModdedAttributes(){
-        return MobEntity.createMobAttributes()
+    public static AttributeSupplier.Builder getModdedAttributes(){
+        return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.25D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.6F)

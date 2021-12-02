@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.util.MathUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 
 public class RitualSunrise extends AbstractRitual {
     @Override
@@ -14,7 +14,7 @@ public class RitualSunrise extends AbstractRitual {
         if (getWorld().getGameTime() % 20 == 0 && !getWorld().isClientSide) {
             incrementProgress();
             if (getProgress() >= 18) {
-                ServerWorld world = (ServerWorld) getWorld();
+                ServerLevel world = (ServerLevel) getWorld();
                 world.setDayTime(MathUtil.getNextDaysTime(world, MathUtil.DAY_TIME));
                 setFinished();
             }

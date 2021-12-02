@@ -2,9 +2,9 @@ package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
 
@@ -25,14 +25,14 @@ public class PacketUpdateSpellbook{
     }
 
     //Decoder
-    public PacketUpdateSpellbook(PacketBuffer buf){
+    public PacketUpdateSpellbook(FriendlyByteBuf buf){
         spellRecipe = buf.readUtf(32767);
         cast_slot = buf.readInt();
         spellName = buf.readUtf(32767);
     }
 
     //Encoder
-    public void toBytes(PacketBuffer buf){
+    public void toBytes(FriendlyByteBuf buf){
         buf.writeUtf(spellRecipe);
         buf.writeInt(cast_slot);
         buf.writeUtf(spellName);
@@ -43,7 +43,7 @@ public class PacketUpdateSpellbook{
             if(ctx.get().getSender() != null){
                 ItemStack stack = StackUtil.getHeldSpellbook(ctx.get().getSender());
                 if(stack != null && stack.getItem() instanceof SpellBook && spellRecipe != null){
-                    CompoundNBT tag = stack.hasTag() ? stack.getTag() : new CompoundNBT();
+                    CompoundTag tag = stack.hasTag() ? stack.getTag() : new CompoundTag();
                     SpellBook.setRecipe(tag, spellRecipe, cast_slot);
                     SpellBook.setSpellName(tag, spellName, cast_slot);
                     SpellBook.setMode(tag, cast_slot);

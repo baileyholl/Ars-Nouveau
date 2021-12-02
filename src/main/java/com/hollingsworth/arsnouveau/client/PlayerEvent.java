@@ -13,18 +13,18 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketGetPersistentData;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.FirstPersonRenderer;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.ItemInHandRenderer;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -55,12 +55,12 @@ public class PlayerEvent {
 
     @SubscribeEvent
     public static void onBlock(final PlayerInteractEvent.RightClickBlock event) {
-        PlayerEntity entity = event.getPlayer();
-        if(!event.getWorld().isClientSide || event.getHand() != Hand.MAIN_HAND || event.getWorld().getBlockState(event.getPos()).getBlock() instanceof ScribesBlock)
+        Player entity = event.getPlayer();
+        if(!event.getWorld().isClientSide || event.getHand() != InteractionHand.MAIN_HAND || event.getWorld().getBlockState(event.getPos()).getBlock() instanceof ScribesBlock)
             return;
         if(entity.getItemInHand(event.getHand()).getItem() instanceof SpellBook){
             event.setCanceled(true);
-            ObfuscationReflectionHelper.setPrivateValue(FirstPersonRenderer.class, minecraft.getItemInHandRenderer(), 1f, MappingUtil.getEquippedProgressMainhand());
+            ObfuscationReflectionHelper.setPrivateValue(ItemInHandRenderer.class, minecraft.getItemInHandRenderer(), 1f, MappingUtil.getEquippedProgressMainhand());
         }
     }
 
@@ -70,26 +70,26 @@ public class PlayerEvent {
         int level = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT, stack);
         if(level > 0 && stack.hasTag() && stack.getTag().contains("spell")){
             Spell spell = Spell.deserialize(stack.getTag().getString("spell"));
-            event.getToolTip().add(new StringTextComponent(spell.getDisplayString()));
+            event.getToolTip().add(new TextComponent(spell.getDisplayString()));
         }
     }
 
     @SubscribeEvent
     public static void onItem(final PlayerInteractEvent.RightClickItem event) {
-        PlayerEntity entity = event.getPlayer();
-        if(!event.getWorld().isClientSide || event.getHand() != Hand.MAIN_HAND)
+        Player entity = event.getPlayer();
+        if(!event.getWorld().isClientSide || event.getHand() != InteractionHand.MAIN_HAND)
             return;
         if(entity.getItemInHand(event.getHand()).getItem() instanceof SpellBook){
             event.setCanceled(true);
-            ObfuscationReflectionHelper.setPrivateValue(FirstPersonRenderer.class, minecraft.getItemInHandRenderer(), 1f, MappingUtil.getEquippedProgressMainhand());
+            ObfuscationReflectionHelper.setPrivateValue(ItemInHandRenderer.class, minecraft.getItemInHandRenderer(), 1f, MappingUtil.getEquippedProgressMainhand());
         }
     }
 
     @SubscribeEvent
     public static void playerLoginEvent(final net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent event){
         if(!event.getPlayer().level.isClientSide && event.getPlayer().hasEffect(ModPotions.SCRYING_EFFECT)){
-            CompoundNBT tag = event.getPlayer().getPersistentData().getCompound(PlayerEntity.PERSISTED_NBT_TAG);
-            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()-> (ServerPlayerEntity) event.getPlayer()), new PacketGetPersistentData(tag));
+            CompoundTag tag = event.getPlayer().getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
+            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()-> (ServerPlayer) event.getPlayer()), new PacketGetPersistentData(tag));
         }
     }
 
@@ -104,11 +104,11 @@ public class PlayerEvent {
         if(event.side == LogicalSide.CLIENT && event.phase == TickEvent.Phase.END && event.player.getEffect(ModPotions.SCRYING_EFFECT) != null && ClientInfo.ticksInGame % 30 == 0){
 
             List<BlockPos> scryingPos = new ArrayList<>();
-            CompoundNBT tag = ClientInfo.persistentData;
+            CompoundTag tag = ClientInfo.persistentData;
             if(!tag.contains("an_scrying"))
                 return;
-            PlayerEntity playerEntity = event.player;
-            World world = playerEntity.level;
+            Player playerEntity = event.player;
+            Level world = playerEntity.level;
             for(BlockPos p : BlockPos.withinManhattan(playerEntity.blockPosition(), 20, 120, 20)){
                 if(p.getY() >= world.getMaxBuildHeight() || world.getBlockState(p).isAir(world, p))
                     continue;
@@ -126,12 +126,12 @@ public class PlayerEvent {
     @SubscribeEvent
     public static void onRenderWorldLast(final RenderWorldLastEvent event)
     {
-        final PlayerEntity playerEntity = Minecraft.getInstance().player;
+        final Player playerEntity = Minecraft.getInstance().player;
 
         if (playerEntity == null || playerEntity.getEffect(ModPotions.SCRYING_EFFECT) == null)
             return;
-        Vector3d vector3d = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-        ClientWorld world = Minecraft.getInstance().level;
+        Vec3 vector3d = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+        ClientLevel world = Minecraft.getInstance().level;
 
         double xView = vector3d.x();
         double yView = vector3d.y();

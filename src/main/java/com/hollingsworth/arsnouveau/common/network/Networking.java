@@ -1,14 +1,14 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.thread.EffectiveSide;
 import net.minecraftforge.fml.network.NetworkDirection;
@@ -135,22 +135,22 @@ public class Networking {
                 PacketTogglePathing::handle);
     }
 
-    public static void sendToNearby(World world, BlockPos pos, Object toSend){
-        if (world instanceof ServerWorld) {
-            ServerWorld ws = (ServerWorld) world;
+    public static void sendToNearby(Level world, BlockPos pos, Object toSend){
+        if (world instanceof ServerLevel) {
+            ServerLevel ws = (ServerLevel) world;
             ws.getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false)
                     .filter(p -> p.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) < 64 * 64)
                     .forEach(p -> INSTANCE.send(PacketDistributor.PLAYER.with(() -> p), toSend));
         }
     }
 
-    public static void sendToNearby(World world, Entity e, Object toSend) {
+    public static void sendToNearby(Level world, Entity e, Object toSend) {
         sendToNearby(world, e.blockPosition(), toSend);
     }
 
-    public static void sendToPlayer(Object msg, PlayerEntity player) {
+    public static void sendToPlayer(Object msg, Player player) {
         if (EffectiveSide.get() == LogicalSide.SERVER) {
-            ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
+            ServerPlayer serverPlayer = (ServerPlayer) player;
             INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), msg);
         }
     }

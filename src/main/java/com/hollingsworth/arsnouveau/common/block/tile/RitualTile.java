@@ -12,23 +12,23 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.RitualBlock;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -42,7 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class RitualTile extends TileEntity implements ITickableTileEntity, ITooltipProvider, IAnimatable, ILightable {
+public class RitualTile extends BlockEntity implements TickableBlockEntity, ITooltipProvider, IAnimatable, ILightable {
     public AbstractRitual ritual;
     AnimationFactory manager = new AnimationFactory(this);
     public boolean isDecorative;
@@ -55,7 +55,7 @@ public class RitualTile extends TileEntity implements ITickableTileEntity, ITool
     }
 
     public void makeParticle(ParticleColor centerColor, ParticleColor outerColor, int intensity){
-        World world = getLevel();
+        Level world = getLevel();
         BlockPos pos = getBlockPos();
         Random rand = world.random;
         double xzOffset = 0.25;
@@ -91,15 +91,15 @@ public class RitualTile extends TileEntity implements ITickableTileEntity, ITool
             if(ritual.getContext().isDone){
                 ritual.onEnd();
                 ritual = null;
-                getLevel().playSound(null, getBlockPos(), SoundEvents.FIRE_EXTINGUISH, SoundCategory.NEUTRAL, 1.0f, 1.0f);
+                getLevel().playSound(null, getBlockPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.NEUTRAL, 1.0f, 1.0f);
                 getLevel().setBlock(getBlockPos(), getLevel().getBlockState(getBlockPos()).setValue(RitualBlock.LIT, false), 3);
                 return;
             }
             if(!ritual.isRunning() && !level.isClientSide){
-                level.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(getBlockPos()).inflate(1)).forEach(i ->{
+                level.getEntitiesOfClass(ItemEntity.class, new AABB(getBlockPos()).inflate(1)).forEach(i ->{
                     if(ritual.canConsumeItem(i.getItem())){
                         ritual.onItemConsumed(i.getItem());
-                        ParticleUtil.spawnPoof((ServerWorld) level, i.blockPosition());
+                        ParticleUtil.spawnPoof((ServerLevel) level, i.blockPosition());
                     }
                 });
             }
@@ -126,16 +126,16 @@ public class RitualTile extends TileEntity implements ITickableTileEntity, ITool
 
     @Override
     @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 3, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 3, this.getUpdateTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.save(new CompoundTag());
     }
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
         handleUpdateTag(level.getBlockState(worldPosition),pkt.getTag());
     }
@@ -143,12 +143,12 @@ public class RitualTile extends TileEntity implements ITickableTileEntity, ITool
     public void startRitual(){
         if(ritual == null || !ritual.canStart() || ritual.isRunning())
             return;
-        getLevel().playSound(null, getBlockPos(), SoundEvents.ILLUSIONER_CAST_SPELL, SoundCategory.NEUTRAL, 1.0f, 1.0f);
+        getLevel().playSound(null, getBlockPos(), SoundEvents.ILLUSIONER_CAST_SPELL, SoundSource.NEUTRAL, 1.0f, 1.0f);
         ritual.onStart();
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT tag) {
+    public void load(BlockState state, CompoundTag tag) {
         super.load(state, tag);
         String ritualID = tag.getString("ritualID");
         if(!ritualID.isEmpty()){
@@ -171,7 +171,7 @@ public class RitualTile extends TileEntity implements ITickableTileEntity, ITool
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
+    public CompoundTag save(CompoundTag tag) {
         if(ritual != null){
             tag.putString("ritualID", ritual.getID());
             ritual.write(tag);
@@ -190,12 +190,12 @@ public class RitualTile extends TileEntity implements ITickableTileEntity, ITool
         this.ritual = ArsNouveauAPI.getInstance().getRitual(selectedRitual);
         if(ritual != null){
             this.ritual.tile = this;
-            World world = getLevel();
+            Level world = getLevel();
             BlockState state = world.getBlockState(getBlockPos());
             world.setBlock(getBlockPos(), state.setValue(RitualBlock.LIT, true), 3);
         }
         this.isDecorative = false;
-        level.playSound(null, getBlockPos(), SoundEvents.FLINTANDSTEEL_USE, SoundCategory.NEUTRAL, 1.0f, 1.0f);
+        level.playSound(null, getBlockPos(), SoundEvents.FLINTANDSTEEL_USE, SoundSource.NEUTRAL, 1.0f, 1.0f);
 
     }
 
@@ -205,26 +205,26 @@ public class RitualTile extends TileEntity implements ITickableTileEntity, ITool
         if(ritual != null){
             tooltips.add(ritual.getName());
             if(isOff) {
-                tooltips.add(new TranslationTextComponent("ars_nouveau.tooltip.turned_off").getString());
+                tooltips.add(new TranslatableComponent("ars_nouveau.tooltip.turned_off").getString());
                 return tooltips;
             }
             if(!ritual.isRunning()){
                 if(!ritual.canStart()){
-                    tooltips.add(new TranslationTextComponent("ars_nouveau.tooltip.conditions_unmet").getString());
+                    tooltips.add(new TranslatableComponent("ars_nouveau.tooltip.conditions_unmet").getString());
                 }else
-                    tooltips.add(new TranslationTextComponent("ars_nouveau.tooltip.waiting").getString());
+                    tooltips.add(new TranslatableComponent("ars_nouveau.tooltip.waiting").getString());
             }else{
 
-                tooltips.add(new TranslationTextComponent("ars_nouveau.tooltip.running").getString());
+                tooltips.add(new TranslatableComponent("ars_nouveau.tooltip.running").getString());
             }
             if(ritual.getConsumedItems().size() != 0) {
-                tooltips.add(new TranslationTextComponent("ars_nouveau.tooltip.consumed").getString());
+                tooltips.add(new TranslatableComponent("ars_nouveau.tooltip.consumed").getString());
                 for (ItemStack i : ritual.getConsumedItems()) {
                     tooltips.add(i.getHoverName().getString());
                 }
             }
             if(ritual.needsManaNow())
-                tooltips.add(new TranslationTextComponent("ars_nouveau.wixie.need_mana").getString());
+                tooltips.add(new TranslatableComponent("ars_nouveau.wixie.need_mana").getString());
         }
         return tooltips;
     }
@@ -246,7 +246,7 @@ public class RitualTile extends TileEntity implements ITickableTileEntity, ITool
     }
 
     @Override
-    public void onLight(RayTraceResult rayTraceResult, World world, LivingEntity shooter, SpellStats stats, SpellContext spellContext) {
+    public void onLight(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats stats, SpellContext spellContext) {
         this.red = spellContext.colors.r;
         this.green = spellContext.colors.g;
         this.blue = spellContext.colors.b;

@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs.AbstractPathJob;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -11,11 +11,11 @@ public class PacketTogglePathing {
 
 
     //Decoder
-    public PacketTogglePathing(PacketBuffer buf){
+    public PacketTogglePathing(FriendlyByteBuf buf){
     }
 
     //Encoder
-    public void toBytes(PacketBuffer buf){
+    public void toBytes(FriendlyByteBuf buf){
 
     }
 

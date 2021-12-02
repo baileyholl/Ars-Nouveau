@@ -10,8 +10,8 @@ import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellbook;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,7 +27,7 @@ public class KeyHandler {
         if(key == ModKeyBindings.NEXT_SLOT.getKey().getValue()  && stack.getItem() instanceof SpellBook){
             if(!stack.hasTag())
                 return;
-            CompoundNBT tag = stack.getTag();
+            CompoundTag tag = stack.getTag();
             int newMode = SpellBook.getMode(tag) + 1;
             if(newMode > 10)
                 newMode = 0;
@@ -39,7 +39,7 @@ public class KeyHandler {
         if(key == ModKeyBindings.PREVIOUS__SLOT.getKey().getValue()  && stack.getItem() instanceof SpellBook){
             if(!stack.hasTag())
                 return;
-            CompoundNBT tag = stack.getTag();
+            CompoundTag tag = stack.getTag();
             int newMode = SpellBook.getMode(tag) - 1;
             if(newMode < 0)
                 newMode = 10;
@@ -84,7 +84,7 @@ public class KeyHandler {
 
     }
 
-    public static void sendUpdatePacket(CompoundNBT tag, int newMode){
+    public static void sendUpdatePacket(CompoundTag tag, int newMode){
         String recipe = SpellBook.getRecipeString(tag, newMode);
         String name = SpellBook.getSpellName(tag, newMode);
         Networking.INSTANCE.sendToServer(new PacketUpdateSpellbook(recipe, newMode, name));

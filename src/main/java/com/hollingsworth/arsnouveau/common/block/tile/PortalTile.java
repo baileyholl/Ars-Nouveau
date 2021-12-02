@@ -5,22 +5,22 @@ import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.common.block.PortalBlock;
 
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketWarpPosition;
-import net.minecraft.entity.Entity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector2f;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.server.level.ServerLevel;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -28,10 +28,10 @@ import java.util.List;
 
 import static com.hollingsworth.arsnouveau.setup.BlockRegistry.PORTAL_TILE_TYPE;
 
-public class PortalTile extends TileEntity implements ITickableTileEntity, ITooltipProvider {
+public class PortalTile extends BlockEntity implements TickableBlockEntity, ITooltipProvider {
     public BlockPos warpPos;
     public String dimID;
-    public Vector2f rotationVec;
+    public Vec2 rotationVec;
     public String displayName;
     public boolean isHorizontal;
 
@@ -46,24 +46,24 @@ public class PortalTile extends TileEntity implements ITickableTileEntity, ITool
             e.xRot = rotationVec != null ? rotationVec.x : e.xRot;
             e.yRot = rotationVec != null ? rotationVec.y : e.yRot;
             Networking.sendToNearby(level, e, new PacketWarpPosition(e.getId(), e.getX(), e.getY(), e.getZ(), e.xRot, e.yRot));
-            ((ServerWorld) level).sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
+            ((ServerLevel) level).sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
                     4, (this.level.random.nextDouble() - 0.5D) * 2.0D, -this.level.random.nextDouble(), (this.level.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
         }
     }
 
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundTag compound) {
         super.load(state, compound);
         this.dimID = compound.getString("dim");
         this.warpPos = NBTUtil.getBlockPos(compound, "warp");
-        this.rotationVec = new Vector2f(compound.getFloat("xRot"), compound.getFloat("yRot"));
+        this.rotationVec = new Vec2(compound.getFloat("xRot"), compound.getFloat("yRot"));
         this.displayName = compound.getString("display");
         this.isHorizontal = compound.getBoolean("horizontal");
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         if (this.warpPos != null) {
             NBTUtil.storeBlockPos(compound, "warp", this.warpPos);
         }
@@ -82,13 +82,13 @@ public class PortalTile extends TileEntity implements ITickableTileEntity, ITool
     @Override
     public void tick() {
         if (!level.isClientSide && warpPos != null && !(level.getBlockState(warpPos).getBlock() instanceof PortalBlock)) {
-            List<Entity> entities = level.getEntitiesOfClass(Entity.class, new AxisAlignedBB(worldPosition));
+            List<Entity> entities = level.getEntitiesOfClass(Entity.class, new AABB(worldPosition));
             for (Entity e : entities) {
                 if(e instanceof EntityFollowProjectile)
                     continue;
-                level.playSound(null, warpPos, SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundCategory.NEUTRAL, 1.0f, 1.0f);
+                level.playSound(null, warpPos, SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1.0f, 1.0f);
                 e.teleportTo(warpPos.getX(), warpPos.getY(), warpPos.getZ());
-                ((ServerWorld) level).sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
+                ((ServerLevel) level).sendParticles(ParticleTypes.PORTAL, warpPos.getX(), warpPos.getY() + 1, warpPos.getZ(),
                         4, (this.level.random.nextDouble() - 0.5D) * 2.0D, -this.level.random.nextDouble(), (this.level.random.nextDouble() - 0.5D) * 2.0D, 0.1f);
                 if (rotationVec != null) {
                     e.xRot = rotationVec.x;
@@ -118,17 +118,17 @@ public class PortalTile extends TileEntity implements ITickableTileEntity, ITool
     }
     @Override
     @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 3, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 3, this.getUpdateTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
         handleUpdateTag(level.getBlockState(worldPosition),pkt.getTag());
     }

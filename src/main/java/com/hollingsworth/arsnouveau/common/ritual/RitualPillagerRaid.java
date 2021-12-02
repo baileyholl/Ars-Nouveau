@@ -4,13 +4,13 @@ import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.raid.Raid;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.raid.Raid;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.Tags;
 
 import java.util.List;
@@ -22,8 +22,8 @@ public class RitualPillagerRaid extends AbstractRitual {
         if(getWorld().getGameTime() % 20 == 0 && !getWorld().isClientSide) {
             incrementProgress();
             if(getProgress() >= 18){
-                ServerWorld world = (ServerWorld) getWorld();
-                List<ServerPlayerEntity> players =  world.getEntitiesOfClass(ServerPlayerEntity.class, new AxisAlignedBB(getPos()).inflate(5.0));
+                ServerLevel world = (ServerLevel) getWorld();
+                List<ServerPlayer> players =  world.getEntitiesOfClass(ServerPlayer.class, new AABB(getPos()).inflate(5.0));
                 if(players.size() > 0){
                     Raid raid = world.getRaids().createOrExtendRaid(players.get(0));
                     if(raid != null){

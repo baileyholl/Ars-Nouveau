@@ -2,11 +2,11 @@ package com.hollingsworth.arsnouveau.api.util;
 
 import com.hollingsworth.arsnouveau.common.block.PortalBlock;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -15,13 +15,13 @@ public abstract class PortalFrameTester {
     protected Predicate<BlockState> VALID_FRAME = null;
     protected int foundPortalBlocks;
     public BlockPos lowerCorner;
-    protected World world;
+    protected Level world;
 
-    public abstract PortalFrameTester init(World world, BlockPos blockPos, Direction.Axis axis,  Predicate<BlockState> foundations);
+    public abstract PortalFrameTester init(Level world, BlockPos blockPos, Direction.Axis axis,  Predicate<BlockState> foundations);
 
-    public abstract Optional<PortalFrameTester> getNewPortal(World worldAccess, BlockPos blockPos, Direction.Axis axis,  Predicate<BlockState> foundations);
+    public abstract Optional<PortalFrameTester> getNewPortal(Level worldAccess, BlockPos blockPos, Direction.Axis axis,  Predicate<BlockState> foundations);
 
-    public abstract Optional<PortalFrameTester> getOrEmpty(World worldAccess, BlockPos blockPos, Predicate<PortalFrameTester> predicate, Direction.Axis axis,  Predicate<BlockState> foundations);
+    public abstract Optional<PortalFrameTester> getOrEmpty(Level worldAccess, BlockPos blockPos, Predicate<PortalFrameTester> predicate, Direction.Axis axis,  Predicate<BlockState> foundations);
 
     public abstract boolean isAlreadyLitPortalFrame();
 
@@ -29,7 +29,7 @@ public abstract class PortalFrameTester {
 
     public abstract void lightPortal(Block frameBlock);
 
-    public abstract void createPortal(World world, BlockPos pos, BlockState frameBlock, Direction.Axis axis);
+    public abstract void createPortal(Level world, BlockPos pos, BlockState frameBlock, Direction.Axis axis);
 
     public abstract boolean isRequestedSize(int attemptWidth, int attemptHeight);
 
@@ -39,7 +39,7 @@ public abstract class PortalFrameTester {
 
     public abstract Direction.Axis getAxis2();
 
-    public abstract BlockPos doesPortalFitAt(World world, BlockPos attemptPos, Direction.Axis axis);
+    public abstract BlockPos doesPortalFitAt(Level world, BlockPos attemptPos, Direction.Axis axis);
 
 //    public abstract Vec3d getEntityOffsetInPortal(BlockLocating.Rectangle arg, Entity entity, Direction.Axis portalAxis);
 //

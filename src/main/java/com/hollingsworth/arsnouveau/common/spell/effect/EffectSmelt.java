@@ -8,25 +8,32 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.FurnaceRecipe;
-import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.util.math.*;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 
 public class EffectSmelt extends AbstractEffect {
     public static EffectSmelt INSTANCE = new EffectSmelt();
@@ -36,22 +43,22 @@ public class EffectSmelt extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         super.onResolveEntity(rayTraceResult, world, shooter, spellStats, spellContext);
         int aoeBuff = spellStats.getBuffCount(AugmentAOE.INSTANCE);
         int pierceBuff = spellStats.getBuffCount(AugmentPierce.INSTANCE);
         int maxItemSmelt = 3 + 4 * aoeBuff + 4 * pierceBuff;
-        List<ItemEntity> itemEntities = world.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(rayTraceResult.getEntity().blockPosition()).inflate(aoeBuff + 1.0));
+        List<ItemEntity> itemEntities = world.getEntitiesOfClass(ItemEntity.class, new AABB(rayTraceResult.getEntity().blockPosition()).inflate(aoeBuff + 1.0));
         smeltItems(world, itemEntities, maxItemSmelt);
     }
 
     @Override
-    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         int aoeBuff = spellStats.getBuffCount(AugmentAOE.INSTANCE);
         int pierceBuff = spellStats.getBuffCount(AugmentPierce.INSTANCE);
         int maxItemSmelt = 3 + 4 * aoeBuff + 4 * pierceBuff;
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
-        List<ItemEntity> itemEntities = world.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(rayTraceResult.getBlockPos()).inflate(aoeBuff + 1.0));
+        List<ItemEntity> itemEntities = world.getEntitiesOfClass(ItemEntity.class, new AABB(rayTraceResult.getBlockPos()).inflate(aoeBuff + 1.0));
         smeltItems(world, itemEntities, maxItemSmelt);
 
         for(BlockPos pos : posList) {
@@ -62,11 +69,11 @@ public class EffectSmelt extends AbstractEffect {
     }
 
 
-    public void smeltBlock(World world, BlockPos pos, LivingEntity shooter){
+    public void smeltBlock(Level world, BlockPos pos, LivingEntity shooter){
         BlockState state = world.getBlockState(pos);
-        if(!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, pos))
+        if(!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos))
             return;
-        Optional<FurnaceRecipe> optional = world.getRecipeManager().getRecipeFor(IRecipeType.SMELTING, new Inventory(new ItemStack(state.getBlock().asItem(), 1)),
+        Optional<SmeltingRecipe> optional = world.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(new ItemStack(state.getBlock().asItem(), 1)),
                 world);
         if (optional.isPresent()) {
             ItemStack itemstack = optional.get().getResultItem();
@@ -83,12 +90,12 @@ public class EffectSmelt extends AbstractEffect {
     }
 
 
-    public void smeltItems(World world, List<ItemEntity> itemEntities, int maxItemSmelt){
+    public void smeltItems(Level world, List<ItemEntity> itemEntities, int maxItemSmelt){
         int numSmelted = 0;
         for (ItemEntity itemEntity : itemEntities) {
             if (numSmelted > maxItemSmelt)
                 break;
-            Optional<FurnaceRecipe> optional = world.getRecipeManager().getRecipeFor(IRecipeType.SMELTING, new Inventory(itemEntity.getItem()),
+            Optional<SmeltingRecipe> optional = world.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(itemEntity.getItem()),
                     world);
             if (optional.isPresent()) {
                 ItemStack result = optional.get().getResultItem().copy();
@@ -104,8 +111,8 @@ public class EffectSmelt extends AbstractEffect {
     }
 
     @Override
-    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
-        return rayTraceResult instanceof BlockRayTraceResult;
+    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, List<AbstractAugment> augments) {
+        return rayTraceResult instanceof BlockHitResult;
     }
 
     @Nonnull

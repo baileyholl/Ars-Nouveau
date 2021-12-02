@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.pathfinding.Path;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +22,7 @@ public class PathJobMoveToPathable extends PathJobMoveToLocation{
      * @param range  max search range.
      * @param entity the entity.
      */
-    public PathJobMoveToPathable(World world, BlockPos start, List<BlockPos> destinations, int range, LivingEntity entity) {
+    public PathJobMoveToPathable(Level world, BlockPos start, List<BlockPos> destinations, int range, LivingEntity entity) {
         super(world, start, destinations.size() == 0 ? start : destinations.get(0), range, entity);
         this.destinations = destinations;
     }

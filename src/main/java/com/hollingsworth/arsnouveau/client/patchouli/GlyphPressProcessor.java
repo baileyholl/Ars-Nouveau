@@ -5,9 +5,9 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.crafting.RecipeManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TranslatableComponent;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;
@@ -32,7 +32,7 @@ public class GlyphPressProcessor implements IComponentProcessor {
         if(s.equals("reagent"))
             return IVariable.from(recipe.reagent);
         if(s.equals("tier"))
-            return IVariable.wrap(new TranslationTextComponent("ars_nouveau.spell_tier." + recipe.tier.toString().toLowerCase()).getString());
+            return IVariable.wrap(new TranslatableComponent("ars_nouveau.spell_tier." + recipe.tier.toString().toLowerCase()).getString());
         if(s.equals("schools")) {
             AbstractSpellPart part = ((Glyph) recipe.output.getItem()).spellPart;
             StringBuilder str = new StringBuilder("");
@@ -48,13 +48,13 @@ public class GlyphPressProcessor implements IComponentProcessor {
                 int cost =  ((Glyph) recipe.output.getItem()).spellPart.getManaCost();
                 String costLang = "";
                 if(cost == 0)
-                    costLang = new TranslationTextComponent("ars_nouveau.mana_cost.none").getString();
+                    costLang = new TranslatableComponent("ars_nouveau.mana_cost.none").getString();
                 if(cost < 20)
-                    costLang = new TranslationTextComponent("ars_nouveau.mana_cost.low").getString();
+                    costLang = new TranslatableComponent("ars_nouveau.mana_cost.low").getString();
                 if(cost < 50)
-                    costLang = new TranslationTextComponent("ars_nouveau.mana_cost.medium").getString();
+                    costLang = new TranslatableComponent("ars_nouveau.mana_cost.medium").getString();
                 if(cost >= 50)
-                    costLang = new TranslationTextComponent("ars_nouveau.mana_cost.high").getString();
+                    costLang = new TranslatableComponent("ars_nouveau.mana_cost.high").getString();
                 return IVariable.wrap(costLang);
             }
             return IVariable.wrap("");

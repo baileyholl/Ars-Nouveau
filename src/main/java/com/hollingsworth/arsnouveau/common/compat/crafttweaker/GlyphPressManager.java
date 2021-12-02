@@ -8,8 +8,8 @@ import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.resources.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Arrays;
@@ -35,7 +35,7 @@ public class GlyphPressManager implements IRecipeManager {
     }
     
     @Override
-    public IRecipeType<GlyphPressRecipe> getRecipeType() {
+    public RecipeType<GlyphPressRecipe> getRecipeType() {
         return RecipeRegistry.GLYPH_TYPE;
     }
 }

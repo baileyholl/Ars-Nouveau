@@ -5,27 +5,27 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.CrystallizerTile;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 
-public class CrystallizerRenderer extends TileEntityRenderer<CrystallizerTile> {
+public class CrystallizerRenderer extends BlockEntityRenderer<CrystallizerTile> {
 
-    public CrystallizerRenderer(TileEntityRendererDispatcher manager) {
+    public CrystallizerRenderer(BlockEntityRenderDispatcher manager) {
         super(manager);
     }
 
     @Override
-    public void render(CrystallizerTile crystallizerTile, float f, MatrixStack ms, IRenderTypeBuffer buffers, int light, int overlay) {
-        World world = crystallizerTile.getLevel();
+    public void render(CrystallizerTile crystallizerTile, float f, PoseStack ms, MultiBufferSource buffers, int light, int overlay) {
+        Level world = crystallizerTile.getLevel();
         BlockPos pos  = crystallizerTile.getBlockPos();
 
         double x = crystallizerTile.getBlockPos().getX();
@@ -41,7 +41,7 @@ public class CrystallizerRenderer extends TileEntityRenderer<CrystallizerTile> {
         float scaleAge = draining ?(float) ParticleUtil.inRange(0.1, 0.2) : (float) ParticleUtil.inRange(0.05, 0.15);
         if(world.random.nextInt( randBound)  == 0 && !Minecraft.getInstance().isPaused()){
             for(int i =0; i< numParticles; i++){
-                Vector3d particlePos = new Vector3d(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0.5, 0.5);
+                Vec3 particlePos = new Vec3(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0.5, 0.5);
                 particlePos = particlePos.add(ParticleUtil.pointInSphere());
                 world.addParticle(ParticleLineData.createData(new ParticleColor(255,25,180) ,scaleAge, baseAge+world.random.nextInt(20)) ,
                         particlePos.x(), particlePos.y(), particlePos.z(),
@@ -61,7 +61,7 @@ public class CrystallizerRenderer extends TileEntityRenderer<CrystallizerTile> {
         ms.pushPose();
         ms.scale(0.5f, 0.5f, 0.5f);
         ms.translate(1D, 1f, 1D);
-        Minecraft.getInstance().getItemRenderer().renderStatic(entityItem.getItem(), ItemCameraTransforms.TransformType.FIXED, 15728880, overlay, ms, buffers);
+        Minecraft.getInstance().getItemRenderer().renderStatic(entityItem.getItem(), ItemTransforms.TransformType.FIXED, 15728880, overlay, ms, buffers);
         ms.popPose();
     }
 }

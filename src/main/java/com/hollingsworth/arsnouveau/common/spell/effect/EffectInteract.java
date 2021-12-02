@@ -4,24 +4,24 @@ import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.ShearsItem;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ShearsItem;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.IForgeShearable;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
@@ -41,23 +41,23 @@ public class EffectInteract extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         Entity e = rayTraceResult.getEntity();
-        if(e instanceof AnimalEntity){
-            if(shooter instanceof PlayerEntity){
-                ((AnimalEntity) e).mobInteract((PlayerEntity) shooter, Hand.MAIN_HAND);
+        if(e instanceof Animal){
+            if(shooter instanceof Player){
+                ((Animal) e).mobInteract((Player) shooter, InteractionHand.MAIN_HAND);
 
             }else if (shooter instanceof IInteractResponder){
-                FakePlayer fakePlayer = FakePlayerFactory.getMinecraft((ServerWorld)world);
+                FakePlayer fakePlayer = FakePlayerFactory.getMinecraft((ServerLevel)world);
                 fakePlayer.inventory.clearContent();
                 fakePlayer.setPos(e.getX(), e.getY(), e.getZ());
                 ItemStack stack = ((IInteractResponder) shooter).getHeldItem().copy();
-                fakePlayer.setItemInHand(Hand.MAIN_HAND, stack);
-                e.interact( fakePlayer, Hand.MAIN_HAND);
+                fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack);
+                e.interact( fakePlayer, InteractionHand.MAIN_HAND);
                 List<ItemStack> items = new ArrayList<>();
                 if(e instanceof IForgeShearable && fakePlayer.getMainHandItem().getItem() instanceof ShearsItem && ((IForgeShearable) e).isShearable(fakePlayer.getMainHandItem(), world, e.blockPosition())){
                     items.addAll(((IForgeShearable) e).onSheared(fakePlayer, fakePlayer.getMainHandItem(), world, e.blockPosition(),
-                            EnchantmentHelper.getItemEnchantmentLevel(net.minecraft.enchantment.Enchantments.BLOCK_FORTUNE,fakePlayer.getMainHandItem())));
+                            EnchantmentHelper.getItemEnchantmentLevel(net.minecraft.world.item.enchantment.Enchantments.BLOCK_FORTUNE,fakePlayer.getMainHandItem())));
                 }
                 items.addAll(fakePlayer.inventory.items);
                 items.addAll(fakePlayer.inventory.armor);
@@ -68,10 +68,10 @@ public class EffectInteract extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         BlockPos blockPos = rayTraceResult.getBlockPos();
         BlockState blockState = world.getBlockState(blockPos);
-        if(!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, blockPos))
+        if(!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, blockPos))
             return;
 
         // Stop duping shears on blocks that create a new itemstack on right click
@@ -79,14 +79,14 @@ public class EffectInteract extends AbstractEffect {
             return;
 
         if (isRealPlayer(shooter)) {
-            blockState.use(world, (PlayerEntity) shooter, Hand.MAIN_HAND, rayTraceResult);
+            blockState.use(world, (Player) shooter, InteractionHand.MAIN_HAND, rayTraceResult);
         } else {
-            FakePlayer player = ANFakePlayer.getPlayer((ServerWorld) world);
+            FakePlayer player = ANFakePlayer.getPlayer((ServerLevel) world);
             // NOTE: Get IInteractResponder held item if we have one
             ItemStack stack = shooter instanceof IInteractResponder ? ((IInteractResponder) shooter).getHeldItem().copy() : ItemStack.EMPTY;
-            player.setItemInHand(Hand.MAIN_HAND, stack);
+            player.setItemInHand(InteractionHand.MAIN_HAND, stack);
 
-            blockState.use(world, player, Hand.MAIN_HAND, rayTraceResult);
+            blockState.use(world, player, InteractionHand.MAIN_HAND, rayTraceResult);
 
             // NOTE: Return all items that were used by the fake player
             // NOTE: Returning of items should probably not only be done for shears. But for now it's better than not returning shears
@@ -102,7 +102,7 @@ public class EffectInteract extends AbstractEffect {
         }
     }
 
-    public void returnItems(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<ItemStack> items){
+    public void returnItems(HitResult rayTraceResult, Level world, LivingEntity shooter, List<ItemStack> items){
         for(ItemStack i : items){
             if(shooter instanceof IPickupResponder){
                 ItemStack leftOver = ((IPickupResponder) shooter).onPickup(i);
@@ -115,7 +115,7 @@ public class EffectInteract extends AbstractEffect {
     }
 
     @Override
-    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
+    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, List<AbstractAugment> augments) {
         return nonAirAnythingSuccess(rayTraceResult, world);
     }
 

@@ -3,8 +3,8 @@ package com.hollingsworth.arsnouveau.common.network;
 import com.hollingsworth.arsnouveau.api.event.ChimeraSummonEvent;
 import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
 import com.hollingsworth.arsnouveau.common.event.timed.EruptionEvent;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.HashMap;
@@ -14,24 +14,24 @@ import java.util.function.Supplier;
 
 public class PacketTimedEvent {
 
-    CompoundNBT tag;
+    CompoundTag tag;
 
     //Decoder
-    public PacketTimedEvent(PacketBuffer buf){
+    public PacketTimedEvent(FriendlyByteBuf buf){
         tag = buf.readNbt();
     }
 
     //Encoder
-    public void toBytes(PacketBuffer buf){
+    public void toBytes(FriendlyByteBuf buf){
         buf.writeNbt(tag);
     }
 
-    public PacketTimedEvent(CompoundNBT tag){
+    public PacketTimedEvent(CompoundTag tag){
         this.tag = tag;
     }
 
     public PacketTimedEvent(ITimedEvent event){
-        this.tag = new CompoundNBT();
+        this.tag = new CompoundTag();
         event.serialize(tag);
     }
 
@@ -44,7 +44,7 @@ public class PacketTimedEvent {
         ctx.get().setPacketHandled(true);
     }
 
-    public static Map<String, Function<CompoundNBT, Void>> methodMap = new HashMap();
+    public static Map<String, Function<CompoundTag, Void>> methodMap = new HashMap();
 
     static{
         methodMap.put(ChimeraSummonEvent.ID, (nbt) -> ChimeraSummonEvent.get(nbt).onPacketHandled());

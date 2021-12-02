@@ -5,14 +5,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.item.crafting.*;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
@@ -21,7 +21,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class CrushRecipe implements IRecipe<IInventory> {
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.ShapedRecipe;
+
+public class CrushRecipe implements Recipe<Container> {
 
     public final Ingredient input;
     public final List<CrushOutput> outputs;
@@ -45,13 +51,13 @@ public class CrushRecipe implements IRecipe<IInventory> {
     }
 
     @Override
-    public boolean matches(IInventory inventory, World world) {
+    public boolean matches(Container inventory, Level world) {
         return this.input.test(inventory.getItem(0));
     }
 
     @Nonnull
     @Override
-    public ItemStack assemble(IInventory inventory) {
+    public ItemStack assemble(Container inventory) {
         return ItemStack.EMPTY;
     }
 
@@ -73,12 +79,12 @@ public class CrushRecipe implements IRecipe<IInventory> {
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return RecipeRegistry.CRUSH_SERIALIZER;
     }
 
     @Override
-    public IRecipeType<?> getType() {
+    public RecipeType<?> getType() {
         return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, RECIPE_ID));
     }
 
@@ -92,18 +98,18 @@ public class CrushRecipe implements IRecipe<IInventory> {
         }
     }
 
-    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CrushRecipe> {
+    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CrushRecipe> {
 
         @Override
         public CrushRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            Ingredient input = Ingredient.fromJson(JSONUtils.getAsJsonArray(json, "input"));
-            JsonArray outputs = JSONUtils.getAsJsonArray(json,"output");
+            Ingredient input = Ingredient.fromJson(GsonHelper.getAsJsonArray(json, "input"));
+            JsonArray outputs = GsonHelper.getAsJsonArray(json,"output");
             List<CrushOutput> parsedOutputs = new ArrayList<>();
 
             for(JsonElement e : outputs){
                 JsonObject obj = e.getAsJsonObject();
-                float chance = JSONUtils.getAsFloat(obj, "chance");
-                ItemStack output = ShapedRecipe.itemFromJson(JSONUtils.getAsJsonObject(obj, "item"));
+                float chance = GsonHelper.getAsFloat(obj, "chance");
+                ItemStack output = ShapedRecipe.itemFromJson(GsonHelper.getAsJsonObject(obj, "item"));
                 parsedOutputs.add(new CrushOutput(output, chance));
             }
 
@@ -112,7 +118,7 @@ public class CrushRecipe implements IRecipe<IInventory> {
 
 
         @Override
-        public void toNetwork(PacketBuffer buf, CrushRecipe recipe) {
+        public void toNetwork(FriendlyByteBuf buf, CrushRecipe recipe) {
             buf.writeInt(recipe.outputs.size());
             recipe.input.toNetwork(buf);
             for(CrushOutput i : recipe.outputs){
@@ -123,7 +129,7 @@ public class CrushRecipe implements IRecipe<IInventory> {
 
         @Nullable
         @Override
-        public CrushRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+        public CrushRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
             int length = buffer.readInt();
             Ingredient input = Ingredient.fromNetwork(buffer);
             List<CrushOutput> stacks = new ArrayList<>();

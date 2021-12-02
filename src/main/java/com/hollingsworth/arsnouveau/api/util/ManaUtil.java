@@ -11,13 +11,13 @@ import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.setup.Config;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.items.IItemHandlerModifiable;
 
@@ -43,7 +43,7 @@ public class ManaUtil {
     }
 
 
-    public static int getMaxMana(PlayerEntity e){
+    public static int getMaxMana(Player e){
         IMana mana = ManaCapability.getMana(e).orElse(null);
         if(mana == null)
             return 0;
@@ -75,7 +75,7 @@ public class ManaUtil {
         return max;
     }
 
-    public static double getManaRegen(PlayerEntity e) {
+    public static double getManaRegen(Player e) {
         IMana mana = ManaCapability.getMana(e).orElse(null);
         if(mana == null)
             return 0;
@@ -113,7 +113,7 @@ public class ManaUtil {
      * Returns the position where the mana was taken, or null if none were found.
      */
     @Nullable
-    public static BlockPos takeManaNearby(BlockPos pos, World world, int range, int mana){
+    public static BlockPos takeManaNearby(BlockPos pos, Level world, int range, int mana){
         Optional<BlockPos> loc = BlockPos.findClosestMatch(pos, range, range, (b) -> world.getBlockEntity(b) instanceof ManaJarTile && ((ManaJarTile) world.getBlockEntity(b)).getCurrentMana() >= mana);
         if(!loc.isPresent())
             return null;
@@ -122,7 +122,7 @@ public class ManaUtil {
         return loc.get();
     }
 
-    public static @Nullable BlockPos takeManaNearbyWithParticles(BlockPos pos, World world, int range, int mana){
+    public static @Nullable BlockPos takeManaNearbyWithParticles(BlockPos pos, Level world, int range, int mana){
         BlockPos result = takeManaNearby(pos,world,range,mana);
         if(result != null){
             EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, result, pos);
@@ -135,18 +135,18 @@ public class ManaUtil {
      * Searches for nearby mana jars that have enough mana.
      * Returns the position where the mana was taken, or null if none were found.
      */
-    public static boolean hasManaNearby(BlockPos pos, World world, int range, int mana){
+    public static boolean hasManaNearby(BlockPos pos, Level world, int range, int mana){
         Optional<BlockPos> loc = BlockPos.findClosestMatch(pos, range, range, (b) -> world.getBlockEntity(b) instanceof ManaJarTile && ((ManaJarTile) world.getBlockEntity(b)).getCurrentMana() >= mana);
         return loc.isPresent();
     }
 
     @Nullable
-    public static BlockPos canGiveManaClosest(BlockPos pos, World world, int range){
+    public static BlockPos canGiveManaClosest(BlockPos pos, Level world, int range){
         Optional<BlockPos> loc = BlockPos.findClosestMatch(pos, range, range, (b) ->  world.getBlockEntity(b) instanceof ManaJarTile && ((ManaJarTile) world.getBlockEntity(b)).canAcceptMana());
         return loc.orElse(null);
     }
 
-    public static List<BlockPos> canGiveManaAny(BlockPos pos, World world, int range){
+    public static List<BlockPos> canGiveManaAny(BlockPos pos, Level world, int range){
         List<BlockPos> posList = new ArrayList<>();
         BlockPos.withinManhattanStream(pos, range, range, range).forEach(b ->{
             if(world.getBlockEntity(b) instanceof ManaJarTile && ((ManaJarTile) world.getBlockEntity(b)).canAcceptMana())

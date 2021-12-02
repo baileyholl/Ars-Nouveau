@@ -2,18 +2,18 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.SimpleNamedContainerProvider;
-import net.minecraft.inventory.container.WorkbenchContainer;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.inventory.CraftingMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,13 +27,13 @@ public class EffectCraft extends AbstractEffect {
         super(GlyphLib.EffectCraftID, "Craft");
     }
 
-    private static final ITextComponent CONTAINER_NAME = new TranslationTextComponent("container.crafting");
+    private static final Component CONTAINER_NAME = new TranslatableComponent("container.crafting");
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        if(shooter instanceof PlayerEntity && isRealPlayer(shooter)){
-            PlayerEntity playerEntity = (PlayerEntity) shooter;
-            playerEntity.openMenu(new SimpleNamedContainerProvider((id, inventory, player) -> new CustomWorkbench(id, inventory, IWorldPosCallable.create(player.getCommandSenderWorld(), player.blockPosition())), CONTAINER_NAME));
+    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        if(shooter instanceof Player && isRealPlayer(shooter)){
+            Player playerEntity = (Player) shooter;
+            playerEntity.openMenu(new SimpleMenuProvider((id, inventory, player) -> new CustomWorkbench(id, inventory, ContainerLevelAccess.create(player.getCommandSenderWorld(), player.blockPosition())), CONTAINER_NAME));
         }
     }
 
@@ -42,18 +42,18 @@ public class EffectCraft extends AbstractEffect {
         return 50;
     }
 
-    public static class CustomWorkbench extends WorkbenchContainer{
+    public static class CustomWorkbench extends CraftingMenu{
 
-        public CustomWorkbench(int id, PlayerInventory playerInventory) {
+        public CustomWorkbench(int id, Inventory playerInventory) {
             super(id, playerInventory);
         }
 
-        public CustomWorkbench(int id, PlayerInventory playerInventory, IWorldPosCallable p_i50090_3_) {
+        public CustomWorkbench(int id, Inventory playerInventory, ContainerLevelAccess p_i50090_3_) {
             super(id, playerInventory, p_i50090_3_);
         }
 
         @Override
-        public boolean stillValid(PlayerEntity playerIn) {
+        public boolean stillValid(Player playerIn) {
             return true;
         }
     }

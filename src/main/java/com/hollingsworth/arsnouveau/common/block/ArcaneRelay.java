@@ -2,11 +2,11 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.ArcaneRelayTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.BlockGetter;
 
 import javax.annotation.Nullable;
 
@@ -20,7 +20,7 @@ public class ArcaneRelay extends ModBlock {
         this(defaultProperties().lightLevel((blockState) ->8).noOcclusion(), registryName);
     }
 
-    public ArcaneRelay(AbstractBlock.Properties properties, String registryName){
+    public ArcaneRelay(BlockBehaviour.Properties properties, String registryName){
         super(properties, registryName);
     }
 
@@ -31,13 +31,13 @@ public class ArcaneRelay extends ModBlock {
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
         return new ArcaneRelayTile();
     }
 
     @Override
-    public BlockRenderType getRenderShape(BlockState p_149645_1_) {
-        return BlockRenderType.ENTITYBLOCK_ANIMATED;
+    public RenderShape getRenderShape(BlockState p_149645_1_) {
+        return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
 }

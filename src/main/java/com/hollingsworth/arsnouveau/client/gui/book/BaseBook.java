@@ -2,12 +2,12 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.ModdedScreen;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TextComponent;
 import org.lwjgl.opengl.GL11;
 
 public class BaseBook extends ModdedScreen {
@@ -21,7 +21,7 @@ public class BaseBook extends ModdedScreen {
     public int bookBottom;
 
     public BaseBook() {
-        super(new StringTextComponent(""));
+        super(new TextComponent(""));
     }
 
     @Override
@@ -35,7 +35,7 @@ public class BaseBook extends ModdedScreen {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
         GlStateManager._pushMatrix();
         if(scaleFactor != 1) {
@@ -48,12 +48,12 @@ public class BaseBook extends ModdedScreen {
         GlStateManager._popMatrix();
     }
 
-    public void drawBackgroundElements(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void drawBackgroundElements(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         Minecraft.getInstance().textureManager.bind(background);
         drawFromTexture(background,0, 0, 0, 0, FULL_WIDTH, FULL_HEIGHT, FULL_WIDTH, FULL_HEIGHT, stack);
     }
 
-    public static void drawFromTexture(ResourceLocation resourceLocation, int x, int y, int u, int v, int w, int h, int fileWidth, int fileHeight, MatrixStack stack) {
+    public static void drawFromTexture(ResourceLocation resourceLocation, int x, int y, int u, int v, int w, int h, int fileWidth, int fileHeight, PoseStack stack) {
         Minecraft.getInstance().textureManager.bind(resourceLocation);
         blit(stack,x, y, u, v, w, h, fileWidth, fileHeight);
     }
@@ -63,7 +63,7 @@ public class BaseBook extends ModdedScreen {
     }
 
 
-    public void drawScreenAfterScale(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void drawScreenAfterScale(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         resetTooltip();
         renderBackground(stack);
         stack.pushPose();

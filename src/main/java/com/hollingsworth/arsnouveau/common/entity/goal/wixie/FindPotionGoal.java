@@ -8,13 +8,15 @@ import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
 import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.Potions;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 import java.util.EnumSet;
+
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 public class FindPotionGoal extends ExtendedRangeGoal {
     EntityWixie wixie;
@@ -31,7 +33,7 @@ public class FindPotionGoal extends ExtendedRangeGoal {
     @Override
     public void start() {
         super.start();
-        TileEntity tileEntity = wixie.level.getBlockEntity(wixie.cauldronPos);
+        BlockEntity tileEntity = wixie.level.getBlockEntity(wixie.cauldronPos);
         found = false;
         if(tileEntity instanceof WixieCauldronTile) {
             potionNeeded = ((WixieCauldronTile) tileEntity).getNeededPotion();
@@ -55,7 +57,7 @@ public class FindPotionGoal extends ExtendedRangeGoal {
 
         if(movePos != null && BlockUtil.distanceFrom(wixie.position(), movePos.above()) < 2.0 + this.extendedRange){
             WixieCauldronTile tile = (WixieCauldronTile) wixie.getCommandSenderWorld().getBlockEntity(wixie.cauldronPos);
-            World world = wixie.getCommandSenderWorld();
+            Level world = wixie.getCommandSenderWorld();
             if(tile == null) {
                 found = true;
                 return;
@@ -89,7 +91,7 @@ public class FindPotionGoal extends ExtendedRangeGoal {
     public boolean canUse() {
         if(wixie.cauldronPos == null)
             return false;
-        TileEntity tileEntity = wixie.level.getBlockEntity(wixie.cauldronPos);
+        BlockEntity tileEntity = wixie.level.getBlockEntity(wixie.cauldronPos);
 
         return wixie.inventoryBackoff == 0 && tileEntity instanceof WixieCauldronTile
                 && ((WixieCauldronTile) tileEntity).hasMana && ((WixieCauldronTile) tileEntity).needsPotion()  && !((WixieCauldronTile) tileEntity).isOff;

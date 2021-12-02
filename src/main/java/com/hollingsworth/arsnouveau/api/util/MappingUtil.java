@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.api.util;
 
-import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 //TODO Remove in favor of AT
 public class MappingUtil {

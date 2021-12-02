@@ -4,18 +4,18 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntitySylph;
 import com.hollingsworth.arsnouveau.common.entity.goal.DistanceRestrictedGoal;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.pattern.BlockStateMatcher;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.item.BoneMealItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.item.BoneMealItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class BonemealGoal extends DistanceRestrictedGoal {
     private int timeGrowing;
     BlockPos growPos;
     EntitySylph sylph;
-    public final Predicate<BlockState> IS_GRASS = BlockStateMatcher.forBlock(Blocks.GRASS_BLOCK);
+    public final Predicate<BlockState> IS_GRASS = BlockStatePredicate.forBlock(Blocks.GRASS_BLOCK);
 
     public BonemealGoal(EntitySylph sylph){
         super(sylph::blockPosition, 0);
@@ -57,7 +57,7 @@ public class BonemealGoal extends DistanceRestrictedGoal {
         if(BlockUtil.distanceFrom(sylph.blockPosition(), this.growPos) > 1.2){
             sylph.getNavigation().moveTo(this.growPos.getX(), this.growPos.getY(), this.growPos.getZ(), 1.2);
         }else{
-            ServerWorld world = (ServerWorld) sylph.level;
+            ServerLevel world = (ServerLevel) sylph.level;
             world.sendParticles(ParticleTypes.COMPOSTER, this.growPos.getX() +0.5, this.growPos.getY()+1.1, this.growPos.getZ()+0.5, 1, ParticleUtil.inRange(-0.2, 0.2),0,ParticleUtil.inRange(-0.2, 0.2),0.01);
             this.timeGrowing--;
             if(this.timeGrowing <= 0){
@@ -80,7 +80,7 @@ public class BonemealGoal extends DistanceRestrictedGoal {
 
     @Override
     public void start() {
-        World world = sylph.level;
+        Level world = sylph.level;
         int range = 4;
         if(this.IS_GRASS.test(world.getBlockState(sylph.blockPosition().below())) && world.getBlockState(sylph.blockPosition()).getMaterial() == Material.AIR){
             this.growPos = sylph.blockPosition().below();

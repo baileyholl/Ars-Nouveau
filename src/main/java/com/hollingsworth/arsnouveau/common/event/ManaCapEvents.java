@@ -7,9 +7,9 @@ import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateMana;
 import com.hollingsworth.arsnouveau.setup.Config;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -32,12 +32,12 @@ public class ManaCapEvents {
         if (mana.getCurrentMana() != mana.getMaxMana()) {
             double regenPerSecond = ManaUtil.getManaRegen(e.player) / Math.max(1, ((int)MEAN_TPS / Config.REGEN_INTERVAL.get()));
             mana.addMana(regenPerSecond);
-            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
+            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
         }
         int max = ManaUtil.getMaxMana(e.player);
         if(mana.getMaxMana() != max) {
             mana.setMaxMana(max);
-            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
+            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
         }
     }
 
@@ -55,7 +55,7 @@ public class ManaCapEvents {
             newMana.setMaxMana(origMana.getMaxMana());
             newMana.setGlyphBonus(origMana.getGlyphBonus());
             newMana.setBookTier(origMana.getBookTier());
-            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity)  e.getEntity()), new PacketUpdateMana(newMana.getCurrentMana(), newMana.getMaxMana(), newMana.getGlyphBonus(), newMana.getBookTier()));
+            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer)  e.getEntity()), new PacketUpdateMana(newMana.getCurrentMana(), newMana.getMaxMana(), newMana.getGlyphBonus(), newMana.getBookTier()));
         }));
     }
 
@@ -69,13 +69,13 @@ public class ManaCapEvents {
         syncPlayerEvent(e.getPlayer());
     }
 
-    public static void syncPlayerEvent(PlayerEntity playerEntity){
-        if (playerEntity instanceof ServerPlayerEntity) {
+    public static void syncPlayerEvent(Player playerEntity){
+        if (playerEntity instanceof ServerPlayer) {
             ManaCapability.getMana(playerEntity).ifPresent(mana -> {
                 mana.setMaxMana(ManaUtil.getMaxMana(playerEntity));
                 mana.setGlyphBonus(mana.getGlyphBonus());
                 mana.setBookTier(mana.getBookTier());
-                Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) playerEntity), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
+                Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) playerEntity), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
             });
         }
     }

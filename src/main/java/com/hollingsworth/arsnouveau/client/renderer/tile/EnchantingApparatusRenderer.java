@@ -7,33 +7,33 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 
 import java.util.Random;
 
-public class EnchantingApparatusRenderer extends TileEntityRenderer<EnchantingApparatusTile> {
+public class EnchantingApparatusRenderer extends BlockEntityRenderer<EnchantingApparatusTile> {
     public static final EnchantingApparatusModel model = new EnchantingApparatusModel();
     public static final ResourceLocation texture = new ResourceLocation(ArsNouveau.MODID + ":textures/blocks/enchanting_apparatus.png");
 
-    public EnchantingApparatusRenderer(TileEntityRendererDispatcher p_i226006_1_) {
+    public EnchantingApparatusRenderer(BlockEntityRenderDispatcher p_i226006_1_) {
         super(p_i226006_1_);
     }
 
     @Override
-    public void render(EnchantingApparatusTile tileEntityIn, float v, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int lightIn, int overlayIn) {
+    public void render(EnchantingApparatusTile tileEntityIn, float v, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int lightIn, int overlayIn) {
         double x = tileEntityIn.getBlockPos().getX();
         double y = tileEntityIn.getBlockPos().getY();
         double z = tileEntityIn.getBlockPos().getZ();
@@ -44,16 +44,16 @@ public class EnchantingApparatusRenderer extends TileEntityRenderer<EnchantingAp
             tileEntityIn.entity = new ItemEntity(tileEntityIn.getLevel(), x, y, z, tileEntityIn.catalystItem);
         }
         matrixStack.pushPose();
-        IVertexBuilder buffer = iRenderTypeBuffer.getBuffer(model.renderType(texture));
+        VertexConsumer buffer = iRenderTypeBuffer.getBuffer(model.renderType(texture));
         double sinOffset = Math.pow(Math.cos((ClientInfo.ticksInGame + v)  /10)/4, 2);
         matrixStack.translate(0.5D,  0.5 + sinOffset, 0.5D);
         float angle = ((ClientInfo.ticksInGame + v)/5.0f) % 360;
         if(tileEntityIn.isCrafting){
-            World world = tileEntityIn.getLevel();
+            Level world = tileEntityIn.getLevel();
             BlockPos pos  = tileEntityIn.getBlockPos().offset(0, 0.5, 0);
             Random rand = world.getRandom();
             for(int i =0; i< 5; i++){
-                Vector3d particlePos = new Vector3d(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0, 0.5);
+                Vec3 particlePos = new Vec3(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0, 0.5);
                 particlePos = particlePos.add(ParticleUtil.pointInSphere());
                 world.addParticle(ParticleLineData.createData(new ParticleColor(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255))),
                         particlePos.x(), particlePos.y(), particlePos.z(),
@@ -86,21 +86,21 @@ public class EnchantingApparatusRenderer extends TileEntityRenderer<EnchantingAp
         matrixStack.pushPose();
         matrixStack.translate(0.5D, 0.55f +sinOffset, 0.5D);
         matrixStack.scale(0.35f, 0.35f, 0.35F);
-        Minecraft.getInstance().getItemRenderer().renderStatic(entityItem.getItem(), ItemCameraTransforms.TransformType.FIXED, 15728880, overlayIn, matrixStack, iRenderTypeBuffer);
+        Minecraft.getInstance().getItemRenderer().renderStatic(entityItem.getItem(), ItemTransforms.TransformType.FIXED, 15728880, overlayIn, matrixStack, iRenderTypeBuffer);
         matrixStack.popPose();
 
     }
 
-    public static class ISRender extends ItemStackTileEntityRenderer {
+    public static class ISRender extends BlockEntityWithoutLevelRenderer {
 
         public ISRender(){ }
 
 
         @Override
-        public void renderByItem(ItemStack p_228364_1_,ItemCameraTransforms.TransformType p_239207_2_,MatrixStack ms, IRenderTypeBuffer buffers, int light, int overlay) {
+        public void renderByItem(ItemStack p_228364_1_,ItemTransforms.TransformType p_239207_2_,PoseStack ms, MultiBufferSource buffers, int light, int overlay) {
             ms.pushPose();
             ms.translate(0.75, 0.25, 0.2);
-            IVertexBuilder buffer = buffers.getBuffer(model.renderType(texture));
+            VertexConsumer buffer = buffers.getBuffer(model.renderType(texture));
             model.renderToBuffer(ms, buffer, light, overlay, 1, 1, 1, 1);
             ms.popPose();
         }

@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
 import com.hollingsworth.arsnouveau.common.util.Log;
-import net.minecraft.pathfinding.Path;
+import net.minecraft.world.level.pathfinder.Path;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;

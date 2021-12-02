@@ -2,8 +2,8 @@ package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -91,7 +91,7 @@ public class SpellCaster implements ISpellCaster{
     // Creates a new instance of SpellCaster for new itemstacks
     public @Nonnull static SpellCaster deserialize(ItemStack stack){
         SpellCaster instance = new SpellCaster(stack);
-        CompoundNBT tag = stack.getTag() != null ? stack.getTag() : new CompoundNBT();
+        CompoundTag tag = stack.getTag() != null ? stack.getTag() : new CompoundTag();
         instance.slot = tag.getInt("current_slot");
         for(int i = 0; i < instance.getMaxSlots(); i++){
             if(tag.contains("spell_" + i)){
@@ -104,7 +104,7 @@ public class SpellCaster implements ISpellCaster{
     }
 
     public void write(ItemStack stack){
-        CompoundNBT tag = stack.hasTag() ? stack.getTag() : new CompoundNBT();
+        CompoundTag tag = stack.hasTag() ? stack.getTag() : new CompoundTag();
         tag.putInt("current_slot", getCurrentSlot());
         tag.putInt("max_slot", getMaxSlots());
         tag.putString("color", color.serialize());

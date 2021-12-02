@@ -6,11 +6,11 @@ import com.hollingsworth.arsnouveau.api.mana.SourcelinkEventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.eventbus.api.Event;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -30,7 +30,7 @@ public class SourcelinkTile extends AbstractManaTile implements IAnimatable {
     public boolean isDisabled = false;
     public boolean registered = false;
 
-    public SourcelinkTile(TileEntityType<?> tileEntityTypeIn) {
+    public SourcelinkTile(BlockEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
     }
 
@@ -98,20 +98,20 @@ public class SourcelinkTile extends AbstractManaTile implements IAnimatable {
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT tag) {
+    public void load(BlockState state, CompoundTag tag) {
         super.load(state, tag);
         progress = tag.getInt("progress");
         isDisabled = tag.getBoolean("disabled");
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
+    public CompoundTag save(CompoundTag tag) {
         tag.putInt("progress", progress);
         tag.putBoolean("disabled", isDisabled);
         return super.save(tag);
     }
 
-    private <E extends TileEntity & IAnimatable > PlayState idlePredicate(AnimationEvent<E> event) {
+    private <E extends BlockEntity & IAnimatable > PlayState idlePredicate(AnimationEvent<E> event) {
         if(this.isDisabled)
             return PlayState.STOP;
         event.getController().setAnimation(new AnimationBuilder().addAnimation("rotation", true));

@@ -4,21 +4,21 @@ import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -29,31 +29,31 @@ public class DominionWand extends ModItem{
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, World p_77663_2_, Entity p_77663_3_, int p_77663_4_, boolean p_77663_5_) {
+    public void inventoryTick(ItemStack stack, Level p_77663_2_, Entity p_77663_3_, int p_77663_4_, boolean p_77663_5_) {
         super.inventoryTick(stack, p_77663_2_, p_77663_3_, p_77663_4_, p_77663_5_);
         if(!stack.hasTag())
-            stack.setTag(new CompoundNBT());
+            stack.setTag(new CompoundTag());
     }
 
     @Override
-    public ActionResultType interactLivingEntity(ItemStack doNotUseStack, PlayerEntity playerEntity, LivingEntity target, Hand hand) {
+    public InteractionResult interactLivingEntity(ItemStack doNotUseStack, Player playerEntity, LivingEntity target, InteractionHand hand) {
 
-        if(playerEntity.level.isClientSide || hand != Hand.MAIN_HAND)
-            return ActionResultType.PASS;
+        if(playerEntity.level.isClientSide || hand != InteractionHand.MAIN_HAND)
+            return InteractionResult.PASS;
 
         ItemStack stack = playerEntity.getItemInHand(hand);
         if(playerEntity.isShiftKeyDown() && target instanceof IWandable){
             ((IWandable) target).onWanded(playerEntity);
             clear(stack, playerEntity);
-            return  ActionResultType.SUCCESS;
+            return  InteractionResult.SUCCESS;
         }
 
         if((getPos(stack) == null || getPos(stack).equals(new BlockPos(0,0,0))) && getEntityID(stack) == -1){
             setEntityID(stack, target.getId());
-            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.dominion_wand.stored_entity"));
-            return  ActionResultType.SUCCESS;
+            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.dominion_wand.stored_entity"));
+            return  InteractionResult.SUCCESS;
         }
-        World world = playerEntity.getCommandSenderWorld();
+        Level world = playerEntity.getCommandSenderWorld();
 
         if(getPos(stack) != null){
             if(world.getBlockEntity(getPos(stack)) instanceof IWandable)
@@ -65,39 +65,39 @@ public class DominionWand extends ModItem{
             clear(stack, playerEntity);
         }
 
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
-    public boolean doesSneakBypassUse(ItemStack stack, IWorldReader world, BlockPos pos, PlayerEntity player) {
+    public boolean doesSneakBypassUse(ItemStack stack, LevelReader world, BlockPos pos, Player player) {
         return false;
     }
 
-    public void clear(ItemStack stack, PlayerEntity playerEntity){
+    public void clear(ItemStack stack, Player playerEntity){
         setPosTag(stack, null);
         setEntityID(stack, -1);
     }
 
 
     @Override
-    public ActionResultType useOn(ItemUseContext context) {
+    public InteractionResult useOn(UseOnContext context) {
         if(context.getLevel().isClientSide || context.getPlayer() == null)
             return super.useOn(context);
         BlockPos pos = context.getClickedPos();
-        World world = context.getLevel();
-        PlayerEntity playerEntity = context.getPlayer();
+        Level world = context.getLevel();
+        Player playerEntity = context.getPlayer();
         ItemStack stack = context.getItemInHand();
         
 
         if(playerEntity.isShiftKeyDown() && world.getBlockEntity(pos) instanceof IWandable){
             ((IWandable) world.getBlockEntity(pos)).onWanded(playerEntity);
             clear(stack, playerEntity);
-            return ActionResultType.CONSUME;
+            return InteractionResult.CONSUME;
         }
 
         if(getEntityID(stack) == - 1 && (getPos(stack) == null || getPos(stack).equals(new BlockPos(0,0,0)))){
             setPosTag(stack, pos);
-            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.dominion_wand.position_set"));
-            return ActionResultType.SUCCESS;
+            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.dominion_wand.position_set"));
+            return InteractionResult.SUCCESS;
         }
 
         if(getPos(stack) != null){
@@ -117,12 +117,12 @@ public class DominionWand extends ModItem{
         return super.useOn(context);
     }
 
-    public void drawConnection(BlockPos pos1, BlockPos pos2, ServerWorld world){
+    public void drawConnection(BlockPos pos1, BlockPos pos2, ServerLevel world){
         ParticleUtil.beam(pos1, pos2, world);
     }
 
     public void setPosTag(ItemStack stack, BlockPos pos){
-        CompoundNBT tag = stack.getTag();
+        CompoundTag tag = stack.getTag();
         if(pos == null && tag != null && tag.contains("to_x")){
             tag.remove("to_x");
             tag.remove("to_y");
@@ -135,13 +135,13 @@ public class DominionWand extends ModItem{
     }
 
     public void setEntityID(ItemStack stack, int id){
-        CompoundNBT tag = stack.getTag();
+        CompoundTag tag = stack.getTag();
         if(tag == null)
             return;
         stack.getTag().putInt("en_id", id);
     }
     public int getEntityID(ItemStack stack){
-        CompoundNBT tag = stack.getTag();
+        CompoundTag tag = stack.getTag();
         if(tag == null || !tag.contains("en_id"))
             return -1;
         return stack.getTag().getInt("en_id");
@@ -151,25 +151,25 @@ public class DominionWand extends ModItem{
     public BlockPos getPos(ItemStack stack){
         if(!stack.hasTag())
             return null;
-        CompoundNBT tag = stack.getTag();
+        CompoundTag tag = stack.getTag();
         return new BlockPos(tag.getInt("to_x"), tag.getInt("to_y"), tag.getInt("to_z"));
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World world, List<ITextComponent> tooltip, ITooltipFlag p_77624_4_) {
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag p_77624_4_) {
         BlockPos pos = getPos(stack);
         tooltip.add(getEntityID(stack) == -1 ? 
-        		new TranslationTextComponent("ars_nouveau.dominion_wand.no_entity") : 
-        		new TranslationTextComponent("ars_nouveau.dominion_wand.entity_stored"));
+        		new TranslatableComponent("ars_nouveau.dominion_wand.no_entity") : 
+        		new TranslatableComponent("ars_nouveau.dominion_wand.entity_stored"));
         if(pos == null){
-            tooltip.add(new TranslationTextComponent("ars_nouveau.dominion_wand.no_location"));
+            tooltip.add(new TranslatableComponent("ars_nouveau.dominion_wand.no_location"));
             return;
         }
 
-        tooltip.add(new TranslationTextComponent("ars_nouveau.dominion_wand.position_stored", getPosString(pos)));
+        tooltip.add(new TranslatableComponent("ars_nouveau.dominion_wand.position_stored", getPosString(pos)));
     }
 
     public static String getPosString(BlockPos pos){
-        return new TranslationTextComponent("ars_nouveau.position", pos.getX(), pos.getY(), pos.getZ()).getString();
+        return new TranslatableComponent("ars_nouveau.position", pos.getX(), pos.getY(), pos.getZ()).getString();
     }
 }

@@ -4,26 +4,26 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.common.block.ManaJar;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.Util;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,13 +31,13 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class PotionJarTile extends TileEntity implements ITickableTileEntity, ITooltipProvider, IWandable {
+public class PotionJarTile extends BlockEntity implements TickableBlockEntity, ITooltipProvider, IWandable {
 
     private int amount;
     private Potion potion = Potions.EMPTY;
     public boolean isLocked;
-    private List<EffectInstance> customEffects = new ArrayList<>();
-    public PotionJarTile(TileEntityType<?> tileEntityTypeIn) {
+    private List<MobEffectInstance> customEffects = new ArrayList<>();
+    public PotionJarTile(BlockEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
     }
 
@@ -78,23 +78,23 @@ public class PotionJarTile extends TileEntity implements ITickableTileEntity, IT
     }
 
     @Override
-    public void onWanded(PlayerEntity playerEntity) {
+    public void onWanded(Player playerEntity) {
         if(!isLocked){
             this.isLocked = true;
-            playerEntity.sendMessage(new TranslationTextComponent("ars_nouveau.locked"), Util.NIL_UUID);
+            playerEntity.sendMessage(new TranslatableComponent("ars_nouveau.locked"), Util.NIL_UUID);
         }else{
             this.isLocked = false;
-            playerEntity.sendMessage(new TranslationTextComponent("ars_nouveau.unlocked"), Util.NIL_UUID);
+            playerEntity.sendMessage(new TranslatableComponent("ars_nouveau.unlocked"), Util.NIL_UUID);
         }
 
         BlockState state = level.getBlockState(worldPosition);
         level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
     }
 
-    public void setPotion(Potion potion, List<EffectInstance> effectInstances){
+    public void setPotion(Potion potion, List<MobEffectInstance> effectInstances){
         this.potion = potion == null ? Potions.EMPTY : potion;
         customEffects = new ArrayList<>();
-        for (EffectInstance e : effectInstances) {
+        for (MobEffectInstance e : effectInstances) {
             if (!potion.getEffects().contains(e))
                 customEffects.add(e);
         }
@@ -144,49 +144,49 @@ public class PotionJarTile extends TileEntity implements ITickableTileEntity, IT
             PotionUtils.setPotion(potionStack, potion);
             list.add(potionStack.getHoverName().getString());
             PotionUtils.setCustomEffects(potionStack, customEffects);
-            List<ITextComponent> tooltip = new ArrayList<>();
+            List<Component> tooltip = new ArrayList<>();
             PotionUtils.addPotionTooltip(potionStack, tooltip, 1.0F);
-            for(ITextComponent i : tooltip){
+            for(Component i : tooltip){
                 list.add(i.getString());
             }
 
         }
-        list.add(new TranslationTextComponent("ars_nouveau.mana_jar.fullness", (getCurrentFill()*100) / this.getMaxFill()).getString());
+        list.add(new TranslatableComponent("ars_nouveau.mana_jar.fullness", (getCurrentFill()*100) / this.getMaxFill()).getString());
         if(isLocked)
-            list.add(new TranslationTextComponent("ars_nouveau.locked").getString());
+            list.add(new TranslatableComponent("ars_nouveau.locked").getString());
 
         return list;
     }
 
-    public void appendEffect(List<EffectInstance> effects){
+    public void appendEffect(List<MobEffectInstance> effects){
         this.customEffects.addAll(effects);
     }
 
-    public void setCustomEffects(List<EffectInstance> effects){
+    public void setCustomEffects(List<MobEffectInstance> effects){
         this.customEffects.clear();
         this.customEffects.addAll(effects);
     }
 
-    public List<EffectInstance> getFullEffects(){
-        List<EffectInstance> thisEffects = getCustomEffects();
+    public List<MobEffectInstance> getFullEffects(){
+        List<MobEffectInstance> thisEffects = getCustomEffects();
         thisEffects.addAll(potion.getEffects());
         return thisEffects;
     }
 
-    public List<EffectInstance> getCustomEffects(){
+    public List<MobEffectInstance> getCustomEffects(){
         return new ArrayList<>(customEffects);
     }
 
     //If the effect list of jars or flasks are equal
-    public boolean isMixEqual(List<EffectInstance> effects){
+    public boolean isMixEqual(List<MobEffectInstance> effects){
 
-        List<EffectInstance> thisEffects = new ArrayList<>(customEffects);
+        List<MobEffectInstance> thisEffects = new ArrayList<>(customEffects);
         thisEffects.addAll(potion.getEffects());
         effects = new ArrayList<>(effects);
         if(thisEffects.size() != effects.size())
             return false;
-        effects.sort(Comparator.comparing(EffectInstance::toString));
-        thisEffects.sort(Comparator.comparing(EffectInstance::toString));
+        effects.sort(Comparator.comparing(MobEffectInstance::toString));
+        thisEffects.sort(Comparator.comparing(MobEffectInstance::toString));
         return thisEffects.equals(effects);
     }
 
@@ -200,7 +200,7 @@ public class PotionJarTile extends TileEntity implements ITickableTileEntity, IT
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT tag) {
+    public void load(BlockState state, CompoundTag tag) {
         super.load(state, tag);
         this.amount = tag.getInt("amount");
         this.potion = PotionUtils.getPotion(tag);
@@ -210,16 +210,16 @@ public class PotionJarTile extends TileEntity implements ITickableTileEntity, IT
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
+    public CompoundTag save(CompoundTag tag) {
         ResourceLocation resourcelocation = Registry.POTION.getKey(potion);
         tag.putInt("amount", this.getAmount());
         tag.putString("Potion", resourcelocation.toString());
         tag.putBoolean("locked", isLocked);
         if(!customEffects.isEmpty()) {
-            ListNBT listnbt = new ListNBT();
+            ListTag listnbt = new ListTag();
 
-            for (EffectInstance effectinstance : customEffects) {
-                listnbt.add(effectinstance.save(new CompoundNBT()));
+            for (MobEffectInstance effectinstance : customEffects) {
+                listnbt.add(effectinstance.save(new CompoundTag()));
             }
 
             tag.put("CustomPotionEffects", listnbt);
@@ -229,17 +229,17 @@ public class PotionJarTile extends TileEntity implements ITickableTileEntity, IT
 
     @Override
     @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 3, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 3, this.getUpdateTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
         handleUpdateTag(level.getBlockState(worldPosition),pkt.getTag());
     }

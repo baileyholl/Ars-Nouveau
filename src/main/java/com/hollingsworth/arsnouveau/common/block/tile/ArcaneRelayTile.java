@@ -9,13 +9,13 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -34,7 +34,7 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
         super(BlockRegistry.ARCANE_RELAY_TILE);
     }
 
-    public ArcaneRelayTile(TileEntityType<?> type){
+    public ArcaneRelayTile(BlockEntityType<?> type){
         super(type);
     }
 
@@ -101,35 +101,35 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
     }
 
     @Override
-    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, PlayerEntity playerEntity) {
+    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         if(storedPos == null || level.isClientSide)
             return;
         // Let relays take from us, no action needed.
         if(this.setSendTo(storedPos.immutable())) {
-            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.connections.send", DominionWand.getPosString(storedPos)));
+            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.connections.send", DominionWand.getPosString(storedPos)));
             ParticleUtil.beam(storedPos, worldPosition, level);
         }else{
-            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.connections.fail"));
+            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.connections.fail"));
         }
     }
 
     @Override
-    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, PlayerEntity playerEntity) {
+    public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         if(storedPos == null)
             return;
         if(level.getBlockEntity(storedPos) instanceof ArcaneRelayTile)
             return;
         if(this.setTakeFrom(storedPos.immutable())) {
-            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.connections.take", DominionWand.getPosString(storedPos)));
+            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.connections.take", DominionWand.getPosString(storedPos)));
         }else{
-            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.connections.fail"));
+            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.connections.fail"));
         }
     }
 
     @Override
-    public void onWanded(PlayerEntity playerEntity) {
+    public void onWanded(Player playerEntity) {
         this.clearPos();
-        PortUtil.sendMessage(playerEntity,new TranslationTextComponent("ars_nouveau.connections.cleared"));
+        PortUtil.sendMessage(playerEntity,new TranslatableComponent("ars_nouveau.connections.cleared"));
     }
 
 
@@ -171,7 +171,7 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT tag) {
+    public void load(BlockState state, CompoundTag tag) {
         if(NBTUtil.hasBlockPos(tag, "to")){
             this.toPos = NBTUtil.getBlockPos(tag, "to");
         }else{
@@ -186,7 +186,7 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
+    public CompoundTag save(CompoundTag tag) {
         if(toPos != null) {
             NBTUtil.storeBlockPos(tag, "to", toPos);
         }else{
@@ -204,14 +204,14 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
     public List<String> getTooltip() {
         List<String> list = new ArrayList<>();
         if(toPos == null){
-            list.add(new TranslationTextComponent("ars_nouveau.relay.no_to").getString());
+            list.add(new TranslatableComponent("ars_nouveau.relay.no_to").getString());
         }else{
-            list.add(new TranslationTextComponent("ars_nouveau.relay.one_to", 1).getString());
+            list.add(new TranslatableComponent("ars_nouveau.relay.one_to", 1).getString());
         }
         if(fromPos == null){
-            list.add(new TranslationTextComponent("ars_nouveau.relay.no_from").getString());
+            list.add(new TranslatableComponent("ars_nouveau.relay.no_from").getString());
         }else{
-            list.add(new TranslationTextComponent("ars_nouveau.relay.one_from", 1).getString());
+            list.add(new TranslatableComponent("ars_nouveau.relay.one_from", 1).getString());
         }
         return list;
     }

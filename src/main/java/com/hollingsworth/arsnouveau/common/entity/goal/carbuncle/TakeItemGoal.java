@@ -5,16 +5,18 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
 import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
 import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 
 import java.util.EnumSet;
+
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 public class TakeItemGoal extends ExtendedRangeGoal {
     EntityCarbuncle carbuncle;
@@ -49,7 +51,7 @@ public class TakeItemGoal extends ExtendedRangeGoal {
 
 
     public void getItem(){
-        World world = carbuncle.level;
+        Level world = carbuncle.level;
         if(world.getBlockEntity(takePos) == null)
             return;
         IItemHandler iItemHandler = world.getBlockEntity(takePos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
@@ -67,10 +69,10 @@ public class TakeItemGoal extends ExtendedRangeGoal {
                 carbuncle.level.playSound(null, carbuncle.getX(),carbuncle.getY(), carbuncle.getZ(),
                         SoundEvents.ITEM_PICKUP, carbuncle.getSoundSource(),1.0F, 1.0F);
 
-                if(world instanceof ServerWorld){
+                if(world instanceof ServerLevel){
                     // Potential bug with OpenJDK causing irreproducible noClassDef errors
                     try {
-                        OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), takePos, 20);
+                        OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerLevel) world), takePos, 20);
                         event.open();
                         EventQueue.getServerInstance().addEvent(event);
                     }catch (Throwable ignored){}
@@ -91,8 +93,8 @@ public class TakeItemGoal extends ExtendedRangeGoal {
     public void tick() {
         super.tick();
         if(carbuncle.getHeldStack().isEmpty() && takePos != null && BlockUtil.distanceFrom(carbuncle.position(), takePos) <= 2d + this.extendedRange){
-            World world = carbuncle.level;
-            TileEntity tileEntity = world.getBlockEntity(takePos);
+            Level world = carbuncle.level;
+            BlockEntity tileEntity = world.getBlockEntity(takePos);
             if(tileEntity == null)
                 return;
             IItemHandler iItemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);

@@ -2,8 +2,8 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.WealdWalker;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
@@ -28,8 +28,8 @@ public class WealdWalkerModel extends AnimatedGeoModel<WealdWalker> {
         if(entity.getEntityData().get(WealdWalker.CASTING)){
             IBone frontLeftLeg = this.getAnimationProcessor().getBone("leg_right");
             IBone frontRightLeg = this.getAnimationProcessor().getBone("leg_left");
-            frontLeftLeg.setRotationX(MathHelper.cos(entity.animationPosition * 0.6662F) * 1.4F * entity.animationSpeed);
-            frontRightLeg.setRotationX(MathHelper.cos(entity.animationPosition * 0.6662F + (float)Math.PI) * 1.4F * entity.animationSpeed);
+            frontLeftLeg.setRotationX(Mth.cos(entity.animationPosition * 0.6662F) * 1.4F * entity.animationSpeed);
+            frontRightLeg.setRotationX(Mth.cos(entity.animationPosition * 0.6662F + (float)Math.PI) * 1.4F * entity.animationSpeed);
         }
     }
 

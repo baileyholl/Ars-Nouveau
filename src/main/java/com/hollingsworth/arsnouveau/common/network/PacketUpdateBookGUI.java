@@ -2,26 +2,26 @@ package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class PacketUpdateBookGUI {
 
-    public CompoundNBT tag;
+    public CompoundTag tag;
     //Decoder
-    public PacketUpdateBookGUI(PacketBuffer buf){
+    public PacketUpdateBookGUI(FriendlyByteBuf buf){
         tag = buf.readNbt();
     }
 
     //Encoder
-    public void toBytes(PacketBuffer buf){
+    public void toBytes(FriendlyByteBuf buf){
         buf.writeNbt(tag);
     }
 
-    public PacketUpdateBookGUI(CompoundNBT tag){
+    public PacketUpdateBookGUI(CompoundTag tag){
         this.tag = tag;
     }
 

@@ -1,11 +1,11 @@
 package com.hollingsworth.arsnouveau.common.armor;
 
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.world.entity.EquipmentSlot;
 
 public class NoviceArmor extends MagicArmor{
 
-    public NoviceArmor(EquipmentSlotType slot) {
+    public NoviceArmor(EquipmentSlot slot) {
         super(Materials.novice, slot, ItemsRegistry.defaultItemProperties());
     }
 

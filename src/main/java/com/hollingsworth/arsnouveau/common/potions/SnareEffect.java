@@ -1,15 +1,15 @@
 package com.hollingsworth.arsnouveau.common.potions;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectType;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
 
-public class SnareEffect extends Effect {
+public class SnareEffect extends MobEffect {
 
     public SnareEffect() {
-        super(EffectType.HARMFUL, 2039587);
+        super(MobEffectCategory.HARMFUL, 2039587);
         setRegistryName(ArsNouveau.MODID, "snared");
         addAttributeModifier(Attributes.MOVEMENT_SPEED, "0dee8a21-f182-42c8-8361-1ad6186cac30", -1, AttributeModifier.Operation.MULTIPLY_TOTAL);
     }

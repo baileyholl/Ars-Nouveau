@@ -1,26 +1,26 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.client.ClientInfo;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class PacketGetPersistentData {
 
-    public CompoundNBT tag;
+    public CompoundTag tag;
     //Decoder
-    public PacketGetPersistentData(PacketBuffer buf){
+    public PacketGetPersistentData(FriendlyByteBuf buf){
         tag = buf.readNbt();
     }
 
     //Encoder
-    public void toBytes(PacketBuffer buf){
+    public void toBytes(FriendlyByteBuf buf){
         buf.writeNbt(tag);
     }
 
-    public PacketGetPersistentData(CompoundNBT tag){
+    public PacketGetPersistentData(CompoundTag tag){
         this.tag = tag;
     }
 

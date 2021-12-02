@@ -1,13 +1,13 @@
 package com.hollingsworth.arsnouveau.common.armor;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.LazyValue;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.util.LazyLoadedValue;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -15,17 +15,17 @@ import java.util.function.Supplier;
 // https://github.com/TheKiritoPlayer20/SuperTools/blob/SuperTools_1.14/src/main/java/me/KG20/supertools/Armor/BasisArmorMaterial.java
 public class Materials {
 
-    public final static IArmorMaterial novice = new ArmorMaterial(ArsNouveau.MODID + ":novice", 25,new int[]{1, 4, 5, 2},
+    public final static ArmorMaterial novice = new ArmorMaterial(ArsNouveau.MODID + ":novice", 25,new int[]{1, 4, 5, 2},
             30, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, () -> Ingredient.of(Items.WHITE_WOOL));
 
-    public final static IArmorMaterial apprentice = new ArmorMaterial(ArsNouveau.MODID + ":apprentice", 25, new int[]{2, 5, 6, 2},
+    public final static ArmorMaterial apprentice = new ArmorMaterial(ArsNouveau.MODID + ":apprentice", 25, new int[]{2, 5, 6, 2},
             30, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0F, () -> Ingredient.of(Items.SCUTE));
 
-    public final static IArmorMaterial master = new ArmorMaterial(ArsNouveau.MODID + ":master", 33, new int[]{3, 6, 8, 3},
+    public final static ArmorMaterial master = new ArmorMaterial(ArsNouveau.MODID + ":master", 33, new int[]{3, 6, 8, 3},
             30, SoundEvents.ARMOR_EQUIP_LEATHER, 2.5f, () -> Ingredient.of(Items.SCUTE));
 
     //Fuck mojang
-    private static class ArmorMaterial implements IArmorMaterial{
+    private static class ArmorMaterial implements ArmorMaterial{
 
         private static final int[] Max_Damage_Array = new int[] {13,15,16,11};
         private final String name;
@@ -40,21 +40,21 @@ public class Materials {
             this.enchantability = enchantability;
             this.soundEvent = soundEvent;
             this.toughness = toughness;
-            this.repairMaterial = new LazyValue<>(supplier);
+            this.repairMaterial = new LazyLoadedValue<>(supplier);
         }
 
         private final SoundEvent soundEvent;
         private final float toughness;
-        private final LazyValue<Ingredient> repairMaterial;
+        private final LazyLoadedValue<Ingredient> repairMaterial;
 
 
         @Override
-        public int getDurabilityForSlot(EquipmentSlotType slotIn) {
+        public int getDurabilityForSlot(EquipmentSlot slotIn) {
             return Max_Damage_Array[slotIn.getIndex()] * maxDamageFactor;
         }
 
         @Override
-        public int getDefenseForSlot(EquipmentSlotType slotIn) {
+        public int getDefenseForSlot(EquipmentSlot slotIn) {
             return damageReductionAmountArray[slotIn.getIndex()];
         }
 

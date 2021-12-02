@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
 import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarCarbuncle;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 
 public class CarbuncleFamiliar extends AbstractFamiliarHolder {
 
@@ -14,7 +14,7 @@ public class CarbuncleFamiliar extends AbstractFamiliarHolder {
     }
 
     @Override
-    public IFamiliar getSummonEntity(World world) {
+    public IFamiliar getSummonEntity(Level world) {
         return new FamiliarCarbuncle(ModEntities.ENTITY_FAMILIAR_CARBUNCLE, world);
     }
 

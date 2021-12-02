@@ -1,23 +1,23 @@
 package com.hollingsworth.arsnouveau.common.potions;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.world.World;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
-public class GravityEffect extends Effect {
+public class GravityEffect extends MobEffect {
 
     protected GravityEffect() {
-        super(EffectType.HARMFUL, 2039587);
+        super(MobEffectCategory.HARMFUL, 2039587);
         setRegistryName(ArsNouveau.MODID, "gravity");
     }
 
@@ -31,8 +31,8 @@ public class GravityEffect extends Effect {
         super.applyEffectTick(livingEntity, p_76394_2_);
         if(!livingEntity.isOnGround()){
             boolean isTooHigh = true;
-            World world = livingEntity.level;
-            if(livingEntity instanceof PlayerEntity) {
+            Level world = livingEntity.level;
+            if(livingEntity instanceof Player) {
                 for (int i = 1; i < 3; i++) {
                     if (world.getBlockState(livingEntity.blockPosition().below(i)).getMaterial() != Material.AIR) {
                         isTooHigh = false;

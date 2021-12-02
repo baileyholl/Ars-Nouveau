@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
-import net.minecraft.util.text.IFormattableTextComponent;
+import net.minecraft.network.chat.MutableComponent;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -30,10 +30,10 @@ public interface SpellValidationError {
      * Creates and returns a Text Component with a full error message, where the use case is reporting an issue with
      * an existing glyph.
      */
-    IFormattableTextComponent makeTextComponentExisting();
+    MutableComponent makeTextComponentExisting();
     /**
      * Creates and returns a Text Component with a full error message, where the use case is reporting an issue that
      * will occur if adding a glyph to a spell.
      */
-    IFormattableTextComponent makeTextComponentAdding();
+    MutableComponent makeTextComponentAdding();
 }

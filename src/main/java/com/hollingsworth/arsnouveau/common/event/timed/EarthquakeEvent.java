@@ -2,9 +2,9 @@ package com.hollingsworth.arsnouveau.common.event.timed;
 
 import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import net.minecraft.entity.item.FallingBlockEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +13,10 @@ public class EarthquakeEvent implements ITimedEvent {
 
     int ticks;
     BlockPos origin;
-    World world;
+    Level world;
     List<BlockPos> posList = new ArrayList<>();
     int counter;
-    public EarthquakeEvent(World world, BlockPos origin, BlockPos destination){
+    public EarthquakeEvent(Level world, BlockPos origin, BlockPos destination){
         this.origin = origin;
         this.world = world;
         //for(BlockPos vec : BlockUtil.getLine(origin.getX(), origin.getZ(), destination.getX(), destination.getZ(), 2f)){

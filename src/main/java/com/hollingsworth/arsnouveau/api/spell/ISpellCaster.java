@@ -7,18 +7,18 @@ import com.hollingsworth.arsnouveau.common.block.tile.PhantomBlockTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -56,50 +56,50 @@ public interface ISpellCaster {
 
     //TODO: Add map of names for spells
 
-    default Spell getSpell(World world, PlayerEntity playerEntity, Hand hand, ISpellCaster caster){
+    default Spell getSpell(Level world, Player playerEntity, InteractionHand hand, ISpellCaster caster){
         return caster.getSpell();
     }
 
-    default ActionResult<ItemStack> castSpell(World worldIn, PlayerEntity playerIn, Hand handIn, TranslationTextComponent invalidMessage, Spell spell){
+    default InteractionResultHolder<ItemStack> castSpell(Level worldIn, Player playerIn, InteractionHand handIn, TranslatableComponent invalidMessage, Spell spell){
         ItemStack stack = playerIn.getItemInHand(handIn);
 
         if(worldIn.isClientSide)
-            return ActionResult.pass(playerIn.getItemInHand(handIn));
+            return InteractionResultHolder.pass(playerIn.getItemInHand(handIn));
         if(spell == null) {
             PortUtil.sendMessageNoSpam(playerIn,invalidMessage);
-            return new ActionResult<>(ActionResultType.SUCCESS, stack);
+            return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
         }
         SpellResolver resolver = new SpellResolver(new SpellContext(spell, playerIn)
                 .withColors(getColor()));
         boolean isSensitive = resolver.spell.getBuffsAtIndex(0, playerIn, AugmentSensitive.INSTANCE) > 0;
-        RayTraceResult result = playerIn.pick(5, 0, isSensitive);
-        if(result instanceof BlockRayTraceResult && worldIn.getBlockEntity(((BlockRayTraceResult) result).getBlockPos()) instanceof ScribesTile)
-            return new ActionResult<>(ActionResultType.SUCCESS, stack);
-        if(result instanceof BlockRayTraceResult && !playerIn.isShiftKeyDown()){
-            if(worldIn.getBlockEntity(((BlockRayTraceResult) result).getBlockPos()) != null &&
-                    !(worldIn.getBlockEntity(((BlockRayTraceResult) result).getBlockPos()) instanceof IntangibleAirTile
-                            ||(worldIn.getBlockEntity(((BlockRayTraceResult) result).getBlockPos()) instanceof PhantomBlockTile))) {
-                return new ActionResult<>(ActionResultType.SUCCESS, stack);
+        HitResult result = playerIn.pick(5, 0, isSensitive);
+        if(result instanceof BlockHitResult && worldIn.getBlockEntity(((BlockHitResult) result).getBlockPos()) instanceof ScribesTile)
+            return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+        if(result instanceof BlockHitResult && !playerIn.isShiftKeyDown()){
+            if(worldIn.getBlockEntity(((BlockHitResult) result).getBlockPos()) != null &&
+                    !(worldIn.getBlockEntity(((BlockHitResult) result).getBlockPos()) instanceof IntangibleAirTile
+                            ||(worldIn.getBlockEntity(((BlockHitResult) result).getBlockPos()) instanceof PhantomBlockTile))) {
+                return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
             }
         }
-        EntityRayTraceResult entityRes = MathUtil.getLookedAtEntity(playerIn, 25);
+        EntityHitResult entityRes = MathUtil.getLookedAtEntity(playerIn, 25);
 
         if(entityRes != null && entityRes.getEntity() instanceof LivingEntity){
             resolver.onCastOnEntity(stack, playerIn, (LivingEntity) entityRes.getEntity(), handIn);
-            return new ActionResult<>(ActionResultType.CONSUME, stack);
+            return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
 
-        if(result.getType() == RayTraceResult.Type.BLOCK || (isSensitive && result instanceof BlockRayTraceResult)){
-            ItemUseContext context = new ItemUseContext(playerIn, handIn, (BlockRayTraceResult) result);
+        if(result.getType() == HitResult.Type.BLOCK || (isSensitive && result instanceof BlockHitResult)){
+            UseOnContext context = new UseOnContext(playerIn, handIn, (BlockHitResult) result);
             resolver.onCastOnBlock(context);
-            return new ActionResult<>(ActionResultType.CONSUME, stack);
+            return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
 
         resolver.onCast(stack,playerIn,worldIn);
-        return new ActionResult<>(ActionResultType.CONSUME, stack);
+        return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
     }
 
-    default ActionResult<ItemStack> castSpell(World worldIn, PlayerEntity playerIn, Hand handIn, TranslationTextComponent invalidMessage){
+    default InteractionResultHolder<ItemStack> castSpell(Level worldIn, Player playerIn, InteractionHand handIn, TranslatableComponent invalidMessage){
         return castSpell(worldIn, playerIn, handIn, invalidMessage, getSpell(worldIn, playerIn, handIn, this));
     }
 

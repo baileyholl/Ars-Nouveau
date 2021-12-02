@@ -5,20 +5,20 @@ import com.hollingsworth.arsnouveau.common.datagen.Recipes;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Food;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
 
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MycelialSourcelinkTile extends SourcelinkTile{
-    public MycelialSourcelinkTile(TileEntityType<?> tileEntityTypeIn) {
+    public MycelialSourcelinkTile(BlockEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
     }
 
@@ -33,7 +33,7 @@ public class MycelialSourcelinkTile extends SourcelinkTile{
         if(level.isClientSide)
             return;
         if(level.getGameTime() % 40 == 0 && this.canAcceptMana()){
-            for(ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(worldPosition).inflate(1.0))){
+            for(ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, new AABB(worldPosition).inflate(1.0))){
                 if(i.getItem().getItem().isEdible()){
                    int source = getSourceValue(i.getItem());
                     this.addMana(source);
@@ -63,7 +63,7 @@ public class MycelialSourcelinkTile extends SourcelinkTile{
     public int getSourceValue(ItemStack i){
         if(i.getItem().getItem().isEdible()){
             int mana = 0;
-            Food food = i.getItem().getItem().getFoodProperties();
+            FoodProperties food = i.getItem().getItem().getFoodProperties();
             mana += 11 * food.getNutrition();
             mana += 30 * food.getSaturationModifier();
             progress += 1;

@@ -4,8 +4,8 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.BookUpgradeRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.DyeRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.PotionFlaskRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -18,12 +18,12 @@ public class ModCrafting {
     @ObjectHolder(ArsNouveau.MODID)
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class Recipes {
-        public static IRecipeSerializer<BookUpgradeRecipe> BOOK_UPGRADE_RECIPE = Null();
-        public static IRecipeSerializer<PotionFlaskRecipe> POTION_FLASK_RECIPE = Null();
-        public static IRecipeSerializer<DyeRecipe> DYE_RECIPE = Null();
+        public static RecipeSerializer<BookUpgradeRecipe> BOOK_UPGRADE_RECIPE = Null();
+        public static RecipeSerializer<PotionFlaskRecipe> POTION_FLASK_RECIPE = Null();
+        public static RecipeSerializer<DyeRecipe> DYE_RECIPE = Null();
 
         @SubscribeEvent
-        public static void register(final RegistryEvent.Register<IRecipeSerializer<?>> event) {
+        public static void register(final RegistryEvent.Register<RecipeSerializer<?>> event) {
             BOOK_UPGRADE_RECIPE = new BookUpgradeRecipe.Serializer();
             POTION_FLASK_RECIPE = new PotionFlaskRecipe.Serializer();
             DYE_RECIPE = new DyeRecipe.Serializer();

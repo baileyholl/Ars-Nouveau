@@ -1,9 +1,12 @@
 package com.hollingsworth.arsnouveau.common.items.itemscrolls;
 
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.items.IItemHandler;
+
+import com.hollingsworth.arsnouveau.common.items.ItemScroll.SortPref;
+import net.minecraft.world.item.Item.Properties;
 
 public class AllowItemScroll extends ItemScroll {
 
@@ -16,7 +19,7 @@ public class AllowItemScroll extends ItemScroll {
     }
 
     @Override
-    public SortPref getSortPref(ItemStack stackToStore, CompoundNBT scrollTag, IItemHandler inventory) {
+    public SortPref getSortPref(ItemStack stackToStore, CompoundTag scrollTag, IItemHandler inventory) {
         return !ItemScroll.containsItem(stackToStore, scrollTag) ? SortPref.INVALID : SortPref.HIGH;
     }
 }

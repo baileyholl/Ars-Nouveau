@@ -7,19 +7,19 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -60,11 +60,11 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
     }
 
     @Override
-    public IRecipeType<?> getType() {
+    public RecipeType<?> getType() {
         return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, RECIPE_ID));
     }
 
-    public boolean doesReagentMatch(ItemStack stack, PlayerEntity playerEntity){
+    public boolean doesReagentMatch(ItemStack stack, Player playerEntity){
         if(stack.isEmpty())
             return false;
         Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
@@ -72,17 +72,17 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
         Collection<Enchantment> enchantList = EnchantmentHelper.getEnchantments(stack).keySet();
         enchantList.remove(enchantment);
         if(stack.getItem() != Items.BOOK && stack.getItem() != Items.ENCHANTED_BOOK && !enchantment.canEnchant(stack)){
-            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.enchanting.incompatible"));
+            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.enchanting.incompatible"));
             return false;
         }
 
         if(!EnchantmentHelper.isEnchantmentCompatible(enchantList, enchantment)){
-            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.enchanting.incompatible"));
+            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.enchanting.incompatible"));
             return false;
         }
 
         if (!(this.enchantLevel - level == 1)) {
-            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.enchanting.bad_level"));
+            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.enchanting.bad_level"));
             return false;
         }
 
@@ -91,7 +91,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
 
     // Override and move reagent match to the end so we can give feedback
     @Override
-    public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile, @Nullable PlayerEntity player) {
+    public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile, @Nullable Player player) {
         pedestalItems = pedestalItems.stream().filter(itemStack -> !itemStack.isEmpty()).collect(Collectors.toList());
         return this.pedestalItems.size() == pedestalItems.size() && doItemsMatch(pedestalItems, this.pedestalItems) && doesReagentMatch(reagent, player);
     }
@@ -119,7 +119,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return RecipeRegistry.ENCHANTMENT_SERIALIZER;
     }
 
@@ -141,24 +141,24 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
         return jsonobject;
     }
 
-    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<EnchantmentRecipe> {
+    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<EnchantmentRecipe> {
 
         @Override
         public EnchantmentRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(JSONUtils.getAsString(json, "enchantment")));
-            int level = JSONUtils.getAsInt(json, "level", 1);
-            int manaCost = JSONUtils.getAsInt(json,"mana", 0);
+            Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(GsonHelper.getAsString(json, "enchantment")));
+            int level = GsonHelper.getAsInt(json, "level", 1);
+            int manaCost = GsonHelper.getAsInt(json,"mana", 0);
             List<Ingredient> stacks = new ArrayList<>();
             for(int i = 1; i < 9; i++){
                 if(json.has("item_"+i))
-                    stacks.add(Ingredient.fromJson(JSONUtils.getAsJsonArray(json, "item_" + i)));
+                    stacks.add(Ingredient.fromJson(GsonHelper.getAsJsonArray(json, "item_" + i)));
             }
             return new EnchantmentRecipe( stacks,enchantment,level, manaCost);
         }
 
         @Nullable
         @Override
-        public EnchantmentRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+        public EnchantmentRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
             int length = buffer.readInt();
             String enchantID = buffer.readUtf();
             int level = buffer.readInt();
@@ -175,7 +175,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
         }
 
         @Override
-        public void toNetwork(PacketBuffer buf, EnchantmentRecipe recipe) {
+        public void toNetwork(FriendlyByteBuf buf, EnchantmentRecipe recipe) {
             buf.writeInt(recipe.pedestalItems.size());
             buf.writeUtf(recipe.enchantment.getRegistryName().toString());
             buf.writeInt(recipe.enchantLevel);

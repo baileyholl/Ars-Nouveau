@@ -4,16 +4,16 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleType;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
 
 
 /**
  * Simplified verison of ElementalCraft https://github.com/Sirttas/ElementalCraft/blob/b91ca42b3d139904d9754d882a595406bad1bd18/src/main/java/sirttas/elementalcraft/particle/ElementTypeParticleData.java
  */
 
-public class ColorParticleTypeData implements IParticleData {
+public class ColorParticleTypeData implements ParticleOptions {
 
     private ParticleType<ColorParticleTypeData> type;
     public static final Codec<ColorParticleTypeData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -28,7 +28,7 @@ public class ColorParticleTypeData implements IParticleData {
     public boolean disableDepthTest;
 
 
-    static final IParticleData.IDeserializer<ColorParticleTypeData> DESERIALIZER = new IParticleData.IDeserializer<ColorParticleTypeData>() {
+    static final ParticleOptions.Deserializer<ColorParticleTypeData> DESERIALIZER = new ParticleOptions.Deserializer<ColorParticleTypeData>() {
         @Override
         public ColorParticleTypeData fromCommand(ParticleType<ColorParticleTypeData> type, StringReader reader) throws CommandSyntaxException {
             reader.expect(' ');
@@ -36,7 +36,7 @@ public class ColorParticleTypeData implements IParticleData {
         }
 
         @Override
-        public ColorParticleTypeData fromNetwork(ParticleType<ColorParticleTypeData> type, PacketBuffer buffer) {
+        public ColorParticleTypeData fromNetwork(ParticleType<ColorParticleTypeData> type, FriendlyByteBuf buffer) {
             return new ColorParticleTypeData(type, ParticleColor.deserialize(buffer.readUtf()), buffer.readBoolean());
         }
     };
@@ -65,7 +65,7 @@ public class ColorParticleTypeData implements IParticleData {
     }
 
     @Override
-    public void writeToNetwork(PacketBuffer packetBuffer) {
+    public void writeToNetwork(FriendlyByteBuf packetBuffer) {
         packetBuffer.writeUtf(color.serialize());
     }
 

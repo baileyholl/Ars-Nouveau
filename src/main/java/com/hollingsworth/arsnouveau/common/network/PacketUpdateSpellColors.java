@@ -3,9 +3,9 @@ package com.hollingsworth.arsnouveau.common.network;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.PacketDistributor;
 
@@ -30,7 +30,7 @@ public class PacketUpdateSpellColors {
     }
 
     //Decoder
-    public PacketUpdateSpellColors(PacketBuffer buf){
+    public PacketUpdateSpellColors(FriendlyByteBuf buf){
         castSlot = buf.readInt();
         r = buf.readInt();
         g = buf.readInt();
@@ -42,7 +42,7 @@ public class PacketUpdateSpellColors {
     }
 
     //Encoder
-    public void toBytes(PacketBuffer buf){
+    public void toBytes(FriendlyByteBuf buf){
         buf.writeInt(castSlot);
         buf.writeInt(r);
         buf.writeInt(g);
@@ -54,7 +54,7 @@ public class PacketUpdateSpellColors {
             if(ctx.get().getSender() != null){
                 ItemStack stack = StackUtil.getHeldSpellbook(ctx.get().getSender());
                 if(stack != null && stack.getItem() instanceof SpellBook){
-                    CompoundNBT tag = stack.hasTag() ? stack.getTag() : new CompoundNBT();
+                    CompoundTag tag = stack.hasTag() ? stack.getTag() : new CompoundTag();
                     SpellBook.setSpellColor(tag, new ParticleColor.IntWrapper(r, g, b), castSlot);
                     stack.setTag(tag);
                     SpellBook.setMode(tag, castSlot);

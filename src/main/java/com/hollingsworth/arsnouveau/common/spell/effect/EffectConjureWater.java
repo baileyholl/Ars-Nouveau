@@ -6,24 +6,26 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.IWaterLoggable;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SimpleWaterloggedBlock;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
+
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
 
 public class EffectConjureWater extends AbstractEffect {
 
@@ -34,7 +36,7 @@ public class EffectConjureWater extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         Entity entity = rayTraceResult.getEntity();
         if(entity.isOnFire()){
             entity.clearFire();
@@ -42,18 +44,18 @@ public class EffectConjureWater extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         int aoeBuff = spellStats.getBuffCount(AugmentAOE.INSTANCE);
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult,aoeBuff, spellStats.getBuffCount(AugmentPierce.INSTANCE));
         if(world.dimensionType().ultraWarm())
             return;
         for(BlockPos pos1 : posList) {
             Block block = world.getBlockState(pos1).getBlock();
-            if(block instanceof IWaterLoggable && ((IWaterLoggable) block).canPlaceLiquid(world, pos1, world.getBlockState(pos1), Fluids.WATER)){
-                ((IWaterLoggable) block).placeLiquid(world, pos1, world.getBlockState(pos1), Fluids.WATER.getSource(true));
+            if(block instanceof SimpleWaterloggedBlock && ((SimpleWaterloggedBlock) block).canPlaceLiquid(world, pos1, world.getBlockState(pos1), Fluids.WATER)){
+                ((SimpleWaterloggedBlock) block).placeLiquid(world, pos1, world.getBlockState(pos1), Fluids.WATER.getSource(true));
             }else{
                 BlockPos hitPos = pos1.relative(rayTraceResult.getDirection());
-                if(!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, pos1))
+                if(!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1))
                     continue;
 
                 if(world.getBlockState(hitPos).canBeReplaced(Fluids.WATER)){

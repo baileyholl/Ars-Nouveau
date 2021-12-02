@@ -7,22 +7,22 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.goal.familiar.FamOwnerHurtByTargetGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.familiar.FamOwnerHurtTargetGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.familiar.FamiliarFollowGoal;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.fml.network.NetworkHooks;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -34,15 +34,21 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class FamiliarEntity extends CreatureEntity implements IAnimatable, IFamiliar, IDispellable {
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.PathfinderMob;
 
-    private static final DataParameter<Optional<UUID>> OWNER_UUID = EntityDataManager.defineId(FamiliarEntity.class, DataSerializers.OPTIONAL_UUID);
+public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamiliar, IDispellable {
+
+    private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(FamiliarEntity.class, EntityDataSerializers.OPTIONAL_UUID);
 
     public static Set<FamiliarEntity> FAMILIAR_SET = Collections.newSetFromMap(new WeakHashMap<>());
 
     public boolean terminatedFamiliar;
 
-    public FamiliarEntity(EntityType<? extends CreatureEntity> p_i48575_1_, World p_i48575_2_) {
+    public FamiliarEntity(EntityType<? extends PathfinderMob> p_i48575_1_, Level p_i48575_2_) {
         super(p_i48575_1_, p_i48575_2_);
         if(!level.isClientSide)
             FAMILIAR_SET.add(this);
@@ -80,7 +86,7 @@ public class FamiliarEntity extends CreatureEntity implements IAnimatable, IFami
             FamiliarEntity.FAMILIAR_SET.remove(this);
         }
         if(level.getGameTime() % 20 == 0 && !level.isClientSide){
-            if(getOwnerID() == null || ((ServerWorld)level).getEntity(getOwnerID()) == null || terminatedFamiliar){
+            if(getOwnerID() == null || ((ServerLevel)level).getEntity(getOwnerID()) == null || terminatedFamiliar){
                 this.remove();
                 this.terminatedFamiliar = true;
                 FAMILIAR_SET.remove(this);
@@ -101,8 +107,8 @@ public class FamiliarEntity extends CreatureEntity implements IAnimatable, IFami
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(3, new FamiliarFollowGoal(this, 2, 6, 4));
-        this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
-        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0f));
+        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0f));
         this.targetSelector.addGoal(1, new FamOwnerHurtByTargetGoal(this));
         this.targetSelector.addGoal(2, new FamOwnerHurtTargetGoal(this));
     }
@@ -125,7 +131,7 @@ public class FamiliarEntity extends CreatureEntity implements IAnimatable, IFami
         if(level.isClientSide || getOwnerID() == null)
             return null;
 
-        return (LivingEntity) ((ServerWorld)level).getEntity(getOwnerID());
+        return (LivingEntity) ((ServerLevel)level).getEntity(getOwnerID());
     }
 
     public AnimationFactory factory = new AnimationFactory(this);
@@ -142,7 +148,7 @@ public class FamiliarEntity extends CreatureEntity implements IAnimatable, IFami
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT tag) {
+    public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         if(getOwnerID() != null)
             tag.putUUID("ownerID", getOwnerID());
@@ -150,7 +156,7 @@ public class FamiliarEntity extends CreatureEntity implements IAnimatable, IFami
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT tag) {
+    public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if(tag.hasUUID("ownerID"))
             setOwnerID(tag.getUUID("ownerID"));
@@ -166,12 +172,12 @@ public class FamiliarEntity extends CreatureEntity implements IAnimatable, IFami
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public static AttributeModifierMap.MutableAttribute attributes() {
-        return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 40d)
+    public static AttributeSupplier.Builder attributes() {
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 40d)
                 .add(Attributes.MOVEMENT_SPEED, 0.2d).add(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.getDefaultValue())
                 .add(Attributes.FOLLOW_RANGE, 16D);
     }
@@ -190,7 +196,7 @@ public class FamiliarEntity extends CreatureEntity implements IAnimatable, IFami
     public boolean onDispel(@Nullable LivingEntity caster) {
         if(!level.isClientSide && getOwner() != null && getOwner().equals(caster)){
             this.remove();
-            ParticleUtil.spawnPoof((ServerWorld) level, blockPosition());
+            ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
             return true;
         }
         return false;

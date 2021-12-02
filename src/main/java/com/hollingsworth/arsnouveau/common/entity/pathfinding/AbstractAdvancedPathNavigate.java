@@ -1,15 +1,15 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
-import net.minecraft.entity.MobEntity;
-import net.minecraft.pathfinding.GroundPathNavigator;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 
-public abstract class AbstractAdvancedPathNavigate extends GroundPathNavigator
+public abstract class AbstractAdvancedPathNavigate extends GroundPathNavigation
 {
     //  Parent class private members
-    protected final MobEntity    ourEntity;
+    protected final Mob    ourEntity;
     protected       BlockPos     destination;
     protected       double       walkSpeedFactor = 1.0D;
     protected       BlockPos     originalDestination;
@@ -19,7 +19,7 @@ public abstract class AbstractAdvancedPathNavigate extends GroundPathNavigator
      */
     private com.hollingsworth.arsnouveau.common.entity.pathfinding.PathingOptions pathingOptions = new com.hollingsworth.arsnouveau.common.entity.pathfinding.PathingOptions();
 
-    public AbstractAdvancedPathNavigate(final MobEntity entityLiving, final World worldIn) {
+    public AbstractAdvancedPathNavigate(final Mob entityLiving, final Level worldIn) {
         super(entityLiving, worldIn);
         this.ourEntity = mob;
     }
@@ -68,7 +68,7 @@ public abstract class AbstractAdvancedPathNavigate extends GroundPathNavigator
      *
      * @return mobentity
      */
-    public MobEntity getOurEntity()
+    public Mob getOurEntity()
     {
         return ourEntity;
     }

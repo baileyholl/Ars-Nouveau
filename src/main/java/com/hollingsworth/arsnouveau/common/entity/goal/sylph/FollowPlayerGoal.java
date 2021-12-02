@@ -1,12 +1,12 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.sylph;
 
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.pathfinding.FlyingPathNavigator;
-import net.minecraft.pathfinding.GroundPathNavigator;
-import net.minecraft.pathfinding.PathNavigator;
-import net.minecraft.pathfinding.PathNodeType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.level.pathfinder.BlockPathTypes;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -15,17 +15,17 @@ import java.util.function.Predicate;
 
 public class FollowPlayerGoal extends Goal {
 
-    private final MobEntity entity;
-    private final Predicate<PlayerEntity> followPredicate;
-    private PlayerEntity followingEntity;
+    private final Mob entity;
+    private final Predicate<Player> followPredicate;
+    private Player followingEntity;
     private final double speedModifier;
-    private final PathNavigator navigation;
+    private final PathNavigation navigation;
     private int timeToRecalcPath;
     private final float stopDistance;
     private float oldWaterCost;
     private final float areaSize;
     private final float probability;
-    public FollowPlayerGoal(MobEntity mob, double speedModifier, float stopDistance, float areaSize, float probability) {
+    public FollowPlayerGoal(Mob mob, double speedModifier, float stopDistance, float areaSize, float probability) {
         this.entity = mob;
         this.followPredicate = Objects::nonNull;
         this.speedModifier = speedModifier;
@@ -34,11 +34,11 @@ public class FollowPlayerGoal extends Goal {
         this.areaSize = areaSize;
         this.probability = probability;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
-        if (!(mob.getNavigation() instanceof GroundPathNavigator) && !(mob.getNavigation() instanceof FlyingPathNavigator)) {
+        if (!(mob.getNavigation() instanceof GroundPathNavigation) && !(mob.getNavigation() instanceof FlyingPathNavigation)) {
             throw new IllegalArgumentException("Unsupported mob type for FollowMobGoal");
         }
     }
-    public FollowPlayerGoal(MobEntity mob, double speedModifier, float stopDistance, float areaSize) {
+    public FollowPlayerGoal(Mob mob, double speedModifier, float stopDistance, float areaSize) {
         this(mob, speedModifier, stopDistance, areaSize, 0.001f);
     }
 
@@ -47,9 +47,9 @@ public class FollowPlayerGoal extends Goal {
      * method as well.
      */
     public boolean canUse() {
-        List<PlayerEntity> list = this.entity.level.getEntitiesOfClass(PlayerEntity.class, this.entity.getBoundingBox().inflate(this.areaSize), this.followPredicate);
+        List<Player> list = this.entity.level.getEntitiesOfClass(Player.class, this.entity.getBoundingBox().inflate(this.areaSize), this.followPredicate);
         if (!list.isEmpty()) {
-            for(PlayerEntity mobentity : list) {
+            for(Player mobentity : list) {
                 if (!mobentity.isInvisible()) {
                     this.followingEntity = mobentity;
                     return true;
@@ -72,8 +72,8 @@ public class FollowPlayerGoal extends Goal {
      */
     public void start() {
         this.timeToRecalcPath = 0;
-        this.oldWaterCost = this.entity.getPathfindingMalus(PathNodeType.WATER);
-        this.entity.setPathfindingMalus(PathNodeType.WATER, 0.0F);
+        this.oldWaterCost = this.entity.getPathfindingMalus(BlockPathTypes.WATER);
+        this.entity.setPathfindingMalus(BlockPathTypes.WATER, 0.0F);
     }
 
     /**
@@ -82,7 +82,7 @@ public class FollowPlayerGoal extends Goal {
     public void stop() {
         this.followingEntity = null;
         this.navigation.stop();
-        this.entity.setPathfindingMalus(PathNodeType.WATER, this.oldWaterCost);
+        this.entity.setPathfindingMalus(BlockPathTypes.WATER, this.oldWaterCost);
     }
 
     /**

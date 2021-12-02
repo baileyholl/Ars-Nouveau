@@ -3,11 +3,13 @@ package com.hollingsworth.arsnouveau.common.items;
 import com.hollingsworth.arsnouveau.common.block.tile.DrygmyTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class DrygmyCharm extends ModItem{
     public DrygmyCharm(Properties properties) {
@@ -23,10 +25,10 @@ public class DrygmyCharm extends ModItem{
     }
 
     @Override
-    public ActionResultType useOn(ItemUseContext context) {
-        World world = context.getLevel();
+    public InteractionResult useOn(UseOnContext context) {
+        Level world = context.getLevel();
         if(world.isClientSide)
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         BlockPos pos = context.getClickedPos();
         if(world.getBlockState(pos).getBlock() == Blocks.MOSSY_COBBLESTONE){
             world.setBlockAndUpdate(pos, BlockRegistry.DRYGMY_BLOCK.defaultBlockState());
@@ -38,6 +40,6 @@ public class DrygmyCharm extends ModItem{
             drygmy.homePos = new BlockPos(pos);
             context.getItemInHand().shrink(1);
         }
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 }

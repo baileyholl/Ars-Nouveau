@@ -5,17 +5,17 @@ import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.EntityType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 import software.bernie.geckolib3.core.easing.EasingManager;
@@ -28,11 +28,11 @@ public class EntityFlyingItem extends EntityFollowProjectile {
     //    int age;
     int maxAge;
 
-    public static final DataParameter<ItemStack> HELD_ITEM = EntityDataManager.defineId(EntityFlyingItem.class, DataSerializers.ITEM_STACK);
-    public static final DataParameter<Float> OFFSET = EntityDataManager.defineId(EntityFlyingItem.class, DataSerializers.FLOAT);
-    public static final DataParameter<Boolean> DIDOFFSET = EntityDataManager.defineId(EntityFlyingItem.class, DataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<ItemStack> HELD_ITEM = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.ITEM_STACK);
+    public static final EntityDataAccessor<Float> OFFSET = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.FLOAT);
+    public static final EntityDataAccessor<Boolean> DIDOFFSET = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.BOOLEAN);
 
-    public EntityFlyingItem(World worldIn, Vector3d from, Vector3d to) {
+    public EntityFlyingItem(Level worldIn, Vec3 from, Vec3 to) {
         this(ModEntities.ENTITY_FLYING_ITEM, worldIn);
         this.entityData.set(EntityFollowProjectile.to, new BlockPos(to));
         this.entityData.set(EntityFollowProjectile.from, new BlockPos(from));
@@ -43,17 +43,17 @@ public class EntityFlyingItem extends EntityFollowProjectile {
         this.entityData.set(GREEN, 25);
         this.entityData.set(BLUE, 180);
     }
-    public EntityFlyingItem(World worldIn, BlockPos from, BlockPos to) {
-        this(worldIn, new Vector3d(from.getX(), from.getY(), from.getZ()), new Vector3d(to.getX(), to.getY(), to.getZ()));
+    public EntityFlyingItem(Level worldIn, BlockPos from, BlockPos to) {
+        this(worldIn, new Vec3(from.getX(), from.getY(), from.getZ()), new Vec3(to.getX(), to.getY(), to.getZ()));
     }
-    public EntityFlyingItem(World worldIn, BlockPos from, BlockPos to, int r, int g, int b) {
-        this(worldIn, new Vector3d(from.getX(), from.getY(), from.getZ()), new Vector3d(to.getX(), to.getY(), to.getZ()));
+    public EntityFlyingItem(Level worldIn, BlockPos from, BlockPos to, int r, int g, int b) {
+        this(worldIn, new Vec3(from.getX(), from.getY(), from.getZ()), new Vec3(to.getX(), to.getY(), to.getZ()));
         this.entityData.set(RED, r);
         this.entityData.set(GREEN, g);
         this.entityData.set(BLUE, b);
     }
 
-    public EntityFlyingItem(EntityType<EntityFlyingItem> entityAOEProjectileEntityType, World world) {
+    public EntityFlyingItem(EntityType<EntityFlyingItem> entityAOEProjectileEntityType, Level world) {
         super(entityAOEProjectileEntityType, world);
     }
 
@@ -99,13 +99,13 @@ public class EntityFlyingItem extends EntityFollowProjectile {
             this.remove();
 
 
-        Vector3d vec3d2 = this.getDeltaMovement();
+        Vec3 vec3d2 = this.getDeltaMovement();
         BlockPos start = entityData.get(from);
         BlockPos end = entityData.get(to);
         if(BlockUtil.distanceFrom(this.blockPosition(), end) < 1 || this.age > 1000 || BlockUtil.distanceFrom(this.blockPosition(), end) > 16){
             this.remove();
             if(level.isClientSide && entityData.get(SPAWN_TOUCH)) {
-                ParticleUtil.spawnTouch((ClientWorld) level, end, new ParticleColor(this.entityData.get(RED),this.entityData.get(GREEN),this.entityData.get(BLUE)));
+                ParticleUtil.spawnTouch((ClientLevel) level, end, new ParticleColor(this.entityData.get(RED),this.entityData.get(GREEN),this.entityData.get(BLUE)));
             }
             return;
         }
@@ -179,7 +179,7 @@ public class EntityFlyingItem extends EntityFollowProjectile {
         return 3;
     }
 
-    public Vector3d getLerped(){
+    public Vec3 getLerped(){
         BlockPos start = entityData.get(from);
         BlockPos end = entityData.get(to);
         double startY = start.getY();
@@ -191,10 +191,10 @@ public class EntityFlyingItem extends EntityFollowProjectile {
         double lerpX = lerp(time, (double)start.getX() +0.5, (double)end.getX()+0.5, type);
         double lerpY = lerp(time, lerp(time, startY, endY, type), lerp(time,endY, startY, type), type);
         double lerpZ = lerp(time,(double)start.getZ()+0.5, (double)end.getZ()+0.5, type);
-        return new Vector3d(lerpX, lerpY, lerpZ);
+        return new Vec3(lerpX, lerpY, lerpZ);
     }
     @Override
-    public void load(CompoundNBT compound) {
+    public void load(CompoundTag compound) {
         super.load(compound);
         if(compound.contains("item")){
             this.entityData.set(HELD_ITEM, ItemStack.of(compound.getCompound("item")));
@@ -205,10 +205,10 @@ public class EntityFlyingItem extends EntityFollowProjectile {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT compound) {
+    public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         if(getStack() != null){
-            CompoundNBT tag = new CompoundNBT();
+            CompoundTag tag = new CompoundTag();
             getStack().save(tag);
             compound.put("item", tag);
         }
@@ -240,11 +240,11 @@ public class EntityFlyingItem extends EntityFollowProjectile {
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public EntityFlyingItem(FMLPlayMessages.SpawnEntity packet, World world){
+    public EntityFlyingItem(FMLPlayMessages.SpawnEntity packet, Level world){
         super(ModEntities.ENTITY_FLYING_ITEM, world);
     }
 }

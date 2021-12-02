@@ -4,17 +4,19 @@ import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.common.block.RitualBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class RitualTablet extends ModItem{
     public AbstractRitual ritual;
@@ -29,22 +31,22 @@ public class RitualTablet extends ModItem{
     }
 
     @Override
-    public ActionResultType useOn(ItemUseContext context) {
+    public InteractionResult useOn(UseOnContext context) {
         if(context.getLevel().getBlockState(context.getClickedPos()).getBlock() instanceof RitualBlock){
-            World world = context.getLevel();
+            Level world = context.getLevel();
             BlockPos pos = context.getClickedPos();
             RitualTile tile = (RitualTile) world.getBlockEntity(pos);
             tile.setRitual(ritual.getID());
             if(!context.getPlayer().isCreative())
                 context.getItemInHand().shrink(1);
-            return ActionResultType.CONSUME;
+            return InteractionResult.CONSUME;
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip2, flagIn);
-        tooltip2.add(new TranslationTextComponent("tooltip.ars_nouveau.tablet"));
+        tooltip2.add(new TranslatableComponent("tooltip.ars_nouveau.tablet"));
     }
 }

@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.MainWindow;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.text.ITextComponent;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.platform.Window;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 
 import java.util.List;
 
@@ -11,16 +11,16 @@ public class ModdedScreen extends Screen {
 
     public int maxScale;
     public float scaleFactor;
-    public List<ITextComponent> tooltip;
+    public List<Component> tooltip;
 
-    public ModdedScreen(ITextComponent titleIn) {
+    public ModdedScreen(Component titleIn) {
         super(titleIn);
     }
 
     @Override
     public void init() {
         super.init();
-        MainWindow res = getMinecraft().getWindow();
+        Window res = getMinecraft().getWindow();
         double oldGuiScale = res.calculateScale(minecraft.options.guiScale, minecraft.isEnforceUnicode());
         maxScale = getMaxAllowedScale();
         int persistentScale = Math.min(0, maxScale);
@@ -40,7 +40,7 @@ public class ModdedScreen extends Screen {
 
         return mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h;
     }
-    public final void drawTooltip(MatrixStack stack, int mouseX, int mouseY) {
+    public final void drawTooltip(PoseStack stack, int mouseX, int mouseY) {
         if (tooltip != null && !tooltip.isEmpty()) {
             this.renderWrappedToolTip(stack, tooltip, mouseX, mouseY, font);
         }
@@ -48,7 +48,7 @@ public class ModdedScreen extends Screen {
 
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY,partialTicks);
     }
 

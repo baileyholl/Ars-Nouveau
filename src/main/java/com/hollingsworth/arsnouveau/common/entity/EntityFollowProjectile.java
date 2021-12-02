@@ -6,34 +6,34 @@ import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.projectile.ArrowEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public class EntityFollowProjectile extends ArrowEntity {
-    public static final DataParameter<BlockPos> to = EntityDataManager.defineId(EntityFollowProjectile.class, DataSerializers.BLOCK_POS);
-    public static final DataParameter<BlockPos> from = EntityDataManager.defineId(EntityFollowProjectile.class, DataSerializers.BLOCK_POS);
-    public static final DataParameter<Integer> RED = EntityDataManager.defineId(EntityFollowProjectile.class, DataSerializers.INT);
-    public static final DataParameter<Integer> GREEN = EntityDataManager.defineId(EntityFollowProjectile.class, DataSerializers.INT);
-    public static final DataParameter<Integer> BLUE = EntityDataManager.defineId(EntityFollowProjectile.class, DataSerializers.INT);
-    public static final DataParameter<Boolean> SPAWN_TOUCH = EntityDataManager.defineId(EntityFollowProjectile.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<Integer> DESPAWN = EntityDataManager.defineId(EntityFollowProjectile.class, DataSerializers.INT);
+public class EntityFollowProjectile extends Arrow {
+    public static final EntityDataAccessor<BlockPos> to = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.BLOCK_POS);
+    public static final EntityDataAccessor<BlockPos> from = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.BLOCK_POS);
+    public static final EntityDataAccessor<Integer> RED = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> GREEN = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> BLUE = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Boolean> SPAWN_TOUCH = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Integer> DESPAWN = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.INT);
 
     private int age;
 //    int age;
     int maxAge = 500;
 
-    public EntityFollowProjectile(World world){
+    public EntityFollowProjectile(Level world){
         super(world, 0, 0,0);
     }
 
@@ -42,7 +42,7 @@ public class EntityFollowProjectile extends ArrowEntity {
         getEntityData().set(DESPAWN, distance);
     }
 
-    public EntityFollowProjectile(World worldIn, Vector3d from, Vector3d to) {
+    public EntityFollowProjectile(Level worldIn, Vec3 from, Vec3 to) {
         this(ModEntities.ENTITY_FOLLOW_PROJ, worldIn);
         this.entityData.set(EntityFollowProjectile.to, new BlockPos(to));
         this.entityData.set(EntityFollowProjectile.from, new BlockPos(from));
@@ -56,23 +56,23 @@ public class EntityFollowProjectile extends ArrowEntity {
         setDespawnDistance((int) (distance + 10));
     }
 
-    public EntityFollowProjectile(World worldIn, BlockPos from, BlockPos to, int r, int g, int b) {
-        this(worldIn, new Vector3d(from.getX(), from.getY(), from.getZ()), new Vector3d(to.getX(), to.getY(), to.getZ()));
+    public EntityFollowProjectile(Level worldIn, BlockPos from, BlockPos to, int r, int g, int b) {
+        this(worldIn, new Vec3(from.getX(), from.getY(), from.getZ()), new Vec3(to.getX(), to.getY(), to.getZ()));
         this.entityData.set(RED, Math.min(r, 255));
         this.entityData.set(GREEN, Math.min(g, 255));
         this.entityData.set(BLUE, Math.min(b, 255));
 
     }
 
-    public EntityFollowProjectile(World worldIn, BlockPos from, BlockPos to,ParticleColor.IntWrapper color) {
+    public EntityFollowProjectile(Level worldIn, BlockPos from, BlockPos to,ParticleColor.IntWrapper color) {
         this(worldIn, from, to, color.r, color.g, color.b);
     }
 
-    public EntityFollowProjectile(World worldIn, BlockPos from, BlockPos to) {
-        this(worldIn, new Vector3d(from.getX(), from.getY(), from.getZ()), new Vector3d(to.getX(), to.getY(), to.getZ()));
+    public EntityFollowProjectile(Level worldIn, BlockPos from, BlockPos to) {
+        this(worldIn, new Vec3(from.getX(), from.getY(), from.getZ()), new Vec3(to.getX(), to.getY(), to.getZ()));
     }
 
-    public EntityFollowProjectile(EntityType<? extends EntityFollowProjectile> entityAOEProjectileEntityType, World world) {
+    public EntityFollowProjectile(EntityType<? extends EntityFollowProjectile> entityAOEProjectileEntityType, Level world) {
         super(entityAOEProjectileEntityType, world);
     }
 
@@ -99,11 +99,11 @@ public class EntityFollowProjectile extends ArrowEntity {
             this.remove();
             return;
         }
-        Vector3d vec3d2 = this.getDeltaMovement();
+        Vec3 vec3d2 = this.getDeltaMovement();
         BlockPos dest = this.entityData.get(EntityFollowProjectile.to);
         if(BlockUtil.distanceFrom(this.blockPosition(), dest) < 1 || this.age > 1000 || BlockUtil.distanceFrom(this.blockPosition(), dest) > this.entityData.get(DESPAWN)){
             if(level.isClientSide && entityData.get(SPAWN_TOUCH)) {
-                ParticleUtil.spawnTouch((ClientWorld) level, this.getOnPos(), new ParticleColor(this.entityData.get(RED),this.entityData.get(GREEN),this.entityData.get(BLUE)));
+                ParticleUtil.spawnTouch((ClientLevel) level, this.getOnPos(), new ParticleColor(this.entityData.get(RED),this.entityData.get(GREEN),this.entityData.get(BLUE)));
             }
             this.remove();
             return;
@@ -119,7 +119,7 @@ public class EntityFollowProjectile extends ArrowEntity {
             double targetX = dest.getX()+0.5;
             double targetY = dest.getY()+0.5;
             double targetZ = dest.getZ()+0.5;
-            Vector3d targetVector = new Vector3d(targetX-posX,targetY-posY,targetZ-posZ);
+            Vec3 targetVector = new Vec3(targetX-posX,targetY-posY,targetZ-posZ);
             double length = targetVector.length();
             targetVector = targetVector.scale(0.3/length);
             double weight  = 0;
@@ -170,14 +170,14 @@ public class EntityFollowProjectile extends ArrowEntity {
 
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT compound) {
+    public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.entityData.set(EntityFollowProjectile.from, NBTUtil.getBlockPos(compound, "from"));
         this.entityData.set(EntityFollowProjectile.to, NBTUtil.getBlockPos(compound, "to"));
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT compound) {
+    public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         if(from != null)
             NBTUtil.storeBlockPos(compound, "from",  this.entityData.get(EntityFollowProjectile.from));
@@ -189,11 +189,11 @@ public class EntityFollowProjectile extends ArrowEntity {
         super.baseTick();
     }
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public EntityFollowProjectile(FMLPlayMessages.SpawnEntity packet, World world){
+    public EntityFollowProjectile(FMLPlayMessages.SpawnEntity packet, Level world){
         super(ModEntities.ENTITY_FOLLOW_PROJ, world);
     }
 

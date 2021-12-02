@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
 import com.hollingsworth.arsnouveau.common.entity.EntitySylph;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarSylph;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 
 public class SylphFamiliar extends AbstractFamiliarHolder {
     public SylphFamiliar() {
@@ -13,7 +13,7 @@ public class SylphFamiliar extends AbstractFamiliarHolder {
     }
 
     @Override
-    public IFamiliar getSummonEntity(World world) {
+    public IFamiliar getSummonEntity(Level world) {
         return new FamiliarSylph(ModEntities.ENTITY_FAMILIAR_SYLPH, world);
     }
 

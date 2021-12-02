@@ -10,12 +10,12 @@ import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.WealdWalker;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,13 +26,13 @@ public class RitualAwakening extends AbstractRitual {
     EntityType<WealdWalker> entity = null;
     BlockPos foundPos;
 
-    public void destroyTree(World world, Set<BlockPos> set){
+    public void destroyTree(Level world, Set<BlockPos> set){
         for(BlockPos p : set){
             BlockUtil.destroyBlockSafelyWithoutSound(world, p, false);
         }
     }
 
-    public void findTree(World world){
+    public void findTree(Level world){
         for(BlockPos p : BlockPos.betweenClosed(getPos().east(3).south(3).below(1), getPos().west(3).north(3).above(1))){
             Set<BlockPos> blazing = SpellUtil.DFSBlockstates(world, p, 350, (b) -> b.getBlock() == BlockRegistry.BLAZING_LOG || b.getBlock() == BlockRegistry.BLAZING_LEAVES);
             if(blazing.size() >= 50){
@@ -68,12 +68,12 @@ public class RitualAwakening extends AbstractRitual {
 
     @Override
     protected void tick() {
-        World world = getWorld();
+        Level world = getWorld();
         if(world.isClientSide){
             BlockPos pos = getPos();
 
             for(int i =0; i< 100; i++){
-                Vector3d particlePos = new Vector3d(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0, 0.5);
+                Vec3 particlePos = new Vec3(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0, 0.5);
                 particlePos = particlePos.add(ParticleUtil.pointInSphere().multiply(5,5,5));
                 world.addParticle(ParticleLineData.createData(getCenterColor()),
                         particlePos.x(), particlePos.y(), particlePos.z(),
@@ -85,7 +85,7 @@ public class RitualAwakening extends AbstractRitual {
             if(getProgress() > 5){
                 findTree(world);
                 if(entity != null){
-                    ParticleUtil.spawnPoof((ServerWorld) world, foundPos);
+                    ParticleUtil.spawnPoof((ServerLevel) world, foundPos);
                     WealdWalker walker =  entity.create(world);
                     walker.setPos(foundPos.getX(), foundPos.getY(), foundPos.getZ());
                     world.addFreshEntity(walker);
@@ -101,12 +101,12 @@ public class RitualAwakening extends AbstractRitual {
     }
 
     @Override
-    public void write(CompoundNBT tag) {
+    public void write(CompoundTag tag) {
         super.write(tag);
     }
 
     @Override
-    public void read(CompoundNBT tag) {
+    public void read(CompoundTag tag) {
         super.read(tag);
 
     }

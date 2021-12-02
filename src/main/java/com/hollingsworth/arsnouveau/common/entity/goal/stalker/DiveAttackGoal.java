@@ -1,10 +1,10 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.stalker;
 
 import com.hollingsworth.arsnouveau.common.entity.WildenStalker;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
 
@@ -32,7 +32,7 @@ public class DiveAttackGoal extends Goal {
             return false;
         } else if (!livingentity.isAlive()) {
             return false;
-        } else if (!(livingentity instanceof PlayerEntity) || !livingentity.isSpectator() && !((PlayerEntity)livingentity).isCreative()) {
+        } else if (!(livingentity instanceof Player) || !livingentity.isSpectator() && !((Player)livingentity).isCreative()) {
             return this.canUse();
         } else {
             return false;
@@ -51,7 +51,7 @@ public class DiveAttackGoal extends Goal {
      */
     public void tick() {
         LivingEntity livingentity = stalker.getTarget();
-        stalker.orbitOffset = new Vector3d(livingentity.getX(), livingentity.getY(0.5D), livingentity.getZ());
+        stalker.orbitOffset = new Vec3(livingentity.getX(), livingentity.getY(0.5D), livingentity.getZ());
         if (stalker.getBoundingBox().inflate(0.2F).intersects(livingentity.getBoundingBox())) {
             stalker.doHurtTarget(livingentity);
             stalker.setFlying(false);

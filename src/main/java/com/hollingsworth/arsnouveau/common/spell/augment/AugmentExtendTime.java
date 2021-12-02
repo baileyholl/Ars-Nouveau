@@ -4,10 +4,12 @@ import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
 import javax.annotation.Nullable;
+
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
 
 public class AugmentExtendTime extends AbstractAugment {
     public static AugmentExtendTime INSTANCE = new AugmentExtendTime();

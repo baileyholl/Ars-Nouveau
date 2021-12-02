@@ -8,15 +8,15 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.items.IItemHandler;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -31,11 +31,11 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BasicSpellTurretTile extends TileEntity implements IPickupResponder, IPlaceBlockResponder, ITooltipProvider, IAnimatable, IAnimationListener {
+public class BasicSpellTurretTile extends BlockEntity implements IPickupResponder, IPlaceBlockResponder, ITooltipProvider, IAnimatable, IAnimationListener {
     public @Nonnull Spell spell = Spell.EMPTY;
     boolean playRecoil;
     public ParticleColor.IntWrapper color = ParticleUtil.defaultParticleColor().toWrapper();
-    public BasicSpellTurretTile(TileEntityType<?> p_i48289_1_) {
+    public BasicSpellTurretTile(BlockEntityType<?> p_i48289_1_) {
         super(p_i48289_1_);
     }
 
@@ -63,14 +63,14 @@ public class BasicSpellTurretTile extends TileEntity implements IPickupResponder
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
+    public CompoundTag save(CompoundTag tag) {
         tag.putString("spell", spell.serialize());
         tag.putString("color", color.serialize());
         return super.save(tag);
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT tag) {
+    public void load(BlockState state, CompoundTag tag) {
         this.spell = Spell.deserialize(tag.getString("spell"));
         if(tag.contains("color")){
             this.color = ParticleColor.IntWrapper.deserialize(tag.getString("color"));
@@ -81,23 +81,23 @@ public class BasicSpellTurretTile extends TileEntity implements IPickupResponder
     @Override
     public List<String> getTooltip() {
         List<String> list = new ArrayList<>();
-        list.add(new TranslationTextComponent("ars_nouveau.spell_turret.casting").getString() + spell.getDisplayString());
+        list.add(new TranslatableComponent("ars_nouveau.spell_turret.casting").getString() + spell.getDisplayString());
         return list;
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.save(new CompoundTag());
     }
 
     @Override
     @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 3, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 3, this.getUpdateTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
         handleUpdateTag(level.getBlockState(worldPosition), pkt.getTag());
     }

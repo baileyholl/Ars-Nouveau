@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.familiar;
 
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarEntity;
-import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.Goal;
 
 public class FamiliarBaseGoal extends Goal {
     public FamiliarEntity entity;

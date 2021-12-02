@@ -6,23 +6,23 @@ import com.hollingsworth.arsnouveau.common.entity.goal.stalker.FlyHelper;
 import com.hollingsworth.arsnouveau.common.entity.goal.stalker.LeapGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.wilden.WildenMeleeAttack;
 import com.hollingsworth.arsnouveau.setup.Config;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -31,20 +31,32 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class WildenStalker extends MonsterEntity implements IAnimatable, IAnimationListener {
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+
+public class WildenStalker extends Monster implements IAnimatable, IAnimationListener {
     int leapCooldown;
-    public Vector3d orbitOffset = Vector3d.ZERO;
+    public Vec3 orbitOffset = Vec3.ZERO;
     public BlockPos orbitPosition = BlockPos.ZERO;
 
-    public static final DataParameter<Boolean> isFlying = EntityDataManager.defineId(WildenStalker.class, DataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> isFlying = SynchedEntityData.defineId(WildenStalker.class, EntityDataSerializers.BOOLEAN);
     public int timeFlying;
 
-    public WildenStalker(EntityType<? extends MonsterEntity> type, World worldIn) {
+    public WildenStalker(EntityType<? extends Monster> type, Level worldIn) {
         super(type, worldIn);
         moveControl = new FlyHelper(this);
     }
 
-    public WildenStalker(World worldIn) {
+    public WildenStalker(Level worldIn) {
         this(ModEntities.WILDEN_STALKER, worldIn);
     }
 
@@ -54,15 +66,15 @@ public class WildenStalker extends MonsterEntity implements IAnimatable, IAnimat
         super.registerGoals();
         this.goalSelector.addGoal(1, new LeapGoal(this));
         this.goalSelector.addGoal(1, new DiveAttackGoal(this));
-        this.goalSelector.addGoal(1, new SwimGoal(this));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true));
+        this.goalSelector.addGoal(1, new FloatGoal(this));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
         this.goalSelector.addGoal(5, new WildenMeleeAttack(this, 1.3D, true, WildenStalker.Animations.ATTACK.ordinal(), () -> !isFlying()));
         this.goalSelector.addGoal(8, new MeleeAttackGoal(this, 1.2f, true));
-        this.goalSelector.addGoal(8, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-        this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         if(Config.STALKER_ATTACK_ANIMALS.get())
-            this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, AnimalEntity.class, 10, true, false, (entity) -> !(entity instanceof SummonWolf) || !((SummonWolf) entity).isWildenSummon));
+            this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Animal.class, 10, true, false, (entity) -> !(entity instanceof SummonWolf) || !((SummonWolf) entity).isWildenSummon));
 
     }
 
@@ -86,7 +98,7 @@ public class WildenStalker extends MonsterEntity implements IAnimatable, IAnimat
     @Override
     public boolean doHurtTarget(Entity entityIn) {
         if(!level.isClientSide && entityIn instanceof LivingEntity && level.getDifficulty() == Difficulty.HARD)
-            ((LivingEntity) entityIn).addEffect(new EffectInstance(Effects.WEAKNESS, 40, 0));
+            ((LivingEntity) entityIn).addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 40, 0));
         return super.doHurtTarget(entityIn);
     }
 
@@ -104,7 +116,7 @@ public class WildenStalker extends MonsterEntity implements IAnimatable, IAnimat
     }
 
     @Override
-    protected int getExperienceReward(PlayerEntity player) {
+    protected int getExperienceReward(Player player) {
         return 8;
     }
 
@@ -169,7 +181,7 @@ public class WildenStalker extends MonsterEntity implements IAnimatable, IAnimat
 
 
     @Override
-    public void travel(Vector3d travelVector) {
+    public void travel(Vec3 travelVector) {
         if(!this.isFlying()) {
             super.travel(travelVector);
             return;
@@ -204,8 +216,8 @@ public class WildenStalker extends MonsterEntity implements IAnimatable, IAnimat
         this.calculateEntityAnimation(this, false);
     }
 
-    public static AttributeModifierMap.MutableAttribute getModdedAttributes(){
-        return MobEntity.createMobAttributes()
+    public static AttributeSupplier.Builder getModdedAttributes(){
+        return Mob.createMobAttributes()
                 .add(Attributes.MAX_HEALTH, 15D)
                 .add(Attributes.MOVEMENT_SPEED, 0.25D)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.7D)

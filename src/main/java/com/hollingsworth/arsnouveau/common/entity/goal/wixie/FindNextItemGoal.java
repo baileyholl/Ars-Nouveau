@@ -6,16 +6,18 @@ import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
 import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
+
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 public class FindNextItemGoal extends ExtendedRangeGoal {
     EntityWixie wixie;
@@ -32,7 +34,7 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
     @Override
     public void start() {
         super.start();
-        World world = wixie.getCommandSenderWorld();
+        Level world = wixie.getCommandSenderWorld();
         WixieCauldronTile tile = (WixieCauldronTile) world.getBlockEntity(wixie.cauldronPos);
         if(tile == null || tile.inventories == null) {
             found = true;
@@ -46,9 +48,9 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
         Set<Item> itemSet = new HashSet<>();
         itemSet.add(getStack.getItem());
         for(BlockPos b : tile.inventories){
-            if(!(world.getBlockEntity(b) instanceof IInventory))
+            if(!(world.getBlockEntity(b) instanceof Container))
                 continue;
-            IInventory i = (IInventory) world.getBlockEntity(b);
+            Container i = (Container) world.getBlockEntity(b);
             if(i.hasAnyOf(itemSet)){
                 movePos = b;
                 this.startDistance = BlockUtil.distanceFrom(wixie.position, movePos);
@@ -67,7 +69,7 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
     public boolean canUse() {
         if(wixie.cauldronPos == null)
             return false;
-        TileEntity tileEntity = wixie.level.getBlockEntity(wixie.cauldronPos);
+        BlockEntity tileEntity = wixie.level.getBlockEntity(wixie.cauldronPos);
         return wixie.inventoryBackoff == 0 && tileEntity instanceof WixieCauldronTile
                 && ((WixieCauldronTile) tileEntity).hasMana && !((WixieCauldronTile) tileEntity).isCraftingDone() && !((WixieCauldronTile) tileEntity).isOff &&  !((WixieCauldronTile) tileEntity).craftManager.getNextItem().isEmpty();
     }
@@ -83,7 +85,7 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
         if(!found && movePos != null && BlockUtil.distanceFrom(wixie.position(), movePos.above()) < 2.0 + this.extendedRange){
 
             WixieCauldronTile tile = (WixieCauldronTile) wixie.getCommandSenderWorld().getBlockEntity(wixie.cauldronPos);
-            World world = wixie.getCommandSenderWorld();
+            Level world = wixie.getCommandSenderWorld();
             if(tile == null) {
                 found = true;
                 return;
@@ -91,9 +93,9 @@ public class FindNextItemGoal extends ExtendedRangeGoal {
 
             for(BlockPos b : tile.inventories){
 
-                if(!(world.getBlockEntity(b) instanceof IInventory))
+                if(!(world.getBlockEntity(b) instanceof Container))
                     continue;
-                IInventory i = (IInventory) world.getBlockEntity(b);
+                Container i = (Container) world.getBlockEntity(b);
                 for(int j = 0; j < i.getContainerSize(); j++) {
                     if (i.getItem(j).getItem() == getStack.getItem()) {
                         found = true;

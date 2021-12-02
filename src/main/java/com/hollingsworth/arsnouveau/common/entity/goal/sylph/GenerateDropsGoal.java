@@ -3,14 +3,14 @@ package com.hollingsworth.arsnouveau.common.entity.goal.sylph;
 import com.hollingsworth.arsnouveau.api.util.DropDistribution;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntitySylph;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 import static com.hollingsworth.arsnouveau.common.entity.goal.sylph.EvaluateGroveGoal.getScore;
 
-import net.minecraft.entity.ai.goal.Goal.Flag;
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 public class GenerateDropsGoal extends Goal {
     EntitySylph sylph;
@@ -61,14 +61,14 @@ public class GenerateDropsGoal extends Goal {
 
     @Override
     public void tick() {
-        World world = sylph.getCommandSenderWorld();
+        Level world = sylph.getCommandSenderWorld();
         timeGathering--;
 
         if(locList == null || timeGathering <= 0)
             return;
 
         for(BlockPos growPos : locList) {
-            ((ServerWorld) world).sendParticles(ParticleTypes.COMPOSTER, growPos.getX() + 0.5, growPos.getY() + 0.5, growPos.getZ() + 0.5, 1, ParticleUtil.inRange(-0.2, 0.2), 0, ParticleUtil.inRange(-0.2, 0.2), 0.01);
+            ((ServerLevel) world).sendParticles(ParticleTypes.COMPOSTER, growPos.getX() + 0.5, growPos.getY() + 0.5, growPos.getZ() + 0.5, 1, ParticleUtil.inRange(-0.2, 0.2), 0, ParticleUtil.inRange(-0.2, 0.2), 0.01);
         }
         timeGathering--;
 
@@ -90,8 +90,8 @@ public class GenerateDropsGoal extends Goal {
     }
 
     public List<ItemStack> getDrops(DropDistribution<BlockState> blockDropDistribution){
-        World world = sylph.getCommandSenderWorld();
-        Supplier<List<ItemStack>> getDrops = () -> Block.getDrops(blockDropDistribution.nextDrop(), (ServerWorld) world, sylph.blockPosition(), null);
+        Level world = sylph.getCommandSenderWorld();
+        Supplier<List<ItemStack>> getDrops = () -> Block.getDrops(blockDropDistribution.nextDrop(), (ServerLevel) world, sylph.blockPosition(), null);
 
         List<ItemStack> successfulDrops;
         boolean bonusReroll = false;
@@ -118,7 +118,7 @@ public class GenerateDropsGoal extends Goal {
 
     @Override
     public void start() {
-        World world = sylph.getCommandSenderWorld();
+        Level world = sylph.getCommandSenderWorld();
         if(locList == null){
             locList = new ArrayList<>();
             for(BlockPos b : BlockPos.betweenClosed(sylph.blockPosition().north(4).west(4).below(3),sylph.blockPosition().south(4).east(4).above(3))){

@@ -4,12 +4,12 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleSparkleData;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.network.IPacket;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -17,15 +17,15 @@ public class EntityRitualProjectile extends ColoredProjectile{
 
     public BlockPos tilePos;
 
-    public EntityRitualProjectile(World worldIn, double x, double y, double z) {
+    public EntityRitualProjectile(Level worldIn, double x, double y, double z) {
         super(worldIn, x, y, z);
     }
 
-    public EntityRitualProjectile(World worldIn, BlockPos pos) {
+    public EntityRitualProjectile(Level worldIn, BlockPos pos) {
         super(worldIn, pos.getX(), pos.getY(), pos.getZ());
     }
 
-    public EntityRitualProjectile(EntityType<EntityRitualProjectile> entityAOEProjectileEntityType, World world) {
+    public EntityRitualProjectile(EntityType<EntityRitualProjectile> entityAOEProjectileEntityType, Level world) {
         super(entityAOEProjectileEntityType, world);
     }
     @Override
@@ -113,26 +113,26 @@ public class EntityRitualProjectile extends ColoredProjectile{
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public EntityRitualProjectile(FMLPlayMessages.SpawnEntity packet, World world){
+    public EntityRitualProjectile(FMLPlayMessages.SpawnEntity packet, Level world){
         super(ModEntities.ENTITY_RITUAL, world);
     }
 
     @Override
-    public boolean save(CompoundNBT tag) {
+    public boolean save(CompoundTag tag) {
         if(tilePos != null)
-            tag.put("ritpos", NBTUtil.writeBlockPos(tilePos));
+            tag.put("ritpos", NbtUtils.writeBlockPos(tilePos));
         return super.save(tag);
     }
 
     @Override
-    public void load(CompoundNBT compound) {
+    public void load(CompoundTag compound) {
         super.load(compound);
         if(compound.contains("ritpos")){
-            tilePos = NBTUtil.readBlockPos(compound.getCompound("ritpos"));
+            tilePos = NbtUtils.readBlockPos(compound.getCompound("ritpos"));
         }
     }
 }

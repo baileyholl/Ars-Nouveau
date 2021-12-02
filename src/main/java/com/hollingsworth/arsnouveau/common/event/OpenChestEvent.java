@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
-import net.minecraft.tileentity.ChestTileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.FakePlayer;
 
 public class OpenChestEvent implements ITimedEvent {
@@ -18,17 +18,17 @@ public class OpenChestEvent implements ITimedEvent {
     }
 
     public void open(){
-        World world = fakePlayer.level;
-        if(world.getBlockEntity(pos) instanceof ChestTileEntity){
-            ((ChestTileEntity) world.getBlockEntity(pos)).startOpen(fakePlayer);
+        Level world = fakePlayer.level;
+        if(world.getBlockEntity(pos) instanceof ChestBlockEntity){
+            ((ChestBlockEntity) world.getBlockEntity(pos)).startOpen(fakePlayer);
 
         }
     }
 
     public void attemptClose(){
-        World world = fakePlayer.level;
-        if(world.getBlockEntity(pos) instanceof ChestTileEntity){
-            ((ChestTileEntity) world.getBlockEntity(pos)).stopOpen(fakePlayer);
+        Level world = fakePlayer.level;
+        if(world.getBlockEntity(pos) instanceof ChestBlockEntity){
+            ((ChestBlockEntity) world.getBlockEntity(pos)).stopOpen(fakePlayer);
         }
     }
 

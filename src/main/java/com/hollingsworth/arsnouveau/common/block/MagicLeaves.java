@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import net.minecraft.block.LeavesBlock;
+import net.minecraft.world.level.block.LeavesBlock;
 
-import net.minecraft.block.AbstractBlock.Properties;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class MagicLeaves extends LeavesBlock {
     public MagicLeaves(Properties properties) {

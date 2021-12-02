@@ -1,28 +1,28 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.TrapDoorBlock;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.pathfinding.GroundPathNavigator;
-import net.minecraft.pathfinding.Path;
-import net.minecraft.pathfinding.PathPoint;
-import net.minecraft.util.GroundPathHelper;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.TrapDoorBlock;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
+import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.world.level.pathfinder.Node;
+import net.minecraft.world.entity.ai.util.GoalUtils;
+import net.minecraft.core.BlockPos;
 
 public class InteractTrapdoorGoal extends Goal {
 
-    protected MobEntity mob;
+    protected Mob mob;
     protected BlockPos doorPos = BlockPos.ZERO;
     protected boolean hasDoor;
     private boolean passed;
     private float doorOpenDirX;
     private float doorOpenDirZ;
 
-    public InteractTrapdoorGoal(MobEntity p_i1621_1_) {
+    public InteractTrapdoorGoal(Mob p_i1621_1_) {
         this.mob = p_i1621_1_;
-        if (!GroundPathHelper.hasGroundPathNavigation(p_i1621_1_)) {
+        if (!GoalUtils.hasGroundPathNavigation(p_i1621_1_)) {
             throw new IllegalArgumentException("Unsupported mob type for DoorInteractGoal");
         }
     }
@@ -53,16 +53,16 @@ public class InteractTrapdoorGoal extends Goal {
     }
 
     public boolean canUse() {
-        if (!GroundPathHelper.hasGroundPathNavigation(this.mob)) {
+        if (!GoalUtils.hasGroundPathNavigation(this.mob)) {
             return false;
         } else if (!this.mob.horizontalCollision) {
             return false;
         } else {
-            GroundPathNavigator groundpathnavigator = (GroundPathNavigator)this.mob.getNavigation();
+            GroundPathNavigation groundpathnavigator = (GroundPathNavigation)this.mob.getNavigation();
             Path path = groundpathnavigator.getPath();
             if (path != null && !path.isDone() && groundpathnavigator.canOpenDoors()) {
                 for(int i = 0; i < Math.min(path.getNextNodeIndex() + 2, path.getNodeCount()); ++i) {
-                    PathPoint pathpoint = path.getNode(i);
+                    Node pathpoint = path.getNode(i);
                     this.doorPos = new BlockPos(pathpoint.x, pathpoint.y, pathpoint.z);
                     if (!(this.mob.distanceToSqr(this.doorPos.getX(), this.mob.getY(), this.doorPos.getZ()) > 2.25D)) {
                         this.hasDoor = isWoodenTrapdoor();

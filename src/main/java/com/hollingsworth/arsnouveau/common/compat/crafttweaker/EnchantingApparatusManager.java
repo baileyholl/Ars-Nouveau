@@ -8,8 +8,8 @@ import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.resources.ResourceLocation;
 import org.openzen.zencode.java.ZenCodeType;
 
 import java.util.Arrays;
@@ -27,7 +27,7 @@ public class EnchantingApparatusManager implements IRecipeManager {
     }
     
     @Override
-    public IRecipeType<EnchantingApparatusRecipe> getRecipeType() {
+    public RecipeType<EnchantingApparatusRecipe> getRecipeType() {
         return RecipeRegistry.APPARATUS_TYPE;
     }
 }

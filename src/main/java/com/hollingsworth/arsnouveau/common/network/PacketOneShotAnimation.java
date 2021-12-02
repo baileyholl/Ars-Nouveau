@@ -2,9 +2,9 @@ package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.common.block.tile.IAnimationListener;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -36,11 +36,11 @@ public class PacketOneShotAnimation {
         this.arg = 0;
     }
 
-    public static PacketOneShotAnimation decode(PacketBuffer buf) {
+    public static PacketOneShotAnimation decode(FriendlyByteBuf buf) {
         return new PacketOneShotAnimation(buf.readInt(),buf.readInt(), buf.readInt(), buf.readInt());
     }
 
-    public static void encode(PacketOneShotAnimation msg, PacketBuffer buf) {
+    public static void encode(PacketOneShotAnimation msg, FriendlyByteBuf buf) {
         buf.writeInt(msg.x);
         buf.writeInt(msg.y);
         buf.writeInt(msg.z);
@@ -58,7 +58,7 @@ public class PacketOneShotAnimation {
                 @Override
                 public void run() {
                     Minecraft mc = Minecraft.getInstance();
-                    ClientWorld world = mc.level;
+                    ClientLevel world = mc.level;
                     if(world.getBlockEntity(new BlockPos(m.x, m.y, m.z)) instanceof IAnimationListener){
                         ((IAnimationListener) world.getBlockEntity(new BlockPos(m.x, m.y, m.z))).startAnimation(m.arg);
                     }

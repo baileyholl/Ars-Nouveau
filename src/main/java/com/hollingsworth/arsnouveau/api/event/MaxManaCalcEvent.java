@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.api.event;
 
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
 /**

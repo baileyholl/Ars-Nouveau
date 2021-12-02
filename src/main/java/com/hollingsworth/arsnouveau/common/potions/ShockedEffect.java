@@ -1,20 +1,20 @@
 package com.hollingsworth.arsnouveau.common.potions;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectType;
-import net.minecraft.util.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
-public class ShockedEffect extends Effect {
+public class ShockedEffect extends MobEffect {
 
     public ShockedEffect() {
-        super(EffectType.HARMFUL, 2039587);
+        super(MobEffectCategory.HARMFUL, 2039587);
         setRegistryName(ArsNouveau.MODID, "shocked");
     }
 
@@ -46,8 +46,8 @@ public class ShockedEffect extends Effect {
             multiplier++;
         if(multiplier > 0){
             int numTicks = 0;
-            if(entity instanceof PlayerEntity){
-                CompoundNBT tag = entity.getPersistentData().getCompound(PlayerEntity.PERSISTED_NBT_TAG);
+            if(entity instanceof Player){
+                CompoundTag tag = entity.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
             }
             entity.hurt(DamageSource.LIGHTNING_BOLT, 20 * multiplier * (amp + 1));
 

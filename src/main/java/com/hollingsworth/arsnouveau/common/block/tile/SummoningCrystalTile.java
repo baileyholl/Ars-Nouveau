@@ -6,10 +6,10 @@ import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleSparkleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -34,7 +34,7 @@ public class SummoningCrystalTile extends AbstractManaTile implements IAnimatabl
         animationData.addAnimationController(new AnimationController(this, "rotate_controller", 0, this::idlePredicate));
     }
 
-    private <E extends TileEntity & IAnimatable > PlayState idlePredicate(AnimationEvent<E> event) {
+    private <E extends BlockEntity & IAnimatable > PlayState idlePredicate(AnimationEvent<E> event) {
         event.getController().setAnimation(new AnimationBuilder().addAnimation("summoning_crystal", true));
         return PlayState.CONTINUE;
     }
@@ -74,13 +74,13 @@ public class SummoningCrystalTile extends AbstractManaTile implements IAnimatabl
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT tag) {
+    public void load(BlockState state, CompoundTag tag) {
         super.load(state,tag);
         isOff = tag.getBoolean("is_off");
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
+    public CompoundTag save(CompoundTag tag) {
         tag.putBoolean("is_off", isOff);
         return super.save(tag);
     }

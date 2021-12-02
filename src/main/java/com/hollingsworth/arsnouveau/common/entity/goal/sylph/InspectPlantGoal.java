@@ -3,26 +3,28 @@ package com.hollingsworth.arsnouveau.common.entity.goal.sylph;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.goal.DistanceRestrictedGoal;
-import net.minecraft.block.material.Material;
-import net.minecraft.command.arguments.EntityAnchorArgument;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.server.level.ServerLevel;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Supplier;
 
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
+
 public class InspectPlantGoal extends DistanceRestrictedGoal {
-    MobEntity entity;
+    Mob entity;
     BlockPos pos;
     int timeLooking;
     int timePerforming;
-    public InspectPlantGoal(MobEntity entity, Supplier<BlockPos> from, int maxDistanceFrom){
+    public InspectPlantGoal(Mob entity, Supplier<BlockPos> from, int maxDistanceFrom){
         super(from, maxDistanceFrom);
         this.setFlags(EnumSet.of(Flag.LOOK, Flag.MOVE));
         this.entity = entity;
@@ -45,8 +47,8 @@ public class InspectPlantGoal extends DistanceRestrictedGoal {
         if(BlockUtil.distanceFrom(entity.blockPosition(), pos) > 1.5){
             entity.getNavigation().moveTo(this.pos.getX(), this.pos.getY(), this.pos.getZ(), 1.2);
         }else{
-            ServerWorld world = (ServerWorld) entity.level;
-            entity.lookAt(EntityAnchorArgument.Type.EYES,new Vector3d(this.pos.getX(), this.pos.getY(), this.pos.getZ()));
+            ServerLevel world = (ServerLevel) entity.level;
+            entity.lookAt(EntityAnchorArgument.Anchor.EYES,new Vec3(this.pos.getX(), this.pos.getY(), this.pos.getZ()));
             if(world.random.nextInt(20) == 0)
                 world.sendParticles(ParticleTypes.HEART, this.pos.getX() +0.5, this.pos.getY()+1.1, this.pos.getZ()+0.5, 1, ParticleUtil.inRange(-0.2, 0.2),0,ParticleUtil.inRange(-0.2, 0.2),0.01);
             this.timeLooking--;

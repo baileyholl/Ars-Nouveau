@@ -3,20 +3,27 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
 import net.minecraft.block.*;
-import net.minecraft.dispenser.IBlockSource;
-import net.minecraft.dispenser.IPosition;
-import net.minecraft.dispenser.Position;
-import net.minecraft.dispenser.ProxyBlockSource;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockSource;
+import net.minecraft.core.Position;
+import net.minecraft.core.PositionImpl;
+import net.minecraft.core.BlockSourceImpl;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 
 import javax.annotation.Nullable;
+
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DirectionalBlock;
+import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.ObserverBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class SpellPrismBlock extends ModBlock{
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
@@ -31,12 +38,12 @@ public class SpellPrismBlock extends ModBlock{
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState().setValue(FACING, context.getNearestLookingDirection().getOpposite());
     }
 
-    public static void redirectSpell(ServerWorld world, BlockPos pos, EntityProjectileSpell spell){
-        IPosition iposition = getDispensePosition(new ProxyBlockSource(world, pos));
+    public static void redirectSpell(ServerLevel world, BlockPos pos, EntityProjectileSpell spell){
+        Position iposition = getDispensePosition(new BlockSourceImpl(world, pos));
         Direction direction = world.getBlockState(pos).getValue(DispenserBlock.FACING);
         spell.setPos(iposition.x(), iposition.y(), iposition.z());
         if(spell.spellResolver == null) {
@@ -58,15 +65,15 @@ public class SpellPrismBlock extends ModBlock{
     }
 
 
-    public static IPosition getDispensePosition(IBlockSource coords) {
+    public static Position getDispensePosition(BlockSource coords) {
         Direction direction = coords.getBlockState().getValue(FACING);
         double d0 = coords.x() + 0.3D * (double)direction.getStepX();
         double d1 = coords.y() + 0.3D * (double)direction.getStepY();
         double d2 = coords.z() + 0.3D * (double)direction.getStepZ();
-        return new Position(d0, d1, d2);
+        return new PositionImpl(d0, d1, d2);
     }
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 

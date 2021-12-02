@@ -3,18 +3,18 @@ package com.hollingsworth.arsnouveau.common.entity.goal;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.pathfinding.Path;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.pathfinder.Path;
 
 import java.util.EnumSet;
 import java.util.function.Supplier;
 
 public class AnimatedAttackGoal extends Goal {
 
-    protected final MobEntity mob;
+    protected final Mob mob;
     private final double speedModifier;
     private final boolean followingTargetEvenIfNotSeen;
     private Path path;
@@ -36,7 +36,7 @@ public class AnimatedAttackGoal extends Goal {
     int animationLength;
     int attackRange;
 
-    public AnimatedAttackGoal(MobEntity entity, boolean followUnseen, Supplier<Boolean> canAttack, int animationID, int animationLength, int attackRange, double speedModifier) {
+    public AnimatedAttackGoal(Mob entity, boolean followUnseen, Supplier<Boolean> canAttack, int animationID, int animationLength, int attackRange, double speedModifier) {
         this.mob = entity;
         this.speedModifier = speedModifier;
         this.followingTargetEvenIfNotSeen = followUnseen;
@@ -98,7 +98,7 @@ public class AnimatedAttackGoal extends Goal {
         } else if (!this.mob.isWithinRestriction(livingentity.blockPosition())) {
             return false;
         } else {
-            return !(livingentity instanceof PlayerEntity) || !livingentity.isSpectator() && !((PlayerEntity)livingentity).isCreative();
+            return !(livingentity instanceof Player) || !livingentity.isSpectator() && !((Player)livingentity).isCreative();
         }
     }
 
@@ -156,7 +156,7 @@ public class AnimatedAttackGoal extends Goal {
             if (this.canPenalize) {
                 this.ticksUntilNextPathRecalculation += failedPathFindingPenalty;
                 if (this.mob.getNavigation().getPath() != null) {
-                    net.minecraft.pathfinding.PathPoint finalPathPoint = this.mob.getNavigation().getPath().getEndNode();
+                    net.minecraft.world.level.pathfinder.Node finalPathPoint = this.mob.getNavigation().getPath().getEndNode();
                     if (finalPathPoint != null && livingentity.distanceToSqr(finalPathPoint.x, finalPathPoint.y, finalPathPoint.z) < 1)
                         failedPathFindingPenalty = 0;
                     else

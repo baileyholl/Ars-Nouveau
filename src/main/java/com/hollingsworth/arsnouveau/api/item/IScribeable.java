@@ -1,10 +1,10 @@
 package com.hollingsworth.arsnouveau.api.item;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public interface IScribeable {
 
@@ -13,5 +13,5 @@ public interface IScribeable {
      * Params come from ScribesBlock#onBlockActivated
      * @return True if the item was successfully scribed, false if it was not.
      */
-    boolean onScribe(World world, BlockPos pos, PlayerEntity player, Hand handIn, ItemStack thisStack);
+    boolean onScribe(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack thisStack);
 }

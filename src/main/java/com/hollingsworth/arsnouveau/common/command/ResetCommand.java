@@ -4,19 +4,19 @@ import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.api.familiar.FamiliarCap;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.mojang.brigadier.CommandDispatcher;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.EntityArgument;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class ResetCommand {
 
-    public static void register(CommandDispatcher<CommandSource> dispatcher) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("ars-reset").
                 requires(sender -> sender.hasPermission(2))
                 .executes(context -> resetPlayers(context.getSource(), ImmutableList.of(context.getSource().getEntityOrException())))
@@ -24,7 +24,7 @@ public class ResetCommand {
                         .executes(context -> resetPlayers(context.getSource(), EntityArgument.getEntities(context, "targets")))));
     }
 
-    private static int resetPlayers(CommandSource source, Collection<? extends Entity> entities) {
+    private static int resetPlayers(CommandSourceStack source, Collection<? extends Entity> entities) {
         for(Entity e : entities){
             if(!(e instanceof LivingEntity))
                 continue;
@@ -34,7 +34,7 @@ public class ResetCommand {
             });
             FamiliarCap.getFamiliarCap((LivingEntity) e).ifPresent(ifam -> ifam.setUnlockedFamiliars(new ArrayList<>()));
         }
-        source.sendSuccess(new TranslationTextComponent("ars_nouveau.reset.cleared"), true);
+        source.sendSuccess(new TranslatableComponent("ars_nouveau.reset.cleared"), true);
         return 1;
     }
 }

@@ -4,14 +4,14 @@ import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
@@ -27,12 +27,12 @@ public class EffectSnare extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         Entity livingEntity = rayTraceResult.getEntity();
         if(!(livingEntity instanceof LivingEntity))
             return;
 
-        ((LivingEntity)livingEntity).addEffect(new EffectInstance(ModPotions.SNARE_EFFECT, (int) (POTION_TIME.get() * 20  + 20 * EXTEND_TIME.get() * spellStats.getDurationMultiplier()), 20));
+        ((LivingEntity)livingEntity).addEffect(new MobEffectInstance(ModPotions.SNARE_EFFECT, (int) (POTION_TIME.get() * 20  + 20 * EXTEND_TIME.get() * spellStats.getDurationMultiplier()), 20));
         livingEntity.setDeltaMovement(0,0,0);
         livingEntity.hurtMarked = true;
     }
@@ -46,7 +46,7 @@ public class EffectSnare extends AbstractEffect {
     }
 
     @Override
-    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
+    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, List<AbstractAugment> augments) {
         return livingEntityHitSuccess(rayTraceResult);
     }
 

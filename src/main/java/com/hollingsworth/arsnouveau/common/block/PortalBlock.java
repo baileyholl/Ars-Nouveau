@@ -5,29 +5,29 @@ import com.hollingsworth.arsnouveau.common.block.tile.PortalTile;
 import com.hollingsworth.arsnouveau.common.datagen.Recipes;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.vector.Vector2f;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -36,7 +36,7 @@ import java.util.Random;
 
 public class PortalBlock extends ModBlock{
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 14.0D, 12.0D, 14.0D);
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
@@ -46,7 +46,7 @@ public class PortalBlock extends ModBlock{
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
         for(int i = 0; i < 4; ++i) {
             double d0 = (double)pos.getX() + (double)rand.nextFloat();
             double d1 = (double)pos.getY() + (double)rand.nextFloat();
@@ -69,7 +69,7 @@ public class PortalBlock extends ModBlock{
     }
 
     @Override
-    public void onProjectileHit(World worldIn, BlockState state, BlockRayTraceResult hit, ProjectileEntity projectile) {
+    public void onProjectileHit(Level worldIn, BlockState state, BlockHitResult hit, Projectile projectile) {
         if(worldIn.getBlockEntity(hit.getBlockPos()) instanceof PortalTile){
             ((PortalTile) worldIn.getBlockEntity(hit.getBlockPos())).warp(projectile);
         }
@@ -81,20 +81,20 @@ public class PortalBlock extends ModBlock{
     }
 
     @Override
-    public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-        if(worldIn.getBlockEntity(pos) instanceof PortalTile && !(entityIn instanceof PlayerEntity)){
+    public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
+        if(worldIn.getBlockEntity(pos) instanceof PortalTile && !(entityIn instanceof Player)){
             ((PortalTile) worldIn.getBlockEntity(pos)).warp(entityIn);
             entityIn.fallDistance = 0;
         }
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
         return new PortalTile();
     }
 
 
-    public boolean trySpawnPortal(IWorld worldIn, BlockPos pos, BlockPos warpPos, String dimID, Vector2f rotation, String displayName) {
+    public boolean trySpawnPortal(LevelAccessor worldIn, BlockPos pos, BlockPos warpPos, String dimID, Vec2 rotation, String displayName) {
         Size portalblock$size = this.isPortal(worldIn, pos);
         if (portalblock$size != null) {
             portalblock$size.placePortalBlocks(warpPos, dimID, rotation, displayName);
@@ -104,7 +104,7 @@ public class PortalBlock extends ModBlock{
         }
     }
 
-    public boolean trySpawnHoriztonalPortal(World worldIn, BlockPos pos, BlockPos warpPos, String dimID, Vector2f rotation, String displayName){
+    public boolean trySpawnHoriztonalPortal(Level worldIn, BlockPos pos, BlockPos warpPos, String dimID, Vec2 rotation, String displayName){
         FlatPortalAreaHelper helper = new FlatPortalAreaHelper().init(worldIn, pos, null, (bs) -> bs.is(Recipes.DECORATIVE_AN));
         if(helper.isValidFrame()){
             BlockPos.betweenClosed(helper.lowerCorner, helper.lowerCorner.relative(Direction.Axis.X, helper.xSize - 1).relative(Direction.Axis.Z, helper.zSize - 1)).forEach((blockPos) -> {
@@ -148,14 +148,14 @@ public class PortalBlock extends ModBlock{
      * returns its solidified counterpart.
      * Note that this method should ideally consider only the specific face passed in.
      */
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         Direction.Axis direction$axis = facing.getAxis();
         Direction.Axis direction$axis1 = stateIn.getValue(AXIS);
         boolean flag = direction$axis1 != direction$axis && direction$axis.isHorizontal();
         if(worldIn.getBlockEntity(currentPos) instanceof PortalTile){
             if(((PortalTile) worldIn.getBlockEntity(currentPos)).isHorizontal){
                 FlatPortalAreaHelper frameTester = new FlatPortalAreaHelper();
-                frameTester.init((World) worldIn, currentPos, null, (bs) -> bs.is(Recipes.DECORATIVE_AN));
+                frameTester.init((Level) worldIn, currentPos, null, (bs) -> bs.is(Recipes.DECORATIVE_AN));
                 if(!frameTester.isValidFrame()){
                     return Blocks.AIR.defaultBlockState();
                 }
@@ -164,12 +164,12 @@ public class PortalBlock extends ModBlock{
         }
         return !flag && facingState.getBlock() != this && !(new Size(worldIn, currentPos, direction$axis1)).isComplete() ? Blocks.AIR.defaultBlockState() : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(AXIS);
     }
 
     @Nullable
-    public Size isPortal(IWorld worldIn, BlockPos pos) {
+    public Size isPortal(LevelAccessor worldIn, BlockPos pos) {
         Size portalblock$size = new Size(worldIn, pos, Direction.Axis.X);
         if (portalblock$size.isValid() && portalblock$size.portalBlockCount == 0) {
             return portalblock$size;
@@ -180,12 +180,12 @@ public class PortalBlock extends ModBlock{
     }
 
     @Override
-    public boolean canBeReplaced(BlockState state, BlockItemUseContext useContext) {
+    public boolean canBeReplaced(BlockState state, BlockPlaceContext useContext) {
         return false;
     }
 
     public static class Size {
-        private final IWorld world;
+        private final LevelAccessor world;
         private final Direction.Axis axis;
         private final Direction rightDir;
         private final Direction leftDir;
@@ -196,7 +196,7 @@ public class PortalBlock extends ModBlock{
         private int width;
         private BlockPos warpPos;
         private int dimId;
-        public Size(IWorld worldIn, BlockPos pos, Direction.Axis axisIn) {
+        public Size(LevelAccessor worldIn, BlockPos pos, Direction.Axis axisIn) {
             this.world = worldIn;
             this.axis = axisIn;
             if (axisIn == Direction.Axis.X) {
@@ -239,7 +239,7 @@ public class PortalBlock extends ModBlock{
             return isPortalFrame(this.world, framePos) ? i : 0;
         }
 
-        public boolean isPortalFrame(IWorld world, BlockPos pos){
+        public boolean isPortalFrame(LevelAccessor world, BlockPos pos){
             return world.getBlockState(pos).getBlock().is(Recipes.DECORATIVE_AN);
         }
 
@@ -307,7 +307,7 @@ public class PortalBlock extends ModBlock{
             return this.bottomLeft != null && this.width >= 1 && this.width <= 21 && this.height >= 1 && this.height <= 21;
         }
 
-        public void placePortalBlocks(BlockPos warpPos, String dimId, Vector2f rotation, String displayName) {
+        public void placePortalBlocks(BlockPos warpPos, String dimId, Vec2 rotation, String displayName) {
             for(int i = 0; i < this.width; ++i) {
                 BlockPos blockpos = this.bottomLeft.relative(this.rightDir, i);
 

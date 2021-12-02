@@ -1,29 +1,29 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.Component;
 
 import javax.annotation.Nullable;
 import java.util.function.Function;
 
-public class NoShadowTextField extends TextFieldWidget {
+public class NoShadowTextField extends EditBox {
 
     public Function<String, Void> onClear;
 
-    public NoShadowTextField(FontRenderer p_i232260_1_, int p_i232260_2_, int p_i232260_3_, int p_i232260_4_, int p_i232260_5_, ITextComponent p_i232260_6_) {
+    public NoShadowTextField(Font p_i232260_1_, int p_i232260_2_, int p_i232260_3_, int p_i232260_4_, int p_i232260_5_, Component p_i232260_6_) {
         super(p_i232260_1_, p_i232260_2_, p_i232260_3_, p_i232260_4_, p_i232260_5_, p_i232260_6_);
     }
 
-    public NoShadowTextField(FontRenderer p_i232259_1_, int p_i232259_2_, int p_i232259_3_, int p_i232259_4_, int p_i232259_5_, @Nullable TextFieldWidget p_i232259_6_, ITextComponent p_i232259_7_) {
+    public NoShadowTextField(Font p_i232259_1_, int p_i232259_2_, int p_i232259_3_, int p_i232259_4_, int p_i232259_5_, @Nullable EditBox p_i232259_6_, Component p_i232259_7_) {
         super(p_i232259_1_, p_i232259_2_,p_i232259_3_,p_i232259_4_,p_i232259_5_, p_i232259_6_,p_i232259_7_);
     }
 
     @Override
-    public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+    public void renderButton(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         if (this.isVisible()) {
 //            if (this.getEnableBackgroundDrawing()) {
 //                int i = this.isFocused() ? -1 : -6250336;
@@ -68,7 +68,7 @@ public class NoShadowTextField extends TextFieldWidget {
 
             if (flag1) {
                 if (flag2) {
-                    AbstractGui.fill(matrixStack, k1, i1 - 1, k1 + 1, i1 + 1 + 9, -3092272);
+                    GuiComponent.fill(matrixStack, k1, i1 - 1, k1 + 1, i1 + 1 + 9, -3092272);
                 } else {
                     this.font.draw(matrixStack, "_", (float)k1, (float)i1, i2);
                 }
@@ -93,7 +93,7 @@ public class NoShadowTextField extends TextFieldWidget {
             }
 
             if (this.isFocused() && flag && mouseButton == 0) {
-                int i = MathHelper.floor(clickedX) - this.x;
+                int i = Mth.floor(clickedX) - this.x;
                 if (this.bordered) {
                     i -= 4;
                 }

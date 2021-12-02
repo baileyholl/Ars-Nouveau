@@ -14,24 +14,24 @@ import com.hollingsworth.arsnouveau.common.entity.goal.wealdwalker.CastSpellGoal
 import com.hollingsworth.arsnouveau.common.entity.goal.wealdwalker.SmashGoal;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.monster.MonsterEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BoneMealItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BoneMealItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -45,18 +45,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class WealdWalker extends AgeableEntity implements IAnimatable, IAnimationListener, IRangedAttackMob, IWandable, ITooltipProvider {
+import net.minecraft.world.entity.AgableMob;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.RangedAttackMob;
 
-    public static final DataParameter<Boolean> SMASHING = EntityDataManager.defineId(WealdWalker.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<Boolean> CASTING = EntityDataManager.defineId(WealdWalker.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<Boolean> BABY = EntityDataManager.defineId(WealdWalker.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<Optional<BlockPos>> HOME = EntityDataManager.defineId(WealdWalker.class, DataSerializers.OPTIONAL_BLOCK_POS);
+public class WealdWalker extends AgableMob implements IAnimatable, IAnimationListener, RangedAttackMob, IWandable, ITooltipProvider {
+
+    public static final EntityDataAccessor<Boolean> SMASHING = SynchedEntityData.defineId(WealdWalker.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> CASTING = SynchedEntityData.defineId(WealdWalker.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> BABY = SynchedEntityData.defineId(WealdWalker.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Optional<BlockPos>> HOME = SynchedEntityData.defineId(WealdWalker.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
     public int smashCooldown;
     public int castCooldown;
     public Spell spell = Spell.EMPTY;
     public ParticleColor color = ParticleUtil.defaultParticleColor();
 
-    public WealdWalker(EntityType<? extends AgeableEntity> type, World world) {
+    public WealdWalker(EntityType<? extends AgableMob> type, Level world) {
         super(type, world);
     }
 
@@ -72,7 +85,7 @@ public class WealdWalker extends AgeableEntity implements IAnimatable, IAnimatio
             this.heal(1.0f);
         }
     }
-    public ActionResultType mobInteract(PlayerEntity p_230254_1_, Hand p_230254_2_) {
+    public InteractionResult mobInteract(Player p_230254_1_, InteractionHand p_230254_2_) {
         ItemStack itemstack = p_230254_1_.getItemInHand(p_230254_2_);
         if (itemstack.getItem() instanceof BoneMealItem && isBaby()) {
             int i = this.getAge();
@@ -80,39 +93,39 @@ public class WealdWalker extends AgeableEntity implements IAnimatable, IAnimatio
             if (this.isBaby()) {
                 this.usePlayerItem(p_230254_1_, itemstack);
                 this.ageUp((int)((float)(-i / 20) * 0.1F), true);
-                return ActionResultType.sidedSuccess(this.level.isClientSide);
+                return InteractionResult.sidedSuccess(this.level.isClientSide);
             }
 
             if (this.level.isClientSide) {
-                return ActionResultType.CONSUME;
+                return InteractionResult.CONSUME;
             }
         }
 
         return super.mobInteract(p_230254_1_, p_230254_2_);
     }
 
-    protected void usePlayerItem(PlayerEntity p_175505_1_, ItemStack p_175505_2_) {
+    protected void usePlayerItem(Player p_175505_1_, ItemStack p_175505_2_) {
         if (!p_175505_1_.abilities.instabuild) {
             p_175505_2_.shrink(1);
         }
     }
 
     @Override
-    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, PlayerEntity playerEntity) {
+    public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         if(storedPos != null){
             setHome(storedPos);
-            PortUtil.sendMessage(playerEntity, new TranslationTextComponent("ars_nouveau.weald_walker.setpos"));
+            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.weald_walker.setpos"));
         }
     }
 
     @Override
-    public EntitySize getDimensions(Pose p_213305_1_) {
-        return isBaby() ? new EntitySize(1,1,true) : super.getDimensions(p_213305_1_);
+    public EntityDimensions getDimensions(Pose p_213305_1_) {
+        return isBaby() ? new EntityDimensions(1,1,true) : super.getDimensions(p_213305_1_);
     }
 
     @Nullable
     @Override
-    public AgeableEntity getBreedOffspring(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
+    public AgableMob getBreedOffspring(ServerLevel p_241840_1_, AgableMob p_241840_2_) {
         return null;
     }
 
@@ -123,9 +136,9 @@ public class WealdWalker extends AgeableEntity implements IAnimatable, IAnimatio
             setBaby(true);
             refreshDimensions();
             this.setHealth(60);
-            ParticleUtil.spawnPoof((ServerWorld) level, blockPosition().above());
-            if(source.getEntity() != null && source.getEntity() instanceof MobEntity)
-                ((MobEntity) source.getEntity()).setTarget(null);
+            ParticleUtil.spawnPoof((ServerLevel) level, blockPosition().above());
+            if(source.getEntity() != null && source.getEntity() instanceof Mob)
+                ((Mob) source.getEntity()).setTarget(null);
             return;
         }
         super.die(source);
@@ -164,7 +177,7 @@ public class WealdWalker extends AgeableEntity implements IAnimatable, IAnimatio
     public boolean isBaby() {
         return this.entityData.get(BABY);
     }
-    public void onSyncedDataUpdated(DataParameter<?> p_184206_1_) {
+    public void onSyncedDataUpdated(EntityDataAccessor<?> p_184206_1_) {
         if (BABY.equals(p_184206_1_)) {
             this.refreshDimensions();
         }
@@ -174,12 +187,12 @@ public class WealdWalker extends AgeableEntity implements IAnimatable, IAnimatio
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(1, new SwimGoal(this));
+        this.goalSelector.addGoal(1, new FloatGoal(this));
         this.goalSelector.addGoal(2, new GoBackHomeGoal(this, this::getHome, 10, () -> this.getTarget() == null || this.isBaby()));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, MonsterEntity.class, false));
-        this.goalSelector.addGoal(8, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 8.0F));
-        this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Monster.class, false));
+        this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
+        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(2, new SmashGoal(this, true,() ->smashCooldown <= 0 && !this.entityData.get(BABY), Animations.SMASH.ordinal(), 25, 5));
         this.goalSelector.addGoal(2, new CastSpellGoal(this, 1.2d, 20,15f, () -> castCooldown <= 0 && !this.entityData.get(BABY), Animations.CAST.ordinal(), 20));
     }
@@ -194,7 +207,7 @@ public class WealdWalker extends AgeableEntity implements IAnimatable, IAnimatio
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT tag) {
+    public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("isBaby", entityData.get(BABY));
         NBTUtil.storeBlockPos(tag, "home", getHome());
@@ -210,7 +223,7 @@ public class WealdWalker extends AgeableEntity implements IAnimatable, IAnimatio
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT tag) {
+    public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         entityData.set(BABY, tag.getBoolean("isBaby"));
         if(NBTUtil.hasBlockPos(tag, "home")){
@@ -276,8 +289,8 @@ public class WealdWalker extends AgeableEntity implements IAnimatable, IAnimatio
         }
     }
 
-    public static AttributeModifierMap.MutableAttribute attributes() {
-        return MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 60d)
+    public static AttributeSupplier.Builder attributes() {
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 60d)
                 .add(Attributes.MOVEMENT_SPEED, 0.2d)
                 .add(Attributes.FOLLOW_RANGE, 16D)
                 .add(Attributes.ATTACK_DAMAGE, 10.5d);
@@ -294,7 +307,7 @@ public class WealdWalker extends AgeableEntity implements IAnimatable, IAnimatio
     }
 
     @Override
-    protected int getExperienceReward(PlayerEntity p_70693_1_) {
+    protected int getExperienceReward(Player p_70693_1_) {
         return 0;
     }
 
@@ -313,9 +326,9 @@ public class WealdWalker extends AgeableEntity implements IAnimatable, IAnimatio
         List<String> tips = new ArrayList<>();
         if(getHome() != null){
             String home = getHome().getX() + ", " + getHome().getY() + ", " + getHome().getZ();
-            tips.add(new TranslationTextComponent("ars_nouveau.weald_walker.home",home).getString());
+            tips.add(new TranslatableComponent("ars_nouveau.weald_walker.home",home).getString());
         }else{
-            tips.add(new TranslationTextComponent("ars_nouveau.weald_walker.home",new TranslationTextComponent("ars_nouveau.nothing").getString()).getString());
+            tips.add(new TranslatableComponent("ars_nouveau.weald_walker.home",new TranslatableComponent("ars_nouveau.nothing").getString()).getString());
         }
         return tips;
     }

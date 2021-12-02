@@ -4,13 +4,13 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.opengl.GL11;
@@ -32,7 +32,7 @@ public class GlyphButton extends Button {
     GuiSpellBook parent;
 
     public GlyphButton(GuiSpellBook parent, int x, int y, boolean isCraftingSlot, String resource_image, String spell_id) {
-        super(x, y,  16, 16, ITextComponent.nullToEmpty(""), parent::onGlyphClick);
+        super(x, y,  16, 16, Component.nullToEmpty(""), parent::onGlyphClick);
         this.parent = parent;
         this.x = x;
         this.y = y;
@@ -55,7 +55,7 @@ public class GlyphButton extends Button {
     }
 
     @Override
-    public void render(MatrixStack ms,int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack ms,int mouseX, int mouseY, float partialTicks) {
         if (visible)
         {
             if(this.resourceIcon != null && !this.resourceIcon.equals("")) {
@@ -72,16 +72,16 @@ public class GlyphButton extends Button {
 
             if(parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)){
                 if(parent.api.getSpell_map().containsKey(this.spell_id)) {
-                    List<ITextComponent> tip = new ArrayList<>();
+                    List<Component> tip = new ArrayList<>();
                     AbstractSpellPart spellPart = parent.api.getSpell_map().get(this.spell_id);
-                    tip.add(new TranslationTextComponent(spellPart.getLocalizationKey()));
+                    tip.add(new TranslatableComponent(spellPart.getLocalizationKey()));
                     for (SpellValidationError ve : validationErrors) {
-                        tip.add(ve.makeTextComponentAdding().withStyle(TextFormatting.RED));
+                        tip.add(ve.makeTextComponentAdding().withStyle(ChatFormatting.RED));
                     }
                     if(Screen.hasShiftDown()){
                         tip.add(spellPart.getBookDescLang());
                     }else{
-                        tip.add(new TranslationTextComponent("tooltip.ars_nouveau.hold_shift"));
+                        tip.add(new TranslatableComponent("tooltip.ars_nouveau.hold_shift"));
                     }
 
                     parent.tooltip = tip;

@@ -4,21 +4,21 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.block.ManaJar;
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ManaJarTile extends AbstractManaTile implements ITickableTileEntity, ITooltipProvider {
+public class ManaJarTile extends AbstractManaTile implements TickableBlockEntity, ITooltipProvider {
 
     public ManaJarTile() {
         super(BlockRegistry.MANA_JAR_TILE);
     }
 
-    public ManaJarTile(TileEntityType<? extends ManaJarTile> tileTileEntityType){
+    public ManaJarTile(BlockEntityType<? extends ManaJarTile> tileTileEntityType){
         super(tileTileEntityType);
     }
 
@@ -53,7 +53,7 @@ public class ManaJarTile extends AbstractManaTile implements ITickableTileEntity
     @Override
     public List<String> getTooltip() {
         List<String> list = new ArrayList<>();
-        list.add(new TranslationTextComponent("ars_nouveau.mana_jar.fullness", (getCurrentMana()*100) / this.getMaxMana()).getString());
+        list.add(new TranslatableComponent("ars_nouveau.mana_jar.fullness", (getCurrentMana()*100) / this.getMaxMana()).getString());
         return list;
     }
 }

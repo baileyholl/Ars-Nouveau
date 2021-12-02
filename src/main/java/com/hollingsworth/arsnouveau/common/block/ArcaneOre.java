@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
-import net.minecraft.block.OreBlock;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.level.block.OreBlock;
+import net.minecraft.util.Mth;
 import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nonnull;
@@ -17,6 +17,6 @@ public class ArcaneOre extends OreBlock {
 
     @Override
     protected int xpOnDrop(@Nonnull Random rand) {
-        return MathHelper.nextInt(rand, 2, 5); // same as lapis or redstone
+        return Mth.nextInt(rand, 2, 5); // same as lapis or redstone
     }
 }

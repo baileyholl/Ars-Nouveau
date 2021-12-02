@@ -4,12 +4,24 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.entity.EntityType;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.loot.*;
 import net.minecraft.loot.functions.*;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+
+import net.minecraft.world.level.storage.loot.ConstantIntValue;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.RandomValueBounds;
+import net.minecraft.world.level.storage.loot.entries.DynamicLoot;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.CopyNameFunction;
+import net.minecraft.world.level.storage.loot.functions.CopyNbtFunction;
+import net.minecraft.world.level.storage.loot.functions.LootingEnchantFunction;
+import net.minecraft.world.level.storage.loot.functions.SetContainerContents;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 
 public class LootTables extends BaseLootTableProvider{
     public LootTables(DataGenerator dataGeneratorIn) {
@@ -23,15 +35,15 @@ public class LootTables extends BaseLootTableProvider{
 
         LootPool.Builder potionJarBuilder = LootPool.lootPool()
                 .name("potion_jar")
-                .setRolls(ConstantRange.exactly(1))
-                .add(ItemLootEntry.lootTableItem(BlockRegistry.POTION_JAR)
-                        .apply(CopyName.copyName(CopyName.Source.BLOCK_ENTITY))
-                        .apply(CopyNbt.copyData(CopyNbt.Source.BLOCK_ENTITY)
-                                .copy("amount", "BlockEntityTag.amount", CopyNbt.Action.REPLACE)
-                                .copy("Potion", "BlockEntityTag.Potion", CopyNbt.Action.REPLACE)
-                                .copy("CustomPotionEffects", "BlockEntityTag.CustomPotionEffects", CopyNbt.Action.REPLACE))
-                        .apply(SetContents.setContents()
-                                .withEntry(DynamicLootEntry.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
+                .setRolls(ConstantIntValue.exactly(1))
+                .add(LootItem.lootTableItem(BlockRegistry.POTION_JAR)
+                        .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
+                        .apply(CopyNbtFunction.copyData(CopyNbtFunction.DataSource.BLOCK_ENTITY)
+                                .copy("amount", "BlockEntityTag.amount", CopyNbtFunction.MergeStrategy.REPLACE)
+                                .copy("Potion", "BlockEntityTag.Potion", CopyNbtFunction.MergeStrategy.REPLACE)
+                                .copy("CustomPotionEffects", "BlockEntityTag.CustomPotionEffects", CopyNbtFunction.MergeStrategy.REPLACE))
+                        .apply(SetContainerContents.setContents()
+                                .withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
                 );
         blockTables.put(BlockRegistry.POTION_JAR,LootTable.lootTable().withPool(potionJarBuilder));
         putStandardLoot(BlockRegistry.ARCANE_ORE);
@@ -52,22 +64,22 @@ public class LootTables extends BaseLootTableProvider{
         putStandardLoot(BlockRegistry.LAVA_LILY);
 
         putEntityTable(ModEntities.WILDEN_STALKER,  LootTable.lootTable()
-                .withPool(LootPool.lootPool().setRolls(ConstantRange.exactly(1))
-                .add(ItemLootEntry.lootTableItem(ItemsRegistry.WILDEN_WING)
-                .apply(SetCount.setCount(RandomValueRange.between(0.0F, 1.0F)))
-                .apply(LootingEnchantBonus.lootingMultiplier(RandomValueRange.between(0.0F, 1.0F)))))
+                .withPool(LootPool.lootPool().setRolls(ConstantIntValue.exactly(1))
+                .add(LootItem.lootTableItem(ItemsRegistry.WILDEN_WING)
+                .apply(SetItemCountFunction.setCount(RandomValueBounds.between(0.0F, 1.0F)))
+                .apply(LootingEnchantFunction.lootingMultiplier(RandomValueBounds.between(0.0F, 1.0F)))))
         );
         putEntityTable(ModEntities.WILDEN_GUARDIAN,  LootTable.lootTable()
-                .withPool(LootPool.lootPool().setRolls(ConstantRange.exactly(1))
-                        .add(ItemLootEntry.lootTableItem(ItemsRegistry.WILDEN_SPIKE)
-                                .apply(SetCount.setCount(RandomValueRange.between(0.0F, 1.0F)))
-                                .apply(LootingEnchantBonus.lootingMultiplier(RandomValueRange.between(0.0F, 1.0F)))))
+                .withPool(LootPool.lootPool().setRolls(ConstantIntValue.exactly(1))
+                        .add(LootItem.lootTableItem(ItemsRegistry.WILDEN_SPIKE)
+                                .apply(SetItemCountFunction.setCount(RandomValueBounds.between(0.0F, 1.0F)))
+                                .apply(LootingEnchantFunction.lootingMultiplier(RandomValueBounds.between(0.0F, 1.0F)))))
         );
         putEntityTable(ModEntities.WILDEN_HUNTER,  LootTable.lootTable()
-                .withPool(LootPool.lootPool().setRolls(ConstantRange.exactly(1))
-                        .add(ItemLootEntry.lootTableItem(ItemsRegistry.WILDEN_HORN)
-                                .apply(SetCount.setCount(RandomValueRange.between(0.0F, 1.0F)))
-                                .apply(LootingEnchantBonus.lootingMultiplier(RandomValueRange.between(0.0F, 1.0F)))))
+                .withPool(LootPool.lootPool().setRolls(ConstantIntValue.exactly(1))
+                        .add(LootItem.lootTableItem(ItemsRegistry.WILDEN_HORN)
+                                .apply(SetItemCountFunction.setCount(RandomValueBounds.between(0.0F, 1.0F)))
+                                .apply(LootingEnchantFunction.lootingMultiplier(RandomValueBounds.between(0.0F, 1.0F)))))
         );
         putStandardLoot(BlockRegistry.RELAY_WARP);
         putStandardLoot(BlockRegistry.RELAY_DEPOSIT);

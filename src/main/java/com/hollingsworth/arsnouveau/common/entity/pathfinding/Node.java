@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 
 /**
  * Nodes used in pathfinding.

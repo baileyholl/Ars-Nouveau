@@ -6,20 +6,20 @@ import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.Explosion;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
 
 public class EruptionEvent implements ITimedEvent {
 
     int delay;
     BlockPos origin;
-    World world;
+    Level world;
     int start;
     int particleDelay;
 
-    public EruptionEvent(World world, BlockPos origin, int delay, int particleDelay){
+    public EruptionEvent(Level world, BlockPos origin, int delay, int particleDelay){
         this.world = world;
         this.origin = origin;
         this.delay = delay;
@@ -56,7 +56,7 @@ public class EruptionEvent implements ITimedEvent {
 
         }
         if(serverSide && delay <= 0){
-            world.explode(null, origin.getX(), origin.getY(), origin.getZ(), 5.0f, Explosion.Mode.NONE);
+            world.explode(null, origin.getX(), origin.getY(), origin.getZ(), 5.0f, Explosion.BlockInteraction.NONE);
         }
 
     }
@@ -67,7 +67,7 @@ public class EruptionEvent implements ITimedEvent {
     }
 
     @Override
-    public CompoundNBT serialize(CompoundNBT tag) {
+    public CompoundTag serialize(CompoundTag tag) {
         ITimedEvent.super.serialize(tag);
         NBTUtil.storeBlockPos(tag, "pos", origin);
         tag.putInt("delay", delay);
@@ -75,7 +75,7 @@ public class EruptionEvent implements ITimedEvent {
         return tag;
     }
 
-    public static EruptionEvent get(CompoundNBT tag){
+    public static EruptionEvent get(CompoundTag tag){
         return new EruptionEvent(ArsNouveau.proxy.getClientWorld(), NBTUtil.getBlockPos(tag, "pos"), tag.getInt("delay"), tag.getInt("particleDelay"));
     }
     public static final String ID = "eruption";

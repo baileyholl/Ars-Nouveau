@@ -8,8 +8,8 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.util.SpellPartConfigUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.item.Item;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.item.Item;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
@@ -108,8 +108,8 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
     }
 
 
-    public TranslationTextComponent getBookDescLang(){
-        return new TranslationTextComponent("ars_nouveau.glyph_desc." + getTag());
+    public TranslatableComponent getBookDescLang(){
+        return new TranslatableComponent("ars_nouveau.glyph_desc." + getTag());
     }
     /**
      * Converts to a patchouli documentation page
@@ -208,6 +208,6 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
     }
 
     public String getLocaleName(){
-        return new TranslationTextComponent(getLocalizationKey()).getString();
+        return new TranslatableComponent(getLocalizationKey()).getString();
     }
 }

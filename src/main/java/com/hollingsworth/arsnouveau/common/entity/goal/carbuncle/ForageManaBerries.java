@@ -4,23 +4,25 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.ManaBerryBush;
 import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.command.arguments.EntityAnchorArgument;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 
 import java.util.EnumSet;
 import java.util.Optional;
 
 import static com.hollingsworth.arsnouveau.common.block.ManaBerryBush.AGE;
 
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
+
 public class ForageManaBerries extends Goal {
     private final EntityCarbuncle entity;
-    private final World world;
+    private final Level world;
     int timeSpent;
     BlockPos pos;
 
@@ -68,10 +70,10 @@ public class ForageManaBerries extends Goal {
         }else if(world.getBlockState(pos).getBlock() instanceof ManaBerryBush){
             int i = world.getBlockState(pos).getValue(AGE);
             boolean flag = i == 3;
-            entity.lookAt(EntityAnchorArgument.Type.EYES,new Vector3d(this.pos.getX(), this.pos.getY(), this.pos.getZ()));
+            entity.lookAt(EntityAnchorArgument.Anchor.EYES,new Vec3(this.pos.getX(), this.pos.getY(), this.pos.getZ()));
             int j = 1 + world.random.nextInt(2);
             ManaBerryBush.popResource(world, pos, new ItemStack(BlockRegistry.MANA_BERRY_BUSH, j + (flag ? 1 : 0)));
-            world.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundCategory.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
+            world.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
             world.setBlock(pos, world.getBlockState(pos).setValue(AGE, 1), 2);
             pos = null;
         }

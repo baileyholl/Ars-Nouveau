@@ -5,18 +5,18 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,15 +39,15 @@ public class EffectBreak extends AbstractEffect {
 
     public ItemStack getStack(LivingEntity shooter){
         if(isRealPlayer(shooter)){
-            ItemStack mainHand = getPlayer(shooter, (ServerWorld)shooter.level).getMainHandItem();
-            return (mainHand.isEmpty() ? getPlayer(shooter, (ServerWorld)shooter.level).getOffhandItem() : mainHand).copy();
+            ItemStack mainHand = getPlayer(shooter, (ServerLevel)shooter.level).getMainHandItem();
+            return (mainHand.isEmpty() ? getPlayer(shooter, (ServerLevel)shooter.level).getOffhandItem() : mainHand).copy();
         }
 
         return new ItemStack(Items.DIAMOND_PICKAXE);
     }
 
     @Override
-    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         BlockPos pos = rayTraceResult.getBlockPos();
         BlockState state;
 
@@ -59,23 +59,23 @@ public class EffectBreak extends AbstractEffect {
         for(BlockPos pos1 : posList) {
             state = world.getBlockState(pos1);
 
-            if(!canBlockBeHarvested(spellStats, world, pos1) || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, pos1)){
+            if(!canBlockBeHarvested(spellStats, world, pos1) || !BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos1)){
                 continue;
             }
             if(spellStats.hasBuff(AugmentExtract.INSTANCE)) {
                 stack.enchant(Enchantments.SILK_TOUCH, 1);
-                state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerWorld) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
+                state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerLevel) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
                 destroyBlockSafely(world, pos1, false, shooter);
             }else if(spellStats.hasBuff(AugmentFortune.INSTANCE)) {
                 int bonus = spellStats.getBuffCount(AugmentFortune.INSTANCE);
                 stack.enchant(Enchantments.BLOCK_FORTUNE, bonus);
-                state.getBlock().popExperience((ServerWorld) world, pos1, state.getExpDrop(world, pos1, bonus, 0));
-                state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerWorld) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
+                state.getBlock().popExperience((ServerLevel) world, pos1, state.getExpDrop(world, pos1, bonus, 0));
+                state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerLevel) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
                 destroyBlockSafely(world, pos1, false, shooter);
             } else {
-                state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerWorld) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
+                state.getBlock().playerDestroy(world, getPlayer(shooter, (ServerLevel) world), pos1, world.getBlockState(pos1), world.getBlockEntity(pos1), stack);
                 destroyBlockSafely(world, pos1, false, shooter);
-                state.getBlock().popExperience((ServerWorld) world, pos1, state.getExpDrop(world, pos1, 0, 0));
+                state.getBlock().popExperience((ServerLevel) world, pos1, state.getExpDrop(world, pos1, 0, 0));
             }
         }
     }
@@ -87,8 +87,8 @@ public class EffectBreak extends AbstractEffect {
     }
 
     @Override
-    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
-        return rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getBlockPos()).getMaterial() != Material.AIR && canBlockBeHarvested(augments, world, ((BlockRayTraceResult) rayTraceResult).getBlockPos());
+    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, List<AbstractAugment> augments) {
+        return rayTraceResult instanceof BlockHitResult && world.getBlockState(((BlockHitResult) rayTraceResult).getBlockPos()).getMaterial() != Material.AIR && canBlockBeHarvested(augments, world, ((BlockHitResult) rayTraceResult).getBlockPos());
     }
 
     @Override

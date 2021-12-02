@@ -4,14 +4,14 @@ import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
-import net.minecraft.entity.AgeableEntity;
-import net.minecraft.item.BoneMealItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.AgableMob;
+import net.minecraft.world.item.BoneMealItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
 public class RitualOvergrowth extends AbstractRitual {
     @Override
     protected void tick() {
-        World world = getWorld();
+        Level world = getWorld();
         BlockPos pos = getPos();
 
 
@@ -30,9 +30,9 @@ public class RitualOvergrowth extends AbstractRitual {
                 return;
 
             if(isAnimalGrowth()){
-                List<AgeableEntity> animals = getWorld().getEntitiesOfClass(AgeableEntity.class, new AxisAlignedBB(getPos()).inflate(5));
+                List<AgableMob> animals = getWorld().getEntitiesOfClass(AgableMob.class, new AABB(getPos()).inflate(5));
                 boolean didWorkOnce = false;
-                for(AgeableEntity a : animals){
+                for(AgableMob a : animals){
                     if(a.isBaby()){
                         a.ageUp(500, true);
                         didWorkOnce = true;
@@ -45,7 +45,7 @@ public class RitualOvergrowth extends AbstractRitual {
                 boolean didWorkOnce = false;
                 for(BlockPos b : BlockPos.betweenClosed(pos.offset(range, -1, range), pos.offset(-range, 1, -range))){
                     if(rand.nextInt(25) == 0)
-                        if(BoneMealItem.applyBonemeal(new ItemStack(Items.BONE_MEAL), world, b, FakePlayerFactory.getMinecraft((ServerWorld) world))) {
+                        if(BoneMealItem.applyBonemeal(new ItemStack(Items.BONE_MEAL), world, b, FakePlayerFactory.getMinecraft((ServerLevel) world))) {
                             didWorkOnce = true;
                         }
                 }

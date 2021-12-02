@@ -12,12 +12,12 @@ import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.ChatFormatting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -208,7 +208,7 @@ public class LootTables {
         ItemStack stack = new ItemStack(ItemsRegistry.CASTER_TOME);
         ISpellCaster spellCaster = SpellCaster.deserialize(stack);
         spellCaster.setSpell(spell);
-        stack.setHoverName(new StringTextComponent(name).setStyle(Style.EMPTY.withColor(TextFormatting.DARK_PURPLE).withItalic(true)));
+        stack.setHoverName(new TextComponent(name).setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true)));
         return stack;
     }
 

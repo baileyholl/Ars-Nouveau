@@ -5,10 +5,10 @@ import com.hollingsworth.arsnouveau.common.entity.SummonWolf;
 import com.hollingsworth.arsnouveau.common.entity.WildenHunter;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
 
 public class WildenSummon extends Goal {
     private final WildenHunter entity;
@@ -19,7 +19,7 @@ public class WildenSummon extends Goal {
 
     @Override
     public boolean canUse() {
-        return entity.isAlive() && entity.getTarget() instanceof PlayerEntity && entity.summonCooldown <= 0;
+        return entity.isAlive() && entity.getTarget() instanceof Player && entity.summonCooldown <= 0;
     }
 
 
@@ -28,7 +28,7 @@ public class WildenSummon extends Goal {
     public void start() {
         super.start();
         Networking.sendToNearby(entity.level, entity, new PacketAnimEntity(entity.getId(), WildenHunter.Animations.HOWL.ordinal()));
-        entity.level.playSound(null, entity.blockPosition(), SoundEvents.WOLF_HOWL, SoundCategory.HOSTILE, 1.0f, 0.3f);
+        entity.level.playSound(null, entity.blockPosition(), SoundEvents.WOLF_HOWL, SoundSource.HOSTILE, 1.0f, 0.3f);
         SummonWolf wolf = new SummonWolf(ModEntities.SUMMON_WOLF, entity.level);
         wolf.ticksLeft = 400;
         wolf.setPos(entity.getRandomX(1), entity.getY(), entity.getRandomZ(1));

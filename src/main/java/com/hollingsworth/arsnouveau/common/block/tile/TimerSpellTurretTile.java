@@ -5,13 +5,13 @@ import com.hollingsworth.arsnouveau.common.spell.effect.EffectRedstone;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
@@ -20,12 +20,12 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 
 import java.util.List;
 
-public class TimerSpellTurretTile extends BasicSpellTurretTile implements ITickableTileEntity, IWandable {
+public class TimerSpellTurretTile extends BasicSpellTurretTile implements TickableBlockEntity, IWandable {
 
     private int ticksPerSignal = 20;
     public boolean isLocked;
     public boolean isOff;
-    public TimerSpellTurretTile(TileEntityType<?> p_i48289_1_) {
+    public TimerSpellTurretTile(BlockEntityType<?> p_i48289_1_) {
         super(p_i48289_1_);
     }
 
@@ -36,7 +36,7 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements ITicka
     @Override
     public void tick() {
         if(!level.isClientSide && ticksPerSignal > 0 && !isOff & level.getGameTime() % ticksPerSignal == 0){
-            getBlockState().tick((ServerWorld) level, getBlockPos(), getLevel().random);
+            getBlockState().tick((ServerLevel) level, getBlockPos(), getLevel().random);
 
         }
     }
@@ -63,7 +63,7 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements ITicka
     }
 
     @Override
-    public void onWanded(PlayerEntity playerEntity) {
+    public void onWanded(Player playerEntity) {
         this.isLocked = !isLocked;
         update();
     }
@@ -78,19 +78,19 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements ITicka
     public List<String> getTooltip() {
         List<String> tooltip = super.getTooltip();
         if(ticksPerSignal <= 0 && !isOff){
-            tooltip.add(new TranslationTextComponent("ars_nouveau.tooltip.turned_off").getString());
+            tooltip.add(new TranslatableComponent("ars_nouveau.tooltip.turned_off").getString());
         }else{
-            tooltip.add(new TranslationTextComponent("ars_nouveau.seconds", ticksPerSignal/20).getString());
+            tooltip.add(new TranslatableComponent("ars_nouveau.seconds", ticksPerSignal/20).getString());
         }
         if(isOff)
-            tooltip.add(new TranslationTextComponent("ars_nouveau.tooltip.turned_off").getString());
+            tooltip.add(new TranslatableComponent("ars_nouveau.tooltip.turned_off").getString());
         if(isLocked)
-            tooltip.add(new TranslationTextComponent("ars_nouveau.locked").getString());
+            tooltip.add(new TranslatableComponent("ars_nouveau.locked").getString());
         return tooltip;
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT tag) {
+    public void load(BlockState state, CompoundTag tag) {
         super.load(state, tag);
         this.isLocked = tag.getBoolean("locked");
         this.ticksPerSignal = tag.getInt("time");
@@ -98,7 +98,7 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements ITicka
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
+    public CompoundTag save(CompoundTag tag) {
         tag.putBoolean("locked", isLocked);
         tag.putInt("time", ticksPerSignal);
         tag.putBoolean("off", isOff);

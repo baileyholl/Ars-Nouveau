@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
 import com.hollingsworth.arsnouveau.client.ClientInfo;
-import net.minecraft.client.particle.IAnimatedSprite;
-import net.minecraft.client.world.ClientWorld;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.multiplayer.ClientLevel;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
@@ -10,7 +10,7 @@ import static java.lang.Math.sin;
 public class ParticleVortex extends ParticleGlow{
     int randOffset;
     double randMotionOff;
-    public ParticleVortex(ClientWorld worldIn, double x, double y, double z, double vx, double vy, double vz, float r, float g, float b, float a, float scale, int lifetime, IAnimatedSprite sprite) {
+    public ParticleVortex(ClientLevel worldIn, double x, double y, double z, double vx, double vy, double vz, float r, float g, float b, float a, float scale, int lifetime, SpriteSet sprite) {
         super(worldIn, x, y, z, vx, vy, vz, r, g, b, a, scale, lifetime, sprite, false);
         this.quadSize = scale/15f;
         initScale = scale/2.0f;

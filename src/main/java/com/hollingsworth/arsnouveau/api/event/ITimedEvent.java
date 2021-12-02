@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.api.event;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 
 /**
  * A basic timed event for the EventQueue.
@@ -15,7 +15,7 @@ public interface ITimedEvent {
     boolean isExpired();
 
     // Methods for sending a timed event as a packet to the client side
-    default CompoundNBT serialize(CompoundNBT tag){
+    default CompoundTag serialize(CompoundTag tag){
         if(getID().isEmpty())
             throw new IllegalStateException("Serialize without ID");
         tag.putString("id", getID());

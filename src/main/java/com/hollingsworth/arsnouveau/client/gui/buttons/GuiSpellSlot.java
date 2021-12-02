@@ -3,11 +3,11 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -30,14 +30,14 @@ public class GuiSpellSlot extends GuiImageButton {
     }
 
     @Override
-    public void render(MatrixStack stack, int parX, int parY, float partialTicks) {
+    public void render(PoseStack stack, int parX, int parY, float partialTicks) {
         if (visible)
         {
             if(parent.isMouseInRelativeRange(parX, parY, x, y, width, height)){
                 String name = SpellBook.getSpellName(parent.spell_book_tag, slotNum);
                 if(!name.isEmpty()){
-                    List<ITextComponent> tip = new ArrayList<>();
-                    tip.add(new StringTextComponent(name));
+                    List<Component> tip = new ArrayList<>();
+                    tip.add(new TextComponent(name));
                     parent.tooltip = tip;
                 }
             }

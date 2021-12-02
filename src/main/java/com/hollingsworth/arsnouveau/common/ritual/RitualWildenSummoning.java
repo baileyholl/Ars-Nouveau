@@ -7,10 +7,10 @@ import com.hollingsworth.arsnouveau.common.entity.WildenGuardian;
 import com.hollingsworth.arsnouveau.common.entity.WildenHunter;
 import com.hollingsworth.arsnouveau.common.entity.WildenStalker;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
 
 import static com.hollingsworth.arsnouveau.common.lib.RitualLib.WILDEN_SUMMON;
 
@@ -25,7 +25,7 @@ public class RitualWildenSummoning extends AbstractRitual {
             if(!isBossSpawn()){
                 int wild = rand.nextInt(3);
                 BlockPos summonPos = getPos().above().east(rand.nextInt(3) - rand.nextInt(6)).north(rand.nextInt(3) - rand.nextInt(6));
-                MobEntity mobEntity;
+                Mob mobEntity;
                 switch (wild){
                     case 0:
                         mobEntity = new WildenStalker(getWorld());
@@ -56,7 +56,7 @@ public class RitualWildenSummoning extends AbstractRitual {
         return didConsumeItem(ItemsRegistry.WILDEN_HORN) && didConsumeItem(ItemsRegistry.WILDEN_WING) && didConsumeItem(ItemsRegistry.WILDEN_SPIKE);
     }
 
-    public void summon(MobEntity mob, BlockPos pos){
+    public void summon(Mob mob, BlockPos pos){
         mob.setPos(pos.getX(), pos.getY(), pos.getZ());
         mob.level.addFreshEntity(mob);
     }

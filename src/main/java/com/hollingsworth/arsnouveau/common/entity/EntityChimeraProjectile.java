@@ -1,17 +1,17 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.IPacket;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -23,21 +23,21 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.Collection;
 
-public class EntityChimeraProjectile extends AbstractArrowEntity implements IAnimatable {
+public class EntityChimeraProjectile extends AbstractArrow implements IAnimatable {
     int groundMax;
-    public EntityChimeraProjectile(double p_i48547_2_, double p_i48547_4_, double p_i48547_6_, World p_i48547_8_) {
+    public EntityChimeraProjectile(double p_i48547_2_, double p_i48547_4_, double p_i48547_6_, Level p_i48547_8_) {
         super(ModEntities.ENTITY_CHIMERA_SPIKE, p_i48547_2_, p_i48547_4_, p_i48547_6_, p_i48547_8_);
     }
 
-    public EntityChimeraProjectile(LivingEntity p_i48548_2_, World p_i48548_3_) {
+    public EntityChimeraProjectile(LivingEntity p_i48548_2_, Level p_i48548_3_) {
         super(ModEntities.ENTITY_CHIMERA_SPIKE, p_i48548_2_, p_i48548_3_);
     }
 
-    public EntityChimeraProjectile(World world){
+    public EntityChimeraProjectile(Level world){
         super(ModEntities.ENTITY_CHIMERA_SPIKE, world);
     }
 
-    public EntityChimeraProjectile(EntityType<EntityChimeraProjectile> entityChimeraProjectileEntityType, World world) {
+    public EntityChimeraProjectile(EntityType<EntityChimeraProjectile> entityChimeraProjectileEntityType, Level world) {
         super(entityChimeraProjectileEntityType, world);
     }
 
@@ -67,7 +67,7 @@ public class EntityChimeraProjectile extends AbstractArrowEntity implements IAni
     }
 
     @Override
-    protected void onHitEntity(EntityRayTraceResult rayTraceResult) {
+    protected void onHitEntity(EntityHitResult rayTraceResult) {
         Entity entity = rayTraceResult.getEntity();
 
         float damage = 7.5f;
@@ -118,14 +118,14 @@ public class EntityChimeraProjectile extends AbstractArrowEntity implements IAni
         super.doPostHurtEffects(entity);
         if(!level.isClientSide){
 
-            Collection<EffectInstance> effects = entity.getActiveEffects();
-            EffectInstance[] array = effects.toArray(new EffectInstance[0]);
-            for (EffectInstance e : array) {
+            Collection<MobEffectInstance> effects = entity.getActiveEffects();
+            MobEffectInstance[] array = effects.toArray(new MobEffectInstance[0]);
+            for (MobEffectInstance e : array) {
                 if (e.getEffect().isBeneficial())
                     entity.removeEffect(e.getEffect());
             }
-            entity.addEffect(new EffectInstance(Effects.WEAKNESS, 200, 2));
-            entity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 100, 2));
+            entity.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 200, 2));
+            entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 2));
         }
 
     }
@@ -159,11 +159,11 @@ public class EntityChimeraProjectile extends AbstractArrowEntity implements IAni
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public EntityChimeraProjectile(FMLPlayMessages.SpawnEntity packet, World world) {
+    public EntityChimeraProjectile(FMLPlayMessages.SpawnEntity packet, Level world) {
         super(ModEntities.ENTITY_CHIMERA_SPIKE, world);
     }
 }

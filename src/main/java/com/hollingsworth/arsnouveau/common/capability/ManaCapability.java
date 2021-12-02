@@ -2,13 +2,13 @@ package com.hollingsworth.arsnouveau.common.capability;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.mana.IMana;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -39,8 +39,8 @@ public class ManaCapability {
         CapabilityManager.INSTANCE.register(IMana.class, new Capability.IStorage<IMana>() {
             @Nullable
             @Override
-            public INBT writeNBT(Capability<IMana> capability, IMana instance, Direction side) {
-                CompoundNBT tag = new CompoundNBT();
+            public Tag writeNBT(Capability<IMana> capability, IMana instance, Direction side) {
+                CompoundTag tag = new CompoundTag();
                 tag.putDouble("current", instance.getCurrentMana());
                 tag.putInt("max", instance.getMaxMana());
                 tag.putInt("glyph", instance.getGlyphBonus());
@@ -49,10 +49,10 @@ public class ManaCapability {
             }
 
             @Override
-            public void readNBT(Capability<IMana> capability, IMana instance, Direction side, INBT nbt) {
-                if(!(nbt instanceof CompoundNBT))
+            public void readNBT(Capability<IMana> capability, IMana instance, Direction side, Tag nbt) {
+                if(!(nbt instanceof CompoundTag))
                     return;
-                CompoundNBT tag = (CompoundNBT)nbt;
+                CompoundTag tag = (CompoundTag)nbt;
                 instance.setMaxMana(tag.getInt("max"));
                 instance.setMana(tag.getDouble("current"));
                 instance.setBookTier(tag.getInt("book_tier"));
@@ -91,7 +91,7 @@ public class ManaCapability {
         @SubscribeEvent
         public static void attachCapabilities(final AttachCapabilitiesEvent<Entity> event) {
 
-            if (event.getObject() instanceof PlayerEntity) {
+            if (event.getObject() instanceof Player) {
                 final Mana mana = new Mana((LivingEntity) event.getObject());
                 event.addCapability(ID, createProvider(mana));
             }

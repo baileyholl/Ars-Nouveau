@@ -4,11 +4,11 @@ import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
         super(BlockRegistry.ARCANE_RELAY_SPLITTER_TILE);
     }
 
-    public ArcaneRelaySplitterTile(TileEntityType<?> type){
+    public ArcaneRelaySplitterTile(BlockEntityType<?> type){
         super(type);
     }
 
@@ -108,7 +108,7 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT tag) {
+    public void load(BlockState state, CompoundTag tag) {
         super.load(state, tag);
         fromList = new ArrayList<>();
         toList = new ArrayList<>();
@@ -132,7 +132,7 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
+    public CompoundTag save(CompoundTag tag) {
         int counter = 0;
         for(BlockPos p : this.fromList){
             NBTUtil.storeBlockPos(tag, "from_" +counter, p);
@@ -150,14 +150,14 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
     public List<String> getTooltip() {
         List<String> list = new ArrayList<>();
         if(toList == null || toList.isEmpty()){
-            list.add(new TranslationTextComponent("ars_nouveau.relay.no_to").getString());
+            list.add(new TranslatableComponent("ars_nouveau.relay.no_to").getString());
         }else{
-            list.add(new TranslationTextComponent("ars_nouveau.relay.one_to", toList.size()).getString());
+            list.add(new TranslatableComponent("ars_nouveau.relay.one_to", toList.size()).getString());
         }
         if(fromList == null || fromList.isEmpty()){
-            list.add(new TranslationTextComponent("ars_nouveau.relay.no_from").getString());
+            list.add(new TranslatableComponent("ars_nouveau.relay.no_from").getString());
         }else{
-            list.add(new TranslationTextComponent("ars_nouveau.relay.one_from", fromList.size()).getString());
+            list.add(new TranslatableComponent("ars_nouveau.relay.one_from", fromList.size()).getString());
         }
         return list;
     }

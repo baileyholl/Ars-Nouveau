@@ -5,14 +5,14 @@ import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.common.capability.SerializableCapabilityProvider;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSyncFamiliars;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -80,28 +80,28 @@ public class FamiliarCap implements IFamiliarCap {
         CapabilityManager.INSTANCE.register(IFamiliarCap.class, new Capability.IStorage<IFamiliarCap>() {
             @Nullable
             @Override
-            public INBT writeNBT(Capability<IFamiliarCap> capability, IFamiliarCap instance, Direction side) {
-                CompoundNBT tag = new CompoundNBT();
+            public Tag writeNBT(Capability<IFamiliarCap> capability, IFamiliarCap instance, Direction side) {
+                CompoundTag tag = new CompoundTag();
                 FamiliarCap.serializeFamiliars(tag, instance);
                 return tag;
             }
 
             @Override
-            public void readNBT(Capability<IFamiliarCap> capability, IFamiliarCap instance, Direction side, INBT nbt) {
-                if(!(nbt instanceof CompoundNBT))
+            public void readNBT(Capability<IFamiliarCap> capability, IFamiliarCap instance, Direction side, Tag nbt) {
+                if(!(nbt instanceof CompoundTag))
                     return;
-                CompoundNBT tag = (CompoundNBT)nbt;
+                CompoundTag tag = (CompoundTag)nbt;
                 instance.setUnlockedFamiliars(NBTUtil.readStrings(tag, "fam"));
             }
         }, () -> new FamiliarCap(null));
         System.out.println("Finished Registering FamiliarCap");
     }
 
-    public static void serializeFamiliars(CompoundNBT tag, IFamiliarCap cap){
+    public static void serializeFamiliars(CompoundTag tag, IFamiliarCap cap){
         NBTUtil.writeStrings(tag, "fam", cap.getUnlockedFamiliars());
     }
 
-    public static List<String> deserializeFamiliars(CompoundNBT tag){
+    public static List<String> deserializeFamiliars(CompoundTag tag){
         return NBTUtil.readStrings(tag, "fam");
     }
 
@@ -134,7 +134,7 @@ public class FamiliarCap implements IFamiliarCap {
         @SubscribeEvent
         public static void attachCapabilities(final AttachCapabilitiesEvent<Entity> event) {
 
-            if (event.getObject() instanceof PlayerEntity) {
+            if (event.getObject() instanceof Player) {
                 final FamiliarCap familiarCap = new FamiliarCap((LivingEntity) event.getObject());
                 event.addCapability(ID, createProvider(familiarCap));
             }
@@ -155,35 +155,35 @@ public class FamiliarCap implements IFamiliarCap {
 
         @SubscribeEvent
         public static void onPlayerLoginEvent(PlayerEvent.PlayerLoggedInEvent event) {
-            if(event.getPlayer() instanceof ServerPlayerEntity){
+            if(event.getPlayer() instanceof ServerPlayer){
                 FamiliarCap.syncFamiliars(event.getPlayer());
             }
         }
 
         @SubscribeEvent
         public static void respawnEvent(PlayerEvent.PlayerRespawnEvent event) {
-            if(event.getPlayer() instanceof ServerPlayerEntity)
+            if(event.getPlayer() instanceof ServerPlayer)
                 FamiliarCap.syncFamiliars(event.getPlayer());
         }
 
 
         @SubscribeEvent
         public static void onPlayerStartTrackingEvent(PlayerEvent.StartTracking event) {
-            if (event.getTarget() instanceof PlayerEntity && event.getPlayer() instanceof ServerPlayerEntity) {
+            if (event.getTarget() instanceof Player && event.getPlayer() instanceof ServerPlayer) {
                 FamiliarCap.syncFamiliars(event.getPlayer());
             }
         }
 
         @SubscribeEvent
         public static void onPlayerDimChangedEvent(PlayerEvent.PlayerChangedDimensionEvent event) {
-            if (event.getPlayer() instanceof ServerPlayerEntity)
+            if (event.getPlayer() instanceof ServerPlayer)
                 FamiliarCap.syncFamiliars(event.getPlayer());
         }
     }
 
-    public static void syncFamiliars(PlayerEntity player){
+    public static void syncFamiliars(Player player){
         IFamiliarCap cap = FamiliarCap.getFamiliarCap(player).orElse(new FamiliarCap(player));
-        CompoundNBT tag = new CompoundNBT();
+        CompoundTag tag = new CompoundTag();
         FamiliarCap.serializeFamiliars(tag, cap);
         Networking.sendToPlayer(new PacketSyncFamiliars(tag), player);
     }

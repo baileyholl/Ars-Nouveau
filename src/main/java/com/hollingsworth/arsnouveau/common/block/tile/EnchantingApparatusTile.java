@@ -5,17 +5,17 @@ import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnchantingApparatusTile extends AnimatedTile implements IInventory {
+public class EnchantingApparatusTile extends AnimatedTile implements Container {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     public ItemStack catalystItem = ItemStack.EMPTY;
     public ItemEntity entity;
@@ -63,7 +63,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
                     pedestalItems.forEach(i -> i = null);
                     this.catalystItem = recipe.getResult(pedestalItems, this.catalystItem, this);
                     clearItems();
-                    ParticleUtil.spawnPoof((ServerWorld) level, worldPosition);
+                    ParticleUtil.spawnPoof((ServerLevel) level, worldPosition);
                 }
 
                 this.isCrafting = false;
@@ -105,12 +105,12 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
         return pedestalItems;
     }
 
-    public IEnchantingRecipe getRecipe(ItemStack stack, @Nullable PlayerEntity playerEntity){
+    public IEnchantingRecipe getRecipe(ItemStack stack, @Nullable Player playerEntity){
         List<ItemStack> pedestalItems = getPedestalItems();
         return ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes(level).stream().filter(r-> r.isMatch(pedestalItems, stack, this, playerEntity)).findFirst().orElse(null);
     }
 
-    public boolean attemptCraft(ItemStack catalyst, @Nullable PlayerEntity playerEntity){
+    public boolean attemptCraft(ItemStack catalyst, @Nullable Player playerEntity){
         if(isCrafting)
             return false;
         if (!craftingPossible(catalyst, playerEntity)) {
@@ -123,7 +123,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
         return true;
     }
 
-    public boolean craftingPossible(ItemStack stack, PlayerEntity playerEntity){
+    public boolean craftingPossible(ItemStack stack, Player playerEntity){
         if(isCrafting || stack.isEmpty())
             return false;
         IEnchantingRecipe recipe = this.getRecipe(stack, playerEntity);
@@ -139,17 +139,17 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
-        catalystItem = ItemStack.of((CompoundNBT)compound.get("itemStack"));
+    public void load(BlockState state, CompoundTag compound) {
+        catalystItem = ItemStack.of((CompoundTag)compound.get("itemStack"));
         isCrafting = compound.getBoolean("is_crafting");
         counter = compound.getInt("counter");
         super.load(state, compound);
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         if(catalystItem != null) {
-            CompoundNBT reagentTag = new CompoundNBT();
+            CompoundTag reagentTag = new CompoundTag();
             catalystItem.save(reagentTag);
             compound.put("itemStack", reagentTag);
         }
@@ -160,20 +160,20 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
     }
     @Override
     @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 3, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 3, this.getUpdateTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        CompoundNBT tag = new CompoundNBT();
+    public CompoundTag getUpdateTag() {
+        CompoundTag tag = new CompoundTag();
         tag.putInt("counter", this.counter);
         tag.putBoolean("is_crafting", this.isCrafting);
         return this.save(tag);
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
         handleUpdateTag(level.getBlockState(worldPosition), pkt.getTag());
     }
@@ -234,7 +234,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
     }
 
     @Override
-    public boolean stillValid(PlayerEntity player) {
+    public boolean stillValid(Player player) {
         return false;
     }
 

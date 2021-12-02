@@ -5,14 +5,14 @@ import com.hollingsworth.arsnouveau.common.datagen.Recipes;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.Tags;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -37,7 +37,7 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
         if(level.isClientSide)
             return;
         if(level.getGameTime() % 20 == 0 && this.canAcceptMana()){
-            for(ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(worldPosition).inflate(1.0))){
+            for(ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, new AABB(worldPosition).inflate(1.0))){
                 int source = getSourceValue(i.getItem());
                 if(source > 0) {
                     this.addMana(source);
@@ -118,7 +118,7 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
         }
     }
 
-    public BlockPos getTagInArea(ITag<Block> block, int range){
+    public BlockPos getTagInArea(Tag<Block> block, int range){
         AtomicReference<BlockPos> posFound = new AtomicReference<>();
         BlockPos.betweenClosedStream(worldPosition.offset(range, -1, range), worldPosition.offset(-range, -1, -range)).forEach(blockPos -> {
             blockPos = blockPos.immutable();

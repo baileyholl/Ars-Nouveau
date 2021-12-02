@@ -8,27 +8,27 @@ import com.hollingsworth.arsnouveau.common.entity.goal.wixie.CompleteCraftingGoa
 import com.hollingsworth.arsnouveau.common.entity.goal.wixie.FindNextItemGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.wixie.FindPotionGoal;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.controller.FlyingMovementController;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.PrioritizedGoal;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.pathfinding.FlyingPathNavigator;
-import net.minecraft.pathfinding.PathNavigator;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.FlyingMoveControl;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.WrappedGoal;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -45,7 +45,7 @@ import java.util.List;
 public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, IAnimationListener, IDispellable {
     AnimationFactory manager = new AnimationFactory(this);
 
-    public static final DataParameter<Boolean> TAMED = EntityDataManager.defineId(EntityWixie.class, DataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(EntityWixie.class, EntityDataSerializers.BOOLEAN);
 
     public BlockPos cauldronPos;
     public int inventoryBackoff;
@@ -65,7 +65,7 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
         return PlayState.CONTINUE;
     }
     @Override
-    protected int getExperienceReward(PlayerEntity player) {
+    protected int getExperienceReward(Player player) {
         return 0;
     }
 
@@ -81,16 +81,16 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
         return manager;
     }
 
-    protected EntityWixie(EntityType<? extends AbstractFlyingCreature> type, World worldIn) {
+    protected EntityWixie(EntityType<? extends AbstractFlyingCreature> type, Level worldIn) {
         super(type, worldIn);
-        this.moveControl =  new FlyingMovementController(this, 10, true);
+        this.moveControl =  new FlyingMoveControl(this, 10, true);
         addGoalsAfterConstructor();
     }
 
-    public EntityWixie(World world, boolean isTamed, BlockPos pos) {
+    public EntityWixie(Level world, boolean isTamed, BlockPos pos) {
         super(ModEntities.ENTITY_WIXIE_TYPE, world);
         this.cauldronPos = pos;
-        this.moveControl =  new FlyingMovementController(this, 10, true);
+        this.moveControl =  new FlyingMoveControl(this, 10, true);
         this.entityData.set(TAMED, isTamed);
         addGoalsAfterConstructor();
     }
@@ -104,7 +104,7 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
     public void tick() {
         super.tick();
         if(!level.isClientSide && (cauldronPos == null || !(level.getBlockEntity(cauldronPos) instanceof WixieCauldronTile)))
-            this.hurt(DamageSource.playerAttack(FakePlayerFactory.getMinecraft((ServerWorld)level)), 99);
+            this.hurt(DamageSource.playerAttack(FakePlayerFactory.getMinecraft((ServerLevel)level)), 99);
         if(!level.isClientSide && inventoryBackoff > 0){
             inventoryBackoff--;
         }
@@ -112,21 +112,21 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
     }
 
     //MOJANG MAKES THIS SO CURSED WHAT THE HECK
-    public List<PrioritizedGoal> getTamedGoals(){
-        List<PrioritizedGoal> list = new ArrayList<>();
-        list.add(new PrioritizedGoal(3, new LookRandomlyGoal(this)));
-        list.add(new PrioritizedGoal(2, new FindNextItemGoal(this)));
-        list.add(new PrioritizedGoal(2, new FindPotionGoal(this)));
-        list.add(new PrioritizedGoal(1, new CompleteCraftingGoal(this)));
+    public List<WrappedGoal> getTamedGoals(){
+        List<WrappedGoal> list = new ArrayList<>();
+        list.add(new WrappedGoal(3, new RandomLookAroundGoal(this)));
+        list.add(new WrappedGoal(2, new FindNextItemGoal(this)));
+        list.add(new WrappedGoal(2, new FindPotionGoal(this)));
+        list.add(new WrappedGoal(1, new CompleteCraftingGoal(this)));
         return list;
     }
 
-    public List<PrioritizedGoal> getUntamedGoals(){
-        List<PrioritizedGoal> list = new ArrayList<>();
-        list.add(new PrioritizedGoal(3, new LookRandomlyGoal(this)));
-        list.add(new PrioritizedGoal(2, new FindNextItemGoal(this)));
-        list.add(new PrioritizedGoal(2, new FindPotionGoal(this)));
-        list.add(new PrioritizedGoal(1, new CompleteCraftingGoal(this)));
+    public List<WrappedGoal> getUntamedGoals(){
+        List<WrappedGoal> list = new ArrayList<>();
+        list.add(new WrappedGoal(3, new RandomLookAroundGoal(this)));
+        list.add(new WrappedGoal(2, new FindNextItemGoal(this)));
+        list.add(new WrappedGoal(2, new FindPotionGoal(this)));
+        list.add(new WrappedGoal(1, new CompleteCraftingGoal(this)));
         return list;
     }
 
@@ -136,12 +136,12 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
         if(this.level.isClientSide())
             return;
 
-        for(PrioritizedGoal goal : getGoals()){
+        for(WrappedGoal goal : getGoals()){
             this.goalSelector.addGoal(goal.getPriority(), goal.getGoal());
         }
     }
 
-    public List<PrioritizedGoal> getGoals(){
+    public List<WrappedGoal> getGoals(){
         return this.entityData.get(TAMED) ? getTamedGoals() : getUntamedGoals();
     }
 
@@ -157,21 +157,21 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
     }
 
     @Override
-    protected PathNavigator createNavigation(World world) {
-        FlyingPathNavigator flyingpathnavigator = new FlyingPathNavigator(this, world);
+    protected PathNavigation createNavigation(Level world) {
+        FlyingPathNavigation flyingpathnavigator = new FlyingPathNavigation(this, world);
         flyingpathnavigator.setCanOpenDoors(false);
         flyingpathnavigator.setCanFloat(true);
         flyingpathnavigator.setCanPassDoors(true);
         return flyingpathnavigator;
     }
-    public static AttributeModifierMap.MutableAttribute attributes() {
-        return MobEntity.createMobAttributes().add(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.getDefaultValue())
+    public static AttributeSupplier.Builder attributes() {
+        return Mob.createMobAttributes().add(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.getDefaultValue())
                 .add(Attributes.MAX_HEALTH, 6.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.2D);
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT tag) {
+    public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if(tag.contains("summoner_x"))
             cauldronPos = new BlockPos(tag.getInt("summoner_x"), tag.getInt("summoner_y"), tag.getInt("summoner_z"));
@@ -180,7 +180,7 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT tag) {
+    public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         if(cauldronPos != null){
             tag.putInt("summoner_x", cauldronPos.getX());
@@ -219,7 +219,7 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
         if(!level.isClientSide ){
             ItemStack stack = new ItemStack(ItemsRegistry.WIXIE_CHARM);
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack.copy()));
-            ParticleUtil.spawnPoof((ServerWorld)level, blockPosition());
+            ParticleUtil.spawnPoof((ServerLevel)level, blockPosition());
             this.remove();
         }
         return true;

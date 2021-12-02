@@ -2,32 +2,32 @@ package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class PacketOpenSpellBook {
-    public CompoundNBT tag;
+    public CompoundTag tag;
     public int tier;
     public String unlockedSpells;
 
     //Decoder
-    public PacketOpenSpellBook(PacketBuffer buf){
+    public PacketOpenSpellBook(FriendlyByteBuf buf){
         tag = buf.readNbt();
         tier = buf.readInt();
         unlockedSpells = buf.readUtf(32767);
     }
 
     //Encoder
-    public void toBytes(PacketBuffer buf){
+    public void toBytes(FriendlyByteBuf buf){
         buf.writeNbt(tag);
         buf.writeInt(tier);
         buf.writeUtf(unlockedSpells);
     }
 
-    public PacketOpenSpellBook(CompoundNBT tag, int tier, String unlockedSpells){
+    public PacketOpenSpellBook(CompoundTag tag, int tier, String unlockedSpells){
         this.tag = tag;
         this.tier = tier;
         this.unlockedSpells = unlockedSpells;

@@ -1,41 +1,47 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.LightningBoltEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.Direction;
 import net.minecraft.util.math.*;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.FMLPlayMessages;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 
 public class EntityLingeringSpell extends EntityProjectileSpell{
 
-    public static final DataParameter<Integer> ACCELERATES = EntityDataManager.defineId(EntityLingeringSpell.class, DataSerializers.INT);
-    public static final DataParameter<Integer> AOE = EntityDataManager.defineId(EntityLingeringSpell.class, DataSerializers.INT);
-    public static final DataParameter<Boolean> LANDED = EntityDataManager.defineId(EntityLingeringSpell.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<Boolean> SENSITIVE = EntityDataManager.defineId(EntityLingeringSpell.class, DataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Integer> ACCELERATES = SynchedEntityData.defineId(EntityLingeringSpell.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> AOE = SynchedEntityData.defineId(EntityLingeringSpell.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Boolean> LANDED = SynchedEntityData.defineId(EntityLingeringSpell.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> SENSITIVE = SynchedEntityData.defineId(EntityLingeringSpell.class, EntityDataSerializers.BOOLEAN);
     public double extendedTime;
     public int maxProcs = 100;
     public int totalProcs;
 
-    public EntityLingeringSpell(EntityType<? extends EntityProjectileSpell> type, World worldIn) {
+    public EntityLingeringSpell(EntityType<? extends EntityProjectileSpell> type, Level worldIn) {
         super(type, worldIn);
     }
 
-    public EntityLingeringSpell(World worldIn, double x, double y, double z) {
+    public EntityLingeringSpell(Level worldIn, double x, double y, double z) {
         super(worldIn, x, y, z);
     }
 
-    public EntityLingeringSpell(World worldIn, LivingEntity shooter) {
+    public EntityLingeringSpell(Level worldIn, LivingEntity shooter) {
         super(worldIn, shooter);
     }
 
@@ -60,14 +66,14 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
             if(isSensitive()){
                 for(BlockPos p : BlockPos.betweenClosed(blockPosition().east(aoe).north(aoe), blockPosition().west(aoe).south(aoe))){
                     spellResolver.onResolveEffect(level, getOwner() instanceof LivingEntity ? (LivingEntity) getOwner() : null, new
-                            BlockRayTraceResult(new Vector3d(p.getX(), p.getY(), p.getZ()), Direction.UP, p, false));
+                            BlockHitResult(new Vec3(p.getX(), p.getY(), p.getZ()), Direction.UP, p, false));
                 }
             }else {
                 int i = 0;
-                for(Entity entity : level.getEntities(null, new AxisAlignedBB(this.blockPosition()).inflate(getAoe()))) {
-                    if(entity.equals(this) || entity instanceof EntityLingeringSpell || entity instanceof LightningBoltEntity)
+                for(Entity entity : level.getEntities(null, new AABB(this.blockPosition()).inflate(getAoe()))) {
+                    if(entity.equals(this) || entity instanceof EntityLingeringSpell || entity instanceof LightningBolt)
                         continue;
-                    spellResolver.onResolveEffect(level, getOwner() instanceof LivingEntity ? (LivingEntity) getOwner() : null, new EntityRayTraceResult(entity));
+                    spellResolver.onResolveEffect(level, getOwner() instanceof LivingEntity ? (LivingEntity) getOwner() : null, new EntityHitResult(entity));
                     i++;
                     if(i > 5)
                         break;
@@ -94,7 +100,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
 
     }
 
-    public EntityLingeringSpell(FMLPlayMessages.SpawnEntity packet, World world){
+    public EntityLingeringSpell(FMLPlayMessages.SpawnEntity packet, Level world){
         super(ModEntities.LINGER_SPELL, world);
     }
     @Override
@@ -102,11 +108,11 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
         return ModEntities.LINGER_SPELL;
     }
     @Override
-    protected void onHit(RayTraceResult result) {
-        if (!level.isClientSide && result instanceof BlockRayTraceResult && !this.removed) {
-            BlockState state = level.getBlockState(((BlockRayTraceResult) result).getBlockPos());
+    protected void onHit(HitResult result) {
+        if (!level.isClientSide && result instanceof BlockHitResult && !this.removed) {
+            BlockState state = level.getBlockState(((BlockHitResult) result).getBlockPos());
             if(state.getMaterial() == Material.PORTAL){
-                state.getBlock().entityInside(state, level, ((BlockRayTraceResult) result).getBlockPos(),this);
+                state.getBlock().entityInside(state, level, ((BlockHitResult) result).getBlockPos(),this);
                 return;
             }
             this.setLanded(true);
@@ -150,13 +156,13 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT tag) {
+    public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putBoolean("sensitive", isSensitive());
     }
 
     @Override
-    public void load(CompoundNBT compound) {
+    public void load(CompoundTag compound) {
         super.load(compound);
         setSensitive(compound.getBoolean("sensitive"));
     }

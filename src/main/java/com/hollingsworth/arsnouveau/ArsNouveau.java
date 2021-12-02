@@ -11,8 +11,8 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.world.WorldEvent;
 import com.hollingsworth.arsnouveau.setup.*;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.MinecraftForge;
@@ -37,7 +37,7 @@ public class ArsNouveau {
     public static IProxy proxy = DistExecutor.runForDist(()-> () -> new ClientProxy(), () -> ()-> new ServerProxy());
     public static boolean caelusLoaded = false;
 
-    public static ItemGroup itemGroup = new ItemGroup(MODID) {
+    public static CreativeModeTab itemGroup = new CreativeModeTab(MODID) {
 
         @Override
         public ItemStack makeIcon() {

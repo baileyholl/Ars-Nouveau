@@ -2,10 +2,10 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 
 public class CarbuncleCharm extends ModItem{
     public CarbuncleCharm() {
@@ -15,15 +15,15 @@ public class CarbuncleCharm extends ModItem{
     /**
      * Called when this item is used when targetting a Block
      */
-    public ActionResultType useOn(ItemUseContext context) {
+    public InteractionResult useOn(UseOnContext context) {
         if(context.getLevel().isClientSide)
-            return ActionResultType.SUCCESS;
-        World world = context.getLevel();
+            return InteractionResult.SUCCESS;
+        Level world = context.getLevel();
         EntityCarbuncle carbuncle = new EntityCarbuncle(world, true);
-        Vector3d vec = context.getClickLocation();
+        Vec3 vec = context.getClickLocation();
         carbuncle.setPos(vec.x, vec.y, vec.z);
         world.addFreshEntity(carbuncle);
         context.getItemInHand().shrink(1);
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 }

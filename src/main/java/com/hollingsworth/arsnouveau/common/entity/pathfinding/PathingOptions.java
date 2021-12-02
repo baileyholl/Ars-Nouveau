@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.function.Function;
 

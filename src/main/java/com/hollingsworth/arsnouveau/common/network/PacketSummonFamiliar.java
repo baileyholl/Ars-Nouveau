@@ -7,12 +7,12 @@ import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.network.NetworkEvent;
 
@@ -29,13 +29,13 @@ public class PacketSummonFamiliar {
     }
 
     //Decoder
-    public PacketSummonFamiliar(PacketBuffer buf){
+    public PacketSummonFamiliar(FriendlyByteBuf buf){
         familiarID = buf.readUtf(32767);
         entityID = buf.readInt();
     }
 
     //Encoder
-    public void toBytes(PacketBuffer buf){
+    public void toBytes(FriendlyByteBuf buf){
         buf.writeUtf(familiarID);
         buf.writeInt(entityID);
     }
@@ -47,7 +47,7 @@ public class PacketSummonFamiliar {
                 Entity owner = ctx.get().getSender().level.getEntity(entityID);
 
                 if(owner instanceof LivingEntity && ((LivingEntity) owner).hasEffect(ModPotions.FAMILIAR_SICKNESS_EFFECT)){
-                    PortUtil.sendMessage(owner, new TranslationTextComponent("ars_nouveau.familiar.sickness"));
+                    PortUtil.sendMessage(owner, new TranslatableComponent("ars_nouveau.familiar.sickness"));
                     return;
                 }
 
@@ -60,9 +60,9 @@ public class PacketSummonFamiliar {
 
                 if(!summonEvent.isCanceled()) {
                     owner.level.addFreshEntity(familiarEntity.getThisEntity());
-                    ParticleUtil.spawnPoof((ServerWorld) owner.level, familiarEntity.getThisEntity().blockPosition());
+                    ParticleUtil.spawnPoof((ServerLevel) owner.level, familiarEntity.getThisEntity().blockPosition());
                     if (owner instanceof LivingEntity) {
-                        ((LivingEntity) owner).addEffect(new EffectInstance(ModPotions.FAMILIAR_SICKNESS_EFFECT, 20 * 300, 0, false, false, true));
+                        ((LivingEntity) owner).addEffect(new MobEffectInstance(ModPotions.FAMILIAR_SICKNESS_EFFECT, 20 * 300, 0, false, false, true));
                     }
                 }
             }

@@ -3,24 +3,24 @@ package com.hollingsworth.arsnouveau.api.event;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.eventbus.api.Event;
 
 import javax.annotation.Nullable;
 
 public class SummonEvent extends Event {
-    public RayTraceResult rayTraceResult;
-    public World world;
+    public HitResult rayTraceResult;
+    public Level world;
     public LivingEntity shooter;
 
     public SpellContext context;
     public ISummon summon;
     public SpellStats stats;
 
-    public SummonEvent(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats stats, SpellContext spellContext, ISummon summon){
+    public SummonEvent(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats stats, SpellContext spellContext, ISummon summon){
         this.rayTraceResult = rayTraceResult;
         this.world = world;
         this.shooter = shooter;
@@ -32,9 +32,9 @@ public class SummonEvent extends Event {
     public static class Death extends Event{
         public ISummon summon;
         public @Nullable DamageSource source;
-        public World world;
+        public Level world;
         public boolean wasExpiration; //If the summon expired via time
-        public Death(World world, ISummon summon, @Nullable DamageSource source, boolean wasExpiration){
+        public Death(Level world, ISummon summon, @Nullable DamageSource source, boolean wasExpiration){
             this.summon = summon;
             this.source = source;
             this.world = world;

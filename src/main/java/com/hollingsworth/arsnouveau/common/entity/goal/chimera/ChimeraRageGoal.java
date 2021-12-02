@@ -14,10 +14,10 @@ import com.hollingsworth.arsnouveau.common.spell.effect.EffectLaunch;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectPull;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.EnumSet;
 
@@ -57,7 +57,7 @@ public class ChimeraRageGoal extends Goal {
         chimera.gainPhaseBuffs();
         LivingEntity target = chimera.getTarget();
         if(target != null && !target.isOnGround()){
-            target.removeEffect(Effects.SLOW_FALLING);
+            target.removeEffect(MobEffects.SLOW_FALLING);
         }
         if(target != null) {
             EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(new Spell.Builder().add(MethodTouch.INSTANCE).add(EffectLaunch.INSTANCE)
@@ -68,7 +68,7 @@ public class ChimeraRageGoal extends Goal {
                     .add(AugmentExtendTime.INSTANCE)
                     .build(), chimera));
             resolver.onCastOnEntity(target);
-            PortUtil.sendMessage(target, new TranslationTextComponent("ars_nouveau.chimera.rage"));
+            PortUtil.sendMessage(target, new TranslatableComponent("ars_nouveau.chimera.rage"));
         }
     }
 

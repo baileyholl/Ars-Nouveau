@@ -1,11 +1,13 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.Level;
+
+import net.minecraft.world.item.Item.Properties;
 
 public abstract class ExperienceGem extends ModItem{
 
@@ -18,7 +20,7 @@ public abstract class ExperienceGem extends ModItem{
         setRegistryName(ArsNouveau.MODID, registryName);
     }
 
-    public ActionResult<ItemStack> use(World world, PlayerEntity playerEntity, Hand hand) {
+    public InteractionResultHolder<ItemStack> use(Level world, Player playerEntity, InteractionHand hand) {
         if(!world.isClientSide) {
             if(playerEntity.isCrouching()){
                 playerEntity.giveExperiencePoints(getValue() * playerEntity.getItemInHand(hand).getCount());
@@ -29,7 +31,7 @@ public abstract class ExperienceGem extends ModItem{
             }
 
         }
-        return ActionResult.pass(playerEntity.getItemInHand(hand));
+        return InteractionResultHolder.pass(playerEntity.getItemInHand(hand));
     }
 
     public abstract int getValue();

@@ -4,45 +4,58 @@ import com.hollingsworth.arsnouveau.api.IFollowingSummon;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.common.entity.goal.FollowSummonerFlyingGoal;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.controller.MovementController;
+import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.monster.VexEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.pathfinding.FlyingPathNavigator;
-import net.minecraft.pathfinding.PathNavigator;
-import net.minecraft.server.management.PreYggdrasilConverter;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.monster.Vex;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.server.players.OldUsersConverter;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.Optional;
 import java.util.UUID;
 
-public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummon {
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.TargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+
+public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
     private LivingEntity owner;
     @Nullable
     private BlockPos boundOrigin;
     private boolean limitedLifespan;
     private int limitedLifeTicks;
 
-    public EntityAllyVex(EntityType<? extends VexEntity> p_i50190_1_, World p_i50190_2_) {
+    public EntityAllyVex(EntityType<? extends Vex> p_i50190_1_, Level p_i50190_2_) {
         super(ModEntities.ALLY_VEX, p_i50190_2_);
     }
 
 
-    public EntityAllyVex(World p_i50190_2_, LivingEntity owner) {
+    public EntityAllyVex(Level p_i50190_2_, LivingEntity owner) {
         super(EntityType.VEX, p_i50190_2_);
         this.owner = owner;
         this.limitedLifespan = false;
@@ -56,7 +69,7 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
     }
 
     @Nullable
-    public ILivingEntityData finalizeSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor worldIn, DifficultyInstance difficultyIn, MobSpawnType reason, @Nullable SpawnGroupData spawnDataIn, @Nullable CompoundTag dataTag) {
         this.populateDefaultEquipmentSlots(difficultyIn);
         this.populateDefaultEquipmentEnchantments(difficultyIn);
         return super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
@@ -66,27 +79,27 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
      * Gives armor or weapon for entity based on given DifficultyInstance
      */
     protected void populateDefaultEquipmentSlots(DifficultyInstance difficulty) {
-        this.setItemSlot(EquipmentSlotType.MAINHAND, new ItemStack(Items.DIAMOND_SWORD));
-        this.setDropChance(EquipmentSlotType.MAINHAND, 0.0F);
+        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_SWORD));
+        this.setDropChance(EquipmentSlot.MAINHAND, 0.0F);
     }
 
     @Override
     protected void registerGoals() {
 
-        this.goalSelector.addGoal(0, new SwimGoal(this));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new EntityAllyVex.ChargeAttackGoal());
 
-        this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 3.0F, 1.0F));
-        this.goalSelector.addGoal(10, new LookAtGoal(this, MobEntity.class, 8.0F));
+        this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 3.0F, 1.0F));
+        this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
         this.goalSelector.addGoal(2, new FollowSummonerFlyingGoal(this, this.owner, 1.0, 6.0f, 3.0f));
         this.targetSelector.addGoal(1, new EntityAllyVex.CopyOwnerTargetGoal(this));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, MobEntity.class, 10, false, true,
-                (entity ) -> (entity instanceof MobEntity && ((MobEntity) entity).getTarget() != null &&
-                        ((MobEntity) entity).getTarget().equals(this.owner)) || (entity instanceof LivingEntity && entity.getKillCredit() != null && entity.getKillCredit().equals(this.owner))
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Mob.class, 10, false, true,
+                (entity ) -> (entity instanceof Mob && ((Mob) entity).getTarget() != null &&
+                        ((Mob) entity).getTarget().equals(this.owner)) || (entity instanceof LivingEntity && entity.getKillCredit() != null && entity.getKillCredit().equals(this.owner))
         ));
     }
-    protected PathNavigator createNavigation(World worldIn) {
-        FlyingPathNavigator flyingpathnavigator = new FlyingPathNavigator(this, worldIn);
+    protected PathNavigation createNavigation(Level worldIn) {
+        FlyingPathNavigation flyingpathnavigator = new FlyingPathNavigation(this, worldIn);
         flyingpathnavigator.setCanOpenDoors(false);
         flyingpathnavigator.setCanFloat(true);
         flyingpathnavigator.setCanPassDoors(true);
@@ -105,17 +118,17 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
     }
 
     @Override
-    public World getWorld() {
+    public Level getWorld() {
         return this.level;
     }
 
     @Override
-    public PathNavigator getPathNav() {
+    public PathNavigation getPathNav() {
         return this.navigation;
     }
 
     @Override
-    public MobEntity getSelfEntity() {
+    public Mob getSelfEntity() {
         return this;
     }
 
@@ -155,7 +168,7 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
          */
         public void start() {
             LivingEntity livingentity = EntityAllyVex.this.getTarget();
-            Vector3d vec3d = livingentity.getEyePosition(1.0F);
+            Vec3 vec3d = livingentity.getEyePosition(1.0F);
             EntityAllyVex.this.moveControl.setWantedPosition(vec3d.x, vec3d.y, vec3d.z, 1.0D);
             EntityAllyVex.this.setIsCharging(true);
             EntityAllyVex.this.playSound(SoundEvents.VEX_CHARGE, 1.0F, 1.0F);
@@ -179,7 +192,7 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
             } else {
                 double d0 = EntityAllyVex.this.distanceToSqr(livingentity);
                 if (d0 < 9.0D) {
-                    Vector3d vec3d = livingentity.getEyePosition(1.0F);
+                    Vec3 vec3d = livingentity.getEyePosition(1.0F);
                     EntityAllyVex.this.moveControl.setWantedPosition(vec3d.x, vec3d.y, vec3d.z, 1.0D);
                 }
             }
@@ -189,14 +202,14 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
 
 
     @Override
-    protected int getExperienceReward(PlayerEntity player) {
+    protected int getExperienceReward(Player player) {
         return 0;
     }
 
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
-    public void readAdditionalSaveData(CompoundNBT compound) {
+    public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         if (compound.contains("BoundX")) {
             this.boundOrigin = new BlockPos(compound.getInt("BoundX"), compound.getInt("BoundY"), compound.getInt("BoundZ"));
@@ -210,7 +223,7 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
             s = compound.getUUID("OwnerUUID");
         } else {
             String s1 = compound.getString("Owner");
-            s = PreYggdrasilConverter.convertMobOwnerIfNecessary(this.getServer(), s1);
+            s = OldUsersConverter.convertMobOwnerIfNecessary(this.getServer(), s1);
         }
 
         if (s != null) {
@@ -249,7 +262,7 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
         this.entityData.define(OWNER_UNIQUE_ID, Optional.empty());
     }
 
-    public void addAdditionalSaveData(CompoundNBT compound) {
+    public void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         if (this.boundOrigin != null) {
             compound.putInt("BoundX", this.boundOrigin.getX());
@@ -296,28 +309,28 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
 
     }
 
-    class MoveHelperController extends MovementController {
-        public MoveHelperController(VexEntity vex) {
+    class MoveHelperController extends MoveControl {
+        public MoveHelperController(Vex vex) {
             super(vex);
         }
 
         public void tick() {
-            if (this.operation == MovementController.Action.MOVE_TO) {
-                Vector3d vec3d = new Vector3d(this.wantedX - EntityAllyVex.this.getX(), this.wantedY - EntityAllyVex.this.getY(), this.wantedZ - EntityAllyVex.this.getZ());
+            if (this.operation == MoveControl.Operation.MOVE_TO) {
+                Vec3 vec3d = new Vec3(this.wantedX - EntityAllyVex.this.getX(), this.wantedY - EntityAllyVex.this.getY(), this.wantedZ - EntityAllyVex.this.getZ());
                 double d0 = vec3d.length();
                 if (d0 < EntityAllyVex.this.getBoundingBox().getSize()) {
-                    this.operation = MovementController.Action.WAIT;
+                    this.operation = MoveControl.Operation.WAIT;
                     EntityAllyVex.this.setDeltaMovement(EntityAllyVex.this.getDeltaMovement().scale(0.5D));
                 } else {
                     EntityAllyVex.this.setDeltaMovement(EntityAllyVex.this.getDeltaMovement().add(vec3d.scale(this.speedModifier * 0.05D / d0)));
                     if (EntityAllyVex.this.getTarget() == null) {
-                        Vector3d vec3d1 = EntityAllyVex.this.getDeltaMovement();
-                        EntityAllyVex.this.yRot = -((float) MathHelper.atan2(vec3d1.x, vec3d1.z)) * (180F / (float)Math.PI);
+                        Vec3 vec3d1 = EntityAllyVex.this.getDeltaMovement();
+                        EntityAllyVex.this.yRot = -((float) Mth.atan2(vec3d1.x, vec3d1.z)) * (180F / (float)Math.PI);
                         EntityAllyVex.this.yBodyRot = EntityAllyVex.this.yRot;
                     } else {
                         double d2 = EntityAllyVex.this.getTarget().getX() - EntityAllyVex.this.getX();
                         double d1 = EntityAllyVex.this.getTarget().getZ() - EntityAllyVex.this.getZ();
-                        EntityAllyVex.this.yRot = -((float)MathHelper.atan2(d2, d1)) * (180F / (float)Math.PI);
+                        EntityAllyVex.this.yRot = -((float)Mth.atan2(d2, d1)) * (180F / (float)Math.PI);
                         EntityAllyVex.this.yBodyRot = EntityAllyVex.this.yRot;
                     }
                 }
@@ -327,9 +340,9 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
     }
 
     class CopyOwnerTargetGoal extends TargetGoal {
-        private final EntityPredicate copyOwnerTargeting = (new EntityPredicate()).allowUnseeable().ignoreInvisibilityTesting();
+        private final TargetingConditions copyOwnerTargeting = (new TargetingConditions()).allowUnseeable().ignoreInvisibilityTesting();
 
-        public CopyOwnerTargetGoal(CreatureEntity creature) {
+        public CopyOwnerTargetGoal(PathfinderMob creature) {
             super(creature, false);
         }
 

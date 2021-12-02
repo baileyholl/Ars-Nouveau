@@ -5,21 +5,21 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.world.World;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 
-public class GlyphPressRecipe implements IRecipe<IInventory> {
+public class GlyphPressRecipe implements Recipe<Container> {
 
     private final ResourceLocation id;
 
@@ -37,12 +37,12 @@ public class GlyphPressRecipe implements IRecipe<IInventory> {
     }
 
     @Override
-    public boolean matches(IInventory inv, World worldIn) {
+    public boolean matches(Container inv, Level worldIn) {
         return false;
     }
 
     @Override
-    public ItemStack assemble(IInventory inv) {
+    public ItemStack assemble(Container inv) {
         return output;
     }
 
@@ -62,12 +62,12 @@ public class GlyphPressRecipe implements IRecipe<IInventory> {
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return RecipeRegistry.PRESS_SERIALIZER;
     }
 
     @Override
-    public IRecipeType<?> getType() {
+    public RecipeType<?> getType() {
         return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, "glyph_recipe"));
     }
 
@@ -86,19 +86,19 @@ public class GlyphPressRecipe implements IRecipe<IInventory> {
         }
     }
 
-    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<GlyphPressRecipe> {
+    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<GlyphPressRecipe> {
 
         @Override
         public GlyphPressRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            ISpellTier.Tier tier = ISpellTier.Tier.valueOf(JSONUtils.getAsString(json, "tier", "ONE"));
-            ItemStack input = new ItemStack(JSONUtils.getAsItem(json, "input"));
-            ItemStack output = new ItemStack(JSONUtils.getAsItem(json, "output"));
+            ISpellTier.Tier tier = ISpellTier.Tier.valueOf(GsonHelper.getAsString(json, "tier", "ONE"));
+            ItemStack input = new ItemStack(GsonHelper.getAsItem(json, "input"));
+            ItemStack output = new ItemStack(GsonHelper.getAsItem(json, "output"));
             return new GlyphPressRecipe(recipeId, tier, input, output);
         }
 
         @Nullable
         @Override
-        public GlyphPressRecipe fromNetwork(ResourceLocation recipeId, PacketBuffer buffer) {
+        public GlyphPressRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
             ISpellTier.Tier tier = ISpellTier.Tier.valueOf(buffer.readUtf());
             ItemStack input = buffer.readItem();
             ItemStack output = buffer.readItem();
@@ -106,7 +106,7 @@ public class GlyphPressRecipe implements IRecipe<IInventory> {
         }
 
         @Override
-        public void toNetwork(PacketBuffer buf, GlyphPressRecipe recipe) {
+        public void toNetwork(FriendlyByteBuf buf, GlyphPressRecipe recipe) {
             buf.writeUtf(recipe.tier.toString());
             buf.writeItem(recipe.reagent);
             buf.writeItem(recipe.output);

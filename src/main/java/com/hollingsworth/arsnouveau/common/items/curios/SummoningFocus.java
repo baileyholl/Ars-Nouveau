@@ -10,18 +10,18 @@ import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.common.items.ModItem;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodOrbit;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -29,6 +29,8 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.world.item.Item.Properties;
+
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class SummoningFocus extends ModItem implements ISpellModifierItem {
     public SummoningFocus(Properties properties) {
@@ -51,7 +53,7 @@ public class SummoningFocus extends ModItem implements ISpellModifierItem {
     }
 
     @Override
-    public SpellStats.Builder applyItemModifiers(ItemStack stack, SpellStats.Builder builder, AbstractSpellPart spellPart, RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellContext spellContext) {
+    public SpellStats.Builder applyItemModifiers(ItemStack stack, SpellStats.Builder builder, AbstractSpellPart spellPart, HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellContext spellContext) {
         builder.addDamageModifier(1.0f);
         return builder;
     }
@@ -62,8 +64,8 @@ public class SummoningFocus extends ModItem implements ISpellModifierItem {
     }
 
 
-    public static boolean containsThis(World world, Entity entity){
-        if(!world.isClientSide && entity instanceof PlayerEntity) {
+    public static boolean containsThis(Level world, Entity entity){
+        if(!world.isClientSide && entity instanceof Player) {
             IItemHandlerModifiable items = CuriosUtil.getAllWornItems((LivingEntity) entity).orElse(null);
             if(items != null){
                 for(int i = 0; i < items.getSlots(); i++){
@@ -80,20 +82,20 @@ public class SummoningFocus extends ModItem implements ISpellModifierItem {
 
     @SubscribeEvent
     public static void summonedEvent(SummonEvent event){
-        if(!event.world.isClientSide && SummoningFocus.containsThis(event.world, event.summon.getOwner((ServerWorld) event.world))){
+        if(!event.world.isClientSide && SummoningFocus.containsThis(event.world, event.summon.getOwner((ServerLevel) event.world))){
             event.summon.setTicksLeft(event.summon.getTicksLeft() * 2);
             if (event.summon.getLivingEntity() != null) {
-                event.summon.getLivingEntity().addEffect(new EffectInstance(Effects.DAMAGE_BOOST, 500, 2));
-                event.summon.getLivingEntity().addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 500, 1));
+                event.summon.getLivingEntity().addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 500, 2));
+                event.summon.getLivingEntity().addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 500, 1));
             }
         }
     }
     @SubscribeEvent
     public static void castSpell(SpellCastEvent event){
-        if(!event.getWorld().isClientSide && event.getEntity() instanceof PlayerEntity &&  SummoningFocus.containsThis(event.getWorld(), event.getEntityLiving())){
+        if(!event.getWorld().isClientSide && event.getEntity() instanceof Player &&  SummoningFocus.containsThis(event.getWorld(), event.getEntityLiving())){
             if(event.spell.getCastMethod() != null && sympatheticMethods.contains(event.spell.getCastMethod())){
-                for(LivingEntity i : event.getWorld().getLoadedEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(event.getEntityLiving().blockPosition()).inflate(30), (l) -> l instanceof ISummon)){
-                    if(event.getEntityLiving().equals(((ISummon) i).getOwner((ServerWorld) event.getWorld()))){
+                for(LivingEntity i : event.getWorld().getLoadedEntitiesOfClass(LivingEntity.class, new AABB(event.getEntityLiving().blockPosition()).inflate(30), (l) -> l instanceof ISummon)){
+                    if(event.getEntityLiving().equals(((ISummon) i).getOwner((ServerLevel) event.getWorld()))){
                         EntitySpellResolver spellResolver = new EntitySpellResolver(new SpellContext(event.spell, i).withColors(event.context.colors));
                         spellResolver.onCast(ItemStack.EMPTY, i, i.level);
                     }
@@ -103,7 +105,7 @@ public class SummoningFocus extends ModItem implements ISpellModifierItem {
     }
     @SubscribeEvent
     public static void summonDeathEvent(SummonEvent.Death event){
-        if(!event.world.isClientSide && SummoningFocus.containsThis(event.world, event.summon.getOwner((ServerWorld) event.world))){
+        if(!event.world.isClientSide && SummoningFocus.containsThis(event.world, event.summon.getOwner((ServerLevel) event.world))){
             DamageSource source = event.source;
             if(source != null && source.getEntity() != null){
                 source.getEntity().hurt(DamageSource.thorns(source.getEntity()).bypassArmor(), 5.0f);

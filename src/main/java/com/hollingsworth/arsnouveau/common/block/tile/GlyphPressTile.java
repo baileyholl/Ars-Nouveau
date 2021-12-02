@@ -9,20 +9,20 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.common.util.LazyOptional;
@@ -43,7 +43,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity, IAnimatable, IAnimationListener, ISidedInventory {
+public class GlyphPressTile extends AnimatedTile implements TickableBlockEntity, IAnimatable, IAnimationListener, WorldlyContainer {
     private final Map<Direction, LazyOptional<IItemHandler>> itemHandlers = new HashMap<>();
     public long frames = 0;
     public boolean isCrafting;
@@ -61,7 +61,7 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
     @Override
     public void tick() {
         if(!level.isClientSide && level.getGameTime() % 20 == 0 && canCraft(reagentItem, baseMaterial))
-            craft(FakePlayerFactory.getMinecraft((ServerWorld) level));
+            craft(FakePlayerFactory.getMinecraft((ServerLevel) level));
 
         if(level.isClientSide || !isCrafting){
             return;
@@ -98,7 +98,7 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
     }
 
 
-    public boolean craft(PlayerEntity playerEntity) {
+    public boolean craft(Player playerEntity) {
         if(isCrafting || baseMaterial == ItemStack.EMPTY)
             return false;
         GlyphPressRecipe recipe = ArsNouveauAPI.getInstance().getGlyphPressRecipe(level, reagentItem.getItem(), getTier(this.baseMaterial.getItem()));
@@ -113,7 +113,7 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
             return true;
         }
 
-        playerEntity.sendMessage(new TranslationTextComponent("ars_nouveau.glyph_press.no_mana"), Util.NIL_UUID);
+        playerEntity.sendMessage(new TranslatableComponent("ars_nouveau.glyph_press.no_mana"), Util.NIL_UUID);
         return false;
     }
 
@@ -139,7 +139,7 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
         return manager;
     }
 
-    private <E extends TileEntity & IAnimatable > PlayState idlePredicate(AnimationEvent<E> event) {
+    private <E extends BlockEntity & IAnimatable > PlayState idlePredicate(AnimationEvent<E> event) {
         return PlayState.CONTINUE;
     }
 
@@ -207,7 +207,7 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
     }
 
     @Override
-    public boolean stillValid(PlayerEntity player) {
+    public boolean stillValid(Player player) {
         return true;
     }
 
@@ -276,29 +276,29 @@ public class GlyphPressTile extends AnimatedTile implements ITickableTileEntity,
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
-        reagentItem = ItemStack.of((CompoundNBT)compound.get("itemStack"));
-        baseMaterial = ItemStack.of((CompoundNBT)compound.get("baseMat"));
-        oldBaseMat = ItemStack.of((CompoundNBT)compound.get("oldBase"));
+    public void load(BlockState state, CompoundTag compound) {
+        reagentItem = ItemStack.of((CompoundTag)compound.get("itemStack"));
+        baseMaterial = ItemStack.of((CompoundTag)compound.get("baseMat"));
+        oldBaseMat = ItemStack.of((CompoundTag)compound.get("oldBase"));
         isCrafting = compound.getBoolean("crafting");
         super.load(state, compound);
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         if(reagentItem != null) {
-            CompoundNBT reagentTag = new CompoundNBT();
+            CompoundTag reagentTag = new CompoundTag();
             reagentItem.save(reagentTag);
             compound.put("itemStack", reagentTag);
         }
         if(baseMaterial != null){
-            CompoundNBT baseMatTag = new CompoundNBT();
+            CompoundTag baseMatTag = new CompoundTag();
             baseMaterial.save(baseMatTag);
             compound.put("baseMat", baseMatTag);
         }
 
         if(oldBaseMat != null){
-            CompoundNBT baseMatTag = new CompoundNBT();
+            CompoundTag baseMatTag = new CompoundTag();
             oldBaseMat.save(baseMatTag);
             compound.put("oldBase", baseMatTag);
         }

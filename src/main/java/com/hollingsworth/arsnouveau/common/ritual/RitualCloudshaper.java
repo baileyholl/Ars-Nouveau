@@ -4,9 +4,9 @@ import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.server.level.ServerLevel;
 
 public class RitualCloudshaper extends AbstractRitual {
     @Override
@@ -15,7 +15,7 @@ public class RitualCloudshaper extends AbstractRitual {
         if (getWorld().getGameTime() % 20 == 0 && !getWorld().isClientSide) {
             incrementProgress();
             if (getProgress() >= 18) {
-                ServerWorld world = (ServerWorld) getWorld();
+                ServerLevel world = (ServerLevel) getWorld();
                 if(!isStorm() && !isRain()){
                     world.setWeatherParameters(12000, 0, false, false);
                     setFinished();

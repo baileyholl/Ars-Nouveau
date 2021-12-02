@@ -1,16 +1,16 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 
 public class FamiliarJabberwog extends FlyingFamiliarEntity {
 
-    public FamiliarJabberwog(EntityType<? extends CreatureEntity> ent, World world) {
+    public FamiliarJabberwog(EntityType<? extends PathfinderMob> ent, Level world) {
         super(ent, world);
 
     }

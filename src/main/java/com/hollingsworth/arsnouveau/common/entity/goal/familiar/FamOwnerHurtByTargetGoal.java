@@ -1,11 +1,11 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.familiar;
 
 import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityPredicate;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.TargetGoal;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.target.TargetGoal;
 
 public class FamOwnerHurtByTargetGoal extends TargetGoal {
 
@@ -14,7 +14,7 @@ public class FamOwnerHurtByTargetGoal extends TargetGoal {
     private int timestamp;
 
     public FamOwnerHurtByTargetGoal(IFamiliar familiar){
-        super((MobEntity) familiar.getThisEntity(), false);
+        super((Mob) familiar.getThisEntity(), false);
         this.familiar = familiar;
     }
 
@@ -28,7 +28,7 @@ public class FamOwnerHurtByTargetGoal extends TargetGoal {
         } else {
             this.ownerLastHurtBy = livingentity.getLastHurtByMob();
             int i = livingentity.getLastHurtByMobTimestamp();
-            return i != this.timestamp && this.canAttack(this.ownerLastHurtBy, EntityPredicate.DEFAULT) && this.familiar.wantsToAttack(this.ownerLastHurtBy, livingentity);
+            return i != this.timestamp && this.canAttack(this.ownerLastHurtBy, TargetingConditions.DEFAULT) && this.familiar.wantsToAttack(this.ownerLastHurtBy, livingentity);
         }
     }
 

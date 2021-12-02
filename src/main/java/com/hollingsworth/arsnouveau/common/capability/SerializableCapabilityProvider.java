@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.capability;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.util.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
  *
  * @author Choonster
  */
-public class SerializableCapabilityProvider<HANDLER> extends SimpleCapabilityProvider<HANDLER> implements INBTSerializable<INBT> {
+public class SerializableCapabilityProvider<HANDLER> extends SimpleCapabilityProvider<HANDLER> implements INBTSerializable<Tag> {
 
     /**
      * Create a provider for the default handler instance.
@@ -40,19 +40,19 @@ public class SerializableCapabilityProvider<HANDLER> extends SimpleCapabilityPro
 
     @Nullable
     @Override
-    public INBT serializeNBT() {
+    public Tag serializeNBT() {
         final HANDLER instance = getInstance();
 
         if (instance == null) {
             return null;
         }
         if(getCapability() == null)
-            return new CompoundNBT();
+            return new CompoundTag();
         return getCapability().writeNBT(instance, getFacing());
     }
 
     @Override
-    public void deserializeNBT(final INBT nbt) {
+    public void deserializeNBT(final Tag nbt) {
         final HANDLER instance = getInstance();
 
         if (instance == null) {

@@ -1,19 +1,21 @@
 package com.hollingsworth.arsnouveau.common.entity.goal;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.pathfinding.Path;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.world.phys.AABB;
 
 import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
+
 public class UntamedFindItemGoal extends Goal {
-    MobEntity mobEntity;
+    Mob mobEntity;
 
     Predicate<ItemEntity> itemSelector;
     Supplier<Boolean> canRun;
@@ -22,10 +24,10 @@ public class UntamedFindItemGoal extends Goal {
     ItemEntity pathingEntity;
 
     public List<ItemEntity> nearbyItems(){
-        return mobEntity.level.getLoadedEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(mobEntity.blockPosition()).inflate(8), itemSelector);
+        return mobEntity.level.getLoadedEntitiesOfClass(ItemEntity.class, new AABB(mobEntity.blockPosition()).inflate(8), itemSelector);
     }
 
-    public UntamedFindItemGoal(MobEntity mobEntity, Supplier<Boolean> canRun, Predicate<ItemEntity> itemSelector){
+    public UntamedFindItemGoal(Mob mobEntity, Supplier<Boolean> canRun, Predicate<ItemEntity> itemSelector){
         this.mobEntity = mobEntity;
         this.setFlags(EnumSet.of(Flag.MOVE));
         this.canRun = canRun;

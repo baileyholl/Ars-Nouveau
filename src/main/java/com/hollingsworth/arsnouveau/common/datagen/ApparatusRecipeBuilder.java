@@ -4,11 +4,11 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantmentRecipe;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.resources.ResourceLocation;
 
 public class ApparatusRecipeBuilder {
     EnchantingApparatusRecipe recipe;
@@ -19,7 +19,7 @@ public class ApparatusRecipeBuilder {
     public static ApparatusRecipeBuilder builder(){
         return new ApparatusRecipeBuilder();
     }
-    public ApparatusRecipeBuilder withResult(IItemProvider result){
+    public ApparatusRecipeBuilder withResult(ItemLike result){
         this.recipe.result = new ItemStack(result);
         return this;
     }
@@ -32,7 +32,7 @@ public class ApparatusRecipeBuilder {
         this.recipe.category = category.name();
         return this;
     }
-    public ApparatusRecipeBuilder withReagent(IItemProvider provider){
+    public ApparatusRecipeBuilder withReagent(ItemLike provider){
         this.recipe.reagent = Ingredient.of(provider);
         return this;
     }
@@ -47,11 +47,11 @@ public class ApparatusRecipeBuilder {
         return this;
     }
 
-    public ApparatusRecipeBuilder withPedestalItem(IItemProvider i){
+    public ApparatusRecipeBuilder withPedestalItem(ItemLike i){
         return this.withPedestalItem(Ingredient.of(i));
     }
 
-    public ApparatusRecipeBuilder withPedestalItem(int count, IItemProvider item){
+    public ApparatusRecipeBuilder withPedestalItem(int count, ItemLike item){
         for(int i = 0; i < count; i++)
             this.withPedestalItem(item);
         return this;

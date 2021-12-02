@@ -1,21 +1,21 @@
 package com.hollingsworth.arsnouveau.common.world.feature;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ISeedReader;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.feature.BlockStateFeatureConfig;
-import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.feature.configurations.BlockStateConfiguration;
+import net.minecraft.world.level.levelgen.feature.Feature;
 
 import java.util.Random;
 
-public abstract class SingleBlockFeature extends Feature<BlockStateFeatureConfig> {
-    public SingleBlockFeature(Codec<BlockStateFeatureConfig> p_i231953_1_) {
+public abstract class SingleBlockFeature extends Feature<BlockStateConfiguration> {
+    public SingleBlockFeature(Codec<BlockStateConfiguration> p_i231953_1_) {
         super(p_i231953_1_);
     }
 
     @Override
-    public boolean place(ISeedReader seed, ChunkGenerator chunkGenerator, Random rand, BlockPos pos, BlockStateFeatureConfig config) {
+    public boolean place(WorldGenLevel seed, ChunkGenerator chunkGenerator, Random rand, BlockPos pos, BlockStateConfiguration config) {
         while(true) {
             label46: {
                 if (pos.getY() > 3) {
@@ -37,5 +37,5 @@ public abstract class SingleBlockFeature extends Feature<BlockStateFeatureConfig
         }
     }
 
-    public abstract void onStatePlace(ISeedReader seed, ChunkGenerator chunkGenerator, Random rand, BlockPos pos, BlockStateFeatureConfig config);
+    public abstract void onStatePlace(WorldGenLevel seed, ChunkGenerator chunkGenerator, Random rand, BlockPos pos, BlockStateConfiguration config);
 }

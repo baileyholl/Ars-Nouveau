@@ -8,7 +8,7 @@ import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -16,9 +16,9 @@ import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,7 +59,7 @@ public class GlyphPressRecipeCategory implements IRecipeCategory<GlyphPressRecip
 
     @Override
     public String getTitle() {
-        return new TranslationTextComponent("block.ars_nouveau.glyph_press").getString();
+        return new TranslatableComponent("block.ars_nouveau.glyph_press").getString();
     }
 
     @Override
@@ -73,7 +73,7 @@ public class GlyphPressRecipeCategory implements IRecipeCategory<GlyphPressRecip
     }
 
     @Override
-    public void draw(GlyphPressRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+    public void draw(GlyphPressRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
         IDrawableAnimated arrow = this.cachedArrows.getUnchecked(40);
         arrow.draw( matrixStack,38, 6);
     }

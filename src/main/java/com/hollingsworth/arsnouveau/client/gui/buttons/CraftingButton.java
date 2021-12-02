@@ -3,14 +3,18 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.ResourceLocation;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.text.*;
 import org.lwjgl.opengl.GL11;
 
 import java.util.LinkedList;
 import java.util.List;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class CraftingButton extends GuiImageButton{
     int slotNum;
@@ -18,7 +22,7 @@ public class CraftingButton extends GuiImageButton{
     public String resourceIcon;
     public List<SpellValidationError> validationErrors;
 
-    public CraftingButton(GuiSpellBook parent, int x, int y, int slotNum, Button.IPressable onPress) {
+    public CraftingButton(GuiSpellBook parent, int x, int y, int slotNum, Button.OnPress onPress) {
         super( x, y, 0, 0, 22, 20, 22, 20, "textures/gui/spell_glyph_slot.png", onPress);
         this.slotNum = slotNum;
         this.spellTag = "";
@@ -34,7 +38,7 @@ public class CraftingButton extends GuiImageButton{
     }
 
     @Override
-    public void render(MatrixStack ms, int parX, int parY, float partialTicks) {
+    public void render(PoseStack ms, int parX, int parY, float partialTicks) {
         if (visible)
         {
             if (validationErrors.isEmpty()) {
@@ -49,10 +53,10 @@ public class CraftingButton extends GuiImageButton{
             if(parent.isMouseInRelativeRange(parX, parY, x, y, width, height)){
 
                 if(parent.api.getSpell_map().containsKey(this.spellTag)) {
-                    List<ITextComponent> tooltip = new LinkedList<>();
-                    tooltip.add(new TranslationTextComponent(parent.api.getSpell_map().get(this.spellTag).getLocalizationKey()));
+                    List<Component> tooltip = new LinkedList<>();
+                    tooltip.add(new TranslatableComponent(parent.api.getSpell_map().get(this.spellTag).getLocalizationKey()));
                     for (SpellValidationError ve : validationErrors) {
-                        tooltip.add(ve.makeTextComponentExisting().withStyle(TextFormatting.RED));
+                        tooltip.add(ve.makeTextComponentExisting().withStyle(ChatFormatting.RED));
                     }
                     parent.tooltip = tooltip;
                 }

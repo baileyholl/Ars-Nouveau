@@ -4,12 +4,12 @@ import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
@@ -17,11 +17,11 @@ public class DelayedSpellEvent implements ITimedEvent{
     private int duration;
     private final Spell spell;
     private final SpellContext context;
-    private final RayTraceResult result;
-    private final World world;
+    private final HitResult result;
+    private final Level world;
     private final @Nullable LivingEntity shooter;
 
-    public DelayedSpellEvent(int delay, Spell spell, RayTraceResult result, World world, @Nullable LivingEntity shooter, SpellContext context){
+    public DelayedSpellEvent(int delay, Spell spell, HitResult result, Level world, @Nullable LivingEntity shooter, SpellContext context){
         this.duration = delay;
         this.spell = spell;
         this.result = result;
@@ -36,11 +36,11 @@ public class DelayedSpellEvent implements ITimedEvent{
         if(duration <= 0 && serverSide){
             resolveSpell();
         }else if(!serverSide && result != null){
-            BlockPos hitVec = result instanceof EntityRayTraceResult ? ((EntityRayTraceResult) result).getEntity().blockPosition() : new BlockPos(result.getLocation());
+            BlockPos hitVec = result instanceof EntityHitResult ? ((EntityHitResult) result).getEntity().blockPosition() : new BlockPos(result.getLocation());
 
             //ParticleUtil.spawnRitualAreaEffect(new BlockPos(result.getLocation()).above(), world, world.random, context.colors.toParticleColor(), 1);
 
-            ParticleUtil.spawnTouch((ClientWorld) world, hitVec, context.colors.toParticleColor());
+            ParticleUtil.spawnTouch((ClientLevel) world, hitVec, context.colors.toParticleColor());
         }
     }
 

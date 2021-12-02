@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.mana.SourcelinkEventQueue;
 import com.hollingsworth.arsnouveau.common.datagen.Recipes;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.SaplingGrowTreeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -38,8 +38,8 @@ public class AgronomicSourcelinkTile extends SourcelinkTile {
         if(event.getWorld().getBlockState(event.getPos()).getBlock().is(Recipes.MAGIC_PLANTS)) {
             mana += 25;
         }
-        if(event.getWorld() instanceof World)
-            SourcelinkEventQueue.addManaEvent((World) event.getWorld(), AgronomicSourcelinkTile.class, mana, event, event.getPos());
+        if(event.getWorld() instanceof Level)
+            SourcelinkEventQueue.addManaEvent((Level) event.getWorld(), AgronomicSourcelinkTile.class, mana, event, event.getPos());
     }
 
     @SubscribeEvent
@@ -48,8 +48,8 @@ public class AgronomicSourcelinkTile extends SourcelinkTile {
         if(event.getWorld().getBlockState(event.getPos()).getBlock().is(Recipes.MAGIC_SAPLINGS)) {
             mana += 50;
         }
-        if(event.getWorld() instanceof World)
-            SourcelinkEventQueue.addManaEvent((World) event.getWorld(), AgronomicSourcelinkTile.class, mana, event, event.getPos());
+        if(event.getWorld() instanceof Level)
+            SourcelinkEventQueue.addManaEvent((Level) event.getWorld(), AgronomicSourcelinkTile.class, mana, event, event.getPos());
     }
 
     @Override

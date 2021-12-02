@@ -3,8 +3,8 @@ package com.hollingsworth.arsnouveau.api.event;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.Cancelable;
 
@@ -36,7 +36,7 @@ public class SpellCastEvent extends LivingEvent {
         this.context = context;
     }
 
-    public World getWorld(){
+    public Level getWorld(){
         return this.getEntityLiving().level;
     }
 

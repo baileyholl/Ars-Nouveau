@@ -1,13 +1,13 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -17,7 +17,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ArcanePedestalTile extends AnimatedTile implements IInventory {
+public class ArcanePedestalTile extends AnimatedTile implements Container {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     public float frames;
     public ItemEntity entity;
@@ -28,15 +28,15 @@ public class ArcanePedestalTile extends AnimatedTile implements IInventory {
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
-        stack = ItemStack.of((CompoundNBT)compound.get("itemStack"));
+    public void load(BlockState state, CompoundTag compound) {
+        stack = ItemStack.of((CompoundTag)compound.get("itemStack"));
         super.load(state, compound);
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         if(stack != null) {
-            CompoundNBT reagentTag = new CompoundNBT();
+            CompoundTag reagentTag = new CompoundTag();
             stack.save(reagentTag);
             compound.put("itemStack", reagentTag);
         }
@@ -94,7 +94,7 @@ public class ArcanePedestalTile extends AnimatedTile implements IInventory {
     }
 
     @Override
-    public boolean stillValid(PlayerEntity player) {
+    public boolean stillValid(Player player) {
         return true;
     }
 

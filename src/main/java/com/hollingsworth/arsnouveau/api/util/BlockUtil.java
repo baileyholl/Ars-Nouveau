@@ -1,20 +1,20 @@
 package com.hollingsworth.arsnouveau.api.util;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.event.world.BlockEvent;
@@ -31,7 +31,7 @@ import static java.lang.Math.abs;
 
 public class BlockUtil {
 
-    public static BlockPos toPos(Vector3d vec){
+    public static BlockPos toPos(Vec3 vec){
         return new BlockPos(vec.x, vec.y, vec.z);
     }
 
@@ -39,7 +39,7 @@ public class BlockUtil {
         return block.is(BlockTags.LEAVES) || block.is(BlockTags.LOGS);
     }
 
-    public static boolean containsStateInRadius(World world, BlockPos start, int radius, Class clazz){
+    public static boolean containsStateInRadius(Level world, BlockPos start, int radius, Class clazz){
         for(double x = start.getX() - radius; x <= start.getX() + radius; x++){
             for(double y = start.getY() - radius; y <= start.getY() + radius; y++){
                 for(double z = start.getZ() - radius; z <= start.getZ() + radius; z++){
@@ -59,19 +59,19 @@ public class BlockUtil {
         return Math.sqrt(Math.pow(start.getX() - end.getX(), 2) + Math.pow(start.getY() - end.getY(), 2) + Math.pow(start.getZ() - end.getZ(), 2));
     }
 
-    public static double distanceFrom(Vector3d start, BlockPos end){
+    public static double distanceFrom(Vec3 start, BlockPos end){
         if(start == null || end == null)
             return 0;
         return Math.sqrt(Math.pow(start.x - end.getX(), 2) + Math.pow(start.y - end.getY(), 2) + Math.pow(start.z - end.getZ(), 2));
     }
 
-    public static double distanceFrom(Vector3d start, Vector3d end){
+    public static double distanceFrom(Vec3 start, Vec3 end){
         return Math.sqrt(Math.pow(start.x - end.x, 2) + Math.pow(start.y - end.y, 2) + Math.pow(start.z - end.z, 2));
     }
-    public static boolean destroyBlockSafely(World world, BlockPos pos, boolean dropBlock, LivingEntity caster){
-        if(!(world instanceof ServerWorld))
+    public static boolean destroyBlockSafely(Level world, BlockPos pos, boolean dropBlock, LivingEntity caster){
+        if(!(world instanceof ServerLevel))
             return false;
-        PlayerEntity playerEntity = caster instanceof PlayerEntity ? (PlayerEntity) caster : FakePlayerFactory.getMinecraft((ServerWorld) world);
+        Player playerEntity = caster instanceof Player ? (Player) caster : FakePlayerFactory.getMinecraft((ServerLevel) world);
         if(MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos),playerEntity)))
             return false;
         world.getBlockState(pos).getBlock().playerWillDestroy(world, pos, world.getBlockState(pos), playerEntity);
@@ -79,47 +79,47 @@ public class BlockUtil {
 
     }
 
-    public static boolean destroyRespectsClaim(LivingEntity caster, World world, BlockPos pos){
-        PlayerEntity playerEntity = caster instanceof PlayerEntity ? (PlayerEntity) caster : FakePlayerFactory.getMinecraft((ServerWorld) world);
+    public static boolean destroyRespectsClaim(LivingEntity caster, Level world, BlockPos pos){
+        Player playerEntity = caster instanceof Player ? (Player) caster : FakePlayerFactory.getMinecraft((ServerLevel) world);
         return !MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos),playerEntity));
     }
 
-    public static void safelyUpdateState(World world, BlockPos pos, BlockState state){
-        if(!World.isOutsideBuildHeight(pos))
+    public static void safelyUpdateState(Level world, BlockPos pos, BlockState state){
+        if(!Level.isOutsideBuildHeight(pos))
             world.sendBlockUpdated(pos, state, state, 3);
     }
 
-    public static void safelyUpdateState(World world, BlockPos pos){
+    public static void safelyUpdateState(Level world, BlockPos pos){
         safelyUpdateState(world, pos, world.getBlockState(pos));
     }
 
-    public static boolean destroyBlockSafelyWithoutSound(World world, BlockPos pos, boolean dropBlock){
+    public static boolean destroyBlockSafelyWithoutSound(Level world, BlockPos pos, boolean dropBlock){
         return destroyBlockWithoutSound(world, pos, dropBlock, null);
     }
 
-    public static boolean destroyBlockSafelyWithoutSound(World world, BlockPos pos, boolean dropBlock, @Nullable LivingEntity caster){
-        if(!(world instanceof ServerWorld))
+    public static boolean destroyBlockSafelyWithoutSound(Level world, BlockPos pos, boolean dropBlock, @Nullable LivingEntity caster){
+        if(!(world instanceof ServerLevel))
             return false;
 
-        PlayerEntity playerEntity = caster instanceof PlayerEntity ? (PlayerEntity) caster : FakePlayerFactory.getMinecraft((ServerWorld) world);
+        Player playerEntity = caster instanceof Player ? (Player) caster : FakePlayerFactory.getMinecraft((ServerLevel) world);
         if(MinecraftForge.EVENT_BUS.post(new BlockEvent.BreakEvent(world, pos, world.getBlockState(pos),playerEntity)))
             return false;
 
         return destroyBlockWithoutSound(world, pos, dropBlock);
     }
 
-    private static boolean destroyBlockWithoutSound(World world, BlockPos pos, boolean dropBlock) {
+    private static boolean destroyBlockWithoutSound(Level world, BlockPos pos, boolean dropBlock) {
         return destroyBlockWithoutSound(world, pos, dropBlock, null);
     }
 
-    private static boolean destroyBlockWithoutSound(World world, BlockPos pos, boolean isMoving, @Nullable Entity entityIn){
+    private static boolean destroyBlockWithoutSound(Level world, BlockPos pos, boolean isMoving, @Nullable Entity entityIn){
         BlockState blockstate = world.getBlockState(pos);
         if (blockstate.isAir(world, pos)) {
             return false;
         } else {
             FluidState ifluidstate = world.getFluidState(pos);
             if (isMoving) {
-                TileEntity tileentity = blockstate.hasTileEntity() ? world.getBlockEntity(pos) : null;
+                BlockEntity tileentity = blockstate.hasTileEntity() ? world.getBlockEntity(pos) : null;
                 Block.dropResources(blockstate, world, pos, tileentity, entityIn, ItemStack.EMPTY);
             }
 
@@ -127,11 +127,11 @@ public class BlockUtil {
         }
     }
 
-    public static List<IItemHandler> getAdjacentInventories(World world, BlockPos pos){
+    public static List<IItemHandler> getAdjacentInventories(Level world, BlockPos pos){
         if(world == null || pos == null)return new ArrayList<>();
         ArrayList<IItemHandler> iInventories = new ArrayList<>();
         for(Direction d : Direction.values()){
-            TileEntity tileEntity = world.getBlockEntity(pos.relative(d));
+            BlockEntity tileEntity = world.getBlockEntity(pos.relative(d));
             if(tileEntity == null)
                 continue;
 
@@ -142,7 +142,7 @@ public class BlockUtil {
         return iInventories;
     }
 
-    public static ItemStack insertItemAdjacent(World world, BlockPos pos, ItemStack stack){
+    public static ItemStack insertItemAdjacent(Level world, BlockPos pos, ItemStack stack){
         for(IItemHandler i : BlockUtil.getAdjacentInventories(world, pos)){
             if(stack == ItemStack.EMPTY || stack == null)
                 break;
@@ -151,7 +151,7 @@ public class BlockUtil {
         return stack;
     }
 
-    public static ItemStack getItemAdjacent(World world, BlockPos pos, Predicate<ItemStack> matchPredicate){
+    public static ItemStack getItemAdjacent(Level world, BlockPos pos, Predicate<ItemStack> matchPredicate){
         ItemStack stack = ItemStack.EMPTY;
         for(IItemHandler inv : BlockUtil.getAdjacentInventories(world, pos)){
             for(int i = 0; i < inv.getSlots(); ++i) {
@@ -169,7 +169,7 @@ public class BlockUtil {
         int dx = abs(x1 - x0), sx = x0 < x1 ? 1 : -1;
         int dy = abs(y1 - y0), sy = y0 < y1 ? 1 : -1;
         int err = dx - dy, e2, x2, y2;                          /* error value e_xy */
-        float ed = dx + dy == 0 ? 1 : MathHelper.sqrt((float) dx * dx + (float) dy * dy);
+        float ed = dx + dy == 0 ? 1 : Mth.sqrt((float) dx * dx + (float) dy * dy);
 
         for (wd = (wd + 1) / 2; ; ) {                                   /* pixel loop */
             vects.add(new BlockPos(x0, 0, y0));
@@ -207,7 +207,7 @@ public class BlockUtil {
      * @return the coordinates of the found block.
      */
     @Nullable
-    public static BlockPos scanForBlockNearPoint(final World world, final BlockPos point, final int radiusX, final int radiusY, final int radiusZ, final int height)
+    public static BlockPos scanForBlockNearPoint(final Level world, final BlockPos point, final int radiusX, final int radiusY, final int radiusZ, final int height)
     {
         @Nullable BlockPos closestCoords = null;
         double minDistance = Double.MAX_VALUE;
@@ -247,7 +247,7 @@ public class BlockUtil {
      * @param height the number of blocks above to check.
      * @return true if no blocks block motion
      */
-    private static boolean wontSuffocate(World world, final int x, final int y, final int z, final int height) {
+    private static boolean wontSuffocate(Level world, final int x, final int y, final int z, final int height) {
         for (int dy = 0; dy < height; dy++)
         {
             final BlockState state = world.getBlockState(new BlockPos(x, y + dy, z));

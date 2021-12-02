@@ -6,7 +6,7 @@ import com.google.common.cache.LoadingCache;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -15,11 +15,11 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -74,12 +74,12 @@ public class EnchantingApparatusRecipeCategory implements IRecipeCategory<Enchan
     }
 
     @Override
-    public void draw(EnchantingApparatusRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+    public void draw(EnchantingApparatusRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
         IDrawableAnimated arrow = this.cachedArrows.getUnchecked(40);
         arrow.draw( matrixStack,55, 22);
-        FontRenderer renderer = Minecraft.getInstance().font;
+        Font renderer = Minecraft.getInstance().font;
         if(recipe.consumesMana())
-            renderer.draw(matrixStack, new TranslationTextComponent("ars_nouveau.source", recipe.manaCost), 0.0f,65f, 10);
+            renderer.draw(matrixStack, new TranslatableComponent("ars_nouveau.source", recipe.manaCost), 0.0f,65f, 10);
     }
 
     @Override

@@ -1,23 +1,23 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 
-public class EntityEarthElemental extends CreatureEntity  {
+public class EntityEarthElemental extends PathfinderMob  {
 
-    protected EntityEarthElemental(EntityType<? extends CreatureEntity> type, World worldIn) {
+    protected EntityEarthElemental(EntityType<? extends PathfinderMob> type, Level worldIn) {
         super(type, worldIn);
     }
-    public EntityEarthElemental(World world){
+    public EntityEarthElemental(Level world){
         this(ModEntities.ENTITY_EARTH_ELEMENTAL_TYPE,world);
     }
 
@@ -59,7 +59,7 @@ public class EntityEarthElemental extends CreatureEntity  {
     @OnlyIn(Dist.CLIENT)
     public void handleEntityEvent(byte id) {
         if (id == 45) {
-            ItemStack itemstack = this.getItemBySlot(EquipmentSlotType.MAINHAND);
+            ItemStack itemstack = this.getItemBySlot(EquipmentSlot.MAINHAND);
             if (!itemstack.isEmpty()) {
                 for(int i = 0; i < 8; ++i) {
 //                    Vec3d vec3d = (new Vec3d(((double)this.rand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D)).rotatePitch(-this.rotationPitch * ((float)Math.PI / 180F)).rotateYaw(-this.rotationYaw * ((float)Math.PI / 180F));
@@ -82,7 +82,7 @@ public class EntityEarthElemental extends CreatureEntity  {
     }
     public void setHeldStack(ItemStack stack){
 //        this.dataManager.set(HELD_ITEM,stack);
-        this.setItemSlot(EquipmentSlotType.MAINHAND, stack);
+        this.setItemSlot(EquipmentSlot.MAINHAND, stack);
     }
 
     public ItemStack getHeldStack(){
@@ -92,19 +92,19 @@ public class EntityEarthElemental extends CreatureEntity  {
 
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT tag) {
+    public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         if(getHeldStack() != null) {
-            CompoundNBT itemTag = new CompoundNBT();
+            CompoundTag itemTag = new CompoundTag();
             getHeldStack().save(itemTag);
             tag.put("held", itemTag);
         }
     }
 
     @Override
-    public void load(CompoundNBT tag) {
+    public void load(CompoundTag tag) {
         super.load(tag);
         if(tag.contains("held"))
-            setHeldStack(ItemStack.of((CompoundNBT)tag.get("held")));
+            setHeldStack(ItemStack.of((CompoundTag)tag.get("held")));
     }
 }

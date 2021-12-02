@@ -5,17 +5,19 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
 import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
 import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.EnumSet;
+
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 public class StoreItemGoal extends ExtendedRangeGoal {
 
@@ -51,8 +53,8 @@ public class StoreItemGoal extends ExtendedRangeGoal {
         super.tick();
         if (!entityCarbuncle.getHeldStack().isEmpty() && storePos != null && BlockUtil.distanceFrom(entityCarbuncle.position(), storePos) <= 2D + this.extendedRange) {
             this.entityCarbuncle.getNavigation().stop();
-            World world = entityCarbuncle.level;
-            TileEntity tileEntity = world.getBlockEntity(storePos);
+            Level world = entityCarbuncle.level;
+            BlockEntity tileEntity = world.getBlockEntity(storePos);
             if(tileEntity == null)
                 return;
 
@@ -64,10 +66,10 @@ public class StoreItemGoal extends ExtendedRangeGoal {
                 if (left.equals(oldStack)) {
                     return;
                 }
-                if (world instanceof ServerWorld) {
+                if (world instanceof ServerLevel) {
                     // Potential bug with OpenJDK causing irreproducible noClassDef errors
                     try {
-                        OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerWorld) world), storePos, 20);
+                        OpenChestEvent event = new OpenChestEvent(FakePlayerFactory.getMinecraft((ServerLevel) world), storePos, 20);
                         event.open();
                         EventQueue.getServerInstance().addEvent(event);
                     }catch (Throwable ignored){ }

@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -11,13 +11,13 @@ public class PacketUpdateFlight {
     public boolean canFly;
     public boolean wasFlying;
     //Decoder
-    public PacketUpdateFlight(PacketBuffer buf){
+    public PacketUpdateFlight(FriendlyByteBuf buf){
         canFly = buf.readBoolean();
         wasFlying = buf.readBoolean();
     }
 
     //Encoder
-    public void toBytes(PacketBuffer buf){
+    public void toBytes(FriendlyByteBuf buf){
         buf.writeBoolean(canFly);
         buf.writeBoolean(wasFlying);
     }

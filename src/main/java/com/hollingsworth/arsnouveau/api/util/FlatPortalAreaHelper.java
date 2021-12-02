@@ -1,12 +1,12 @@
 package com.hollingsworth.arsnouveau.api.util;
 
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -18,7 +18,7 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
     public FlatPortalAreaHelper() {
     }
 
-    public FlatPortalAreaHelper init(World world, BlockPos blockPos, Direction.Axis axis,  Predicate<BlockState>  foundations) {
+    public FlatPortalAreaHelper init(Level world, BlockPos blockPos, Direction.Axis axis,  Predicate<BlockState>  foundations) {
         VALID_FRAME = foundations;
         this.world = world;
         this.lowerCorner = this.getLowerCorner(blockPos, Direction.Axis.X, Direction.Axis.Z);
@@ -41,13 +41,13 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
         return this;
     }
 
-    public Optional<PortalFrameTester> getNewPortal(World worldAccess, BlockPos blockPos, Direction.Axis axis, Predicate<BlockState>  foundations) {
+    public Optional<PortalFrameTester> getNewPortal(Level worldAccess, BlockPos blockPos, Direction.Axis axis, Predicate<BlockState>  foundations) {
         return getOrEmpty(worldAccess, blockPos, (areaHelper) -> {
             return areaHelper.isValidFrame() && areaHelper.foundPortalBlocks == 0;
         }, axis, foundations);
     }
 
-    public Optional<PortalFrameTester> getOrEmpty(World worldAccess, BlockPos blockPos, Predicate<PortalFrameTester> predicate, Direction.Axis axis, Predicate<BlockState>  foundations) {
+    public Optional<PortalFrameTester> getOrEmpty(Level worldAccess, BlockPos blockPos, Predicate<PortalFrameTester> predicate, Direction.Axis axis, Predicate<BlockState>  foundations) {
         return Optional.of((PortalFrameTester) new FlatPortalAreaHelper().init(worldAccess, blockPos, axis, foundations)).filter(predicate);
     }
 
@@ -76,7 +76,7 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
 //    }
 
     @Override
-    public void createPortal(World world, BlockPos pos, BlockState frameBlock, Direction.Axis axis) {
+    public void createPortal(Level world, BlockPos pos, BlockState frameBlock, Direction.Axis axis) {
         for (int i = -1; i < 3; i++) {
             world.setBlockAndUpdate(pos.relative(Direction.Axis.X, i).relative(Direction.Axis.Z, -1), frameBlock);
             world.setBlockAndUpdate(pos.relative(Direction.Axis.X, i).relative(Direction.Axis.Z, 2), frameBlock);
@@ -101,12 +101,12 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
         lightPortal(frameBlock.getBlock());
     }
 
-    private void fillAirAroundPortal(World world, BlockPos pos) {
+    private void fillAirAroundPortal(Level world, BlockPos pos) {
         if (world.getBlockState(pos).getMaterial().isSolid())
             world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
     }
 
-    private void placeLandingPad(World world, BlockPos pos, BlockState frameBlock) {
+    private void placeLandingPad(Level world, BlockPos pos, BlockState frameBlock) {
         if (!world.getBlockState(pos).getMaterial().isSolid())
             world.setBlockAndUpdate(pos, frameBlock);
     }
@@ -133,7 +133,7 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
     }
 
     @Override
-    public BlockPos doesPortalFitAt(World world, BlockPos attemptPos, Direction.Axis axis) {
+    public BlockPos doesPortalFitAt(Level world, BlockPos attemptPos, Direction.Axis axis) {
         return attemptPos;
 //        BlockLocating.Rectangle rect = BlockLocating.getLargestRectangle(attemptPos.up(), Direction.Axis.X, 4, Direction.Axis.Z, 4, blockPos -> {
 //            return world.getBlockState(blockPos).getMaterial().isSolid() &&

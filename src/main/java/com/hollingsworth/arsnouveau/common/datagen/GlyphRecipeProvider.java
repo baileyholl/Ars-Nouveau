@@ -5,8 +5,8 @@ import com.google.gson.GsonBuilder;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DirectoryCache;
-import net.minecraft.data.IDataProvider;
+import net.minecraft.data.HashCache;
+import net.minecraft.data.DataProvider;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,7 +15,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class GlyphRecipeProvider implements IDataProvider {
+public class GlyphRecipeProvider implements DataProvider {
     private final DataGenerator generator;
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
     private static final Logger LOGGER = LogManager.getLogger();
@@ -23,12 +23,12 @@ public class GlyphRecipeProvider implements IDataProvider {
         this.generator = generatorIn;
     }
     @Override
-    public void run(DirectoryCache cache) throws IOException {
+    public void run(HashCache cache) throws IOException {
         List<Glyph> glyphList = ArsNouveauAPI.getInstance().getGlyphMap().values().stream().collect(Collectors.toList());
         Path output = this.generator.getOutputFolder();
         for(Glyph g : glyphList){
             Path path = getGlyphPath(output, g);
-            IDataProvider.save(GSON, cache, g.asRecipe(), path);
+            DataProvider.save(GSON, cache, g.asRecipe(), path);
         }
     }
 

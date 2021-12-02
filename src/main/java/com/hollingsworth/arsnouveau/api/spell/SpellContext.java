@@ -2,8 +2,8 @@ package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -19,7 +19,7 @@ public class SpellContext {
 
     private int currentIndex;
 
-    public @Nullable TileEntity castingTile;
+    public @Nullable BlockEntity castingTile;
 
     public ParticleColor.IntWrapper colors;
 
@@ -65,7 +65,7 @@ public class SpellContext {
         return this;
     }
 
-    public SpellContext withCastingTile(TileEntity tile){
+    public SpellContext withCastingTile(BlockEntity tile){
         this.castingTile = tile;
         return this;
     }

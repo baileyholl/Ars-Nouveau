@@ -10,23 +10,23 @@ import com.hollingsworth.arsnouveau.common.block.SconceBlock;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class SconceTile extends TileEntity implements ILightable, ITickableTileEntity {
+public class SconceTile extends BlockEntity implements ILightable, TickableBlockEntity {
 
     public int red = 255;
     public int green = 125;
@@ -40,23 +40,23 @@ public class SconceTile extends TileEntity implements ILightable, ITickableTileE
 
     @Override
     @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 3, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 3, this.getUpdateTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
         handleUpdateTag(level.getBlockState(worldPosition), pkt.getTag());
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT nbt) {
+    public void load(BlockState state, CompoundTag nbt) {
         super.load(state, nbt);
         this.red = nbt.getInt("red");
         this.red = red > 0 ? red : 255;
@@ -68,7 +68,7 @@ public class SconceTile extends TileEntity implements ILightable, ITickableTileE
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         compound.putInt("red", red);
         compound.putInt("green", green);
         compound.putInt("blue", blue);
@@ -77,15 +77,15 @@ public class SconceTile extends TileEntity implements ILightable, ITickableTileE
     }
 
     @Override
-    public void onLight(RayTraceResult rayTraceResult, World world, LivingEntity shooter, SpellStats stats, SpellContext spellContext) {
+    public void onLight(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats stats, SpellContext spellContext) {
         this.red = spellContext.colors.r;
         this.green = spellContext.colors.g;
         this.blue = spellContext.colors.b;
         lit = true;
-        if(rayTraceResult instanceof BlockRayTraceResult) {
-            BlockState state = world.getBlockState(((BlockRayTraceResult) rayTraceResult).getBlockPos());
+        if(rayTraceResult instanceof BlockHitResult) {
+            BlockState state = world.getBlockState(((BlockHitResult) rayTraceResult).getBlockPos());
             world.setBlock(getBlockPos(), state.setValue(SconceBlock.LIGHT_LEVEL, Math.min(Math.max(0, 15 - stats.getBuffCount(AugmentDampen.INSTANCE)), 15)), 3);
-            world.sendBlockUpdated(((BlockRayTraceResult) rayTraceResult).getBlockPos(), state,
+            world.sendBlockUpdated(((BlockHitResult) rayTraceResult).getBlockPos(), state,
                     state.setValue(SconceBlock.LIGHT_LEVEL, 15), 3);
         }
     }
@@ -94,7 +94,7 @@ public class SconceTile extends TileEntity implements ILightable, ITickableTileE
     public void tick() {
         if(!level.isClientSide || !lit)
             return;
-        World world = getLevel();
+        Level world = getLevel();
         BlockPos pos = getBlockPos();
         Random rand = world.random;
         double xzOffset = 0.15;

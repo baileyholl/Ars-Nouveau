@@ -5,12 +5,12 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
 
 public class RelayWarpTile extends ArcaneRelaySplitterTile{
 
-    public RelayWarpTile(TileEntityType<?> type){
+    public RelayWarpTile(BlockEntityType<?> type){
         super(type);
     }
 

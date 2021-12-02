@@ -1,21 +1,21 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.AABB;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 
-public class ScribesTile extends TileEntity implements IAnimatable {
+public class ScribesTile extends BlockEntity implements IAnimatable {
 
     public ItemEntity entity; // For rendering
     public ItemStack stack;
@@ -27,15 +27,15 @@ public class ScribesTile extends TileEntity implements IAnimatable {
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
-        stack = ItemStack.of((CompoundNBT)compound.get("itemStack"));
+    public void load(BlockState state, CompoundTag compound) {
+        stack = ItemStack.of((CompoundTag)compound.get("itemStack"));
         super.load(state,compound);
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public CompoundTag save(CompoundTag compound) {
         if(stack != null) {
-            CompoundNBT reagentTag = new CompoundNBT();
+            CompoundTag reagentTag = new CompoundTag();
             stack.save(reagentTag);
             compound.put("itemStack", reagentTag);
         }
@@ -45,16 +45,16 @@ public class ScribesTile extends TileEntity implements IAnimatable {
 
     @Override
     @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 3, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 3, this.getUpdateTag());
     }
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
         handleUpdateTag(level.getBlockState(worldPosition),pkt.getTag());
     }
@@ -65,7 +65,7 @@ public class ScribesTile extends TileEntity implements IAnimatable {
     }
 
     @Override
-    public AxisAlignedBB getRenderBoundingBox() {
+    public AABB getRenderBoundingBox() {
         return super.getRenderBoundingBox().inflate(2);
     }
 

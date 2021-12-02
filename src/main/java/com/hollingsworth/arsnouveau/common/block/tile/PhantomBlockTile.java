@@ -3,15 +3,15 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.IntNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class PhantomBlockTile extends AnimatedTile implements ITickableTileEntity, IAnimatable {
+public class PhantomBlockTile extends AnimatedTile implements TickableBlockEntity, IAnimatable {
 
     int age;
     public boolean isPermanent;
@@ -36,7 +36,7 @@ public class PhantomBlockTile extends AnimatedTile implements ITickableTileEntit
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(BlockState state, CompoundTag compound) {
         super.load(state,compound);
         this.age = compound.getInt("age");
         this.color = ParticleColor.IntWrapper.deserialize(compound.getString("color")).toParticleColor();
@@ -45,8 +45,8 @@ public class PhantomBlockTile extends AnimatedTile implements ITickableTileEntit
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
-        compound.put("age", IntNBT.valueOf(age));
+    public CompoundTag save(CompoundTag compound) {
+        compound.put("age", IntTag.valueOf(age));
         compound.putString("color", color.toWrapper().serialize());
         compound.putBoolean("permanent", isPermanent);
         compound.putDouble("modifier", lengthModifier);

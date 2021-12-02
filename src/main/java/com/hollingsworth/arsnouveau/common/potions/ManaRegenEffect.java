@@ -1,12 +1,12 @@
 package com.hollingsworth.arsnouveau.common.potions;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectType;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
 
-public class ManaRegenEffect extends Effect {
+public class ManaRegenEffect extends MobEffect {
     protected ManaRegenEffect() {
-        super(EffectType.BENEFICIAL, 8080895);
+        super(MobEffectCategory.BENEFICIAL, 8080895);
         setRegistryName(ArsNouveau.MODID, "mana_regen");
     }
 }

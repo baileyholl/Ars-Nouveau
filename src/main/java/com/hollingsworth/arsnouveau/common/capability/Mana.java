@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.capability;
 
 import com.hollingsworth.arsnouveau.api.mana.IMana;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.entity.LivingEntity;
 
 import javax.annotation.Nullable;
 

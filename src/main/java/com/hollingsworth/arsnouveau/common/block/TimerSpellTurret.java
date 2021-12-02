@@ -4,23 +4,25 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.tile.TimerSpellTurretTile;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nullable;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class TimerSpellTurret extends BasicSpellTurret{
@@ -36,26 +38,26 @@ public class TimerSpellTurret extends BasicSpellTurret{
 
     @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
         return new TimerSpellTurretTile();
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         ItemStack stack = player.getItemInHand(handIn);
-        if(handIn == Hand.MAIN_HAND) {
+        if(handIn == InteractionHand.MAIN_HAND) {
             if ((stack.getItem() instanceof SpellParchment) || worldIn.isClientSide)
                 return super.use(state, worldIn, pos, player, handIn, hit);
             TimerSpellTurretTile timerSpellTurretTile = (TimerSpellTurretTile) worldIn.getBlockEntity(pos);
             if(timerSpellTurretTile.isLocked)
-                return ActionResultType.SUCCESS;
+                return InteractionResult.SUCCESS;
             timerSpellTurretTile.addTime(20 * (player.isShiftKeyDown() ? 10 : 1));
         }
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public void attack(BlockState state, World level, BlockPos pos, PlayerEntity player) {
+    public void attack(BlockState state, Level level, BlockPos pos, Player player) {
         if(!level.isClientSide){
             TimerSpellTurretTile timerSpellTurretTile = (TimerSpellTurretTile) level.getBlockEntity(pos);
             if(!timerSpellTurretTile.isLocked){
@@ -65,7 +67,7 @@ public class TimerSpellTurret extends BasicSpellTurret{
     }
 
     @Override
-    public void neighborChanged(BlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         if(!world.isClientSide() && world.getBlockEntity(pos) instanceof TimerSpellTurretTile){
             ((TimerSpellTurretTile) world.getBlockEntity(pos)).isOff = world.hasNeighborSignal(pos);
             ((TimerSpellTurretTile) world.getBlockEntity(pos)).update();

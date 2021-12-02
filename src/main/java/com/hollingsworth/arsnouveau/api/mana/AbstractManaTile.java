@@ -1,34 +1,34 @@
 package com.hollingsworth.arsnouveau.api.mana;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import javax.annotation.Nullable;
 
 import static com.hollingsworth.arsnouveau.api.NbtTags.MANA_TAG;
 import static com.hollingsworth.arsnouveau.api.NbtTags.MAX_MANA_TAG;
 
-public abstract class AbstractManaTile extends TileEntity implements IManaTile, ITickableTileEntity {
+public abstract class AbstractManaTile extends BlockEntity implements IManaTile, TickableBlockEntity {
     private int mana = 0;
     private int maxMana = 0;
-    public AbstractManaTile(TileEntityType<?> tileEntityTypeIn) {
+    public AbstractManaTile(BlockEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT tag) {
+    public void load(BlockState state, CompoundTag tag) {
         mana = tag.getInt(MANA_TAG);
         maxMana = tag.getInt(MAX_MANA_TAG);
         super.load(state, tag);
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
+    public CompoundTag save(CompoundTag tag) {
         tag.putInt(MANA_TAG, getCurrentMana());
         tag.putInt(MAX_MANA_TAG, getMaxMana());
         return super.save(tag);
@@ -111,17 +111,17 @@ public abstract class AbstractManaTile extends TileEntity implements IManaTile, 
 
     @Override
     @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 3, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 3, this.getUpdateTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
         handleUpdateTag(level.getBlockState(worldPosition),pkt.getTag());
     }

@@ -3,18 +3,18 @@ package com.hollingsworth.arsnouveau.common.potions;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.event.BounceTimedEvent;
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
-public class BounceEffect extends Effect {
+public class BounceEffect extends MobEffect {
     public BounceEffect() {
-        super(EffectType.BENEFICIAL, 2039587);
+        super(MobEffectCategory.BENEFICIAL, 2039587);
         setRegistryName(ArsNouveau.MODID, "bounce");
     }
     // Adapted from Tinkers https://github.com/SlimeKnights/TinkersConstruct/blob/7df8a5dd62a3b731e59250c49300faadc24501d0/src/main/java/slimeknights/tconstruct/gadgets/GadgetEvents.java
@@ -24,7 +24,7 @@ public class BounceEffect extends Effect {
         if (entity == null || !entity.hasEffect(ModPotions.BOUNCE_EFFECT)) {
             return;
         }
-        boolean isPlayer = entity instanceof PlayerEntity;
+        boolean isPlayer = entity instanceof Player;
         boolean isClient = entity.level.isClientSide;
         if (isClient && !isPlayer) {
             return;

@@ -1,13 +1,13 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
-import net.minecraft.pathfinding.PathPoint;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.pathfinder.Node;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
 
 /**
  * Class extending pathPoint for our usage with ladders.
  */
-public class PathPointExtended extends PathPoint
+public class PathPointExtended extends Node
 {
     /**
      * Is the point on a ladder.

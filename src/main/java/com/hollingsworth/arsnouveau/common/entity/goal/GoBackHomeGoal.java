@@ -1,22 +1,22 @@
 package com.hollingsworth.arsnouveau.common.entity.goal;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.core.BlockPos;
 
 import java.util.function.Supplier;
 
 public class GoBackHomeGoal extends DistanceRestrictedGoal {
-    MobEntity entity;
+    Mob entity;
     Supplier<Boolean> shouldGo;
 
-    public GoBackHomeGoal(MobEntity entity, Supplier<BlockPos> pos, int maxDistance) {
+    public GoBackHomeGoal(Mob entity, Supplier<BlockPos> pos, int maxDistance) {
         super(pos, maxDistance);
         this.entity = entity;
         this.shouldGo = () -> true;
     }
 
-    public GoBackHomeGoal(MobEntity entity, Supplier<BlockPos> pos, int maxDistance, Supplier<Boolean> shouldGo) {
+    public GoBackHomeGoal(Mob entity, Supplier<BlockPos> pos, int maxDistance, Supplier<Boolean> shouldGo) {
         super(pos, maxDistance);
         this.entity = entity;
         this.shouldGo = shouldGo;

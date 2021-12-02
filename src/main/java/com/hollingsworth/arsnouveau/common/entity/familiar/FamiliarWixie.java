@@ -5,13 +5,13 @@ import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.living.PotionEvent;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -26,7 +26,7 @@ import java.util.Random;
 public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationListener {
     public int debuffCooldown;
 
-    public FamiliarWixie(EntityType<? extends CreatureEntity> ent, World world) {
+    public FamiliarWixie(EntityType<? extends PathfinderMob> ent, Level world) {
         super(ent, world);
     }
 
@@ -83,8 +83,8 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
     public static class DebuffTargetGoal extends Goal {
         FamiliarWixie wixie;
 
-        public static ArrayList<Effect> effectTable = new ArrayList<>(Arrays.asList(
-                Effects.MOVEMENT_SLOWDOWN, Effects.WEAKNESS, Effects.LEVITATION, Effects.POISON
+        public static ArrayList<MobEffect> effectTable = new ArrayList<>(Arrays.asList(
+                MobEffects.MOVEMENT_SLOWDOWN, MobEffects.WEAKNESS, MobEffects.LEVITATION, MobEffects.POISON
         ));
 
         public DebuffTargetGoal(FamiliarWixie wixie){
@@ -96,13 +96,13 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
             super.tick();
             if(wixie.getTarget() == null)
                 return;
-            Effect effect = effectTable.get(new Random().nextInt(effectTable.size()));
-            if(effect == Effects.POISON){
+            MobEffect effect = effectTable.get(new Random().nextInt(effectTable.size()));
+            if(effect == MobEffects.POISON){
                 if(wixie.getTarget().isInvertedHealAndHarm())
-                    effect = Effects.REGENERATION;
+                    effect = MobEffects.REGENERATION;
             }
             Networking.sendToNearby(wixie.level, wixie, new PacketAnimEntity(wixie.getId(), EntityWixie.Animations.CAST.ordinal()));
-            wixie.getTarget().addEffect(new EffectInstance(effect, 7 * 20, new Random().nextInt(2)));
+            wixie.getTarget().addEffect(new MobEffectInstance(effect, 7 * 20, new Random().nextInt(2)));
             wixie.debuffCooldown = 150;
         }
 

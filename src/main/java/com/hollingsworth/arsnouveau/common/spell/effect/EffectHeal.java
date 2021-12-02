@@ -3,19 +3,21 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
+
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
 
 public class EffectHeal extends AbstractEffect {
     public static EffectHeal INSTANCE = new EffectHeal();
@@ -25,7 +27,7 @@ public class EffectHeal extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         if(rayTraceResult.getEntity() instanceof LivingEntity){
             LivingEntity entity = ((LivingEntity) rayTraceResult.getEntity());
             if(entity.removed || entity.getHealth() <= 0)
@@ -33,7 +35,7 @@ public class EffectHeal extends AbstractEffect {
 
             float healVal = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
             if(spellStats.hasBuff(AugmentExtendTime.INSTANCE)){
-                applyPotionWithCap(entity, Effects.REGENERATION, spellStats, 5, 5, 4);
+                applyPotionWithCap(entity, MobEffects.REGENERATION, spellStats, 5, 5, 4);
             }else{
                 if(entity.isInvertedHealAndHarm()){
                     dealDamage(world, shooter, healVal, spellStats, entity, buildDamageSource(world, shooter).setMagic());
@@ -52,7 +54,7 @@ public class EffectHeal extends AbstractEffect {
     }
 
     @Override
-    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
+    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, List<AbstractAugment> augments) {
         return livingEntityHitSuccess(rayTraceResult);
     }
 

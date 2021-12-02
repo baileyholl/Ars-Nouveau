@@ -2,17 +2,17 @@ package com.hollingsworth.arsnouveau.common.entity.familiar;
 
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.ritual.ScryingRitual;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -20,7 +20,7 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 
 public class FamiliarCarbuncle extends FamiliarEntity {
 
-    public FamiliarCarbuncle(EntityType<? extends CreatureEntity> ent, World world) {
+    public FamiliarCarbuncle(EntityType<? extends PathfinderMob> ent, Level world) {
         super(ent, world);
     }
 
@@ -28,18 +28,18 @@ public class FamiliarCarbuncle extends FamiliarEntity {
     public void tick() {
         super.tick();
         if(!level.isClientSide && level.getGameTime() % 60 == 0 && getOwner() != null){
-            getOwner().addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 600, 1, false, false, true));
-            this.addEffect(new EffectInstance(Effects.MOVEMENT_SPEED, 600, 1, false, false, true));
+            getOwner().addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 600, 1, false, false, true));
+            this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 600, 1, false, false, true));
         }
     }
 
     @Override
-    protected ActionResultType mobInteract(PlayerEntity player, Hand hand) {
+    protected InteractionResult mobInteract(Player player, InteractionHand hand) {
         if(!player.level.isClientSide && player.equals(getOwner())){
             ItemStack stack = player.getItemInHand(hand);
             if(stack.getItem().is(Tags.Items.NUGGETS_GOLD)){
                 stack.shrink(1);
-                ScryingRitual.grantScrying((ServerPlayerEntity) player, new ItemStack(Blocks.GOLD_ORE), 3 * 20 * 60);
+                ScryingRitual.grantScrying((ServerPlayer) player, new ItemStack(Blocks.GOLD_ORE), 3 * 20 * 60);
             }
         }
         return super.mobInteract(player, hand);

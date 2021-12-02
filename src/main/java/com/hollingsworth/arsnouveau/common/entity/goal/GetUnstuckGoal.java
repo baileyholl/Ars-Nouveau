@@ -2,16 +2,16 @@ package com.hollingsworth.arsnouveau.common.entity.goal;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.util.ArrayUtil;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.pathfinding.Path;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
 
 import java.util.EnumSet;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import net.minecraft.entity.ai.goal.Goal.Flag;
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 public class GetUnstuckGoal extends CheckStuckGoal {
 
@@ -19,10 +19,10 @@ public class GetUnstuckGoal extends CheckStuckGoal {
     BlockPos targetPos;
     public Direction[] directions = new Direction[]{Direction.NORTH, Direction.EAST, Direction.WEST, Direction.SOUTH};
     Supplier<Boolean> isStuck;
-    MobEntity entity;
+    Mob entity;
     boolean isStuckTrying;
     Function<Boolean, Void> setUnstuck;
-    public GetUnstuckGoal(MobEntity entity, Supplier<Boolean> isStuck, Function<Boolean, Void> setUnstuck){
+    public GetUnstuckGoal(Mob entity, Supplier<Boolean> isStuck, Function<Boolean, Void> setUnstuck){
         super(entity::blockPosition, 4, null);
         this.entity = entity;
         this.isStuck = isStuck;

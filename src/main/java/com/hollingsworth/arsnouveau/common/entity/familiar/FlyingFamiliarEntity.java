@@ -1,21 +1,21 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
-import net.minecraft.entity.CreatureEntity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.controller.FlyingMovementController;
-import net.minecraft.pathfinding.FlyingPathNavigator;
-import net.minecraft.pathfinding.PathNavigator;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.control.FlyingMoveControl;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.level.Level;
 
 public class FlyingFamiliarEntity extends FamiliarEntity{
-    public FlyingFamiliarEntity(EntityType<? extends CreatureEntity> p_i48575_1_, World p_i48575_2_) {
+    public FlyingFamiliarEntity(EntityType<? extends PathfinderMob> p_i48575_1_, Level p_i48575_2_) {
         super(p_i48575_1_, p_i48575_2_);
-        this.moveControl = new FlyingMovementController(this, 10, true);
+        this.moveControl = new FlyingMoveControl(this, 10, true);
     }
 
     @Override
-    protected PathNavigator createNavigation(World world) {
-        FlyingPathNavigator flyingpathnavigator = new FlyingPathNavigator(this, world);
+    protected PathNavigation createNavigation(Level world) {
+        FlyingPathNavigation flyingpathnavigator = new FlyingPathNavigation(this, world);
         flyingpathnavigator.setCanOpenDoors(false);
         flyingpathnavigator.setCanFloat(true);
         flyingpathnavigator.setCanPassDoors(true);

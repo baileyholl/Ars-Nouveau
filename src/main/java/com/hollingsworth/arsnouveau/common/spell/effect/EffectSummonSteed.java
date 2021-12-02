@@ -7,20 +7,22 @@ import com.hollingsworth.arsnouveau.common.entity.SummonHorse;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
+
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
 
 public class EffectSummonSteed extends AbstractEffect {
     public static EffectSummonSteed INSTANCE = new EffectSummonSteed();
@@ -31,22 +33,22 @@ public class EffectSummonSteed extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
 
         if(!canSummon(shooter))
             return;
 
         int ticks = (int) (20 * (GENERIC_INT.get() +  EXTEND_TIME.get() * spellStats.getDurationMultiplier()));
-        Vector3d hit = rayTraceResult.getLocation();
+        Vec3 hit = rayTraceResult.getLocation();
         for(int i = 0; i < 1 + spellStats.getBuffCount(AugmentAOE.INSTANCE); i++){
             SummonHorse horse = new SummonHorse(ModEntities.SUMMON_HORSE, world);
             horse.setPos(hit.x(), hit.y(), hit.z());
             horse.ticksLeft = ticks;
-            horse.tameWithName((PlayerEntity) shooter);
+            horse.tameWithName((Player) shooter);
             world.addFreshEntity(horse);
             horse.getHorseInventory().setItem(0, new ItemStack(Items.SADDLE));
             horse.setOwnerID(shooter.getUUID());
-            horse.setDropChance(EquipmentSlotType.CHEST, 0.0F);
+            horse.setDropChance(EquipmentSlot.CHEST, 0.0F);
         }
         applySummoningSickness(shooter, 30 * 20);
     }

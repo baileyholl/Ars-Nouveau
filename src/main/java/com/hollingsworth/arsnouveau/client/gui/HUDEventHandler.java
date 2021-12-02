@@ -3,12 +3,12 @@ package com.hollingsworth.arsnouveau.client.gui;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.item.ItemFrameEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -36,7 +36,7 @@ public class HUDEventHandler {
     public static void renderSpellHUD(final RenderGameOverlayEvent.Post event) {
         if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) return;
 
-        final PlayerEntity player = minecraft.player;
+        final Player player = minecraft.player;
 
         spellHUD.drawHUD(event.getMatrixStack());
         manaHUD.drawHUD(event.getMatrixStack(), event.getPartialTicks());
@@ -51,20 +51,20 @@ public class HUDEventHandler {
     @SubscribeEvent
     public static void renderEntityHUD(final RenderGameOverlayEvent.Post event) {
         if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) return;
-        RayTraceResult mouseOver = Minecraft.getInstance().hitResult;
-        if (mouseOver != null && mouseOver.getType() == RayTraceResult.Type.ENTITY) {
+        HitResult mouseOver = Minecraft.getInstance().hitResult;
+        if (mouseOver != null && mouseOver.getType() == HitResult.Type.ENTITY) {
 
-          EntityRayTraceResult result = (EntityRayTraceResult) mouseOver;
+          EntityHitResult result = (EntityHitResult) mouseOver;
           if(result.getEntity() instanceof ITooltipProvider)
               entityHUD.drawHUD(event.getMatrixStack(),((ITooltipProvider) result.getEntity()).getTooltip());
 
-          if(result.getEntity() instanceof ItemFrameEntity){
-              scrollHUD.drawHUD(event.getMatrixStack(), (ItemFrameEntity) result.getEntity());
+          if(result.getEntity() instanceof ItemFrame){
+              scrollHUD.drawHUD(event.getMatrixStack(), (ItemFrame) result.getEntity());
           }
 
         }
-        if (mouseOver != null && mouseOver.getType() == RayTraceResult.Type.BLOCK) {
-            BlockRayTraceResult result = (BlockRayTraceResult) mouseOver;
+        if (mouseOver != null && mouseOver.getType() == HitResult.Type.BLOCK) {
+            BlockHitResult result = (BlockHitResult) mouseOver;
             BlockPos pos = result.getBlockPos();
             if(Minecraft.getInstance().level != null && Minecraft.getInstance().level.getBlockEntity(pos) instanceof ITooltipProvider){
                 entityHUD.drawHUD(event.getMatrixStack(), ((ITooltipProvider) Minecraft.getInstance().level.getBlockEntity(pos)).getTooltip());

@@ -16,13 +16,13 @@ import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DirectoryCache;
-import net.minecraft.data.IDataProvider;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.data.HashCache;
+import net.minecraft.data.DataProvider;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.tags.ItemTags;
 import net.minecraftforge.common.Tags;
 import org.apache.logging.log4j.LogManager;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ApparatusRecipeProvider implements IDataProvider {
+public class ApparatusRecipeProvider implements DataProvider {
     private final DataGenerator generator;
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
     private static final Logger LOGGER = LogManager.getLogger();
@@ -44,20 +44,20 @@ public class ApparatusRecipeProvider implements IDataProvider {
 
     List<EnchantingApparatusRecipe> recipes = new ArrayList<>();
     @Override
-    public void run(DirectoryCache cache) throws IOException {
+    public void run(HashCache cache) throws IOException {
         addEntries();
         Path output = this.generator.getOutputFolder();
         for(IEnchantingRecipe g : recipes){
             if(g instanceof EnchantingApparatusRecipe){
                 System.out.println(g);
                 Path path = getRecipePath(output, ((EnchantingApparatusRecipe) g).getId().getPath());
-                IDataProvider.save(GSON, cache, ((EnchantingApparatusRecipe) g).asRecipe(), path);
+                DataProvider.save(GSON, cache, ((EnchantingApparatusRecipe) g).asRecipe(), path);
 
                 if(g.getResultItem().isEmpty())
                     continue;
                 Path path1 = getApparatusPath(output, (EnchantingApparatusRecipe) g);
                 try {
-                    IDataProvider.save(GSON, cache, ((EnchantingApparatusRecipe)g).serialize(), path1);
+                    DataProvider.save(GSON, cache, ((EnchantingApparatusRecipe)g).serialize(), path1);
                     System.out.println(g);
                 } catch (IOException ioexception) {
                     LOGGER.error("Couldn't save apparatus {}", path1, ioexception);

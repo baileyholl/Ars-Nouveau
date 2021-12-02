@@ -4,10 +4,10 @@ import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class ArcaneCoreTile extends TileEntity implements ITickableTileEntity {
+public class ArcaneCoreTile extends BlockEntity implements TickableBlockEntity {
     public ArcaneCoreTile() {
         super(BlockRegistry.ARCANE_CORE_TILE);
     }

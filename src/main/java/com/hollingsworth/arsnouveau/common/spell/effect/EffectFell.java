@@ -10,36 +10,38 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtract;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentFortune;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.tags.Tag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
+
 public class EffectFell extends AbstractEffect {
     public static EffectFell INSTANCE = new EffectFell();
 
-    public static ITag.INamedTag<Block> FELLABLE =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "harvest/fellable"));
+    public static Tag.Named<Block> FELLABLE =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "harvest/fellable"));
 
     private EffectFell() {
         super(GlyphLib.EffectFellID, "Fell");
     }
 
     @Override
-    public void onResolveBlock(BlockRayTraceResult ray, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveBlock(BlockHitResult ray, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         BlockPos blockPos = ray.getBlockPos();
         BlockState state = world.getBlockState(blockPos);
         if (isTree(state)) {
@@ -49,11 +51,11 @@ public class EffectFell extends AbstractEffect {
                 if (!BlockUtil.destroyRespectsClaim(shooter, world, listPos))
                     return;
                 if (spellStats.hasBuff(AugmentExtract.INSTANCE)) {
-                    world.getBlockState(listPos).getDrops(LootUtil.getSilkContext((ServerWorld) world, listPos, shooter)).forEach(i -> world.addFreshEntity(new ItemEntity(world, listPos.getX(), listPos.getY(), listPos.getZ(), i)));
+                    world.getBlockState(listPos).getDrops(LootUtil.getSilkContext((ServerLevel) world, listPos, shooter)).forEach(i -> world.addFreshEntity(new ItemEntity(world, listPos.getX(), listPos.getY(), listPos.getZ(), i)));
                     BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, false);
                 } else if (spellStats.hasBuff(AugmentFortune.INSTANCE)) {
                     world.getBlockState(listPos)
-                            .getDrops(LootUtil.getFortuneContext((ServerWorld) world, listPos, shooter, spellStats.getBuffCount(AugmentFortune.INSTANCE)))
+                            .getDrops(LootUtil.getFortuneContext((ServerLevel) world, listPos, shooter, spellStats.getBuffCount(AugmentFortune.INSTANCE)))
                             .forEach(i -> world.addFreshEntity(new ItemEntity(world, listPos.getX(), listPos.getY(), listPos.getZ(), i)));
                     BlockUtil.destroyBlockSafelyWithoutSound(world, listPos, false);
                 } else {
@@ -75,7 +77,7 @@ public class EffectFell extends AbstractEffect {
         return blockstate.getBlock().is(FELLABLE);
     }
 
-    public Set<BlockPos> getTree(World world, BlockPos start, int maxBlocks) {
+    public Set<BlockPos> getTree(Level world, BlockPos start, int maxBlocks) {
         return SpellUtil.DFSBlockstates(world, start, maxBlocks, this::isTree);
     }
 

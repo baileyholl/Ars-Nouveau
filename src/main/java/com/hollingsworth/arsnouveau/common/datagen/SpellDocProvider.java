@@ -8,9 +8,9 @@ import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.setup.APIRegistry;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DirectoryCache;
-import net.minecraft.data.IDataProvider;
-import net.minecraft.item.Items;
+import net.minecraft.data.HashCache;
+import net.minecraft.data.DataProvider;
+import net.minecraft.world.item.Items;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class SpellDocProvider implements IDataProvider {
+public class SpellDocProvider implements DataProvider {
     private final DataGenerator generator;
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
     private static final Logger LOGGER = LogManager.getLogger();
@@ -29,7 +29,7 @@ public class SpellDocProvider implements IDataProvider {
     }
 
     @Override
-    public void run(DirectoryCache cache) throws IOException {
+    public void run(HashCache cache) throws IOException {
         APIRegistry.registerApparatusRecipes();
         Path path = this.generator.getOutputFolder();
         System.out.println("ACTING IN DOC PROVIDER");
@@ -38,7 +38,7 @@ public class SpellDocProvider implements IDataProvider {
         for(AbstractSpellPart spellPatchouliObj : spells){
             Path path1 = getSpellPath(path, spellPatchouliObj);
             try {
-                IDataProvider.save(GSON, cache, spellPatchouliObj.serialize(), path1);
+                DataProvider.save(GSON, cache, spellPatchouliObj.serialize(), path1);
             } catch (IOException ioexception) {
                 LOGGER.error("Couldn't save spell {}", path1, ioexception);
             }
@@ -57,7 +57,7 @@ public class SpellDocProvider implements IDataProvider {
         for(EnchantingApparatusRecipe r : apparatusRecipes ){
             Path path1 = getApparatusPath(path, r);
             try {
-                IDataProvider.save(GSON, cache, r.serialize(), path1);
+                DataProvider.save(GSON, cache, r.serialize(), path1);
                 System.out.println(r);
             } catch (IOException ioexception) {
                 LOGGER.error("Couldn't save apparatus {}", path1, ioexception);
