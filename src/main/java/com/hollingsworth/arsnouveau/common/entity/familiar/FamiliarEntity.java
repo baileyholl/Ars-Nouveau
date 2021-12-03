@@ -7,23 +7,23 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.goal.familiar.FamOwnerHurtByTargetGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.familiar.FamOwnerHurtTargetGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.familiar.FamiliarFollowGoal;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.network.NetworkHooks;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.controller.AnimationController;
@@ -33,12 +33,6 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 import java.util.*;
-
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.PathfinderMob;
 
 public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamiliar, IDispellable {
 
@@ -52,11 +46,6 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
         super(p_i48575_1_, p_i48575_2_);
         if(!level.isClientSide)
             FAMILIAR_SET.add(this);
-    }
-
-    @Override
-    public void remove() {
-        super.remove();
     }
 
     @Override
@@ -82,12 +71,12 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
     public void tick() {
         super.tick();
         if(this.terminatedFamiliar){
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
             FamiliarEntity.FAMILIAR_SET.remove(this);
         }
         if(level.getGameTime() % 20 == 0 && !level.isClientSide){
             if(getOwnerID() == null || ((ServerLevel)level).getEntity(getOwnerID()) == null || terminatedFamiliar){
-                this.remove();
+                this.remove(RemovalReason.DISCARDED);
                 this.terminatedFamiliar = true;
                 FAMILIAR_SET.remove(this);
             }
@@ -195,16 +184,11 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
     @Override
     public boolean onDispel(@Nullable LivingEntity caster) {
         if(!level.isClientSide && getOwner() != null && getOwner().equals(caster)){
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
             return true;
         }
         return false;
-    }
-
-    @Override
-    public void remove(boolean keepData) {
-        super.remove(keepData);
     }
 
     @Override

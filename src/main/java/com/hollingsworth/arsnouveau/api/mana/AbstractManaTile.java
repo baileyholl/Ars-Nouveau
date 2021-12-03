@@ -1,30 +1,28 @@
 package com.hollingsworth.arsnouveau.api.mana;
 
-import net.minecraft.world.level.block.state.BlockState;
+import com.hollingsworth.arsnouveau.common.block.tile.AgronomicSourcelinkTile;
+import com.hollingsworth.arsnouveau.common.block.tile.ModdedTile;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-
-import javax.annotation.Nullable;
+import net.minecraft.world.level.block.state.BlockState;
 
 import static com.hollingsworth.arsnouveau.api.NbtTags.MANA_TAG;
 import static com.hollingsworth.arsnouveau.api.NbtTags.MAX_MANA_TAG;
 
-public abstract class AbstractManaTile extends BlockEntity implements IManaTile, TickableBlockEntity {
+public abstract class AbstractManaTile extends ModdedTile implements IManaTile {
     private int mana = 0;
     private int maxMana = 0;
-    public AbstractManaTile(BlockEntityType<?> tileEntityTypeIn) {
-        super(tileEntityTypeIn);
+
+    public AbstractManaTile(BlockEntityType<?> manaTile, BlockPos pos, BlockState state) {
+        super(manaTile, pos, state);
     }
 
     @Override
-    public void load(BlockState state, CompoundTag tag) {
+    public void load(CompoundTag tag) {
         mana = tag.getInt(MANA_TAG);
         maxMana = tag.getInt(MAX_MANA_TAG);
-        super.load(state, tag);
+        super.load(tag);
     }
 
     @Override
@@ -107,23 +105,6 @@ public abstract class AbstractManaTile extends BlockEntity implements IManaTile,
 
     public int getTransferRate(IManaTile from, IManaTile to, int fromTransferRate){
         return Math.min(Math.min(fromTransferRate, from.getCurrentMana()), to.getMaxMana() - to.getCurrentMana());
-    }
-
-    @Override
-    @Nullable
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 3, this.getUpdateTag());
-    }
-
-    @Override
-    public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
-    }
-
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
-        handleUpdateTag(level.getBlockState(worldPosition),pkt.getTag());
     }
 }
 

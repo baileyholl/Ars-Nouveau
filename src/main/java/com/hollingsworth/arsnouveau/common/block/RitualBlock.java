@@ -19,12 +19,11 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
-public class RitualBlock extends ModBlock{
+public class RitualBlock extends TickableModBlock {
     public RitualBlock(String registryName) {
         super(defaultProperties().noOcclusion().lightLevel((b) -> b.getValue(LIT) ? 15 : 0), registryName);
     }

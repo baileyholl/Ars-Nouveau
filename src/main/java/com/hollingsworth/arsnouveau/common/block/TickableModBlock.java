@@ -8,14 +8,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Material;
 
-public class ModBlock extends Block {
+public abstract class TickableModBlock extends ModBlock implements ITickableBlock{
 
-    public ModBlock(Properties properties, String registry) {
-        super(properties);
-        setRegistryName(registry);
+    public TickableModBlock(Properties properties, String registry) {
+        super(properties, registry);
     }
 
-    public ModBlock(String registryName){
+    public TickableModBlock(String registryName){
         this(defaultProperties(), registryName);
     }
 

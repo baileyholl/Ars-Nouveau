@@ -43,19 +43,19 @@ public class WardBlock extends ModBlock {
     }
 
 
-    @Deprecated
-    public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        if(context.getEntity() == null)
-            return state.getShape(worldIn, pos);
-
-        if(context.getEntity().level.isClientSide)
-            return state.getShape(worldIn, pos);
-
-        if(!(context.getEntity() instanceof Player))
-            return Shapes.block().move(0, 1, 0);
-
-        return Shapes.block();
-    }
+//    @Deprecated
+//    public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+//        if(context.getEntity() == null)
+//            return state.getShape(worldIn, pos);
+//
+//        if(context.getEntity().level.isClientSide)
+//            return state.getShape(worldIn, pos);
+//
+//        if(!(context.getEntity() instanceof Player))
+//            return Shapes.block().move(0, 1, 0);
+//
+//        return Shapes.block();
+//    }
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         if (entity != null) {
@@ -77,17 +77,4 @@ public class WardBlock extends ModBlock {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(BlockStateProperties.FACING);
     }
-//
-//    @Override
-//    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-//        builder.add( FACING);
-//    }
-//
-//    public BlockState getStateForPlacement(BlockItemUseContext context) {
-//        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().rotateY());
-//    }
-//
-//    public BlockState rotate(BlockState state, Rotation rot) {
-//        return state.with(FACING, rot.rotate(state.get(FACING)));
-//    }
 }

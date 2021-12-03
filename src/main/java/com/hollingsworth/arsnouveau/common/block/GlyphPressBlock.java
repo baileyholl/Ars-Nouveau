@@ -16,21 +16,18 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
-
-public class GlyphPressBlock extends ModBlock{
+public class GlyphPressBlock extends TickableModBlock {
     public static final Property<Integer> stage = IntegerProperty.create("stage", 1, 31);
 
     public GlyphPressBlock() {
-        super(ModBlock.defaultProperties().noOcclusion(),"glyph_press");
+        super(TickableModBlock.defaultProperties().noOcclusion(),"glyph_press");
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new GlyphPressTile(pos, state);
     }
 
     @Override
@@ -45,22 +42,22 @@ public class GlyphPressBlock extends ModBlock{
                 world.addFreshEntity(item);
                 tile.baseMaterial = ItemStack.EMPTY;
             }
-            else if (!player.inventory.getSelected().isEmpty()) {
+            else if (!player.getInventory().getSelected().isEmpty()) {
                 if(player.getItemInHand(handIn).getItem() == Items.CLAY_BALL || player.getItemInHand(handIn).getItem() == ItemsRegistry.magicClay ||
                         player.getItemInHand(handIn).getItem() == ItemsRegistry.marvelousClay || player.getItemInHand(handIn).getItem() == ItemsRegistry.mythicalClay) {
                     if(tile.baseMaterial != null && !tile.baseMaterial.isEmpty()){
                         ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.baseMaterial);
                         world.addFreshEntity(item);
                     }
-                    tile.baseMaterial = player.inventory.removeItem(player.inventory.selected, 1);
+                    tile.baseMaterial = player.getInventory().removeItem(player.getInventory().selected, 1);
                 }else if(tile.baseMaterial != null && !tile.baseMaterial.isEmpty()){
                     if(tile.reagentItem != null && !tile.reagentItem.isEmpty()){
                         ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.reagentItem);
                         world.addFreshEntity(item);
                     }
 
-                    tile.reagentItem = player.inventory.removeItem(player.inventory.selected, 1);
-                    if(!tile.craft(player) && player.inventory.add(tile.reagentItem)) {
+                    tile.reagentItem = player.getInventory().removeItem(player.getInventory().selected, 1);
+                    if(!tile.craft(player) && player.getInventory().add(tile.reagentItem)) {
                         tile.reagentItem = ItemStack.EMPTY;
                     }
                 }
@@ -85,12 +82,6 @@ public class GlyphPressBlock extends ModBlock{
             }
 
         }
-    }
-
-    @Nullable
-    @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new GlyphPressTile();
     }
 
     @Override

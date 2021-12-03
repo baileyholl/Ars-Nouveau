@@ -8,23 +8,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.BlockGetter;
 
-import javax.annotation.Nullable;
-
-public class PhantomBlock extends ModBlock {
+public class PhantomBlock extends TickableModBlock {
 
     public PhantomBlock() {
         super(defaultProperties().lightLevel(bs -> 7).noOcclusion().dynamicShape(), "phantom_block");
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Nullable
-    @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new PhantomBlockTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new PhantomBlockTile(pos, state);
     }
 
     @Override

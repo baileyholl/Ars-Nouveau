@@ -12,22 +12,16 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 
-public class CrystallizerBlock extends ModBlock{
+public class CrystallizerBlock extends TickableModBlock {
     public CrystallizerBlock() {
         super(defaultProperties().noOcclusion(), LibBlockNames.CRYSTALLIZER);
     }
 
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new CrystallizerTile();
-    }
-
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new CrystallizerTile(pos, state);
     }
 
     @Override

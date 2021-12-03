@@ -11,23 +11,15 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.level.BlockGetter;
 
-import javax.annotation.Nullable;
-
-public class ArcaneRelaySplitter extends ModBlock{
+public class ArcaneRelaySplitter extends TickableModBlock {
 
     public ArcaneRelaySplitter() {
         super(defaultProperties().lightLevel((state) -> 8).noOcclusion(), LibBlockNames.ARCANE_RELAY_SPLITTER);
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Nullable
-    @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new ArcaneRelaySplitterTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new ArcaneRelaySplitterTile(pos, state);
     }
 
     @Override

@@ -1,53 +1,36 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs;
 
-import com.hollingsworth.arsnouveau.common.entity.pathfinding.*;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.ChunkCache;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.PathPointExtended;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.PathResult;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.PathingOptions;
 import com.hollingsworth.arsnouveau.common.util.Log;
 import net.minecraft.block.*;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.pathfinder.Node;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.Half;
-import net.minecraft.core.Direction;
+import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.core.Vec3i;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.Level;
 
 import java.lang.ref.WeakReference;
 import java.util.*;
 import java.util.concurrent.Callable;
 
 import static com.hollingsworth.arsnouveau.common.entity.pathfinding.PathingConstants.*;
-
-import net.minecraft.world.level.block.AbstractBannerBlock;
-import net.minecraft.world.level.block.BambooBlock;
-import net.minecraft.world.level.block.BaseRailBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.CampfireBlock;
-import net.minecraft.world.level.block.DoorBlock;
-import net.minecraft.world.level.block.FenceBlock;
-import net.minecraft.world.level.block.FenceGateBlock;
-import net.minecraft.world.level.block.FireBlock;
-import net.minecraft.world.level.block.LadderBlock;
-import net.minecraft.world.level.block.MagmaBlock;
-import net.minecraft.world.level.block.PressurePlateBlock;
-import net.minecraft.world.level.block.SignBlock;
-import net.minecraft.world.level.block.SnowLayerBlock;
-import net.minecraft.world.level.block.StairBlock;
-import net.minecraft.world.level.block.TrapDoorBlock;
-import net.minecraft.world.level.block.VineBlock;
-import net.minecraft.world.level.block.WallBlock;
-import net.minecraft.world.level.block.WoolCarpetBlock;
-import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Abstract class for Jobs that run in the multithreaded path finder.

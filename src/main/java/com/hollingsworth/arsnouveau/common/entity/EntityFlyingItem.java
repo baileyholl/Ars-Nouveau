@@ -6,18 +6,18 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.network.FMLPlayMessages;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PlayMessages;
 import software.bernie.geckolib3.core.easing.EasingManager;
 import software.bernie.geckolib3.core.easing.EasingType;
 
@@ -96,14 +96,14 @@ public class EntityFlyingItem extends EntityFollowProjectile {
 
 
         if(age > 400)
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
 
 
         Vec3 vec3d2 = this.getDeltaMovement();
         BlockPos start = entityData.get(from);
         BlockPos end = entityData.get(to);
         if(BlockUtil.distanceFrom(this.blockPosition(), end) < 1 || this.age > 1000 || BlockUtil.distanceFrom(this.blockPosition(), end) > 16){
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
             if(level.isClientSide && entityData.get(SPAWN_TOUCH)) {
                 ParticleUtil.spawnTouch((ClientLevel) level, end, new ParticleColor(this.entityData.get(RED),this.entityData.get(GREEN),this.entityData.get(BLUE)));
             }
@@ -244,7 +244,7 @@ public class EntityFlyingItem extends EntityFollowProjectile {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public EntityFlyingItem(FMLPlayMessages.SpawnEntity packet, Level world){
+    public EntityFlyingItem(PlayMessages.SpawnEntity packet, Level world){
         super(ModEntities.ENTITY_FLYING_ITEM, world);
     }
 }

@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.world.entity.AgableMob;
+import net.minecraft.world.entity.AgeableMob;
 import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -30,9 +31,9 @@ public class RitualOvergrowth extends AbstractRitual {
                 return;
 
             if(isAnimalGrowth()){
-                List<AgableMob> animals = getWorld().getEntitiesOfClass(AgableMob.class, new AABB(getPos()).inflate(5));
+                List<AgeableMob> animals = getWorld().getEntitiesOfClass(AgeableMob.class, new AABB(getPos()).inflate(5));
                 boolean didWorkOnce = false;
-                for(AgableMob a : animals){
+                for(AgeableMob a : animals){
                     if(a.isBaby()){
                         a.ageUp(500, true);
                         didWorkOnce = true;

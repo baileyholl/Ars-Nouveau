@@ -7,18 +7,18 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.projectile.Arrow;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.network.FMLPlayMessages;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PlayMessages;
 
 public class EntityFollowProjectile extends Arrow {
     public static final EntityDataAccessor<BlockPos> to = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.BLOCK_POS);
@@ -96,7 +96,7 @@ public class EntityFollowProjectile extends Arrow {
     public void tick() {
         this.age++;
         if(age > maxAge) {
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
             return;
         }
         Vec3 vec3d2 = this.getDeltaMovement();
@@ -105,7 +105,7 @@ public class EntityFollowProjectile extends Arrow {
             if(level.isClientSide && entityData.get(SPAWN_TOUCH)) {
                 ParticleUtil.spawnTouch((ClientLevel) level, this.getOnPos(), new ParticleColor(this.entityData.get(RED),this.entityData.get(GREEN),this.entityData.get(BLUE)));
             }
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
             return;
         }
         double posX = getX();
@@ -193,7 +193,7 @@ public class EntityFollowProjectile extends Arrow {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public EntityFollowProjectile(FMLPlayMessages.SpawnEntity packet, Level world){
+    public EntityFollowProjectile(PlayMessages.SpawnEntity packet, Level world){
         super(ModEntities.ENTITY_FOLLOW_PROJ, world);
     }
 

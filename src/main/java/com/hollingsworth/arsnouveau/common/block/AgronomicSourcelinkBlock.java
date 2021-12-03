@@ -8,7 +8,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
@@ -16,7 +15,7 @@ import javax.annotation.Nullable;
 public class AgronomicSourcelinkBlock extends SourcelinkBlock {
 
     public AgronomicSourcelinkBlock() {
-        super(ModBlock.defaultProperties().noOcclusion(), LibBlockNames.MANA_CONDENSER);
+        super(TickableModBlock.defaultProperties().noOcclusion(), LibBlockNames.MANA_CONDENSER);
     }
 
     @Override
@@ -29,11 +28,9 @@ public class AgronomicSourcelinkBlock extends SourcelinkBlock {
         super.playerWillDestroy(worldIn, pos, state, player);
     }
 
-    @Nullable
+
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new AgronomicSourcelinkTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new AgronomicSourcelinkTile(pos, state);
     }
-
-
 }

@@ -195,7 +195,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         if(!(entity instanceof LivingEntity) )
             return;
         LivingEntity mob = (LivingEntity) entity;
-        if(mob.getHealth() <= 0 && !mob.removed && stats.hasBuff(AugmentFortune.INSTANCE)){
+        if(mob.getHealth() <= 0 && !mob.isRemoved() && stats.hasBuff(AugmentFortune.INSTANCE)){
             int looting = stats.getBuffCount(AugmentFortune.INSTANCE);
             LootContext.Builder lootContext = LootUtil.getLootingContext((ServerLevel)world,shooter, mob, looting, DamageSource.playerAttack(playerContext));
             ResourceLocation lootTable = mob.getLootTable();
@@ -218,7 +218,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         LivingEntity mob = (LivingEntity) entity;
 
 
-        if(mob.getHealth() <= 0 && !mob.removed && hasBuff(augments, AugmentFortune.class)){
+        if(mob.getHealth() <= 0 && !mob.isRemoved() && hasBuff(augments, AugmentFortune.class)){
             int looting = getBuffCount(augments, AugmentFortune.class);
             LootContext.Builder lootContext = LootUtil.getLootingContext((ServerLevel)world,shooter, mob, looting, DamageSource.playerAttack((Player) shooter));
             ResourceLocation lootTable = mob.getLootTable();

@@ -3,32 +3,30 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Arrow;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.util.math.*;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.network.FMLPlayMessages;
-import net.minecraftforge.fml.network.NetworkHooks;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PlayMessages;
 
 public class EntitySpellArrow extends Arrow {
     public SpellResolver spellResolver;
@@ -69,7 +67,7 @@ public class EntitySpellArrow extends Arrow {
         boolean isNoClip = this.isNoPhysics();
         Vec3 vector3d = this.getDeltaMovement();
         if (this.xRotO == 0.0F && this.yRotO == 0.0F) {
-            float f = Mth.sqrt(getHorizontalDistanceSqr(vector3d));
+            float f = Mth.sqrt((float) vector3d.horizontalDistanceSqr());
             this.yRot = (float) (Mth.atan2(vector3d.x, vector3d.z) * (double) (180F / (float) Math.PI));
             this.xRot = (float) (Mth.atan2(vector3d.y, f) * (double) (180F / (float) Math.PI));
             this.yRotO = this.yRot;
@@ -97,7 +95,7 @@ public class EntitySpellArrow extends Arrow {
             vector3d3 = raytraceresult.getLocation();
         }
 
-        while (!this.removed) {
+        while (!this.isRemoved()) {
             EntityHitResult entityraytraceresult = this.findHitEntity(vector3d2, vector3d3);
             if (entityraytraceresult != null) {
                 raytraceresult = entityraytraceresult;
@@ -140,7 +138,7 @@ public class EntitySpellArrow extends Arrow {
         double d5 = this.getX() + d3;
         double d1 = this.getY() + d4;
         double d2 = this.getZ() + d0;
-        float f1 = Mth.sqrt(getHorizontalDistanceSqr(vector3d));
+        float f1 = Mth.sqrt((float) vector3d.horizontalDistanceSqr());
         if (isNoClip) {
             this.yRot = (float) (Mth.atan2(-d3, -d0) * (double) (180F / (float) Math.PI));
         } else {
@@ -195,7 +193,7 @@ public class EntitySpellArrow extends Arrow {
         this.pierceLeft--;
         if (this.pierceLeft < 0) {
             this.level.broadcastEntityEvent(this, (byte) 3);
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         }
     }
 
@@ -318,7 +316,7 @@ public class EntitySpellArrow extends Arrow {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public EntitySpellArrow(FMLPlayMessages.SpawnEntity packet, Level world) {
+    public EntitySpellArrow(PlayMessages.SpawnEntity packet, Level world) {
         super(ModEntities.ENTITY_SPELL_ARROW, world);
     }
 }

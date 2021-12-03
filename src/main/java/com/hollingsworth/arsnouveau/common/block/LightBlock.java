@@ -18,7 +18,7 @@ import java.util.Random;
 
 import static com.hollingsworth.arsnouveau.common.block.SconceBlock.LIGHT_LEVEL;
 
-public class LightBlock extends ModBlock {
+public class LightBlock extends TickableModBlock {
 
     protected static final VoxelShape SHAPE = Block.box(4.0D, 4.0D, 4.0D, 12.0D, 12.0D, 12.0D);
 
@@ -26,15 +26,9 @@ public class LightBlock extends ModBlock {
         super(defaultProperties().lightLevel((bs)-> bs.getValue(LIGHT_LEVEL) == 0 ? 14 :  bs.getValue(LIGHT_LEVEL)).noCollission().noOcclusion().dynamicShape().strength(0f,0f), "light_block");
     }
 
-    @Nullable
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new LightTile();
-    }
-
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new LightTile(pos, state);
     }
 
     @Override

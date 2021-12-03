@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntTag;
@@ -19,6 +20,10 @@ public class PhantomBlockTile extends AnimatedTile implements TickableBlockEntit
     public ParticleColor color = ParticleUtil.defaultParticleColor();
     public PhantomBlockTile() {
         super(BlockRegistry.PHANTOM_TILE);
+    }
+
+    public PhantomBlockTile(BlockPos pos, BlockState state) {
+        super();
     }
 
     @Override

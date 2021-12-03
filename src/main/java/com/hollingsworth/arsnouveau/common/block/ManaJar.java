@@ -23,14 +23,12 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
 public class ManaJar extends ManaBlock {
 
     public static final Property<Integer> fill = IntegerProperty.create("fill", 0, 11);
 
     public ManaJar() {
-        super(ModBlock.defaultProperties().noOcclusion(),"mana_jar");
+        super(TickableModBlock.defaultProperties().noOcclusion(),"mana_jar");
     }
 
     public ManaJar(Properties properties, String registryName){
@@ -38,14 +36,8 @@ public class ManaJar extends ManaBlock {
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Nullable
-    @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new ManaJarTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new ManaJarTile(pos, state);
     }
 
     @Override

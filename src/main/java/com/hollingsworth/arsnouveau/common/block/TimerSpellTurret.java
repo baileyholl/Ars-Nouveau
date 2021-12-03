@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.block.tile.TimerSpellTurretTile;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
@@ -36,11 +37,11 @@ public class TimerSpellTurret extends BasicSpellTurret{
         this(defaultProperties().noOcclusion(), LibBlockNames.TIMER_SPELL_TURRET);
     }
 
-    @Nullable
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new TimerSpellTurretTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new TimerSpellTurretTile(pos, state);
     }
+
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {

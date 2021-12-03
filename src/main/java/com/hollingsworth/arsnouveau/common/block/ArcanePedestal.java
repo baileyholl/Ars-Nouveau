@@ -17,18 +17,12 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
-
-public class ArcanePedestal extends ModBlock{
+public class ArcanePedestal extends TickableModBlock {
 
     public ArcanePedestal() {
-        super(ModBlock.defaultProperties().noOcclusion(),LibBlockNames.ARCANE_PEDESTAL);
+        super(TickableModBlock.defaultProperties().noOcclusion(),LibBlockNames.ARCANE_PEDESTAL);
     }
 
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
 
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
@@ -42,13 +36,13 @@ public class ArcanePedestal extends ModBlock{
                 ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
                 world.addFreshEntity(item);
                 tile.stack = null;
-            } else if (!player.inventory.getSelected().isEmpty()) {
+            } else if (!player.getInventory().getSelected().isEmpty()) {
                 if(tile.stack != null){
                     ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
                     world.addFreshEntity(item);
                 }
 
-                tile.stack = player.inventory.removeItem(player.inventory.selected, 1);
+                tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);
 
             }
             world.sendBlockUpdated(pos, state, state, 2);
@@ -69,9 +63,8 @@ public class ArcanePedestal extends ModBlock{
         return Block.box(1D, 0.0D, 1.0D, 15, 16, 15);
     }
 
-    @Nullable
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new ArcanePedestalTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new ArcanePedestalTile(pos, state);
     }
 }

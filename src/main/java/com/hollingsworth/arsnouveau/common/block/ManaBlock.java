@@ -14,9 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.Level;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
-public abstract class ManaBlock extends ModBlock{
+public abstract class ManaBlock extends TickableModBlock {
     public ManaBlock(String registryName) {
         super(registryName);
     }

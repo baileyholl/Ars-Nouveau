@@ -8,9 +8,7 @@ import net.minecraft.server.level.ServerLevel;
 
 import java.util.Random;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
-public class SourcelinkBlock extends ModBlock{
+public abstract class SourcelinkBlock extends TickableModBlock {
     public SourcelinkBlock(Properties properties, String registry) {
         super(properties, registry);
     }
@@ -34,12 +32,8 @@ public class SourcelinkBlock extends ModBlock{
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Override
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.ENTITYBLOCK_ANIMATED;
     }
+
 }

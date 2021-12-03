@@ -24,9 +24,7 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 import java.util.List;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
-public class PotionJar extends ModBlock{
+public class PotionJar extends TickableModBlock {
     public PotionJar(Properties properties, String registry) {
         super(properties, registry);
     }
@@ -93,10 +91,6 @@ public class PotionJar extends ModBlock{
         return super.use(state, worldIn, pos, player, handIn, hit);
     }
 
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
 
     @Override
     public RenderShape getRenderShape(BlockState p_149645_1_) {
@@ -106,10 +100,9 @@ public class PotionJar extends ModBlock{
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> builder) { builder.add(ManaJar.fill); }
 
-    @Nullable
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new PotionJarTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new PotionJarTile(pos, state);
     }
 
     @Override

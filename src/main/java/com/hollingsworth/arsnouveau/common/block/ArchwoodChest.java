@@ -1,8 +1,10 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.ArchwoodChestTile;
+import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.block.*;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -24,10 +26,9 @@ public class ArchwoodChest extends ChestBlock {
         super(BlockBehaviour.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD), () -> BlockRegistry.ARCHWOOD_CHEST_TILE);
     }
 
-    @Nullable
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new ArchwoodChestTile(BlockRegistry.ARCHWOOD_CHEST_TILE);
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new ArchwoodChestTile(pos, state);
     }
 
 

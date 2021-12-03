@@ -29,10 +29,6 @@ public class ModdedTile extends BlockEntity {
         return this.save(new CompoundTag());
     }
 
-    public void tick(Level p_155014_, BlockPos p_155015_, BlockState p_155016_, ModdedTile p_155017_){
-
-    }
-
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);

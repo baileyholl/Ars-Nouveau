@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
@@ -17,6 +18,9 @@ public class RelayDepositTile extends ArcaneRelayTile{
 
     public RelayDepositTile(){
         super(BlockRegistry.RELAY_DEPOSIT_TILE);
+    }
+
+    public RelayDepositTile(BlockPos pos, BlockState state) {
     }
 
     @Override

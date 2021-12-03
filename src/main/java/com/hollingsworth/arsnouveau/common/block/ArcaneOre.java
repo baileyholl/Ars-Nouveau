@@ -1,22 +1,31 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.OreBlock;
-import net.minecraft.util.Mth;
-import net.minecraftforge.common.ToolType;
-
-import javax.annotation.Nonnull;
-import java.util.Random;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 
 
 public class ArcaneOre extends OreBlock {
     public ArcaneOre() {
-        super(ModBlock.defaultProperties().strength(3.0F, 3.0F).harvestTool(ToolType.PICKAXE).requiresCorrectToolForDrops());
+        super(TickableModBlock.defaultProperties().strength(3.0F, 3.0F));
         setRegistryName(LibBlockNames.ARCANE_ORE);
     }
 
-    @Override
-    protected int xpOnDrop(@Nonnull Random rand) {
-        return Mth.nextInt(rand, 2, 5); // same as lapis or redstone
+    public ArcaneOre(BlockBehaviour.Properties props, UniformInt uniformInt) {
+        super(props, uniformInt);
     }
+
+    @Override
+    public int getExpDrop(BlockState state, LevelReader reader, BlockPos pos, int fortune, int silktouch) {
+        return super.getExpDrop(state, reader, pos, fortune, silktouch);
+    }
+
+//    @Override
+//    protected int xpOnDrop(@Nonnull Random rand) {
+//        return Mth.nextInt(rand, 2, 5); // same as lapis or redstone
+//    }
 }

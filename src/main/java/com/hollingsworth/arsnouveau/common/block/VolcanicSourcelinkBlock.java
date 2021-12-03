@@ -1,7 +1,9 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.block.tile.VolcanicSourcelinkTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.BlockGetter;
@@ -13,7 +15,8 @@ public class VolcanicSourcelinkBlock extends SourcelinkBlock {
     }
 
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new VolcanicSourcelinkTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new VolcanicSourcelinkTile(pos, state);
     }
+
 }

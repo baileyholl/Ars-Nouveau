@@ -36,6 +36,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
     public UUID uuid;
     public ParticleColor color = ParticleUtil.defaultParticleColor();
     public Entity touchedEntity;
+
     public RuneTile() {
         super(BlockRegistry.RUNE_TILE);
         isCharged = true;
@@ -96,7 +97,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
     }
 
     @Override
-    public void load( BlockState state, CompoundTag tag) {
+    public void load(CompoundTag tag) {
         this.spell = Spell.deserialize(tag.getString("spell"));
         this.isCharged = tag.getBoolean("charged");
         this.isTemporary = tag.getBoolean("temp");
@@ -104,7 +105,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
         if(tag.contains("uuid"))
             this.uuid = tag.getUUID("uuid");
         this.color = ParticleColor.IntWrapper.deserialize(tag.getString("color")).toParticleColor();
-        super.load(state, tag);
+        super.load(tag);
     }
 
     @Override

@@ -11,9 +11,7 @@ import javax.annotation.Nullable;
 
 import static com.hollingsworth.arsnouveau.common.block.tile.SummoningTile.CONVERTED;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
-public class SummonBlock extends ModBlock{
+public abstract class SummonBlock extends TickableModBlock {
     public SummonBlock(Properties properties, String registry) {
         super(properties, registry);
     }
@@ -46,8 +44,5 @@ public class SummonBlock extends ModBlock{
         return PushReaction.BLOCK;
     }
 
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
+
 }

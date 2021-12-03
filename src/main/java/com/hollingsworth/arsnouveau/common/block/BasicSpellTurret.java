@@ -12,47 +12,32 @@ import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import net.minecraft.block.*;
-import net.minecraft.core.BlockSource;
-import net.minecraft.core.Position;
-import net.minecraft.core.PositionImpl;
-import net.minecraft.core.BlockSourceImpl;
+import net.minecraft.core.*;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.util.*;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nullable;
 import java.util.Random;
 
-import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.DirectionalBlock;
-import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-import net.minecraft.world.level.block.state.BlockState;
-
-public class BasicSpellTurret extends ModBlock{
+public class BasicSpellTurret extends TickableModBlock {
 
     public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
@@ -120,7 +105,7 @@ public class BasicSpellTurret extends ModBlock{
         boolean neighborSignal = worldIn.hasNeighborSignal(pos) || worldIn.hasNeighborSignal(pos.above());
         boolean isTriggered = state.getValue(TRIGGERED);
         if (neighborSignal && !isTriggered) {
-            worldIn.getBlockTicks().scheduleTick(pos, this,4);
+            worldIn.getBlockTicks().schedule(pos, this,4);
             worldIn.setBlock(pos, state.setValue(TRIGGERED, Boolean.TRUE), 4);
 
         } else if (!neighborSignal && isTriggered) {
@@ -147,11 +132,6 @@ public class BasicSpellTurret extends ModBlock{
         double d1 = coords.y() + 0.5D * (double)direction.getStepY();
         double d2 = coords.z() + 0.5D * (double)direction.getStepZ();
         return new PositionImpl(d0, d1, d2);
-    }
-
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
     }
 
     @Override
@@ -201,9 +181,8 @@ public class BasicSpellTurret extends ModBlock{
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
-    @Nullable
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new BasicSpellTurretTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new BasicSpellTurretTile(pos, state);
     }
 }

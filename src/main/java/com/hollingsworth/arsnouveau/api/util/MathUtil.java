@@ -3,15 +3,13 @@ package com.hollingsworth.arsnouveau.api.util;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.util.math.*;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
 import java.util.function.Predicate;
-
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.EntityHitResult;
 
 public class MathUtil {
 // https://github.com/Mithion/ArsMagica2/tree/6d6b68002363b2569c2f2300c8f9146ad800bbc6#readme

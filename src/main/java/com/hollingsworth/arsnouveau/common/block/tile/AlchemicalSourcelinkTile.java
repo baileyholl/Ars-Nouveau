@@ -6,18 +6,16 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
 public class AlchemicalSourcelinkTile extends SourcelinkTile{
-    public AlchemicalSourcelinkTile(BlockEntityType<?> tileEntityTypeIn) {
-        super(tileEntityTypeIn);
-    }
 
-    public AlchemicalSourcelinkTile(){
-        super(BlockRegistry.ALCHEMICAL_TILE);
+    public AlchemicalSourcelinkTile(BlockPos pos, BlockState state){
+        super(BlockRegistry.ALCHEMICAL_TILE, pos, state);
     }
 
     @Override

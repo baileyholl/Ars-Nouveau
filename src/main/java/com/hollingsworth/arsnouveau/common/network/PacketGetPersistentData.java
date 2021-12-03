@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.network;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 

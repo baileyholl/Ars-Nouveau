@@ -2,13 +2,9 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.VitalicSourcelinkTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.BlockGetter;
-
-import javax.annotation.Nullable;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class VitalicSourcelinkBlock extends SourcelinkBlock{
     public VitalicSourcelinkBlock(Properties properties, String registry) {
@@ -20,12 +16,12 @@ public class VitalicSourcelinkBlock extends SourcelinkBlock{
     }
 
     public VitalicSourcelinkBlock(){
-        super(ModBlock.defaultProperties().noOcclusion(), LibBlockNames.VITALIC_SOURCELINK);
+        super(TickableModBlock.defaultProperties().noOcclusion(), LibBlockNames.VITALIC_SOURCELINK);
     }
 
-    @Nullable
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new VitalicSourcelinkTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new VitalicSourcelinkTile(pos, state);
     }
+
 }

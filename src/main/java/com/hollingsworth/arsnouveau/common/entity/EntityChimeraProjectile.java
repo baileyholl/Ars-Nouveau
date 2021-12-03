@@ -1,19 +1,19 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.network.FMLPlayMessages;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PlayMessages;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.controller.AnimationController;
@@ -47,7 +47,7 @@ public class EntityChimeraProjectile extends AbstractArrow implements IAnimatabl
 //        if(groundMax == 0)
 //            groundMax = 60 + random.nextInt(60);
         if(!level.isClientSide && this.inGroundTime >= 1){
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         }
     }
 
@@ -100,15 +100,15 @@ public class EntityChimeraProjectile extends AbstractArrow implements IAnimatabl
             }
 
             this.playSound(this.getDefaultHitGroundSoundEvent(), 1.0F, 1.2F / (this.random.nextFloat() * 0.2F + 0.9F));
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
 
         } else {
             entity.setRemainingFireTicks(k);
             this.setDeltaMovement(this.getDeltaMovement().scale(-0.1D));
-            this.yRot += 180.0F;
+            this.setYRot(this.getYRot() + 180f);
             this.yRotO += 180.0F;
             if (!this.level.isClientSide && this.getDeltaMovement().lengthSqr() < 1.0E-7D) {
-                this.remove();
+                this.remove(RemovalReason.DISCARDED);
             }
         }
     }
@@ -163,7 +163,7 @@ public class EntityChimeraProjectile extends AbstractArrow implements IAnimatabl
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public EntityChimeraProjectile(FMLPlayMessages.SpawnEntity packet, Level world) {
+    public EntityChimeraProjectile(PlayMessages.SpawnEntity packet, Level world) {
         super(ModEntities.ENTITY_CHIMERA_SPIKE, world);
     }
 }

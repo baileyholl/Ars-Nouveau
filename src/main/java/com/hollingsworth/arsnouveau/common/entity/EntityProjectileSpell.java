@@ -8,30 +8,28 @@ import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.util.math.*;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraftforge.fml.network.FMLPlayMessages;
-import net.minecraftforge.fml.network.NetworkHooks;
-
-import java.util.HashSet;
-import java.util.Set;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PlayMessages;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class EntityProjectileSpell extends ColoredProjectile {
 
@@ -71,7 +69,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
         Vec3 vector3d = this.getDeltaMovement();
 
         if(this.age > 60*20){
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
             return;
         }
 
@@ -184,7 +182,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
     {
         Vec3 vec3d = (new Vec3(x, y, z)).normalize().add(this.random.nextGaussian() * (double)0.0075F * (double)inaccuracy, this.random.nextGaussian() * (double)0.0075F * (double)inaccuracy, this.random.nextGaussian() * (double)0.0075F * (double)inaccuracy).scale(velocity);
         this.setDeltaMovement(vec3d);
-        float f = Mth.sqrt(getHorizontalDistanceSqr(vec3d));
+        float f = Mth.sqrt((float) vec3d.horizontalDistanceSqr());
         this.yRot = (float)(Mth.atan2(vec3d.x, vec3d.z) * (double)(180F / (float)Math.PI));
         this.xRot = (float)(Mth.atan2(vec3d.y, f) * (double)(180F / (float)Math.PI));
         this.yRotO = this.yRot;
@@ -206,7 +204,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
         this.pierceLeft--;
         if(this.pierceLeft < 0){
             this.level.broadcastEntityEvent(this, (byte)3);
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         }
     }
 
@@ -222,7 +220,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
             }
         }
 
-        if (!level.isClientSide && result instanceof BlockHitResult  && !this.removed && !hitList.contains(((BlockHitResult) result).getBlockPos())) {
+        if (!level.isClientSide && result instanceof BlockHitResult  && !this.isRemoved() && !hitList.contains(((BlockHitResult) result).getBlockPos())) {
 
             BlockHitResult blockraytraceresult = (BlockHitResult)result;
             BlockState state = level.getBlockState(((BlockHitResult) result).getBlockPos());
@@ -249,7 +247,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
     }
 
 
-    public EntityProjectileSpell(FMLPlayMessages.SpawnEntity packet, Level world){
+    public EntityProjectileSpell(PlayMessages.SpawnEntity packet, Level world){
         super(ModEntities.SPELL_PROJ, world);
     }
 

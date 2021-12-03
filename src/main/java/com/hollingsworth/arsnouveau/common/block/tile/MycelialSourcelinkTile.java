@@ -12,6 +12,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.core.BlockPos;
 
@@ -24,6 +25,10 @@ public class MycelialSourcelinkTile extends SourcelinkTile{
 
     public MycelialSourcelinkTile(){
         super(BlockRegistry.MYCELIAL_TILE);
+    }
+
+    public MycelialSourcelinkTile(BlockPos pos, BlockState state) {
+        super();
     }
 
 

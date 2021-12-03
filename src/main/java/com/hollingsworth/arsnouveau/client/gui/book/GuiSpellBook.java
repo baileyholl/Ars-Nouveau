@@ -27,7 +27,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import vazkii.patchouli.api.PatchouliAPI;
+
 
 import java.util.ArrayList;
 import java.util.Collection;

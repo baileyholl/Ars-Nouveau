@@ -20,8 +20,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 
-import javax.annotation.Nullable;
-
 import java.util.Map;
 
 import net.minecraft.world.level.block.Block;
@@ -30,7 +28,7 @@ import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class SconceBlock extends ModBlock{
+public class SconceBlock extends TickableModBlock {
     private static final Map<Direction, VoxelShape> AABBS =
             Maps.newEnumMap(ImmutableMap.of(Direction.NORTH, Block.box(5D, 3.0D, 11.0D, 11D, 13.0D, 16.0D),
                     Direction.SOUTH, Block.box(5.0, 3.0D, 0.0D, 11D, 13.0D, 5.0D),
@@ -76,14 +74,9 @@ public class SconceBlock extends ModBlock{
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
         return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
 
-    @Nullable
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new SconceTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new SconceTile(pos, state);
     }
 }

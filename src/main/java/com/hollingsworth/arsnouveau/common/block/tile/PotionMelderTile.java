@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -40,6 +41,10 @@ public class PotionMelderTile extends BlockEntity implements IAnimatable, Tickab
     }
 
     AnimationFactory manager = new AnimationFactory(this);
+
+    public PotionMelderTile(BlockPos pos, BlockState state) {
+        super();
+    }
 
     @Override
     public void tick() {

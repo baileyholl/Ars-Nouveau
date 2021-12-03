@@ -20,7 +20,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.Random;
 
-public class ArcaneCoreRenderer extends BlockEntityRenderer<ArcaneCoreTile> {
+public class ArcaneCoreRenderer implements BlockEntityRenderer<ArcaneCoreTile> {
     public static final ResourceLocation texture = new ResourceLocation(ArsNouveau.MODID + ":textures/entity/arcane_core.png");
     public static final ArcaneCoreModel model = new ArcaneCoreModel();
 
@@ -53,7 +53,9 @@ public class ArcaneCoreRenderer extends BlockEntityRenderer<ArcaneCoreTile> {
 
     public static class ISRender extends BlockEntityWithoutLevelRenderer {
 
-        public ISRender(){ }
+        public ISRender(){
+            super();
+        }
 
         @Override
         public void renderByItem(ItemStack stack, ItemTransforms.TransformType p_239207_2_, PoseStack ms, MultiBufferSource buffers, int light, int overlay) {

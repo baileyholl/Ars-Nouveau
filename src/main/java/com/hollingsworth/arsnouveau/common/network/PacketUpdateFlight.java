@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -33,8 +33,8 @@ public class PacketUpdateFlight {
 
     public void handle(Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(()->{
-            ArsNouveau.proxy.getPlayer().abilities.mayfly = canFly;
-            ArsNouveau.proxy.getPlayer().abilities.flying = wasFlying;
+            ArsNouveau.proxy.getPlayer().getAbilities().mayfly = canFly;
+            ArsNouveau.proxy.getPlayer().getAbilities().flying = wasFlying;
         } );
         ctx.get().setPacketHandled(true);
     }

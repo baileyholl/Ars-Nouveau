@@ -2,9 +2,9 @@ package com.hollingsworth.arsnouveau.common.network;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.world.entity.Entity;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -61,8 +61,8 @@ public class PacketWarpPosition {
                     if(e == null)
                         return;
                     e.setPos(message.x, message.y, message.z);
-                    e.xRot = message.xRot;
-                    e.yRot = message.yRot;
+                    e.setXRot(message.xRot);
+                    e.setYRot(message.yRot);
                 }
             });
             ctx.get().setPacketHandled(true);

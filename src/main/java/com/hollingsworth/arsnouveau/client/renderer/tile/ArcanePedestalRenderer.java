@@ -5,13 +5,13 @@ import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 
-public class ArcanePedestalRenderer extends BlockEntityRenderer<ArcanePedestalTile> {
+public class ArcanePedestalRenderer implements BlockEntityRenderer<ArcanePedestalTile> {
 
     public ArcanePedestalRenderer(BlockEntityRenderDispatcher p_i226006_1_) {
         super(p_i226006_1_);

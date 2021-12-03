@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.common.block.ManaJar;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -43,6 +44,10 @@ public class PotionJarTile extends BlockEntity implements TickableBlockEntity, I
 
     public PotionJarTile() {
         super(BlockRegistry.POTION_JAR_TYPE);
+    }
+
+    public PotionJarTile(BlockPos pos, BlockState state) {
+        super();
     }
 
     @Override

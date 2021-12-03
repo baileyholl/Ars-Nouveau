@@ -7,6 +7,7 @@ public interface ITooltipProvider {
     /**
      * A list of tool tips to render on the screen when looking at this target.
      */
+    //TODO: Change signature to include list param
     List<String> getTooltip();
 
 }

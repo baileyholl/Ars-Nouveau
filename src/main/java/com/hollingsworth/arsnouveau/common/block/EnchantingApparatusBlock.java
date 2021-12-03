@@ -4,35 +4,33 @@ import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
-
-public class EnchantingApparatusBlock extends ModBlock{
+public class EnchantingApparatusBlock extends TickableModBlock {
 
     public EnchantingApparatusBlock() {
-        super(ModBlock.defaultProperties().noOcclusion(),"enchanting_apparatus");
+        super(TickableModBlock.defaultProperties().noOcclusion(),"enchanting_apparatus");
     }
 
 
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new EnchantingApparatusTile(pos, state);
     }
 
     @Override
@@ -61,7 +59,7 @@ public class EnchantingApparatusBlock extends ModBlock{
                 PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.apparatus.nomana"));
             }else{
                 if(tile.attemptCraft(player.getMainHandItem(), player)){
-                    tile.catalystItem = player.inventory.removeItem(player.inventory.selected, 1);
+                    tile.catalystItem = player.getInventory().removeItem(player.getInventory().selected, 1);
                 }
             }
         }else{
@@ -69,7 +67,7 @@ public class EnchantingApparatusBlock extends ModBlock{
             world.addFreshEntity(item);
             tile.catalystItem = ItemStack.EMPTY;
             if(tile.attemptCraft(player.getMainHandItem(), player)){
-                tile.catalystItem = player.inventory.removeItem(player.inventory.selected, 1);
+                tile.catalystItem = player.getInventory().removeItem(player.getInventory().selected, 1);
             }
         }
 
@@ -88,12 +86,6 @@ public class EnchantingApparatusBlock extends ModBlock{
         if(worldIn.getBlockEntity(pos) instanceof EnchantingApparatusTile && ((EnchantingApparatusTile) worldIn.getBlockEntity(pos)).catalystItem != null){
             worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), ((EnchantingApparatusTile) worldIn.getBlockEntity(pos)).catalystItem));
         }
-    }
-
-    @Nullable
-    @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new EnchantingApparatusTile();
     }
 
     @Override

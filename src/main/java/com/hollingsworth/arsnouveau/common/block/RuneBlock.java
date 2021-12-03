@@ -33,7 +33,7 @@ import net.minecraft.server.level.ServerLevel;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class RuneBlock extends ModBlock{
+public class RuneBlock extends TickableModBlock {
 
     public static VoxelShape shape =  Block.box(0.0D, 0.0D, 0.0D, 16D, 0.5D, 16D);
     public RuneBlock() {
@@ -101,18 +101,13 @@ public class RuneBlock extends ModBlock{
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Override
     public RenderShape getRenderShape(BlockState p_149645_1_) {
         return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new RuneTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new RuneTile(pos, state);
     }
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;

@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.mana.SourcelinkEventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.block.ITickable;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -24,14 +25,14 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SourcelinkTile extends AbstractManaTile implements IAnimatable {
+public class SourcelinkTile extends AbstractManaTile implements IAnimatable, ITickable {
 
     int progress;
     public boolean isDisabled = false;
     public boolean registered = false;
 
-    public SourcelinkTile(BlockEntityType<?> tileEntityTypeIn) {
-        super(tileEntityTypeIn);
+    public SourcelinkTile(BlockEntityType<?> sourceLinkTile, BlockPos pos, BlockState state) {
+        super(sourceLinkTile, pos, state);
     }
 
     @Override
@@ -98,8 +99,8 @@ public class SourcelinkTile extends AbstractManaTile implements IAnimatable {
     }
 
     @Override
-    public void load(BlockState state, CompoundTag tag) {
-        super.load(state, tag);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         progress = tag.getInt("progress");
         isDisabled = tag.getBoolean("disabled");
     }

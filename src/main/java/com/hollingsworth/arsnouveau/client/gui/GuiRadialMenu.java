@@ -26,6 +26,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.MovementInputUpdateEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -64,11 +65,11 @@ public class GuiRadialMenu extends Screen {
         }
     }
     @SubscribeEvent
-    public static void updateInputEvent(InputUpdateEvent event) {
+    public static void updateInputEvent(MovementInputUpdateEvent event) {
         if (Minecraft.getInstance().screen instanceof GuiRadialMenu) {
 
             Options settings = Minecraft.getInstance().options;
-            Input eInput = event.getMovementInput();
+            Input eInput = event.getInput();
             eInput.up = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyUp.getKey().getValue());
             eInput.down = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyDown.getKey().getValue());
             eInput.left = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyLeft.getKey().getValue());

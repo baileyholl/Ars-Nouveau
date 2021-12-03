@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.IntangibleAirTile;
+import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
@@ -32,13 +33,8 @@ public class IntangibleAirBlock extends Block implements LiquidBlockContainer {
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new IntangibleAirTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new IntangibleAirTile(pos, state);
     }
 
     @Override

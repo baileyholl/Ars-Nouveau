@@ -34,7 +34,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class PortalBlock extends ModBlock{
+public class PortalBlock extends TickableModBlock {
     protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 14.0D, 12.0D, 14.0D);
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return SHAPE;
@@ -240,7 +240,7 @@ public class PortalBlock extends ModBlock{
         }
 
         public boolean isPortalFrame(LevelAccessor world, BlockPos pos){
-            return world.getBlockState(pos).getBlock().is(Recipes.DECORATIVE_AN);
+            return world.getBlockState(pos).getBlock().in(Recipes.DECORATIVE_AN);
         }
 
         public int getHeight() {

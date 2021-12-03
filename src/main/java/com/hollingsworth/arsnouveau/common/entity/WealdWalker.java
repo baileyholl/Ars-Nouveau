@@ -13,25 +13,30 @@ import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.wealdwalker.CastSpellGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.wealdwalker.SmashGoal;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import net.minecraft.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BoneMealItem;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.RangedAttackMob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BoneMealItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -45,20 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import net.minecraft.world.entity.AgableMob;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
-import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.monster.RangedAttackMob;
-
-public class WealdWalker extends AgableMob implements IAnimatable, IAnimationListener, RangedAttackMob, IWandable, ITooltipProvider {
+public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationListener, RangedAttackMob, IWandable, ITooltipProvider {
 
     public static final EntityDataAccessor<Boolean> SMASHING = SynchedEntityData.defineId(WealdWalker.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Boolean> CASTING = SynchedEntityData.defineId(WealdWalker.class, EntityDataSerializers.BOOLEAN);
@@ -69,7 +61,7 @@ public class WealdWalker extends AgableMob implements IAnimatable, IAnimationLis
     public Spell spell = Spell.EMPTY;
     public ParticleColor color = ParticleUtil.defaultParticleColor();
 
-    public WealdWalker(EntityType<? extends AgableMob> type, Level world) {
+    public WealdWalker(EntityType<? extends AgeableMob> type, Level world) {
         super(type, world);
     }
 
@@ -105,7 +97,7 @@ public class WealdWalker extends AgableMob implements IAnimatable, IAnimationLis
     }
 
     protected void usePlayerItem(Player p_175505_1_, ItemStack p_175505_2_) {
-        if (!p_175505_1_.abilities.instabuild) {
+        if (!p_175505_1_.getAbilities().instabuild) {
             p_175505_2_.shrink(1);
         }
     }
@@ -125,7 +117,7 @@ public class WealdWalker extends AgableMob implements IAnimatable, IAnimationLis
 
     @Nullable
     @Override
-    public AgableMob getBreedOffspring(ServerLevel p_241840_1_, AgableMob p_241840_2_) {
+    public AgeableMob getBreedOffspring(ServerLevel p_241840_1_, AgeableMob p_241840_2_) {
         return null;
     }
 
@@ -316,7 +308,7 @@ public class WealdWalker extends AgableMob implements IAnimatable, IAnimationLis
         EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(spell, this).withColors(color.toWrapper()));
         EntityProjectileSpell projectileSpell = new EntityProjectileSpell(level, resolver);
         projectileSpell.setColor(color.toWrapper());
-        projectileSpell.shoot(this, this.xRot, this.yRot, 0.0F, 1.0f, 0.8f);
+        projectileSpell.shoot(this, this.getXRot(), this.getYRot(), 0.0F, 1.0f, 0.8f);
         level.addFreshEntity(projectileSpell);
         this.castCooldown = 40;
     }

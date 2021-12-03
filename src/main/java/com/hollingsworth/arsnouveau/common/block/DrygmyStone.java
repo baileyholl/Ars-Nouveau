@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.DrygmyTile;
+import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
@@ -56,10 +57,9 @@ public class DrygmyStone extends SummonBlock{
     }
 
 
-    @Nullable
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new DrygmyTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new DrygmyTile(pos, state);
     }
 
     @Override
