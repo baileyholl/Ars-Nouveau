@@ -7,7 +7,9 @@ import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -31,16 +33,17 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BasicSpellTurretTile extends BlockEntity implements IPickupResponder, IPlaceBlockResponder, ITooltipProvider, IAnimatable, IAnimationListener {
+public class BasicSpellTurretTile extends ModdedTile implements IPickupResponder, IPlaceBlockResponder, ITooltipProvider, IAnimatable, IAnimationListener, ITickable {
+
     public @Nonnull Spell spell = Spell.EMPTY;
     boolean playRecoil;
     public ParticleColor.IntWrapper color = ParticleUtil.defaultParticleColor().toWrapper();
-    public BasicSpellTurretTile(BlockEntityType<?> p_i48289_1_) {
-        super(p_i48289_1_);
+    public BasicSpellTurretTile(BlockEntityType<?> p_i48289_1_, BlockPos pos, BlockState state) {
+        super(p_i48289_1_, pos, state);
     }
 
-    public BasicSpellTurretTile(){
-        super(BlockRegistry.BASIC_SPELL_TURRET_TILE);
+    public BasicSpellTurretTile(BlockPos pos, BlockState state){
+        super(BlockRegistry.BASIC_SPELL_TURRET_TILE, pos, state);
     }
 
     public int getManaCost(){
@@ -70,12 +73,12 @@ public class BasicSpellTurretTile extends BlockEntity implements IPickupResponde
     }
 
     @Override
-    public void load(BlockState state, CompoundTag tag) {
+    public void load(CompoundTag tag) {
         this.spell = Spell.deserialize(tag.getString("spell"));
         if(tag.contains("color")){
             this.color = ParticleColor.IntWrapper.deserialize(tag.getString("color"));
         }
-        super.load(state, tag);
+        super.load(tag);
     }
 
     @Override
@@ -83,23 +86,6 @@ public class BasicSpellTurretTile extends BlockEntity implements IPickupResponde
         List<String> list = new ArrayList<>();
         list.add(new TranslatableComponent("ars_nouveau.spell_turret.casting").getString() + spell.getDisplayString());
         return list;
-    }
-
-    @Override
-    public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
-    }
-
-    @Override
-    @Nullable
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 3, this.getUpdateTag());
-    }
-
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
-        handleUpdateTag(level.getBlockState(worldPosition), pkt.getTag());
     }
 
     public PlayState walkPredicate(AnimationEvent event) {

@@ -41,8 +41,8 @@ public class BookwyrmLecternTile extends SummoningTile implements IWandable {
     public boolean isOff;
     int taskIndex;
 
-    public BookwyrmLecternTile() {
-        super(BlockRegistry.BOOKWYRM_LECTERN_TILE);
+    public BookwyrmLecternTile(BlockPos pos, BlockState state) {
+        super(BlockRegistry.BOOKWYRM_LECTERN_TILE, pos, state);
         tier = 1;
     }
 
@@ -117,9 +117,9 @@ public class BookwyrmLecternTile extends SummoningTile implements IWandable {
             taskIndex += 1;
 
             // If the block above is not air
-            if (level.getBlockState(taskPos.above()).getMaterial() != Material.AIR && !isTreeBlock(level.getBlockState(taskPos).getBlock())){
+            if (level.getBlockState(taskPos.above()).getMaterial() != Material.AIR && !isTreeBlock(level.getBlockState(taskPos))){
                 for(int j = 1; j < 4; j++) {
-                    if (level.getBlockState(taskPos.above(i)).getMaterial() != Material.AIR || isTreeBlock(level.getBlockState(taskPos.above()).getBlock())){
+                    if (level.getBlockState(taskPos.above(i)).getMaterial() != Material.AIR || isTreeBlock(level.getBlockState(taskPos.above()))){
                         taskPos = taskPos.above(i);
                         break;
                     }
@@ -180,8 +180,8 @@ public class BookwyrmLecternTile extends SummoningTile implements IWandable {
 
 
     @Override
-    public void load(BlockState state, CompoundTag tag) {
-        super.load(state,tag);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         taskIndex = tag.getInt("task_index");
         tier = tag.getInt("tier");
         isOff = tag.getBoolean("is_off");

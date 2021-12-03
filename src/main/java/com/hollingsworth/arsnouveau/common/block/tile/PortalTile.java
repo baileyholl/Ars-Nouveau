@@ -2,41 +2,36 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.PortalBlock;
-
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
-import net.minecraft.world.level.block.state.BlockState;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketWarpPosition;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec2;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec2;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.hollingsworth.arsnouveau.setup.BlockRegistry.PORTAL_TILE_TYPE;
 
-public class PortalTile extends BlockEntity implements TickableBlockEntity, ITooltipProvider {
+public class PortalTile extends ModdedTile implements ITickable, ITooltipProvider {
     public BlockPos warpPos;
     public String dimID;
     public Vec2 rotationVec;
     public String displayName;
     public boolean isHorizontal;
 
-    public PortalTile() {
-        super(PORTAL_TILE_TYPE);
+    public PortalTile(BlockPos pos, BlockState state) {
+        super(PORTAL_TILE_TYPE, pos, state);
     }
 
     public void warp(Entity e) {
@@ -53,8 +48,8 @@ public class PortalTile extends BlockEntity implements TickableBlockEntity, IToo
 
 
     @Override
-    public void load(BlockState state, CompoundTag compound) {
-        super.load(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         this.dimID = compound.getString("dim");
         this.warpPos = NBTUtil.getBlockPos(compound, "warp");
         this.rotationVec = new Vec2(compound.getFloat("xRot"), compound.getFloat("yRot"));
@@ -115,21 +110,5 @@ public class PortalTile extends BlockEntity implements TickableBlockEntity, IToo
             return true;
         }
         return false;
-    }
-    @Override
-    @Nullable
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 3, this.getUpdateTag());
-    }
-
-    @Override
-    public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
-    }
-
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
-        handleUpdateTag(level.getBlockState(worldPosition),pkt.getTag());
     }
 }

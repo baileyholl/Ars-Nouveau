@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -27,7 +28,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnchantingApparatusTile extends AnimatedTile implements Container {
+public class EnchantingApparatusTile extends AnimatedTile implements Container, ITickable {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     public ItemStack catalystItem = ItemStack.EMPTY;
     public ItemEntity entity;
@@ -36,8 +37,8 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container {
     private int craftingLength = 100;
     public boolean isCrafting;
 
-    public EnchantingApparatusTile() {
-        super(BlockRegistry.ENCHANTING_APP_TILE);
+    public EnchantingApparatusTile(BlockPos pos, BlockState state) {
+        super(BlockRegistry.ENCHANTING_APP_TILE, pos, state);
         counter = 1;
     }
 
@@ -139,11 +140,11 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container {
     }
 
     @Override
-    public void load(BlockState state, CompoundTag compound) {
+    public void load(CompoundTag compound) {
         catalystItem = ItemStack.of((CompoundTag)compound.get("itemStack"));
         isCrafting = compound.getBoolean("is_crafting");
         counter = compound.getInt("counter");
-        super.load(state, compound);
+        super.load(compound);
     }
 
     @Override
@@ -159,23 +160,11 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container {
         return super.save(compound);
     }
     @Override
-    @Nullable
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 3, this.getUpdateTag());
-    }
-
-    @Override
     public CompoundTag getUpdateTag() {
         CompoundTag tag = new CompoundTag();
         tag.putInt("counter", this.counter);
         tag.putBoolean("is_crafting", this.isCrafting);
         return this.save(tag);
-    }
-
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
-        handleUpdateTag(level.getBlockState(worldPosition), pkt.getTag());
     }
 
     @Override
@@ -253,7 +242,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container {
     }
 
     @Override
-    protected void invalidateCaps() {
+    public void invalidateCaps() {
         itemHandler.invalidate();
         super.invalidateCaps();
     }

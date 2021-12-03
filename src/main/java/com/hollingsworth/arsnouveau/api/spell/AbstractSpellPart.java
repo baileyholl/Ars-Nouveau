@@ -99,7 +99,7 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
     }
 
     protected <T> Set<T> setOf(T... list) {
-        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(list)));
+        return Set.of(list);
     }
 
     @Override

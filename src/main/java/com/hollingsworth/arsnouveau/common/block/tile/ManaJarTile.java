@@ -2,24 +2,25 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
-import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.ManaJar;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ManaJarTile extends AbstractManaTile implements TickableBlockEntity, ITooltipProvider {
+public class ManaJarTile extends AbstractManaTile implements ITickable, ITooltipProvider {
 
-    public ManaJarTile() {
-        super(BlockRegistry.MANA_JAR_TILE);
+    public ManaJarTile(BlockPos pos, BlockState state) {
+        super(BlockRegistry.MANA_JAR_TILE, pos, state);
     }
 
-    public ManaJarTile(BlockEntityType<? extends ManaJarTile> tileTileEntityType){
-        super(tileTileEntityType);
+    public ManaJarTile(BlockEntityType<? extends ManaJarTile> tileTileEntityType, BlockPos pos, BlockState state){
+        super(tileTileEntityType, pos, state);
     }
 
     @Override

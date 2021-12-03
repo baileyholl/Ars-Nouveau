@@ -4,26 +4,24 @@ import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.util.math.*;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.network.FMLPlayMessages;
-import net.minecraftforge.fml.network.NetworkHooks;
-
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PlayMessages;
 
 public class EntityOrbitProjectile extends EntityProjectileSpell{
     public Entity wardedEntity;
@@ -88,15 +86,15 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
     public void tick() {
         this.age++;
         if(!level.isClientSide && this.age > 60 * 20 + 30 * 20 * extendTimes){
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
             return;
         }
         if(!level.isClientSide && spellResolver == null)
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         Entity owner = level.getEntity(getOwnerID());
-//        this.remove();
+
         if(!level.isClientSide && owner == null) {
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
             return;
         }
 
@@ -162,7 +160,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
         this.pierceLeft--;
         if(this.pierceLeft < 0){
             this.level.broadcastEntityEvent(this, (byte)3);
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         }
     }
 
@@ -179,7 +177,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
                         new BlockPos(result.getLocation()),getParticleColorWrapper()));
                 attemptRemoval();
             }
-        }else if(numSensitive > 0 && result instanceof BlockHitResult && !this.removed){
+        }else if(numSensitive > 0 && result instanceof BlockHitResult && !this.isRemoved()){
             BlockHitResult blockraytraceresult = (BlockHitResult)result;
             if(this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(this.level, (LivingEntity) this.getOwner(), blockraytraceresult);
@@ -231,7 +229,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public EntityOrbitProjectile(FMLPlayMessages.SpawnEntity packet, Level world) {
+    public EntityOrbitProjectile(PlayMessages.SpawnEntity packet, Level world) {
         super(ModEntities.ENTITY_WARD, world);
     }
 

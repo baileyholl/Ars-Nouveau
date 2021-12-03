@@ -18,11 +18,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.Nullable;
-
 import static com.hollingsworth.arsnouveau.common.block.tile.SummoningTile.CONVERTED;
 
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import org.jetbrains.annotations.Nullable;
 
 public class BookwyrmLectern extends SummonBlock{
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
@@ -36,10 +35,7 @@ public class BookwyrmLectern extends SummonBlock{
         super(registryName);
     }
 
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
+
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
@@ -60,11 +56,6 @@ public class BookwyrmLectern extends SummonBlock{
         }
     }
 
-    @Nullable
-    @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new BookwyrmLecternTile();
-    }
 
     public BlockState getStateForPlacement(BlockPlaceContext p_196258_1_) {
         return this.defaultBlockState().setValue(FACING, p_196258_1_.getHorizontalDirection().getOpposite());
@@ -87,4 +78,9 @@ public class BookwyrmLectern extends SummonBlock{
         return p_185471_1_.rotate(p_185471_2_.getRotation(p_185471_1_.getValue(FACING)));
     }
 
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
+        return new BookwyrmLecternTile(p_153215_, p_153216_);
+    }
 }

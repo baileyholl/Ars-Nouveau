@@ -104,12 +104,12 @@ public class ANExplosion extends Explosion {
 
         for (Entity entity : list) {
             if (!entity.ignoreExplosion()) {
-                double d12 = Mth.sqrt(entity.distanceToSqr(vector3d)) / f2;
+                double d12 = Mth.sqrt((float) entity.distanceToSqr(vector3d)) / f2;
                 if (d12 <= 1.0D) {
                     double d5 = entity.getX() - this.x;
                     double d7 = (entity instanceof PrimedTnt ? entity.getY() : entity.getEyeY()) - this.y;
                     double d9 = entity.getZ() - this.z;
-                    double d13 = Mth.sqrt(d5 * d5 + d7 * d7 + d9 * d9);
+                    double d13 = Mth.sqrt((float) (d5 * d5 + d7 * d7 + d9 * d9));
                     if (d13 != 0.0D) {
                         d5 = d5 / d13;
                         d7 = d7 / d13;

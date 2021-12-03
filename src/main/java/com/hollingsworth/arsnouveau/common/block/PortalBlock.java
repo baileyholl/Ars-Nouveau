@@ -75,9 +75,10 @@ public class PortalBlock extends TickableModBlock {
         }
     }
 
+
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
+    public BlockEntity newBlockEntity(BlockPos p_153215_, BlockState p_153216_) {
+        return new PortalTile(p_153215_, p_153216_);
     }
 
     @Override
@@ -88,10 +89,6 @@ public class PortalBlock extends TickableModBlock {
         }
     }
 
-    @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new PortalTile();
-    }
 
 
     public boolean trySpawnPortal(LevelAccessor worldIn, BlockPos pos, BlockPos warpPos, String dimID, Vec2 rotation, String displayName) {
@@ -240,7 +237,7 @@ public class PortalBlock extends TickableModBlock {
         }
 
         public boolean isPortalFrame(LevelAccessor world, BlockPos pos){
-            return world.getBlockState(pos).getBlock().in(Recipes.DECORATIVE_AN);
+            return world.getBlockState(pos).is(Recipes.DECORATIVE_AN);
         }
 
         public int getHeight() {

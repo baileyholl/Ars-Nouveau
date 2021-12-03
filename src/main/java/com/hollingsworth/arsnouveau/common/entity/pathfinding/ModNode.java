@@ -5,7 +5,7 @@ import net.minecraft.core.BlockPos;
 /**
  * Nodes used in pathfinding.
  */
-public class Node implements Comparable<Node>
+public class ModNode implements Comparable<ModNode>
 {
     /**
      * Values used in the generation of the hash of the node.
@@ -27,7 +27,7 @@ public class Node implements Comparable<Node>
     /**
      * The parent of the node (Node preceding this node).
      */
-    public Node parent;
+    public ModNode parent;
 
     /**
      * Added counter.
@@ -95,7 +95,7 @@ public class Node implements Comparable<Node>
      * @param pos       coordinates of node.
      * @param heuristic heuristic estimate.
      */
-    public Node(final BlockPos pos, final double heuristic)
+    public ModNode(final BlockPos pos, final double heuristic)
     {
         this(null, pos, 0, heuristic, heuristic);
     }
@@ -109,7 +109,7 @@ public class Node implements Comparable<Node>
      * @param heuristic heuristic estimate.
      * @param score     node total score.
      */
-    public Node(final Node parent, final BlockPos pos, final double cost, final double heuristic, final double score)
+    public ModNode(final ModNode parent, final BlockPos pos, final double cost, final double heuristic, final double score)
     {
         this.parent = parent;
         this.pos = pos;
@@ -121,7 +121,7 @@ public class Node implements Comparable<Node>
     }
 
     @Override
-    public int compareTo(final Node o)
+    public int compareTo(final ModNode o)
     {
         //  Comparing doubles and returning value as int; can't simply cast the result
         if (score < o.score)
@@ -159,7 +159,7 @@ public class Node implements Comparable<Node>
     {
         if (o != null && o.getClass() == this.getClass())
         {
-            final Node other = (Node) o;
+            final ModNode other = (ModNode) o;
             return pos.getX() == other.pos.getX()
                      && pos.getY() == other.pos.getY()
                      && pos.getZ() == other.pos.getZ();

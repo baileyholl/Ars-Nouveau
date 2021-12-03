@@ -3,15 +3,16 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
-public class ArcaneCoreTile extends BlockEntity implements TickableBlockEntity {
-    public ArcaneCoreTile() {
-        super(BlockRegistry.ARCANE_CORE_TILE);
+public class ArcaneCoreTile extends ModdedTile implements ITickable {
+
+    public ArcaneCoreTile(BlockPos pos, BlockState state) {
+        super(BlockRegistry.ARCANE_CORE_TILE, pos, state);
     }
-
 
     @Override
     public void tick() {

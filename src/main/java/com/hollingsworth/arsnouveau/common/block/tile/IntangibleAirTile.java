@@ -1,23 +1,19 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
 
-import javax.annotation.Nullable;
-
-public class IntangibleAirTile extends BlockEntity implements TickableBlockEntity {
+public class IntangibleAirTile extends ModdedTile implements ITickable {
     public int duration;
     public int maxLength;
     public int stateID;
 
-    public IntangibleAirTile() {
-        super(BlockRegistry.INTANGIBLE_AIR_TYPE);
+    public IntangibleAirTile(BlockPos pos, BlockState state) {
+        super(BlockRegistry.INTANGIBLE_AIR_TYPE, pos, state);
     }
 
     @Override
@@ -33,11 +29,11 @@ public class IntangibleAirTile extends BlockEntity implements TickableBlockEntit
     }
 
     @Override
-    public void load(BlockState state, CompoundTag nbt) {
+    public void load(CompoundTag nbt) {
         stateID = nbt.getInt("state_id");
         duration = nbt.getInt("duration");
         maxLength = nbt.getInt("max_length");
-        super.load(state, nbt);
+        super.load(nbt);
     }
 
     @Override
@@ -48,20 +44,4 @@ public class IntangibleAirTile extends BlockEntity implements TickableBlockEntit
         return super.save(compound);
     }
 
-    @Override
-    @Nullable
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 3, this.getUpdateTag());
-    }
-
-    @Override
-    public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
-    }
-
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
-        handleUpdateTag(level.getBlockState(worldPosition),pkt.getTag());
-    }
 }

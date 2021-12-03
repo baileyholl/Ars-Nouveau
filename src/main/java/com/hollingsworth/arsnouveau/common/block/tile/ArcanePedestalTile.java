@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -23,14 +24,14 @@ public class ArcanePedestalTile extends AnimatedTile implements Container {
     public ItemEntity entity;
     public ItemStack stack;
 
-    public ArcanePedestalTile() {
-        super(BlockRegistry.ARCANE_PEDESTAL_TILE);
+    public ArcanePedestalTile(BlockPos pos, BlockState state){
+        super(BlockRegistry.ARCANE_PEDESTAL_TILE, pos, state);
     }
 
     @Override
-    public void load(BlockState state, CompoundTag compound) {
+    public void load(CompoundTag compound) {
         stack = ItemStack.of((CompoundTag)compound.get("itemStack"));
-        super.load(state, compound);
+        super.load(compound);
     }
 
     @Override
@@ -104,10 +105,6 @@ public class ArcanePedestalTile extends AnimatedTile implements Container {
         this.stack = ItemStack.EMPTY;
     }
 
-    @Override
-    public void tick() {
-
-    }
 
     @Nonnull
     @Override
@@ -119,7 +116,7 @@ public class ArcanePedestalTile extends AnimatedTile implements Container {
     }
 
     @Override
-    protected void invalidateCaps() {
+    public void invalidateCaps() {
         itemHandler.invalidate();
         super.invalidateCaps();
     }

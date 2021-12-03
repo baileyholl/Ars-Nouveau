@@ -35,7 +35,7 @@ public class BlockUtil {
         return new BlockPos(vec.x, vec.y, vec.z);
     }
 
-    public static boolean isTreeBlock(Block block){
+    public static boolean isTreeBlock(BlockState block){
         return block.is(BlockTags.LEAVES) || block.is(BlockTags.LOGS);
     }
 
@@ -85,7 +85,7 @@ public class BlockUtil {
     }
 
     public static void safelyUpdateState(Level world, BlockPos pos, BlockState state){
-        if(!Level.isOutsideBuildHeight(pos))
+        if(!world.isOutsideBuildHeight(pos))
             world.sendBlockUpdated(pos, state, state, 3);
     }
 
@@ -114,12 +114,12 @@ public class BlockUtil {
 
     private static boolean destroyBlockWithoutSound(Level world, BlockPos pos, boolean isMoving, @Nullable Entity entityIn){
         BlockState blockstate = world.getBlockState(pos);
-        if (blockstate.isAir(world, pos)) {
+        if (blockstate.isAir()) {
             return false;
         } else {
             FluidState ifluidstate = world.getFluidState(pos);
             if (isMoving) {
-                BlockEntity tileentity = blockstate.hasTileEntity() ? world.getBlockEntity(pos) : null;
+                BlockEntity tileentity = blockstate.hasBlockEntity() ? world.getBlockEntity(pos) : null;
                 Block.dropResources(blockstate, world, pos, tileentity, entityIn, ItemStack.EMPTY);
             }
 

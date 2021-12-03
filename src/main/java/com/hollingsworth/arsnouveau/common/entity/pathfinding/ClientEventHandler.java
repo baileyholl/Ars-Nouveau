@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.event.RenderLevelLastEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -20,11 +20,11 @@ public class ClientEventHandler
      * @param event the catched event.
      */
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void renderWorldLastEvent(final RenderWorldLastEvent event)
+    public static void renderWorldLastEvent(final RenderLevelLastEvent event)
     {
         if (DEBUG_DRAW)
         {
-            Pathfinding.debugDraw(event.getPartialTicks(), event.getMatrixStack());
+            Pathfinding.debugDraw(event.getPartialTick(), event.getPoseStack());
         }
     }
 }

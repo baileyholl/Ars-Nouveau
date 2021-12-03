@@ -2,53 +2,48 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
+import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.ManaJar;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.Util;
-import net.minecraft.core.Registry;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class PotionJarTile extends BlockEntity implements TickableBlockEntity, ITooltipProvider, IWandable {
+public class PotionJarTile extends BlockEntity implements ITickable, ITooltipProvider, IWandable {
 
     private int amount;
     private Potion potion = Potions.EMPTY;
     public boolean isLocked;
     private List<MobEffectInstance> customEffects = new ArrayList<>();
-    public PotionJarTile(BlockEntityType<?> tileEntityTypeIn) {
-        super(tileEntityTypeIn);
-    }
 
-    public PotionJarTile() {
-        super(BlockRegistry.POTION_JAR_TYPE);
+    public PotionJarTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+        super(tileEntityTypeIn, pos, state);
     }
 
     public PotionJarTile(BlockPos pos, BlockState state) {
-        super();
+        super(BlockRegistry.POTION_JAR_TYPE, pos, state);
     }
+
 
     @Override
     public void tick() {
@@ -205,8 +200,8 @@ public class PotionJarTile extends BlockEntity implements TickableBlockEntity, I
     }
 
     @Override
-    public void load(BlockState state, CompoundTag tag) {
-        super.load(state, tag);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         this.amount = tag.getInt("amount");
         this.potion = PotionUtils.getPotion(tag);
         this.customEffects = new ArrayList<>();
@@ -230,23 +225,6 @@ public class PotionJarTile extends BlockEntity implements TickableBlockEntity, I
             tag.put("CustomPotionEffects", listnbt);
         }
         return super.save(tag);
-    }
-
-    @Override
-    @Nullable
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 3, this.getUpdateTag());
-    }
-
-    @Override
-    public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
-    }
-
-    @Override
-    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
-        handleUpdateTag(level.getBlockState(worldPosition),pkt.getTag());
     }
 
     public int getMaxFill() {

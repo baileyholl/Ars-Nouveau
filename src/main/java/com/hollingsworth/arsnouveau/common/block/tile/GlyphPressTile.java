@@ -5,24 +5,24 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.WorldlyContainer;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.common.util.LazyOptional;
@@ -43,7 +43,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class GlyphPressTile extends AnimatedTile implements TickableBlockEntity, IAnimatable, IAnimationListener, WorldlyContainer {
+public class GlyphPressTile extends AnimatedTile implements ITickable, IAnimatable, IAnimationListener, WorldlyContainer {
     private final Map<Direction, LazyOptional<IItemHandler>> itemHandlers = new HashMap<>();
     public long frames = 0;
     public boolean isCrafting;
@@ -52,8 +52,8 @@ public class GlyphPressTile extends AnimatedTile implements TickableBlockEntity,
     public ItemStack oldBaseMat = ItemStack.EMPTY;
     public ItemEntity entity;
 
-    public GlyphPressTile() {
-        super(BlockRegistry.GLYPH_PRESS_TILE);
+    public GlyphPressTile(BlockPos pos, BlockState state) {
+        super(BlockRegistry.GLYPH_PRESS_TILE, pos, state);
         ImmutableList.of(Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST).forEach(this::addItemHandler);
         addItemHandler(null);
     }
@@ -270,18 +270,18 @@ public class GlyphPressTile extends AnimatedTile implements TickableBlockEntity,
     }
 
     @Override
-    protected void invalidateCaps() {
+    public void invalidateCaps() {
         itemHandlers.values().forEach(LazyOptional::invalidate);
         super.invalidateCaps();
     }
 
     @Override
-    public void load(BlockState state, CompoundTag compound) {
+    public void load(CompoundTag compound) {
         reagentItem = ItemStack.of((CompoundTag)compound.get("itemStack"));
         baseMaterial = ItemStack.of((CompoundTag)compound.get("baseMat"));
         oldBaseMat = ItemStack.of((CompoundTag)compound.get("oldBase"));
         isCrafting = compound.getBoolean("crafting");
-        super.load(state, compound);
+        super.load(compound);
     }
 
     @Override

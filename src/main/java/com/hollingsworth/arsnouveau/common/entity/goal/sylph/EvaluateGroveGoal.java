@@ -2,25 +2,18 @@ package com.hollingsworth.arsnouveau.common.entity.goal.sylph;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.EntitySylph;
-import net.minecraft.block.*;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.BushBlock;
-import net.minecraft.world.level.block.LeavesBlock;
-import net.minecraft.world.level.block.StemGrownBlock;
-import net.minecraft.world.level.block.state.BlockState;
 
 public class EvaluateGroveGoal extends Goal {
 
@@ -44,7 +37,7 @@ public class EvaluateGroveGoal extends Goal {
         if(state.getMaterial() == Material.AIR)
             return 0;
 
-        if(state == Blocks.WATER.defaultBlockState() || state == Blocks.GRASS_BLOCK.defaultBlockState() || state == Blocks.PODZOL.defaultBlockState() || state == Blocks.GRASS_PATH.defaultBlockState())
+        if(state == Blocks.WATER.defaultBlockState() || state == Blocks.GRASS_BLOCK.defaultBlockState() || state == Blocks.PODZOL.defaultBlockState() || state == Blocks.DIRT_PATH.defaultBlockState())
             return 1;
 
         if(state.getBlock() instanceof BushBlock)
@@ -54,10 +47,10 @@ public class EvaluateGroveGoal extends Goal {
         if(state.getBlock() instanceof StemGrownBlock)
             return 2;
 
-        if(state.getBlock().is(BlockTags.LOGS))
+        if(state.is(BlockTags.LOGS))
             return 2;
 
-        if(state.getBlock().is(BlockTags.LEAVES) || state.getBlock() instanceof LeavesBlock)
+        if(state.is(BlockTags.LEAVES) || state.getBlock() instanceof LeavesBlock)
             return 1;
 
         if(state.getMaterial() == Material.PLANT || state.getMaterial() == Material.REPLACEABLE_PLANT)
@@ -93,7 +86,7 @@ public class EvaluateGroveGoal extends Goal {
             if(!dropMap.containsKey(state)){
                 dropMap.put(state, 0);
             }
-            if(!state.hasTileEntity())
+            if(!state.hasBlockEntity())
                 dropMap.put(state, dropMap.get(state) + 1);
             defaultMap.put(defaultState, defaultMap.get(defaultState) + 1);
             score += defaultMap.get(defaultState) <= 50 ? getScore(defaultState) : 0;

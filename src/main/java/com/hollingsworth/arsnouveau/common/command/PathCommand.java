@@ -6,9 +6,9 @@ import com.hollingsworth.arsnouveau.common.network.PacketTogglePathing;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraft.world.entity.Entity;
+import net.minecraftforge.network.PacketDistributor;
 
 public class PathCommand {
 

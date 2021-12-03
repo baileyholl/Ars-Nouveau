@@ -3,45 +3,35 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.api.IFollowingSummon;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.common.entity.goal.FollowSummonerFlyingGoal;
-import net.minecraft.entity.*;
-import net.minecraft.world.entity.ai.control.MoveControl;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.world.entity.monster.Vex;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
-import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.server.players.OldUsersConverter;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.players.OldUsersConverter;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.Level;
-
-import javax.annotation.Nullable;
-import java.util.EnumSet;
-import java.util.Optional;
-import java.util.UUID;
-
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.monster.Vex;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.Vec3;
+
+import javax.annotation.Nullable;
+import java.util.EnumSet;
+import java.util.Optional;
+import java.util.UUID;
 
 public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
     private LivingEntity owner;
@@ -340,7 +330,6 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
     }
 
     class CopyOwnerTargetGoal extends TargetGoal {
-        private final TargetingConditions copyOwnerTargeting = (new TargetingConditions()).allowUnseeable().ignoreInvisibilityTesting();
 
         public CopyOwnerTargetGoal(PathfinderMob creature) {
             super(creature, false);
@@ -362,45 +351,4 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
         }
     }
 
-    class MoveRandomGoal extends Goal {
-        public MoveRandomGoal() {
-            this.setFlags(EnumSet.of(Goal.Flag.MOVE));
-        }
-
-        /**
-         * Returns whether the EntityAIBase should begin execution.
-         */
-        public boolean canUse() {
-            return !EntityAllyVex.this.getMoveControl().hasWanted() && EntityAllyVex.this.random.nextInt(7) == 0;
-        }
-
-        /**
-         * Returns whether an in-progress EntityAIBase should continue executing
-         */
-        public boolean canContinueToUse() {
-            return false;
-        }
-
-        /**
-         * Keep ticking a continuous task that has already been started
-         */
-        public void tick() {
-            BlockPos blockpos = EntityAllyVex.this.getBoundOrigin();
-            if (blockpos == null) {
-                blockpos = new BlockPos(EntityAllyVex.this.blockPosition());
-            }
-
-            for(int i = 0; i < 3; ++i) {
-                BlockPos blockpos1 = blockpos.offset(EntityAllyVex.this.random.nextInt(15) - 7, EntityAllyVex.this.random.nextInt(11) - 5, EntityAllyVex.this.random.nextInt(15) - 7);
-                if (EntityAllyVex.this.level.isEmptyBlock(blockpos1)) {
-                    EntityAllyVex.this.moveControl.setWantedPosition((double)blockpos1.getX() + 0.5D, (double)blockpos1.getY() + 0.5D, (double)blockpos1.getZ() + 0.5D, 0.25D);
-                    if (EntityAllyVex.this.getTarget() == null) {
-                        EntityAllyVex.this.getLookControl().setLookAt((double)blockpos1.getX() + 0.5D, (double)blockpos1.getY() + 0.5D, (double)blockpos1.getZ() + 0.5D, 180.0F, 20.0F);
-                    }
-                    break;
-                }
-            }
-
-        }
-    }
 }

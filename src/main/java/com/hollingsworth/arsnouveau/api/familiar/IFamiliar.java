@@ -28,7 +28,7 @@ public interface IFamiliar {
      */
     default void onFamiliarSpawned(FamiliarSummonEvent event){
         if(event.owner.equals(getOwner()) && !event.getEntity().equals(this)){
-            this.getThisEntity().remove();
+            this.getThisEntity().remove(Entity.RemovalReason.DISCARDED);
         }
     }
 

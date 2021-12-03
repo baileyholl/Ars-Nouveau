@@ -5,13 +5,13 @@ import com.hollingsworth.arsnouveau.common.spell.effect.EffectRedstone;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
@@ -20,17 +20,18 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 
 import java.util.List;
 
-public class TimerSpellTurretTile extends BasicSpellTurretTile implements TickableBlockEntity, IWandable {
+public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWandable {
 
     private int ticksPerSignal = 20;
     public boolean isLocked;
     public boolean isOff;
-    public TimerSpellTurretTile(BlockEntityType<?> p_i48289_1_) {
-        super(p_i48289_1_);
+
+    public TimerSpellTurretTile(BlockEntityType<?> p_i48289_1_, BlockPos pos, BlockState state) {
+        super(p_i48289_1_, pos, state);
     }
 
-    public TimerSpellTurretTile(){
-        super(BlockRegistry.TIMER_SPELL_TURRET_TILE);
+    public TimerSpellTurretTile(BlockPos pos, BlockState state){
+        super(BlockRegistry.TIMER_SPELL_TURRET_TILE, pos, state);
     }
 
     @Override
@@ -90,8 +91,8 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements Tickab
     }
 
     @Override
-    public void load(BlockState state, CompoundTag tag) {
-        super.load(state, tag);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         this.isLocked = tag.getBoolean("locked");
         this.ticksPerSignal = tag.getInt("time");
         this.isOff = tag.getBoolean("off");

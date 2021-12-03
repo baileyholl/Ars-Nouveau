@@ -16,12 +16,12 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
 public class RecipeRegistry {
-    public static final RecipeType<GlyphPressRecipe> GLYPH_TYPE = new RecipeType();
-    public static final RecipeType<EnchantingApparatusRecipe> APPARATUS_TYPE = new RecipeType();
+    public static final RecipeType<GlyphPressRecipe> GLYPH_TYPE = new ModRecipeType();
+    public static final RecipeType<EnchantingApparatusRecipe> APPARATUS_TYPE = new ModRecipeType();
 
-    public static final RecipeType<EnchantmentRecipe> ENCHANTMENT_TYPE = new RecipeType();
+    public static final RecipeType<EnchantmentRecipe> ENCHANTMENT_TYPE = new ModRecipeType();
 
-    public static final RecipeType<EnchantmentRecipe> CRUSH_TYPE = new RecipeType();
+    public static final RecipeType<EnchantmentRecipe> CRUSH_TYPE = new ModRecipeType();
 
     public static final RecipeSerializer<GlyphPressRecipe> PRESS_SERIALIZER = new GlyphPressRecipe.Serializer();
     public static final RecipeSerializer<EnchantingApparatusRecipe> APPARATUS_SERIALIZER = new EnchantingApparatusRecipe.Serializer();
@@ -40,7 +40,7 @@ public class RecipeRegistry {
         evt.getRegistry().register(CRUSH_SERIALIZER.setRegistryName(new ResourceLocation(ArsNouveau.MODID, CrushRecipe.RECIPE_ID)));
     }
 
-    private static class RecipeType<T extends Recipe<?>> implements RecipeType<T> {
+    private static class ModRecipeType<T extends Recipe<?>> implements RecipeType<T> {
         @Override
         public String toString() {
             return Registry.RECIPE_TYPE.getKey(this).toString();

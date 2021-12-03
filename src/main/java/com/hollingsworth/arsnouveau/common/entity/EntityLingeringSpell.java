@@ -1,27 +1,21 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.core.Direction;
-import net.minecraft.util.math.*;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.network.FMLPlayMessages;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.*;
+import net.minecraftforge.network.PlayMessages;
 
 public class EntityLingeringSpell extends EntityProjectileSpell{
 
@@ -57,7 +51,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
         if(!level.isClientSide) {
             this.setLanded(isOnGround);
             if(spellResolver == null) {
-                this.remove();
+                this.remove(RemovalReason.DISCARDED);
                 return;
             }
         }
@@ -80,7 +74,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
                 }
                 totalProcs += i;
                 if(totalProcs>= maxProcs)
-                    this.remove();
+                    this.remove(RemovalReason.DISCARDED);
             }
         }
 
@@ -91,7 +85,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
             age++;
         }
         if(age > 70 + extendedTime * 20)
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         if(level.isClientSide){
             ParticleUtil.spawnRitualAreaEffect(getOnPos(), level, random, getParticleColor(), getAoe(), 5, 20);
             ParticleUtil.spawnLight(level, getParticleColor(), position.add(0, 0.5, 0),10);
@@ -100,7 +94,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
 
     }
 
-    public EntityLingeringSpell(FMLPlayMessages.SpawnEntity packet, Level world){
+    public EntityLingeringSpell(PlayMessages.SpawnEntity packet, Level world){
         super(ModEntities.LINGER_SPELL, world);
     }
     @Override
@@ -109,7 +103,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
     }
     @Override
     protected void onHit(HitResult result) {
-        if (!level.isClientSide && result instanceof BlockHitResult && !this.removed) {
+        if (!level.isClientSide && result instanceof BlockHitResult && !this.isRemoved()) {
             BlockState state = level.getBlockState(((BlockHitResult) result).getBlockPos());
             if(state.getMaterial() == Material.PORTAL){
                 state.getBlock().entityInside(state, level, ((BlockHitResult) result).getBlockPos(),this);
