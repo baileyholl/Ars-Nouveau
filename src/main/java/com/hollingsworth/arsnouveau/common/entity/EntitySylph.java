@@ -237,16 +237,11 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
     }
 
     @Override
-    public void remove() {
-        super.remove();
-    }
-
-    @Override
     public void tick() {
         super.tick();
         if(!this.level.isClientSide){
             if(level.getGameTime() % 20 == 0 && this.blockPosition().getY() < 0) {
-                this.remove();
+                this.remove(RemovalReason.DISCARDED);
                 return;
             }
 
@@ -270,7 +265,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
             if(tamingTime > 60 && !level.isClientSide) {
                 ItemStack stack = new ItemStack(ItemsRegistry.sylphShard, 1 + level.random.nextInt(1));
                 level.addFreshEntity(new ItemEntity(level, getX(), getY() + 0.5, getZ(), stack));
-                this.remove(false);
+                this.remove(RemovalReason.DISCARDED);
                 level.playSound(null, getX(), getY(), getZ(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1f, 1f );
             }
             else if (tamingTime > 55 && level.isClientSide){
@@ -476,14 +471,14 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
 
     @Override
     public boolean onDispel(@Nullable LivingEntity caster) {
-        if(this.removed)
+        if(this.isRemoved())
             return false;
 
         if(!level.isClientSide && isTamed()){
             ItemStack stack = new ItemStack(ItemsRegistry.sylphCharm);
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
             ParticleUtil.spawnPoof((ServerLevel)level, blockPosition());
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         }
         return this.isTamed();
     }

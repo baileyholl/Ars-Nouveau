@@ -20,6 +20,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.inventory.PageButton;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -111,7 +112,7 @@ public class GuiSpellBook extends BaseBook {
             int offset = i >= 5 ? 14 : 0;
             CraftingButton cell = new CraftingButton(this,bookLeft + 19 + 24 * i + offset, bookTop + FULL_HEIGHT - 47, i, this::onCraftingSlotClick);
             //GlyphButton glyphButton = new GlyphButton(this,bookLeft + 10 + 28 * i, bookTop + FULL_HEIGHT - 24, )
-            addButton(cell);
+            addRenderableWidget(cell);
             craftingCells.add(cell);
         }
         updateCraftingSlots(selected_slot_ind);
@@ -119,8 +120,8 @@ public class GuiSpellBook extends BaseBook {
         addCastMethodParts();
         addAugmentParts();
         addEffectParts(0);
-        addButton(new CreateSpellButton(this, bookRight - 71, bookBottom - 13, this::onCreateClick));
-        addButton(new GuiImageButton(bookRight - 126, bookBottom - 13, 0,0,41, 12, 41, 12, "textures/gui/clear_icon.png", this::clear));
+        addRenderableWidget(new CreateSpellButton(this, bookRight - 71, bookBottom - 13, this::onCreateClick));
+        addRenderableWidget(new GuiImageButton(bookRight - 126, bookBottom - 13, 0,0,41, 12, 41, 12, "textures/gui/clear_icon.png", this::clear));
 
         spell_name = new NoShadowTextField(minecraft.font, bookLeft + 32, bookTop + FULL_HEIGHT - 11,
                 88, 12, null, new TranslatableComponent("ars_nouveau.spell_book_gui.spell_name"));
@@ -147,8 +148,8 @@ public class GuiSpellBook extends BaseBook {
             searchBar.setSuggestion(new TranslatableComponent("ars_nouveau.spell_book_gui.search").getString());
         searchBar.setResponder(this::onSearchChanged);
 //
-        addButton(spell_name);
-        addButton(searchBar);
+        addRenderableWidget(spell_name);
+        addRenderableWidget(searchBar);
         // Add spell slots
         for(int i = 1; i <= 10; i++){
             GuiSpellSlot slot = new GuiSpellSlot(this,bookLeft + 281, bookTop +1 + 15 * i, i);
@@ -157,17 +158,17 @@ public class GuiSpellBook extends BaseBook {
                 selected_cast_slot = i;
                 slot.isSelected = true;
             }
-            addButton(slot);
+            addRenderableWidget(slot);
         }
 
-        addButton(new GuiImageButton(bookLeft - 15, bookTop + 22, 0, 0, 23, 20, 23,20, "textures/gui/worn_book_bookmark.png",this::onDocumentationClick)
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 22, 0, 0, 23, 20, 23,20, "textures/gui/worn_book_bookmark.png",this::onDocumentationClick)
         .withTooltip(this, new TranslatableComponent("ars_nouveau.gui.notebook")));
-        addButton(new GuiImageButton(bookLeft - 15, bookTop + 46, 0, 0, 23, 20, 23,20, "textures/gui/color_wheel_bookmark.png",this::onColorClick)
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 46, 0, 0, 23, 20, 23,20, "textures/gui/color_wheel_bookmark.png",this::onColorClick)
                 .withTooltip(this, new TranslatableComponent("ars_nouveau.gui.color")));
-        addButton(new GuiImageButton(bookLeft - 15, bookTop + 70, 0, 0, 23, 20, 23,20, "textures/gui/summon_circle_bookmark.png",this::onFamiliarClick)
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 70, 0, 0, 23, 20, 23,20, "textures/gui/summon_circle_bookmark.png",this::onFamiliarClick)
                 .withTooltip(this, new TranslatableComponent("ars_nouveau.gui.familiar")));
-        this.nextButton = addButton(new PageButton(bookRight -20, bookBottom -10, true, this::onPageIncrease, true));
-        this.previousButton = addButton(new PageButton(bookLeft - 5 , bookBottom -10, false, this::onPageDec, true));
+        this.nextButton = addRenderableWidget(new PageButton(bookRight -20, bookBottom -10, true, this::onPageIncrease, true));
+        this.previousButton = addRenderableWidget(new PageButton(bookLeft - 5 , bookBottom -10, false, this::onPageDec, true));
 
         updateNextPageButtons();
         previousButton.active = false;
@@ -200,12 +201,12 @@ public class GuiSpellBook extends BaseBook {
                 }
             }
             // Set visibility of Cast Methods and Augments
-            for(AbstractWidget w : buttons) {
+            for(Widget w : renderables) {
                 if(w instanceof GlyphButton) {
                     if (((GlyphButton) w).spell_id != null) {
                         AbstractSpellPart part = api.getSpell_map().get(((GlyphButton) w).spell_id);
                         if (part != null) {
-                            w.visible = part.getLocaleName().toLowerCase().contains(str.toLowerCase());
+                            ((GlyphButton) w).visible = part.getLocaleName().toLowerCase().contains(str.toLowerCase());
                         }
                     }
                 }
@@ -214,9 +215,9 @@ public class GuiSpellBook extends BaseBook {
             // Reset our book on clear
             searchBar.setSuggestion(new TranslatableComponent("ars_nouveau.spell_book_gui.search").getString());
             displayedEffects = allEffects;
-            for(AbstractWidget w : buttons){
+            for(Widget w : renderables){
                 if(w instanceof GlyphButton ) {
-                    w.visible = true;
+                    ((GlyphButton) w).visible = true;
                 }
             }
         }
@@ -248,8 +249,8 @@ public class GuiSpellBook extends BaseBook {
 
     public void clearButtons( List<GlyphButton> glyphButtons){
         for (GlyphButton b : glyphButtons) {
-            buttons.remove(b);
-            children.remove(b);
+            renderables.remove(b);
+            children().remove(b);
         }
         glyphButtons.clear();
     }
@@ -265,7 +266,7 @@ public class GuiSpellBook extends BaseBook {
             int yOffset = (i / PER_ROW) * 18;
             GlyphButton cell = new GlyphButton(this, xStart + xOffset, yStart + yOffset, false, part.getIcon(), part.tag);
             glyphButtons.add(cell);
-            addButton(cell);
+            addRenderableWidget(cell);
         }
     }
 
@@ -297,7 +298,7 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void onDocumentationClick(Button button){
-        PatchouliAPI.get().openBookGUI(Registry.ITEM.getKey(ItemsRegistry.wornNotebook));
+      //  PatchouliAPI.get().openBookGUI(Registry.ITEM.getKey(ItemsRegistry.wornNotebook));
     }
 
     public void onColorClick(Button button){

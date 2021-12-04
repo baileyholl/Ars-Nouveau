@@ -81,7 +81,7 @@ public class EntityDummy extends PathfinderMob implements ISummon {
         if(!level.isClientSide){
             if(level.getGameTime() % 10 == 0 && level.getPlayerByUUID(getOwnerID()) == null){
                 ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
-                this.remove();
+                this.remove(RemovalReason.DISCARDED);
                 onSummonDeath(level, null, false);
                 return;
             }
@@ -89,7 +89,7 @@ public class EntityDummy extends PathfinderMob implements ISummon {
             ticksLeft--;
             if(ticksLeft <= 0) {
                 ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
-                this.remove();
+                this.remove(RemovalReason.DISCARDED);
                 onSummonDeath(level, null, true);
             }
         }

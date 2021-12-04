@@ -41,46 +41,46 @@ public class GuiColorScreen extends BaseBook {
         redW = (SliderButton)buildSlider(new TranslatableComponent("ars_nouveau.color_gui.red_slider").getString(), s -> red, (settings, d) -> red = d).createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 49, 100);
         greenW = (SliderButton)buildSlider(new TranslatableComponent("ars_nouveau.color_gui.green_slider").getString(), s -> green, (settings, d) -> green = d).createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 89, 100);
         blueW = (SliderButton)buildSlider(new TranslatableComponent("ars_nouveau.color_gui.blue_slider").getString(), s -> blue, (settings, d) -> blue = d).createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 129, 100);
-        addButton(redW);
-        addButton(greenW);
-        addButton(blueW);
-        addButton(new GuiImageButton(bookLeft+ 55, bookBottom - 36, 0,0,37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveClick));
+        addWidget(redW);
+        addWidget(greenW);
+        addWidget(blueW);
+        addWidget(new GuiImageButton(bookLeft+ 55, bookBottom - 36, 0,0,37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveClick));
         addPresets();
     }
 
     public void addPresets(){
         // Default
-        addButton(new GuiImageButton(bookRight - 131, bookTop + 44, 0,0,48, 11, 48, 11,
+        addWidget(new GuiImageButton(bookRight - 131, bookTop + 44, 0,0,48, 11, 48, 11,
                 "textures/gui/default_color_icon.png", (_2) -> setFromPreset(255, 25, 180)));
         // Purple
-        addButton(new GuiImageButton(bookRight - 131, bookTop + 68, 0,0,48, 11, 48, 11,
+        addWidget(new GuiImageButton(bookRight - 131, bookTop + 68, 0,0,48, 11, 48, 11,
                 "textures/gui/purple_color_icon.png", (_2) -> setFromPreset(80, 25, 255)));
 
         // Blue
-        addButton(new GuiImageButton(bookRight - 131, bookTop + 92, 0,0,48, 11, 48, 11,
+        addWidget(new GuiImageButton(bookRight - 131, bookTop + 92, 0,0,48, 11, 48, 11,
                 "textures/gui/blue_color_icon.png", (_2) -> setFromPreset(30, 25, 255)));
 
         // Red
-        addButton(new GuiImageButton(bookRight - 131, bookTop + 116, 0,0,48, 11, 48, 11,
+        addWidget(new GuiImageButton(bookRight - 131, bookTop + 116, 0,0,48, 11, 48, 11,
                 "textures/gui/red_color_icon.png", (_2) -> setFromPreset(255, 25, 25)));
 
         // Green
-        addButton(new GuiImageButton(bookRight - 131, bookTop + 140, 0,0,48, 11, 48, 11,
+        addWidget(new GuiImageButton(bookRight - 131, bookTop + 140, 0,0,48, 11, 48, 11,
                 "textures/gui/green_color_icon.png", (_2) -> setFromPreset(25, 255, 25)));
 
         // Yellow
-        addButton(new GuiImageButton(bookRight - 73, bookTop + 44, 0,0,48, 11, 48, 11,
+        addWidget(new GuiImageButton(bookRight - 73, bookTop + 44, 0,0,48, 11, 48, 11,
                 "textures/gui/yellow_color_icon.png", (_2) -> setFromPreset(255, 255, 25)));
         // White
-        addButton(new GuiImageButton(bookRight - 73, bookTop + 68, 0,0,48, 11, 48, 11,
+        addWidget(new GuiImageButton(bookRight - 73, bookTop + 68, 0,0,48, 11, 48, 11,
                 "textures/gui/white_color_icon.png", (_2) -> setFromPreset(255, 255, 255)));
 
         // Orange
-        addButton(new GuiImageButton(bookRight - 73, bookTop + 92, 0,0,48, 11, 48, 11,
+        addWidget(new GuiImageButton(bookRight - 73, bookTop + 92, 0,0,48, 11, 48, 11,
                 "textures/gui/orange_color_icon.png", (_2) -> setFromPreset(255, 90, 1)));
 
         // Cyan
-        addButton(new GuiImageButton(bookRight - 73, bookTop + 116, 0,0,48, 11, 48, 11,
+        addWidget(new GuiImageButton(bookRight - 73, bookTop + 116, 0,0,48, 11, 48, 11,
                 "textures/gui/cyan_color_icon.png", (_2) -> setFromPreset(25, 255, 255)));
 
 

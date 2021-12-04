@@ -11,16 +11,17 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
 
-public class CrystallizerRenderer extends BlockEntityRenderer<CrystallizerTile> {
+public class CrystallizerRenderer implements BlockEntityRenderer<CrystallizerTile> {
 
-    public CrystallizerRenderer(BlockEntityRenderDispatcher manager) {
-        super(manager);
+    public CrystallizerRenderer(BlockEntityRendererProvider.Context manager) {
+
     }
 
     @Override
@@ -61,7 +62,7 @@ public class CrystallizerRenderer extends BlockEntityRenderer<CrystallizerTile> 
         ms.pushPose();
         ms.scale(0.5f, 0.5f, 0.5f);
         ms.translate(1D, 1f, 1D);
-        Minecraft.getInstance().getItemRenderer().renderStatic(entityItem.getItem(), ItemTransforms.TransformType.FIXED, 15728880, overlay, ms, buffers);
+        Minecraft.getInstance().getItemRenderer().renderStatic(entityItem.getItem(), ItemTransforms.TransformType.FIXED, 15728880, overlay, ms, buffers, (int) crystallizerTile.getBlockPos().asLong());
         ms.popPose();
     }
 }

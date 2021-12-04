@@ -39,7 +39,8 @@ public class RitualDig extends AbstractRitual {
     }
 
     public boolean canBlockBeHarvested(BlockPos pos){
-        return getWorld().getBlockState(pos).getDestroySpeed(getWorld(), pos) >= 0 && 5 >= getWorld().getBlockState(pos).getHarvestLevel();
+        //TODO: Restore getHarvestLevel 5 >=
+        return getWorld().getBlockState(pos).getDestroySpeed(getWorld(), pos) >= 0 && 5 >= 4;//getWorld().getBlockState(pos).getHarvestLevel();
     }
 
     public void breakBlock(BlockPos pos){

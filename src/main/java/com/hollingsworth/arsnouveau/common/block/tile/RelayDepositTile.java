@@ -12,15 +12,8 @@ import java.util.List;
 
 public class RelayDepositTile extends ArcaneRelayTile{
 
-    public RelayDepositTile(BlockEntityType<?> type){
-        super(type);
-    }
-
-    public RelayDepositTile(){
-        super(BlockRegistry.RELAY_DEPOSIT_TILE);
-    }
-
     public RelayDepositTile(BlockPos pos, BlockState state) {
+        super(BlockRegistry.RELAY_DEPOSIT_TILE, pos, state);
     }
 
     @Override

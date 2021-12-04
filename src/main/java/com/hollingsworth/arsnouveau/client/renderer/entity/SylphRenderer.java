@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
@@ -23,7 +24,7 @@ import java.util.Random;
 
 public class SylphRenderer extends GeoEntityRenderer {
 
-    public SylphRenderer(EntityRenderDispatcher manager) {
+    public SylphRenderer(EntityRendererProvider.Context manager) {
         super(manager, new SylphModel());
     }
 

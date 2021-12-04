@@ -22,7 +22,7 @@ public class FamiliarEvents {
         List<FamiliarEntity> stale = new ArrayList<>();
         List<FamiliarEntity> matching = new ArrayList<>();
         for(FamiliarEntity familiarEntity : FamiliarEntity.FAMILIAR_SET){
-            if(familiarEntity.removed || familiarEntity.terminatedFamiliar || familiarEntity.getOwner() == null) {
+            if(familiarEntity.isRemoved() || familiarEntity.terminatedFamiliar || familiarEntity.getOwner() == null) {
                 stale.add(familiarEntity);
             }else if(predicate.test(familiarEntity)){
                 matching.add(familiarEntity);

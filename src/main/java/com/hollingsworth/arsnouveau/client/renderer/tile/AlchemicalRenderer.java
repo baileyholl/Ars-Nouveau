@@ -10,6 +10,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
@@ -20,7 +21,7 @@ public class AlchemicalRenderer extends GeoBlockRenderer<AlchemicalSourcelinkTil
 
     public static SourcelinkModel model = new SourcelinkModel<>("alchemical");
 
-    public AlchemicalRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
+    public AlchemicalRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
         super(rendererDispatcherIn, model);
     }
 

@@ -19,16 +19,12 @@ import net.minecraft.core.BlockPos;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MycelialSourcelinkTile extends SourcelinkTile{
-    public MycelialSourcelinkTile(BlockEntityType<?> tileEntityTypeIn) {
-        super(tileEntityTypeIn);
-    }
-
-    public MycelialSourcelinkTile(){
-        super(BlockRegistry.MYCELIAL_TILE);
+    public MycelialSourcelinkTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+        super(tileEntityTypeIn, pos, state);
     }
 
     public MycelialSourcelinkTile(BlockPos pos, BlockState state) {
-        super();
+        super(BlockRegistry.MYCELIAL_TILE, pos, state);
     }
 
 
@@ -66,17 +62,18 @@ public class MycelialSourcelinkTile extends SourcelinkTile{
     }
 
     public int getSourceValue(ItemStack i){
-        if(i.getItem().getItem().isEdible()){
+        if(i.getItem().isEdible()){
             int mana = 0;
-            FoodProperties food = i.getItem().getItem().getFoodProperties();
+            FoodProperties food = i.getItem().getFoodProperties();
             mana += 11 * food.getNutrition();
             mana += 30 * food.getSaturationModifier();
             progress += 1;
-            if(i.getItem().getItem().is(Recipes.MAGIC_FOOD) || (i.getItem().getItem() instanceof BlockItem && Recipes.MAGIC_PLANTS.contains(((BlockItem) i.getItem().getItem()).getBlock()))){
-                progress += 4;
-                mana += 10;
-                mana *= 2;
-            }
+            //TODO: restore tags
+//            if(i.is(Recipes.MAGIC_FOOD) || (i.getItem() instanceof BlockItem && Recipes.MAGIC_PLANTS.contains(((BlockItem) i.getItem()).getBlock()))){
+//                progress += 4;
+//                mana += 10;
+//                mana *= 2;
+//            }
             return mana;
         }
         return 0;

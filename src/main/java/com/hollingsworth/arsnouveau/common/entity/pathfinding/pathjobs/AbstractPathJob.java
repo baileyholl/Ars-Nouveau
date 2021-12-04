@@ -140,7 +140,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
         this.xzRestricted = false;
         this.hardXzRestriction = false;
 
-        this.world = new ChunkCache(world, new BlockPos(minX, 0, minZ), new BlockPos(maxX, 256, maxZ), range);
+        this.world = new ChunkCache(world, new BlockPos(minX, world.getMinBuildHeight(), minZ), new BlockPos(maxX, world.getMaxBuildHeight(), maxZ), range, world.dimensionType());
 
         this.start = new BlockPos(start);
         this.maxRange = range;
@@ -217,7 +217,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
         this.xzRestricted = true;
         this.hardXzRestriction = hardRestriction;
 
-        this.world = new ChunkCache(world, new BlockPos(minX, 0, minZ), new BlockPos(maxX, 256, maxZ), range);
+        this.world = new ChunkCache(world, new BlockPos(minX, world.getMinBuildHeight(), minZ), new BlockPos(maxX, world.getMaxBuildHeight(), maxZ), range, world.dimensionType());
 
         this.start = start;
         this.maxRange = range;

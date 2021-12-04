@@ -9,13 +9,14 @@ import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.Pathfinding;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
-import com.hollingsworth.arsnouveau.common.world.WorldEvent;
 import com.hollingsworth.arsnouveau.setup.*;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -37,12 +38,16 @@ public class ArsNouveau {
     public static IProxy proxy = DistExecutor.runForDist(()-> () -> new ClientProxy(), () -> ()-> new ServerProxy());
     public static boolean caelusLoaded = false;
 
-    public static CreativeModeTab itemGroup = new CreativeModeTab(MODID) {
-
+    public static CreativeModeTab itemGroup = new CreativeModeTab(CreativeModeTab.getGroupCountSafe(), MODID) {
         @Override
         public ItemStack makeIcon() {
-            return ItemsRegistry.archmageSpellBook.getDefaultInstance();
+            return Items.COBBLESTONE.getDefaultInstance();
         }
+
+        /*@Override
+        public ItemStack makeIcon() {
+            return Items.COBBLESTONE.getDefaultInstance();//ItemsRegistry.archmageSpellBook.getDefaultInstance();
+        }*/
     };
 
     public ArsNouveau(){
@@ -65,11 +70,11 @@ public class ArsNouveau {
         ManaCapability.register();
         FamiliarCap.register();
         APIRegistry.registerApparatusRecipes();
-        event.enqueueWork(WorldEvent::registerFeatures);
+        //event.enqueueWork(WorldEvent::registerFeatures);
         Networking.registerMessages();
         event.enqueueWork(ModPotions::addRecipes);
         if(Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
-            BiomeManager.addBiome(BiomeManager.BiomeType.COOL, new BiomeManager.BiomeEntry(WorldEvent.archwoodKey, Config.ARCHWOOD_FOREST_WEIGHT.get()));
+           // BiomeManager.addBiome(BiomeManager.BiomeType.COOL, new BiomeManager.BiomeEntry(WorldEvent.archwoodKey, Config.ARCHWOOD_FOREST_WEIGHT.get()));
         }
     }
 

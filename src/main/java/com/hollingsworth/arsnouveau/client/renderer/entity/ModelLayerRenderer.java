@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -83,7 +84,7 @@ public class ModelLayerRenderer<T extends Entity & IAnimatable> extends GeoLayer
        // matrixStackIn.rotate(Vector3f.YP.rotationDegrees(180f));
 
 
-        Minecraft.getInstance().textureManager.bind(getTextureLocation((T) entity));
+        RenderSystem.setShaderTexture(0, getTextureLocation((T)entity));
         Color renderColor = getRenderColor((T) entity, partialTicks, matrixStackIn, bufferIn, null, packedLightIn);
         RenderType renderType = getRenderType((T) entity, partialTicks, matrixStackIn, bufferIn, null, packedLightIn, getTextureLocation((T) entity));
         render(model, (T) entity, partialTicks, renderType, matrixStackIn, bufferIn, null, packedLightIn, OverlayTexture.NO_OVERLAY, (float) renderColor.getRed() / 255f, (float) renderColor.getGreen() / 255f, (float) renderColor.getBlue() / 255f, (float) renderColor.getAlpha() / 255);

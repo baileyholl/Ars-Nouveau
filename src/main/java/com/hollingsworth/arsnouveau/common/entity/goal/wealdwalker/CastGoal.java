@@ -68,7 +68,7 @@ public class CastGoal<T extends Mob & RangedAttackMob> extends Goal {
 
 
         double d0 = this.mob.distanceToSqr(livingentity.getX(), livingentity.getY(), livingentity.getZ());
-        boolean canSeeEnemy = this.mob.getSensing().canSee(livingentity);
+        boolean canSeeEnemy = this.mob.getSensing().hasLineOfSight(livingentity);
         if (canSeeEnemy != this.seeTime > 0) {
             this.seeTime = 0;
         }

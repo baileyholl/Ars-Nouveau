@@ -48,7 +48,7 @@ public class CollectEssenceGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return !complete && canUse() && target != null && !target.removed && target.isAlive() && drygmy.getHome() != null;
+        return !complete && canUse() && target != null && !target.isRemoved() && target.isAlive() && drygmy.getHome() != null;
     }
 
     @Override

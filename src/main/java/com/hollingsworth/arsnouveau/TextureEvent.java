@@ -13,7 +13,7 @@ public class TextureEvent {
 
     @SubscribeEvent
     public static void textEvent(TextureStitchEvent.Pre event){
-        if(event.getMap().location().toString().equals("minecraft:textures/atlas/chest.png")) {
+        if(event.getAtlas().location().toString().equals("minecraft:textures/atlas/chest.png")) {
             ResourceLocation resNormal = new ResourceLocation(ArsNouveau.MODID,"entity/archwood_chest");
             ResourceLocation resLeft = new ResourceLocation(ArsNouveau.MODID,"entity/archwood_chest_left");
             ResourceLocation resRight = new ResourceLocation(ArsNouveau.MODID,"entity/archwood_chest_right");

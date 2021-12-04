@@ -96,11 +96,6 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
     }
 
     @Override
-    public void remove() {
-        super.remove();
-    }
-
-    @Override
     public void tick() {
         super.tick();
         if(!level.isClientSide && (cauldronPos == null || !(level.getBlockEntity(cauldronPos) instanceof WixieCauldronTile)))
@@ -213,14 +208,14 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
     }
     @Override
     public boolean onDispel(@Nullable LivingEntity caster) {
-        if(this.removed)
+        if(this.isRemoved())
             return false;
 
         if(!level.isClientSide ){
             ItemStack stack = new ItemStack(ItemsRegistry.WIXIE_CHARM);
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack.copy()));
             ParticleUtil.spawnPoof((ServerLevel)level, blockPosition());
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         }
         return true;
     }

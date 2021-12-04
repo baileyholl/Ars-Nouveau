@@ -39,7 +39,7 @@ public class EffectDispel extends AbstractEffect {
                 if(e.isCurativeItem(new ItemStack(Items.MILK_BUCKET)))
                     entity.removeEffect(e.getEffect());
             }
-            if(entity instanceof IDispellable && entity.isAlive() && entity.getHealth() > 0 && !entity.removed){
+            if(entity instanceof IDispellable && entity.isAlive() && entity.getHealth() > 0 && !entity.isRemoved()){
                 ((IDispellable) entity).onDispel(shooter);
             }
             MinecraftForge.EVENT_BUS.post(new DispelEvent(rayTraceResult, world, shooter, spellStats.getAugments(), spellContext));

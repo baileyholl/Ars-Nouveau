@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
+import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 
 /**
  * Event handler used to catch various forge events.
@@ -9,7 +9,7 @@ import net.minecraftforge.fml.event.server.FMLServerStoppingEvent;
 public class FMLEventHandler
 {
     @SubscribeEvent
-    public static void onServerStopped(final FMLServerStoppingEvent event)
+    public static void onServerStopped(final ServerStoppingEvent event)
     {
         Pathfinding.shutdown();
     }

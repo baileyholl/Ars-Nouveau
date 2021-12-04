@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import com.mojang.math.Matrix4f;
@@ -20,19 +21,19 @@ import java.util.Random;
 import java.util.stream.IntStream;
 
 @OnlyIn(Dist.CLIENT)
-public class PortalTileRenderer<T extends PortalTile> extends BlockEntityRenderer<T> {
+public class PortalTileRenderer<T extends PortalTile> implements BlockEntityRenderer<T> {
     public static final ResourceLocation END_SKY_TEXTURE = new ResourceLocation("textures/environment/end_sky.png");
     public static final ResourceLocation END_PORTAL_TEXTURE = new ResourceLocation("textures/entity/end_portal.png");
     private static final Random RANDOM = new Random(31100L);
-    private static final List<RenderType> RENDER_TYPES = IntStream.range(0, 16).mapToObj((p_228882_0_) -> RenderType.endPortal(p_228882_0_ + 1)).collect(ImmutableList.toImmutableList());
+    private static final List<RenderType> RENDER_TYPES = IntStream.range(0, 16).mapToObj((p_228882_0_) -> RenderType.endPortal()).toList();
 
-    public PortalTileRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
+    public PortalTileRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
+
     }
 
     public void render(T tileEntityIn, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
         RANDOM.setSeed(31100L);
-        double d0 = tileEntityIn.getBlockPos().distSqr(this.renderer.camera.getPosition(), true);
+        double d0 = 5d;//;tileEntityIn.getBlockPos().distSqr(this.renderer.camera.getPosition(), true);
         int i = this.getPasses(d0);
         float f = this.getOffset();
         Matrix4f matrix4f = matrixStackIn.last().pose();

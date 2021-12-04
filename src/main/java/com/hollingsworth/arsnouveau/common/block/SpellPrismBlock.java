@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
 import net.minecraft.core.*;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
@@ -34,7 +35,7 @@ public class SpellPrismBlock extends ModBlock {
         Direction direction = world.getBlockState(pos).getValue(DispenserBlock.FACING);
         spell.setPos(iposition.x(), iposition.y(), iposition.z());
         if(spell.spellResolver == null) {
-            spell.remove();
+            spell.remove(Entity.RemovalReason.DISCARDED);
             return;
         }
         float velocity = 0.5f + 0.1f * Math.min(2, spell.spellResolver.spell.getBuffsAtIndex(0, null, AugmentAccelerate.INSTANCE));
@@ -45,7 +46,7 @@ public class SpellPrismBlock extends ModBlock {
             if(world.getBlockState(adjacentPos).getBlock() instanceof ObserverBlock){
                 BlockState observer = world.getBlockState(adjacentPos);
                 if(adjacentPos.relative(observer.getValue(FACING)).equals(pos)) { // Make sure the observer is facing us.
-                    world.getBlockTicks().scheduleTick(pos.relative(d), world.getBlockState(pos.relative(d)).getBlock(), 2);
+                    world.scheduleTick(pos.relative(d), world.getBlockState(pos.relative(d)).getBlock(), 2);
                 }
             }
         }

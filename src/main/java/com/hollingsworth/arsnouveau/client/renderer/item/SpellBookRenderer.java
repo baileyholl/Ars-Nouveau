@@ -7,6 +7,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import com.mojang.blaze3d.platform.Lighting;
+import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -35,14 +36,14 @@ public class SpellBookRenderer extends GeoItemRenderer<SpellBook> {
     @Override
     public void renderByItem(ItemStack itemStack, ItemTransforms.TransformType transformType, PoseStack stack, MultiBufferSource bufferIn, int combinedLightIn, int p_239207_6_) {
         if(transformType == ItemTransforms.TransformType.GUI){
-            RenderSystem.pushMatrix();
+            stack.pushPose();
             MultiBufferSource.BufferSource irendertypebuffer$impl = Minecraft.getInstance().renderBuffers().bufferSource();
             Lighting.setupForFlatItems();
             render(itemStack.getItem(), stack, bufferIn, 15728880, itemStack, transformType);
             irendertypebuffer$impl.endBatch();
             RenderSystem.enableDepthTest();
             Lighting.setupFor3DItems();
-            RenderSystem.popMatrix();
+            stack.popPose();
         }else {
             render(itemStack.getItem(), stack, bufferIn, combinedLightIn, itemStack, transformType);
         }
@@ -57,8 +58,8 @@ public class SpellBookRenderer extends GeoItemRenderer<SpellBook> {
         stack.pushPose();
         stack.translate(0, 0.01f, 0);
         stack.translate(0.5, 0.5, 0.5);
-        Minecraft.getInstance().textureManager.bind(getTextureLocation((SpellBook) animatable));
 //        System.out.println(getTextureLocation((SpellBook) animatable));
+        RenderSystem.setShaderTexture(0, getTextureLocation((SpellBook) animatable));
         Color renderColor = getRenderColor((SpellBook) animatable, 0, stack, bufferIn, null, packedLightIn);
         RenderType renderType = getRenderType((SpellBook) animatable, 0, stack, bufferIn, null, packedLightIn, getTextureLocation((SpellBook) animatable));
         render(model, (SpellBook) animatable, 0, renderType, stack, bufferIn, null, packedLightIn, OverlayTexture.NO_OVERLAY, (float) renderColor.getRed() / 255f, (float) renderColor.getGreen() / 255f, (float) renderColor.getBlue() / 255f, (float) renderColor.getAlpha() / 255);

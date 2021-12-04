@@ -4,12 +4,13 @@ import com.hollingsworth.arsnouveau.common.entity.EntityChimeraProjectile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.util.Mth;
 import com.mojang.math.Vector3f;
 import software.bernie.geckolib3.renderers.geo.GeoProjectilesRenderer;
 
 public class ChimeraProjectileRenderer extends GeoProjectilesRenderer<EntityChimeraProjectile> {
-    protected ChimeraProjectileRenderer(EntityRenderDispatcher renderManager) {
+    public ChimeraProjectileRenderer(EntityRendererProvider.Context renderManager) {
         super(renderManager, new ChimeraProjectileModel());
     }
 

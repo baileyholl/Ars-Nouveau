@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.goal;
 
+import net.minecraft.world.entity.ai.util.LandRandomPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.entity.PathfinderMob;
@@ -23,7 +24,7 @@ public class RandomFlyingGoal extends WaterAvoidingRandomStrollGoal {
     protected Vec3 getPosition() {
         Vec3 vec3d = null;
         if (this.mob.isInWater()) {
-            vec3d = RandomPos.getLandPos(this.mob, 15, 15);
+            vec3d = LandRandomPos.getPos(this.mob, 15, 15);
         }
 
         if (this.mob.getRandom().nextFloat() >= this.probability) {
@@ -50,7 +51,7 @@ public class RandomFlyingGoal extends WaterAvoidingRandomStrollGoal {
             blockpos1 = (BlockPos)iterator.next();
             if (!blockpos.equals(blockpos1)) {
                 Block block = this.mob.level.getBlockState(blockpos$mutable1.set(blockpos1).move(Direction.DOWN)).getBlock();
-                boolean flag = block instanceof LeavesBlock || block.is(BlockTags.LOGS);
+                boolean flag = block instanceof LeavesBlock || block.defaultBlockState().is(BlockTags.LOGS);
                 if (flag && this.mob.level.isEmptyBlock(blockpos1) && this.mob.level.isEmptyBlock(blockpos$mutable.set(blockpos1).move(Direction.UP))) {
                     break;
                 }

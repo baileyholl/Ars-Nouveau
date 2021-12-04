@@ -32,7 +32,7 @@ public class EnchantersMirror extends ModItem implements ICasterTool, IAnimatabl
     }
 
     public EnchantersMirror(Properties properties, String registryName) {
-        super(properties.setISTER(() -> MirrorRenderer::new), registryName);
+        super(properties, registryName);
     }
 
     public EnchantersMirror(String registryName) {

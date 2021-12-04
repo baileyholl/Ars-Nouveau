@@ -42,7 +42,7 @@ public class ModdedScreen extends Screen {
     }
     public final void drawTooltip(PoseStack stack, int mouseX, int mouseY) {
         if (tooltip != null && !tooltip.isEmpty()) {
-            this.renderWrappedToolTip(stack, tooltip, mouseX, mouseY, font);
+            this.renderComponentTooltip(stack, tooltip, mouseX, mouseY, font);
         }
     }
 

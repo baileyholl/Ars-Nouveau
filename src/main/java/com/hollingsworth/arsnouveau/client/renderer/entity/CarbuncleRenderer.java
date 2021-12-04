@@ -9,7 +9,9 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
@@ -24,7 +26,7 @@ public class CarbuncleRenderer extends GeoEntityRenderer<EntityCarbuncle> {
     private static final ResourceLocation GREEN = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_green.png");
     private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_wild_orange.png");
 
-    public CarbuncleRenderer(EntityRenderDispatcher manager) {
+    public CarbuncleRenderer(EntityRendererProvider.Context  manager) {
         super(manager,new CarbuncleModel());
 //        this.addLayer(new CarbuncleHeldItemLayer(this));
 //        this.addLayer(new ModelLayerRenderer(this, new CarbuncleShadesModel(this.getGeoModelProvider())));
@@ -59,7 +61,7 @@ public class CarbuncleRenderer extends GeoEntityRenderer<EntityCarbuncle> {
             stack.translate(0, -0.10, 0);
             stack.scale(0.75f, 0.75f, 0.75f);
             ItemStack itemstack = carbuncle.getHeldStack();
-            Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemTransforms.TransformType.GROUND, packedLightIn, OverlayTexture.NO_OVERLAY, stack, this.buffer);
+            Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemTransforms.TransformType.GROUND, packedLightIn, OverlayTexture.NO_OVERLAY, stack, this.buffer, (int) carbuncle.getOnPos().asLong());
             stack.popPose();
             bufferIn = buffer.getBuffer(RenderType.entityCutoutNoCull(text));
 

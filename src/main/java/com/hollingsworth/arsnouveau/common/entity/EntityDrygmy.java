@@ -110,7 +110,7 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
 
         if(level.isClientSide && isChanneling() && getChannelEntity() != -1){
             Entity entity = level.getEntity(getChannelEntity());
-            if(entity == null || entity.removed)
+            if(entity == null || entity.isRemoved())
                 return;
             Vec3 vec = entity.position;
             level.addParticle(GlowParticleData.createData(new ParticleColor(50, 255, 20)),
@@ -133,7 +133,7 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
             if (tamingTime > 60 && !level.isClientSide) {
                 ItemStack stack = new ItemStack(ItemsRegistry.DRYGMY_SHARD, 1 + level.random.nextInt(2));
                 level.addFreshEntity(new ItemEntity(level, getX(), getY() + 0.5, getZ(), stack));
-                this.remove(false);
+                this.remove(RemovalReason.DISCARDED);
                 level.playSound(null, getX(), getY(), getZ(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1f, 1f);
             }
         }
@@ -255,14 +255,14 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
 
     @Override
     public boolean onDispel(@Nullable LivingEntity caster) {
-        if (this.removed)
+        if (this.isRemoved())
             return false;
 
         if (!level.isClientSide && isTamed()) {
             ItemStack stack = new ItemStack(ItemsRegistry.DRYGMY_CHARM);
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
             ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         }
         return this.isTamed();
     }

@@ -47,8 +47,8 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
     public boolean needsMana;
     private List<LivingEntity> nearbyEntities;
 
-    public DrygmyTile() {
-        super(BlockRegistry.DRYGMY_TILE);
+    public DrygmyTile(BlockPos pos, BlockState state) {
+        super(BlockRegistry.DRYGMY_TILE, pos, state);
     }
 
     @Override
@@ -155,7 +155,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
             LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerLevel)this.level)).withRandom(level.getRandom())
                     .withParameter(LootContextParams.THIS_ENTITY, entity).withParameter(LootContextParams.ORIGIN, entity.position())
                     .withParameter(LootContextParams.DAMAGE_SOURCE, damageSource)
-                    .withOptionalParameter(LootContextParams.KILLER_ENTITY, fakePlayer.getEntity())
+                    .withOptionalParameter(LootContextParams.KILLER_ENTITY, fakePlayer)
                     .withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY, damageSource.getDirectEntity());
             lootcontext$builder = lootcontext$builder.withParameter(LootContextParams.LAST_DAMAGE_PLAYER, fakePlayer)
                     .withLuck(fakePlayer.getLuck());
@@ -205,11 +205,11 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
 
 
     @Override
-    public void load(BlockState state, CompoundTag compound) {
+    public void load(CompoundTag compound) {
         this.progress = compound.getInt("progress");
         this.bonus = compound.getInt("bonus");
         this.needsMana = compound.getBoolean("needsMana");
-        super.load(state, compound);
+        super.load(compound);
     }
 
     @Override

@@ -28,7 +28,7 @@ public class ArchwoodChest extends ChestBlock {
 
     @OnlyIn(Dist.CLIENT)
     public BlockItem provideItemBlock(Block block, Item.Properties props) {
-        ArchwoodChestTile.setISTER(props, block);
+    //    ArchwoodChestTile.setISTER(props, block);
         return new BlockItem(block, props);
     }
 

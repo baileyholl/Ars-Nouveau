@@ -94,7 +94,7 @@ public class SummoningFocus extends ModItem implements ISpellModifierItem {
     public static void castSpell(SpellCastEvent event){
         if(!event.getWorld().isClientSide && event.getEntity() instanceof Player &&  SummoningFocus.containsThis(event.getWorld(), event.getEntityLiving())){
             if(event.spell.getCastMethod() != null && sympatheticMethods.contains(event.spell.getCastMethod())){
-                for(LivingEntity i : event.getWorld().getLoadedEntitiesOfClass(LivingEntity.class, new AABB(event.getEntityLiving().blockPosition()).inflate(30), (l) -> l instanceof ISummon)){
+                for(LivingEntity i : event.getWorld().getEntitiesOfClass(LivingEntity.class, new AABB(event.getEntityLiving().blockPosition()).inflate(30), (l) -> l instanceof ISummon)){
                     if(event.getEntityLiving().equals(((ISummon) i).getOwner((ServerLevel) event.getWorld()))){
                         EntitySpellResolver spellResolver = new EntitySpellResolver(new SpellContext(event.spell, i).withColors(event.context.colors));
                         spellResolver.onCast(ItemStack.EMPTY, i, i.level);

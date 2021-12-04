@@ -11,6 +11,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -23,7 +24,7 @@ import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
 public class PressRenderer extends GeoBlockRenderer<GlyphPressTile> {
 
-    public PressRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
+    public PressRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
         super(rendererDispatcherIn, new PressModel());
     }
 
@@ -31,7 +32,7 @@ public class PressRenderer extends GeoBlockRenderer<GlyphPressTile> {
         stack.pushPose();
         tileEntityIn.frames++;
         entityItem.setYHeadRot(tileEntityIn.frames);
-        ObfuscationReflectionHelper.setPrivateValue(ItemEntity.class, entityItem, (int) (800f - tileEntityIn.frames), MappingUtil.getItemEntityAge());
+        //TODO: Check if age set still needed
         Minecraft.getInstance().getEntityRenderDispatcher().render(entityItem, 0.5,1,0.5, entityItem.yRot, 2.0f,stack, iRenderTypeBuffer,15728880);
         Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entityItem);
         stack.popPose();
@@ -44,7 +45,7 @@ public class PressRenderer extends GeoBlockRenderer<GlyphPressTile> {
         matrixStack.mulPose(Vector3f.XP.rotationDegrees(90.0F));
         matrixStack.translate(0, 0D, -0.2d);
         matrixStack.scale(0.35f, 0.35f, 0.35F);
-        Minecraft.getInstance().getItemRenderer().renderStatic(new ItemStack(itemToRender), ItemTransforms.TransformType.NONE, 150, il , matrixStack, iRenderTypeBuffer);
+        Minecraft.getInstance().getItemRenderer().renderStatic(new ItemStack(itemToRender), ItemTransforms.TransformType.NONE, 150, il , matrixStack, iRenderTypeBuffer, 1);
         matrixStack.popPose();
     }
 

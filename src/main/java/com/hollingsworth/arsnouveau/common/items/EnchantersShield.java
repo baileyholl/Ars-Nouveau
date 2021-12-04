@@ -24,7 +24,7 @@ import net.minecraft.world.item.Item.Properties;
 public class EnchantersShield extends ShieldItem implements IAnimatable {
 
     public EnchantersShield() {
-        super(defaultItemProperties().durability(500).setISTER(() -> ShieldRenderer::new));
+        super(defaultItemProperties().durability(500));
         setRegistryName(LibItemNames.ENCHANTERS_SHIELD);
     }
 
@@ -60,10 +60,11 @@ public class EnchantersShield extends ShieldItem implements IAnimatable {
         return factory;
     }
 
-    @Override
-    public boolean isShield(ItemStack stack, @Nullable LivingEntity entity) {
-        return true;
-    }
+//    @Override
+//    public boolean isShield(ItemStack stack, @Nullable LivingEntity entity) {
+//        return true;
+//    }
+//
 
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {

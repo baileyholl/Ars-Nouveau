@@ -4,6 +4,8 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
 import com.hollingsworth.arsnouveau.api.spell.IPlaceBlockResponder;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
@@ -12,8 +14,8 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 
 public class SpellTurretTile extends BasicSpellTurretTile  implements IPickupResponder, IPlaceBlockResponder, ITooltipProvider {
 
-    public SpellTurretTile() {
-        super(BlockRegistry.SPELL_TURRET_TYPE);
+    public SpellTurretTile(BlockPos pos, BlockState state) {
+        super(BlockRegistry.SPELL_TURRET_TYPE, pos, state);
     }
 
     @Override

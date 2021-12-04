@@ -5,7 +5,9 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleSparkleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -20,12 +22,12 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.Random;
 
-public class SummoningCrystalTile extends AbstractManaTile implements IAnimatable {
+public class SummoningCrystalTile extends AbstractManaTile implements IAnimatable, ITickable {
 
     public boolean isOff;
 
-    public SummoningCrystalTile() {
-        super(BlockRegistry.SUMMONING_CRYSTAL_TILE);
+    public SummoningCrystalTile(BlockPos pos, BlockState state) {
+        super(BlockRegistry.SUMMONING_CRYSTAL_TILE, pos, state);
     }
 
     AnimationFactory manager = new AnimationFactory(this);
@@ -74,8 +76,8 @@ public class SummoningCrystalTile extends AbstractManaTile implements IAnimatabl
     }
 
     @Override
-    public void load(BlockState state, CompoundTag tag) {
-        super.load(state,tag);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         isOff = tag.getBoolean("is_off");
     }
 

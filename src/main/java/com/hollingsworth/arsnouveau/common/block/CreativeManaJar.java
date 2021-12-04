@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.CreativeManaJarTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.BlockGetter;
@@ -14,9 +15,8 @@ public class CreativeManaJar extends ManaJar {
         super(TickableModBlock.defaultProperties().noOcclusion(), LibBlockNames.CREATIVE_MANA_JAR);
     }
 
-    @Nullable
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-        return new CreativeManaJarTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new CreativeManaJarTile(pos, state);
     }
 }

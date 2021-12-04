@@ -11,10 +11,7 @@ import com.hollingsworth.arsnouveau.common.network.PacketSetBookMode;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.screens.Screen;
@@ -59,7 +56,8 @@ public class GuiRadialMenu extends Screen {
     @SubscribeEvent
     public static void overlayEvent(RenderGameOverlayEvent.Pre event) {
         if (Minecraft.getInstance().screen instanceof GuiRadialMenu) {
-            if (event.getType() == RenderGameOverlayEvent.ElementType.CROSSHAIRS) {
+            //TODO: Verify this is still Crosshairs
+            if (event.getType() == RenderGameOverlayEvent.ElementType.LAYER) {
                 event.setCanceled(true);
             }
         }
@@ -113,17 +111,18 @@ public class GuiRadialMenu extends Screen {
             a += 360;
         }
 
-        RenderSystem.pushMatrix();
-        RenderSystem.disableAlphaTest();
+        ms.pushPose();
+       //TODO: Restore alpha test?
+        // RenderSystem.disableAlphaTest();
         RenderSystem.enableBlend();
         RenderSystem.disableTexture();
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
-        RenderSystem.translated(0, animTop, 0);
+        ms.translate(0, animTop, 0);
 
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder buffer = tessellator.getBuilder();
-        buffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR);
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         boolean hasMouseOver = false;
         int mousedOverSlot = -1;
         //Category mousedOverCategory = null;
@@ -161,9 +160,9 @@ public class GuiRadialMenu extends Screen {
             adjusted = adjusted == 0 ? 10 : adjusted;
             drawCenteredString(ms,font, SpellBook.getSpellName(tag,  adjusted), width/2,(height - font.lineHeight) / 2,16777215);
         }
-
-        Lighting.turnBackOn();
-        RenderSystem.popMatrix();
+        //TODO: find lighting call
+//        Lighting.turnBackOn();
+        ms.popPose();
         for(int i = 0; i< numberOfSlices; i++){
             ItemStack stack = new ItemStack(Blocks.DIRT);
             float angle1 = ((i / (float) numberOfSlices) - 0.25f) * 2 * (float) Math.PI;
@@ -181,9 +180,10 @@ public class GuiRadialMenu extends Screen {
                     break;
                 }
             }
-            RenderSystem.disableRescaleNormal();
-            Lighting.turnOff();
-            RenderSystem.disableLighting();
+            //TODO: Find replacements for rescale, lights,
+//            RenderSystem.disableRescaleNormal();
+//            Lighting.turnOff();
+//            RenderSystem.disableLighting();
             RenderSystem.disableDepthTest();
             if(!resourceIcon.isEmpty()) {
                 GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + resourceIcon),

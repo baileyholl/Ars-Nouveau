@@ -47,8 +47,10 @@ public class Recipes extends RecipeProvider {
     public static Ingredient MANA_GEM = Ingredient.of(MANA_GEM_TAG);
     public static Ingredient MANA_GEM_BLOCK = Ingredient.of(MANA_GEM_BLOCK_TAG);
     public static Ingredient ARCHWOOD_LOG = Ingredient.of(ARCHWOOD_LOG_TAG);
+
+
     @Override
-    protected void buildShapelessRecipes(Consumer<FinishedRecipe> consumer) {
+    protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
         {
             makeArmor("novice", consumer, ItemsRegistry.MAGE_FIBER);
             makeArmor("apprentice", consumer, ItemsRegistry.BLAZE_FIBER);
@@ -603,7 +605,7 @@ public class Recipes extends RecipeProvider {
 
     private static int STONECUTTER_COUNTER = 0;
     public static void makeStonecutter(Consumer<FinishedRecipe> consumer, ItemLike input, ItemLike output, String reg){
-        SingleItemRecipeBuilder.stonecutting(Ingredient.of(input), output).unlocks("has_journal",InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.wornNotebook)).save(consumer, new ResourceLocation(ArsNouveau.MODID, reg + "_"+STONECUTTER_COUNTER));
+        SingleItemRecipeBuilder.stonecutting(Ingredient.of(input), output).unlockedBy("has_journal",InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.wornNotebook)).save(consumer, new ResourceLocation(ArsNouveau.MODID, reg + "_"+STONECUTTER_COUNTER));
         STONECUTTER_COUNTER++;
     }
 

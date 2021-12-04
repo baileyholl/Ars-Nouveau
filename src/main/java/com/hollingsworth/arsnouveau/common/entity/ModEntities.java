@@ -45,7 +45,6 @@ public class ModEntities {
             .sized(0.6F, 0.98F).setTrackingRange(10)
             .setShouldReceiveVelocityUpdates(true));
 
-    public static EntityType<EntityEarthElemental> ENTITY_EARTH_ELEMENTAL_TYPE = null;
     public static EntityType<EntityWixie> ENTITY_WIXIE_TYPE = null;
 
     public static EntityType<EntityFlyingItem> ENTITY_FLYING_ITEM = null;

@@ -2,16 +2,16 @@ package com.hollingsworth.arsnouveau.common.capability;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.mana.IMana;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -21,12 +21,9 @@ import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nullable;
 
-import static com.hollingsworth.arsnouveau.setup.InjectionUtil.Null;
-
 public class ManaCapability {
 
-    @CapabilityInject(IMana.class)
-    public static final Capability<IMana> MANA_CAPABILITY = Null();
+    public static final Capability<IMana> MANA_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
 
     public static final Direction DEFAULT_FACING = null;
@@ -35,30 +32,30 @@ public class ManaCapability {
     public static final ResourceLocation ID = new ResourceLocation(ArsNouveau.MODID, "mana");
 
     public static void register(){
-
-        CapabilityManager.INSTANCE.register(IMana.class, new Capability.IStorage<IMana>() {
-            @Nullable
-            @Override
-            public Tag writeNBT(Capability<IMana> capability, IMana instance, Direction side) {
-                CompoundTag tag = new CompoundTag();
-                tag.putDouble("current", instance.getCurrentMana());
-                tag.putInt("max", instance.getMaxMana());
-                tag.putInt("glyph", instance.getGlyphBonus());
-                tag.putInt("book_tier", instance.getBookTier());
-                return tag;
-            }
-
-            @Override
-            public void readNBT(Capability<IMana> capability, IMana instance, Direction side, Tag nbt) {
-                if(!(nbt instanceof CompoundTag))
-                    return;
-                CompoundTag tag = (CompoundTag)nbt;
-                instance.setMaxMana(tag.getInt("max"));
-                instance.setMana(tag.getDouble("current"));
-                instance.setBookTier(tag.getInt("book_tier"));
-                instance.setGlyphBonus(tag.getInt("glyph"));
-            }
-        }, () -> new Mana(null));
+//
+//        CapabilityManager.INSTANCE.register(IMana.class, new Capability.IStorage<IMana>() {
+//            @Nullable
+//            @Override
+//            public Tag writeNBT(Capability<IMana> capability, IMana instance, Direction side) {
+//                CompoundTag tag = new CompoundTag();
+//                tag.putDouble("current", instance.getCurrentMana());
+//                tag.putInt("max", instance.getMaxMana());
+//                tag.putInt("glyph", instance.getGlyphBonus());
+//                tag.putInt("book_tier", instance.getBookTier());
+//                return tag;
+//            }
+//
+//            @Override
+//            public void readNBT(Capability<IMana> capability, IMana instance, Direction side, Tag nbt) {
+//                if(!(nbt instanceof CompoundTag))
+//                    return;
+//                CompoundTag tag = (CompoundTag)nbt;
+//                instance.setMaxMana(tag.getInt("max"));
+//                instance.setMana(tag.getDouble("current"));
+//                instance.setBookTier(tag.getInt("book_tier"));
+//                instance.setGlyphBonus(tag.getInt("glyph"));
+//            }
+//        }, () -> new Mana(null));
         System.out.println("Finished Registering ManaCapability");
     }
 

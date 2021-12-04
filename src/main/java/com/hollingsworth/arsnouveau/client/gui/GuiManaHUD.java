@@ -4,7 +4,9 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.client.IDisplayMana;
 import com.hollingsworth.arsnouveau.api.mana.IMana;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.arsnouveau.client.gui.book.BaseBook;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
@@ -35,15 +37,15 @@ public class GuiManaHUD extends GuiComponent {
 
         int height = minecraft.getWindow().getGuiScaledHeight() - 5;
 
-        Minecraft.getInstance().textureManager.bind(new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_border.png"));
+        RenderSystem.setShaderTexture(0, new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_border.png"));
         blit(ms,offsetLeft, height - 18, 0, 0, 108, 18, 256, 256);
         int manaOffset = (int) (((ClientInfo.ticksInGame + pt) / 3 % (33))) * 6;
 
         // 96
-        Minecraft.getInstance().textureManager.bind(new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_mana.png"));
+        RenderSystem.setShaderTexture(0,new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_mana.png"));
         blit(ms,offsetLeft + 9, height - 9, 0, manaOffset, manaLength,6, 256, 256);
 
-        Minecraft.getInstance().textureManager.bind(new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_border.png"));
+        RenderSystem.setShaderTexture(0,new ResourceLocation(ArsNouveau.MODID, "textures/gui/manabar_gui_border.png"));
         blit(ms,offsetLeft, height - 17, 0, 18, 108, 20, 256, 256);
     }
 }

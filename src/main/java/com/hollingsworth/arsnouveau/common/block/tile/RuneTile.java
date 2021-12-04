@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.RuneBlock;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -28,7 +29,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
 
-public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimatable {
+public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimatable, ITickable {
     public Spell spell = Spell.EMPTY;
     public boolean isTemporary;
     public boolean isCharged;
@@ -37,8 +38,8 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
     public ParticleColor color = ParticleUtil.defaultParticleColor();
     public Entity touchedEntity;
 
-    public RuneTile() {
-        super(BlockRegistry.RUNE_TILE);
+    public RuneTile(BlockPos pos, BlockState state) {
+        super(BlockRegistry.RUNE_TILE, pos, state);
         isCharged = true;
         isTemporary = false;
         ticksUntilCharge = 0;

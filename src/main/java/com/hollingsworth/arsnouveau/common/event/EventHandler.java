@@ -15,6 +15,7 @@ import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.ritual.RitualFlight;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Witch;
@@ -169,7 +170,7 @@ public class EventHandler {
             LivingEntity entity = (LivingEntity) ((EntityHitResult) event.rayTraceResult).getEntity();
             if(entity instanceof Witch){
                 if(entity.getHealth() <= entity.getMaxHealth()/2){
-                    entity.remove();
+                    entity.remove(Entity.RemovalReason.KILLED);
                     ParticleUtil.spawnPoof((ServerLevel) event.world, entity.blockPosition());
                     event.world.addFreshEntity(new ItemEntity(event.world, entity.getX(), entity.getY(), entity.getZ(), new ItemStack(ItemsRegistry.WIXIE_SHARD)));
                 }

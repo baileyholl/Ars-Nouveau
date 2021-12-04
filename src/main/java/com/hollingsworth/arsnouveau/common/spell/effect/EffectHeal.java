@@ -30,7 +30,7 @@ public class EffectHeal extends AbstractEffect {
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         if(rayTraceResult.getEntity() instanceof LivingEntity){
             LivingEntity entity = ((LivingEntity) rayTraceResult.getEntity());
-            if(entity.removed || entity.getHealth() <= 0)
+            if(entity.isRemoved() || entity.getHealth() <= 0)
                 return;
 
             float healVal = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());

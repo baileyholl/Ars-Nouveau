@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
+import com.hollingsworth.arsnouveau.common.util.WorldUtil;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.entity.Entity;
@@ -27,12 +28,16 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-
 public class ChunkCache implements LevelReader
 {
-    protected int       chunkX;
+    /**
+     * Dimensiontype.
+     */
+    private final DimensionType dimType;
+    protected int chunkX;
     protected int       chunkZ;
     protected LevelChunk[][] chunkArray;
     /**
@@ -44,7 +49,7 @@ public class ChunkCache implements LevelReader
      */
     protected Level     world;
 
-    public ChunkCache(Level worldIn, BlockPos posFromIn, BlockPos posToIn, int subIn)
+    public ChunkCache(Level worldIn, BlockPos posFromIn, BlockPos posToIn, int subIn, final DimensionType type)
     {
         this.world = worldIn;
         this.chunkX = posFromIn.getX() - subIn >> 4;
@@ -58,24 +63,13 @@ public class ChunkCache implements LevelReader
         {
             for (int l = this.chunkZ; l <= j; ++l)
             {
-                if (isEntityChunkLoaded(world, new ChunkPos(k, l)))
+                if (WorldUtil.isEntityChunkLoaded(world, new ChunkPos(k, l)))
                 {
                     this.chunkArray[k - this.chunkX][l - this.chunkZ] = (LevelChunk) worldIn.getChunk(k, l, ChunkStatus.FULL, false);
                 }
             }
         }
-    }
-
-    /**
-     * Returns whether an entity ticking chunk is loaded at the position
-     *
-     * @param world world to check on
-     * @param pos   chunk position
-     * @return true if loaded
-     */
-    public static boolean isEntityChunkLoaded(final LevelAccessor world, final ChunkPos pos)
-    {
-        return world.getChunkSource().isEntityTickingChunk(pos);
+        this.dimType = type;
     }
 
     /**
@@ -111,7 +105,7 @@ public class ChunkCache implements LevelReader
     @Override
     public BlockState getBlockState(BlockPos pos)
     {
-        if (pos.getY() >= 0 && pos.getY() < 256)
+        if (pos.getY() >= getMinBuildHeight() && pos.getY() < getMaxBuildHeight())
         {
             int i = (pos.getX() >> 4) - this.chunkX;
             int j = (pos.getZ() >> 4) - this.chunkZ;
@@ -133,7 +127,7 @@ public class ChunkCache implements LevelReader
     @Override
     public FluidState getFluidState(final BlockPos pos)
     {
-        if (pos.getY() >= 0 && pos.getY() < 256)
+        if (pos.getY() >= getMinBuildHeight() && pos.getY() < getMaxBuildHeight())
         {
             int i = (pos.getX() >> 4) - this.chunkX;
             int j = (pos.getZ() >> 4) - this.chunkZ;
@@ -166,7 +160,7 @@ public class ChunkCache implements LevelReader
     public boolean isEmptyBlock(BlockPos pos)
     {
         BlockState state = this.getBlockState(pos);
-        return state.getBlock().isAir(state, this, pos);
+        return state.isAir();
     }
 
     @Nullable
@@ -219,8 +213,7 @@ public class ChunkCache implements LevelReader
     }
 
     @Override
-    public Stream<VoxelShape> getEntityCollisions(
-      @Nullable final Entity entity, final AABB axisAlignedBB, final Predicate<Entity> predicate)
+    public List<VoxelShape> getEntityCollisions(@org.jetbrains.annotations.Nullable final Entity p_186427_, final AABB p_186428_)
     {
         return null;
     }
@@ -246,7 +239,7 @@ public class ChunkCache implements LevelReader
     @Override
     public DimensionType dimensionType()
     {
-        return null;
+        return dimType;
     }
 
     private boolean withinBounds(int x, int z)

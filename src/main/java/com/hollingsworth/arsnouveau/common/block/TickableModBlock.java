@@ -18,6 +18,10 @@ public abstract class TickableModBlock extends ModBlock implements ITickableBloc
         this(defaultProperties(), registryName);
     }
 
+    public TickableModBlock(Properties properties){
+        super(properties);
+    }
+
     public static Block.Properties defaultProperties(){
         return Block.Properties.of(Material.STONE).sound(SoundType.STONE).strength(2.0f, 6.0f);
     }

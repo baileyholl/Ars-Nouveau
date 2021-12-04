@@ -36,11 +36,11 @@ public class RitualWarp extends AbstractRitual {
         if(!world.isClientSide && world.getGameTime() % 20 == 0){
             incrementProgress();
             if(getProgress() >= 3){
-                List<Entity> entities = getWorld().getEntitiesOfClass(LivingEntity.class, new AABB(getPos()).inflate(5));
+                List<LivingEntity> entities = getWorld().getEntitiesOfClass(LivingEntity.class, new AABB(getPos()).inflate(5));
 
                 ItemStack i = getConsumedItems().get(0);
                 BlockPos b = WarpScroll.getPos(i);
-                for(Entity a : entities){
+                for(LivingEntity a : entities){
                     if(b != null)
                         a.teleportTo(b.getX(), b.getY(), b.getZ());
                 }

@@ -42,7 +42,7 @@ public class FindItem extends Goal {
     }
 
     public List<ItemEntity> nearbyItems(){
-       return entityCarbuncle.level.getLoadedEntitiesOfClass(ItemEntity.class, entityCarbuncle.getAABB(), getFinderItems());
+       return entityCarbuncle.level.getEntitiesOfClass(ItemEntity.class, entityCarbuncle.getAABB(), getFinderItems());
     }
 
     @Override

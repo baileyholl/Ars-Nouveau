@@ -35,9 +35,9 @@ public class EffectCrush extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         for(BlockPos p : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats.getBuffCount(AugmentAOE.INSTANCE), spellStats.getBuffCount(AugmentPierce.INSTANCE))){
             BlockState state = world.getBlockState(p);
-            if(state.getBlock().is(Tags.Blocks.COBBLESTONE) || state.getBlock().is(Tags.Blocks.STONE)){
+            if(state.is(Tags.Blocks.COBBLESTONE) || state.is(Tags.Blocks.STONE)){
                 world.setBlockAndUpdate(p, Blocks.GRAVEL.defaultBlockState());
-            }else if(state.getBlock().is(Tags.Blocks.GRAVEL)){
+            }else if(state.is(Tags.Blocks.GRAVEL)){
                 world.setBlockAndUpdate(p, Blocks.SAND.defaultBlockState());
             }
         }

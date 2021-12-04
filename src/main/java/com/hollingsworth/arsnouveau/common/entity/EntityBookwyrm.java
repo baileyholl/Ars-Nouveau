@@ -98,7 +98,7 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
 
         ItemStack stack = player.getItemInHand(hand);
 
-        if (player.getMainHandItem().getItem().is(Tags.Items.DYES)) {
+        if (player.getMainHandItem().is(Tags.Items.DYES)) {
             DyeColor color = DyeColor.getColor(stack);
             if(color == null || this.entityData.get(COLOR).equals(color.getName()) || !Arrays.asList(COLORS).contains(color.getName()))
                 return InteractionResult.SUCCESS;
@@ -251,14 +251,14 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
 
     @Override
     public boolean onDispel(@Nullable LivingEntity caster) {
-        if(this.removed)
+        if(this.isRemoved())
             return false;
 
         if(!level.isClientSide){
             ItemStack stack = new ItemStack(ItemsRegistry.BOOKWYRM_CHARM);
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
             ParticleUtil.spawnPoof((ServerLevel)level, blockPosition());
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         }
         return true;
     }

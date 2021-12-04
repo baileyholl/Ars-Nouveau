@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
@@ -33,7 +34,7 @@ public class FlyingFamiliarEntity extends FamiliarEntity{
     }
 
     @Override
-    public boolean causeFallDamage(float p_225503_1_, float p_225503_2_) {
+    public boolean causeFallDamage(float p_147187_, float p_147188_, DamageSource p_147189_) {
         return false;
     }
 }

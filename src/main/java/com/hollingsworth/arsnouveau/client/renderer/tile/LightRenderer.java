@@ -9,14 +9,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
 import java.util.Random;
 
-public class LightRenderer extends BlockEntityRenderer<LightTile> {
-    public LightRenderer(BlockEntityRenderDispatcher p_i226006_1_) {
-        super(p_i226006_1_);
+public class LightRenderer implements BlockEntityRenderer<LightTile> {
+    public LightRenderer(BlockEntityRendererProvider.Context p_i226006_1_) {
+
     }
 
     @Override

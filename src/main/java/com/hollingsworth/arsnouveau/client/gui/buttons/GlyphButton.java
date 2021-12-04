@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.components.Button;
@@ -50,20 +51,15 @@ public class GlyphButton extends Button {
     }
 
     @Override
-    public boolean isHovered() {
-        return super.isHovered();
-    }
-
-    @Override
     public void render(PoseStack ms,int mouseX, int mouseY, float partialTicks) {
         if (visible)
         {
             if(this.resourceIcon != null && !this.resourceIcon.equals("")) {
                 GL11.glEnable(GL11.GL_BLEND);
                 if (validationErrors.isEmpty()) {
-                    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                 } else {
-                    GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.25F);
+                   RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.25F);
                 }
 
                 GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + this.resourceIcon), x, y, 0, 0, 16, 16,16,16 , ms);

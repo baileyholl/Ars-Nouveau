@@ -29,6 +29,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.ticks.ScheduledTick;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -91,7 +92,7 @@ public class RuneBlock extends TickableModBlock {
         super.entityInside(state, worldIn, pos, entityIn);
         if(worldIn.getBlockEntity(pos) instanceof RuneTile) {
             ((RuneTile) worldIn.getBlockEntity(pos)).touchedEntity = entityIn;
-            worldIn.getBlockTicks().scheduleTick(pos, this, 1);
+            worldIn.scheduleTick(pos, this,1);
         }
     }
 

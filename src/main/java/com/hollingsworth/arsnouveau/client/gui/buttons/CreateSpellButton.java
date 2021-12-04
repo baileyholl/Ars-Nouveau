@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.resources.ResourceLocation;
@@ -26,9 +27,9 @@ public class CreateSpellButton extends GuiImageButton {
     public void render(PoseStack ms, int parX, int parY, float partialTicks) {
         if (visible) {
             if (parent.validationErrors.isEmpty()) {
-                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             } else {
-                GL11.glColor4f(1.0F, 0.7F, 0.7F, 1.0F);
+                RenderSystem.setShaderColor(1.0F, 0.7F, 0.7F, 1.0F);
             }
 
             GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, image_width, image_height, ms);

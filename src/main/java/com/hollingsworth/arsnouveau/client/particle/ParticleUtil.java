@@ -47,7 +47,8 @@ public class ParticleUtil {
     }
 
     public static void spawnFollowProjectile(Level world, BlockPos from, BlockPos to){
-        if(world.getChunkSource().isEntityTickingChunk(new ChunkPos(from)) && world.getChunkSource().isEntityTickingChunk(new ChunkPos(to))){
+        //TODO: Restore check loaded chunk
+        if(true){//world.getChunkSource().isEntityTickingChunk(new ChunkPos(from)) && world.getChunkSource().isEntityTickingChunk(new ChunkPos(to))){
             EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, from, to);
             world.addFreshEntity(aoeProjectile);
         }

@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.ResourceLocation;
@@ -24,12 +25,12 @@ import net.minecraft.world.level.Level;
 
 import java.util.Random;
 
-public class EnchantingApparatusRenderer extends BlockEntityRenderer<EnchantingApparatusTile> {
+public class EnchantingApparatusRenderer implements BlockEntityRenderer<EnchantingApparatusTile> {
     public static final EnchantingApparatusModel model = new EnchantingApparatusModel();
     public static final ResourceLocation texture = new ResourceLocation(ArsNouveau.MODID + ":textures/blocks/enchanting_apparatus.png");
 
-    public EnchantingApparatusRenderer(BlockEntityRenderDispatcher p_i226006_1_) {
-        super(p_i226006_1_);
+    public EnchantingApparatusRenderer(BlockEntityRendererProvider.Context p_i226006_1_) {
+
     }
 
     @Override
@@ -86,23 +87,25 @@ public class EnchantingApparatusRenderer extends BlockEntityRenderer<EnchantingA
         matrixStack.pushPose();
         matrixStack.translate(0.5D, 0.55f +sinOffset, 0.5D);
         matrixStack.scale(0.35f, 0.35f, 0.35F);
-        Minecraft.getInstance().getItemRenderer().renderStatic(entityItem.getItem(), ItemTransforms.TransformType.FIXED, 15728880, overlayIn, matrixStack, iRenderTypeBuffer);
+        Minecraft.getInstance().getItemRenderer().renderStatic(entityItem.getItem(), ItemTransforms.TransformType.FIXED, 15728880, overlayIn, matrixStack, iRenderTypeBuffer, (int) tileEntityIn.getBlockPos().asLong());
         matrixStack.popPose();
 
     }
 
-    public static class ISRender extends BlockEntityWithoutLevelRenderer {
-
-        public ISRender(){ }
-
-
-        @Override
-        public void renderByItem(ItemStack p_228364_1_,ItemTransforms.TransformType p_239207_2_,PoseStack ms, MultiBufferSource buffers, int light, int overlay) {
-            ms.pushPose();
-            ms.translate(0.75, 0.25, 0.2);
-            VertexConsumer buffer = buffers.getBuffer(model.renderType(texture));
-            model.renderToBuffer(ms, buffer, light, overlay, 1, 1, 1, 1);
-            ms.popPose();
-        }
-    }
+//    public static class ISRender extends BlockEntityWithoutLevelRenderer {
+//
+//        public ISRender(){
+//            super();
+//        }
+//
+//
+//        @Override
+//        public void renderByItem(ItemStack p_228364_1_,ItemTransforms.TransformType p_239207_2_,PoseStack ms, MultiBufferSource buffers, int light, int overlay) {
+//            ms.pushPose();
+//            ms.translate(0.75, 0.25, 0.2);
+//            VertexConsumer buffer = buffers.getBuffer(model.renderType(texture));
+//            model.renderToBuffer(ms, buffer, light, overlay, 1, 1, 1, 1);
+//            ms.popPose();
+//        }
+//    }
 }

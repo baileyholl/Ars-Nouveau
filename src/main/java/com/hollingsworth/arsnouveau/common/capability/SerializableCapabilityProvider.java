@@ -23,9 +23,9 @@ public class SerializableCapabilityProvider<HANDLER> extends SimpleCapabilityPro
      * @param capability The Capability instance to provide the handler for
      * @param facing     The Direction to provide the handler for
      */
-    public SerializableCapabilityProvider(final Capability<HANDLER> capability, @Nullable final Direction facing) {
-        this(capability, facing, capability.getDefaultInstance());
-    }
+//    public SerializableCapabilityProvider(final Capability<HANDLER> capability, @Nullable final Direction facing) {
+//        this(capability, facing, capability.getDefaultInstance());
+//    }
 
     /**
      * Create a provider for the specified handler instance.
@@ -48,7 +48,7 @@ public class SerializableCapabilityProvider<HANDLER> extends SimpleCapabilityPro
         }
         if(getCapability() == null)
             return new CompoundTag();
-        return getCapability().writeNBT(instance, getFacing());
+        return new CompoundTag();// getCapability().writeNBT(instance, getFacing());
     }
 
     @Override
@@ -59,7 +59,7 @@ public class SerializableCapabilityProvider<HANDLER> extends SimpleCapabilityPro
             return;
         }
 
-        getCapability().readNBT(instance, getFacing(), nbt);
+       // getCapability().readNBT(instance, getFacing(), nbt);
     }
 
 }

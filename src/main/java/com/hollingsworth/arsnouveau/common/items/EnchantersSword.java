@@ -33,7 +33,7 @@ import net.minecraft.world.item.Item.Properties;
 
 public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatable {
     public EnchantersSword(Tier iItemTier, int baseDamage, float baseAttackSpeed) {
-        super(iItemTier, baseDamage, baseAttackSpeed, defaultItemProperties().stacksTo(1).setISTER(() -> SwordRenderer::new));
+        super(iItemTier, baseDamage, baseAttackSpeed, defaultItemProperties().stacksTo(1));
 
     }
 

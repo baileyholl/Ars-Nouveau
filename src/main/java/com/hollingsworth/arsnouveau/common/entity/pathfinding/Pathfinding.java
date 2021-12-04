@@ -2,16 +2,13 @@ package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
 import com.hollingsworth.arsnouveau.common.util.Log;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs.AbstractPathJob;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.*;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import com.mojang.blaze3d.vertex.BufferBuilder;
 import net.minecraft.client.renderer.MultiBufferSource;
-import com.mojang.blaze3d.vertex.Tesselator;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraft.world.entity.Entity;
 import com.mojang.math.Matrix4f;
 import net.minecraft.world.phys.Vec3;
@@ -114,11 +111,11 @@ public final class Pathfinding
 
         matrixStack.pushPose();
         matrixStack.translate(-dx, -dy, -dz);
-
+        //TODO: restore lighting
         RenderSystem.enableDepthTest();
         RenderSystem.disableTexture();
         RenderSystem.disableBlend();
-        RenderSystem.disableLighting();
+//        RenderSystem.disableLighting();
 
         final Set<ModNode> debugNodesNotVisited;
         final Set<ModNode> debugNodesVisited;
@@ -163,7 +160,7 @@ public final class Pathfinding
         RenderSystem.disableDepthTest();
         RenderSystem.enableTexture();
         RenderSystem.enableBlend();
-        RenderSystem.enableLighting();
+//        RenderSystem.enableLighting();
         matrixStack.popPose();
     }
 
@@ -188,8 +185,8 @@ public final class Pathfinding
         final BufferBuilder vertexBuffer = tessellator.getBuilder();
 
         final Matrix4f matrix4f = matrixStack.last().pose();
-        vertexBuffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION);
-        RenderSystem.color3f(r, g, b);
+        vertexBuffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
+        RenderSystem.setShaderColor(r, g, b, 1.0f);
 
         //  X+
         vertexBuffer.vertex(matrix4f, 1.0f, 0.0f, 0.0f).endVertex();
@@ -234,7 +231,7 @@ public final class Pathfinding
             final float pdx = n.parent.pos.getX() - n.pos.getX() + 0.125f;
             final float pdy = n.parent.pos.getY() - n.pos.getY() + 0.125f;
             final float pdz = n.parent.pos.getZ() - n.pos.getZ() + 0.125f;
-            vertexBuffer.begin(GL11.GL_LINES, DefaultVertexFormat.POSITION_COLOR);
+            vertexBuffer.begin(VertexFormat.Mode.LINES, DefaultVertexFormat.POSITION_COLOR);
             vertexBuffer.vertex(matrix4f, 0.5f, 0.5f, 0.5f).color(0.75F, 0.75F, 0.75F, 1.0F).endVertex();
             vertexBuffer.vertex(matrix4f, pdx / 0.25f, pdy / 0.25f, pdz / 0.25f).color(0.75F, 0.75F, 0.75F, 1.0F).endVertex();
             tessellator.end();
@@ -252,7 +249,8 @@ public final class Pathfinding
 
         matrixStack.pushPose();
         matrixStack.translate(0.0F, 0.75F, 0.0F);
-        RenderSystem.normal3f(0.0F, 1.0F, 0.0F);
+        //TODO: restore normal?
+        //RenderSystem.normal3f(0.0F, 1.0F, 0.0F);
 
         final EntityRenderDispatcher renderManager = Minecraft.getInstance().getEntityRenderDispatcher();
         matrixStack.mulPose(renderManager.cameraOrientation());
@@ -274,7 +272,7 @@ public final class Pathfinding
         final Matrix4f matrix4f = matrixStack.last().pose();
         final Tesselator tessellator = Tesselator.getInstance();
         final BufferBuilder vertexBuffer = tessellator.getBuilder();
-        vertexBuffer.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION_COLOR);
+        vertexBuffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         vertexBuffer.vertex(matrix4f, (-i - 1), -5.0f, 0.0f).color(0.0F, 0.0F, 0.0F, 0.7F).endVertex();
         vertexBuffer.vertex(matrix4f, (-i - 1), 12.0f, 0.0f).color(0.0F, 0.0F, 0.0F, 0.7F).endVertex();
         vertexBuffer.vertex(matrix4f, (i + 1), 12.0f, 0.0f).color(0.0F, 0.0F, 0.0F, 0.7F).endVertex();

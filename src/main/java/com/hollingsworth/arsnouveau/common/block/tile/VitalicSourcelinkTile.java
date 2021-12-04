@@ -6,8 +6,10 @@ import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.api.mana.SourcelinkEventQueue;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -17,15 +19,15 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class VitalicSourcelinkTile extends SourcelinkTile{
-    public VitalicSourcelinkTile(BlockEntityType<?> tileEntityTypeIn) {
-        super(tileEntityTypeIn);
+    public VitalicSourcelinkTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+        super(tileEntityTypeIn, pos, state);
     }
 
     // Test for a quark tag that has disabled baby growth.
     private static final String TAG_POISONED = "quark:poison_potato_applied";
 
-    public VitalicSourcelinkTile(){
-        super(BlockRegistry.VITALIC_TILE);
+    public VitalicSourcelinkTile(BlockPos pos, BlockState state){
+        super(BlockRegistry.VITALIC_TILE, pos, state);
     }
 
     @Override
@@ -37,7 +39,7 @@ public class VitalicSourcelinkTile extends SourcelinkTile{
     public void tick() {
         super.tick();
         if(!level.isClientSide && level.getGameTime() % 60 == 0){
-            for(Animal entity : level.getLoadedEntitiesOfClass(Animal.class, new AABB(worldPosition).inflate(6))){
+            for(Animal entity : level.getEntitiesOfClass(Animal.class, new AABB(worldPosition).inflate(6))){
                 if(entity.isBaby()){
                     if(entity.getAge() < 0){
                         if(ModList.get().isLoaded("quark") && entity.getPersistentData().contains(TAG_POISONED)){

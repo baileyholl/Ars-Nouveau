@@ -18,7 +18,8 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
 
-public class IntangibleAirBlock extends Block implements LiquidBlockContainer {
+public class IntangibleAirBlock extends TickableModBlock implements LiquidBlockContainer {
+
     public IntangibleAirBlock() {
         super(Block.Properties.of(Material.DECORATION).noCollission().noDrops());
         setRegistryName(LibBlockNames.INTANGIBLE_AIR);

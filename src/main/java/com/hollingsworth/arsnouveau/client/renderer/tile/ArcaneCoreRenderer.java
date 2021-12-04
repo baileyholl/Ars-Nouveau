@@ -8,11 +8,13 @@ import com.hollingsworth.arsnouveau.common.block.tile.ArcaneCoreTile;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.BlockPos;
@@ -24,8 +26,8 @@ public class ArcaneCoreRenderer implements BlockEntityRenderer<ArcaneCoreTile> {
     public static final ResourceLocation texture = new ResourceLocation(ArsNouveau.MODID + ":textures/entity/arcane_core.png");
     public static final ArcaneCoreModel model = new ArcaneCoreModel();
 
-    public ArcaneCoreRenderer(BlockEntityRenderDispatcher p_i226006_1_) {
-        super(p_i226006_1_);
+    public ArcaneCoreRenderer(BlockEntityRendererProvider.Context p_i226006_1_) {
+
     }
 
     @Override
@@ -53,8 +55,8 @@ public class ArcaneCoreRenderer implements BlockEntityRenderer<ArcaneCoreTile> {
 
     public static class ISRender extends BlockEntityWithoutLevelRenderer {
 
-        public ISRender(){
-            super();
+        public ISRender(BlockEntityRenderDispatcher p_172550_, EntityModelSet p_172551_){
+            super(p_172550_, p_172551_);
         }
 
         @Override

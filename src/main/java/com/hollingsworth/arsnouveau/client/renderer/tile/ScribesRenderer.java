@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -26,7 +27,7 @@ import javax.annotation.Nullable;
 
 public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
 
-    public ScribesRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
+    public ScribesRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
         super(rendererDispatcherIn, new ScribesModel());
     }
 
@@ -118,7 +119,7 @@ public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
         }
         matrixStack.scale(0.6f, 0.6f, 0.6f);
 
-        Minecraft.getInstance().getItemRenderer().renderStatic(new ItemStack(itemToRender), ItemTransforms.TransformType.FIXED, i, il, matrixStack, iRenderTypeBuffer);
+        Minecraft.getInstance().getItemRenderer().renderStatic(new ItemStack(itemToRender), ItemTransforms.TransformType.FIXED, i, il, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
         matrixStack.popPose();
     }
     public static GenericItemRenderer getISTER(){

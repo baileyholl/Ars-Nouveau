@@ -343,10 +343,9 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
     }
 
     @Override
-    protected boolean canMoveDirectly(final Vec3 start, final Vec3 end, final int sizeX, final int sizeY, final int sizeZ)
-    {
+    protected boolean canMoveDirectly(Vec3 p_186133_, Vec3 p_186134_) {
         // TODO special path blocks go into the false as !specialPathBlocks
-        return false && super.canMoveDirectly(start, end, sizeX, sizeY, sizeZ);
+        return false; //super.canMoveDirectly(p_186133_, p_186134_);
     }
 
     public double getSpeedFactor()
@@ -773,7 +772,7 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
                 {
                     final Node point = path.getNode(i);
                     final BlockPos pos = new BlockPos(point.x, point.y, point.z);
-                    for (final Node node : AbstractPathJob.lastDebugNodesPath)
+                    for (final ModNode node : AbstractPathJob.lastDebugNodesPath)
                     {
                         if (!node.isReachedByWorker() && node.pos.equals(pos))
                         {
@@ -821,7 +820,7 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
                     if (AbstractPathJob.lastDebugNodesPath != null)
                     {
                         final BlockPos pos = new BlockPos(tempoPos.x, tempoPos.y, tempoPos.z);
-                        for (final Node node : AbstractPathJob.lastDebugNodesPath)
+                        for (final ModNode node : AbstractPathJob.lastDebugNodesPath)
                         {
                             if (node.isReachedByWorker() && node.pos.equals(pos))
                             {

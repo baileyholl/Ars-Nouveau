@@ -2,9 +2,11 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -24,14 +26,14 @@ import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class CrystallizerTile extends AbstractManaTile implements Container {
+public class CrystallizerTile extends AbstractManaTile implements Container, ITickable {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     public ItemStack stack = ItemStack.EMPTY;
     public ItemEntity entity;
     public boolean draining;
 
-    public CrystallizerTile() {
-        super(BlockRegistry.CRYSTALLIZER_TILE);
+    public CrystallizerTile(BlockPos pos, BlockState state) {
+        super(BlockRegistry.CRYSTALLIZER_TILE, pos, state);
     }
 
     @Override
@@ -72,10 +74,10 @@ public class CrystallizerTile extends AbstractManaTile implements Container {
     }
 
     @Override
-    public void load(BlockState state, CompoundTag tag) {
+    public void load(CompoundTag tag) {
         stack = ItemStack.of((CompoundTag)tag.get("itemStack"));
         draining = tag.getBoolean("draining");
-        super.load(state, tag);
+        super.load(tag);
     }
 
     @Override
@@ -149,7 +151,7 @@ public class CrystallizerTile extends AbstractManaTile implements Container {
     }
 
     @Override
-    protected void invalidateCaps() {
+    public void invalidateCaps() {
         itemHandler.invalidate();
         super.invalidateCaps();
     }

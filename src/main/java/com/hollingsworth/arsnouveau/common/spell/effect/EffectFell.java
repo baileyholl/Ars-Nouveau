@@ -74,7 +74,7 @@ public class EffectFell extends AbstractEffect {
     }
 
     public boolean isTree(BlockState blockstate){
-        return blockstate.getBlock().is(FELLABLE);
+        return blockstate.is(FELLABLE);
     }
 
     public Set<BlockPos> getTree(Level world, BlockPos start, int maxBlocks) {

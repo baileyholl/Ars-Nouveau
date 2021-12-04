@@ -8,13 +8,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 
 public class RenderSpell extends EntityRenderer<EntityProjectileSpell> {
     private final ResourceLocation entityTexture; // new ResourceLocation(ExampleMod.MODID, "textures/entity/spell_proj.png");
 
 
-    public RenderSpell(EntityRenderDispatcher renderManagerIn, ResourceLocation entityTexture)
+    public RenderSpell(EntityRendererProvider.Context renderManagerIn, ResourceLocation entityTexture)
     {
         super(renderManagerIn);
         this.entityTexture = entityTexture;

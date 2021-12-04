@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.common.mixin.ExpInvokerMixin;
 import com.hollingsworth.arsnouveau.setup.EntityTags;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -56,8 +57,8 @@ public class RitualDisintegration extends AbstractRitual {
                 if(m.getType().is(EntityTags.DISINTEGRATION_BLACKLIST)) {
                     continue;
                 }
-                m.remove();
-                if (m.removed) {
+                m.remove(Entity.RemovalReason.DISCARDED);
+                if (m.isRemoved()) {
                     ExpInvokerMixin invoker = ((ExpInvokerMixin) m);
                     ParticleUtil.spawnPoof((ServerLevel) world, m.blockPosition());
                     if (invoker.an_shouldDropExperience()) {

@@ -34,12 +34,6 @@ public class FamiliarButton extends Button {
         this.familiarHolder = familiar;
     }
 
-
-    @Override
-    public boolean isHovered() {
-        return super.isHovered();
-    }
-
     @Override
     public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
         if (visible)

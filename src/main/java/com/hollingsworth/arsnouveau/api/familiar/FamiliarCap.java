@@ -7,15 +7,14 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSyncFamiliars;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -28,8 +27,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static com.hollingsworth.arsnouveau.setup.InjectionUtil.Null;
 
 public class FamiliarCap implements IFamiliarCap {
 
@@ -66,8 +63,8 @@ public class FamiliarCap implements IFamiliarCap {
         return this.ownedFamiliars.remove(holderID);
     }
 
-    @CapabilityInject(IFamiliarCap.class)
-    public static final Capability<IFamiliarCap> FAMILIAR_CAPABILITY = Null();
+
+    public static final Capability<IFamiliarCap> FAMILIAR_CAPABILITY = CapabilityManager.get(new CapabilityToken<>(){});
 
 
     public static final Direction DEFAULT_FACING = null;
@@ -77,24 +74,24 @@ public class FamiliarCap implements IFamiliarCap {
 
     public static void register(){
 
-        CapabilityManager.INSTANCE.register(IFamiliarCap.class, new Capability.IStorage<IFamiliarCap>() {
-            @Nullable
-            @Override
-            public Tag writeNBT(Capability<IFamiliarCap> capability, IFamiliarCap instance, Direction side) {
-                CompoundTag tag = new CompoundTag();
-                FamiliarCap.serializeFamiliars(tag, instance);
-                return tag;
-            }
-
-            @Override
-            public void readNBT(Capability<IFamiliarCap> capability, IFamiliarCap instance, Direction side, Tag nbt) {
-                if(!(nbt instanceof CompoundTag))
-                    return;
-                CompoundTag tag = (CompoundTag)nbt;
-                instance.setUnlockedFamiliars(NBTUtil.readStrings(tag, "fam"));
-            }
-        }, () -> new FamiliarCap(null));
-        System.out.println("Finished Registering FamiliarCap");
+//        CapabilityManager.INSTANCE.register(IFamiliarCap.class, new Capability.IStorage<IFamiliarCap>() {
+//            @Nullable
+//            @Override
+//            public Tag writeNBT(Capability<IFamiliarCap> capability, IFamiliarCap instance, Direction side) {
+//                CompoundTag tag = new CompoundTag();
+//                FamiliarCap.serializeFamiliars(tag, instance);
+//                return tag;
+//            }
+//
+//            @Override
+//            public void readNBT(Capability<IFamiliarCap> capability, IFamiliarCap instance, Direction side, Tag nbt) {
+//                if(!(nbt instanceof CompoundTag))
+//                    return;
+//                CompoundTag tag = (CompoundTag)nbt;
+//                instance.setUnlockedFamiliars(NBTUtil.readStrings(tag, "fam"));
+//            }
+//        }, () -> new FamiliarCap(null));
+//        System.out.println("Finished Registering FamiliarCap");
     }
 
     public static void serializeFamiliars(CompoundTag tag, IFamiliarCap cap){

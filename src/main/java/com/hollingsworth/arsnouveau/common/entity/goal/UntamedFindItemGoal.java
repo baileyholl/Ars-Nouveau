@@ -24,7 +24,7 @@ public class UntamedFindItemGoal extends Goal {
     ItemEntity pathingEntity;
 
     public List<ItemEntity> nearbyItems(){
-        return mobEntity.level.getLoadedEntitiesOfClass(ItemEntity.class, new AABB(mobEntity.blockPosition()).inflate(8), itemSelector);
+        return mobEntity.level.getEntitiesOfClass(ItemEntity.class, new AABB(mobEntity.blockPosition()).inflate(8), itemSelector);
     }
 
     public UntamedFindItemGoal(Mob mobEntity, Supplier<Boolean> canRun, Predicate<ItemEntity> itemSelector){
@@ -38,7 +38,7 @@ public class UntamedFindItemGoal extends Goal {
     public void tick() {
         super.tick();
         timeFinding += 1;
-        if(pathingEntity == null || pathingEntity.removed)
+        if(pathingEntity == null || pathingEntity.isRemoved())
             return;
 
         pathToTarget(pathingEntity, 1.2f);
@@ -47,7 +47,7 @@ public class UntamedFindItemGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return timeFinding <= 20 * 30 && !itemStuck  && !(pathingEntity == null || pathingEntity.removed || pathingEntity.getItem().isEmpty()) && canUse();
+        return timeFinding <= 20 * 30 && !itemStuck  && !(pathingEntity == null || pathingEntity.isRemoved() || pathingEntity.getItem().isEmpty()) && canUse();
     }
 
     @Override

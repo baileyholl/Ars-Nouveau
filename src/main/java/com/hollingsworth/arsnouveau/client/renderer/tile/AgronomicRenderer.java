@@ -10,6 +10,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
@@ -18,7 +19,7 @@ import java.util.Random;
 
 public class AgronomicRenderer extends GeoBlockRenderer<AgronomicSourcelinkTile> {
     public static SourcelinkModel model =  new SourcelinkModel("agronomic");
-    public AgronomicRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
+    public AgronomicRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
         super(rendererDispatcherIn, model);
     }
 

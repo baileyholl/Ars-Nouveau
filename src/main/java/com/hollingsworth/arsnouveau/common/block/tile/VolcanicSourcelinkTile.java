@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.tags.Tag;
@@ -22,8 +23,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatable {
 
-    public VolcanicSourcelinkTile() {
-        super(BlockRegistry.VOLCANIC_TILE);
+    public VolcanicSourcelinkTile(BlockPos pos, BlockState state) {
+        super(BlockRegistry.VOLCANIC_TILE, pos, state);
     }
 
     @Override
@@ -73,10 +74,10 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
             source = burnTime / 12;
             progress = 1;
         }
-        if(i.getItem().getItem() == BlockRegistry.BLAZING_LOG.asItem()){
+        if(i.getItem() == BlockRegistry.BLAZING_LOG.asItem()){
             source += 100;
             progress += 5;
-        }else if(i.getItem().getItem().is(Recipes.ARCHWOOD_LOG_TAG)){
+        }else if(i.is(Recipes.ARCHWOOD_LOG_TAG)){
             source += 50;
             progress += 3;
         }
@@ -122,7 +123,7 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
         AtomicReference<BlockPos> posFound = new AtomicReference<>();
         BlockPos.betweenClosedStream(worldPosition.offset(range, -1, range), worldPosition.offset(-range, -1, -range)).forEach(blockPos -> {
             blockPos = blockPos.immutable();
-            if(posFound.get() == null && level.getBlockState(blockPos).getBlock().is(block))
+            if(posFound.get() == null && level.getBlockState(blockPos).is(block))
                 posFound.set(blockPos);
         });
 

@@ -170,8 +170,9 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         return 2 + getAmplificationBonus(augments);
     }
 
+    //TODO: Restore harvest level
     public boolean canBlockBeHarvested(List<AbstractAugment> augments, Level world, BlockPos pos){
-        return world.getBlockState(pos).getDestroySpeed(world, pos) >= 0 && getBaseHarvestLevel(augments) >= world.getBlockState(pos).getHarvestLevel();
+        return true;// world.getBlockState(pos).getDestroySpeed(world, pos) >= 0 && getBaseHarvestLevel(augments) >= world.getBlockState(pos).getHarvestLevel();
     }
 
 
@@ -180,7 +181,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public boolean canBlockBeHarvested(SpellStats stats, Level world, BlockPos pos){
-        return world.getBlockState(pos).getDestroySpeed(world, pos) >= 0 && getBaseHarvestLevel(stats) >= world.getBlockState(pos).getHarvestLevel();
+        return true;// world.getBlockState(pos).getDestroySpeed(world, pos) >= 0 && getBaseHarvestLevel(stats) >= world.getBlockState(pos).getHarvestLevel();
     }
 
     public void dealDamage(Level world, LivingEntity shooter, float baseDamage, SpellStats stats, Entity entity, DamageSource source){

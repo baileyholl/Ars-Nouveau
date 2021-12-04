@@ -37,7 +37,7 @@ public class FamiliarCarbuncle extends FamiliarEntity {
     protected InteractionResult mobInteract(Player player, InteractionHand hand) {
         if(!player.level.isClientSide && player.equals(getOwner())){
             ItemStack stack = player.getItemInHand(hand);
-            if(stack.getItem().is(Tags.Items.NUGGETS_GOLD)){
+            if(stack.is(Tags.Items.NUGGETS_GOLD)){
                 stack.shrink(1);
                 ScryingRitual.grantScrying((ServerPlayer) player, new ItemStack(Blocks.GOLD_ORE), 3 * 20 * 60);
             }

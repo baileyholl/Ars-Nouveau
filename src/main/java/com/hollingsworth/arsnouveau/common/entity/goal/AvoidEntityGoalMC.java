@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity.goal;
 import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.ai.util.RandomPos;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.pathfinder.Path;
@@ -40,15 +41,15 @@ public class AvoidEntityGoalMC<T extends LivingEntity> extends Goal {
         this.sprintSpeedModifier = sprintModifier;
         this.pathNav = carby.getNavigation();
         this.setFlags(EnumSet.of(Goal.Flag.MOVE));
-        this.avoidEntityTargeting = (new TargetingConditions()).range(maxDist).selector(selectPredicate.and(avoidPredicate));
+        this.avoidEntityTargeting = (TargetingConditions.forCombat().range(maxDist).selector(selectPredicate.and(avoidPredicate)));
     }
 
     public boolean canUse() {
-        this.toAvoid = this.mob.level.getNearestLoadedEntity(this.avoidClass, this.avoidEntityTargeting, this.mob, this.mob.getX(), this.mob.getY(), this.mob.getZ(), this.mob.getBoundingBox().inflate(this.maxDist, 3.0D, this.maxDist));
+        this.toAvoid = this.mob.level.getNearestEntity(this.avoidClass, this.avoidEntityTargeting, this.mob, this.mob.getX(), this.mob.getY(), this.mob.getZ(), this.mob.getBoundingBox().inflate(this.maxDist, 3.0D, this.maxDist));
         if (this.toAvoid == null) {
             return false;
         } else {
-            Vec3 vector3d = RandomPos.getPosAvoid(this.mob, 16, 7, this.toAvoid.position());
+            Vec3 vector3d = DefaultRandomPos.getPosAway(this.mob, 16, 7, this.toAvoid.position());
             if (vector3d == null) {
                 return false;
             } else if (this.toAvoid.distanceToSqr(vector3d.x, vector3d.y, vector3d.z) < this.toAvoid.distanceToSqr(this.mob)) {

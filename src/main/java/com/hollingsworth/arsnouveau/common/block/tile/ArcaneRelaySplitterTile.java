@@ -18,12 +18,12 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
     ArrayList<BlockPos> toList = new ArrayList<>();
     ArrayList<BlockPos> fromList = new ArrayList<>();
 
-    public ArcaneRelaySplitterTile() {
-        super(BlockRegistry.ARCANE_RELAY_SPLITTER_TILE);
+    public ArcaneRelaySplitterTile(BlockPos pos, BlockState state) {
+        super(BlockRegistry.ARCANE_RELAY_SPLITTER_TILE, pos, state);
     }
 
-    public ArcaneRelaySplitterTile(BlockEntityType<?> type){
-        super(type);
+    public ArcaneRelaySplitterTile(BlockEntityType<?> type, BlockPos pos, BlockState state){
+        super(type, pos, state);
     }
 
     @Override
@@ -108,8 +108,8 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
     }
 
     @Override
-    public void load(BlockState state, CompoundTag tag) {
-        super.load(state, tag);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         fromList = new ArrayList<>();
         toList = new ArrayList<>();
         int counter = 0;

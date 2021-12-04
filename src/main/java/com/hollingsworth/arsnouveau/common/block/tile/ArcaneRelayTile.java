@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -28,14 +29,14 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvider, IWandable, IAnimatable {
+public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvider, IWandable, IAnimatable, ITickable {
 
-    public ArcaneRelayTile() {
-        super(BlockRegistry.ARCANE_RELAY_TILE);
+    public ArcaneRelayTile(BlockPos pos, BlockState state) {
+        super(BlockRegistry.ARCANE_RELAY_TILE, pos, state);
     }
 
-    public ArcaneRelayTile(BlockEntityType<?> type){
-        super(type);
+    public ArcaneRelayTile(BlockEntityType<?> type, BlockPos pos, BlockState state){
+        super(type, pos, state);
     }
 
     public BlockPos getToPos() {
@@ -171,7 +172,7 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
     }
 
     @Override
-    public void load(BlockState state, CompoundTag tag) {
+    public void load(CompoundTag tag) {
         if(NBTUtil.hasBlockPos(tag, "to")){
             this.toPos = NBTUtil.getBlockPos(tag, "to");
         }else{
@@ -182,7 +183,7 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
         }else{
             fromPos = null;
         }
-        super.load(state, tag);
+        super.load(tag);
     }
 
     @Override

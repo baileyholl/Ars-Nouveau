@@ -60,7 +60,8 @@ public class PlayerEvent {
             return;
         if(entity.getItemInHand(event.getHand()).getItem() instanceof SpellBook){
             event.setCanceled(true);
-            ObfuscationReflectionHelper.setPrivateValue(ItemInHandRenderer.class, minecraft.getItemInHandRenderer(), 1f, MappingUtil.getEquippedProgressMainhand());
+            // TODO: Check if item renderer still needed
+            ///ObfuscationReflectionHelper.setPrivateValue(ItemInHandRenderer.class, minecraft.getItemInHandRenderer(), 1f, MappingUtil.getEquippedProgressMainhand());
         }
     }
 
@@ -81,7 +82,8 @@ public class PlayerEvent {
             return;
         if(entity.getItemInHand(event.getHand()).getItem() instanceof SpellBook){
             event.setCanceled(true);
-            ObfuscationReflectionHelper.setPrivateValue(ItemInHandRenderer.class, minecraft.getItemInHandRenderer(), 1f, MappingUtil.getEquippedProgressMainhand());
+            // TODO: Check if item renderer still needed
+          //  ObfuscationReflectionHelper.setPrivateValue(ItemInHandRenderer.class, minecraft.getItemInHandRenderer(), 1f, MappingUtil.getEquippedProgressMainhand());
         }
     }
 

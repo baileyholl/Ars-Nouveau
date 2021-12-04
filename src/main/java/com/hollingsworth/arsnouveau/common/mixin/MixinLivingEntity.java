@@ -10,27 +10,27 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(LivingEntity.class)
 public class MixinLivingEntity {
 
-    @Redirect(
-            method = "updateFallFlying",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/item/ItemStack;canElytraFly(Lnet/minecraft/entity/LivingEntity;)Z",
-                    remap = false
-            )
-    )
-    public boolean elytraOverride(ItemStack stack, LivingEntity entity) {
-        return entity.getEffect(ModPotions.GLIDE_EFFECT) != null || stack.canElytraFly(entity);
-    }
-
-    @Redirect(
-            method = "updateFallFlying",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/item/ItemStack;elytraFlightTick(Lnet/minecraft/entity/LivingEntity;I)Z",
-                    remap = false
-            )
-    )
-    public boolean eytraValidOverride(ItemStack stack, LivingEntity entity, int flightTicks) {
-        return entity.getEffect(ModPotions.GLIDE_EFFECT) != null || stack.elytraFlightTick(entity, flightTicks);
-    }
+//    @Redirect(
+//            method = "updateFallFlying",
+//            at = @At(
+//                    value = "INVOKE",
+//                    target = "Lnet/minecraft/item/ItemStack;canElytraFly(Lnet/minecraft/entity/LivingEntity;)Z",
+//                    remap = false
+//            )
+//    )
+//    public boolean elytraOverride(ItemStack stack, LivingEntity entity) {
+//        return entity.getEffect(ModPotions.GLIDE_EFFECT) != null || stack.canElytraFly(entity);
+//    }
+//
+//    @Redirect(
+//            method = "updateFallFlying",
+//            at = @At(
+//                    value = "INVOKE",
+//                    target = "Lnet/minecraft/item/ItemStack;elytraFlightTick(Lnet/minecraft/entity/LivingEntity;I)Z",
+//                    remap = false
+//            )
+//    )
+//    public boolean eytraValidOverride(ItemStack stack, LivingEntity entity, int flightTicks) {
+//        return entity.getEffect(ModPotions.GLIDE_EFFECT) != null || stack.elytraFlightTick(entity, flightTicks);
+//    }
 }

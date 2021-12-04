@@ -44,8 +44,7 @@ public class EffectRedstone extends AbstractEffect {
         }
         int timeBonus = (int) spellStats.getDurationMultiplier();
         world.setBlockAndUpdate(pos, state);
-        world.getBlockTicks().scheduleTick(pos, state.getBlock(), GENERIC_INT.get() + timeBonus * BONUS_TIME.get());
-
+        world.scheduleTick(pos, state.getBlock(), GENERIC_INT.get() + timeBonus * BONUS_TIME.get());
         BlockPos hitPos = pos.relative(rayTraceResult.getDirection().getOpposite());
 
         BlockUtil.safelyUpdateState(world, pos);

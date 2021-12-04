@@ -2,8 +2,10 @@ package com.hollingsworth.arsnouveau.client.renderer.tile;
 
 import com.hollingsworth.arsnouveau.common.block.IntangibleAirBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.IntangibleAirTile;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
@@ -26,28 +28,30 @@ import org.lwjgl.opengl.GL11;
 import java.util.List;
 import java.util.Random;
 
-public class IntangibleAirRenderer extends BlockEntityRenderer<IntangibleAirTile> {
-    public IntangibleAirRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn);
-    }
-    static class DummyRender extends net.minecraft.client.renderer.RenderType{
-        public static final RenderType RenderBlock = create("MiningLaserRenderBlock",
-                DefaultVertexFormat.BLOCK, GL11.GL_QUADS, 256,
-                RenderType.CompositeState.builder()
-                        .setShadeModelState(SMOOTH_SHADE)
-                        .setLightmapState(LIGHTMAP)
-                        .setTextureState(BLOCK_SHEET_MIPPED)
-                        .setLayeringState(VIEW_OFFSET_Z_LAYERING)
-                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-                        .setDepthTestState(LEQUAL_DEPTH_TEST)
-                        .setCullState(CULL)
-                        .setWriteMaskState(COLOR_WRITE)
-                        .createCompositeState(false));
+public class IntangibleAirRenderer implements BlockEntityRenderer<IntangibleAirTile> {
 
-        public DummyRender(String nameIn, VertexFormat formatIn, int drawModeIn, int bufferSizeIn, boolean useDelegateIn, boolean needsSortingIn, Runnable setupTaskIn, Runnable clearTaskIn) {
-            super(nameIn, formatIn, drawModeIn, bufferSizeIn, useDelegateIn, needsSortingIn, setupTaskIn, clearTaskIn);
-        }
+    public IntangibleAirRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
+
     }
+
+//    static class DummyRender extends net.minecraft.client.renderer.RenderType{
+//        public static final RenderType RenderBlock = create("MiningLaserRenderBlock",
+//                DefaultVertexFormat.BLOCK, GL11.GL_QUADS, 256,
+//                RenderType.CompositeState.builder()
+//                        .setShadeModelState(SMOOTH_SHADE)
+//                        .setLightmapState(LIGHTMAP)
+//                        .setTextureState(BLOCK_SHEET_MIPPED)
+//                        .setLayeringState(VIEW_OFFSET_Z_LAYERING)
+//                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+//                        .setDepthTestState(LEQUAL_DEPTH_TEST)
+//                        .setCullState(CULL)
+//                        .setWriteMaskState(COLOR_WRITE)
+//                        .createCompositeState(false));
+//
+//        public DummyRender(String nameIn, VertexFormat formatIn, int drawModeIn, int bufferSizeIn, boolean useDelegateIn, boolean needsSortingIn, Runnable setupTaskIn, Runnable clearTaskIn) {
+//            super(nameIn, formatIn, drawModeIn, bufferSizeIn, useDelegateIn, needsSortingIn, setupTaskIn, clearTaskIn);
+//        }
+//    }
 
 
     private void renderModelBrightnessColorQuads(PoseStack.Pose matrixEntry, VertexConsumer builder, float red, float green, float blue, float alpha, List<BakedQuad> listQuads, int combinedLightsIn, int combinedOverlayIn) {
@@ -65,8 +69,7 @@ public class IntangibleAirRenderer extends BlockEntityRenderer<IntangibleAirTile
                 f1 = 1f;
                 f2 = 1f;
             }
-
-            builder.addVertexData(matrixEntry, bakedquad, f, f1, f2, alpha, combinedLightsIn, combinedOverlayIn);
+            builder.putBulkData(matrixEntry, bakedquad, f, f1, f2, alpha, combinedLightsIn, combinedOverlayIn);
         }
     }
 
@@ -78,7 +81,7 @@ public class IntangibleAirRenderer extends BlockEntityRenderer<IntangibleAirTile
         double scale = ((double)tileEntityIn.duration)/(double)tileEntityIn.maxLength;
 
         BlockRenderDispatcher blockrendererdispatcher = Minecraft.getInstance().getBlockRenderer();
-        Minecraft.getInstance().getTextureManager().bind(InventoryMenu.BLOCK_ATLAS);
+        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
         BakedModel ibakedmodel = blockrendererdispatcher.getBlockModel(renderState);
         BlockColors blockColors = Minecraft.getInstance().getBlockColors();
         int color = blockColors.getColor(renderState, tileEntityIn.getLevel(), tileEntityIn.getBlockPos(), 0);
@@ -90,7 +93,7 @@ public class IntangibleAirRenderer extends BlockEntityRenderer<IntangibleAirTile
 
         for (Direction direction : Direction.values()) {
             if (!(tileEntityIn.getLevel().getBlockState(tileEntityIn.getBlockPos().relative(direction)).getBlock() instanceof IntangibleAirBlock)) {
-                renderModelBrightnessColorQuads(matrixStackIn.last(), bufferIn.getBuffer(DummyRender.RenderBlock), f, f1, f2, (float)scale, ibakedmodel.getQuads(renderState, direction, new Random(Mth.getSeed(tileEntityIn.getBlockPos())), EmptyModelData.INSTANCE), combinedLightIn, combinedOverlayIn);
+            //    renderModelBrightnessColorQuads(matrixStackIn.last(), bufferIn.getBuffer(DummyRender.RenderBlock), f, f1, f2, (float)scale, ibakedmodel.getQuads(renderState, direction, new Random(Mth.getSeed(tileEntityIn.getBlockPos())), EmptyModelData.INSTANCE), combinedLightIn, combinedOverlayIn);
             }
         }
 

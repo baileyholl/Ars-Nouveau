@@ -2,9 +2,11 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.common.entity.EntityDummy;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.layers.*;
 import net.minecraft.client.model.HumanoidModel;
@@ -26,7 +28,7 @@ import net.minecraft.network.chat.Component;
 
 public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel<EntityDummy>> {
 
-    public DummyRenderer(EntityRenderDispatcher p_i46102_1_) {
+    public DummyRenderer(EntityRendererProvider.Context p_i46102_1_) {
         this(p_i46102_1_, false);
     }
 
@@ -37,16 +39,16 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
 
 
 
-    public DummyRenderer(EntityRenderDispatcher p_i46103_1_, boolean p_i46103_2_) {
-        super(p_i46103_1_, new PlayerModel<>(0.0F, p_i46103_2_), 0.5F);
-        this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel(0.5F), new HumanoidModel(1.0F)));
-        this.addLayer(new ItemInHandLayer<>(this));
-        this.addLayer(new ArrowLayer<>(this));
-
-        this.addLayer(new CustomHeadLayer<>(this));
-        this.addLayer(new ElytraLayer<>(this));
-        this.addLayer(new SpinAttackEffectLayer<>(this));
-        this.addLayer(new BeeStingerLayer<>(this));
+    public DummyRenderer(EntityRendererProvider.Context  p_i46103_1_, boolean p_i46103_2_) {
+          super(p_i46103_1_, new PlayerModel(p_i46103_1_.bakeLayer(ModelLayers.PLAYER_SLIM), p_i46103_2_), 0.5F);
+//        this.addLayer(new HumanoidArmorLayer<>(this, new HumanoidModel(0.5F), new HumanoidModel(1.0F)));
+//        this.addLayer(new ItemInHandLayer<>(this));
+//        this.addLayer(new ArrowLayer(this));
+//
+//        this.addLayer(new CustomHeadLayer(this));
+//        this.addLayer(new ElytraLayer<>(this));
+//        this.addLayer(new SpinAttackEffectLayer<>(this));
+//        this.addLayer(new BeeStingerLayer<>(this));
     }
 
     public void render(EntityDummy p_225623_1_, float p_225623_2_, float p_225623_3_, PoseStack p_225623_4_, MultiBufferSource p_225623_5_, int p_225623_6_) {
@@ -167,8 +169,8 @@ public class DummyRenderer extends LivingEntityRenderer<EntityDummy, PlayerModel
 
             Vec3 vector3d = p_225621_1_.getViewVector(p_225621_5_);
             Vec3 vector3d1 = p_225621_1_.getDeltaMovement();
-            double d0 = Entity.getHorizontalDistanceSqr(vector3d1);
-            double d1 = Entity.getHorizontalDistanceSqr(vector3d);
+            double d0 = vector3d1.horizontalDistanceSqr();
+            double d1 = vector3d.horizontalDistanceSqr();
             if (d0 > 0.0D && d1 > 0.0D) {
                 double d2 = (vector3d1.x * vector3d.x + vector3d1.z * vector3d.z) / Math.sqrt(d0 * d1);
                 double d3 = vector3d1.x * vector3d.z - vector3d1.z * vector3d.x;

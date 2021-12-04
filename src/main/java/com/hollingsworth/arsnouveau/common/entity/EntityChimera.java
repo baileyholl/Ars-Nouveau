@@ -411,7 +411,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
     @Override
     protected void customServerAiStep() {
         super.customServerAiStep();
-        this.bossEvent.setPercent(this.getHealth() / this.getMaxHealth());
+        this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
     }
 
     protected boolean canRide(Entity p_184228_1_) {
@@ -421,7 +421,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
     @Override
     public void checkDespawn() {
         if (this.level.getDifficulty() == Difficulty.PEACEFUL && this.shouldDespawnInPeaceful()) {
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
         } else {
             this.noActionTime = 0;
         }
@@ -688,7 +688,7 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
                 }
 
                 this.mob.setSpeed(f1);
-                double d4 = Mth.sqrt(d0 * d0 + d2 * d2);
+                double d4 = Mth.sqrt((float) (d0 * d0 + d2 * d2));
                 float f2 = (float)(-(Mth.atan2(d1, d4) * (double)(180F / (float)Math.PI)));
                 this.mob.xRot = this.rotlerp(this.mob.xRot, f2, (float)this.maxTurn);
                 this.mob.setYya(d1 > 0.0D ? f1 : -f1);

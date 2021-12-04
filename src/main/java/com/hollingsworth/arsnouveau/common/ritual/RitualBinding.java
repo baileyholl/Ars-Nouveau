@@ -42,7 +42,7 @@ public class RitualBinding extends AbstractRitual {
                 for(Entity entity : entities){
                     for(AbstractFamiliarHolder familiarHolder : ArsNouveauAPI.getInstance().getFamiliarHolderMap().values()){
                         if(familiarHolder.isEntity.test(entity)){
-                            entity.remove();
+                            entity.remove(Entity.RemovalReason.DISCARDED);
                             ParticleUtil.spawnPoof((ServerLevel) world, entity.blockPosition());
                             world.addFreshEntity(new ItemEntity(world, entity.blockPosition().getX(), entity.blockPosition().getY(), entity.blockPosition().getZ(), familiarHolder.getOutputItem()));
                             world.playSound(null, entity.blockPosition(), SoundEvents.BOOK_PUT, SoundSource.NEUTRAL, 1.0f, 1.0f);

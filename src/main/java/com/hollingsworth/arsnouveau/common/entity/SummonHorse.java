@@ -53,7 +53,7 @@ public class SummonHorse extends Horse implements ISummon {
             ticksLeft--;
             if(ticksLeft <= 0) {
                 ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
-                this.remove();
+                this.remove(RemovalReason.DISCARDED);
                 onSummonDeath(level, null, true);
             }
         }

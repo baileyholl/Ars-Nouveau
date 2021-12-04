@@ -47,7 +47,7 @@ public class EntityEvokerFangs extends EvokerFangs {
     public void tick() {
         // Entity.super
         if (!this.level.isClientSide) {
-            this.setSharedFlag(6, this.isGlowing());
+            this.setSharedFlag(6, this.isCurrentlyGlowing());
         }
         this.baseTick();
         if (this.level.isClientSide) {
@@ -78,7 +78,7 @@ public class EntityEvokerFangs extends EvokerFangs {
             }
 
             if (--this.lifeTicks < 0) {
-                this.remove();
+                this.remove(RemovalReason.DISCARDED);
             }
         }
 

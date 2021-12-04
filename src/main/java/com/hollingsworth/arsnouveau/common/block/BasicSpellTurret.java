@@ -105,7 +105,7 @@ public class BasicSpellTurret extends TickableModBlock {
         boolean neighborSignal = worldIn.hasNeighborSignal(pos) || worldIn.hasNeighborSignal(pos.above());
         boolean isTriggered = state.getValue(TRIGGERED);
         if (neighborSignal && !isTriggered) {
-            worldIn.getBlockTicks().schedule(pos, this,4);
+            worldIn.scheduleTick(pos, this,4);
             worldIn.setBlock(pos, state.setValue(TRIGGERED, Boolean.TRUE), 4);
 
         } else if (!neighborSignal && isTriggered) {

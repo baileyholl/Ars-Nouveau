@@ -35,7 +35,7 @@ import java.util.List;
 public class Wand extends ModItem  implements IAnimatable, ICasterTool {
     public AnimationFactory factory = new AnimationFactory(this);
     public Wand() {
-        super(new Item.Properties().stacksTo(1).tab(ArsNouveau.itemGroup).setISTER(() -> WandRenderer::new), LibItemNames.WAND);
+        super(new Item.Properties().stacksTo(1).tab(ArsNouveau.itemGroup), LibItemNames.WAND);
     }
 
 

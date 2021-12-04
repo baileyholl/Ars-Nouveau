@@ -37,29 +37,27 @@ public class BaseBook extends ModdedScreen {
     @Override
     public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        GlStateManager._pushMatrix();
+        matrixStack.pushPose();
         if(scaleFactor != 1) {
-            GlStateManager._scalef(scaleFactor, scaleFactor, scaleFactor);
-
+            matrixStack.scale(scaleFactor, scaleFactor, scaleFactor);
             mouseX /= scaleFactor;
             mouseY /= scaleFactor;
         }
         drawScreenAfterScale(matrixStack,mouseX, mouseY, partialTicks);
-        GlStateManager._popMatrix();
+        matrixStack.popPose();
     }
 
     public void drawBackgroundElements(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
-        Minecraft.getInstance().textureManager.bind(background);
         drawFromTexture(background,0, 0, 0, 0, FULL_WIDTH, FULL_HEIGHT, FULL_WIDTH, FULL_HEIGHT, stack);
     }
 
     public static void drawFromTexture(ResourceLocation resourceLocation, int x, int y, int u, int v, int w, int h, int fileWidth, int fileHeight, PoseStack stack) {
-        Minecraft.getInstance().textureManager.bind(resourceLocation);
+        RenderSystem.setShaderTexture(0, resourceLocation);
         blit(stack,x, y, u, v, w, h, fileWidth, fileHeight);
     }
 
     public void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
 
@@ -68,7 +66,7 @@ public class BaseBook extends ModdedScreen {
         renderBackground(stack);
         stack.pushPose();
         stack.translate(bookLeft, bookTop, 0);
-        RenderSystem.color3f(1F, 1F, 1F);
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         drawBackgroundElements(stack,mouseX, mouseY, partialTicks);
         drawForegroundElements(mouseX, mouseY, partialTicks);
         stack.popPose();

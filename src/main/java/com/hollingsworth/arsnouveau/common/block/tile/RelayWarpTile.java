@@ -7,15 +7,16 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class RelayWarpTile extends ArcaneRelaySplitterTile{
 
-    public RelayWarpTile(BlockEntityType<?> type){
-        super(type);
+    public RelayWarpTile(BlockEntityType<?> type, BlockPos pos, BlockState state){
+        super(type, pos, state);
     }
 
-    public RelayWarpTile(){
-        super(BlockRegistry.RELAY_WARP_TILE);
+    public RelayWarpTile(BlockPos pos, BlockState state){
+        super(BlockRegistry.RELAY_WARP_TILE, pos, state);
     }
 
     @Override
