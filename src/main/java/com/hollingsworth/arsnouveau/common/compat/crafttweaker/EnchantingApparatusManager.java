@@ -7,6 +7,7 @@ import com.blamejared.crafttweaker.api.item.IItemStack;
 import com.blamejared.crafttweaker.api.managers.IRecipeManager;
 import com.blamejared.crafttweaker.impl.actions.recipes.ActionAddRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
+import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.ResourceLocation;
@@ -27,7 +28,7 @@ public class EnchantingApparatusManager implements IRecipeManager {
     }
     
     @Override
-    public IRecipeType<EnchantingApparatusRecipe> getRecipeType() {
+    public IRecipeType<IEnchantingRecipe> getRecipeType() {
         return RecipeRegistry.APPARATUS_TYPE;
     }
 }

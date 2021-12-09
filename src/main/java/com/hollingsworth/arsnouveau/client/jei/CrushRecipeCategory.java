@@ -66,7 +66,7 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
 
     @Override
     public IDrawable getBackground() {
-        return helper.createBlankDrawable(120,8 + 16 * outputs.size());
+        return helper.createBlankDrawable(120,8 + 16 * Math.max(2,outputs.size()));
     }
 
     @Override

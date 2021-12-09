@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "ars_nouveau:mana_berry"
+    }
+  ],
+  "result": {
+    "item": "minecraft:purple_dye"
+  }
+}

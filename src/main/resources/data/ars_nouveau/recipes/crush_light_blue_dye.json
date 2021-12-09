@@ -1,13 +1,13 @@
 {
   "type": "ars_nouveau:crush",
   "input": {
-    "tag": "forge:stone"
+    "item": "minecraft:blue_orchid"
   },
   "output": [
     {
-      "item": "minecraft:gravel",
+      "item": "minecraft:light_blue_dye",
       "chance": 1.0,
-      "count": 1
+      "count": 2
     }
   ]
 }

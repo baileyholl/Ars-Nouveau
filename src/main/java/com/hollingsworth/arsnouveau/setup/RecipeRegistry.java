@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.setup;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantmentRecipe;
+import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.CrushRecipe;
 import net.minecraft.item.crafting.IRecipe;
@@ -17,11 +18,11 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
 public class RecipeRegistry {
     public static final IRecipeType<GlyphPressRecipe> GLYPH_TYPE = new RecipeType();
-    public static final IRecipeType<EnchantingApparatusRecipe> APPARATUS_TYPE = new RecipeType();
+    public static final IRecipeType<IEnchantingRecipe> APPARATUS_TYPE = new RecipeType();
 
     public static final IRecipeType<EnchantmentRecipe> ENCHANTMENT_TYPE = new RecipeType();
 
-    public static final IRecipeType<EnchantmentRecipe> CRUSH_TYPE = new RecipeType();
+    public static final IRecipeType<CrushRecipe> CRUSH_TYPE = new RecipeType();
 
     public static final IRecipeSerializer<GlyphPressRecipe> PRESS_SERIALIZER = new GlyphPressRecipe.Serializer();
     public static final IRecipeSerializer<EnchantingApparatusRecipe> APPARATUS_SERIALIZER = new EnchantingApparatusRecipe.Serializer();
