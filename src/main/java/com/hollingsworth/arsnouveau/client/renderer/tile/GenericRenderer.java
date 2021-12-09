@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
 import java.util.concurrent.Callable;
+import java.util.function.Supplier;
 
 public class GenericRenderer extends GeoBlockRenderer {
 
@@ -16,7 +17,7 @@ public class GenericRenderer extends GeoBlockRenderer {
         super(rendererDispatcherIn, new GenericModel(loc));
     }
 
-    public static Callable<BlockEntityWithoutLevelRenderer> getISTER(String loc){
+    public static Supplier<BlockEntityWithoutLevelRenderer> getISTER(String loc){
         return () -> new GenericItemRenderer(new GenericModel(loc));
     }
 }

@@ -31,38 +31,36 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 public class ClientHandler {
     @SubscribeEvent
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event){
-//        event.registerBlockEntityRenderer(BlockRegistry.GLYPH_PRESS_TILE, PressRenderer::new);
-//        event.registerBlockEntityRenderer(BlockRegistry.ARCANE_PEDESTAL_TILE, ArcanePedestalRenderer::new);
-//        event.registerBlockEntityRenderer(BlockRegistry.ENCHANTING_APP_TILE, EnchantingApparatusRenderer::new);
-//        event.registerBlockEntityRenderer(BlockRegistry.SCRIBES_TABLE_TILE, ScribesRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.GLYPH_PRESS_TILE, PressRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.ARCANE_PEDESTAL_TILE, ArcanePedestalRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.ENCHANTING_APP_TILE, EnchantingApparatusRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.SCRIBES_TABLE_TILE, ScribesRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.AGRONOMIC_SOURCELINK_TILE, AgronomicRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.LIGHT_TILE, LightRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.PORTAL_TILE_TYPE, PortalTileRenderer::new);
 //
 //
-//        event.registerBlockEntityRenderer(BlockRegistry.AGRONOMIC_SOURCELINK_TILE, AgronomicRenderer::new);
-//        event.registerBlockEntityRenderer(BlockRegistry.LIGHT_TILE, LightRenderer::new);
-//        event.registerBlockEntityRenderer(BlockRegistry.PORTAL_TILE_TYPE, PortalTileRenderer::new);
-//
-//
-//        event.registerBlockEntityRenderer(BlockRegistry.INTANGIBLE_AIR_TYPE, IntangibleAirRenderer::new);
-//        event.registerBlockEntityRenderer(BlockRegistry.VOLCANIC_TILE, VolcanicRenderer::new);
-//        event.registerBlockEntityRenderer(BlockRegistry.CRYSTALLIZER_TILE, CrystallizerRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.INTANGIBLE_AIR_TYPE, IntangibleAirRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.VOLCANIC_TILE, VolcanicRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.CRYSTALLIZER_TILE, CrystallizerRenderer::new);
 //        event.registerBlockEntityRenderer(BlockRegistry.SUMMONING_CRYSTAL_TILE, SummoningCrystalRenderer::new);
-//        event.registerBlockEntityRenderer(BlockRegistry.POTION_MELDER_TYPE, PotionMelderRenderer::new);
-//        event.registerBlockEntityRenderer(BlockRegistry.RITUAL_TILE, RitualBrazierRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.POTION_MELDER_TYPE, PotionMelderRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.RITUAL_TILE, RitualBrazierRenderer::new);
 //
-//        event.registerBlockEntityRenderer(BlockRegistry.ALCHEMICAL_TILE, AlchemicalRenderer::new);
-//        event.registerBlockEntityRenderer(BlockRegistry.VITALIC_TILE, VitalicRenderer::new);
-//        event.registerBlockEntityRenderer(BlockRegistry.MYCELIAL_TILE, MycelialRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.ALCHEMICAL_TILE, AlchemicalRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.VITALIC_TILE, VitalicRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.MYCELIAL_TILE, MycelialRenderer::new);
 //
-//        event.registerBlockEntityRenderer(BlockRegistry.RELAY_DEPOSIT_TILE, (t) -> new GenericRenderer(t, "source_deposit"));
-//        event.registerBlockEntityRenderer(BlockRegistry.RELAY_WARP_TILE, (t) -> new GenericRenderer(t, "source_warp"));
-//        event.registerBlockEntityRenderer(BlockRegistry.ARCANE_RELAY_TILE, (t) -> new GenericRenderer(t, "source_relay"));
-//        event.registerBlockEntityRenderer(BlockRegistry.ARCANE_RELAY_SPLITTER_TILE, (t) -> new GenericRenderer(t, "source_splitter"));
-//        event.registerBlockEntityRenderer(BlockRegistry.BASIC_SPELL_TURRET_TILE, BasicTurretRenderer::new);
-//        event.registerBlockEntityRenderer(BlockRegistry.SPELL_TURRET_TYPE, ReducerTurretRenderer::new);
-//        event.registerBlockEntityRenderer(BlockRegistry.TIMER_SPELL_TURRET_TILE, TimerTurretRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.RELAY_DEPOSIT_TILE, (t) -> new GenericRenderer(t, "source_deposit"));
+        event.registerBlockEntityRenderer(BlockRegistry.RELAY_WARP_TILE, (t) -> new GenericRenderer(t, "source_warp"));
+        event.registerBlockEntityRenderer(BlockRegistry.ARCANE_RELAY_TILE, (t) -> new GenericRenderer(t, "source_relay"));
+        event.registerBlockEntityRenderer(BlockRegistry.ARCANE_RELAY_SPLITTER_TILE, (t) -> new GenericRenderer(t, "source_splitter"));
+        event.registerBlockEntityRenderer(BlockRegistry.BASIC_SPELL_TURRET_TILE, BasicTurretRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.SPELL_TURRET_TYPE, ReducerTurretRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.TIMER_SPELL_TURRET_TILE, TimerTurretRenderer::new);
 //        event.registerBlockEntityRenderer(BlockRegistry.ARCHWOOD_CHEST_TILE, ArchwoodChestRenderer::new);
-//        event.registerBlockEntityRenderer(BlockRegistry.RUNE_TILE, RuneRenderer::new);
-//        event.registerBlockEntityRenderer(BlockRegistry.PHANTOM_TILE, MageBlockRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.RUNE_TILE, RuneRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.PHANTOM_TILE, MageBlockRenderer::new);
 
 
 
@@ -112,42 +110,42 @@ public class ClientHandler {
     @SubscribeEvent
     public static void init(final FMLClientSetupEvent evt) {
 //
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.MANA_JAR, RenderType.translucent());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.GLYPH_PRESS_BLOCK, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.ARCANE_PEDESTAL, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.ENCHANTING_APP_BLOCK, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.LIGHT_BLOCK, RenderType.translucent());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.PHANTOM_BLOCK, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.MAGE_BLOOM_CROP, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SCRIBES_BLOCK, RenderType.translucent());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.ARCANE_RELAY, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.RUNE_BLOCK, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.ARCANE_CORE_BLOCK, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.CRYSTALLIZER_BLOCK, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.VOLCANIC_BLOCK, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.MANA_BERRY_BUSH, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.LAVA_LILY, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.WIXIE_CAULDRON, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.CREATIVE_MANA_JAR, RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.MANA_JAR, RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.GLYPH_PRESS_BLOCK, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.ARCANE_PEDESTAL, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.ENCHANTING_APP_BLOCK, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.LIGHT_BLOCK, RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.PHANTOM_BLOCK, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.MAGE_BLOOM_CROP, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SCRIBES_BLOCK, RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.ARCANE_RELAY, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.RUNE_BLOCK, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.ARCANE_CORE_BLOCK, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.CRYSTALLIZER_BLOCK, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.VOLCANIC_BLOCK, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.MANA_BERRY_BUSH, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.LAVA_LILY, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.WIXIE_CAULDRON, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.CREATIVE_MANA_JAR, RenderType.translucent());
 //        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.VEXING_SAPLING, RenderType.cutout());
 //        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.FLOURISHING_SAPLING, RenderType.cutout());
 //        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BLAZING_SAPLING, RenderType.cutout());
 //        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.CASCADING_SAPLING, RenderType.cutout());
 //        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.MANA_GEM_BLOCK, RenderType.translucent());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.POTION_JAR, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.POTION_MELDER, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.RITUAL_BLOCK, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SCONCE_BLOCK, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.DRYGMY_BLOCK, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.ALCHEMICAL_BLOCK, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.VITALIC_BLOCK, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.MYCELIAL_BLOCK, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.RELAY_WARP, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.RELAY_DEPOSIT, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BOOKWYRM_LECTERN, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SPELL_TURRET, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BASIC_SPELL_TURRET, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.TIMER_SPELL_TURRET, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.POTION_JAR, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.POTION_MELDER, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.RITUAL_BLOCK, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SCONCE_BLOCK, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.DRYGMY_BLOCK, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.ALCHEMICAL_BLOCK, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.VITALIC_BLOCK, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.MYCELIAL_BLOCK, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.RELAY_WARP, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.RELAY_DEPOSIT, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BOOKWYRM_LECTERN, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SPELL_TURRET, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BASIC_SPELL_TURRET, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.TIMER_SPELL_TURRET, RenderType.cutout());
 //        evt.enqueueWork(() -> {
 //            ItemProperties.register(ItemsRegistry.ENCHANTERS_SHIELD,new ResourceLocation(ArsNouveau.MODID,"blocking"), (p_239421_0_, p_239421_1_, p_239421_2_, arg4) -> {
 //                return p_239421_2_ != null && p_239421_2_.isUsingItem() && p_239421_2_.getUseItem() == p_239421_0_ ? 1.0F : 0.0F;
