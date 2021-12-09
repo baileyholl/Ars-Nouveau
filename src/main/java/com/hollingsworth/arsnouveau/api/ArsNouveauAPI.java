@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.api;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
@@ -19,9 +18,9 @@ import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.spell.validation.StandardSpellValidator;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
@@ -196,31 +195,25 @@ public class ArsNouveauAPI {
     public Map<String, AbstractFamiliarHolder> getFamiliarHolderMap(){
         return this.familiarHolderMap;
     }
+
     public Map<String, FamiliarScript> getFamiliarScriptMap(){
         return this.familiarScriptMap;
     }
+
     public List<IEnchantingRecipe> getEnchantingApparatusRecipes(World world) {
-        List<IEnchantingRecipe> recipes = new ArrayList<>(enchantingApparatusRecipes);
-        RecipeManager manager = world.getRecipeManager();
-        for(IRecipe i : manager.getRecipes()){
-            if(i instanceof EnchantingApparatusRecipe){
-                recipes.add((IEnchantingRecipe) i);
-            }
-        }
-        return recipes;
+        return world.getRecipeManager().getAllRecipesFor(RecipeRegistry.APPARATUS_TYPE);
     }
 
-    public GlyphPressRecipe getGlyphPressRecipe(World world, Item reagent, @Nullable ISpellTier.Tier tier){
+    public @Nullable GlyphPressRecipe getGlyphPressRecipe(World world, Item reagent, @Nullable ISpellTier.Tier tier){
         if(reagent == null || reagent == Items.AIR)
             return null;
 
         RecipeManager manager = world.getRecipeManager();
-        for(IRecipe i : manager.getRecipes()){
-            if(i instanceof GlyphPressRecipe){
-                if(((GlyphPressRecipe) i).reagent.getItem() == reagent && ((GlyphPressRecipe) i).tier == tier)
-                    return (GlyphPressRecipe) i;
-            }
+        for(GlyphPressRecipe i : manager.getAllRecipesFor(RecipeRegistry.GLYPH_TYPE)){
+            if(i.reagent.getItem() == reagent && i.tier == tier)
+                return i;
         }
+
         return null;
     }
     public List<VanillaPotionRecipe> vanillaPotionRecipes = new ArrayList<>();
