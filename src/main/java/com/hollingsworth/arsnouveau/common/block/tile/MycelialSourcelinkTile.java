@@ -68,12 +68,12 @@ public class MycelialSourcelinkTile extends SourcelinkTile{
             mana += 11 * food.getNutrition();
             mana += 30 * food.getSaturationModifier();
             progress += 1;
-            //TODO: restore tags
-//            if(i.is(Recipes.MAGIC_FOOD) || (i.getItem() instanceof BlockItem && Recipes.MAGIC_PLANTS.contains(((BlockItem) i.getItem()).getBlock()))){
-//                progress += 4;
-//                mana += 10;
-//                mana *= 2;
-//            }
+
+            if(i.is(Recipes.MAGIC_FOOD) || (i.getItem() instanceof BlockItem && Recipes.MAGIC_PLANTS.contains(((BlockItem) i.getItem()).getBlock()))){
+                progress += 4;
+                mana += 10;
+                mana *= 2;
+            }
             return mana;
         }
         return 0;

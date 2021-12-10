@@ -37,10 +37,10 @@ public class AgronomicSourcelinkTile extends SourcelinkTile {
     @SubscribeEvent
     public static void cropGrow(BlockEvent.CropGrowEvent.Post event) {
         int mana = 20;
-        //TODO: Restore tags
-    //    if(event.getWorld().getBlockState(event.getPos()).is(Recipes.MAGIC_PLANTS)) {
-//            mana += 25;
-//        }
+
+        if(event.getWorld().getBlockState(event.getPos()).is(Recipes.MAGIC_PLANTS)) {
+            mana += 25;
+        }
         if(event.getWorld() instanceof Level)
             SourcelinkEventQueue.addManaEvent((Level) event.getWorld(), AgronomicSourcelinkTile.class, mana, event, event.getPos());
     }
@@ -48,9 +48,9 @@ public class AgronomicSourcelinkTile extends SourcelinkTile {
     @SubscribeEvent
     public static void treeGrow(SaplingGrowTreeEvent event) {
         int mana = 50;
-//        if(event.getWorld().getBlockState(event.getPos()).is(Recipes.MAGIC_SAPLINGS)) {
-//            mana += 50;
-//        }
+        if(event.getWorld().getBlockState(event.getPos()).is(Recipes.MAGIC_SAPLINGS)) {
+            mana += 50;
+        }
         if(event.getWorld() instanceof Level)
             SourcelinkEventQueue.addManaEvent((Level) event.getWorld(), AgronomicSourcelinkTile.class, mana, event, event.getPos());
     }

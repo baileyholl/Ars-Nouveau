@@ -295,7 +295,7 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
     @Override
     protected boolean canUpdatePath()
     {
-        // todo activate and handle propperly if you want rail pathing.
+        //  activate and handle propperly if you want rail pathing.
         // Auto dismount when trying to path.
         /*if (ourEntity.vehicle != null)
         {
@@ -344,7 +344,7 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
 
     @Override
     protected boolean canMoveDirectly(Vec3 p_186133_, Vec3 p_186134_) {
-        // TODO special path blocks go into the false as !specialPathBlocks
+        //  special path blocks go into the false as !specialPathBlocks
         return false; //super.canMoveDirectly(p_186133_, p_186134_);
     }
 
@@ -488,7 +488,7 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
             }
             else if (level.random.nextInt(10) == 0)
             {
-                if (false) // todo if you also want them to move faster on certain blocks here you check for it.
+                if (false) //  if you also want them to move faster on certain blocks here you check for it.
                 {
                     speedModifier = ON_PATH_SPEED_MULTIPLIER * getSpeedFactor();
                 }
@@ -555,7 +555,7 @@ public class MinecoloniesAdvancedPathNavigate extends AbstractAdvancedPathNaviga
      */
     private boolean handlePathOnRails(final PathPointExtended pEx, final PathPointExtended pExNext)
     {
-        /*if (pEx.isRailsEntry()) todo if you want custom rail handling activate and add minecart.
+        /*if (pEx.isRailsEntry())  if you want custom rail handling activate and add minecart.
         {
             final BlockPos blockPos = new BlockPos(pEx.x, pEx.y, pEx.z);
             if (!spawnedPos.equals(blockPos))

@@ -139,7 +139,7 @@ repositories {
 dependencies {
 
     implementation 'org.jetbrains:annotations:20.1.0'
-    minecraft 'net.minecraftforge:forge:1.18-38.0.12'
+    minecraft 'net.minecraftforge:forge:1.18-38.0.17'
 //    runtimeOnly fg.deobf("curse.maven:exp-406201:3419814") //Blame
 //    runtimeOnly fg.deobf("curse.maven:exp-248787:3395800")  // Appleskin
 //    runtimeOnly fg.deobf("curse.maven:exp-407174:3188120")  // Shutup experimental settings
@@ -150,11 +150,11 @@ dependencies {
 //    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50:api")
 //    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50")
 //    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50")
-//    compileOnly fg.deobf("mezz.jei:jei-1.16.2:7.3.2.25:api")
-//    runtimeOnly fg.deobf("mezz.jei:jei-1.16.2:7.3.2.25")
+    compileOnly fg.deobf("mezz.jei:jei-1.18:9.0.0.40:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.18:9.0.0.40")
 //    runtimeOnly fg.deobf("curse.maven:exp-449945:3429057")  // Per viam invenire
-    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18-5.0.2.1:api")
-    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18-5.0.2.1")
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18-5.0.2.4:api")
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18-5.0.2.4")
     implementation fg.deobf('software.bernie.geckolib:geckolib-1.18:3.0.0')
     
 //    compileOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.4:7.1.0.84")
