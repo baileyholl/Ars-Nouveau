@@ -89,7 +89,7 @@ public class ArchwoodChestRenderer<T extends BlockEntity & LidBlockEntity> imple
             Material rendermaterial = this.getMaterial(tileEntity, chesttype);
             VertexConsumer ivertexbuilder = rendermaterial.buffer(buffer, RenderType::entityCutout);
             if (flag1) {
-                if (chesttype == ChestType.LEFT) {
+                if (chesttype == ChestType.RIGHT) {
                     this.render(ms, ivertexbuilder, this.doubleRightLid, this.doubleRightLock, this.doubleRightBottom, f1, i, p_225616_6_);
                 } else {
                     this.render(ms, ivertexbuilder, this.doubleLeftLid, this.doubleLeftLock, this.doubleLeftBottom, f1, i, p_225616_6_);
@@ -121,23 +121,5 @@ public class ArchwoodChestRenderer<T extends BlockEntity & LidBlockEntity> imple
             default:
                 return new Material(Sheets.CHEST_SHEET, new ResourceLocation("ars_nouveau","entity/archwood_chest"));
         }
-      //  return new RenderMaterial(CHEST_SHEET, new ResourceLocation("ars_nouveau","entity/chest/archwood"));
     }
-
-//    public static BlockEntityWithoutLevelRenderer getRenderer(){
-//        return new BlockEntityWithoutLevelRenderer() {
-//            private BlockEntity tile = null;
-//            //render
-//            @Override
-//            public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack matrix, MultiBufferSource buffer, int x, int y) {
-//                if(tile == null) {
-//                  //  tile =  BlockRegistry.ARCHWOOD_CHEST_TILE.create();
-//                }
-//                if(tile == null)
-//                    return;
-//                //BlockEntityRenderDispatcher.instance.renderItem(tile, matrix, buffer, x, y);
-//            }
-//
-//        };
-//    }
 }

@@ -1,3 +1,32 @@
+package com.hollingsworth.arsnouveau.common.world;
+
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
+import com.hollingsworth.arsnouveau.common.world.tree.SupplierBlockStateProvider;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.Config;
+import net.minecraft.core.Registry;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.data.worldgen.features.FeatureUtils;
+import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
+import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
+import net.minecraft.world.level.levelgen.feature.foliageplacers.BlobFoliagePlacer;
+import net.minecraft.world.level.levelgen.feature.foliageplacers.SpruceFoliagePlacer;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import net.minecraft.world.level.levelgen.feature.trunkplacers.StraightTrunkPlacer;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
+import java.util.Objects;
+
 //package com.hollingsworth.arsnouveau.common.world;
 //
 //import com.google.common.collect.ImmutableList;
@@ -55,35 +84,37 @@
 //import static com.hollingsworth.arsnouveau.common.world.FeatureLib.*;
 //import static net.minecraft.data.worldgen.Features.*;
 //
-//@Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
-//public class WorldEvent {
-//    public static ConfiguredFeature<TreeConfiguration, ?> CASCADING_TREE =  Feature.TREE.configured((
-//            new TreeConfiguration.TreeConfigurationBuilder(new SupplierBlockStateProvider(LibBlockNames.CASCADING_LOG),
-//                    new SupplierBlockStateProvider(LibBlockNames.CASCADING_LEAVES),
-//                    new BlobFoliagePlacer(UniformInt.fixed(0), UniformInt.fixed(0), 0),
-//                    new MagicTrunkPlacer(9, 1, 0),
-//                    new TwoLayersFeatureSize(2, 0, 2))).ignoreVines().build());
-//
-//    public static ConfiguredFeature<TreeConfiguration, ?> BLAZING_TREE =  Feature.TREE.configured((
-//            new TreeConfiguration.TreeConfigurationBuilder(new SupplierBlockStateProvider(LibBlockNames.BLAZING_LOG),
-//                    new SupplierBlockStateProvider(LibBlockNames.BLAZING_LEAVES),
-//                    new BlobFoliagePlacer(UniformInt.fixed(0), UniformInt.fixed(0), 0),
-//                    new MagicTrunkPlacer(9, 1, 0),
-//                    new TwoLayersFeatureSize(2, 0, 2))).ignoreVines().build());
-//
-//    public static ConfiguredFeature<TreeConfiguration, ?> FLOURISHING_TREE =  Feature.TREE.configured((
-//            new TreeConfiguration.TreeConfigurationBuilder(new SupplierBlockStateProvider(LibBlockNames.FLOURISHING_LOG),
-//                    new SupplierBlockStateProvider(LibBlockNames.FLOURISHING_LEAVES),
-//                    new BlobFoliagePlacer(UniformInt.fixed(0), UniformInt.fixed(0), 0),
-//                    new MagicTrunkPlacer(9, 1, 0),
-//                    new TwoLayersFeatureSize(2, 0, 2))).ignoreVines().build());
-//
-//    public static ConfiguredFeature<TreeConfiguration, ?> VEXING_TREE =  Feature.TREE.configured((
-//            new TreeConfiguration.TreeConfigurationBuilder(new SupplierBlockStateProvider(LibBlockNames.VEXING_LOG),
-//                    new SupplierBlockStateProvider(LibBlockNames.VEXING_LEAVES),
-//                    new BlobFoliagePlacer(UniformInt.fixed(0), UniformInt.fixed(0), 0),
-//                    new MagicTrunkPlacer(9, 1, 0),
-//                    new TwoLayersFeatureSize(2, 0, 2))).ignoreVines().build());
+@Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
+public class WorldEvent {
+    public static ConfiguredFeature<TreeConfiguration, ?> CASCADING_TREE =  Feature.TREE.configured((
+            new TreeConfiguration.TreeConfigurationBuilder(new SupplierBlockStateProvider(LibBlockNames.CASCADING_LOG),
+                    new MagicTrunkPlacer(9, 1, 0),
+                    new SupplierBlockStateProvider(LibBlockNames.CASCADING_LEAVES),
+                    new BlobFoliagePlacer(UniformInt.of(0, 0), UniformInt.of(0,0), 0),
+                    new TwoLayersFeatureSize(2, 0, 2))).ignoreVines().build());
+
+
+
+    public static ConfiguredFeature<TreeConfiguration, ?> BLAZING_TREE =  Feature.TREE.configured((
+            new TreeConfiguration.TreeConfigurationBuilder(new SupplierBlockStateProvider(LibBlockNames.BLAZING_LOG),
+                    new MagicTrunkPlacer(9, 1, 0),
+                    new SupplierBlockStateProvider(LibBlockNames.BLAZING_LEAVES),
+                    new BlobFoliagePlacer(UniformInt.of(0, 0), UniformInt.of(0, 0), 0),
+                    new TwoLayersFeatureSize(2, 0, 2))).ignoreVines().build());
+
+    public static ConfiguredFeature<TreeConfiguration, ?> FLOURISHING_TREE =  Feature.TREE.configured((
+            new TreeConfiguration.TreeConfigurationBuilder(new SupplierBlockStateProvider(LibBlockNames.FLOURISHING_LOG),
+                    new MagicTrunkPlacer(9, 1, 0),
+                    new SupplierBlockStateProvider(LibBlockNames.FLOURISHING_LEAVES),
+                    new BlobFoliagePlacer(UniformInt.of(0, 0), UniformInt.of(0, 0), 0),
+                    new TwoLayersFeatureSize(2, 0, 2))).ignoreVines().build());
+
+    public static ConfiguredFeature<TreeConfiguration, ?> VEXING_TREE =  Feature.TREE.configured((
+            new TreeConfiguration.TreeConfigurationBuilder(new SupplierBlockStateProvider(LibBlockNames.VEXING_LOG),
+                    new MagicTrunkPlacer(9, 1, 0),
+                    new SupplierBlockStateProvider(LibBlockNames.VEXING_LEAVES),
+                    new BlobFoliagePlacer(UniformInt.of(0, 0), UniformInt.of(0, 0), 0),
+                    new TwoLayersFeatureSize(2, 0, 2))).ignoreVines().build());
 //
 //
 //    public static ConfiguredFeature<TreeConfiguration, ?> MAGIC_TREE_CONFIG2 = Feature.TREE.configured((
@@ -126,15 +157,17 @@
 //            }
 //        }
 //    };
-//    public static void registerFeatures() {
-//        RandomPatchConfiguration BERRY_BUSH_PATCH_CONFIG = (new RandomPatchConfiguration.GrassConfigurationBuilder(new SimpleStateProvider(BlockRegistry.MANA_BERRY_BUSH.defaultBlockState()), SimpleBlockPlacer.INSTANCE)).tries(64).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK)).noProjection().build();
-//
-//        float treeChance = Config.TREE_SPAWN_RATE.get().floatValue();
+    public static void registerFeatures() {
+      //  RandomPatchConfiguration BERRY_BUSH_PATCH_CONFIG = (new RandomPatchConfiguration.GrassConfigurationBuilder(new SimpleStateProvider(BlockRegistry.MANA_BERRY_BUSH.defaultBlockState()), SimpleBlockPlacer.INSTANCE)).tries(64).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK)).noProjection().build();
+
+        float treeChance = Config.TREE_SPAWN_RATE.get().floatValue();
 //
 //        ConfiguredFeature<?, ?> CASCADE = CASCADING_TREE
 //                .decorated(Features.Decorators.HEIGHTMAP_SQUARE)
 //                .decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(0, treeChance, 1)));
-//        ConfiguredFeature<?, ?> BLAZE = BLAZING_TREE
+//        Feature.TREE.configured()
+
+        //        ConfiguredFeature<?, ?> BLAZE = BLAZING_TREE
 //                .decorated(Features.Decorators.HEIGHTMAP_SQUARE)
 //                .decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(0, treeChance, 1)));
 //        ConfiguredFeature<?, ?> VEX = VEXING_TREE
@@ -181,7 +214,7 @@
 //
 //        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, BlockRegistry.VEXING_SAPLING.getRegistryName(), VEX);
 //        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, BlockRegistry.BLAZING_SAPLING.getRegistryName(), BLAZE);
-//        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, BlockRegistry.CASCADING_SAPLING.getRegistryName(), CASCADE);
+        //Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, BlockRegistry.CASCADING_SAPLING.getRegistryName(), CASCADE);
 //        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, BlockRegistry.FLOURISHING_SAPLING.getRegistryName(), FLOURISHING);
 //        Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, FeatureLib.RANDOM_LIGHTS_LOC, RANDOM_LIGHTS);
 //
@@ -205,45 +238,41 @@
 //        ),VEXING_TREE
 //                .decorated(Features.Decorators.HEIGHTMAP_SQUARE)
 //                .decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(0, 0, 0))))));
-//
-//
-//       // Registry.register(WorldGenRegistries.PROCESSOR_LIST, new ResourceLocation(ArsNouveau.MODID, "archwood_plains"), ARCHWOOD_PLAINS);
-//
-//    }
-//
-//    @SubscribeEvent
-//    public static void biomeLoad(BiomeLoadingEvent e) {
-//
-//        if (e.getCategory() == Biome.BiomeCategory.NETHER || e.getCategory() == Biome.BiomeCategory.THEEND)
-//            return;
-//
-//        addMobSpawns(e);
-//
-//        if (Config.SPAWN_ORE.get()) {
-//            e.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES,
-//                    Objects.requireNonNull(BuiltinRegistries.CONFIGURED_FEATURE.get(BlockRegistry.ARCANE_ORE.getRegistryName()))).build();
-//        }
-//
+
+
+       // Registry.register(WorldGenRegistries.PROCESSOR_LIST, new ResourceLocation(ArsNouveau.MODID, "archwood_plains"), ARCHWOOD_PLAINS);
+
+    }
+
+    @SubscribeEvent
+    public static void biomeLoad(BiomeLoadingEvent e) {
+
+        if (e.getCategory() == Biome.BiomeCategory.NETHER || e.getCategory() == Biome.BiomeCategory.THEEND)
+            return;
+
+      //  addMobSpawns(e);
+
+
 //        if ((e.getCategory().equals(Biome.BiomeCategory.TAIGA) ||e.getName().equals(new ResourceLocation(ArsNouveau.MODID, "archwood_forest")))  && Config.SPAWN_BERRIES.get()) {
 //            e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, Objects.requireNonNull(BuiltinRegistries.CONFIGURED_FEATURE.get(BlockRegistry.MANA_BERRY_BUSH.getRegistryName()))).build();
 //        }
-//        //Feature.RANDOM_SELECTOR.withConfiguration(new MultipleRandomFeatureConfig(ImmutableList.of(MAGIC_TREE_CONFIG.withChance(0.2F)), MAGIC_TREE_CONFIG)),
+
+        //Feature.RANDOM_SELECTOR.withConfiguration(new MultipleRandomFeatureConfig(ImmutableList.of(MAGIC_TREE_CONFIG.withChance(0.2F)), MAGIC_TREE_CONFIG)),
 //        e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION,
 //                Objects.requireNonNull(BuiltinRegistries.CONFIGURED_FEATURE.get(BlockRegistry.VEXING_SAPLING.getRegistryName()))).build();
-//
-//        e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION,
-//                Objects.requireNonNull(BuiltinRegistries.CONFIGURED_FEATURE.get(BlockRegistry.CASCADING_SAPLING.getRegistryName()))).build();
-//
+
+        //e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, () -> BuiltinRegistries.CONFIGURED_FEATURE.get(BlockRegistry.CASCADING_SAPLING.getRegistryName()));
+
 //        e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION,
 //                Objects.requireNonNull(BuiltinRegistries.CONFIGURED_FEATURE.get(BlockRegistry.BLAZING_SAPLING.getRegistryName()))).build();
 //
 //        e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION,
 //                Objects.requireNonNull(BuiltinRegistries.CONFIGURED_FEATURE.get(BlockRegistry.FLOURISHING_SAPLING.getRegistryName()))).build();
-//
+
 //        if(e.getName().equals(archwoodForest.getRegistryName())){
 //            addArchwoodForestFeatures(e);
 //        }
-//    }
+    }
 //
 //    public static void addMobSpawns(BiomeLoadingEvent e){
 //        List<Biome.BiomeCategory> categories = Arrays.asList(Biome.BiomeCategory.FOREST, Biome.BiomeCategory.EXTREME_HILLS, Biome.BiomeCategory.JUNGLE,
@@ -311,4 +340,4 @@
 //            return ResourceKey.create(Registry.BIOME_REGISTRY, Objects.requireNonNull(b.getRegistryName()));
 //        }
 //    }
-//}
+}

@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -17,10 +18,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 
-public class ArcanePedestal extends TickableModBlock {
+public class ArcanePedestal extends ModBlock implements EntityBlock {
 
     public ArcanePedestal() {
-        super(TickableModBlock.defaultProperties().noOcclusion(),LibBlockNames.ARCANE_PEDESTAL);
+        super(ModBlock.defaultProperties().noOcclusion(),LibBlockNames.ARCANE_PEDESTAL);
     }
 
 

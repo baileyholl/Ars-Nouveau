@@ -38,19 +38,14 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.AGRONOMIC_SOURCELINK_TILE, AgronomicRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.LIGHT_TILE, LightRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.PORTAL_TILE_TYPE, PortalTileRenderer::new);
-//
-//
         event.registerBlockEntityRenderer(BlockRegistry.INTANGIBLE_AIR_TYPE, IntangibleAirRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.VOLCANIC_TILE, VolcanicRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.CRYSTALLIZER_TILE, CrystallizerRenderer::new);
-//        event.registerBlockEntityRenderer(BlockRegistry.SUMMONING_CRYSTAL_TILE, SummoningCrystalRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.POTION_MELDER_TYPE, PotionMelderRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.RITUAL_TILE, RitualBrazierRenderer::new);
-//
         event.registerBlockEntityRenderer(BlockRegistry.ALCHEMICAL_TILE, AlchemicalRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.VITALIC_TILE, VitalicRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.MYCELIAL_TILE, MycelialRenderer::new);
-//
         event.registerBlockEntityRenderer(BlockRegistry.RELAY_DEPOSIT_TILE, (t) -> new GenericRenderer(t, "source_deposit"));
         event.registerBlockEntityRenderer(BlockRegistry.RELAY_WARP_TILE, (t) -> new GenericRenderer(t, "source_warp"));
         event.registerBlockEntityRenderer(BlockRegistry.ARCANE_RELAY_TILE, (t) -> new GenericRenderer(t, "source_relay"));
@@ -58,11 +53,9 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.BASIC_SPELL_TURRET_TILE, BasicTurretRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.SPELL_TURRET_TYPE, ReducerTurretRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.TIMER_SPELL_TURRET_TILE, TimerTurretRenderer::new);
-//        event.registerBlockEntityRenderer(BlockRegistry.ARCHWOOD_CHEST_TILE, ArchwoodChestRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.ARCHWOOD_CHEST_TILE, ArchwoodChestRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.RUNE_TILE, RuneRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.PHANTOM_TILE, MageBlockRenderer::new);
-
-
 
         event.registerEntityRenderer( ModEntities.SPELL_PROJ,
                 renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
@@ -127,11 +120,11 @@ public class ClientHandler {
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.LAVA_LILY, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.WIXIE_CAULDRON, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.CREATIVE_MANA_JAR, RenderType.translucent());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.VEXING_SAPLING, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.FLOURISHING_SAPLING, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BLAZING_SAPLING, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.CASCADING_SAPLING, RenderType.cutout());
-//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.MANA_GEM_BLOCK, RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.VEXING_SAPLING, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.FLOURISHING_SAPLING, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BLAZING_SAPLING, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.CASCADING_SAPLING, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.MANA_GEM_BLOCK, RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.POTION_JAR, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.POTION_MELDER, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.RITUAL_BLOCK, RenderType.cutout());
@@ -146,32 +139,31 @@ public class ClientHandler {
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SPELL_TURRET, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BASIC_SPELL_TURRET, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.TIMER_SPELL_TURRET, RenderType.cutout());
-//        evt.enqueueWork(() -> {
-//            ItemProperties.register(ItemsRegistry.ENCHANTERS_SHIELD,new ResourceLocation(ArsNouveau.MODID,"blocking"), (p_239421_0_, p_239421_1_, p_239421_2_, arg4) -> {
-//                return p_239421_2_ != null && p_239421_2_.isUsingItem() && p_239421_2_.getUseItem() == p_239421_0_ ? 1.0F : 0.0F;
-//            });
-//        });
+        evt.enqueueWork(() -> {
+            ItemProperties.register(ItemsRegistry.ENCHANTERS_SHIELD,new ResourceLocation(ArsNouveau.MODID,"blocking"), (p_239421_0_, p_239421_1_, p_239421_2_, arg4) -> {
+                return p_239421_2_ != null && p_239421_2_.isUsingItem() && p_239421_2_.getUseItem() == p_239421_0_ ? 1.0F : 0.0F;
+            });
+        });
     }
 
     @SubscribeEvent
     public static void initColors(final ColorHandlerEvent.Item event) {
-//        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-//                (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
-//                ItemsRegistry.POTION_FLASK);
-//
-//        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-//                        (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
-//                ItemsRegistry.POTION_FLASK_EXTEND_TIME);
-//
-//        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
-//                        (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
-//                ItemsRegistry.POTION_FLASK_AMPLIFY);
-//TODO: Restore colors
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
+                ItemsRegistry.POTION_FLASK);
 
-//        event.getBlockColors().register((state, reader, pos, tIndex) ->
-//                reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionJarTile
-//                        ? ((PotionJarTile) reader.getBlockEntity(pos)).getColor()
-//                        : -1, BlockRegistry.POTION_JAR);
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
+                ItemsRegistry.POTION_FLASK_EXTEND_TIME);
+
+        event.getItemColors().register((stack, color) -> color > 0 ? -1 :
+                        (PotionUtils.getPotion(stack) != Potions.EMPTY ? PotionUtils.getColor(stack) : -1),
+                ItemsRegistry.POTION_FLASK_AMPLIFY);
+
+        event.getBlockColors().register((state, reader, pos, tIndex) ->
+                reader != null && pos != null && reader.getBlockEntity(pos) instanceof PotionJarTile
+                        ? ((PotionJarTile) reader.getBlockEntity(pos)).getColor()
+                        : -1, BlockRegistry.POTION_JAR);
     }
 
 }
