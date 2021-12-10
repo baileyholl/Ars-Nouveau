@@ -41,46 +41,46 @@ public class GuiColorScreen extends BaseBook {
         redW = (SliderButton)buildSlider(new TranslatableComponent("ars_nouveau.color_gui.red_slider").getString(), s -> red, (settings, d) -> red = d).createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 49, 100);
         greenW = (SliderButton)buildSlider(new TranslatableComponent("ars_nouveau.color_gui.green_slider").getString(), s -> green, (settings, d) -> green = d).createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 89, 100);
         blueW = (SliderButton)buildSlider(new TranslatableComponent("ars_nouveau.color_gui.blue_slider").getString(), s -> blue, (settings, d) -> blue = d).createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 129, 100);
-        addWidget(redW);
-        addWidget(greenW);
-        addWidget(blueW);
-        addWidget(new GuiImageButton(bookLeft+ 55, bookBottom - 36, 0,0,37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveClick));
+        addRenderableWidget(redW);
+        addRenderableWidget(greenW);
+        addRenderableWidget(blueW);
+        addRenderableWidget(new GuiImageButton(bookLeft+ 55, bookBottom - 36, 0,0,37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveClick));
         addPresets();
     }
 
     public void addPresets(){
         // Default
-        addWidget(new GuiImageButton(bookRight - 131, bookTop + 44, 0,0,48, 11, 48, 11,
+        addRenderableWidget(new GuiImageButton(bookRight - 131, bookTop + 44, 0,0,48, 11, 48, 11,
                 "textures/gui/default_color_icon.png", (_2) -> setFromPreset(255, 25, 180)));
         // Purple
-        addWidget(new GuiImageButton(bookRight - 131, bookTop + 68, 0,0,48, 11, 48, 11,
+        addRenderableWidget(new GuiImageButton(bookRight - 131, bookTop + 68, 0,0,48, 11, 48, 11,
                 "textures/gui/purple_color_icon.png", (_2) -> setFromPreset(80, 25, 255)));
 
         // Blue
-        addWidget(new GuiImageButton(bookRight - 131, bookTop + 92, 0,0,48, 11, 48, 11,
+        addRenderableWidget(new GuiImageButton(bookRight - 131, bookTop + 92, 0,0,48, 11, 48, 11,
                 "textures/gui/blue_color_icon.png", (_2) -> setFromPreset(30, 25, 255)));
 
         // Red
-        addWidget(new GuiImageButton(bookRight - 131, bookTop + 116, 0,0,48, 11, 48, 11,
+        addRenderableWidget(new GuiImageButton(bookRight - 131, bookTop + 116, 0,0,48, 11, 48, 11,
                 "textures/gui/red_color_icon.png", (_2) -> setFromPreset(255, 25, 25)));
 
         // Green
-        addWidget(new GuiImageButton(bookRight - 131, bookTop + 140, 0,0,48, 11, 48, 11,
+        addRenderableWidget(new GuiImageButton(bookRight - 131, bookTop + 140, 0,0,48, 11, 48, 11,
                 "textures/gui/green_color_icon.png", (_2) -> setFromPreset(25, 255, 25)));
 
         // Yellow
-        addWidget(new GuiImageButton(bookRight - 73, bookTop + 44, 0,0,48, 11, 48, 11,
+        addRenderableWidget(new GuiImageButton(bookRight - 73, bookTop + 44, 0,0,48, 11, 48, 11,
                 "textures/gui/yellow_color_icon.png", (_2) -> setFromPreset(255, 255, 25)));
         // White
-        addWidget(new GuiImageButton(bookRight - 73, bookTop + 68, 0,0,48, 11, 48, 11,
+        addRenderableWidget(new GuiImageButton(bookRight - 73, bookTop + 68, 0,0,48, 11, 48, 11,
                 "textures/gui/white_color_icon.png", (_2) -> setFromPreset(255, 255, 255)));
 
         // Orange
-        addWidget(new GuiImageButton(bookRight - 73, bookTop + 92, 0,0,48, 11, 48, 11,
+        addRenderableWidget(new GuiImageButton(bookRight - 73, bookTop + 92, 0,0,48, 11, 48, 11,
                 "textures/gui/orange_color_icon.png", (_2) -> setFromPreset(255, 90, 1)));
 
         // Cyan
-        addWidget(new GuiImageButton(bookRight - 73, bookTop + 116, 0,0,48, 11, 48, 11,
+        addRenderableWidget(new GuiImageButton(bookRight - 73, bookTop + 116, 0,0,48, 11, 48, 11,
                 "textures/gui/cyan_color_icon.png", (_2) -> setFromPreset(25, 255, 255)));
 
 
@@ -119,28 +119,7 @@ public class GuiColorScreen extends BaseBook {
         minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.color_gui.cyan").getString(), 228, 118,  color);
        // minecraft.fontRenderer.drawString(stack, "Ice", 218, 115,  0);
         minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.color_gui.save").getString(), 67, 160,  color);
-        int xOffset = 10;
 
-
-//
-//        fillGradient(stack,
-//                0, 0,
-//                50,
-//                100,
-//                1073741824, 1073741824);
-//        int r = (int)red & 0xFF;
-//        int g = (int)green & 0xFF;
-//        int b = (int)blue & 0xFF;
-//        int a = 1 & 0xFF;
-//
-//        int rgb = (r << 24) + (g << 16) + (b << 8) + (a);
-//       //System.out.println(rgb);
-//        System.out.println(red);
-//        fill(stack,
-//                0, 0,
-//                50,
-//                100,
-//                new ParticleColor(red, green, blue).getColor());
 
     }
 
