@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.ritual;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.ritual.RitualContext;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityRitualProjectile;
@@ -39,8 +40,7 @@ public class RitualDig extends AbstractRitual {
     }
 
     public boolean canBlockBeHarvested(BlockPos pos){
-        //TODO: Restore getHarvestLevel 5 >=
-        return getWorld().getBlockState(pos).getDestroySpeed(getWorld(), pos) >= 0 && 5 >= 4;//getWorld().getBlockState(pos).getHarvestLevel();
+        return getWorld().getBlockState(pos).getDestroySpeed(getWorld(), pos) >= 0 && SpellUtil.isCorrectHarvestLevel(5, getWorld().getBlockState(pos));
     }
 
     public void breakBlock(BlockPos pos){

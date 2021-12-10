@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.chimera;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -110,11 +111,7 @@ public class ChimeraRamGoal extends Goal {
     }
 
     public void destroyBlock(BlockPos pos){
-        //TODO: Restore harvest level
-//        if(boss.level.getBlockState(pos).getHarvestLevel() < 9999 && boss.level.getBlockState(pos).getDestroySpeed(boss.level, pos) >= 0 ){
-//            boss.level.destroyBlock(pos, true);
-//        }
-        if(boss.level.getBlockState(pos).getDestroySpeed(boss.level, pos) >= 0 ) {
+        if(SpellUtil.isCorrectHarvestLevel(4, boss.level.getBlockState(pos))) {
             boss.level.destroyBlock(pos, true);
         }
     }
