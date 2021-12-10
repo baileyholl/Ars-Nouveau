@@ -126,7 +126,6 @@ public class GuiRadialMenu extends Screen {
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
         boolean hasMouseOver = false;
         int mousedOverSlot = -1;
-        //Category mousedOverCategory = null;
 
         if (!closing) {
             selectedItem = -1;
@@ -161,8 +160,7 @@ public class GuiRadialMenu extends Screen {
             adjusted = adjusted == 0 ? 10 : adjusted;
             drawCenteredString(ms,font, SpellBook.getSpellName(tag,  adjusted), width/2,(height - font.lineHeight) / 2,16777215);
         }
-        //TODO: find lighting call
-//        Lighting.turnBackOn();
+
         ms.popPose();
         for(int i = 0; i< numberOfSlices; i++){
             ItemStack stack = new ItemStack(Blocks.DIRT);
@@ -181,10 +179,7 @@ public class GuiRadialMenu extends Screen {
                     break;
                 }
             }
-            //TODO: Find replacements for rescale, lights,
-//            RenderSystem.disableRescaleNormal();
-//            Lighting.turnOff();
-//            RenderSystem.disableLighting();
+
             RenderSystem.disableDepthTest();
             if(!resourceIcon.isEmpty()) {
                 GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + resourceIcon),
