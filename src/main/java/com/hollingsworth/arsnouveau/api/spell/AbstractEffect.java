@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.api.event.SummonEvent;
 import com.hollingsworth.arsnouveau.api.util.LootUtil;
+import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.items.VoidJar;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
@@ -170,9 +171,8 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         return 2 + getAmplificationBonus(augments);
     }
 
-    //TODO: Restore harvest level
     public boolean canBlockBeHarvested(List<AbstractAugment> augments, Level world, BlockPos pos){
-        return true;// world.getBlockState(pos).getDestroySpeed(world, pos) >= 0 && getBaseHarvestLevel(augments) >= world.getBlockState(pos).getHarvestLevel();
+        return  world.getBlockState(pos).getDestroySpeed(world, pos) >= 0 && SpellUtil.isCorrectHarvestLevel(getBaseHarvestLevel(augments), world.getBlockState(pos));
     }
 
 

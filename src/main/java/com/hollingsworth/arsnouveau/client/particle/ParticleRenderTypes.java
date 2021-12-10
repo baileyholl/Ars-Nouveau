@@ -1,17 +1,17 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
+import com.hollingsworth.arsnouveau.client.RenderTypes;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.particle.ParticleRenderType;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.Tesselator;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureManager;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import org.lwjgl.opengl.GL11;
 
-public class RenderTypes {
+public class ParticleRenderTypes {
 
 //    static final ParticleRenderType AN_RENDER = new ParticleRenderType() {
 //        @Override
@@ -40,14 +40,16 @@ public class RenderTypes {
         @Override
         public void begin(BufferBuilder buffer, TextureManager textureManager) {
 //            RenderSystem.disableAlphaTest();
+//            RenderSystem.disableDepthTest();
 
             RenderSystem.enableBlend();
-//            RenderSystem.alphaFunc(516, 0.3f);
+
             RenderSystem.enableCull();
 
             textureManager.bindForSetup(TextureAtlas.LOCATION_PARTICLES);
             RenderSystem.depthMask(false);
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.DestFactor.ONE.value);
+            RenderSystem.setShader(() -> RenderTypes.CustomRenderTypes.brightSolidShader);
 
             buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.PARTICLE);
         }
@@ -55,12 +57,12 @@ public class RenderTypes {
         @Override
         public void end(Tesselator tessellator) {
             tessellator.end();
-            RenderSystem.enableDepthTest();
-//            RenderSystem.enableAlphaTest();
-
-            RenderSystem.depthMask(true);
-            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.DestFactor.ONE.value);
-            RenderSystem.disableCull();
+//            RenderSystem.enableDepthTest();
+////            RenderSystem.enableAlphaTest();
+//
+//            RenderSystem.depthMask(true);
+//            RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.DestFactor.ONE.value);
+//            RenderSystem.disableCull();
 
 //            RenderSystem.alphaFunc(516, 0.1F);
         }

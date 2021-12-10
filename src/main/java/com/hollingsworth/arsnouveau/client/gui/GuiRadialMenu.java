@@ -16,6 +16,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.Input;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -112,10 +113,10 @@ public class GuiRadialMenu extends Screen {
         }
 
         ms.pushPose();
-       //TODO: Restore alpha test?
-        // RenderSystem.disableAlphaTest();
         RenderSystem.enableBlend();
         RenderSystem.disableTexture();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 
         ms.translate(0, animTop, 0);
@@ -154,7 +155,7 @@ public class GuiRadialMenu extends Screen {
 
         tessellator.end();
         RenderSystem.enableTexture();
-
+        RenderSystem.disableBlend();
         if (hasMouseOver && mousedOverSlot != -1) {
             int adjusted =  (mousedOverSlot+ 6) % 10;
             adjusted = adjusted == 0 ? 10 : adjusted;

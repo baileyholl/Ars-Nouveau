@@ -72,7 +72,7 @@ public class ParticleLine extends TextureSheetParticle {
 
     @Override
     public ParticleRenderType getRenderType() {
-        return RenderTypes.EMBER_RENDER;
+        return ParticleRenderTypes.EMBER_RENDER;
     }
 
 

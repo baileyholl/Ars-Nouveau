@@ -39,7 +39,7 @@ public class ParticleSparkle extends TextureSheetParticle {
     }
     @Override
     public ParticleRenderType getRenderType() {
-        return RenderTypes.EMBER_RENDER;
+        return ParticleRenderTypes.EMBER_RENDER;
     }
 
 

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
@@ -16,7 +17,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
 
-public class ScribesTile extends ModdedTile implements IAnimatable {
+public class ScribesTile extends ModdedTile implements IAnimatable, ITickable {
 
     public ItemEntity entity; // For rendering
     public ItemStack stack;

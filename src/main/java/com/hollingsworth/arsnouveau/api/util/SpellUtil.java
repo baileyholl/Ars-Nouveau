@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.core.Direction;
@@ -34,6 +35,18 @@ public class SpellUtil {
         int pierceBonus = stats.getBuffCount(AugmentPierce.INSTANCE);
         return calcAOEBlocks(caster, origin, mop, 1 + aoeBonus, 1 + aoeBonus, 1 + pierceBonus, -1);
     }
+
+    public static boolean isCorrectHarvestLevel(int strength, BlockState p_150816_) {
+        int i = strength;
+        if (i < 3 && p_150816_.is(BlockTags.NEEDS_DIAMOND_TOOL)) {
+            return false;
+        } else if (i < 2 && p_150816_.is(BlockTags.NEEDS_IRON_TOOL)) {
+            return false;
+        } else {
+            return i >= 1 || !p_150816_.is(BlockTags.NEEDS_STONE_TOOL);
+        }
+    }
+
 
     public static List<BlockPos> calcAOEBlocks(LivingEntity caster, BlockPos origin, BlockHitResult mop, int aoeBonus, int pierceBonus) {
         return calcAOEBlocks(caster, origin, mop, 1 + aoeBonus, 1 + aoeBonus, 1 + pierceBonus, -1);

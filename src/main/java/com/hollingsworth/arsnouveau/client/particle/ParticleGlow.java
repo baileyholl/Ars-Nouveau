@@ -45,7 +45,7 @@ public class ParticleGlow extends TextureSheetParticle {
     }
     @Override
     public ParticleRenderType getRenderType() {
-        return this.disableDepthTest ? RenderTypes.EMBER_RENDER_NO_MASK : RenderTypes.EMBER_RENDER;
+        return this.disableDepthTest ? ParticleRenderTypes.EMBER_RENDER_NO_MASK : ParticleRenderTypes.EMBER_RENDER;
     }
 
 
@@ -65,6 +65,7 @@ public class ParticleGlow extends TextureSheetParticle {
         float lifeCoeff = (float)this.age/(float)this.lifetime;
         this.quadSize = initScale-initScale*lifeCoeff;
         this.alpha = initAlpha*(1.0f-lifeCoeff);
+
         this.oRoll = roll;
         roll += 1.0f;
     }
