@@ -56,8 +56,6 @@ public class Recipes extends RecipeProvider {
             makeArmor("apprentice", consumer, ItemsRegistry.BLAZE_FIBER);
             makeArmor("archmage", consumer, ItemsRegistry.END_FIBER);
 
-            SimpleCookingRecipeBuilder.smelting(Ingredient.of(BlockRegistry.ARCANE_ORE), ItemsRegistry.manaGem,0.5f, 200)
-                    .unlockedBy("has_ore", InventoryChangeTrigger.TriggerInstance.hasItems(BlockRegistry.ARCANE_ORE)).save(consumer);
 
            ShapelessRecipeBuilder.shapeless(ItemsRegistry.wornNotebook).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.wornNotebook))
                    .requires(MANA_GEM, 1)
@@ -136,10 +134,6 @@ public class Recipes extends RecipeProvider {
                     .pattern("xxx").define('x', Tags.Items.NUGGETS_IRON).define('y', MANA_GEM).save(consumer);
 
 
-            ShapelessRecipeBuilder.shapeless(BlockRegistry.WARD_BLOCK, 2).unlockedBy("has_journal",
-                    InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.wornNotebook))
-                    .requires(BlockRegistry.ARCANE_STONE, 9)
-                    .save(consumer);
 
             ShapedRecipeBuilder.shaped(BlockRegistry.ARCANE_BRICKS, 4).unlockedBy("has_journal",InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.wornNotebook))
                     .pattern("xx ")

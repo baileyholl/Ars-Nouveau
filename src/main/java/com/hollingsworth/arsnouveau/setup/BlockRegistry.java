@@ -58,7 +58,7 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.SOURCE_JAR) public static BlockEntityType<ManaJarTile> MANA_JAR_TILE;
     @ObjectHolder(LibBlockNames.ARCANE_RELAY) public static BlockEntityType<ArcaneRelayTile> ARCANE_RELAY_TILE;
     @ObjectHolder(LibBlockNames.WARDING_STONE) public static WardBlock WARD_BLOCK;
-    @ObjectHolder(LibBlockNames.ARCANE_ORE) public static ArcaneOre ARCANE_ORE;
+//    @ObjectHolder(LibBlockNames.ARCANE_ORE) public static ArcaneOre ARCANE_ORE;
     @ObjectHolder(LibBlockNames.MAGE_BLOOM) public static ManaBloomCrop MAGE_BLOOM_CROP;
     @ObjectHolder(LibBlockNames.ARCANE_BRICKS) public static ModBlock ARCANE_BRICKS;
     @ObjectHolder(LibBlockNames.SCRIBES_BLOCK) public static ScribesBlock SCRIBES_BLOCK;

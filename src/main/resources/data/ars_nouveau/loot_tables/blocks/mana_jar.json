@@ -3,7 +3,8 @@
   "pools": [
     {
       "name": "mana_jar",
-      "rolls": 1,
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
@@ -30,6 +31,7 @@
             },
             {
               "function": "minecraft:set_contents",
+              "type": "ars_nouveau:mana_jar",
               "entries": [
                 {
                   "type": "minecraft:dynamic",

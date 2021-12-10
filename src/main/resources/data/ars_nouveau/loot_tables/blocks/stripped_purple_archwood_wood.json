@@ -2,11 +2,12 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "rolls": 1,
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "ars_nouveau:warding_stone"
+          "name": "ars_nouveau:stripped_purple_archwood_wood"
         }
       ],
       "conditions": [

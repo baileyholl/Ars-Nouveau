@@ -3,15 +3,26 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.HashCache;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ShulkerBoxBlock;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.LootTables;
+import net.minecraft.world.level.storage.loot.entries.DynamicLoot;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.CopyNameFunction;
+import net.minecraft.world.level.storage.loot.functions.CopyNbtFunction;
+import net.minecraft.world.level.storage.loot.functions.SetContainerContents;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -48,20 +59,20 @@ public abstract class BaseLootTableProvider extends LootTableProvider {
 //        return LootTable.lootTable().withPool(builder);
 //    }
 
-//    protected LootTable.Builder createManaManchineTable(String name, Block block){
-//        LootPool.Builder builder = LootPool.lootPool()
-//                .name(name)
-//                .setRolls(ConstantValue.exactly(1))
-//                .add(LootItem.lootTableItem(block)
-//                        .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
-//                        .apply(CopyNbtFunction.copyData(CopyNbtFunction.DataSource.BLOCK_ENTITY)
-//                                .copy("inv", "BlockEntityTag.inv", CopyNbtFunction.MergeStrategy.REPLACE) //addOperation
-//                                .copy("mana", "BlockEntityTag.mana", CopyNbtFunction.MergeStrategy.REPLACE))
-//                        .apply(SetContainerContents.setContents()
-//                                .withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
-//                );
-//        return LootTable.lootTable().withPool(builder);
-//    }
+    protected LootTable.Builder createManaManchineTable(String name, Block block){
+        LootPool.Builder builder = LootPool.lootPool()
+                .name(name)
+                .setRolls(ConstantValue.exactly(1))
+                .add(LootItem.lootTableItem(block)
+                        .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
+                        .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
+                                .copy("inv", "BlockEntityTag.inv", CopyNbtFunction.MergeStrategy.REPLACE) //addOperation
+                                .copy("mana", "BlockEntityTag.mana", CopyNbtFunction.MergeStrategy.REPLACE))
+                        .apply(SetContainerContents.setContents(BlockRegistry.MANA_JAR_TILE)
+                                .withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
+                );
+        return LootTable.lootTable().withPool(builder);
+    }
 
     @Override
     public void run(HashCache cache) {
