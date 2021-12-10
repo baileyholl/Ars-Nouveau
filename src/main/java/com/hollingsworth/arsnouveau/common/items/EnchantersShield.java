@@ -1,8 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.client.renderer.item.ShieldRenderer;
-import com.hollingsworth.arsnouveau.client.renderer.item.SpellBookRenderer;
-import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
+import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.entity.Entity;
@@ -18,11 +17,7 @@ import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-import javax.annotation.Nullable;
-
 import static com.hollingsworth.arsnouveau.setup.ItemsRegistry.defaultItemProperties;
-
-import net.minecraft.world.item.Item.Properties;
 
 import java.util.function.Consumer;
 
@@ -43,7 +38,7 @@ public class EnchantersShield extends ShieldItem implements IAnimatable {
         if(world.isClientSide() || world.getGameTime() % 200 !=  0 || stack.getDamageValue() == 0 || !(entity instanceof Player))
             return;
 
-        ManaCapability.getMana((LivingEntity) entity).ifPresent(mana -> {
+        CapabilityRegistry.getMana((LivingEntity) entity).ifPresent(mana -> {
             if(mana.getCurrentMana() > 20){
                 mana.removeMana(20);
                 stack.setDamageValue(stack.getDamageValue() - 1);

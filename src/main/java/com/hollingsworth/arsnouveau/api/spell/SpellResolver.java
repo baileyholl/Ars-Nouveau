@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
-import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
+import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -91,7 +91,7 @@ public class SpellResolver {
     boolean enoughMana(LivingEntity entity){
         int totalCost = getCastingCost(spell, entity);
         AtomicBoolean canCast = new AtomicBoolean(false);
-        ManaCapability.getMana(entity).ifPresent(mana -> {
+        CapabilityRegistry.getMana(entity).ifPresent(mana -> {
             canCast.set(totalCost <= mana.getCurrentMana() || (entity instanceof Player &&  ((Player) entity).isCreative()));
             if(!canCast.get() && !entity.getCommandSenderWorld().isClientSide && !silent)
                 PortUtil.sendMessageNoSpam(entity,new TranslatableComponent("ars_nouveau.spell.no_mana"));
@@ -196,7 +196,7 @@ public class SpellResolver {
 
     public void expendMana(LivingEntity entity){
         int totalCost = getCastingCost(spell, entity);
-        ManaCapability.getMana(entity).ifPresent(mana -> mana.removeMana(totalCost));
+        CapabilityRegistry.getMana(entity).ifPresent(mana -> mana.removeMana(totalCost));
     }
 
     public int getCastingCost(Spell spell, LivingEntity e){

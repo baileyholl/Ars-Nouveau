@@ -13,7 +13,7 @@ import com.hollingsworth.arsnouveau.client.renderer.item.SpellBookRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.IntangibleAirTile;
 import com.hollingsworth.arsnouveau.common.block.tile.PhantomBlockTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
-import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
+import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOpenSpellBook;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
@@ -49,7 +49,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IItemRenderProperties;
 import net.minecraftforge.network.PacketDistributor;
-import software.bernie.example.client.renderer.item.JackInTheBoxRenderer;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
@@ -108,7 +107,7 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
         if(!stack.hasTag())
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
 
-        ManaCapability.getMana(playerIn).ifPresent(iMana -> {
+        CapabilityRegistry.getMana(playerIn).ifPresent(iMana -> {
             if(iMana.getBookTier() < this.tier.ordinal()){
                 iMana.setBookTier(this.tier.ordinal());
             }

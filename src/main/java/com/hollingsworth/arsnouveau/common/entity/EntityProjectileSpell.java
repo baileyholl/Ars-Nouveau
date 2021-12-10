@@ -131,7 +131,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
 
         if(level.isClientSide && this.age > 2) {
 //
-            for (int i = 0; i < 10; i++) {
+            for (int i = 0; i < 3; i++) {
 
                 double deltaX = getX() - xOld;
                 double deltaY = getY() - yOld;

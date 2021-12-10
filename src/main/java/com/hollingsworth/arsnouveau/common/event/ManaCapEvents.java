@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.mana.IMana;
+import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
-import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
+import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateMana;
 import com.hollingsworth.arsnouveau.setup.Config;
@@ -25,7 +25,7 @@ public class ManaCapEvents {
         if(e.player.getCommandSenderWorld().isClientSide || e.player.getCommandSenderWorld().getGameTime() % Config.REGEN_INTERVAL.get() != 0)
             return;
 
-        IMana mana = ManaCapability.getMana(e.player).orElse(null);
+        IManaCap mana = CapabilityRegistry.getMana(e.player).orElse(null);
         if(mana == null)
             return;
 
@@ -51,7 +51,7 @@ public class ManaCapEvents {
         if(e.getOriginal().level.isClientSide)
             return;
 
-        ManaCapability.getMana((LivingEntity) e.getEntity()).ifPresent(newMana -> ManaCapability.getMana(e.getOriginal()).ifPresent(origMana -> {
+        CapabilityRegistry.getMana((LivingEntity) e.getEntity()).ifPresent(newMana -> CapabilityRegistry.getMana(e.getOriginal()).ifPresent(origMana -> {
             newMana.setMaxMana(origMana.getMaxMana());
             newMana.setGlyphBonus(origMana.getGlyphBonus());
             newMana.setBookTier(origMana.getBookTier());
@@ -71,7 +71,7 @@ public class ManaCapEvents {
 
     public static void syncPlayerEvent(Player playerEntity){
         if (playerEntity instanceof ServerPlayer) {
-            ManaCapability.getMana(playerEntity).ifPresent(mana -> {
+            CapabilityRegistry.getMana(playerEntity).ifPresent(mana -> {
                 mana.setMaxMana(ManaUtil.getMaxMana(playerEntity));
                 mana.setGlyphBonus(mana.getGlyphBonus());
                 mana.setBookTier(mana.getBookTier());

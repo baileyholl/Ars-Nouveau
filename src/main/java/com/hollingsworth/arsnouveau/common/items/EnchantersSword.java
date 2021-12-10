@@ -2,9 +2,8 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.spell.*;
-import com.hollingsworth.arsnouveau.client.renderer.item.SpellBookRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.item.SwordRenderer;
-import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
+import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -33,8 +32,6 @@ import java.util.function.Consumer;
 
 import static com.hollingsworth.arsnouveau.setup.ItemsRegistry.defaultItemProperties;
 
-import net.minecraft.world.item.Item.Properties;
-
 public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatable {
     public EnchantersSword(Tier iItemTier, int baseDamage, float baseAttackSpeed) {
         super(iItemTier, baseDamage, baseAttackSpeed, defaultItemProperties().stacksTo(1));
@@ -47,7 +44,7 @@ public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatab
         if(world.isClientSide() || world.getGameTime() % 200 !=  0 || stack.getDamageValue() == 0 || !(entity instanceof Player))
             return;
 
-        ManaCapability.getMana((LivingEntity) entity).ifPresent(mana -> {
+        CapabilityRegistry.getMana((LivingEntity) entity).ifPresent(mana -> {
             if(mana.getCurrentMana() > 20){
                 mana.removeMana(20);
                 stack.setDamageValue(stack.getDamageValue() - 1);

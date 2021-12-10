@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.IScribeable;
-import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
+import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -48,7 +48,7 @@ public class VoidJar extends ModItem implements IScribeable {
             ItemStack jar = list.get(i);
             if(jar.getItem() == ItemsRegistry.VOID_JAR){
                 if(isActive(jar) && containsItem(pickingUp, jar.getTag())){
-                    ManaCapability.getMana(player).ifPresent(iMana -> iMana.addMana(5.0 * pickingUp.getCount()));
+                    CapabilityRegistry.getMana(player).ifPresent(iMana -> iMana.addMana(5.0 * pickingUp.getCount()));
                     pickingUp.setCount(0);
                     voided = true;
                     break;

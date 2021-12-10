@@ -2,9 +2,9 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
-import com.hollingsworth.arsnouveau.api.mana.IMana;
+import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.spell.*;
-import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
+import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.entity.EntitySpellArrow;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -42,7 +42,7 @@ public class SpellArrow extends ArrowItem {
 
     @Override
     public AbstractArrow createArrow(Level world, ItemStack stack, LivingEntity shooter) {
-        IMana mana = ManaCapability.getMana(shooter).orElse(null);
+        IManaCap mana = CapabilityRegistry.getMana(shooter).orElse(null);
         if(mana == null)
             return new Arrow(world, shooter);
         EntitySpellArrow spellArrow = new EntitySpellArrow(world, shooter);

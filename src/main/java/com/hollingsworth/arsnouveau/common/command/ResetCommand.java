@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.command;
 
 import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.api.familiar.FamiliarCap;
-import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
+import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -28,7 +28,7 @@ public class ResetCommand {
         for(Entity e : entities){
             if(!(e instanceof LivingEntity))
                 continue;
-            ManaCapability.getMana((LivingEntity) e).ifPresent(iMana -> {
+            CapabilityRegistry.getMana((LivingEntity) e).ifPresent(iMana -> {
                 iMana.setBookTier(0);
                 iMana.setGlyphBonus(0);
             });

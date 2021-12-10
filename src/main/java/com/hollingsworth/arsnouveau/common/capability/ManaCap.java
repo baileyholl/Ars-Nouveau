@@ -1,11 +1,12 @@
 package com.hollingsworth.arsnouveau.common.capability;
 
-import com.hollingsworth.arsnouveau.api.mana.IMana;
+import com.hollingsworth.arsnouveau.api.mana.IManaCap;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 
 import javax.annotation.Nullable;
 
-public class Mana implements IMana {
+public class ManaCap implements IManaCap {
 
     private final LivingEntity livingEntity;
 
@@ -18,7 +19,7 @@ public class Mana implements IMana {
     private int bookTier;
 
 
-    public Mana(@Nullable final LivingEntity entity) {
+    public ManaCap(@Nullable final LivingEntity entity) {
         this.livingEntity = entity;
     }
 
@@ -81,5 +82,23 @@ public class Mana implements IMana {
     @Override
     public void setBookTier(int bookTier){
         this.bookTier = bookTier;
+    }
+
+    @Override
+    public CompoundTag serializeNBT() {
+        CompoundTag tag = new CompoundTag();
+        tag.putDouble("current", getCurrentMana());
+        tag.putInt("max", getMaxMana());
+        tag.putInt("glyph", getGlyphBonus());
+        tag.putInt("book_tier", getBookTier());
+        return tag;
+    }
+
+    @Override
+    public void deserializeNBT(CompoundTag tag) {
+        setMaxMana(tag.getInt("max"));
+        setMana(tag.getDouble("current"));
+        setBookTier(tag.getInt("book_tier"));
+        setGlyphBonus(tag.getInt("glyph"));
     }
 }

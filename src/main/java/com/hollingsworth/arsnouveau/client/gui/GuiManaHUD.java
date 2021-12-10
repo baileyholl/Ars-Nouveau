@@ -2,10 +2,9 @@ package com.hollingsworth.arsnouveau.client.gui;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.client.IDisplayMana;
-import com.hollingsworth.arsnouveau.api.mana.IMana;
+import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
-import com.hollingsworth.arsnouveau.client.gui.book.BaseBook;
-import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
+import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -27,7 +26,7 @@ public class GuiManaHUD extends GuiComponent {
         if(!shouldDisplayBar())
             return;
 
-        IMana mana = ManaCapability.getMana(minecraft.player).orElse(null);
+        IManaCap mana = CapabilityRegistry.getMana(minecraft.player).orElse(null);
         if(mana == null)
             return;
 

@@ -2,11 +2,11 @@ package com.hollingsworth.arsnouveau.api.util;
 
 import com.hollingsworth.arsnouveau.api.event.ManaRegenCalcEvent;
 import com.hollingsworth.arsnouveau.api.event.MaxManaCalcEvent;
-import com.hollingsworth.arsnouveau.api.mana.IMana;
+import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
 import com.hollingsworth.arsnouveau.common.armor.MagicArmor;
 import com.hollingsworth.arsnouveau.common.block.tile.ManaJarTile;
-import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
+import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
@@ -44,7 +44,7 @@ public class ManaUtil {
 
 
     public static int getMaxMana(Player e){
-        IMana mana = ManaCapability.getMana(e).orElse(null);
+        IManaCap mana = CapabilityRegistry.getMana(e).orElse(null);
         if(mana == null)
             return 0;
         int max = Config.INIT_MAX_MANA.get();
@@ -76,7 +76,7 @@ public class ManaUtil {
     }
 
     public static double getManaRegen(Player e) {
-        IMana mana = ManaCapability.getMana(e).orElse(null);
+        IManaCap mana = CapabilityRegistry.getMana(e).orElse(null);
         if(mana == null)
             return 0;
         double regen = Config.INIT_MANA_REGEN.get();
