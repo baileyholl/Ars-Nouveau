@@ -14,14 +14,14 @@ public abstract class AnimatedTile extends ModdedTile {
 
     @Override
     public void load(CompoundTag tag) {
-        counter = tag.getInt("counter");
         super.load(tag);
+        counter = tag.getInt("counter");
     }
 
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putInt("counter", counter);
-        return super.save(tag);
     }
 }

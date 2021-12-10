@@ -66,10 +66,10 @@ public class BasicSpellTurretTile extends ModdedTile implements IPickupResponder
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putString("spell", spell.serialize());
         tag.putString("color", color.serialize());
-        return super.save(tag);
     }
 
     @Override

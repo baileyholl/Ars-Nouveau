@@ -47,12 +47,11 @@ public class SconceTile extends ModdedTile implements ILightable, ITickable {
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public void saveAdditional(CompoundTag compound) {
         compound.putInt("red", red);
         compound.putInt("green", green);
         compound.putInt("blue", blue);
         compound.putBoolean("lit", lit);
-        return super.save(compound);
     }
 
     @Override

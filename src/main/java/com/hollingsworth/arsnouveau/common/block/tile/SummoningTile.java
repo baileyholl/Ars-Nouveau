@@ -39,9 +39,8 @@ public class SummoningTile extends ModdedTile implements ITickable {
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        compound.putBoolean("converted", converted);
-        return super.save(compound);
+    public void saveAdditional(CompoundTag tag) {
+        tag.putBoolean("converted", converted);
     }
 
 }

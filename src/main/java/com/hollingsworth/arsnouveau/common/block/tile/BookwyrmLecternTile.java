@@ -188,10 +188,10 @@ public class BookwyrmLecternTile extends SummoningTile implements IWandable {
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putInt("task_index", taskIndex);
         tag.putInt("tier", tier);
         tag.putBoolean("is_off", isOff);
-        return super.save(tag);
     }
 }

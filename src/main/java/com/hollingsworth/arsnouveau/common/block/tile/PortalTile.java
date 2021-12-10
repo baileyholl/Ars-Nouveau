@@ -58,7 +58,7 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public void saveAdditional(CompoundTag compound) {
         if (this.warpPos != null) {
             NBTUtil.storeBlockPos(compound, "warp", this.warpPos);
         }
@@ -71,7 +71,6 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
             compound.putString("display", displayName);
         }
         compound.putBoolean("horizontal", isHorizontal);
-        return super.save(compound);
     }
 
     @Override

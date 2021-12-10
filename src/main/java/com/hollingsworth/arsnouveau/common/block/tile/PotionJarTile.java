@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class PotionJarTile extends BlockEntity implements ITickable, ITooltipProvider, IWandable {
+public class PotionJarTile extends ModdedTile implements ITickable, ITooltipProvider, IWandable {
 
     private int amount;
     private Potion potion = Potions.EMPTY;
@@ -210,7 +210,7 @@ public class PotionJarTile extends BlockEntity implements ITickable, ITooltipPro
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public void saveAdditional(CompoundTag tag) {
         ResourceLocation resourcelocation = Registry.POTION.getKey(potion);
         tag.putInt("amount", this.getAmount());
         tag.putString("Potion", resourcelocation.toString());
@@ -224,7 +224,6 @@ public class PotionJarTile extends BlockEntity implements ITickable, ITooltipPro
 
             tag.put("CustomPotionEffects", listnbt);
         }
-        return super.save(tag);
     }
 
     public int getMaxFill() {

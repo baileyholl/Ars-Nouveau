@@ -213,11 +213,11 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        compound.putInt("progress", progress);
-        compound.putInt("bonus", bonus);
-        compound.putBoolean("needsMana", needsMana);
-        return super.save(compound);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.putInt("progress", progress);
+        tag.putInt("bonus", bonus);
+        tag.putBoolean("needsMana", needsMana);
     }
 
     @Override

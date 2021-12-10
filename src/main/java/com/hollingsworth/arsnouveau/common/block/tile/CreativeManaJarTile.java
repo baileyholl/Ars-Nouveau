@@ -9,6 +9,7 @@ public class CreativeManaJarTile extends ManaJarTile{
     public CreativeManaJarTile(BlockPos pos, BlockState state){
         super(BlockRegistry.CREATIVE_JAR_TILE, pos, state);
     }
+
     @Override
     public int getCurrentMana() {
         return this.getMaxMana();

@@ -81,14 +81,14 @@ public class CrystallizerTile extends AbstractManaTile implements Container, ITi
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         if(stack != null) {
             CompoundTag reagentTag = new CompoundTag();
             stack.save(reagentTag);
             tag.put("itemStack", reagentTag);
         }
         tag.putBoolean("draining", draining);
-        return super.save(tag);
     }
 
     @Override

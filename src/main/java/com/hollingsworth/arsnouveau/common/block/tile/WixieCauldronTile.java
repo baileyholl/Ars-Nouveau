@@ -371,7 +371,8 @@ public class WixieCauldronTile extends ModdedTile implements ITickable, ITooltip
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
         compound.putBoolean("converted", converted);
 
         if(craftingItem != null){
@@ -387,7 +388,6 @@ public class WixieCauldronTile extends ModdedTile implements ITickable, ITooltip
         compound.putBoolean("off", isOff);
         compound.putBoolean("isPotion", isCraftingPotion);
         compound.putBoolean("storage", needsPotionStorage);
-        return super.save(compound);
     }
 
     @Override

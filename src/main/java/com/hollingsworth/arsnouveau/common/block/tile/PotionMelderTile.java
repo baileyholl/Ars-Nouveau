@@ -219,10 +219,9 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public void saveAdditional(CompoundTag compound) {
         compound.putInt("mixing", timeMixing);
         compound.putBoolean("isMixing", isMixing);
         compound.putBoolean("hasMana", hasMana);
-        return super.save(compound);
     }
 }

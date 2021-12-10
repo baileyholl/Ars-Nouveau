@@ -106,10 +106,9 @@ public class SourcelinkTile extends AbstractManaTile implements IAnimatable, ITi
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public void saveAdditional(CompoundTag tag) {
         tag.putInt("progress", progress);
         tag.putBoolean("disabled", isDisabled);
-        return super.save(tag);
     }
 
     private <E extends BlockEntity & IAnimatable > PlayState idlePredicate(AnimationEvent<E> event) {

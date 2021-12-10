@@ -187,7 +187,8 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         if(toPos != null) {
             NBTUtil.storeBlockPos(tag, "to", toPos);
         }else{
@@ -198,7 +199,6 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
         }else{
             NBTUtil.removeBlockPos(tag, "from");
         }
-        return super.save(tag);
     }
 
     @Override

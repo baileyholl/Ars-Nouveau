@@ -148,23 +148,24 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         if(catalystItem != null) {
             CompoundTag reagentTag = new CompoundTag();
             catalystItem.save(reagentTag);
-            compound.put("itemStack", reagentTag);
+            tag.put("itemStack", reagentTag);
         }
-        compound.putBoolean("is_crafting", isCrafting);
-        compound.putInt("counter", counter);
+        tag.putBoolean("is_crafting", isCrafting);
+        tag.putInt("counter", counter);
 
-        return super.save(compound);
     }
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag tag = new CompoundTag();
         tag.putInt("counter", this.counter);
         tag.putBoolean("is_crafting", this.isCrafting);
-        return this.save(tag);
+        this.saveAdditional(tag);
+        return tag;
     }
 
     @Override

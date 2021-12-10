@@ -35,14 +35,12 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable {
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public void saveAdditional(CompoundTag compound) {
         if(stack != null) {
             CompoundTag reagentTag = new CompoundTag();
             stack.save(reagentTag);
             compound.put("itemStack", reagentTag);
         }
-
-        return super.save(compound);
     }
 
     @Override

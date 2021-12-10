@@ -26,10 +26,9 @@ public abstract class AbstractManaTile extends ModdedTile implements IManaTile {
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public void saveAdditional(CompoundTag tag) {
         tag.putInt(MANA_TAG, getCurrentMana());
         tag.putInt(MAX_MANA_TAG, getMaxMana());
-        return super.save(tag);
     }
 
     @Override

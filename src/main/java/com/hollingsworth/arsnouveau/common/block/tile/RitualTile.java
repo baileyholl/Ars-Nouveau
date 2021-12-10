@@ -157,7 +157,7 @@ public class RitualTile extends ModdedTile implements ITooltipProvider, IAnimata
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public void saveAdditional(CompoundTag tag) {
         if(ritual != null){
             tag.putString("ritualID", ritual.getID());
             ritual.write(tag);
@@ -169,7 +169,6 @@ public class RitualTile extends ModdedTile implements ITooltipProvider, IAnimata
         tag.putInt("blue", blue);
         tag.putBoolean("decorative", isDecorative);
         tag.putBoolean("off", isOff);
-        return super.save(tag);
     }
 
     public void setRitual(String selectedRitual) {

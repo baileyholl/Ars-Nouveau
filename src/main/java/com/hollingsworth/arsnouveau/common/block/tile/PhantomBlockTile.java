@@ -47,12 +47,11 @@ public class PhantomBlockTile extends AnimatedTile implements ITickable, IAnimat
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        compound.put("age", IntTag.valueOf(age));
-        compound.putString("color", color.toWrapper().serialize());
-        compound.putBoolean("permanent", isPermanent);
-        compound.putDouble("modifier", lengthModifier);
-        return super.save(compound);
+    public void saveAdditional(CompoundTag tag) {
+        tag.put("age", IntTag.valueOf(age));
+        tag.putString("color", color.toWrapper().serialize());
+        tag.putBoolean("permanent", isPermanent);
+        tag.putDouble("modifier", lengthModifier);
     }
 
 

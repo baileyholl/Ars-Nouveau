@@ -32,10 +32,9 @@ public class LightTile extends ModdedTile {
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        compound.putInt("red", red);
-        compound.putInt("green", green);
-        compound.putInt("blue", blue);
-        return super.save(compound);
+    public void saveAdditional(CompoundTag tag) {
+        tag.putInt("red", red);
+        tag.putInt("green", green);
+        tag.putInt("blue", blue);
     }
 }

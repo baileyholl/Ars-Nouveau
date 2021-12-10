@@ -82,8 +82,7 @@ public class SummoningCrystalTile extends AbstractManaTile implements IAnimatabl
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public void saveAdditional(CompoundTag tag) {
         tag.putBoolean("is_off", isOff);
-        return super.save(tag);
     }
 }

@@ -132,7 +132,8 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         int counter = 0;
         for(BlockPos p : this.fromList){
             NBTUtil.storeBlockPos(tag, "from_" +counter, p);
@@ -143,7 +144,6 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
             NBTUtil.storeBlockPos(tag, "to_" +counter, p);
             counter ++;
         }
-        return super.save(tag);
     }
 
     @Override

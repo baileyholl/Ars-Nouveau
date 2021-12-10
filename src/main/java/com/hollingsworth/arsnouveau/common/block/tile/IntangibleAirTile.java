@@ -37,11 +37,10 @@ public class IntangibleAirTile extends ModdedTile implements ITickable {
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        compound.putInt("state_id", stateID);
-        compound.putInt("duration", duration);
-        compound.putInt("max_length", maxLength);
-        return super.save(compound);
+    public void saveAdditional(CompoundTag tag) {
+        tag.putInt("state_id", stateID);
+        tag.putInt("duration", duration);
+        tag.putInt("max_length", maxLength);
     }
 
 }

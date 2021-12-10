@@ -285,25 +285,25 @@ public class GlyphPressTile extends AnimatedTile implements ITickable, IAnimatab
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         if(reagentItem != null) {
             CompoundTag reagentTag = new CompoundTag();
             reagentItem.save(reagentTag);
-            compound.put("itemStack", reagentTag);
+            tag.put("itemStack", reagentTag);
         }
         if(baseMaterial != null){
             CompoundTag baseMatTag = new CompoundTag();
             baseMaterial.save(baseMatTag);
-            compound.put("baseMat", baseMatTag);
+            tag.put("baseMat", baseMatTag);
         }
 
         if(oldBaseMat != null){
             CompoundTag baseMatTag = new CompoundTag();
             oldBaseMat.save(baseMatTag);
-            compound.put("oldBase", baseMatTag);
+            tag.put("oldBase", baseMatTag);
         }
-        compound.putBoolean("crafting", isCrafting);
-        return super.save(compound);
+        tag.putBoolean("crafting", isCrafting);
     }
 
 }

@@ -85,7 +85,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
+    public void saveAdditional(CompoundTag tag) {
         tag.putString("spell", spell.serialize());
         tag.putBoolean("charged", isCharged);
         tag.putBoolean("temp", isTemporary);
@@ -94,7 +94,6 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
             tag.putUUID("uuid", uuid);
         if(color != null)
             tag.putString("color", color.toWrapper().serialize());
-        return super.save(tag);
     }
 
     @Override

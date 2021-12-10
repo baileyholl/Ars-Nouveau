@@ -30,19 +30,18 @@ public class ArcanePedestalTile extends AnimatedTile implements Container {
 
     @Override
     public void load(CompoundTag compound) {
-        stack = ItemStack.of((CompoundTag)compound.get("itemStack"));
         super.load(compound);
+        stack = compound.contains("itemStack") ? ItemStack.of((CompoundTag)compound.get("itemStack")) : ItemStack.EMPTY;
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         if(stack != null) {
             CompoundTag reagentTag = new CompoundTag();
             stack.save(reagentTag);
-            compound.put("itemStack", reagentTag);
+            tag.put("itemStack", reagentTag);
         }
-
-        return super.save(compound);
     }
 
     @Override
