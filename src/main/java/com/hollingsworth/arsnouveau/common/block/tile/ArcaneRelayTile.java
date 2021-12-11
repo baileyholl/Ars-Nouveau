@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -202,19 +203,18 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
     }
 
     @Override
-    public List<String> getTooltip() {
-        List<String> list = new ArrayList<>();
+    public List<Component> getTooltip(List<Component> tooltip) {
         if(toPos == null){
-            list.add(new TranslatableComponent("ars_nouveau.relay.no_to").getString());
+            tooltip.add(new TranslatableComponent("ars_nouveau.relay.no_to"));
         }else{
-            list.add(new TranslatableComponent("ars_nouveau.relay.one_to", 1).getString());
+            tooltip.add(new TranslatableComponent("ars_nouveau.relay.one_to", 1));
         }
         if(fromPos == null){
-            list.add(new TranslatableComponent("ars_nouveau.relay.no_from").getString());
+            tooltip.add(new TranslatableComponent("ars_nouveau.relay.no_from"));
         }else{
-            list.add(new TranslatableComponent("ars_nouveau.relay.one_from", 1).getString());
+            tooltip.add(new TranslatableComponent("ars_nouveau.relay.one_from", 1));
         }
-        return list;
+        return tooltip;
     }
     AnimationFactory factory = new AnimationFactory(this);
 

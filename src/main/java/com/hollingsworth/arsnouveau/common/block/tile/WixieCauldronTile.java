@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.recipe.PotionIngredient;
 import com.hollingsworth.arsnouveau.api.recipe.RecipeWrapper;
 import com.hollingsworth.arsnouveau.api.recipe.ShapedHelper;
-import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
@@ -19,6 +19,7 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
@@ -75,7 +76,7 @@ public class WixieCauldronTile extends ModdedTile implements ITickable, ITooltip
         }
 
         if(!hasMana && level.getGameTime() % 5 == 0){
-            if(ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 6, 50) != null) {
+            if(SourceUtil.takeManaNearbyWithParticles(worldPosition, level, 6, 50) != null) {
                 this.hasMana = true;
                 level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(WixieCauldron.FILLED, true));
             }
@@ -391,43 +392,40 @@ public class WixieCauldronTile extends ModdedTile implements ITickable, ITooltip
     }
 
     @Override
-    public List<String> getTooltip() {
+    public List<Component> getTooltip(List<Component> tooltip) {
 
         if(craftingItem == null)
             return new ArrayList<>();
-        List<String> strings = new ArrayList<>();
-
-
 
         if(!isCraftingPotion){
-            strings.add(new TranslatableComponent("ars_nouveau.wixie.crafting").getString() +new TranslatableComponent(craftingItem.getDescriptionId()).getString());
+            tooltip.add(new TextComponent(
+                    new TranslatableComponent("ars_nouveau.wixie.crafting").getString() +
+                            new TranslatableComponent(craftingItem.getDescriptionId()).getString())
+            );
         }else if(this.craftManager != null && this.craftManager.isPotionCrafting()){
             ItemStack potionStack = new ItemStack(Items.POTION);
             PotionUtils.setPotion(potionStack, this.craftManager.potionOut);
-            strings.add(new TranslatableComponent("ars_nouveau.wixie.crafting").getString() + potionStack.getHoverName().getString());
-//            strings.add(potionStack.getDisplayName().getString());
-            List<Component> tooltip = new ArrayList<>();
+            tooltip.add(new TextComponent(new TranslatableComponent("ars_nouveau.wixie.crafting").getString() + potionStack.getHoverName()));
             PotionUtils.addPotionTooltip(potionStack, tooltip, 1.0F);
-            for(Component i : tooltip){
-                strings.add(i.getString());
-            }
         }
 
         if(!hasMana){
-            strings.add(new TranslatableComponent("ars_nouveau.wixie.need_mana").getString());
+            tooltip.add(new TranslatableComponent("ars_nouveau.wixie.need_mana"));
         }
         if(this.craftManager != null && !this.craftManager.neededItems.isEmpty())
-            strings.add(new TranslatableComponent("ars_nouveau.wixie.needs").getString() + new TranslatableComponent(this.craftManager.neededItems.get(0).getDescriptionId()).getString());
+            tooltip.add(new TextComponent(
+                    new TranslatableComponent("ars_nouveau.wixie.needs").getString() +
+                            new TranslatableComponent(this.craftManager.neededItems.get(0).getDescriptionId()).getString()));
 
         if(this.craftManager != null && this.craftManager.isPotionCrafting() && !this.craftManager.hasObtainedPotion()){
             ItemStack potionStack = new ItemStack(Items.POTION);
             PotionUtils.setPotion(potionStack, this.craftManager.getPotionNeeded());
-            strings.add(new TranslatableComponent("ars_nouveau.wixie.needs").getString() + potionStack.getHoverName().getString());
+            tooltip.add(new TextComponent(new TranslatableComponent("ars_nouveau.wixie.needs").getString() + potionStack.getHoverName().getString()));
         }
         if(this.needsPotionStorage)
-            strings.add(new TranslatableComponent("ars_nouveau.wixie.needs_storage").getString());
+            tooltip.add(new TranslatableComponent("ars_nouveau.wixie.needs_storage"));
 
-        return strings;
+        return tooltip;
     }
 
     public static class CraftingProgress{

@@ -1,10 +1,9 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.mana.IManaTile;
-import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -20,12 +19,12 @@ public class RelayDepositTile extends ArcaneRelayTile{
     public void tick() {
         super.tick();
         if(!level.isClientSide && level.getGameTime() % 20 == 0 && getCurrentMana() > 0){
-            List<BlockPos> posList = ManaUtil.canGiveManaAny(worldPosition, level, 5);
+            List<BlockPos> posList = SourceUtil.canGiveManaAny(worldPosition, level, 5);
             for(BlockPos jarPos : posList) {
                 if(this.getCurrentMana() == 0)
                     break;
 
-                if (jarPos != null && !jarPos.equals(this.getToPos()) && !jarPos.equals(this.getFromPos()) && level.getBlockEntity(jarPos) instanceof ManaJarTile) {
+                if (jarPos != null && !jarPos.equals(this.getToPos()) && !jarPos.equals(this.getFromPos()) && level.getBlockEntity(jarPos) instanceof SourceJarTile) {
                     transferMana(this, (IManaTile) level.getBlockEntity(jarPos));
                     ParticleUtil.spawnFollowProjectile(level, this.worldPosition, jarPos);
                 }

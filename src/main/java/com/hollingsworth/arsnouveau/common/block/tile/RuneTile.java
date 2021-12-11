@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
@@ -125,7 +125,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
             level.destroyBlock(this.worldPosition, false);
         }
         if(!level.isClientSide){
-            BlockPos fromPos = ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 10, 100);
+            BlockPos fromPos = SourceUtil.takeManaNearbyWithParticles(worldPosition, level, 10, 100);
             if(fromPos != null) {
                 this.isCharged = true;
                 level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).cycle(RuneBlock.POWERED));

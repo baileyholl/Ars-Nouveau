@@ -71,7 +71,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         registry.addRecipes(apparatus, EnchantingApparatusRecipeCategory.UID);
         registry.addRecipes(crushRecipes, CrushRecipeCategory.UID);
         ItemStack manaPot = PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotions.MANA_REGEN_POTION);
-        IJeiBrewingRecipe manaPotionRecipe = registry.getVanillaRecipeFactory().createBrewingRecipe(Collections.singletonList(new ItemStack(BlockRegistry.MANA_BERRY_BUSH)),
+        IJeiBrewingRecipe manaPotionRecipe = registry.getVanillaRecipeFactory().createBrewingRecipe(Collections.singletonList(new ItemStack(BlockRegistry.SOURCEBERRY_BUSH)),
                 PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.AWKWARD), manaPot );
         registry.addRecipes(Collections.singletonList(manaPotionRecipe), new ResourceLocation(ModIds.MINECRAFT_ID, "brewing"));
     }

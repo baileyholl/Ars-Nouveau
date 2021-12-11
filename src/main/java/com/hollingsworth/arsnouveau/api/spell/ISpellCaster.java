@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.api.spell;
 import com.hollingsworth.arsnouveau.api.util.MathUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.IntangibleAirTile;
-import com.hollingsworth.arsnouveau.common.block.tile.PhantomBlockTile;
+import com.hollingsworth.arsnouveau.common.block.tile.MageBlockTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -78,7 +78,7 @@ public interface ISpellCaster {
         if(result instanceof BlockHitResult && !playerIn.isShiftKeyDown()){
             if(worldIn.getBlockEntity(((BlockHitResult) result).getBlockPos()) != null &&
                     !(worldIn.getBlockEntity(((BlockHitResult) result).getBlockPos()) instanceof IntangibleAirTile
-                            ||(worldIn.getBlockEntity(((BlockHitResult) result).getBlockPos()) instanceof PhantomBlockTile))) {
+                            ||(worldIn.getBlockEntity(((BlockHitResult) result).getBlockPos()) instanceof MageBlockTile))) {
                 return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
             }
         }

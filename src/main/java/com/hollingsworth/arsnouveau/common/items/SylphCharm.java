@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level;
 public class SylphCharm extends ModItem{
 
     public SylphCharm() {
-        super(LibItemNames.SYLPH_CHARM);
+        super(LibItemNames.WHIRLISPRIGE_CHARM);
     }
 
     /**

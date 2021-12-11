@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
-import com.hollingsworth.arsnouveau.common.block.tile.PhantomBlockTile;
+import com.hollingsworth.arsnouveau.common.block.tile.MageBlockTile;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.world.level.block.state.BlockState;
@@ -37,10 +37,10 @@ public class EffectPhantomBlock extends AbstractEffect {
             if(!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos))
                 continue;
             BlockState state = world.getBlockState(pos);
-            if (state.getMaterial().isReplaceable() && world.isUnobstructed(BlockRegistry.PHANTOM_BLOCK.defaultBlockState(), pos, CollisionContext.of(ANFakePlayer.getPlayer((ServerLevel) world)))) {
-                world.setBlockAndUpdate(pos, BlockRegistry.PHANTOM_BLOCK.defaultBlockState());
-                if(world.getBlockEntity(pos) instanceof PhantomBlockTile) {
-                    PhantomBlockTile tile = (PhantomBlockTile) world.getBlockEntity(pos);
+            if (state.getMaterial().isReplaceable() && world.isUnobstructed(BlockRegistry.MAGE_BLOCK.defaultBlockState(), pos, CollisionContext.of(ANFakePlayer.getPlayer((ServerLevel) world)))) {
+                world.setBlockAndUpdate(pos, BlockRegistry.MAGE_BLOCK.defaultBlockState());
+                if(world.getBlockEntity(pos) instanceof MageBlockTile) {
+                    MageBlockTile tile = (MageBlockTile) world.getBlockEntity(pos);
                     tile.color = spellContext.colors.toParticleColor();
                     tile.lengthModifier = spellStats.getDurationMultiplier();
                     tile.isPermanent = spellStats.hasBuff(AugmentAmplify.INSTANCE);

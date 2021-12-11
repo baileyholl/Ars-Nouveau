@@ -12,6 +12,8 @@ import com.hollingsworth.arsnouveau.common.items.DominionWand;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.FlyingMob;
 import net.minecraft.world.entity.LivingEntity;
@@ -32,7 +34,6 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.util.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -235,18 +236,18 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
     }
 
     @Override
-    public List<String> getTooltip() {
-        List<String> list = new ArrayList<>();
+    public List<Component> getTooltip(List<Component> tooltip) {
         Spell spellParts = Spell.deserialize(this.getRecipeString());
         String spellString = spellParts.getDisplayString();
         String itemString = this.getHeldStack() == ItemStack.EMPTY ? new TranslatableComponent("ars_nouveau.whelp.no_item").getString() : this.getHeldStack().getHoverName().getString();
         String itemAction = this.getHeldStack().getItem() instanceof BlockItem ? 
         		new TranslatableComponent("ars_nouveau.whelp.placing").getString() : 
         		new TranslatableComponent("ars_nouveau.whelp.using").getString();
-        list.add(new TranslatableComponent("ars_nouveau.whelp.spell").getString() + spellString);
-        list.add(itemAction + itemString);
-        list.add(new TranslatableComponent("ars_nouveau.whelp.strict").getString() + new TranslatableComponent("ars_nouveau." + this.entityData.get(STRICT_MODE)).getString() );
-        return list;
+        tooltip.add(new TextComponent(new TranslatableComponent("ars_nouveau.whelp.spell").getString() + spellString));
+        tooltip.add(new TextComponent(itemAction + itemString));
+        tooltip.add(new TextComponent(new TranslatableComponent("ars_nouveau.whelp.strict").getString() +
+                new TranslatableComponent("ars_nouveau." + this.entityData.get(STRICT_MODE)).getString() ));
+        return tooltip;
     }
 
     @Override

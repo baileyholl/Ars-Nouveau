@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -147,19 +148,18 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
     }
 
     @Override
-    public List<String> getTooltip() {
-        List<String> list = new ArrayList<>();
+    public List<Component> getTooltip(List<Component> tooltip) {
         if(toList == null || toList.isEmpty()){
-            list.add(new TranslatableComponent("ars_nouveau.relay.no_to").getString());
+            tooltip.add(new TranslatableComponent("ars_nouveau.relay.no_to"));
         }else{
-            list.add(new TranslatableComponent("ars_nouveau.relay.one_to", toList.size()).getString());
+            tooltip.add(new TranslatableComponent("ars_nouveau.relay.one_to", toList.size()));
         }
         if(fromList == null || fromList.isEmpty()){
-            list.add(new TranslatableComponent("ars_nouveau.relay.no_from").getString());
+            tooltip.add(new TranslatableComponent("ars_nouveau.relay.no_from"));
         }else{
-            list.add(new TranslatableComponent("ars_nouveau.relay.one_from", fromList.size()).getString());
+            tooltip.add(new TranslatableComponent("ars_nouveau.relay.one_from", fromList.size()));
         }
-        return list;
+        return tooltip;
     }
 
 }

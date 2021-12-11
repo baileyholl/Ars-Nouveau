@@ -137,11 +137,11 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
         if(this.getCraftingReagent() != null){
             String clayType;
             if(this.getTier() == Tier.ONE){
-                clayType = ItemsRegistry.magicClay.getRegistryName().toString();
+                clayType = ItemsRegistry.MAGIC_CLAY.getRegistryName().toString();
             }else if(this.getTier() == Tier.TWO){
-                clayType = ItemsRegistry.marvelousClay.getRegistryName().toString();
+                clayType = ItemsRegistry.MARVELOUS_CLAY.getRegistryName().toString();
             }else{
-                clayType = ItemsRegistry.mythicalClay.getRegistryName().toString();
+                clayType = ItemsRegistry.MYTHICAL_CLAY.getRegistryName().toString();
             }
             infoPage.addProperty("clay_type", clayType);
             infoPage.addProperty("reagent", this.getCraftingReagent().getRegistryName().toString());

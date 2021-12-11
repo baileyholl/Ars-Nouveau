@@ -37,13 +37,8 @@ public class ArsNouveau {
     public static CreativeModeTab itemGroup = new CreativeModeTab(CreativeModeTab.getGroupCountSafe(), MODID) {
         @Override
         public ItemStack makeIcon() {
-            return Items.COBBLESTONE.getDefaultInstance();
+            return ItemsRegistry.CREATIVE_SPELLBOOK.getDefaultInstance();
         }
-
-        /*@Override
-        public ItemStack makeIcon() {
-            return Items.COBBLESTONE.getDefaultInstance();//ItemsRegistry.archmageSpellBook.getDefaultInstance();
-        }*/
     };
 
     public ArsNouveau(){

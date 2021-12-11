@@ -9,7 +9,7 @@ import net.minecraft.world.level.Level;
 
 public class CarbuncleCharm extends ModItem{
     public CarbuncleCharm() {
-        super(LibItemNames.CARBUNCLE_CHARM);
+        super(LibItemNames.STARBUNCLE_CHARM);
     }
 
     /**

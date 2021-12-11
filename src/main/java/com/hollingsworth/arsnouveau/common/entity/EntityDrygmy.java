@@ -16,6 +16,7 @@ import com.hollingsworth.arsnouveau.common.entity.goal.sylph.FollowPlayerGoal;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -234,7 +235,7 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
         return list;
     }
     @Override
-    public List<String> getTooltip() {
+    public List<Component> getTooltip(List<Component> tooltip) {
         return null;
     }
 

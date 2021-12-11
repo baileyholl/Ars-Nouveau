@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.GlyphPressTile;
+import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,7 +23,7 @@ public class GlyphPressBlock extends TickableModBlock {
     public static final Property<Integer> stage = IntegerProperty.create("stage", 1, 31);
 
     public GlyphPressBlock() {
-        super(TickableModBlock.defaultProperties().noOcclusion(),"glyph_press");
+        super(TickableModBlock.defaultProperties().noOcclusion(), LibBlockNames.GLYPH_PRESS);
     }
 
     @Override
@@ -43,8 +44,8 @@ public class GlyphPressBlock extends TickableModBlock {
                 tile.baseMaterial = ItemStack.EMPTY;
             }
             else if (!player.getInventory().getSelected().isEmpty()) {
-                if(player.getItemInHand(handIn).getItem() == Items.CLAY_BALL || player.getItemInHand(handIn).getItem() == ItemsRegistry.magicClay ||
-                        player.getItemInHand(handIn).getItem() == ItemsRegistry.marvelousClay || player.getItemInHand(handIn).getItem() == ItemsRegistry.mythicalClay) {
+                if(player.getItemInHand(handIn).getItem() == Items.CLAY_BALL || player.getItemInHand(handIn).getItem() == ItemsRegistry.MAGIC_CLAY ||
+                        player.getItemInHand(handIn).getItem() == ItemsRegistry.MARVELOUS_CLAY || player.getItemInHand(handIn).getItem() == ItemsRegistry.MYTHICAL_CLAY) {
                     if(tile.baseMaterial != null && !tile.baseMaterial.isEmpty()){
                         ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.baseMaterial);
                         world.addFreshEntity(item);

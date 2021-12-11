@@ -20,7 +20,7 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe{
 
 
     public SpellWriteRecipe(){
-        this.pedestalItems = Collections.singletonList(Ingredient.of(ItemsRegistry.spellParchment));
+        this.pedestalItems = Collections.singletonList(Ingredient.of(ItemsRegistry.SPELL_PARCHMENT));
     }
 
     @Override

@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.BookwyrmLectern;
 import com.hollingsworth.arsnouveau.common.block.ManaBlock;
@@ -90,13 +90,13 @@ public class BookwyrmLecternTile extends SummoningTile implements IWandable {
     public boolean enoughMana(@Nullable Spell spell){
         if(spell == null)
             return false;
-        return ManaUtil.hasManaNearby(worldPosition, level, 7, spell.getCastingCost() / 4);
+        return SourceUtil.hasManaNearby(worldPosition, level, 7, spell.getCastingCost() / 4);
     }
 
     public boolean removeManaAround(@Nullable Spell spell){
         if(spell == null)
             return false;
-        return ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 7, spell.getCastingCost() / 4) != null;
+        return SourceUtil.takeManaNearbyWithParticles(worldPosition, level, 7, spell.getCastingCost() / 4) != null;
     }
 
     public @Nullable BlockPos getNextTaskLoc(@Nullable Spell spell, EntityBookwyrm caster){

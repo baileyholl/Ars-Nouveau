@@ -4,7 +4,7 @@ public class LibItemNames {
 
     public static final String BLANK_GLYPH = "blank_glyph";
 
-    public static final String MANA_FIBER = "mana_fiber";
+    public static final String MAGE_FIBER = "magebloom_fiber";
 
     public static final String MAGIC_CLAY = "magic_clay";
 
@@ -12,7 +12,7 @@ public class LibItemNames {
 
     public static final String MYTHICAL_CLAY = "mythical_clay";
 
-    public static final String BUCKET_OF_MANA = "bucket_of_mana";
+    public static final String BUCKET_OF_SOURCE = "bucket_of_source";
 
     public static final String WORN_NOTEBOOK = "worn_notebook";
 
@@ -21,7 +21,7 @@ public class LibItemNames {
     public static final String ARCHMAGE_SPELL_BOOK = "archmage_spell_book";
 
     public static final String ARCANE_BRICK = "arcane_brick";
-    public static final String MANA_BLOOM = "mana_bloom";
+    public static final String MAGE_BLOOM = "magebloom";
     public static final String BLAZE_FIBER = "blaze_fiber";
 
     public static final String END_FIBER = "end_fiber";
@@ -40,27 +40,25 @@ public class LibItemNames {
     public static final String WARP_SCROLL = "warp_scroll";
     public static final String CREATIVE_SPELL_BOOK = "creative_spell_book";
     public static final String SPELL_PARCHMENT = "spell_parchment";
-    public static final String BOOKWYRM_CHARM = "whelp_charm";
+    public static final String BOOKWYRM_CHARM = "bookwyrm_charm";
     public static final String DOMINION_WAND = "dominion_wand";
     public static final String DULL_TRINKET = "dull_trinket";
     public static final String RUNIC_CHALK = "runic_chalk";
-    public static final String CARBUNCLE_CHARM = "carbuncle_charm";
-    public static final String CARBUNCLE_SHARD = "carbuncle_shards";
-    public static final String EARTH_ELEMENTAL_SHARD = "earth_elemental_shards";
-    public static final String EARTH_ELEMENTAL_CHARM = "earth_elemental_charm";
-    public static final String SYLPH_SHARD = "sylph_shards";
-    public static final String SYLPH_CHARM = "sylph_charm";
-    public static final String MANA_GEM = "mana_gem";
+    public static final String STARBUNCLE_CHARM = "starbuncle_charm";
+    public static final String STARBUNCLE_SHARDS = "starbuncle_shards";
+
+    public static final String WHIRLISPRIG_SHARDS = "whirlisprig_shards";
+    public static final String WHIRLISPRIGE_CHARM = "whirlisprig_charm";
+    public static final String SOURCE_GEM = "source_gem";
     public static final String WIXIE_SHARD = "wixie_shards";
     public static final String WIXIE_CHARM = "wixie_charm";
     public static final String ALLOW_ITEM_SCROLL = "allow_scroll";
     public static final String DENY_ITEM_SCROLL = "deny_scroll";
     public static final String BLANK_PARCHMENT = "blank_parchment";
-    public static final String MANA_BERRY = "mana_berry";
+    public static final String SOURCE_BERRY = "source_berry";
 
     public static final String WAND = "wand";
     public static final String VOID_JAR = "void_jar";
-    public static final String RITUAL_BOOK = "ritual_book";
 
     public static final String SPELL_BOW = "spell_bow";
     public static final String PIERCE_ARROW = "pierce_arrow";
@@ -81,8 +79,8 @@ public class LibItemNames {
     public static final String ENCHANTERS_SWORD = "enchanters_sword";
     public static final String ENCHANTERS_SHIELD = "enchanters_shield";
 
-    public static final String CARBUNCLE_SE = "carbuncle_se";
-    public static final String SYLPH_SE = "sylph_se";
+    public static final String CARBUNCLE_SE = "starbuncle_se";
+    public static final String SYLPH_SE = "whirlisprig_se";
 
     public static final String WILDEN_HUNTER_SE = "wilden_hunter_se";
     public static final String WILDEN_STALKER_SE = "wilden_stalker_se";

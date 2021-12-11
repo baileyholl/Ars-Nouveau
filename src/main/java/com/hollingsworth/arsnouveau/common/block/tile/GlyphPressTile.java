@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
-import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
@@ -106,7 +106,7 @@ public class GlyphPressTile extends AnimatedTile implements ITickable, IAnimatab
             return false;
 
         int manaCost = recipe.tier == ISpellTier.Tier.ONE ? 1000 : (recipe.tier == ISpellTier.Tier.TWO ? 2000 : 3000);
-        BlockPos jar = ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 5, manaCost);
+        BlockPos jar = SourceUtil.takeManaNearbyWithParticles(worldPosition, level, 5, manaCost);
         if(jar != null){
             isCrafting = true;
             Networking.sendToNearby(level, worldPosition, new PacketOneShotAnimation(worldPosition));
@@ -119,11 +119,11 @@ public class GlyphPressTile extends AnimatedTile implements ITickable, IAnimatab
 
 
     public ISpellTier.Tier getTier(Item clay){
-        if(clay == ItemsRegistry.magicClay)
+        if(clay == ItemsRegistry.MAGIC_CLAY)
             return ISpellTier.Tier.ONE;
-        else if(clay == ItemsRegistry.marvelousClay){
+        else if(clay == ItemsRegistry.MARVELOUS_CLAY){
             return ISpellTier.Tier.TWO;
-        }else if(clay == ItemsRegistry.mythicalClay)
+        }else if(clay == ItemsRegistry.MYTHICAL_CLAY)
             return ISpellTier.Tier.THREE;
         return null;
     }
@@ -249,7 +249,7 @@ public class GlyphPressTile extends AnimatedTile implements ITickable, IAnimatab
         int manaCost = recipe.tier == ISpellTier.Tier.ONE ? 500 : (recipe.tier == ISpellTier.Tier.TWO ? 1500 : 3000);
         AtomicBoolean valid = new AtomicBoolean(false);
         BlockPos.betweenClosedStream(this.getBlockPos().offset(5, -3, 5), this.getBlockPos().offset(-5, 3, -5)).forEach(blockPos -> {
-            if(!valid.get() && level.getBlockEntity(blockPos) instanceof ManaJarTile && ((ManaJarTile) level.getBlockEntity(blockPos)).getCurrentMana() >= manaCost) {
+            if(!valid.get() && level.getBlockEntity(blockPos) instanceof SourceJarTile && ((SourceJarTile) level.getBlockEntity(blockPos)).getCurrentMana() >= manaCost) {
                 valid.set(true);
             }
         });

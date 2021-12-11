@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "ars_nouveau:block/mage_block" }
+  }
+}

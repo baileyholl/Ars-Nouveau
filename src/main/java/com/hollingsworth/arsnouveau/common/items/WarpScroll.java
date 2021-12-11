@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -11,7 +11,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.util.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.network.chat.Component;
@@ -48,10 +47,10 @@ public class WarpScroll extends ModItem{
             String displayName = stack.hasCustomHoverName() ? stack.getHoverName().getString() : "";
             if(getPos(stack) != BlockPos.ZERO
                     && getDimension(stack).equals(entity.getCommandSenderWorld().dimension().getRegistryName().toString())
-                    && ManaUtil.hasManaNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000)
+                    && SourceUtil.hasManaNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000)
                     && (BlockRegistry.PORTAL_BLOCK.trySpawnPortal(entity.getCommandSenderWorld(), entity.blockPosition(), getPos(stack), getDimension(stack), getRotationVector(stack), displayName)
                     || BlockRegistry.PORTAL_BLOCK.trySpawnHoriztonalPortal(entity.getCommandSenderWorld(), entity.blockPosition(), getPos(stack), getDimension(stack), getRotationVector(stack), displayName))
-                    && ManaUtil.takeManaNearbyWithParticles(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000) != null){
+                    && SourceUtil.takeManaNearbyWithParticles(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000) != null){
                 BlockPos pos = entity.blockPosition();
                 ServerLevel world = (ServerLevel) entity.getCommandSenderWorld();
                 world.sendParticles(ParticleTypes.PORTAL, pos.getX(),  pos.getY() + 1,  pos.getZ(),
@@ -88,7 +87,7 @@ public class WarpScroll extends ModItem{
             return InteractionResultHolder.pass(stack);
         }
         if(player.isShiftKeyDown()){
-            ItemStack newWarpStack = new ItemStack(ItemsRegistry.warpScroll);
+            ItemStack newWarpStack = new ItemStack(ItemsRegistry.WARP_SCROLL);
             newWarpStack.setTag(new CompoundTag());
             setTeleportTag(newWarpStack, player.blockPosition(), player.getCommandSenderWorld().dimension().getRegistryName().toString());
             setRotationVector(newWarpStack, player.getRotationVector());

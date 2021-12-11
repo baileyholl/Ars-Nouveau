@@ -29,7 +29,7 @@ public class BlockStatesDatagen extends BlockStateProvider {
         registerNormalCube(BlockRegistry.AB_CLOVER, LibBlockNames.AB_CLOVER);
         registerNormalCube(BlockRegistry.AB_SMOOTH, LibBlockNames.AB_SMOOTH);
         registerNormalCube(BlockRegistry.AB_SMOOTH_SLAB, LibBlockNames.AB_SMOOTH_SLAB);
-        registerNormalCube(BlockRegistry.MANA_GEM_BLOCK, LibBlockNames.MANA_GEM_BLOCK);
+        registerNormalCube(BlockRegistry.MANA_GEM_BLOCK, LibBlockNames.SOURCE_GEM_BLOCK);
 
         registerNormalCube(BlockRegistry.AB_SMOOTH_BASKET, LibBlockNames.AB_SMOOTH_BASKET);
         registerNormalCube(BlockRegistry.AB_SMOOTH_CLOVER, LibBlockNames.AB_SMOOTH_CLOVER);

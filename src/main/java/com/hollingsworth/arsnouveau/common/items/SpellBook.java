@@ -11,7 +11,7 @@ import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellBookRenderer;
 import com.hollingsworth.arsnouveau.common.block.tile.IntangibleAirTile;
-import com.hollingsworth.arsnouveau.common.block.tile.PhantomBlockTile;
+import com.hollingsworth.arsnouveau.common.block.tile.MageBlockTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -90,7 +90,7 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
             tag.putInt(SpellBook.BOOK_MODE_TAG, 0);
             StringBuilder starting_spells = new StringBuilder();
 
-            if(stack.getItem() == ItemsRegistry.creativeSpellBook){
+            if(stack.getItem() == ItemsRegistry.CREATIVE_SPELLBOOK){
                 ArsNouveauAPI.getInstance().getSpell_map().values().forEach(s -> starting_spells.append(",").append(s.getTag().trim()));
             }else{
                 ArsNouveauAPI.getInstance().getDefaultStartingSpells().forEach(s-> starting_spells.append(",").append(s.getTag().trim()));
@@ -124,7 +124,7 @@ public class SpellBook extends Item implements ISpellTier, IScribeable, IDisplay
         if(result instanceof BlockHitResult && !playerIn.isShiftKeyDown()){
             if(worldIn.getBlockEntity(((BlockHitResult) result).getBlockPos()) != null &&
                     !(worldIn.getBlockEntity(((BlockHitResult) result).getBlockPos()) instanceof IntangibleAirTile
-                    ||(worldIn.getBlockEntity(((BlockHitResult) result).getBlockPos()) instanceof PhantomBlockTile))) {
+                    ||(worldIn.getBlockEntity(((BlockHitResult) result).getBlockPos()) instanceof MageBlockTile))) {
                 return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
             }
         }

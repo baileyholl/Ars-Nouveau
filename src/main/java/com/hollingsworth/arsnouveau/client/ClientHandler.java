@@ -55,7 +55,7 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.TIMER_SPELL_TURRET_TILE, TimerTurretRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ARCHWOOD_CHEST_TILE, ArchwoodChestRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.RUNE_TILE, RuneRenderer::new);
-        event.registerBlockEntityRenderer(BlockRegistry.PHANTOM_TILE, MageBlockRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.MAGE_BLOCK_TILE, MageBlockRenderer::new);
 
         event.registerEntityRenderer( ModEntities.SPELL_PROJ,
                 renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
@@ -103,12 +103,12 @@ public class ClientHandler {
     @SubscribeEvent
     public static void init(final FMLClientSetupEvent evt) {
 //
-        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.MANA_JAR, RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SOURCE_JAR, RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.GLYPH_PRESS_BLOCK, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.ARCANE_PEDESTAL, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.ENCHANTING_APP_BLOCK, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.LIGHT_BLOCK, RenderType.translucent());
-        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.PHANTOM_BLOCK, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.MAGE_BLOCK, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.MAGE_BLOOM_CROP, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SCRIBES_BLOCK, RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.ARCANE_RELAY, RenderType.cutout());
@@ -116,10 +116,10 @@ public class ClientHandler {
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.ARCANE_CORE_BLOCK, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.CRYSTALLIZER_BLOCK, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.VOLCANIC_BLOCK, RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.MANA_BERRY_BUSH, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SOURCEBERRY_BUSH, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.LAVA_LILY, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.WIXIE_CAULDRON, RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.CREATIVE_MANA_JAR, RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.CREATIVE_SOURCE_JAR, RenderType.translucent());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.VEXING_SAPLING, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.FLOURISHING_SAPLING, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BLAZING_SAPLING, RenderType.cutout());

@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.common.block.ManaBerryBush;
+import com.hollingsworth.arsnouveau.common.block.SourceBerryBush;
 import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
@@ -16,9 +16,7 @@ import net.minecraft.world.level.Level;
 import java.util.EnumSet;
 import java.util.Optional;
 
-import static com.hollingsworth.arsnouveau.common.block.ManaBerryBush.AGE;
-
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
+import static com.hollingsworth.arsnouveau.common.block.SourceBerryBush.AGE;
 
 public class ForageManaBerries extends Goal {
     private final EntityCarbuncle entity;
@@ -46,7 +44,7 @@ public class ForageManaBerries extends Goal {
 
     @Override
     public boolean canUse() {
-        if(entity.isStuck || !entity.getHeldStack().isEmpty() || world.random.nextDouble() > 0.02 || !entity.isValidItem(new ItemStack(BlockRegistry.MANA_BERRY_BUSH)))
+        if(entity.isStuck || !entity.getHeldStack().isEmpty() || world.random.nextDouble() > 0.02 || !entity.isValidItem(new ItemStack(BlockRegistry.SOURCEBERRY_BUSH)))
             return false;
         this.pos = getNearbyManaBerry();
         return pos != null;
@@ -67,12 +65,12 @@ public class ForageManaBerries extends Goal {
 
         if(BlockUtil.distanceFrom(entity.position, pos) >= 2.0){
             entity.getNavigation().tryMoveToBlockPos(pos, 1.3);
-        }else if(world.getBlockState(pos).getBlock() instanceof ManaBerryBush){
+        }else if(world.getBlockState(pos).getBlock() instanceof SourceBerryBush){
             int i = world.getBlockState(pos).getValue(AGE);
             boolean flag = i == 3;
             entity.lookAt(EntityAnchorArgument.Anchor.EYES,new Vec3(this.pos.getX(), this.pos.getY(), this.pos.getZ()));
             int j = 1 + world.random.nextInt(2);
-            ManaBerryBush.popResource(world, pos, new ItemStack(BlockRegistry.MANA_BERRY_BUSH, j + (flag ? 1 : 0)));
+            SourceBerryBush.popResource(world, pos, new ItemStack(BlockRegistry.SOURCEBERRY_BUSH, j + (flag ? 1 : 0)));
             world.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
             world.setBlock(pos, world.getBlockState(pos).setValue(AGE, 1), 2);
             pos = null;
@@ -85,11 +83,11 @@ public class ForageManaBerries extends Goal {
             return false;
       //  entity.getNavigation().tryMoveToBlockPos(pos, 1.3);
        //Path path = entity.getNavigation().createPath(pos, 0)=
-        return timeSpent <= 20 * 30 && !entity.isStuck && world.getBlockState(pos).getBlock() instanceof ManaBerryBush && world.getBlockState(pos).getValue(AGE) == 3;
+        return timeSpent <= 20 * 30 && !entity.isStuck && world.getBlockState(pos).getBlock() instanceof SourceBerryBush && world.getBlockState(pos).getValue(AGE) == 3;
     }
 
     public BlockPos getNearbyManaBerry(){
-        Optional<BlockPos> p = BlockPos.findClosestMatch(entity.blockPosition(), 10,3, (b)-> world.getBlockState(b).getBlock() instanceof ManaBerryBush && world.getBlockState(b).getValue(AGE) == 3);
+        Optional<BlockPos> p = BlockPos.findClosestMatch(entity.blockPosition(), 10,3, (b)-> world.getBlockState(b).getBlock() instanceof SourceBerryBush && world.getBlockState(b).getValue(AGE) == 3);
         return p.orElse(null);
     }
 }

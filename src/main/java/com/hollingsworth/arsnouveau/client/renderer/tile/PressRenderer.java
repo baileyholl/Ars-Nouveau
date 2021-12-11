@@ -65,7 +65,7 @@ public class PressRenderer extends GeoBlockRenderer<GlyphPressTile> {
         if (tileEntityIn.counter <= 40) {
             renderPressedItem(x, y, z, tileEntityIn.baseMaterial.getItem(), matrixStack, iRenderTypeBuffer,packedLightIn,  packedOverlayIn);
         }else if(tileEntityIn.counter <= 110){
-            renderPressedItem(x, y, z, ItemsRegistry.blankGlyph, matrixStack, iRenderTypeBuffer,packedLightIn,  packedOverlayIn);
+            renderPressedItem(x, y, z, ItemsRegistry.BLANK_GLYPH, matrixStack, iRenderTypeBuffer,packedLightIn,  packedOverlayIn);
         }else{
             renderPressedItem(x, y, z, tileEntityIn.baseMaterial.getItem(), matrixStack, iRenderTypeBuffer,packedLightIn,  packedOverlayIn);
         }

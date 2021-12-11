@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -44,7 +44,7 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
     public void tick() {
 
         if(!level.isClientSide && !hasMana && level.getGameTime() % 20 == 0){
-            if(ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 5, 100) != null) {
+            if(SourceUtil.takeManaNearbyWithParticles(worldPosition, level, 5, 100) != null) {
                 hasMana = true;
                 level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
             }

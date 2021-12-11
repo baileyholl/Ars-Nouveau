@@ -98,7 +98,7 @@ public class PotionJar extends TickableModBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> builder) { builder.add(ManaJar.fill); }
+    protected void createBlockStateDefinition(StateDefinition.Builder<net.minecraft.world.level.block.Block, BlockState> builder) { builder.add(SourceJar.fill); }
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {

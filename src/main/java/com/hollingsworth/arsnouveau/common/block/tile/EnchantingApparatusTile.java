@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
-import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
@@ -19,8 +19,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -155,7 +153,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
             return false;
         }
         IEnchantingRecipe recipe = this.getRecipe(catalyst, playerEntity);
-        ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 10, recipe.manaCost());
+        SourceUtil.takeManaNearbyWithParticles(worldPosition, level, 10, recipe.manaCost());
         this.isCrafting = true;
         updateBlock();
         Networking.sendToNearby(level, worldPosition, new PacketOneShotAnimation(worldPosition));
@@ -167,7 +165,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
             return false;
         IEnchantingRecipe recipe = this.getRecipe(stack, playerEntity);
 
-        return recipe != null && (!recipe.consumesMana() || (recipe.consumesMana() && ManaUtil.hasManaNearby(worldPosition, level, 10, recipe.manaCost())));
+        return recipe != null && (!recipe.consumesMana() || (recipe.consumesMana() && SourceUtil.hasManaNearby(worldPosition, level, 10, recipe.manaCost())));
     }
 
     public void updateBlock(){

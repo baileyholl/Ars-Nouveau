@@ -15,6 +15,7 @@ import com.hollingsworth.arsnouveau.common.entity.goal.wealdwalker.SmashGoal;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -314,15 +315,14 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
     }
 
     @Override
-    public List<String> getTooltip() {
-        List<String> tips = new ArrayList<>();
+    public List<Component> getTooltip(List<Component> tooltip) {
         if(getHome() != null){
             String home = getHome().getX() + ", " + getHome().getY() + ", " + getHome().getZ();
-            tips.add(new TranslatableComponent("ars_nouveau.weald_walker.home",home).getString());
+            tooltip.add(new TranslatableComponent("ars_nouveau.weald_walker.home",home));
         }else{
-            tips.add(new TranslatableComponent("ars_nouveau.weald_walker.home",new TranslatableComponent("ars_nouveau.nothing").getString()).getString());
+            tooltip.add(new TranslatableComponent("ars_nouveau.weald_walker.home",new TranslatableComponent("ars_nouveau.nothing").getString()));
         }
-        return tips;
+        return tooltip;
     }
 
     public enum Animations{

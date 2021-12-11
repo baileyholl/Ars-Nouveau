@@ -1,6 +1,6 @@
 {
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "ars_nouveau:items/mythical_clay"
-    }
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "ars_nouveau:items/mythical_clay"
+  }
 }

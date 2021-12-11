@@ -32,11 +32,11 @@ public class LootTables {
  // /setblock ~ ~ ~ minecraft:chest{LootTable:"minecraft:chests/simple_dungeon"}
     public static Random r = new Random();
     static {
-        BASIC_LOOT.add(() -> new ItemStack(ItemsRegistry.manaGem,1 + r.nextInt(5)));
+        BASIC_LOOT.add(() -> new ItemStack(ItemsRegistry.SOURCE_GEM,1 + r.nextInt(5)));
         BASIC_LOOT.add(() -> new ItemStack(ItemsRegistry.WILDEN_HORN,1 + r.nextInt(3)));
         BASIC_LOOT.add(() -> new ItemStack(ItemsRegistry.WILDEN_SPIKE, 1 + r.nextInt(3)));
         BASIC_LOOT.add(() -> new ItemStack(ItemsRegistry.WILDEN_WING, 1 + r.nextInt(3)));
-        BASIC_LOOT.add(() -> new ItemStack(BlockRegistry.MANA_BERRY_BUSH, 1 + r.nextInt(3)));
+        BASIC_LOOT.add(() -> new ItemStack(BlockRegistry.SOURCEBERRY_BUSH, 1 + r.nextInt(3)));
         BASIC_LOOT.add(() ->{
             ItemStack stack = new ItemStack(Items.POTION);
             PotionUtils.setPotion(stack, ModPotions.LONG_MANA_REGEN_POTION);
@@ -56,9 +56,9 @@ public class LootTables {
         });
 
 
-        UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.warpScroll, 1 + r.nextInt(2)));
-        UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.carbuncleShard));
-        UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.sylphShard));
+        UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.WARP_SCROLL, 1 + r.nextInt(2)));
+        UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.STARBUNCLE_SHARD));
+        UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.WHIRLISPRIG_SHARDS));
         UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.DRYGMY_SHARD));
         UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.WIXIE_SHARD));
         UNCOMMON_LOOT.add(() -> new ItemStack(ItemsRegistry.AMPLIFY_ARROW, 16 + r.nextInt(16)));

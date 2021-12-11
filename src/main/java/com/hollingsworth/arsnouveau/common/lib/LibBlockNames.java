@@ -4,18 +4,13 @@ public class LibBlockNames {
 
     public static final String STATE_PROVIDER = "an_stateprovider";
 
-    public final static String PHANTOM_BLOCK = "phantom_block";
+    public final static String MAGE_BLOCK = "mage_block";
     public final static String LIGHT_BLOCK = "light_block";
-    public final static String AGRONOMIC_SOURCELINK = "mana_condenser";
     public final static String ENCHANTING_APPARATUS = "enchanting_apparatus";
     public final static String GLYPH_PRESS = "glyph_press";
-    public final static String SOURCE_JAR = "mana_jar";
-    public final static String WARDING_STONE = "warding_stone";
-    //TODO: Rename
-    public final static String MAGE_BLOOM = "mana_bloom_crop";
-    // TODO: Rename
-    public final static String ARCANE_ORE = "arcane_ore";
+    public final static String SOURCE_JAR = "source_jar";
 
+    public final static String MAGE_BLOOM = "magebloom_crop";
     public final static String ARCANE_PEDESTAL = "arcane_pedestal";
     public final static String SUMMONING_CRYSTAL = "summoning_crystal";
     public final static String ARCANE_BRICKS = "arcane_bricks";
@@ -27,7 +22,7 @@ public class LibBlockNames {
     public static final String PORTAL = "portal";
     public static final String CRYSTALLIZER = "crystallizer";
     public static final String ARCANE_CORE = "arcane_core";
-    // TODO Rename next major version
+
     public final static String ARCANE_STONE = "arcane_stone";
     public final static String AB_MOSAIC = "ab_mosaic";
     public final static String AB_HERRING = "ab_herring";
@@ -37,14 +32,13 @@ public class LibBlockNames {
     public static final String REDSTONE_AIR = "redstone_air";
 
     public static final String INTANGIBLE_AIR = "intangible_air";
-    // TODO Rename next major version
-    public static final String VOLCANIC_ACCUMULATOR = "volcanic_accumulator";
+
+    public static final String VOLCANIC_SOURCELINK = "volcanic_sourcelink";
     public static final String LAVA_LILY = "lava_lily";
-    // TODO Rename next major version
-    public static final String MANA_BERRY_BUSH = "mana_berry_bush";
+    public static final String SOURCEBERRY_BUSH = "sourceberry_bush";
     public static final String WIXIE_CAULDRON = "wixie_cauldron";
-    // TODO Rename next major version
-    public static final String CREATIVE_MANA_JAR = "creative_mana_jar";
+
+    public static final String CREATIVE_SOURCE_JAR = "creative_source_jar";
     public final static String AB_SMOOTH = "ab_smooth";
     public final static String AB_CLOVER = "ab_clover";
     public final static String AB_SMOOTH_SLAB = "ab_smooth_slab";
@@ -90,12 +84,9 @@ public class LibBlockNames {
     public final static String STRIPPED_AWWOOD_RED = "stripped_red_archwood_wood";
     public final static String STRIPPED_AWLOG_PURPLE = "stripped_purple_archwood_log";
     public final static String STRIPPED_AWWOOD_PURPLE = "stripped_purple_archwood_wood";
-    // TODO Rename next major version
-    public final static String MANA_GEM_BLOCK = "mana_gem_block";
-
+    public final static String SOURCE_GEM_BLOCK = "source_gem_block";
     public final static String POTION_JAR_BLOCK = "potion_jar";
     public final static String POTION_MELDER_BLOCK = "potion_melder";
-
     public final static String AB_SMOOTH_BASKET = "sas_basket";
     public final static String AB_SMOOTH_CLOVER = "sas_clover";
     public final static String AB_SMOOTH_HERRING = "sas_herring";
@@ -116,12 +107,10 @@ public class LibBlockNames {
 
     public static final String DRYGMY_STONE = "drygmy_stone";
 
-    //TODO Rename next major version
-    public static final String MANA_CONDENSER = "mana_condenser";
-
     public static final String ALCHEMICAL_SOURCELINK = "alchemical_sourcelink";
     public static final String VITALIC_SOURCELINK = "vitalic_sourcelink";
     public static final String MYCELIAL_SOURCELINK = "mycelial_sourcelink";
+    public final static String AGRONOMIC_SOURCELINK = "agronomic_sourcelink";
 
     public static final String RELAY_WARP = "relay_warp";
     public static final String RELAY_DEPOSIT = "relay_deposit";

@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
-import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.Config;
@@ -47,7 +47,7 @@ public class CrystallizerTile extends AbstractManaTile implements Container, ITi
             return;
 
 
-        if(this.stack.isEmpty() && this.level.getGameTime() % 20 == 0 && ManaUtil.takeManaNearby(worldPosition, level, 1, 200) != null){
+        if(this.stack.isEmpty() && this.level.getGameTime() % 20 == 0 && SourceUtil.takeManaNearby(worldPosition, level, 1, 200) != null){
             this.addMana(500);
             if(!draining) {
                 draining = true;
@@ -65,7 +65,7 @@ public class CrystallizerTile extends AbstractManaTile implements Container, ITi
             Item foundItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(Config.CRYSTALLIZER_ITEM.get()));
             if(foundItem == null){
                 System.out.println("NULL CRYSTALLIZER ITEM.");
-                foundItem = ItemsRegistry.manaGem;
+                foundItem = ItemsRegistry.SOURCE_GEM;
             }
             this.stack = new ItemStack(foundItem);
 

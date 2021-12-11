@@ -29,7 +29,7 @@ public abstract class ManaBlock extends TickableModBlock {
         if(!worldIn.isClientSide && handIn == InteractionHand.MAIN_HAND){
             if(worldIn.getBlockEntity(pos) instanceof AbstractManaTile){
                 AbstractManaTile tile = (AbstractManaTile) worldIn.getBlockEntity(pos);
-                if(player.getItemInHand(handIn).getItem() == ItemsRegistry.bucketOfMana){
+                if(player.getItemInHand(handIn).getItem() == ItemsRegistry.BUCKET_OF_SOURCE){
                     if(tile.getMaxMana() - tile.getCurrentMana() >= 1000){
                         tile.addMana(1000);
                         if(!player.isCreative())
@@ -39,15 +39,15 @@ public abstract class ManaBlock extends TickableModBlock {
                 }else if(player.getItemInHand(handIn).getItem() instanceof BucketItem && ((BucketItem)player.getItemInHand(handIn).getItem()).getFluid() == Fluids.EMPTY){
                     if(tile.getCurrentMana() >= 1000){
                         if(player.getItemInHand(handIn).getCount() == 1){
-                            player.setItemInHand(handIn, new ItemStack(ItemsRegistry.bucketOfMana));
+                            player.setItemInHand(handIn, new ItemStack(ItemsRegistry.BUCKET_OF_SOURCE));
                             tile.removeMana(1000);
-                        }else if(player.addItem(new ItemStack(ItemsRegistry.bucketOfMana))) {
+                        }else if(player.addItem(new ItemStack(ItemsRegistry.BUCKET_OF_SOURCE))) {
                             player.getItemInHand(handIn).shrink(1);
                             tile.removeMana(1000);
                         }
                     }else if(tile.getCurrentMana() >= 1000 && player.getItemInHand(handIn).getCount() == 1){
                         tile.removeMana(1000);
-                        player.setItemInHand(player.getUsedItemHand(),new ItemStack(ItemsRegistry.bucketOfMana));
+                        player.setItemInHand(player.getUsedItemHand(),new ItemStack(ItemsRegistry.BUCKET_OF_SOURCE));
                     }
                 }
             }

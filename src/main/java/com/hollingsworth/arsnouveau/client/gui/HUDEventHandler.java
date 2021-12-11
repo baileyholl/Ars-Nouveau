@@ -14,6 +14,8 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.ArrayList;
+
 
 /**
  * Renders this mod's HUDs.
@@ -43,11 +45,6 @@ public class HUDEventHandler {
 
     }
 
-    /**
-     *
-     *
-     * @param event The event
-     */
     @SubscribeEvent
     public static void renderEntityHUD(final RenderGameOverlayEvent.Post event) {
         if (event.getType() != RenderGameOverlayEvent.ElementType.ALL) return;
@@ -56,7 +53,7 @@ public class HUDEventHandler {
 
           EntityHitResult result = (EntityHitResult) mouseOver;
           if(result.getEntity() instanceof ITooltipProvider)
-              entityHUD.drawHUD(event.getMatrixStack(),((ITooltipProvider) result.getEntity()).getTooltip());
+              entityHUD.drawHUD(event.getMatrixStack(),((ITooltipProvider) result.getEntity()).getTooltip(new ArrayList<>()));
 
           if(result.getEntity() instanceof ItemFrame){
               scrollHUD.drawHUD(event.getMatrixStack(), (ItemFrame) result.getEntity());
@@ -67,7 +64,7 @@ public class HUDEventHandler {
             BlockHitResult result = (BlockHitResult) mouseOver;
             BlockPos pos = result.getBlockPos();
             if(Minecraft.getInstance().level != null && Minecraft.getInstance().level.getBlockEntity(pos) instanceof ITooltipProvider){
-                entityHUD.drawHUD(event.getMatrixStack(), ((ITooltipProvider) Minecraft.getInstance().level.getBlockEntity(pos)).getTooltip());
+                entityHUD.drawHUD(event.getMatrixStack(), ((ITooltipProvider) Minecraft.getInstance().level.getBlockEntity(pos)).getTooltip(new ArrayList<>()));
             }
         }
     }

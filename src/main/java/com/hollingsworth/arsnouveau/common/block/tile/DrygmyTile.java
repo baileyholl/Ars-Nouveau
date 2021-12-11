@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.EntityTags;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -74,7 +75,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
             refreshEntitiesAndBonus();
         }
 
-        if(!level.isClientSide && level.getGameTime() % 80 == 0 && needsMana && ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 7, Config.DRYGMY_MANA_COST.get()) != null){
+        if(!level.isClientSide && level.getGameTime() % 80 == 0 && needsMana && SourceUtil.takeManaNearbyWithParticles(worldPosition, level, 7, Config.DRYGMY_MANA_COST.get()) != null){
             this.needsMana = false;
             level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
         }
@@ -221,11 +222,10 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
     }
 
     @Override
-    public List<String> getTooltip() {
-        List<String> list = new ArrayList<>();
+    public List<Component> getTooltip(List<Component> tooltip) {
         if(this.needsMana){
-            list.add(new TranslatableComponent("ars_nouveau.wixie.need_mana").getString());
+            tooltip.add(new TranslatableComponent("ars_nouveau.wixie.need_mana"));
         }
-        return list;
+        return tooltip;
     }
 }

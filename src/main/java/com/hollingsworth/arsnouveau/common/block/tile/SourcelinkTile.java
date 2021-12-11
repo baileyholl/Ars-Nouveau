@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
 import com.hollingsworth.arsnouveau.api.mana.IManaTile;
 import com.hollingsworth.arsnouveau.api.mana.SourcelinkEventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import net.minecraft.world.level.block.state.BlockState;
@@ -55,7 +55,7 @@ public class SourcelinkTile extends AbstractManaTile implements IAnimatable, ITi
         }
 
         if(level.getGameTime() % 100 == 0 && getCurrentMana() > 0){
-            BlockPos jarPos = ManaUtil.canGiveManaClosest(worldPosition, level, 5);
+            BlockPos jarPos = SourceUtil.canGiveManaClosest(worldPosition, level, 5);
             if(jarPos != null){
                 transferMana(this, (IManaTile) level.getBlockEntity(jarPos));
                 ParticleUtil.spawnFollowProjectile(level, this.worldPosition, jarPos);

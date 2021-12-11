@@ -10,6 +10,8 @@ import com.hollingsworth.arsnouveau.common.network.PacketWarpPosition;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -95,12 +97,11 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
     }
 
     @Override
-    public List<String> getTooltip() {
-        ArrayList<String> list = new ArrayList();
+    public List<Component> getTooltip(List<Component> tooltip) {
         if (this.displayName != null) {
-            list.add(this.displayName);
+            tooltip.add(new TextComponent(this.displayName));
         }
-        return list;
+        return tooltip;
     }
 
     public boolean update(){

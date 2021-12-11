@@ -98,7 +98,7 @@ public class EventHandler {
             return;
 
         LivingEntity entity = e.getEntityLiving();
-        e.getEntityLiving().getCommandSenderWorld().addFreshEntity(new ItemEntity(entity.level, entity.getX(), entity.getY(), entity.getZ(), new ItemStack(ItemsRegistry.wornNotebook)));
+        e.getEntityLiving().getCommandSenderWorld().addFreshEntity(new ItemEntity(entity.level, entity.getX(), entity.getY(), entity.getZ(), new ItemStack(ItemsRegistry.WORN_NOTEBOOK)));
         tag.putBoolean(book_tag, true);
         e.getPlayer().getPersistentData().put(Player.PERSISTED_NBT_TAG, tag);
     }

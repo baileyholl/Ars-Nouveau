@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 public class AgronomicSourcelinkBlock extends SourcelinkBlock {
 
     public AgronomicSourcelinkBlock() {
-        super(TickableModBlock.defaultProperties().noOcclusion(), LibBlockNames.MANA_CONDENSER);
+        super(TickableModBlock.defaultProperties().noOcclusion(), LibBlockNames.AGRONOMIC_SOURCELINK);
     }
 
     @Override

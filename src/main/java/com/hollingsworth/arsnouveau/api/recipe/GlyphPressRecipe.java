@@ -78,11 +78,11 @@ public class GlyphPressRecipe implements Recipe<Container> {
     public static ItemStack getClayFromTier(ISpellTier.Tier tier){
         switch (tier) {
             case ONE:
-                return new ItemStack(ItemsRegistry.magicClay);
+                return new ItemStack(ItemsRegistry.MAGIC_CLAY);
             case TWO:
-                return new ItemStack(ItemsRegistry.marvelousClay);
+                return new ItemStack(ItemsRegistry.MARVELOUS_CLAY);
             default:
-                return new ItemStack(ItemsRegistry.mythicalClay);
+                return new ItemStack(ItemsRegistry.MYTHICAL_CLAY);
         }
     }
 

@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleSparkleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
@@ -56,11 +56,11 @@ public class SummoningCrystalTile extends AbstractManaTile implements IAnimatabl
     }
 
     public boolean enoughMana(int manaCost){
-        return ManaUtil.hasManaNearby(worldPosition, level, 7, manaCost);
+        return SourceUtil.hasManaNearby(worldPosition, level, 7, manaCost);
     }
 
     public boolean removeManaAround(int manaCost){
-        return ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 7, manaCost) != null;
+        return SourceUtil.takeManaNearbyWithParticles(worldPosition, level, 7, manaCost) != null;
     }
 
     @Override

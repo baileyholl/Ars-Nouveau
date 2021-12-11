@@ -77,8 +77,8 @@ public class ApparatusRecipeProvider implements DataProvider {
     }
 
     public void addEntries(){
-        addRecipe(builder().withResult(ItemsRegistry.beltOfLevitation)
-                .withReagent(ItemsRegistry.mundaneBelt)
+        addRecipe(builder().withResult(ItemsRegistry.BELT_OF_LEVITATION)
+                .withReagent(ItemsRegistry.MUNDANE_BELT)
                 .withPedestalItem(4, Ingredient.of(Tags.Items.INGOTS_GOLD))
                 .withPedestalItem(3, Items.FEATHER)
                 .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.EffectLaunchID))
@@ -86,7 +86,7 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .build());
 
         addRecipe(builder()
-                .withResult(ItemsRegistry.jarOfLight)
+                .withResult(ItemsRegistry.JAR_OF_LIGHT)
                 .withReagent(Items.GLASS_BOTTLE)
                 .withPedestalItem(4, Items.GLOWSTONE)
                 .withPedestalItem(2, Items.REDSTONE_LAMP)
@@ -100,8 +100,8 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .build());
 
         addRecipe(builder()
-                .withResult(ItemsRegistry.ringOfLesserDiscount)
-                .withReagent(ItemsRegistry.ringOfPotential)
+                .withResult(ItemsRegistry.RING_OF_LESSER_DISCOUNT)
+                .withReagent(ItemsRegistry.RING_OF_POTENTIAL)
                 .withPedestalItem(4,  Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(2,Ingredient.of(Tags.Items.ENDER_PEARLS))
                 .withPedestalItem(2,   Recipes.MANA_GEM)
@@ -109,15 +109,15 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .build());
 
         addRecipe(builder()
-                .withResult(ItemsRegistry.ringOfGreaterDiscount)
-                .withReagent(ItemsRegistry.ringOfLesserDiscount)
+                .withResult(ItemsRegistry.RING_OF_GREATER_DISCOUNT)
+                .withReagent(ItemsRegistry.RING_OF_LESSER_DISCOUNT)
                 .withPedestalItem(4,  Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(2,Ingredient.of(Tags.Items.RODS_BLAZE))
                 .withPedestalItem(2, Recipes.MANA_GEM)
                 .build());
 
 
-        addRecipe(new EnchantingApparatusRecipe(new ItemStack(ItemsRegistry.beltOfUnstableGifts), Ingredient.of(ItemsRegistry.mundaneBelt), Arrays.asList(
+        addRecipe(new EnchantingApparatusRecipe(new ItemStack(ItemsRegistry.BELT_OF_UNSTABLE_GIFTS), Ingredient.of(ItemsRegistry.MUNDANE_BELT), Arrays.asList(
                 Ingredient.of(Items.SUGAR),
                 Ingredient.of(Tags.Items.CROPS_NETHER_WART),
                 Ingredient.of(Tags.Items.RODS_BLAZE),
@@ -146,22 +146,22 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .build());
 
         addRecipe(builder()
-                .withResult(ItemsRegistry.carbuncleCharm)
-                .withReagent(ItemsRegistry.carbuncleShard)
+                .withResult(ItemsRegistry.STARBUNCLE_CHARM)
+                .withReagent(ItemsRegistry.STARBUNCLE_SHARD)
                 .withPedestalItem(5,Ingredient.of(Tags.Items.NUGGETS_GOLD))
                 .withPedestalItem(3, Recipes.MANA_GEM)
                 .build());
 
         addRecipe(builder()
-                .withResult(ItemsRegistry.amuletOfManaBoost)
-                .withReagent(ItemsRegistry.dullTrinket)
+                .withResult(ItemsRegistry.AMULET_OF_MANA_BOOST)
+                .withReagent(ItemsRegistry.DULL_TRINKET)
                 .withPedestalItem(3,Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(5, Recipes.MANA_GEM)
                 .build());
 
         addRecipe(builder()
-                .withResult(ItemsRegistry.amuletOfManaRegen)
-                .withReagent(ItemsRegistry.dullTrinket)
+                .withResult(ItemsRegistry.AMULET_OF_MANA_REGEN)
+                .withReagent(ItemsRegistry.DULL_TRINKET)
                 .withPedestalItem(2,Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(2,Ingredient.of(Tags.Items.INGOTS_GOLD))
                 .withPedestalItem(4, Recipes.MANA_GEM)
@@ -169,8 +169,8 @@ public class ApparatusRecipeProvider implements DataProvider {
 
 
         addRecipe(builder()
-                .withResult(ItemsRegistry.sylphCharm)
-                .withReagent(ItemsRegistry.sylphShard)
+                .withResult(ItemsRegistry.WHIRLISPRIG_CHARM)
+                .withReagent(ItemsRegistry.WHIRLISPRIG_SHARDS)
                 .withPedestalItem(Recipes.MANA_GEM)
                 .withPedestalItem(BlockRegistry.MAGE_BLOOM_CROP)
                 .withPedestalItem(ItemsRegistry.MAGE_BLOOM)
@@ -288,7 +288,7 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .buildEnchantmentRecipe(EnchantmentRegistry.REACTIVE_ENCHANTMENT, 2, 6000));
 
         addRecipe(builder()
-                .withPedestalItem(4, ItemsRegistry.mythicalClay)
+                .withPedestalItem(4, ItemsRegistry.MYTHICAL_CLAY)
                 .withPedestalItem(1,Ingredient.of(Tags.Items.ENDER_PEARLS))
                 .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(AugmentPierce.INSTANCE))
                 .withPedestalItem(ArsNouveauAPI.getInstance().getGlyphItem(AugmentExtract.INSTANCE))
@@ -792,18 +792,18 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .buildEnchantmentRecipe(Enchantments.UNBREAKING, 3, 5000));
 
         addRecipe(builder()
-                .withPedestalItem(1, BlockRegistry.MANA_BERRY_BUSH)
+                .withPedestalItem(1, BlockRegistry.SOURCEBERRY_BUSH)
                 .withPedestalItem(4, Recipes.MANA_GEM_BLOCK)
                 .buildEnchantmentRecipe(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, 1, 2000));
         addRecipe(builder()
-                .withPedestalItem(1, BlockRegistry.MANA_BERRY_BUSH)
+                .withPedestalItem(1, BlockRegistry.SOURCEBERRY_BUSH)
                 .withPedestalItem(1,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentAmplify.INSTANCE)))
                 .withPedestalItem(4, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(EnchantmentRegistry.MANA_BOOST_ENCHANTMENT, 2, 3500));
 
         addRecipe(builder()
-                .withPedestalItem(1, BlockRegistry.MANA_BERRY_BUSH)
+                .withPedestalItem(1, BlockRegistry.SOURCEBERRY_BUSH)
                 .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentAmplify.INSTANCE)))
                 .withPedestalItem(4, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
@@ -811,19 +811,19 @@ public class ApparatusRecipeProvider implements DataProvider {
 
 
         addRecipe(builder()
-                .withPedestalItem(2, BlockRegistry.MANA_BERRY_BUSH)
+                .withPedestalItem(2, BlockRegistry.SOURCEBERRY_BUSH)
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, 1, 2000));
         addRecipe(builder()
-                .withPedestalItem(2, BlockRegistry.MANA_BERRY_BUSH)
+                .withPedestalItem(2, BlockRegistry.SOURCEBERRY_BUSH)
                 .withPedestalItem(2,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentExtendTime.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))
                 .buildEnchantmentRecipe(EnchantmentRegistry.MANA_REGEN_ENCHANTMENT, 2, 3500));
 
         addRecipe(builder()
-                .withPedestalItem(2, BlockRegistry.MANA_BERRY_BUSH)
+                .withPedestalItem(2, BlockRegistry.SOURCEBERRY_BUSH)
                 .withPedestalItem(3,  Ingredient.of(ArsNouveauAPI.getInstance().getGlyphItem(AugmentExtendTime.INSTANCE)))
                 .withPedestalItem(2, Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(1, Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS))

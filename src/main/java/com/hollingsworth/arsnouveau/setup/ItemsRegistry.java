@@ -42,64 +42,64 @@ import net.minecraft.world.item.Tiers;
 
 @ObjectHolder(ArsNouveau.MODID)
 public class ItemsRegistry {
-    @ObjectHolder(LibItemNames.RUNIC_CHALK)public static RunicChalk runicChalk;
-    @ObjectHolder(LibItemNames.NOVICE_SPELL_BOOK) public static SpellBook noviceSpellBook;
+    @ObjectHolder(LibItemNames.RUNIC_CHALK)public static RunicChalk RUNIC_CHALK;
+    @ObjectHolder(LibItemNames.NOVICE_SPELL_BOOK) public static SpellBook NOVICE_SPELLBOOK;
 
-    @ObjectHolder(LibItemNames.APPRENTICE_SPELL_BOOK) public static SpellBook apprenticeSpellBook;
-    @ObjectHolder(LibItemNames.ARCHMAGE_SPELL_BOOK) public static SpellBook archmageSpellBook;
-    @ObjectHolder(LibItemNames.CREATIVE_SPELL_BOOK) public static SpellBook creativeSpellBook;
-
-
-    @ObjectHolder(LibItemNames.BLANK_GLYPH) public static  Item blankGlyph;
-    @ObjectHolder(LibItemNames.BUCKET_OF_MANA) public static ModItem bucketOfMana;
-
-    @ObjectHolder(LibItemNames.MAGIC_CLAY) public static ModItem magicClay;
-    @ObjectHolder(LibItemNames.MARVELOUS_CLAY) public static ModItem marvelousClay;
-    @ObjectHolder(LibItemNames.MYTHICAL_CLAY) public static ModItem mythicalClay;
-
-    @ObjectHolder(LibItemNames.MANA_BLOOM) public static ModItem MAGE_BLOOM;
+    @ObjectHolder(LibItemNames.APPRENTICE_SPELL_BOOK) public static SpellBook APPRENTICE_SPELLBOOK;
+    @ObjectHolder(LibItemNames.ARCHMAGE_SPELL_BOOK) public static SpellBook ARCHMAGE_SPELLBOOK;
+    @ObjectHolder(LibItemNames.CREATIVE_SPELL_BOOK) public static SpellBook CREATIVE_SPELLBOOK;
 
 
-    @ObjectHolder(LibItemNames.MANA_FIBER) public static ModItem MAGE_FIBER;
+    @ObjectHolder(LibItemNames.BLANK_GLYPH) public static  Item BLANK_GLYPH;
+    @ObjectHolder(LibItemNames.BUCKET_OF_SOURCE) public static ModItem BUCKET_OF_SOURCE;
+
+    @ObjectHolder(LibItemNames.MAGIC_CLAY) public static ModItem MAGIC_CLAY;
+    @ObjectHolder(LibItemNames.MARVELOUS_CLAY) public static ModItem MARVELOUS_CLAY;
+    @ObjectHolder(LibItemNames.MYTHICAL_CLAY) public static ModItem MYTHICAL_CLAY;
+
+    @ObjectHolder(LibItemNames.MAGE_BLOOM) public static ModItem MAGE_BLOOM;
+
+
+    @ObjectHolder(LibItemNames.MAGE_FIBER) public static ModItem MAGE_FIBER;
     @ObjectHolder(LibItemNames.BLAZE_FIBER) public static ModItem BLAZE_FIBER;
     @ObjectHolder(LibItemNames.END_FIBER) public static ModItem END_FIBER;
 
-    @ObjectHolder(LibItemNames.MUNDANE_BELT) public static ModItem mundaneBelt;
-    @ObjectHolder(LibItemNames.JAR_OF_LIGHT) public static JarOfLight jarOfLight;
+    @ObjectHolder(LibItemNames.MUNDANE_BELT) public static ModItem MUNDANE_BELT;
+    @ObjectHolder(LibItemNames.JAR_OF_LIGHT) public static JarOfLight JAR_OF_LIGHT;
 
-    @ObjectHolder(LibItemNames.BELT_OF_LEVITATION)public static BeltOfLevitation beltOfLevitation;
+    @ObjectHolder(LibItemNames.BELT_OF_LEVITATION)public static BeltOfLevitation BELT_OF_LEVITATION;
 
-    @ObjectHolder(LibItemNames.WORN_NOTEBOOK) public static WornNotebook wornNotebook = Null();
+    @ObjectHolder(LibItemNames.WORN_NOTEBOOK) public static WornNotebook WORN_NOTEBOOK = Null();
 
-    @ObjectHolder(LibItemNames.RING_OF_POTENTIAL) public  static ModItem ringOfPotential;
+    @ObjectHolder(LibItemNames.RING_OF_POTENTIAL) public  static ModItem RING_OF_POTENTIAL;
 
-    @ObjectHolder(LibItemNames.RING_OF_LESSER_DISCOUNT) public static DiscountRing ringOfLesserDiscount;
+    @ObjectHolder(LibItemNames.RING_OF_LESSER_DISCOUNT) public static DiscountRing RING_OF_LESSER_DISCOUNT;
 
 
-    @ObjectHolder(LibItemNames.RING_OF_GREATER_DISCOUNT) public static DiscountRing ringOfGreaterDiscount;
+    @ObjectHolder(LibItemNames.RING_OF_GREATER_DISCOUNT) public static DiscountRing RING_OF_GREATER_DISCOUNT;
 
-    @ObjectHolder(LibItemNames.BELT_OF_UNSTABLE_GIFTS) public static BeltOfUnstableGifts beltOfUnstableGifts;
+    @ObjectHolder(LibItemNames.BELT_OF_UNSTABLE_GIFTS) public static BeltOfUnstableGifts BELT_OF_UNSTABLE_GIFTS;
 
-    @ObjectHolder(LibItemNames.WARP_SCROLL) public static WarpScroll warpScroll;
+    @ObjectHolder(LibItemNames.WARP_SCROLL) public static WarpScroll WARP_SCROLL;
 
-    @ObjectHolder(LibItemNames.SPELL_PARCHMENT) public static SpellParchment spellParchment;
+    @ObjectHolder(LibItemNames.SPELL_PARCHMENT) public static SpellParchment SPELL_PARCHMENT;
 
     @ObjectHolder(LibItemNames.BOOKWYRM_CHARM) public static BookwyrmCharm BOOKWYRM_CHARM;
     @ObjectHolder(LibItemNames.DOMINION_WAND) public static DominionWand DOMINION_ROD;
 
-    @ObjectHolder(LibItemNames.AMULET_OF_MANA_BOOST)public static AbstractManaCurio amuletOfManaBoost;
-    @ObjectHolder(LibItemNames.AMULET_OF_MANA_REGEN)public static AbstractManaCurio amuletOfManaRegen;
-    @ObjectHolder(LibItemNames.DULL_TRINKET)public static ModItem dullTrinket;
-    @ObjectHolder(LibItemNames.CARBUNCLE_CHARM) public static CarbuncleCharm carbuncleCharm;
-    @ObjectHolder(LibItemNames.DOMINION_WAND)public static DominionWand dominionWand;
+    @ObjectHolder(LibItemNames.AMULET_OF_MANA_BOOST)public static AbstractManaCurio AMULET_OF_MANA_BOOST;
+    @ObjectHolder(LibItemNames.AMULET_OF_MANA_REGEN)public static AbstractManaCurio AMULET_OF_MANA_REGEN;
+    @ObjectHolder(LibItemNames.DULL_TRINKET)public static ModItem DULL_TRINKET;
+    @ObjectHolder(LibItemNames.STARBUNCLE_CHARM) public static CarbuncleCharm STARBUNCLE_CHARM;
+    @ObjectHolder(LibItemNames.DOMINION_WAND)public static DominionWand DOMINION_WAND;
     @ObjectHolder("debug")public static Debug debug;
 
-    @ObjectHolder(LibItemNames.CARBUNCLE_SHARD)public static ModItem carbuncleShard;
+    @ObjectHolder(LibItemNames.STARBUNCLE_SHARDS)public static ModItem STARBUNCLE_SHARD;
 
 
-    @ObjectHolder(LibItemNames.SYLPH_CHARM)public static SylphCharm sylphCharm;
-    @ObjectHolder(LibItemNames.SYLPH_SHARD)public static ModItem sylphShard;
-    @ObjectHolder(LibItemNames.MANA_GEM)public static ModItem manaGem;
+    @ObjectHolder(LibItemNames.WHIRLISPRIGE_CHARM)public static SylphCharm WHIRLISPRIG_CHARM;
+    @ObjectHolder(LibItemNames.WHIRLISPRIG_SHARDS)public static ModItem WHIRLISPRIG_SHARDS;
+    @ObjectHolder(LibItemNames.SOURCE_GEM)public static ModItem SOURCE_GEM;
     @ObjectHolder(LibItemNames.ALLOW_ITEM_SCROLL)public static AllowItemScroll ALLOW_ITEM_SCROLL;
     @ObjectHolder(LibItemNames.DENY_ITEM_SCROLL)public static DenyItemScroll DENY_ITEM_SCROLL;
     @ObjectHolder(LibItemNames.MIMIC_ITEM_SCROLL)public static MimicItemScroll MIMIC_ITEM_SCROLL;
@@ -162,12 +162,12 @@ public class ItemsRegistry {
                     new ModItem(LibItemNames.MYTHICAL_CLAY),
                     new ModItem(LibItemNames.BLAZE_FIBER),
                     new ModItem(LibItemNames.END_FIBER),
-                    new CompostableItem(LibItemNames.MANA_BLOOM, 0.65F).withTooltip(new TranslatableComponent("ars_nouveau.tooltip.mana_bloom")),
-                    new ModItem(LibItemNames.MANA_FIBER),
+                    new CompostableItem(LibItemNames.MAGE_BLOOM, 0.65F).withTooltip(new TranslatableComponent("ars_nouveau.tooltip.magebloom")),
+                    new ModItem(LibItemNames.MAGE_FIBER),
                     new ModItem(LibItemNames.MUNDANE_BELT).withTooltip(new TranslatableComponent("ars_nouveau.tooltip.dull")),
                     new ModItem(LibItemNames.RING_OF_POTENTIAL).withTooltip(new TranslatableComponent("ars_nouveau.tooltip.dull")),
                     new BeltOfUnstableGifts(LibItemNames.BELT_OF_UNSTABLE_GIFTS),
-                    new ModItem(defaultItemProperties().stacksTo(1), LibItemNames.BUCKET_OF_MANA),
+                    new ModItem(defaultItemProperties().stacksTo(1), LibItemNames.BUCKET_OF_SOURCE),
                     new NoviceArmor(EquipmentSlot.FEET).setRegistryName("novice_boots"),
                     new NoviceArmor(EquipmentSlot.LEGS).setRegistryName("novice_leggings"),
                     new NoviceArmor(EquipmentSlot.CHEST).setRegistryName("novice_robes"),
@@ -189,7 +189,7 @@ public class ItemsRegistry {
                     new JarOfLight(),
                     new WornNotebook().withTooltip(new TranslatableComponent("tooltip.worn_notebook")),
                     new CarbuncleCharm(),
-                    new ModItem(LibItemNames.CARBUNCLE_SHARD).withTooltip(new TranslatableComponent("tooltip.carbuncle_shard")),
+                    new ModItem(LibItemNames.STARBUNCLE_SHARDS).withTooltip(new TranslatableComponent("tooltip.starbuncle_shard")),
                     new WixieCharm(),
                     new DiscountRing(LibItemNames.RING_OF_LESSER_DISCOUNT) {
                         @Override
@@ -216,9 +216,9 @@ public class ItemsRegistry {
                             return 3;
                         }
                     },
-                    new ModItem(LibItemNames.SYLPH_SHARD).withTooltip(new TranslatableComponent("tooltip.sylph_shard")),
+                    new ModItem(LibItemNames.WHIRLISPRIG_SHARDS).withTooltip(new TranslatableComponent("tooltip.whirlisprig_shard")),
                     new SylphCharm(),
-                    new ModItem(LibItemNames.MANA_GEM).withTooltip(new TranslatableComponent("tooltip.mana_gem")),
+                    new ModItem(LibItemNames.SOURCE_GEM).withTooltip(new TranslatableComponent("tooltip.source_gem")),
                     new AllowItemScroll(LibItemNames.ALLOW_ITEM_SCROLL),
                     new DenyItemScroll(LibItemNames.DENY_ITEM_SCROLL),
                     new MimicItemScroll(LibItemNames.MIMIC_ITEM_SCROLL),

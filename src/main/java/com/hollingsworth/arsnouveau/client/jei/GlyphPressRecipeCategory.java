@@ -82,7 +82,7 @@ public class GlyphPressRecipeCategory implements IRecipeCategory<GlyphPressRecip
 
     @Override
     public void setIngredients(GlyphPressRecipe glyphPressRecipe, IIngredients iIngredients) {
-        ItemStack clay = glyphPressRecipe.tier == ISpellTier.Tier.ONE ? new ItemStack(ItemsRegistry.magicClay) : glyphPressRecipe.tier == ISpellTier.Tier.TWO ? new ItemStack(ItemsRegistry.marvelousClay): new ItemStack(ItemsRegistry.mythicalClay);
+        ItemStack clay = glyphPressRecipe.tier == ISpellTier.Tier.ONE ? new ItemStack(ItemsRegistry.MAGIC_CLAY) : glyphPressRecipe.tier == ISpellTier.Tier.TWO ? new ItemStack(ItemsRegistry.MARVELOUS_CLAY): new ItemStack(ItemsRegistry.MYTHICAL_CLAY);
         List<List<ItemStack>> itemStacks = new ArrayList<>();
         itemStacks.add(Collections.singletonList(clay));
         itemStacks.add(Collections.singletonList(glyphPressRecipe.reagent));

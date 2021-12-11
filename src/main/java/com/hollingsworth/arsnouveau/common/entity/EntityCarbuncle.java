@@ -23,6 +23,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -194,7 +195,7 @@ public class EntityCarbuncle extends PathfinderMob implements IAnimatable, IDisp
                 Networking.sendToNearby(level, this, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, blockPosition()));
 
             if (tamingTime > 60 && !level.isClientSide) {
-                ItemStack stack = new ItemStack(ItemsRegistry.carbuncleShard, 1 + level.random.nextInt(2));
+                ItemStack stack = new ItemStack(ItemsRegistry.STARBUNCLE_SHARD, 1 + level.random.nextInt(2));
                 level.addFreshEntity(new ItemEntity(level, getX(), getY() + 0.5, getZ(), stack));
                 this.remove(RemovalReason.DISCARDED);
                 level.playSound(null, getX(), getY(), getZ(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1f, 1f);
@@ -391,7 +392,7 @@ public class EntityCarbuncle extends PathfinderMob implements IAnimatable, IDisp
     @Override
     public void die(DamageSource source) {
         if (!level.isClientSide && isTamed()) {
-            ItemStack stack = new ItemStack(ItemsRegistry.carbuncleCharm);
+            ItemStack stack = new ItemStack(ItemsRegistry.STARBUNCLE_CHARM);
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
             if (this.getHeldStack() != null)
                 level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getHeldStack()));
@@ -507,7 +508,7 @@ public class EntityCarbuncle extends PathfinderMob implements IAnimatable, IDisp
             return false;
 
         if (!level.isClientSide && isTamed()) {
-            ItemStack stack = new ItemStack(ItemsRegistry.carbuncleCharm);
+            ItemStack stack = new ItemStack(ItemsRegistry.STARBUNCLE_CHARM);
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack.copy()));
             stack = getHeldStack();
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
@@ -621,16 +622,15 @@ public class EntityCarbuncle extends PathfinderMob implements IAnimatable, IDisp
     }
 
     @Override
-    public List<String> getTooltip() {
-        List<String> toolTip = new ArrayList<>();
+    public List<Component> getTooltip(List<Component> tooltip) {
         if(!isTamed())
-            return toolTip;
-        toolTip.add(new TranslatableComponent("ars_nouveau.carbuncle.storing", this.entityData.get(TO_POS)).getString());
-        toolTip.add(new TranslatableComponent("ars_nouveau.carbuncle.taking", this.entityData.get(FROM_POS)).getString());
+            return tooltip;
+        tooltip.add(new TranslatableComponent("ars_nouveau.carbuncle.storing", this.entityData.get(TO_POS)));
+        tooltip.add(new TranslatableComponent("ars_nouveau.carbuncle.taking", this.entityData.get(FROM_POS)));
         if(pathBlockDesc() != null && !pathBlockDesc().isEmpty()){
-            toolTip.add(new TranslatableComponent("ars_nouveau.carbuncle.pathing", this.entityData.get(PATH_BLOCK)).getString());
+            tooltip.add(new TranslatableComponent("ars_nouveau.carbuncle.pathing", this.entityData.get(PATH_BLOCK)));
         }
-        return toolTip;
+        return tooltip;
     }
 
 

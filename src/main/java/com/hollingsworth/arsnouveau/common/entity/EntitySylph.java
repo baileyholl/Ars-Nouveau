@@ -15,6 +15,8 @@ import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -41,7 +43,6 @@ import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.tags.Tag;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -263,7 +264,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
                 Networking.sendToNearby(level, this, new PacketANEffect(PacketANEffect.EffectType.TIMED_HELIX, blockPosition()));
 
             if(tamingTime > 60 && !level.isClientSide) {
-                ItemStack stack = new ItemStack(ItemsRegistry.sylphShard, 1 + level.random.nextInt(1));
+                ItemStack stack = new ItemStack(ItemsRegistry.WHIRLISPRIG_SHARDS, 1 + level.random.nextInt(1));
                 level.addFreshEntity(new ItemEntity(level, getX(), getY() + 0.5, getZ(), stack));
                 this.remove(RemovalReason.DISCARDED);
                 level.playSound(null, getX(), getY(), getZ(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.NEUTRAL, 1f, 1f );
@@ -320,7 +321,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
     @Override
     public void die(DamageSource source) {
         if(!level.isClientSide && isTamed()){
-            ItemStack stack = new ItemStack(ItemsRegistry.sylphCharm);
+            ItemStack stack = new ItemStack(ItemsRegistry.WHIRLISPRIG_CHARM);
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
         }
         super.die(source);
@@ -363,8 +364,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
     protected void registerGoals() { /*Do not use. See above*/}
 
     @Override
-    public List<String> getTooltip() {
-        List<String> tooltip = new ArrayList<>();
+    public List<Component> getTooltip(List<Component> tooltip) {
         if(!this.entityData.get(TAMED))
             return tooltip;
         int mood = this.entityData.get(MOOD_SCORE);
@@ -377,7 +377,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
             moodStr = new TranslatableComponent("ars_nouveau.sylph.tooltip_happy").getString();
         else if(mood >= 250)
             moodStr = new TranslatableComponent("ars_nouveau.sylph.tooltip_content").getString();
-        tooltip.add(new TranslatableComponent("ars_nouveau.sylph.tooltip_mood").getString() + moodStr);
+        tooltip.add(new TextComponent(new TranslatableComponent("ars_nouveau.sylph.tooltip_mood").getString() + moodStr));
         return tooltip;
     }
 
@@ -475,7 +475,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
             return false;
 
         if(!level.isClientSide && isTamed()){
-            ItemStack stack = new ItemStack(ItemsRegistry.sylphCharm);
+            ItemStack stack = new ItemStack(ItemsRegistry.WHIRLISPRIG_CHARM);
             level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
             ParticleUtil.spawnPoof((ServerLevel)level, blockPosition());
             this.remove(RemovalReason.DISCARDED);

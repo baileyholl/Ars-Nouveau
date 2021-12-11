@@ -29,8 +29,6 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
-
 public class EffectBlink extends AbstractEffect {
     public static EffectBlink INSTANCE = new EffectBlink();
 
@@ -44,7 +42,7 @@ public class EffectBlink extends AbstractEffect {
         double distance = GENERIC_INT.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
 
         if(spellContext.castingTile instanceof IInventoryResponder){
-            ItemStack scroll = ((IInventoryResponder) spellContext.castingTile).getItem(new ItemStack(ItemsRegistry.warpScroll));
+            ItemStack scroll = ((IInventoryResponder) spellContext.castingTile).getItem(new ItemStack(ItemsRegistry.WARP_SCROLL));
             if(!scroll.isEmpty()){
                 BlockPos pos = WarpScroll.getPos(scroll);
                 if(pos != null){

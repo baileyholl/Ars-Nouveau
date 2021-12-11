@@ -6,13 +6,15 @@ import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.ILightable;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
-import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.RitualBlock;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.LivingEntity;
@@ -106,7 +108,7 @@ public class RitualTile extends ModdedTile implements ITooltipProvider, IAnimata
             }
             if(ritual.consumesMana() && ritual.needsManaNow()){
                 int cost = ritual.getManaCost();
-                if(ManaUtil.takeManaNearbyWithParticles(getBlockPos(), getLevel(), 6, cost) != null){
+                if(SourceUtil.takeManaNearbyWithParticles(getBlockPos(), getLevel(), 6, cost) != null){
                     ritual.setNeedsMana(false);
                 }else{
                     return;
@@ -185,31 +187,30 @@ public class RitualTile extends ModdedTile implements ITooltipProvider, IAnimata
     }
 
     @Override
-    public List<String> getTooltip() {
-        List<String> tooltips = new ArrayList<>();
+    public List<Component> getTooltip(List<Component> tooltips) {
         if(ritual != null){
-            tooltips.add(ritual.getName());
+            tooltips.add(new TextComponent(ritual.getName()));
             if(isOff) {
-                tooltips.add(new TranslatableComponent("ars_nouveau.tooltip.turned_off").getString());
+                tooltips.add(new TranslatableComponent("ars_nouveau.tooltip.turned_off"));
                 return tooltips;
             }
             if(!ritual.isRunning()){
                 if(!ritual.canStart()){
-                    tooltips.add(new TranslatableComponent("ars_nouveau.tooltip.conditions_unmet").getString());
+                    tooltips.add(new TranslatableComponent("ars_nouveau.tooltip.conditions_unmet"));
                 }else
-                    tooltips.add(new TranslatableComponent("ars_nouveau.tooltip.waiting").getString());
+                    tooltips.add(new TranslatableComponent("ars_nouveau.tooltip.waiting"));
             }else{
 
-                tooltips.add(new TranslatableComponent("ars_nouveau.tooltip.running").getString());
+                tooltips.add(new TranslatableComponent("ars_nouveau.tooltip.running"));
             }
             if(ritual.getConsumedItems().size() != 0) {
-                tooltips.add(new TranslatableComponent("ars_nouveau.tooltip.consumed").getString());
+                tooltips.add(new TranslatableComponent("ars_nouveau.tooltip.consumed"));
                 for (ItemStack i : ritual.getConsumedItems()) {
-                    tooltips.add(i.getHoverName().getString());
+                    tooltips.add(i.getHoverName());
                 }
             }
             if(ritual.needsManaNow())
-                tooltips.add(new TranslatableComponent("ars_nouveau.wixie.need_mana").getString());
+                tooltips.add(new TranslatableComponent("ars_nouveau.wixie.need_mana"));
         }
         return tooltips;
     }

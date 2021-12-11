@@ -1,11 +1,10 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
-import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
@@ -55,7 +54,7 @@ public class EnchantingApparatusBlock extends TickableModBlock {
             IEnchantingRecipe recipe = tile.getRecipe(player.getMainHandItem(), player);
             if(recipe == null){
                 PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.apparatus.norecipe"));
-            }else if(recipe.consumesMana() && !ManaUtil.hasManaNearby(tile.getBlockPos(), tile.getLevel(), 10, recipe.manaCost())){
+            }else if(recipe.consumesMana() && !SourceUtil.hasManaNearby(tile.getBlockPos(), tile.getLevel(), 10, recipe.manaCost())){
                 PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.apparatus.nomana"));
             }else{
                 if(tile.attemptCraft(player.getMainHandItem(), player)){
