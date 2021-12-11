@@ -3,9 +3,16 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -17,24 +24,33 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-public class EnchantingApparatusTile extends AnimatedTile implements Container, ITickable {
+public class EnchantingApparatusTile extends AnimatedTile implements Container, ITickable, IAnimatable, IAnimationListener {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     public ItemStack catalystItem = ItemStack.EMPTY;
     public ItemEntity entity;
     public long frames = 0;
 
-    private int craftingLength = 100;
+    private int craftingLength = (int) (20 * 11);
     public boolean isCrafting;
 
     public EnchantingApparatusTile(BlockPos pos, BlockState state) {
@@ -45,8 +61,29 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
 
     @Override
     public void tick() {
-        if(level.isClientSide)
+        int craftingLength = 210;
+        if(level.isClientSide) {
+            if(this.isCrafting){
+                Level world = getLevel();
+                BlockPos pos  = getBlockPos().offset(0, 0.5, 0);
+                Random rand = world.getRandom();
+
+                Vec3 particlePos = new Vec3(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0, 0.5);
+                particlePos = particlePos.add(ParticleUtil.pointInSphere());
+                world.addParticle(ParticleLineData.createData(new ParticleColor(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255))),
+                        particlePos.x(), particlePos.y(), particlePos.z(),
+                        pos.getX()  +0.5, pos.getY() + 1  , pos.getZ() +0.5);
+
+                for(BlockPos p : pedestalList()){
+                    getLevel().addParticle(
+                            GlowParticleData.createData(new ParticleColor(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255))),
+                            p.getX() +0.5 + ParticleUtil.inRange(-0.2, 0.2)  , p.getY() +1.5  + ParticleUtil.inRange(-0.3, 0.3) , p.getZ() +0.5 + ParticleUtil.inRange(-0.2, 0.2),
+                            0,0,0);
+                }
+
+            }
             return;
+        }
 
         if(isCrafting){
             if(this.getRecipe(catalystItem, null) == null)
@@ -121,6 +158,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
         ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 10, recipe.manaCost());
         this.isCrafting = true;
         updateBlock();
+        Networking.sendToNearby(level, worldPosition, new PacketOneShotAnimation(worldPosition));
         return true;
     }
 
@@ -246,5 +284,41 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
     public void invalidateCaps() {
         itemHandler.invalidate();
         super.invalidateCaps();
+    }
+
+    @Override
+    public void registerControllers(AnimationData animationData) {
+        animationData.addAnimationController(new AnimationController(this, "controller", 1,  this::idlePredicate));
+        animationData.addAnimationController(new AnimationController(this, "craft_controller", 1,  this::craftPredicate));
+    }
+    AnimationFactory manager = new AnimationFactory(this);
+
+    @Override
+    public AnimationFactory getFactory() {
+        return manager;
+    }
+
+    private <E extends BlockEntity & IAnimatable > PlayState idlePredicate(AnimationEvent<E> event) {
+//        if(this.isCrafting)
+//            return PlayState.STOP;
+        event.getController().setAnimation(new AnimationBuilder().addAnimation("floating", true));
+
+        return PlayState.CONTINUE;
+    }
+
+    private <E extends BlockEntity & IAnimatable > PlayState craftPredicate(AnimationEvent<E> event) {
+        if(!this.isCrafting)
+            return PlayState.STOP;
+        //event.getController().setAnimation(new AnimationBuilder().addAnimation("floating", true).addAnimation("enchanting", false));
+
+        return PlayState.CONTINUE;
+    }
+    @Override
+    public void startAnimation(int arg) {
+        AnimationData data = this.manager.getOrCreateAnimationData(this.hashCode());
+        data.setResetSpeedInTicks(0.0);
+        AnimationController controller = data.getAnimationControllers().get("craft_controller");
+        controller.markNeedsReload();
+        controller.setAnimation(new AnimationBuilder().addAnimation("enchanting", false));
     }
 }

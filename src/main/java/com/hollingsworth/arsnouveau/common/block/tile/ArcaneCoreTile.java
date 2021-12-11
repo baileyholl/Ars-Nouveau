@@ -19,7 +19,7 @@ public class ArcaneCoreTile extends ModdedTile implements ITickable {
 
         if(level.isClientSide) {
             ParticleColor randColor = new ParticleColor(level.random.nextInt(255), level.random.nextInt(255), level.random.nextInt(255));
-            for (int i = 0; i < 6; i++) {
+            for (int i = 0; i < 2; i++) {
                 level.addParticle(
                         GlowParticleData.createData(randColor),
                         worldPosition.getX() + 0.5 + ParticleUtil.inRange(-0.3, 0.3), worldPosition.getY() + 0.5 + ParticleUtil.inRange(-0.3, 0.3), worldPosition.getZ() + 0.5 + ParticleUtil.inRange(-0.3, 0.3),

@@ -33,7 +33,7 @@ public class ModdedTile extends BlockEntity {
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
-        handleUpdateTag(pkt.getTag());
+        handleUpdateTag(pkt.getTag() == null ? new CompoundTag() : pkt.getTag());
     }
 
     public void updateBlock(){

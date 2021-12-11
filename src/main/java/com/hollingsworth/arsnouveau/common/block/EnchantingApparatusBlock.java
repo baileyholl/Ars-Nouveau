@@ -3,7 +3,9 @@ package com.hollingsworth.arsnouveau.common.block;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
+import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
@@ -24,18 +26,16 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class EnchantingApparatusBlock extends TickableModBlock {
 
     public EnchantingApparatusBlock() {
-        super(TickableModBlock.defaultProperties().noOcclusion(),"enchanting_apparatus");
+        super(TickableModBlock.defaultProperties().noOcclusion(), LibBlockNames.ENCHANTING_APPARATUS);
     }
 
+    public EnchantingApparatusBlock(Properties properties, String registry){
+        super(properties, registry);
+    }
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new EnchantingApparatusTile(pos, state);
-    }
-
-    @Override
-    public void attack(BlockState state, Level worldIn, BlockPos pos, Player player) {
-        super.attack(state, worldIn, pos, player);
     }
 
     @Override

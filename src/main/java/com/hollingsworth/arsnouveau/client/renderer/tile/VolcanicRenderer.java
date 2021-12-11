@@ -25,7 +25,6 @@ public class VolcanicRenderer extends GeoBlockRenderer<VolcanicSourcelinkTile> {
         super(rendererDispatcherIn, model);
     }
 
-
     @Override
     public void renderLate(VolcanicSourcelinkTile animatable, PoseStack stackIn, float ticks, MultiBufferSource renderTypeBuffer, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
         Level world = animatable.getLevel();
@@ -43,13 +42,6 @@ public class VolcanicRenderer extends GeoBlockRenderer<VolcanicSourcelinkTile> {
                     pos.getX() +0.5  , pos.getY() +0.3  + ParticleUtil.inRange(-0.1, 0.35) , pos.getZ() +0.5 ,
                     0,0,0);
         }
-        int time = (int) (ClientInfo.ticksInGame + ticks);
-
-//        for(int i =0; i < 1; i++){
-//            world.addParticle(ParticleSparkleData.createData(new ParticleColor(255,52,36), 0.05f, 60),
-//                    pos.getX()  +Math.cos(time)/2 +0.5 , pos.getY() +1.0 , pos.getZ() + Math.sin(time)/2 +0.5,
-//                    ParticleUtil.inRange(-0.01, 0.01),  ParticleUtil.inRange(-0.01, 0.01), ParticleUtil.inRange(-0.01, 0.01));
-//        }
     }
     public static GenericItemRenderer getISTER(){
         return new GenericItemRenderer(model);
