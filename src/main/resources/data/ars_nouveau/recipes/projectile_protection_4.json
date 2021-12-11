@@ -25,12 +25,12 @@
   ],
   "item_5": [
     {
-      "tag": "forge:storage_blocks/mana"
+      "tag": "forge:storage_blocks/source"
     }
   ],
   "item_6": [
     {
-      "tag": "forge:storage_blocks/mana"
+      "tag": "forge:storage_blocks/source"
     }
   ]
 }

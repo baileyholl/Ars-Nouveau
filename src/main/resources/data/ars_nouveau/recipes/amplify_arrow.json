@@ -2,12 +2,12 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "item_1": [
     {
-      "tag": "forge:storage_blocks/mana"
+      "tag": "forge:storage_blocks/source"
     }
   ],
   "item_2": [
     {
-      "tag": "forge:storage_blocks/mana"
+      "tag": "forge:storage_blocks/source"
     }
   ],
   "item_3": [
@@ -23,5 +23,6 @@
   "output": {
     "item": "ars_nouveau:amplify_arrow",
     "count": 32
-  }
+  },
+  "sourceCost": 0
 }

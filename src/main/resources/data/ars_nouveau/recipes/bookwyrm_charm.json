@@ -22,22 +22,22 @@
   ],
   "item_5": [
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     }
   ],
   "item_6": [
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     }
   ],
   "item_7": [
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     }
   ],
   "item_8": [
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     }
   ],
   "item_9": [
@@ -51,6 +51,7 @@
     }
   ],
   "output": {
-    "item": "ars_nouveau:whelp_charm"
-  }
+    "item": "ars_nouveau:bookwyrm_charm"
+  },
+  "sourceCost": 0
 }

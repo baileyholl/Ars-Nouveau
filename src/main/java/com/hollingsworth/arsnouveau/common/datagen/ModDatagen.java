@@ -15,7 +15,7 @@ public class ModDatagen {
         System.out.println("calling datagen");
         event.getGenerator().addProvider(new LootTables(event.getGenerator()));
         event.getGenerator().addProvider(new DefaultTableProvider(event.getGenerator()));
-        event.getGenerator().addProvider(new ItemModelGenerator(event.getGenerator(), ArsNouveau.MODID, event.getExistingFileHelper()));
+//        event.getGenerator().addProvider(new ItemModelGenerator(event.getGenerator(), ArsNouveau.MODID, event.getExistingFileHelper()));
         event.getGenerator().addProvider(new LangDatagen(event.getGenerator(), ArsNouveau.MODID, "en_us"));
         event.getGenerator().addProvider(new SpellDocProvider(event.getGenerator()));
         event.getGenerator().addProvider(new Recipes(event.getGenerator()));

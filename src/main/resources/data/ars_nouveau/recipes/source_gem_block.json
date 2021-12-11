@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "minecraft:lily_pad"
+      "tag": "forge:gems/source"
     },
     {
       "tag": "forge:gems/source"
@@ -30,7 +30,6 @@
     }
   ],
   "result": {
-    "item": "ars_nouveau:lava_lily",
-    "count": 8
+    "item": "ars_nouveau:source_gem_block"
   }
 }

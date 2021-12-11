@@ -2,17 +2,17 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "item_1": [
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     }
   ],
   "item_2": [
     {
-      "item": "ars_nouveau:mana_bloom_crop"
+      "item": "ars_nouveau:magebloom_crop"
     }
   ],
   "item_3": [
     {
-      "item": "ars_nouveau:mana_bloom"
+      "item": "ars_nouveau:magebloom"
     }
   ],
   "item_4": [
@@ -42,10 +42,11 @@
   ],
   "reagent": [
     {
-      "item": "ars_nouveau:sylph_shards"
+      "item": "ars_nouveau:whirlisprig_shards"
     }
   ],
   "output": {
-    "item": "ars_nouveau:sylph_charm"
-  }
+    "item": "ars_nouveau:whirlisprig_charm"
+  },
+  "sourceCost": 0
 }

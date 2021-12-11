@@ -27,25 +27,26 @@
   ],
   "item_6": [
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     }
   ],
   "item_7": [
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     }
   ],
   "item_8": [
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     }
   ],
   "reagent": [
     {
-      "item": "ars_nouveau:carbuncle_shards"
+      "item": "ars_nouveau:starbuncle_shards"
     }
   ],
   "output": {
-    "item": "ars_nouveau:carbuncle_charm"
-  }
+    "item": "ars_nouveau:starbuncle_charm"
+  },
+  "sourceCost": 0
 }

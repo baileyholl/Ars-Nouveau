@@ -10,13 +10,13 @@
       "tag": "forge:ingots/gold"
     },
     "s": {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     },
     "i": {
       "item": "minecraft:lava_bucket"
     }
   },
   "result": {
-    "item": "ars_nouveau:volcanic_accumulator"
+    "item": "ars_nouveau:volcanic_sourcelink"
   }
 }

@@ -27,5 +27,6 @@
   ],
   "output": {
     "item": "ars_nouveau:relay_deposit"
-  }
+  },
+  "sourceCost": 0
 }

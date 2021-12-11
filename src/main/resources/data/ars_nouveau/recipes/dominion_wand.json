@@ -2,12 +2,12 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "item_1": [
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     }
   ],
   "item_2": [
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     }
   ],
   "item_3": [
@@ -22,5 +22,6 @@
   ],
   "output": {
     "item": "ars_nouveau:dominion_wand"
-  }
+  },
+  "sourceCost": 0
 }

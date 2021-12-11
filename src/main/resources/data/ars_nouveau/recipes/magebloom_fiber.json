@@ -2,11 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "ars_nouveau:mana_bloom"
+      "item": "ars_nouveau:magebloom"
     }
   ],
   "result": {
-    "item": "ars_nouveau:mana_fiber",
+    "item": "ars_nouveau:magebloom_fiber",
     "count": 4
   }
 }

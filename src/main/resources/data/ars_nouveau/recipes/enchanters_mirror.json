@@ -42,10 +42,11 @@
   ],
   "reagent": [
     {
-      "tag": "forge:storage_blocks/mana"
+      "tag": "forge:storage_blocks/source"
     }
   ],
   "output": {
     "item": "ars_nouveau:enchanters_mirror"
-  }
+  },
+  "sourceCost": 0
 }

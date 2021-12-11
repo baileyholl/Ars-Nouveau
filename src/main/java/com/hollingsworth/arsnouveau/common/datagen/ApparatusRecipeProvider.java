@@ -129,13 +129,13 @@ public class ApparatusRecipeProvider implements DataProvider {
         ), ArsNouveauAPI.PatchouliCategories.equipment.name()));
 
 
-        addRecipe(builder()
-                .withResult(BlockRegistry.SUMMONING_CRYSTAL)
-                .withReagent(Recipes.MANA_GEM_BLOCK)
-                .withPedestalItem(2,  Ingredient.of(Tags.Items.INGOTS_IRON))
-                .withPedestalItem(2,Ingredient.of(Tags.Items.INGOTS_GOLD))
-                .withPedestalItem(4, BlockRegistry.ARCANE_STONE)
-                .build());
+//        addRecipe(builder()
+//                .withResult(BlockRegistry.SUMMONING_CRYSTAL)
+//                .withReagent(Recipes.MANA_GEM_BLOCK)
+//                .withPedestalItem(2,  Ingredient.of(Tags.Items.INGOTS_IRON))
+//                .withPedestalItem(2,Ingredient.of(Tags.Items.INGOTS_GOLD))
+//                .withPedestalItem(4, BlockRegistry.ARCANE_STONE)
+//                .build());
 
         addRecipe(builder()
                 .withResult(ItemsRegistry.BOOKWYRM_CHARM)

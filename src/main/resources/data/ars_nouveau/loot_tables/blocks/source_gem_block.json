@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "ars_nouveau:mana_gem_block"
+          "name": "ars_nouveau:source_gem_block"
         }
       ],
       "conditions": [

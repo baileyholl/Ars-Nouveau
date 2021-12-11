@@ -2,7 +2,7 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "item_1": [
     {
-      "tag": "forge:storage_blocks/mana"
+      "tag": "forge:storage_blocks/source"
     }
   ],
   "item_2": [
@@ -22,5 +22,6 @@
   ],
   "output": {
     "item": "ars_nouveau:spell_bow"
-  }
+  },
+  "sourceCost": 0
 }

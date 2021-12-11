@@ -10,13 +10,13 @@
       "tag": "forge:ingots/gold"
     },
     "s": {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     },
     "i": {
       "item": "minecraft:wheat"
     }
   },
   "result": {
-    "item": "ars_nouveau:mana_condenser"
+    "item": "ars_nouveau:agronomic_sourcelink"
   }
 }

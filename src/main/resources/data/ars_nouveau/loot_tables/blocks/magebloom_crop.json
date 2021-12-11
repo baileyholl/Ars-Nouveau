@@ -12,17 +12,17 @@
               "conditions": [
                 {
                   "condition": "minecraft:block_state_property",
-                  "block": "ars_nouveau:mana_bloom_crop",
+                  "block": "ars_nouveau:magebloom_crop",
                   "properties": {
                     "age": "7"
                   }
                 }
               ],
-              "name": "ars_nouveau:mana_bloom"
+              "name": "ars_nouveau:magebloom"
             },
             {
               "type": "minecraft:item",
-              "name": "ars_nouveau:mana_bloom_crop"
+              "name": "ars_nouveau:magebloom_crop"
             }
           ]
         }
@@ -44,13 +44,13 @@
               }
             }
           ],
-          "name": "ars_nouveau:mana_bloom_crop"
+          "name": "ars_nouveau:magebloom_crop"
         }
       ],
       "conditions": [
         {
           "condition": "minecraft:block_state_property",
-          "block": "ars_nouveau:mana_bloom_crop",
+          "block": "ars_nouveau:magebloom_crop",
           "properties": {
             "age": "7"
           }

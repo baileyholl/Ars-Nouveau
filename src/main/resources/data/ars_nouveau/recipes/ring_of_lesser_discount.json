@@ -32,12 +32,12 @@
   ],
   "item_7": [
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     }
   ],
   "item_8": [
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     }
   ],
   "item_9": [
@@ -57,5 +57,6 @@
   ],
   "output": {
     "item": "ars_nouveau:ring_of_lesser_discount"
-  }
+  },
+  "sourceCost": 0
 }

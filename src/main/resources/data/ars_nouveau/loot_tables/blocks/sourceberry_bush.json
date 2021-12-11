@@ -6,13 +6,13 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "ars_nouveau:mana_berry"
+          "name": "ars_nouveau:source_berry"
         }
       ],
       "conditions": [
         {
           "condition": "minecraft:block_state_property",
-          "block": "ars_nouveau:mana_berry_bush",
+          "block": "ars_nouveau:sourceberry_bush",
           "properties": {
             "age": "3"
           }
@@ -42,13 +42,13 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "ars_nouveau:mana_berry"
+          "name": "ars_nouveau:source_berry"
         }
       ],
       "conditions": [
         {
           "condition": "minecraft:block_state_property",
-          "block": "ars_nouveau:mana_berry_bush",
+          "block": "ars_nouveau:sourceberry_bush",
           "properties": {
             "age": "2"
           }

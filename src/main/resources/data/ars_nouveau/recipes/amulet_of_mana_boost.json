@@ -17,27 +17,27 @@
   ],
   "item_4": [
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     }
   ],
   "item_5": [
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     }
   ],
   "item_6": [
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     }
   ],
   "item_7": [
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     }
   ],
   "item_8": [
     {
-      "tag": "forge:gems/mana"
+      "tag": "forge:gems/source"
     }
   ],
   "reagent": [
@@ -47,5 +47,6 @@
   ],
   "output": {
     "item": "ars_nouveau:amulet_of_mana_boost"
-  }
+  },
+  "sourceCost": 0
 }

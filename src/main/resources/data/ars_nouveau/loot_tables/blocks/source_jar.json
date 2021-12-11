@@ -31,7 +31,7 @@
             },
             {
               "function": "minecraft:set_contents",
-              "type": "ars_nouveau:mana_jar",
+              "type": "ars_nouveau:source_jar",
               "entries": [
                 {
                   "type": "minecraft:dynamic",
@@ -40,7 +40,7 @@
               ]
             }
           ],
-          "name": "ars_nouveau:mana_jar"
+          "name": "ars_nouveau:source_jar"
         }
       ]
     }

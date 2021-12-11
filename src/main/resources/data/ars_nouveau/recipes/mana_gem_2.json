@@ -2,11 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "ars_nouveau:mana_gem_block"
+      "item": "ars_nouveau:source_gem_block"
     }
   ],
   "result": {
-    "item": "ars_nouveau:mana_gem",
+    "item": "ars_nouveau:source_gem",
     "count": 9
   }
 }

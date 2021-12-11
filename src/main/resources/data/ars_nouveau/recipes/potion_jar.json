@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
-      "item": "ars_nouveau:mana_jar"
+      "item": "ars_nouveau:source_jar"
     },
     {
       "item": "minecraft:nether_wart"
