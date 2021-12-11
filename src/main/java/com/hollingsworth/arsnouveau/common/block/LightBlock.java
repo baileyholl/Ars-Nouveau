@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.LightTile;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -18,7 +19,7 @@ import java.util.Random;
 
 import static com.hollingsworth.arsnouveau.common.block.SconceBlock.LIGHT_LEVEL;
 
-public class LightBlock extends TickableModBlock {
+public class LightBlock extends ModBlock implements EntityBlock {
 
     protected static final VoxelShape SHAPE = Block.box(4.0D, 4.0D, 4.0D, 12.0D, 12.0D, 12.0D);
 

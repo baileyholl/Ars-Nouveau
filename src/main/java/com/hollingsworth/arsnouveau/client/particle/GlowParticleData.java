@@ -16,7 +16,7 @@ public class GlowParticleData implements ParticleProvider<ColorParticleTypeData>
 
     @Override
     public Particle createParticle(ColorParticleTypeData data, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
-        return new ParticleGlow(worldIn, x,y,z,xSpeed, ySpeed, zSpeed, data.color.getRed(), data.color.getGreen(), data.color.getBlue(), 1.0f, .25f, 36, this.spriteSet, data.disableDepthTest);
+        return new ParticleGlow(worldIn, x,y,z,xSpeed, ySpeed, zSpeed, data.color.getRed(), data.color.getGreen(), data.color.getBlue(), data.alpha, data.size, data.age, this.spriteSet, data.disableDepthTest);
     }
 
     public static ParticleOptions createData(ParticleColor color) {
@@ -24,7 +24,14 @@ public class GlowParticleData implements ParticleProvider<ColorParticleTypeData>
     }
 
     public static ParticleOptions createData(ParticleColor color, boolean disableDepthTest) {
-        return new ColorParticleTypeData(ModParticles.GLOW_TYPE, color, disableDepthTest);
+        return new ColorParticleTypeData(ModParticles.GLOW_TYPE, color, disableDepthTest, 0.25f, 0.75f, 36);
     }
-    
+
+    public static ParticleOptions createData(ParticleColor color, boolean disableDepthTest, float size, float alpha, int age){
+        return new ColorParticleTypeData(color, disableDepthTest, size, alpha, age);
+    }
+
+    public static ParticleOptions createData(ParticleColor color, float size, float alpha, int age){
+        return new ColorParticleTypeData(color, false, size, alpha, age);
+    }
 }

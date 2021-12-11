@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -27,13 +28,15 @@ public class LightRenderer implements BlockEntityRenderer<LightTile> {
         Random rand = world.random;
         if(Minecraft.getInstance().isPaused())
             return;
+
         world.addParticle(
                 GlowParticleData.createData(new ParticleColor(
                         rand.nextInt(lightTile.red),
                         rand.nextInt(lightTile.green),
                         rand.nextInt(lightTile.blue)
-                )),
-                pos.getX() +0.5 + ParticleUtil.inRange(-0.1, 0.1)  , pos.getY() +0.5  + ParticleUtil.inRange(-0.1, 0.1) , pos.getZ() +0.5 + ParticleUtil.inRange(-0.1, 0.1),
-                0,0,0);
+                ), 0.25f, 0.9f, 36),
+                pos.getX() + 0.5 + ParticleUtil.inRange(-0.1, 0.1), pos.getY() + 0.5 + ParticleUtil.inRange(-0.1, 0.1), pos.getZ() + 0.5 + ParticleUtil.inRange(-0.1, 0.1),
+                0, 0, 0);
+
     }
 }

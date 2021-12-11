@@ -20,13 +20,18 @@ public class ColorParticleTypeData implements ParticleOptions {
             Codec.FLOAT.fieldOf("r").forGetter(d -> d.color.getRed()),
             Codec.FLOAT.fieldOf("g").forGetter(d -> d.color.getGreen()),
             Codec.FLOAT.fieldOf("b").forGetter(d -> d.color.getBlue()),
-            Codec.BOOL.fieldOf("disableDepthTest").forGetter(d-> d.disableDepthTest)
+            Codec.BOOL.fieldOf("disableDepthTest").forGetter(d-> d.disableDepthTest),
+            Codec.FLOAT.fieldOf("size").forGetter(d -> d.size),
+            Codec.FLOAT.fieldOf("alpha").forGetter(d -> d.alpha),
+            Codec.INT.fieldOf("age").forGetter(d -> d.age)
     )
             .apply(instance, ColorParticleTypeData::new));
 
     public ParticleColor color;
     public boolean disableDepthTest;
-
+    public float size = .25f;
+    public float alpha = 1.0f;
+    public int age = 36;
 
     static final ParticleOptions.Deserializer<ColorParticleTypeData> DESERIALIZER = new ParticleOptions.Deserializer<ColorParticleTypeData>() {
         @Override
@@ -40,23 +45,25 @@ public class ColorParticleTypeData implements ParticleOptions {
             return new ColorParticleTypeData(type, ParticleColor.deserialize(buffer.readUtf()), buffer.readBoolean());
         }
     };
-    public ColorParticleTypeData(float r, float g, float b){
-        this.color = new ParticleColor(r, g, b);
-        this.type = ModParticles.GLOW_TYPE;
-        this.disableDepthTest = false;
+
+    public ColorParticleTypeData(float r, float g, float b,  boolean disableDepthTest, float size, float alpha, int age){
+        this(ModParticles.GLOW_TYPE, new ParticleColor(r,g,b), disableDepthTest, size, alpha, age);
+    }
+    public ColorParticleTypeData(ParticleColor color,  boolean disableDepthTest, float size, float alpha, int age){
+        this(ModParticles.GLOW_TYPE, color, disableDepthTest, size, alpha, age);
     }
 
     public ColorParticleTypeData(ParticleType<ColorParticleTypeData> particleTypeData, ParticleColor color, boolean disableDepthTest){
-        this.type = particleTypeData;
+        this(particleTypeData, color, disableDepthTest, 0.25f, 1.0f, 36);
+    }
+    public ColorParticleTypeData(ParticleType<ColorParticleTypeData> particleTypeData, ParticleColor color, boolean disableDepthTest, float size, float alpha, int age){
+        this.type =   particleTypeData;
         this.color = color;
         this.disableDepthTest = disableDepthTest;
+        this.size = size;
+        this.alpha = alpha;
+        this.age = age;
     }
-
-    public ColorParticleTypeData(float r, float g, float b, boolean disableDepthTest){
-        this(r,g,b);
-        this.disableDepthTest = disableDepthTest;
-    }
-
 
 
     @Override
