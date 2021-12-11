@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.client;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
-import com.hollingsworth.arsnouveau.api.util.MappingUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -14,7 +13,6 @@ import com.hollingsworth.arsnouveau.common.network.PacketGetPersistentData;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TextComponent;
@@ -34,7 +32,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import net.minecraftforge.network.PacketDistributor;
 
 import java.util.ArrayList;
@@ -46,13 +43,6 @@ import static com.hollingsworth.arsnouveau.api.util.DropDistribution.rand;
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
 public class PlayerEvent {
 
-    private static final Minecraft minecraft = Minecraft.getInstance();
-
-    @SubscribeEvent
-    public static void onTick(final TickEvent.RenderTickEvent evt) {
-
-    }
-
     @SubscribeEvent
     public static void onBlock(final PlayerInteractEvent.RightClickBlock event) {
         Player entity = event.getPlayer();
@@ -60,8 +50,6 @@ public class PlayerEvent {
             return;
         if(entity.getItemInHand(event.getHand()).getItem() instanceof SpellBook){
             event.setCanceled(true);
-            // TODO: Check if item renderer still needed
-            ///ObfuscationReflectionHelper.setPrivateValue(ItemInHandRenderer.class, minecraft.getItemInHandRenderer(), 1f, MappingUtil.getEquippedProgressMainhand());
         }
     }
 
@@ -82,8 +70,6 @@ public class PlayerEvent {
             return;
         if(entity.getItemInHand(event.getHand()).getItem() instanceof SpellBook){
             event.setCanceled(true);
-            // TODO: Check if item renderer still needed
-          //  ObfuscationReflectionHelper.setPrivateValue(ItemInHandRenderer.class, minecraft.getItemInHandRenderer(), 1f, MappingUtil.getEquippedProgressMainhand());
         }
     }
 
@@ -94,12 +80,6 @@ public class PlayerEvent {
             Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()-> (ServerPlayer) event.getPlayer()), new PacketGetPersistentData(tag));
         }
     }
-
-    @SubscribeEvent
-    public static void playerRender(final RenderPlayerEvent event) {
-
-    }
-
 
     @SubscribeEvent
     public static void playerTickEvent(final TickEvent.PlayerTickEvent event){
@@ -135,11 +115,7 @@ public class PlayerEvent {
         Vec3 vector3d = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
         ClientLevel world = Minecraft.getInstance().level;
 
-        double xView = vector3d.x();
         double yView = vector3d.y();
-        double zView = vector3d.z();
-       // System.out.println(playerEntity.getPersistentData().getCompound(PlayerEntity.PERSISTED_NBT_TAG));
-
         if(Minecraft.getInstance().isPaused())
             return;
         for(BlockPos p : ClientInfo.scryingPositions){

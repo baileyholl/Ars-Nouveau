@@ -57,7 +57,6 @@ public class GuiRadialMenu extends Screen {
     @SubscribeEvent
     public static void overlayEvent(RenderGameOverlayEvent.Pre event) {
         if (Minecraft.getInstance().screen instanceof GuiRadialMenu) {
-            //TODO: Verify this is still Crosshairs
             if (event.getType() == RenderGameOverlayEvent.ElementType.LAYER) {
                 event.setCanceled(true);
             }

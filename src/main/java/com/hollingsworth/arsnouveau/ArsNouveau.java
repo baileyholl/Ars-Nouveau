@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau;
 
 import com.hollingsworth.arsnouveau.api.familiar.FamiliarCap;
-import com.hollingsworth.arsnouveau.api.util.MappingUtil;
 import com.hollingsworth.arsnouveau.client.ClientHandler;
-import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.Pathfinding;
@@ -51,7 +49,6 @@ public class ArsNouveau {
     public ArsNouveau(){
         caelusLoaded = ModList.get().isLoaded("caelus");
         APIRegistry.registerSpells();
-        MappingUtil.setup();
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SERVER_CONFIG);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(ClientEventHandler.class));
         Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(FMLEventHandler.class);
