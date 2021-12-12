@@ -42,6 +42,6 @@ public class MageBloomCrop extends CropBlock {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
-        tooltip.add(new TranslatableComponent("tooltip.mana_bloom"));
+        tooltip.add(new TranslatableComponent("tooltip.magebloom"));
     }
 }

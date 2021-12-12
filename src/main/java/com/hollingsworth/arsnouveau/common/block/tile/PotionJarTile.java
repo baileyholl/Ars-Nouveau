@@ -145,7 +145,7 @@ public class PotionJarTile extends ModdedTile implements ITickable, ITooltipProv
 
             PotionUtils.addPotionTooltip(potionStack, tooltip, 1.0F);
         }
-        tooltip.add(new TranslatableComponent("ars_nouveau.mana_jar.fullness", (getCurrentFill()*100) / this.getMaxFill()));
+        tooltip.add(new TranslatableComponent("ars_nouveau.source_jar.fullness", (getCurrentFill()*100) / this.getMaxFill()));
         if(isLocked)
             tooltip.add(new TranslatableComponent("ars_nouveau.locked"));
 

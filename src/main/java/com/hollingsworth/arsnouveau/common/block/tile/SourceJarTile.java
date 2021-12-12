@@ -53,7 +53,7 @@ public class SourceJarTile extends AbstractManaTile implements ITickable, IToolt
 
     @Override
     public List<Component> getTooltip(List<Component> tooltip) {
-        tooltip.add(new TranslatableComponent("ars_nouveau.mana_jar.fullness", (getCurrentMana()*100) / this.getMaxMana()));
+        tooltip.add(new TranslatableComponent("ars_nouveau.source_jar.fullness", (getCurrentMana()*100) / this.getMaxMana()));
         return tooltip;
     }
 }
