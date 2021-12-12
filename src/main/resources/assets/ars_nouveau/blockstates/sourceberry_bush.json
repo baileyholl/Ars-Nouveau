@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "ars_nouveau:block/sourceberry/sourceberry0"
+    },
+    "age=1": {
+      "model": "ars_nouveau:block/sourceberry/sourceberry1"
+    },
+    "age=2": {
+      "model": "ars_nouveau:block/sourceberry/sourceberry2"
+    },
+    "age=3": {
+      "model": "ars_nouveau:block/sourceberry/sourceberry3"
+    }
+  }
+}

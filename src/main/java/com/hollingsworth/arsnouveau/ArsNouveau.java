@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.Pathfinding;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
+import com.hollingsworth.arsnouveau.common.world.WorldEvent;
 import com.hollingsworth.arsnouveau.setup.*;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -59,10 +60,11 @@ public class ArsNouveau {
     public void setup (final FMLCommonSetupEvent event){
         FamiliarCap.register();
         APIRegistry.registerApparatusRecipes();
-        //event.enqueueWork(WorldEvent::registerFeatures);
+        event.enqueueWork(WorldEvent::registerFeatures);
         Networking.registerMessages();
         event.enqueueWork(ModPotions::addRecipes);
-        if(Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
+        //TODO: Restore archwood forest
+        if(false && Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
            // BiomeManager.addBiome(BiomeManager.BiomeType.COOL, new BiomeManager.BiomeEntry(WorldEvent.archwoodKey, Config.ARCHWOOD_FOREST_WEIGHT.get()));
         }
     }

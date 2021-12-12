@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.world;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.common.block.SourceBerryBush;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
 import com.hollingsworth.arsnouveau.common.world.tree.SupplierBlockStateProvider;
@@ -9,22 +10,36 @@ import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.data.worldgen.features.FeatureUtils;
+import net.minecraft.data.worldgen.features.VegetationFeatures;
+import net.minecraft.data.worldgen.placement.PlacementUtils;
+import net.minecraft.data.worldgen.placement.TreePlacements;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.WeightedPlacedFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.RandomFeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.BlobFoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.SpruceFoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.StraightTrunkPlacer;
+import net.minecraft.world.level.levelgen.placement.BiomeFilter;
+import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraft.world.level.levelgen.placement.RarityFilter;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.List;
 import java.util.Objects;
 
 //package com.hollingsworth.arsnouveau.common.world;
@@ -157,11 +172,18 @@ public class WorldEvent {
 //            }
 //        }
 //    };
+
     public static void registerFeatures() {
-      //  RandomPatchConfiguration BERRY_BUSH_PATCH_CONFIG = (new RandomPatchConfiguration.GrassConfigurationBuilder(new SimpleStateProvider(BlockRegistry.MANA_BERRY_BUSH.defaultBlockState()), SimpleBlockPlacer.INSTANCE)).tries(64).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK)).noProjection().build();
+        ConfiguredFeature<?, ?> PATCH_BERRY_BUSH = FeatureUtils.register("ars_nouveau:patch_berry", Feature.RANDOM_PATCH.configured(FeatureUtils.simplePatchConfiguration(Feature.SIMPLE_BLOCK.configured(new SimpleBlockConfiguration(BlockStateProvider.simple(BlockRegistry.SOURCEBERRY_BUSH.defaultBlockState().setValue(SourceBerryBush.AGE, 3)))), List.of(Blocks.GRASS_BLOCK))));
+
+        PlacedFeature BERRY_BUSH_PATCH_CONFIG = PlacementUtils.register("ars_nouveau:placed_berry", PATCH_BERRY_BUSH.placed(RarityFilter.onAverageOnceEvery(32), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BiomeFilter.biome()));
 
         float treeChance = Config.TREE_SPAWN_RATE.get().floatValue();
+//        PlacedFeature PLACED_CASCADE = PlacementUtils.register("ars_nouveau:placed_cascade", CASCADING_TREE.placed());
+//        ConfiguredFeature<RandomFeatureConfiguration, ?> CONFIGURED = FeatureUtils.register("ars_nouveau:random_cascade", Feature.RANDOM_SELECTOR.configured(new RandomFeatureConfiguration(List.of(new WeightedPlacedFeature(PLACED_CASCADE, 0.1f)), PLACED_CASCADE)));
 //
+
+        //
 //        ConfiguredFeature<?, ?> CASCADE = CASCADING_TREE
 //                .decorated(Features.Decorators.HEIGHTMAP_SQUARE)
 //                .decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(0, treeChance, 1)));
@@ -253,15 +275,15 @@ public class WorldEvent {
       //  addMobSpawns(e);
 
 
-//        if ((e.getCategory().equals(Biome.BiomeCategory.TAIGA) ||e.getName().equals(new ResourceLocation(ArsNouveau.MODID, "archwood_forest")))  && Config.SPAWN_BERRIES.get()) {
-//            e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, Objects.requireNonNull(BuiltinRegistries.CONFIGURED_FEATURE.get(BlockRegistry.MANA_BERRY_BUSH.getRegistryName()))).build();
-//        }
+        if ((e.getCategory().equals(Biome.BiomeCategory.TAIGA) || e.getName().equals(new ResourceLocation(ArsNouveau.MODID, "archwood_forest")))  && Config.SPAWN_BERRIES.get()) {
+            e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, Objects.requireNonNull(BuiltinRegistries.PLACED_FEATURE.get(new ResourceLocation("ars_nouveau:placed_berry")))).build();
+        }
 
         //Feature.RANDOM_SELECTOR.withConfiguration(new MultipleRandomFeatureConfig(ImmutableList.of(MAGIC_TREE_CONFIG.withChance(0.2F)), MAGIC_TREE_CONFIG)),
 //        e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION,
 //                Objects.requireNonNull(BuiltinRegistries.CONFIGURED_FEATURE.get(BlockRegistry.VEXING_SAPLING.getRegistryName()))).build();
 
-        //e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, () -> BuiltinRegistries.CONFIGURED_FEATURE.get(BlockRegistry.CASCADING_SAPLING.getRegistryName()));
+//        e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, BuiltinRegistries.PLACED_FEATURE.get(new ResourceLocation(ArsNouveau.MODID, "random_cascade")));
 
 //        e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION,
 //                Objects.requireNonNull(BuiltinRegistries.CONFIGURED_FEATURE.get(BlockRegistry.BLAZING_SAPLING.getRegistryName()))).build();
