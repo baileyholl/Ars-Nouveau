@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
@@ -21,6 +22,7 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
@@ -201,7 +203,14 @@ public class ArsNouveauAPI {
     }
 
     public List<IEnchantingRecipe> getEnchantingApparatusRecipes(World world) {
-        return world.getRecipeManager().getAllRecipesFor(RecipeRegistry.APPARATUS_TYPE);
+        List<IEnchantingRecipe> recipes = new ArrayList<>(enchantingApparatusRecipes);
+        RecipeManager manager = world.getRecipeManager();
+        for(IRecipe i : manager.getRecipes()){
+            if(i instanceof EnchantingApparatusRecipe){
+                recipes.add((IEnchantingRecipe) i);
+            }
+        }
+        return recipes;
     }
 
     public @Nullable GlyphPressRecipe getGlyphPressRecipe(World world, Item reagent, @Nullable ISpellTier.Tier tier){
