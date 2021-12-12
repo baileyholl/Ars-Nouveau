@@ -4,13 +4,12 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleSparkleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.entity.EntitySylph;
+import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.resources.ResourceLocation;
@@ -55,8 +54,8 @@ public class SylphRenderer extends GeoEntityRenderer {
 
     @Override
     public ResourceLocation getTextureLocation(LivingEntity entity) {
-        if(entity instanceof EntitySylph){
-            return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_" + (((EntitySylph) entity).getColor().isEmpty() ? "summer" : ((EntitySylph) entity).getColor())+ ".png");
+        if(entity instanceof Whirlisprig){
+            return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_" + (((Whirlisprig) entity).getColor().isEmpty() ? "summer" : ((Whirlisprig) entity).getColor())+ ".png");
         }
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_summer.png");
     }

@@ -221,7 +221,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_WARD;
+        return ModEntities.ORBIT_SPELL;
     }
 
     @Override
@@ -230,7 +230,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
     }
 
     public EntityOrbitProjectile(PlayMessages.SpawnEntity packet, Level world) {
-        super(ModEntities.ENTITY_WARD, world);
+        super(ModEntities.ORBIT_SPELL, world);
     }
 
     public int getTicksLeft() {

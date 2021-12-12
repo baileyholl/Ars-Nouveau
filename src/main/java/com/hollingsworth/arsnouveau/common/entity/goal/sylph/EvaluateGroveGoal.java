@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.sylph;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.entity.EntitySylph;
+import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -17,12 +17,12 @@ import java.util.Map;
 
 public class EvaluateGroveGoal extends Goal {
 
-    private final EntitySylph sylph;
+    private final Whirlisprig sylph;
     private final int ticksToNextEval;
     public static Tag.Named<Block> KINDA_LIKES =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "sylph/kinda_likes"));
     public static Tag.Named<Block> GREATLY_LIKES =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "sylph/greatly_likes"));
 
-    public EvaluateGroveGoal(EntitySylph sylph, int tickFreq){
+    public EvaluateGroveGoal(Whirlisprig sylph, int tickFreq){
         this.sylph = sylph;
         this.ticksToNextEval = tickFreq;
     }
@@ -91,7 +91,7 @@ public class EvaluateGroveGoal extends Goal {
             defaultMap.put(defaultState, defaultMap.get(defaultState) + 1);
             score += defaultMap.get(defaultState) <= 50 ? getScore(defaultState) : 0;
         }
-        sylph.getEntityData().set(EntitySylph.MOOD_SCORE, score);
+        sylph.getEntityData().set(Whirlisprig.MOOD_SCORE, score);
         sylph.timeUntilEvaluation = ticksToNextEval;
         sylph.genTable = dropMap;
         sylph.scoreMap = defaultMap;

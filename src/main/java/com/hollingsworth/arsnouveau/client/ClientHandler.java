@@ -63,8 +63,8 @@ public class ClientHandler {
                 renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.ENTITY_EVOKER_FANGS_ENTITY_TYPE, RenderFangs::new);
         event.registerEntityRenderer(ModEntities.ALLY_VEX, RenderAllyVex::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_CARBUNCLE_TYPE, CarbuncleRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_SYLPH_TYPE, SylphRenderer::new);
+        event.registerEntityRenderer(ModEntities.STARBUNCLE_TYPE, CarbuncleRenderer::new);
+        event.registerEntityRenderer(ModEntities.WHIRLISPRIG_TYPE, SylphRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE, WixieRenderer::new);
         event.registerEntityRenderer(ModEntities.WILDEN_STALKER,renderManager -> new com.hollingsworth.arsnouveau.client.renderer.entity.GenericRenderer(renderManager, new WildenStalkerModel()));
         event.registerEntityRenderer(ModEntities.WILDEN_GUARDIAN, WildenGuardianRenderer::new);
@@ -81,7 +81,7 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE, WixieRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_DUMMY, DummyRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_DRYGMY, DrygmyRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_WARD,  renderManager -> new RenderRitualProjectile(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
+        event.registerEntityRenderer(ModEntities.ORBIT_SPELL, renderManager -> new RenderRitualProjectile(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.WILDEN_BOSS, WildenBossRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_CHIMERA_SPIKE, ChimeraProjectileRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_CARBUNCLE, FamiliarCarbyRenderer::new);

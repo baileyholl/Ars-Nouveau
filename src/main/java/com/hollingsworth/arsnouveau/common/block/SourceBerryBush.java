@@ -77,7 +77,7 @@ public class SourceBerryBush extends BushBlock implements BonemealableBlock {
     }
 
     public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
-        if (entityIn instanceof LivingEntity && entityIn.getType() != EntityType.FOX && entityIn.getType() != EntityType.BEE && entityIn.getType() != ModEntities.ENTITY_CARBUNCLE_TYPE) {
+        if (entityIn instanceof LivingEntity && entityIn.getType() != EntityType.FOX && entityIn.getType() != EntityType.BEE && entityIn.getType() != ModEntities.STARBUNCLE_TYPE) {
             entityIn.makeStuckInBlock(state, new Vec3(0.8F, 0.75D, 0.8F));
             if (!worldIn.isClientSide && state.getValue(AGE) > 0 && (entityIn.xOld != entityIn.getX() || entityIn.zOld != entityIn.getZ())) {
                 double d0 = Math.abs(entityIn.getX() - entityIn.xOld);

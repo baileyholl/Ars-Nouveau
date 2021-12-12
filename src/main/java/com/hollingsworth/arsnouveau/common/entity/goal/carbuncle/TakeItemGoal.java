@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
+import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
 import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -16,15 +16,13 @@ import net.minecraftforge.items.IItemHandler;
 
 import java.util.EnumSet;
 
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
-
 public class TakeItemGoal extends ExtendedRangeGoal {
-    EntityCarbuncle carbuncle;
+    Starbuncle carbuncle;
     BlockPos takePos;
     boolean unreachable;
 
 
-    public TakeItemGoal(EntityCarbuncle carbuncle){
+    public TakeItemGoal(Starbuncle carbuncle){
         super(25);
         this.setFlags(EnumSet.of(Flag.MOVE));
         this.carbuncle = carbuncle;

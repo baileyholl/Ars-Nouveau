@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
 import com.hollingsworth.arsnouveau.api.event.EventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
+import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
 import com.hollingsworth.arsnouveau.common.event.OpenChestEvent;
 import net.minecraft.world.item.ItemStack;
@@ -17,17 +17,15 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.EnumSet;
 
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
-
 public class StoreItemGoal extends ExtendedRangeGoal {
 
-    private final EntityCarbuncle entityCarbuncle;
+    private final Starbuncle starbuncle;
     BlockPos storePos;
     boolean unreachable;
 
-    public StoreItemGoal(EntityCarbuncle entityCarbuncle) {
+    public StoreItemGoal(Starbuncle starbuncle) {
         super(25);
-        this.entityCarbuncle = entityCarbuncle;
+        this.starbuncle = starbuncle;
         this.setFlags(EnumSet.of(Flag.MOVE));
     }
 
@@ -41,28 +39,28 @@ public class StoreItemGoal extends ExtendedRangeGoal {
     @Override
     public void start() {
         super.start();
-        storePos = entityCarbuncle.getValidStorePos(entityCarbuncle.getHeldStack());
-        if (storePos!= null && !entityCarbuncle.getHeldStack().isEmpty()) {
-            entityCarbuncle.getNavigation().tryMoveToBlockPos(storePos, 1.3);
-            startDistance = BlockUtil.distanceFrom(entityCarbuncle.position, storePos);
+        storePos = starbuncle.getValidStorePos(starbuncle.getHeldStack());
+        if (storePos!= null && !starbuncle.getHeldStack().isEmpty()) {
+            starbuncle.getNavigation().tryMoveToBlockPos(storePos, 1.3);
+            startDistance = BlockUtil.distanceFrom(starbuncle.position, storePos);
         }
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (!entityCarbuncle.getHeldStack().isEmpty() && storePos != null && BlockUtil.distanceFrom(entityCarbuncle.position(), storePos) <= 2D + this.extendedRange) {
-            this.entityCarbuncle.getNavigation().stop();
-            Level world = entityCarbuncle.level;
+        if (!starbuncle.getHeldStack().isEmpty() && storePos != null && BlockUtil.distanceFrom(starbuncle.position(), storePos) <= 2D + this.extendedRange) {
+            this.starbuncle.getNavigation().stop();
+            Level world = starbuncle.level;
             BlockEntity tileEntity = world.getBlockEntity(storePos);
             if(tileEntity == null)
                 return;
 
             IItemHandler iItemHandler = tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
             if (iItemHandler != null) {
-                ItemStack oldStack = new ItemStack(entityCarbuncle.getHeldStack().getItem(), entityCarbuncle.getHeldStack().getCount());
+                ItemStack oldStack = new ItemStack(starbuncle.getHeldStack().getItem(), starbuncle.getHeldStack().getCount());
 
-                ItemStack left = ItemHandlerHelper.insertItemStacked(iItemHandler, entityCarbuncle.getHeldStack(), false);
+                ItemStack left = ItemHandlerHelper.insertItemStacked(iItemHandler, starbuncle.getHeldStack(), false);
                 if (left.equals(oldStack)) {
                     return;
                 }
@@ -74,32 +72,32 @@ public class StoreItemGoal extends ExtendedRangeGoal {
                         EventQueue.getServerInstance().addEvent(event);
                     }catch (Throwable ignored){ }
                 }
-                entityCarbuncle.setHeldStack(left);
-                entityCarbuncle.setBackOff(5 + entityCarbuncle.level.random.nextInt(20));
+                starbuncle.setHeldStack(left);
+                starbuncle.setBackOff(5 + starbuncle.level.random.nextInt(20));
                 return;
             }
         }
 
-        if (storePos != null && !entityCarbuncle.getHeldStack().isEmpty()) {
+        if (storePos != null && !starbuncle.getHeldStack().isEmpty()) {
                 setPath(storePos.getX(), storePos.getY(), storePos.getZ(), 1.3D);
         }
 
     }
 
     public void setPath(double x, double y, double z, double speedIn){
-        entityCarbuncle.getNavigation().tryMoveToBlockPos(new BlockPos(x, y, z), 1.3);
-        if(entityCarbuncle.getNavigation().getPath() != null && !entityCarbuncle.getNavigation().getPath().canReach()) {
+        starbuncle.getNavigation().tryMoveToBlockPos(new BlockPos(x, y, z), 1.3);
+        if(starbuncle.getNavigation().getPath() != null && !starbuncle.getNavigation().getPath().canReach()) {
             unreachable = true;
         }
     }
 
     @Override
     public boolean canContinueToUse() {
-        return !unreachable && entityCarbuncle.isTamed() && entityCarbuncle.getHeldStack() != null && !entityCarbuncle.getHeldStack().isEmpty() && entityCarbuncle.getBackOff() == 0 && storePos != null;
+        return !unreachable && starbuncle.isTamed() && starbuncle.getHeldStack() != null && !starbuncle.getHeldStack().isEmpty() && starbuncle.getBackOff() == 0 && storePos != null;
     }
 
     @Override
     public boolean canUse() {
-        return entityCarbuncle.isTamed() && entityCarbuncle.getHeldStack() != null && !entityCarbuncle.getHeldStack().isEmpty() && entityCarbuncle.getBackOff() == 0;
+        return starbuncle.isTamed() && starbuncle.getHeldStack() != null && !starbuncle.getHeldStack().isEmpty() && starbuncle.getBackOff() == 0;
     }
 }

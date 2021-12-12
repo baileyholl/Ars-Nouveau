@@ -1,10 +1,9 @@
 package com.hollingsworth.arsnouveau.common.entity.goal;
 
-import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
+import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
-import net.minecraft.world.entity.ai.util.RandomPos;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -16,7 +15,7 @@ import java.util.EnumSet;
 import java.util.function.Predicate;
 
 public class AvoidEntityGoalMC<T extends LivingEntity> extends Goal {
-    protected final EntityCarbuncle mob;
+    protected final Starbuncle mob;
     private final double walkSpeedModifier;
     private final double sprintSpeedModifier;
     protected T toAvoid;
@@ -28,11 +27,11 @@ public class AvoidEntityGoalMC<T extends LivingEntity> extends Goal {
 
     private final TargetingConditions avoidEntityTargeting;
 
-    public AvoidEntityGoalMC(EntityCarbuncle carby, Class<T> avoidClass, float maxDist, double walkModifier, double sprintModifier) {
+    public AvoidEntityGoalMC(Starbuncle carby, Class<T> avoidClass, float maxDist, double walkModifier, double sprintModifier) {
         this(carby, avoidClass, (p_200828_0_) -> true, maxDist, walkModifier, sprintModifier, EntitySelector.NO_CREATIVE_OR_SPECTATOR::test);
     }
 
-    public AvoidEntityGoalMC(EntityCarbuncle carby, Class<T> avoidClass, Predicate<LivingEntity> avoidPredicate, float maxDist, double walkModifier, double sprintModifier, Predicate<LivingEntity> selectPredicate) {
+    public AvoidEntityGoalMC(Starbuncle carby, Class<T> avoidClass, Predicate<LivingEntity> avoidPredicate, float maxDist, double walkModifier, double sprintModifier, Predicate<LivingEntity> selectPredicate) {
         this.mob = carby;
         this.avoidClass = avoidClass;
         this.avoidPredicate = avoidPredicate;

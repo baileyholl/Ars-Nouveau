@@ -48,7 +48,7 @@ public class LibItemNames {
     public static final String STARBUNCLE_SHARDS = "starbuncle_shards";
 
     public static final String WHIRLISPRIG_SHARDS = "whirlisprig_shards";
-    public static final String WHIRLISPRIGE_CHARM = "whirlisprig_charm";
+    public static final String WHIRLISPRIG_CHARM = "whirlisprig_charm";
     public static final String SOURCE_GEM = "source_gem";
     public static final String WIXIE_SHARD = "wixie_shards";
     public static final String WIXIE_CHARM = "wixie_charm";
@@ -79,7 +79,7 @@ public class LibItemNames {
     public static final String ENCHANTERS_SWORD = "enchanters_sword";
     public static final String ENCHANTERS_SHIELD = "enchanters_shield";
 
-    public static final String CARBUNCLE_SE = "starbuncle_se";
+    public static final String STARBUNCLE_SE = "starbuncle_se";
     public static final String SYLPH_SE = "whirlisprig_se";
 
     public static final String WILDEN_HUNTER_SE = "wilden_hunter_se";

@@ -2,14 +2,15 @@ package com.hollingsworth.arsnouveau.common.familiars;
 
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
-import com.hollingsworth.arsnouveau.common.entity.EntitySylph;
+import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarSylph;
+import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;
 import net.minecraft.world.level.Level;
 
-public class SylphFamiliar extends AbstractFamiliarHolder {
-    public SylphFamiliar() {
-        super("sylph", (e) -> e instanceof EntitySylph);
+public class WhirlisprigFamiliar extends AbstractFamiliarHolder {
+    public WhirlisprigFamiliar() {
+        super(LibEntityNames.WHIRLISPRIG, (e) -> e instanceof Whirlisprig);
     }
 
     @Override
@@ -19,11 +20,11 @@ public class SylphFamiliar extends AbstractFamiliarHolder {
 
     @Override
     public String getBookName() {
-        return "Sylph";
+        return "Whirlisprig";
     }
 
     @Override
     public String getBookDescription() {
-        return "Sylphs will reduce the cost of Elemental Earth glyphs by half, and grants bonus saturation when consuming food. Obtained by performing the Ritual of Binding near a Sylph.";
+        return "Whirlisprigs will reduce the cost of Elemental Earth glyphs by half, and grants bonus saturation when consuming food. Obtained by performing the Ritual of Binding near a Whirlisprig.";
     }
 }

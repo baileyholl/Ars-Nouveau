@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity.goal.sylph;
 
 import com.hollingsworth.arsnouveau.api.util.DropDistribution;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.entity.EntitySylph;
+import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -21,13 +21,11 @@ import java.util.stream.Collectors;
 
 import static com.hollingsworth.arsnouveau.common.entity.goal.sylph.EvaluateGroveGoal.getScore;
 
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
-
 public class GenerateDropsGoal extends Goal {
-    EntitySylph sylph;
+    Whirlisprig sylph;
     public List<BlockPos> locList;
     int timeGathering;
-    public GenerateDropsGoal(EntitySylph sylph){
+    public GenerateDropsGoal(Whirlisprig sylph){
         this.sylph = sylph;
         this.setFlags(EnumSet.of(Flag.MOVE));
     }
@@ -43,7 +41,7 @@ public class GenerateDropsGoal extends Goal {
     }
 
     public int getTimerByMood(){
-        int mood = sylph.getEntityData().get(EntitySylph.MOOD_SCORE);
+        int mood = sylph.getEntityData().get(Whirlisprig.MOOD_SCORE);
         if(mood >= 1000)
             return 20;
 

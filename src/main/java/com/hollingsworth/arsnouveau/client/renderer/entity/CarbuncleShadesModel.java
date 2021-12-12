@@ -1,36 +1,36 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
+import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.model.provider.GeoModelProvider;
 
-public class CarbuncleShadesModel extends AnimatedGeoModel<EntityCarbuncle> {
-    public GeoModelProvider<EntityCarbuncle> modelProvider;
-    public CarbuncleShadesModel(GeoModelProvider<EntityCarbuncle> geoModelProvider) {
+public class CarbuncleShadesModel extends AnimatedGeoModel<Starbuncle> {
+    public GeoModelProvider<Starbuncle> modelProvider;
+    public CarbuncleShadesModel(GeoModelProvider<Starbuncle> geoModelProvider) {
         this.modelProvider = geoModelProvider;
     }
 
     @Override
-    public ResourceLocation getModelLocation(EntityCarbuncle object) {
+    public ResourceLocation getModelLocation(Starbuncle object) {
         return new ResourceLocation(ArsNouveau.MODID , "geo/carbuncle_shades.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(EntityCarbuncle o) {
+    public ResourceLocation getTextureLocation(Starbuncle o) {
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_shades.png");
     }
 //carbuncle_animations
     @Override
-    public ResourceLocation getAnimationFileLocation(EntityCarbuncle animatable) {
+    public ResourceLocation getAnimationFileLocation(Starbuncle animatable) {
         return new ResourceLocation(ArsNouveau.MODID , "animations/carbuncle_animations.json");
     }
 
     @Override
-    public void setLivingAnimations(EntityCarbuncle entity, Integer uniqueID, AnimationEvent customPredicate) {
+    public void setLivingAnimations(Starbuncle entity, Integer uniqueID, AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
         IBone head = this.getAnimationProcessor().getBone("specs");
         IBone carby = ((CarbuncleModel) modelProvider).getBone("carbuncle");

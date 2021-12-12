@@ -90,14 +90,14 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.AMULET_OF_MANA_BOOST)public static AbstractManaCurio AMULET_OF_MANA_BOOST;
     @ObjectHolder(LibItemNames.AMULET_OF_MANA_REGEN)public static AbstractManaCurio AMULET_OF_MANA_REGEN;
     @ObjectHolder(LibItemNames.DULL_TRINKET)public static ModItem DULL_TRINKET;
-    @ObjectHolder(LibItemNames.STARBUNCLE_CHARM) public static CarbuncleCharm STARBUNCLE_CHARM;
+    @ObjectHolder(LibItemNames.STARBUNCLE_CHARM) public static StarbuncleCharm STARBUNCLE_CHARM;
     @ObjectHolder(LibItemNames.DOMINION_WAND)public static DominionWand DOMINION_WAND;
     @ObjectHolder("debug")public static Debug debug;
 
     @ObjectHolder(LibItemNames.STARBUNCLE_SHARDS)public static ModItem STARBUNCLE_SHARD;
 
 
-    @ObjectHolder(LibItemNames.WHIRLISPRIGE_CHARM)public static SylphCharm WHIRLISPRIG_CHARM;
+    @ObjectHolder(LibItemNames.WHIRLISPRIG_CHARM)public static WhirlisprigCharm WHIRLISPRIG_CHARM;
     @ObjectHolder(LibItemNames.WHIRLISPRIG_SHARDS)public static ModItem WHIRLISPRIG_SHARDS;
     @ObjectHolder(LibItemNames.SOURCE_GEM)public static ModItem SOURCE_GEM;
     @ObjectHolder(LibItemNames.ALLOW_ITEM_SCROLL)public static AllowItemScroll ALLOW_ITEM_SCROLL;
@@ -188,7 +188,7 @@ public class ItemsRegistry {
                     new WarpScroll(),
                     new JarOfLight(),
                     new WornNotebook().withTooltip(new TranslatableComponent("tooltip.worn_notebook")),
-                    new CarbuncleCharm(),
+                    new StarbuncleCharm(),
                     new ModItem(LibItemNames.STARBUNCLE_SHARDS).withTooltip(new TranslatableComponent("tooltip.starbuncle_shard")),
                     new WixieCharm(),
                     new DiscountRing(LibItemNames.RING_OF_LESSER_DISCOUNT) {
@@ -217,7 +217,7 @@ public class ItemsRegistry {
                         }
                     },
                     new ModItem(LibItemNames.WHIRLISPRIG_SHARDS).withTooltip(new TranslatableComponent("tooltip.whirlisprig_shard")),
-                    new SylphCharm(),
+                    new WhirlisprigCharm(),
                     new ModItem(LibItemNames.SOURCE_GEM).withTooltip(new TranslatableComponent("tooltip.source_gem")),
                     new AllowItemScroll(LibItemNames.ALLOW_ITEM_SCROLL),
                     new DenyItemScroll(LibItemNames.DENY_ITEM_SCROLL),
@@ -266,8 +266,8 @@ public class ItemsRegistry {
                     }.withTooltip(new TranslatableComponent("ars_nouveau.tooltip.exp_gem")),
                     new EnchantersShield(),
                     new EnchantersSword(Tiers.NETHERITE, 3, -2.4F).setRegistryName(LibItemNames.ENCHANTERS_SWORD),
-                    new SpawnEggItem(ModEntities.ENTITY_CARBUNCLE_TYPE, 0xFFB233,0xFFE633,defaultItemProperties()).setRegistryName(LibItemNames.CARBUNCLE_SE),
-                    new SpawnEggItem(ModEntities.ENTITY_SYLPH_TYPE, 0x77FF33,0xFFFB00,defaultItemProperties()).setRegistryName(LibItemNames.SYLPH_SE),
+                    new SpawnEggItem(ModEntities.STARBUNCLE_TYPE, 0xFFB233,0xFFE633,defaultItemProperties()).setRegistryName(LibItemNames.STARBUNCLE_SE),
+                    new SpawnEggItem(ModEntities.WHIRLISPRIG_TYPE, 0x77FF33,0xFFFB00,defaultItemProperties()).setRegistryName(LibItemNames.SYLPH_SE),
                     new SpawnEggItem(ModEntities.WILDEN_HUNTER, 0xFDFDFD,0xCAA97F,defaultItemProperties()).setRegistryName(LibItemNames.WILDEN_HUNTER_SE),
                     new SpawnEggItem(ModEntities.WILDEN_GUARDIAN, 0xFFFFFF,0xFF9E00,defaultItemProperties()).setRegistryName(LibItemNames.WILDEN_GUARDIAN_SE),
                     new SpawnEggItem(ModEntities.WILDEN_STALKER, 0x9B650C,0xEF1818,defaultItemProperties()).setRegistryName(LibItemNames.WILDEN_STALKER_SE),

@@ -70,7 +70,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class EntityCarbuncle extends PathfinderMob implements IAnimatable, IDispellable, ITooltipProvider, IWandable {
+public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellable, ITooltipProvider, IWandable {
 
     public List<ItemStack> allowedItems = new ArrayList<>(); // Items the carbuncle is allowed to take
     public List<ItemStack> ignoreItems = new ArrayList<>(); // Items the carbuncle will not take
@@ -82,13 +82,13 @@ public class EntityCarbuncle extends PathfinderMob implements IAnimatable, IDisp
 
     private MinecoloniesAdvancedPathNavigate pathNavigate;
 
-    public static final EntityDataAccessor<Integer> TO_POS = SynchedEntityData.defineId(EntityCarbuncle.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> FROM_POS = SynchedEntityData.defineId(EntityCarbuncle.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> TO_POS = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> FROM_POS = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.INT);
 
-    public static final EntityDataAccessor<ItemStack> HELD_ITEM = SynchedEntityData.defineId(EntityCarbuncle.class, EntityDataSerializers.ITEM_STACK);
-    public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(EntityCarbuncle.class, EntityDataSerializers.BOOLEAN);
-    public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(EntityCarbuncle.class, EntityDataSerializers.STRING);
-    public static final EntityDataAccessor<String> PATH_BLOCK = SynchedEntityData.defineId(EntityCarbuncle.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<ItemStack> HELD_ITEM = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.ITEM_STACK);
+    public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<String> PATH_BLOCK = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.STRING);
 
     private int backOff; // Used to stop inventory store/take spam when chests are full or empty.
     public int tamingTime;
@@ -101,15 +101,15 @@ public class EntityCarbuncle extends PathfinderMob implements IAnimatable, IDisp
 
     AnimationFactory manager = new AnimationFactory(this);
 
-    public EntityCarbuncle(EntityType<EntityCarbuncle> entityCarbuncleEntityType, Level world) {
+    public Starbuncle(EntityType<Starbuncle> entityCarbuncleEntityType, Level world) {
         super(entityCarbuncleEntityType, world);
         maxUpStep = 1.2f;
         addGoalsAfterConstructor();
         this.moveControl = new MovementHandler(this);
     }
 
-    public EntityCarbuncle(Level world, boolean tamed) {
-        super(ModEntities.ENTITY_CARBUNCLE_TYPE, world);
+    public Starbuncle(Level world, boolean tamed) {
+        super(ModEntities.STARBUNCLE_TYPE, world);
         this.setTamed(tamed);
         maxUpStep = 1.2f;
         this.moveControl = new MovementHandler(this);
@@ -254,7 +254,7 @@ public class EntityCarbuncle extends PathfinderMob implements IAnimatable, IDisp
         this.TO_LIST = new ArrayList<>();
         this.entityData.set(TO_POS, 0);
         this.entityData.set(FROM_POS, 0);
-        PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.carbuncle.cleared"));
+        PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.starbuncle.cleared"));
     }
 
     @Override
@@ -262,7 +262,7 @@ public class EntityCarbuncle extends PathfinderMob implements IAnimatable, IDisp
         if (storedPos == null)
             return;
         if (level.getBlockEntity(storedPos) != null && level.getBlockEntity(storedPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
-            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.carbuncle.store"));
+            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.starbuncle.store"));
             setToPos(storedPos);
         }
     }
@@ -273,7 +273,7 @@ public class EntityCarbuncle extends PathfinderMob implements IAnimatable, IDisp
             return;
 
         if (level.getBlockEntity(storedPos) != null && level.getBlockEntity(storedPos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent()) {
-            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.carbuncle.take"));
+            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.starbuncle.take"));
             setFromPos(storedPos);
         }
     }
@@ -427,18 +427,18 @@ public class EntityCarbuncle extends PathfinderMob implements IAnimatable, IDisp
         if(player.getMainHandItem().getItem() instanceof BlockItem){
             pathBlock = ((BlockItem) player.getMainHandItem().getItem()).getBlock();
             setPathBlockDesc(new TranslatableComponent(pathBlock.getDescriptionId()).getString());
-            PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.carbuncle.path"));
+            PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.starbuncle.path"));
         }
 
         if (player.getMainHandItem().isEmpty() && this.isTamed()) {
             StringBuilder status = new StringBuilder();
             if (whitelist && allowedItems != null) {
-                status.append(new TranslatableComponent("ars_nouveau.carbuncle.whitelist").getString());
+                status.append(new TranslatableComponent("ars_nouveau.starbuncle.whitelist").getString());
                 for (ItemStack i : allowedItems) {
                     status.append(i.getHoverName().getString());
                 }
             } else if (blacklist && allowedItems != null) {
-                status.append(new TranslatableComponent("ars_nouveau.carbuncle.blacklist").getString());
+                status.append(new TranslatableComponent("ars_nouveau.starbuncle.blacklist").getString());
                 for (ItemStack i : ignoreItems) {
                     status.append(i.getHoverName().getString());
                 }
@@ -475,7 +475,7 @@ public class EntityCarbuncle extends PathfinderMob implements IAnimatable, IDisp
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_CARBUNCLE_TYPE;
+        return ModEntities.STARBUNCLE_TYPE;
     }
 
     @Override
@@ -625,10 +625,10 @@ public class EntityCarbuncle extends PathfinderMob implements IAnimatable, IDisp
     public List<Component> getTooltip(List<Component> tooltip) {
         if(!isTamed())
             return tooltip;
-        tooltip.add(new TranslatableComponent("ars_nouveau.carbuncle.storing", this.entityData.get(TO_POS)));
-        tooltip.add(new TranslatableComponent("ars_nouveau.carbuncle.taking", this.entityData.get(FROM_POS)));
+        tooltip.add(new TranslatableComponent("ars_nouveau.starbuncle.storing", this.entityData.get(TO_POS)));
+        tooltip.add(new TranslatableComponent("ars_nouveau.starbuncle.taking", this.entityData.get(FROM_POS)));
         if(pathBlockDesc() != null && !pathBlockDesc().isEmpty()){
-            tooltip.add(new TranslatableComponent("ars_nouveau.carbuncle.pathing", this.entityData.get(PATH_BLOCK)));
+            tooltip.add(new TranslatableComponent("ars_nouveau.starbuncle.pathing", this.entityData.get(PATH_BLOCK)));
         }
         return tooltip;
     }

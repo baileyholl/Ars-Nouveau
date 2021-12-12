@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
+import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.processor.IBone;
@@ -10,13 +10,13 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import javax.annotation.Nullable;
 
-public class CarbuncleModel extends AnimatedGeoModel<EntityCarbuncle> {
+public class CarbuncleModel extends AnimatedGeoModel<Starbuncle> {
 
     private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_wild_orange.png");
     private static final ResourceLocation TAMED_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_orange.png");
 
     @Override
-    public void setLivingAnimations(EntityCarbuncle entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
+    public void setLivingAnimations(Starbuncle entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
         if(entity.partyCarby)
             return;
@@ -27,17 +27,17 @@ public class CarbuncleModel extends AnimatedGeoModel<EntityCarbuncle> {
     }
 
     @Override
-    public ResourceLocation getModelLocation(EntityCarbuncle carbuncle) {
+    public ResourceLocation getModelLocation(Starbuncle carbuncle) {
         return new ResourceLocation(ArsNouveau.MODID , "geo/carbuncle.geo.json");
     }
 
     @Override
-    public ResourceLocation getTextureLocation(EntityCarbuncle carbuncle) {
+    public ResourceLocation getTextureLocation(Starbuncle carbuncle) {
         return carbuncle.isTamed() ? TAMED_TEXTURE : WILD_TEXTURE;
     }
 
     @Override
-    public ResourceLocation getAnimationFileLocation(EntityCarbuncle carbuncle) {
+    public ResourceLocation getAnimationFileLocation(Starbuncle carbuncle) {
         return new ResourceLocation(ArsNouveau.MODID , "animations/carbuncle_animations.json");
     }
 }

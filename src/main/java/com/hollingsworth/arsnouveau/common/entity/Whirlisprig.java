@@ -75,18 +75,18 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 
-public class EntitySylph extends AbstractFlyingCreature implements IPickupResponder, IAnimatable, ITooltipProvider, IDispellable {
+public class Whirlisprig extends AbstractFlyingCreature implements IPickupResponder, IAnimatable, ITooltipProvider, IDispellable {
     AnimationFactory manager = new AnimationFactory(this);
 
     public static Tag.Named<Item> DENIED_DROP =  ItemTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "sylph/denied_drop"));
 
     public int timeSinceBonemeal = 0;
-    public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(EntitySylph.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(Whirlisprig.class, EntityDataSerializers.BOOLEAN);
     /*Strictly used for after a tame event*/
     public int tamingTime = 0;
     public boolean droppingShards; // Strictly used by non-tamed spawns for giving shards
-    public static final EntityDataAccessor<Integer> MOOD_SCORE = SynchedEntityData.defineId(EntitySylph.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(EntitySylph.class, EntityDataSerializers.STRING);
+    public static final EntityDataAccessor<Integer> MOOD_SCORE = SynchedEntityData.defineId(Whirlisprig.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(Whirlisprig.class, EntityDataSerializers.STRING);
     public List<ItemStack> ignoreItems;
     public int timeUntilGather = 0;
     public int timeUntilEvaluation = 0;
@@ -221,15 +221,15 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
         return InteractionResult.SUCCESS;
     }
 
-    protected EntitySylph(EntityType<? extends AbstractFlyingCreature> type, Level worldIn) {
+    protected Whirlisprig(EntityType<? extends AbstractFlyingCreature> type, Level worldIn) {
         super(type, worldIn);
         MinecraftForge.EVENT_BUS.register(this);
         this.moveControl =  new FlyingMoveControl(this, 10, true);
         addGoalsAfterConstructor();
     }
 
-    public EntitySylph(Level world, boolean isTamed, BlockPos pos) {
-        super(ModEntities.ENTITY_SYLPH_TYPE, world);
+    public Whirlisprig(Level world, boolean isTamed, BlockPos pos) {
+        super(ModEntities.WHIRLISPRIG_TYPE, world);
         MinecraftForge.EVENT_BUS.register(this);
         this.moveControl =  new FlyingMoveControl(this, 10, true);
         this.entityData.set(TAMED, isTamed);
@@ -429,7 +429,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
         timeUntilGather = tag.getInt("gather");
         timeUntilEvaluation = tag.getInt("eval");
         this.entityData.set(TAMED, tag.getBoolean("tamed"));
-        this.entityData.set(EntitySylph.MOOD_SCORE, tag.getInt("score"));
+        this.entityData.set(Whirlisprig.MOOD_SCORE, tag.getInt("score"));
         if(!setBehaviors){
             tryResetGoals();
             setBehaviors = true;
@@ -455,7 +455,7 @@ public class EntitySylph extends AbstractFlyingCreature implements IPickupRespon
         tag.putInt("bonemeal", timeSinceBonemeal);
         tag.putInt("gather", timeUntilGather);
         tag.putBoolean("tamed", this.entityData.get(TAMED));
-        tag.putInt("score", this.entityData.get(EntitySylph.MOOD_SCORE));
+        tag.putInt("score", this.entityData.get(Whirlisprig.MOOD_SCORE));
         tag.putString("color", this.entityData.get(COLOR));
         if (ignoreItems != null && !ignoreItems.isEmpty())
             NBTUtil.writeItems(tag, "ignored_", ignoreItems);

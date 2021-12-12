@@ -1,17 +1,15 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
+import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
@@ -20,7 +18,7 @@ import software.bernie.geckolib3.util.RenderUtils;
 
 import javax.annotation.Nullable;
 
-public class CarbuncleRenderer extends GeoEntityRenderer<EntityCarbuncle> {
+public class CarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
     private static final ResourceLocation ORANGE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_orange.png");
     private static final ResourceLocation PURPLE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_purple.png");
     private static final ResourceLocation GREEN = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_green.png");
@@ -31,16 +29,16 @@ public class CarbuncleRenderer extends GeoEntityRenderer<EntityCarbuncle> {
 //        this.addLayer(new CarbuncleHeldItemLayer(this));
 //        this.addLayer(new ModelLayerRenderer(this, new CarbuncleShadesModel(this.getGeoModelProvider())));
     }
-    EntityCarbuncle carbuncle;
+    Starbuncle carbuncle;
     MultiBufferSource buffer;
     ResourceLocation text;
     @Override
-    protected void applyRotations(EntityCarbuncle entityLiving, PoseStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
+    protected void applyRotations(Starbuncle entityLiving, PoseStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
         super.applyRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
     }
 
     @Override
-    public void renderEarly(EntityCarbuncle animatable, PoseStack stackIn, float ticks, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
+    public void renderEarly(Starbuncle animatable, PoseStack stackIn, float ticks, MultiBufferSource renderTypeBuffer, VertexConsumer vertexBuilder, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float partialTicks) {
         this.carbuncle = animatable;
         this.buffer = renderTypeBuffer;
         this.text = this.getTextureLocation(animatable);
@@ -48,7 +46,7 @@ public class CarbuncleRenderer extends GeoEntityRenderer<EntityCarbuncle> {
     }
 
     @Override
-    public void render(EntityCarbuncle entity, float entityYaw, float p_225623_3_, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int p_225623_6_) {
+    public void render(Starbuncle entity, float entityYaw, float p_225623_3_, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int p_225623_6_) {
         super.render(entity, entityYaw, p_225623_3_, matrixStack, iRenderTypeBuffer, p_225623_6_);
     }
 
@@ -70,8 +68,8 @@ public class CarbuncleRenderer extends GeoEntityRenderer<EntityCarbuncle> {
         super.renderRecursively(bone, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
     }
 
-    public ResourceLocation getColor(EntityCarbuncle e){
-        String color = e.getEntityData().get(EntityCarbuncle.COLOR).toLowerCase();
+    public ResourceLocation getColor(Starbuncle e){
+        String color = e.getEntityData().get(Starbuncle.COLOR).toLowerCase();
 
         if(color.isEmpty())
             return ORANGE;
@@ -80,12 +78,12 @@ public class CarbuncleRenderer extends GeoEntityRenderer<EntityCarbuncle> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(EntityCarbuncle entity) {
+    public ResourceLocation getTextureLocation(Starbuncle entity) {
         return entity.isTamed() ? getColor(entity) : WILD_TEXTURE;
     }
 
     @Override
-    public RenderType getRenderType(EntityCarbuncle animatable, float partialTicks, PoseStack stack, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
+    public RenderType getRenderType(Starbuncle animatable, float partialTicks, PoseStack stack, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
         return RenderType.entityCutoutNoCull(textureLocation);
     }
 }

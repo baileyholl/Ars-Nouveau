@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity.goal.sylph;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.entity.EntitySylph;
+import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
 import com.hollingsworth.arsnouveau.common.entity.goal.DistanceRestrictedGoal;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
@@ -28,16 +28,16 @@ import java.util.function.Supplier;
 public class BonemealGoal extends DistanceRestrictedGoal {
     private int timeGrowing;
     BlockPos growPos;
-    EntitySylph sylph;
+    Whirlisprig sylph;
     public final Predicate<BlockState> IS_GRASS = BlockStatePredicate.forBlock(Blocks.GRASS_BLOCK);
 
-    public BonemealGoal(EntitySylph sylph){
+    public BonemealGoal(Whirlisprig sylph){
         super(sylph::blockPosition, 0);
         this.sylph = sylph;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK, Goal.Flag.JUMP));
     }
 
-    public BonemealGoal(EntitySylph sylph, Supplier<BlockPos> from, int distanceFrom){
+    public BonemealGoal(Whirlisprig sylph, Supplier<BlockPos> from, int distanceFrom){
         super(from, distanceFrom);
         this.sylph = sylph;
     }

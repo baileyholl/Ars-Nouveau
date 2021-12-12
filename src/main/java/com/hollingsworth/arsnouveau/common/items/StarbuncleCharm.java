@@ -1,14 +1,14 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
+import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
 
-public class CarbuncleCharm extends ModItem{
-    public CarbuncleCharm() {
+public class StarbuncleCharm extends ModItem{
+    public StarbuncleCharm() {
         super(LibItemNames.STARBUNCLE_CHARM);
     }
 
@@ -19,7 +19,7 @@ public class CarbuncleCharm extends ModItem{
         if(context.getLevel().isClientSide)
             return InteractionResult.SUCCESS;
         Level world = context.getLevel();
-        EntityCarbuncle carbuncle = new EntityCarbuncle(world, true);
+        Starbuncle carbuncle = new Starbuncle(world, true);
         Vec3 vec = context.getClickLocation();
         carbuncle.setPos(vec.x, vec.y, vec.z);
         world.addFreshEntity(carbuncle);

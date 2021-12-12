@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.SourceBerryBush;
-import com.hollingsworth.arsnouveau.common.entity.EntityCarbuncle;
+import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.world.entity.ai.goal.Goal;
@@ -19,13 +19,13 @@ import java.util.Optional;
 import static com.hollingsworth.arsnouveau.common.block.SourceBerryBush.AGE;
 
 public class ForageManaBerries extends Goal {
-    private final EntityCarbuncle entity;
+    private final Starbuncle entity;
     private final Level world;
     int timeSpent;
     BlockPos pos;
 
-    public ForageManaBerries(EntityCarbuncle entityCarbuncle) {
-        this.entity = entityCarbuncle;
+    public ForageManaBerries(Starbuncle starbuncle) {
+        this.entity = starbuncle;
         this.world = entity.level;
         this.setFlags(EnumSet.of(Flag.MOVE));
     }

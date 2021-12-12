@@ -111,9 +111,9 @@ public class APIRegistry {
         registerRitual(new RitualWildenSummoning());
         registerRitual(new RitualBinding());
         registerRitual(new RitualAwakening());
-        registerFamiliar(new CarbuncleFamiliar());
+        registerFamiliar(new StarbuncleFamiliar());
         registerFamiliar(new DrygmyFamiliar());
-        registerFamiliar(new SylphFamiliar());
+        registerFamiliar(new WhirlisprigFamiliar());
         registerFamiliar(new WixieFamiliar());
 //        registerFamiliar(new JabberwogFamiliar());
         registerFamiliar(new BookwyrmFamiliar());
