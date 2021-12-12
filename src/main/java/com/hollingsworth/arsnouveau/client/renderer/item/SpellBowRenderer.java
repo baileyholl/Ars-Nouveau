@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.renderer.item;
 
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
+import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -44,7 +45,7 @@ public class SpellBowRenderer extends FixedGeoItemRenderer<Wand> {
             Vec3 laserPos = playerPos.add(right);
             laserPos = laserPos.add(forward);
             laserPos = laserPos.add(down);
-            ISpellCaster tool = SpellCaster.deserialize(itemStack);
+            ISpellCaster tool =  CasterUtil.getCaster(itemStack);
                 int timeHeld = 72000 - Minecraft.getInstance().player.getUseItemRemainingTicks();
                 if(timeHeld > 0 && timeHeld != 72000){
                     float scaleAge = (float) ParticleUtil.inRange(0.05,0.1);

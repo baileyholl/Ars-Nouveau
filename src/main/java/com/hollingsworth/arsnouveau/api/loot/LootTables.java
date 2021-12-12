@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
+import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.common.datagen.DungeonLootGenerator;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
@@ -206,7 +207,7 @@ public class LootTables {
 
     public static ItemStack makeTome(String name, Spell spell){
         ItemStack stack = new ItemStack(ItemsRegistry.CASTER_TOME);
-        ISpellCaster spellCaster = SpellCaster.deserialize(stack);
+        ISpellCaster spellCaster = CasterUtil.getCaster(stack);
         spellCaster.setSpell(spell);
         stack.setHoverName(new TextComponent(name).setStyle(Style.EMPTY.withColor(ChatFormatting.DARK_PURPLE).withItalic(true)));
         return stack;
@@ -214,7 +215,7 @@ public class LootTables {
 
     public static ItemStack makeTome(String name, Spell spell, String flavorText){
         ItemStack stack = makeTome(name, spell);
-        ISpellCaster spellCaster = SpellCaster.deserialize(stack);
+        ISpellCaster spellCaster =  CasterUtil.getCaster(stack);
         spellCaster.setFlavorText(flavorText);
         return stack;
     }

@@ -1,9 +1,8 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -36,13 +35,13 @@ public class GuiRadialMenu extends Screen {
 
     private boolean closing;
     private double startAnimation;
-    private CompoundTag tag;
+    private ItemStack casterStack;
     private int selectedItem;
 
 
-    public GuiRadialMenu(CompoundTag book_tag) {
+    public GuiRadialMenu(ItemStack casterStack) {
         super(new TextComponent(""));
-        this.tag = book_tag;
+        this.casterStack = casterStack;
         this.closing = false;
         this.minecraft = Minecraft.getInstance();
         this.startAnimation = getMinecraft().level.getGameTime() + (double) getMinecraft().getFrameTime();
@@ -154,10 +153,11 @@ public class GuiRadialMenu extends Screen {
         tessellator.end();
         RenderSystem.enableTexture();
         RenderSystem.disableBlend();
+        ISpellCaster caster = CasterUtil.getCaster(casterStack);
         if (hasMouseOver && mousedOverSlot != -1) {
             int adjusted =  (mousedOverSlot+ 6) % 10;
             adjusted = adjusted == 0 ? 10 : adjusted;
-            drawCenteredString(ms,font, SpellBook.getSpellName(tag,  adjusted), width/2,(height - font.lineHeight) / 2,16777215);
+            drawCenteredString(ms,font, caster.getSpellName(adjusted), width/2,(height - font.lineHeight) / 2,16777215);
         }
 
         ms.popPose();
@@ -169,7 +169,7 @@ public class GuiRadialMenu extends Screen {
 
             String resourceIcon = "";
             String castType = "";
-            for(AbstractSpellPart p : SpellBook.getRecipeFromTag(tag, i +1).recipe){
+            for(AbstractSpellPart p : caster.getSpell(i + 1).recipe){
                 if(p instanceof AbstractCastMethod)
                     castType = p.getIcon();
 
@@ -214,8 +214,9 @@ public class GuiRadialMenu extends Screen {
     public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
 
         if(this.selectedItem != -1){
-            SpellBook.setMode(tag, selectedItem);
-            Networking.INSTANCE.sendToServer(new PacketSetBookMode(tag));
+            ISpellCaster caster =  CasterUtil.getCaster(casterStack);
+            caster.setCurrentSlot(selectedItem);
+            Networking.INSTANCE.sendToServer(new PacketSetBookMode(casterStack.getTag()));
             minecraft.player.closeContainer();
         }
         return true;

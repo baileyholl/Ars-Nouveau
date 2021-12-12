@@ -1,5 +1,8 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
+import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
+import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
@@ -55,12 +58,12 @@ public class PacketUpdateSpellColors {
                 ItemStack stack = StackUtil.getHeldSpellbook(ctx.get().getSender());
                 if(stack != null && stack.getItem() instanceof SpellBook){
                     CompoundTag tag = stack.hasTag() ? stack.getTag() : new CompoundTag();
-                    SpellBook.setSpellColor(tag, new ParticleColor.IntWrapper(r, g, b), castSlot);
-                    stack.setTag(tag);
-                    SpellBook.setMode(tag, castSlot);
-                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->ctx.get().getSender()), new PacketUpdateBookGUI(tag));
+                    ISpellCaster caster =  CasterUtil.getCaster(stack);
+                    caster.setColor(new ParticleColor.IntWrapper(r, g, b), castSlot);
+                    caster.setCurrentSlot(castSlot);
+                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->ctx.get().getSender()), new PacketUpdateBookGUI(stack));
                     Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->ctx.get().getSender()),
-                            new PacketOpenSpellBook(stack.getTag(), ((SpellBook) stack.getItem()).tier.ordinal(), SpellBook.getUnlockedSpellString(tag)));
+                            new PacketOpenSpellBook(stack, ((SpellBook) stack.getItem()).tier.ordinal(), SpellBook.getUnlockedSpellString(tag)));
 
                 }
             }

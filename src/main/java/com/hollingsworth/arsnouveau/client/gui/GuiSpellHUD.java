@@ -1,5 +1,8 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
+import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
+import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -37,11 +40,10 @@ public class GuiSpellHUD extends AbstractContainerEventHandler implements GuiEve
         ItemStack stack = StackUtil.getHeldSpellbook(minecraft.player);
         if(stack != ItemStack.EMPTY && stack.getItem() instanceof SpellBook && stack.getTag() != null){
             int offsetLeft = 10;
-            CompoundTag tag = stack.getTag();
-            int mode = tag.getInt(SpellBook.BOOK_MODE_TAG);
+            ISpellCaster caster =  CasterUtil.getCaster(stack);
             String renderString;
-            if(mode != 0){
-            renderString = mode + " " + SpellBook.getSpellName(stack.getTag());
+            if(caster.getCurrentSlot() != 0){
+                renderString = caster.getCurrentSlot() + " " + caster.getSpellName();
             }else{
                 renderString = new TranslatableComponent("ars_nouveau.spell_hud.crafting_mode").getString();
             }

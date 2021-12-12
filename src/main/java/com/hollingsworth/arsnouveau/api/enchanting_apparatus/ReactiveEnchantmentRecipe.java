@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.enchanting_apparatus;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
+import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
@@ -42,7 +43,7 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe{
         ItemStack parchment = getParchment(pedestalItems);
 
         tag.putString("spell", SpellParchment.getSpell(parchment).serialize());
-        tag.putString("spell_color", SpellCaster.deserialize(parchment).getColor().serialize());
+        tag.putString("spell_color", CasterUtil.getCaster(parchment).getColor().serialize());
         stack.setTag(tag);
         return stack;
     }

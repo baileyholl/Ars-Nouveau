@@ -1,6 +1,9 @@
 package com.hollingsworth.arsnouveau.client.gui.buttons;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
+import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
+import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -35,7 +38,8 @@ public class GuiSpellSlot extends GuiImageButton {
         if (visible)
         {
             if(parent.isMouseInRelativeRange(parX, parY, x, y, width, height)){
-                String name = SpellBook.getSpellName(parent.spell_book_tag, slotNum);
+                ISpellCaster caster = CasterUtil.getCaster(parent.bookStack);
+                String name = caster.getSpellName(slotNum);
                 if(!name.isEmpty()){
                     List<Component> tip = new ArrayList<>();
                     tip.add(new TextComponent(name));

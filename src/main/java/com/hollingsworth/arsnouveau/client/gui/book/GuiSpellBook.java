@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.FamiliarCap;
 import com.hollingsworth.arsnouveau.api.familiar.IFamiliarCap;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.buttons.*;
@@ -28,6 +29,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.ItemStack;
 
 
 import java.util.ArrayList;
@@ -63,13 +65,15 @@ public class GuiSpellBook extends BaseBook {
     PageButton previousButton;
     ISpellValidator spellValidator;
     public String previousString = "";
-    public GuiSpellBook(ArsNouveauAPI api, CompoundTag tag, int tier, String unlockedSpells) {
+    public ItemStack bookStack;
+    public GuiSpellBook(ArsNouveauAPI api, ItemStack bookStack, int tier, String unlockedSpells) {
         super();
+        this.bookStack = bookStack;
         this.api = api;
         this.selected_cast_slot = 1;
         craftingCells = new ArrayList<>();
         this.max_spell_tier = tier;
-        this.spell_book_tag = tag;
+        this.spell_book_tag = bookStack.getOrCreateTag();
         this.unlockedSpells = SpellRecipeUtil.getSpellsFromString(unlockedSpells);
 
         this.castMethods = new ArrayList<>();
@@ -102,7 +106,8 @@ public class GuiSpellBook extends BaseBook {
     @Override
     public void init() {
         super.init();
-        int selected_slot_ind = SpellBook.getMode(spell_book_tag);
+        ISpellCaster caster = CasterUtil.getCaster(bookStack);
+        int selected_slot_ind = caster.getCurrentSlot();
         if(selected_slot_ind == 0) selected_slot_ind = 1;
 
         //Crafting slots
@@ -138,9 +143,9 @@ public class GuiSpellBook extends BaseBook {
         };
 
 
-        int mode = SpellBook.getMode(spell_book_tag);
+        int mode = caster.getCurrentSlot();
         mode = mode == 0 ? 1 : mode;
-        spell_name.setValue(SpellBook.getSpellName(spell_book_tag, mode));
+        spell_name.setValue(caster.getSpellName(mode));
         if(spell_name.getValue().isEmpty())
             spell_name.setSuggestion(new TranslatableComponent("ars_nouveau.spell_book_gui.spell_name").getString());
 
@@ -302,7 +307,7 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void onColorClick(Button button){
-        ParticleColor.IntWrapper color = SpellBook.getSpellColor(spell_book_tag, selected_cast_slot);
+        ParticleColor.IntWrapper color = CasterUtil.getCaster(bookStack).getColor(selected_cast_slot);
         Minecraft.getInstance().setScreen(new GuiColorScreen(color.r, color.g, color.b, selected_cast_slot));
     }
 
@@ -342,13 +347,13 @@ public class GuiSpellBook extends BaseBook {
         this.selected_slot.isSelected = true;
         this.selected_cast_slot = this.selected_slot.slotNum;
         updateCraftingSlots(this.selected_cast_slot);
-        spell_name.setValue(SpellBook.getSpellName(spell_book_tag, this.selected_cast_slot));
+        spell_name.setValue(CasterUtil.getCaster(bookStack).getSpellName(selected_cast_slot));
         validate();
     }
 
     public void updateCraftingSlots(int bookSlot){
         //Crafting slots
-        List<AbstractSpellPart> spell_recipe = this.spell_book_tag != null ? SpellBook.getRecipeFromTag(spell_book_tag, bookSlot).recipe : null;
+        List<AbstractSpellPart> spell_recipe = this.spell_book_tag != null ? CasterUtil.getCaster(bookStack).getSpell(bookSlot).recipe : null;
         for (int i = 0; i < craftingCells.size(); i++) {
             CraftingButton slot = craftingCells.get(i);
             slot.spellTag = "";
@@ -384,8 +389,8 @@ public class GuiSpellBook extends BaseBook {
         }
     }
 
-    public static void open(ArsNouveauAPI api, CompoundTag spell_book_tag, int tier, String unlockedSpells){
-        Minecraft.getInstance().setScreen(new GuiSpellBook(api, spell_book_tag, tier, unlockedSpells));
+    public static void open(ArsNouveauAPI api, ItemStack stack, int tier, String unlockedSpells){
+        Minecraft.getInstance().setScreen(new GuiSpellBook(api, stack, tier, unlockedSpells));
     }
 
     public void drawBackgroundElements(PoseStack stack, int mouseX, int mouseY, float partialTicks) {

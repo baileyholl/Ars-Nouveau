@@ -27,12 +27,11 @@ import java.util.Map;
  * An interface for handling NBT as it relates to items that may cast spells.
  * See SpellCaster for implementation.
  */
-//TODO: Rework for spellbook
 public interface ISpellCaster {
 
     @Nonnull Spell getSpell();
 
-    Spell getSpell(int slot);
+    @Nonnull Spell getSpell(int slot);
 
     int getMaxSlots();
 
@@ -40,22 +39,52 @@ public interface ISpellCaster {
 
     void setCurrentSlot(int slot);
 
+    default void setNextSlot(){
+        int slot = getCurrentSlot() + 1;
+        if(slot > getMaxSlots()){
+            slot = 1;
+        }
+        setCurrentSlot(slot);
+    }
+
+    default void setPreviousSlot(){
+        int slot = getCurrentSlot() - 1;
+        if(slot < 1)
+            slot = getMaxSlots();
+        setCurrentSlot(slot);
+    }
+
     void setSpell(Spell spell, int slot);
 
     void setSpell(Spell spell);
 
+    @Nonnull ParticleColor.IntWrapper getColor(int slot);
+
+    @Nonnull ParticleColor.IntWrapper getColor();
+
     void setColor(ParticleColor.IntWrapper color);
+
+    void setColor(ParticleColor.IntWrapper color, int slot);
 
     void setFlavorText(String str);
 
+    String getSpellName(int slot);
+
+    String getSpellName();
+
+    void setSpellName(String name);
+
+    void setSpellName(String name, int slot);
+
     String getFlavorText();
-    //TODO: Make color a slotted map
-    @Nonnull ParticleColor.IntWrapper getColor();
 
     Map<Integer, Spell> getSpells();
 
-    //TODO: Add map of names for spells
+    Map<Integer, String> getSpellNames();
 
+    Map<Integer, ParticleColor.IntWrapper> getColors();
+
+    @Nonnull
     default Spell getSpell(Level world, Player playerEntity, InteractionHand hand, ISpellCaster caster){
         return caster.getSpell();
     }
@@ -101,11 +130,5 @@ public interface ISpellCaster {
 
     default InteractionResultHolder<ItemStack> castSpell(Level worldIn, Player playerIn, InteractionHand handIn, TranslatableComponent invalidMessage){
         return castSpell(worldIn, playerIn, handIn, invalidMessage, getSpell(worldIn, playerIn, handIn, this));
-    }
-
-    default void copySlotFrom(ISpellCaster caster){
-        setColor(caster.getColor());
-        setSpell(caster.getSpell());
-        setFlavorText(caster.getFlavorText());
     }
 }

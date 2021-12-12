@@ -36,12 +36,8 @@ public interface ICasterTool extends IScribeable, IDisplayMana {
             return false;
         boolean success = false;
         Spell spell = new Spell();
-        if(heldStack.getItem() instanceof SpellBook) {
-            spell = SpellBook.getRecipeFromTag(heldStack.getTag(), SpellBook.getMode(heldStack.getTag()));
-            caster.setColor(SpellBook.getSpellColor(heldStack.getTag(), SpellBook.getMode(heldStack.getTag())));
-            caster.setFlavorText(SpellBook.getSpellName(heldStack.getTag()));
-        }else if(heldStack.getItem() instanceof ICasterTool){
-            SpellCaster heldCaster = SpellCaster.deserialize(heldStack);
+        if(heldStack.getItem() instanceof ICasterTool){
+            ISpellCaster heldCaster = getSpellCaster(heldStack);
             spell = heldCaster.getSpell();
             caster.setColor(heldCaster.getColor());
             caster.setFlavorText(heldCaster.getFlavorText());
@@ -67,7 +63,7 @@ public interface ICasterTool extends IScribeable, IDisplayMana {
     }
 
     default @Nonnull ISpellCaster getSpellCaster(ItemStack stack){
-        return SpellCaster.deserialize(stack);
+        return new SpellCaster(stack);
     }
 
     default boolean setSpell(ISpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell){

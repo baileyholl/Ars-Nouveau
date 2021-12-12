@@ -1,5 +1,9 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
+import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
+import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import net.minecraft.nbt.CompoundTag;
@@ -43,12 +47,11 @@ public class PacketUpdateSpellbook{
             if(ctx.get().getSender() != null){
                 ItemStack stack = StackUtil.getHeldSpellbook(ctx.get().getSender());
                 if(stack != null && stack.getItem() instanceof SpellBook && spellRecipe != null){
-                    CompoundTag tag = stack.hasTag() ? stack.getTag() : new CompoundTag();
-                    SpellBook.setRecipe(tag, spellRecipe, cast_slot);
-                    SpellBook.setSpellName(tag, spellName, cast_slot);
-                    SpellBook.setMode(tag, cast_slot);
-                    stack.setTag(tag);
-                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->ctx.get().getSender()), new PacketUpdateBookGUI(tag));
+                    ISpellCaster caster = CasterUtil.getCaster(stack);
+                    caster.setCurrentSlot(cast_slot);
+                    caster.setSpell(Spell.deserialize(spellRecipe));
+                    caster.setSpellName(spellName);
+                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->ctx.get().getSender()), new PacketUpdateBookGUI(stack));
                 }
             }
         });

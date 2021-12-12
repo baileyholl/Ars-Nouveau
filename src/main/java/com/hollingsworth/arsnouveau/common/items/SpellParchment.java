@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
+import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.ItemStack;
@@ -29,7 +30,7 @@ public class SpellParchment extends ModItem implements ICasterTool {
     }
 
     public static @Nonnull Spell getSpell(ItemStack stack){
-        return SpellCaster.deserialize(stack).getSpell();
+        return CasterUtil.getCaster(stack).getSpell();
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.BasicSpellTurretTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
@@ -160,7 +161,7 @@ public class BasicSpellTurret extends TickableModBlock {
             }
             BasicSpellTurretTile tile = (BasicSpellTurretTile) worldIn.getBlockEntity(pos);
             tile.spell = spell;
-            tile.color = SpellCaster.deserialize(stack).getColor();
+            tile.color = CasterUtil.getCaster(stack).getColor();
             tile.color.makeVisible();
             PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.alert.spell_set"));
             worldIn.sendBlockUpdated(pos, state, state, 2);
