@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.world;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.SourceBerryBush;
+import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.world.tree.MagicTrunkPlacer;
 import com.hollingsworth.arsnouveau.common.world.tree.SupplierBlockStateProvider;
@@ -15,7 +16,9 @@ import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.data.worldgen.placement.TreePlacements;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.levelgen.GenerationStep;
@@ -39,6 +42,7 @@ import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -272,7 +276,7 @@ public class WorldEvent {
         if (e.getCategory() == Biome.BiomeCategory.NETHER || e.getCategory() == Biome.BiomeCategory.THEEND)
             return;
 
-      //  addMobSpawns(e);
+        addMobSpawns(e);
 
 
         if ((e.getCategory().equals(Biome.BiomeCategory.TAIGA) || e.getName().equals(new ResourceLocation(ArsNouveau.MODID, "archwood_forest")))  && Config.SPAWN_BERRIES.get()) {
@@ -296,32 +300,31 @@ public class WorldEvent {
 //        }
     }
 //
-//    public static void addMobSpawns(BiomeLoadingEvent e){
-//        List<Biome.BiomeCategory> categories = Arrays.asList(Biome.BiomeCategory.FOREST, Biome.BiomeCategory.EXTREME_HILLS, Biome.BiomeCategory.JUNGLE,
-//                Biome.BiomeCategory.PLAINS, Biome.BiomeCategory.SWAMP, Biome.BiomeCategory.SAVANNA);
-//
-//        if (categories.contains(e.getCategory())) {
-//            if (Config.CARBUNCLE_WEIGHT.get() > 0) {
-//                e.getSpawns().addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.ENTITY_CARBUNCLE_TYPE, Config.CARBUNCLE_WEIGHT.get(), 1, 1));
-//            }
-//            if (Config.SYLPH_WEIGHT.get() > 0) {
-//                e.getSpawns().addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.ENTITY_SYLPH_TYPE, Config.SYLPH_WEIGHT.get(), 1, 1));
-//            }
-//        }
-//        if (Config.DRYGMY_WEIGHT.get() > 0) {
-//            e.getSpawns().addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.ENTITY_DRYGMY, Config.DRYGMY_WEIGHT.get(), 1, 1));
-//        }
-//
-//        if(!e.getCategory().equals(Biome.BiomeCategory.MUSHROOM) && !e.getCategory().equals(Biome.BiomeCategory.NONE)){
-//            if(e.getClimate().temperature <= 0.35f &&  Config.WGUARDIAN_WEIGHT.get() > 0){
-//                e.getSpawns().addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.WILDEN_GUARDIAN, Config.WGUARDIAN_WEIGHT.get(), 1, 1));
-//            }
-//            if( Config.WSTALKER_WEIGHT.get() > 0)
-//                e.getSpawns().addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.WILDEN_STALKER, Config.WSTALKER_WEIGHT.get(), 3, 3));
-//            if( Config.WHUNTER_WEIGHT.get() > 0)
-//                e.getSpawns().addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.WILDEN_HUNTER, Config.WHUNTER_WEIGHT.get(), 1, 1));
-//        }
-//    }
+    public static void addMobSpawns(BiomeLoadingEvent e){
+        List<Biome.BiomeCategory> categories = Arrays.asList(Biome.BiomeCategory.FOREST, Biome.BiomeCategory.EXTREME_HILLS, Biome.BiomeCategory.JUNGLE, Biome.BiomeCategory.PLAINS, Biome.BiomeCategory.SWAMP, Biome.BiomeCategory.SAVANNA, Biome.BiomeCategory.MOUNTAIN);
+
+        if (categories.contains(e.getCategory())) {
+            if (Config.CARBUNCLE_WEIGHT.get() > 0) {
+                e.getSpawns().addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.STARBUNCLE_TYPE, Config.CARBUNCLE_WEIGHT.get(), 1, 1));
+            }
+            if (Config.SYLPH_WEIGHT.get() > 0) {
+                e.getSpawns().addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.WHIRLISPRIG_TYPE, Config.SYLPH_WEIGHT.get(), 1, 1));
+            }
+        }
+        if (Config.DRYGMY_WEIGHT.get() > 0) {
+            e.getSpawns().addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(ModEntities.ENTITY_DRYGMY, Config.DRYGMY_WEIGHT.get(), 1, 1));
+        }
+
+        if(!e.getCategory().equals(Biome.BiomeCategory.MUSHROOM) && !e.getCategory().equals(Biome.BiomeCategory.NONE)){
+            if(e.getClimate().temperature <= 0.35f &&  Config.WGUARDIAN_WEIGHT.get() > 0){
+                e.getSpawns().addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.WILDEN_GUARDIAN, Config.WGUARDIAN_WEIGHT.get(), 1, 1));
+            }
+            if( Config.WSTALKER_WEIGHT.get() > 0)
+                e.getSpawns().addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.WILDEN_STALKER, Config.WSTALKER_WEIGHT.get(), 3, 3));
+            if( Config.WHUNTER_WEIGHT.get() > 0)
+                e.getSpawns().addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(ModEntities.WILDEN_HUNTER, Config.WHUNTER_WEIGHT.get(), 1, 1));
+        }
+    }
 //
 //    public static void addBlazingForestFeatures(BiomeLoadingEvent e){
 //        e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION,
