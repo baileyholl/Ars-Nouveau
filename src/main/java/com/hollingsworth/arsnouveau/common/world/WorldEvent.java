@@ -14,6 +14,7 @@ import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.features.VegetationFeatures;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.data.worldgen.placement.TreePlacements;
+import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.entity.MobCategory;
@@ -183,8 +184,19 @@ public class WorldEvent {
         PlacedFeature BERRY_BUSH_PATCH_CONFIG = PlacementUtils.register("ars_nouveau:placed_berry", PATCH_BERRY_BUSH.placed(RarityFilter.onAverageOnceEvery(32), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BiomeFilter.biome()));
 
         float treeChance = Config.TREE_SPAWN_RATE.get().floatValue();
-//        PlacedFeature PLACED_CASCADE = PlacementUtils.register("ars_nouveau:placed_cascade", CASCADING_TREE.placed());
-//        ConfiguredFeature<RandomFeatureConfiguration, ?> CONFIGURED = FeatureUtils.register("ars_nouveau:random_cascade", Feature.RANDOM_SELECTOR.configured(new RandomFeatureConfiguration(List.of(new WeightedPlacedFeature(PLACED_CASCADE, 0.1f)), PLACED_CASCADE)));
+
+        PlacedFeature PLACED_CASCADE = PlacementUtils.register("ars_nouveau:placed_cascade", CASCADING_TREE.filteredByBlockSurvival(BlockRegistry.CASCADING_SAPLING));
+        PlacedFeature PLACED_BLAZING = PlacementUtils.register("ars_nouveau:placed_blazing", BLAZING_TREE.filteredByBlockSurvival(BlockRegistry.BLAZING_SAPLING));
+        PlacedFeature PLACED_VEXING = PlacementUtils.register("ars_nouveau:placed_vexing", VEXING_TREE.filteredByBlockSurvival(BlockRegistry.VEXING_SAPLING));
+        PlacedFeature PLACED_FLOURISHING = PlacementUtils.register("ars_nouveau:placed_flourishing", FLOURISHING_TREE.filteredByBlockSurvival(BlockRegistry.FLOURISHING_SAPLING));
+
+
+        ConfiguredFeature<RandomFeatureConfiguration, ?> CONFIGURED = FeatureUtils.register("ars_nouveau:random_cascade", Feature.RANDOM_SELECTOR.configured(new RandomFeatureConfiguration(List.of(
+                new WeightedPlacedFeature(PLACED_CASCADE, 0.25f),
+                new WeightedPlacedFeature(PLACED_BLAZING, 0.25f),
+                new WeightedPlacedFeature(PLACED_VEXING, 0.25f),
+                new WeightedPlacedFeature(PLACED_FLOURISHING, 0.25f)), PLACED_CASCADE)));
+        PlacementUtils.register("ars_nouveau:archwood",CONFIGURED.placed(VegetationPlacements.treePlacement(RarityFilter.onAverageOnceEvery(100))));
 //
 
         //
@@ -287,7 +299,7 @@ public class WorldEvent {
 //        e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION,
 //                Objects.requireNonNull(BuiltinRegistries.CONFIGURED_FEATURE.get(BlockRegistry.VEXING_SAPLING.getRegistryName()))).build();
 
-//        e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, BuiltinRegistries.PLACED_FEATURE.get(new ResourceLocation(ArsNouveau.MODID, "random_cascade")));
+        e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, Objects.requireNonNull(BuiltinRegistries.PLACED_FEATURE.get(new ResourceLocation(ArsNouveau.MODID, "archwood"))));
 
 //        e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION,
 //                Objects.requireNonNull(BuiltinRegistries.CONFIGURED_FEATURE.get(BlockRegistry.BLAZING_SAPLING.getRegistryName()))).build();
