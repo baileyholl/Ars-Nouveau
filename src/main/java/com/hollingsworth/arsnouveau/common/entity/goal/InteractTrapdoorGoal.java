@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.common.entity;
+package com.hollingsworth.arsnouveau.common.entity.goal;
 
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.TrapDoorBlock;

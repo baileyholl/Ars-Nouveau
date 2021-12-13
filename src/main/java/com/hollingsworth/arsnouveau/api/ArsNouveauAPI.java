@@ -59,7 +59,7 @@ public class ArsNouveauAPI {
      * key: Unique spell ID. Please make this snake_case!
      * value: Associated glyph
      */
-    private HashMap<String, AbstractSpellPart> spell_map;
+    private HashMap<String, AbstractSpellPart> spellMap;
 
     private HashMap<String, AbstractRitual> ritualMap;
 
@@ -89,12 +89,12 @@ public class ArsNouveauAPI {
     private List<AbstractSpellPart> startingSpells;
 
     public List<AbstractSpellPart> getDefaultStartingSpells(){
-        return spell_map.values().stream().filter(Config::isStarterEnabled).collect(Collectors.toList());
+        return spellMap.values().stream().filter(Config::isStarterEnabled).collect(Collectors.toList());
     }
 
     public boolean addStartingSpell(String tag){
-        if(ArsNouveauAPI.getInstance().getSpell_map().containsKey(tag)){
-            return startingSpells.add(ArsNouveauAPI.getInstance().getSpell_map().get(tag));
+        if(ArsNouveauAPI.getInstance().getSpellMap().containsKey(tag)){
+            return startingSpells.add(ArsNouveauAPI.getInstance().getSpellMap().get(tag));
         }else{
             throw new IllegalStateException("Attempted to add a starting spell for an unregistered spell. Spells must be added to the Spell Map first!");
         }
@@ -119,7 +119,7 @@ public class ArsNouveauAPI {
 
     public AbstractSpellPart registerSpell(String id, AbstractSpellPart part){
         glyphMap.put(id, new Glyph(getSpellRegistryName(id), part));
-        return spell_map.put(id, part);
+        return spellMap.put(id, part);
     }
 
     public AbstractSpellPart registerSpell(AbstractSpellPart part){
@@ -173,8 +173,8 @@ public class ArsNouveauAPI {
         return "ritual_"+ id.toLowerCase();
     }
 
-    public Map<String, AbstractSpellPart> getSpell_map() {
-        return spell_map;
+    public Map<String, AbstractSpellPart> getSpellMap() {
+        return spellMap;
     }
 
     public Map<String, Glyph> getGlyphMap(){
@@ -196,9 +196,11 @@ public class ArsNouveauAPI {
     public Map<String, AbstractFamiliarHolder> getFamiliarHolderMap(){
         return this.familiarHolderMap;
     }
+
     public Map<String, FamiliarScript> getFamiliarScriptMap(){
         return this.familiarScriptMap;
     }
+
     public List<IEnchantingRecipe> getEnchantingApparatusRecipes(Level world) {
         List<IEnchantingRecipe> recipes = new ArrayList<>(enchantingApparatusRecipes);
         RecipeManager manager = world.getRecipeManager();
@@ -269,7 +271,7 @@ public class ArsNouveauAPI {
     }
 
     private ArsNouveauAPI(){
-        spell_map = new HashMap<>();
+        spellMap = new HashMap<>();
         glyphMap = new HashMap<>();
         startingSpells = new ArrayList<>();
         enchantingApparatusRecipes = new ArrayList<>();
@@ -281,9 +283,9 @@ public class ArsNouveauAPI {
 
     /** Retrieves a handle to the singleton instance. */
     public static ArsNouveauAPI getInstance() {
-        return arsNouveauAPI;
+        return ARS_NOUVEAU_API;
     }
 
     // This is needed internally by the mod, so just make it eagerly.
-    private static final ArsNouveauAPI arsNouveauAPI = new ArsNouveauAPI();
+    private static final ArsNouveauAPI ARS_NOUVEAU_API = new ArsNouveauAPI();
 }

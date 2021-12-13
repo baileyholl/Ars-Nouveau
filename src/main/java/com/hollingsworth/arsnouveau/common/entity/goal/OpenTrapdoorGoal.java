@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.entity.goal;
 
-import com.hollingsworth.arsnouveau.common.entity.InteractTrapdoorGoal;
 import net.minecraft.world.entity.Mob;
 
 public class OpenTrapdoorGoal extends InteractTrapdoorGoal {
