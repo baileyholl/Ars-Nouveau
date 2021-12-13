@@ -19,7 +19,7 @@ public class RelayDepositTile extends ArcaneRelayTile{
     public void tick() {
         super.tick();
         if(!level.isClientSide && level.getGameTime() % 20 == 0 && getSource() > 0){
-            List<BlockPos> posList = SourceUtil.canGiveManaAny(worldPosition, level, 5);
+            List<BlockPos> posList = SourceUtil.canGiveSourceAny(worldPosition, level, 5);
             for(BlockPos jarPos : posList) {
                 if(this.getSource() == 0)
                     break;

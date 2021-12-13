@@ -106,7 +106,7 @@ public class GlyphPressTile extends AnimatedTile implements ITickable, IAnimatab
             return false;
 
         int manaCost = recipe.tier == ISpellTier.Tier.ONE ? 1000 : (recipe.tier == ISpellTier.Tier.TWO ? 2000 : 3000);
-        BlockPos jar = SourceUtil.takeManaNearbyWithParticles(worldPosition, level, 5, manaCost);
+        BlockPos jar = SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 5, manaCost);
         if(jar != null){
             isCrafting = true;
             Networking.sendToNearby(level, worldPosition, new PacketOneShotAnimation(worldPosition));

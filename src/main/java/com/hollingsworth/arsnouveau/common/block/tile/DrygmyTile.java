@@ -75,7 +75,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
             refreshEntitiesAndBonus();
         }
 
-        if(!level.isClientSide && level.getGameTime() % 80 == 0 && needsMana && SourceUtil.takeManaNearbyWithParticles(worldPosition, level, 7, Config.DRYGMY_MANA_COST.get()) != null){
+        if(!level.isClientSide && level.getGameTime() % 80 == 0 && needsMana && SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 7, Config.DRYGMY_MANA_COST.get()) != null){
             this.needsMana = false;
             level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
         }

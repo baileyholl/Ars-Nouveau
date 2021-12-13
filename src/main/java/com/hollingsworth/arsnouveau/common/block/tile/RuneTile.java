@@ -125,7 +125,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
             level.destroyBlock(this.worldPosition, false);
         }
         if(!level.isClientSide){
-            BlockPos fromPos = SourceUtil.takeManaNearbyWithParticles(worldPosition, level, 10, 100);
+            BlockPos fromPos = SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 10, 100);
             if(fromPos != null) {
                 this.isCharged = true;
                 level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).cycle(RuneBlock.POWERED));

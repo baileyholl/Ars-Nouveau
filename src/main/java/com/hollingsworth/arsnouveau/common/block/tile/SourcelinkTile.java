@@ -55,7 +55,7 @@ public class SourcelinkTile extends AbstractSourceMachine implements IAnimatable
         }
 
         if(level.getGameTime() % 100 == 0 && getSource() > 0){
-            BlockPos jarPos = SourceUtil.canGiveManaClosest(worldPosition, level, 5);
+            BlockPos jarPos = SourceUtil.canGiveSourceClosest(worldPosition, level, 5);
             if(jarPos != null){
                 transferSource(this, (ISourceTile) level.getBlockEntity(jarPos));
                 ParticleUtil.spawnFollowProjectile(level, this.worldPosition, jarPos);

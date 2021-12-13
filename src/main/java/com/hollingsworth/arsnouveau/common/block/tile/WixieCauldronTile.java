@@ -76,7 +76,7 @@ public class WixieCauldronTile extends ModdedTile implements ITickable, ITooltip
         }
 
         if(!hasMana && level.getGameTime() % 5 == 0){
-            if(SourceUtil.takeManaNearbyWithParticles(worldPosition, level, 6, 50) != null) {
+            if(SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 6, 50) != null) {
                 this.hasMana = true;
                 level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(WixieCauldron.FILLED, true));
             }

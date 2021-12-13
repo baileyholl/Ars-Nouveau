@@ -4,12 +4,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.checkerframework.checker.units.qual.C;
 
 import javax.annotation.Nullable;
 
@@ -47,5 +44,17 @@ public class ModdedTile extends BlockEntity {
         CompoundTag tag = new CompoundTag();
         this.saveAdditional(tag);
         return tag;
+    }
+
+    public double getX(){
+        return this.worldPosition.getX();
+    }
+
+    public double getY(){
+        return this.worldPosition.getY();
+    }
+
+    public double getZ(){
+        return this.worldPosition.getZ();
     }
 }

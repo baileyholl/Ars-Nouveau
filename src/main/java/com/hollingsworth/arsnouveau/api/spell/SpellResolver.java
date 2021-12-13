@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.hollingsworth.arsnouveau.api.util.SourceUtil.getPlayerDiscounts;
+import static com.hollingsworth.arsnouveau.api.util.ManaUtil.getPlayerDiscounts;
 
 public class SpellResolver {
     public AbstractCastMethod castType;

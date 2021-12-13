@@ -44,7 +44,7 @@ public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickab
     public void tick() {
 
         if(!level.isClientSide && !hasMana && level.getGameTime() % 20 == 0){
-            if(SourceUtil.takeManaNearbyWithParticles(worldPosition, level, 5, 100) != null) {
+            if(SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 5, 100) != null) {
                 hasMana = true;
                 level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
             }

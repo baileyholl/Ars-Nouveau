@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
-import com.hollingsworth.arsnouveau.api.util.SourceUtil;
+import com.hollingsworth.arsnouveau.api.util.ManaUtil;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateMana;
@@ -30,11 +30,11 @@ public class ManaCapEvents {
             return;
 
         if (mana.getCurrentMana() != mana.getMaxMana()) {
-            double regenPerSecond = SourceUtil.getManaRegen(e.player) / Math.max(1, ((int)MEAN_TPS / Config.REGEN_INTERVAL.get()));
+            double regenPerSecond = ManaUtil.getManaRegen(e.player) / Math.max(1, ((int)MEAN_TPS / Config.REGEN_INTERVAL.get()));
             mana.addMana(regenPerSecond);
             Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
         }
-        int max = SourceUtil.getMaxMana(e.player);
+        int max = ManaUtil.getMaxMana(e.player);
         if(mana.getMaxMana() != max) {
             mana.setMaxMana(max);
             Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) e.player), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));
@@ -72,7 +72,7 @@ public class ManaCapEvents {
     public static void syncPlayerEvent(Player playerEntity){
         if (playerEntity instanceof ServerPlayer) {
             CapabilityRegistry.getMana(playerEntity).ifPresent(mana -> {
-                mana.setMaxMana(SourceUtil.getMaxMana(playerEntity));
+                mana.setMaxMana(ManaUtil.getMaxMana(playerEntity));
                 mana.setGlyphBonus(mana.getGlyphBonus());
                 mana.setBookTier(mana.getBookTier());
                 Networking.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) playerEntity), new PacketUpdateMana(mana.getCurrentMana(), mana.getMaxMana(), mana.getGlyphBonus(), mana.getBookTier()));

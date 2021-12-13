@@ -56,11 +56,11 @@ public class SummoningCrystalTile extends AbstractSourceMachine implements IAnim
     }
 
     public boolean enoughMana(int manaCost){
-        return SourceUtil.hasManaNearby(worldPosition, level, 7, manaCost);
+        return SourceUtil.hasSourceNearby(worldPosition, level, 7, manaCost);
     }
 
     public boolean removeManaAround(int manaCost){
-        return SourceUtil.takeManaNearbyWithParticles(worldPosition, level, 7, manaCost) != null;
+        return SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 7, manaCost) != null;
     }
 
     @Override

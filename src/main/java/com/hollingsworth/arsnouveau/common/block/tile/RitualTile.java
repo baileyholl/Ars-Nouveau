@@ -36,7 +36,7 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Random;
 
@@ -108,7 +108,7 @@ public class RitualTile extends ModdedTile implements ITooltipProvider, IAnimata
             }
             if(ritual.consumesMana() && ritual.needsManaNow()){
                 int cost = ritual.getManaCost();
-                if(SourceUtil.takeManaNearbyWithParticles(getBlockPos(), getLevel(), 6, cost) != null){
+                if(SourceUtil.takeSourceNearbyWithParticles(getBlockPos(), getLevel(), 6, cost) != null){
                     ritual.setNeedsMana(false);
                 }else{
                     return;

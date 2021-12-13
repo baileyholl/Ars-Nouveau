@@ -79,6 +79,8 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
 
     public boolean canAcceptSource(){ return this.getSource() < this.getMaxSource(); }
 
+    public boolean canAcceptSource(int source){return this.getSource() + source <= this.getMaxSource();}
+
     public int transferSource(ISourceTile from, ISourceTile to){
         int transferRate = getTransferRate(from, to);
         from.removeSource(transferRate);

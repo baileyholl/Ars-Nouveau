@@ -47,10 +47,10 @@ public class WarpScroll extends ModItem{
             String displayName = stack.hasCustomHoverName() ? stack.getHoverName().getString() : "";
             if(getPos(stack) != BlockPos.ZERO
                     && getDimension(stack).equals(entity.getCommandSenderWorld().dimension().getRegistryName().toString())
-                    && SourceUtil.hasManaNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000)
+                    && SourceUtil.hasSourceNearby(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000)
                     && (BlockRegistry.PORTAL_BLOCK.trySpawnPortal(entity.getCommandSenderWorld(), entity.blockPosition(), getPos(stack), getDimension(stack), getRotationVector(stack), displayName)
                     || BlockRegistry.PORTAL_BLOCK.trySpawnHoriztonalPortal(entity.getCommandSenderWorld(), entity.blockPosition(), getPos(stack), getDimension(stack), getRotationVector(stack), displayName))
-                    && SourceUtil.takeManaNearbyWithParticles(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000) != null){
+                    && SourceUtil.takeSourceNearbyWithParticles(entity.blockPosition(), entity.getCommandSenderWorld(), 10, 9000) != null){
                 BlockPos pos = entity.blockPosition();
                 ServerLevel world = (ServerLevel) entity.getCommandSenderWorld();
                 world.sendParticles(ParticleTypes.PORTAL, pos.getX(),  pos.getY() + 1,  pos.getZ(),
