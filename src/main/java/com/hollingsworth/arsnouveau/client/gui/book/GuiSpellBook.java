@@ -15,17 +15,14 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellbook;
 import com.hollingsworth.arsnouveau.common.spell.validation.CombinedSpellValidator;
 import com.hollingsworth.arsnouveau.common.spell.validation.GlyphMaxTierValidator;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.inventory.PageButton;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.Registry;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -209,7 +206,7 @@ public class GuiSpellBook extends BaseBook {
             for(Widget w : renderables) {
                 if(w instanceof GlyphButton) {
                     if (((GlyphButton) w).spell_id != null) {
-                        AbstractSpellPart part = api.getSpell_map().get(((GlyphButton) w).spell_id);
+                        AbstractSpellPart part = api.getSpellMap().get(((GlyphButton) w).spell_id);
                         if (part != null) {
                             ((GlyphButton) w).visible = part.getLocaleName().toLowerCase().contains(str.toLowerCase());
                         }
@@ -431,7 +428,7 @@ public class GuiSpellBook extends BaseBook {
                 // Also note where we found the first blank.  Used later for the glyph buttons.
                 if (firstBlankSlot < 0) firstBlankSlot = i;
             } else {
-                recipe.add(api.getSpell_map().get(b.spellTag));
+                recipe.add(api.getSpellMap().get(b.spellTag));
             }
         }
 
@@ -468,7 +465,7 @@ public class GuiSpellBook extends BaseBook {
         glyphButton.validationErrors.clear();
 
         // Simulate adding the glyph to the current spell
-        recipe.add(api.getSpell_map().get(glyphButton.spell_id));
+        recipe.add(api.getSpellMap().get(glyphButton.spell_id));
 
         // Filter the errors to ones referring to the simulated glyph
         glyphButton.validationErrors.addAll(

@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
-import com.hollingsworth.arsnouveau.api.IFollowingSummon;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
 import com.hollingsworth.arsnouveau.common.entity.goal.FollowSummonerFlyingGoal;
 import net.minecraft.Util;

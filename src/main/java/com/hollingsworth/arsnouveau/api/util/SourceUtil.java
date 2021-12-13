@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class SourceUtil {
-    
+
     /**
      * Searches for nearby mana jars that have enough mana.
      * Returns the position where the mana was taken, or null if none were found.

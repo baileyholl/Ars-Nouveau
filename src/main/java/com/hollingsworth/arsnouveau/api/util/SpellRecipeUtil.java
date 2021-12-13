@@ -17,7 +17,7 @@ public class SpellRecipeUtil {
         ArrayList<AbstractSpellPart> spells = new ArrayList<>();
 
         spellStrings.forEach(s->{
-            Optional<AbstractSpellPart> spell =  ArsNouveauAPI.getInstance().getSpell_map().values().stream().filter(sp -> sp.getTag().equals(s.trim())).findFirst();
+            Optional<AbstractSpellPart> spell =  ArsNouveauAPI.getInstance().getSpellMap().values().stream().filter(sp -> sp.getTag().equals(s.trim())).findFirst();
             spell.ifPresent(spells::add);
         });
         return spells;

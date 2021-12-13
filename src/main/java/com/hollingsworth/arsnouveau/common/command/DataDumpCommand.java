@@ -40,7 +40,7 @@ public class DataDumpCommand {
      * Creates a CSV file at {@link DataDumpCommand#PATH_AUGMENT_COMPATIBILITY} all augment compatibility information
      */
     public static int dumpAugmentCompat(CommandContext<CommandSourceStack> context) {
-        Map<String, AbstractSpellPart> spells = ArsNouveauAPI.getInstance().getSpell_map();
+        Map<String, AbstractSpellPart> spells = ArsNouveauAPI.getInstance().getSpellMap();
 
         // Collect the Augments
         List<AbstractAugment> augments = spells.values().stream()

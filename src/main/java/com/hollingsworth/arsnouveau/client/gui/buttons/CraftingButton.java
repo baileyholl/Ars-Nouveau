@@ -10,7 +10,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -51,9 +50,9 @@ public class CraftingButton extends GuiImageButton{
             }
             if(parent.isMouseInRelativeRange(parX, parY, x, y, width, height)){
 
-                if(parent.api.getSpell_map().containsKey(this.spellTag)) {
+                if(parent.api.getSpellMap().containsKey(this.spellTag)) {
                     List<Component> tooltip = new LinkedList<>();
-                    tooltip.add(new TranslatableComponent(parent.api.getSpell_map().get(this.spellTag).getLocalizationKey()));
+                    tooltip.add(new TranslatableComponent(parent.api.getSpellMap().get(this.spellTag).getLocalizationKey()));
                     for (SpellValidationError ve : validationErrors) {
                         tooltip.add(ve.makeTextComponentExisting().withStyle(ChatFormatting.RED));
                     }

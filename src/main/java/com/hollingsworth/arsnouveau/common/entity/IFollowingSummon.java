@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.api;
+package com.hollingsworth.arsnouveau.common.entity;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;

@@ -9,7 +9,6 @@ import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
-import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellBookRenderer;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -83,7 +82,7 @@ public class SpellBook extends Item implements ISpellTier, IAnimatable, ICasterT
             StringBuilder starting_spells = new StringBuilder();
 
             if(stack.getItem() == ItemsRegistry.CREATIVE_SPELLBOOK){
-                ArsNouveauAPI.getInstance().getSpell_map().values().forEach(s -> starting_spells.append(",").append(s.getTag().trim()));
+                ArsNouveauAPI.getInstance().getSpellMap().values().forEach(s -> starting_spells.append(",").append(s.getTag().trim()));
             }else{
                 ArsNouveauAPI.getInstance().getDefaultStartingSpells().forEach(s-> starting_spells.append(",").append(s.getTag().trim()));
             }

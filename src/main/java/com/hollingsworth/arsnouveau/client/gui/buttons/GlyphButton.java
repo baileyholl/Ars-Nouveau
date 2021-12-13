@@ -67,9 +67,9 @@ public class GlyphButton extends Button {
             }
 
             if(parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)){
-                if(parent.api.getSpell_map().containsKey(this.spell_id)) {
+                if(parent.api.getSpellMap().containsKey(this.spell_id)) {
                     List<Component> tip = new ArrayList<>();
-                    AbstractSpellPart spellPart = parent.api.getSpell_map().get(this.spell_id);
+                    AbstractSpellPart spellPart = parent.api.getSpellMap().get(this.spell_id);
                     tip.add(new TranslatableComponent(spellPart.getLocalizationKey()));
                     for (SpellValidationError ve : validationErrors) {
                         tip.add(ve.makeTextComponentAdding().withStyle(ChatFormatting.RED));
