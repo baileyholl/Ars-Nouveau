@@ -33,11 +33,11 @@ public class MycelialSourcelinkTile extends SourcelinkTile{
         super.tick();
         if(level.isClientSide)
             return;
-        if(level.getGameTime() % 40 == 0 && this.canAcceptMana()){
+        if(level.getGameTime() % 40 == 0 && this.canAcceptSource()){
             for(ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, new AABB(worldPosition).inflate(1.0))){
                 if(i.getItem().getItem().isEdible()){
                    int source = getSourceValue(i.getItem());
-                    this.addMana(source);
+                    this.addSource(source);
                     ItemStack containerItem = i.getItem().getContainerItem();
                     i.getItem().shrink(1);
                     if(!containerItem.isEmpty()){
@@ -50,7 +50,7 @@ public class MycelialSourcelinkTile extends SourcelinkTile{
             for(ArcanePedestalTile i : getSurroundingPedestals()){
                 int sourceValue = getSourceValue(i.getItem(0));
                 if(sourceValue > 0){
-                    this.addMana(sourceValue);
+                    this.addSource(sourceValue);
                     ItemStack containerItem = i.getItem(0).getContainerItem();
                     i.removeItem(0, 1);
                     i.setItem(0, containerItem);

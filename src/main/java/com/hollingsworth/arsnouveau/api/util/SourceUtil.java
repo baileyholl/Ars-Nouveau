@@ -114,11 +114,11 @@ public class SourceUtil {
      */
     @Nullable
     public static BlockPos takeManaNearby(BlockPos pos, Level world, int range, int mana){
-        Optional<BlockPos> loc = BlockPos.findClosestMatch(pos, range, range, (b) -> world.getBlockEntity(b) instanceof SourceJarTile && ((SourceJarTile) world.getBlockEntity(b)).getCurrentMana() >= mana);
+        Optional<BlockPos> loc = BlockPos.findClosestMatch(pos, range, range, (b) -> world.getBlockEntity(b) instanceof SourceJarTile && ((SourceJarTile) world.getBlockEntity(b)).getSource() >= mana);
         if(!loc.isPresent())
             return null;
         SourceJarTile tile = (SourceJarTile) world.getBlockEntity(loc.get());
-        tile.removeMana(mana);
+        tile.removeSource(mana);
         return loc.get();
     }
 
@@ -136,20 +136,20 @@ public class SourceUtil {
      * Returns the position where the mana was taken, or null if none were found.
      */
     public static boolean hasManaNearby(BlockPos pos, Level world, int range, int mana){
-        Optional<BlockPos> loc = BlockPos.findClosestMatch(pos, range, range, (b) -> world.getBlockEntity(b) instanceof SourceJarTile && ((SourceJarTile) world.getBlockEntity(b)).getCurrentMana() >= mana);
+        Optional<BlockPos> loc = BlockPos.findClosestMatch(pos, range, range, (b) -> world.getBlockEntity(b) instanceof SourceJarTile && ((SourceJarTile) world.getBlockEntity(b)).getSource() >= mana);
         return loc.isPresent();
     }
 
     @Nullable
     public static BlockPos canGiveManaClosest(BlockPos pos, Level world, int range){
-        Optional<BlockPos> loc = BlockPos.findClosestMatch(pos, range, range, (b) ->  world.getBlockEntity(b) instanceof SourceJarTile && ((SourceJarTile) world.getBlockEntity(b)).canAcceptMana());
+        Optional<BlockPos> loc = BlockPos.findClosestMatch(pos, range, range, (b) ->  world.getBlockEntity(b) instanceof SourceJarTile && ((SourceJarTile) world.getBlockEntity(b)).canAcceptSource());
         return loc.orElse(null);
     }
 
     public static List<BlockPos> canGiveManaAny(BlockPos pos, Level world, int range){
         List<BlockPos> posList = new ArrayList<>();
         BlockPos.withinManhattanStream(pos, range, range, range).forEach(b ->{
-            if(world.getBlockEntity(b) instanceof SourceJarTile && ((SourceJarTile) world.getBlockEntity(b)).canAcceptMana())
+            if(world.getBlockEntity(b) instanceof SourceJarTile && ((SourceJarTile) world.getBlockEntity(b)).canAcceptSource())
                 posList.add(b.immutable());
         });
         return posList;

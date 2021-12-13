@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
+import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleSparkleData;
@@ -22,7 +22,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.Random;
 
-public class SummoningCrystalTile extends AbstractManaTile implements IAnimatable, ITickable {
+public class SummoningCrystalTile extends AbstractSourceMachine implements IAnimatable, ITickable {
 
     public boolean isOff;
 

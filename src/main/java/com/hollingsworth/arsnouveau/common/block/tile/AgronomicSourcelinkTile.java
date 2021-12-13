@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.mana.SourcelinkEventQueue;
+import com.hollingsworth.arsnouveau.api.source.SourcelinkEventQueue;
 import com.hollingsworth.arsnouveau.common.datagen.Recipes;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
@@ -20,7 +20,7 @@ public class AgronomicSourcelinkTile extends SourcelinkTile {
     }
 
     @Override
-    public int getMaxMana() {
+    public int getMaxSource() {
         return 1000;
     }
 
@@ -30,8 +30,8 @@ public class AgronomicSourcelinkTile extends SourcelinkTile {
     }
 
     @Override
-    public int getCurrentMana() {
-        return super.getCurrentMana();
+    public int getSource() {
+        return super.getSource();
     }
 
     @SubscribeEvent

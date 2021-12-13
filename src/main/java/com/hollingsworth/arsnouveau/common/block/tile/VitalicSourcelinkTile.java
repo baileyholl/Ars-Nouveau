@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
-import com.hollingsworth.arsnouveau.api.mana.SourcelinkEventQueue;
+import com.hollingsworth.arsnouveau.api.source.SourcelinkEventQueue;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
@@ -31,7 +31,7 @@ public class VitalicSourcelinkTile extends SourcelinkTile{
     }
 
     @Override
-    public int getMaxMana() {
+    public int getMaxSource() {
         return 2500;
     }
 
@@ -46,7 +46,7 @@ public class VitalicSourcelinkTile extends SourcelinkTile{
                             return;
                         }
                         entity.setAge(Math.min(0,entity.getAge() + 500));
-                        this.addMana(10);
+                        this.addSource(10);
                         ParticleUtil.spawnFollowProjectile(level, entity.blockPosition(), this.worldPosition);
                     }
                 }

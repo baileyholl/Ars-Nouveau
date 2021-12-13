@@ -249,7 +249,7 @@ public class GlyphPressTile extends AnimatedTile implements ITickable, IAnimatab
         int manaCost = recipe.tier == ISpellTier.Tier.ONE ? 500 : (recipe.tier == ISpellTier.Tier.TWO ? 1500 : 3000);
         AtomicBoolean valid = new AtomicBoolean(false);
         BlockPos.betweenClosedStream(this.getBlockPos().offset(5, -3, 5), this.getBlockPos().offset(-5, 3, -5)).forEach(blockPos -> {
-            if(!valid.get() && level.getBlockEntity(blockPos) instanceof SourceJarTile && ((SourceJarTile) level.getBlockEntity(blockPos)).getCurrentMana() >= manaCost) {
+            if(!valid.get() && level.getBlockEntity(blockPos) instanceof SourceJarTile && ((SourceJarTile) level.getBlockEntity(blockPos)).getSource() >= manaCost) {
                 valid.set(true);
             }
         });

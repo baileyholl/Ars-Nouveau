@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
-import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
+import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.SourceJar;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
-public class SourceJarTile extends AbstractManaTile implements ITickable, ITooltipProvider {
+public class SourceJarTile extends AbstractSourceMachine implements ITickable, ITooltipProvider {
 
     public SourceJarTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.SOURCE_JAR_TILE, pos, state);
@@ -24,7 +24,7 @@ public class SourceJarTile extends AbstractManaTile implements ITickable, IToolt
     }
 
     @Override
-    public int getMaxMana() {
+    public int getMaxSource() {
         return 10000;
     }
 
@@ -36,10 +36,10 @@ public class SourceJarTile extends AbstractManaTile implements ITickable, IToolt
         }
         BlockState state = level.getBlockState(worldPosition);
         int fillState = 0;
-        if(this.getCurrentMana() > 0 && this.getCurrentMana() < 1000)
+        if(this.getSource() > 0 && this.getSource() < 1000)
             fillState = 1;
-        else if(this.getCurrentMana() != 0){
-            fillState = (this.getCurrentMana() / 1000) + 1;
+        else if(this.getSource() != 0){
+            fillState = (this.getSource() / 1000) + 1;
         }
 
         level.setBlock(worldPosition, state.setValue(SourceJar.fill, fillState),3);
@@ -48,12 +48,12 @@ public class SourceJarTile extends AbstractManaTile implements ITickable, IToolt
 
     @Override
     public int getTransferRate() {
-        return getMaxMana();
+        return getMaxSource();
     }
 
     @Override
     public List<Component> getTooltip(List<Component> tooltip) {
-        tooltip.add(new TranslatableComponent("ars_nouveau.source_jar.fullness", (getCurrentMana()*100) / this.getMaxMana()));
+        tooltip.add(new TranslatableComponent("ars_nouveau.source_jar.fullness", (getSource()*100) / this.getMaxSource()));
         return tooltip;
     }
 }

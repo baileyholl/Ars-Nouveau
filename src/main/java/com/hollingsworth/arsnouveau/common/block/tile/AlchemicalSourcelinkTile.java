@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -19,7 +18,7 @@ public class AlchemicalSourcelinkTile extends SourcelinkTile{
     }
 
     @Override
-    public int getMaxMana() {
+    public int getMaxSource() {
         return 20000;
     }
 
@@ -45,7 +44,7 @@ public class AlchemicalSourcelinkTile extends SourcelinkTile{
                 }
                 if(effectTypes.size() > 1)
                     mana *= (1.5 * (effectTypes.size() - 1));
-                addMana(mana);
+                addSource(mana);
                 tile.addAmount(-100);
             }
         }

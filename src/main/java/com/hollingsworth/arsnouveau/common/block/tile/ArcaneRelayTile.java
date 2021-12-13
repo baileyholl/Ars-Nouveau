@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
-import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
+import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -27,10 +27,9 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
-public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvider, IWandable, IAnimatable, ITickable {
+public class ArcaneRelayTile extends AbstractSourceMachine implements ITooltipProvider, IWandable, IAnimatable, ITickable {
 
     public ArcaneRelayTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.ARCANE_RELAY_TILE, pos, state);
@@ -94,7 +93,7 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
     }
 
     @Override
-    public int getMaxMana() {
+    public int getMaxSource() {
         return 1000;
     }
 
@@ -145,14 +144,14 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
 
         if(fromPos != null){
             // Block has been removed
-            if(!(level.getBlockEntity(fromPos) instanceof AbstractManaTile)){
+            if(!(level.getBlockEntity(fromPos) instanceof AbstractSourceMachine)){
                 fromPos = null;
                 update();
                 return;
-            }else if(level.getBlockEntity(fromPos) instanceof AbstractManaTile){
+            }else if(level.getBlockEntity(fromPos) instanceof AbstractSourceMachine){
                 // Transfer mana fromPos to this
-                AbstractManaTile fromTile = (AbstractManaTile) level.getBlockEntity(fromPos);
-                if(transferMana(fromTile, this) > 0){
+                AbstractSourceMachine fromTile = (AbstractSourceMachine) level.getBlockEntity(fromPos);
+                if(transferSource(fromTile, this) > 0){
                     update();
                     ParticleUtil.spawnFollowProjectile(level, fromPos, worldPosition);
                 }
@@ -161,13 +160,13 @@ public class ArcaneRelayTile extends AbstractManaTile implements ITooltipProvide
 
         if(toPos == null)
             return;
-        if(!(level.getBlockEntity(toPos) instanceof AbstractManaTile)){
+        if(!(level.getBlockEntity(toPos) instanceof AbstractSourceMachine)){
             toPos = null;
             update();
             return;
         }
-        AbstractManaTile toTile = (AbstractManaTile) this.level.getBlockEntity(toPos);
-        if(transferMana(this, toTile) > 0){
+        AbstractSourceMachine toTile = (AbstractSourceMachine) this.level.getBlockEntity(toPos);
+        if(transferSource(this, toTile) > 0){
             ParticleUtil.spawnFollowProjectile(level, worldPosition, toPos);
         }
     }

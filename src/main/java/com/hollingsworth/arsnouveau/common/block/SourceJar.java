@@ -24,7 +24,7 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class SourceJar extends ManaBlock {
+public class SourceJar extends SourceBlock {
 
     public static final Property<Integer> fill = IntegerProperty.create("fill", 0, 11);
 
@@ -63,9 +63,9 @@ public class SourceJar extends ManaBlock {
     @Override
     public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos) {
         SourceJarTile tile = (SourceJarTile) worldIn.getBlockEntity(pos);
-        if (tile == null || tile.getCurrentMana() <= 0) return 0;
-        int step = (tile.getMaxMana() - 1) / 14;
-        return (tile.getCurrentMana() - 1) / step + 1;
+        if (tile == null || tile.getSource() <= 0) return 0;
+        int step = (tile.getMaxSource() - 1) / 14;
+        return (tile.getSource() - 1) / step + 1;
     }
 
     @Override

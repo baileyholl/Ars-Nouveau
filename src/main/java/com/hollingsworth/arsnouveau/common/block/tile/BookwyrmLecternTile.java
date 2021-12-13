@@ -8,7 +8,7 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.BookwyrmLectern;
-import com.hollingsworth.arsnouveau.common.block.ManaBlock;
+import com.hollingsworth.arsnouveau.common.block.SourceBlock;
 import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -126,7 +126,7 @@ public class BookwyrmLecternTile extends SummoningTile implements IWandable {
                 }
             }
             Block block = level.getBlockState(taskPos).getBlock();
-            if(block instanceof BookwyrmLectern || block instanceof BaseEntityBlock || block instanceof ManaBlock || block instanceof Container)
+            if(block instanceof BookwyrmLectern || block instanceof BaseEntityBlock || block instanceof SourceBlock || block instanceof Container)
                 continue;
 
             if(caster.getEntityData().get(EntityBookwyrm.STRICT_MODE)){

@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.mana.IManaTile;
+import com.hollingsworth.arsnouveau.api.source.ISourceTile;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -18,14 +18,14 @@ public class RelayDepositTile extends ArcaneRelayTile{
     @Override
     public void tick() {
         super.tick();
-        if(!level.isClientSide && level.getGameTime() % 20 == 0 && getCurrentMana() > 0){
+        if(!level.isClientSide && level.getGameTime() % 20 == 0 && getSource() > 0){
             List<BlockPos> posList = SourceUtil.canGiveManaAny(worldPosition, level, 5);
             for(BlockPos jarPos : posList) {
-                if(this.getCurrentMana() == 0)
+                if(this.getSource() == 0)
                     break;
 
                 if (jarPos != null && !jarPos.equals(this.getToPos()) && !jarPos.equals(this.getFromPos()) && level.getBlockEntity(jarPos) instanceof SourceJarTile) {
-                    transferMana(this, (IManaTile) level.getBlockEntity(jarPos));
+                    transferSource(this, (ISourceTile) level.getBlockEntity(jarPos));
                     ParticleUtil.spawnFollowProjectile(level, this.worldPosition, jarPos);
                 }
             }

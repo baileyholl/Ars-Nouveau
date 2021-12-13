@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
-import com.hollingsworth.arsnouveau.api.mana.IManaTile;
-import com.hollingsworth.arsnouveau.api.mana.SourcelinkEventQueue;
+import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
+import com.hollingsworth.arsnouveau.api.source.ISourceTile;
+import com.hollingsworth.arsnouveau.api.source.SourcelinkEventQueue;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SourcelinkTile extends AbstractManaTile implements IAnimatable, ITickable {
+public class SourcelinkTile extends AbstractSourceMachine implements IAnimatable, ITickable {
 
     int progress;
     public boolean isDisabled = false;
@@ -41,7 +41,7 @@ public class SourcelinkTile extends AbstractManaTile implements IAnimatable, ITi
     }
 
     @Override
-    public int getMaxMana() {
+    public int getMaxSource() {
         return 1000;
     }
 
@@ -54,10 +54,10 @@ public class SourcelinkTile extends AbstractManaTile implements IAnimatable, ITi
             registered = true;
         }
 
-        if(level.getGameTime() % 100 == 0 && getCurrentMana() > 0){
+        if(level.getGameTime() % 100 == 0 && getSource() > 0){
             BlockPos jarPos = SourceUtil.canGiveManaClosest(worldPosition, level, 5);
             if(jarPos != null){
-                transferMana(this, (IManaTile) level.getBlockEntity(jarPos));
+                transferSource(this, (ISourceTile) level.getBlockEntity(jarPos));
                 ParticleUtil.spawnFollowProjectile(level, this.worldPosition, jarPos);
             }
         }
@@ -74,7 +74,7 @@ public class SourcelinkTile extends AbstractManaTile implements IAnimatable, ITi
     }
 
     public void getManaEvent(BlockPos sourcePos, int total){
-        this.addMana(total);
+        this.addSource(total);
         ParticleUtil.spawnFollowProjectile(level, sourcePos, this.worldPosition);
     }
 

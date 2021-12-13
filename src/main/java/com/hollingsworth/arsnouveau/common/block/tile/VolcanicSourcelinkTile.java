@@ -37,11 +37,11 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
         super.tick();
         if(level.isClientSide)
             return;
-        if(level.getGameTime() % 20 == 0 && this.canAcceptMana()){
+        if(level.getGameTime() % 20 == 0 && this.canAcceptSource()){
             for(ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, new AABB(worldPosition).inflate(1.0))){
                 int source = getSourceValue(i.getItem());
                 if(source > 0) {
-                    this.addMana(source);
+                    this.addSource(source);
                     ItemStack containerItem = i.getItem().getContainerItem();
                     i.getItem().shrink(1);
                     if(!containerItem.isEmpty()){
@@ -55,7 +55,7 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
             for(ArcanePedestalTile i : getSurroundingPedestals()){
                 int sourceValue = getSourceValue(i.getItem(0));
                 if(sourceValue > 0){
-                    this.addMana(sourceValue);
+                    this.addSource(sourceValue);
                     ItemStack containerItem = i.getItem(0).getContainerItem();
                     i.removeItem(0, 1);
                     i.setItem(0, containerItem);
@@ -144,7 +144,7 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
     }
 
     @Override
-    public int getMaxMana() {
+    public int getMaxSource() {
         return 1000;
     }
 

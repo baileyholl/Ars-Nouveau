@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.mana.IManaTile;
+import com.hollingsworth.arsnouveau.api.source.ISourceTile;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -29,7 +29,7 @@ public class RelayWarpTile extends ArcaneRelaySplitterTile{
         }
     }
 
-    public int transferMana(IManaTile from, IManaTile to, int fromTransferRate){
+    public int transferSource(ISourceTile from, ISourceTile to, int fromTransferRate){
         if(to instanceof RelayWarpTile){
             RelayWarpTile toWarp = (RelayWarpTile) to;
             double adjustedDist = BlockUtil.distanceFrom(toWarp.worldPosition, this.worldPosition) - 30;
@@ -38,13 +38,13 @@ public class RelayWarpTile extends ArcaneRelaySplitterTile{
                 int transferRate = getTransferRate(from, to, fromTransferRate);
                 if(transferRate == 0)
                     return 0;
-                from.removeMana(transferRate);
+                from.removeSource(transferRate);
                 int lossyTransfer = Math.max(1, (int) (transferRate * 0.7));
-                to.addMana(lossyTransfer);
+                to.addSource(lossyTransfer);
                 return lossyTransfer;
             }
         }
-        return super.transferMana(from, to, fromTransferRate);
+        return super.transferSource(from, to, fromTransferRate);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.api.mana;
+package com.hollingsworth.arsnouveau.api.source;
 
 import com.hollingsworth.arsnouveau.common.block.tile.SourcelinkTile;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -28,7 +28,7 @@ public class SourcelinkEventQueue {
                 stalePos.add(p);
                 continue;
             }
-            if(entity.getClass().equals(tileType) && ((SourcelinkTile) entity).eventInRange(sourcePos, event) && ((SourcelinkTile) entity).canAcceptMana() ){
+            if(entity.getClass().equals(tileType) && ((SourcelinkTile) entity).eventInRange(sourcePos, event) && ((SourcelinkTile) entity).canAcceptSource() ){
                 ((SourcelinkTile) entity).getManaEvent(sourcePos, amount);
                 break;
             }

@@ -11,7 +11,7 @@ public class CreativeSourceJarTile extends SourceJarTile {
     }
 
     @Override
-    public int getCurrentMana() {
-        return this.getMaxMana();
+    public int getSource() {
+        return this.getMaxSource();
     }
 }

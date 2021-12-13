@@ -1,32 +1,27 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
+import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import com.hollingsworth.arsnouveau.setup.Config;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.Container;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class CrystallizerTile extends AbstractManaTile implements Container, ITickable {
+public class CrystallizerTile extends AbstractSourceMachine implements Container, ITickable {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     public ItemStack stack = ItemStack.EMPTY;
     public ItemEntity entity;
@@ -48,28 +43,27 @@ public class CrystallizerTile extends AbstractManaTile implements Container, ITi
 
 
         if(this.stack.isEmpty() && this.level.getGameTime() % 20 == 0 && SourceUtil.takeManaNearby(worldPosition, level, 1, 200) != null){
-            this.addMana(500);
+            this.addSource(500);
             if(!draining) {
                 draining = true;
                 update();
             }
         }else if(this.level.getGameTime() % 20 == 0){
-            this.addMana(5);
+            this.addSource(5);
             if(draining){
                 draining = false;
                 update();
             }
         }
 
-        if(this.getCurrentMana() >= 5000 && (stack == null || stack.isEmpty())){
-            Item foundItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(Config.CRYSTALLIZER_ITEM.get()));
-            if(foundItem == null){
-                System.out.println("NULL CRYSTALLIZER ITEM.");
-                foundItem = ItemsRegistry.SOURCE_GEM;
-            }
-            this.stack = new ItemStack(foundItem);
-
-            this.setMana(0);
+        if(this.getSource() >= 5000 && (stack == null || stack.isEmpty())){
+//            Item foundItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(Config.CRYSTALLIZER_ITEM.get()));
+//            if(foundItem == null || foundItem == Items.AIR){
+//                System.out.println("NULL CRYSTALLIZER ITEM.");
+//                foundItem = ItemsRegistry.SOURCE_GEM;
+//            }
+//            this.stack = new ItemStack(foundItem);
+            this.setSource(0);
         }
     }
 
@@ -92,7 +86,7 @@ public class CrystallizerTile extends AbstractManaTile implements Container, ITi
     }
 
     @Override
-    public int getMaxMana() {
+    public int getMaxSource() {
         return 5000;
     }
 

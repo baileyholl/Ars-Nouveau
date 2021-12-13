@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
+import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -50,12 +50,12 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
         ArrayList<BlockPos> stale = new ArrayList<>();
         int ratePer = getTransferRate() / fromList.size();
         for(BlockPos fromPos : fromList){
-            if(!(level.getBlockEntity(fromPos) instanceof AbstractManaTile)){
+            if(!(level.getBlockEntity(fromPos) instanceof AbstractSourceMachine)){
                 stale.add(fromPos);
                 continue;
             }
-            AbstractManaTile fromTile = (AbstractManaTile) level.getBlockEntity(fromPos);
-            if(transferMana(fromTile, this, ratePer) > 0){
+            AbstractSourceMachine fromTile = (AbstractSourceMachine) level.getBlockEntity(fromPos);
+            if(transferSource(fromTile, this, ratePer) > 0){
                 createParticles(fromPos, worldPosition);
             }
         }
@@ -74,12 +74,12 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
         ArrayList<BlockPos> stale = new ArrayList<>();
         int ratePer = getTransferRate() / toList.size();
         for(BlockPos toPos : toList){
-            if(!(level.getBlockEntity(toPos) instanceof AbstractManaTile)){
+            if(!(level.getBlockEntity(toPos) instanceof AbstractSourceMachine)){
                 stale.add(toPos);
                 continue;
             }
-            AbstractManaTile toTile = (AbstractManaTile) level.getBlockEntity(toPos);
-            int transfer = transferMana(this, toTile, ratePer);
+            AbstractSourceMachine toTile = (AbstractSourceMachine) level.getBlockEntity(toPos);
+            int transfer = transferSource(this, toTile, ratePer);
             if(transfer > 0){
                 createParticles(worldPosition, toPos);
             }
@@ -104,7 +104,7 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
     }
 
     @Override
-    public int getMaxMana() {
+    public int getMaxSource() {
         return 2500;
     }
 
