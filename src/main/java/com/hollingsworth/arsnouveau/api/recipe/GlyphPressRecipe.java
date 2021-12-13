@@ -28,6 +28,7 @@ public class GlyphPressRecipe implements Recipe<Container> {
     public final ItemStack reagent;
 
     public final ItemStack output;
+    public static final String RECIPE_ID = "glyph_recipe";
 
     public GlyphPressRecipe(ResourceLocation id, ISpellTier.Tier tier, ItemStack reagent, ItemStack output){
         this.id = id;

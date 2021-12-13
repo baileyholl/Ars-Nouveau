@@ -36,6 +36,8 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
     public ResourceLocation id;
     public int manaCost;
 
+    public static final String RECIPE_ID = "enchanting_apparatus";
+
     public EnchantingApparatusRecipe(ItemStack result, Ingredient reagent, List<Ingredient> pedestalItems, String category){
         this.reagent = reagent;
         this.pedestalItems = pedestalItems;
