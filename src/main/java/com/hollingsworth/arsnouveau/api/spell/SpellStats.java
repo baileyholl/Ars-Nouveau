@@ -106,7 +106,7 @@ public class SpellStats {
             this.spellStats = new SpellStats();
         }
 
-        public SpellStats build(AbstractSpellPart spellPart, HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellContext spellContext){
+        public SpellStats build(AbstractSpellPart spellPart, @Nullable HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellContext spellContext){
             for(AbstractAugment abstractAugment : spellStats.augments){
                 abstractAugment.applyModifiers(this, spellPart);
             }

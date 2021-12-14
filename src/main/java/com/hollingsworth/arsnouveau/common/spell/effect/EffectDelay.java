@@ -8,23 +8,21 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketClientDelayEffect;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Set;
-
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
 
 public class EffectDelay extends AbstractEffect {
     public static EffectDelay INSTANCE = new EffectDelay();
@@ -39,7 +37,7 @@ public class EffectDelay extends AbstractEffect {
             return;
         Spell newSpell =  new Spell(new ArrayList<>(spellContext.getSpell().recipe.subList(spellContext.getCurrentIndex(), spellContext.getSpell().recipe.size())));
         SpellContext newContext = new SpellContext(newSpell, shooter).withColors(spellContext.colors);
-        int duration = GENERIC_INT.get() + EXTEND_TIME.get() * getBuffCount(spellStats.getAugments(), AugmentExtendTime.class) * 20 - (EXTEND_TIME.get() / 2) * getBuffCount(spellStats.getAugments(), AugmentDurationDown.class) * 20;
+        int duration = GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getBuffCount(AugmentExtendTime.INSTANCE) * 20 - (EXTEND_TIME.get() / 2) * spellStats.getBuffCount(AugmentDurationDown.INSTANCE) * 20;
         EventQueue.getServerInstance().addEvent(
                 new DelayedSpellEvent(duration , newSpell, rayTraceResult, world, shooter, newContext));
         Networking.sendToNearby(world, new BlockPos(safelyGetHitPos(rayTraceResult)),

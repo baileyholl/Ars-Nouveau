@@ -21,10 +21,7 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Set;
-
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
 
 public class EffectGrow  extends AbstractEffect {
     public static EffectGrow INSTANCE = new EffectGrow();
@@ -44,7 +41,7 @@ public class EffectGrow  extends AbstractEffect {
     }
 
     @Override
-    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, List<AbstractAugment> augments) {
+    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         if(!(rayTraceResult instanceof BlockHitResult))
             return false;
         BlockPos pos = ((BlockHitResult) rayTraceResult).getBlockPos();

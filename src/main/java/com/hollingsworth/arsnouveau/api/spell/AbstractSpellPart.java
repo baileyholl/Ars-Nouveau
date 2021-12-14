@@ -4,17 +4,19 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.util.SpellPartConfigUtil;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.world.item.Item;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class AbstractSpellPart implements ISpellTier, Comparable<AbstractSpellPart> {
     // TODO: Clarify that this is the default cost.
@@ -65,19 +67,6 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
 
     public ISpellTier.Tier getTier() {
         return ISpellTier.Tier.ONE;
-    }
-    // TODO: Move to SpellStats
-    @Deprecated
-    public static int getBuffCount(List<AbstractAugment> augments, Class<? extends AbstractSpellPart> spellClass){
-        return (int) augments.stream().filter(spellClass::isInstance).count();
-    }
-
-    public boolean hasBuff(List<AbstractAugment> augments, Class spellClass){
-        return getBuffCount(augments, spellClass) > 0;
-    }
-
-    public int getAmplificationBonus(List<AbstractAugment> augmentTypes){
-        return getBuffCount(augmentTypes, AugmentAmplify.class) - getBuffCount(augmentTypes, AugmentDampen.class);
     }
 
     /**

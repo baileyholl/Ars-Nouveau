@@ -44,7 +44,7 @@ public class EffectCut extends AbstractEffect {
         if(entity instanceof IForgeShearable){
             IForgeShearable shearable = (IForgeShearable) entity;
             ItemStack shears = new ItemStack(Items.SHEARS);
-            applyEnchantments(spellStats.getAugments(), shears);
+            applyEnchantments(spellStats, shears);
             if(shearable.isShearable(shears, world, entity.blockPosition())){
                 List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerLevel) world), shears, world, entity.blockPosition(), spellStats.getBuffCount(AugmentFortune.INSTANCE));
                 items.forEach(i->world.addFreshEntity(new ItemEntity(world, entity.getX(), entity.getY(), entity.getZ(), i)));
@@ -55,15 +55,15 @@ public class EffectCut extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world,  LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
-        for(BlockPos p : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        for(BlockPos p : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult,spellStats.getBuffCount(AugmentAOE.INSTANCE), spellStats.getBuffCount(AugmentPierce.INSTANCE))) {
             ItemStack shears = new ItemStack(Items.SHEARS);
-            applyEnchantments(augments, shears);
+            applyEnchantments(spellStats, shears);
             if (world.getBlockState(p).getBlock() instanceof IForgeShearable) {
                 IForgeShearable shearable = (IForgeShearable) world.getBlockState(p).getBlock();
 
                 if (shearable.isShearable(shears, world,p)) {
-                    List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerLevel) world), shears, world, p, getBuffCount(augments, AugmentFortune.class));
+                    List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerLevel) world), shears, world, p, spellStats.getBuffCount(AugmentFortune.INSTANCE));
                     items.forEach(i -> world.addFreshEntity(new ItemEntity(world, p.getX(), p.getY(),p.getZ(), i)));
                 }
             }

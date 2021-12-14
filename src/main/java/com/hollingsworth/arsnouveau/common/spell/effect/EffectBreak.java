@@ -87,8 +87,8 @@ public class EffectBreak extends AbstractEffect {
     }
 
     @Override
-    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, List<AbstractAugment> augments) {
-        return rayTraceResult instanceof BlockHitResult && world.getBlockState(((BlockHitResult) rayTraceResult).getBlockPos()).getMaterial() != Material.AIR && canBlockBeHarvested(augments, world, ((BlockHitResult) rayTraceResult).getBlockPos());
+    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        return rayTraceResult instanceof BlockHitResult && world.getBlockState(((BlockHitResult) rayTraceResult).getBlockPos()).getMaterial() != Material.AIR && canBlockBeHarvested(spellStats, world, ((BlockHitResult) rayTraceResult).getBlockPos());
     }
 
     @Override

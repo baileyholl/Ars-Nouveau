@@ -22,7 +22,6 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Set;
 
 public class EffectFangs extends AbstractEffect {
@@ -84,7 +83,7 @@ public class EffectFangs extends AbstractEffect {
     }
 
     @Override
-    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, List<AbstractAugment> augments) {
+    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         return nonAirAnythingSuccess(rayTraceResult, world);
     }
 

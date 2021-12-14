@@ -18,7 +18,6 @@ import net.minecraftforge.common.MinecraftForge;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 public class EffectDispel extends AbstractEffect {
@@ -54,7 +53,7 @@ public class EffectDispel extends AbstractEffect {
     }
 
     @Override
-    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, List<AbstractAugment> augments) {
+    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         return rayTraceResult instanceof EntityHitResult || (rayTraceResult instanceof BlockHitResult && world.getBlockState(((BlockHitResult) rayTraceResult).getBlockPos()).getBlock() instanceof IDispellable);
     }
 

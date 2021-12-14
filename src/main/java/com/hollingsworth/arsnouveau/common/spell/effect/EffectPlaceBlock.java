@@ -96,7 +96,7 @@ public class EffectPlaceBlock extends AbstractEffect {
     }
 
     @Override
-    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, List<AbstractAugment> augments) {
+    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         return nonAirBlockSuccess(rayTraceResult, world);
     }
 

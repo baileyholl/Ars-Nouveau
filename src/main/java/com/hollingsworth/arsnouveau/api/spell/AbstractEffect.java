@@ -49,65 +49,46 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         super(tag, description);
     }
 
-    // Apply the effect at the destination position.
-    @Deprecated // Marked for removal
-    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext){
-        if(rayTraceResult instanceof BlockHitResult)
-            onResolveBlock((BlockHitResult) rayTraceResult,
-                    world,
-                    shooter,
-                    new SpellStats.Builder().setAugments(augments)
-                            .addItemsFromEntity(shooter)
-                            .build(this, rayTraceResult, world, shooter, spellContext),
-                    spellContext);
-
-        if(rayTraceResult instanceof EntityHitResult)
-            onResolveEntity((EntityHitResult) rayTraceResult,
-                    world,
-                    shooter,
-                    new SpellStats.Builder().setAugments(augments)
-                            .addItemsFromEntity(shooter)
-                            .build(this, rayTraceResult, world, shooter, spellContext),
-                    spellContext);
-    }
-    @Deprecated // Marked for removal
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext){}
-
-    @Deprecated // Marked for removal
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext){}
-
     public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext){
-        onResolve(rayTraceResult, world, shooter, spellStats.getAugments(), spellContext);
+        if(rayTraceResult instanceof BlockHitResult){
+            onResolveBlock((BlockHitResult) rayTraceResult, world, shooter, spellStats, spellContext);
+        }else if(rayTraceResult instanceof EntityHitResult){
+            onResolveEntity((EntityHitResult) rayTraceResult, world, shooter, spellStats, spellContext);
+        }
     }
 
-    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext){
-        onResolveEntity(rayTraceResult, world, shooter, spellStats.getAugments(), spellContext);
-    }
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext){}
 
-    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext){
-        onResolveBlock(rayTraceResult, world, shooter, spellStats.getAugments(), spellContext);
-    }
-
-
-    @Deprecated // Use config-sensitive method
-    public void applyPotion(LivingEntity entity, MobEffect potionEffect, List<AbstractAugment> augmentTypes){
-        applyPotion(entity, potionEffect, augmentTypes, 30, 8);
-    }
-
-    @Deprecated // Use stats sensitive method
-    public void applyConfigPotion(LivingEntity entity, MobEffect potionEffect, List<AbstractAugment> augmentTypes){
-        applyPotion(entity, potionEffect, augmentTypes, POTION_TIME == null ? 30 : POTION_TIME.get(), EXTEND_TIME == null ? 8 : EXTEND_TIME.get());
-    }
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext){}
 
     public void applyConfigPotion(LivingEntity entity, MobEffect potionEffect, SpellStats spellStats){
         applyConfigPotion(entity, potionEffect, spellStats, true);
     }
+
     public void applyConfigPotion(LivingEntity entity, MobEffect potionEffect, SpellStats spellStats, boolean showParticles){
         applyPotion(entity, potionEffect, spellStats, POTION_TIME == null ? 30 : POTION_TIME.get(), EXTEND_TIME == null ? 8 : EXTEND_TIME.get(), showParticles);
     }
+
+    public void applyPotionWithCap(LivingEntity entity, MobEffect potionEffect, SpellStats stats, int baseDuration, int durationBuffBase, int cap){
+        if(entity == null)
+            return;
+        int duration = (int) (baseDuration + durationBuffBase * stats.getDurationMultiplier());
+        int amp = Math.min(cap, (int)stats.getAmpMultiplier());
+        entity.addEffect(new MobEffectInstance(potionEffect, duration * 20, amp));
+    }
+
+    public void applyPotion(LivingEntity entity, MobEffect potionEffect, SpellStats stats, int baseDurationSeconds, int durationBuffSeconds, boolean showParticles){
+        if(entity == null)
+            return;
+        int ticks = baseDurationSeconds * 20 + durationBuffSeconds * stats.getDurationInTicks();
+        int amp = (int) stats.getAmpMultiplier();
+        entity.addEffect(new MobEffectInstance(potionEffect, ticks, amp, false, showParticles, true));
+    }
+
     public boolean canSummon(LivingEntity playerEntity){
         return isRealPlayer(playerEntity) && playerEntity.getEffect(ModPotions.SUMMONING_SICKNESS) == null;
     }
+
     public void applySummoningSickness(LivingEntity playerEntity, int time){
         playerEntity.addEffect(new MobEffectInstance(ModPotions.SUMMONING_SICKNESS, time));
     }
@@ -121,67 +102,16 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         MinecraftForge.EVENT_BUS.post(new SummonEvent(rayTraceResult, world, shooter, augments, spellContext, summon));
     }
 
-    @Deprecated
-    public void applyPotionWithCap(LivingEntity entity, MobEffect potionEffect, List<AbstractAugment> augmentTypes, int baseDuration, int durationBuffBase, int cap){
-        if(entity == null)
-            return;
-        int duration = baseDuration + durationBuffBase * getDurationModifier(augmentTypes);
-        int amp = Math.min(cap, getAmplificationBonus(augmentTypes));
-        entity.addEffect(new MobEffectInstance(potionEffect, duration * 20, amp));
-    }
-
-    public void applyPotionWithCap(LivingEntity entity, MobEffect potionEffect, SpellStats stats, int baseDuration, int durationBuffBase, int cap){
-        if(entity == null)
-            return;
-        int duration = (int) (baseDuration + durationBuffBase * stats.getDurationMultiplier());
-        int amp = Math.min(cap, (int)stats.getAmpMultiplier());
-        entity.addEffect(new MobEffectInstance(potionEffect, duration * 20, amp));
-    }
-
-    @Deprecated // Use config-sensitive method. Will become private
-    public void applyPotion(LivingEntity entity, MobEffect potionEffect, List<AbstractAugment> augmentTypes, int baseDuration, int durationBuffBase){
-        if(entity == null)
-            return;
-        int duration = baseDuration + durationBuffBase * getDurationModifier(augmentTypes);
-        int amp = getAmplificationBonus(augmentTypes);
-        entity.addEffect(new MobEffectInstance(potionEffect, duration * 20, amp));
-    }
-
-    public void applyPotion(LivingEntity entity, MobEffect potionEffect, SpellStats stats, int baseDurationSeconds, int durationBuffSeconds, boolean showParticles){
-        if(entity == null)
-            return;
-        int ticks = baseDurationSeconds * 20 + durationBuffSeconds * stats.getDurationInTicks();
-        int amp = (int) stats.getAmpMultiplier();
-        entity.addEffect(new MobEffectInstance(potionEffect, ticks, amp, false, showParticles, true));
-    }
-
-
-
-    @Deprecated
-    public int getDurationModifier( List<AbstractAugment> augmentTypes){
-        return getBuffCount(augmentTypes, AugmentExtendTime.class) - getBuffCount(augmentTypes, AugmentDurationDown.class);
-    }
-
     public Player getPlayer(LivingEntity entity, ServerLevel world){
         return entity instanceof Player ? (Player) entity : FakePlayerFactory.getMinecraft(world);
     }
-
-    @Deprecated
-    public int getBaseHarvestLevel(List<AbstractAugment> augments){
-        return 2 + getAmplificationBonus(augments);
-    }
-
-    public boolean canBlockBeHarvested(List<AbstractAugment> augments, Level world, BlockPos pos){
-        return  world.getBlockState(pos).getDestroySpeed(world, pos) >= 0 && SpellUtil.isCorrectHarvestLevel(getBaseHarvestLevel(augments), world.getBlockState(pos));
-    }
-
 
     public int getBaseHarvestLevel(SpellStats stats){
         return (int) (2 + stats.getAmpMultiplier());
     }
 
     public boolean canBlockBeHarvested(SpellStats stats, Level world, BlockPos pos){
-        return true;// world.getBlockState(pos).getDestroySpeed(world, pos) >= 0 && getBaseHarvestLevel(stats) >= world.getBlockState(pos).getHarvestLevel();
+        return world.getBlockState(pos).getDestroySpeed(world, pos) >= 0 && SpellUtil.isCorrectHarvestLevel(getBaseHarvestLevel(stats), world.getBlockState(pos));
     }
 
     public void dealDamage(Level world, LivingEntity shooter, float baseDamage, SpellStats stats, Entity entity, DamageSource source){
@@ -199,29 +129,6 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         if(mob.getHealth() <= 0 && !mob.isRemoved() && stats.hasBuff(AugmentFortune.INSTANCE)){
             int looting = stats.getBuffCount(AugmentFortune.INSTANCE);
             LootContext.Builder lootContext = LootUtil.getLootingContext((ServerLevel)world,shooter, mob, looting, DamageSource.playerAttack(playerContext));
-            ResourceLocation lootTable = mob.getLootTable();
-            LootTable loottable = world.getServer().getLootTables().get(lootTable);
-            List<ItemStack> items = loottable.getRandomItems(lootContext.create(LootContextParamSets.ALL_PARAMS));
-            items.forEach(mob::spawnAtLocation);
-        }
-    }
-
-
-    @Deprecated // Use stats sensitive dealDamage
-    public void dealDamage(Level world, LivingEntity shooter, float damage, List<AbstractAugment> augments, Entity entity, DamageSource source){
-        shooter = shooter == null ? FakePlayerFactory.getMinecraft((ServerLevel) world) : shooter;
-        if(entity instanceof LivingEntity && ((LivingEntity) entity).getHealth() <= 0 || damage <= 0)
-            return;
-
-        entity.hurt(source, damage);
-        if(!(entity instanceof LivingEntity) )
-            return;
-        LivingEntity mob = (LivingEntity) entity;
-
-
-        if(mob.getHealth() <= 0 && !mob.isRemoved() && hasBuff(augments, AugmentFortune.class)){
-            int looting = getBuffCount(augments, AugmentFortune.class);
-            LootContext.Builder lootContext = LootUtil.getLootingContext((ServerLevel)world,shooter, mob, looting, DamageSource.playerAttack((Player) shooter));
             ResourceLocation lootTable = mob.getLootTable();
             LootTable loottable = world.getServer().getLootTables().get(lootTable);
             List<ItemStack> items = loottable.getRandomItems(lootContext.create(LootContextParamSets.ALL_PARAMS));
@@ -247,7 +154,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     // If the spell would actually do anything. Can be used for logic checks for things like the whelp.
-    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, List<AbstractAugment> augments){
+    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext){
         return true;
     }
 
@@ -263,12 +170,14 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         return nonAirBlockSuccess(result, world) || livingEntityHitSuccess(result);
     }
 
-    public void applyEnchantments(List<AbstractAugment> augments, ItemStack stack){
-        if(hasBuff(augments, AugmentExtract.class)){
+    public void applyEnchantments(SpellStats stats, ItemStack stack){
+
+        if(stats.hasBuff(AugmentExtract.INSTANCE)){
             stack.enchant(Enchantments.SILK_TOUCH, 1);
         }
-        if(hasBuff(augments, AugmentFortune.class)){
-            stack.enchant(Enchantments.BLOCK_FORTUNE, getBuffCount(augments, AugmentExtract.class));
+
+        if(stats.hasBuff(AugmentFortune.INSTANCE)){
+            stack.enchant(Enchantments.BLOCK_FORTUNE, stats.getBuffCount(AugmentFortune.INSTANCE));
         }
     }
 

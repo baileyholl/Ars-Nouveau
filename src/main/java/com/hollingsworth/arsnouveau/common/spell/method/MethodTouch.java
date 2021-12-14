@@ -1,10 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.method;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
-import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
@@ -21,7 +18,6 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Set;
 
 public class MethodTouch extends AbstractCastMethod {
@@ -37,10 +33,10 @@ public class MethodTouch extends AbstractCastMethod {
     }
 
     @Override
-    public void onCast(ItemStack stack, LivingEntity caster, Level world, List<AbstractAugment> augments, SpellContext context, SpellResolver resolver) { }
+    public void onCast(ItemStack stack, LivingEntity caster, Level world, SpellStats spellStats, SpellContext context, SpellResolver resolver) { }
 
     @Override
-    public void onCastOnBlock(UseOnContext context, List<AbstractAugment> augments, SpellContext spellContext, SpellResolver resolver) {
+    public void onCastOnBlock(UseOnContext context, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         Level world = context.getLevel();
         BlockHitResult res = new BlockHitResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), false);
         resolver.onResolveEffect(world, context.getPlayer(), res);
@@ -50,14 +46,14 @@ public class MethodTouch extends AbstractCastMethod {
     }
 
     @Override
-    public void onCastOnBlock(BlockHitResult res, LivingEntity caster, List<AbstractAugment> augments, SpellContext spellContext, SpellResolver resolver) {
+    public void onCastOnBlock(BlockHitResult res, LivingEntity caster, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         resolver.onResolveEffect(caster.getCommandSenderWorld(),caster, res);
         resolver.expendMana(caster);
         Networking.sendToNearby(caster.level, caster, new PacketANEffect(PacketANEffect.EffectType.BURST, res.getBlockPos(), spellContext.colors));
     }
 
     @Override
-    public void onCastOnEntity(ItemStack stack, LivingEntity caster, Entity target, InteractionHand hand, List<AbstractAugment> augments, SpellContext spellContext, SpellResolver resolver) {
+    public void onCastOnEntity(ItemStack stack, LivingEntity caster, Entity target, InteractionHand hand, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         resolver.onResolveEffect(caster.getCommandSenderWorld(), caster, new EntityHitResult(target));
         if(spellContext.getType() != SpellContext.CasterType.RUNE)
             resolver.expendMana(caster);
@@ -65,25 +61,25 @@ public class MethodTouch extends AbstractCastMethod {
     }
 
     @Override
-    public boolean wouldCastSuccessfully(@Nullable ItemStack stack, LivingEntity playerEntity, Level world, List<AbstractAugment> augments, SpellResolver resolver) {
+    public boolean wouldCastSuccessfully(@Nullable ItemStack stack, LivingEntity playerEntity, Level world, SpellStats spellStats, SpellResolver resolver) {
         return false;
     }
 
     @Override
-    public boolean wouldCastOnBlockSuccessfully(UseOnContext context, List<AbstractAugment> augments, SpellResolver resolver) {
+    public boolean wouldCastOnBlockSuccessfully(UseOnContext context, SpellStats spellStats, SpellResolver resolver) {
         Level world = context.getLevel();
         BlockHitResult res = new BlockHitResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), false);
-        return resolver.wouldAllEffectsDoWork(res, world, context.getPlayer(), augments);
+        return resolver.wouldAllEffectsDoWork(res, world, context.getPlayer(), spellStats);
     }
 
     @Override
-    public boolean wouldCastOnBlockSuccessfully(BlockHitResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments, SpellResolver resolver) {
-        return resolver.wouldAllEffectsDoWork(blockRayTraceResult, caster.getCommandSenderWorld(), caster, augments);
+    public boolean wouldCastOnBlockSuccessfully(BlockHitResult blockRayTraceResult, LivingEntity caster, SpellStats spellStats, SpellResolver resolver) {
+        return resolver.wouldAllEffectsDoWork(blockRayTraceResult, caster.getCommandSenderWorld(), caster, spellStats);
     }
 
     @Override
-    public boolean wouldCastOnEntitySuccessfully(@Nullable ItemStack stack, LivingEntity caster, Entity target, InteractionHand hand, List<AbstractAugment> augments, SpellResolver resolver) {
-        return resolver.wouldAllEffectsDoWork(new EntityHitResult(target), caster.getCommandSenderWorld(), caster, augments);
+    public boolean wouldCastOnEntitySuccessfully(@Nullable ItemStack stack, LivingEntity caster, Entity target, InteractionHand hand, SpellStats spellStats, SpellResolver resolver) {
+        return resolver.wouldAllEffectsDoWork(new EntityHitResult(target), caster.getCommandSenderWorld(), caster, spellStats);
     }
 
     @Nonnull
