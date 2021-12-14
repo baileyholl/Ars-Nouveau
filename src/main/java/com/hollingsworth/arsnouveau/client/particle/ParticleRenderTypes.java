@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -41,12 +42,14 @@ public class ParticleRenderTypes {
         public void begin(BufferBuilder buffer, TextureManager textureManager) {
 //            RenderSystem.disableAlphaTest();
 //            RenderSystem.disableDepthTest();
-
+            Minecraft.getInstance().gameRenderer.lightTexture().turnOnLightLayer();
             RenderSystem.enableBlend();
 
             RenderSystem.enableCull();
 
-            textureManager.bindForSetup(TextureAtlas.LOCATION_PARTICLES);
+            RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_PARTICLES);
+            RenderSystem.enableDepthTest();
+
             RenderSystem.depthMask(false);
             RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA.value, GlStateManager.DestFactor.ONE.value);
             RenderSystem.setShader(() -> RenderTypes.CustomRenderTypes.brightSolidShader);
@@ -57,6 +60,8 @@ public class ParticleRenderTypes {
         @Override
         public void end(Tesselator tessellator) {
             tessellator.end();
+
+//            RenderSystem.disableDepthTest();
 //            RenderSystem.enableDepthTest();
 ////            RenderSystem.enableAlphaTest();
 //
