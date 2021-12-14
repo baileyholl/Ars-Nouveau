@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.api;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
@@ -206,7 +205,7 @@ public class ArsNouveauAPI {
         List<IEnchantingRecipe> recipes = new ArrayList<>(enchantingApparatusRecipes);
         RecipeManager manager = world.getRecipeManager();
         for(IRecipe i : manager.getRecipes()){
-            if(i instanceof EnchantingApparatusRecipe){
+            if(i instanceof IEnchantingRecipe){
                 recipes.add((IEnchantingRecipe) i);
             }
         }
