@@ -519,7 +519,7 @@ public class Recipes extends RecipeProvider {
                     .requires(MANA_GEM, 4)
                     .save(consumer);
 
-            shapelessBuilder(Items.PINK_DYE).requires(ItemsRegistry.MAGE_BLOOM).save(consumer, new ResourceLocation(ArsNouveau.MODID, "magebloom_to_pink"));
+            shapelessBuilder(Items.PINK_DYE, 2).requires(ItemsRegistry.MAGE_BLOOM, 2).save(consumer, new ResourceLocation(ArsNouveau.MODID, "magebloom_to_pink"));
             shapelessBuilder(Items.PURPLE_DYE).requires(BlockRegistry.MANA_BERRY_BUSH).save(consumer, new ResourceLocation(ArsNouveau.MODID, "sourceberry_to_purple"));
 
         }

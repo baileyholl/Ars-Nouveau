@@ -3,9 +3,13 @@
   "ingredients": [
     {
       "item": "ars_nouveau:mana_bloom"
+    },
+    {
+      "item": "ars_nouveau:mana_bloom"
     }
   ],
   "result": {
-    "item": "minecraft:pink_dye"
+    "item": "minecraft:pink_dye",
+    "count": 2
   }
 }
