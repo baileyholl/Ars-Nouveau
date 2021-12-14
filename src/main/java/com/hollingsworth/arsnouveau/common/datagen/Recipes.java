@@ -159,11 +159,10 @@ public class Recipes extends RecipeProvider {
                     .pattern("xxx").define('y',MANA_GEM).define('x',  Tags.Items.STONE).save(consumer);
 
             ShapedRecipeBuilder.shaped(BlockRegistry.CRYSTALLIZER_BLOCK.asItem(), 1).unlockedBy("has_journal",InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                    .pattern("yxy")
-                    .pattern("yzy")
-                    .pattern("yxy").define('x', BlockRegistry.ARCANE_STONE)
-                    .define('y', Tags.Items.INGOTS_GOLD)
-                    .define('z', MANA_GEM).save(consumer);
+                    .pattern("xyx")
+                    .pattern("x x")
+                    .pattern("xyx").define('x', BlockRegistry.ARCHWOOD_PLANK)
+                    .define('y', Tags.Items.INGOTS_GOLD).save(consumer);
 
             makeStonecutter(consumer, BlockRegistry.ARCANE_STONE, BlockRegistry.AB_ALTERNATE, LibBlockNames.ARCANE_STONE);
             makeStonecutter(consumer, BlockRegistry.ARCANE_STONE, BlockRegistry.ARCANE_BRICKS, LibBlockNames.ARCANE_STONE);

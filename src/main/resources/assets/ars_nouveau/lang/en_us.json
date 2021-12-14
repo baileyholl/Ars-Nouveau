@@ -155,7 +155,7 @@
 	"block.ars_nouveau.ab_mosaic":"Arcane Brick: Mosaic",
 	"block.ars_nouveau.ab_basket":"Arcane Brick: Basketweave",
 	"ars_nouveau.page.crystallizer1": "The crystallizer provides a renewable source of Source Gems by condensing source over time. The Crystallizer can work passively at a very slow rate, or it may be given source from adjacent jars and create Source Gems as a much faster rate. The Crystallizer may also be accessed by Hoppers and Starbuncles.",
-	"tooltip.source_gem":"Found within Source Gem Ore.",
+	"tooltip.source_gem":"Obtained by placing lapis or amethyst in a Crystallizer.",
 	"tooltip.magebloom":"Crafted using the Enchanting Apparatus",
 	"ars_nouveau.alert.turret_type": "Turrets can only use Touch or Projectile.",
 	"ars_nouveau.alert.spell_set": "Spell set.",
