@@ -2,12 +2,16 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.InfuserRecipe;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -26,7 +30,8 @@ public class CrystallizerTile extends AbstractSourceMachine implements Container
     public ItemStack stack = ItemStack.EMPTY;
     public ItemEntity entity;
     public boolean draining;
-
+    InfuserRecipe recipe;
+    int backoff;
     public CrystallizerTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.CRYSTALLIZER_TILE, pos, state);
     }
@@ -41,29 +46,58 @@ public class CrystallizerTile extends AbstractSourceMachine implements Container
         if(level.isClientSide)
             return;
 
+        if(backoff > 0) {
+            backoff--;
+            return;
+        }
+        if(stack.isEmpty()) {
+            draining = false;
+            return;
+        }
 
-        if(this.stack.isEmpty() && this.level.getGameTime() % 20 == 0 && SourceUtil.takeManaNearby(worldPosition, level, 1, 200) != null){
-            this.addSource(500);
-            if(!draining) {
-                draining = true;
-                update();
-            }
-        }else if(this.level.getGameTime() % 20 == 0){
-            this.addSource(5);
-            if(draining){
-                draining = false;
-                update();
+        // Restore the recipe on world restart
+        if(recipe == null){
+            for(InfuserRecipe recipe : level.getRecipeManager().getAllRecipesFor(RecipeRegistry.INFUSER_TYPE)){
+                if(recipe.matches(new SimpleContainer(stack), level)){
+                    this.recipe = recipe;
+                    break;
+                }
             }
         }
 
-        if(this.getSource() >= 5000 && (stack == null || stack.isEmpty())){
-//            Item foundItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(Config.CRYSTALLIZER_ITEM.get()));
-//            if(foundItem == null || foundItem == Items.AIR){
-//                System.out.println("NULL CRYSTALLIZER ITEM.");
-//                foundItem = ItemsRegistry.SOURCE_GEM;
-//            }
-//            this.stack = new ItemStack(foundItem);
-            this.setSource(0);
+        if(recipe == null || !recipe.matches(new SimpleContainer(stack), level)) {
+            backoff = 20;
+            recipe = null;
+            return;
+        }
+
+        int transferRate = 200;
+
+        if(recipe == null || !recipe.matches(new SimpleContainer(stack), level))
+            return;
+
+        if(this.level.getGameTime() % 20 == 0 && recipe.matches(new SimpleContainer(stack), level)){
+            if(canAcceptSource(Math.min(200, recipe.source)) && SourceUtil.takeSourceNearby(worldPosition, level, 1, Math.min(200, recipe.source)) != null){
+                this.addSource(transferRate);
+                if(!draining) {
+                    draining = true;
+                    update();
+                }
+            }else{
+                this.addSource(5);
+                if(draining){
+                    draining = false;
+                    update();
+                }
+            }
+        }
+
+        if(this.getSource() >= recipe.source){
+            this.setItem(0, recipe.output.copy());
+            this.addSource(-recipe.source);
+            draining = false;
+            ParticleUtil.spawnTouchPacket(level, worldPosition, ParticleUtil.defaultParticleColorWrapper());
+            update();
         }
     }
 
@@ -95,6 +129,19 @@ public class CrystallizerTile extends AbstractSourceMachine implements Container
         return 1;
     }
 
+    @Override
+    public int getMaxStackSize() {
+        return 1;
+    }
+
+    @Override
+    public boolean canPlaceItem(int slot, ItemStack stack) {
+        if(stack.isEmpty())
+            return false;
+        InfuserRecipe recipe = level.getRecipeManager().getAllRecipesFor(RecipeRegistry.INFUSER_TYPE).stream()
+                .filter(f -> f.matches(new SimpleContainer(stack), level)).findFirst().orElse(null);
+        return recipe != null;
+    }
 
     @Override
     public boolean isEmpty() {
@@ -110,6 +157,7 @@ public class CrystallizerTile extends AbstractSourceMachine implements Container
     public ItemStack removeItem(int index, int count) {
         ItemStack copy = stack.copy();
         stack.shrink(count);
+        updateBlock();
         return copy;
     }
 
@@ -123,6 +171,7 @@ public class CrystallizerTile extends AbstractSourceMachine implements Container
     @Override
     public void setItem(int index, ItemStack stack) {
         this.stack = stack;
+        updateBlock();
     }
 
     @Override
@@ -133,6 +182,7 @@ public class CrystallizerTile extends AbstractSourceMachine implements Container
     @Override
     public void clearContent() {
         this.stack = ItemStack.EMPTY;
+        updateBlock();
     }
 
     @Nonnull
