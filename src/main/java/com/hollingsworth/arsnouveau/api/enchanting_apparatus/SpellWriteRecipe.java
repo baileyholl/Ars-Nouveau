@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.enchanting_apparatus;
 
+import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
@@ -39,7 +40,8 @@ public class SpellWriteRecipe extends EnchantingApparatusRecipe{
     public ItemStack getResult(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile) {
         CompoundNBT tag = reagent.getOrCreateTag();
         ItemStack parchment = getParchment(pedestalItems);
-        tag.putString("spell", parchment.getOrCreateTag().getString("spell"));
+        tag.putString("spell", SpellParchment.getSpell(parchment).serialize());
+        tag.putString("spell_color", SpellCaster.deserialize(parchment).getColor().serialize());
         reagent.setTag(tag);
         return reagent.copy();
     }
