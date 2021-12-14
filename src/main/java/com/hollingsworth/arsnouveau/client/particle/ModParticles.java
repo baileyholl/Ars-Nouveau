@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.client.particle;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.event.RegistryEvent;

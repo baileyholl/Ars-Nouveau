@@ -4,9 +4,9 @@ import com.hollingsworth.arsnouveau.common.items.ItemScroll;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 
 import java.util.ArrayList;
 import java.util.List;

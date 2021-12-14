@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.potions;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.entity.goal;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.function.Supplier;
 

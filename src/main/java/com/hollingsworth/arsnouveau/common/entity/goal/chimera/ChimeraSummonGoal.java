@@ -7,9 +7,9 @@ import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
 import com.hollingsworth.arsnouveau.common.network.PacketTimedEvent;
-import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
 

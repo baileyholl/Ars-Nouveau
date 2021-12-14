@@ -1,15 +1,10 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.level.block.Block;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
-
-import net.minecraft.world.item.Item.Properties;
-
-import java.util.function.Supplier;
 
 public class AnimBlockItem extends BlockItem implements IAnimatable {
     AnimationFactory manager = new AnimationFactory(this);

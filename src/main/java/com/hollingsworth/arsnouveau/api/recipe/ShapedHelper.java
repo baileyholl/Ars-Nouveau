@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.api.recipe;
 
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraft.core.NonNullList;
 
 import java.util.ArrayList;
 import java.util.List;

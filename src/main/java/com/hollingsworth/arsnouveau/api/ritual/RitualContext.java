@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.api.ritual;
 
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;

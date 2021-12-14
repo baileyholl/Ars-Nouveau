@@ -1,13 +1,13 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.guardian;
 
 import com.hollingsworth.arsnouveau.common.entity.WildenGuardian;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.Difficulty;
 
 import java.util.EnumSet;
 

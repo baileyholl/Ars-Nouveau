@@ -2,10 +2,10 @@ package com.hollingsworth.arsnouveau.common.entity.goal.wilden;
 
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
-import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 
 import java.util.function.Supplier;
 

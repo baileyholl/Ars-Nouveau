@@ -5,12 +5,12 @@ import com.hollingsworth.arsnouveau.common.block.tile.BookwyrmLecternTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LecternBlock;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
 
 public class BookwyrmCharm extends ModItem{
     public BookwyrmCharm() {

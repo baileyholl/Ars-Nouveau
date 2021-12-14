@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
-import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.data.tags.BlockTagsProvider;
 
 public class BlockTagProvider extends BlockTagsProvider {
     public BlockTagProvider(DataGenerator generatorIn) {

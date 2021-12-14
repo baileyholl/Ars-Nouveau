@@ -20,7 +20,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.hollingsworth.arsnouveau.setup.BlockRegistry.PORTAL_TILE_TYPE;

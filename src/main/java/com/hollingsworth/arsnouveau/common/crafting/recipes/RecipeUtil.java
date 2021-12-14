@@ -4,9 +4,9 @@ package com.hollingsworth.arsnouveau.common.crafting.recipes;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.core.NonNullList;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.crafting.CraftingHelper;
 
 /**

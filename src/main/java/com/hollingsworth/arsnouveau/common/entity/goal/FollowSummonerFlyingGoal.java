@@ -1,10 +1,10 @@
 package com.hollingsworth.arsnouveau.common.entity.goal;
 
 import com.hollingsworth.arsnouveau.common.entity.IFollowingSummon;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class FollowSummonerFlyingGoal extends FollowSummonerGoal{
 

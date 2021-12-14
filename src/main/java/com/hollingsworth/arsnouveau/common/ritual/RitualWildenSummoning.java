@@ -7,10 +7,10 @@ import com.hollingsworth.arsnouveau.common.entity.WildenGuardian;
 import com.hollingsworth.arsnouveau.common.entity.WildenHunter;
 import com.hollingsworth.arsnouveau.common.entity.WildenStalker;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.BlockPos;
 
 import static com.hollingsworth.arsnouveau.common.lib.RitualLib.WILDEN_SUMMON;
 

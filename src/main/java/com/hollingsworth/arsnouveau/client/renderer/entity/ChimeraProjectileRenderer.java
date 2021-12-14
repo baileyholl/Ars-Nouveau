@@ -2,11 +2,10 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.common.entity.EntityChimeraProjectile;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.util.Mth;
-import com.mojang.math.Vector3f;
 import software.bernie.geckolib3.renderers.geo.GeoProjectilesRenderer;
 
 public class ChimeraProjectileRenderer extends GeoProjectilesRenderer<EntityChimeraProjectile> {

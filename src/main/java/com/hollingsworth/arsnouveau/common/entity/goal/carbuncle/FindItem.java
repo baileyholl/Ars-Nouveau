@@ -2,11 +2,12 @@ package com.hollingsworth.arsnouveau.common.entity.goal.carbuncle;
 
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.PathResult;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.core.BlockPos;
+
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;

@@ -8,12 +8,12 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityRitualProjectile;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
 import static com.hollingsworth.arsnouveau.api.util.BlockUtil.destroyBlockSafely;

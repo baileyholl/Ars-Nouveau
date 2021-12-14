@@ -10,18 +10,18 @@ import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
 import com.hollingsworth.arsnouveau.common.items.ModItem;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodOrbit;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -29,7 +29,6 @@ import net.minecraftforge.items.IItemHandlerModifiable;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.world.item.Item.Properties;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class SummoningFocus extends ModItem implements ISpellModifierItem {

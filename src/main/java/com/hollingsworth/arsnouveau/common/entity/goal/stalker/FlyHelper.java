@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.stalker;
 
 import com.hollingsworth.arsnouveau.common.entity.WildenStalker;
-import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.phys.Vec3;
 
 public class FlyHelper extends MoveControl {

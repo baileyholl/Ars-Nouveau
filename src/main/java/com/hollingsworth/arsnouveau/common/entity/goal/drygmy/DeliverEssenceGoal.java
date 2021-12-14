@@ -2,9 +2,9 @@ package com.hollingsworth.arsnouveau.common.entity.goal.drygmy;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.pathfinder.Path;
-import net.minecraft.core.BlockPos;
 
 import java.util.EnumSet;
 

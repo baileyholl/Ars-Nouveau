@@ -2,8 +2,8 @@ package com.hollingsworth.arsnouveau.common.familiars;
 
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
-import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarSylph;
 import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;
 import net.minecraft.world.level.Level;

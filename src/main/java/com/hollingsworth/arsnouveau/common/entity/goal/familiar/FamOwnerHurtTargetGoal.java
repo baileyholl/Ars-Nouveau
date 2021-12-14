@@ -2,11 +2,11 @@ package com.hollingsworth.arsnouveau.common.entity.goal.familiar;
 
 import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 
 import java.util.EnumSet;
 

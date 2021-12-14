@@ -7,8 +7,6 @@ import net.minecraft.world.item.Item;
 
 import javax.annotation.Nullable;
 
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
-
 public class AugmentPierce extends AbstractAugment {
     public static AugmentPierce INSTANCE = new AugmentPierce();
 

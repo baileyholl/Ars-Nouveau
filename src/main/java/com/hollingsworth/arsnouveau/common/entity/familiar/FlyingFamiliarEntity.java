@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;

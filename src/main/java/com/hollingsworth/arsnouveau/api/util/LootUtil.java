@@ -1,19 +1,17 @@
 package com.hollingsworth.arsnouveau.api.util;
 
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.minecraft.world.level.block.entity.FurnaceBlockEntity;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.server.level.ServerLevel;
-
 import net.minecraftforge.common.util.FakePlayerFactory;
 
 public class LootUtil {

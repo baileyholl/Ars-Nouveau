@@ -2,10 +2,10 @@ package com.hollingsworth.arsnouveau.common.entity.goal.wealdwalker;
 
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
-import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.monster.RangedAttackMob;
 
 import java.util.EnumSet;
 import java.util.function.Supplier;

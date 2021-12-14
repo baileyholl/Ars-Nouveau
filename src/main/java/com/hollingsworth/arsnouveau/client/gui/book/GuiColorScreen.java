@@ -5,14 +5,14 @@ import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellColors;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Options;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.SliderButton;
-import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.Options;
 import net.minecraft.client.ProgressOption;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.SliderButton;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;

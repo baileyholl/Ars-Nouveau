@@ -1,10 +1,10 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.familiar;
 
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.core.BlockPos;
 
 import java.util.EnumSet;
 

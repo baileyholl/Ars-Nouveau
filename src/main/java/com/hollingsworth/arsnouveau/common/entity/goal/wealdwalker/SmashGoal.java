@@ -2,8 +2,8 @@ package com.hollingsworth.arsnouveau.common.entity.goal.wealdwalker;
 
 import com.hollingsworth.arsnouveau.common.entity.WealdWalker;
 import com.hollingsworth.arsnouveau.common.entity.goal.AnimatedAttackGoal;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
 
 import java.util.function.Supplier;
 

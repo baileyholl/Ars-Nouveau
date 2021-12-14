@@ -1,16 +1,10 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.RelayWarpTile;
-import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.BlockGetter;
-
-import javax.annotation.Nullable;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class RelayWarpBlock extends ArcaneRelay{
 

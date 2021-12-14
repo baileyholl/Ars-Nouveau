@@ -5,10 +5,10 @@ import com.hollingsworth.arsnouveau.common.entity.SummonWolf;
 import com.hollingsworth.arsnouveau.common.entity.WildenHunter;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
 
 public class WildenSummon extends Goal {
     private final WildenHunter entity;

@@ -1,13 +1,13 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.level.Level;
 
 public abstract class ColoredProjectile extends Arrow {

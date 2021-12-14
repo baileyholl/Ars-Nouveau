@@ -2,8 +2,8 @@ package com.hollingsworth.arsnouveau.common.familiars;
 
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
-import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarCarbuncle;
 import net.minecraft.world.level.Level;
 

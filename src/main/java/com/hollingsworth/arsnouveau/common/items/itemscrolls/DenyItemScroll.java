@@ -1,12 +1,9 @@
 package com.hollingsworth.arsnouveau.common.items.itemscrolls;
 
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
-
-import com.hollingsworth.arsnouveau.common.items.ItemScroll.SortPref;
-import net.minecraft.world.item.Item.Properties;
 
 public class DenyItemScroll extends ItemScroll {
 

@@ -1,27 +1,21 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.BookwyrmLecternTile;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import org.jetbrains.annotations.Nullable;
 
 import static com.hollingsworth.arsnouveau.common.block.tile.SummoningTile.CONVERTED;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-import org.jetbrains.annotations.Nullable;
 
 public class BookwyrmLectern extends SummonBlock{
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;

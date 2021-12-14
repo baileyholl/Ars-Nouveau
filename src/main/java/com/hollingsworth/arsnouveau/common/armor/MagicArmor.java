@@ -2,8 +2,8 @@ package com.hollingsworth.arsnouveau.common.armor;
 
 import com.hollingsworth.arsnouveau.api.mana.IManaEquipment;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;

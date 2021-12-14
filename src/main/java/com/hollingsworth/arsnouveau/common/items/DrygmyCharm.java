@@ -3,13 +3,11 @@ package com.hollingsworth.arsnouveau.common.items;
 import com.hollingsworth.arsnouveau.common.block.tile.DrygmyTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-
-import net.minecraft.world.item.Item.Properties;
+import net.minecraft.world.level.block.Blocks;
 
 public class DrygmyCharm extends ModItem{
     public DrygmyCharm(Properties properties) {

@@ -3,20 +3,18 @@ package com.hollingsworth.arsnouveau.common.items;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.familiar.FamiliarCap;
 import com.hollingsworth.arsnouveau.api.familiar.IFamiliarCap;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-
-import net.minecraft.world.item.Item.Properties;
-import org.jetbrains.annotations.Nullable;
 
 public class FamiliarScript extends ModItem{
     public AbstractFamiliarHolder familiar;

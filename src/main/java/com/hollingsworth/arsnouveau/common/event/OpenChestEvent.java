@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.event;
 
 import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
-import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraftforge.common.util.FakePlayer;
 
 public class OpenChestEvent implements ITimedEvent {

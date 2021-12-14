@@ -1,12 +1,10 @@
 package com.hollingsworth.arsnouveau.common.enchantment;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentCategory;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
-
-import net.minecraft.world.item.enchantment.Enchantment.Rarity;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentCategory;
 
 public class ReactiveEnchantment extends Enchantment {
     protected ReactiveEnchantment() {

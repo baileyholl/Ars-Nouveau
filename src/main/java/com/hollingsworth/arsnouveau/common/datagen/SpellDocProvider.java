@@ -1,4 +1,5 @@
 package com.hollingsworth.arsnouveau.common.datagen;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hollingsworth.arsnouveau.ArsNouveau;
@@ -8,8 +9,8 @@ import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.setup.APIRegistry;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.HashCache;
 import net.minecraft.data.DataProvider;
+import net.minecraft.data.HashCache;
 import net.minecraft.world.item.Items;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

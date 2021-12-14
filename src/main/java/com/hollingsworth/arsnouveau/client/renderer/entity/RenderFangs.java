@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.client.renderer.entity;
 
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.EvokerFangsRenderer;
 

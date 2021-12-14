@@ -6,18 +6,16 @@ import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
 import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
-
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 public class FindNextItemGoal extends ExtendedRangeGoal {
     EntityWixie wixie;

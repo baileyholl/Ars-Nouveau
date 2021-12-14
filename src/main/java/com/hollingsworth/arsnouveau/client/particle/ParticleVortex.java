@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
 import com.hollingsworth.arsnouveau.client.ClientInfo;
-import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.SpriteSet;
 
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;

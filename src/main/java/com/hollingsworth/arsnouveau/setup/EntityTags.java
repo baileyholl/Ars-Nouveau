@@ -1,10 +1,10 @@
 package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.tags.Tag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
 
 public class EntityTags {
     public static final Tag.Named<EntityType<?>> DRYGMY_BLACKLIST = EntityTypeTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "drygmy_blacklist"));

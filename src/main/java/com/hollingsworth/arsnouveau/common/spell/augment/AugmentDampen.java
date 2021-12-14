@@ -9,8 +9,6 @@ import net.minecraft.world.item.Items;
 
 import javax.annotation.Nullable;
 
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
-
 public class AugmentDampen extends AbstractAugment {
     public static AugmentDampen INSTANCE = new AugmentDampen();
 

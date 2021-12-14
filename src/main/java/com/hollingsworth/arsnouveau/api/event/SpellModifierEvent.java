@@ -4,8 +4,8 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.eventbus.api.Event;
 
 import javax.annotation.Nullable;

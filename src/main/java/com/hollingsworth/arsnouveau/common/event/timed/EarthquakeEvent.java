@@ -2,8 +2,8 @@ package com.hollingsworth.arsnouveau.common.event.timed;
 
 import com.hollingsworth.arsnouveau.api.event.ITimedEvent;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;

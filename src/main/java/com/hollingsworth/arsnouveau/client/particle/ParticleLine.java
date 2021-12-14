@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
-import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.ParticleRenderType;
-import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.world.level.Level;
 
 public class ParticleLine extends TextureSheetParticle {

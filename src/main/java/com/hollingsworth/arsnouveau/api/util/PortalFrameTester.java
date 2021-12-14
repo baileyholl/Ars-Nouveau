@@ -2,11 +2,11 @@ package com.hollingsworth.arsnouveau.api.util;
 
 import com.hollingsworth.arsnouveau.common.block.PortalBlock;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
 
 import java.util.Optional;
 import java.util.function.Predicate;

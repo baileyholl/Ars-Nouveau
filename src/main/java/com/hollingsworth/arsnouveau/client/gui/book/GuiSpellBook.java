@@ -17,17 +17,16 @@ import com.hollingsworth.arsnouveau.common.spell.validation.CombinedSpellValidat
 import com.hollingsworth.arsnouveau.common.spell.validation.GlyphMaxTierValidator;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.inventory.PageButton;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-
 
 import java.util.ArrayList;
 import java.util.Collection;

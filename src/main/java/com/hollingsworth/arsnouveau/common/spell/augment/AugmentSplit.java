@@ -7,8 +7,6 @@ import net.minecraft.world.item.Items;
 
 import javax.annotation.Nullable;
 
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier.Tier;
-
 public class AugmentSplit extends AbstractAugment {
     public static AugmentSplit INSTANCE = new AugmentSplit();
 

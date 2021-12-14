@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.compat;
 
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
 //import top.theillusivec4.caelus.api.CaelusApi;
 

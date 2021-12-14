@@ -1,11 +1,11 @@
 package com.hollingsworth.arsnouveau.common.block;
 
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.PushReaction;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.material.PushReaction;
 
 import javax.annotation.Nullable;
 

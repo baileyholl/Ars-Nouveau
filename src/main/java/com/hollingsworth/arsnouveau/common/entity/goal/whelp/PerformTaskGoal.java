@@ -7,8 +7,6 @@ import net.minecraft.core.BlockPos;
 
 import java.util.EnumSet;
 
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
-
 public class PerformTaskGoal extends ExtendedRangeGoal {
 
     EntityBookwyrm wyrm;

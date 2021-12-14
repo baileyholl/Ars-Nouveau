@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
-import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.Particle;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.ParticleOptions;
 
 public class GlowParticleData implements ParticleProvider<ColorParticleTypeData> {

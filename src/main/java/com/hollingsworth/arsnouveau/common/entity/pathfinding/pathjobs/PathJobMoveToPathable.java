@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs;
 
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.pathfinder.Path;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,12 +1,12 @@
 package com.hollingsworth.arsnouveau.api.entity;
 
 import com.hollingsworth.arsnouveau.api.event.SummonEvent;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nullable;

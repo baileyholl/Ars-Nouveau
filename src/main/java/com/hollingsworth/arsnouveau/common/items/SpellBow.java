@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.spell.*;
-import com.hollingsworth.arsnouveau.client.renderer.item.SpellBookRenderer;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellBowRenderer;
 import com.hollingsworth.arsnouveau.common.entity.EntitySpellArrow;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
@@ -139,12 +138,12 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
 
                 List<AbstractArrow> arrows = new ArrayList<>();
                 boolean didCastSpell = false;
-                if(arrowitem == Items.ARROW && caster.getSpell() != null && new SpellResolver(new SpellContext(caster.getSpell(), playerentity)).withSilent(true).canCast(playerentity)){
+                if(arrowitem == Items.ARROW  && new SpellResolver(new SpellContext(caster.getSpell(), playerentity)).withSilent(true).canCast(playerentity)){
                     abstractarrowentity = buildSpellArrow(worldIn, playerentity, caster, isSpellArrow);
                     new SpellResolver(new SpellContext(caster.getSpell(), playerentity)).expendMana(playerentity);
                     didCastSpell = true;
                 }else if(arrowitem instanceof SpellArrow){
-                    if(caster.getSpell() == null || !(new SpellResolver(new SpellContext(caster.getSpell(), playerentity)).canCast(playerentity))){
+                    if(!(new SpellResolver(new SpellContext(caster.getSpell(), playerentity)).canCast(playerentity))){
                         return;
                     }else if(new SpellResolver(new SpellContext(caster.getSpell(), playerentity)).canCast(playerentity)){
                         new SpellResolver(new SpellContext(caster.getSpell(), playerentity)).expendMana(playerentity);
@@ -152,10 +151,10 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
                     }
                 }
                 arrows.add(abstractarrowentity);
-                if(caster.getSpell() != null && caster.getSpell().isValid() && didCastSpell){
-                    int numSplits = caster.getSpell().getBuffsAtIndex(0, playerentity, AugmentSplit.class);
+                if(caster.getSpell().isValid() && didCastSpell){
+                    int numSplits = caster.getSpell().getBuffsAtIndex(0, playerentity, AugmentSplit.INSTANCE);
                     if(abstractarrowentity instanceof EntitySpellArrow){
-                        numSplits = ((EntitySpellArrow) abstractarrowentity).spellResolver.spell.getBuffsAtIndex(0, playerentity, AugmentSplit.class);
+                        numSplits = ((EntitySpellArrow) abstractarrowentity).spellResolver.spell.getBuffsAtIndex(0, playerentity, AugmentSplit.INSTANCE);
                     }
 
                            // (abstractarrowentity instanceof EntitySpellArrow ? ((EntitySpellArrow) abstractarrowentity).spellResolver.spell.getBuffsAtIndex(0, AugmentSplit));

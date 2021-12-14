@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.entity.goal;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Mob;
 
 import java.util.function.Supplier;
 

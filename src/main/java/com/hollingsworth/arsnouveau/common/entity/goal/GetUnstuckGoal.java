@@ -2,16 +2,14 @@ package com.hollingsworth.arsnouveau.common.entity.goal;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.util.ArrayUtil;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.pathfinder.Path;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
 
 import java.util.EnumSet;
 import java.util.function.Function;
 import java.util.function.Supplier;
-
-import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 public class GetUnstuckGoal extends CheckStuckGoal {
 

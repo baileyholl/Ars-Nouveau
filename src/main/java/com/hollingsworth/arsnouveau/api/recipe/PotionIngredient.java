@@ -2,14 +2,12 @@ package com.hollingsworth.arsnouveau.api.recipe;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import javax.annotation.Nullable;
 import java.util.stream.Stream;
-
-import net.minecraft.world.item.crafting.Ingredient.ItemValue;
 
 public class PotionIngredient extends Ingredient {
     private final ItemStack stack;

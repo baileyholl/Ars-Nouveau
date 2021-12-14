@@ -5,12 +5,12 @@ import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.world.level.block.CauldronBlock;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.CauldronBlock;
 
 public class WixieCharm extends ModItem{
     public WixieCharm() {

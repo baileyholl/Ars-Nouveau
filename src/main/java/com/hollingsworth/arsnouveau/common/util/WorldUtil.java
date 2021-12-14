@@ -1,32 +1,22 @@
 package com.hollingsworth.arsnouveau.common.util;
 
-import net.minecraft.server.level.ServerChunkCache;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.material.FluidState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Tuple;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.Registry;
-import net.minecraft.world.*;
-import net.minecraft.world.level.chunk.ChunkStatus;
+import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
-import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Predicate;
-
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 /**
  * Class which has world related util functions like chunk load checks
  */

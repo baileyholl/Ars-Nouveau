@@ -1,13 +1,8 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.hollingsworth.arsnouveau.client.renderer.item.WandRenderer;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.IItemRenderProperties;
-import software.bernie.geckolib3.core.IAnimatable;
-import software.bernie.geckolib3.core.manager.AnimationData;
-import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;

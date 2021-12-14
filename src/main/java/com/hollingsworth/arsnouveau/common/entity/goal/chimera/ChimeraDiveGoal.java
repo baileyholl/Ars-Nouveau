@@ -5,10 +5,10 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
-import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.Explosion;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
 

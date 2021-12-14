@@ -3,8 +3,8 @@ package com.hollingsworth.arsnouveau.common.entity.goal.chimera;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
 import com.hollingsworth.arsnouveau.common.entity.EntityChimeraProjectile;
-import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
 

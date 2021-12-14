@@ -4,11 +4,11 @@ import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
 import javax.annotation.Nullable;
 import java.util.Collections;

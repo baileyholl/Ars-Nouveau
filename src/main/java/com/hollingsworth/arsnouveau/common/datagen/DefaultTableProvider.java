@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.datagen;
 import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.data.DataGenerator;

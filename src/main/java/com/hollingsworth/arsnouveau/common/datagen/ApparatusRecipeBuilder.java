@@ -4,11 +4,11 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantmentRecipe;
-import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.resources.ResourceLocation;
 
 public class ApparatusRecipeBuilder {
     EnchantingApparatusRecipe recipe;
