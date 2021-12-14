@@ -73,7 +73,7 @@ public class FindPotionGoal extends ExtendedRangeGoal {
             int color = jar.getColor();
             int r = (color >> 16) & 0xFF;
             int g = (color >> 8) & 0xFF;
-            int b = (color >> 0) & 0xFF;
+            int b = (color) & 0xFF;
             int a = (color >> 24) & 0xFF;
             EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(world, movePos, wixie.cauldronPos, r,g,b);
 

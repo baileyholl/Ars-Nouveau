@@ -51,11 +51,7 @@ public class FollowSummonerGoal extends Goal {
             return false;
         } else if (this.summon instanceof TamableAnimal && ((TamableAnimal) this.summon).isOrderedToSit()) {
             return false;
-        } else if (this.summon.getSelfEntity().distanceToSqr(livingentity) < (double)(this.minDist * this.minDist)) {
-            return false;
-        } else {
-            return true;
-        }
+        } else return !(this.summon.getSelfEntity().distanceToSqr(livingentity) < (double) (this.minDist * this.minDist));
     }
 
     /**

@@ -39,7 +39,7 @@ public class GlyphPressRecipeCategory implements IRecipeCategory<GlyphPressRecip
         icon = helper.createDrawableIngredient(new ItemStack(BlockRegistry.GLYPH_PRESS_BLOCK));
         this.cachedArrows = CacheBuilder.newBuilder()
                 .maximumSize(25)
-                .build(new CacheLoader<Integer, IDrawableAnimated>() {
+                .build(new CacheLoader<>() {
                     @Override
                     public IDrawableAnimated load(Integer cookTime) {
                         return helper.drawableBuilder(JEIConstants.RECIPE_GUI_VANILLA, 82, 128, 24, 17)

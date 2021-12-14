@@ -93,7 +93,7 @@ public class RitualFlight extends AbstractRitual {
                     }
                 }
             }
-            activePositions.removeAll(stalePositions);
+            stalePositions.forEach(activePositions::remove);
             return foundPos;
         }
 

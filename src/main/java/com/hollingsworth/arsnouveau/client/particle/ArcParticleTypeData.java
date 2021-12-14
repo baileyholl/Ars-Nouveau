@@ -16,7 +16,7 @@ public class ArcParticleTypeData implements ParticleOptions {
     private ParticleType<ArcParticleTypeData> type;
     public Vec3 source;
     public Vec3 target;
-    static final ParticleOptions.Deserializer<ArcParticleTypeData> DESERIALIZER = new ParticleOptions.Deserializer<ArcParticleTypeData>() {
+    static final ParticleOptions.Deserializer<ArcParticleTypeData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
         @Override
         public ArcParticleTypeData fromCommand(ParticleType<ArcParticleTypeData> type, StringReader reader) throws CommandSyntaxException {
             reader.expect(' ');

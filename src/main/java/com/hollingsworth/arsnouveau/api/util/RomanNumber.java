@@ -21,7 +21,7 @@ public class RomanNumber {
         map.put(1, "I");
     }
 
-    public final static String toRoman(int number) {
+    public static String toRoman(int number) {
         int l =  map.floorKey(number);
         if ( number == l ) {
             return map.get(number);

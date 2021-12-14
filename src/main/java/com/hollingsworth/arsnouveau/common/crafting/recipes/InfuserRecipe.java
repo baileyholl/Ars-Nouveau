@@ -92,7 +92,7 @@ public class InfuserRecipe implements Recipe<Container> {
             if(GsonHelper.isArrayNode(json, "input")){
                 input = Ingredient.fromJson(GsonHelper.getAsJsonArray(json, "input"));
             }else{
-                input = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "input"));;
+                input = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "input"));
             }
             Item output = GsonHelper.getAsItem(json,"output");
             int count = GsonHelper.getAsInt(json, "count");

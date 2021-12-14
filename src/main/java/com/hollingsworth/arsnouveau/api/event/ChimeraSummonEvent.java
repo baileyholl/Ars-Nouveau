@@ -39,11 +39,10 @@ public class ChimeraSummonEvent implements ITimedEvent {
         duration--;
         if(serverSide){
             Entity owner = world.getEntity(ownerID);
-            if(!(owner instanceof EntityChimera)) {
+            if(!(owner instanceof EntityChimera boss)) {
                 duration = 0;
                 return;
             }
-            EntityChimera boss = (EntityChimera) owner;
             boolean summonedWilden = false;
             if(duration % 20 ==0){
                 Random random = boss.getRandom();

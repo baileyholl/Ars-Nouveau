@@ -31,7 +31,7 @@ public class ColoredDynamicTypeData implements ParticleOptions {
         return type;
     }
 
-    static final Deserializer<ColoredDynamicTypeData> DESERIALIZER = new Deserializer<ColoredDynamicTypeData>() {
+    static final Deserializer<ColoredDynamicTypeData> DESERIALIZER = new Deserializer<>() {
         @Override
         public ColoredDynamicTypeData fromCommand(ParticleType<ColoredDynamicTypeData> type, StringReader reader) throws CommandSyntaxException {
             reader.expect(' ');

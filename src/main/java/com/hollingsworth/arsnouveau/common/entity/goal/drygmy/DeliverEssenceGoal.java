@@ -20,11 +20,6 @@ public class DeliverEssenceGoal extends Goal {
     }
 
     @Override
-    public boolean canContinueToUse() {
-        return super.canContinueToUse();
-    }
-
-    @Override
     public boolean isInterruptable() {
         return false;
     }

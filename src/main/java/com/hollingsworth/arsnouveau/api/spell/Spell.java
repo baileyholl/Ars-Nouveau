@@ -78,11 +78,6 @@ public class Spell {
         return count;
     }
 
-    @Deprecated
-    public int getBuffsAtIndex(int startPosition, @Nullable LivingEntity caster, Class<? extends AbstractAugment> augmentClass){
-        return (int) getAugments(startPosition, caster).stream().filter(a -> a.getClass().equals(augmentClass)).count();
-    }
-
     public int getBuffsAtIndex(int startPosition, @Nullable LivingEntity caster, AbstractAugment augment){
         return (int) getAugments(startPosition, caster).stream().filter(a -> a.equals(augment)).count();
     }

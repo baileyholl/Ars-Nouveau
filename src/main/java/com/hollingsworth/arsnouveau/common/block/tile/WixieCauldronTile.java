@@ -161,7 +161,7 @@ public class WixieCauldronTile extends ModdedTile implements ITickable, ITooltip
                     int color = ((PotionJarTile) level.getBlockEntity(jarPos)).getColor();
                     int r = (color >> 16) & 0xFF;
                     int g = (color >> 8) & 0xFF;
-                    int b = (color >> 0) & 0xFF;
+                    int b = (color) & 0xFF;
                     int a = (color >> 24) & 0xFF;
                     EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(level, worldPosition, jarPos, r,g,b);
                     level.addFreshEntity(aoeProjectile);

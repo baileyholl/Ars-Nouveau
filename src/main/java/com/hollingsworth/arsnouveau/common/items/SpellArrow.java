@@ -55,7 +55,7 @@ public class SpellArrow extends ArrowItem {
         modifySpell(spell);
         spell.setCost(spell.getCastingCost() - part.getManaCost() * numParts);
         spellArrow.spellResolver = new SpellResolver(new SpellContext(spell, entity)).withSilent(true);
-        spellArrow.pierceLeft = spell.getBuffsAtIndex(0, shooter, AugmentPierce.class);
+        spellArrow.pierceLeft = spell.getBuffsAtIndex(0, shooter, AugmentPierce.INSTANCE);
         return spellArrow;
     }
 

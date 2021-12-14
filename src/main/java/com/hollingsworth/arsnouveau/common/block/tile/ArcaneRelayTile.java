@@ -148,9 +148,8 @@ public class ArcaneRelayTile extends AbstractSourceMachine implements ITooltipPr
                 fromPos = null;
                 update();
                 return;
-            }else if(level.getBlockEntity(fromPos) instanceof AbstractSourceMachine){
+            }else if(level.getBlockEntity(fromPos) instanceof AbstractSourceMachine fromTile){
                 // Transfer mana fromPos to this
-                AbstractSourceMachine fromTile = (AbstractSourceMachine) level.getBlockEntity(fromPos);
                 if(transferSource(fromTile, this) > 0){
                     update();
                     ParticleUtil.spawnFollowProjectile(level, fromPos, worldPosition);

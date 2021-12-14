@@ -28,7 +28,7 @@ public class FamiliarEvents {
                 matching.add(familiarEntity);
             }
         }
-        FamiliarEntity.FAMILIAR_SET.removeAll(stale);
+        stale.forEach(FamiliarEntity.FAMILIAR_SET::remove);
         return matching;
     }
 

@@ -41,7 +41,7 @@ public class EnchantingApparatusRecipeCategory implements IRecipeCategory<Enchan
         icon = helper.createDrawableIngredient(new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK));
         this.cachedArrows = CacheBuilder.newBuilder()
                 .maximumSize(25)
-                .build(new CacheLoader<Integer, IDrawableAnimated>() {
+                .build(new CacheLoader<>() {
                     @Override
                     public IDrawableAnimated load(Integer cookTime) {
                         return helper.drawableBuilder(JEIConstants.RECIPE_GUI_VANILLA, 82, 128, 24, 17)
@@ -142,7 +142,7 @@ public class EnchantingApparatusRecipeCategory implements IRecipeCategory<Enchan
             index++;
             recipeLayout.getItemStacks().init(index, true, 36, 40);
             recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM).get(9));
-        }catch (Exception e){}
+        }catch (Exception ignored){}
 
     }
 }

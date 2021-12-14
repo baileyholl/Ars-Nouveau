@@ -50,11 +50,10 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
         ArrayList<BlockPos> stale = new ArrayList<>();
         int ratePer = getTransferRate() / fromList.size();
         for(BlockPos fromPos : fromList){
-            if(!(level.getBlockEntity(fromPos) instanceof AbstractSourceMachine)){
+            if(!(level.getBlockEntity(fromPos) instanceof AbstractSourceMachine fromTile)){
                 stale.add(fromPos);
                 continue;
             }
-            AbstractSourceMachine fromTile = (AbstractSourceMachine) level.getBlockEntity(fromPos);
             if(transferSource(fromTile, this, ratePer) > 0){
                 createParticles(fromPos, worldPosition);
             }
@@ -74,11 +73,10 @@ public class ArcaneRelaySplitterTile extends ArcaneRelayTile{
         ArrayList<BlockPos> stale = new ArrayList<>();
         int ratePer = getTransferRate() / toList.size();
         for(BlockPos toPos : toList){
-            if(!(level.getBlockEntity(toPos) instanceof AbstractSourceMachine)){
+            if(!(level.getBlockEntity(toPos) instanceof AbstractSourceMachine toTile)){
                 stale.add(toPos);
                 continue;
             }
-            AbstractSourceMachine toTile = (AbstractSourceMachine) level.getBlockEntity(toPos);
             int transfer = transferSource(this, toTile, ratePer);
             if(transfer > 0){
                 createParticles(worldPosition, toPos);

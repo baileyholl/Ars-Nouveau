@@ -33,7 +33,7 @@ public class ColorParticleTypeData implements ParticleOptions {
     public float alpha = 1.0f;
     public int age = 36;
 
-    static final ParticleOptions.Deserializer<ColorParticleTypeData> DESERIALIZER = new ParticleOptions.Deserializer<ColorParticleTypeData>() {
+    static final ParticleOptions.Deserializer<ColorParticleTypeData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
         @Override
         public ColorParticleTypeData fromCommand(ParticleType<ColorParticleTypeData> type, StringReader reader) throws CommandSyntaxException {
             reader.expect(' ');

@@ -134,7 +134,7 @@ public class CrushRecipe implements Recipe<Container> {
             if(GsonHelper.isArrayNode(json, "input")){
                 input = Ingredient.fromJson(GsonHelper.getAsJsonArray(json, "input"));
             }else{
-                input = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "input"));;
+                input = Ingredient.fromJson(GsonHelper.getAsJsonObject(json, "input"));
             }
             JsonArray outputs = GsonHelper.getAsJsonArray(json,"output");
             List<CrushOutput> parsedOutputs = new ArrayList<>();

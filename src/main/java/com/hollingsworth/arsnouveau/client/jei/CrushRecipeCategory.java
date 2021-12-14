@@ -42,7 +42,7 @@ public class CrushRecipeCategory implements IRecipeCategory<CrushRecipe> {
         icon = helper.createDrawableIngredient(new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(EffectCrush.INSTANCE)));
         this.cachedArrows = CacheBuilder.newBuilder()
                 .maximumSize(25)
-                .build(new CacheLoader<Integer, IDrawableAnimated>() {
+                .build(new CacheLoader<>() {
                     @Override
                     public IDrawableAnimated load(Integer cookTime) {
                         return helper.drawableBuilder(JEIConstants.RECIPE_GUI_VANILLA, 82, 128, 24, 17)

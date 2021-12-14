@@ -37,11 +37,10 @@ public class CrystallizerBlock extends TickableModBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if(!(worldIn.getBlockEntity(pos) instanceof CrystallizerTile))
+        if(!(worldIn.getBlockEntity(pos) instanceof CrystallizerTile tile))
             return super.use(state, worldIn, pos, player, handIn, hit);
         if(worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND)
             return super.use(state, worldIn, pos, player, handIn, hit);
-        CrystallizerTile tile = (CrystallizerTile) worldIn.getBlockEntity(pos);
         if(tile.stack.isEmpty() && !player.getItemInHand(handIn).isEmpty()){
             InfuserRecipe recipe = worldIn.getRecipeManager().getAllRecipesFor(RecipeRegistry.INFUSER_TYPE).stream()
                     .filter(f -> f.matches(new SimpleContainer(player.getItemInHand(handIn)), worldIn)).findFirst().orElse(null);

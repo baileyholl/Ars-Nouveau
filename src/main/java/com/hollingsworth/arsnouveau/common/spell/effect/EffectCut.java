@@ -41,8 +41,7 @@ public class EffectCut extends AbstractEffect {
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         Entity entity = rayTraceResult.getEntity();
-        if(entity instanceof IForgeShearable){
-            IForgeShearable shearable = (IForgeShearable) entity;
+        if(entity instanceof IForgeShearable shearable){
             ItemStack shears = new ItemStack(Items.SHEARS);
             applyEnchantments(spellStats, shears);
             if(shearable.isShearable(shears, world, entity.blockPosition())){
@@ -59,8 +58,7 @@ public class EffectCut extends AbstractEffect {
         for(BlockPos p : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult,spellStats.getBuffCount(AugmentAOE.INSTANCE), spellStats.getBuffCount(AugmentPierce.INSTANCE))) {
             ItemStack shears = new ItemStack(Items.SHEARS);
             applyEnchantments(spellStats, shears);
-            if (world.getBlockState(p).getBlock() instanceof IForgeShearable) {
-                IForgeShearable shearable = (IForgeShearable) world.getBlockState(p).getBlock();
+            if (world.getBlockState(p).getBlock() instanceof IForgeShearable shearable) {
 
                 if (shearable.isShearable(shears, world,p)) {
                     List<ItemStack> items = shearable.onSheared(getPlayer(shooter, (ServerLevel) world), shears, world, p, spellStats.getBuffCount(AugmentFortune.INSTANCE));

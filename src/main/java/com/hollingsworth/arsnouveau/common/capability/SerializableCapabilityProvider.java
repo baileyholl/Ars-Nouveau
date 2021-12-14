@@ -15,6 +15,8 @@ import javax.annotation.Nullable;
  *
  * @author Choonster
  */
+//TODO: Remove in favor of simplified cap
+    @Deprecated
 public class SerializableCapabilityProvider<HANDLER> extends SimpleCapabilityProvider<HANDLER> implements INBTSerializable<Tag> {
 
     /**

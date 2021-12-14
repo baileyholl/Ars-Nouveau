@@ -123,9 +123,8 @@ public abstract class AbstractEffect extends AbstractSpellPart {
 
         entity.hurt(source, totalDamage);
         Player playerContext = shooter instanceof Player ? (Player) shooter : ANFakePlayer.getPlayer((ServerLevel) world);
-        if(!(entity instanceof LivingEntity) )
+        if(!(entity instanceof LivingEntity mob) )
             return;
-        LivingEntity mob = (LivingEntity) entity;
         if(mob.getHealth() <= 0 && !mob.isRemoved() && stats.hasBuff(AugmentFortune.INSTANCE)){
             int looting = stats.getBuffCount(AugmentFortune.INSTANCE);
             LootContext.Builder lootContext = LootUtil.getLootingContext((ServerLevel)world,shooter, mob, looting, DamageSource.playerAttack(playerContext));
@@ -237,8 +236,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
             return ((IInventoryResponder) spellContext.castingTile).getItem(predicate);
         }else if(shooter instanceof IInventoryResponder){
             return ((IInventoryResponder) shooter).getItem(predicate);
-        }else if(shooter instanceof Player){
-            Player playerEntity = (Player) shooter;
+        }else if(shooter instanceof Player playerEntity){
             NonNullList<ItemStack> list = playerEntity.inventory.items;
             for(int i = 0; i < 9; i++){
                 ItemStack stack = list.get(i);
@@ -263,8 +261,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         }
         if(responder != null){
             return responder.extractItem(predicate, maxExtract);
-        }else if(shooter instanceof Player){
-            Player playerEntity = (Player) shooter;
+        }else if(shooter instanceof Player playerEntity){
             NonNullList<ItemStack> list = playerEntity.inventory.items;
             for(int i = 0; i < 9; i++){
                 ItemStack stack = list.get(i);
