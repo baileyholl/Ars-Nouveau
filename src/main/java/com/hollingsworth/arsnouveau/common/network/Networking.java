@@ -123,10 +123,10 @@ public class Networking {
                 PacketSummonFamiliar::new,
                 PacketSummonFamiliar::handle);
         INSTANCE.registerMessage(nextID(),
-                PacketSyncFamiliars.class,
-                PacketSyncFamiliars::toBytes,
-                PacketSyncFamiliars::new,
-                PacketSyncFamiliars::handle);
+                PacketSyncPlayerCap.class,
+                PacketSyncPlayerCap::toBytes,
+                PacketSyncPlayerCap::new,
+                PacketSyncPlayerCap::handle);
 
         INSTANCE.registerMessage(nextID(),
                 PacketTogglePathing.class,

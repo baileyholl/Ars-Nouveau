@@ -47,6 +47,6 @@ public class ManaCapAttacher {
         final ManaCapProvider provider = new ManaCapProvider();
 
         event.addCapability(ManaCapProvider.IDENTIFIER, provider);
-        event.addListener(provider::invalidate);
+       // event.addListener(provider::invalidate);
     }
 }

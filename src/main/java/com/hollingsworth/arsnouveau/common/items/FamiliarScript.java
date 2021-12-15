@@ -48,7 +48,7 @@ public class FamiliarScript extends ModItem{
                 return super.use(worldIn, playerIn, handIn);
             }
             familiarCap.unlockFamiliar(familiar);
-            CapabilityRegistry.EventHandler.syncFamiliars(playerIn);
+            CapabilityRegistry.EventHandler.syncPlayerCap(playerIn);
             playerIn.sendMessage(new TranslatableComponent("ars_nouveau.familiar.unlocked"), Util.NIL_UUID);
             playerIn.getItemInHand(handIn).shrink(1);
         }

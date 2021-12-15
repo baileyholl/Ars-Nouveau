@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.capability;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketSyncFamiliars;
+import com.hollingsworth.arsnouveau.common.network.PacketSyncPlayerCap;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
@@ -36,7 +36,7 @@ public class CapabilityRegistry {
      * @return A lazy optional containing the IMana, if any
      */
     public static LazyOptional<IManaCap> getMana(final LivingEntity entity){
-        return entity.getCapability(MANA_CAPABILITY, DEFAULT_FACING);
+        return entity.getCapability(MANA_CAPABILITY);
     }
 
     /**
@@ -46,7 +46,7 @@ public class CapabilityRegistry {
      * @return A lazy optional containing the IMana, if any
      */
     public static LazyOptional<IPlayerCap> getPlayerDataCap(final LivingEntity entity){
-        return entity.getCapability(PLAYER_DATA_CAP, DEFAULT_FACING);
+        return entity.getCapability(PLAYER_DATA_CAP);
     }
     /**
      * Event handler for the {@link IManaCap} capability.
@@ -62,8 +62,10 @@ public class CapabilityRegistry {
          */
         @SubscribeEvent
         public static void attachCapabilities(final AttachCapabilitiesEvent<Entity> event) {
-            ManaCapAttacher.attach(event);
-            ANPlayerCapAttacher.attach(event);
+            if(event.getObject() instanceof Player) {
+                ManaCapAttacher.attach(event);
+                ANPlayerCapAttacher.attach(event);
+            }
         }
 
         @SubscribeEvent
@@ -77,52 +79,59 @@ public class CapabilityRegistry {
          * @param event The event
          */
         @SubscribeEvent
-        public static void playerClone(final PlayerEvent.Clone event) {
-            getMana(event.getOriginal()).ifPresent(oldMaxMana -> getMana(event.getPlayer()).ifPresent(newMaxMana -> {
+        public static void playerClone(PlayerEvent.Clone event) {
+            Player oldPlayer = event.getOriginal();
+            oldPlayer.revive();
+            getMana(oldPlayer).ifPresent(oldMaxMana -> getMana(event.getPlayer()).ifPresent(newMaxMana -> {
                 newMaxMana.setMaxMana(oldMaxMana.getMaxMana());
                 newMaxMana.setMana(oldMaxMana.getCurrentMana());
                 newMaxMana.setBookTier(oldMaxMana.getBookTier());
                 newMaxMana.setGlyphBonus(oldMaxMana.getGlyphBonus());
             }));
 
-            getPlayerDataCap(event.getOriginal()).ifPresent(oldFamiliarCap -> getPlayerDataCap(event.getPlayer()).ifPresent(newFamiliarCap -> {
-                newFamiliarCap.setUnlockedFamiliars(oldFamiliarCap.getUnlockedFamiliars());
-                syncFamiliars(event.getPlayer());
-            }));
+            getPlayerDataCap(oldPlayer).ifPresent(oldPlayerCap ->{
+                IPlayerCap playerDataCap = getPlayerDataCap(event.getPlayer()).orElse(new ANPlayerDataCap());
+                CompoundTag tag = oldPlayerCap.serializeNBT();
+                playerDataCap.deserializeNBT(tag);
+                syncPlayerCap(event.getPlayer());
+            });
+            event.getOriginal().invalidateCaps();
         }
 
 
         @SubscribeEvent
         public static void onPlayerLoginEvent(PlayerEvent.PlayerLoggedInEvent event) {
             if(event.getPlayer() instanceof ServerPlayer){
-                syncFamiliars(event.getPlayer());
+                syncPlayerCap(event.getPlayer());
             }
         }
 
         @SubscribeEvent
         public static void respawnEvent(PlayerEvent.PlayerRespawnEvent event) {
-            if(event.getPlayer() instanceof ServerPlayer)
-               syncFamiliars(event.getPlayer());
+            if(event.getPlayer() instanceof ServerPlayer) {
+                syncPlayerCap(event.getPlayer());
+            }
         }
 
 
         @SubscribeEvent
         public static void onPlayerStartTrackingEvent(PlayerEvent.StartTracking event) {
             if (event.getTarget() instanceof Player && event.getPlayer() instanceof ServerPlayer) {
-                syncFamiliars(event.getPlayer());
+                syncPlayerCap(event.getPlayer());
             }
         }
 
         @SubscribeEvent
         public static void onPlayerDimChangedEvent(PlayerEvent.PlayerChangedDimensionEvent event) {
-            if (event.getPlayer() instanceof ServerPlayer)
-                syncFamiliars(event.getPlayer());
+            if (event.getPlayer() instanceof ServerPlayer) {
+                syncPlayerCap(event.getPlayer());
+            }
         }
 
-        public static void syncFamiliars(Player player){
+        public static void syncPlayerCap(Player player){
             IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(player).orElse(new ANPlayerDataCap());
             CompoundTag tag = cap.serializeNBT();
-            Networking.sendToPlayer(new PacketSyncFamiliars(tag), player);
+            Networking.sendToPlayer(new PacketSyncPlayerCap(tag), player);
         }
     }
 }

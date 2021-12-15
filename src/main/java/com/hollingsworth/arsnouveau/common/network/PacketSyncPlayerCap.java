@@ -11,10 +11,10 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class PacketSyncFamiliars {
+public class PacketSyncPlayerCap {
     CompoundTag tag;
     //Decoder
-    public PacketSyncFamiliars(FriendlyByteBuf buf){
+    public PacketSyncPlayerCap(FriendlyByteBuf buf){
         tag = buf.readNbt();
     }
 
@@ -23,17 +23,17 @@ public class PacketSyncFamiliars {
         buf.writeNbt(tag);
     }
 
-    public PacketSyncFamiliars(CompoundTag famCaps){
+    public PacketSyncPlayerCap(CompoundTag famCaps){
        this.tag = famCaps;
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(()->{
             Player playerEntity = ArsNouveau.proxy.getPlayer();
-            IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerEntity).orElse(null);
+            IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerEntity).orElse(new ANPlayerDataCap());
 
             if(cap != null){
-                cap.setUnlockedFamiliars(ANPlayerDataCap.deserialize(tag).familiars);
+                cap.deserializeNBT(tag);
             }
         });
         ctx.get().setPacketHandled(true);
