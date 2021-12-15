@@ -31,8 +31,6 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -71,7 +69,7 @@ public class EffectExchange extends AbstractEffect {
         Player playerEntity = getPlayer(shooter, (ServerLevel) world);
         List<ItemStack> list = playerEntity.inventory.items;
         List<IItemHandler> handlers = new ArrayList<>();
-
+        ANFakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
         if(spellContext.castingTile instanceof IPlaceBlockResponder && spellContext.castingTile instanceof IPickupResponder) {
             handlers = ((IPlaceBlockResponder) spellContext.castingTile).getInventory();
         }
@@ -89,7 +87,7 @@ public class EffectExchange extends AbstractEffect {
                 continue;
             }
             if(isRealPlayer(shooter) && spellContext.castingTile == null) {
-                firstBlock = swapFromInv(list, origState, world, pos1, result, shooter, 9, firstBlock);
+                firstBlock = swapFromInv(list, origState, world, pos1, result, shooter, 9, firstBlock, (Player) shooter);
             } else if((spellContext.castingTile instanceof IPlaceBlockResponder && spellContext.castingTile instanceof IPickupResponder) || (shooter instanceof IPlaceBlockResponder && shooter instanceof IPickupResponder)){
                 boolean shouldBreak = false;
                 for(IItemHandler i : handlers){
@@ -104,7 +102,7 @@ public class EffectExchange extends AbstractEffect {
                             }else if(item.getBlock() != firstBlock)
                                 continue;
                             ItemStack extracted = i.extractItem(slot, 1, false);
-                            if(attemptPlace(extracted, world, pos1, result, shooter)) {
+                            if(attemptPlace(extracted, world, pos1, result, shooter, fakePlayer)) {
                                 shouldBreak = true;
                                 break;
                             }else{
@@ -120,7 +118,7 @@ public class EffectExchange extends AbstractEffect {
         }
     }
 
-    public Block swapFromInv(List<ItemStack> inventory, BlockState origState, Level world, BlockPos pos1, BlockHitResult result, LivingEntity shooter, int slots, Block firstBlock){
+    public Block swapFromInv(List<ItemStack> inventory, BlockState origState, Level world, BlockPos pos1, BlockHitResult result, LivingEntity shooter, int slots, Block firstBlock, Player fakePlayer){
         for(int i = 0; i < slots; i++){
             ItemStack stack = inventory.get(i);
             if(stack.getItem() instanceof BlockItem && world instanceof ServerLevel){
@@ -131,18 +129,17 @@ public class EffectExchange extends AbstractEffect {
                     firstBlock = item.getBlock();
                 }else if(item.getBlock() != firstBlock)
                     continue;
-                if(attemptPlace(stack, world, new BlockPos(pos1), result, shooter))
+                if(attemptPlace(stack, world, new BlockPos(pos1), result, shooter, fakePlayer))
                     break;
             }
         }
         return firstBlock;
     }
 
-    public boolean attemptPlace(ItemStack stack, Level world, BlockPos pos1, BlockHitResult result, LivingEntity shooter){
+    public boolean attemptPlace(ItemStack stack, Level world, BlockPos pos1, BlockHitResult result, LivingEntity shooter, Player fakePlayer){
         BlockItem item = (BlockItem)stack.getItem();
         ItemStack tool = LootUtil.getDefaultFakeTool();
         tool.enchant(Enchantments.SILK_TOUCH, 1);
-        FakePlayer fakePlayer = FakePlayerFactory.getMinecraft((ServerLevel)world);
         fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack);
         BlockPlaceContext context = BlockPlaceContext.at(new BlockPlaceContext(new UseOnContext(fakePlayer, InteractionHand.MAIN_HAND, result)), pos1.relative(result.getDirection().getOpposite()), result.getDirection());
         BlockState placeState = item.getBlock().getStateForPlacement(context);
@@ -153,7 +150,7 @@ public class EffectExchange extends AbstractEffect {
             item.getBlock().setPlacedBy(world, pos1, placeState, shooter, stack);
             BlockItem.updateCustomBlockEntityTag(world,
                     shooter instanceof Player ? (Player) shooter :
-                            ANFakePlayer.getPlayer((ServerLevel) world), pos1, stack);
+                            fakePlayer, pos1, stack);
             stack.shrink(1);
             return true;
         }
