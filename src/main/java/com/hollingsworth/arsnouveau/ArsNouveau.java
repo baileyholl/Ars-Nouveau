@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau;
 
-import com.hollingsworth.arsnouveau.api.familiar.FamiliarCap;
 import com.hollingsworth.arsnouveau.client.ClientHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
@@ -57,7 +56,6 @@ public class ArsNouveau {
     }
 
     public void setup (final FMLCommonSetupEvent event){
-        FamiliarCap.register();
         APIRegistry.registerApparatusRecipes();
         event.enqueueWork(WorldEvent::registerFeatures);
         Networking.registerMessages();

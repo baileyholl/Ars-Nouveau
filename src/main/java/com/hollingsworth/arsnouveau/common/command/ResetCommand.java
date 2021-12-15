@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.command;
 
 import com.google.common.collect.ImmutableList;
-import com.hollingsworth.arsnouveau.api.familiar.FamiliarCap;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
@@ -32,7 +31,7 @@ public class ResetCommand {
                 iMana.setBookTier(0);
                 iMana.setGlyphBonus(0);
             });
-            FamiliarCap.getFamiliarCap((LivingEntity) e).ifPresent(ifam -> ifam.setUnlockedFamiliars(new ArrayList<>()));
+            CapabilityRegistry.getPlayerDataCap((LivingEntity) e).ifPresent(ifam -> ifam.setUnlockedFamiliars(new ArrayList<>()));
         }
         source.sendSuccess(new TranslatableComponent("ars_nouveau.reset.cleared"), true);
         return 1;

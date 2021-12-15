@@ -1,8 +1,9 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.familiar.FamiliarCap;
-import com.hollingsworth.arsnouveau.api.familiar.IFamiliarCap;
+import com.hollingsworth.arsnouveau.common.capability.ANPlayerDataCap;
+import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
@@ -29,9 +30,10 @@ public class PacketSyncFamiliars {
     public void handle(Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(()->{
             Player playerEntity = ArsNouveau.proxy.getPlayer();
-            IFamiliarCap cap = FamiliarCap.getFamiliarCap(playerEntity).orElse(null);
+            IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerEntity).orElse(null);
+
             if(cap != null){
-                cap.setUnlockedFamiliars(FamiliarCap.deserializeFamiliars(tag));
+                cap.setUnlockedFamiliars(ANPlayerDataCap.deserialize(tag).familiars);
             }
         });
         ctx.get().setPacketHandled(true);

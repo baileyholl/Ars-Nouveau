@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
-import com.hollingsworth.arsnouveau.api.familiar.FamiliarCap;
-import com.hollingsworth.arsnouveau.api.familiar.IFamiliarCap;
+import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -41,14 +41,14 @@ public class FamiliarScript extends ModItem{
         if(worldIn.isClientSide)
             return super.use(worldIn, playerIn, handIn);
 
-        IFamiliarCap familiarCap = FamiliarCap.getFamiliarCap(playerIn).orElse(null);
+        IPlayerCap familiarCap = CapabilityRegistry.getPlayerDataCap(playerIn).orElse(null);
         if(familiarCap != null){
-            if(familiarCap.ownsFamiliar(familiar.getId())){
+            if(familiarCap.ownsFamiliar(familiar)){
                 playerIn.sendMessage(new TranslatableComponent("ars_nouveau.familiar.owned"), Util.NIL_UUID);
                 return super.use(worldIn, playerIn, handIn);
             }
-            familiarCap.unlockFamiliar(familiar.getId());
-            FamiliarCap.syncFamiliars(playerIn);
+            familiarCap.unlockFamiliar(familiar);
+            CapabilityRegistry.EventHandler.syncFamiliars(playerIn);
             playerIn.sendMessage(new TranslatableComponent("ars_nouveau.familiar.unlocked"), Util.NIL_UUID);
             playerIn.getItemInHand(handIn).shrink(1);
         }
