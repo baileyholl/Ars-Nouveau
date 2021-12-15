@@ -267,7 +267,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
             stack.enchant(Enchantments.SILK_TOUCH, 1);
         }
         if(hasBuff(augments, AugmentFortune.class)){
-            stack.enchant(Enchantments.BLOCK_FORTUNE, getBuffCount(augments, AugmentExtract.class));
+            stack.enchant(Enchantments.BLOCK_FORTUNE, getBuffCount(augments, AugmentFortune.class));
         }
     }
 
