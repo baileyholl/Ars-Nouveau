@@ -24,7 +24,7 @@ public interface IPlayerCap  extends INBTSerializable<CompoundTag> {
     /**
      * @return true if they already know this glyph.
      */
-    boolean knowsSpell(AbstractSpellPart spellPart);
+    boolean knowsGlyph(AbstractSpellPart spellPart);
 
     /*Familiar data*/
 

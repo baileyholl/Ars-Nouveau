@@ -38,7 +38,7 @@ public class FamiliarScript extends ModItem{
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
-        if(worldIn.isClientSide)
+        if(worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND)
             return super.use(worldIn, playerIn, handIn);
 
         IPlayerCap familiarCap = CapabilityRegistry.getPlayerDataCap(playerIn).orElse(null);

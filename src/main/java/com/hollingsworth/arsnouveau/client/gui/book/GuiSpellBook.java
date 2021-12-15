@@ -4,7 +4,6 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
-import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.buttons.*;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
@@ -47,7 +46,7 @@ public class GuiSpellBook extends BaseBook {
     public GuiSpellSlot selected_slot;
     public int max_spell_tier; // Used to load spells that are appropriate tier
     List<CraftingButton> craftingCells;
-    public List<AbstractSpellPart> unlockedSpells;
+    public Collection<AbstractSpellPart> unlockedSpells;
     public List<AbstractSpellPart> castMethods;
     public List<AbstractSpellPart> augments;
     public List<AbstractSpellPart> displayedEffects;
@@ -62,7 +61,7 @@ public class GuiSpellBook extends BaseBook {
     ISpellValidator spellValidator;
     public String previousString = "";
     public ItemStack bookStack;
-    public GuiSpellBook(ArsNouveauAPI api, ItemStack bookStack, int tier, String unlockedSpells) {
+    public GuiSpellBook(ArsNouveauAPI api, ItemStack bookStack, int tier, Collection<AbstractSpellPart> unlockedSpells) {
         super();
         this.bookStack = bookStack;
         this.api = api;
@@ -70,7 +69,7 @@ public class GuiSpellBook extends BaseBook {
         craftingCells = new ArrayList<>();
         this.max_spell_tier = tier;
         this.spell_book_tag = bookStack.getOrCreateTag();
-        this.unlockedSpells = SpellRecipeUtil.getSpellsFromString(unlockedSpells);
+        this.unlockedSpells = unlockedSpells;
 
         this.castMethods = new ArrayList<>();
         this.augments = new ArrayList<>();
@@ -385,8 +384,11 @@ public class GuiSpellBook extends BaseBook {
         }
     }
 
-    public static void open(ArsNouveauAPI api, ItemStack stack, int tier, String unlockedSpells){
-        Minecraft.getInstance().setScreen(new GuiSpellBook(api, stack, tier, unlockedSpells));
+    public static void open(ArsNouveauAPI api, ItemStack stack, int tier){
+        IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player).orElse(null);
+        Collection<AbstractSpellPart> parts = cap == null ? new ArrayList<>() : cap.getKnownGlyphs();
+        parts.addAll(ArsNouveauAPI.getInstance().getDefaultStartingSpells());
+        Minecraft.getInstance().setScreen(new GuiSpellBook(api, stack, tier, parts));
     }
 
     public void drawBackgroundElements(PoseStack stack, int mouseX, int mouseY, float partialTicks) {

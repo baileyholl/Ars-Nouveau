@@ -4,6 +4,8 @@ import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -60,9 +62,10 @@ public class PacketUpdateSpellColors {
                     ISpellCaster caster =  CasterUtil.getCaster(stack);
                     caster.setColor(new ParticleColor.IntWrapper(r, g, b), castSlot);
                     caster.setCurrentSlot(castSlot);
+                    IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(ctx.get().getSender()).orElse(null);
                     Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->ctx.get().getSender()), new PacketUpdateBookGUI(stack));
                     Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->ctx.get().getSender()),
-                            new PacketOpenSpellBook(stack, ((SpellBook) stack.getItem()).tier.ordinal(), SpellBook.getUnlockedSpellString(tag)));
+                            new PacketOpenSpellBook(stack, ((SpellBook) stack.getItem()).tier.ordinal()));
 
                 }
             }

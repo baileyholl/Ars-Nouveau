@@ -28,7 +28,7 @@ public class ANPlayerDataCap implements IPlayerCap{
     }
 
     @Override
-    public boolean knowsSpell(AbstractSpellPart spellPart) {
+    public boolean knowsGlyph(AbstractSpellPart spellPart) {
         return glyphs.contains(spellPart);
     }
 

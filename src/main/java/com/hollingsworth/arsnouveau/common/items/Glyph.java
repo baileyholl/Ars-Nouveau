@@ -4,6 +4,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
+import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -37,18 +39,17 @@ public class Glyph extends ModItem{
             playerIn.sendMessage(new TranslatableComponent("ars_nouveau.spell.disabled"), Util.NIL_UUID);
             return super.use(worldIn, playerIn, handIn);
         }
-
-        playerIn.getInventory().items.forEach(itemStack -> {
-            if(itemStack.getItem() instanceof SpellBook){
-                if(SpellBook.getUnlockedSpells(itemStack.getTag()).contains(spellPart)){
-                    playerIn.sendMessage(new TextComponent("You already know this spell!"),  Util.NIL_UUID);
-                    return;
-                }
-                SpellBook.unlockSpell(itemStack.getTag(), this.spellPart.getTag());
+        IPlayerCap playerDataCap = CapabilityRegistry.getPlayerDataCap(playerIn).orElse(null);
+        if(playerDataCap != null){
+            if(playerDataCap.knowsGlyph(spellPart)){
+                playerIn.sendMessage(new TextComponent("You already know this spell!"),  Util.NIL_UUID);
+                return super.use(worldIn, playerIn, handIn);
+            }else if(playerDataCap.unlockGlyph(spellPart)){
+                CapabilityRegistry.EventHandler.syncPlayerCap(playerIn);
                 playerIn.getItemInHand(handIn).shrink(1);
                 playerIn.sendMessage(new TextComponent("Unlocked " + this.spellPart.getName()), Util.NIL_UUID);
             }
-        });
+        }
         return super.use(worldIn, playerIn, handIn);
     }
 
