@@ -122,8 +122,8 @@ public class Spell {
             return new Spell(recipe);
         String[] recipeList = recipeStr.substring(1, recipeStr.length() - 1).split(",");
         for(String id : recipeList){
-            if (ArsNouveauAPI.getInstance().getSpellMap().containsKey(id.trim()))
-                recipe.add(ArsNouveauAPI.getInstance().getSpellMap().get(id.trim()));
+            if (ArsNouveauAPI.getInstance().getSpellpartMap().containsKey(id.trim()))
+                recipe.add(ArsNouveauAPI.getInstance().getSpellpartMap().get(id.trim()));
         }
         return new Spell(recipe);
     }

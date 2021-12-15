@@ -82,7 +82,7 @@ public class SpellBook extends Item implements ISpellTier, IAnimatable, ICasterT
             StringBuilder starting_spells = new StringBuilder();
 
             if(stack.getItem() == ItemsRegistry.CREATIVE_SPELLBOOK){
-                ArsNouveauAPI.getInstance().getSpellMap().values().forEach(s -> starting_spells.append(",").append(s.getTag().trim()));
+                ArsNouveauAPI.getInstance().getSpellpartMap().values().forEach(s -> starting_spells.append(",").append(s.getTag().trim()));
             }else{
                 ArsNouveauAPI.getInstance().getDefaultStartingSpells().forEach(s-> starting_spells.append(",").append(s.getTag().trim()));
             }

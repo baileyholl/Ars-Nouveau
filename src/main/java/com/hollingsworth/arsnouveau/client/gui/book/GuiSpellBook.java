@@ -2,14 +2,14 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.familiar.FamiliarCap;
-import com.hollingsworth.arsnouveau.api.familiar.IFamiliarCap;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.buttons.*;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellbook;
@@ -205,7 +205,7 @@ public class GuiSpellBook extends BaseBook {
             for(Widget w : renderables) {
                 if(w instanceof GlyphButton) {
                     if (((GlyphButton) w).spell_id != null) {
-                        AbstractSpellPart part = api.getSpellMap().get(((GlyphButton) w).spell_id);
+                        AbstractSpellPart part = api.getSpellpartMap().get(((GlyphButton) w).spell_id);
                         if (part != null) {
                             ((GlyphButton) w).visible = part.getLocaleName().toLowerCase().contains(str.toLowerCase());
                         }
@@ -309,9 +309,9 @@ public class GuiSpellBook extends BaseBook {
 
     public void onFamiliarClick(Button button){
         Collection<String> familiarHolders = new ArrayList<>();
-        IFamiliarCap cap = FamiliarCap.getFamiliarCap(ArsNouveau.proxy.getPlayer()).orElse(null);
+        IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(ArsNouveau.proxy.getPlayer()).orElse(null);
         if(cap != null){
-            familiarHolders = cap.getUnlockedFamiliars();
+            familiarHolders = cap.getUnlockedFamiliars().stream().map(s -> s.id).collect(Collectors.toList());
         }
         Collection<String> finalFamiliarHolders = familiarHolders;
         Minecraft.getInstance().setScreen(new GuiFamiliarScreen(api, ArsNouveauAPI.getInstance().getFamiliarHolderMap().values().stream().filter(f -> finalFamiliarHolders.contains(f.id)).collect(Collectors.toList())));
@@ -427,7 +427,7 @@ public class GuiSpellBook extends BaseBook {
                 // Also note where we found the first blank.  Used later for the glyph buttons.
                 if (firstBlankSlot < 0) firstBlankSlot = i;
             } else {
-                recipe.add(api.getSpellMap().get(b.spellTag));
+                recipe.add(api.getSpellpartMap().get(b.spellTag));
             }
         }
 
@@ -464,7 +464,7 @@ public class GuiSpellBook extends BaseBook {
         glyphButton.validationErrors.clear();
 
         // Simulate adding the glyph to the current spell
-        recipe.add(api.getSpellMap().get(glyphButton.spell_id));
+        recipe.add(api.getSpellpartMap().get(glyphButton.spell_id));
 
         // Filter the errors to ones referring to the simulated glyph
         glyphButton.validationErrors.addAll(

@@ -58,7 +58,7 @@ public class ArsNouveauAPI {
      * key: Unique spell ID. Please make this snake_case!
      * value: Associated glyph
      */
-    private HashMap<String, AbstractSpellPart> spellMap;
+    private HashMap<String, AbstractSpellPart> spellpartMap;
 
     private HashMap<String, AbstractRitual> ritualMap;
 
@@ -67,7 +67,7 @@ public class ArsNouveauAPI {
     /**
      * Contains the list of glyph item instances used by the glyph press.
      */
-    private HashMap<String, Glyph> glyphMap;
+    private HashMap<String, Glyph> glyphItemMap;
 
     private HashMap<String, FamiliarScript> familiarScriptMap;
 
@@ -88,12 +88,12 @@ public class ArsNouveauAPI {
     private List<AbstractSpellPart> startingSpells;
 
     public List<AbstractSpellPart> getDefaultStartingSpells(){
-        return spellMap.values().stream().filter(Config::isStarterEnabled).collect(Collectors.toList());
+        return spellpartMap.values().stream().filter(Config::isStarterEnabled).collect(Collectors.toList());
     }
 
     public boolean addStartingSpell(String tag){
-        if(ArsNouveauAPI.getInstance().getSpellMap().containsKey(tag)){
-            return startingSpells.add(ArsNouveauAPI.getInstance().getSpellMap().get(tag));
+        if(ArsNouveauAPI.getInstance().getSpellpartMap().containsKey(tag)){
+            return startingSpells.add(ArsNouveauAPI.getInstance().getSpellpartMap().get(tag));
         }else{
             throw new IllegalStateException("Attempted to add a starting spell for an unregistered spell. Spells must be added to the Spell Map first!");
         }
@@ -117,8 +117,8 @@ public class ArsNouveauAPI {
     }
 
     public AbstractSpellPart registerSpell(String id, AbstractSpellPart part){
-        glyphMap.put(id, new Glyph(getSpellRegistryName(id), part));
-        return spellMap.put(id, part);
+        glyphItemMap.put(id, new Glyph(getSpellRegistryName(id), part));
+        return spellpartMap.put(id, part);
     }
 
     public AbstractSpellPart registerSpell(AbstractSpellPart part){
@@ -172,12 +172,12 @@ public class ArsNouveauAPI {
         return "ritual_"+ id.toLowerCase();
     }
 
-    public Map<String, AbstractSpellPart> getSpellMap() {
-        return spellMap;
+    public Map<String, AbstractSpellPart> getSpellpartMap() {
+        return spellpartMap;
     }
 
-    public Map<String, Glyph> getGlyphMap(){
-        return glyphMap;
+    public Map<String, Glyph> getGlyphItemMap(){
+        return glyphItemMap;
     }
 
     public Map<String, AbstractRitual> getRitualMap(){
@@ -270,8 +270,8 @@ public class ArsNouveauAPI {
     }
 
     private ArsNouveauAPI(){
-        spellMap = new HashMap<>();
-        glyphMap = new HashMap<>();
+        spellpartMap = new HashMap<>();
+        glyphItemMap = new HashMap<>();
         startingSpells = new ArrayList<>();
         enchantingApparatusRecipes = new ArrayList<>();
         ritualMap = new HashMap<>();

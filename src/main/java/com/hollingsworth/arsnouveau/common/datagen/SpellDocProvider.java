@@ -34,7 +34,7 @@ public class SpellDocProvider implements DataProvider {
         APIRegistry.registerApparatusRecipes();
         Path path = this.generator.getOutputFolder();
         System.out.println("ACTING IN DOC PROVIDER");
-        ArrayList<AbstractSpellPart> spells = new ArrayList<>(ArsNouveauAPI.getInstance().getSpellMap().values());
+        ArrayList<AbstractSpellPart> spells = new ArrayList<>(ArsNouveauAPI.getInstance().getSpellpartMap().values());
 
         for(AbstractSpellPart spellPatchouliObj : spells){
             Path path1 = getSpellPath(path, spellPatchouliObj);

@@ -70,7 +70,7 @@ public class Config {
     public static ForgeConfigSpec.BooleanValue ENFORCE_AUGMENT_CAP_ON_CAST;
 
     public static boolean isSpellEnabled(String tag){
-        AbstractSpellPart spellPart = ArsNouveauAPI.getInstance().getSpellMap().get(tag);
+        AbstractSpellPart spellPart = ArsNouveauAPI.getInstance().getSpellpartMap().get(tag);
         return spellPart.ENABLED == null || spellPart.ENABLED.get();
     }
 
@@ -81,8 +81,8 @@ public class Config {
 
     public static int getAddonSpellCost(String tag){
         return addonSpellCosts.getOrDefault(tag,
-                ArsNouveauAPI.getInstance().getSpellMap().containsKey(tag) ?
-                        ArsNouveauAPI.getInstance().getSpellMap().get(tag).getManaCost() : 0);
+                ArsNouveauAPI.getInstance().getSpellpartMap().containsKey(tag) ?
+                        ArsNouveauAPI.getInstance().getSpellpartMap().get(tag).getManaCost() : 0);
     }
 
     private static Map<String, ForgeConfigSpec.IntValue> spellCost = new HashMap<>();
@@ -142,7 +142,7 @@ public class Config {
         SERVER_BUILDER.pop();
 
         SERVER_CONFIG = SERVER_BUILDER.build();
-        RegistryHelper.generateConfig(ArsNouveau.MODID, new ArrayList<>(ArsNouveauAPI.getInstance().getSpellMap().values()));
+        RegistryHelper.generateConfig(ArsNouveau.MODID, new ArrayList<>(ArsNouveauAPI.getInstance().getSpellpartMap().values()));
     }
 
     public static boolean isStarterEnabled(AbstractSpellPart e){

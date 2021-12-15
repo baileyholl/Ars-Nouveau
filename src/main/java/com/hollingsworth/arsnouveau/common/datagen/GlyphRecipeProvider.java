@@ -24,7 +24,7 @@ public class GlyphRecipeProvider implements DataProvider {
     }
     @Override
     public void run(HashCache cache) throws IOException {
-        List<Glyph> glyphList = ArsNouveauAPI.getInstance().getGlyphMap().values().stream().collect(Collectors.toList());
+        List<Glyph> glyphList = ArsNouveauAPI.getInstance().getGlyphItemMap().values().stream().collect(Collectors.toList());
         Path output = this.generator.getOutputFolder();
         for(Glyph g : glyphList){
             Path path = getGlyphPath(output, g);

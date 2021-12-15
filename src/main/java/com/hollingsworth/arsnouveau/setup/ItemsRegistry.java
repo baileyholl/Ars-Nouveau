@@ -283,7 +283,7 @@ public class ItemsRegistry {
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();
-            for(Glyph glyph : ArsNouveauAPI.getInstance().getGlyphMap().values()){
+            for(Glyph glyph : ArsNouveauAPI.getInstance().getGlyphItemMap().values()){
                 registry.register(glyph);
                 ITEMS.add(glyph);
             }
