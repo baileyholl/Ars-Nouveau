@@ -121,8 +121,7 @@ public class CapabilityRegistry {
 
         public static void syncFamiliars(Player player){
             IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(player).orElse(new ANPlayerDataCap());
-            CompoundTag tag = new CompoundTag();
-            cap.deserializeNBT(tag);
+            CompoundTag tag = cap.serializeNBT();
             Networking.sendToPlayer(new PacketSyncFamiliars(tag), player);
         }
     }

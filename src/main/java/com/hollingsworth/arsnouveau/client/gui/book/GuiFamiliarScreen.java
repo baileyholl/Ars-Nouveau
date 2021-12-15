@@ -39,9 +39,9 @@ public class GuiFamiliarScreen extends BaseBook{
             int xOffset = 20 * (i % PER_ROW);
             int yOffset = (i / PER_ROW) * 18;
             FamiliarButton cell = new FamiliarButton(this, xStart + xOffset, yStart + yOffset, false, part);
-            addWidget(cell);
+            addRenderableWidget(cell);
         }
-        addWidget(new GuiImageButton(bookRight - 71, bookBottom - 13, 0,0,41, 12, 41, 12, "textures/gui/clear_icon.png", (e) -> {Minecraft.getInstance().setScreen(null);}));
+        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 13, 0,0,41, 12, 41, 12, "textures/gui/clear_icon.png", (e) -> {Minecraft.getInstance().setScreen(null);}));
 
     }
 
