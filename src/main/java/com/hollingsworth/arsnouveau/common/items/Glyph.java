@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
@@ -41,7 +42,7 @@ public class Glyph extends ModItem{
         }
         IPlayerCap playerDataCap = CapabilityRegistry.getPlayerDataCap(playerIn).orElse(null);
         if(playerDataCap != null){
-            if(playerDataCap.knowsGlyph(spellPart)){
+            if(playerDataCap.knowsGlyph(spellPart) || ArsNouveauAPI.getInstance().getDefaultStartingSpells().contains(spellPart)){
                 playerIn.sendMessage(new TextComponent("You already know this spell!"),  Util.NIL_UUID);
                 return super.use(worldIn, playerIn, handIn);
             }else if(playerDataCap.unlockGlyph(spellPart)){
