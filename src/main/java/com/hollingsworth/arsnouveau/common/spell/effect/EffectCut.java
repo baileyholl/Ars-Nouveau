@@ -56,6 +56,7 @@ public class EffectCut extends AbstractEffect {
 
     @Override
     public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world,  LivingEntity shooter, List<AbstractAugment> augments, SpellContext spellContext) {
+        PlayerEntity entity = ANFakePlayer.getPlayer((ServerWorld) world);
         for(BlockPos p : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, getBuffCount(augments, AugmentAOE.class), getBuffCount(augments, AugmentPierce.class))) {
             ItemStack shears = new ItemStack(Items.SHEARS);
             applyEnchantments(augments, shears);
@@ -67,7 +68,6 @@ public class EffectCut extends AbstractEffect {
                     items.forEach(i -> world.addFreshEntity(new ItemEntity(world, p.getX(), p.getY(),p.getZ(), i)));
                 }
             }
-            PlayerEntity entity = ANFakePlayer.getPlayer((ServerWorld) world);
             entity.setItemInHand(Hand.MAIN_HAND, shears);
             // TODO Replace with AN shears
             if(world.getBlockEntity(p) != null && (world.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).isPresent() ||

@@ -40,6 +40,7 @@ public class EffectPlaceBlock extends AbstractEffect {
     public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
         BlockRayTraceResult result = rayTraceResult;
+        FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerWorld) world);
         for(BlockPos pos1 : posList) {
             BlockPos hitPos = result.isInside() ? pos1 : pos1.relative(result.getDirection());
             if(spellContext.castingTile instanceof IPlaceBlockResponder){
@@ -48,7 +49,6 @@ public class EffectPlaceBlock extends AbstractEffect {
                     return;
 
                 BlockItem item = (BlockItem) stack.getItem();
-                FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerWorld) world);
                 fakePlayer.setItemInHand(Hand.MAIN_HAND, stack);
 
                 // Special offset for touch
@@ -69,7 +69,7 @@ public class EffectPlaceBlock extends AbstractEffect {
                 if(world.getBlockState(hitPos).getMaterial() != Material.AIR){
                     result = new BlockRayTraceResult(result.getLocation().add(0, 1, 0), Direction.UP, result.getBlockPos(),false);
                 }
-                attemptPlace(world, stack, item, result);
+                attemptPlace(world, stack, item, result, fakePlayer);
             }else if(shooter instanceof PlayerEntity){
                 PlayerEntity playerEntity = (PlayerEntity) shooter;
                 NonNullList<ItemStack> list =  playerEntity.inventory.items;
@@ -81,7 +81,7 @@ public class EffectPlaceBlock extends AbstractEffect {
                         BlockItem item = (BlockItem)stack.getItem();
 
                         BlockRayTraceResult resolveResult = new BlockRayTraceResult(new Vector3d(hitPos.getX(), hitPos.getY(), hitPos.getZ()), result.getDirection(), hitPos, false);
-                        ActionResultType resultType = attemptPlace(world, stack, item, resolveResult);
+                        ActionResultType resultType = attemptPlace(world, stack, item, resolveResult, fakePlayer);
                         if(ActionResultType.FAIL != resultType)
                             break;
                     }
@@ -95,8 +95,7 @@ public class EffectPlaceBlock extends AbstractEffect {
         return nonAirBlockSuccess(rayTraceResult, world);
     }
 
-    public static ActionResultType attemptPlace(World world, ItemStack stack, BlockItem item, BlockRayTraceResult result){
-        FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerWorld) world);
+    public static ActionResultType attemptPlace(World world, ItemStack stack, BlockItem item, BlockRayTraceResult result, FakePlayer fakePlayer){
         fakePlayer.setItemInHand(Hand.MAIN_HAND, stack);
         BlockItemUseContext context = BlockItemUseContext.at(new BlockItemUseContext(new ItemUseContext(fakePlayer, Hand.MAIN_HAND, result)), result.getBlockPos(), result.getDirection());
         return item.place(context);

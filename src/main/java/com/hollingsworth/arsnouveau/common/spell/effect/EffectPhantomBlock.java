@@ -32,12 +32,13 @@ public class EffectPhantomBlock extends AbstractEffect {
 
     @Override
     public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        ANFakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerWorld) world);
         for(BlockPos pos : SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats)) {
             pos =  rayTraceResult.isInside() ? pos : pos.relative(( rayTraceResult).getDirection());
             if(!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, pos))
                 continue;
             BlockState state = world.getBlockState(pos);
-            if (state.getMaterial().isReplaceable() && world.isUnobstructed(BlockRegistry.PHANTOM_BLOCK.defaultBlockState(), pos, ISelectionContext.of(ANFakePlayer.getPlayer((ServerWorld) world)))) {
+            if (state.getMaterial().isReplaceable() && world.isUnobstructed(BlockRegistry.PHANTOM_BLOCK.defaultBlockState(), pos, ISelectionContext.of(fakePlayer))) {
                 world.setBlockAndUpdate(pos, BlockRegistry.PHANTOM_BLOCK.defaultBlockState());
                 if(world.getBlockEntity(pos) instanceof PhantomBlockTile) {
                     PhantomBlockTile tile = (PhantomBlockTile) world.getBlockEntity(pos);
