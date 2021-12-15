@@ -45,8 +45,6 @@ public class ManaCapAttacher {
 
     public static void attach(final AttachCapabilitiesEvent<Entity> event) {
         final ManaCapProvider provider = new ManaCapProvider();
-
         event.addCapability(ManaCapProvider.IDENTIFIER, provider);
-       // event.addListener(provider::invalidate);
     }
 }

@@ -44,8 +44,6 @@ public class ANPlayerCapAttacher {
 
     public static void attach(final AttachCapabilitiesEvent<Entity> event) {
         final ANPlayerCapProvider provider = new ANPlayerCapProvider();
-
         event.addCapability(ANPlayerCapProvider.IDENTIFIER, provider);
-     //   event.addListener(provider::invalidate);
     }
 }
