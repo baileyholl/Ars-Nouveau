@@ -36,6 +36,11 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
+
+    public SpellBow(Item.Properties p_40660_){
+        super(p_40660_);
+    }
+
     public SpellBow() {
         super(ItemsRegistry.defaultItemProperties().stacksTo(1));
     }
@@ -77,7 +82,7 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
         InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, worldIn, playerIn, handIn, hasAmmo);
         if (ret != null) return ret;
 
-        if(hasAmmo || (caster.getSpell() != null && new SpellResolver(new SpellContext(caster.getSpell(), playerIn)).withSilent(true).canCast(playerIn))){
+        if(hasAmmo || (caster.getSpell().isValid() && new SpellResolver(new SpellContext(caster.getSpell(), playerIn)).withSilent(true).canCast(playerIn))){
             playerIn.startUsingItem(handIn);
             return InteractionResultHolder.consume(itemstack);
         }
@@ -102,9 +107,8 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
     @Override
     public void releaseUsing(ItemStack bowStack, Level worldIn, LivingEntity entityLiving, int timeLeft) {
         //Copied from BowItem so we can spawn arrows in case there are no items.
-        if (!(entityLiving instanceof Player))
+        if (!(entityLiving instanceof Player playerentity))
             return;
-        Player playerentity = (Player)entityLiving;
         boolean isInfinity = playerentity.abilities.instabuild || EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, bowStack) > 0;
         ItemStack arrowStack = findAmmo(playerentity, bowStack);
 
@@ -129,7 +133,7 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
             return;
 
         float f = getPowerForTime(useTime);
-        if (((double)f >= 0.1D) && canFire) {
+        if ((double)f >= 0.1D) {
             boolean isArrowInfinite = playerentity.abilities.instabuild || (arrowStack.getItem() instanceof ArrowItem && ((ArrowItem)arrowStack.getItem()).isInfinite(arrowStack, bowStack, playerentity));
             if (!worldIn.isClientSide) {
                 ArrowItem arrowitem = (ArrowItem)(arrowStack.getItem() instanceof ArrowItem ? arrowStack.getItem() : Items.ARROW);
@@ -156,8 +160,6 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
                     if(abstractarrowentity instanceof EntitySpellArrow){
                         numSplits = ((EntitySpellArrow) abstractarrowentity).spellResolver.spell.getBuffsAtIndex(0, playerentity, AugmentSplit.INSTANCE);
                     }
-
-                           // (abstractarrowentity instanceof EntitySpellArrow ? ((EntitySpellArrow) abstractarrowentity).spellResolver.spell.getBuffsAtIndex(0, AugmentSplit));
 
                     for(int i =1; i < numSplits + 1; i++){
                         Direction offset = playerentity.getDirection().getClockWise();
@@ -216,9 +218,7 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
-
-    }
+    public void registerControllers(AnimationData data) {}
 
     @Override
     public AbstractArrow customArrow(AbstractArrow arrow) {
@@ -226,6 +226,7 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
     }
 
     public AnimationFactory factory = new AnimationFactory(this);
+
     @Override
     public AnimationFactory getFactory() {
         return factory;
@@ -260,7 +261,6 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
     public int getEnchantmentValue() {
         return super.getEnchantmentValue();
     }
-
 
     @Override
     public boolean isEnchantable(ItemStack stack) {

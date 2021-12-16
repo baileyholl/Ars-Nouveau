@@ -18,6 +18,7 @@ import java.util.List;
 public class ModItem extends Item {
     public List<Component> tooltip;
     public Rarity rarity;
+
     public ModItem(Properties properties) {
         super(properties);
     }

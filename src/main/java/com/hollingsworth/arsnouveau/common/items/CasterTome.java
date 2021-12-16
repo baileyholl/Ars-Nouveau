@@ -21,6 +21,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class CasterTome extends ModItem implements ICasterTool {
+
     public CasterTome(Properties properties) {
         super(properties);
     }
@@ -38,7 +39,6 @@ public class CasterTome extends ModItem implements ICasterTool {
         return player.isCreative() && ICasterTool.super.onScribe(world, pos, player, handIn, stack);
     }
 
-
     @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
@@ -53,7 +53,6 @@ public class CasterTome extends ModItem implements ICasterTool {
         if(worldIn == null)
             return;
         ISpellCaster caster = getSpellCaster(stack);
-
         Spell spell = caster.getSpell();
         tooltip2.add(new TextComponent(spell.getDisplayString()));
         if(!caster.getFlavorText().isEmpty())

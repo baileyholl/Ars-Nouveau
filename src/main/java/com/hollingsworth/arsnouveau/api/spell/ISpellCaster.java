@@ -95,7 +95,7 @@ public interface ISpellCaster {
 
         if(worldIn.isClientSide)
             return InteractionResultHolder.pass(playerIn.getItemInHand(handIn));
-        
+
         if(!spell.isValid()) {
             PortUtil.sendMessageNoSpam(playerIn,invalidMessage);
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);

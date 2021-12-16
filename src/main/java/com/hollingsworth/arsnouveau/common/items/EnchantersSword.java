@@ -33,9 +33,13 @@ import java.util.function.Consumer;
 import static com.hollingsworth.arsnouveau.setup.ItemsRegistry.defaultItemProperties;
 
 public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatable {
+
     public EnchantersSword(Tier iItemTier, int baseDamage, float baseAttackSpeed) {
         super(iItemTier, baseDamage, baseAttackSpeed, defaultItemProperties().stacksTo(1));
+    }
 
+    public EnchantersSword(Tier iItemTier, int baseDamage, float baseAttackSpeed, Properties properties) {
+        super(iItemTier, baseDamage, baseAttackSpeed, properties);
     }
 
     @Override
@@ -52,10 +56,6 @@ public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatab
         });
     }
 
-    public EnchantersSword(Tier iItemTier, int baseDamage, float baseAttackSpeed, Properties properties) {
-        super(iItemTier, baseDamage, baseAttackSpeed, properties);
-    }
-
     @Override
     public boolean isScribedSpellValid(ISpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
         return spell.recipe.stream().noneMatch(s -> s instanceof AbstractCastMethod);
@@ -65,7 +65,6 @@ public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatab
     public void sendInvalidMessage(Player player) {
         PortUtil.sendMessageNoSpam(player, new TranslatableComponent("ars_nouveau.sword.invalid"));
     }
-
 
     @Override
     public boolean setSpell(ISpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell) {
@@ -80,13 +79,10 @@ public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatab
 
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity player) {
-
         ISpellCaster caster = getSpellCaster(stack);
         SpellResolver resolver = new SpellResolver(new SpellContext(caster.getSpell(), player).withColors(caster.getColor()));
         EntityHitResult entityRes = new EntityHitResult(target);
-
-        resolver.onCastOnEntity(stack, player, (LivingEntity) entityRes.getEntity(), InteractionHand.MAIN_HAND);
-
+        resolver.onCastOnEntity(stack, player, entityRes.getEntity(), InteractionHand.MAIN_HAND);
         return super.hurtEnemy(stack, target, player);
     }
 

@@ -37,13 +37,16 @@ import java.util.function.Consumer;
 
 public class Wand extends ModItem  implements IAnimatable, ICasterTool {
     public AnimationFactory factory = new AnimationFactory(this);
+
+    public Wand(Properties properties){
+        super(properties);
+    }
+
     public Wand() {
         super(new Item.Properties().stacksTo(1).tab(ArsNouveau.itemGroup), LibItemNames.WAND);
     }
 
-
-    private <P extends Item & IAnimatable> PlayState predicate(AnimationEvent<P> event)
-    {
+    private <P extends Item & IAnimatable> PlayState predicate(AnimationEvent<P> event) {
         event.getController().setAnimation(new AnimationBuilder().addAnimation("wand_gem_spin", true));
         return PlayState.CONTINUE;
     }
@@ -56,8 +59,7 @@ public class Wand extends ModItem  implements IAnimatable, ICasterTool {
     }
 
     @Override
-    public void registerControllers(AnimationData data)
-    {
+    public void registerControllers(AnimationData data) {
        data.addAnimationController(new AnimationController(this, "controller", 20, this::predicate));
     }
 

@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class EnchantersMirror extends ModItem implements ICasterTool, IAnimatable, ISpellModifierItem {
+
     public EnchantersMirror(Properties properties) {
         super(properties);
     }
@@ -40,11 +41,9 @@ public class EnchantersMirror extends ModItem implements ICasterTool, IAnimatabl
         super(registryName);
     }
 
-
     @Override
-    public void registerControllers(AnimationData data) {
+    public void registerControllers(AnimationData data) {}
 
-    }
     AnimationFactory factory = new AnimationFactory(this);
 
     @Override
@@ -91,6 +90,7 @@ public class EnchantersMirror extends ModItem implements ICasterTool, IAnimatabl
     public SpellStats.Builder applyItemModifiers(ItemStack stack, SpellStats.Builder builder, AbstractSpellPart spellPart, HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellContext spellContext) {
         return builder.addDurationModifier(1.0D);
     }
+
     @Override
     public void initializeClient(Consumer<IItemRenderProperties> consumer) {
         super.initializeClient(consumer);
