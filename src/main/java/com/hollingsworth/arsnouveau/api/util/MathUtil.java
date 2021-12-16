@@ -2,19 +2,19 @@ package com.hollingsworth.arsnouveau.api.util;
 
 
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 
+import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 public class MathUtil {
 // https://github.com/Mithion/ArsMagica2/tree/6d6b68002363b2569c2f2300c8f9146ad800bbc6#readme
 
-    public static EntityHitResult getLookedAtEntity(LivingEntity entity,int range){
+    public static @Nullable EntityHitResult getLookedAtEntity(Entity entity,int range){
         Vec3 vec3d = entity.getEyePosition(1.0f);
         Vec3 vec3d1 = entity.getViewVector(1.0F);
         Vec3 vec3d2 = vec3d.add(vec3d1.x * range, vec3d1.y * range, vec3d1.z * range);
@@ -22,7 +22,7 @@ public class MathUtil {
         return MathUtil.traceEntities(entity, vec3d, vec3d2, axisalignedbb, (e) -> !e.isSpectator() && e.isPickable(), range);
     }
 
-    public static EntityHitResult traceEntities(Entity shooter, Vec3 startVec, Vec3 endVec, AABB boundingBox, Predicate<Entity> filter, double distance){
+    public static @Nullable EntityHitResult traceEntities(Entity shooter, Vec3 startVec, Vec3 endVec, AABB boundingBox, Predicate<Entity> filter, double distance){
         Level world = shooter.level;
         double d0 = distance;
         Entity entity = null;

@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
-import com.hollingsworth.arsnouveau.api.util.MathUtil;
+import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.IntangibleAirTile;
 import com.hollingsworth.arsnouveau.common.block.tile.MageBlockTile;
@@ -16,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -89,36 +90,39 @@ public interface ISpellCaster {
         return caster.getSpell();
     }
 
-    default InteractionResultHolder<ItemStack> castSpell(Level worldIn, Player playerIn, InteractionHand handIn, TranslatableComponent invalidMessage, Spell spell){
+    default InteractionResultHolder<ItemStack> castSpell(Level worldIn, Player playerIn, InteractionHand handIn, TranslatableComponent invalidMessage, @Nonnull Spell spell){
         ItemStack stack = playerIn.getItemInHand(handIn);
 
         if(worldIn.isClientSide)
             return InteractionResultHolder.pass(playerIn.getItemInHand(handIn));
-        if(spell == null) {
+        
+        if(!spell.isValid()) {
             PortUtil.sendMessageNoSpam(playerIn,invalidMessage);
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
         }
-        SpellResolver resolver = new SpellResolver(new SpellContext(spell, playerIn)
-                .withColors(getColor()));
+        SpellResolver resolver = getSpellResolver(new SpellContext(spell, playerIn).withColors(getColor()), worldIn, playerIn, handIn);
         boolean isSensitive = resolver.spell.getBuffsAtIndex(0, playerIn, AugmentSensitive.INSTANCE) > 0;
-        HitResult result = playerIn.pick(5, 0, isSensitive);
-        if(result instanceof BlockHitResult && worldIn.getBlockEntity(((BlockHitResult) result).getBlockPos()) instanceof ScribesTile)
-            return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
-        if(result instanceof BlockHitResult && !playerIn.isShiftKeyDown()){
-            if(worldIn.getBlockEntity(((BlockHitResult) result).getBlockPos()) != null &&
-                    !(worldIn.getBlockEntity(((BlockHitResult) result).getBlockPos()) instanceof IntangibleAirTile
-                            ||(worldIn.getBlockEntity(((BlockHitResult) result).getBlockPos()) instanceof MageBlockTile))) {
+        HitResult result = SpellUtil.rayTrace(playerIn, 5, 0, isSensitive);
+        if(result instanceof BlockHitResult blockHit){
+            BlockEntity tile = worldIn.getBlockEntity(blockHit.getBlockPos());
+            if(tile instanceof ScribesTile)
+                return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+
+            // TODO: Change to block tag system for whitelisting castable target blocks
+            if(!playerIn.isShiftKeyDown() && tile != null && !(worldIn.getBlockEntity(((BlockHitResult) result).getBlockPos()) instanceof IntangibleAirTile
+                    ||(worldIn.getBlockEntity(((BlockHitResult) result).getBlockPos()) instanceof MageBlockTile))){
                 return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
             }
-        }
-        EntityHitResult entityRes = MathUtil.getLookedAtEntity(playerIn, 25);
 
-        if(entityRes != null && entityRes.getEntity() instanceof LivingEntity){
-            resolver.onCastOnEntity(stack, playerIn, (LivingEntity) entityRes.getEntity(), handIn);
+        }
+
+
+        if(result instanceof EntityHitResult entityHitResult && entityHitResult.getEntity() instanceof LivingEntity){
+            resolver.onCastOnEntity(stack, playerIn, entityHitResult.getEntity(), handIn);
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
 
-        if(result.getType() == HitResult.Type.BLOCK || (isSensitive && result instanceof BlockHitResult)){
+        if(result instanceof BlockHitResult && (result.getType() == HitResult.Type.BLOCK || isSensitive)){
             UseOnContext context = new UseOnContext(playerIn, handIn, (BlockHitResult) result);
             resolver.onCastOnBlock(context);
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
@@ -130,5 +134,9 @@ public interface ISpellCaster {
 
     default InteractionResultHolder<ItemStack> castSpell(Level worldIn, Player playerIn, InteractionHand handIn, TranslatableComponent invalidMessage){
         return castSpell(worldIn, playerIn, handIn, invalidMessage, getSpell(worldIn, playerIn, handIn, this));
+    }
+
+    default SpellResolver getSpellResolver(SpellContext context, Level worldIn, Player playerIn, InteractionHand handIn){
+        return new SpellResolver(context);
     }
 }
