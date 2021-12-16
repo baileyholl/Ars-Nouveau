@@ -15,7 +15,7 @@ public class AugmentExtract extends AbstractAugment {
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 30;
     }
 

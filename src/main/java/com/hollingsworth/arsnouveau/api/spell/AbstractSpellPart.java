@@ -19,8 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 public abstract class AbstractSpellPart implements ISpellTier, Comparable<AbstractSpellPart> {
-    // TODO: Clarify that this is the default cost.
-    public abstract int getManaCost();
+
     public String tag;
     public String name;
     /*Tag for NBT data and SpellManager#spellList*/
@@ -48,9 +47,11 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
         }
         return Math.max(cost, 0);
     }
+    
+    public abstract int getDefaultManaCost();
 
     public int getConfigCost(){
-        return COST == null ? getManaCost() : COST.get();
+        return COST == null ? getDefaultManaCost() : COST.get();
     }
 
     @Nullable
@@ -120,8 +121,8 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
         infoPage.addProperty("recipe", ArsNouveau.MODID + ":" + "glyph_" + this.tag);
         infoPage.addProperty("tier",this.getTier().name());
 
-        String manaCost = this.getManaCost() < 20 ? "Low" : "Medium";
-        manaCost = this.getManaCost() > 50 ? "High" : manaCost;
+        String manaCost = this.getDefaultManaCost() < 20 ? "Low" : "Medium";
+        manaCost = this.getDefaultManaCost() > 50 ? "High" : manaCost;
         infoPage.addProperty("mana_cost", manaCost);
         if(this.getCraftingReagent() != null){
             String clayType;
@@ -152,7 +153,7 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
     public void buildConfig(ForgeConfigSpec.Builder builder){
         builder.comment("General settings").push("general");
         ENABLED = builder.comment("Is Enabled?").define("enabled", true);
-        COST = builder.comment("Cost").defineInRange("cost", getManaCost(), Integer.MIN_VALUE, Integer.MAX_VALUE);
+        COST = builder.comment("Cost").defineInRange("cost", getDefaultManaCost(), Integer.MIN_VALUE, Integer.MAX_VALUE);
         STARTER_SPELL = builder.comment("Is Starter Glyph?").define("starter", defaultedStarterGlyph());
         PER_SPELL_LIMIT = builder.comment("The maximum number of times this glyph may appear in a single spell").defineInRange("per_spell_limit", Integer.MAX_VALUE, 1, Integer.MAX_VALUE);
     }

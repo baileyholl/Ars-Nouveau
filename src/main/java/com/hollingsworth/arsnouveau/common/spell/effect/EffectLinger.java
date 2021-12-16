@@ -57,7 +57,7 @@ public class EffectLinger extends AbstractEffect {
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 500;
     }
 

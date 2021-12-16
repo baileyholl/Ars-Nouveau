@@ -67,7 +67,7 @@ public class EffectIgnite  extends AbstractEffect {
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 15;
     }
 

@@ -78,7 +78,7 @@ public class MethodSelf extends AbstractCastMethod {
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 10;
     }
 

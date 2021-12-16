@@ -64,7 +64,7 @@ public class EffectConjureWater extends AbstractEffect {
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 80;
     }
 

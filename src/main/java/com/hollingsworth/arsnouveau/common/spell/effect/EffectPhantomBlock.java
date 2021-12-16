@@ -53,7 +53,7 @@ public class EffectPhantomBlock extends AbstractEffect {
 
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 5;
     }
 

@@ -82,7 +82,7 @@ public class Config {
     public static int getAddonSpellCost(String tag){
         return addonSpellCosts.getOrDefault(tag,
                 ArsNouveauAPI.getInstance().getSpellpartMap().containsKey(tag) ?
-                        ArsNouveauAPI.getInstance().getSpellpartMap().get(tag).getManaCost() : 0);
+                        ArsNouveauAPI.getInstance().getSpellpartMap().get(tag).getDefaultManaCost() : 0);
     }
 
     private static Map<String, ForgeConfigSpec.IntValue> spellCost = new HashMap<>();

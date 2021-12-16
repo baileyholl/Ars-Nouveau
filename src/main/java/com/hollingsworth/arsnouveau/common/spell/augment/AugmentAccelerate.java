@@ -15,7 +15,7 @@ public class AugmentAccelerate extends AbstractAugment {
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 10;
     }
 

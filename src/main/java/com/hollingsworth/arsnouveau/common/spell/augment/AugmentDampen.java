@@ -17,7 +17,7 @@ public class AugmentDampen extends AbstractAugment {
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return -5;
     }
 

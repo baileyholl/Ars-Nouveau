@@ -15,7 +15,7 @@ public class AugmentPierce extends AbstractAugment {
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 40;
     }
 

@@ -148,7 +148,7 @@ public class EffectBlink extends AbstractEffect {
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 50;
     }
 

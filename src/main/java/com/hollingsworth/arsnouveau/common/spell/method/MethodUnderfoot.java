@@ -70,7 +70,7 @@ public class MethodUnderfoot extends AbstractCastMethod {
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 5;
     }
 

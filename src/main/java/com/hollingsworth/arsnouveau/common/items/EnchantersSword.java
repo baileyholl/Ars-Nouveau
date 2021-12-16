@@ -73,7 +73,7 @@ public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatab
         recipe.addAll(spell.recipe);
         recipe.add(AugmentAmplify.INSTANCE);
         spell.recipe = recipe;
-        spell.setCost(spell.getCastingCost() - AugmentAmplify.INSTANCE.getManaCost());
+        spell.setCost(spell.getCastingCost() - AugmentAmplify.INSTANCE.getDefaultManaCost());
         return ICasterTool.super.setSpell(caster, player, hand, stack, spell);
     }
 

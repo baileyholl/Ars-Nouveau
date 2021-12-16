@@ -26,7 +26,7 @@ public class AugmentSensitive extends AbstractAugment {
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 10;
     }
 }

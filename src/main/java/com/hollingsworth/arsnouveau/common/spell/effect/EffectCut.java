@@ -98,7 +98,7 @@ public class EffectCut extends AbstractEffect {
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 0;
     }
 

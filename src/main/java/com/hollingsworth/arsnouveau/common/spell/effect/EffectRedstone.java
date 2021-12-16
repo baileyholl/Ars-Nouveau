@@ -78,7 +78,7 @@ public class EffectRedstone extends AbstractEffect {
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 0;
     }
 

@@ -46,7 +46,7 @@ public class EffectAquatic extends AbstractEffect {
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 25;
     }
 
