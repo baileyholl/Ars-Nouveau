@@ -34,7 +34,7 @@ public interface ICasterTool extends IScribeable, IDisplayMana {
 
         if(!((heldStack.getItem() instanceof SpellBook) || (heldStack.getItem() instanceof SpellParchment)) || heldStack.getTag() == null)
             return false;
-        boolean success = false;
+        boolean success;
         Spell spell = new Spell();
         if(heldStack.getItem() instanceof ICasterTool){
             ISpellCaster heldCaster = getSpellCaster(heldStack);
@@ -46,12 +46,12 @@ public interface ICasterTool extends IScribeable, IDisplayMana {
             success = setSpell(caster, player, handIn, stack, spell);
             if(success){
                 sendSetMessage(player);
-                return success;
+                return true;
             }
         }else{
             sendInvalidMessage(player);
         }
-        return success;
+        return false;
     }
 
     default void sendSetMessage(Player player){
@@ -71,7 +71,6 @@ public interface ICasterTool extends IScribeable, IDisplayMana {
         return true;
     }
 
-
     default boolean isScribedSpellValid(ISpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell){
         return spell.isValid();
     }
@@ -80,7 +79,6 @@ public interface ICasterTool extends IScribeable, IDisplayMana {
     default boolean shouldDisplay(ItemStack stack) {
         return true;
     }
-
 
     default void getInformation(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
         if(worldIn == null)

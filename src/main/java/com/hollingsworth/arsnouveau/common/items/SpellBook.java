@@ -1,16 +1,15 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellBookRenderer;
+import com.hollingsworth.arsnouveau.common.capability.ANPlayerDataCap;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -21,7 +20,6 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -43,11 +41,7 @@ import java.util.function.Consumer;
 
 public class SpellBook extends Item implements ISpellTier, IAnimatable, ICasterTool {
 
-    public static final String BOOK_MODE_TAG = "mode";
-    public static final String UNLOCKED_SPELLS = "spells";
-    public static final int SEGMENTS = 10;
     public Tier tier;
-
 
     public SpellBook(Tier tier){
         super(new Item.Properties().stacksTo(1).tab(ArsNouveau.itemGroup));
@@ -65,27 +59,6 @@ public class SpellBook extends Item implements ISpellTier, IAnimatable, ICasterT
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-        if(!stack.hasTag())
-            stack.setTag(new CompoundTag());
-
-        if(!worldIn.isClientSide && worldIn.getGameTime() % 5 == 0 && !stack.hasTag()) {
-            CompoundTag tag = new CompoundTag();
-            tag.putInt(SpellBook.BOOK_MODE_TAG, 0);
-            StringBuilder starting_spells = new StringBuilder();
-
-            if(stack.getItem() == ItemsRegistry.CREATIVE_SPELLBOOK){
-                ArsNouveauAPI.getInstance().getSpellpartMap().values().forEach(s -> starting_spells.append(",").append(s.getTag().trim()));
-            }else{
-                ArsNouveauAPI.getInstance().getDefaultStartingSpells().forEach(s-> starting_spells.append(",").append(s.getTag().trim()));
-            }
-            tag.putString(SpellBook.UNLOCKED_SPELLS, starting_spells.toString());
-            stack.setTag(tag);
-        }
-        super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
-    }
-
-    @Override
     public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
 
@@ -93,7 +66,7 @@ public class SpellBook extends Item implements ISpellTier, IAnimatable, ICasterT
             if(iMana.getBookTier() < this.tier.ordinal()){
                 iMana.setBookTier(this.tier.ordinal());
             }
-            IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerIn).orElse(null);
+            IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerIn).orElse(new ANPlayerDataCap());
             if(iMana.getGlyphBonus() < cap.getKnownGlyphs().size()){
                 iMana.setGlyphBonus(cap.getKnownGlyphs().size());
             }
@@ -139,10 +112,10 @@ public class SpellBook extends Item implements ISpellTier, IAnimatable, ICasterT
     }
 
     @Override
-    public void registerControllers(AnimationData data) {
+    public void registerControllers(AnimationData data) {}
 
-    }
     AnimationFactory factory = new AnimationFactory(this);
+
     @Override
     public AnimationFactory getFactory() {
         return factory;

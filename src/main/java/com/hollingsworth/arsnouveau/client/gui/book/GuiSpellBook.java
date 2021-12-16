@@ -14,6 +14,7 @@ import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellbook;
 import com.hollingsworth.arsnouveau.common.spell.validation.CombinedSpellValidator;
 import com.hollingsworth.arsnouveau.common.spell.validation.GlyphMaxTierValidator;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -388,6 +389,8 @@ public class GuiSpellBook extends BaseBook {
         IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player).orElse(null);
         Collection<AbstractSpellPart> parts = cap == null ? new ArrayList<>() : cap.getKnownGlyphs();
         parts.addAll(ArsNouveauAPI.getInstance().getDefaultStartingSpells());
+        if(stack.getItem() == ItemsRegistry.CREATIVE_SPELLBOOK)
+            parts = ArsNouveauAPI.getInstance().getSpellpartMap().values();
         Minecraft.getInstance().setScreen(new GuiSpellBook(api, stack, tier, parts));
     }
 

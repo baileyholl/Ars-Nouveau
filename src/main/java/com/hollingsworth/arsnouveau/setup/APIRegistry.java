@@ -38,7 +38,7 @@ public class APIRegistry {
         registerSpell(EffectHarm.INSTANCE);
         registerSpell(EffectIgnite.INSTANCE);
         registerSpell(EffectPhantomBlock.INSTANCE);
-        registerSpell(EffectHeal.INSTANCE);
+//        registerSpell(EffectHeal.INSTANCE);
         registerSpell(EffectGrow.INSTANCE);
         registerSpell(EffectKnockback.INSTANCE);
         registerSpell(EffectHaste.INSTANCE);
@@ -50,9 +50,9 @@ public class APIRegistry {
         registerSpell(EffectBlink.INSTANCE);
         registerSpell(EffectExplosion.INSTANCE);
         registerSpell(EffectLightning.INSTANCE);
-        registerSpell(EffectSlowfall.INSTANCE);
-        registerSpell(EffectShield.INSTANCE);
-        registerSpell(EffectAquatic.INSTANCE);
+//        registerSpell(EffectSlowfall.INSTANCE);
+//        registerSpell(EffectShield.INSTANCE);
+//        registerSpell(EffectAquatic.INSTANCE);
         registerSpell(EffectFangs.INSTANCE);
         registerSpell(EffectSummonVex.INSTANCE);
         registerSpell(EffectStrength.INSTANCE);
@@ -76,7 +76,7 @@ public class APIRegistry {
         registerSpell(EffectLeap.INSTANCE);
         registerSpell(EffectDelay.INSTANCE);
         registerSpell(EffectRedstone.INSTANCE);
-        registerSpell(EffectIntangible.INSTANCE);
+//        registerSpell(EffectIntangible.INSTANCE);
         registerSpell(EffectInvisibility.INSTANCE);
         registerSpell(AugmentDurationDown.INSTANCE);
         registerSpell(EffectWither.INSTANCE);
