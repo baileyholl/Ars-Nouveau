@@ -42,23 +42,23 @@ Craft spells, create powerful baubles, and summon magical creatures!
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
     side="BOTH"
 
-#[[dependencies.ars_nouveau]]
-#    modId="patchouli"
-#    mandatory=true
-#    versionRange="[1.16-42,)"
-#    ordering="AFTER"
-#    side="BOTH"
-#
-#[[dependencies.ars_nouveau]]
-#    modId="curios"
-#    mandatory=true
-#    versionRange="[1.16.3-4.0.1.0,)"
-#    ordering="AFTER"
-#    side="BOTH"
-#
-#[[dependencies.ars_nouveau]]
-#    modId="geckolib3"
-#    mandatory=true
-#    versionRange="[3.0.0-beta.8,)"
-#    ordering="AFTER"
-#    side="BOTH"
+[[dependencies.ars_nouveau]]
+    modId="patchouli"
+    mandatory=true
+    versionRange="[1.18.1-61,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.ars_nouveau]]
+    modId="curios"
+    mandatory=true
+    versionRange="[1.18.1-5.0.3.0,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.ars_nouveau]]
+    modId="geckolib3"
+    mandatory=true
+    versionRange="[3.0.1,)"
+    ordering="AFTER"
+    side="BOTH"

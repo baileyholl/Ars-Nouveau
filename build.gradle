@@ -25,9 +25,9 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '2.0.0'
+version = '2.0.0-beta2'
 group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'ars_nouveau-1.18'
+archivesBaseName = 'ars_nouveau-1.18.1'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 minecraft {
@@ -153,9 +153,9 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-1.18:9.0.0.40:api")
     runtimeOnly fg.deobf("mezz.jei:jei-1.18:9.0.0.40")
 //    runtimeOnly fg.deobf("curse.maven:exp-449945:3429057")  // Per viam invenire
-    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18-5.0.2.4:api")
-    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18-5.0.2.4")
-    implementation fg.deobf('software.bernie.geckolib:geckolib-1.18:3.0.0')
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.1-5.0.3.0:api")
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.1-5.0.3.0")
+    implementation fg.deobf('software.bernie.geckolib:geckolib-1.18-forge:3.0.3')
     
 //    compileOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.4:7.1.0.84")
 
