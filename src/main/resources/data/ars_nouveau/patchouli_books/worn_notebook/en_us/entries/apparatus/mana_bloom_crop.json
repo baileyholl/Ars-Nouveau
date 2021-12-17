@@ -1,15 +1,15 @@
 {
-  "name": "block.ars_nouveau.mana_bloom_crop",
-  "icon": "ars_nouveau:mana_bloom_crop",
-  "category": "resources",
+  "name": "block.ars_nouveau.magebloom_crop",
+  "icon": "ars_nouveau:magebloom_crop",
+  "category": "ars_nouveau:resources",
   "pages": [
     {
       "type": "text",
-      "text": "ars_nouveau.page.mana_bloom_crop"
+      "text": "ars_nouveau.page.magebloom_crop"
     },
     {
       "type": "apparatus_recipe",
-      "recipe": "ars_nouveau:mana_bloom_crop"
+      "recipe": "ars_nouveau:magebloom_crop"
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "name": "item.ars_nouveau.summon_focus",
   "icon": "ars_nouveau:summon_focus",
-  "category": "equipment",
+  "category": "ars_nouveau:equipment",
   "pages": [
     {
       "type": "text",

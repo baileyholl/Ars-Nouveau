@@ -2,7 +2,7 @@
     "name": "Starter Spells",
     "icon": "ars_nouveau:glyph_break",
 	"sortnum":3,
-    "category": "getting_started",
+    "category": "ars_nouveau:getting_started",
     "pages": [
         {
             "type": "text",
@@ -50,7 +50,7 @@
 			"text":"A tier 1 effect that can be crafted using the Glyph Press. Summons a temporary, tamed, and saddled horse."
         },
 		{
-            "type": "relations",
+            "type": "patchouli:relations",
             "entries":["machines/glyph_press"],
 			"text":"To learn about creating new glyphs, see the section on the Glyph Press."
         }

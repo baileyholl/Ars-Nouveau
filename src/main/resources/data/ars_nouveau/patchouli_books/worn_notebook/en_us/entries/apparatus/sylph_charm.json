@@ -1,45 +1,45 @@
 {
-  "name": "item.ars_nouveau.sylph_charm",
-  "icon": "ars_nouveau:sylph_charm",
-  "category": "automation",
+  "name": "item.ars_nouveau.whirlisprig_charm",
+  "icon": "ars_nouveau:whirlisprig_charm",
+  "category": "ars_nouveau:automation",
   "pages": [
     {
       "type": "text",
-      "text": "ars_nouveau.page.sylph_charm"
+      "text": "ars_nouveau.page.whirlisprig_charm"
     },
     {
-      "type": "apparatus_recipe",
-      "recipe": "ars_nouveau:sylph_charm"
+      "type": "ars_nouveau:apparatus_recipe",
+      "recipe": "ars_nouveau:whirlisprig_charm"
     },
 	{
 	 "type": "entity",
-      "entity": "ars_nouveau:sylph",
-	  "text":"ars_nouveau.page2.sylph_charm"
+      "entity": "ars_nouveau:whirlisprig",
+	  "text":"ars_nouveau.page2.whirlisprig_charm"
 	},
 	{
       "type": "text",
 	  "title":"Summoning",
-      "text": "ars_nouveau.page3.sylph_charm"
+      "text": "ars_nouveau.page3.whirlisprig_charm"
     },{
       "type": "text",
 	  "title":"Happiness",
-      "text": "ars_nouveau.page4.sylph_charm"
+      "text": "ars_nouveau.page4.whirlisprig_charm"
     },
 	{
       "type": "text",
 	  "title":"Important",
-      "text": "ars_nouveau.page5.sylph_charm"
+      "text": "ars_nouveau.page5.whirlisprig_charm"
     },{
       "type": "text",
 	  "title":"Production",
-      "text": "ars_nouveau.page6.sylph_charm"
+      "text": "ars_nouveau.page6.whirlisprig_charm"
     },{
 	"type":"multiblock",
 	"multiblock":{
 		"mapping":{
 			"C":"minecraft:chest",
-			"0":"ars_nouveau:summoning_crystal",
-			"J":"ars_nouveau:mana_jar"
+			"0":"minecraft:chest",
+			"J":"ars_nouveau:source_jar"
 		},
 		"pattern":[
 			["   "],

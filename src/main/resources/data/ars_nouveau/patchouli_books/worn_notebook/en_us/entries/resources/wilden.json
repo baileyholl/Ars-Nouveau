@@ -1,7 +1,7 @@
 {
     "name": "ars_nouveau.wilden",
     "icon": "ars_nouveau:wilden_horn",
-    "category": "resources",
+    "category": "ars_nouveau:resources",
     "pages": [
         {
             "type": "text",

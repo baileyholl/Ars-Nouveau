@@ -1,15 +1,15 @@
 {
   "name": "Strength",
   "icon": "ars_nouveau:glyph_strength",
-  "category": "spells_3",
+  "category": "ars_nouveau:spells_3",
   "sortnum": 2,
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "ars_nouveau.glyph_desc.strength"
     },
     {
-      "type": "glyph_recipe",
+      "type": "ars_nouveau:glyph_recipe",
       "recipe": "ars_nouveau:glyph_strength",
       "tier": "THREE",
       "mana_cost": "High",

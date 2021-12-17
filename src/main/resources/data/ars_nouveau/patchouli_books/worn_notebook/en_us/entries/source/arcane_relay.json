@@ -1,7 +1,7 @@
 {
   "name": "block.ars_nouveau.arcane_relay",
   "icon": "ars_nouveau:arcane_relay",
-  "category": "source",
+  "category": "ars_nouveau:source",
   "pages": [
     {
       "type": "text",

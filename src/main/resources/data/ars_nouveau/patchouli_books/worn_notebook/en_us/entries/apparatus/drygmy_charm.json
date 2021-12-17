@@ -1,7 +1,7 @@
 {
   "name": "item.ars_nouveau.drygmy_charm",
   "icon": "ars_nouveau:drygmy_charm",
-  "category": "automation",
+  "category": "ars_nouveau:automation",
   "pages": [
     {
       "type": "text",
@@ -36,7 +36,7 @@
 		"mapping":{
 			"C":"minecraft:chest",
 			"0":"ars_nouveau:drygmy_stone",
-			"J":"ars_nouveau:mana_jar"
+			"J":"ars_nouveau:source_jar"
 		},
 		"pattern":[
 			["   "],

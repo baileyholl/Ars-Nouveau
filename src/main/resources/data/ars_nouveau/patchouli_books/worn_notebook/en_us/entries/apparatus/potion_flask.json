@@ -1,7 +1,7 @@
 {
   "name": "item.ars_nouveau.potion_flask",
   "icon": "ars_nouveau:potion_flask",
-  "category": "equipment",
+  "category": "ars_nouveau:equipment",
   "pages": [
     {
       "type": "text",

@@ -1,15 +1,15 @@
 {
   "name": "Extend Time",
   "icon": "ars_nouveau:glyph_extend_time",
-  "category": "spells_2",
+  "category": "ars_nouveau:spells_2",
   "sortnum": 3,
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "ars_nouveau.glyph_desc.extend_time"
     },
     {
-      "type": "glyph_recipe",
+      "type": "ars_nouveau:glyph_recipe",
       "recipe": "ars_nouveau:glyph_extend_time",
       "tier": "TWO",
       "mana_cost": "Low",

@@ -1,16 +1,16 @@
 {
-    "name": "Starting Automation",
+    "name": "ars_nouveau.patchouli.automation",
     "icon": "ars_nouveau:spell_turret",
 	"sortnum":10,
-    "category": "getting_started",
+    "category": "ars_nouveau:getting_started",
     "pages": [
         {
-            "type": "text",
-            "text": "All spells may be used in Automation through casters like the Whelp or Spell Turret. Use these to create auto harvesters, tree farms, quarries, cake farms, glass factories, and more! For item transport, autocrafting, or resource generation, see the variety of magical entities that may be summoned using Charms."       
+            "type": "patchouli:text",
+            "text": "ars_nouveau.patchouli.automation.page1"       
         },
 		{
-            "type": "relations",
-            "entries":["apparatus/whelp_charm", "apparatus/spell_turret","apparatus/carbuncle_charm","apparatus/wixie_charm"]        
+            "type": "patchouli:relations",
+            "entries":["ars_nouveau:apparatus/bookwyrm_charm", "ars_nouveau:apparatus/spell_turret","ars_nouveau:apparatus/starbuncle_charm","ars_nouveau:apparatus/wixie_charm"]        
         }
     ]
 }

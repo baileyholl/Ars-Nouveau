@@ -1,7 +1,7 @@
 {
     "name": "Warp Portal",
     "icon": "ars_nouveau:warp_scroll",
-    "category": "machines",
+    "category": "ars_nouveau:machines",
     "pages": [
         {
             "type": "text",

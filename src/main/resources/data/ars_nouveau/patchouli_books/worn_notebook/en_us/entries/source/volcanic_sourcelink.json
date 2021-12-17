@@ -1,7 +1,7 @@
 {
-    "name": "block.ars_nouveau.volcanic_accumulator",
-    "icon": "ars_nouveau:volcanic_accumulator",
-    "category": "source",
+    "name": "block.ars_nouveau.volcanic_sourcelink",
+    "icon": "ars_nouveau:volcanic_sourcelink",
+    "category": "ars_nouveau:source",
     "pages": [
         {
             "type": "text",
@@ -18,7 +18,7 @@
         },
 		{
             "type":"crafting",
-			"recipe":"ars_nouveau:volcanic_accumulator",
+			"recipe":"ars_nouveau:volcanic_sourcelink",
 			"recipe2":"ars_nouveau:lava_lily"
 		},
 		{

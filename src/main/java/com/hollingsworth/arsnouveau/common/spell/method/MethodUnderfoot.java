@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.method;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;

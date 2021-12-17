@@ -1,7 +1,7 @@
 {
     "name": "Scribes Table",
     "icon": "ars_nouveau:scribes_table",
-    "category": "machines",
+    "category": "ars_nouveau:machines",
     "pages": [
         {
             "type": "text",

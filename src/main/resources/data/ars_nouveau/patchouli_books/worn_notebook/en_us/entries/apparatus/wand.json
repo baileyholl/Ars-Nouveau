@@ -1,7 +1,7 @@
 {
   "name": "item.ars_nouveau.wand",
   "icon": "ars_nouveau:wand",
-  "category": "equipment",
+  "category": "ars_nouveau:equipment",
   "pages": [
     {
       "type": "text",

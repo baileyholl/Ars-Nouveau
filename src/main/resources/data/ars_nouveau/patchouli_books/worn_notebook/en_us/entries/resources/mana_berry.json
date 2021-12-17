@@ -1,11 +1,11 @@
 {
-    "name": "block.ars_nouveau.mana_berry_bush",
-    "icon": "ars_nouveau:mana_berry",
-    "category": "resources",
+    "name": "block.ars_nouveau.sourceberry_bush",
+    "icon": "ars_nouveau:sourceberry",
+    "category": "ars_nouveau:resources",
     "pages": [
         {
             "type": "text",
-            "text": "ars_nouveau.page1.mana_berry"
+            "text": "ars_nouveau.page1.sourceberry"
         },
         {
             "type": "crafting",
@@ -14,7 +14,7 @@
         },
 		{
             "type": "relations",
-            "entries":["apparatus/carbuncle_charm"]        
+            "entries":["apparatus/starbuncle_charm"]        
         }
     ]
 }

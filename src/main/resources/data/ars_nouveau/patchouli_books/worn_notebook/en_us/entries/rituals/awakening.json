@@ -1,14 +1,14 @@
 {
   "name": "item.ars_nouveau.ritual_awakening",
   "icon": "ars_nouveau:ritual_awakening",
-  "category": "rituals",
+  "category": "ars_nouveau:rituals",
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "ars_nouveau.ritual_desc.awakening"
     },
     {
-      "type": "crafting",
+      "type": "patchouli:crafting",
       "recipe": "ars_nouveau:ritual_awakening"
     }
   ]

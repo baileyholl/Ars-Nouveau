@@ -1,7 +1,7 @@
 {
   "name": "item.ars_nouveau.jar_of_light",
   "icon": "ars_nouveau:jar_of_light",
-  "category": "equipment",
+  "category": "ars_nouveau:equipment",
   "pages": [
     {
       "type": "text",

@@ -1,7 +1,7 @@
 {
   "name": "item.ars_nouveau.amulet_of_mana_boost",
   "icon": "ars_nouveau:amulet_of_mana_boost",
-  "category": "equipment",
+  "category": "ars_nouveau:equipment",
   "pages": [
     {
       "type": "text",

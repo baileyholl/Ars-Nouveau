@@ -1,0 +1,15 @@
+{
+    "name": "block.ars_nouveau.agronomic_sourcelink",
+    "icon": "ars_nouveau:agronomic_sourcelink",
+    "category": "ars_nouveau:source",
+    "pages": [
+        {
+            "type": "text",
+            "text": "ars_nouveau.page1.agronomic_sourcelink"
+        },
+		{
+            "type":"crafting",
+			"recipe":"ars_nouveau:agronomic_sourcelink"
+		}
+    ]
+}

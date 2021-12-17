@@ -1,7 +1,7 @@
 {
   "name": "item.ars_nouveau.enchanters_shield",
   "icon": "ars_nouveau:enchanters_shield",
-   "category": "equipment",
+   "category": "ars_nouveau:equipment",
   "pages": [
     {
       "type": "text",

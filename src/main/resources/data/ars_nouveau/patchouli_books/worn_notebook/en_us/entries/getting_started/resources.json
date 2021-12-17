@@ -1,8 +1,8 @@
 {
     "name": "World Generation",
-    "icon": "ars_nouveau:mana_gem",
+    "icon": "ars_nouveau:source_gem",
 	"sortnum":8,
-    "category": "getting_started",
+    "category": "ars_nouveau:getting_started",
     "pages": [
         {
             "type": "text",

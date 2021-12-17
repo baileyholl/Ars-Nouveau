@@ -1,7 +1,7 @@
 {
   "name": "entity.ars_nouveau.wixie",
   "icon": "ars_nouveau:familiar_wixie",
-  "category": "familiars",
+  "category": "ars_nouveau:familiars",
   "pages": [
     {
       "type": "text",

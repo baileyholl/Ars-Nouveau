@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.augment;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;

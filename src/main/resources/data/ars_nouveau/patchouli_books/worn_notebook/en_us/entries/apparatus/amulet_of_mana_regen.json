@@ -1,7 +1,7 @@
 {
   "name": "item.ars_nouveau.amulet_of_mana_regen",
   "icon": "ars_nouveau:amulet_of_mana_regen",
-  "category": "equipment",
+  "category": "ars_nouveau:equipment",
   "pages": [
     {
       "type": "text",

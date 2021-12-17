@@ -1,7 +1,7 @@
 {
     "name": "Enchanting Apparatus",
     "icon": "ars_nouveau:enchanting_apparatus",
-    "category": "machines",
+    "category": "ars_nouveau:machines",
     "pages": [
         {
             "type": "text",

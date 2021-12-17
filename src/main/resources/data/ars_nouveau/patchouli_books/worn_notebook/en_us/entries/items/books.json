@@ -1,7 +1,7 @@
 {
     "name": "Spell Books",
     "icon": "ars_nouveau:archmage_spell_book",
-    "category": "equipment",
+    "category": "ars_nouveau:equipment",
     "pages": [
         {
             "type": "text",

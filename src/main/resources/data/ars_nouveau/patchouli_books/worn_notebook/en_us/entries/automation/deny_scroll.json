@@ -1,7 +1,7 @@
 {
     "name": "item.ars_nouveau.deny_scroll",
     "icon": "ars_nouveau:deny_scroll",
-    "category": "automation",
+    "category": "ars_nouveau:automation",
     "pages": [
         {
             "type": "text",

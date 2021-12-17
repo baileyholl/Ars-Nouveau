@@ -1,6 +1,6 @@
 {
 	"name": "Resources and Decoration",
 	"description": "Resources found in the world.",
-	"icon": "ars_nouveau:arcane_ore",
+	"icon": "ars_nouveau:source_berry",
 	"sortnum":1
 }

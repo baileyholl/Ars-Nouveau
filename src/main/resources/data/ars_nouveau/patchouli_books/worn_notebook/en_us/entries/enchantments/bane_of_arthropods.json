@@ -1,26 +1,26 @@
 {
   "name": "enchantment.minecraft.bane_of_arthropods",
   "icon": "minecraft:enchanted_book",
-  "category": "enchantments",
+  "category": "ars_nouveau:enchantments",
   "pages": [
     {
-      "type": "enchanting_recipe",
+      "type": "ars_nouveau:enchanting_recipe",
       "recipe": "ars_nouveau:bane_of_arthropods_1"
     },
     {
-      "type": "enchanting_recipe",
+      "type": "ars_nouveau:enchanting_recipe",
       "recipe": "ars_nouveau:bane_of_arthropods_2"
     },
     {
-      "type": "enchanting_recipe",
+      "type": "ars_nouveau:enchanting_recipe",
       "recipe": "ars_nouveau:bane_of_arthropods_3"
     },
     {
-      "type": "enchanting_recipe",
+      "type": "ars_nouveau:enchanting_recipe",
       "recipe": "ars_nouveau:bane_of_arthropods_4"
     },
     {
-      "type": "enchanting_recipe",
+      "type": "ars_nouveau:enchanting_recipe",
       "recipe": "ars_nouveau:bane_of_arthropods_5"
     }
   ]

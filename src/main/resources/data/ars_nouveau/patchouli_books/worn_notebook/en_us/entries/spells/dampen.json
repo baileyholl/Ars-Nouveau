@@ -1,15 +1,15 @@
 {
   "name": "Dampen",
   "icon": "ars_nouveau:glyph_dampen",
-  "category": "spells_2",
+  "category": "ars_nouveau:spells_2",
   "sortnum": 3,
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "ars_nouveau.glyph_desc.dampen"
     },
     {
-      "type": "glyph_recipe",
+      "type": "ars_nouveau:glyph_recipe",
       "recipe": "ars_nouveau:glyph_dampen",
       "tier": "TWO",
       "mana_cost": "Low",

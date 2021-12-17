@@ -1,8 +1,8 @@
 {
     "name": "Source",
-    "icon": "ars_nouveau:mana_jar",
+    "icon": "ars_nouveau:source_jar",
 	"sortnum":5,
-    "category": "getting_started",
+    "category": "ars_nouveau:getting_started",
     "pages": [
         {
             "type": "text",

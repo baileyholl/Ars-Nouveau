@@ -21,12 +21,14 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.inventory.PageButton;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import vazkii.patchouli.api.PatchouliAPI;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -299,7 +301,7 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void onDocumentationClick(Button button){
-      //  PatchouliAPI.get().openBookGUI(Registry.ITEM.getKey(ItemsRegistry.wornNotebook));
+        PatchouliAPI.get().openBookGUI(Registry.ITEM.getKey(ItemsRegistry.WORN_NOTEBOOK));
     }
 
     public void onColorClick(Button button){

@@ -1,7 +1,7 @@
 {
   "name": "block.ars_nouveau.spell_prism",
   "icon": "ars_nouveau:spell_prism",
-  "category": "automation",
+  "category": "ars_nouveau:automation",
   "pages": [
     {
       "type": "text",

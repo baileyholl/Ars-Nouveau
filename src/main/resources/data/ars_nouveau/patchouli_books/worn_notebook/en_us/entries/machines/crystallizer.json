@@ -1,7 +1,7 @@
 {
     "name": "Crystallizer",
     "icon": "ars_nouveau:crystallizer",
-    "category": "machines",
+    "category": "ars_nouveau:machines",
     "pages": [
         {
             "type": "text",

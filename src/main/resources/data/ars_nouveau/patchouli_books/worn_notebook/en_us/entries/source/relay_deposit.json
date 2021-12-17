@@ -1,7 +1,7 @@
 {
   "name": "block.ars_nouveau.relay_deposit",
   "icon": "ars_nouveau:relay_deposit",
-  "category": "source",
+  "category": "ars_nouveau:source",
   "pages": [
     {
       "type": "text",

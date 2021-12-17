@@ -1,7 +1,7 @@
 {
     "name": "block.ars_nouveau.potion_melder",
     "icon": "ars_nouveau:potion_melder",
-    "category": "machines",
+    "category": "ars_nouveau:machines",
     "pages": [
         {
             "type": "text",
@@ -16,7 +16,7 @@
 		"mapping":{
 			"C":"ars_nouveau:potion_jar",
 			"0":"ars_nouveau:potion_melder",
-			"J":"ars_nouveau:mana_jar"
+			"J":"ars_nouveau:source_jar"
 		},
 		"pattern":[
 			["   "],

@@ -1,15 +1,15 @@
 {
   "name": "Bounce",
   "icon": "ars_nouveau:glyph_bounce",
-  "category": "spells_1",
+  "category": "ars_nouveau:spells_1",
   "sortnum": 2,
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "ars_nouveau.glyph_desc.bounce"
     },
     {
-      "type": "glyph_recipe",
+      "type": "ars_nouveau:glyph_recipe",
       "recipe": "ars_nouveau:glyph_bounce",
       "tier": "ONE",
       "mana_cost": "Medium",

@@ -1,7 +1,7 @@
 {
     "name": "item.ars_nouveau.dominion_wand",
     "icon": "ars_nouveau:dominion_wand",
-    "category": "automation",
+    "category": "ars_nouveau:automation",
     "pages": [
         {
             "type": "text",

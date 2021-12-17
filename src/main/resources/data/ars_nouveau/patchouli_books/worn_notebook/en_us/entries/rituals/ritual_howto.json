@@ -2,7 +2,7 @@
   "name": "Performing Rituals",
   "sortnum":-1,
   "icon": "ars_nouveau:ritual",
-  "category": "rituals",
+  "category": "ars_nouveau:rituals",
   "pages": [
     {
       "type": "text",

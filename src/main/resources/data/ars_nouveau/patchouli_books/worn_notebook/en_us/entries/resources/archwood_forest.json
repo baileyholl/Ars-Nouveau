@@ -1,7 +1,7 @@
 {
     "name": "biome.ars_nouveau.archwood_forest",
     "icon": "ars_nouveau:red_archwood_sapling",
-    "category": "resources",
+    "category": "ars_nouveau:resources",
     "pages": [
         {
             "type": "text",

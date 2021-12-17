@@ -1,7 +1,7 @@
 {
   "name": "block.ars_nouveau.basic_spell_turret",
   "icon": "ars_nouveau:basic_spell_turret",
-  "category": "automation",
+  "category": "ars_nouveau:automation",
   "pages": [
     {
       "type": "text",

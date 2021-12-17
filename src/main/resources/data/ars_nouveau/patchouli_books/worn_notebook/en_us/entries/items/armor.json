@@ -1,7 +1,7 @@
 {
     "name": "Magical Armor",
     "icon": "ars_nouveau:novice_robes",
-    "category": "equipment",
+    "category": "ars_nouveau:equipment",
     "pages": [
         {
             "type": "text",
@@ -9,7 +9,7 @@
         },
 		{
             "type":"crafting",
-			"recipe":"ars_nouveau:mana_fiber",
+			"recipe":"ars_nouveau:magebloom_fiber",
 			"recipe2":"ars_nouveau:novice_hood"
 		},{
             "type":"crafting",

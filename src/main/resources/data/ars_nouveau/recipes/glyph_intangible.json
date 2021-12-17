@@ -1,6 +1,0 @@
-{
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "THREE",
-  "input": "minecraft:phantom_membrane",
-  "output": "ars_nouveau:glyph_intangible"
-}

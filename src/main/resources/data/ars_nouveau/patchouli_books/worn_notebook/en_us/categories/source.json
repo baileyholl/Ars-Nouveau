@@ -1,6 +1,6 @@
 {
 	"name": "Source",
 	"description": "Source generation and transfer.",
-	"icon": "ars_nouveau:volcanic_accumulator",
+	"icon": "ars_nouveau:volcanic_sourcelink",
 	"sortnum":5
 }

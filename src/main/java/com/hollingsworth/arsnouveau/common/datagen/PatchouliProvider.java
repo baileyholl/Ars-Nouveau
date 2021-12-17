@@ -56,15 +56,15 @@ public class PatchouliProvider implements DataProvider {
         JsonObject object = new JsonObject();
         object.addProperty("name", "entity.ars_nouveau." + familiarHolder.getId());
         object.addProperty("icon", "ars_nouveau:familiar_" + familiarHolder.getId());
-        object.addProperty("category", "familiars");
+        object.addProperty("category", "ars_nouveau:familiars");
         JsonArray pages = new JsonArray();
 
         JsonObject page = new JsonObject();
-        page.addProperty("type", "text");
+        page.addProperty("type", "patchouli:text");
         page.addProperty("text", "ars_nouveau.familiar_desc." + familiarHolder.getId());
         pages.add(page);
         JsonObject page2 = new JsonObject();
-        page2.addProperty("type", "entity");
+        page2.addProperty("type", "patchouli:entity");
         page2.addProperty("entity", "ars_nouveau:" + familiarHolder.getEntityKey());
         pages.add(page2);
         object.add("pages", pages);
@@ -75,16 +75,16 @@ public class PatchouliProvider implements DataProvider {
         JsonObject object = new JsonObject();
         object.addProperty("name", "item.ars_nouveau.ritual_" + ritual.getID());
         object.addProperty("icon","ars_nouveau:ritual_" + ritual.getID());
-        object.addProperty("category", "rituals");
+        object.addProperty("category", "ars_nouveau:rituals");
         JsonArray pages = new JsonArray();
 
         JsonObject page = new JsonObject();
-        page.addProperty("type", "text");
+        page.addProperty("type", "patchouli:text");
         page.addProperty("text", "ars_nouveau.ritual_desc." + ritual.getID());
         pages.add(page);
 
         JsonObject page2 = new JsonObject();
-        page2.addProperty("type", "crafting");
+        page2.addProperty("type", "patchouli:crafting");
         page2.addProperty("recipe", "ars_nouveau:ritual_" + ritual.getID());
         pages.add(page2);
 
@@ -96,11 +96,11 @@ public class PatchouliProvider implements DataProvider {
         JsonObject object = new JsonObject();
         object.addProperty("name", enchantment.getDescriptionId());
         object.addProperty("icon", Items.ENCHANTED_BOOK.getRegistryName().toString());
-        object.addProperty("category", "enchantments");
+        object.addProperty("category", "ars_nouveau:enchantments");
         JsonArray pages = new JsonArray();
         for(int i = enchantment.getMinLevel(); i <= enchantment.getMaxLevel(); i++){
             JsonObject page = new JsonObject();
-            page.addProperty("type", "enchanting_recipe");
+            page.addProperty("type", "ars_nouveau:enchanting_recipe");
             page.addProperty("recipe", "ars_nouveau:" + enchantment.getRegistryName().getPath() + "_" + i);
             pages.add(page);
         }

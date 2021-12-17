@@ -1,7 +1,7 @@
 {
   "name": "Dull Items",
   "icon": "ars_nouveau:dull_trinket",
-  "category": "equipment",
+  "category": "ars_nouveau:equipment",
   "pages": [
 		{
             "type":"crafting",

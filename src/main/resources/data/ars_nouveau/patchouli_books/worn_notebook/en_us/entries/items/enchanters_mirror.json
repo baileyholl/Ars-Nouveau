@@ -1,7 +1,7 @@
 {
   "name": "item.ars_nouveau.enchanters_mirror",
   "icon": "ars_nouveau:enchanters_mirror",
-     "category": "equipment",
+     "category": "ars_nouveau:equipment",
   "pages": [
     {
       "type": "text",

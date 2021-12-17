@@ -1,7 +1,7 @@
 {
   "name": "item.ars_nouveau.void_jar",
   "icon": "ars_nouveau:void_jar",
-  "category": "equipment",
+  "category": "ars_nouveau:equipment",
   "pages": [
     {
       "type": "text",

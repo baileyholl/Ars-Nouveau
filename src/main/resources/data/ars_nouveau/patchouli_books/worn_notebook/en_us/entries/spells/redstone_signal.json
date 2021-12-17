@@ -1,15 +1,15 @@
 {
   "name": "Redstone Signal",
   "icon": "ars_nouveau:glyph_redstone_signal",
-  "category": "spells_1",
+  "category": "ars_nouveau:spells_1",
   "sortnum": 2,
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "ars_nouveau.glyph_desc.redstone_signal"
     },
     {
-      "type": "glyph_recipe",
+      "type": "ars_nouveau:glyph_recipe",
       "recipe": "ars_nouveau:glyph_redstone_signal",
       "tier": "ONE",
       "mana_cost": "Low",

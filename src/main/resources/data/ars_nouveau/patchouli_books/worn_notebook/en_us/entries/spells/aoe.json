@@ -1,15 +1,15 @@
 {
   "name": "AOE",
   "icon": "ars_nouveau:glyph_aoe",
-  "category": "spells_2",
+  "category": "ars_nouveau:spells_2",
   "sortnum": 3,
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "ars_nouveau.glyph_desc.aoe"
     },
     {
-      "type": "glyph_recipe",
+      "type": "ars_nouveau:glyph_recipe",
       "recipe": "ars_nouveau:glyph_aoe",
       "tier": "TWO",
       "mana_cost": "Medium",

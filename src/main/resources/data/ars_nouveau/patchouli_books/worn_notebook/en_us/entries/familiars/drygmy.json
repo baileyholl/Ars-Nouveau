@@ -1,7 +1,7 @@
 {
   "name": "entity.ars_nouveau.drygmy",
   "icon": "ars_nouveau:familiar_drygmy",
-  "category": "familiars",
+  "category": "ars_nouveau:familiars",
   "pages": [
     {
       "type": "text",

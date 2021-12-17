@@ -1,7 +1,7 @@
 {
   "name": "item.ars_nouveau.belt_of_unstable_gifts",
   "icon": "ars_nouveau:belt_of_unstable_gifts",
-  "category": "equipment",
+  "category": "ars_nouveau:equipment",
   "pages": [
     {
       "type": "text",

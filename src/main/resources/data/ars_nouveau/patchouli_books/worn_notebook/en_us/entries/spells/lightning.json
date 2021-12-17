@@ -1,20 +1,20 @@
 {
   "name": "Lightning",
   "icon": "ars_nouveau:glyph_lightning",
-  "category": "spells_3",
+  "category": "ars_nouveau:spells_3",
   "sortnum": 2,
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "ars_nouveau.glyph_desc.lightning"
     },
     {
-      "type": "glyph_recipe",
+      "type": "ars_nouveau:glyph_recipe",
       "recipe": "ars_nouveau:glyph_lightning",
       "tier": "THREE",
-      "mana_cost": "Medium",
+      "mana_cost": "High",
       "clay_type": "ars_nouveau:mythical_clay",
-      "reagent": "minecraft:conduit"
+      "reagent": "minecraft:heart_of_the_sea"
     }
   ]
 }

@@ -2,7 +2,7 @@
   "name": "ars_nouveau.page1.summoning_familiars",
   "sortnum":-1,
   "icon": "ars_nouveau:ritual_binding",
-  "category": "familiars",
+  "category": "ars_nouveau:familiars",
   "pages": [
     {
       "type": "text",

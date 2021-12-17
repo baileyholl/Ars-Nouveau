@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau;
+package com.hollingsworth.arsnouveau.common.lib;
 
 public class GlyphLib {
     public static final String MethodProjectileID = "projectile";

@@ -2,7 +2,7 @@
   "name": "How to Enchant",
   "sortnum":-1,
   "icon": "ars_nouveau:enchanting_apparatus",
-  "category": "enchantments",
+  "category": "ars_nouveau:enchantments",
   "pages": [
     {
       "type": "text",

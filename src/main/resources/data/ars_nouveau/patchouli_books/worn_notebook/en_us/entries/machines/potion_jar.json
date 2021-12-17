@@ -1,7 +1,7 @@
 {
     "name": "Potion Jar",
     "icon": "ars_nouveau:potion_jar",
-    "category": "machines",
+    "category": "ars_nouveau:machines",
     "pages": [
         {
             "type": "text",

@@ -47,7 +47,7 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
         }
         return Math.max(cost, 0);
     }
-    
+
     public abstract int getDefaultManaCost();
 
     public int getConfigCost(){
@@ -109,15 +109,15 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
 
         jsonobject.addProperty("name", this.getName());
         jsonobject.addProperty("icon", ArsNouveau.MODID + ":" + getItemID());
-        jsonobject.addProperty("category", "spells_"+(getTier().ordinal() + 1));
+        jsonobject.addProperty("category", "ars_nouveau:spells_"+(getTier().ordinal() + 1));
         jsonobject.addProperty("sortnum", this instanceof AbstractCastMethod ? 1 : this instanceof AbstractEffect ? 2 : 3);
         JsonArray jsonArray = new JsonArray();
         JsonObject descPage = new JsonObject();
-        descPage.addProperty("type", "text");
+        descPage.addProperty("type", "patchouli:text");
         descPage.addProperty("text","ars_nouveau.glyph_desc." + tag);
 
         JsonObject infoPage = new JsonObject();
-        infoPage.addProperty("type", "glyph_recipe");
+        infoPage.addProperty("type", "ars_nouveau:glyph_recipe");
         infoPage.addProperty("recipe", ArsNouveau.MODID + ":" + "glyph_" + this.tag);
         infoPage.addProperty("tier",this.getTier().name());
 

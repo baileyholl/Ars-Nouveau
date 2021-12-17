@@ -1,15 +1,15 @@
 {
   "name": "Item Pickup",
   "icon": "ars_nouveau:glyph_pickup",
-  "category": "spells_1",
+  "category": "ars_nouveau:spells_1",
   "sortnum": 2,
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "ars_nouveau.glyph_desc.pickup"
     },
     {
-      "type": "glyph_recipe",
+      "type": "ars_nouveau:glyph_recipe",
       "recipe": "ars_nouveau:glyph_pickup",
       "tier": "ONE",
       "mana_cost": "Low",

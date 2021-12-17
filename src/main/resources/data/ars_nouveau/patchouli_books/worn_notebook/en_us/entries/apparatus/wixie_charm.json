@@ -1,7 +1,7 @@
 {
   "name": "item.ars_nouveau.wixie_charm",
   "icon": "ars_nouveau:wixie_charm",
-  "category": "automation",
+  "category": "ars_nouveau:automation",
   "pages": [
     {
       "type": "text",

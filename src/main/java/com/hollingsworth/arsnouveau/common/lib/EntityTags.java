@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.setup;
+package com.hollingsworth.arsnouveau.common.lib;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.resources.ResourceLocation;

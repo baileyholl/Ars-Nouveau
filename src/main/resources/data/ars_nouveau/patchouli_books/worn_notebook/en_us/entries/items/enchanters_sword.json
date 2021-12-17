@@ -1,7 +1,7 @@
 {
   "name": "item.ars_nouveau.enchanters_sword",
   "icon": "ars_nouveau:enchanters_sword",
-   "category": "equipment",
+   "category": "ars_nouveau:equipment",
   "pages": [
     {
       "type": "text",

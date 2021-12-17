@@ -1,15 +1,15 @@
 {
   "name": "Underfoot",
   "icon": "ars_nouveau:glyph_underfoot",
-  "category": "spells_1",
+  "category": "ars_nouveau:spells_1",
   "sortnum": 1,
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "ars_nouveau.glyph_desc.underfoot"
     },
     {
-      "type": "glyph_recipe",
+      "type": "ars_nouveau:glyph_recipe",
       "recipe": "ars_nouveau:glyph_underfoot",
       "tier": "ONE",
       "mana_cost": "Low",

@@ -1,15 +1,15 @@
 {
   "name": "Exchange",
   "icon": "ars_nouveau:glyph_exchange",
-  "category": "spells_2",
+  "category": "ars_nouveau:spells_2",
   "sortnum": 2,
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "ars_nouveau.glyph_desc.exchange"
     },
     {
-      "type": "glyph_recipe",
+      "type": "ars_nouveau:glyph_recipe",
       "recipe": "ars_nouveau:glyph_exchange",
       "tier": "TWO",
       "mana_cost": "Medium",

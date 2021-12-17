@@ -1,7 +1,7 @@
 {
   "name": "item.ars_nouveau.belt_of_levitation",
   "icon": "ars_nouveau:belt_of_levitation",
-  "category": "equipment",
+  "category": "ars_nouveau:equipment",
   "pages": [
     {
       "type": "text",

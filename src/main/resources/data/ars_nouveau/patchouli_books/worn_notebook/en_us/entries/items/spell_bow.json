@@ -1,7 +1,7 @@
 {
   "name": "item.ars_nouveau.spell_bow",
   "icon": "ars_nouveau:spell_bow",
-  "category": "equipment",
+  "category": "ars_nouveau:equipment",
   "pages": [
     {
       "type": "text",

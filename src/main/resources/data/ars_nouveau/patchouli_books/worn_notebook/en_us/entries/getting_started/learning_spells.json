@@ -2,7 +2,7 @@
     "name": "New Spells",
     "icon": "ars_nouveau:blank_glyph",
 	"sortnum":4,
-    "category": "getting_started",
+    "category": "ars_nouveau:getting_started",
     "pages": [
         {
             "type": "text",

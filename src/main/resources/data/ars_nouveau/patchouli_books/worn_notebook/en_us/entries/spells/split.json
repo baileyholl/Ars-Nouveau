@@ -1,15 +1,15 @@
 {
   "name": "Split",
   "icon": "ars_nouveau:glyph_split",
-  "category": "spells_3",
+  "category": "ars_nouveau:spells_3",
   "sortnum": 3,
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "ars_nouveau.glyph_desc.split"
     },
     {
-      "type": "glyph_recipe",
+      "type": "ars_nouveau:glyph_recipe",
       "recipe": "ars_nouveau:glyph_split",
       "tier": "THREE",
       "mana_cost": "Medium",

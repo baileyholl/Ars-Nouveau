@@ -1,7 +1,7 @@
 {
   "name": "entity.ars_nouveau.bookwyrm",
   "icon": "ars_nouveau:familiar_bookwyrm",
-  "category": "familiars",
+  "category": "ars_nouveau:familiars",
   "pages": [
     {
       "type": "text",
@@ -9,7 +9,7 @@
     },
     {
       "type": "entity",
-      "entity": "ars_nouveau:whelp"
+      "entity": "ars_nouveau:bookwyrm"
     }
   ]
 }

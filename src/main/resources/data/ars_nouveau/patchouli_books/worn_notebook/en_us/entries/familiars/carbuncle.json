@@ -1,15 +1,15 @@
 {
-  "name": "entity.ars_nouveau.carbuncle",
-  "icon": "ars_nouveau:familiar_carbuncle",
-  "category": "familiars",
+  "name": "entity.ars_nouveau.starbuncle",
+  "icon": "ars_nouveau:familiar_starbuncle",
+  "category": "ars_nouveau:familiars",
   "pages": [
     {
       "type": "text",
-      "text": "ars_nouveau.familiar_desc.carbuncle"
+      "text": "ars_nouveau.familiar_desc.starbuncle"
     },
     {
       "type": "entity",
-      "entity": "ars_nouveau:carbuncle"
+      "entity": "ars_nouveau:starbuncle"
     }
   ]
 }

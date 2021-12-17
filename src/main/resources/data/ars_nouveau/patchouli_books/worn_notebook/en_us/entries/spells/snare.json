@@ -1,15 +1,15 @@
 {
   "name": "Snare",
   "icon": "ars_nouveau:glyph_snare",
-  "category": "spells_1",
+  "category": "ars_nouveau:spells_1",
   "sortnum": 2,
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "ars_nouveau.glyph_desc.snare"
     },
     {
-      "type": "glyph_recipe",
+      "type": "ars_nouveau:glyph_recipe",
       "recipe": "ars_nouveau:glyph_snare",
       "tier": "ONE",
       "mana_cost": "High",

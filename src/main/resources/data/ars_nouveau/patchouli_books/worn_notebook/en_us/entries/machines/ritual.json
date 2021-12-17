@@ -1,7 +1,7 @@
 {
     "name": "Ritual Brazier",
     "icon": "ars_nouveau:ritual",
-    "category": "machines",
+    "category": "ars_nouveau:machines",
     "pages": [
         {
             "type": "text",

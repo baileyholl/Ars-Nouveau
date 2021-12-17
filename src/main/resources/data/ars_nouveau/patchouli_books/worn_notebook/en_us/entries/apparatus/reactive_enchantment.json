@@ -1,7 +1,7 @@
 {
   "name": "enchantment.ars_nouveau.reactive",
   "icon": "minecraft:enchanted_book",
-  "category": "equipment",
+  "category": "ars_nouveau:equipment",
   "pages": [
     {
       "type": "text",

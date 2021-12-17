@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;

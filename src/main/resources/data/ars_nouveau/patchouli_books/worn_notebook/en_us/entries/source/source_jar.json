@@ -1,7 +1,7 @@
 {
-    "name": "block.ars_nouveau.mana_jar",
-    "icon": "ars_nouveau:mana_jar",
-    "category": "source",
+    "name": "block.ars_nouveau.source_jar",
+    "icon": "ars_nouveau:source_jar",
+    "category": "ars_nouveau:source",
     "pages": [
         {
             "type": "text",
@@ -10,7 +10,7 @@
 
 		{
             "type":"crafting",
-			"recipe":"ars_nouveau:mana_jar"
+			"recipe":"ars_nouveau:source_jar"
 		}
     ]
 }

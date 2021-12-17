@@ -2,7 +2,7 @@
     "name": "Upgrades",
     "icon": "ars_nouveau:archmage_spell_book",
 	"sortnum":9,
-    "category": "getting_started",
+    "category": "ars_nouveau:getting_started",
     "pages": [
         {
             "type": "text",

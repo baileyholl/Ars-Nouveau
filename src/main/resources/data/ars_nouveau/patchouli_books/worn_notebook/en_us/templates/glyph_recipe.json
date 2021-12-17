@@ -1,41 +1,41 @@
 {
 	"processor": "com.hollingsworth.arsnouveau.client.patchouli.GlyphPressProcessor",
-    "components": [
+	"components": [
 
-        {
-            "type":"item",
-            "item":"#clay_type",
-            "framed":true,
-            "x":20,
-            "y":20
-        },
-        {
-            "type":"item",
-            "item":"#reagent",
-            "framed":true,
-            "x":80,
-            "y":20
-        },
 		{
-			"type": "header",
+			"type": "patchouli:item",
+			"item": "#clay_type",
+			"framed": true,
+			"x": 20,
+			"y": 20
+		},
+		{
+			"type": "patchouli:item",
+			"item": "#reagent",
+			"framed": true,
+			"x": 80,
+			"y": 20
+		},
+		{
+			"type": "patchouli:header",
 			"text": "Glyph Press Reagents",
 			"x": -1,
 			"y": -1
-        },
-        {
-			"type": "text",
+		},
+		{
+			"type": "patchouli:text",
 			"text": "Tier: #tier#",
 			"x": 0,
 			"y": 50
 		},
-        {
-			"type": "text",
+		{
+			"type": "patchouli:text",
 			"text": "Casting Cost: #mana_cost#",
 			"x": 0,
 			"y": 60
-		},,
-        {
-			"type": "text",
+		},
+		{
+			"type": "patchouli:text",
 			"text": "Spell Schools: #schools#",
 			"x": 0,
 			"y": 70

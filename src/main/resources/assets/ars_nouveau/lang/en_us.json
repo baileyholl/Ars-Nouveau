@@ -896,5 +896,7 @@
 	"ars_nouveau.page1.weald_waddler": "If a Weald Walker dies, it will be turned into a Weald Waddler. Weald Waddlers will slowly grow back into Weald Walkers, and can be sped up by giving them bonemeal. A Weald Waddler cannot fight or protect itself until it has grown back to a Walker.",
 	"ars_nouveau.source": "Source: %s",
 	"ars_nouveau.crush_recipe": "Crush Glyph",
-	"ars_nouveau.enchanting_apparatus": "Enchanting Apparatus"
+	"ars_nouveau.enchanting_apparatus": "Enchanting Apparatus",
+	"ars_nouveau.patchouli.automation": "Starting Automation",
+	"ars_nouveau.patchouli.automation.page1": "All spells may be used in Automation through casters like the Bookwyrm or Spell Turret. Use these to create auto harvesters, tree farms, quarries, cake farms, glass factories, and more! For item transport, autocrafting, or resource generation, see the variety of magical entities that may be summoned using Charms."
 }

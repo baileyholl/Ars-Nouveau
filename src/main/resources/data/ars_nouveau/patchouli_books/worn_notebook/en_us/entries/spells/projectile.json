@@ -1,15 +1,15 @@
 {
   "name": "Projectile",
   "icon": "ars_nouveau:glyph_projectile",
-  "category": "spells_1",
+  "category": "ars_nouveau:spells_1",
   "sortnum": 1,
   "pages": [
     {
-      "type": "text",
+      "type": "patchouli:text",
       "text": "ars_nouveau.glyph_desc.projectile"
     },
     {
-      "type": "glyph_recipe",
+      "type": "ars_nouveau:glyph_recipe",
       "recipe": "ars_nouveau:glyph_projectile",
       "tier": "ONE",
       "mana_cost": "Low",

@@ -1,7 +1,7 @@
 {
     "name": "ars_nouveau.archwood_trees",
     "icon": "ars_nouveau:blue_archwood_sapling",
-    "category": "resources",
+    "category": "ars_nouveau:resources",
     "pages": [
         {
             "type": "text",

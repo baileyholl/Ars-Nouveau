@@ -2,7 +2,7 @@
     "name": "Trinkets",
     "icon": "ars_nouveau:warp_scroll",
 	"sortnum":11,
-    "category": "getting_started",
+    "category": "ars_nouveau:getting_started",
     "pages": [
         {
             "type": "text",
