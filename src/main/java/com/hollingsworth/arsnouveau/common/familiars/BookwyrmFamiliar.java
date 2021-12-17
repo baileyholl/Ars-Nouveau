@@ -29,6 +29,6 @@ public class BookwyrmFamiliar extends AbstractFamiliarHolder {
 
     @Override
     public String getEntityKey() {
-        return "whelp";
+        return "bookwyrm";
     }
 }

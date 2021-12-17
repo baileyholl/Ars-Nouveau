@@ -2,8 +2,8 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.HashCache;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -38,7 +39,7 @@ public class PatchouliProvider implements DataProvider {
         Path output = this.generator.getOutputFolder();
         for(Enchantment g : enchants){
             Path path = getPath(output, g.getRegistryName().getPath());
-            DataProvider.save(GSON, cache, getPage(g), path);
+            DataProvider.save(GSON, cache, getEnchantmentPage(g), path);
         }
 
         for(AbstractRitual r : ArsNouveauAPI.getInstance().getRitualMap().values()){
@@ -53,59 +54,38 @@ public class PatchouliProvider implements DataProvider {
     }
 
     public JsonObject getFamiliarPage(AbstractFamiliarHolder familiarHolder){
-        JsonObject object = new JsonObject();
-        object.addProperty("name", "entity.ars_nouveau." + familiarHolder.getId());
-        object.addProperty("icon", "ars_nouveau:familiar_" + familiarHolder.getId());
-        object.addProperty("category", "ars_nouveau:familiars");
-        JsonArray pages = new JsonArray();
+        PatchouliBuilder builder = new PatchouliBuilder();
+        builder.withName("entity.ars_nouveau." + familiarHolder.getId())
+                .withIcon("ars_nouveau:familiar_" + familiarHolder.getId())
+                .withCategory(PatchouliBuilder.FAMILIARS)
+                .withTextPage("ars_nouveau.familiar_desc." + familiarHolder.getId())
+                .withEntityPage(new ResourceLocation(ArsNouveau.MODID, familiarHolder.getEntityKey()));
 
-        JsonObject page = new JsonObject();
-        page.addProperty("type", "patchouli:text");
-        page.addProperty("text", "ars_nouveau.familiar_desc." + familiarHolder.getId());
-        pages.add(page);
-        JsonObject page2 = new JsonObject();
-        page2.addProperty("type", "patchouli:entity");
-        page2.addProperty("entity", "ars_nouveau:" + familiarHolder.getEntityKey());
-        pages.add(page2);
-        object.add("pages", pages);
-        return object;
+        return builder.build();
     }
 
     public JsonObject getRitualPage(AbstractRitual ritual){
-        JsonObject object = new JsonObject();
-        object.addProperty("name", "item.ars_nouveau.ritual_" + ritual.getID());
-        object.addProperty("icon","ars_nouveau:ritual_" + ritual.getID());
-        object.addProperty("category", "ars_nouveau:rituals");
-        JsonArray pages = new JsonArray();
+        PatchouliBuilder builder = new PatchouliBuilder();
+        builder.withName("item.ars_nouveau.ritual_" + ritual.getID())
+                .withIcon("ars_nouveau:ritual_" + ritual.getID())
+                .withCategory(PatchouliBuilder.RITUALS)
+                .withTextPage("ars_nouveau.ritual_desc." + ritual.getID())
+                .withCraftingPage("ars_nouveau:ritual_" + ritual.getID());
 
-        JsonObject page = new JsonObject();
-        page.addProperty("type", "patchouli:text");
-        page.addProperty("text", "ars_nouveau.ritual_desc." + ritual.getID());
-        pages.add(page);
-
-        JsonObject page2 = new JsonObject();
-        page2.addProperty("type", "patchouli:crafting");
-        page2.addProperty("recipe", "ars_nouveau:ritual_" + ritual.getID());
-        pages.add(page2);
-
-        object.add("pages", pages);
-        return object;
+        return builder.build();
     }
 
-    public JsonObject getPage(Enchantment enchantment){
-        JsonObject object = new JsonObject();
-        object.addProperty("name", enchantment.getDescriptionId());
-        object.addProperty("icon", Items.ENCHANTED_BOOK.getRegistryName().toString());
-        object.addProperty("category", "ars_nouveau:enchantments");
-        JsonArray pages = new JsonArray();
+    public JsonObject getEnchantmentPage(Enchantment enchantment){
+        PatchouliBuilder builder = new PatchouliBuilder();
+
+        builder.withName(enchantment.getDescriptionId())
+                .withIcon(Items.ENCHANTED_BOOK.getRegistryName().toString())
+                .withCategory(PatchouliBuilder.ENCHANTMENTS);
+
         for(int i = enchantment.getMinLevel(); i <= enchantment.getMaxLevel(); i++){
-            JsonObject page = new JsonObject();
-            page.addProperty("type", "ars_nouveau:enchanting_recipe");
-            page.addProperty("recipe", "ars_nouveau:" + enchantment.getRegistryName().getPath() + "_" + i);
-            pages.add(page);
+            builder.withRecipePage(new ResourceLocation("ars_nouveau:enchanting_recipe"),"ars_nouveau:" + enchantment.getRegistryName().getPath() + "_" + i);
         }
-        object.add("pages", pages);
-        return object;
+        return builder.build();
     }
 
     public void addEntries(){
