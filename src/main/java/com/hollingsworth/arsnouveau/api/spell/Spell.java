@@ -155,7 +155,7 @@ public class Spell {
     }
 
     public boolean isValid(){
-        return this.isEmpty();
+        return !this.isEmpty();
     }
 
     public static class Builder{
