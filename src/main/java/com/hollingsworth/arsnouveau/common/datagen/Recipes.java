@@ -158,7 +158,7 @@ public class Recipes extends RecipeProvider {
                     .pattern("xyx")
                     .pattern("xxx").define('y',MANA_GEM).define('x',  Tags.Items.STONE).save(consumer);
 
-            ShapedRecipeBuilder.shaped(BlockRegistry.CRYSTALLIZER_BLOCK.asItem(), 1).unlockedBy("has_journal",InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
+            ShapedRecipeBuilder.shaped(BlockRegistry.IMBUEMENT_BLOCK.asItem(), 1).unlockedBy("has_journal",InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern("xyx")
                     .pattern("x x")
                     .pattern("xyx").define('x', BlockRegistry.ARCHWOOD_PLANK)

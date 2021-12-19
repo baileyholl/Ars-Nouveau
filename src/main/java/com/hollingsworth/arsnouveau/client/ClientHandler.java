@@ -40,7 +40,7 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.PORTAL_TILE_TYPE, PortalTileRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.INTANGIBLE_AIR_TYPE, IntangibleAirRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.VOLCANIC_TILE, VolcanicRenderer::new);
-        event.registerBlockEntityRenderer(BlockRegistry.CRYSTALLIZER_TILE, CrystallizerRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.IMBUEMENT_TILE, ImbuementRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.POTION_MELDER_TYPE, PotionMelderRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.RITUAL_TILE, RitualBrazierRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ALCHEMICAL_TILE, AlchemicalRenderer::new);
@@ -114,7 +114,7 @@ public class ClientHandler {
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.ARCANE_RELAY, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.RUNE_BLOCK, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.ARCANE_CORE_BLOCK, RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.CRYSTALLIZER_BLOCK, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.IMBUEMENT_BLOCK, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.VOLCANIC_BLOCK, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SOURCEBERRY_BUSH, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.LAVA_LILY, RenderType.cutout());

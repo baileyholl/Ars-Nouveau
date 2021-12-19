@@ -37,8 +37,6 @@ public class EnchantingApparatusRenderer extends GeoBlockRenderer<EnchantingAppa
             }
             stack.pushPose();
             RenderUtils.translate(bone, stack);
-          //  RenderUtils.rotate(bone, stack);
-           // RenderUtils.moveToPivot(bone,stack);
             stack.translate(0, +0.4, 0);
             stack.scale(0.75f, 0.75f, 0.75f);
             ItemStack itemstack = tile.entity.getItem();
@@ -62,32 +60,5 @@ public class EnchantingApparatusRenderer extends GeoBlockRenderer<EnchantingAppa
         super.render(tile, v, matrixStack, iRenderTypeBuffer, lightIn, overlayIn);
         EnchantingApparatusTile tileEntityIn = (EnchantingApparatusTile) tile;
         this.tile = tileEntityIn;
-
-
-//        if(tileEntityIn.isCrafting){
-//            Level world = tileEntityIn.getLevel();
-//            BlockPos pos  = tileEntityIn.getBlockPos().offset(0, 0.5, 0);
-//            Random rand = world.getRandom();
-//            for(int i =0; i< 1; i++){
-//                Vec3 particlePos = new Vec3(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0, 0.5);
-//                particlePos = particlePos.add(ParticleUtil.pointInSphere());
-//                world.addParticle(ParticleLineData.createData(new ParticleColor(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255))),
-//                        particlePos.x(), particlePos.y(), particlePos.z(),
-//                        pos.getX()  +0.5, pos.getY() + 1  , pos.getZ() +0.5);
-//            }
-//
-//
-//            tileEntityIn.pedestalList().forEach((b) ->{
-//                BlockPos pos2 = b.immutable();
-//                for(int i = 0; i < 1; i++){
-//                    tileEntityIn.getLevel().addParticle(
-//                            GlowParticleData.createData(new ParticleColor(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255))),
-//                            pos2.getX() +0.5 + ParticleUtil.inRange(-0.2, 0.2)  , pos2.getY() +1.5  + ParticleUtil.inRange(-0.3, 0.3) , pos2.getZ() +0.5 + ParticleUtil.inRange(-0.2, 0.2),
-//                            0,0,0);
-//                }
-//            });
-//        }
-
-
     }
 }

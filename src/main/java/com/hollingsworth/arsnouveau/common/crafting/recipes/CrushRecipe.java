@@ -70,6 +70,10 @@ public class CrushRecipe implements Recipe<Container> {
         return this.input.test(inventory.getItem(0));
     }
 
+    public boolean matches(ItemStack i, Level world){
+        return this.input.test(i);
+    }
+
     @Nonnull
     @Override
     public ItemStack assemble(Container inventory) {

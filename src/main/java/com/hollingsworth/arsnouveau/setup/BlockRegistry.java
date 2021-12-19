@@ -70,8 +70,8 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.RUNE) public static RuneBlock RUNE_BLOCK;
     @ObjectHolder(LibBlockNames.PORTAL) public static PortalBlock PORTAL_BLOCK;
     @ObjectHolder(LibBlockNames.PORTAL) public static BlockEntityType<PortalTile> PORTAL_TILE_TYPE;
-    @ObjectHolder(LibBlockNames.CRYSTALLIZER) public static CrystallizerBlock CRYSTALLIZER_BLOCK;
-    @ObjectHolder(LibBlockNames.CRYSTALLIZER) public static BlockEntityType<CrystallizerTile> CRYSTALLIZER_TILE;
+    @ObjectHolder(LibBlockNames.IMBUEMENT_CHAMBER) public static ImbuementBlock IMBUEMENT_BLOCK;
+    @ObjectHolder(LibBlockNames.IMBUEMENT_CHAMBER) public static BlockEntityType<ImbuementTile> IMBUEMENT_TILE;
     @ObjectHolder(LibBlockNames.ARCANE_RELAY_SPLITTER) public static ArcaneRelaySplitter ARCANE_RELAY_SPLITTER;
     @ObjectHolder(LibBlockNames.ARCANE_RELAY_SPLITTER) public static BlockEntityType<ArcaneRelaySplitterTile> ARCANE_RELAY_SPLITTER_TILE;
     @ObjectHolder(LibBlockNames.ARCANE_CORE) public static ArcaneCore ARCANE_CORE_BLOCK;
@@ -227,7 +227,7 @@ public class BlockRegistry {
             registry.register(new ModBlock(LibBlockNames.AB_BASKET));
             registry.register(new ModBlock(LibBlockNames.AB_HERRING));
             registry.register(new ModBlock(LibBlockNames.AB_MOSAIC));
-            registry.register(new CrystallizerBlock());
+            registry.register(new ImbuementBlock());
             registry.register(new SpellTurret());
             registry.register(new RedstoneAir());
             registry.register(new IntangibleAirBlock());
@@ -330,7 +330,7 @@ public class BlockRegistry {
             event.getRegistry().register(BlockEntityType.Builder.of(PortalTile::new, BlockRegistry.PORTAL_BLOCK).build(null).setRegistryName(LibBlockNames.PORTAL));
             event.getRegistry().register(BlockEntityType.Builder.of(ArcaneRelaySplitterTile::new, BlockRegistry.ARCANE_RELAY_SPLITTER).build(null).setRegistryName(LibBlockNames.ARCANE_RELAY_SPLITTER));
             event.getRegistry().register(BlockEntityType.Builder.of(ArcaneCoreTile::new, BlockRegistry.ARCANE_CORE_BLOCK).build(null).setRegistryName(LibBlockNames.ARCANE_CORE));
-            event.getRegistry().register(BlockEntityType.Builder.of(CrystallizerTile::new, BlockRegistry.CRYSTALLIZER_BLOCK).build(null).setRegistryName(LibBlockNames.CRYSTALLIZER));
+            event.getRegistry().register(BlockEntityType.Builder.of(ImbuementTile::new, BlockRegistry.IMBUEMENT_BLOCK).build(null).setRegistryName(LibBlockNames.IMBUEMENT_CHAMBER));
             event.getRegistry().register(BlockEntityType.Builder.of(SpellTurretTile::new, BlockRegistry.SPELL_TURRET).build(null).setRegistryName(LibBlockNames.SPELL_TURRET));
             event.getRegistry().register(BlockEntityType.Builder.of(IntangibleAirTile::new, BlockRegistry.INTANGIBLE_AIR).build(null).setRegistryName(LibBlockNames.INTANGIBLE_AIR));
             event.getRegistry().register(BlockEntityType.Builder.of(VolcanicSourcelinkTile::new, BlockRegistry.VOLCANIC_BLOCK).build(null).setRegistryName(LibBlockNames.VOLCANIC_SOURCELINK));
@@ -404,7 +404,12 @@ public class BlockRegistry {
                     return GenericRenderer.getISTER("source_splitter");
                 }
             }.setRegistryName(LibBlockNames.ARCANE_RELAY_SPLITTER));
-            registry.register(new BlockItem(BlockRegistry.CRYSTALLIZER_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.CRYSTALLIZER));
+            registry.register(new RendererBlockItem(BlockRegistry.IMBUEMENT_BLOCK, ItemsRegistry.defaultItemProperties()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return GenericRenderer.getISTER("imbuement_chamber");
+                }
+            }.setRegistryName(LibBlockNames.IMBUEMENT_CHAMBER));
             registry.register(new BlockItem(BlockRegistry.ARCANE_CORE_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.ARCANE_CORE));
             registry.register(getDefaultBlockItem(BlockRegistry.AB_ALTERNATE, LibBlockNames.AB_ALTERNATE));
             registry.register(getDefaultBlockItem(BlockRegistry.AB_BASKET, LibBlockNames.AB_BASKET));

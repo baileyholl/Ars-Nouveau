@@ -20,7 +20,7 @@ public class LibBlockNames {
     public static final String ARCANE_RELAY_SPLITTER = "arcane_relay_splitter";
     public static final String RUNE = "rune";
     public static final String PORTAL = "portal";
-    public static final String CRYSTALLIZER = "crystallizer";
+    public static final String IMBUEMENT_CHAMBER = "imbuement_chamber";
     public static final String ARCANE_CORE = "arcane_core";
 
     public final static String ARCANE_STONE = "arcane_stone";

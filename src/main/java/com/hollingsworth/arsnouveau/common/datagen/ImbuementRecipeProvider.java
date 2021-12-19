@@ -18,20 +18,20 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InfuserRecipeProvider implements DataProvider {
+public class ImbuementRecipeProvider implements DataProvider {
     private final DataGenerator generator;
     List<InfuserRecipe> recipes = new ArrayList<>();
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
     private static final Logger LOGGER = LogManager.getLogger();
 
-    public InfuserRecipeProvider(DataGenerator generatorIn){
+    public ImbuementRecipeProvider(DataGenerator generatorIn){
         this.generator = generatorIn;
     }
 
     @Override
     public void run(HashCache cache) throws IOException {
-        recipes.add(new InfuserRecipe("lapis", Ingredient.of(Tags.Items.GEMS_LAPIS), ItemsRegistry.SOURCE_GEM.getDefaultInstance(), 50));
-        recipes.add(new InfuserRecipe("amethyst", Ingredient.of(Items.AMETHYST_SHARD), ItemsRegistry.SOURCE_GEM.getDefaultInstance(), 50));
+        recipes.add(new InfuserRecipe("lapis", Ingredient.of(Tags.Items.GEMS_LAPIS), ItemsRegistry.SOURCE_GEM.getDefaultInstance(), 500));
+        recipes.add(new InfuserRecipe("amethyst", Ingredient.of(Items.AMETHYST_SHARD), ItemsRegistry.SOURCE_GEM.getDefaultInstance(), 500));
         
         Path output = this.generator.getOutputFolder();
         for(InfuserRecipe g : recipes){

@@ -2,11 +2,15 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.InfuserRecipe;
+import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -16,24 +20,36 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class CrystallizerTile extends AbstractSourceMachine implements Container, ITickable {
+public class ImbuementTile extends AbstractSourceMachine implements Container, ITickable, IAnimatable {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     public ItemStack stack = ItemStack.EMPTY;
     public ItemEntity entity;
     public boolean draining;
     InfuserRecipe recipe;
     int backoff;
-    public CrystallizerTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.CRYSTALLIZER_TILE, pos, state);
+    public float frames;
+    boolean hasRecipe;
+    int craftTicks;
+
+    public ImbuementTile(BlockPos pos, BlockState state) {
+        super(BlockRegistry.IMBUEMENT_TILE, pos, state);
     }
 
     @Override
@@ -43,23 +59,40 @@ public class CrystallizerTile extends AbstractSourceMachine implements Container
 
     @Override
     public void tick() {
-        if(level.isClientSide)
-            return;
+        if(level.isClientSide) {
 
+            int baseAge = draining ? 20 : 40;
+            int randBound = draining ? 3 : 6;
+            int numParticles = draining ? 2 : 1;
+            float scaleAge = draining ?(float) ParticleUtil.inRange(0.1, 0.2) : (float) ParticleUtil.inRange(0.05, 0.15);
+            if(level.random.nextInt( randBound)  == 0 && !Minecraft.getInstance().isPaused()){
+                for(int i =0; i< numParticles; i++){
+                    Vec3 particlePos = new Vec3(getX(), getY(), getZ()).add(0.5, 0.5, 0.5);
+                    particlePos = particlePos.add(ParticleUtil.pointInSphere());
+                    level.addParticle(ParticleLineData.createData(new ParticleColor(255,25,180) ,scaleAge, baseAge + level.random.nextInt(20)) ,
+                            particlePos.x(), particlePos.y(), particlePos.z(),
+                            getX() + 0.5  , getY() +0.5 , getZ()+ 0.5);
+                }
+            }
+            return;
+        }
+        this.hasRecipe = recipe != null;
         if(backoff > 0) {
             backoff--;
             return;
         }
         if(stack.isEmpty()) {
-            draining = false;
             return;
         }
+        if(craftTicks > 0)
+            craftTicks--;
 
         // Restore the recipe on world restart
         if(recipe == null){
             for(InfuserRecipe recipe : level.getRecipeManager().getAllRecipesFor(RecipeRegistry.INFUSER_TYPE)){
                 if(recipe.matches(new SimpleContainer(stack), level)){
                     this.recipe = recipe;
+                    this.craftTicks = 100;
                     break;
                 }
             }
@@ -68,20 +101,29 @@ public class CrystallizerTile extends AbstractSourceMachine implements Container
         if(recipe == null || !recipe.matches(new SimpleContainer(stack), level)) {
             backoff = 20;
             recipe = null;
+            if(this.draining) {
+                this.draining = false;
+                update();
+            }
             return;
         }
 
         int transferRate = 200;
 
-        if(recipe == null || !recipe.matches(new SimpleContainer(stack), level))
-            return;
 
-        if(this.level.getGameTime() % 20 == 0 && recipe.matches(new SimpleContainer(stack), level)){
-            if(canAcceptSource(Math.min(200, recipe.source)) && SourceUtil.takeSourceNearby(worldPosition, level, 1, Math.min(200, recipe.source)) != null){
-                this.addSource(transferRate);
-                if(!draining) {
-                    draining = true;
-                    update();
+        if(this.level.getGameTime() % 20 == 0 && this.getSource() < recipe.source){
+            if(canAcceptSource(Math.min(200, recipe.source))){
+                BlockPos takePos = SourceUtil.takeSourceNearby(worldPosition, level, 2, Math.min(200, recipe.source));
+                if(takePos != null){
+                    this.addSource(transferRate);
+                    EntityFlyingItem item = new EntityFlyingItem(level,takePos.above(), worldPosition, 255, 50, 80)
+                            .withNoTouch();
+                    item.setDistanceAdjust(2f);
+                    level.addFreshEntity(item);
+                    if(!draining) {
+                        draining = true;
+                        update();
+                    }
                 }
             }else{
                 this.addSource(5);
@@ -92,10 +134,9 @@ public class CrystallizerTile extends AbstractSourceMachine implements Container
             }
         }
 
-        if(this.getSource() >= recipe.source){
+        if(this.getSource() >= recipe.source && craftTicks <= 0){
             this.setItem(0, recipe.output.copy());
             this.addSource(-recipe.source);
-            draining = false;
             ParticleUtil.spawnTouchPacket(level, worldPosition, ParticleUtil.defaultParticleColorWrapper());
             update();
         }
@@ -105,6 +146,8 @@ public class CrystallizerTile extends AbstractSourceMachine implements Container
     public void load(CompoundTag tag) {
         stack = ItemStack.of((CompoundTag)tag.get("itemStack"));
         draining = tag.getBoolean("draining");
+        this.hasRecipe = tag.getBoolean("hasRecipe");
+        this.craftTicks = tag.getInt("craftTicks");
         super.load(tag);
     }
 
@@ -117,11 +160,13 @@ public class CrystallizerTile extends AbstractSourceMachine implements Container
             tag.put("itemStack", reagentTag);
         }
         tag.putBoolean("draining", draining);
+        tag.putBoolean("hasRecipe", hasRecipe);
+        tag.putInt("craftTicks", craftTicks);
     }
 
     @Override
     public int getMaxSource() {
-        return 5000;
+        return Integer.MAX_VALUE;
     }
 
     @Override
@@ -136,7 +181,7 @@ public class CrystallizerTile extends AbstractSourceMachine implements Container
 
     @Override
     public boolean canPlaceItem(int slot, ItemStack stack) {
-        if(stack.isEmpty())
+        if(stack.isEmpty() || !this.stack.isEmpty())
             return false;
         InfuserRecipe recipe = level.getRecipeManager().getAllRecipesFor(RecipeRegistry.INFUSER_TYPE).stream()
                 .filter(f -> f.matches(new SimpleContainer(stack), level)).findFirst().orElse(null);
@@ -145,7 +190,7 @@ public class CrystallizerTile extends AbstractSourceMachine implements Container
 
     @Override
     public boolean isEmpty() {
-        return this.stack == null || this.stack.isEmpty();
+        return this.stack.isEmpty();
     }
 
     @Override
@@ -171,6 +216,7 @@ public class CrystallizerTile extends AbstractSourceMachine implements Container
     @Override
     public void setItem(int index, ItemStack stack) {
         this.stack = stack;
+        this.craftTicks = 100;
         updateBlock();
     }
 
@@ -198,5 +244,29 @@ public class CrystallizerTile extends AbstractSourceMachine implements Container
     public void invalidateCaps() {
         itemHandler.invalidate();
         super.invalidateCaps();
+    }
+
+    @Override
+    public void registerControllers(AnimationData data) {
+        data.addAnimationController(new AnimationController(this, "controller", 1,  this::idlePredicate));
+        data.addAnimationController(new AnimationController(this, "slowcraft_controller", 20,  this::slowCraftPredicate));
+    }
+
+    private PlayState slowCraftPredicate(AnimationEvent animationEvent) {
+        if(this.stack.isEmpty())
+            return PlayState.STOP;
+        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("imbue_slow", true));
+        return PlayState.CONTINUE;
+    }
+
+    private PlayState idlePredicate(AnimationEvent animationEvent) {
+        animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("float", true));
+        return PlayState.CONTINUE;
+    }
+
+    AnimationFactory factory = new AnimationFactory(this);
+    @Override
+    public AnimationFactory getFactory() {
+        return factory;
     }
 }

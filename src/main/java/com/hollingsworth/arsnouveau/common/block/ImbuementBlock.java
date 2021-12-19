@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.common.block.tile.CrystallizerTile;
+import com.hollingsworth.arsnouveau.common.block.tile.ImbuementTile;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.InfuserRecipe;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -19,25 +19,25 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class CrystallizerBlock extends TickableModBlock {
-    public CrystallizerBlock() {
-        super(defaultProperties().noOcclusion(), LibBlockNames.CRYSTALLIZER);
+public class ImbuementBlock extends TickableModBlock {
+    public ImbuementBlock() {
+        super(defaultProperties().noOcclusion(), LibBlockNames.IMBUEMENT_CHAMBER);
     }
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new CrystallizerTile(pos, state);
+        return new ImbuementTile(pos, state);
     }
 
     @Override
     public RenderShape getRenderShape(BlockState p_149645_1_) {
-        return RenderShape.MODEL;
+        return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if(!(worldIn.getBlockEntity(pos) instanceof CrystallizerTile tile))
+        if(!(worldIn.getBlockEntity(pos) instanceof ImbuementTile tile))
             return super.use(state, worldIn, pos, player, handIn, hit);
         if(worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND)
             return super.use(state, worldIn, pos, player, handIn, hit);
@@ -69,10 +69,10 @@ public class CrystallizerBlock extends TickableModBlock {
     @Override
     public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         super.playerWillDestroy(worldIn, pos, state, player);
-        if(!(worldIn.getBlockEntity(pos) instanceof CrystallizerTile))
+        if(!(worldIn.getBlockEntity(pos) instanceof ImbuementTile))
             return;
-        ItemStack stack = ((CrystallizerTile) worldIn.getBlockEntity(pos)).stack;
+        ItemStack stack = ((ImbuementTile) worldIn.getBlockEntity(pos)).stack;
         worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack.copy()));
-        ((CrystallizerTile) worldIn.getBlockEntity(pos)).stack = ItemStack.EMPTY;
+        ((ImbuementTile) worldIn.getBlockEntity(pos)).stack = ItemStack.EMPTY;
     }
 }

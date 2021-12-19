@@ -25,7 +25,7 @@ public class ModDatagen {
         event.getGenerator().addProvider(new ApparatusRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(new PatchouliProvider(event.getGenerator()));
         event.getGenerator().addProvider(new DungeonLootGenerator(event.getGenerator(), MODID));
-        event.getGenerator().addProvider(new InfuserRecipeProvider(event.getGenerator()));
+        event.getGenerator().addProvider(new ImbuementRecipeProvider(event.getGenerator()));
         event.getGenerator().addProvider(new CrushRecipeProvider(event.getGenerator()));
     }
 }

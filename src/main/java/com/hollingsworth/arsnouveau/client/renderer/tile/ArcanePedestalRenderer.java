@@ -21,7 +21,7 @@ public class ArcanePedestalRenderer implements BlockEntityRenderer<ArcanePedesta
         entityItem.setYHeadRot(tileEntityIn.frames);
         entityItem.age = (int) tileEntityIn.frames;
         Minecraft.getInstance().getEntityRenderDispatcher().render(entityItem, 0.5,1,0.5, entityItem.yRot, 2.0f,stack, iRenderTypeBuffer,15728880);
-        Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entityItem);
+
         stack.popPose();
     }
 
