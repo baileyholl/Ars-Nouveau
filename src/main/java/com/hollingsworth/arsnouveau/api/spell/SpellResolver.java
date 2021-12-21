@@ -79,7 +79,6 @@ public class SpellResolver {
         return SpellUtil.postEvent(new SpellCastEvent(entity, spell, spellContext));
     }
 
-    // TODO: Remove world arg
     public void onCast(ItemStack stack, LivingEntity livingEntity, Level world){
         if(canCast(livingEntity) && !postEvent(livingEntity)) {
             SpellStats stats = new SpellStats.Builder()
@@ -127,7 +126,7 @@ public class SpellResolver {
         for(int i = 0; i < spell.recipe.size(); i++){
             if(spellContext.isCanceled())
                 break;
-            AbstractSpellPart part = spellContext.nextSpell();
+            AbstractSpellPart part = spellContext.nextPart();
             if(part == null)
                 return;
             SpellStats.Builder builder = new SpellStats.Builder();

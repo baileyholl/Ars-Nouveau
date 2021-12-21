@@ -39,8 +39,7 @@ public class SpellContext {
         this.colors = ParticleUtil.defaultParticleColorWrapper();
     }
 
-    // TODO: Rename to nextPart
-    public @Nullable AbstractSpellPart nextSpell(){
+    public @Nullable AbstractSpellPart nextPart(){
         this.currentIndex++;
         AbstractSpellPart part = null;
         try {
