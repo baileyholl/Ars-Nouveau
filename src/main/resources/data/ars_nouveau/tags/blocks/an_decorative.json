@@ -1,8 +1,6 @@
 {
   "replace": false,
   "values": [
-	  "ars_nouveau:ab_smooth",
-	  "ars_nouveau:ab_clover",
 	  "ars_nouveau:arcane_stone",
 	  "ars_nouveau:arcane_bricks",
 	  "ars_nouveau:ab_mosaic",
@@ -24,7 +22,6 @@
 	  "ars_nouveau:as_gold_mosaic",
 	  "ars_nouveau:as_gold_slab",
 	  "ars_nouveau:as_gold_stone",
-	  "ars_nouveau:ab_smooth_slab",
 	  "ars_nouveau:ab_smooth",
 	  "ars_nouveau:ab_clover"
   ]

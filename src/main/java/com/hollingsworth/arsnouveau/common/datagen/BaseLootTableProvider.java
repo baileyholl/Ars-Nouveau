@@ -53,7 +53,7 @@ public abstract class BaseLootTableProvider extends LootTableProvider {
                         .apply(CopyNameFunction.copyName(CopyNameFunction.NameSource.BLOCK_ENTITY))
                         .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY)
                                 .copy("inv", "BlockEntityTag.inv", CopyNbtFunction.MergeStrategy.REPLACE) //addOperation
-                                .copy("mana", "BlockEntityTag.mana", CopyNbtFunction.MergeStrategy.REPLACE))
+                                .copy("source", "BlockEntityTag.source", CopyNbtFunction.MergeStrategy.REPLACE))
                         .apply(SetContainerContents.setContents(BlockRegistry.SOURCE_JAR_TILE)
                                 .withEntry(DynamicLoot.dynamicEntry(new ResourceLocation("minecraft", "contents"))))
                 );

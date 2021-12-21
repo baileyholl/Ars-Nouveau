@@ -150,7 +150,7 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.STRIPPED_AWWOOD_RED) public static RotatedPillarBlock STRIPPED_AWWOOD_RED;
     @ObjectHolder(LibBlockNames.STRIPPED_AWLOG_PURPLE) public static RotatedPillarBlock STRIPPED_AWLOG_PURPLE;
     @ObjectHolder(LibBlockNames.STRIPPED_AWWOOD_PURPLE) public static RotatedPillarBlock STRIPPED_AWWOOD_PURPLE;
-    @ObjectHolder(LibBlockNames.SOURCE_GEM_BLOCK) public static ModBlock MANA_GEM_BLOCK;
+    @ObjectHolder(LibBlockNames.SOURCE_GEM_BLOCK) public static ModBlock SOURCE_GEM_BLOCK;
 
     @ObjectHolder(LibBlockNames.POTION_JAR_BLOCK) public static PotionJar POTION_JAR;
     @ObjectHolder(LibBlockNames.POTION_JAR_BLOCK) public static BlockEntityType<PotionJarTile> POTION_JAR_TYPE;
@@ -484,7 +484,7 @@ public class BlockRegistry {
             registry.register(getDefaultBlockItem(BlockRegistry.STRIPPED_AWLOG_PURPLE, LibBlockNames.STRIPPED_AWLOG_PURPLE));
             registry.register(getDefaultBlockItem(BlockRegistry.STRIPPED_AWWOOD_PURPLE, LibBlockNames.STRIPPED_AWWOOD_PURPLE));
 
-            registry.register(getDefaultBlockItem(BlockRegistry.MANA_GEM_BLOCK, LibBlockNames.SOURCE_GEM_BLOCK));
+            registry.register(getDefaultBlockItem(BlockRegistry.SOURCE_GEM_BLOCK, LibBlockNames.SOURCE_GEM_BLOCK));
             ComposterBlock.COMPOSTABLES.put(BlockRegistry.MAGE_BLOOM_CROP.asItem(), 0.3f);
 
             registry.register(getDefaultBlockItem(BlockRegistry.POTION_JAR, LibBlockNames.POTION_JAR_BLOCK));

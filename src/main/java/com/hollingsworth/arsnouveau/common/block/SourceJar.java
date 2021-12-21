@@ -79,7 +79,7 @@ public class SourceJar extends SourceBlock {
 
         if(stack.getTag() == null)
             return;
-        int mana = stack.getTag().getCompound("BlockEntityTag").getInt("mana");
+        int mana = stack.getTag().getCompound("BlockEntityTag").getInt("source");
         tooltip.add( new TextComponent((mana*100) / 10000 + "% full"));
     }
 }

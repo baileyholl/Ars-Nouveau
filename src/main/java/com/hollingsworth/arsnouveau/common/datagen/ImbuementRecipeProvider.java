@@ -32,7 +32,7 @@ public class ImbuementRecipeProvider implements DataProvider {
     public void run(HashCache cache) throws IOException {
         recipes.add(new InfuserRecipe("lapis", Ingredient.of(Tags.Items.GEMS_LAPIS), ItemsRegistry.SOURCE_GEM.getDefaultInstance(), 500));
         recipes.add(new InfuserRecipe("amethyst", Ingredient.of(Items.AMETHYST_SHARD), ItemsRegistry.SOURCE_GEM.getDefaultInstance(), 500));
-        recipes.add(new InfuserRecipe("amethyst_block", Ingredient.of(Items.AMETHYST_SHARD), ItemsRegistry.SOURCE_GEM.getDefaultInstance(), 500));
+        recipes.add(new InfuserRecipe("amethyst_block", Ingredient.of(Items.AMETHYST_SHARD), ItemsRegistry.SOURCE_GEM.getDefaultInstance(), 2000));
 
         Path output = this.generator.getOutputFolder();
         for(InfuserRecipe g : recipes){

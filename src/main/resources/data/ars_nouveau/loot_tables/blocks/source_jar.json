@@ -2,7 +2,7 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "name": "mana_jar",
+      "name": "source_jar",
       "rolls": 1.0,
       "bonus_rolls": 0.0,
       "entries": [
@@ -23,8 +23,8 @@
                   "op": "replace"
                 },
                 {
-                  "source": "mana",
-                  "target": "BlockEntityTag.mana",
+                  "source": "source",
+                  "target": "BlockEntityTag.source",
                   "op": "replace"
                 }
               ]

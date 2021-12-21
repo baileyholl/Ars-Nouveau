@@ -235,8 +235,8 @@ public class Recipes extends RecipeProvider {
             strippedLogToWood(consumer, BlockRegistry.STRIPPED_AWLOG_RED, BlockRegistry.STRIPPED_AWWOOD_RED);
             strippedLogToWood(consumer, BlockRegistry.STRIPPED_AWLOG_PURPLE, BlockRegistry.STRIPPED_AWWOOD_PURPLE);
             shapedWoodenTrapdoor(consumer, BlockRegistry.ARCHWOOD_TRAPDOOR, BlockRegistry.ARCHWOOD_PLANK);
-            shapelessBuilder(BlockRegistry.MANA_GEM_BLOCK,1).requires(MANA_GEM, 9).save(consumer);
-            shapelessBuilder(ItemsRegistry.SOURCE_GEM, 9).requires(BlockRegistry.MANA_GEM_BLOCK,1).save(consumer, new ResourceLocation(ArsNouveau.MODID, "mana_gem_2"));
+            shapelessBuilder(BlockRegistry.SOURCE_GEM_BLOCK,1).requires(MANA_GEM, 9).save(consumer);
+            shapelessBuilder(ItemsRegistry.SOURCE_GEM, 9).requires(BlockRegistry.SOURCE_GEM_BLOCK,1).save(consumer, new ResourceLocation(ArsNouveau.MODID, "mana_gem_2"));
             shapelessBuilder(Items.LEATHER, 1).requires(ItemsRegistry.WILDEN_WING).save(consumer,  new ResourceLocation(ArsNouveau.MODID, "wing_to_leather"));
             shapelessBuilder(Items.BONE_MEAL, 3).requires(ItemsRegistry.WILDEN_HORN).save(consumer,  new ResourceLocation(ArsNouveau.MODID, "horn_to_bonemeal"));
             shapelessBuilder(Items.ORANGE_DYE, 5).requires(ItemsRegistry.WILDEN_SPIKE).save(consumer,  new ResourceLocation(ArsNouveau.MODID, "spike_to_dye"));

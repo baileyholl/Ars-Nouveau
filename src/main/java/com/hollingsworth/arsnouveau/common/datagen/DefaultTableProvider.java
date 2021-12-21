@@ -95,7 +95,7 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.STRIPPED_AWLOG_PURPLE);
             registerDropSelf(BlockRegistry.STRIPPED_AWWOOD_PURPLE);
             registerDropDoor(BlockRegistry.ARCHWOOD_DOOR);
-            registerDropSelf(BlockRegistry.MANA_GEM_BLOCK);
+            registerDropSelf(BlockRegistry.SOURCE_GEM_BLOCK);
 
             registerDropSelf(BlockRegistry.AB_SMOOTH_BASKET);
             registerDropSelf(BlockRegistry.AB_SMOOTH_CLOVER);

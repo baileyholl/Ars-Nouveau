@@ -38,12 +38,13 @@ public class EffectBreak extends AbstractEffect {
     }
 
     public ItemStack getStack(LivingEntity shooter){
-        if(isRealPlayer(shooter)){
-            ItemStack mainHand = getPlayer(shooter, (ServerLevel)shooter.level).getMainHandItem();
-            return (mainHand.isEmpty() ? getPlayer(shooter, (ServerLevel)shooter.level).getOffhandItem() : mainHand).copy();
-        }
-
         return new ItemStack(Items.DIAMOND_PICKAXE);
+//        if(isRealPlayer(shooter)){
+//            ItemStack mainHand = getPlayer(shooter, (ServerLevel)shooter.level).getMainHandItem();
+//            return (mainHand.isEmpty() ? getPlayer(shooter, (ServerLevel)shooter.level).getOffhandItem() : mainHand).copy();
+//        }
+//
+//        return new ItemStack(Items.DIAMOND_PICKAXE);
     }
 
     @Override
