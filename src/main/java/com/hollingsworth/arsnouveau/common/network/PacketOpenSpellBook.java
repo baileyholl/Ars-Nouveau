@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.network;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
@@ -34,7 +33,7 @@ public class PacketOpenSpellBook {
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(()-> GuiSpellBook.open(ArsNouveauAPI.getInstance(), tag, tier, unlockedSpells));
+        ctx.get().enqueueWork(()-> GuiSpellBook.open(tag, tier, unlockedSpells));
         ctx.get().setPacketHandled(true);
     }
 

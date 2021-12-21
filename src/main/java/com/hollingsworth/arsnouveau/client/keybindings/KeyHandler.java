@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.client.keybindings;
 
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.client.gui.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
@@ -20,7 +19,6 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
 public class KeyHandler {
     private static final Minecraft MINECRAFT = Minecraft.getInstance();
-
     public static void checkKeysPressed(int key){
         ItemStack stack = StackUtil.getHeldSpellbook(MINECRAFT.player);
 
@@ -65,7 +63,7 @@ public class KeyHandler {
             }
 
             if(stack.getItem() instanceof SpellBook && stack.hasTag() && MINECRAFT.screen == null){
-                GuiSpellBook.open(ArsNouveauAPI.getInstance(), stack.getTag(), ((SpellBook) stack.getItem()).getTier().ordinal(), SpellBook.getUnlockedSpellString(stack.getTag()));
+                GuiSpellBook.open(stack.getTag(), ((SpellBook) stack.getItem()).getTier().ordinal(), SpellBook.getUnlockedSpellString(stack.getTag()));
             }
         }
     }

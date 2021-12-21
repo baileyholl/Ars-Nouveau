@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.gui.ModdedScreen;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
@@ -37,15 +36,16 @@ public class BaseBook extends ModdedScreen {
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-        GlStateManager._pushMatrix();
+
+        matrixStack.pushPose();
         if(scaleFactor != 1) {
-            GlStateManager._scalef(scaleFactor, scaleFactor, scaleFactor);
+            matrixStack.scale(scaleFactor, scaleFactor, scaleFactor);
 
             mouseX /= scaleFactor;
             mouseY /= scaleFactor;
         }
         drawScreenAfterScale(matrixStack,mouseX, mouseY, partialTicks);
-        GlStateManager._popMatrix();
+        matrixStack.popPose();
     }
 
     public void drawBackgroundElements(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {

@@ -47,47 +47,43 @@ public class GuiSpellBook extends BaseBook {
     public CompoundNBT spell_book_tag;
     public GuiSpellSlot selected_slot;
     public int max_spell_tier; // Used to load spells that are appropriate tier
-    List<CraftingButton> craftingCells;
+    List<CraftingButton> craftingCells = new ArrayList<>();
     public List<AbstractSpellPart> unlockedSpells;
     public List<AbstractSpellPart> castMethods;
     public List<AbstractSpellPart> augments;
-    public List<AbstractSpellPart> displayedEffects;
+    public List<AbstractSpellPart> displayedGlyphs;
     public List<AbstractSpellPart> allEffects;
     public List<GlyphButton> castMethodButtons;
     public List<GlyphButton> augmentButtons;
     public List<GlyphButton> effectButtons;
+    public List<GlyphButton> glyphButtons = new ArrayList<>();
     public int page = 0;
     public List<SpellValidationError> validationErrors;
     ChangePageButton nextButton;
     ChangePageButton previousButton;
     ISpellValidator spellValidator;
     public String previousString = "";
-    public GuiSpellBook(ArsNouveauAPI api, CompoundNBT tag, int tier, String unlockedSpells) {
+    int formTextRow = 0;
+    int augmentTextRow = 0;
+    int effectTextRow = 0;
+    
+
+    public GuiSpellBook(CompoundNBT tag, int tier, String unlockedSpells) {
         super();
-        this.api = api;
+        this.api = ArsNouveauAPI.getInstance();
         this.selected_cast_slot = 1;
-        craftingCells = new ArrayList<>();
+
         this.max_spell_tier = tier;
         this.spell_book_tag = tag;
         this.unlockedSpells = SpellRecipeUtil.getSpellsFromString(unlockedSpells);
 
         this.castMethods = new ArrayList<>();
         this.augments = new ArrayList<>();
-        this.displayedEffects = new ArrayList<>();
+        this.displayedGlyphs = new ArrayList<>();
         allEffects = new ArrayList<>();
 
-        // Pre-partition the known spell glyphs
-        for (AbstractSpellPart part : this.unlockedSpells) {
-            if (part instanceof AbstractCastMethod) {
-                this.castMethods.add(part);
-            } else if (part instanceof AbstractAugment) {
-                this.augments.add(part);
-            } else if (part instanceof AbstractEffect) {
-                this.displayedEffects.add(part);
-                allEffects.add(part);
-            }
-        }
 
+        this.displayedGlyphs = this.unlockedSpells;
         this.castMethodButtons = new ArrayList<>();
         this.augmentButtons = new ArrayList<>();
         this.effectButtons = new ArrayList<>();
@@ -116,9 +112,10 @@ public class GuiSpellBook extends BaseBook {
         }
         updateCraftingSlots(selected_slot_ind);
 
-        addCastMethodParts();
-        addAugmentParts();
-        addEffectParts(0);
+//        addCastMethodParts();
+//        addAugmentParts();
+//        addEffectParts(0);
+        layoutAllGlyphs(0);
         addButton(new CreateSpellButton(this, bookRight - 71, bookBottom - 13, this::onCreateClick));
         addButton(new GuiImageButton(bookRight - 126, bookBottom - 13, 0,0,41, 12, 41, 12, "textures/gui/clear_icon.png", this::clear));
 
@@ -181,7 +178,7 @@ public class GuiSpellBook extends BaseBook {
         this.page = 0;
         previousButton.active = false;
         previousButton.visible = false;
-        addEffectParts(0);
+        layoutAllGlyphs(0);
         validate();
     }
 
@@ -192,11 +189,11 @@ public class GuiSpellBook extends BaseBook {
 
         if (!str.isEmpty()) {
             searchBar.setSuggestion("");
-            displayedEffects = new ArrayList<>();
+            displayedGlyphs = new ArrayList<>();
             // Filter Effects
             for (AbstractSpellPart spellPart : unlockedSpells) {
-                if (spellPart instanceof AbstractEffect && spellPart.getLocaleName().toLowerCase().contains(str.toLowerCase())) {
-                    displayedEffects.add(spellPart);
+                if (spellPart.getLocaleName().toLowerCase().contains(str.toLowerCase())) {
+                    displayedGlyphs.add(spellPart);
                 }
             }
             // Set visibility of Cast Methods and Augments
@@ -213,7 +210,7 @@ public class GuiSpellBook extends BaseBook {
         } else {
             // Reset our book on clear
             searchBar.setSuggestion(new TranslationTextComponent("ars_nouveau.spell_book_gui.search").getString());
-            displayedEffects = allEffects;
+            displayedGlyphs = unlockedSpells;
             for(Widget w : buttons){
                 if(w instanceof GlyphButton ) {
                     w.visible = true;
@@ -224,7 +221,7 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void updateNextPageButtons(){
-        if(displayedEffects.size() < 36){
+        if(displayedGlyphs.size() < 36){
             nextButton.visible = false;
             nextButton.active = false;
         }else{
@@ -233,18 +230,91 @@ public class GuiSpellBook extends BaseBook {
         }
     }
 
-    private void addCastMethodParts() {
-        layoutParts(castMethods, castMethodButtons, bookLeft + 20, bookTop + 34, 2);
-    }
+    private void layoutAllGlyphs(int page){
+        clearButtons(glyphButtons);
+        formTextRow = 0;
+        augmentTextRow = 0;
+        effectTextRow = 0;
+        final int PER_ROW = 6;
+        final int MAX_ROWS = 6;
+        boolean nextPage = false;
+        int xStart = nextPage ? bookLeft + 154 : bookLeft + 20;
+        int adjustedRowsPlaced = 0;
+        int yStart = bookTop + 20;
+        boolean foundForms = false;
+        boolean foundAugments = false;
+        boolean foundEffects = false;
+        List<AbstractSpellPart> sorted = new ArrayList<>();
+        sorted.addAll(displayedGlyphs.stream().filter(s -> s instanceof AbstractCastMethod).collect(Collectors.toList()));
+        sorted.addAll(displayedGlyphs.stream().filter(s -> s instanceof AbstractAugment).collect(Collectors.toList()));
+        sorted.addAll(displayedGlyphs.stream().filter(s -> s instanceof AbstractEffect).collect(Collectors.toList()));
+        int perPage = 58;
+        sorted = sorted.subList(perPage * page, Math.min(sorted.size(), perPage * (page + 1)));
+        int adjustedXPlaced = 0;
+        int totalRowsPlaced = 0;
+        int row_offset = page == 0 ? 2 : 0;
 
-    private void addAugmentParts() {
-        layoutParts(augments, augmentButtons, bookLeft + 20, bookTop + 88, 3);
-    }
 
-    private void addEffectParts(int page) {
-        List<AbstractSpellPart> displayedEffects = this.displayedEffects.subList(36 * page, Math.min(this.displayedEffects.size(), 36 * (page + 1)));
-        layoutParts(displayedEffects, effectButtons, bookLeft + 154, bookTop + 34, 6);
+        for(int i = 0; i < sorted.size(); i++){
+            AbstractSpellPart part = sorted.get(i);
+            if(!foundForms && part instanceof AbstractCastMethod) {
+                foundForms = true;
+                adjustedRowsPlaced += 1;
+                totalRowsPlaced += 1;
+                formTextRow = page != 0 ? 0 : totalRowsPlaced;
+                adjustedXPlaced = 0;
+            }
+
+            if(!foundAugments && part instanceof AbstractAugment){
+                foundAugments = true;
+                adjustedRowsPlaced += row_offset;
+                totalRowsPlaced += row_offset;
+                augmentTextRow = page != 0 ? 0 : totalRowsPlaced - 1;
+                adjustedXPlaced = 0;
+            } else if(!foundEffects && part instanceof AbstractEffect){
+                foundEffects = true;
+                adjustedRowsPlaced += row_offset;
+                totalRowsPlaced += row_offset;
+                effectTextRow = page != 0 ? 0 :totalRowsPlaced - 1;
+                adjustedXPlaced = 0;
+            }else{
+
+                if(adjustedXPlaced >= PER_ROW){
+                    adjustedRowsPlaced++;
+                    totalRowsPlaced++;
+                    adjustedXPlaced = 0;
+                }
+            }
+            if(adjustedRowsPlaced > MAX_ROWS){
+                if(nextPage){
+                    break;
+                }
+                nextPage = true;
+                adjustedXPlaced = 0;
+                adjustedRowsPlaced = 0;
+            }
+            int xOffset = 20 * ((adjustedXPlaced ) % PER_ROW) + (nextPage ? 134 :0);
+            int yPlace = adjustedRowsPlaced * 18 + yStart;
+
+            GlyphButton cell = new GlyphButton(this, xStart + xOffset, yPlace, false, part.getIcon(), part.tag);
+            addButton(cell);
+            glyphButtons.add(cell);
+            adjustedXPlaced++;
+        }
     }
+//
+//    private void addCastMethodParts() {
+//        layoutParts(castMethods, castMethodButtons, bookLeft + 20, bookTop + 34, 2);
+//    }
+//
+//    private void addAugmentParts() {
+//        layoutParts(augments, augmentButtons, bookLeft + 20, bookTop + 88, 3);
+//    }
+//
+//    private void addEffectParts(int page) {
+//        List<AbstractSpellPart> displayedEffects = this.displayedGlyphs.subList(36 * page, Math.min(this.displayedGlyphs.size(), 36 * (page + 1)));
+//        layoutParts(displayedEffects, effectButtons, bookLeft + 154, bookTop + 34, 6);
+//    }
 
     public void clearButtons( List<GlyphButton> glyphButtons){
         for (GlyphButton b : glyphButtons) {
@@ -254,30 +324,30 @@ public class GuiSpellBook extends BaseBook {
         glyphButtons.clear();
     }
 
-    private void layoutParts(List<AbstractSpellPart> parts, List<GlyphButton> glyphButtons, int xStart, int yStart, int maxRows) {
-        // Clear out the old buttons
-        clearButtons(glyphButtons);
-        final int PER_ROW = 6;
-        int toLayout = Math.min(parts.size(), PER_ROW * maxRows);
-        for (int i = 0; i < toLayout; i++) {
-            AbstractSpellPart part = parts.get(i);
-            int xOffset = 20 * (i % PER_ROW);
-            int yOffset = (i / PER_ROW) * 18;
-            GlyphButton cell = new GlyphButton(this, xStart + xOffset, yStart + yOffset, false, part.getIcon(), part.tag);
-            glyphButtons.add(cell);
-            addButton(cell);
-        }
-    }
+//    private void layoutParts(List<AbstractSpellPart> parts, List<GlyphButton> glyphButtons, int xStart, int yStart, int maxRows) {
+//        // Clear out the old buttons
+//        clearButtons(glyphButtons);
+//        final int PER_ROW = 6;
+//        int toLayout = Math.min(parts.size(), PER_ROW * maxRows);
+//        for (int i = 0; i < toLayout; i++) {
+//            AbstractSpellPart part = parts.get(i);
+//            int xOffset = 20 * (i % PER_ROW);
+//            int yOffset = (i / PER_ROW) * 18;
+//            GlyphButton cell = new GlyphButton(this, xStart + xOffset, yStart + yOffset, false, part.getIcon(), part.tag);
+//            glyphButtons.add(cell);
+//            addButton(cell);
+//        }
+//    }
 
     public void onPageIncrease(Button button){
         page++;
-        if(displayedEffects.size() < 36 * (page + 1)){
+        if(displayedGlyphs.size() < 58 * (page + 1)){
             nextButton.visible = false;
             nextButton.active = false;
         }
         previousButton.active = true;
         previousButton.visible = true;
-        addEffectParts(page);
+        layoutAllGlyphs(page);
         validate();
     }
 
@@ -288,11 +358,11 @@ public class GuiSpellBook extends BaseBook {
             previousButton.visible = false;
         }
 
-        if(displayedEffects.size() > 36 * (page + 1)){
+        if(displayedGlyphs.size() > 58 * (page + 1)){
             nextButton.visible = true;
             nextButton.active = true;
         }
-        addEffectParts(page);
+        layoutAllGlyphs(page);
         validate();
     }
 
@@ -383,15 +453,22 @@ public class GuiSpellBook extends BaseBook {
         }
     }
 
-    public static void open(ArsNouveauAPI api, CompoundNBT spell_book_tag, int tier, String unlockedSpells){
-        Minecraft.getInstance().setScreen(new GuiSpellBook(api, spell_book_tag, tier, unlockedSpells));
+    public static void open(CompoundNBT spell_book_tag, int tier, String unlockedSpells){
+        Minecraft.getInstance().setScreen(new GuiSpellBook(spell_book_tag, tier, unlockedSpells));
     }
 
     public void drawBackgroundElements(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
-        minecraft.font.draw(stack,new TranslationTextComponent("ars_nouveau.spell_book_gui.form").getString(), 20, 24, -8355712);
-        minecraft.font.draw(stack,new TranslationTextComponent("ars_nouveau.spell_book_gui.effect").getString(), 154, 24, -8355712);
-        minecraft.font.draw(stack,new TranslationTextComponent("ars_nouveau.spell_book_gui.augment").getString(), 20, 78, -8355712);
+        if(formTextRow >= 1) {
+            minecraft.font.draw(stack, new TranslationTextComponent("ars_nouveau.spell_book_gui.form").getString(), formTextRow > 6 ? 154 : 20 ,  5 + 18 * (formTextRow + (formTextRow == 1 ? 0 : 1)), -8355712);
+        }
+        if(effectTextRow >= 1) {
+
+            minecraft.font.draw(stack, new TranslationTextComponent("ars_nouveau.spell_book_gui.effect").getString(), effectTextRow > 6 ? 154 : 20,  5 + 18 * (effectTextRow  + 1), -8355712);
+        }
+        if(augmentTextRow >= 1) {
+            minecraft.font.draw(stack, new TranslationTextComponent("ars_nouveau.spell_book_gui.augment").getString(), augmentTextRow > 6 ? 154 : 20,  5 + 18 * (augmentTextRow + 1), -8355712);
+        }
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/spell_name_paper.png"), 16, 179, 0, 0, 109, 15,109,15, stack);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15,72,15, stack);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/clear_paper.png"), 161, 179, 0, 0, 47, 15,47,15, stack);
