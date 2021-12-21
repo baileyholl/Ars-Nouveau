@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.common.entity.goal.sylph;
+package com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;

@@ -9,7 +9,7 @@ import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.SummoningCrystalTile;
 import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
-import com.hollingsworth.arsnouveau.common.entity.goal.sylph.*;
+import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.*;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -77,7 +77,7 @@ import java.util.Map;
 public class Whirlisprig extends AbstractFlyingCreature implements IPickupResponder, IAnimatable, ITooltipProvider, IDispellable {
     AnimationFactory manager = new AnimationFactory(this);
 
-    public static Tag.Named<Item> DENIED_DROP =  ItemTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "sylph/denied_drop"));
+    public static Tag.Named<Item> DENIED_DROP =  ItemTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/denied_drop"));
 
     public int timeSinceBonemeal = 0;
     public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(Whirlisprig.class, EntityDataSerializers.BOOLEAN);
@@ -124,7 +124,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements IPickupRespon
             List<ItemStack> items = ItemsRegistry.DENY_ITEM_SCROLL.getItems(stack);
             if (!items.isEmpty()) {
                 this.ignoreItems = ItemsRegistry.DENY_ITEM_SCROLL.getItems(stack);
-                PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.sylph.ignore"));
+                PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.whirlisprig.ignore"));
             }
         }
         return super.mobInteract(player,hand);
@@ -167,29 +167,29 @@ public class Whirlisprig extends AbstractFlyingCreature implements IPickupRespon
         if(stack.isEmpty()) {
             int moodScore = entityData.get(MOOD_SCORE);
             if(moodScore < 250){
-                PortUtil.sendMessage(player, new TranslatableComponent("sylph.unhappy"));
+                PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.unhappy"));
             }else if(moodScore <= 500){
-                PortUtil.sendMessage(player, new TranslatableComponent("sylph.content"));
+                PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.content"));
             }else if(moodScore <= 750){
-                PortUtil.sendMessage(player, new TranslatableComponent("sylph.happy"));
+                PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.happy"));
             }else if(moodScore < 1000){
-                PortUtil.sendMessage(player, new TranslatableComponent("sylph.very_happy"));
+                PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.very_happy"));
             }else{
-                PortUtil.sendMessage(player, new TranslatableComponent("sylph.extremely_happy"));
+                PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.extremely_happy"));
             }
             int numDrops = diversityScore / 2;
             if(numDrops <= 5){
-                PortUtil.sendMessage(player, new TranslatableComponent("sylph.okay_diversity"));
+                PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.okay_diversity"));
             }else if(numDrops <= 10){
-                PortUtil.sendMessage(player, new TranslatableComponent("sylph.diverse_enough"));
+                PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.diverse_enough"));
             }else if(numDrops <= 20){
-                PortUtil.sendMessage(player, new TranslatableComponent("sylph.very_diverse"));
+                PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.very_diverse"));
             }else{
-                PortUtil.sendMessage(player, new TranslatableComponent("sylph.extremely_diverse"));
+                PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.extremely_diverse"));
             }
             if(ignoreItems != null && !ignoreItems.isEmpty()) {
                 StringBuilder status = new StringBuilder();
-                status.append(new TranslatableComponent("ars_nouveau.sylph.ignore_list").getString());
+                status.append(new TranslatableComponent("ars_nouveau.whirlisprig.ignore_list").getString());
                 for (ItemStack i : ignoreItems) {
                     status.append(i.getHoverName().getString()).append(" ");
                 }
@@ -203,19 +203,19 @@ public class Whirlisprig extends AbstractFlyingCreature implements IPickupRespon
         BlockState state = ((BlockItem) stack.getItem()).getBlock().defaultBlockState();
         int score = EvaluateGroveGoal.getScore(state);
         if(score > 0 && this.scoreMap != null && this.scoreMap.get(state) != null && this.scoreMap.get(state) >= 50){
-            PortUtil.sendMessage(player, new TranslatableComponent("sylph.toomuch"));
+            PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.toomuch"));
             return InteractionResult.SUCCESS;
         }
 
         if(score == 0) {
-            PortUtil.sendMessage(player, new TranslatableComponent("sylph.notinterested"));
+            PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.notinterested"));
         }
         if(score == 1){
-            PortUtil.sendMessage(player, new TranslatableComponent("sylph.likes"));
+            PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.likes"));
         }
 
         if(score == 2){
-            PortUtil.sendMessage(player, new TranslatableComponent("sylph.excited"));
+            PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.excited"));
         }
         return InteractionResult.SUCCESS;
     }

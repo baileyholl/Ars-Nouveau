@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.common.entity.goal.sylph;
+package com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
@@ -19,8 +19,8 @@ public class EvaluateGroveGoal extends Goal {
 
     private final Whirlisprig sylph;
     private final int ticksToNextEval;
-    public static Tag.Named<Block> KINDA_LIKES =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "sylph/kinda_likes"));
-    public static Tag.Named<Block> GREATLY_LIKES =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "sylph/greatly_likes"));
+    public static Tag.Named<Block> KINDA_LIKES =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/kinda_likes"));
+    public static Tag.Named<Block> GREATLY_LIKES =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/greatly_likes"));
 
     public EvaluateGroveGoal(Whirlisprig sylph, int tickFreq){
         this.sylph = sylph;

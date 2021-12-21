@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.common.entity.goal.sylph;
+package com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig;
 
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.Goal;

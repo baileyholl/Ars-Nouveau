@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.common.entity.goal.sylph;
+package com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig;
 
 import com.hollingsworth.arsnouveau.api.util.DropDistribution;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.hollingsworth.arsnouveau.common.entity.goal.sylph.EvaluateGroveGoal.getScore;
+import static com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.EvaluateGroveGoal.getScore;
 
 public class GenerateDropsGoal extends Goal {
     Whirlisprig sylph;
