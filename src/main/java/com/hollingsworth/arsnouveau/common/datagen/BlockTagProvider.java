@@ -141,7 +141,8 @@ public class BlockTagProvider extends BlockTagsProvider {
                 Blocks.CAVE_VINES,
                 Blocks.TWISTING_VINES,
                 Blocks.PUMPKIN,
-                Blocks.MELON);
+                Blocks.MELON,
+                Blocks.WEEPING_VINES);
 
 
         Tag.Named<Block> HARVEST_STEMS = BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "harvest/stems"));
