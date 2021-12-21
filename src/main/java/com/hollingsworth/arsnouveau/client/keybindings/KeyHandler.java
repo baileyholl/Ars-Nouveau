@@ -21,7 +21,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(value = Dist.CLIENT, modid = ArsNouveau.MODID)
 public class KeyHandler {
     private static final Minecraft MINECRAFT = Minecraft.getInstance();
-
+    //TODO: Change from hardcoded book to API item listener interfaces
     public static void checkKeysPressed(int key){
         ItemStack stack = StackUtil.getHeldSpellbook(MINECRAFT.player);
         ISpellCaster caster = null;
@@ -37,7 +37,7 @@ public class KeyHandler {
             return;
         }
 
-        if(key == ModKeyBindings.PREVIOUS__SLOT.getKey().getValue()  && stack.getItem() instanceof SpellBook){
+        if(key == ModKeyBindings.PREVIOUS_SLOT.getKey().getValue()  && stack.getItem() instanceof SpellBook){
             if(!stack.hasTag())
                 return;
             caster.setPreviousSlot();

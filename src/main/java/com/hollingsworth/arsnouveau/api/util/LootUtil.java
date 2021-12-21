@@ -40,9 +40,15 @@ public class LootUtil {
     public static LootContext.Builder getLootingContext(ServerLevel world, LivingEntity player, LivingEntity slainEntity, int looting, DamageSource source){
         ItemStack stack = getDefaultFakeWeapon();
         stack.enchant(Enchantments.MOB_LOOTING, looting);
-        return(new LootContext.Builder(world)).withRandom(world.random).withParameter(LootContextParams.THIS_ENTITY, slainEntity)
-                .withParameter(LootContextParams.ORIGIN, new Vec3(slainEntity.getX(), slainEntity.getY(), slainEntity.getZ())).withParameter(LootContextParams.LAST_DAMAGE_PLAYER, FakePlayerFactory.getMinecraft(world)).withParameter(LootContextParams.DAMAGE_SOURCE, source).withOptionalParameter(LootContextParams.KILLER_ENTITY, source.getEntity())
-                .withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY, source.getDirectEntity()).withParameter(LootContextParams.KILLER_ENTITY, player).withLuck( player instanceof Player ? ((Player)player).getLuck() : 1.0f).withParameter(LootContextParams.TOOL, stack).withParameter(LootContextParams.EXPLOSION_RADIUS, 0.0f)
-                .withParameter(LootContextParams.BLOCK_STATE, Blocks.AIR.defaultBlockState());
+        return(new LootContext.Builder(world)).withRandom(world.random)
+                .withParameter(LootContextParams.THIS_ENTITY, slainEntity)
+                .withParameter(LootContextParams.ORIGIN, new Vec3(slainEntity.getX(), slainEntity.getY(), slainEntity.getZ()))
+                .withParameter(LootContextParams.LAST_DAMAGE_PLAYER, FakePlayerFactory.getMinecraft(world))
+                .withParameter(LootContextParams.DAMAGE_SOURCE, source).withOptionalParameter(LootContextParams.KILLER_ENTITY, source.getEntity())
+                .withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY, source.getDirectEntity())
+                .withParameter(LootContextParams.KILLER_ENTITY, player).withLuck( player instanceof Player ? ((Player)player).getLuck() : 1.0f)
+                .withParameter(LootContextParams.TOOL, stack).withParameter(LootContextParams.EXPLOSION_RADIUS, 0.0f)
+                .withParameter(LootContextParams.BLOCK_STATE, Blocks.AIR.defaultBlockState())
+                .withOptionalParameter(LootContextParams.BLOCK_ENTITY, null);
     }
 }

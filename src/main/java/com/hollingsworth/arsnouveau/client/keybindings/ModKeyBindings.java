@@ -26,7 +26,7 @@ public class ModKeyBindings {
             GLFW.GLFW_KEY_X,
             CATEGORY);
 
-    public static final KeyMapping PREVIOUS__SLOT = new KeyMapping("key.ars_nouveau.previous_slot",
+    public static final KeyMapping PREVIOUS_SLOT = new KeyMapping("key.ars_nouveau.previous_slot",
             KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_Z,
@@ -37,7 +37,7 @@ public class ModKeyBindings {
     public static void registerKeyBindings(final FMLClientSetupEvent event) {
         ClientRegistry.registerKeyBinding(OPEN_BOOK);
         ClientRegistry.registerKeyBinding(OPEN_SPELL_SELECTION);
-        ClientRegistry.registerKeyBinding(PREVIOUS__SLOT);
+        ClientRegistry.registerKeyBinding(PREVIOUS_SLOT);
         ClientRegistry.registerKeyBinding(NEXT_SLOT);
     }
 }

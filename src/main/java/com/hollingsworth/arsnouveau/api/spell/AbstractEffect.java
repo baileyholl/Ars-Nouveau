@@ -130,7 +130,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
             LootContext.Builder lootContext = LootUtil.getLootingContext((ServerLevel)world,shooter, mob, looting, DamageSource.playerAttack(playerContext));
             ResourceLocation lootTable = mob.getLootTable();
             LootTable loottable = world.getServer().getLootTables().get(lootTable);
-            List<ItemStack> items = loottable.getRandomItems(lootContext.create(LootContextParamSets.ALL_PARAMS));
+            List<ItemStack> items = loottable.getRandomItems(lootContext.create(LootContextParamSets.ENTITY));
             items.forEach(mob::spawnAtLocation);
         }
     }

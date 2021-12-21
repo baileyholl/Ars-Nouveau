@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.client.IDisplayMana;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
+import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -30,20 +31,20 @@ public interface ICasterTool extends IScribeable, IDisplayMana {
     @Override
     default boolean onScribe(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack stack) {
         ItemStack heldStack = player.getItemInHand(handIn);
-        ISpellCaster caster = getSpellCaster(stack);
-
-        if(!((heldStack.getItem() instanceof SpellBook) || (heldStack.getItem() instanceof SpellParchment)) || heldStack.getTag() == null)
+        ISpellCaster thisCaster = CasterUtil.getCaster(stack);
+        if(!((heldStack.getItem() instanceof SpellBook) || (heldStack.getItem() instanceof SpellParchment)) )
             return false;
         boolean success;
+
         Spell spell = new Spell();
         if(heldStack.getItem() instanceof ICasterTool){
-            ISpellCaster heldCaster = getSpellCaster(heldStack);
+            ISpellCaster heldCaster = CasterUtil.getCaster(heldStack);
             spell = heldCaster.getSpell();
-            caster.setColor(heldCaster.getColor());
-            caster.setFlavorText(heldCaster.getFlavorText());
+            thisCaster.setColor(heldCaster.getColor());
+            thisCaster.setFlavorText(heldCaster.getFlavorText());
         }
-        if(isScribedSpellValid(caster, player, handIn, stack, spell)){
-            success = setSpell(caster, player, handIn, stack, spell);
+        if(isScribedSpellValid(thisCaster, player, handIn, stack, spell)){
+            success = setSpell(thisCaster, player, handIn, stack, spell);
             if(success){
                 sendSetMessage(player);
                 return true;
