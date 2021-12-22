@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.network;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
@@ -31,7 +30,7 @@ public class PacketOpenSpellBook {
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(()-> GuiSpellBook.open(ArsNouveauAPI.getInstance(), stack, tier));
+        ctx.get().enqueueWork(()-> GuiSpellBook.open(stack, tier));
         ctx.get().setPacketHandled(true);
     }
 

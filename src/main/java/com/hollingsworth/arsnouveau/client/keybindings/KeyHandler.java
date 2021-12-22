@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.client.keybindings;
 
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
@@ -62,7 +61,7 @@ public class KeyHandler {
             }
 
             if(stack.getItem() instanceof SpellBook && MINECRAFT.screen == null){
-                GuiSpellBook.open(ArsNouveauAPI.getInstance(), stack, ((SpellBook) stack.getItem()).getTier().ordinal());
+                GuiSpellBook.open(stack, ((SpellBook) stack.getItem()).getTier().ordinal());
             }
         }
     }
