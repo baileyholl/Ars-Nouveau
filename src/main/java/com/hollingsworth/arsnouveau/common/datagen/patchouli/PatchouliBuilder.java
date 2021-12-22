@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.common.datagen;
+package com.hollingsworth.arsnouveau.common.datagen.patchouli;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -12,6 +12,7 @@ public class PatchouliBuilder {
     int textCounter;
     String name;
     public ResourceLocation category;
+
     public PatchouliBuilder(ResourceLocation category, String name){
         this.category = category;
         this.withName(name.contains(".") ? name : "ars_nouveau.page." + name);
@@ -38,6 +39,11 @@ public class PatchouliBuilder {
         return this;
     }
 
+    public PatchouliBuilder withPage(IPatchouliPage page){
+        pages.add(page.build());
+        return this;
+    }
+
     public PatchouliBuilder withIcon(String path){
         object.addProperty("icon", path);
         return this;
@@ -54,10 +60,7 @@ public class PatchouliBuilder {
     }
 
     public PatchouliBuilder withTextPage(String contents){
-        JsonObject page = new JsonObject();
-        page.addProperty("type", "patchouli:text");
-        page.addProperty("text", contents);
-        pages.add(page);
+        pages.add(new TextPage(contents).build());
         return this;
     }
 
@@ -70,55 +73,6 @@ public class PatchouliBuilder {
         return withLocalizedText(this.name);
     }
 
-    public PatchouliBuilder withEntityPage(ResourceLocation entityType){
-        JsonObject page = new JsonObject();
-        page.addProperty("type", "patchouli:entity");
-        page.addProperty("entity", entityType.toString());
-        pages.add(page);
-        return this;
-    }
-
-    public PatchouliBuilder withEntityTextPage(ResourceLocation entityType, String id){
-        JsonObject page = new JsonObject();
-        page.addProperty("type", "patchouli:entity");
-        page.addProperty("entity", entityType.toString());
-        textCounter++;
-        page.addProperty("text", "ars_nouveau.page" + textCounter + "." + id);
-        pages.add(page);
-        return this;
-    }
-
-    public PatchouliBuilder withCraftingPage(String path){
-        return withRecipePage(new ResourceLocation("patchouli:crafting"), path);
-    }
-
-    public PatchouliBuilder withCraftingPage(ItemLike item){
-        return withCraftingPage(item.asItem().getRegistryName().toString());
-    }
-
-    public PatchouliBuilder withRecipePage(ResourceLocation type, String recipePath){
-        JsonObject page = new JsonObject();
-        page.addProperty("type", type.toString());
-        page.addProperty("recipe", recipePath);
-        pages.add(page);
-        return this;
-    }
-
-    public PatchouliBuilder withRecipePage(ResourceLocation type, ItemLike itemLike){
-        return withRecipePage(type, itemLike.asItem().getRegistryName().toString());
-    }
-
-    public PatchouliBuilder withRelations(String... entries){
-        JsonObject page = new JsonObject();
-        page.addProperty("type", "patchouli:relations");
-        JsonArray array = new JsonArray();
-        for(String s : entries)
-            array.add(s);
-        page.add("entries", array);
-        pages.add(page);
-        return this;
-    }
-
     public JsonObject build(){
         this.object.add("pages", pages);
         return this.object;
@@ -126,7 +80,8 @@ public class PatchouliBuilder {
 
 
     public static abstract class RecipeProvider{
-        abstract ResourceLocation getType(ItemLike item);
+
+        public abstract ResourceLocation getType(ItemLike item);
 
         public ResourceLocation getPath(ItemLike item){
             return item.asItem().getRegistryName();

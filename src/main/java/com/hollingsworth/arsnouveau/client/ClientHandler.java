@@ -51,7 +51,7 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.ARCANE_RELAY_TILE, (t) -> new GenericRenderer(t, "source_relay"));
         event.registerBlockEntityRenderer(BlockRegistry.ARCANE_RELAY_SPLITTER_TILE, (t) -> new GenericRenderer(t, "source_splitter"));
         event.registerBlockEntityRenderer(BlockRegistry.BASIC_SPELL_TURRET_TILE, BasicTurretRenderer::new);
-        event.registerBlockEntityRenderer(BlockRegistry.SPELL_TURRET_TYPE, ReducerTurretRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.ENCHANTED_SPELL_TURRET_TYPE, ReducerTurretRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.TIMER_SPELL_TURRET_TILE, TimerTurretRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ARCHWOOD_CHEST_TILE, ArchwoodChestRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.RUNE_TILE, RuneRenderer::new);
@@ -136,7 +136,7 @@ public class ClientHandler {
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.RELAY_WARP, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.RELAY_DEPOSIT, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BOOKWYRM_LECTERN, RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SPELL_TURRET, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.ENCHANTED_SPELL_TURRET, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BASIC_SPELL_TURRET, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.TIMER_SPELL_TURRET, RenderType.cutout());
         evt.enqueueWork(() -> {

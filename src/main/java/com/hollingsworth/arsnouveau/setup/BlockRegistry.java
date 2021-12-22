@@ -90,8 +90,8 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.AB_SMOOTH_MOSAIC) public static ModBlock AB_SMOOTH_MOSAIC;
     @ObjectHolder(LibBlockNames.AB_SMOOTH_ALTERNATING) public static ModBlock AB_SMOOTH_ALTERNATING;
     @ObjectHolder(LibBlockNames.AB_SMOOTH_ASHLAR) public static ModBlock AB_SMOOTH_ASHLAR;
-    @ObjectHolder(LibBlockNames.SPELL_TURRET) public static SpellTurret SPELL_TURRET;
-    @ObjectHolder(LibBlockNames.SPELL_TURRET) public static BlockEntityType<SpellTurretTile> SPELL_TURRET_TYPE;
+    @ObjectHolder(LibBlockNames.ENCHANTED_SPELL_TURRET) public static EnchantedSpellTurret ENCHANTED_SPELL_TURRET;
+    @ObjectHolder(LibBlockNames.ENCHANTED_SPELL_TURRET) public static BlockEntityType<EnchantedTurretTile> ENCHANTED_SPELL_TURRET_TYPE;
     @ObjectHolder(LibBlockNames.REDSTONE_AIR) public static RedstoneAir REDSTONE_AIR;
     @ObjectHolder(LibBlockNames.INTANGIBLE_AIR) public static IntangibleAirBlock INTANGIBLE_AIR;
     @ObjectHolder(LibBlockNames.INTANGIBLE_AIR) public static  BlockEntityType<IntangibleAirTile> INTANGIBLE_AIR_TYPE;
@@ -228,7 +228,7 @@ public class BlockRegistry {
             registry.register(new ModBlock(LibBlockNames.AB_HERRING));
             registry.register(new ModBlock(LibBlockNames.AB_MOSAIC));
             registry.register(new ImbuementBlock());
-            registry.register(new SpellTurret());
+            registry.register(new EnchantedSpellTurret());
             registry.register(new RedstoneAir());
             registry.register(new IntangibleAirBlock());
             registry.register(new VolcanicSourcelinkBlock());
@@ -331,7 +331,7 @@ public class BlockRegistry {
             event.getRegistry().register(BlockEntityType.Builder.of(ArcaneRelaySplitterTile::new, BlockRegistry.ARCANE_RELAY_SPLITTER).build(null).setRegistryName(LibBlockNames.ARCANE_RELAY_SPLITTER));
             event.getRegistry().register(BlockEntityType.Builder.of(ArcaneCoreTile::new, BlockRegistry.ARCANE_CORE_BLOCK).build(null).setRegistryName(LibBlockNames.ARCANE_CORE));
             event.getRegistry().register(BlockEntityType.Builder.of(ImbuementTile::new, BlockRegistry.IMBUEMENT_BLOCK).build(null).setRegistryName(LibBlockNames.IMBUEMENT_CHAMBER));
-            event.getRegistry().register(BlockEntityType.Builder.of(SpellTurretTile::new, BlockRegistry.SPELL_TURRET).build(null).setRegistryName(LibBlockNames.SPELL_TURRET));
+            event.getRegistry().register(BlockEntityType.Builder.of(EnchantedTurretTile::new, BlockRegistry.ENCHANTED_SPELL_TURRET).build(null).setRegistryName(LibBlockNames.ENCHANTED_SPELL_TURRET));
             event.getRegistry().register(BlockEntityType.Builder.of(IntangibleAirTile::new, BlockRegistry.INTANGIBLE_AIR).build(null).setRegistryName(LibBlockNames.INTANGIBLE_AIR));
             event.getRegistry().register(BlockEntityType.Builder.of(VolcanicSourcelinkTile::new, BlockRegistry.VOLCANIC_BLOCK).build(null).setRegistryName(LibBlockNames.VOLCANIC_SOURCELINK));
             event.getRegistry().register(BlockEntityType.Builder.of(WixieCauldronTile::new, BlockRegistry.WIXIE_CAULDRON).build(null).setRegistryName(LibBlockNames.WIXIE_CAULDRON));
@@ -543,12 +543,12 @@ public class BlockRegistry {
                     return  BasicTurretRenderer::getISTER;
                 }
             }.setRegistryName(LibBlockNames.BASIC_SPELL_TURRET));
-            registry.register(new RendererBlockItem(BlockRegistry.SPELL_TURRET, ItemsRegistry.defaultItemProperties()) {
+            registry.register(new RendererBlockItem(BlockRegistry.ENCHANTED_SPELL_TURRET, ItemsRegistry.defaultItemProperties()) {
                 @Override
                 public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
                     return ReducerTurretRenderer::getISTER;
                 }
-            }.setRegistryName(LibBlockNames.SPELL_TURRET));
+            }.setRegistryName(LibBlockNames.ENCHANTED_SPELL_TURRET));
             registry.register(new ArchwoodChest.Item(BlockRegistry.ARCHWOOD_CHEST, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.ARCHWOOD_CHEST));
             registry.register(getDefaultBlockItem(BlockRegistry.SPELL_PRISM, LibBlockNames.SPELL_PRISM));
 

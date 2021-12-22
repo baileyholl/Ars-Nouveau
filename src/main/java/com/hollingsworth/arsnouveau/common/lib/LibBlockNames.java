@@ -28,7 +28,7 @@ public class LibBlockNames {
     public final static String AB_HERRING = "ab_herring";
     public final static String AB_BASKET = "ab_basket";
     public final static String AB_ALTERNATE = "ab_alternating";
-    public static final String SPELL_TURRET = "spell_turret";
+    public static final String ENCHANTED_SPELL_TURRET = "spell_turret";
     public static final String REDSTONE_AIR = "redstone_air";
 
     public static final String INTANGIBLE_AIR = "intangible_air";

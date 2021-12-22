@@ -901,7 +901,7 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .build());
 
         addRecipe(builder()
-                .withResult(BlockRegistry.SPELL_TURRET)
+                .withResult(BlockRegistry.ENCHANTED_SPELL_TURRET)
                 .withReagent(BlockRegistry.BASIC_SPELL_TURRET)
                 .withPedestalItem(Recipes.MANA_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.RODS_BLAZE))

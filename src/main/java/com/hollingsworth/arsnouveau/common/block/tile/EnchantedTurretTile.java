@@ -12,10 +12,10 @@ import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 
-public class SpellTurretTile extends BasicSpellTurretTile  implements IPickupResponder, IPlaceBlockResponder, ITooltipProvider {
+public class EnchantedTurretTile extends BasicSpellTurretTile  implements IPickupResponder, IPlaceBlockResponder, ITooltipProvider {
 
-    public SpellTurretTile(BlockPos pos, BlockState state) {
-        super(BlockRegistry.SPELL_TURRET_TYPE, pos, state);
+    public EnchantedTurretTile(BlockPos pos, BlockState state) {
+        super(BlockRegistry.ENCHANTED_SPELL_TURRET_TYPE, pos, state);
     }
 
     @Override

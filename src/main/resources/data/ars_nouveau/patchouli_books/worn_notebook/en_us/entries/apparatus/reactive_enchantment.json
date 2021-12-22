@@ -12,7 +12,7 @@
       "text": "ars_nouveau.page.reactive2"
     },
 	{
-      "type": "reactive_enchant_first",
+      "type": "ars_nouveau:reactive_enchant_first",
       "reagent": "minecraft:diamond_sword",
       "item1": "ars_nouveau:spell_parchment",
       "item2": "ars_nouveau:glyph_amplify",
@@ -21,11 +21,11 @@
 	  "cost":"Medium"
     },
 	{
-      "type": "text",
+      "type": "patchouli:text",
       "text": "ars_nouveau.page.reactive3"
     },
 	{
-      "type": "reactive_enchant_upgrade",
+      "type": "ars_nouveau:reactive_enchant_upgrade",
       "reagent": "minecraft:diamond_sword{Enchantments:[{id:'ars_nouveau:reactive',lvl:1}]}",
       "item1": "minecraft:blaze_powder",
       "item2": "minecraft:blaze_powder",
@@ -37,7 +37,7 @@
       "item8": "ars_nouveau:glyph_dampen",
 	  "cost":"High"
     },{
-      "type": "reactive_enchant_upgrade",
+      "type": "ars_nouveau:reactive_enchant_upgrade",
       "reagent": "minecraft:diamond_sword{Enchantments:[{id:'ars_nouveau:reactive',lvl:2}]}",
       "item1": "minecraft:ender_pearl",
       "item2": "ars_nouveau:mythical_clay",

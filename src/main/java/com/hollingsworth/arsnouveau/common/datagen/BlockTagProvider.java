@@ -34,7 +34,7 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.IMBUEMENT_BLOCK,
                 BlockRegistry.SOURCE_JAR,
                 BlockRegistry.ARCANE_RELAY_SPLITTER,
-                BlockRegistry.SPELL_TURRET,
+                BlockRegistry.ENCHANTED_SPELL_TURRET,
                 BlockRegistry.VOLCANIC_BLOCK,
                 BlockRegistry.LAVA_LILY,
                 BlockRegistry.WIXIE_CAULDRON,
