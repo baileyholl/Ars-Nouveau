@@ -22,6 +22,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Map;
 
 /**
@@ -90,13 +91,13 @@ public interface ISpellCaster {
         return caster.getSpell();
     }
 
-    default InteractionResultHolder<ItemStack> castSpell(Level worldIn, Player playerIn, InteractionHand handIn, TranslatableComponent invalidMessage, @Nonnull Spell spell){
+    default InteractionResultHolder<ItemStack> castSpell(Level worldIn, Player playerIn, InteractionHand handIn, @Nullable TranslatableComponent invalidMessage, @Nonnull Spell spell){
         ItemStack stack = playerIn.getItemInHand(handIn);
 
         if(worldIn.isClientSide)
             return InteractionResultHolder.pass(playerIn.getItemInHand(handIn));
 
-        if(!spell.isValid()) {
+        if(!spell.isValid() && invalidMessage != null) {
             PortUtil.sendMessageNoSpam(playerIn,invalidMessage);
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
         }

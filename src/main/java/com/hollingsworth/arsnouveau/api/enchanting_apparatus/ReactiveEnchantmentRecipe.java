@@ -1,11 +1,12 @@
 package com.hollingsworth.arsnouveau.api.enchanting_apparatus;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
-import net.minecraft.nbt.CompoundTag;
+import com.hollingsworth.arsnouveau.common.spell.casters.ReactiveCaster;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -14,7 +15,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
-//TODO: Make Reactive SpellCaster
 public class ReactiveEnchantmentRecipe extends EnchantmentRecipe{
 
     public ReactiveEnchantmentRecipe(ItemStack[] pedestalItems, int manaCost) {
@@ -38,14 +38,13 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe{
 
     @Override
     public ItemStack getResult(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile) {
-        ItemStack stack = super.getResult(pedestalItems, reagent, enchantingApparatusTile);
-        CompoundTag tag = stack.getOrCreateTag();
+        ItemStack resultStack = super.getResult(pedestalItems, reagent, enchantingApparatusTile);
         ItemStack parchment = getParchment(pedestalItems);
-
-        tag.putString("spell",  CasterUtil.getCaster(parchment).getSpell().serialize());
-        tag.putString("spell_color", CasterUtil.getCaster(parchment).getColor().serialize());
-        stack.setTag(tag);
-        return stack;
+        ISpellCaster parchmentCaster = CasterUtil.getCaster(parchment);
+        ReactiveCaster reactiveCaster = new ReactiveCaster(resultStack);
+        reactiveCaster.setColor(parchmentCaster.getColor());
+        reactiveCaster.setSpell(parchmentCaster.getSpell());
+        return resultStack;
     }
 
     @Override
