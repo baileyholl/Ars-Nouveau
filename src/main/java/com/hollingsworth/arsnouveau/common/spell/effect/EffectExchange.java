@@ -87,7 +87,7 @@ public class EffectExchange extends AbstractEffect {
                 continue;
             }
             if(isRealPlayer(shooter) && spellContext.castingTile == null) {
-                firstBlock = swapFromInv(list, origState, world, pos1, result, shooter, 9, firstBlock, (Player) shooter);
+                firstBlock = swapFromInv(list, origState, world, pos1, result, shooter, 9, firstBlock, (Player) fakePlayer);
             } else if((spellContext.castingTile instanceof IPlaceBlockResponder && spellContext.castingTile instanceof IPickupResponder) || (shooter instanceof IPlaceBlockResponder && shooter instanceof IPickupResponder)){
                 boolean shouldBreak = false;
                 for(IItemHandler i : handlers){
