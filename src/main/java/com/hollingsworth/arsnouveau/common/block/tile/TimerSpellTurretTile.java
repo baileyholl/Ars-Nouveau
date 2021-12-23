@@ -101,6 +101,7 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
 
     @Override
     public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putBoolean("locked", isLocked);
         tag.putInt("time", ticksPerSignal);
         tag.putBoolean("off", isOff);
