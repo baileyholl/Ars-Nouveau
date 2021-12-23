@@ -73,7 +73,7 @@ public class SpellBook extends Item implements ISpellTier, IAnimatable, ICasterT
         });
         ISpellCaster caster = getSpellCaster(stack);
 
-        return caster.castSpell(worldIn, playerIn, handIn, new TranslatableComponent("ars_nouveau.invalid"));
+        return caster.castSpell(worldIn, playerIn, handIn, new TranslatableComponent("ars_nouveau.invalid_spell"));
     }
 
     /**
@@ -99,10 +99,8 @@ public class SpellBook extends Item implements ISpellTier, IAnimatable, ICasterT
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(final ItemStack stack, @Nullable final Level world, final List<Component> tooltip, final TooltipFlag flag) {
         super.appendHoverText(stack, world, tooltip, flag);
-        if(stack.hasTag()) {
-            tooltip.add(new TranslatableComponent("ars_nouveau.spell_book.select", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_SPELL_SELECTION.getKey().getName()).get().getString()));
-            tooltip.add(new TranslatableComponent("ars_nouveau.spell_book.craft", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_BOOK.getKey().getName()).get().getString()));
-        }
+        tooltip.add(new TranslatableComponent("ars_nouveau.spell_book.select", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_SPELL_SELECTION.getName()).get()));
+        tooltip.add(new TranslatableComponent("ars_nouveau.spell_book.craft", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_BOOK.getName()).get()));
         tooltip.add(new TranslatableComponent("tooltip.ars_nouveau.caster_level", getTier().ordinal() + 1).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
     }
 

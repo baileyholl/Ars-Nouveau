@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.api.spell.Spell;
+import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
 import com.hollingsworth.arsnouveau.common.items.RunicChalk;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
@@ -62,7 +63,7 @@ public class RuneBlock extends TickableModBlock {
         }
         if(!(stack.getItem() instanceof SpellParchment) || worldIn.isClientSide)
             return InteractionResult.SUCCESS;
-        Spell spell = SpellParchment.getSpell(stack);
+        Spell spell = CasterUtil.getCaster(stack).getSpell();
         if(spell.isEmpty())
             return InteractionResult.SUCCESS;
 

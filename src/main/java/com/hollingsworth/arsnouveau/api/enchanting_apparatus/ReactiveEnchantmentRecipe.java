@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+
 //TODO: Make Reactive SpellCaster
 public class ReactiveEnchantmentRecipe extends EnchantmentRecipe{
 
@@ -23,7 +24,7 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe{
     @Override
     public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile, @Nullable Player player) {
         ItemStack parchment = getParchment(pedestalItems);
-        return super.isMatch(pedestalItems, reagent, enchantingApparatusTile, player) && !parchment.isEmpty() && !SpellParchment.getSpell(parchment).isEmpty();
+        return super.isMatch(pedestalItems, reagent, enchantingApparatusTile, player) && !parchment.isEmpty() && !CasterUtil.getCaster(parchment).getSpell().isEmpty();
     }
 
     public static @Nonnull ItemStack getParchment(List<ItemStack> pedestalItems){
@@ -41,7 +42,7 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe{
         CompoundTag tag = stack.getOrCreateTag();
         ItemStack parchment = getParchment(pedestalItems);
 
-        tag.putString("spell", SpellParchment.getSpell(parchment).serialize());
+        tag.putString("spell",  CasterUtil.getCaster(parchment).getSpell().serialize());
         tag.putString("spell_color", CasterUtil.getCaster(parchment).getColor().serialize());
         stack.setTag(tag);
         return stack;

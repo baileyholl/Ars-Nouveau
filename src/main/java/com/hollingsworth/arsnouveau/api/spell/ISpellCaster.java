@@ -139,4 +139,6 @@ public interface ISpellCaster {
     default SpellResolver getSpellResolver(SpellContext context, Level worldIn, Player playerIn, InteractionHand handIn){
         return new SpellResolver(context);
     }
+
+    String getTagID();
 }

@@ -149,7 +149,9 @@ public class SpellCaster implements ISpellCaster{
         return tag;
     }
 
-    public SpellCaster(CompoundTag tag){
+    public SpellCaster(CompoundTag itemTag){
+        CompoundTag tag = itemTag.getCompound(getTagID());
+
         this.slot = tag.contains("current_slot") ? tag.getInt("current_slot") : 1;
         this.flavorText = tag.getString("flavor");
         for(int i = 0; i < this.getMaxSlots() + 1; i++){
@@ -171,6 +173,14 @@ public class SpellCaster implements ISpellCaster{
             return;
         }
         CompoundTag tag = stack.getOrCreateTag();
-        stack.setTag(writeTag(tag));
+        CompoundTag casterTag = new CompoundTag(); // Nest our tags so we dont cause conflicts
+        writeTag(casterTag);
+        tag.put(getTagID(), casterTag);
+        stack.setTag(tag);
+    }
+
+    @Override
+    public String getTagID() {
+        return "ars_nouveau_spellCaster";
     }
 }

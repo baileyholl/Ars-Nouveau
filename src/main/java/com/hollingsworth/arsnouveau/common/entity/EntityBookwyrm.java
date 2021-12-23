@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.BookwyrmLecternTile;
 import com.hollingsworth.arsnouveau.common.entity.goal.whelp.PerformTaskGoal;
@@ -109,7 +110,7 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
             return InteractionResult.FAIL;
 
         if(stack.getItem() instanceof SpellParchment){
-            Spell spell = SpellParchment.getSpell(stack);
+            Spell spell =  CasterUtil.getCaster(stack).getSpell();
             if(new EntitySpellResolver(new SpellContext(spell, this)).canCast(this)) {
                 this.spellRecipe = spell;
                 setRecipeString(spellRecipe.serialize());

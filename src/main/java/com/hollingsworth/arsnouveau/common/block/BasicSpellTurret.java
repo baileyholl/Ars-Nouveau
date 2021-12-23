@@ -155,7 +155,7 @@ public class BasicSpellTurret extends TickableModBlock {
             ItemStack stack = player.getItemInHand(handIn);
             if(!(stack.getItem() instanceof SpellParchment) || worldIn.isClientSide)
                 return InteractionResult.SUCCESS;
-            Spell spell = SpellParchment.getSpell(stack);
+            Spell spell =  CasterUtil.getCaster(stack).getSpell();
             if(spell.isEmpty())
                 return InteractionResult.SUCCESS;
             if(!(spell.recipe.get(0) instanceof MethodTouch || spell.recipe.get(0) instanceof MethodProjectile)){
