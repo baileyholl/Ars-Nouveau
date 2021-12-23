@@ -1,6 +1,6 @@
 {
-	"name": "Rituals",
-	"description": "Rituals are more powerful versions of spells, and come in semi-permanent or single use forms. To get started with Rituals, you will need a Ritual Brazier and a tablet of the ritual you would like to perform.",
-	"icon": "ars_nouveau:ritual",
+	"name": "ars_nouveau.rituals",
+	"description": "ars_nouveau.rituals_desc",
+	"icon": "ars_nouveau:ritual_brazier",
 	"sortnum":10
 }
