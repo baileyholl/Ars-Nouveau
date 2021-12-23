@@ -1,19 +1,15 @@
 {
-    "name": "item.ars_nouveau.dominion_wand",
-    "icon": "ars_nouveau:dominion_wand",
-    "category": "ars_nouveau:automation",
-    "pages": [
-        {
-            "type": "text",
-            "text": "ars_nouveau.page1.dominion_wand"
-        },
+  "name": "item.ars_nouveau.dominion_wand",
+  "category": "ars_nouveau:automation",
+  "icon": "ars_nouveau:dominion_wand",
+  "pages": [
     {
-      "type": "apparatus_recipe",
-      "recipe": "ars_nouveau:dominion_wand"
+      "text": "ars_nouveau.page.dominion_wand",
+      "type": "patchouli:text"
     },
-		{
-            "type": "relations",
-            "entries":["apparatus/arcane_relay", "apparatus/whelp_charm"]        
-        }
-    ]
+    {
+      "recipe": "ars_nouveau:dominion_wand",
+      "type": "ars_nouveau:apparatus_recipe"
+    }
+  ]
 }

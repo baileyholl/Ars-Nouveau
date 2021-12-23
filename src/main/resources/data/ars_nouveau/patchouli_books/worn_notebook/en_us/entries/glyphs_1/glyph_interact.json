@@ -1,0 +1,16 @@
+{
+  "name": "ars_nouveau.glyph_name.interact",
+  "category": "ars_nouveau:glyphs_1",
+  "icon": "ars_nouveau:glyph_interact",
+  "sortnum": 2,
+  "pages": [
+    {
+      "text": "ars_nouveau.glyph_desc.interact",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:glyph_interact",
+      "type": "ars_nouveau:glyph_recipe"
+    }
+  ]
+}

@@ -1,20 +1,16 @@
 {
-    "name": "item.ars_nouveau.mimic_scroll",
-    "icon": "ars_nouveau:mimic_scroll",
-    "category": "ars_nouveau:automation",
-    "pages": [
-        {
-            "type": "text",
-            "text": "ars_nouveau.page1.mimic_scroll"
-        },
-		{
-            "type":"crafting",
-			"recipe":"ars_nouveau:blank_parchment",
-			"recipe2":"ars_nouveau:mimic_scroll"
-		},
-		{
-            "type": "relations",
-            "entries":["apparatus/carbuncle_charm", "machines/scribes_table"]        
-        }
-    ]
+  "name": "item.ars_nouveau.mimic_scroll",
+  "icon": "ars_nouveau:mimic_scroll",
+  "category": "ars_nouveau:automation",
+  "pages": [
+    {
+      "text": "ars_nouveau.page1.mimic_scroll",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:blank_parchment",
+      "recipe2": "ars_nouveau:mimic_scroll",
+      "type": "patchouli:crafting"
+    }
+  ]
 }

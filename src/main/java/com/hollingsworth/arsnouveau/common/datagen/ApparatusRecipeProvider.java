@@ -866,22 +866,22 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .build());
 
         addRecipe(builder()
-                .withResult(BlockRegistry.ARCANE_RELAY_SPLITTER)
-                .withReagent(BlockRegistry.ARCANE_RELAY)
+                .withResult(BlockRegistry.RELAY_SPLITTER)
+                .withReagent(BlockRegistry.RELAY)
                 .withPedestalItem(4,Ingredient.of(Tags.Items.GEMS_QUARTZ))
                 .withPedestalItem(4,Ingredient.of(Tags.Items.GEMS_LAPIS))
                 .build());
 
         addRecipe(builder()
                 .withResult(BlockRegistry.RELAY_WARP)
-                .withReagent(BlockRegistry.ARCANE_RELAY)
+                .withReagent(BlockRegistry.RELAY)
                 .withPedestalItem(4, Ingredient.of(Tags.Items.ENDER_PEARLS))
                 .withPedestalItem(4, Ingredient.of(Items.POPPED_CHORUS_FRUIT))
                 .build());
 
         addRecipe(builder()
                 .withResult(BlockRegistry.RELAY_DEPOSIT)
-                .withReagent(BlockRegistry.ARCANE_RELAY)
+                .withReagent(BlockRegistry.RELAY)
                 .withPedestalItem(4,Ingredient.of(Items.HOPPER))
                 .build());
 

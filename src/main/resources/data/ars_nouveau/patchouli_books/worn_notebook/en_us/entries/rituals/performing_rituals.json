@@ -1,0 +1,26 @@
+{
+  "name": "ars_nouveau.page.performing_rituals",
+  "category": "ars_nouveau:rituals",
+  "sortnum": -1,
+  "icon": "ars_nouveau:ritual_brazier",
+  "pages": [
+    {
+      "text": "ars_nouveau.page1.performing_rituals",
+      "type": "patchouli:text"
+    },
+    {
+      "text": "ars_nouveau.page2.performing_rituals",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:ritual_sunrise",
+      "type": "patchouli:crafting"
+    },
+    {
+      "entries": [
+        "ars_nouveau:machines/ritual_brazier"
+      ],
+      "type": "patchouli:relations"
+    }
+  ]
+}

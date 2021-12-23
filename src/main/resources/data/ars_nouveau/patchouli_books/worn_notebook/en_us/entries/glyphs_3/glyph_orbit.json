@@ -1,0 +1,16 @@
+{
+  "name": "ars_nouveau.glyph_name.orbit",
+  "category": "ars_nouveau:glyphs_3",
+  "icon": "ars_nouveau:glyph_orbit",
+  "sortnum": 1,
+  "pages": [
+    {
+      "text": "ars_nouveau.glyph_desc.orbit",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:glyph_orbit",
+      "type": "ars_nouveau:glyph_recipe"
+    }
+  ]
+}

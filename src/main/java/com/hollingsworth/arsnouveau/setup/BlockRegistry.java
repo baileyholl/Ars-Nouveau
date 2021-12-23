@@ -56,7 +56,7 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.ARCANE_PEDESTAL) public static ArcanePedestal ARCANE_PEDESTAL;
     @ObjectHolder(LibBlockNames.SOURCE_JAR) public static SourceJar SOURCE_JAR;
     @ObjectHolder(LibBlockNames.SOURCE_JAR) public static BlockEntityType<SourceJarTile> SOURCE_JAR_TILE;
-    @ObjectHolder(LibBlockNames.ARCANE_RELAY) public static BlockEntityType<ArcaneRelayTile> ARCANE_RELAY_TILE;
+    @ObjectHolder(LibBlockNames.RELAY) public static BlockEntityType<ArcaneRelayTile> ARCANE_RELAY_TILE;
 
     @ObjectHolder(LibBlockNames.MAGE_BLOOM) public static MageBloomCrop MAGE_BLOOM_CROP;
     @ObjectHolder(LibBlockNames.ARCANE_BRICKS) public static ModBlock ARCANE_BRICKS;
@@ -65,15 +65,15 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.SUMMONING_CRYSTAL) public static BlockEntityType<SummoningCrystalTile> SUMMONING_CRYSTAL_TILE;
     @ObjectHolder(LibBlockNames.SCRIBES_BLOCK) public static BlockEntityType<ScribesTile> SCRIBES_TABLE_TILE;
     @ObjectHolder(LibBlockNames.ARCANE_ROAD) public static TickableModBlock ARCANE_ROAD;
-    @ObjectHolder(LibBlockNames.ARCANE_RELAY) public static ArcaneRelay ARCANE_RELAY;
+    @ObjectHolder(LibBlockNames.RELAY) public static Relay RELAY;
     @ObjectHolder(LibBlockNames.RUNE) public static BlockEntityType<RuneTile> RUNE_TILE;
     @ObjectHolder(LibBlockNames.RUNE) public static RuneBlock RUNE_BLOCK;
     @ObjectHolder(LibBlockNames.PORTAL) public static PortalBlock PORTAL_BLOCK;
     @ObjectHolder(LibBlockNames.PORTAL) public static BlockEntityType<PortalTile> PORTAL_TILE_TYPE;
     @ObjectHolder(LibBlockNames.IMBUEMENT_CHAMBER) public static ImbuementBlock IMBUEMENT_BLOCK;
     @ObjectHolder(LibBlockNames.IMBUEMENT_CHAMBER) public static BlockEntityType<ImbuementTile> IMBUEMENT_TILE;
-    @ObjectHolder(LibBlockNames.ARCANE_RELAY_SPLITTER) public static ArcaneRelaySplitter ARCANE_RELAY_SPLITTER;
-    @ObjectHolder(LibBlockNames.ARCANE_RELAY_SPLITTER) public static BlockEntityType<ArcaneRelaySplitterTile> ARCANE_RELAY_SPLITTER_TILE;
+    @ObjectHolder(LibBlockNames.RELAY_SPLITTER) public static RelaySplitter RELAY_SPLITTER;
+    @ObjectHolder(LibBlockNames.RELAY_SPLITTER) public static BlockEntityType<RelaySplitterTile> RELAY_SPLITTER_TILE;
     @ObjectHolder(LibBlockNames.ARCANE_CORE) public static ArcaneCore ARCANE_CORE_BLOCK;
     @ObjectHolder(LibBlockNames.ARCANE_CORE) public static BlockEntityType<ArcaneCoreTile> ARCANE_CORE_TILE;
     @ObjectHolder(LibBlockNames.AB_ALTERNATE) public static ModBlock AB_ALTERNATE;
@@ -129,8 +129,8 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.FLOURISHING_WOOD) public static StrippableLog FLOURISHING_WOOD;
     @ObjectHolder(LibBlockNames.ARCHWOOD_PLANK) public static ModBlock ARCHWOOD_PLANK;
 
-    @ObjectHolder(LibBlockNames.RITUAL_CIRCLE) public static RitualBlock RITUAL_BLOCK;
-    @ObjectHolder(LibBlockNames.RITUAL_CIRCLE) public static BlockEntityType<RitualTile> RITUAL_TILE;
+    @ObjectHolder(LibBlockNames.RITUAL_BRAZIER) public static RitualBrazierBlock RITUAL_BLOCK;
+    @ObjectHolder(LibBlockNames.RITUAL_BRAZIER) public static BlockEntityType<RitualTile> RITUAL_TILE;
 
     @ObjectHolder(LibBlockNames.ARCHWOOD_BUTTON) public static WoodButtonBlock ARCHWOOD_BUTTON;
     @ObjectHolder(LibBlockNames.ARCHWOOD_STAIRS) public static StairBlock ARCHWOOD_STAIRS;
@@ -217,10 +217,10 @@ public class BlockRegistry {
             registry.register(new ArcanePedestal());
             registry.register(new ModBlock(LibBlockNames.ARCANE_BRICKS));
             registry.register(new ScribesBlock());
-            registry.register(new ArcaneRelay());
+            registry.register(new Relay());
             registry.register(new RuneBlock());
             registry.register(new PortalBlock());
-            registry.register(new ArcaneRelaySplitter());
+            registry.register(new RelaySplitter());
             registry.register(new ArcaneCore());
             registry.register(new ModBlock(LibBlockNames.AB_ALTERNATE));
             registry.register(new ModBlock(LibBlockNames.ARCANE_STONE));
@@ -257,7 +257,7 @@ public class BlockRegistry {
             registry.register(new StrippableLog(LOG_PROP, LibBlockNames.FLOURISHING_WOOD, () ->BlockRegistry.STRIPPED_AWWOOD_GREEN));
             registry.register(new StrippableLog(LOG_PROP, LibBlockNames.BLAZING_WOOD, () ->BlockRegistry.STRIPPED_AWWOOD_RED));
             registry.register(new ModBlock(LOG_PROP, LibBlockNames.ARCHWOOD_PLANK));
-            registry.register(new RitualBlock(LibBlockNames.RITUAL_CIRCLE));
+            registry.register(new RitualBrazierBlock(LibBlockNames.RITUAL_BRAZIER));
             registry.register(new WoodButtonBlock(BlockBehaviour.Properties.of(Material.DECORATION).noCollission().strength(0.5F).sound(SoundType.WOOD)).setRegistryName(LibBlockNames.ARCHWOOD_BUTTON));
             registry.register(new StairBlock(()-> ARCHWOOD_PLANK.defaultBlockState(),woodProp).setRegistryName(LibBlockNames.ARCHWOOD_STAIRS));
             registry.register(new SlabBlock(woodProp).setRegistryName(LibBlockNames.ARCHWOOD_SLABS));
@@ -325,10 +325,10 @@ public class BlockRegistry {
             event.getRegistry().register(BlockEntityType.Builder.of(EnchantingApparatusTile::new, BlockRegistry.ENCHANTING_APP_BLOCK).build(null).setRegistryName(LibBlockNames.ENCHANTING_APPARATUS));
             event.getRegistry().register(BlockEntityType.Builder.of(ArcanePedestalTile::new, BlockRegistry.ARCANE_PEDESTAL).build(null).setRegistryName(LibBlockNames.ARCANE_PEDESTAL));
             event.getRegistry().register(BlockEntityType.Builder.of(ScribesTile::new, BlockRegistry.SCRIBES_BLOCK).build(null).setRegistryName(LibBlockNames.SCRIBES_BLOCK));
-            event.getRegistry().register(BlockEntityType.Builder.of(ArcaneRelayTile::new, BlockRegistry.ARCANE_RELAY).build(null).setRegistryName(LibBlockNames.ARCANE_RELAY));
+            event.getRegistry().register(BlockEntityType.Builder.of(ArcaneRelayTile::new, BlockRegistry.RELAY).build(null).setRegistryName(LibBlockNames.RELAY));
             event.getRegistry().register(BlockEntityType.Builder.of(RuneTile::new, BlockRegistry.RUNE_BLOCK).build(null).setRegistryName(LibBlockNames.RUNE));
             event.getRegistry().register(BlockEntityType.Builder.of(PortalTile::new, BlockRegistry.PORTAL_BLOCK).build(null).setRegistryName(LibBlockNames.PORTAL));
-            event.getRegistry().register(BlockEntityType.Builder.of(ArcaneRelaySplitterTile::new, BlockRegistry.ARCANE_RELAY_SPLITTER).build(null).setRegistryName(LibBlockNames.ARCANE_RELAY_SPLITTER));
+            event.getRegistry().register(BlockEntityType.Builder.of(RelaySplitterTile::new, BlockRegistry.RELAY_SPLITTER).build(null).setRegistryName(LibBlockNames.RELAY_SPLITTER));
             event.getRegistry().register(BlockEntityType.Builder.of(ArcaneCoreTile::new, BlockRegistry.ARCANE_CORE_BLOCK).build(null).setRegistryName(LibBlockNames.ARCANE_CORE));
             event.getRegistry().register(BlockEntityType.Builder.of(ImbuementTile::new, BlockRegistry.IMBUEMENT_BLOCK).build(null).setRegistryName(LibBlockNames.IMBUEMENT_CHAMBER));
             event.getRegistry().register(BlockEntityType.Builder.of(EnchantedTurretTile::new, BlockRegistry.ENCHANTED_SPELL_TURRET).build(null).setRegistryName(LibBlockNames.ENCHANTED_SPELL_TURRET));
@@ -336,7 +336,7 @@ public class BlockRegistry {
             event.getRegistry().register(BlockEntityType.Builder.of(VolcanicSourcelinkTile::new, BlockRegistry.VOLCANIC_BLOCK).build(null).setRegistryName(LibBlockNames.VOLCANIC_SOURCELINK));
             event.getRegistry().register(BlockEntityType.Builder.of(WixieCauldronTile::new, BlockRegistry.WIXIE_CAULDRON).build(null).setRegistryName(LibBlockNames.WIXIE_CAULDRON));
             event.getRegistry().register(BlockEntityType.Builder.of(CreativeSourceJarTile::new, BlockRegistry.CREATIVE_SOURCE_JAR).build(null).setRegistryName(LibBlockNames.CREATIVE_SOURCE_JAR));
-            event.getRegistry().register(BlockEntityType.Builder.of(RitualTile::new, BlockRegistry.RITUAL_BLOCK).build(null).setRegistryName(LibBlockNames.RITUAL_CIRCLE));
+            event.getRegistry().register(BlockEntityType.Builder.of(RitualTile::new, BlockRegistry.RITUAL_BLOCK).build(null).setRegistryName(LibBlockNames.RITUAL_BRAZIER));
             event.getRegistry().register(BlockEntityType.Builder.of(PotionJarTile::new, BlockRegistry.POTION_JAR).build(null).setRegistryName(LibBlockNames.POTION_JAR_BLOCK));
             event.getRegistry().register(BlockEntityType.Builder.of(PotionMelderTile::new, BlockRegistry.POTION_MELDER).build(null).setRegistryName(LibBlockNames.POTION_MELDER_BLOCK));
             event.getRegistry().register(BlockEntityType.Builder.of(SconceTile::new, BlockRegistry.SCONCE_BLOCK).build(null).setRegistryName(LibBlockNames.SCONCE));
@@ -390,20 +390,20 @@ public class BlockRegistry {
                     return ScribesRenderer::getISTER;
                 }
             }.setRegistryName(LibBlockNames.SCRIBES_BLOCK));
-            registry.register(new RendererBlockItem(BlockRegistry.ARCANE_RELAY, ItemsRegistry.defaultItemProperties()) {
+            registry.register(new RendererBlockItem(BlockRegistry.RELAY, ItemsRegistry.defaultItemProperties()) {
                 @Override
                 public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
                     return GenericRenderer.getISTER("source_relay");
                 }
-            }.setRegistryName(LibBlockNames.ARCANE_RELAY));
+            }.setRegistryName(LibBlockNames.RELAY));
             registry.register(new BlockItem(BlockRegistry.RUNE_BLOCK, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.RUNE));
             registry.register(new BlockItem(BlockRegistry.PORTAL_BLOCK, new Item.Properties()).setRegistryName(LibBlockNames.PORTAL));
-            registry.register(new RendererBlockItem(BlockRegistry.ARCANE_RELAY_SPLITTER, ItemsRegistry.defaultItemProperties()) {
+            registry.register(new RendererBlockItem(BlockRegistry.RELAY_SPLITTER, ItemsRegistry.defaultItemProperties()) {
                 @Override
                 public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
                     return GenericRenderer.getISTER("source_splitter");
                 }
-            }.setRegistryName(LibBlockNames.ARCANE_RELAY_SPLITTER));
+            }.setRegistryName(LibBlockNames.RELAY_SPLITTER));
             registry.register(new RendererBlockItem(BlockRegistry.IMBUEMENT_BLOCK, ItemsRegistry.defaultItemProperties()) {
                 @Override
                 public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
@@ -464,7 +464,7 @@ public class BlockRegistry {
                 public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
                     return  RitualBrazierRenderer::getISTER;
                 }
-            }.setRegistryName(LibBlockNames.RITUAL_CIRCLE));
+            }.setRegistryName(LibBlockNames.RITUAL_BRAZIER));
 
             registry.register(getDefaultBlockItem(BlockRegistry.ARCHWOOD_BUTTON, LibBlockNames.ARCHWOOD_BUTTON));
             registry.register(getDefaultBlockItem(BlockRegistry.ARCHWOOD_STAIRS, LibBlockNames.ARCHWOOD_STAIRS));

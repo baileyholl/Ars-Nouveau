@@ -1,0 +1,15 @@
+{
+  "name": "item.ars_nouveau.ritual_restoration",
+  "category": "ars_nouveau:rituals",
+  "icon": "ars_nouveau:ritual_restoration",
+  "pages": [
+    {
+      "text": "ars_nouveau.ritual_desc.restoration",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:ritual_restoration",
+      "type": "patchouli:crafting"
+    }
+  ]
+}

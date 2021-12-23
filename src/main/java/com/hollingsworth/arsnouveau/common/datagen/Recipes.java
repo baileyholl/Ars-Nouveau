@@ -464,7 +464,7 @@ public class Recipes extends RecipeProvider {
                     .requires(Items.WHEAT, 3)
                     .requires(BlockRegistry.SOURCEBERRY_BUSH)
                     .save(consumer);
-            ShapedRecipeBuilder.shaped(BlockRegistry.ARCANE_RELAY).unlockedBy("has_journal",InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
+            ShapedRecipeBuilder.shaped(BlockRegistry.RELAY).unlockedBy("has_journal",InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern("g g")
                     .pattern("gMg")
                     .pattern("g g")

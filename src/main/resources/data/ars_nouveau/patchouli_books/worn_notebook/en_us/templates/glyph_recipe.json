@@ -18,25 +18,25 @@
 		},
 		{
 			"type": "patchouli:header",
-			"text": "Glyph Press Reagents",
+			"text": "ars_nouveau.glyph_reagents",
 			"x": -1,
 			"y": -1
 		},
 		{
 			"type": "patchouli:text",
-			"text": "Tier: #tier#",
+			"text": "#tier#",
 			"x": 0,
 			"y": 50
 		},
 		{
 			"type": "patchouli:text",
-			"text": "Casting Cost: #mana_cost#",
+			"text": "#mana_cost#",
 			"x": 0,
 			"y": 60
 		},
 		{
 			"type": "patchouli:text",
-			"text": "Spell Schools: #schools#",
+			"text": "#schools#",
 			"x": 0,
 			"y": 70
 		}

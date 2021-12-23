@@ -24,7 +24,7 @@ public class BlockTagProvider extends BlockTagsProvider {
        // super.addTags();
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE).add(
                 BlockRegistry.ARCANE_STONE,
-                BlockRegistry.ARCANE_RELAY,
+                BlockRegistry.RELAY,
                 BlockRegistry.ARCANE_CORE_BLOCK,
                 BlockRegistry.ENCHANTING_APP_BLOCK,
                 BlockRegistry.GLYPH_PRESS_BLOCK,
@@ -33,7 +33,7 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.RUNE_BLOCK,
                 BlockRegistry.IMBUEMENT_BLOCK,
                 BlockRegistry.SOURCE_JAR,
-                BlockRegistry.ARCANE_RELAY_SPLITTER,
+                BlockRegistry.RELAY_SPLITTER,
                 BlockRegistry.ENCHANTED_SPELL_TURRET,
                 BlockRegistry.VOLCANIC_BLOCK,
                 BlockRegistry.LAVA_LILY,

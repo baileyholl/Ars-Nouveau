@@ -1,15 +1,15 @@
 {
-    "name": "block.ars_nouveau.sconce",
-    "icon": "ars_nouveau:sconce",
-    "category": "ars_nouveau:resources",
-    "pages": [
-        {
-            "type": "text",
-            "text": "ars_nouveau.page1.sconce"
-        },
-		{
-            "type":"crafting",
-			"recipe":"ars_nouveau:sconce"
-		}
-    ]
+  "name": "block.ars_nouveau.sconce",
+  "category": "ars_nouveau:resources",
+  "icon": "ars_nouveau:sconce",
+  "pages": [
+    {
+      "text": "ars_nouveau.page.sconce",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:sconce",
+      "type": "patchouli:crafting"
+    }
+  ]
 }

@@ -1,0 +1,16 @@
+{
+  "name": "ars_nouveau.glyph_name.aoe",
+  "category": "ars_nouveau:glyphs_2",
+  "icon": "ars_nouveau:glyph_aoe",
+  "sortnum": 3,
+  "pages": [
+    {
+      "text": "ars_nouveau.glyph_desc.aoe",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:glyph_aoe",
+      "type": "ars_nouveau:glyph_recipe"
+    }
+  ]
+}

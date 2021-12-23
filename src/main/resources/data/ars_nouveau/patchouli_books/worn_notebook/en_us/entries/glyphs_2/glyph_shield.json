@@ -1,0 +1,16 @@
+{
+  "name": "ars_nouveau.glyph_name.shield",
+  "category": "ars_nouveau:glyphs_2",
+  "icon": "ars_nouveau:glyph_shield",
+  "sortnum": 2,
+  "pages": [
+    {
+      "text": "ars_nouveau.glyph_desc.shield",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:glyph_shield",
+      "type": "ars_nouveau:glyph_recipe"
+    }
+  ]
+}

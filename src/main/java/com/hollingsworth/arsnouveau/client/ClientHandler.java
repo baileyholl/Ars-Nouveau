@@ -49,7 +49,7 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.RELAY_DEPOSIT_TILE, (t) -> new GenericRenderer(t, "source_deposit"));
         event.registerBlockEntityRenderer(BlockRegistry.RELAY_WARP_TILE, (t) -> new GenericRenderer(t, "source_warp"));
         event.registerBlockEntityRenderer(BlockRegistry.ARCANE_RELAY_TILE, (t) -> new GenericRenderer(t, "source_relay"));
-        event.registerBlockEntityRenderer(BlockRegistry.ARCANE_RELAY_SPLITTER_TILE, (t) -> new GenericRenderer(t, "source_splitter"));
+        event.registerBlockEntityRenderer(BlockRegistry.RELAY_SPLITTER_TILE, (t) -> new GenericRenderer(t, "source_splitter"));
         event.registerBlockEntityRenderer(BlockRegistry.BASIC_SPELL_TURRET_TILE, BasicTurretRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ENCHANTED_SPELL_TURRET_TYPE, ReducerTurretRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.TIMER_SPELL_TURRET_TILE, TimerTurretRenderer::new);
@@ -111,7 +111,7 @@ public class ClientHandler {
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.MAGE_BLOCK, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.MAGE_BLOOM_CROP, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SCRIBES_BLOCK, RenderType.translucent());
-        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.ARCANE_RELAY, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.RELAY, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.RUNE_BLOCK, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.ARCANE_CORE_BLOCK, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.IMBUEMENT_BLOCK, RenderType.cutout());

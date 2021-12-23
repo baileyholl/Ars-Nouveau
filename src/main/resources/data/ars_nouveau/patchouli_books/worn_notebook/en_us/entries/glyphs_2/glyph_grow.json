@@ -1,0 +1,16 @@
+{
+  "name": "ars_nouveau.glyph_name.grow",
+  "category": "ars_nouveau:glyphs_2",
+  "icon": "ars_nouveau:glyph_grow",
+  "sortnum": 2,
+  "pages": [
+    {
+      "text": "ars_nouveau.glyph_desc.grow",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:glyph_grow",
+      "type": "ars_nouveau:glyph_recipe"
+    }
+  ]
+}

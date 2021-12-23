@@ -1,15 +1,15 @@
 {
   "name": "item.ars_nouveau.ritual_binding",
-  "icon": "ars_nouveau:ritual_binding",
   "category": "ars_nouveau:rituals",
+  "icon": "ars_nouveau:ritual_binding",
   "pages": [
     {
-      "type": "patchouli:text",
-      "text": "ars_nouveau.ritual_desc.binding"
+      "text": "ars_nouveau.ritual_desc.binding",
+      "type": "patchouli:text"
     },
     {
-      "type": "patchouli:crafting",
-      "recipe": "ars_nouveau:ritual_binding"
+      "recipe": "ars_nouveau:ritual_binding",
+      "type": "patchouli:crafting"
     }
   ]
 }

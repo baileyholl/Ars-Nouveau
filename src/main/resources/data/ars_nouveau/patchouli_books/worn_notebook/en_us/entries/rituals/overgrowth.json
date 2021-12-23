@@ -1,15 +1,15 @@
 {
   "name": "item.ars_nouveau.ritual_overgrowth",
-  "icon": "ars_nouveau:ritual_overgrowth",
   "category": "ars_nouveau:rituals",
+  "icon": "ars_nouveau:ritual_overgrowth",
   "pages": [
     {
-      "type": "patchouli:text",
-      "text": "ars_nouveau.ritual_desc.overgrowth"
+      "text": "ars_nouveau.ritual_desc.overgrowth",
+      "type": "patchouli:text"
     },
     {
-      "type": "patchouli:crafting",
-      "recipe": "ars_nouveau:ritual_overgrowth"
+      "recipe": "ars_nouveau:ritual_overgrowth",
+      "type": "patchouli:crafting"
     }
   ]
 }

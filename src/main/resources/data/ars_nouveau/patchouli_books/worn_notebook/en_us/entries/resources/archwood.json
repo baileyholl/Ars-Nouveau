@@ -1,15 +1,11 @@
 {
-    "name": "ars_nouveau.archwood_trees",
-    "icon": "ars_nouveau:blue_archwood_sapling",
-    "category": "ars_nouveau:resources",
-    "pages": [
-        {
-            "type": "text",
-            "text": "ars_nouveau.page1.archwood"
-        },
-		{
-            "type":"crafting",
-			"recipe":"ars_nouveau:archwood_planks"
-		}
-    ]
+  "name": "ars_nouveau.page.archwood",
+  "category": "ars_nouveau:resources",
+  "icon": "ars_nouveau:blue_archwood_sapling",
+  "pages": [
+    {
+      "text": "ars_nouveau.page1.archwood",
+      "type": "patchouli:text"
+    }
+  ]
 }

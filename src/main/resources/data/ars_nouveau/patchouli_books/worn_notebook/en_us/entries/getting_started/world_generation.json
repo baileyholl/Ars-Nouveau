@@ -1,0 +1,20 @@
+{
+  "name": "ars_nouveau.page.world_generation",
+  "category": "ars_nouveau:getting_started",
+  "sortnum": 7,
+  "icon": "ars_nouveau:source_gem",
+  "pages": [
+    {
+      "text": "ars_nouveau.page1.world_generation",
+      "type": "patchouli:text"
+    },
+    {
+      "entries": [
+        "ars_nouveau:machines/imbuement_chamber",
+        "ars_nouveau:resources/archwood",
+        "ars_nouveau:resources/sourceberry"
+      ],
+      "type": "patchouli:relations"
+    }
+  ]
+}

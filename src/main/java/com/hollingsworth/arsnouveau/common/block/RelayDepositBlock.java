@@ -6,7 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class RelayDepositBlock extends ArcaneRelay{
+public class RelayDepositBlock extends Relay {
 
     public RelayDepositBlock(String registryName) {
         super(registryName);

@@ -16,8 +16,8 @@ public class LibBlockNames {
     public final static String ARCANE_BRICKS = "arcane_bricks";
     public static final String SCRIBES_BLOCK = "scribes_table";
     public static final String ARCANE_ROAD = "arcane_road";
-    public static final String ARCANE_RELAY = "arcane_relay";
-    public static final String ARCANE_RELAY_SPLITTER = "arcane_relay_splitter";
+    public static final String RELAY = "relay";
+    public static final String RELAY_SPLITTER = "relay_splitter";
     public static final String RUNE = "rune";
     public static final String PORTAL = "portal";
     public static final String IMBUEMENT_CHAMBER = "imbuement_chamber";
@@ -65,7 +65,7 @@ public class LibBlockNames {
 
     public final static String ARCHWOOD_PLANK = "archwood_planks";
 
-    public final static String RITUAL_CIRCLE = "ritual";
+    public final static String RITUAL_BRAZIER = "ritual_brazier";
     public final static String ARCHWOOD_STAIRS = "archwood_stairs";
     public final static String ARCHWOOD_SLABS = "archwood_slab";
     public final static String ARCHWOOD_SIGN = "archwood_wall_sign";

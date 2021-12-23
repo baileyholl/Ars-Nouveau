@@ -1,0 +1,16 @@
+{
+  "name": "ars_nouveau.glyph_name.extract",
+  "category": "ars_nouveau:glyphs_2",
+  "icon": "ars_nouveau:glyph_extract",
+  "sortnum": 3,
+  "pages": [
+    {
+      "text": "ars_nouveau.glyph_desc.extract",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:glyph_extract",
+      "type": "ars_nouveau:glyph_recipe"
+    }
+  ]
+}

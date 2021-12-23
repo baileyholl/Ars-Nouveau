@@ -1,0 +1,16 @@
+{
+  "name": "ars_nouveau.glyph_name.extend_time",
+  "category": "ars_nouveau:glyphs_2",
+  "icon": "ars_nouveau:glyph_extend_time",
+  "sortnum": 3,
+  "pages": [
+    {
+      "text": "ars_nouveau.glyph_desc.extend_time",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:glyph_extend_time",
+      "type": "ars_nouveau:glyph_recipe"
+    }
+  ]
+}

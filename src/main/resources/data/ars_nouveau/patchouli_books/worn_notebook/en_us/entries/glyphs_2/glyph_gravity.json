@@ -1,0 +1,16 @@
+{
+  "name": "ars_nouveau.glyph_name.gravity",
+  "category": "ars_nouveau:glyphs_2",
+  "icon": "ars_nouveau:glyph_gravity",
+  "sortnum": 2,
+  "pages": [
+    {
+      "text": "ars_nouveau.glyph_desc.gravity",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:glyph_gravity",
+      "type": "ars_nouveau:glyph_recipe"
+    }
+  ]
+}

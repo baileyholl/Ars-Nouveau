@@ -1,0 +1,16 @@
+{
+  "name": "ars_nouveau.glyph_name.pickup",
+  "category": "ars_nouveau:glyphs_1",
+  "icon": "ars_nouveau:glyph_pickup",
+  "sortnum": 2,
+  "pages": [
+    {
+      "text": "ars_nouveau.glyph_desc.pickup",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:glyph_pickup",
+      "type": "ars_nouveau:glyph_recipe"
+    }
+  ]
+}

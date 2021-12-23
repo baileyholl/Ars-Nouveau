@@ -1,15 +1,15 @@
 {
   "name": "item.ars_nouveau.ritual_sunrise",
-  "icon": "ars_nouveau:ritual_sunrise",
   "category": "ars_nouveau:rituals",
+  "icon": "ars_nouveau:ritual_sunrise",
   "pages": [
     {
-      "type": "patchouli:text",
-      "text": "ars_nouveau.ritual_desc.sunrise"
+      "text": "ars_nouveau.ritual_desc.sunrise",
+      "type": "patchouli:text"
     },
     {
-      "type": "patchouli:crafting",
-      "recipe": "ars_nouveau:ritual_sunrise"
+      "recipe": "ars_nouveau:ritual_sunrise",
+      "type": "patchouli:crafting"
     }
   ]
 }

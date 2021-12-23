@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
-import com.hollingsworth.arsnouveau.common.block.RitualBlock;
+import com.hollingsworth.arsnouveau.common.block.RitualBrazierBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
@@ -30,7 +30,7 @@ public class RitualTablet extends ModItem{
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        if(context.getLevel().getBlockState(context.getClickedPos()).getBlock() instanceof RitualBlock){
+        if(context.getLevel().getBlockState(context.getClickedPos()).getBlock() instanceof RitualBrazierBlock){
             Level world = context.getLevel();
             BlockPos pos = context.getClickedPos();
             RitualTile tile = (RitualTile) world.getBlockEntity(pos);

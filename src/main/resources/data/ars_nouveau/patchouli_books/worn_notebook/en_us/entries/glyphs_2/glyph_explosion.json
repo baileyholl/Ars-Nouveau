@@ -1,0 +1,16 @@
+{
+  "name": "ars_nouveau.glyph_name.explosion",
+  "category": "ars_nouveau:glyphs_2",
+  "icon": "ars_nouveau:glyph_explosion",
+  "sortnum": 2,
+  "pages": [
+    {
+      "text": "ars_nouveau.glyph_desc.explosion",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:glyph_explosion",
+      "type": "ars_nouveau:glyph_recipe"
+    }
+  ]
+}

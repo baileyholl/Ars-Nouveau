@@ -135,8 +135,8 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.SCRIBES_BLOCK);
 //        putStandardLoot(BlockRegistry.SUMMONING_CRYSTAL);
             registerDropSelf(BlockRegistry.ARCANE_BRICKS);
-            registerDropSelf(BlockRegistry.ARCANE_RELAY);
-            registerDropSelf(BlockRegistry.ARCANE_RELAY_SPLITTER);
+            registerDropSelf(BlockRegistry.RELAY);
+            registerDropSelf(BlockRegistry.RELAY_SPLITTER);
             registerDropSelf(BlockRegistry.ARCANE_CORE_BLOCK);
             registerDropSelf(BlockRegistry.IMBUEMENT_BLOCK);
             registerDropSelf(BlockRegistry.VOLCANIC_BLOCK);

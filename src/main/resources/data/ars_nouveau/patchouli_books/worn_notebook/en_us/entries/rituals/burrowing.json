@@ -1,15 +1,15 @@
 {
   "name": "item.ars_nouveau.ritual_burrowing",
-  "icon": "ars_nouveau:ritual_burrowing",
   "category": "ars_nouveau:rituals",
+  "icon": "ars_nouveau:ritual_burrowing",
   "pages": [
     {
-      "type": "patchouli:text",
-      "text": "ars_nouveau.ritual_desc.burrowing"
+      "text": "ars_nouveau.ritual_desc.burrowing",
+      "type": "patchouli:text"
     },
     {
-      "type": "patchouli:crafting",
-      "recipe": "ars_nouveau:ritual_burrowing"
+      "recipe": "ars_nouveau:ritual_burrowing",
+      "type": "patchouli:crafting"
     }
   ]
 }

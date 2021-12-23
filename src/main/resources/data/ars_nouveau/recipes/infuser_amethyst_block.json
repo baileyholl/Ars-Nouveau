@@ -1,0 +1,9 @@
+{
+  "type": "ars_nouveau:infuser",
+  "input": {
+    "item": "minecraft:amethyst_shard"
+  },
+  "output": "ars_nouveau:source_gem",
+  "count": 1,
+  "source": 2000
+}

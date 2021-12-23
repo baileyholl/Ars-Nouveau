@@ -43,92 +43,62 @@ import static com.hollingsworth.arsnouveau.setup.InjectionUtil.Null;
 public class ItemsRegistry {
     @ObjectHolder(LibItemNames.RUNIC_CHALK)public static RunicChalk RUNIC_CHALK;
     @ObjectHolder(LibItemNames.NOVICE_SPELL_BOOK) public static SpellBook NOVICE_SPELLBOOK;
-
     @ObjectHolder(LibItemNames.APPRENTICE_SPELL_BOOK) public static SpellBook APPRENTICE_SPELLBOOK;
     @ObjectHolder(LibItemNames.ARCHMAGE_SPELL_BOOK) public static SpellBook ARCHMAGE_SPELLBOOK;
     @ObjectHolder(LibItemNames.CREATIVE_SPELL_BOOK) public static SpellBook CREATIVE_SPELLBOOK;
-
-
     @ObjectHolder(LibItemNames.BLANK_GLYPH) public static  Item BLANK_GLYPH;
     @ObjectHolder(LibItemNames.BUCKET_OF_SOURCE) public static ModItem BUCKET_OF_SOURCE;
-
     @ObjectHolder(LibItemNames.MAGIC_CLAY) public static ModItem MAGIC_CLAY;
     @ObjectHolder(LibItemNames.MARVELOUS_CLAY) public static ModItem MARVELOUS_CLAY;
     @ObjectHolder(LibItemNames.MYTHICAL_CLAY) public static ModItem MYTHICAL_CLAY;
-
     @ObjectHolder(LibItemNames.MAGE_BLOOM) public static ModItem MAGE_BLOOM;
-
-
     @ObjectHolder(LibItemNames.MAGE_FIBER) public static ModItem MAGE_FIBER;
     @ObjectHolder(LibItemNames.BLAZE_FIBER) public static ModItem BLAZE_FIBER;
     @ObjectHolder(LibItemNames.END_FIBER) public static ModItem END_FIBER;
-
     @ObjectHolder(LibItemNames.MUNDANE_BELT) public static ModItem MUNDANE_BELT;
     @ObjectHolder(LibItemNames.JAR_OF_LIGHT) public static JarOfLight JAR_OF_LIGHT;
-
     @ObjectHolder(LibItemNames.BELT_OF_LEVITATION)public static BeltOfLevitation BELT_OF_LEVITATION;
-
     @ObjectHolder(LibItemNames.WORN_NOTEBOOK) public static WornNotebook WORN_NOTEBOOK = Null();
-
     @ObjectHolder(LibItemNames.RING_OF_POTENTIAL) public  static ModItem RING_OF_POTENTIAL;
-
     @ObjectHolder(LibItemNames.RING_OF_LESSER_DISCOUNT) public static DiscountRing RING_OF_LESSER_DISCOUNT;
-
-
     @ObjectHolder(LibItemNames.RING_OF_GREATER_DISCOUNT) public static DiscountRing RING_OF_GREATER_DISCOUNT;
-
     @ObjectHolder(LibItemNames.BELT_OF_UNSTABLE_GIFTS) public static BeltOfUnstableGifts BELT_OF_UNSTABLE_GIFTS;
-
     @ObjectHolder(LibItemNames.WARP_SCROLL) public static WarpScroll WARP_SCROLL;
-
     @ObjectHolder(LibItemNames.SPELL_PARCHMENT) public static SpellParchment SPELL_PARCHMENT;
-
     @ObjectHolder(LibItemNames.BOOKWYRM_CHARM) public static BookwyrmCharm BOOKWYRM_CHARM;
     @ObjectHolder(LibItemNames.DOMINION_WAND) public static DominionWand DOMINION_ROD;
-
     @ObjectHolder(LibItemNames.AMULET_OF_MANA_BOOST)public static AbstractManaCurio AMULET_OF_MANA_BOOST;
     @ObjectHolder(LibItemNames.AMULET_OF_MANA_REGEN)public static AbstractManaCurio AMULET_OF_MANA_REGEN;
     @ObjectHolder(LibItemNames.DULL_TRINKET)public static ModItem DULL_TRINKET;
     @ObjectHolder(LibItemNames.STARBUNCLE_CHARM) public static StarbuncleCharm STARBUNCLE_CHARM;
     @ObjectHolder(LibItemNames.DOMINION_WAND)public static DominionWand DOMINION_WAND;
     @ObjectHolder("debug")public static Debug debug;
-
     @ObjectHolder(LibItemNames.STARBUNCLE_SHARDS)public static ModItem STARBUNCLE_SHARD;
-
-
     @ObjectHolder(LibItemNames.WHIRLISPRIG_CHARM)public static WhirlisprigCharm WHIRLISPRIG_CHARM;
     @ObjectHolder(LibItemNames.WHIRLISPRIG_SHARDS)public static ModItem WHIRLISPRIG_SHARDS;
     @ObjectHolder(LibItemNames.SOURCE_GEM)public static ModItem SOURCE_GEM;
     @ObjectHolder(LibItemNames.ALLOW_ITEM_SCROLL)public static AllowItemScroll ALLOW_ITEM_SCROLL;
     @ObjectHolder(LibItemNames.DENY_ITEM_SCROLL)public static DenyItemScroll DENY_ITEM_SCROLL;
     @ObjectHolder(LibItemNames.MIMIC_ITEM_SCROLL)public static MimicItemScroll MIMIC_ITEM_SCROLL;
-
-
     @ObjectHolder(LibItemNames.BLANK_PARCHMENT)public static ModItem BLANK_PARCHMENT;
     @ObjectHolder(LibItemNames.WAND)public static Wand WAND;
     @ObjectHolder(LibItemNames.VOID_JAR)public static VoidJar VOID_JAR;
     @ObjectHolder(LibItemNames.WIXIE_CHARM)public static WixieCharm WIXIE_CHARM;
     @ObjectHolder(LibItemNames.WIXIE_SHARD)public static ModItem WIXIE_SHARD;
     @ObjectHolder(LibItemNames.SPELL_BOW)public static SpellBow SPELL_BOW;
-
     @ObjectHolder(LibItemNames.AMPLIFY_ARROW)public static SpellArrow AMPLIFY_ARROW;
     @ObjectHolder(LibItemNames.SPLIT_ARROW)public static SpellArrow SPLIT_ARROW;
     @ObjectHolder(LibItemNames.PIERCE_ARROW)public static SpellArrow PIERCE_ARROW;
-
     @ObjectHolder(LibItemNames.WILDEN_HORN)public static ModItem WILDEN_HORN;
     @ObjectHolder(LibItemNames.WILDEN_SPIKE)public static ModItem WILDEN_SPIKE;
     @ObjectHolder(LibItemNames.WILDEN_WING)public static ModItem WILDEN_WING;
-
-
     @ObjectHolder(LibItemNames.POTION_FLASK)public static PotionFlask POTION_FLASK;
     @ObjectHolder(LibItemNames.POTION_FLASK_AMPLIFY)public static PotionFlask POTION_FLASK_AMPLIFY;
     @ObjectHolder(LibItemNames.POTION_FLASK_EXTEND_TIME)public static PotionFlask POTION_FLASK_EXTEND_TIME;
     @ObjectHolder(LibItemNames.EXP_GEM)public static ExperienceGem EXPERIENCE_GEM;
     @ObjectHolder(LibItemNames.GREATER_EXP_GEM)public static ExperienceGem GREATER_EXPERIENCE_GEM;
-
     @ObjectHolder(LibItemNames.ENCHANTERS_SWORD)public static EnchantersSword ENCHANTERS_SWORD;
     @ObjectHolder(LibItemNames.ENCHANTERS_SHIELD)public static EnchantersShield ENCHANTERS_SHIELD;
-
     @ObjectHolder(LibItemNames.CASTER_TOME)public static CasterTome CASTER_TOME;
     @ObjectHolder(LibItemNames.DRYGMY_CHARM)public static DrygmyCharm DRYGMY_CHARM;
     @ObjectHolder(LibItemNames.DRYGMY_SHARD)public static ModItem DRYGMY_SHARD;
@@ -137,6 +107,18 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.SOURCE_BERRY_PIE)public static ModItem SOURCE_BERRY_PIE;
     @ObjectHolder(LibItemNames.SOURCE_BERRY_ROLL)public static ModItem SOURCE_BERRY_ROLL;
     @ObjectHolder(LibItemNames.ENCHANTERS_MIRROR)public static EnchantersMirror ENCHANTERS_MIRROR;
+    @ObjectHolder(LibItemNames.NOVICE_BOOTS)public static NoviceArmor NOVICE_BOOTS;
+    @ObjectHolder(LibItemNames.NOVICE_LEGGINGS)public static NoviceArmor NOVICE_LEGGINGS;
+    @ObjectHolder(LibItemNames.NOVICE_ROBES)public static NoviceArmor NOVICE_ROBES;
+    @ObjectHolder(LibItemNames.NOVICE_HOOD)public static NoviceArmor NOVICE_HOOD;
+    @ObjectHolder(LibItemNames.APPRENTICE_BOOTS)public static ApprenticeArmor APPRENTICE_BOOTS;
+    @ObjectHolder(LibItemNames.APPRENTICE_LEGGINGS)public static ApprenticeArmor APPRENTICE_LEGGINGS;
+    @ObjectHolder(LibItemNames.APPRENTICE_ROBES)public static ApprenticeArmor APPRENTICE_ROBES;
+    @ObjectHolder(LibItemNames.APPRENTICE_HOOD)public static ApprenticeArmor APPRENTICE_HOOD;
+    @ObjectHolder(LibItemNames.ARCHMAGE_BOOTS)public static MasterArmor ARCHMAGE_BOOTS;
+    @ObjectHolder(LibItemNames.ARCHMAGE_LEGGINGS)public static MasterArmor ARCHMAGE_LEGGINGS;
+    @ObjectHolder(LibItemNames.ARCHMAGE_ROBES)public static MasterArmor ARCHMAGE_ROBES;
+    @ObjectHolder(LibItemNames.ARCHMAGE_HOOD)public static MasterArmor ARCHMAGE_HOOD;
 
     public static FoodProperties SOURCE_BERRY_FOOD = (new FoodProperties.Builder()).nutrition(2).saturationMod(0.1F).effect(() -> new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).alwaysEat().build();
     public static FoodProperties SOURCE_PIE_FOOD = (new FoodProperties.Builder()).nutrition(9).saturationMod(0.9F).effect(() -> new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT, 60 * 20, 1), 1.0f).alwaysEat().build();
@@ -167,18 +149,18 @@ public class ItemsRegistry {
                     new ModItem(LibItemNames.RING_OF_POTENTIAL).withTooltip(new TranslatableComponent("ars_nouveau.tooltip.dull")),
                     new BeltOfUnstableGifts(LibItemNames.BELT_OF_UNSTABLE_GIFTS),
                     new ModItem(defaultItemProperties().stacksTo(1), LibItemNames.BUCKET_OF_SOURCE),
-                    new NoviceArmor(EquipmentSlot.FEET).setRegistryName("novice_boots"),
-                    new NoviceArmor(EquipmentSlot.LEGS).setRegistryName("novice_leggings"),
-                    new NoviceArmor(EquipmentSlot.CHEST).setRegistryName("novice_robes"),
-                    new NoviceArmor(EquipmentSlot.HEAD).setRegistryName("novice_hood"),
-                    new ApprenticeArmor(EquipmentSlot.FEET).setRegistryName("apprentice_boots"),
-                    new ApprenticeArmor(EquipmentSlot.LEGS).setRegistryName("apprentice_leggings"),
-                    new ApprenticeArmor(EquipmentSlot.CHEST).setRegistryName("apprentice_robes"),
-                    new ApprenticeArmor(EquipmentSlot.HEAD).setRegistryName("apprentice_hood"),
-                    new MasterArmor(EquipmentSlot.FEET).setRegistryName("archmage_boots"),
-                    new MasterArmor(EquipmentSlot.LEGS).setRegistryName("archmage_leggings"),
-                    new MasterArmor(EquipmentSlot.CHEST).setRegistryName("archmage_robes"),
-                    new MasterArmor(EquipmentSlot.HEAD).setRegistryName("archmage_hood"),
+                    new NoviceArmor(EquipmentSlot.FEET).setRegistryName(LibItemNames.NOVICE_BOOTS),
+                    new NoviceArmor(EquipmentSlot.LEGS).setRegistryName(LibItemNames.NOVICE_LEGGINGS),
+                    new NoviceArmor(EquipmentSlot.CHEST).setRegistryName(LibItemNames.NOVICE_ROBES),
+                    new NoviceArmor(EquipmentSlot.HEAD).setRegistryName(LibItemNames.NOVICE_HOOD),
+                    new ApprenticeArmor(EquipmentSlot.FEET).setRegistryName(LibItemNames.APPRENTICE_BOOTS),
+                    new ApprenticeArmor(EquipmentSlot.LEGS).setRegistryName(LibItemNames.APPRENTICE_LEGGINGS),
+                    new ApprenticeArmor(EquipmentSlot.CHEST).setRegistryName(LibItemNames.APPRENTICE_ROBES),
+                    new ApprenticeArmor(EquipmentSlot.HEAD).setRegistryName(LibItemNames.APPRENTICE_HOOD),
+                    new MasterArmor(EquipmentSlot.FEET).setRegistryName(LibItemNames.ARCHMAGE_BOOTS),
+                    new MasterArmor(EquipmentSlot.LEGS).setRegistryName(LibItemNames.ARCHMAGE_LEGGINGS),
+                    new MasterArmor(EquipmentSlot.CHEST).setRegistryName(LibItemNames.ARCHMAGE_ROBES),
+                    new MasterArmor(EquipmentSlot.HEAD).setRegistryName(LibItemNames.ARCHMAGE_HOOD),
                     new SpellBook(ISpellTier.Tier.ONE).setRegistryName(LibItemNames.NOVICE_SPELL_BOOK),
                     new SpellBook(ISpellTier.Tier.TWO).setRegistryName(LibItemNames.APPRENTICE_SPELL_BOOK),
                     new SpellBook(ISpellTier.Tier.THREE).setRegistryName(LibItemNames.ARCHMAGE_SPELL_BOOK),

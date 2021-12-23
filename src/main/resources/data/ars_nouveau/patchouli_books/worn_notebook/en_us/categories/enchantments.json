@@ -1,6 +1,6 @@
 {
-	"name": "Enchanting",
-	"description": "Once you have acquired a jar of Mana and an Enchanting Apparatus, you may begin enchanting items. For more information, see the section on the Enchanting Apparatus.",
+	"name": "ars_nouveau.enchanting",
+	"description": "ars_nouveau.enchanting_desc",
 	"icon": "ars_nouveau:enchanting_apparatus",
 	"sortnum":8
 }

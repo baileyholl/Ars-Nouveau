@@ -1,0 +1,16 @@
+{
+  "name": "ars_nouveau.glyph_name.light",
+  "category": "ars_nouveau:glyphs_1",
+  "icon": "ars_nouveau:glyph_light",
+  "sortnum": 2,
+  "pages": [
+    {
+      "text": "ars_nouveau.glyph_desc.light",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:glyph_light",
+      "type": "ars_nouveau:glyph_recipe"
+    }
+  ]
+}

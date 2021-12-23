@@ -11,7 +11,7 @@ import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
-import com.hollingsworth.arsnouveau.common.block.RitualBlock;
+import com.hollingsworth.arsnouveau.common.block.RitualBrazierBlock;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -95,7 +95,7 @@ public class RitualTile extends ModdedTile implements ITooltipProvider, IAnimata
                 ritual.onEnd();
                 ritual = null;
                 getLevel().playSound(null, getBlockPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.NEUTRAL, 1.0f, 1.0f);
-                getLevel().setBlock(getBlockPos(), getLevel().getBlockState(getBlockPos()).setValue(RitualBlock.LIT, false), 3);
+                getLevel().setBlock(getBlockPos(), getLevel().getBlockState(getBlockPos()).setValue(RitualBrazierBlock.LIT, false), 3);
                 return;
             }
             if(!ritual.isRunning() && !level.isClientSide){
@@ -179,7 +179,7 @@ public class RitualTile extends ModdedTile implements ITooltipProvider, IAnimata
             this.ritual.tile = this;
             Level world = getLevel();
             BlockState state = world.getBlockState(getBlockPos());
-            world.setBlock(getBlockPos(), state.setValue(RitualBlock.LIT, true), 3);
+            world.setBlock(getBlockPos(), state.setValue(RitualBrazierBlock.LIT, true), 3);
         }
         this.isDecorative = false;
         level.playSound(null, getBlockPos(), SoundEvents.FLINTANDSTEEL_USE, SoundSource.NEUTRAL, 1.0f, 1.0f);
@@ -238,6 +238,6 @@ public class RitualTile extends ModdedTile implements ITooltipProvider, IAnimata
         this.blue = spellContext.colors.b;
         this.isDecorative = true;
         BlockState state = world.getBlockState(getBlockPos());
-        world.setBlock(getBlockPos(), state.setValue(RitualBlock.LIT, true), 3);
+        world.setBlock(getBlockPos(), state.setValue(RitualBrazierBlock.LIT, true), 3);
     }
 }

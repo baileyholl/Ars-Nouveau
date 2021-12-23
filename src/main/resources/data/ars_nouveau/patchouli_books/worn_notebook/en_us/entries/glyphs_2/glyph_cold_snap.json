@@ -1,0 +1,16 @@
+{
+  "name": "ars_nouveau.glyph_name.cold_snap",
+  "category": "ars_nouveau:glyphs_2",
+  "icon": "ars_nouveau:glyph_cold_snap",
+  "sortnum": 2,
+  "pages": [
+    {
+      "text": "ars_nouveau.glyph_desc.cold_snap",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:glyph_cold_snap",
+      "type": "ars_nouveau:glyph_recipe"
+    }
+  ]
+}

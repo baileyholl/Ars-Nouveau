@@ -1,36 +1,44 @@
 {
-    "name": "Warp Portal",
-    "icon": "ars_nouveau:warp_scroll",
-    "category": "ars_nouveau:machines",
-    "pages": [
-        {
-            "type": "text",
-            "text": "ars_nouveau.page1.warp_portal"
-        },{
-            "type": "text",
-            "text": "ars_nouveau.page2.warp_portal"
-        },
-		{
-		"type":"multiblock",
-		"multiblock":{
-			"mapping":{
-				"B":"ars_nouveau:arcane_bricks",
-				"P":"ars_nouveau:portal",
-				"0":"ars_nouveau:portal"
-			},
-			"pattern":[
-				[" BB "],
-				["BPPB"],
-				["B0PB"],
-				["BPPB"],
-				[" BB "]
-			],
-			"symmetrical": true
-		},
-		"text":"ars_nouveau.page3.warp_portal"
-		},{
-            "type": "relations",
-            "entries":["items/warp_scroll"]        
+  "name": "ars_nouveau.page.warp_portal",
+  "category": "ars_nouveau:machines",
+  "icon": "ars_nouveau:warp_scroll",
+  "pages": [
+    {
+      "text": "ars_nouveau.page1.warp_portal",
+      "type": "patchouli:text"
+    },
+    {
+      "text": "ars_nouveau.page2.warp_portal",
+      "type": "patchouli:text"
+    },
+    {
+      "name": "ars_nouveau.page3.warp_portal",
+      "text": "ars_nouveau.page4.warp_portal",
+      "multiblock": {
+        "pattern": [
+          [
+            " BB "
+          ],
+          [
+            "BPPB"
+          ],
+          [
+            "B0PB"
+          ],
+          [
+            "BPPB"
+          ],
+          [
+            " BB "
+          ]
+        ],
+        "mapping": {
+          "B": "ars_nouveau:arcane_bricks",
+          "P": "ars_nouveau:portal",
+          "0": "ars_nouveau:portal"
         }
-    ]
+      },
+      "type": "patchouli:multiblock"
+    }
+  ]
 }

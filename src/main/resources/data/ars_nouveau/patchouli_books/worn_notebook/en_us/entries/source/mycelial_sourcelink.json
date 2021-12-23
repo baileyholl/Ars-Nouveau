@@ -1,15 +1,15 @@
 {
-    "name": "block.ars_nouveau.mycelial_sourcelink",
-    "icon": "ars_nouveau:mycelial_sourcelink",
-    "category": "ars_nouveau:source",
-    "pages": [
-        {
-            "type": "text",
-            "text": "ars_nouveau.page1.mycelial_sourcelink"
-        },
-		{
-            "type":"crafting",
-			"recipe":"ars_nouveau:mycelial_sourcelink"
-		}
-    ]
+  "name": "block.ars_nouveau.mycelial_sourcelink",
+  "category": "ars_nouveau:source",
+  "icon": "ars_nouveau:mycelial_sourcelink",
+  "pages": [
+    {
+      "text": "ars_nouveau.page.mycelial_sourcelink",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:mycelial_sourcelink",
+      "type": "patchouli:crafting"
+    }
+  ]
 }

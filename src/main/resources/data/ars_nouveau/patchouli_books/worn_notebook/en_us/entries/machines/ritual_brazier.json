@@ -1,0 +1,15 @@
+{
+  "name": "block.ars_nouveau.ritual_brazier",
+  "category": "ars_nouveau:machines",
+  "icon": "ars_nouveau:ritual_brazier",
+  "pages": [
+    {
+      "text": "ars_nouveau.page.ritual_brazier",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:ritual_brazier",
+      "type": "patchouli:crafting"
+    }
+  ]
+}

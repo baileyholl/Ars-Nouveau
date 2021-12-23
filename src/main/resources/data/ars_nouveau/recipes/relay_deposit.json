@@ -22,7 +22,7 @@
   ],
   "reagent": [
     {
-      "item": "ars_nouveau:arcane_relay"
+      "item": "ars_nouveau:relay"
     }
   ],
   "output": {

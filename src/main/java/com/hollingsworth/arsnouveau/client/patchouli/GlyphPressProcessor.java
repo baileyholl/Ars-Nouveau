@@ -32,10 +32,10 @@ public class GlyphPressProcessor implements IComponentProcessor {
         if(s.equals("reagent"))
             return IVariable.from(recipe.reagent);
         if(s.equals("tier"))
-            return IVariable.wrap(new TranslatableComponent("ars_nouveau.spell_tier." + recipe.tier.toString().toLowerCase()).getString());
+            return IVariable.wrap(new TranslatableComponent("ars_nouveau.tier").getString() + ": " + new TranslatableComponent("ars_nouveau.spell_tier." + recipe.tier.toString().toLowerCase()).getString());
         if(s.equals("schools")) {
             AbstractSpellPart part = ((Glyph) recipe.output.getItem()).spellPart;
-            StringBuilder str = new StringBuilder("");
+            StringBuilder str = new StringBuilder(new TranslatableComponent("ars_nouveau.spell_schools").getString() +": ");
             for(SpellSchool spellSchool : part.getSchools()){
                 str.append(spellSchool.getTextComponent().getString()).append(",");
             }
@@ -55,7 +55,7 @@ public class GlyphPressProcessor implements IComponentProcessor {
                     costLang = new TranslatableComponent("ars_nouveau.mana_cost.medium").getString();
                 if(cost >= 50)
                     costLang = new TranslatableComponent("ars_nouveau.mana_cost.high").getString();
-                return IVariable.wrap(costLang);
+                return IVariable.wrap(new TranslatableComponent("ars_nouveau.casting_cost").getString() + ": " + costLang);
             }
             return IVariable.wrap("");
         }

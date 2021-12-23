@@ -1,19 +1,19 @@
 {
   "name": "enchantment.minecraft.sweeping",
-  "icon": "minecraft:enchanted_book",
   "category": "ars_nouveau:enchantments",
+  "icon": "minecraft:enchanted_book",
   "pages": [
     {
-      "type": "ars_nouveau:enchanting_recipe",
-      "recipe": "ars_nouveau:sweeping_1"
+      "recipe": "ars_nouveau:sweeping_1",
+      "type": "ars_nouveau:enchanting_recipe"
     },
     {
-      "type": "ars_nouveau:enchanting_recipe",
-      "recipe": "ars_nouveau:sweeping_2"
+      "recipe": "ars_nouveau:sweeping_2",
+      "type": "ars_nouveau:enchanting_recipe"
     },
     {
-      "type": "ars_nouveau:enchanting_recipe",
-      "recipe": "ars_nouveau:sweeping_3"
+      "recipe": "ars_nouveau:sweeping_3",
+      "type": "ars_nouveau:enchanting_recipe"
     }
   ]
 }
