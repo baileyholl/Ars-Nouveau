@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantmentRecipe;
 import net.minecraft.resources.ResourceLocation;
@@ -28,10 +27,6 @@ public class ApparatusRecipeBuilder {
         return this;
     }
 
-    public ApparatusRecipeBuilder withCategory(ArsNouveauAPI.PatchouliCategories category){
-        this.recipe.category = category.name();
-        return this;
-    }
     public ApparatusRecipeBuilder withReagent(ItemLike provider){
         this.recipe.reagent = Ingredient.of(provider);
         return this;

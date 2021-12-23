@@ -1,48 +1,50 @@
 {
   "type": "ars_nouveau:enchanting_apparatus",
-  "item_1": [
-    {
-      "item": "ars_nouveau:glyph_amplify"
-    }
-  ],
-  "item_2": [
-    {
-      "item": "ars_nouveau:glyph_amplify"
-    }
-  ],
-  "item_3": [
-    {
-      "item": "ars_nouveau:glyph_amplify"
-    }
-  ],
-  "item_4": [
-    {
-      "item": "ars_nouveau:glyph_amplify"
-    }
-  ],
-  "item_5": [
-    {
-      "item": "ars_nouveau:glyph_amplify"
-    }
-  ],
-  "item_6": [
-    {
-      "item": "ars_nouveau:glyph_amplify"
-    }
-  ],
-  "item_7": [
-    {
-      "item": "ars_nouveau:glyph_amplify"
-    }
-  ],
-  "item_8": [
-    {
-      "item": "ars_nouveau:glyph_amplify"
-    }
-  ],
   "reagent": [
     {
       "item": "ars_nouveau:potion_flask"
+    }
+  ],
+  "pedestalItems": [
+    {
+      "item": {
+        "item": "ars_nouveau:glyph_amplify"
+      }
+    },
+    {
+      "item": {
+        "item": "ars_nouveau:glyph_amplify"
+      }
+    },
+    {
+      "item": {
+        "item": "ars_nouveau:glyph_amplify"
+      }
+    },
+    {
+      "item": {
+        "item": "ars_nouveau:glyph_amplify"
+      }
+    },
+    {
+      "item": {
+        "item": "ars_nouveau:glyph_amplify"
+      }
+    },
+    {
+      "item": {
+        "item": "ars_nouveau:glyph_amplify"
+      }
+    },
+    {
+      "item": {
+        "item": "ars_nouveau:glyph_amplify"
+      }
+    },
+    {
+      "item": {
+        "item": "ars_nouveau:glyph_amplify"
+      }
     }
   ],
   "output": {

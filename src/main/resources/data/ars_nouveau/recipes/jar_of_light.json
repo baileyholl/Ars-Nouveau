@@ -1,48 +1,50 @@
 {
   "type": "ars_nouveau:enchanting_apparatus",
-  "item_1": [
-    {
-      "item": "minecraft:glowstone"
-    }
-  ],
-  "item_2": [
-    {
-      "item": "minecraft:glowstone"
-    }
-  ],
-  "item_3": [
-    {
-      "item": "minecraft:glowstone"
-    }
-  ],
-  "item_4": [
-    {
-      "item": "minecraft:glowstone"
-    }
-  ],
-  "item_5": [
-    {
-      "item": "minecraft:redstone_lamp"
-    }
-  ],
-  "item_6": [
-    {
-      "item": "minecraft:redstone_lamp"
-    }
-  ],
-  "item_7": [
-    {
-      "tag": "forge:glass"
-    }
-  ],
-  "item_8": [
-    {
-      "tag": "forge:glass"
-    }
-  ],
   "reagent": [
     {
       "item": "minecraft:glass_bottle"
+    }
+  ],
+  "pedestalItems": [
+    {
+      "item": {
+        "item": "minecraft:glowstone"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:glowstone"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:glowstone"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:glowstone"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:redstone_lamp"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:redstone_lamp"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:glass"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:glass"
+      }
     }
   ],
   "output": {

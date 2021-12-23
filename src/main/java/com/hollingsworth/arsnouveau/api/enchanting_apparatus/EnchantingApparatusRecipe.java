@@ -12,7 +12,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -32,17 +31,15 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
     public Ingredient reagent; // Used in the arcane pedestal
     public ItemStack result; // Result item
     public List<Ingredient> pedestalItems; // Items part of the recipe
-    public String category;
     public ResourceLocation id;
     public int manaCost;
 
     public static final String RECIPE_ID = "enchanting_apparatus";
 
-    public EnchantingApparatusRecipe(ItemStack result, Ingredient reagent, List<Ingredient> pedestalItems, String category){
+    public EnchantingApparatusRecipe(ItemStack result, Ingredient reagent, List<Ingredient> pedestalItems){
         this.reagent = reagent;
         this.pedestalItems = pedestalItems;
         this.result = result;
-        this.category = category;
         manaCost = 0;
         this.id = new ResourceLocation(ArsNouveau.MODID, result.getItem().getRegistryName().getPath());
     }
@@ -55,7 +52,6 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         this.reagent = reagent;
         this.pedestalItems = pedestalItems;
         this.result = result;
-        this.category = "";
         manaCost = cost;
         this.id = id;
     }
@@ -65,20 +61,6 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         pedestalItems = new ArrayList<>();
         manaCost = 0;
         this.id = new ResourceLocation(ArsNouveau.MODID, "empty");
-    }
-
-
-    public EnchantingApparatusRecipe(Item result, Item reagent, Item[] pedestalItems, String category){
-        ArrayList<Ingredient> stacks = new ArrayList<>();
-        for(Item i : pedestalItems){
-            stacks.add(Ingredient.of(i));
-        }
-        this.reagent = Ingredient.of(reagent);
-        this.result = new ItemStack(result);
-        this.pedestalItems = stacks;
-        this.category = category;
-        manaCost = 0;
-        this.id = new ResourceLocation(ArsNouveau.MODID, result.getRegistryName().getPath());
     }
 
     @Override
@@ -133,12 +115,12 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
     public JsonElement asRecipe(){
         JsonObject jsonobject = new JsonObject();
         jsonobject.addProperty("type", "ars_nouveau:enchanting_apparatus");
-        int counter = 1;
-        for(Ingredient i : pedestalItems){
-            JsonArray item = new JsonArray();
-            item.add(i.toJson());
-            jsonobject.add("item_"+counter, item);
-            counter++;
+
+        JsonArray pedestalArr = new JsonArray();
+        for(Ingredient i : this.pedestalItems){
+            JsonObject object = new JsonObject();
+            object.add("item", i.toJson());
+            pedestalArr.add(object);
         }
         JsonArray reagent =  new JsonArray();
         reagent.add(this.reagent.toJson());
@@ -150,33 +132,9 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         if (count > 1) {
             resultObj.addProperty("count", count);
         }
-
+        jsonobject.add("pedestalItems", pedestalArr);
         jsonobject.add("output", resultObj);
         jsonobject.addProperty("sourceCost", manaCost);
-        return jsonobject;
-    }
-
-    /**
-     * Converts to a patchouli documentation page
-     */
-    public JsonElement serialize() {
-        JsonObject jsonobject = new JsonObject();
-
-        jsonobject.addProperty("name", this.result.getItem().getDescriptionId());
-        jsonobject.addProperty("icon",  this.result.getItem().getRegistryName().toString());
-        jsonobject.addProperty("category", this.category);
-        JsonArray jsonArray = new JsonArray();
-        JsonObject descPage = new JsonObject();
-        descPage.addProperty("type", "text");
-        descPage.addProperty("text",ArsNouveau.MODID + ".page." + this.result.getItem().getRegistryName().toString().replace(ArsNouveau.MODID + ":", ""));
-        JsonObject infoPage = new JsonObject();
-        infoPage.addProperty("type", "apparatus_recipe");
-        infoPage.addProperty("recipe", this.result.getItem().getRegistryName().toString());
-
-
-        jsonArray.add(descPage);
-        jsonArray.add(infoPage);
-        jsonobject.add("pages", jsonArray);
         return jsonobject;
     }
 
@@ -226,7 +184,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
 
     @Override
     public RecipeType<?> getType() {
-        return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, "enchanting_apparatus"));
+        return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, RECIPE_ID));
     }
     // TODO: Rewrite. Make items an array.
     public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<EnchantingApparatusRecipe> {
@@ -236,10 +194,18 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
             Ingredient reagent = Ingredient.fromJson(GsonHelper.getAsJsonArray(json, "reagent"));
             ItemStack output = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "output"));
             int cost = json.has("sourceCost") ? GsonHelper.getAsInt(json, "sourceCost") : 0;
+            JsonArray pedestalItems = GsonHelper.getAsJsonArray(json,"pedestalItems");
             List<Ingredient> stacks = new ArrayList<>();
-            for(int i = 1; i < 9; i++){
-                if(json.has("item_"+i))
-                    stacks.add(Ingredient.fromJson(GsonHelper.getAsJsonArray(json, "item_" + i)));
+
+            for(JsonElement e : pedestalItems){
+                JsonObject obj = e.getAsJsonObject();
+                Ingredient input = null;
+                if(GsonHelper.isArrayNode(obj, "item")){
+                    input = Ingredient.fromJson(GsonHelper.getAsJsonArray(obj, "item"));
+                }else{
+                    input = Ingredient.fromJson(GsonHelper.getAsJsonObject(obj, "item"));
+                }
+                stacks.add(input);
             }
             return new EnchantingApparatusRecipe(recipeId, stacks, reagent, output, cost);
         }

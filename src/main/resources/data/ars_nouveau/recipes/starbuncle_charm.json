@@ -1,48 +1,50 @@
 {
   "type": "ars_nouveau:enchanting_apparatus",
-  "item_1": [
-    {
-      "tag": "forge:nuggets/gold"
-    }
-  ],
-  "item_2": [
-    {
-      "tag": "forge:nuggets/gold"
-    }
-  ],
-  "item_3": [
-    {
-      "tag": "forge:nuggets/gold"
-    }
-  ],
-  "item_4": [
-    {
-      "tag": "forge:nuggets/gold"
-    }
-  ],
-  "item_5": [
-    {
-      "tag": "forge:nuggets/gold"
-    }
-  ],
-  "item_6": [
-    {
-      "tag": "forge:gems/source"
-    }
-  ],
-  "item_7": [
-    {
-      "tag": "forge:gems/source"
-    }
-  ],
-  "item_8": [
-    {
-      "tag": "forge:gems/source"
-    }
-  ],
   "reagent": [
     {
       "item": "ars_nouveau:starbuncle_shards"
+    }
+  ],
+  "pedestalItems": [
+    {
+      "item": {
+        "tag": "forge:nuggets/gold"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:nuggets/gold"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:nuggets/gold"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:nuggets/gold"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:nuggets/gold"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
     }
   ],
   "output": {

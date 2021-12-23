@@ -1,48 +1,50 @@
 {
   "type": "ars_nouveau:enchanting_apparatus",
-  "item_1": [
-    {
-      "item": "minecraft:sugar"
-    }
-  ],
-  "item_2": [
-    {
-      "tag": "forge:crops/nether_wart"
-    }
-  ],
-  "item_3": [
-    {
-      "tag": "forge:rods/blaze"
-    }
-  ],
-  "item_4": [
-    {
-      "tag": "forge:dusts/glowstone"
-    }
-  ],
-  "item_5": [
-    {
-      "item": "minecraft:fermented_spider_eye"
-    }
-  ],
-  "item_6": [
-    {
-      "tag": "forge:dusts/redstone"
-    }
-  ],
-  "item_7": [
-    {
-      "item": "minecraft:brewing_stand"
-    }
-  ],
-  "item_8": [
-    {
-      "tag": "forge:feathers"
-    }
-  ],
   "reagent": [
     {
       "item": "ars_nouveau:mundane_belt"
+    }
+  ],
+  "pedestalItems": [
+    {
+      "item": {
+        "item": "minecraft:sugar"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:crops/nether_wart"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:rods/blaze"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:dusts/glowstone"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:fermented_spider_eye"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:dusts/redstone"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:brewing_stand"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:feathers"
+      }
     }
   ],
   "output": {

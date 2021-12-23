@@ -1,53 +1,55 @@
 {
   "type": "ars_nouveau:enchanting_apparatus",
-  "item_1": [
-    {
-      "tag": "forge:ingots/iron"
-    }
-  ],
-  "item_2": [
-    {
-      "tag": "forge:ingots/iron"
-    }
-  ],
-  "item_3": [
-    {
-      "tag": "forge:ingots/iron"
-    }
-  ],
-  "item_4": [
-    {
-      "tag": "forge:ingots/iron"
-    }
-  ],
-  "item_5": [
-    {
-      "tag": "forge:gems/source"
-    }
-  ],
-  "item_6": [
-    {
-      "tag": "forge:gems/source"
-    }
-  ],
-  "item_7": [
-    {
-      "tag": "forge:gems/source"
-    }
-  ],
-  "item_8": [
-    {
-      "tag": "forge:gems/source"
-    }
-  ],
-  "item_9": [
-    {
-      "item": "minecraft:book"
-    }
-  ],
   "reagent": [
     {
       "item": "minecraft:egg"
+    }
+  ],
+  "pedestalItems": [
+    {
+      "item": {
+        "tag": "forge:ingots/iron"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:ingots/iron"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:ingots/iron"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:ingots/iron"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:book"
+      }
     }
   ],
   "output": {

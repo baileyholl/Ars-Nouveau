@@ -30,16 +30,16 @@ public class Recipes extends RecipeProvider {
         super(generatorIn);
     }
 
-    public static Tag.Named<Item> MANA_GEM_TAG = ItemTags.bind("forge:gems/source");
-    public static Tag.Named<Item> MANA_GEM_BLOCK_TAG = ItemTags.bind("forge:storage_blocks/source");
+    public static Tag.Named<Item> SOURCE_GEM_TAG = ItemTags.bind("forge:gems/source");
+    public static Tag.Named<Item> SOURCE_GEM_BLOCK_TAG = ItemTags.bind("forge:storage_blocks/source");
     public static Tag.Named<Item> ARCHWOOD_LOG_TAG = ItemTags.bind("forge:logs/archwood");
     public static Tag.Named<Block> DECORATIVE_AN =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "an_decorative"));
     public static Tag.Named<Block> MAGIC_SAPLINGS =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "magic_saplings"));
     public static Tag.Named<Block> MAGIC_PLANTS =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "magic_plants"));
     public static Tag.Named<Item> MAGIC_FOOD = ItemTags.bind("ars_nouveau:magic_food");
 
-    public static Ingredient MANA_GEM = Ingredient.of(MANA_GEM_TAG);
-    public static Ingredient MANA_GEM_BLOCK = Ingredient.of(MANA_GEM_BLOCK_TAG);
+    public static Ingredient SOURCE_GEM = Ingredient.of(SOURCE_GEM_TAG);
+    public static Ingredient SOURCE_GEM_BLOCK = Ingredient.of(SOURCE_GEM_BLOCK_TAG);
     public static Ingredient ARCHWOOD_LOG = Ingredient.of(ARCHWOOD_LOG_TAG);
 
 
@@ -52,19 +52,19 @@ public class Recipes extends RecipeProvider {
 
 
            ShapelessRecipeBuilder.shapeless(ItemsRegistry.WORN_NOTEBOOK).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                   .requires(MANA_GEM, 1)
+                   .requires(SOURCE_GEM, 1)
                    .requires(Items.BOOK).save(consumer);
 
 
             ShapelessRecipeBuilder.shapeless(ItemsRegistry.MAGIC_CLAY).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .requires(Items.CLAY_BALL)
-                    .requires(MANA_GEM, 1)
+                    .requires(SOURCE_GEM, 1)
                     .requires(Items.REDSTONE, 2)
                     .save(consumer);
             ShapelessRecipeBuilder.shapeless(ItemsRegistry.MARVELOUS_CLAY).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .requires(ItemsRegistry.MAGIC_CLAY)
                     .requires(Tags.Items.INGOTS_GOLD)
-                    .requires(MANA_GEM, 1)
+                    .requires(SOURCE_GEM, 1)
                     .requires(Items.LAPIS_LAZULI, 2)
                     .save(consumer);
 
@@ -120,12 +120,12 @@ public class Recipes extends RecipeProvider {
                     .pattern("xyx")
                     .pattern(" x ")
                     .define('x', Tags.Items.LEATHER)
-                    .define('y', MANA_GEM).save(consumer);
+                    .define('y', SOURCE_GEM).save(consumer);
 
             ShapedRecipeBuilder.shaped(ItemsRegistry.RING_OF_POTENTIAL).unlockedBy("has_journal",InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern("xxx")
                     .pattern("xyx")
-                    .pattern("xxx").define('x', Tags.Items.NUGGETS_IRON).define('y', MANA_GEM).save(consumer);
+                    .pattern("xxx").define('x', Tags.Items.NUGGETS_IRON).define('y', SOURCE_GEM).save(consumer);
 
 
 
@@ -145,7 +145,7 @@ public class Recipes extends RecipeProvider {
             ShapedRecipeBuilder.shaped(ItemsRegistry.DULL_TRINKET).unlockedBy("has_journal",InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern(" x ")
                     .pattern("xyx")
-                    .pattern(" x ").define('x',  Tags.Items.NUGGETS_IRON).define('y',MANA_GEM).save(consumer);
+                    .pattern(" x ").define('x',  Tags.Items.NUGGETS_IRON).define('y', SOURCE_GEM).save(consumer);
 
             ShapedRecipeBuilder.shaped(BlockRegistry.ARCANE_CORE_BLOCK).unlockedBy("has_journal",InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern("xxx")
@@ -156,7 +156,7 @@ public class Recipes extends RecipeProvider {
             ShapedRecipeBuilder.shaped(BlockRegistry.ARCANE_STONE, 8).unlockedBy("has_journal",InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern("xxx")
                     .pattern("xyx")
-                    .pattern("xxx").define('y',MANA_GEM).define('x',  Tags.Items.STONE).save(consumer);
+                    .pattern("xxx").define('y', SOURCE_GEM).define('x',  Tags.Items.STONE).save(consumer);
 
             ShapedRecipeBuilder.shaped(BlockRegistry.IMBUEMENT_BLOCK.asItem(), 1).unlockedBy("has_journal",InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern("xyx")
@@ -188,7 +188,7 @@ public class Recipes extends RecipeProvider {
 
             ShapelessRecipeBuilder.shapeless(ItemsRegistry.SPELL_PARCHMENT, 1).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .requires(ItemsRegistry.BLANK_PARCHMENT, 1)
-                    .requires(Ingredient.of(ItemTags.bind("forge:gems/mana")), 4)
+                    .requires(Ingredient.of(SOURCE_GEM_TAG), 4)
                     .save(consumer);
 
             ShapelessRecipeBuilder.shapeless(ItemsRegistry.ALLOW_ITEM_SCROLL, 1).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
@@ -202,7 +202,7 @@ public class Recipes extends RecipeProvider {
                     .save(consumer);
 
             ShapelessRecipeBuilder.shapeless(ItemsRegistry.WARP_SCROLL).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                    .requires(Ingredient.of(Tags.Items.GEMS_LAPIS), 4).requires(ItemsRegistry.BLANK_PARCHMENT).requires(MANA_GEM, 4)
+                    .requires(Ingredient.of(Tags.Items.GEMS_LAPIS), 4).requires(ItemsRegistry.BLANK_PARCHMENT).requires(SOURCE_GEM, 4)
                     .save(consumer);
 
             ShapedRecipeBuilder.shaped(BlockRegistry.VOLCANIC_BLOCK).unlockedBy("has_journal",InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
@@ -210,11 +210,11 @@ public class Recipes extends RecipeProvider {
                     .pattern("gig")
                     .pattern(" s ")
                     .define('g', Tags.Items.INGOTS_GOLD)
-                    .define('s', MANA_GEM)
+                    .define('s', SOURCE_GEM)
                     .define('i', Items.LAVA_BUCKET).save(consumer);
 
             ShapelessRecipeBuilder.shapeless(BlockRegistry.LAVA_LILY, 8).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                    .requires(Items.LILY_PAD, 1).requires(MANA_GEM, 8)
+                    .requires(Items.LILY_PAD, 1).requires(SOURCE_GEM, 8)
                     .save(consumer);
 
             shapelessBuilder(BlockRegistry.ARCHWOOD_PLANK, 4).requires(ARCHWOOD_LOG).save(consumer);
@@ -235,7 +235,7 @@ public class Recipes extends RecipeProvider {
             strippedLogToWood(consumer, BlockRegistry.STRIPPED_AWLOG_RED, BlockRegistry.STRIPPED_AWWOOD_RED);
             strippedLogToWood(consumer, BlockRegistry.STRIPPED_AWLOG_PURPLE, BlockRegistry.STRIPPED_AWWOOD_PURPLE);
             shapedWoodenTrapdoor(consumer, BlockRegistry.ARCHWOOD_TRAPDOOR, BlockRegistry.ARCHWOOD_PLANK);
-            shapelessBuilder(BlockRegistry.SOURCE_GEM_BLOCK,1).requires(MANA_GEM, 9).save(consumer);
+            shapelessBuilder(BlockRegistry.SOURCE_GEM_BLOCK,1).requires(SOURCE_GEM, 9).save(consumer);
             shapelessBuilder(ItemsRegistry.SOURCE_GEM, 9).requires(BlockRegistry.SOURCE_GEM_BLOCK,1).save(consumer, new ResourceLocation(ArsNouveau.MODID, "mana_gem_2"));
             shapelessBuilder(Items.LEATHER, 1).requires(ItemsRegistry.WILDEN_WING).save(consumer,  new ResourceLocation(ArsNouveau.MODID, "wing_to_leather"));
             shapelessBuilder(Items.BONE_MEAL, 3).requires(ItemsRegistry.WILDEN_HORN).save(consumer,  new ResourceLocation(ArsNouveau.MODID, "horn_to_bonemeal"));
@@ -257,12 +257,12 @@ public class Recipes extends RecipeProvider {
 
             shapelessBuilder(BlockRegistry.RITUAL_BLOCK)
                     .requires(BlockRegistry.ARCANE_PEDESTAL)
-                    .requires(Recipes.MANA_GEM_BLOCK_TAG)
+                    .requires(Recipes.SOURCE_GEM_BLOCK_TAG)
                     .requires(Ingredient.of(Tags.Items.INGOTS_GOLD), 3)
                     .save(consumer);
 
             shapelessBuilder(BlockRegistry.SCONCE_BLOCK)
-                    .requires(Recipes.MANA_GEM)
+                    .requires(Recipes.SOURCE_GEM)
                     .requires(Ingredient.of(Tags.Items.NUGGETS_GOLD), 2)
                     .save(consumer);
 
@@ -298,7 +298,7 @@ public class Recipes extends RecipeProvider {
             shapelessBuilder(getRitualItem(RitualLib.CLOUDSHAPER))
                     .requires(BlockRegistry.CASCADING_LOG)
                     .requires(Items.FEATHER)
-                    .requires(MANA_GEM_BLOCK_TAG)
+                    .requires(SOURCE_GEM_BLOCK_TAG)
                     .save(consumer);
 
             shapelessBuilder(getRitualItem(RitualLib.CHALLENGE))
@@ -362,7 +362,7 @@ public class Recipes extends RecipeProvider {
                     .requires(BlockRegistry.VEXING_LOG)
                     .requires(Items.SPIDER_EYE, 3)
                     .requires(Items.GLOWSTONE)
-                    .requires(Recipes.MANA_GEM_BLOCK)
+                    .requires(Recipes.SOURCE_GEM_BLOCK)
                     .save(consumer);
 
             shapelessBuilder(getRitualItem(RitualLib.FLIGHT))
@@ -426,7 +426,7 @@ public class Recipes extends RecipeProvider {
                     .pattern("gig")
                     .pattern(" s ")
                     .define('g', Tags.Items.INGOTS_GOLD)
-                    .define('s', MANA_GEM)
+                    .define('s', SOURCE_GEM)
                     .define('i', Items.BREWING_STAND).save(consumer);
 
             ShapedRecipeBuilder.shaped(BlockRegistry.VITALIC_BLOCK).unlockedBy("has_journal",InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
@@ -434,7 +434,7 @@ public class Recipes extends RecipeProvider {
                     .pattern("gig")
                     .pattern(" s ")
                     .define('g', Tags.Items.INGOTS_GOLD)
-                    .define('s', MANA_GEM)
+                    .define('s', SOURCE_GEM)
                     .define('i', Items.GLISTERING_MELON_SLICE).save(consumer);
 
             ShapedRecipeBuilder.shaped(BlockRegistry.MYCELIAL_BLOCK).unlockedBy("has_journal",InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
@@ -442,7 +442,7 @@ public class Recipes extends RecipeProvider {
                     .pattern("gig")
                     .pattern(" s ")
                     .define('g', Tags.Items.INGOTS_GOLD)
-                    .define('s', MANA_GEM)
+                    .define('s', SOURCE_GEM)
                     .define('i', Items.MUSHROOM_STEW).save(consumer);
 
             ShapedRecipeBuilder.shaped(BlockRegistry.AGRONOMIC_SOURCELINK).unlockedBy("has_journal",InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
@@ -450,7 +450,7 @@ public class Recipes extends RecipeProvider {
                     .pattern("gig")
                     .pattern(" s ")
                     .define('g', Tags.Items.INGOTS_GOLD)
-                    .define('s', MANA_GEM)
+                    .define('s', SOURCE_GEM)
                     .define('i', Items.WHEAT).save(consumer);
 
             shapelessBuilder(ItemsRegistry.SOURCE_BERRY_PIE)
@@ -469,13 +469,13 @@ public class Recipes extends RecipeProvider {
                     .pattern("gMg")
                     .pattern("g g")
                     .define('g', Tags.Items.INGOTS_GOLD)
-                    .define('M', MANA_GEM_BLOCK)
+                    .define('M', SOURCE_GEM_BLOCK)
                     .save(consumer);
             shapelessBuilder(getRitualItem(RitualLib.BINDING))
                     .requires(BlockRegistry.VEXING_LOG)
                     .requires(ItemsRegistry.BLANK_PARCHMENT)
                     .requires(Items.ENDER_PEARL, 1)
-                    .requires(MANA_GEM, 3)
+                    .requires(SOURCE_GEM, 3)
                     .save(consumer);
 
             ShapedRecipeBuilder.shaped(BlockRegistry.BASIC_SPELL_TURRET).unlockedBy("has_journal",InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
@@ -483,7 +483,7 @@ public class Recipes extends RecipeProvider {
                     .pattern("xzy")
                     .pattern("yyy")
                     .define('z', Ingredient.of(Tags.Items.STORAGE_BLOCKS_REDSTONE))
-                    .define('x', MANA_GEM)
+                    .define('x', SOURCE_GEM)
                     .define('y', Ingredient.of(Tags.Items.INGOTS_GOLD))
                     .save(consumer);
 
@@ -512,7 +512,7 @@ public class Recipes extends RecipeProvider {
                     .requires(BlockRegistry.CASCADING_SAPLING)
                     .requires(BlockRegistry.FLOURISHING_SAPLING)
                     .requires(BlockRegistry.VEXING_SAPLING)
-                    .requires(MANA_GEM, 4)
+                    .requires(SOURCE_GEM, 4)
                     .save(consumer);
 
             shapelessBuilder(Items.PINK_DYE, 2).requires(ItemsRegistry.MAGE_BLOOM, 2).save(consumer, new ResourceLocation(ArsNouveau.MODID, "magebloom_to_pink"));

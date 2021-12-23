@@ -1,23 +1,25 @@
 {
   "type": "ars_nouveau:enchanting_apparatus",
-  "item_1": [
-    {
-      "tag": "forge:gems/source"
-    }
-  ],
-  "item_2": [
-    {
-      "tag": "forge:gems/source"
-    }
-  ],
-  "item_3": [
-    {
-      "tag": "forge:ingots/gold"
-    }
-  ],
   "reagent": [
     {
       "item": "minecraft:stick"
+    }
+  ],
+  "pedestalItems": [
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:ingots/gold"
+      }
     }
   ],
   "output": {
