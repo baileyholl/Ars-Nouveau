@@ -112,18 +112,19 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
 
         if(this.level.getGameTime() % 20 == 0 && this.getSource() < recipe.source){
-            if(canAcceptSource(Math.min(200, recipe.source))){
-                BlockPos takePos = SourceUtil.takeSourceNearby(worldPosition, level, 2, Math.min(200, recipe.source));
-                if(takePos != null){
-                    this.addSource(transferRate);
-                    EntityFlyingItem item = new EntityFlyingItem(level,takePos.above(), worldPosition, 255, 50, 80)
-                            .withNoTouch();
-                    item.setDistanceAdjust(2f);
-                    level.addFreshEntity(item);
-                    if(!draining) {
-                        draining = true;
-                        update();
-                    }
+            if(!canAcceptSource(Math.min(200, recipe.source)))
+                return;
+
+            BlockPos takePos = SourceUtil.takeSourceNearby(worldPosition, level, 2, Math.min(200, recipe.source));
+            if(takePos != null){
+                this.addSource(transferRate);
+                EntityFlyingItem item = new EntityFlyingItem(level,takePos.above(), worldPosition, 255, 50, 80)
+                        .withNoTouch();
+                item.setDistanceAdjust(2f);
+                level.addFreshEntity(item);
+                if(!draining) {
+                    draining = true;
+                    update();
                 }
             }else{
                 this.addSource(5);
@@ -132,6 +133,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
                     update();
                 }
             }
+
         }
 
         if(this.getSource() >= recipe.source && craftTicks <= 0){
