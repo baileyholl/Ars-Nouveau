@@ -186,7 +186,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
     public RecipeType<?> getType() {
         return Registry.RECIPE_TYPE.get(new ResourceLocation(ArsNouveau.MODID, RECIPE_ID));
     }
-    // TODO: Rewrite. Make items an array.
+
     public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<EnchantingApparatusRecipe> {
 
         @Override
