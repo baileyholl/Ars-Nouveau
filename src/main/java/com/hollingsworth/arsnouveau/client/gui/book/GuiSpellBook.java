@@ -523,13 +523,7 @@ public class GuiSpellBook extends BaseBook {
             recipe = new ArrayList<>(recipe.subList(0, firstBlankSlot));
         }
 
-        for (GlyphButton button : castMethodButtons) {
-            validateGlyphButton(recipe, button);
-        }
-        for (GlyphButton button : augmentButtons) {
-            validateGlyphButton(recipe, button);
-        }
-        for (GlyphButton button : effectButtons) {
+        for(GlyphButton button : glyphButtons){
             validateGlyphButton(recipe, button);
         }
     }
