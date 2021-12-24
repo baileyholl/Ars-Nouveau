@@ -15,6 +15,9 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import java.nio.file.Path;
 
 public class BlockTagProvider extends BlockTagsProvider {
+
+    public static Tag.Named<Block> IGNORE_TILE =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "ignore_tile"));
+
     public BlockTagProvider(DataGenerator generatorIn, ExistingFileHelper helper) {
         super(generatorIn, ArsNouveau.MODID, helper);
     }
@@ -104,8 +107,14 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.STRIPPED_AWWOOD_PURPLE,
                 BlockRegistry.BOOKWYRM_LECTERN,
                 BlockRegistry.ARCHWOOD_CHEST
-
         );
+        this.tag(BlockTags.MINEABLE_WITH_HOE).add(
+                BlockRegistry.CASCADING_LEAVE,
+                BlockRegistry.BLAZING_LEAVES,
+                BlockRegistry.FLOURISHING_LEAVES,
+                BlockRegistry.VEXING_LEAVES
+        );
+
         this.tag(BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "an_decorative")))
                 .add(BlockRegistry.AB_SMOOTH_BASKET,
                 BlockRegistry.AB_SMOOTH_CLOVER,
@@ -239,6 +248,9 @@ public class BlockTagProvider extends BlockTagsProvider {
         this.tag(BlockTags.WOODEN_SLABS).add(BlockRegistry.ARCHWOOD_SLABS);
         this.tag(BlockTags.WOODEN_STAIRS).add(BlockRegistry.ARCHWOOD_STAIRS);
         this.tag(BlockTags.WOODEN_TRAPDOORS).add(BlockRegistry.ARCHWOOD_TRAPDOOR);
+
+        this.tag(IGNORE_TILE).add(BlockRegistry.INTANGIBLE_AIR, BlockRegistry.REDSTONE_AIR, BlockRegistry.MAGE_BLOCK);
+
     }
     protected Path getPath(ResourceLocation p_126514_) {
         return this.generator.getOutputFolder().resolve("data/" + p_126514_.getNamespace() + "/tags/blocks/" + p_126514_.getPath() + ".json");

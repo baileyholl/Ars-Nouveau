@@ -2,9 +2,8 @@ package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.common.block.tile.IntangibleAirTile;
-import com.hollingsworth.arsnouveau.common.block.tile.MageBlockTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -108,10 +107,8 @@ public interface ISpellCaster {
             BlockEntity tile = worldIn.getBlockEntity(blockHit.getBlockPos());
             if(tile instanceof ScribesTile)
                 return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
-
-            // TODO: Change to block tag system for whitelisting castable target blocks
-            if(!playerIn.isShiftKeyDown() && tile != null && !(worldIn.getBlockEntity(((BlockHitResult) result).getBlockPos()) instanceof IntangibleAirTile
-                    ||(worldIn.getBlockEntity(((BlockHitResult) result).getBlockPos()) instanceof MageBlockTile))){
+            
+            if(!playerIn.isShiftKeyDown() && tile != null && !(worldIn.getBlockState(blockHit.getBlockPos()).is(BlockTagProvider.IGNORE_TILE))){
                 return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
             }
 
