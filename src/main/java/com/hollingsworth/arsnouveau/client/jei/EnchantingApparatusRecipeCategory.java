@@ -79,8 +79,8 @@ public class EnchantingApparatusRecipeCategory implements IRecipeCategory<Enchan
         IDrawableAnimated arrow = this.cachedArrows.getUnchecked(40);
         arrow.draw( matrixStack,55, 22);
         Font renderer = Minecraft.getInstance().font;
-        if(recipe.consumesMana())
-            renderer.draw(matrixStack, new TranslatableComponent("ars_nouveau.source", recipe.manaCost), 0.0f,65f, 10);
+        if(recipe.consumesSource())
+            renderer.draw(matrixStack, new TranslatableComponent("ars_nouveau.source", recipe.sourceCost), 0.0f,65f, 10);
     }
 
     @Override

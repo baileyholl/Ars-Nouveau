@@ -36,7 +36,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
         this.pedestalItems = pedestalItems;
         this.enchantment = enchantment;
         this.enchantLevel = level;
-        this.manaCost = manaCost;
+        this.sourceCost = manaCost;
         this.id = new ResourceLocation(ArsNouveau.MODID, enchantment.getRegistryName().getPath() +"_" + level);
     }
 
@@ -110,15 +110,15 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
         jsonobject.addProperty("type", "ars_nouveau:" + EnchantmentRecipe.RECIPE_ID);
         jsonobject.addProperty("enchantment", enchantment.getRegistryName().toString());
         jsonobject.addProperty("level", enchantLevel);
-        jsonobject.addProperty("mana", manaCost());
+        jsonobject.addProperty("sourceCost", getSourceCost());
 
-        int counter = 1;
-        for(Ingredient i : pedestalItems){
-            JsonArray item = new JsonArray();
-            item.add(i.toJson());
-            jsonobject.add("item_"+counter, item);
-            counter++;
+        JsonArray pedestalArr = new JsonArray();
+        for(Ingredient i : this.pedestalItems){
+            JsonObject object = new JsonObject();
+            object.add("item", i.toJson());
+            pedestalArr.add(object);
         }
+        jsonobject.add("pedestalItems", pedestalArr);
         return jsonobject;
     }
 
@@ -128,11 +128,19 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
         public EnchantmentRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
             Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(GsonHelper.getAsString(json, "enchantment")));
             int level = GsonHelper.getAsInt(json, "level", 1);
-            int manaCost = GsonHelper.getAsInt(json,"mana", 0);
+            int manaCost = GsonHelper.getAsInt(json,"sourceCost", 0);
+            JsonArray pedestalItems = GsonHelper.getAsJsonArray(json,"pedestalItems");
             List<Ingredient> stacks = new ArrayList<>();
-            for(int i = 1; i < 9; i++){
-                if(json.has("item_"+i))
-                    stacks.add(Ingredient.fromJson(GsonHelper.getAsJsonArray(json, "item_" + i)));
+
+            for(JsonElement e : pedestalItems){
+                JsonObject obj = e.getAsJsonObject();
+                Ingredient input = null;
+                if(GsonHelper.isArrayNode(obj, "item")){
+                    input = Ingredient.fromJson(GsonHelper.getAsJsonArray(obj, "item"));
+                }else{
+                    input = Ingredient.fromJson(GsonHelper.getAsJsonObject(obj, "item"));
+                }
+                stacks.add(input);
             }
             return new EnchantmentRecipe( stacks,enchantment,level, manaCost);
         }
@@ -160,7 +168,7 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
             buf.writeInt(recipe.pedestalItems.size());
             buf.writeUtf(recipe.enchantment.getRegistryName().toString());
             buf.writeInt(recipe.enchantLevel);
-            buf.writeInt(recipe.manaCost());
+            buf.writeInt(recipe.getSourceCost());
             for(Ingredient i : recipe.pedestalItems){
                 i.toNetwork(buf);
             }

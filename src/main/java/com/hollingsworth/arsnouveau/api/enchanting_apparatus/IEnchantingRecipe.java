@@ -17,9 +17,9 @@ public interface IEnchantingRecipe extends Recipe<EnchantingApparatusTile> {
      */
     ItemStack getResult(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile);
 
-    default boolean consumesMana(){
-        return manaCost() > 0;
+    default boolean consumesSource(){
+        return getSourceCost() > 0;
     }
 
-    int manaCost();
+    int getSourceCost();
 }

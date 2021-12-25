@@ -32,7 +32,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
     public ItemStack result; // Result item
     public List<Ingredient> pedestalItems; // Items part of the recipe
     public ResourceLocation id;
-    public int manaCost;
+    public int sourceCost;
 
     public static final String RECIPE_ID = "enchanting_apparatus";
 
@@ -40,7 +40,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         this.reagent = reagent;
         this.pedestalItems = pedestalItems;
         this.result = result;
-        manaCost = 0;
+        sourceCost = 0;
         this.id = new ResourceLocation(ArsNouveau.MODID, result.getItem().getRegistryName().getPath());
     }
 
@@ -52,14 +52,14 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         this.reagent = reagent;
         this.pedestalItems = pedestalItems;
         this.result = result;
-        manaCost = cost;
+        sourceCost = cost;
         this.id = id;
     }
     public EnchantingApparatusRecipe(){
         reagent = Ingredient.EMPTY;
         result = ItemStack.EMPTY;
         pedestalItems = new ArrayList<>();
-        manaCost = 0;
+        sourceCost = 0;
         this.id = new ResourceLocation(ArsNouveau.MODID, "empty");
     }
 
@@ -134,18 +134,18 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         }
         jsonobject.add("pedestalItems", pedestalArr);
         jsonobject.add("output", resultObj);
-        jsonobject.addProperty("sourceCost", manaCost);
+        jsonobject.addProperty("sourceCost", sourceCost);
         return jsonobject;
     }
 
     @Override
-    public boolean consumesMana() {
-        return manaCost() > 0;
+    public boolean consumesSource() {
+        return getSourceCost() > 0;
     }
 
     @Override
-    public int manaCost() {
-        return manaCost;
+    public int getSourceCost() {
+        return sourceCost;
     }
 
     @Override
@@ -236,7 +236,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
             for(Ingredient i : recipe.pedestalItems){
                 i.toNetwork(buf);
             }
-            buf.writeInt(recipe.manaCost);
+            buf.writeInt(recipe.sourceCost);
         }
     }
 }
