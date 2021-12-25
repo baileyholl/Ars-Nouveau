@@ -2,25 +2,27 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:unbreaking",
   "level": 1,
-  "mana": 2000,
-  "item_1": [
+  "sourceCost": 2000,
+  "pedestalItems": [
     {
-      "item": "ars_nouveau:glyph_shield"
-    }
-  ],
-  "item_2": [
+      "item": {
+        "item": "ars_nouveau:glyph_shield"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_amplify"
-    }
-  ],
-  "item_3": [
+      "item": {
+        "item": "ars_nouveau:glyph_amplify"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/source"
-    }
-  ],
-  "item_4": [
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/lapis"
+      "item": {
+        "tag": "forge:storage_blocks/lapis"
+      }
     }
   ]
 }

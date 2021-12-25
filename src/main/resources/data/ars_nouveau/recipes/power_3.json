@@ -2,45 +2,47 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:power",
   "level": 3,
-  "mana": 5000,
-  "item_1": [
+  "sourceCost": 5000,
+  "pedestalItems": [
     {
-      "item": "ars_nouveau:glyph_amplify"
-    }
-  ],
-  "item_2": [
+      "item": {
+        "item": "ars_nouveau:glyph_amplify"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_amplify"
-    }
-  ],
-  "item_3": [
+      "item": {
+        "item": "ars_nouveau:glyph_amplify"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_amplify"
-    }
-  ],
-  "item_4": [
+      "item": {
+        "item": "ars_nouveau:glyph_amplify"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_projectile"
-    }
-  ],
-  "item_5": [
+      "item": {
+        "item": "ars_nouveau:glyph_projectile"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/source"
-    }
-  ],
-  "item_6": [
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/source"
-    }
-  ],
-  "item_7": [
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/lapis"
-    }
-  ],
-  "item_8": [
+      "item": {
+        "tag": "forge:storage_blocks/lapis"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/lapis"
+      "item": {
+        "tag": "forge:storage_blocks/lapis"
+      }
     }
   ]
 }

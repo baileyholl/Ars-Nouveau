@@ -2,45 +2,47 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:blast_protection",
   "level": 4,
-  "mana": 8000,
-  "item_1": [
+  "sourceCost": 8000,
+  "pedestalItems": [
     {
-      "tag": "forge:gems/diamond"
-    }
-  ],
-  "item_2": [
+      "item": {
+        "tag": "forge:gems/diamond"
+      }
+    },
     {
-      "tag": "forge:gems/diamond"
-    }
-  ],
-  "item_3": [
+      "item": {
+        "tag": "forge:gems/diamond"
+      }
+    },
     {
-      "tag": "forge:gems/diamond"
-    }
-  ],
-  "item_4": [
+      "item": {
+        "tag": "forge:gems/diamond"
+      }
+    },
     {
-      "tag": "forge:gems/diamond"
-    }
-  ],
-  "item_5": [
+      "item": {
+        "tag": "forge:gems/diamond"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/source"
-    }
-  ],
-  "item_6": [
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/source"
-    }
-  ],
-  "item_7": [
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/gold"
-    }
-  ],
-  "item_8": [
+      "item": {
+        "tag": "forge:storage_blocks/gold"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/gold"
+      "item": {
+        "tag": "forge:storage_blocks/gold"
+      }
     }
   ]
 }

@@ -2,45 +2,47 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "ars_nouveau:reactive",
   "level": 3,
-  "mana": 9000,
-  "item_1": [
+  "sourceCost": 9000,
+  "pedestalItems": [
     {
-      "item": "ars_nouveau:mythical_clay"
-    }
-  ],
-  "item_2": [
+      "item": {
+        "item": "ars_nouveau:mythical_clay"
+      }
+    },
     {
-      "item": "ars_nouveau:mythical_clay"
-    }
-  ],
-  "item_3": [
+      "item": {
+        "item": "ars_nouveau:mythical_clay"
+      }
+    },
     {
-      "item": "ars_nouveau:mythical_clay"
-    }
-  ],
-  "item_4": [
+      "item": {
+        "item": "ars_nouveau:mythical_clay"
+      }
+    },
     {
-      "item": "ars_nouveau:mythical_clay"
-    }
-  ],
-  "item_5": [
+      "item": {
+        "item": "ars_nouveau:mythical_clay"
+      }
+    },
     {
-      "tag": "forge:ender_pearls"
-    }
-  ],
-  "item_6": [
+      "item": {
+        "tag": "forge:ender_pearls"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_pierce"
-    }
-  ],
-  "item_7": [
+      "item": {
+        "item": "ars_nouveau:glyph_pierce"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_extract"
-    }
-  ],
-  "item_8": [
+      "item": {
+        "item": "ars_nouveau:glyph_extract"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_fortune"
+      "item": {
+        "item": "ars_nouveau:glyph_fortune"
+      }
     }
   ]
 }

@@ -2,20 +2,22 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:flame",
   "level": 1,
-  "mana": 5000,
-  "item_1": [
+  "sourceCost": 5000,
+  "pedestalItems": [
     {
-      "item": "ars_nouveau:glyph_ignite"
-    }
-  ],
-  "item_2": [
+      "item": {
+        "item": "ars_nouveau:glyph_ignite"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_projectile"
-    }
-  ],
-  "item_3": [
+      "item": {
+        "item": "ars_nouveau:glyph_projectile"
+      }
+    },
     {
-      "tag": "forge:rods/blaze"
+      "item": {
+        "tag": "forge:rods/blaze"
+      }
     }
   ]
 }

@@ -2,45 +2,47 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:infinity",
   "level": 1,
-  "mana": 9000,
-  "item_1": [
+  "sourceCost": 9000,
+  "pedestalItems": [
     {
-      "item": "ars_nouveau:glyph_projectile"
-    }
-  ],
-  "item_2": [
+      "item": {
+        "item": "ars_nouveau:glyph_projectile"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_projectile"
-    }
-  ],
-  "item_3": [
+      "item": {
+        "item": "ars_nouveau:glyph_projectile"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_projectile"
-    }
-  ],
-  "item_4": [
+      "item": {
+        "item": "ars_nouveau:glyph_projectile"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_projectile"
-    }
-  ],
-  "item_5": [
+      "item": {
+        "item": "ars_nouveau:glyph_projectile"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_projectile"
-    }
-  ],
-  "item_6": [
+      "item": {
+        "item": "ars_nouveau:glyph_projectile"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_projectile"
-    }
-  ],
-  "item_7": [
+      "item": {
+        "item": "ars_nouveau:glyph_projectile"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_projectile"
-    }
-  ],
-  "item_8": [
+      "item": {
+        "item": "ars_nouveau:glyph_projectile"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/diamond"
+      "item": {
+        "tag": "forge:storage_blocks/diamond"
+      }
     }
   ]
 }

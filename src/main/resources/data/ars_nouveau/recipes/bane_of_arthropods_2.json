@@ -2,30 +2,32 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:bane_of_arthropods",
   "level": 2,
-  "mana": 3500,
-  "item_1": [
+  "sourceCost": 3500,
+  "pedestalItems": [
     {
-      "item": "minecraft:spider_eye"
-    }
-  ],
-  "item_2": [
+      "item": {
+        "item": "minecraft:spider_eye"
+      }
+    },
     {
-      "item": "minecraft:spider_eye"
-    }
-  ],
-  "item_3": [
+      "item": {
+        "item": "minecraft:spider_eye"
+      }
+    },
     {
-      "item": "minecraft:spider_eye"
-    }
-  ],
-  "item_4": [
+      "item": {
+        "item": "minecraft:spider_eye"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/source"
-    }
-  ],
-  "item_5": [
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/lapis"
+      "item": {
+        "tag": "forge:storage_blocks/lapis"
+      }
     }
   ]
 }
