@@ -218,7 +218,7 @@ public class PatchouliProvider implements DataProvider {
 
         addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.WIXIE_CHARM)
                 .withLocalizedText()
-                .withPage(new ApparatusPage(ItemsRegistry.BOOKWYRM_CHARM))
+                .withPage(new ApparatusPage(ItemsRegistry.WIXIE_CHARM))
                 .withPage(new EntityPage(ModEntities.ENTITY_WIXIE_TYPE.getRegistryName().toString())
                         .withText(getLangPath("wixie_charm", 2)))
                 .withPage(new TextPage(getLangPath("wixie_charm", 3)).withTitle("ars_nouveau.item_crafting"))

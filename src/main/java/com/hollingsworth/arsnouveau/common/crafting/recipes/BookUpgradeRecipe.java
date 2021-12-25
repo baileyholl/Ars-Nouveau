@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
 import com.google.gson.JsonObject;
-import com.hollingsworth.arsnouveau.common.crafting.ModCrafting;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
+import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -39,7 +39,7 @@ public class BookUpgradeRecipe extends ShapelessRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModCrafting.Recipes.BOOK_UPGRADE_RECIPE;
+        return RecipeRegistry.BOOK_UPGRADE_RECIPE;
     }
 
     public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<BookUpgradeRecipe> {

@@ -107,7 +107,7 @@ public interface ISpellCaster {
             BlockEntity tile = worldIn.getBlockEntity(blockHit.getBlockPos());
             if(tile instanceof ScribesTile)
                 return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
-            
+
             if(!playerIn.isShiftKeyDown() && tile != null && !(worldIn.getBlockState(blockHit.getBlockPos()).is(BlockTagProvider.IGNORE_TILE))){
                 return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
             }

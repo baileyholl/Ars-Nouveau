@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
 import com.google.gson.JsonObject;
-import com.hollingsworth.arsnouveau.common.crafting.ModCrafting;
 import com.hollingsworth.arsnouveau.common.items.PotionFlask;
+import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -107,7 +107,7 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModCrafting.Recipes.POTION_FLASK_RECIPE;
+        return RecipeRegistry.POTION_FLASK_RECIPE;
     }
 
     public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<PotionFlaskRecipe> {

@@ -31,28 +31,9 @@ public class EnchantmentRecipe extends EnchantingApparatusRecipe{
     public Enchantment enchantment;
     public int enchantLevel;
     public static final String RECIPE_ID = "enchantment";
+
     public EnchantmentRecipe(List<Ingredient> pedestalItems, Enchantment enchantment, int level, int manaCost){
         this.pedestalItems = pedestalItems;
-        this.enchantment = enchantment;
-        this.enchantLevel = level;
-        this.manaCost = manaCost;
-        this.id = new ResourceLocation(ArsNouveau.MODID, enchantment.getRegistryName().getPath() +"_" + level);
-    }
-
-    public EnchantmentRecipe(ItemStack[] pedestalItems, Enchantment enchantment, int level, int manaCost){
-        List<Ingredient> ingres = new ArrayList<>();
-        for(ItemStack i : pedestalItems){
-            ingres.add(Ingredient.of(i.getItem()));
-        }
-        this.pedestalItems = ingres;
-        this.enchantment = enchantment;
-        this.enchantLevel = level;
-        this.manaCost = manaCost;
-        this.id = new ResourceLocation(ArsNouveau.MODID, enchantment.getRegistryName().getPath() +"_" + level);
-    }
-
-    public EnchantmentRecipe(Ingredient[] pedestalItems, Enchantment enchantment, int level, int manaCost){
-        this.pedestalItems =  Arrays.asList(pedestalItems);
         this.enchantment = enchantment;
         this.enchantLevel = level;
         this.manaCost = manaCost;

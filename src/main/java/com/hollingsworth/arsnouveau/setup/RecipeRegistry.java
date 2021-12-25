@@ -4,8 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantmentRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.CrushRecipe;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.InfuserRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.*;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
@@ -30,9 +29,13 @@ public class RecipeRegistry {
     public static final RecipeSerializer<EnchantmentRecipe> ENCHANTMENT_SERIALIZER = new EnchantmentRecipe.Serializer();
     public static final RecipeSerializer<CrushRecipe> CRUSH_SERIALIZER = new CrushRecipe.Serializer();
     public static final RecipeSerializer<InfuserRecipe> INFUSER_SERIALIZER = new InfuserRecipe.Serializer();
+    public static final RecipeSerializer<BookUpgradeRecipe> BOOK_UPGRADE_RECIPE =  new BookUpgradeRecipe.Serializer();
+    public static final RecipeSerializer<PotionFlaskRecipe> POTION_FLASK_RECIPE = new PotionFlaskRecipe.Serializer();
+    public static final RecipeSerializer<DyeRecipe> DYE_RECIPE = new DyeRecipe.Serializer();
 
     @SubscribeEvent
     public static void register(final RegistryEvent.Register<RecipeSerializer<?>> evt) {
+
         Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, GlyphPressRecipe.RECIPE_ID), GLYPH_TYPE);
         Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, EnchantingApparatusRecipe.RECIPE_ID), APPARATUS_TYPE);
         Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, EnchantmentRecipe.RECIPE_ID), ENCHANTMENT_TYPE);
@@ -44,6 +47,11 @@ public class RecipeRegistry {
         evt.getRegistry().register(ENCHANTMENT_SERIALIZER.setRegistryName(new ResourceLocation(ArsNouveau.MODID, EnchantmentRecipe.RECIPE_ID)));
         evt.getRegistry().register(CRUSH_SERIALIZER.setRegistryName(new ResourceLocation(ArsNouveau.MODID, CrushRecipe.RECIPE_ID)));
         evt.getRegistry().register(INFUSER_SERIALIZER.setRegistryName(new ResourceLocation(ArsNouveau.MODID, InfuserRecipe.RECIPE_ID)));
+        evt.getRegistry().registerAll(
+                BOOK_UPGRADE_RECIPE.setRegistryName(new ResourceLocation(ArsNouveau.MODID, "book_upgrade")),
+                POTION_FLASK_RECIPE.setRegistryName(new ResourceLocation(ArsNouveau.MODID, "potion_flask")),
+                DYE_RECIPE.setRegistryName(new ResourceLocation(ArsNouveau.MODID, "dye"))
+        );
     }
 
     private static class ModRecipeType<T extends Recipe<?>> implements RecipeType<T> {
