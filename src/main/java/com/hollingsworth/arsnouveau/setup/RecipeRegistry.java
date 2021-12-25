@@ -24,6 +24,10 @@ public class RecipeRegistry {
     public static final RecipeType<CrushRecipe> CRUSH_TYPE = new ModRecipeType();
     public static final RecipeType<InfuserRecipe> INFUSER_TYPE = new ModRecipeType<>();
 
+    public static final RecipeType<BookUpgradeRecipe> BOOK_UPGRADE_TYPE = new ModRecipeType();
+    public static final RecipeType<PotionFlaskRecipe> POTION_FLASK_TYPE = new ModRecipeType();
+    public static final RecipeType<DyeRecipe> DYE_TYPE = new ModRecipeType<>();
+
     public static final RecipeSerializer<GlyphPressRecipe> PRESS_SERIALIZER = new GlyphPressRecipe.Serializer();
     public static final RecipeSerializer<EnchantingApparatusRecipe> APPARATUS_SERIALIZER = new EnchantingApparatusRecipe.Serializer();
     public static final RecipeSerializer<EnchantmentRecipe> ENCHANTMENT_SERIALIZER = new EnchantmentRecipe.Serializer();
@@ -41,6 +45,10 @@ public class RecipeRegistry {
         Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, EnchantmentRecipe.RECIPE_ID), ENCHANTMENT_TYPE);
         Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, CrushRecipe.RECIPE_ID), CRUSH_TYPE);
         Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, InfuserRecipe.RECIPE_ID), INFUSER_TYPE);
+
+        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, "book_upgrade"), BOOK_UPGRADE_TYPE);
+        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, "potion_flask"), POTION_FLASK_TYPE);
+        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, "dye"), DYE_TYPE);
 
         evt.getRegistry().register(PRESS_SERIALIZER.setRegistryName(new ResourceLocation(ArsNouveau.MODID, GlyphPressRecipe.RECIPE_ID)));
         evt.getRegistry().register(APPARATUS_SERIALIZER.setRegistryName(new ResourceLocation(ArsNouveau.MODID, EnchantingApparatusRecipe.RECIPE_ID)));
