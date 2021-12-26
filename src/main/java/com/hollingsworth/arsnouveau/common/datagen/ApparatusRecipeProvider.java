@@ -901,6 +901,12 @@ public class ApparatusRecipeProvider implements DataProvider {
         List<Ingredient> spellWriteList = new ArrayList<>();
         spellWriteList.add(Ingredient.of(ItemsRegistry.SPELL_PARCHMENT));
         addRecipe(new SpellWriteRecipe(spellWriteList));
+
+        addRecipe(builder()
+                .withPedestalItem(4, Ingredient.of(Tags.Items.GEMS_DIAMOND))
+                .withPedestalItem(1,Ingredient.of(Tags.Items.ENDER_PEARLS))
+                .withPedestalItem(1, Ingredient.of(ItemsRegistry.WILDEN_TRIBUTE))
+                .buildEnchantmentRecipe(EnchantmentRegistry.REACTIVE_ENCHANTMENT, 4, 9000));
     }
 
     public void addRecipe(EnchantingApparatusRecipe recipe){

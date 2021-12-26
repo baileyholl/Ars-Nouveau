@@ -186,7 +186,9 @@ public class PatchouliProvider implements DataProvider {
                 .withLocalizedText()
                 .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.getRegistryName().getPath() + "_" + 2))
                 .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.getRegistryName().getPath() + "_" + 3))
-                .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.getRegistryName().getPath() + "_" + 4)), getPath(EQUIPMENT, "reactive_enchantment"));
+                .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.getRegistryName().getPath() + "_" + 4))
+                .withLocalizedText()
+                .withPage(new ApparatusPage("ars_nouveau:spell_write")), getPath(EQUIPMENT, "reactive_enchantment"));
 
         addBasicItem(ItemsRegistry.RING_OF_GREATER_DISCOUNT, EQUIPMENT, new ApparatusPage(ItemsRegistry.RING_OF_GREATER_DISCOUNT));
         addBasicItem(ItemsRegistry.RING_OF_LESSER_DISCOUNT, EQUIPMENT, new ApparatusPage(ItemsRegistry.RING_OF_LESSER_DISCOUNT));

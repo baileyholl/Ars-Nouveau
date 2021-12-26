@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantmentRecipe;
+import com.hollingsworth.arsnouveau.api.enchanting_apparatus.SpellWriteRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.CrushRecipe;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
@@ -58,7 +59,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
             if(i instanceof GlyphPressRecipe){
                 recipeList.add((GlyphPressRecipe) i);
             }
-            if(i instanceof EnchantingApparatusRecipe && !(i instanceof EnchantmentRecipe)){
+            if(i instanceof EnchantingApparatusRecipe && !(i instanceof EnchantmentRecipe || i instanceof SpellWriteRecipe)){
                 apparatus.add((EnchantingApparatusRecipe) i);
             }
             if(i instanceof CrushRecipe){

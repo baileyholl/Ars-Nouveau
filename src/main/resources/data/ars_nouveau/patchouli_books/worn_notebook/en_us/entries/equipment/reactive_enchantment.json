@@ -26,6 +26,14 @@
     {
       "recipe": "ars_nouveau:reactive_4",
       "type": "ars_nouveau:enchanting_recipe"
+    },
+    {
+      "text": "ars_nouveau.page3.reactive_enchantment",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:spell_write",
+      "type": "ars_nouveau:apparatus_recipe"
     }
   ]
 }

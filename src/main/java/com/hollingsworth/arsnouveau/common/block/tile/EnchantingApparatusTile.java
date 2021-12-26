@@ -153,7 +153,8 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
             return false;
         }
         IEnchantingRecipe recipe = this.getRecipe(catalyst, playerEntity);
-        SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 10, recipe.getSourceCost());
+        if(recipe.consumesSource())
+            SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 10, recipe.getSourceCost());
         this.isCrafting = true;
         updateBlock();
         Networking.sendToNearby(level, worldPosition, new PacketOneShotAnimation(worldPosition));

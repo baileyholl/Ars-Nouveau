@@ -12,7 +12,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.AbstractCandleBlock;
 import net.minecraft.world.level.block.BaseFireBlock;
+import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
@@ -42,6 +44,12 @@ public class EffectIgnite  extends AbstractEffect {
     public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         if(spellStats.hasBuff(AugmentSensitive.INSTANCE))
             return;
+        BlockState hitState = world.getBlockState(rayTraceResult.getBlockPos());
+        if(hitState.getBlock() instanceof CandleBlock && CandleBlock.canLight(hitState)){
+            AbstractCandleBlock.setLit(world, hitState, rayTraceResult.getBlockPos(), true);
+            return;
+        }
+
         if(world.getBlockState((rayTraceResult).getBlockPos().above()).getMaterial().isReplaceable()) {
             Direction face = (rayTraceResult).getDirection();
             for (BlockPos pos : SpellUtil.calcAOEBlocks(shooter, (rayTraceResult).getBlockPos(), rayTraceResult, spellStats)) {

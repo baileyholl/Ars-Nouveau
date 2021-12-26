@@ -11,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketGetPersistentData;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
+import com.hollingsworth.arsnouveau.common.spell.casters.ReactiveCaster;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -56,8 +57,8 @@ public class PlayerEvent {
     public static void onTooltip(final ItemTooltipEvent event){
         ItemStack stack = event.getItemStack();
         int level = EnchantmentHelper.getItemEnchantmentLevel(EnchantmentRegistry.REACTIVE_ENCHANTMENT, stack);
-        if(level > 0 && stack.hasTag() && stack.getTag().contains("spell")){
-            Spell spell = Spell.deserialize(stack.getTag().getString("spell"));
+        if(level > 0 && new ReactiveCaster(stack).getSpell().isValid()){
+            Spell spell = new ReactiveCaster(stack).getSpell();
             event.getToolTip().add(new TextComponent(spell.getDisplayString()));
         }
     }
