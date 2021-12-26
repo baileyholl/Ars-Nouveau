@@ -221,7 +221,7 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void updateNextPageButtons(){
-        if(displayedGlyphs.size() < 36){
+        if(displayedGlyphs.size() < 58){
             nextButton.visible = false;
             nextButton.active = false;
         }else{
