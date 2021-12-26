@@ -274,7 +274,7 @@ public class GuiSpellBook extends BaseBook {
     }
 
     public void updateNextPageButtons(){
-        if(displayedGlyphs.size() < 36){
+        if(displayedGlyphs.size() < 58){
             nextButton.visible = false;
             nextButton.active = false;
         }else{
@@ -293,7 +293,7 @@ public class GuiSpellBook extends BaseBook {
 
     public void onPageIncrease(Button button){
         page++;
-        if(displayedGlyphs.size() < 36 * (page + 1)){
+        if(displayedGlyphs.size() < 58 * (page + 1)){
             nextButton.visible = false;
             nextButton.active = false;
         }
@@ -310,7 +310,7 @@ public class GuiSpellBook extends BaseBook {
             previousButton.visible = false;
         }
 
-        if(displayedGlyphs.size() > 36 * (page + 1)){
+        if(displayedGlyphs.size() > 58 * (page + 1)){
             nextButton.visible = true;
             nextButton.active = true;
         }

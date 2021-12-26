@@ -42,6 +42,7 @@ public class PatchouliProvider implements DataProvider {
     public static ResourceLocation EQUIPMENT = new ResourceLocation(ArsNouveau.MODID, "equipment");
     public static ResourceLocation FAMILIARS = new ResourceLocation(ArsNouveau.MODID, "familiars");
     public static ResourceLocation GETTING_STARTED = new ResourceLocation(ArsNouveau.MODID, "getting_started");
+    public static ResourceLocation MOD_NEWS = new ResourceLocation(ArsNouveau.MODID, "mod_news");
 
     public static ResourceLocation MACHINES = new ResourceLocation(ArsNouveau.MODID, "machines");
     public static ResourceLocation RESOURCES = new ResourceLocation(ArsNouveau.MODID, "resources");
@@ -177,11 +178,15 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new ApparatusPage(ItemsRegistry.POTION_FLASK_EXTEND_TIME))
                 .withLocalizedText()
                 .withPage(new ApparatusPage(ItemsRegistry.POTION_FLASK_AMPLIFY)), getPath(EQUIPMENT, "potion_flask"));
-//        //TODO: finish reactive
-//        addPage(new PatchouliBuilder(EQUIPMENT, "reactive_enchantment")
-//                .withIcon(Items.ENCHANTED_BOOK)
-//                .withLocalizedText()
-//                .withLocalizedText(), getPath(EQUIPMENT, "reactive_enchantment"));
+
+        addPage(new PatchouliBuilder(EQUIPMENT, "reactive_enchantment")
+                .withIcon(Items.ENCHANTED_BOOK)
+                .withLocalizedText()
+                .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.getRegistryName().getPath() + "_" + 1))
+                .withLocalizedText()
+                .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.getRegistryName().getPath() + "_" + 2))
+                .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.getRegistryName().getPath() + "_" + 3))
+                .withPage(new EnchantingPage("ars_nouveau:" + EnchantmentRegistry.REACTIVE_ENCHANTMENT.getRegistryName().getPath() + "_" + 4)), getPath(EQUIPMENT, "reactive_enchantment"));
 
         addBasicItem(ItemsRegistry.RING_OF_GREATER_DISCOUNT, EQUIPMENT, new ApparatusPage(ItemsRegistry.RING_OF_GREATER_DISCOUNT));
         addBasicItem(ItemsRegistry.RING_OF_LESSER_DISCOUNT, EQUIPMENT, new ApparatusPage(ItemsRegistry.RING_OF_LESSER_DISCOUNT));
@@ -378,6 +383,10 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new CraftingPage(ArsNouveauAPI.getInstance().getRitualItemMap().get(RitualLib.BINDING)))
                 .withPage(new RelationsPage().withEntry(MACHINES, "ritual_brazier").withEntry(RITUALS, "binding")), getPath(FAMILIARS,"summoning_familiars"));
 
+        addPage(new PatchouliBuilder(MOD_NEWS, "mod_news")
+                .withIcon(ItemsRegistry.SPELL_PARCHMENT)
+                .withPage(new LinkPage("https://discord.gg/y7TMXZu", "ars_nouveau.discord_text", "ars_nouveau.community"))
+                .withPage(new LinkPage("https://www.redbubble.com/people/Gootastic/explore?page=1&sortOrder=recent", "ars_nouveau.store_text", "ars_nouveau.store")), getPath(MOD_NEWS, "mod_news"));
 
     }
 

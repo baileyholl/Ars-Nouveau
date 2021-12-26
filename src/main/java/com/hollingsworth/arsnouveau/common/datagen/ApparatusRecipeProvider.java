@@ -5,6 +5,8 @@ import com.google.gson.GsonBuilder;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
+import com.hollingsworth.arsnouveau.api.enchanting_apparatus.ReactiveEnchantmentRecipe;
+import com.hollingsworth.arsnouveau.api.enchanting_apparatus.SpellWriteRecipe;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
@@ -890,6 +892,15 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withPedestalItem(Recipes.SOURCE_GEM_BLOCK)
                 .withPedestalItem(2, Ingredient.of(Tags.Items.RODS_BLAZE))
                 .build());
+        List<Ingredient> reactiveIngredients = new ArrayList<>();
+        reactiveIngredients.add(Ingredient.of(ItemsRegistry.SPELL_PARCHMENT));
+        reactiveIngredients.add(Ingredient.of(Tags.Items.STORAGE_BLOCKS_LAPIS));
+        reactiveIngredients.add(Ingredient.of(Recipes.SOURCE_GEM_BLOCK_TAG));
+        addRecipe(new ReactiveEnchantmentRecipe(reactiveIngredients, 3000));
+
+        List<Ingredient> spellWriteList = new ArrayList<>();
+        spellWriteList.add(Ingredient.of(ItemsRegistry.SPELL_PARCHMENT));
+        addRecipe(new SpellWriteRecipe(spellWriteList));
     }
 
     public void addRecipe(EnchantingApparatusRecipe recipe){

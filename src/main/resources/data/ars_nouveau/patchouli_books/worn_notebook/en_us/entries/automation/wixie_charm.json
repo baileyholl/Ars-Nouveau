@@ -8,7 +8,7 @@
       "type": "patchouli:text"
     },
     {
-      "recipe": "ars_nouveau:bookwyrm_charm",
+      "recipe": "ars_nouveau:wixie_charm",
       "type": "ars_nouveau:apparatus_recipe"
     },
     {

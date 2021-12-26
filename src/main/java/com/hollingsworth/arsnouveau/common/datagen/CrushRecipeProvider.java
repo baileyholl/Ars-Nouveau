@@ -35,7 +35,7 @@ public class CrushRecipeProvider implements DataProvider {
         recipes.add(new CrushRecipe("gravel", Ingredient.of(Tags.Items.GRAVEL))
                 .withItems(Items.SAND.getDefaultInstance(), 1.0f)
                 .withItems(Items.FLINT.getDefaultInstance(), 0.02f));
-
+        recipes.add(new CrushRecipe("cobblestone", Ingredient.of(Tags.Items.COBBLESTONE)).withItems(Items.GRAVEL.getDefaultInstance(), 1.0f));
         recipes.add(new CrushRecipe("white_dye", Ingredient.of(Items.LILY_OF_THE_VALLEY)).withItems(new ItemStack(Items.WHITE_DYE,2)));
         recipes.add(new CrushRecipe("orange_dye", Ingredient.of(Items.ORANGE_TULIP)).withItems(new ItemStack(Items.ORANGE_DYE,2)));
         recipes.add(new CrushRecipe("magenta_dye", Ingredient.of(Items.ALLIUM)).withItems(new ItemStack(Items.MAGENTA_DYE,2)));

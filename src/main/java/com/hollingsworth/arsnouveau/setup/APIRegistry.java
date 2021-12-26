@@ -1,8 +1,6 @@
 package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.SpellWriteRecipe;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
@@ -13,19 +11,6 @@ import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
 
 public class APIRegistry {
-
-    public static void registerApparatusRecipes() {
-//        registerApparatusRecipe(new ReactiveEnchantmentRecipe(new ItemStack[]{new ItemStack(ItemsRegistry.SPELL_PARCHMENT),
-//                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentAmplifyID)),
-//                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentAmplifyID)),
-//                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentAmplifyID))}, 3000));
-
-        registerApparatusRecipe(new SpellWriteRecipe());
-    }
-
-    public static void registerApparatusRecipe(IEnchantingRecipe recipe) {
-        ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes().add(recipe);
-    }
 
     public static void registerSpells() {
         registerSpell(MethodProjectile.INSTANCE);

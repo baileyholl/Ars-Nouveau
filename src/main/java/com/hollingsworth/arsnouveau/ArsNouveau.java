@@ -56,7 +56,6 @@ public class ArsNouveau {
     }
 
     public void setup (final FMLCommonSetupEvent event){
-        APIRegistry.registerApparatusRecipes();
         event.enqueueWork(WorldEvent::registerFeatures);
         Networking.registerMessages();
         event.enqueueWork(ModPotions::addRecipes);

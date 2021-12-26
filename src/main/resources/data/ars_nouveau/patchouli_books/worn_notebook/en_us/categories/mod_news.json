@@ -1,0 +1,6 @@
+{
+	"name": "ars_nouveau.mod_news",
+	"description": "ars_nouveau.mod_news_desc",
+	"icon": "ars_nouveau:spell_parchment",
+	"sortnum":99
+}

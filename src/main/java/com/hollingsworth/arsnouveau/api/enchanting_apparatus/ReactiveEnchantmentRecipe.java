@@ -19,7 +19,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import javax.annotation.Nonnull;
@@ -30,10 +29,10 @@ import java.util.List;
 public class ReactiveEnchantmentRecipe extends EnchantmentRecipe{
     public static final String RECIPE_ID = "reactive_enchantment";
 
-    public ReactiveEnchantmentRecipe(List<Ingredient> pedestalItems, Enchantment enchantment, int level, int manaCost){
-        super(pedestalItems, enchantment, level, manaCost);
+    public ReactiveEnchantmentRecipe(List<Ingredient> pedestalItems, int sourceCost){
+        super(pedestalItems, EnchantmentRegistry.REACTIVE_ENCHANTMENT, 1, sourceCost);
     }
-    
+
     @Override
     public boolean isMatch(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile, @Nullable Player player) {
         ItemStack parchment = getParchment(pedestalItems);
@@ -98,7 +97,7 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe{
                 }
                 stacks.add(input);
             }
-            return new ReactiveEnchantmentRecipe( stacks, EnchantmentRegistry.REACTIVE_ENCHANTMENT, 1, sourceCost);
+            return new ReactiveEnchantmentRecipe(stacks, sourceCost);
         }
 
         @Nullable
@@ -114,7 +113,7 @@ public class ReactiveEnchantmentRecipe extends EnchantmentRecipe{
                     break;
                 }
             }
-            return new ReactiveEnchantmentRecipe(stacks, EnchantmentRegistry.REACTIVE_ENCHANTMENT, 1, sourceCost);
+            return new ReactiveEnchantmentRecipe(stacks, sourceCost);
         }
 
         @Override

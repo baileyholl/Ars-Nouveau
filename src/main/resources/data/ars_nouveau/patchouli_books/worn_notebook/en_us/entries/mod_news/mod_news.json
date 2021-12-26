@@ -1,0 +1,19 @@
+{
+  "name": "ars_nouveau.page.mod_news",
+  "category": "ars_nouveau:mod_news",
+  "icon": "ars_nouveau:spell_parchment",
+  "pages": [
+    {
+      "url": "https://discord.gg/y7TMXZu",
+      "link_text": "ars_nouveau.discord_text",
+      "text": "ars_nouveau.community",
+      "type": "patchouli:link"
+    },
+    {
+      "url": "https://www.redbubble.com/people/Gootastic/explore?page\u003d1\u0026sortOrder\u003drecent",
+      "link_text": "ars_nouveau.store_text",
+      "text": "ars_nouveau.store",
+      "type": "patchouli:link"
+    }
+  ]
+}
