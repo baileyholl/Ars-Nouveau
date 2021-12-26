@@ -87,45 +87,51 @@ public class PatchouliProvider implements DataProvider {
                 .withLocalizedText()
                 .withLocalizedText(), getPath(GETTING_STARTED, "spell_mana"));
 
+        addPage(new PatchouliBuilder(GETTING_STARTED, "obtaining_gems")
+                .withIcon(BlockRegistry.IMBUEMENT_BLOCK)
+                .withSortNum(3)
+                .withLocalizedText()
+                .withPage(new RelationsPage().withEntry(GETTING_STARTED, "source")), getPath(GETTING_STARTED, "obtaining_gems"));
+
         addPage(new PatchouliBuilder(GETTING_STARTED, "new_glyphs")
                 .withIcon(ItemsRegistry.BLANK_GLYPH)
-                .withSortNum(3)
+                .withSortNum(4)
                 .withLocalizedText()
                 .withPage(new RelationsPage().withEntry(MACHINES, "glyph_press").withEntry(GETTING_STARTED, "source")), getPath(GETTING_STARTED, "new_glyphs"));
 
         addPage(new PatchouliBuilder(GETTING_STARTED, "source")
-                .withSortNum(4)
+                .withSortNum(5)
                 .withIcon(BlockRegistry.SOURCE_JAR)
                 .withLocalizedText()
                 .withPage(new RelationsPage().withEntry(SOURCE, "source_jar").withEntry(SOURCE, "agronomic_sourcelink")), getPath(GETTING_STARTED, "source"));
 
         addPage(new PatchouliBuilder(GETTING_STARTED, "apparatus_crafting")
-                .withSortNum(5)
+                .withSortNum(6)
                 .withIcon(BlockRegistry.ENCHANTING_APP_BLOCK)
                 .withLocalizedText()
                 .withPage(new RelationsPage().withEntry(MACHINES, "enchanting_apparatus")), getPath(GETTING_STARTED, "apparatus_crafting"));
 
         addPage(new PatchouliBuilder(GETTING_STARTED, "better_casting")
-                .withSortNum(6)
+                .withSortNum(7)
                 .withIcon(ItemsRegistry.NOVICE_ROBES)
                 .withLocalizedText()
                 .withPage(new RelationsPage().withEntry(MACHINES, "enchanting_apparatus")), getPath(GETTING_STARTED, "better_casting"));
 
         addPage(new PatchouliBuilder(GETTING_STARTED, "world_generation")
-                .withSortNum(7)
+                .withSortNum(8)
                 .withIcon(ItemsRegistry.SOURCE_GEM)
                 .withLocalizedText()
                 .withPage(new RelationsPage().withEntry(MACHINES, "imbuement_chamber").withEntry(RESOURCES, "archwood").withEntry(RESOURCES,"sourceberry")),
                 getPath(GETTING_STARTED, "world_generation"));
 
         addPage(new PatchouliBuilder(GETTING_STARTED, "upgrades")
-                .withSortNum(8)
+                .withSortNum(9)
                 .withIcon(ItemsRegistry.ARCHMAGE_SPELLBOOK)
                 .withLocalizedText()
                 .withPage(new RelationsPage().withEntry(EQUIPMENT, "spell_books").withEntry(EQUIPMENT, "armor")), getPath(GETTING_STARTED, "upgrades"));
 
         addPage(new PatchouliBuilder(GETTING_STARTED, "starting_automation")
-                .withSortNum(9)
+                .withSortNum(10)
                 .withIcon(BlockRegistry.BASIC_SPELL_TURRET)
                 .withLocalizedText()
                 .withPage(new RelationsPage().withEntry(AUTOMATION, "spell_turret")
@@ -134,7 +140,7 @@ public class PatchouliProvider implements DataProvider {
 
         addPage(new PatchouliBuilder(GETTING_STARTED, "trinkets")
                 .withIcon(ItemsRegistry.WARP_SCROLL)
-                .withSortNum(10)
+                .withSortNum(11)
                 .withLocalizedText()
                 .withPage(new RelationsPage()
                         .withEntry(EQUIPMENT, "ring_of_greater_discount")

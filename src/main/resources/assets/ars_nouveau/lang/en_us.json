@@ -129,7 +129,7 @@
 	"block.ars_nouveau.ab_mosaic":"Arcane Brick: Mosaic",
 	"block.ars_nouveau.ab_basket":"Arcane Brick: Basketweave",
 	"ars_nouveau.page.crystallizer1": "The crystallizer provides a renewable source of Source Gems by condensing source over time. The Crystallizer can work passively at a very slow rate, or it may be given source from adjacent jars and create Source Gems as a much faster rate. The Crystallizer may also be accessed by Hoppers and Starbuncles.",
-	"tooltip.source_gem":"Obtained by placing lapis or amethyst in a Crystallizer.",
+	"tooltip.source_gem":"Obtained by placing lapis or amethyst in an Imbuement Chamber.",
 	"tooltip.magebloom":"Crafted using the Enchanting Apparatus",
 	"ars_nouveau.alert.turret_type": "Turrets can only use Touch or Projectile.",
 	"ars_nouveau.alert.spell_set": "Spell set.",
@@ -973,5 +973,7 @@
 	"ars_nouveau.page2.reactive_enchantment": "Like other enchantments, Reactive levels can only be applied to an item with the previous level of enchantment. Reactive 2 requires Reactive 1, etc.",
 	"ars_nouveau.page3.reactive_enchantment": "The spell inscribed for Reactive can be changed by placing the item in the apparatus with a new inscribed spell parchment.",
 	"ars_nouveau.discord_text": "Join Discord!",
-	"ars_nouveau.store_text": "Shop Redbubble!"
+	"ars_nouveau.store_text": "Shop Redbubble!",
+	"ars_nouveau.page.obtaining_gems": "Obtaining Source Gems",
+	"ars_nouveau.page1.obtaining_gems": "To obtain Source Gems, you must first build an Imbuement Chamber. An Imbuement Chamber imbues items inside it with Source, and will convert them to a new item. To obtain a source gem, place an Amethyst or Lapis inside your Imbuement Chamber and wait. Imbuement Chambers will consume source from nearby Source Jars to speed up any crafting."
 }

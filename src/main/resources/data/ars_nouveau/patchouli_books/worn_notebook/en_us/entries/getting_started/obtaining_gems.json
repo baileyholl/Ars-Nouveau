@@ -1,16 +1,15 @@
 {
-  "name": "ars_nouveau.page.new_glyphs",
+  "name": "ars_nouveau.page.obtaining_gems",
   "category": "ars_nouveau:getting_started",
-  "icon": "ars_nouveau:blank_glyph",
-  "sortnum": 4,
+  "icon": "ars_nouveau:imbuement_chamber",
+  "sortnum": 3,
   "pages": [
     {
-      "text": "ars_nouveau.page1.new_glyphs",
+      "text": "ars_nouveau.page1.obtaining_gems",
       "type": "patchouli:text"
     },
     {
       "entries": [
-        "ars_nouveau:machines/glyph_press",
         "ars_nouveau:getting_started/source"
       ],
       "type": "patchouli:relations"

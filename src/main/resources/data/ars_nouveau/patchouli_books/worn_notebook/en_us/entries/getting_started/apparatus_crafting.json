@@ -1,7 +1,7 @@
 {
   "name": "ars_nouveau.page.apparatus_crafting",
   "category": "ars_nouveau:getting_started",
-  "sortnum": 5,
+  "sortnum": 6,
   "icon": "ars_nouveau:enchanting_apparatus",
   "pages": [
     {

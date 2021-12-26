@@ -1,7 +1,7 @@
 {
   "name": "ars_nouveau.page.starting_automation",
   "category": "ars_nouveau:getting_started",
-  "sortnum": 9,
+  "sortnum": 10,
   "icon": "ars_nouveau:basic_spell_turret",
   "pages": [
     {

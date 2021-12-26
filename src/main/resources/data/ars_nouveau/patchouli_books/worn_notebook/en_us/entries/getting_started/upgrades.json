@@ -1,7 +1,7 @@
 {
   "name": "ars_nouveau.page.upgrades",
   "category": "ars_nouveau:getting_started",
-  "sortnum": 8,
+  "sortnum": 9,
   "icon": "ars_nouveau:archmage_spell_book",
   "pages": [
     {

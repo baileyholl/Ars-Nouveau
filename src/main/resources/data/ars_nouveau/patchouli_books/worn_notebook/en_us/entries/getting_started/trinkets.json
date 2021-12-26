@@ -2,7 +2,7 @@
   "name": "ars_nouveau.page.trinkets",
   "category": "ars_nouveau:getting_started",
   "icon": "ars_nouveau:warp_scroll",
-  "sortnum": 10,
+  "sortnum": 11,
   "pages": [
     {
       "text": "ars_nouveau.page1.trinkets",
