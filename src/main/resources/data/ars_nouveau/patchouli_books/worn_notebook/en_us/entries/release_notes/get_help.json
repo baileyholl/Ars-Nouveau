@@ -1,0 +1,19 @@
+{
+    "name": "Support Ars Nouveau!",
+    "icon": "ars_nouveau:glyph_heal",
+    "category": "release_notes",
+	"sortnum":1,
+    "pages": [
+        {
+            "type": "link",
+            "text": "Join the Ars Nouveau discord commuinity for news, feature requests, bug reports, or help!",
+			"link_text":"Join Discord",
+			"url":"https://discord.gg/y7TMXZu"
+        },{
+            "type": "link",
+            "text": "Support the mod with summon themed art scenes, sold as stickers, mugs, and more!",
+			"link_text":"Shop Redbubble",
+			"url":"https://www.redbubble.com/people/Gootastic/explore?page=1&sortOrder=recent"
+        }
+    ]
+}

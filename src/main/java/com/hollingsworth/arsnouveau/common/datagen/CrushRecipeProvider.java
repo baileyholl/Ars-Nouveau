@@ -32,6 +32,8 @@ public class CrushRecipeProvider implements IDataProvider {
     public void run(DirectoryCache cache) throws IOException {
         recipes.add(new CrushRecipe("stone", Ingredient.of(Tags.Items.STONE))
                 .withItems(Items.GRAVEL.getDefaultInstance(), 1.0f));
+        recipes.add(new CrushRecipe("cobblestone", Ingredient.of(Tags.Items.COBBLESTONE))
+                .withItems(Items.GRAVEL.getDefaultInstance(), 1.0f));
         recipes.add(new CrushRecipe("gravel", Ingredient.of(Tags.Items.GRAVEL))
                 .withItems(Items.SAND.getDefaultInstance(), 1.0f)
                 .withItems(Items.FLINT.getDefaultInstance(), 0.02f));
