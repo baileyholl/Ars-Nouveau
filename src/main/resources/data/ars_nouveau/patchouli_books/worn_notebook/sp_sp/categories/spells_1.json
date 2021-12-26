@@ -1,6 +1,0 @@
-{
-	"name": "Hechizos de Nivel 1",
-	"description": "Hechizos que pueden ser lanzados usando un Grimorio de Novato.",
-	"icon": "ars_nouveau:glyph_projectile",
-	"sortnum":2
-}
