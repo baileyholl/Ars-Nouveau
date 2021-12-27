@@ -13,7 +13,7 @@ public class ANPlayerDataCap implements IPlayerCap{
 
     public Set<AbstractSpellPart> glyphs = new HashSet<>();
 
-    public Set<AbstractFamiliarHolder> familiars = new HashSet<>();
+    public Set<FamiliarData> familiars = new HashSet<>();
 
     public ANPlayerDataCap(){}
 
@@ -34,21 +34,26 @@ public class ANPlayerDataCap implements IPlayerCap{
 
     @Override
     public boolean unlockFamiliar(AbstractFamiliarHolder holderID) {
-        return familiars.add(holderID);
+        return familiars.add(new FamiliarData(holderID.id));
     }
 
     @Override
     public boolean ownsFamiliar(AbstractFamiliarHolder holderID) {
-        return familiars.contains(holderID);
+        return familiars.stream().anyMatch(f -> f.familiarHolder.getId().equals(holderID.id));
     }
 
     @Override
-    public Collection<AbstractFamiliarHolder> getUnlockedFamiliars() {
+    public Collection<FamiliarData> getUnlockedFamiliars() {
         return familiars;
     }
 
     @Override
-    public void setUnlockedFamiliars(Collection<AbstractFamiliarHolder> familiars) {
+    public FamiliarData getFamiliarData(String id) {
+        return this.familiars.stream().filter(f -> f.familiarHolder.id.equals(id)).findFirst().orElse(null);
+    }
+
+    @Override
+    public void setUnlockedFamiliars(Collection<FamiliarData> familiars) {
         this.familiars = new HashSet<>(familiars);
     }
 
@@ -61,7 +66,9 @@ public class ANPlayerDataCap implements IPlayerCap{
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
         NBTUtil.writeStrings(tag, "glyph_", glyphs.stream().map(s -> s.tag).collect(Collectors.toList()));
-        NBTUtil.writeStrings(tag, "familiar_", familiars.stream().map(s -> s.id).collect(Collectors.toList()));
+        for(FamiliarData f : familiars){
+            tag.put("familiar_" + f.familiarHolder.id, f.toTag());
+        }
         return tag;
     }
 
@@ -69,8 +76,11 @@ public class ANPlayerDataCap implements IPlayerCap{
     public void deserializeNBT(CompoundTag nbt) {
         glyphs.addAll(NBTUtil.readStrings(nbt, "glyph_").stream()
                 .map(s -> ArsNouveauAPI.getInstance().getSpellpartMap().get(s)).collect(Collectors.toList()));
-        familiars.addAll(NBTUtil.readStrings(nbt, "familiar_").stream()
-                .map(s -> ArsNouveauAPI.getInstance().getFamiliarHolderMap().get(s)).collect(Collectors.toList()));
+        for(String s : nbt.getAllKeys()){
+            if(s.contains("familiar_")){
+                familiars.add(new FamiliarData(nbt.getCompound(s)));
+            }
+        }
     }
 
     public static ANPlayerDataCap deserialize(CompoundTag tag){

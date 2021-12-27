@@ -4,8 +4,9 @@ import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
-import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarCarbuncle;
+import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
 import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 
 public class StarbuncleFamiliar extends AbstractFamiliarHolder {
@@ -15,8 +16,10 @@ public class StarbuncleFamiliar extends AbstractFamiliarHolder {
     }
 
     @Override
-    public IFamiliar getSummonEntity(Level world) {
-        return new FamiliarCarbuncle(ModEntities.ENTITY_FAMILIAR_CARBUNCLE, world);
+    public IFamiliar getSummonEntity(Level world, CompoundTag tag) {
+        FamiliarStarbuncle familiarStarbuncle = new FamiliarStarbuncle(ModEntities.ENTITY_FAMILIAR_STARBUNCLE, world);
+        familiarStarbuncle.setTagData(tag);
+        return familiarStarbuncle;
     }
 
     @Override

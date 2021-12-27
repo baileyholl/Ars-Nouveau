@@ -30,7 +30,6 @@ public class FamiliarWixie extends FlyingFamiliarEntity implements IAnimationLis
         super(ent, world);
     }
 
-
     public void potionEvent(PotionEvent.PotionAddedEvent event) {
         if(!isAlive())
             return;

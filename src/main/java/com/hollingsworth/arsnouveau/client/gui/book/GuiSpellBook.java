@@ -331,7 +331,7 @@ public class GuiSpellBook extends BaseBook {
         Collection<String> familiarHolders = new ArrayList<>();
         IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(ArsNouveau.proxy.getPlayer()).orElse(null);
         if(cap != null){
-            familiarHolders = cap.getUnlockedFamiliars().stream().map(s -> s.id).collect(Collectors.toList());
+            familiarHolders = cap.getUnlockedFamiliars().stream().map(s -> s.familiarHolder.id).collect(Collectors.toList());
         }
         Collection<String> finalFamiliarHolders = familiarHolders;
         Minecraft.getInstance().setScreen(new GuiFamiliarScreen(api, ArsNouveauAPI.getInstance().getFamiliarHolderMap().values().stream().filter(f -> finalFamiliarHolders.contains(f.id)).collect(Collectors.toList())));

@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
 import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarWixie;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 
 public class WixieFamiliar extends AbstractFamiliarHolder {
@@ -13,8 +14,10 @@ public class WixieFamiliar extends AbstractFamiliarHolder {
     }
 
     @Override
-    public IFamiliar getSummonEntity(Level world) {
-        return new FamiliarWixie(ModEntities.ENTITY_FAMILIAR_WIXIE, world);
+    public IFamiliar getSummonEntity(Level world, CompoundTag tag) {
+        FamiliarWixie wixie = new FamiliarWixie(ModEntities.ENTITY_FAMILIAR_WIXIE, world);
+        wixie.setTagData(tag);
+        return wixie;
     }
 
     @Override

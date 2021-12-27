@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
 import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarDrygmy;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 
 public class DrygmyFamiliar extends AbstractFamiliarHolder {
@@ -13,8 +14,10 @@ public class DrygmyFamiliar extends AbstractFamiliarHolder {
     }
 
     @Override
-    public IFamiliar getSummonEntity(Level world) {
-        return new FamiliarDrygmy(ModEntities.ENTITY_FAMILIAR_DRYGMY, world);
+    public IFamiliar getSummonEntity(Level world, CompoundTag tag) {
+        FamiliarDrygmy familiarDrygmy = new FamiliarDrygmy(ModEntities.ENTITY_FAMILIAR_DRYGMY, world);
+        familiarDrygmy.setTagData(tag);
+        return familiarDrygmy;
     }
 
     @Override

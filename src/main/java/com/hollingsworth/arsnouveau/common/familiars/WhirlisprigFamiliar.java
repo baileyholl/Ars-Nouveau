@@ -4,8 +4,9 @@ import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
-import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarSylph;
+import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarWhirlisprig;
 import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 
 public class WhirlisprigFamiliar extends AbstractFamiliarHolder {
@@ -14,8 +15,10 @@ public class WhirlisprigFamiliar extends AbstractFamiliarHolder {
     }
 
     @Override
-    public IFamiliar getSummonEntity(Level world) {
-        return new FamiliarSylph(ModEntities.ENTITY_FAMILIAR_SYLPH, world);
+    public IFamiliar getSummonEntity(Level world, CompoundTag tag) {
+        FamiliarWhirlisprig whirlisprig = new FamiliarWhirlisprig(ModEntities.ENTITY_FAMILIAR_SYLPH, world);
+        whirlisprig.setTagData(tag);
+        return whirlisprig;
     }
 
     @Override

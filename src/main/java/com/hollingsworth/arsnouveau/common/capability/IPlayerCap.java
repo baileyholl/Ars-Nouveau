@@ -33,9 +33,11 @@ public interface IPlayerCap  extends INBTSerializable<CompoundTag> {
 
     boolean ownsFamiliar(AbstractFamiliarHolder holderID);
 
-    Collection<AbstractFamiliarHolder> getUnlockedFamiliars();
+    Collection<FamiliarData> getUnlockedFamiliars();
 
-    void setUnlockedFamiliars(Collection<AbstractFamiliarHolder> familiars);
+    FamiliarData getFamiliarData(String id);
+
+    void setUnlockedFamiliars(Collection<FamiliarData> familiars);
 
     boolean removeFamiliar(AbstractFamiliarHolder holderID);
 

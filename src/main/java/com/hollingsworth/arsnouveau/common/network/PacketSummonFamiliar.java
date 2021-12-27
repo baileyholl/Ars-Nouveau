@@ -1,10 +1,10 @@
 package com.hollingsworth.arsnouveau.common.network;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.event.FamiliarSummonEvent;
-import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.network.FriendlyByteBuf;
@@ -43,7 +43,11 @@ public class PacketSummonFamiliar {
     public void handle(Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(()->{
             if(ctx.get().getSender() != null){
-                AbstractFamiliarHolder familiarHolder = ArsNouveauAPI.getInstance().getFamiliarHolderMap().get(familiarID);
+                IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(ctx.get().getSender()).orElse(null);
+                if(cap == null)
+                    return;
+
+
                 Entity owner = ctx.get().getSender().level.getEntity(entityID);
 
                 if(owner instanceof LivingEntity && ((LivingEntity) owner).hasEffect(ModPotions.FAMILIAR_SICKNESS_EFFECT)){
@@ -51,7 +55,7 @@ public class PacketSummonFamiliar {
                     return;
                 }
 
-                IFamiliar familiarEntity = familiarHolder.getSummonEntity(owner.level);
+                IFamiliar familiarEntity = cap.getFamiliarData(familiarID).getEntity(ctx.get().getSender().level);
                 familiarEntity.setOwnerID(owner.getUUID());
                 familiarEntity.getThisEntity().setPos(owner.getX(), owner.getY(), owner.getZ());
 

@@ -18,9 +18,10 @@ import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 
-public class FamiliarCarbuncle extends FamiliarEntity {
+public class FamiliarStarbuncle extends FamiliarEntity {
 
-    public FamiliarCarbuncle(EntityType<? extends PathfinderMob> ent, Level world) {
+
+    public FamiliarStarbuncle(EntityType<? extends PathfinderMob> ent, Level world) {
         super(ent, world);
     }
 
@@ -56,6 +57,6 @@ public class FamiliarCarbuncle extends FamiliarEntity {
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_FAMILIAR_CARBUNCLE;
+        return ModEntities.ENTITY_FAMILIAR_STARBUNCLE;
     }
 }

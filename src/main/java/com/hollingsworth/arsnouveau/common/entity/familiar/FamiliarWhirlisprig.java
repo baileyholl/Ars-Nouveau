@@ -15,9 +15,8 @@ import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 
-public class FamiliarSylph extends FlyingFamiliarEntity implements ISpellCastListener {
-
-    public FamiliarSylph(EntityType<? extends PathfinderMob> ent, Level world) {
+public class FamiliarWhirlisprig extends FlyingFamiliarEntity implements ISpellCastListener {
+    public FamiliarWhirlisprig(EntityType<? extends PathfinderMob> ent, Level world) {
         super(ent, world);
     }
 

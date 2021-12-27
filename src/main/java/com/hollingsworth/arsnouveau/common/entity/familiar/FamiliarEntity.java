@@ -199,4 +199,6 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
         if(!event.getEntity().equals(this) && event.owner.equals(this.getOwner()))
             this.terminatedFamiliar = true;
     }
+
+    public void setTagData(@Nullable CompoundTag tag){}
 }

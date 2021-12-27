@@ -82,9 +82,9 @@ public class FamiliarEvents {
 
     @SubscribeEvent
     public static void eatEvent(LivingEntityUseItemEvent.Finish event) {
-        for(FamiliarEntity entity : getFamiliars((familiarEntity -> familiarEntity instanceof FamiliarSylph))){
-            if(entity instanceof FamiliarSylph){
-                ((FamiliarSylph) entity).eatEvent(event);
+        for(FamiliarEntity entity : getFamiliars((familiarEntity -> familiarEntity instanceof FamiliarWhirlisprig))){
+            if(entity instanceof FamiliarWhirlisprig){
+                ((FamiliarWhirlisprig) entity).eatEvent(event);
             }
         }
     }

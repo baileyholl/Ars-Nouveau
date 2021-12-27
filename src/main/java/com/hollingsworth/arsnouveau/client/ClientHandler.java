@@ -84,7 +84,7 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ORBIT_SPELL, renderManager -> new RenderRitualProjectile(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.WILDEN_BOSS, WildenBossRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_CHIMERA_SPIKE, ChimeraProjectileRenderer::new);
-        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_CARBUNCLE, FamiliarCarbyRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_STARBUNCLE, FamiliarCarbyRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_DRYGMY, DrygmyRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_SYLPH, SylphRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_FAMILIAR_WIXIE, WixieRenderer::new);

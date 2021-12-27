@@ -82,12 +82,12 @@ public class ModEntities {
     public static EntityType<EntityDrygmy> ENTITY_DRYGMY = null;
     public static EntityType<EntityOrbitProjectile> ORBIT_SPELL = null;
     public static EntityType<EntityChimeraProjectile> ENTITY_CHIMERA_SPIKE = null;
-    public static EntityType<FamiliarCarbuncle> ENTITY_FAMILIAR_CARBUNCLE = null;
+    public static EntityType<FamiliarStarbuncle> ENTITY_FAMILIAR_STARBUNCLE = null;
 
     public static EntityType<FamiliarWixie> ENTITY_FAMILIAR_WIXIE = null;
     public static EntityType<FamiliarBookwyrm> ENTITY_FAMILIAR_BOOKWYRM = null;
     public static EntityType<FamiliarDrygmy> ENTITY_FAMILIAR_DRYGMY = null;
-    public static EntityType<FamiliarSylph> ENTITY_FAMILIAR_SYLPH = null;
+    public static EntityType<FamiliarWhirlisprig> ENTITY_FAMILIAR_SYLPH = null;
     public static EntityType<FamiliarJabberwog> ENTITY_FAMILIAR_JABBERWOG = null;
     public static EntityType<EntityLingeringSpell> LINGER_SPELL = null;
     public static EntityType<WealdWalker> ENTITY_CASCADING_WEALD = null;
@@ -191,14 +191,14 @@ public class ModEntities {
                     EntityType.Builder.<EntityChimeraProjectile>of(EntityChimeraProjectile::new, MobCategory.MISC)
                             .clientTrackingRange(20).updateInterval(20).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityChimeraProjectile::new));
 
-            ENTITY_FAMILIAR_CARBUNCLE = build(LibEntityNames.FAMILIAR_STARBUNCLE, EntityType.Builder.of(FamiliarCarbuncle::new, MobCategory.CREATURE)
+            ENTITY_FAMILIAR_STARBUNCLE = build(LibEntityNames.FAMILIAR_STARBUNCLE, EntityType.Builder.of(FamiliarStarbuncle::new, MobCategory.CREATURE)
                     .sized(0.7F, 0.63F).setTrackingRange(10));
 
             ENTITY_FAMILIAR_BOOKWYRM = build(LibEntityNames.FAMILIAR_BOOKWYRM, EntityType.Builder.of(FamiliarBookwyrm::new, MobCategory.CREATURE)
                     .sized(0.7f, 0.9f).setTrackingRange(10));
             ENTITY_FAMILIAR_DRYGMY = build(LibEntityNames.FAMILIAR_DRYGMY, EntityType.Builder.of(FamiliarDrygmy::new, MobCategory.CREATURE)
                     .sized(0.6f, 0.85f).setTrackingRange(10));
-            ENTITY_FAMILIAR_SYLPH = build(LibEntityNames.FAMILIAR_WHIRLISPRIG, EntityType.Builder.of(FamiliarSylph::new, MobCategory.CREATURE)
+            ENTITY_FAMILIAR_SYLPH = build(LibEntityNames.FAMILIAR_WHIRLISPRIG, EntityType.Builder.of(FamiliarWhirlisprig::new, MobCategory.CREATURE)
                     .sized(0.7F, 0.63F).setTrackingRange(10));
             ENTITY_FAMILIAR_JABBERWOG = build(LibEntityNames.FAMILIAR_JABBERWOG, EntityType.Builder.of(FamiliarJabberwog::new, MobCategory.CREATURE)
                     .sized(0.7F, 0.63F).setTrackingRange(10));
@@ -257,7 +257,7 @@ public class ModEntities {
                     ORBIT_SPELL,
                     WILDEN_BOSS,
                     ENTITY_CHIMERA_SPIKE,
-                    ENTITY_FAMILIAR_CARBUNCLE,
+                    ENTITY_FAMILIAR_STARBUNCLE,
                     ENTITY_FAMILIAR_BOOKWYRM,
                     ENTITY_FAMILIAR_JABBERWOG,
                     ENTITY_FAMILIAR_WIXIE,
@@ -297,7 +297,7 @@ public class ModEntities {
                     .add(Attributes.MAX_HEALTH, 20.0D)
                     .add(Attributes.MOVEMENT_SPEED, 0.25D).build());
             event.put(WILDEN_BOSS, EntityChimera.getModdedAttributes().build());
-            event.put(ENTITY_FAMILIAR_CARBUNCLE, FamiliarEntity.attributes().build());
+            event.put(ENTITY_FAMILIAR_STARBUNCLE, FamiliarEntity.attributes().build());
             event.put(ENTITY_FAMILIAR_BOOKWYRM, FamiliarEntity.attributes().build());
             event.put(ENTITY_FAMILIAR_JABBERWOG, FamiliarEntity.attributes().build());
             event.put(ENTITY_FAMILIAR_WIXIE, FamiliarEntity.attributes().build());

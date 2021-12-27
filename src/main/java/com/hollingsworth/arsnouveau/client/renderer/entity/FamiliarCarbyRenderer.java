@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
-import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarCarbuncle;
+import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarStarbuncle;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -17,7 +17,7 @@ import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 import javax.annotation.Nullable;
 
-public class FamiliarCarbyRenderer  extends GeoEntityRenderer<FamiliarCarbuncle> {
+public class FamiliarCarbyRenderer  extends GeoEntityRenderer<FamiliarStarbuncle> {
     private static final ResourceLocation ORANGE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_orange.png");
     private static final ResourceLocation PURPLE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_purple.png");
     private static final ResourceLocation GREEN = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_green.png");
@@ -28,17 +28,17 @@ public class FamiliarCarbyRenderer  extends GeoEntityRenderer<FamiliarCarbuncle>
     }
 
     @Override
-    protected void applyRotations(FamiliarCarbuncle entityLiving, PoseStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
+    protected void applyRotations(FamiliarStarbuncle entityLiving, PoseStack matrixStackIn, float ageInTicks, float rotationYaw, float partialTicks) {
         super.applyRotations(entityLiving, matrixStackIn, ageInTicks, rotationYaw, partialTicks);
     }
 
     @Override
-    public void render(FamiliarCarbuncle entity, float entityYaw, float p_225623_3_, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int p_225623_6_) {
+    public void render(FamiliarStarbuncle entity, float entityYaw, float p_225623_3_, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int p_225623_6_) {
         super.render(entity, entityYaw, p_225623_3_, matrixStack, iRenderTypeBuffer, p_225623_6_);
     }
 
 
-    public ResourceLocation getColor(FamiliarCarbuncle e){
+    public ResourceLocation getColor(FamiliarStarbuncle e){
         String color = e.getEntityData().get(Starbuncle.COLOR).toLowerCase();
 
         if(color.isEmpty())
@@ -48,22 +48,22 @@ public class FamiliarCarbyRenderer  extends GeoEntityRenderer<FamiliarCarbuncle>
     }
 
     @Override
-    public ResourceLocation getTextureLocation(FamiliarCarbuncle entity) {
+    public ResourceLocation getTextureLocation(FamiliarStarbuncle entity) {
         return WILD_TEXTURE;
     }
 
     @Override
-    public RenderType getRenderType(FamiliarCarbuncle animatable, float partialTicks, PoseStack stack, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
+    public RenderType getRenderType(FamiliarStarbuncle animatable, float partialTicks, PoseStack stack, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
         return RenderType.entityCutoutNoCull(textureLocation);
     }
 
-    public static class FamiliarCarbyModel extends AnimatedGeoModel<FamiliarCarbuncle> {
+    public static class FamiliarCarbyModel extends AnimatedGeoModel<FamiliarStarbuncle> {
 
         private final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_wild_orange.png");
         private final ResourceLocation TAMED_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_orange.png");
 
         @Override
-        public void setLivingAnimations(FamiliarCarbuncle entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
+        public void setLivingAnimations(FamiliarStarbuncle entity, Integer uniqueID, @Nullable AnimationEvent customPredicate) {
             super.setLivingAnimations(entity, uniqueID, customPredicate);
             IBone head = this.getAnimationProcessor().getBone("head");
             EntityModelData extraData = (EntityModelData) customPredicate.getExtraDataOfType(EntityModelData.class).get(0);
@@ -72,17 +72,17 @@ public class FamiliarCarbyRenderer  extends GeoEntityRenderer<FamiliarCarbuncle>
         }
 
         @Override
-        public ResourceLocation getModelLocation(FamiliarCarbuncle carbuncle) {
+        public ResourceLocation getModelLocation(FamiliarStarbuncle carbuncle) {
             return new ResourceLocation(ArsNouveau.MODID , "geo/carbuncle.geo.json");
         }
 
         @Override
-        public ResourceLocation getTextureLocation(FamiliarCarbuncle carbuncle) {
+        public ResourceLocation getTextureLocation(FamiliarStarbuncle carbuncle) {
             return WILD_TEXTURE;
         }
 
         @Override
-        public ResourceLocation getAnimationFileLocation(FamiliarCarbuncle carbuncle) {
+        public ResourceLocation getAnimationFileLocation(FamiliarStarbuncle carbuncle) {
             return new ResourceLocation(ArsNouveau.MODID , "animations/carbuncle_animations.json");
         }
 

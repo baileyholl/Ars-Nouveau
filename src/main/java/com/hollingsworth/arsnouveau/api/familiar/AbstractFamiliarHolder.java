@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.familiar;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +20,7 @@ public abstract class AbstractFamiliarHolder {
         this.isEntity = isConversionEntity;
     }
 
-    public abstract IFamiliar getSummonEntity(Level world);
+    public abstract IFamiliar getSummonEntity(Level world, CompoundTag tag);
 
     public ItemStack getOutputItem(){
         return new ItemStack(ArsNouveauAPI.getInstance().getFamiliarItem(getId()));
