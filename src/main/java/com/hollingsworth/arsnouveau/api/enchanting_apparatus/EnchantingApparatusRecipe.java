@@ -80,7 +80,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
 
 
     // Function to check if both arrays are same
-    static boolean doItemsMatch(List<ItemStack> inputs, List<Ingredient> recipeItems) {
+    public static boolean doItemsMatch(List<ItemStack> inputs, List<Ingredient> recipeItems) {
         StackedContents recipeitemhelper = new StackedContents();
         for(ItemStack i : inputs)
             recipeitemhelper.accountStack(i, 1);

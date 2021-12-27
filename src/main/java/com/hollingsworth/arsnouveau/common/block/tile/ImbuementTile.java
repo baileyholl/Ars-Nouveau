@@ -15,7 +15,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -36,6 +35,8 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ImbuementTile extends AbstractSourceMachine implements Container, ITickable, IAnimatable {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
@@ -90,7 +91,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         // Restore the recipe on world restart
         if(recipe == null){
             for(ImbuementRecipe recipe : level.getRecipeManager().getAllRecipesFor(RecipeRegistry.INFUSER_TYPE)){
-                if(recipe.matches(new SimpleContainer(stack), level)){
+                if(recipe.matches(this, level)){
                     this.recipe = recipe;
                     this.craftTicks = 100;
                     break;
@@ -98,7 +99,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
             }
         }
 
-        if(recipe == null || !recipe.matches(new SimpleContainer(stack), level)) {
+        if(recipe == null || !recipe.matches(this, level)) {
             backoff = 20;
             recipe = null;
             if(this.draining) {
@@ -127,7 +128,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
                     update();
                 }
             }else{
-                this.addSource(5);
+                this.addSource(10);
                 if(draining){
                     draining = false;
                     update();
@@ -186,7 +187,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
         if(stack.isEmpty() || !this.stack.isEmpty())
             return false;
         ImbuementRecipe recipe = level.getRecipeManager().getAllRecipesFor(RecipeRegistry.INFUSER_TYPE).stream()
-                .filter(f -> f.matches(new SimpleContainer(stack), level)).findFirst().orElse(null);
+                .filter(f -> f.matches(this, level)).findFirst().orElse(null);
         return recipe != null;
     }
 
@@ -270,5 +271,15 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     @Override
     public AnimationFactory getFactory() {
         return factory;
+    }
+
+    public List<ItemStack> getPedestalItems(){
+        ArrayList<ItemStack> pedestalItems = new ArrayList<>();
+        for(BlockPos p : BlockPos.betweenClosed(this.getBlockPos().offset(1, -1, 1), this.getBlockPos().offset(-1, 1, -1))){
+            if(level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile  && !pedestalTile.stack.isEmpty()) {
+                pedestalItems.add(pedestalTile.stack);
+            }
+        }
+        return pedestalItems;
     }
 }

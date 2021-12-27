@@ -22,7 +22,7 @@ public class ArcanePedestalTile extends AnimatedTile implements Container {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     public float frames;
     public ItemEntity entity;
-    public ItemStack stack;
+    public ItemStack stack = ItemStack.EMPTY;
 
     public ArcanePedestalTile(BlockPos pos, BlockState state){
         super(BlockRegistry.ARCANE_PEDESTAL_TILE, pos, state);

@@ -9,7 +9,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -41,11 +40,15 @@ public class ImbuementBlock extends TickableModBlock {
             return super.use(state, worldIn, pos, player, handIn, hit);
         if(worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND)
             return super.use(state, worldIn, pos, player, handIn, hit);
+
         if(tile.stack.isEmpty() && !player.getItemInHand(handIn).isEmpty()){
+
+            tile.stack = player.getItemInHand(handIn).copy();
             ImbuementRecipe recipe = worldIn.getRecipeManager().getAllRecipesFor(RecipeRegistry.INFUSER_TYPE).stream()
-                    .filter(f -> f.matches(new SimpleContainer(player.getItemInHand(handIn)), worldIn)).findFirst().orElse(null);
+                    .filter(f -> f.matches(tile, worldIn)).findFirst().orElse(null);
             if(recipe == null){
                 PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.norecipe"));
+                tile.stack = ItemStack.EMPTY;
             }else{
                 tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);
                 tile.update();
@@ -55,10 +58,13 @@ public class ImbuementBlock extends TickableModBlock {
             ItemEntity item = new ItemEntity(worldIn, player.getX(), player.getY(), player.getZ(), tile.stack.copy());
             worldIn.addFreshEntity(item);
             tile.stack = ItemStack.EMPTY;
+            tile.stack = player.getInventory().getSelected().copy();
             ImbuementRecipe recipe = worldIn.getRecipeManager().getAllRecipesFor(RecipeRegistry.INFUSER_TYPE).stream()
-                    .filter(f -> f.matches(new SimpleContainer(player.getItemInHand(handIn)), worldIn)).findFirst().orElse(null);
+                    .filter(f -> f.matches(tile, worldIn)).findFirst().orElse(null);
             if(recipe != null){
                 tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);
+            }else{
+                tile.stack = ItemStack.EMPTY;
             }
             tile.draining = false;
             tile.update();
