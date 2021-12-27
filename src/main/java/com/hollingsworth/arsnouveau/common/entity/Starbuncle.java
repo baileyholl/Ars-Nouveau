@@ -213,7 +213,12 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
 
     @Override
     public void tick() {
-        super.tick();
+        try {
+            super.tick();
+        }catch (NoClassDefFoundError error){
+            System.out.println("Starbuncle threaded pathing failed.");
+            return;
+        }
         if(!level.isClientSide && level.getGameTime() % 10 == 0 && this.getName().getString().toLowerCase(Locale.ROOT).equals("jeb_")){
             this.entityData.set(COLOR, carbyColors[level.random.nextInt(carbyColors.length)]);
         }

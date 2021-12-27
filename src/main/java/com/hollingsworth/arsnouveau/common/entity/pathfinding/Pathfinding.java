@@ -19,8 +19,6 @@ import java.util.ConcurrentModificationException;
 import java.util.Set;
 import java.util.concurrent.*;
 
-import static com.hollingsworth.arsnouveau.common.entity.pathfinding.PathingConstants.debugNodeMonitor;
-
 /**
  * Static class the handles all the Pathfinding.
  */
@@ -42,10 +40,11 @@ public final class Pathfinding
         @Override
         public Thread newThread(final Runnable runnable)
         {
-            final Thread thread = new Thread(runnable, "Minecolonies Pathfinding Worker #" + (id++));
+            final Thread thread = new Thread(runnable, "AN stolen Minecolonies Pathfinding Worker #" + (id++));
             thread.setDaemon(true);
 
-            thread.setUncaughtExceptionHandler((thread1, throwable) -> Log.getLogger().error("Minecolonies Pathfinding Thread errored! ", throwable));
+            thread.setUncaughtExceptionHandler((thread1, throwable) -> Log.getLogger().error("AN stolen Minecolonies Pathfinding Thread errored! ", throwable));
+            thread.setContextClassLoader(ClassLoader.getSystemClassLoader());
             return thread;
         }
     }
@@ -120,7 +119,7 @@ public final class Pathfinding
         final Set<ModNode> debugNodesVisited;
         final Set<ModNode> debugNodesPath;
 
-        synchronized (debugNodeMonitor)
+        synchronized (PathingConstants.debugNodeMonitor)
         {
             debugNodesNotVisited = AbstractPathJob.lastDebugNodesNotVisited;
             debugNodesVisited = AbstractPathJob.lastDebugNodesVisited;
