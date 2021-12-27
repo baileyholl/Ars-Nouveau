@@ -2,7 +2,7 @@
     "components": [
 		{
 			"type": "patchouli:header",
-			"text": "Enchanting Apparatus",
+			"text": "block.ars_nouveau.enchanting_apparatus",
 			"x": -1,
 			"y": -1
         },
@@ -13,7 +13,7 @@
             "y":20
         },{
             "type":"patchouli:text",
-            "text":"Level",
+            "text":"ars_nouveau.level",
             "x":35,
             "y":30
         },{

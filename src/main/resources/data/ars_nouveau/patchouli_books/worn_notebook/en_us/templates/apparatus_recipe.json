@@ -8,7 +8,7 @@
         },
 		 {
             "type":"patchouli:text",
-            "text":"Reagent:",
+            "text":"ars_nouveau.reagent",
             "x":5,
             "y":25
         },
