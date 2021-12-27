@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.InfuserRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
@@ -20,7 +20,7 @@ import java.util.List;
 
 public class ImbuementRecipeProvider implements DataProvider {
     private final DataGenerator generator;
-    List<InfuserRecipe> recipes = new ArrayList<>();
+    List<ImbuementRecipe> recipes = new ArrayList<>();
     private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -30,12 +30,12 @@ public class ImbuementRecipeProvider implements DataProvider {
 
     @Override
     public void run(HashCache cache) throws IOException {
-        recipes.add(new InfuserRecipe("lapis", Ingredient.of(Tags.Items.GEMS_LAPIS), ItemsRegistry.SOURCE_GEM.getDefaultInstance(), 500));
-        recipes.add(new InfuserRecipe("amethyst", Ingredient.of(Items.AMETHYST_SHARD), ItemsRegistry.SOURCE_GEM.getDefaultInstance(), 500));
-        recipes.add(new InfuserRecipe("amethyst_block", Ingredient.of(Items.AMETHYST_SHARD), ItemsRegistry.SOURCE_GEM.getDefaultInstance(), 2000));
+        recipes.add(new ImbuementRecipe("lapis", Ingredient.of(Tags.Items.GEMS_LAPIS), ItemsRegistry.SOURCE_GEM.getDefaultInstance(), 500));
+        recipes.add(new ImbuementRecipe("amethyst", Ingredient.of(Items.AMETHYST_SHARD), ItemsRegistry.SOURCE_GEM.getDefaultInstance(), 500));
+        recipes.add(new ImbuementRecipe("amethyst_block", Ingredient.of(Items.AMETHYST_SHARD), ItemsRegistry.SOURCE_GEM.getDefaultInstance(), 2000));
 
         Path output = this.generator.getOutputFolder();
-        for(InfuserRecipe g : recipes){
+        for(ImbuementRecipe g : recipes){
             Path path = getRecipePath(output, g.getId().getPath());
             DataProvider.save(GSON, cache,  g.asRecipe(), path);
         }

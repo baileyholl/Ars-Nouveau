@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.InfuserRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
@@ -42,7 +42,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     public ItemStack stack = ItemStack.EMPTY;
     public ItemEntity entity;
     public boolean draining;
-    InfuserRecipe recipe;
+    ImbuementRecipe recipe;
     int backoff;
     public float frames;
     boolean hasRecipe;
@@ -89,7 +89,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
         // Restore the recipe on world restart
         if(recipe == null){
-            for(InfuserRecipe recipe : level.getRecipeManager().getAllRecipesFor(RecipeRegistry.INFUSER_TYPE)){
+            for(ImbuementRecipe recipe : level.getRecipeManager().getAllRecipesFor(RecipeRegistry.INFUSER_TYPE)){
                 if(recipe.matches(new SimpleContainer(stack), level)){
                     this.recipe = recipe;
                     this.craftTicks = 100;
@@ -185,7 +185,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     public boolean canPlaceItem(int slot, ItemStack stack) {
         if(stack.isEmpty() || !this.stack.isEmpty())
             return false;
-        InfuserRecipe recipe = level.getRecipeManager().getAllRecipesFor(RecipeRegistry.INFUSER_TYPE).stream()
+        ImbuementRecipe recipe = level.getRecipeManager().getAllRecipesFor(RecipeRegistry.INFUSER_TYPE).stream()
                 .filter(f -> f.matches(new SimpleContainer(stack), level)).findFirst().orElse(null);
         return recipe != null;
     }

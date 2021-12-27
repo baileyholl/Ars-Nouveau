@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.ImbuementTile;
-import com.hollingsworth.arsnouveau.common.crafting.recipes.InfuserRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
@@ -42,7 +42,7 @@ public class ImbuementBlock extends TickableModBlock {
         if(worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND)
             return super.use(state, worldIn, pos, player, handIn, hit);
         if(tile.stack.isEmpty() && !player.getItemInHand(handIn).isEmpty()){
-            InfuserRecipe recipe = worldIn.getRecipeManager().getAllRecipesFor(RecipeRegistry.INFUSER_TYPE).stream()
+            ImbuementRecipe recipe = worldIn.getRecipeManager().getAllRecipesFor(RecipeRegistry.INFUSER_TYPE).stream()
                     .filter(f -> f.matches(new SimpleContainer(player.getItemInHand(handIn)), worldIn)).findFirst().orElse(null);
             if(recipe == null){
                 PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.norecipe"));
@@ -55,7 +55,7 @@ public class ImbuementBlock extends TickableModBlock {
             ItemEntity item = new ItemEntity(worldIn, player.getX(), player.getY(), player.getZ(), tile.stack.copy());
             worldIn.addFreshEntity(item);
             tile.stack = ItemStack.EMPTY;
-            InfuserRecipe recipe = worldIn.getRecipeManager().getAllRecipesFor(RecipeRegistry.INFUSER_TYPE).stream()
+            ImbuementRecipe recipe = worldIn.getRecipeManager().getAllRecipesFor(RecipeRegistry.INFUSER_TYPE).stream()
                     .filter(f -> f.matches(new SimpleContainer(player.getItemInHand(handIn)), worldIn)).findFirst().orElse(null);
             if(recipe != null){
                 tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);
