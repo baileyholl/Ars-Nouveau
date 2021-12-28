@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
@@ -33,7 +34,7 @@ public class ImbuementRecipeProvider implements DataProvider {
     public void run(HashCache cache) throws IOException {
         recipes.add(new ImbuementRecipe("lapis", Ingredient.of(Tags.Items.GEMS_LAPIS), ItemsRegistry.SOURCE_GEM.getDefaultInstance(), 500));
         recipes.add(new ImbuementRecipe("amethyst", Ingredient.of(Items.AMETHYST_SHARD), ItemsRegistry.SOURCE_GEM.getDefaultInstance(), 500));
-        recipes.add(new ImbuementRecipe("amethyst_block", Ingredient.of(Items.AMETHYST_BLOCK), new ItemStack(ItemsRegistry.SOURCE_GEM, 4), 2000));
+        recipes.add(new ImbuementRecipe("amethyst_block", Ingredient.of(Items.AMETHYST_BLOCK), new ItemStack(BlockRegistry.SOURCE_GEM_BLOCK), 2000));
 
         Path output = this.generator.getOutputFolder();
         for(ImbuementRecipe g : recipes){
