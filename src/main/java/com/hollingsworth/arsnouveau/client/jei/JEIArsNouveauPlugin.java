@@ -7,9 +7,11 @@ import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantmentRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.SpellWriteRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.CrushRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectCrush;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.ModIds;
@@ -43,7 +45,8 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         registry.addRecipeCategories(
             new GlyphPressRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
                 new EnchantingApparatusRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
-                new CrushRecipeCategory(registry.getJeiHelpers().getGuiHelper())
+                new CrushRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
+                new ImbuementRecipeCategory(registry.getJeiHelpers().getGuiHelper())
         );
     }
 
@@ -54,6 +57,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         List<GlyphPressRecipe> recipeList = new ArrayList<>();
         List<EnchantingApparatusRecipe> apparatus = new ArrayList<>();
         List<CrushRecipe> crushRecipes = new ArrayList<>();
+        List<ImbuementRecipe> imbuementRecipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeRegistry.INFUSER_TYPE);
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
         for(Recipe i : manager.getRecipes()){
             if(i instanceof GlyphPressRecipe){
@@ -71,6 +75,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
 
         registry.addRecipes(apparatus, EnchantingApparatusRecipeCategory.UID);
         registry.addRecipes(crushRecipes, CrushRecipeCategory.UID);
+        registry.addRecipes(imbuementRecipes, ImbuementRecipeCategory.UID);
         ItemStack manaPot = PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotions.MANA_REGEN_POTION);
         IJeiBrewingRecipe manaPotionRecipe = registry.getVanillaRecipeFactory().createBrewingRecipe(Collections.singletonList(new ItemStack(BlockRegistry.SOURCEBERRY_BUSH)),
                 PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.AWKWARD), manaPot );
@@ -82,5 +87,6 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         registry.addRecipeCatalyst(new ItemStack(BlockRegistry.GLYPH_PRESS_BLOCK), GlyphPressRecipeCategory.UID);
         registry.addRecipeCatalyst(new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK), EnchantingApparatusRecipeCategory.UID);
         registry.addRecipeCatalyst(new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(EffectCrush.INSTANCE)), CrushRecipeCategory.UID);
+        registry.addRecipeCatalyst(new ItemStack(BlockRegistry.IMBUEMENT_BLOCK), ImbuementRecipeCategory.UID);
     }
 }
