@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.PotionIngredient;
 import com.hollingsworth.arsnouveau.api.recipe.VanillaPotionRecipe;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
+import com.hollingsworth.arsnouveau.api.ritual.IScryer;
 import com.hollingsworth.arsnouveau.api.ritual.RitualContext;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
@@ -42,50 +43,46 @@ import java.util.stream.Collectors;
  */
 public class ArsNouveauAPI {
 
-
-    public enum PatchouliCategories{
-        spells,
-        machines,
-        equipment,
-        resources,
-        getting_started,
-        automation
-    }
-
     /**
      * Map of all spells to be registered in the spell system
      *
      * key: Unique spell ID. Please make this snake_case!
      * value: Associated glyph
      */
-    private HashMap<String, AbstractSpellPart> spellpartMap;
+    private HashMap<String, AbstractSpellPart> spellpartMap = new HashMap<>();
 
-    private HashMap<String, AbstractRitual> ritualMap;
+    private HashMap<String, AbstractRitual> ritualMap = new HashMap<>();
 
-    private HashMap<String, AbstractFamiliarHolder> familiarHolderMap;
+    private HashMap<String, AbstractFamiliarHolder> familiarHolderMap = new HashMap<>();
 
     /**
      * Contains the list of glyph item instances used by the glyph press.
      */
-    private HashMap<String, Glyph> glyphItemMap;
+    private HashMap<String, Glyph> glyphItemMap = new HashMap<>();
 
-    private HashMap<String, FamiliarScript> familiarScriptMap;
+    private HashMap<String, FamiliarScript> familiarScriptMap = new HashMap<>();
 
     /**
      * Contains the list of parchment item instances created during registration
      */
-    private HashMap<String, RitualTablet> ritualParchmentMap;
+    private HashMap<String, RitualTablet> ritualParchmentMap = new HashMap<>();
+
+    private HashMap<String, IScryer> scryerMap = new HashMap<>();
 
     /** Validator to use when crafting a spell in the spell book. */
     private ISpellValidator craftingSpellValidator;
     /** Validator to use when casting a spell. */
     private ISpellValidator castingSpellValidator;
 
-    private List<IEnchantingRecipe> enchantingApparatusRecipes;
+    private List<IEnchantingRecipe> enchantingApparatusRecipes = new ArrayList<>();
+
+    public List<VanillaPotionRecipe> vanillaPotionRecipes = new ArrayList<>();
+
+    private List<BrewingRecipe> brewingRecipes = new ArrayList<>();
     /**
      * Spells that all spellbooks contain
      */
-    private List<AbstractSpellPart> startingSpells;
+    private List<AbstractSpellPart> startingSpells = new ArrayList<>();
 
     public List<AbstractSpellPart> getDefaultStartingSpells(){
         return spellpartMap.values().stream().filter(Config::isStarterEnabled).collect(Collectors.toList());
@@ -224,8 +221,6 @@ public class ArsNouveauAPI {
         }
         return null;
     }
-    public List<VanillaPotionRecipe> vanillaPotionRecipes = new ArrayList<>();
-    private List<BrewingRecipe> brewingRecipes;
 
     public List<BrewingRecipe> getAllPotionRecipes(){
         if(brewingRecipes == null){
@@ -269,16 +264,16 @@ public class ArsNouveauAPI {
         return castingSpellValidator;
     }
 
-    private ArsNouveauAPI(){
-        spellpartMap = new HashMap<>();
-        glyphItemMap = new HashMap<>();
-        startingSpells = new ArrayList<>();
-        enchantingApparatusRecipes = new ArrayList<>();
-        ritualMap = new HashMap<>();
-        ritualParchmentMap = new HashMap<>();
-        familiarHolderMap = new HashMap<>();
-        familiarScriptMap = new HashMap<>();
+    public @Nullable IScryer getScryer(String id){
+        return this.scryerMap.get(id);
     }
+
+    public boolean registerScryer(IScryer scryer){
+        this.scryerMap.put(scryer.getID(), scryer);
+        return true;
+    }
+
+    private ArsNouveauAPI(){}
 
     /** Retrieves a handle to the singleton instance. */
     public static ArsNouveauAPI getInstance() {

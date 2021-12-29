@@ -2,6 +2,8 @@ package com.hollingsworth.arsnouveau.common.ritual;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
+import com.hollingsworth.arsnouveau.api.ritual.IScryer;
+import com.hollingsworth.arsnouveau.api.ritual.SingleBlockScryer;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
@@ -36,17 +38,18 @@ public class ScryingRitual extends AbstractRitual {
                 ItemStack item = getConsumedItems().stream().filter(i -> i.getItem() instanceof BlockItem).findFirst().orElse(ItemStack.EMPTY);
                 int modifier = didConsumeItem(ArsNouveauAPI.getInstance().getGlyphItem(AugmentExtendTime.INSTANCE)) ? 3 : 1;
                 for(ServerPlayer playerEntity : players){
-                    ScryingRitual.grantScrying(playerEntity, item, 60 * 20 * 5 * modifier);
+                    if(item.getItem() instanceof BlockItem blockItem)
+                        ScryingRitual.grantScrying(playerEntity, 60 * 20 * 5 * modifier, new SingleBlockScryer(blockItem.getBlock()));
                 }
             }
             setFinished();
         }
     }
 
-    public static void grantScrying(ServerPlayer playerEntity, ItemStack stack, int ticks){
+    public static void grantScrying(ServerPlayer playerEntity, int ticks, IScryer scryer){
         playerEntity.addEffect(new MobEffectInstance(ModPotions.SCRYING_EFFECT, ticks));
         CompoundTag tag = playerEntity.getPersistentData().getCompound(Player.PERSISTED_NBT_TAG);
-        tag.putString("an_scrying", stack.getItem().getRegistryName().toString());
+        tag.put("an_scryer", scryer.toTag(new CompoundTag()));
         playerEntity.getPersistentData().put(Player.PERSISTED_NBT_TAG, tag);
         Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->playerEntity), new PacketGetPersistentData(tag));
     }

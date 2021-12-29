@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.setup;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
+import com.hollingsworth.arsnouveau.api.ritual.SingleBlockScryer;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.familiars.*;
 import com.hollingsworth.arsnouveau.common.ritual.*;
@@ -12,7 +13,7 @@ import com.hollingsworth.arsnouveau.common.spell.method.*;
 
 public class APIRegistry {
 
-    public static void registerSpells() {
+    public static void setup() {
         registerSpell(MethodProjectile.INSTANCE);
         registerSpell(MethodTouch.INSTANCE);
         registerSpell(MethodSelf.INSTANCE);
@@ -107,6 +108,8 @@ public class APIRegistry {
         registerSpell(EffectWindshear.INSTANCE);
         registerSpell(EffectEvaporate.INSTANCE);
         registerSpell(EffectLinger.INSTANCE);
+
+        ArsNouveauAPI.getInstance().registerScryer(SingleBlockScryer.INSTANCE);
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar){

@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.familiar;
 
+import com.hollingsworth.arsnouveau.api.ritual.SingleBlockScryer;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.ritual.ScryingRitual;
 import net.minecraft.server.level.ServerPlayer;
@@ -40,7 +41,7 @@ public class FamiliarStarbuncle extends FamiliarEntity {
             ItemStack stack = player.getItemInHand(hand);
             if(stack.is(Tags.Items.NUGGETS_GOLD)){
                 stack.shrink(1);
-                ScryingRitual.grantScrying((ServerPlayer) player, new ItemStack(Blocks.GOLD_ORE), 3 * 20 * 60);
+                ScryingRitual.grantScrying((ServerPlayer) player, 3 * 20 * 60, new SingleBlockScryer(Blocks.GOLD_ORE));
             }
         }
         return super.mobInteract(player, hand);
