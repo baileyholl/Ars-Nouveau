@@ -91,7 +91,6 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withPedestalItem(4,  Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(2,Ingredient.of(Tags.Items.ENDER_PEARLS))
                 .withPedestalItem(2,   Recipes.SOURCE_GEM)
-                .withPedestalItem(2,   Ingredient.of(Tags.Items.ENDER_PEARLS))
                 .build());
 
         addRecipe(builder()
@@ -125,10 +124,9 @@ public class ApparatusRecipeProvider implements DataProvider {
 
         addRecipe(builder()
                 .withResult(ItemsRegistry.BOOKWYRM_CHARM)
-                .withReagent(Items.EGG)
+                .withReagent(Items.BOOK)
                 .withPedestalItem(4, Ingredient.of(Tags.Items.INGOTS_IRON))
                 .withPedestalItem(4, Recipes.SOURCE_GEM)
-                .withPedestalItem(Items.BOOK)
                 .build());
 
         addRecipe(builder()

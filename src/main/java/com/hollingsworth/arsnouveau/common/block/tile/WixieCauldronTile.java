@@ -8,7 +8,6 @@ import com.hollingsworth.arsnouveau.api.recipe.ShapedHelper;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.WixieCauldron;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
@@ -46,43 +45,36 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class WixieCauldronTile extends ModdedTile implements ITickable, ITooltipProvider {
+public class WixieCauldronTile extends SummoningTile implements ITooltipProvider {
 
     public List<BlockPos> inventories;
     public ItemStack craftingItem;
-
-    int tickCounter;
-    boolean converted;
     public int entityID;
-
-    public boolean hasMana;
+    public boolean hasSource;
     public boolean isOff;
     public boolean isCraftingPotion;
     public boolean needsPotionStorage;
     RecipeWrapper recipeWrapper;
     public CraftingProgress craftManager = new CraftingProgress();
+
     public WixieCauldronTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.WIXIE_CAULDRON_TYPE, pos, state);
     }
 
     @Override
     public void tick() {
+        super.tick();
         if(level.isClientSide)
             return;
 
-        if (!converted) {
-            convertedEffect();
-            return;
-        }
-
-        if(!hasMana && level.getGameTime() % 5 == 0){
+        if(!hasSource && level.getGameTime() % 5 == 0){
             if(SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 6, 50) != null) {
-                this.hasMana = true;
+                this.hasSource = true;
                 level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(WixieCauldron.FILLED, true));
             }
         }
 
-        if(!hasMana)
+        if(!hasSource)
             return;
 
         if(this.recipeWrapper == null && craftingItem != null)
@@ -90,8 +82,6 @@ public class WixieCauldronTile extends ModdedTile implements ITickable, ITooltip
 
         if (level.getGameTime() % 100 == 0) {
             updateInventories(); // Update the inventories available to use
-
-           // attemptFinish();
         }
 
     }
@@ -128,7 +118,7 @@ public class WixieCauldronTile extends ModdedTile implements ITickable, ITooltip
 
                 if (!craftManager.outputStack.isEmpty()) {
                     level.addFreshEntity(new ItemEntity(level, worldPosition.getX(), worldPosition.getY() + 1, worldPosition.getZ(), craftManager.outputStack.copy()));
-                    this.hasMana = false;
+                    this.hasSource = false;
                     level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(WixieCauldron.FILLED, false));
                 }
                 for (ItemStack i : craftManager.remainingItems) {
@@ -165,7 +155,7 @@ public class WixieCauldronTile extends ModdedTile implements ITickable, ITooltip
                     int a = (color >> 24) & 0xFF;
                     EntityFollowProjectile aoeProjectile = new EntityFollowProjectile(level, worldPosition, jarPos, r,g,b);
                     level.addFreshEntity(aoeProjectile);
-                    this.hasMana = false;
+                    this.hasSource = false;
                     level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(WixieCauldron.FILLED, false));
                     craftManager = new CraftingProgress();
                     setNewCraft();
@@ -307,7 +297,7 @@ public class WixieCauldronTile extends ModdedTile implements ITickable, ITooltip
 
 
     public void convertedEffect() {
-        tickCounter++;
+        super.convertedEffect();
         if (tickCounter >= 120 && !level.isClientSide) {
             converted = true;
             level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).setValue(WixieCauldron.FILLED, false).setValue(SummoningTile.CONVERTED, true));
@@ -361,11 +351,10 @@ public class WixieCauldronTile extends ModdedTile implements ITickable, ITooltip
         if(compound.contains("crafting")) {
             this.craftingItem = ItemStack.of(compound.getCompound("crafting"));
         }
-        this.converted = compound.getBoolean("converted");
 
         craftManager = CraftingProgress.read(compound);
         this.entityID = compound.getInt("entityid");
-        this.hasMana = compound.getBoolean("hasmana");
+        this.hasSource = compound.getBoolean("hasmana");
         this.isOff = compound.getBoolean("off");
         this.isCraftingPotion = compound.getBoolean("isPotion");
         needsPotionStorage = compound.getBoolean("storage");
@@ -374,7 +363,6 @@ public class WixieCauldronTile extends ModdedTile implements ITickable, ITooltip
     @Override
     public void saveAdditional(CompoundTag compound) {
         super.saveAdditional(compound);
-        compound.putBoolean("converted", converted);
 
         if(craftingItem != null){
             CompoundTag itemTag = new CompoundTag();
@@ -385,7 +373,7 @@ public class WixieCauldronTile extends ModdedTile implements ITickable, ITooltip
             craftManager.write(compound);
 
         compound.putInt("entityid", entityID);
-        compound.putBoolean("hasmana",hasMana);
+        compound.putBoolean("hasmana", hasSource);
         compound.putBoolean("off", isOff);
         compound.putBoolean("isPotion", isCraftingPotion);
         compound.putBoolean("storage", needsPotionStorage);
@@ -409,7 +397,7 @@ public class WixieCauldronTile extends ModdedTile implements ITickable, ITooltip
             PotionUtils.addPotionTooltip(potionStack, tooltip, 1.0F);
         }
 
-        if(!hasMana){
+        if(!hasSource){
             tooltip.add(new TranslatableComponent("ars_nouveau.wixie.need_mana"));
         }
         if(this.craftManager != null && !this.craftManager.neededItems.isEmpty())

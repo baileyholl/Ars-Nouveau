@@ -199,6 +199,8 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.ARCHWOOD_CHEST) public static  ArchwoodChest ARCHWOOD_CHEST;
     @ObjectHolder(LibBlockNames.ARCHWOOD_CHEST) public static  BlockEntityType<ArchwoodChestTile> ARCHWOOD_CHEST_TILE;
     @ObjectHolder(LibBlockNames.SPELL_PRISM) public static  SpellPrismBlock SPELL_PRISM;
+    @ObjectHolder(LibBlockNames.WHIRLISPRIG_BLOCK) public static BlockEntityType<WhirlisprigTile> WHIRLISPRIG_TILE;
+    @ObjectHolder(LibBlockNames.WHIRLISPRIG_BLOCK) public static WhirlisprigFlower WHIRLISPRIG_FLOWER;
 
     @ObjectHolder(LibBlockNames.STATE_PROVIDER) public static BlockStateProviderType stateProviderType;
 
@@ -307,6 +309,7 @@ public class BlockRegistry {
             registry.register(new TimerSpellTurret());
             registry.register(new ArchwoodChest().setRegistryName(LibBlockNames.ARCHWOOD_CHEST));
             registry.register(new SpellPrismBlock(LibBlockNames.SPELL_PRISM));
+            registry.register(new WhirlisprigFlower(LibBlockNames.WHIRLISPRIG_BLOCK));
         }
         static Block.Properties woodProp = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD);
         public static MagicLeaves createLeavesBlock() {
@@ -350,6 +353,7 @@ public class BlockRegistry {
             event.getRegistry().register(BlockEntityType.Builder.of(BasicSpellTurretTile::new, BlockRegistry.BASIC_SPELL_TURRET).build(null).setRegistryName(LibBlockNames.BASIC_SPELL_TURRET));
             event.getRegistry().register(BlockEntityType.Builder.of(TimerSpellTurretTile::new, BlockRegistry.TIMER_SPELL_TURRET).build(null).setRegistryName(LibBlockNames.TIMER_SPELL_TURRET));
             event.getRegistry().register(BlockEntityType.Builder.of(ArchwoodChestTile::new, BlockRegistry.ARCHWOOD_CHEST).build(null).setRegistryName(LibBlockNames.ARCHWOOD_CHEST));
+            event.getRegistry().register(BlockEntityType.Builder.of(WhirlisprigTile::new, BlockRegistry.WHIRLISPRIG_FLOWER).build(null).setRegistryName(LibBlockNames.WHIRLISPRIG_BLOCK));
 
         }
 
@@ -551,7 +555,12 @@ public class BlockRegistry {
             }.setRegistryName(LibBlockNames.ENCHANTED_SPELL_TURRET));
             registry.register(new ArchwoodChest.Item(BlockRegistry.ARCHWOOD_CHEST, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.ARCHWOOD_CHEST));
             registry.register(getDefaultBlockItem(BlockRegistry.SPELL_PRISM, LibBlockNames.SPELL_PRISM));
-
+            registry.register(new RendererBlockItem(BlockRegistry.WHIRLISPRIG_FLOWER, ItemsRegistry.defaultItemProperties()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return  WhirlisprigFlowerRenderer::getISTER;
+                }
+            }.setRegistryName(LibBlockNames.WHIRLISPRIG_BLOCK));
         }
 
         public static Item getDefaultBlockItem(Block block, String registry){

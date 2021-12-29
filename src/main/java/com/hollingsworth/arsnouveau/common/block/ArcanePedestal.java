@@ -7,6 +7,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -36,7 +37,7 @@ public class ArcanePedestal extends ModBlock implements EntityBlock {
                     return InteractionResult.SUCCESS;
                 ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
                 world.addFreshEntity(item);
-                tile.stack = null;
+                tile.stack = ItemStack.EMPTY;
             } else if (!player.getInventory().getSelected().isEmpty()) {
                 if(tile.stack != null){
                     ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);

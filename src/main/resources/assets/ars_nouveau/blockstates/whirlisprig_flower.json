@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "converted=false": {
+      "model": "block/poppy"
+    },
+    "converted=true": {
+      "model": "ars_nouveau:block/whirlisprig_flower"
+    }
+  }
+}

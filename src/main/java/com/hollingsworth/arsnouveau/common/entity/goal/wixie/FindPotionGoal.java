@@ -92,7 +92,7 @@ public class FindPotionGoal extends ExtendedRangeGoal {
         BlockEntity tileEntity = wixie.level.getBlockEntity(wixie.cauldronPos);
 
         return wixie.inventoryBackoff == 0 && tileEntity instanceof WixieCauldronTile
-                && ((WixieCauldronTile) tileEntity).hasMana && ((WixieCauldronTile) tileEntity).needsPotion()  && !((WixieCauldronTile) tileEntity).isOff;
+                && ((WixieCauldronTile) tileEntity).hasSource && ((WixieCauldronTile) tileEntity).needsPotion()  && !((WixieCauldronTile) tileEntity).isOff;
     }
 
     @Override

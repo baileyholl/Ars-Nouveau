@@ -220,7 +220,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements IPickupRespon
         return InteractionResult.SUCCESS;
     }
 
-    protected Whirlisprig(EntityType<? extends AbstractFlyingCreature> type, Level worldIn) {
+    public Whirlisprig(EntityType<? extends AbstractFlyingCreature> type, Level worldIn) {
         super(type, worldIn);
         MinecraftForge.EVENT_BUS.register(this);
         this.moveControl =  new FlyingMoveControl(this, 10, true);
