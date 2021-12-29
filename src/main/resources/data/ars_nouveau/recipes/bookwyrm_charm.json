@@ -2,7 +2,7 @@
   "type": "ars_nouveau:enchanting_apparatus",
   "reagent": [
     {
-      "item": "minecraft:egg"
+      "item": "minecraft:book"
     }
   ],
   "pedestalItems": [
@@ -44,11 +44,6 @@
     {
       "item": {
         "tag": "forge:gems/source"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:book"
       }
     }
   ],
