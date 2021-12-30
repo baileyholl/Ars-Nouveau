@@ -167,7 +167,11 @@ public class BlockTagProvider extends BlockTagsProvider {
 
         Tag.Named<Block> WHIRLISPRIG_KINDA_LIKES = BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/kinda_likes"));
         Tag.Named<Block> WHIRLISPRIG_GREATLY_LIKES = BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/greatly_likes"));
-        this.tag(WHIRLISPRIG_GREATLY_LIKES);
+        this.tag(WHIRLISPRIG_GREATLY_LIKES).add(Blocks.MUSHROOM_STEM,
+                Blocks.BROWN_MUSHROOM_BLOCK,
+                Blocks.RED_MUSHROOM_BLOCK,
+                Blocks.SHROOMLIGHT,
+                Blocks.WARPED_WART_BLOCK, Blocks.NETHER_WART_BLOCK);
         this.tag(WHIRLISPRIG_KINDA_LIKES);
 
         Tag.Named<Block> MAGIC_PLANTS = BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "magic_plants"));

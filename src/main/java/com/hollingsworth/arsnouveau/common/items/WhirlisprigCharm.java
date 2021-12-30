@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 
-import com.hollingsworth.arsnouveau.common.block.tile.DrygmyTile;
+import com.hollingsworth.arsnouveau.common.block.tile.WhirlisprigTile;
 import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -29,7 +29,7 @@ public class WhirlisprigCharm extends ModItem{
         if(world.getBlockState(pos).is(BlockTags.FLOWERS)){
             world.setBlockAndUpdate(pos, BlockRegistry.WHIRLISPRIG_FLOWER.defaultBlockState());
             context.getItemInHand().shrink(1);
-        }else if(world.getBlockEntity(pos) instanceof DrygmyTile) {
+        }else if(world.getBlockEntity(pos) instanceof WhirlisprigTile) {
             Whirlisprig whirlisprig = new Whirlisprig(world, true, pos);
             whirlisprig.setPos(pos.getX() + 0.5, pos.getY() + 1.0, pos.getZ() + 0.5);
             world.addFreshEntity(whirlisprig);

@@ -4,6 +4,8 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.DropDistribution;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
+import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
@@ -60,13 +62,27 @@ public class WhirlisprigTile extends SummoningTile implements IAnimatable {
     @Override
     public void tick() {
         super.tick();
+        if(level.isClientSide){
+            for(int i = 0; i < progress/20; i++){
+                level.addParticle(
+                        GlowParticleData.createData(new ParticleColor(
+                                50,
+                                255,
+                                20
+                        )),
+                        getBlockPos().getX() +0.5 + ParticleUtil.inRange(-0.1, 0.1)  , getBlockPos().getY() + 1.3  + ParticleUtil.inRange(-0.1, 0.1) , getBlockPos().getZ() +0.5 + ParticleUtil.inRange(-0.1, 0.1),
+                        0,0,0);
+            }
+
+        }
         if(!level.isClientSide){
             if(ticksToNextEval > 0)
                 ticksToNextEval--;
             if(ticksToNextEval <= 0)
                 evaluateGrove();
 
-            if(level.getGameTime() % 60 == 0 && progress >= 500 && SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 5, Config.SYLPH_MANA_COST.get()) != null){
+            if(level.getGameTime() % 60 == 0 && progress >= 250 && SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 5, Config.SYLPH_MANA_COST.get()) != null){
+                this.progress = 0;
                 DropDistribution<BlockState> blockDropDistribution = new DropDistribution<>(genTable);
                 int numDrops = getDropsByDiversity() + 3;
                 for(int i = 0; i < numDrops; i++){
@@ -78,6 +94,7 @@ public class WhirlisprigTile extends SummoningTile implements IAnimatable {
                         BlockUtil.insertItemAdjacent(level, worldPosition, s);
                     }
                 }
+                updateBlock();
             }
         }
     }
@@ -111,8 +128,8 @@ public class WhirlisprigTile extends SummoningTile implements IAnimatable {
     }
 
     public void addProgress(){
-        this.progress += this.moodScore / 50;
-        level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+        this.progress += this.moodScore / 30;
+        updateBlock();
     }
 
     public void evaluateGrove(){
