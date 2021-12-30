@@ -71,19 +71,19 @@ public class BookwyrmLecternTile extends SummoningTile implements IWandable {
     public void changeTier(Player entity){
         if(tier == 1 || tier == 0){
             tier = 2;
-            entity.sendMessage(new TranslatableComponent("ars_nouveau.summoning_crystal.set", "5 x 5"), Util.NIL_UUID);
+            entity.sendMessage(new TranslatableComponent("ars_nouveau.bookwyrm_lectern.set", "5 x 5"), Util.NIL_UUID);
         }else if(tier == 2){
             tier = 3;
-            entity.sendMessage(new TranslatableComponent("ars_nouveau.summoning_crystal.set", "9 x 9"), Util.NIL_UUID);
+            entity.sendMessage(new TranslatableComponent("ars_nouveau.bookwyrm_lectern.set", "9 x 9"), Util.NIL_UUID);
         }else if(tier == 3){
             tier = 4;
-            entity.sendMessage(new TranslatableComponent("ars_nouveau.summoning_crystal.set", "13 x 13"), Util.NIL_UUID);
+            entity.sendMessage(new TranslatableComponent("ars_nouveau.bookwyrm_lectern.set", "13 x 13"), Util.NIL_UUID);
         }else if(tier == 4){
             tier = 5;
-            entity.sendMessage(new TranslatableComponent("ars_nouveau.summoning_crystal.set", "17 x 17"), Util.NIL_UUID);
+            entity.sendMessage(new TranslatableComponent("ars_nouveau.bookwyrm_lectern.set", "17 x 17"), Util.NIL_UUID);
         }else if(tier == 5){
             tier = 1;
-            entity.sendMessage(new TranslatableComponent("ars_nouveau.summoning_crystal.adjacent"), Util.NIL_UUID);
+            entity.sendMessage(new TranslatableComponent("ars_nouveau.bookwyrm_lectern.adjacent"), Util.NIL_UUID);
         }
     }
 
