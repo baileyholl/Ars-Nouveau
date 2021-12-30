@@ -1,15 +1,23 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.api.util.DropDistribution;
+import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.Config;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -17,24 +25,28 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class WhirlisprigTile extends SummoningTile implements IAnimatable {
-    public int ticksToNextEval;
+
     public static Tag.Named<Block> KINDA_LIKES =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/kinda_likes"));
     public static Tag.Named<Block> GREATLY_LIKES =  BlockTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/greatly_likes"));
-
-    int moodScore;
-    int diversityScore;
-    public Map<BlockState, Integer> genTable;
-    public Map<BlockState, Integer> scoreMap;
+    public static Tag.Named<Item> DENIED_DROP =  ItemTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/denied_drop"));
+    public List<ItemStack> ignoreItems = new ArrayList<>();
+    public int ticksToNextEval;
+    public int moodScore;
+    public int diversityScore;
+    public int progress;
+    public Map<BlockState, Integer> genTable = new HashMap<>();
+    public Map<BlockState, Integer> scoreMap = new HashMap<>();
 
 
     public WhirlisprigTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -53,7 +65,54 @@ public class WhirlisprigTile extends SummoningTile implements IAnimatable {
                 ticksToNextEval--;
             if(ticksToNextEval <= 0)
                 evaluateGrove();
+
+            if(level.getGameTime() % 60 == 0 && progress >= 500 && SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 5, Config.SYLPH_MANA_COST.get()) != null){
+                DropDistribution<BlockState> blockDropDistribution = new DropDistribution<>(genTable);
+                int numDrops = getDropsByDiversity() + 3;
+                for(int i = 0; i < numDrops; i++){
+                    BlockState block = blockDropDistribution.nextDrop();
+                    if(block == null)
+                        return;
+
+                    for(ItemStack s : getDrops(blockDropDistribution)){
+                        BlockUtil.insertItemAdjacent(level, worldPosition, s);
+                    }
+                }
+            }
         }
+    }
+
+    public boolean isValidReward(ItemStack stack){
+        if (DENIED_DROP.contains(stack.getItem()))
+            return false;
+        if (ignoreItems == null || ignoreItems.isEmpty())
+            return true;
+        return ignoreItems.stream().noneMatch(i -> i.sameItem(stack));
+    }
+
+    public int getDropsByDiversity(){
+        return diversityScore / 2;
+    }
+
+    public List<ItemStack> getDrops(DropDistribution<BlockState> blockDropDistribution){
+        Supplier<List<ItemStack>> getDrops = () -> Block.getDrops(blockDropDistribution.nextDrop(), (ServerLevel) level, worldPosition, null);
+
+        List<ItemStack> successfulDrops;
+        boolean bonusReroll = false;
+        for(int numRerolls = 0; numRerolls < (bonusReroll ? 16 : 8); numRerolls++) {
+            List<ItemStack> drops = getDrops.get();
+            if (drops.isEmpty()) continue;
+            successfulDrops = drops.stream().filter(s -> isValidReward(s)).collect(Collectors.toCollection(ArrayList::new));
+            bonusReroll = true;
+            if (successfulDrops.isEmpty()) continue;
+            return successfulDrops;
+        }
+        return new ArrayList<>();
+    }
+
+    public void addProgress(){
+        this.progress += this.moodScore / 50;
+        level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
     }
 
     public void evaluateGrove(){
@@ -80,11 +139,11 @@ public class WhirlisprigTile extends SummoningTile implements IAnimatable {
             defaultMap.put(defaultState, defaultMap.get(defaultState) + 1);
             score += defaultMap.get(defaultState) <= 50 ? getScore(defaultState) : 0;
         }
-        this.ticksToNextEval = 20 * 120;
+        ticksToNextEval = 20 * 120;
         genTable = dropMap;
         scoreMap = defaultMap;
         diversityScore = defaultMap.keySet().size();
-        this.moodScore = score;
+        moodScore = score;
     }
 
     public static int getScore(BlockState state){
@@ -143,12 +202,31 @@ public class WhirlisprigTile extends SummoningTile implements IAnimatable {
     }
 
     @Override
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.putInt("moodScore", moodScore);
+        tag.putInt("diversityScore", diversityScore);
+        tag.putInt("progress", progress);
+        tag.putInt("evalTicks", ticksToNextEval);
+    }
+
+    @Override
+    public void load(CompoundTag compound) {
+        super.load(compound);
+        moodScore = compound.getInt("moodScore");
+        diversityScore = compound.getInt("diversityScore");
+        progress = compound.getInt("progress");
+        ticksToNextEval = compound.getInt("evalTicks");
+    }
+
+    @Override
     public void registerControllers(AnimationData data) {
         AnimationController controller = new AnimationController<>(this, "rotateController", 1, this::walkPredicate);
         data.addAnimationController(controller);
     }
 
     private <T extends IAnimatable> PlayState walkPredicate(AnimationEvent<T> tAnimationEvent) {
+        tAnimationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("spin"));
         return PlayState.CONTINUE;
     }
 

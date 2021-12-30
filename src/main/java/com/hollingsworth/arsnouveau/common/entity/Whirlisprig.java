@@ -1,19 +1,19 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
-import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.block.tile.SummoningCrystalTile;
+import com.hollingsworth.arsnouveau.common.block.tile.WhirlisprigTile;
 import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
-import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.*;
+import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.BonemealGoal;
+import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.FollowMobGoalBackoff;
+import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.FollowPlayerGoal;
+import com.hollingsworth.arsnouveau.common.entity.goal.whirlisprig.InspectPlantGoal;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -24,12 +24,9 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
@@ -67,17 +64,14 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 
-public class Whirlisprig extends AbstractFlyingCreature implements IPickupResponder, IAnimatable, ITooltipProvider, IDispellable {
+public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, ITooltipProvider, IDispellable {
     AnimationFactory manager = new AnimationFactory(this);
 
-    public static Tag.Named<Item> DENIED_DROP =  ItemTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "whirlisprig/denied_drop"));
 
     public int timeSinceBonemeal = 0;
     public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(Whirlisprig.class, EntityDataSerializers.BOOLEAN);
@@ -87,14 +81,11 @@ public class Whirlisprig extends AbstractFlyingCreature implements IPickupRespon
     public static final EntityDataAccessor<Integer> MOOD_SCORE = SynchedEntityData.defineId(Whirlisprig.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(Whirlisprig.class, EntityDataSerializers.STRING);
     public List<ItemStack> ignoreItems;
-    public int timeUntilGather = 0;
-    public int timeUntilEvaluation = 0;
     public int diversityScore;
-    public Map<BlockState, Integer> genTable;
-    public Map<BlockState, Integer> scoreMap;
-    public BlockPos crystalPos;
-    public List<ItemStack> drops;
+    public BlockPos flowerPos;
+    public int timeSinceGen;
     private boolean setBehaviors;
+
     private <E extends Entity> PlayState idlePredicate(AnimationEvent event) {
         event.getController().setAnimation(new AnimationBuilder().addAnimation("idle"));
         return PlayState.CONTINUE;
@@ -201,8 +192,8 @@ public class Whirlisprig extends AbstractFlyingCreature implements IPickupRespon
         if(!(stack.getItem() instanceof BlockItem))
             return InteractionResult.PASS;
         BlockState state = ((BlockItem) stack.getItem()).getBlock().defaultBlockState();
-        int score = EvaluateGroveGoal.getScore(state);
-        if(score > 0 && this.scoreMap != null && this.scoreMap.get(state) != null && this.scoreMap.get(state) >= 50){
+        int score = WhirlisprigTile.getScore(state);
+        if(score > 0 && getTile() != null && getTile().scoreMap != null && getTile().scoreMap.get(state) != null && getTile().scoreMap.get(state) >= 50){
             PortUtil.sendMessage(player, new TranslatableComponent("whirlisprig.toomuch"));
             return InteractionResult.SUCCESS;
         }
@@ -232,7 +223,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements IPickupRespon
         MinecraftForge.EVENT_BUS.register(this);
         this.moveControl =  new FlyingMoveControl(this, 10, true);
         this.entityData.set(TAMED, isTamed);
-        this.crystalPos = pos;
+        this.flowerPos = pos;
         addGoalsAfterConstructor();
     }
 
@@ -245,14 +236,15 @@ public class Whirlisprig extends AbstractFlyingCreature implements IPickupRespon
                 return;
             }
 
-            if(Boolean.TRUE.equals(this.entityData.get(TAMED))){
-                this.timeUntilEvaluation--;
-                this.timeUntilGather--;
-            }
             this.timeSinceBonemeal++;
+            this.timeSinceGen++;
+            if(level.getGameTime() % 20 == 0 && flowerPos != null && isTamed() && getTile() != null){
+                this.entityData.set(MOOD_SCORE, getTile().moodScore);
+                this.diversityScore = getTile().diversityScore;
+            }
         }
 
-        if(!level.isClientSide && level.getGameTime() % 60 == 0 && isTamed() && crystalPos != null && !(level.getBlockEntity(crystalPos) instanceof SummoningCrystalTile)) {
+        if(!level.isClientSide && level.getGameTime() % 60 == 0 && isTamed() && flowerPos != null && !(level.getBlockEntity(flowerPos) instanceof WhirlisprigTile)) {
             this.hurt(DamageSource.playerAttack(FakePlayerFactory.getMinecraft((ServerLevel) level)), 99);
             return;
         }
@@ -293,22 +285,9 @@ public class Whirlisprig extends AbstractFlyingCreature implements IPickupRespon
         return this.entityData.get(TAMED) ? getTamedGoals() : getUntamedGoals();
     }
 
-    public boolean enoughManaForTask(){
-        if(!(level.getBlockEntity(crystalPos) instanceof SummoningCrystalTile))
-            return false;
-        return ((SummoningCrystalTile) level.getBlockEntity(crystalPos)).enoughMana(Config.SYLPH_MANA_COST.get());
-    }
-
-    public boolean removeManaForDrops(){
-        if(!(level.getBlockEntity(crystalPos) instanceof SummoningCrystalTile))
-            return false;
-        return ((SummoningCrystalTile) level.getBlockEntity(crystalPos)).removeManaAround(Config.SYLPH_MANA_COST.get());
-    }
-
     public boolean isTamed(){
         return this.entityData.get(TAMED);
     }
-
 
     @Override
     public boolean hurt(DamageSource source, float amount) {
@@ -331,11 +310,9 @@ public class Whirlisprig extends AbstractFlyingCreature implements IPickupRespon
     public List<WrappedGoal> getTamedGoals(){
         List<WrappedGoal> list = new ArrayList<>();
         list.add(new WrappedGoal(3, new RandomLookAroundGoal(this)));
-        list.add(new WrappedGoal(2, new BonemealGoal(this, () -> this.crystalPos, 10)));
-        list.add(new WrappedGoal(1, new EvaluateGroveGoal(this, 20 * 120 )));
-        list.add(new WrappedGoal(2, new InspectPlantGoal(this, () -> this.crystalPos,15)));
-        list.add(new WrappedGoal(1, new GoBackHomeGoal(this, () -> this.crystalPos,20)));
-        list.add(new WrappedGoal(1, new GenerateDropsGoal(this)));
+        list.add(new WrappedGoal(2, new BonemealGoal(this, () -> this.flowerPos, 10)));
+        list.add(new WrappedGoal(2, new InspectPlantGoal(this, () -> this.flowerPos,15)));
+        list.add(new WrappedGoal(1, new GoBackHomeGoal(this, () -> this.flowerPos,20)));
         list.add(new WrappedGoal(0, new FloatGoal(this)));
         return list;
     }
@@ -351,13 +328,19 @@ public class Whirlisprig extends AbstractFlyingCreature implements IPickupRespon
         return list;
     }
 
+    public WhirlisprigTile getTile(){
+        if(this.flowerPos == null || !(level.getBlockEntity(flowerPos) instanceof WhirlisprigTile)){
+            return null;
+        }
+        return (WhirlisprigTile) level.getBlockEntity(flowerPos);
+    }
+
     @SubscribeEvent
     public void treeGrow(SaplingGrowTreeEvent event) {
         if(!this.entityData.get(TAMED) && BlockUtil.distanceFrom(this.blockPosition(), event.getPos()) <= 10) {
             this.droppingShards = true;
         }
     }
-
 
     @Override
     protected void registerGoals() { /*Do not use. See above*/}
@@ -367,36 +350,18 @@ public class Whirlisprig extends AbstractFlyingCreature implements IPickupRespon
         if(!this.entityData.get(TAMED))
             return tooltip;
         int mood = this.entityData.get(MOOD_SCORE);
-        String moodStr = new TranslatableComponent("ars_nouveau.sylph.tooltip_unhappy").getString();
+        String moodStr = new TranslatableComponent("ars_nouveau.whirlisprig.tooltip_unhappy").getString();
         if(mood >= 1000)
-            moodStr = new TranslatableComponent("ars_nouveau.sylph.tooltip_extremely_happy").getString();
+            moodStr = new TranslatableComponent("ars_nouveau.whirlisprig.tooltip_extremely_happy").getString();
         else if(mood >= 750)
-            moodStr = new TranslatableComponent("ars_nouveau.sylph.tooltip_very_happy").getString();
+            moodStr = new TranslatableComponent("ars_nouveau.whirlisprig.tooltip_very_happy").getString();
         else if(mood >= 500)
-            moodStr = new TranslatableComponent("ars_nouveau.sylph.tooltip_happy").getString();
+            moodStr = new TranslatableComponent("ars_nouveau.whirlisprig.tooltip_happy").getString();
         else if(mood >= 250)
-            moodStr = new TranslatableComponent("ars_nouveau.sylph.tooltip_content").getString();
-        tooltip.add(new TextComponent(new TranslatableComponent("ars_nouveau.sylph.tooltip_mood").getString() + moodStr));
+            moodStr = new TranslatableComponent("ars_nouveau.whirlisprig.tooltip_content").getString();
+        tooltip.add(new TextComponent(new TranslatableComponent("ars_nouveau.whirlisprig.tooltip_mood").getString() + moodStr));
         return tooltip;
     }
-
-    public boolean isValidReward(ItemStack stack){
-        if (DENIED_DROP.contains(stack.getItem()))
-            return false;
-        if (ignoreItems == null || ignoreItems.isEmpty())
-            return true;
-        return ignoreItems.stream().noneMatch(i -> i.sameItem(stack));
-    }
-
-
-    @Override
-    public @Nonnull ItemStack onPickup(ItemStack stack) {
-        if(!isValidReward(stack))
-            return stack;
-        SummoningCrystalTile tile = level.getBlockEntity(crystalPos) instanceof SummoningCrystalTile ? (SummoningCrystalTile) level.getBlockEntity(crystalPos) : null;
-        return tile == null ? stack : tile.insertItem(stack);
-    }
-
 
     @Override
     public boolean removeWhenFarAway(double p_213397_1_) {
@@ -408,7 +373,6 @@ public class Whirlisprig extends AbstractFlyingCreature implements IPickupRespon
                 .add(Attributes.MAX_HEALTH, 6.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.2D);
     }
-
 
     @Override
     protected PathNavigation createNavigation(Level world) {
@@ -423,10 +387,8 @@ public class Whirlisprig extends AbstractFlyingCreature implements IPickupRespon
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if(tag.contains("summoner_x"))
-            crystalPos = new BlockPos(tag.getInt("summoner_x"), tag.getInt("summoner_y"), tag.getInt("summoner_z"));
+            flowerPos = new BlockPos(tag.getInt("summoner_x"), tag.getInt("summoner_y"), tag.getInt("summoner_z"));
         timeSinceBonemeal = tag.getInt("bonemeal");
-        timeUntilGather = tag.getInt("gather");
-        timeUntilEvaluation = tag.getInt("eval");
         this.entityData.set(TAMED, tag.getBoolean("tamed"));
         this.entityData.set(Whirlisprig.MOOD_SCORE, tag.getInt("score"));
         if(!setBehaviors){
@@ -435,6 +397,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements IPickupRespon
         }
         ignoreItems = NBTUtil.readItems(tag, "ignored_");
         this.entityData.set(COLOR, tag.getString("color"));
+        this.timeSinceGen = tag.getInt("genTime");
     }
     // A workaround for goals not registering correctly for a dynamic variable on reload as read() is called after constructor.
     public void tryResetGoals(){
@@ -445,17 +408,16 @@ public class Whirlisprig extends AbstractFlyingCreature implements IPickupRespon
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
-        if(crystalPos != null){
-            tag.putInt("summoner_x", crystalPos.getX());
-            tag.putInt("summoner_y", crystalPos.getY());
-            tag.putInt("summoner_z", crystalPos.getZ());
+        if(flowerPos != null){
+            tag.putInt("summoner_x", flowerPos.getX());
+            tag.putInt("summoner_y", flowerPos.getY());
+            tag.putInt("summoner_z", flowerPos.getZ());
         }
-        tag.putInt("eval", timeUntilEvaluation);
         tag.putInt("bonemeal", timeSinceBonemeal);
-        tag.putInt("gather", timeUntilGather);
         tag.putBoolean("tamed", this.entityData.get(TAMED));
         tag.putInt("score", this.entityData.get(Whirlisprig.MOOD_SCORE));
         tag.putString("color", this.entityData.get(COLOR));
+        tag.putInt("genTime", timeSinceGen);
         if (ignoreItems != null && !ignoreItems.isEmpty())
             NBTUtil.writeItems(tag, "ignored_", ignoreItems);
     }
