@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.event;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.event.FamiliarSummonEvent;
 import com.hollingsworth.arsnouveau.api.event.MaxManaCalcEvent;
+import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellModifierEvent;
 import com.hollingsworth.arsnouveau.common.entity.familiar.*;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
@@ -40,6 +41,15 @@ public class FamiliarEvents {
             }
         }
 
+    }
+
+    @SubscribeEvent
+    public static void castEvent(SpellCastEvent event) {
+        for(FamiliarEntity entity : getFamiliars((f) -> f instanceof ISpellCastListener)){
+            if(entity instanceof ISpellCastListener){
+                ((ISpellCastListener) entity).onCast(event);
+            }
+        }
     }
 
     @SubscribeEvent
