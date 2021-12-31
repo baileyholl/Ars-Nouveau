@@ -186,8 +186,10 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     public boolean canPlaceItem(int slot, ItemStack stack) {
         if(stack.isEmpty() || !this.stack.isEmpty())
             return false;
+        this.stack = stack.copy();
         ImbuementRecipe recipe = level.getRecipeManager().getAllRecipesFor(RecipeRegistry.INFUSER_TYPE).stream()
                 .filter(f -> f.matches(this, level)).findFirst().orElse(null);
+        this.stack = ItemStack.EMPTY;
         return recipe != null;
     }
 
@@ -252,12 +254,10 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
     @Override
     public void registerControllers(AnimationData data) {
         data.addAnimationController(new AnimationController(this, "controller", 1,  this::idlePredicate));
-        data.addAnimationController(new AnimationController(this, "slowcraft_controller", 20,  this::slowCraftPredicate));
+        data.addAnimationController(new AnimationController(this, "slowcraft_controller", 1,  this::slowCraftPredicate));
     }
 
     private PlayState slowCraftPredicate(AnimationEvent animationEvent) {
-        if(this.stack.isEmpty())
-            return PlayState.STOP;
         animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("imbue_slow", true));
         return PlayState.CONTINUE;
     }

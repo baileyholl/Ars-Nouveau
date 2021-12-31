@@ -69,7 +69,7 @@ public class ImbuementBlock extends TickableModBlock {
             tile.draining = false;
             tile.update();
         }
-        return super.use(state, worldIn, pos, player, handIn, hit);
+        return InteractionResult.SUCCESS;
     }
 
     @Override
