@@ -75,17 +75,9 @@ public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimata
         }
     }
 
-    public void setParsedSpell(List<AbstractSpellPart> spell){
-        if(spell.size() <= 1){
-            this.spell = Spell.EMPTY;
-            return;
-        }
-        spell.set(0, MethodTouch.INSTANCE);
-        this.spell = new Spell(spell);
-    }
-
     @Override
     public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putString("spell", spell.serialize());
         tag.putBoolean("charged", isCharged);
         tag.putBoolean("temp", isTemporary);

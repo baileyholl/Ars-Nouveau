@@ -24,9 +24,10 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.Tiers;
+import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -120,6 +121,15 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.ARCHMAGE_ROBES)public static MasterArmor ARCHMAGE_ROBES;
     @ObjectHolder(LibItemNames.ARCHMAGE_HOOD)public static MasterArmor ARCHMAGE_HOOD;
 
+    @ObjectHolder(LibItemNames.DOWSING_ROD)public static DowsingRod DOWSING_ROD;
+    @ObjectHolder(LibItemNames.ABJURATION_ESSENCE)public static ModItem ABJURATION_ESSENCE;
+    @ObjectHolder(LibItemNames.CONJURATION_ESSENCE)public static ModItem CONJURATION_ESSENCE;
+    @ObjectHolder(LibItemNames.AIR_ESSENCE)public static ModItem AIR_ESSENCE;
+    @ObjectHolder(LibItemNames.EARTH_ESSENCE)public static ModItem EARTH_ESSENCE;
+    @ObjectHolder(LibItemNames.FIRE_ESSENCE)public static ModItem FIRE_ESSENCE;
+    @ObjectHolder(LibItemNames.MANIPULATION_ESSENCE)public static ModItem MANIPULATION_ESSENCE;
+    @ObjectHolder(LibItemNames.WATER_ESSENCE)public static ModItem WATER_ESSENCE;
+
     public static FoodProperties SOURCE_BERRY_FOOD = (new FoodProperties.Builder()).nutrition(2).saturationMod(0.1F).effect(() -> new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT, 100), 1.0f).alwaysEat().build();
     public static FoodProperties SOURCE_PIE_FOOD = (new FoodProperties.Builder()).nutrition(9).saturationMod(0.9F).effect(() -> new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT, 60 * 20, 1), 1.0f).alwaysEat().build();
     public static FoodProperties SOURCE_ROLL_FOOD = (new FoodProperties.Builder()).nutrition(8).saturationMod(0.6F).effect(() -> new MobEffectInstance(ModPotions.MANA_REGEN_EFFECT, 60 * 20), 1.0f).alwaysEat().build();
@@ -187,15 +197,17 @@ public class ItemsRegistry {
                     new SpellParchment(),
                     new AbstractManaCurio(LibItemNames.AMULET_OF_MANA_BOOST){
                         @Override
-                        public int getMaxManaBoost() {
+                        public int getMaxManaBoost(ItemStack i) {
                             return 50;
                         }
                     },
                     new AbstractManaCurio(LibItemNames.AMULET_OF_MANA_REGEN){
+
                         @Override
-                        public int getManaRegenBonus() {
+                        public int getManaRegenBonus(ItemStack i) {
                             return 3;
                         }
+
                     },
                     new ModItem(LibItemNames.WHIRLISPRIG_SHARDS).withTooltip(new TranslatableComponent("tooltip.whirlisprig_shard")),
                     new WhirlisprigCharm(),
@@ -247,11 +259,11 @@ public class ItemsRegistry {
                     }.withTooltip(new TranslatableComponent("ars_nouveau.tooltip.exp_gem")),
                     new EnchantersShield(),
                     new EnchantersSword(Tiers.NETHERITE, 3, -2.4F).setRegistryName(LibItemNames.ENCHANTERS_SWORD),
-                    new SpawnEggItem(ModEntities.STARBUNCLE_TYPE, 0xFFB233,0xFFE633,defaultItemProperties()).setRegistryName(LibItemNames.STARBUNCLE_SE),
-                    new SpawnEggItem(ModEntities.WHIRLISPRIG_TYPE, 0x77FF33,0xFFFB00,defaultItemProperties()).setRegistryName(LibItemNames.SYLPH_SE),
-                    new SpawnEggItem(ModEntities.WILDEN_HUNTER, 0xFDFDFD,0xCAA97F,defaultItemProperties()).setRegistryName(LibItemNames.WILDEN_HUNTER_SE),
-                    new SpawnEggItem(ModEntities.WILDEN_GUARDIAN, 0xFFFFFF,0xFF9E00,defaultItemProperties()).setRegistryName(LibItemNames.WILDEN_GUARDIAN_SE),
-                    new SpawnEggItem(ModEntities.WILDEN_STALKER, 0x9B650C,0xEF1818,defaultItemProperties()).setRegistryName(LibItemNames.WILDEN_STALKER_SE),
+                    new ForgeSpawnEggItem(() -> ModEntities.STARBUNCLE_TYPE, 0xFFB233,0xFFE633,defaultItemProperties()).setRegistryName(LibItemNames.STARBUNCLE_SE),
+                    new ForgeSpawnEggItem(() -> ModEntities.WHIRLISPRIG_TYPE, 0x77FF33,0xFFFB00,defaultItemProperties()).setRegistryName(LibItemNames.SYLPH_SE),
+                    new ForgeSpawnEggItem(() -> ModEntities.WILDEN_HUNTER, 0xFDFDFD,0xCAA97F,defaultItemProperties()).setRegistryName(LibItemNames.WILDEN_HUNTER_SE),
+                    new ForgeSpawnEggItem(() -> ModEntities.WILDEN_GUARDIAN, 0xFFFFFF,0xFF9E00,defaultItemProperties()).setRegistryName(LibItemNames.WILDEN_GUARDIAN_SE),
+                    new ForgeSpawnEggItem(() -> ModEntities.WILDEN_STALKER, 0x9B650C,0xEF1818,defaultItemProperties()).setRegistryName(LibItemNames.WILDEN_STALKER_SE),
                     new CasterTome(defaultItemProperties().stacksTo(1), LibItemNames.CASTER_TOME),
                     new DrygmyCharm(LibItemNames.DRYGMY_CHARM),
                     new ModItem(LibItemNames.DRYGMY_SHARD).withTooltip(new TranslatableComponent("tooltip.ars_nouveau.drygmy_shard")),
@@ -261,7 +273,15 @@ public class ItemsRegistry {
                     new SummoningFocus(defaultItemProperties().stacksTo(1), LibItemNames.SUMMON_FOCUS),
                     new ModItem(defaultItemProperties().food(SOURCE_PIE_FOOD), LibItemNames.SOURCE_BERRY_PIE).withTooltip(new TranslatableComponent("tooltip.ars_nouveau.source_food")),
                     new ModItem(defaultItemProperties().food(SOURCE_ROLL_FOOD), LibItemNames.SOURCE_BERRY_ROLL).withTooltip(new TranslatableComponent("tooltip.ars_nouveau.source_food")),
-                    new EnchantersMirror(defaultItemProperties().stacksTo(1), LibItemNames.ENCHANTERS_MIRROR)
+                    new EnchantersMirror(defaultItemProperties().stacksTo(1), LibItemNames.ENCHANTERS_MIRROR),
+                    new ModItem(LibItemNames.ABJURATION_ESSENCE),
+                    new ModItem(LibItemNames.CONJURATION_ESSENCE),
+                    new ModItem(LibItemNames.AIR_ESSENCE),
+                    new ModItem(LibItemNames.EARTH_ESSENCE),
+                    new ModItem(LibItemNames.FIRE_ESSENCE),
+                    new ModItem(LibItemNames.MANIPULATION_ESSENCE),
+                    new ModItem(LibItemNames.WATER_ESSENCE),
+                    new DowsingRod(LibItemNames.DOWSING_ROD),
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

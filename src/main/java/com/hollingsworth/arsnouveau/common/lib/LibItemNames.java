@@ -112,4 +112,15 @@ public class LibItemNames {
     public static final String ARCHMAGE_LEGGINGS = "archmage_leggings";
     public static final String ARCHMAGE_ROBES = "archmage_robes";
     public static final String ARCHMAGE_HOOD = "archmage_hood";
+
+    public static final String ABJURATION_ESSENCE = "abjuration_essence";
+    public static final String CONJURATION_ESSENCE = "conjuration_essence";
+    public static final String AIR_ESSENCE = "air_essence";
+    public static final String EARTH_ESSENCE = "earth_essence";
+    public static final String FIRE_ESSENCE = "fire_essence";
+    public static final String MANIPULATION_ESSENCE = "manipulation_essence";
+    public static final String WATER_ESSENCE = "water_essence";
+
+    public static final String DOWSING_ROD = "dowsing_rod";
+
 }

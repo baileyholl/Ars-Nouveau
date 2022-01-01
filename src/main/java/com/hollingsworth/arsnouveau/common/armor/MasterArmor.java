@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.armor;
 
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
 
 public class MasterArmor  extends MagicArmor{
     public MasterArmor(EquipmentSlot slot) {
@@ -9,12 +10,13 @@ public class MasterArmor  extends MagicArmor{
     }
 
     @Override
-    public int getMaxManaBoost() {
+    public int getMaxManaBoost(ItemStack i) {
         return 80;
     }
 
     @Override
-    public int getManaRegenBonus() {
+    public int getManaRegenBonus(ItemStack i) {
         return 6;
     }
+
 }
