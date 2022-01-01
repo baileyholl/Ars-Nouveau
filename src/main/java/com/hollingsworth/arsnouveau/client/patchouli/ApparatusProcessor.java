@@ -2,10 +2,8 @@ package com.hollingsworth.arsnouveau.client.patchouli;
 
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeManager;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;
@@ -29,12 +27,8 @@ public class ApparatusProcessor implements IComponentProcessor {
         if(key.equals("reagent"))
             return IVariable.wrapList(Arrays.asList(recipe.reagent.getItems()).stream().map(IVariable::from).collect(Collectors.toList()));
 
-        if(key.startsWith("item")) {
-            int index = Integer.parseInt(key.substring(4)) - 1;
-            if(recipe.pedestalItems.size() <= index)
-                return IVariable.from(ItemStack.EMPTY);
-            Ingredient ingredient = recipe.pedestalItems.get(Integer.parseInt(key.substring(4)) - 1);
-            return IVariable.wrapList(Arrays.asList(ingredient.getItems()).stream().map(IVariable::from).collect(Collectors.toList()));
+        if(key.equals("recipe")){
+            return IVariable.wrap(recipe.getId().toString());
         }
 
         if(key.equals("footer")){

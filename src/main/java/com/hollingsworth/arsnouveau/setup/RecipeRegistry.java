@@ -20,11 +20,9 @@ import net.minecraftforge.fml.common.Mod;
 public class RecipeRegistry {
     public static final RecipeType<GlyphPressRecipe> GLYPH_TYPE = new ModRecipeType();
     public static final RecipeType<EnchantingApparatusRecipe> APPARATUS_TYPE = new ModRecipeType();
-
     public static final RecipeType<EnchantmentRecipe> ENCHANTMENT_TYPE = new ModRecipeType();
-
     public static final RecipeType<CrushRecipe> CRUSH_TYPE = new ModRecipeType();
-    public static final RecipeType<ImbuementRecipe> INFUSER_TYPE = new ModRecipeType<>();
+    public static final RecipeType<ImbuementRecipe> IMBUEMENT_TYPE = new ModRecipeType<>();
 
     public static final RecipeType<BookUpgradeRecipe> BOOK_UPGRADE_TYPE = new ModRecipeType();
     public static final RecipeType<PotionFlaskRecipe> POTION_FLASK_TYPE = new ModRecipeType();
@@ -50,7 +48,7 @@ public class RecipeRegistry {
         Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, EnchantingApparatusRecipe.RECIPE_ID), APPARATUS_TYPE);
         Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, EnchantmentRecipe.RECIPE_ID), ENCHANTMENT_TYPE);
         Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, CrushRecipe.RECIPE_ID), CRUSH_TYPE);
-        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, ImbuementRecipe.RECIPE_ID), INFUSER_TYPE);
+        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, ImbuementRecipe.RECIPE_ID), IMBUEMENT_TYPE);
 
         Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, "book_upgrade"), BOOK_UPGRADE_TYPE);
         Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, "potion_flask"), POTION_FLASK_TYPE);

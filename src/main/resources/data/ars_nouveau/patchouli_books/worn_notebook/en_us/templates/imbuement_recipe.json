@@ -1,9 +1,9 @@
 {
-  "processor": "com.hollingsworth.arsnouveau.client.patchouli.ApparatusProcessor",
+  "processor": "com.hollingsworth.arsnouveau.client.patchouli.ImbuementProcessor",
   "components": [
     {
       "type": "patchouli:header",
-      "text": "block.ars_nouveau.enchanting_apparatus",
+      "text": "block.ars_nouveau.imbuement_chamber",
       "x": -1,
       "y": -1
     },
@@ -12,7 +12,7 @@
       "class": "com.hollingsworth.arsnouveau.client.patchouli.component.RotatingItemListComponent",
       "x": -1,
       "y": 21,
-      "recipe_type": "enchanting_apparatus",
+      "recipe_type": "imbuement_chamber",
       "recipe_name": "#recipe"
     },
     {

@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.client.patchouli.component;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.item.crafting.Ingredient;
 import vazkii.patchouli.api.IComponentRenderContext;
 import vazkii.patchouli.api.ICustomComponent;
@@ -11,8 +10,6 @@ import java.util.List;
 /**
  * Base custom Patchouli component that draws a rotating circle of items.
  * Size is 80x80. For a centered one, set X to -1.
- * For usage with a specified list of items, see {@link RotatingItemListComponent}.
- * For usage with a runic altar or petal apothecary recipes, see {@link RotatingRecipeComponent}.
  */
 abstract class RotatingItemListComponentBase implements ICustomComponent {
     protected transient List<Ingredient> ingredients;
@@ -30,10 +27,8 @@ abstract class RotatingItemListComponentBase implements ICustomComponent {
     @Override
     public void render(PoseStack ms, IComponentRenderContext context, float pticks, int mouseX, int mouseY) {
         int degreePerInput = (int) (360F / ingredients.size());
-        int ticksElapsed = context.getTicksInBook();
-
-        float currentDegree = Screen.hasShiftDown() ? ticksElapsed : ticksElapsed + pticks;
-
+        int ticksElapsed = 0;
+        float currentDegree = ticksElapsed;
         for (Ingredient input : ingredients) {
             renderIngredientAtAngle(ms, context, currentDegree, input, mouseX, mouseY);
 

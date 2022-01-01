@@ -57,7 +57,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
         List<GlyphPressRecipe> recipeList = new ArrayList<>();
         List<EnchantingApparatusRecipe> apparatus = new ArrayList<>();
         List<CrushRecipe> crushRecipes = new ArrayList<>();
-        List<ImbuementRecipe> imbuementRecipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeRegistry.INFUSER_TYPE);
+        List<ImbuementRecipe> imbuementRecipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE);
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
         for(Recipe i : manager.getRecipes()){
             if(i instanceof GlyphPressRecipe){

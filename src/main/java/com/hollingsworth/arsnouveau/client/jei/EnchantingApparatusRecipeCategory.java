@@ -21,10 +21,10 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.phys.Vec2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class EnchantingApparatusRecipeCategory implements IRecipeCategory<EnchantingApparatusRecipe> {
@@ -37,7 +37,7 @@ public class EnchantingApparatusRecipeCategory implements IRecipeCategory<Enchan
 
     public EnchantingApparatusRecipeCategory(IGuiHelper helper){
         this.helper = helper;
-        background = helper.createBlankDrawable(60,50);
+        background = helper.createBlankDrawable(114,108);
         icon = helper.createDrawableIngredient(new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK));
         this.cachedArrows = CacheBuilder.newBuilder()
                 .maximumSize(25)
@@ -66,7 +66,7 @@ public class EnchantingApparatusRecipeCategory implements IRecipeCategory<Enchan
 
     @Override
     public IDrawable getBackground() {
-        return helper.createBlankDrawable(100,75);
+        return background;
     }
 
     @Override
@@ -76,73 +76,44 @@ public class EnchantingApparatusRecipeCategory implements IRecipeCategory<Enchan
 
     @Override
     public void draw(EnchantingApparatusRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-        IDrawableAnimated arrow = this.cachedArrows.getUnchecked(40);
-        arrow.draw( matrixStack,55, 22);
         Font renderer = Minecraft.getInstance().font;
         if(recipe.consumesSource())
-            renderer.draw(matrixStack, new TranslatableComponent("ars_nouveau.source", recipe.sourceCost), 0.0f,65f, 10);
+            renderer.draw(matrixStack, new TranslatableComponent("ars_nouveau.source", recipe.sourceCost), 0.0f,100f, 10);
     }
 
     @Override
     public void setIngredients(EnchantingApparatusRecipe o, IIngredients iIngredients) {
         List<List<ItemStack>> itemStacks = new ArrayList<>();
-
-        itemStacks.add(Arrays.asList(o.reagent.getItems()));
-        itemStacks.add(Collections.singletonList(o.result));
         for(Ingredient i : o.pedestalItems){
-
-           itemStacks.add(Arrays.asList(i.getItems()));
+            itemStacks.add(Arrays.asList(i.getItems()));
         }
         iIngredients.setInputLists(VanillaTypes.ITEM, itemStacks);
-        //   iIngredients.setInput(VanillaTypes.ITEM, glyphPressRecipe.reagent);
         iIngredients.setOutput(VanillaTypes.ITEM, o.result);
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, EnchantingApparatusRecipe o, IIngredients ingredients) {
-        int index = 0;
-        recipeLayout.getItemStacks().init(index, true, 18, 22);
+    public void setRecipe(IRecipeLayout recipeLayout, EnchantingApparatusRecipe apparatusRecipe, IIngredients ingredients) {
+        recipeLayout.getItemStacks().init(0, true, 48, 45);
+        recipeLayout.getItemStacks().set(0, Arrays.asList(apparatusRecipe.reagent.getItems()));
 
-        recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM).get(0));
+        int index = 1;
+        double angleBetweenEach = 360.0 / ingredients.getInputs(VanillaTypes.ITEM).size();
+        Vec2 point = new Vec2(48, 13), center = new Vec2(48, 45);
 
-        index++;
-        recipeLayout.getItemStacks().init(index, true, 80, 22);
+        for (List<ItemStack> o : ingredients.getInputs(VanillaTypes.ITEM)) {
+            recipeLayout.getItemStacks().init(index, true, (int) point.x, (int) point.y);
+            recipeLayout.getItemStacks().set(index, o);
+            index += 1;
+            point = rotatePointAbout(point, center, angleBetweenEach);
+        }
+        recipeLayout.getItemStacks().init(index, false, 86, 10);
         recipeLayout.getItemStacks().set(index, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
+    }
 
-
-//        index++;
-//        recipeLayout.getItemStacks().init(index, true, 16, 4);
-//        recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM).get(1));
-        try {
-            index++;
-            recipeLayout.getItemStacks().init(index, true, 0, 4);
-            recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM).get(2));
-
-            index++;
-            recipeLayout.getItemStacks().init(index, true, 18, 4);
-            recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM).get(3));
-
-            index++;
-            recipeLayout.getItemStacks().init(index, true, 36, 4);
-            recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM).get(4));
-
-            index++;
-            recipeLayout.getItemStacks().init(index, true, 0, 22);
-            recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM).get(5));
-
-            index++;
-            recipeLayout.getItemStacks().init(index, true, 36, 22);
-            recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM).get(6));
-            index++;
-            recipeLayout.getItemStacks().init(index, true, 0, 40);
-            recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM).get(7));
-            index++;
-            recipeLayout.getItemStacks().init(index, true, 18, 40);
-            recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM).get(8));
-            index++;
-            recipeLayout.getItemStacks().init(index, true, 36, 40);
-            recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM).get(9));
-        }catch (Exception ignored){}
-
+    public static Vec2 rotatePointAbout(Vec2 in, Vec2 about, double degrees) {
+        double rad = degrees * Math.PI / 180.0;
+        double newX = Math.cos(rad) * (in.x - about.x) - Math.sin(rad) * (in.y - about.y) + about.x;
+        double newY = Math.sin(rad) * (in.x - about.x) + Math.cos(rad) * (in.y - about.y) + about.y;
+        return new Vec2((float) newX, (float) newY);
     }
 }

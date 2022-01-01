@@ -21,11 +21,13 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.phys.Vec2;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+
+import static com.hollingsworth.arsnouveau.client.jei.EnchantingApparatusRecipeCategory.rotatePointAbout;
 
 public class ImbuementRecipeCategory implements IRecipeCategory<ImbuementRecipe> {
     public final static ResourceLocation UID = new ResourceLocation(ArsNouveau.MODID, "imbuement");
@@ -37,8 +39,8 @@ public class ImbuementRecipeCategory implements IRecipeCategory<ImbuementRecipe>
 
     public ImbuementRecipeCategory(IGuiHelper helper){
         this.helper = helper;
-        background = helper.createBlankDrawable(60,50);
-        icon = helper.createDrawableIngredient(new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK));
+        background = helper.createBlankDrawable(114,108);
+        icon = helper.createDrawableIngredient(new ItemStack(BlockRegistry.IMBUEMENT_BLOCK));
         this.cachedArrows = CacheBuilder.newBuilder()
                 .maximumSize(25)
                 .build(new CacheLoader<>() {
@@ -66,7 +68,7 @@ public class ImbuementRecipeCategory implements IRecipeCategory<ImbuementRecipe>
 
     @Override
     public IDrawable getBackground() {
-        return helper.createBlankDrawable(100,75);
+        return background;
     }
 
     @Override
@@ -76,72 +78,37 @@ public class ImbuementRecipeCategory implements IRecipeCategory<ImbuementRecipe>
 
     @Override
     public void draw(ImbuementRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-        IDrawableAnimated arrow = this.cachedArrows.getUnchecked(40);
-        arrow.draw( matrixStack,55, 22);
         Font renderer = Minecraft.getInstance().font;
-        renderer.draw(matrixStack, new TranslatableComponent("ars_nouveau.source", recipe.source), 0.0f,65f, 10);
+        renderer.draw(matrixStack, new TranslatableComponent("ars_nouveau.source", recipe.source), 0.0f,100f, 10);
     }
 
     @Override
     public void setIngredients(ImbuementRecipe o, IIngredients iIngredients) {
         List<List<ItemStack>> itemStacks = new ArrayList<>();
-
-        itemStacks.add(Arrays.asList(o.input.getItems()));
-        itemStacks.add(Collections.singletonList(o.output));
         for(Ingredient i : o.pedestalItems){
-
             itemStacks.add(Arrays.asList(i.getItems()));
         }
         iIngredients.setInputLists(VanillaTypes.ITEM, itemStacks);
-        //   iIngredients.setInput(VanillaTypes.ITEM, glyphPressRecipe.reagent);
         iIngredients.setOutput(VanillaTypes.ITEM, o.output);
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, ImbuementRecipe o, IIngredients ingredients) {
-        int index = 0;
-        recipeLayout.getItemStacks().init(index, true, 18, 22);
+    public void setRecipe(IRecipeLayout recipeLayout, ImbuementRecipe recipe, IIngredients ingredients) {
+        recipeLayout.getItemStacks().init(0, true, 48, 45);
+        recipeLayout.getItemStacks().set(0, Arrays.asList(recipe.input.getItems()));
 
-        recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM).get(0));
+        int index = 1;
+        double angleBetweenEach = 360.0 / ingredients.getInputs(VanillaTypes.ITEM).size();
+        Vec2 point = new Vec2(48, 13), center = new Vec2(48, 45);
 
-        index++;
-        recipeLayout.getItemStacks().init(index, true, 80, 22);
+        for (List<ItemStack> o : ingredients.getInputs(VanillaTypes.ITEM)) {
+            recipeLayout.getItemStacks().init(index, true, (int) point.x, (int) point.y);
+            recipeLayout.getItemStacks().set(index, o);
+            index += 1;
+            point = rotatePointAbout(point, center, angleBetweenEach);
+        }
+        recipeLayout.getItemStacks().init(index, false, 86, 10);
         recipeLayout.getItemStacks().set(index, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
-
-
-//        index++;
-//        recipeLayout.getItemStacks().init(index, true, 16, 4);
-//        recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM).get(1));
-        try {
-            index++;
-            recipeLayout.getItemStacks().init(index, true, 0, 4);
-            recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM).get(2));
-
-            index++;
-            recipeLayout.getItemStacks().init(index, true, 18, 4);
-            recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM).get(3));
-
-            index++;
-            recipeLayout.getItemStacks().init(index, true, 36, 4);
-            recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM).get(4));
-
-            index++;
-            recipeLayout.getItemStacks().init(index, true, 0, 22);
-            recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM).get(5));
-
-            index++;
-            recipeLayout.getItemStacks().init(index, true, 36, 22);
-            recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM).get(6));
-            index++;
-            recipeLayout.getItemStacks().init(index, true, 0, 40);
-            recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM).get(7));
-            index++;
-            recipeLayout.getItemStacks().init(index, true, 18, 40);
-            recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM).get(8));
-            index++;
-            recipeLayout.getItemStacks().init(index, true, 36, 40);
-            recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM).get(9));
-        }catch (Exception ignored){}
 
     }
 }
