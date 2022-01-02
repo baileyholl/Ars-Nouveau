@@ -50,7 +50,7 @@ public class Recipes extends RecipeProvider {
 
 
            ShapelessRecipeBuilder.shapeless(ItemsRegistry.WORN_NOTEBOOK).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                   .requires(SOURCE_GEM, 1)
+                   .requires(Ingredient.of(Tags.Items.GEMS_LAPIS), 1)
                    .requires(Items.BOOK).save(consumer);
 
 
