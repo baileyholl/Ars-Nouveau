@@ -91,7 +91,7 @@ public class PatchouliProvider implements DataProvider {
                 .withIcon(BlockRegistry.IMBUEMENT_BLOCK)
                 .withSortNum(3)
                 .withLocalizedText()
-                .withPage(new RelationsPage().withEntry(GETTING_STARTED, "source")), getPath(GETTING_STARTED, "obtaining_gems"));
+                .withPage(new RelationsPage().withEntry(GETTING_STARTED, "source").withEntry(EQUIPMENT, "dowsing_rod")), getPath(GETTING_STARTED, "obtaining_gems"));
 
         addPage(new PatchouliBuilder(GETTING_STARTED, "new_glyphs")
                 .withIcon(ItemsRegistry.BLANK_GLYPH)
@@ -410,6 +410,7 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new LinkPage("https://discord.gg/y7TMXZu", "ars_nouveau.discord_text", "ars_nouveau.community"))
                 .withPage(new LinkPage("https://www.redbubble.com/people/Gootastic/explore?page=1&sortOrder=recent", "ars_nouveau.store_text", "ars_nouveau.store")), getPath(MOD_NEWS, "mod_news"));
 
+        addBasicItem(ItemsRegistry.DOWSING_ROD, EQUIPMENT, new CraftingPage(ItemsRegistry.DOWSING_ROD));
     }
 
     public String getLangPath(String name, int count){
