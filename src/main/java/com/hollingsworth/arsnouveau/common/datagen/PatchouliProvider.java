@@ -311,7 +311,21 @@ public class PatchouliProvider implements DataProvider {
         addBasicItem(ItemsRegistry.SPELL_BOW, EQUIPMENT, new ApparatusPage(ItemsRegistry.SPELL_BOW));
         addBasicItem(ItemsRegistry.RUNIC_CHALK, EQUIPMENT, new CraftingPage(ItemsRegistry.RUNIC_CHALK));
         addBasicItem(ItemsRegistry.WARP_SCROLL, EQUIPMENT, new CraftingPage(ItemsRegistry.WARP_SCROLL));
-        addBasicItem(BlockRegistry.IMBUEMENT_BLOCK, MACHINES, new CraftingPage(BlockRegistry.IMBUEMENT_BLOCK));
+        addPage(new PatchouliBuilder(MACHINES,BlockRegistry.IMBUEMENT_BLOCK)
+                .withLocalizedText()
+                .withPage(new CraftingPage(BlockRegistry.IMBUEMENT_BLOCK))
+                        .withPage(new ImbuementPage("ars_nouveau:imbuement_lapis"))
+                        .withPage(new ImbuementPage("ars_nouveau:imbuement_amethyst"))
+                        .withPage(new ImbuementPage("ars_nouveau:imbuement_amethyst_block"))
+                        .withPage(new ImbuementPage("ars_nouveau:imbuement_" + ItemsRegistry.FIRE_ESSENCE.getRegistryName().getPath()))
+                        .withPage(new ImbuementPage("ars_nouveau:imbuement_" +ItemsRegistry.EARTH_ESSENCE.getRegistryName().getPath()))
+                        .withPage(new ImbuementPage("ars_nouveau:imbuement_" +ItemsRegistry.WATER_ESSENCE.getRegistryName().getPath()))
+                        .withPage(new ImbuementPage("ars_nouveau:imbuement_" +ItemsRegistry.AIR_ESSENCE.getRegistryName().getPath()))
+                        .withPage(new ImbuementPage("ars_nouveau:imbuement_" +ItemsRegistry.ABJURATION_ESSENCE.getRegistryName().getPath()))
+                        .withPage(new ImbuementPage("ars_nouveau:imbuement_" +ItemsRegistry.CONJURATION_ESSENCE.getRegistryName().getPath()))
+                        .withPage(new ImbuementPage("ars_nouveau:imbuement_" +ItemsRegistry.MANIPULATION_ESSENCE.getRegistryName().getPath()))
+                , getPath(MACHINES, "imbuement_chamber"));
+
         addPage(new PatchouliBuilder(MACHINES, BlockRegistry.ENCHANTING_APP_BLOCK)
                 .withLocalizedText()
                 .withPage(new CraftingPage(BlockRegistry.ARCANE_PEDESTAL).withRecipe2(BlockRegistry.ARCANE_CORE_BLOCK))

@@ -274,14 +274,14 @@ public class ItemsRegistry {
                     new ModItem(defaultItemProperties().food(SOURCE_PIE_FOOD), LibItemNames.SOURCE_BERRY_PIE).withTooltip(new TranslatableComponent("tooltip.ars_nouveau.source_food")),
                     new ModItem(defaultItemProperties().food(SOURCE_ROLL_FOOD), LibItemNames.SOURCE_BERRY_ROLL).withTooltip(new TranslatableComponent("tooltip.ars_nouveau.source_food")),
                     new EnchantersMirror(defaultItemProperties().stacksTo(1), LibItemNames.ENCHANTERS_MIRROR),
-                    new ModItem(LibItemNames.ABJURATION_ESSENCE),
-                    new ModItem(LibItemNames.CONJURATION_ESSENCE),
-                    new ModItem(LibItemNames.AIR_ESSENCE),
-                    new ModItem(LibItemNames.EARTH_ESSENCE),
-                    new ModItem(LibItemNames.FIRE_ESSENCE),
-                    new ModItem(LibItemNames.MANIPULATION_ESSENCE),
-                    new ModItem(LibItemNames.WATER_ESSENCE),
-                    new DowsingRod(LibItemNames.DOWSING_ROD),
+                    new ModItem(LibItemNames.ABJURATION_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
+                    new ModItem(LibItemNames.CONJURATION_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
+                    new ModItem(LibItemNames.AIR_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
+                    new ModItem(LibItemNames.EARTH_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
+                    new ModItem(LibItemNames.FIRE_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
+                    new ModItem(LibItemNames.MANIPULATION_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
+                    new ModItem(LibItemNames.WATER_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
+                    new DowsingRod(LibItemNames.DOWSING_ROD)
             };
 
             final IForgeRegistry<Item> registry = event.getRegistry();

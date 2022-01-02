@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.ritual;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.ritual.IScryer;
 import com.hollingsworth.arsnouveau.api.ritual.SingleBlockScryer;
@@ -10,7 +9,7 @@ import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketGetPersistentData;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -36,7 +35,7 @@ public class ScryingRitual extends AbstractRitual {
             List<ServerPlayer> players =  getWorld().getEntitiesOfClass(ServerPlayer.class, new AABB(getPos()).inflate(5.0));
             if(players.size() > 0){
                 ItemStack item = getConsumedItems().stream().filter(i -> i.getItem() instanceof BlockItem).findFirst().orElse(ItemStack.EMPTY);
-                int modifier = didConsumeItem(ArsNouveauAPI.getInstance().getGlyphItem(AugmentExtendTime.INSTANCE)) ? 3 : 1;
+                int modifier = didConsumeItem(ItemsRegistry.MANIPULATION_ESSENCE) ? 3 : 1;
                 for(ServerPlayer playerEntity : players){
                     if(item.getItem() instanceof BlockItem blockItem)
                         ScryingRitual.grantScrying(playerEntity, 60 * 20 * 5 * modifier, new SingleBlockScryer(blockItem.getBlock()));
@@ -61,7 +60,7 @@ public class ScryingRitual extends AbstractRitual {
 
     @Override
     public boolean canConsumeItem(ItemStack stack) {
-        Item extendTime = ArsNouveauAPI.getInstance().getGlyphItem(AugmentExtendTime.INSTANCE);
+        Item extendTime = ItemsRegistry.MANIPULATION_ESSENCE;
         if(didConsumeItem(extendTime) && getConsumedItems().size() == 1 && stack.getItem() instanceof BlockItem)
             return true;
 
@@ -89,7 +88,7 @@ public class ScryingRitual extends AbstractRitual {
 
     @Override
     public String getLangDescription() {
-        return "Grants vision of a given block through any other block for a given time. White particles signify you are very close, green is semi-far, and blue particles are blocks very far from you.  To complete the ritual, throw any block of your choice before starting. You may also add a Glyph of Extend Time to increase the duration to 15 minutes.";
+        return "Grants vision of a given block through any other block for a given time. White particles signify you are very close, green is semi-far, and blue particles are blocks very far from you.  To complete the ritual, throw any block of your choice before starting. You may also add a Manipulation Essence to increase the duration to 15 minutes.";
     }
 
     @Override

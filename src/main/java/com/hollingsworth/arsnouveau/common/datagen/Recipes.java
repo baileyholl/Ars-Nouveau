@@ -4,8 +4,6 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
-import com.hollingsworth.arsnouveau.common.spell.effect.EffectGrow;
-import com.hollingsworth.arsnouveau.common.spell.effect.EffectHeal;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
@@ -93,9 +91,9 @@ public class Recipes extends RecipeProvider {
                     .save(consumer);
 
             ShapedRecipeBuilder.shaped(BlockRegistry.SOURCE_JAR).unlockedBy("has_journal",InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                    .pattern("xyx")
+                    .pattern("yyy")
                     .pattern("x x")
-                    .pattern("xxx").define('x', Tags.Items.GLASS).define('y', BlockRegistry.ARCANE_STONE).save(consumer);
+                    .pattern("yyy").define('x', Tags.Items.GLASS).define('y', BlockRegistry.ARCHWOOD_SLABS).save(consumer);
 
             ShapedRecipeBuilder.shaped(BlockRegistry.GLYPH_PRESS_BLOCK).unlockedBy("has_journal",InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern("xxx")
@@ -255,7 +253,7 @@ public class Recipes extends RecipeProvider {
 
             shapelessBuilder(BlockRegistry.POTION_JAR)
                     .requires(BlockRegistry.SOURCE_JAR)
-                    .requires(Items.NETHER_WART)
+                    .requires(ItemsRegistry.ABJURATION_ESSENCE)
                     .save(consumer);
 
             shapelessBuilder(BlockRegistry.RITUAL_BLOCK)
@@ -319,7 +317,7 @@ public class Recipes extends RecipeProvider {
             shapelessBuilder(getRitualItem(RitualLib.OVERGROWTH))
                     .requires(BlockRegistry.FLOURISHING_LOG)
                     .requires(ItemsRegistry.MAGE_BLOOM, 3)
-                    .requires(ArsNouveauAPI.getInstance().getGlyphItem(EffectGrow.INSTANCE), 2)
+                    .requires(ItemsRegistry.EARTH_ESSENCE, 2)
                     .save(consumer);
 
             shapelessBuilder(getRitualItem(RitualLib.FERTILITY))
@@ -332,7 +330,7 @@ public class Recipes extends RecipeProvider {
             shapelessBuilder(getRitualItem(RitualLib.RESTORATION))
                     .requires(BlockRegistry.FLOURISHING_LOG)
                     .requires(Items.GOLDEN_APPLE)
-                    .requires(ArsNouveauAPI.getInstance().getGlyphItem(EffectHeal.INSTANCE), 1)
+                    .requires(ItemsRegistry.ABJURATION_ESSENCE, 1)
                     .save(consumer);
 
             shapelessBuilder(getRitualItem(RitualLib.DISINTEGRATION))

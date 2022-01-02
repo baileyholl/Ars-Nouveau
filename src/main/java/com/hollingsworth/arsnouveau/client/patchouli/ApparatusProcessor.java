@@ -30,7 +30,9 @@ public class ApparatusProcessor implements IComponentProcessor {
         if(key.equals("recipe")){
             return IVariable.wrap(recipe.getId().toString());
         }
-
+        if(key.equals("output")){
+            return IVariable.from(recipe.result);
+        }
         if(key.equals("footer")){
             return IVariable.wrap(recipe.result.getItem().getDescriptionId());
         }

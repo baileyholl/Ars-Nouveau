@@ -30,7 +30,9 @@ public class ImbuementProcessor implements IComponentProcessor {
         if(key.equals("recipe")){
             return IVariable.wrap(recipe.getId().toString());
         }
-
+        if(key.equals("output")){
+            return IVariable.from(recipe.output);
+        }
         if(key.equals("footer")){
             return IVariable.wrap(recipe.output.getItem().getDescriptionId());
         }

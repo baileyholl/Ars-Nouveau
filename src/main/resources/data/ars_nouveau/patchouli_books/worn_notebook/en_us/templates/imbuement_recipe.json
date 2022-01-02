@@ -1,4 +1,4 @@
-{
+ {
   "processor": "com.hollingsworth.arsnouveau.client.patchouli.ImbuementProcessor",
   "components": [
     {
@@ -14,6 +14,12 @@
       "y": 21,
       "recipe_type": "imbuement_chamber",
       "recipe_name": "#recipe"
+    },{
+      "type": "patchouli:item",
+      "item": "#output",
+      "framed": true,
+      "x": 49,
+      "y": 116
     },
     {
       "type": "patchouli:item",
