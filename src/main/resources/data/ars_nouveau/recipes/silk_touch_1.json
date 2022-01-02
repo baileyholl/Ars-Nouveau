@@ -6,22 +6,22 @@
   "pedestalItems": [
     {
       "item": {
-        "item": "ars_nouveau:glyph_extract"
+        "tag": "forge:gems/emerald"
       }
     },
     {
       "item": {
-        "item": "ars_nouveau:glyph_extract"
+        "tag": "forge:gems/emerald"
       }
     },
     {
       "item": {
-        "item": "ars_nouveau:glyph_amplify"
+        "tag": "forge:gems/diamond"
       }
     },
     {
       "item": {
-        "item": "ars_nouveau:glyph_amplify"
+        "tag": "forge:gems/diamond"
       }
     },
     {

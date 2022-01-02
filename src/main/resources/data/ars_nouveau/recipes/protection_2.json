@@ -6,17 +6,17 @@
   "pedestalItems": [
     {
       "item": {
-        "item": "ars_nouveau:glyph_touch"
+        "item": "ars_nouveau:manipulation_essence"
       }
     },
     {
       "item": {
-        "item": "ars_nouveau:glyph_touch"
+        "item": "ars_nouveau:manipulation_essence"
       }
     },
     {
       "item": {
-        "item": "ars_nouveau:glyph_shield"
+        "item": "ars_nouveau:abjuration_essence"
       }
     },
     {

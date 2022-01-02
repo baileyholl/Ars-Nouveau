@@ -31,17 +31,17 @@
     },
     {
       "item": {
-        "item": "ars_nouveau:glyph_pierce"
+        "item": "ars_nouveau:abjuration_essence"
       }
     },
     {
       "item": {
-        "item": "ars_nouveau:glyph_extract"
+        "item": "ars_nouveau:conjuration_essence"
       }
     },
     {
       "item": {
-        "item": "ars_nouveau:glyph_fortune"
+        "item": "ars_nouveau:manipulation_essence"
       }
     }
   ]

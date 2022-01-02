@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "xyx",
+    "yyy",
     "x x",
-    "xxx"
+    "yyy"
   ],
   "key": {
     "x": {
       "tag": "forge:glass"
     },
     "y": {
-      "item": "ars_nouveau:arcane_stone"
+      "item": "ars_nouveau:archwood_slab"
     }
   },
   "result": {

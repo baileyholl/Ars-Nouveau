@@ -6,12 +6,12 @@
   "pedestalItems": [
     {
       "item": {
-        "item": "ars_nouveau:glyph_ignite"
+        "item": "ars_nouveau:fire_essence"
       }
     },
     {
       "item": {
-        "item": "ars_nouveau:glyph_shield"
+        "item": "ars_nouveau:abjuration_essence"
       }
     },
     {

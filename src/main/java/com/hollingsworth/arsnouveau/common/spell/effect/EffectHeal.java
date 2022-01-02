@@ -1,9 +1,8 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -31,15 +30,12 @@ public class EffectHeal extends AbstractEffect {
                 return;
 
             float healVal = (float) (GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
-            if(spellStats.hasBuff(AugmentExtendTime.INSTANCE)){
-                applyPotionWithCap(entity, MobEffects.REGENERATION, spellStats, 5, 5, 4);
+            if(entity.isInvertedHealAndHarm()){
+                dealDamage(world, shooter, healVal, spellStats, entity, buildDamageSource(world, shooter).setMagic());
             }else{
-                if(entity.isInvertedHealAndHarm()){
-                    dealDamage(world, shooter, healVal, spellStats, entity, buildDamageSource(world, shooter).setMagic());
-                }else{
-                    entity.heal(healVal);
-                }
+                entity.heal(healVal);
             }
+
         }
     }
 
@@ -57,7 +53,7 @@ public class EffectHeal extends AbstractEffect {
 
     @Override
     public int getDefaultManaCost() {
-        return 100;
+        return 50;
     }
 
     @Override
@@ -76,14 +72,13 @@ public class EffectHeal extends AbstractEffect {
     public Set<AbstractAugment> getCompatibleAugments() {
         return augmentSetOf(
                 AugmentAmplify.INSTANCE, AugmentDampen.INSTANCE,
-                AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE,
                 AugmentFortune.INSTANCE
         );
     }
 
     @Override
     public String getBookDescription() {
-        return "Heals a small amount of health for the target. When used with Extend Time, the Regeneration buff is applied instead, up to level 5. When used on Undead, the spell will deal an equal amount of magic damage.";
+        return "Heals a small amount of health for the target. When used on Undead, the spell will deal an equal amount of magic damage.";
     }
 
     @Nonnull

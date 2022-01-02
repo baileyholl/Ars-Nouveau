@@ -26,22 +26,22 @@
     },
     {
       "item": {
-        "tag": "forge:storage_blocks/gold"
+        "item": "ars_nouveau:air_essence"
       }
     },
     {
       "item": {
-        "item": "ars_nouveau:glyph_extend_time"
+        "item": "ars_nouveau:earth_essence"
       }
     },
     {
       "item": {
-        "item": "ars_nouveau:glyph_aoe"
+        "item": "ars_nouveau:fire_essence"
       }
     },
     {
       "item": {
-        "item": "ars_nouveau:glyph_dampen"
+        "item": "ars_nouveau:water_essence"
       }
     }
   ]

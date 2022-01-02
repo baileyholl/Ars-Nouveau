@@ -8,6 +8,8 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 
@@ -57,6 +59,11 @@ public class EffectRune extends AbstractEffect {
     public String getBookDescription() {
         return "Places a rune on the ground that will cast the spell on targets that touch the rune. Unlike runes placed by Runic Chalk, these runes are temporary " +
                 "and cannot be recharged. When using Item Pickup, items are deposited into adjacent inventories.";
+    }
+
+    @Override
+    public Item getCraftingReagent() {
+        return Items.TRIPWIRE_HOOK;
     }
 
     @Nonnull

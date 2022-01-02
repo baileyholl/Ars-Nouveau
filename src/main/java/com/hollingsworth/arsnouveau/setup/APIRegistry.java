@@ -34,11 +34,9 @@ public class APIRegistry {
         registerSpell(EffectExplosion.INSTANCE);
         registerSpell(EffectLightning.INSTANCE);
         registerSpell(EffectSlowfall.INSTANCE);
-        registerSpell(EffectShield.INSTANCE);
         registerSpell(EffectAquatic.INSTANCE);
         registerSpell(EffectFangs.INSTANCE);
         registerSpell(EffectSummonVex.INSTANCE);
-        registerSpell(EffectStrength.INSTANCE);
         registerSpell(AugmentAccelerate.INSTANCE);
         registerSpell(AugmentSplit.INSTANCE);
         registerSpell(AugmentAmplify.INSTANCE);
