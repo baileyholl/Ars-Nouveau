@@ -161,8 +161,8 @@ public class LootTables {
                         .add(EffectRune.INSTANCE)
                         .add(EffectDispel.INSTANCE)
                         .add(EffectHeal.INSTANCE)
-                        .add(AugmentExtendTime.INSTANCE),
-                "Cures status effects and grants regeneration."
+                        .add(AugmentAmplify.INSTANCE),
+                "Cures status effects and heals the user."
         ));
 
         RARE_LOOT.add(() -> makeTome("Knocked out of Orbit", new Spell()
