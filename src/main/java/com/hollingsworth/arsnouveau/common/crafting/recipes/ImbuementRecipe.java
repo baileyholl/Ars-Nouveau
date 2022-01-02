@@ -18,6 +18,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -53,6 +54,16 @@ public class ImbuementRecipe implements Recipe<ImbuementTile> {
 
     public ImbuementRecipe withPedestalItem(Ingredient i){
         this.pedestalItems.add(i);
+        return this;
+    }
+
+    public ImbuementRecipe withPedestalItem(ItemStack i){
+        this.pedestalItems.add(Ingredient.of(i));
+        return this;
+    }
+
+    public ImbuementRecipe withPedestalItem(ItemLike i){
+        this.pedestalItems.add(Ingredient.of(i));
         return this;
     }
 

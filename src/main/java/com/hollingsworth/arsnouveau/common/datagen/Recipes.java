@@ -520,6 +520,17 @@ public class Recipes extends RecipeProvider {
 
             shapelessBuilder(Items.PINK_DYE, 2).requires(ItemsRegistry.MAGE_BLOOM, 2).save(consumer, new ResourceLocation(ArsNouveau.MODID, "magebloom_to_pink"));
             shapelessBuilder(Items.PURPLE_DYE).requires(BlockRegistry.SOURCEBERRY_BUSH).save(consumer, new ResourceLocation(ArsNouveau.MODID, "sourceberry_to_purple"));
+
+            shapelessBuilder(Items.WATER_BUCKET).requires(ItemsRegistry.WATER_ESSENCE).requires(Items.BUCKET).save(consumer, new ResourceLocation(ArsNouveau.MODID, "water_essence_to_bucket"));
+            shapelessBuilder(Items.FIRE_CHARGE, 3).requires(ItemsRegistry.FIRE_ESSENCE).requires(Items.GUNPOWDER).requires(Items.COAL).save(consumer, new ResourceLocation(ArsNouveau.MODID, "fire_essence_to_charge"));
+
+
+            ShapedRecipeBuilder.shaped(ItemsRegistry.DOWSING_ROD).unlockedBy("has_journal",InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
+                    .pattern(" x ")
+                    .pattern("a a")
+                    .define('x', Tags.Items.INGOTS_GOLD)
+                    .define('a', BlockRegistry.ARCHWOOD_PLANK)
+                    .save(consumer);
         }
     }
 

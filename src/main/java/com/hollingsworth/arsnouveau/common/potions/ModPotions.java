@@ -41,6 +41,9 @@ public class ModPotions {
     public static final MobEffect SPELL_DAMAGE_EFFECT = new PublicEffect(MobEffectCategory.BENEFICIAL, new ParticleColor(30, 200, 200).getColor()).setRegistryName(ArsNouveau.MODID, LibPotions.SPELL_DAMAGE);
     public static final MobEffect FAMILIAR_SICKNESS_EFFECT = new PublicEffect(MobEffectCategory.NEUTRAL, new ParticleColor(30, 200, 200).getColor(), new ArrayList<>()).setRegistryName(ArsNouveau.MODID, LibPotions.FAMILIAR_SICKNESS);
     public static final BounceEffect BOUNCE_EFFECT = new BounceEffect();
+    public static final MagicFindEffect MAGIC_FIND_EFFECT = new MagicFindEffect();
+
+
     @ObjectHolder(LibPotions.MANA_REGEN) public static Potion MANA_REGEN_POTION;
     @ObjectHolder(LibPotions.MANA_REGEN_LONG) public static Potion LONG_MANA_REGEN_POTION;
     @ObjectHolder(LibPotions.MANA_REGEN_STRONG) public static Potion STRONG_MANA_REGEN_POTION;
@@ -93,7 +96,8 @@ public class ModPotions {
                     GRAVITY_EFFECT,
                     SPELL_DAMAGE_EFFECT,
                     FAMILIAR_SICKNESS_EFFECT,
-                    BOUNCE_EFFECT
+                    BOUNCE_EFFECT,
+                    MAGIC_FIND_EFFECT
             );
         }
 

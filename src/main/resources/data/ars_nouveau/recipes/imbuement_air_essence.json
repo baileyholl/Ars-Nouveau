@@ -1,0 +1,26 @@
+{
+  "type": "ars_nouveau:imbuement",
+  "input": {
+    "tag": "forge:gems/source"
+  },
+  "output": "ars_nouveau:air_essence",
+  "count": 1,
+  "source": 2000,
+  "pedestalItems": [
+    {
+      "item": {
+        "item": "minecraft:feather"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:phantom_membrane"
+      }
+    },
+    {
+      "item": {
+        "tag": "minecraft:arrows"
+      }
+    }
+  ]
+}

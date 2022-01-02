@@ -23,12 +23,14 @@ public class SourcelinkEventQueue {
         List<BlockPos> stalePos = new ArrayList<>();
         Set<BlockPos> worldList = posMap.getOrDefault(world.dimension().getRegistryName().toString(), new HashSet<>());
         for(BlockPos p : worldList){
+            if(!world.isLoaded(p))
+                return;
             BlockEntity entity = world.getBlockEntity(p);
             if(world.getBlockEntity(p) == null || !(entity instanceof SourcelinkTile)){
                 stalePos.add(p);
                 continue;
             }
-            if(entity.getClass().equals(tileType) && ((SourcelinkTile) entity).eventInRange(sourcePos, event) && ((SourcelinkTile) entity).canAcceptSource() ){
+            if(entity.getClass().equals(tileType) && ((SourcelinkTile) entity).eventInRange(sourcePos, event) && ((SourcelinkTile) entity).canAcceptSource()){
                 ((SourcelinkTile) entity).getManaEvent(sourcePos, amount);
                 break;
             }

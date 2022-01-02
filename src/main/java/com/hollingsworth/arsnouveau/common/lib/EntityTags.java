@@ -10,4 +10,6 @@ public class EntityTags {
     public static final Tag.Named<EntityType<?>> DRYGMY_BLACKLIST = EntityTypeTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "drygmy_blacklist"));
     public static final Tag.Named<EntityType<?>> DISINTEGRATION_WHITELIST = EntityTypeTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "disintegration_whitelist"));
     public static final Tag.Named<EntityType<?>> DISINTEGRATION_BLACKLIST = EntityTypeTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "disintegration_blacklist"));
+
+    public static final Tag.Named<EntityType<?>> MAGIC_FIND = EntityTypeTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "magic_find"));
 }

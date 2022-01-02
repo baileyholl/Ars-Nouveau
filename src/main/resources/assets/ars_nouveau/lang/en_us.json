@@ -983,5 +983,6 @@
 	"item.ars_nouveau.manipulation_essence": "Manipulation Essence",
 	"item.ars_nouveau.water_essence": "Water Essence",
 	"item.ars_nouveau.fire_essence": "Fire Essence",
-	"item.ars_nouveau.dowsing_rod": "Dowsing Rod"
+	"item.ars_nouveau.dowsing_rod": "Dowsing Rod",
+	"effect.ars_nouveau.magic_find": "Magic Find"
 }
