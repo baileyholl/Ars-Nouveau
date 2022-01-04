@@ -74,8 +74,13 @@ public class ANPlayerDataCap implements IPlayerCap{
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        glyphs.addAll(NBTUtil.readStrings(nbt, "glyph_").stream()
-                .map(s -> ArsNouveauAPI.getInstance().getSpellpartMap().get(s)).collect(Collectors.toList()));
+        ArsNouveauAPI api = ArsNouveauAPI.getInstance();
+        for(String s : NBTUtil.readStrings(nbt, "glyph_")){
+            if(api.getSpellpartMap().containsKey(s)){
+                glyphs.add(api.getSpellpartMap().get(s));
+            }
+        }
+
         for(String s : nbt.getAllKeys()){
             if(s.contains("familiar_")){
                 familiars.add(new FamiliarData(nbt.getCompound(s)));

@@ -25,7 +25,7 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '2.0.2'
+version = '2.0.3-test'
 group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'ars_nouveau-1.18.1'
 
@@ -139,7 +139,7 @@ repositories {
 dependencies {
 
     implementation 'org.jetbrains:annotations:20.1.0'
-    minecraft 'net.minecraftforge:forge:1.18-38.0.17'
+    minecraft 'net.minecraftforge:forge:1.18.1-39.0.9'
 //    runtimeOnly fg.deobf("curse.maven:exp-406201:3419814") //Blame
 //    runtimeOnly fg.deobf("curse.maven:exp-248787:3395800")  // Appleskin
 //    runtimeOnly fg.deobf("curse.maven:exp-407174:3188120")  // Shutup experimental settings
@@ -156,6 +156,8 @@ dependencies {
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.1-5.0.3.0:api")
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.1-5.0.3.0")
     implementation fg.deobf('software.bernie.geckolib:geckolib-1.18-forge:3.0.3')
+    runtimeOnly fg.deobf("curse.maven:exp-64760:3577168")
+    compileOnly fg.deobf("curse.maven:exp-64760:3577168")
     
 //    compileOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.4:7.1.0.84")
 

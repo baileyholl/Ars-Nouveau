@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class LootTables {
+public class DungeonLootTables {
 
     public static List<Supplier<ItemStack>> BASIC_LOOT = new ArrayList<>();
     public static List<Supplier<ItemStack>> UNCOMMON_LOOT = new ArrayList<>();

@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.loot.LootTables;
+import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -85,7 +85,7 @@ public class DungeonLootGenerator extends GlobalLootModifierProvider {
 
         @Override
         protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
-            generatedLoot.addAll(LootTables.getRandomRoll(this));
+            generatedLoot.addAll(DungeonLootTables.getRandomRoll(this));
             return generatedLoot;
         }
 

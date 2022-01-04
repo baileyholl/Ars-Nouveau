@@ -15,8 +15,8 @@ import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
-public class LootTables extends BaseLootTableProvider{
-    public LootTables(DataGenerator dataGeneratorIn) {
+public class LootTableProvider extends BaseLootTableProvider{
+    public LootTableProvider(DataGenerator dataGeneratorIn) {
         super(dataGeneratorIn);
     }
 
