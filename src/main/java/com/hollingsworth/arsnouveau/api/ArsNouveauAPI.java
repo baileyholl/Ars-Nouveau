@@ -223,8 +223,7 @@ public class ArsNouveauAPI {
     }
 
     public List<BrewingRecipe> getAllPotionRecipes(){
-        if(brewingRecipes == null){
-            brewingRecipes = new ArrayList<>();
+        if(brewingRecipes.isEmpty()){
             BrewingRecipeRegistry.getRecipes().forEach(ib ->{
                 if(ib instanceof BrewingRecipe)
                     brewingRecipes.add((BrewingRecipe) ib);
