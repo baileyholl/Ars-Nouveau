@@ -223,10 +223,6 @@ publishing {
             url "file://" + System.getenv("local_maven")
         }
     }
-    artifact sourcesJar {
-
-        classifier 'sources'
-    }
 }
 
 // Disables Gradle's custom module metadata from being published to maven. The
