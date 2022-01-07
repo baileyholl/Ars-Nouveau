@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs;
 
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.*;
-import com.hollingsworth.arsnouveau.common.util.Log;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
@@ -489,8 +488,7 @@ public abstract class AbstractPathJob implements Callable<Path> {
         try {
             return search();
         } catch (final Exception e) {
-            // Log everything, so exceptions of the pathfinding-thread show in Log
-            Log.getLogger().warn("Pathfinding Exception", e);
+            e.printStackTrace();
         }
 
         return null;
