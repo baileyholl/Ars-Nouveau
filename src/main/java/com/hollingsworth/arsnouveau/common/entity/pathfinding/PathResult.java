@@ -1,6 +1,5 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
-import com.hollingsworth.arsnouveau.common.util.Log;
 import net.minecraft.pathfinding.Path;
 
 import java.util.concurrent.Callable;
@@ -187,7 +186,7 @@ public class PathResult<T extends Callable<Path>>
         }
         catch (InterruptedException | ExecutionException e)
         {
-            Log.getLogger().catching(e);
+            e.printStackTrace();
         }
     }
 

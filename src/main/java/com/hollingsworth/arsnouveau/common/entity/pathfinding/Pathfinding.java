@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
-import com.hollingsworth.arsnouveau.common.util.Log;
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.pathjobs.AbstractPathJob;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -46,10 +46,13 @@ public final class Pathfinding
         @Override
         public Thread newThread(final Runnable runnable)
         {
-            final Thread thread = new Thread(runnable, "Minecolonies Pathfinding Worker #" + (id++));
+            final Thread thread = new Thread(runnable, "AN Pathfinding Worker #" + (id++));
             thread.setDaemon(true);
 
-            thread.setUncaughtExceptionHandler((thread1, throwable) -> Log.getLogger().error("Minecolonies Pathfinding Thread errored! ", throwable));
+            thread.setUncaughtExceptionHandler((thread1, throwable) ->{
+                throwable.printStackTrace();
+            });
+            thread.setContextClassLoader(ArsNouveau.class.getClassLoader());
             return thread;
         }
     }
@@ -63,7 +66,7 @@ public final class Pathfinding
     {
         if (executor == null)
         {
-            executor = new ThreadPoolExecutor(1, 1, 10, TimeUnit.SECONDS, jobQueue, new MinecoloniesThreadFactory());
+            executor = new ThreadPoolExecutor(1, 2, 10, TimeUnit.SECONDS, jobQueue, new MinecoloniesThreadFactory());
         }
         return executor;
     }
@@ -81,16 +84,6 @@ public final class Pathfinding
     private Pathfinding()
     {
         //Hides default constructor.
-    }
-
-    /**
-     * Add a job to the queue for processing.
-     *
-     * @param job PathJob
-     */
-    public static void enqueue(final AbstractPathJob job)
-    {
-        job.getResult().startJob(getExecutor());
     }
 
     /**
@@ -157,7 +150,8 @@ public final class Pathfinding
         }
         catch (final ConcurrentModificationException exc)
         {
-            Log.getLogger().catching(exc);
+            exc.printStackTrace();
+
         }
 
         RenderSystem.disableDepthTest();

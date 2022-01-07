@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.client.ClientHandler;
 import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
-import com.hollingsworth.arsnouveau.common.entity.pathfinding.Pathfinding;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.world.WorldEvent;
@@ -85,6 +84,6 @@ public class ArsNouveau {
     @SubscribeEvent
     public static void onServerStopped(final FMLServerStoppingEvent event)
     {
-        Pathfinding.shutdown();
+
     }
 }
