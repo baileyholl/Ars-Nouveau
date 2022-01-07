@@ -185,6 +185,30 @@ jar {
     }
 }
 
+task sourcesJar(type: Jar, dependsOn: classes) {
+    description = 'Creates a JAR containing the source code.'
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    description = 'Creates a JAR containing the JavaDocs.'
+    from javadoc.destinationDir
+    classifier = 'javadoc'
+}
+
+task deobfJar(type: Jar) {
+    description = 'Creates a JAR containing the non-obfuscated compiled code.'
+    from sourceSets.main.output
+    classifier = "deobf"
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+    archives deobfJar
+}
+
 // Example configuration to allow publishing using the maven-publish task
 // we define a custom artifact that is sourced from the reobfJar output task
 // and then declare that to be published
@@ -204,6 +228,10 @@ publishing {
         maven {
             url "file:///${project.projectDir}/mcmodsrepo"
         }
+    }
+    artifact sourcesJar {
+
+        classifier 'sources'
     }
 }
 
