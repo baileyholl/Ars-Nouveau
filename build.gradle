@@ -34,7 +34,7 @@ archivesBaseName = 'ars_nouveau-1.18.1'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 java.withSourcesJar()
-java.withJavadocJar()
+
 minecraft {
 
 
