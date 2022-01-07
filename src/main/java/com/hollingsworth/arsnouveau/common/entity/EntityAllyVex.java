@@ -249,6 +249,7 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
         this.entityData.define(OWNER_UNIQUE_ID, Optional.empty());
     }
 
+
     public void addAdditionalSaveData(CompoundNBT compound) {
         super.addAdditionalSaveData(compound);
         if (this.boundOrigin != null) {
@@ -288,12 +289,12 @@ public class EntityAllyVex extends VexEntity implements IFollowingSummon, ISummo
     @Nullable
     @Override
     public UUID getOwnerID() {
-        return null;
+        return !this.getEntityData().get(OWNER_UNIQUE_ID).isPresent() ? this.getUUID() : this.getEntityData().get(OWNER_UNIQUE_ID).get();
     }
 
     @Override
     public void setOwnerID(UUID uuid) {
-
+        this.getEntityData().set(OWNER_UNIQUE_ID, Optional.ofNullable(uuid));
     }
 
     class MoveHelperController extends MovementController {
