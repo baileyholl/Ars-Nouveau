@@ -206,7 +206,7 @@ publishing {
             groupId project.group
             artifactId project.archivesBaseName
             version project.version
-            artifact jar
+            artifact reobfArtifact
         }
     }
     repositories {
