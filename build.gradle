@@ -33,6 +33,8 @@ group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/g
 archivesBaseName = 'ars_nouveau-1.18.1'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.withSourcesJar()
+java.withJavadocJar()
 minecraft {
 
 
