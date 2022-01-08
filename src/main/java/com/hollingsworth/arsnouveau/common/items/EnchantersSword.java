@@ -71,7 +71,6 @@ public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatab
         recipe.addAll(spell.recipe);
         recipe.add(AugmentAmplify.INSTANCE);
         spell.recipe = recipe;
-        spell.setCost(spell.getCastingCost() - AugmentAmplify.INSTANCE.getManaCost());
         return ICasterTool.super.setSpell(caster, player, hand, stack, spell);
     }
 
@@ -79,11 +78,11 @@ public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatab
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity player) {
 
         ISpellCaster caster = getSpellCaster(stack);
-        SpellResolver resolver = new SpellResolver(new SpellContext(caster.getSpell(), player).withColors(caster.getColor()));
+        Spell spell = caster.getSpell();
+        spell.setCost(spell.getCastingCost() - AugmentAmplify.INSTANCE.getManaCost());
+        SpellResolver resolver = new SpellResolver(new SpellContext(spell, player).withColors(caster.getColor()));
         EntityRayTraceResult entityRes = new EntityRayTraceResult(target);
-
-        resolver.onCastOnEntity(stack, player, (LivingEntity) entityRes.getEntity(), Hand.MAIN_HAND);
-
+        resolver.onCastOnEntity(stack, player, entityRes.getEntity(), Hand.MAIN_HAND);
         return super.hurtEnemy(stack, target, player);
     }
 

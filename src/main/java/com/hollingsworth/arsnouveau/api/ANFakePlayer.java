@@ -35,13 +35,14 @@ public class ANFakePlayer extends FakePlayer {
 
     public static ANFakePlayer getPlayer(ServerWorld world)
     {
-//        ANFakePlayer ret = FAKE_PLAYER != null ? FAKE_PLAYER.get() : null;
-//        if (ret == null)
-//        {
-//            ret = new ANFakePlayer(world);
-//            FAKE_PLAYER = new WeakReference<>(ret);
-//        }
-        return new ANFakePlayer(world);
+        ANFakePlayer ret = FAKE_PLAYER != null ? FAKE_PLAYER.get() : null;
+        if (ret == null)
+        {
+            ret = new ANFakePlayer(world);
+            FAKE_PLAYER = new WeakReference<>(ret);
+        }
+        FAKE_PLAYER.get().level = world;
+        return FAKE_PLAYER.get();
     }
 
 
