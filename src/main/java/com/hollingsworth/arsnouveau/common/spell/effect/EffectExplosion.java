@@ -91,11 +91,6 @@ public class EffectExplosion extends AbstractEffect {
     }
 
     @Override
-    public boolean dampenIsAllowed() {
-        return true;
-    }
-
-    @Override
     public Tier getTier() {
         return Tier.TWO;
     }

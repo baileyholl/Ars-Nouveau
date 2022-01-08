@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -21,6 +21,7 @@ import net.minecraft.world.phys.HitResult;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static com.hollingsworth.arsnouveau.api.util.BlockUtil.destroyBlockSafely;
@@ -92,11 +93,6 @@ public class EffectBreak extends AbstractEffect {
         return rayTraceResult instanceof BlockHitResult && world.getBlockState(((BlockHitResult) rayTraceResult).getBlockPos()).getMaterial() != Material.AIR && canBlockBeHarvested(spellStats, world, ((BlockHitResult) rayTraceResult).getBlockPos());
     }
 
-    @Override
-    public boolean dampenIsAllowed() {
-        return true;
-    }
-
     @Nullable
     @Override
     public Item getCraftingReagent() {
@@ -119,6 +115,13 @@ public class EffectBreak extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "A spell you start with. Breaks blocks of an average hardness. Can be amplified to increase the harvest level. Sensitive will simulate breaking blocks with Shears instead of a pickaxe.";
+    }
+
+    @Override
+    protected Map<String, Integer> getDefaultAugmentLimits() {
+        Map<String, Integer> map = super.getDefaultAugmentLimits();
+        map.put(GlyphLib.AugmentFortuneID, 4);
+        return map;
     }
 
     @Nonnull
