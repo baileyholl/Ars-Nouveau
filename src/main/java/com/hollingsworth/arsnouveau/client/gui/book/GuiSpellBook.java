@@ -219,7 +219,7 @@ public class GuiSpellBook extends BaseBook {
             int xOffset = 20 * ((adjustedXPlaced ) % PER_ROW) + (nextPage ? 134 :0);
             int yPlace = adjustedRowsPlaced * 18 + yStart;
 
-            GlyphButton cell = new GlyphButton(this, xStart + xOffset, yPlace, false, part.getIcon(), part.tag);
+            GlyphButton cell = new GlyphButton(this, xStart + xOffset, yPlace, false, part.getIcon(), part.getId());
             addRenderableWidget(cell);
             glyphButtons.add(cell);
             adjustedXPlaced++;
@@ -375,7 +375,7 @@ public class GuiSpellBook extends BaseBook {
             slot.spellTag = "";
             slot.resourceIcon = "";
             if (spell_recipe != null && i < spell_recipe.size()){
-                slot.spellTag = spell_recipe.get(i).getTag();
+                slot.spellTag = spell_recipe.get(i).getId();
                 slot.resourceIcon = spell_recipe.get(i).getIcon();
             }
         }

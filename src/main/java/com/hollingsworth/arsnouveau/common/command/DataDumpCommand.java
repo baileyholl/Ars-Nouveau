@@ -49,20 +49,20 @@ public class DataDumpCommand {
         List<AbstractAugment> augments = spells.values().stream()
                 .filter(p -> p instanceof AbstractAugment)
                 .map(p -> (AbstractAugment) p)
-                .sorted(Comparator.comparing(a -> a.tag))
+                .sorted(Comparator.comparing(a -> a.getId()))
                 .collect(Collectors.toList());
 
         // Collect the augment compatibilities
         List<Tuple<AbstractSpellPart, Set<AbstractAugment>>> augmentCompat = spells.values().stream()
                 .filter(part -> part instanceof AbstractCastMethod)
                 .map(part -> new Tuple<>(part, part.getCompatibleAugments()))
-                .sorted(Comparator.comparing(t -> t.getA().tag))
+                .sorted(Comparator.comparing(t -> t.getA().getId()))
                 .collect(Collectors.toList());
         // Technically can be done in one sort, but writing a comparator based on type is ugly.
         augmentCompat.addAll(spells.values().stream()
                 .filter(part -> part instanceof AbstractEffect)
                 .map(part -> new Tuple<>(part, part.getCompatibleAugments()))
-                .sorted(Comparator.comparing(t -> t.getA().tag))
+                .sorted(Comparator.comparing(t -> t.getA().getId()))
                 .collect(Collectors.toList()));
 
         // Write the file
@@ -72,14 +72,14 @@ public class DataDumpCommand {
             PrintWriter w = new PrintWriter(new FileWriterWithEncoding(file, "UTF-8", false));
 
             // Header Line
-            w.println("glyph, " + augments.stream().map(a -> a.tag).collect(Collectors.joining(", ")));
+            w.println("glyph, " + augments.stream().map(a -> a.getId()).collect(Collectors.joining(", ")));
 
             // Rows
             for (Tuple<AbstractSpellPart, Set<AbstractAugment>> row : augmentCompat) {
                 AbstractSpellPart part = row.getA();
                 Set<AbstractAugment> compatibleAugments = row.getB();
 
-                w.print(part.tag + ", ");
+                w.print(part.getId() + ", ");
 
                 // Columns
                 w.print(augments.stream()

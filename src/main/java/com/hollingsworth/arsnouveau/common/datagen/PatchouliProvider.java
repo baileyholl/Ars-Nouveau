@@ -459,12 +459,12 @@ public class PatchouliProvider implements DataProvider {
         else
             category = GLYPHS_3;
         PatchouliBuilder builder = new PatchouliBuilder(category, spellPart.getName())
-                .withName("ars_nouveau.glyph_name." + spellPart.getTag())
+                .withName("ars_nouveau.glyph_name." + spellPart.getId())
                 .withIcon(ArsNouveau.MODID + ":" + spellPart.getItemID())
                 .withSortNum(spellPart instanceof AbstractCastMethod ? 1 : spellPart instanceof AbstractEffect ? 2 : 3)
-                .withPage(new TextPage("ars_nouveau.glyph_desc." + spellPart.tag))
+                .withPage(new TextPage("ars_nouveau.glyph_desc." + spellPart.getId()))
                 .withPage(new GlyphPressPage(spellPart));
-        this.pages.add(new PatchouliPage(builder, getPath(category, "glyph_" + spellPart.tag)));
+        this.pages.add(new PatchouliPage(builder, getPath(category, "glyph_" + spellPart.getId())));
     }
 
     public void addFamiliarPage(AbstractFamiliarHolder familiarHolder){

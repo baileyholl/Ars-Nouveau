@@ -65,7 +65,7 @@ public class ANPlayerDataCap implements IPlayerCap{
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        NBTUtil.writeStrings(tag, "glyph_", glyphs.stream().map(s -> s.tag).collect(Collectors.toList()));
+        NBTUtil.writeStrings(tag, "glyph_", glyphs.stream().map(s -> s.getId()).collect(Collectors.toList()));
         for(FamiliarData f : familiars){
             tag.put("familiar_" + f.familiarHolder.id, f.toTag());
         }

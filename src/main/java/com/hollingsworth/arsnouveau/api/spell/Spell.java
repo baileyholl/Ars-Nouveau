@@ -86,14 +86,10 @@ public class Spell {
         int cost = 0;
         if(recipe == null)
             return cost;
-        for (int i = 0; i < recipe.size(); i++) {
-            AbstractSpellPart spell = recipe.get(i);
-            if (!(spell instanceof AbstractAugment)) {
-                List<AbstractAugment> augments = getAugments(i, null);
-                cost += spell.getAdjustedManaCost(augments);
-            }
+        for (AbstractSpellPart spell : recipe) {
+            cost += spell.getConfigCost();
         }
-        return cost;
+        return Math.max(0, cost);
     }
 
     public int getCastingCost(){
@@ -111,7 +107,7 @@ public class Spell {
     public String serialize(){
         List<String> tags = new ArrayList<>();
         for(AbstractSpellPart slot : recipe){
-            tags.add(slot.tag);
+            tags.add(slot.getId());
         }
         return tags.toString();
     }

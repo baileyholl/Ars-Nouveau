@@ -87,11 +87,6 @@ public class EffectFangs extends AbstractEffect {
         return nonAirAnythingSuccess(rayTraceResult, world);
     }
 
-    @Override
-    public boolean dampenIsAllowed() {
-        return true;
-    }
-
     private void spawnFangs(Level world, double xAngle, double zAngle, double yStart, double yEnd, float rotationYaw, int tickDelay, LivingEntity caster, float damage) {
         BlockPos blockpos = new BlockPos(xAngle, yEnd, zAngle);
         boolean flag = false;

@@ -1,12 +1,6 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.util.SpellPartConfigUtil;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -20,17 +14,17 @@ import java.util.Set;
 
 public abstract class AbstractSpellPart implements ISpellTier, Comparable<AbstractSpellPart> {
 
-    public String tag;
+    private String id;
     public String name;
-    /*Tag for NBT data and SpellManager#spellList*/
-    public String getTag(){
-        return this.tag;
+    /*ID for NBT data and SpellManager#spellList*/
+    public String getId(){
+        return this.id;
     }
 
-    public String getIcon(){return this.tag + ".png";}
+    public String getIcon(){return this.id + ".png";}
 
-    protected AbstractSpellPart(String tag, String name){
-        this.tag = tag;
+    protected AbstractSpellPart(String id, String name){
+        this.id = id;
         this.name = name;
         for(SpellSchool spellSchool : getSchools()){
             spellSchool.addSpellPart(this);
@@ -40,9 +34,6 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
     public int getAdjustedManaCost(List<AbstractAugment> augmentTypes){
         int cost = getConfigCost();
         for(AbstractAugment a: augmentTypes){
-            if(a instanceof AugmentDampen && !dampenIsAllowed()){
-                continue;
-            }
             cost += a.getConfigCost();
         }
         return Math.max(cost, 0);
@@ -57,11 +48,6 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
     @Nullable
     public Item getCraftingReagent(){
         return null;
-    }
-
-    // Check for mana reduction exploit
-    public boolean dampenIsAllowed(){
-        return getCompatibleAugments().contains(AugmentDampen.INSTANCE);
     }
 
     public String getName(){return this.name;}
@@ -97,52 +83,10 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
         return this.getTier().ordinal() - o.getTier().ordinal();
     }
 
-
     public TranslatableComponent getBookDescLang(){
-        return new TranslatableComponent("ars_nouveau.glyph_desc." + getTag());
+        return new TranslatableComponent("ars_nouveau.glyph_desc." + getId());
     }
-    /**
-     * Converts to a patchouli documentation page
-     */
-    public JsonElement serialize() {
-        JsonObject jsonobject = new JsonObject();
 
-        jsonobject.addProperty("name", this.getName());
-        jsonobject.addProperty("icon", ArsNouveau.MODID + ":" + getItemID());
-        jsonobject.addProperty("category", "ars_nouveau:spells_"+(getTier().ordinal() + 1));
-        jsonobject.addProperty("sortnum", this instanceof AbstractCastMethod ? 1 : this instanceof AbstractEffect ? 2 : 3);
-        JsonArray jsonArray = new JsonArray();
-        JsonObject descPage = new JsonObject();
-        descPage.addProperty("type", "patchouli:text");
-        descPage.addProperty("text","ars_nouveau.glyph_desc." + tag);
-
-        JsonObject infoPage = new JsonObject();
-        infoPage.addProperty("type", "ars_nouveau:glyph_recipe");
-        infoPage.addProperty("recipe", ArsNouveau.MODID + ":" + "glyph_" + this.tag);
-        infoPage.addProperty("tier",this.getTier().name());
-
-        String manaCost = this.getDefaultManaCost() < 20 ? "Low" : "Medium";
-        manaCost = this.getDefaultManaCost() > 50 ? "High" : manaCost;
-        infoPage.addProperty("mana_cost", manaCost);
-        if(this.getCraftingReagent() != null){
-            String clayType;
-            if(this.getTier() == Tier.ONE){
-                clayType = ItemsRegistry.MAGIC_CLAY.getRegistryName().toString();
-            }else if(this.getTier() == Tier.TWO){
-                clayType = ItemsRegistry.MARVELOUS_CLAY.getRegistryName().toString();
-            }else{
-                clayType = ItemsRegistry.MYTHICAL_CLAY.getRegistryName().toString();
-            }
-            infoPage.addProperty("clay_type", clayType);
-            infoPage.addProperty("reagent", this.getCraftingReagent().getRegistryName().toString());
-        }
-
-
-        jsonArray.add(descPage);
-        jsonArray.add(infoPage);
-        jsonobject.add("pages", jsonArray);
-        return jsonobject;
-    }
     // Can be null if addons do not create a config. PLEASE REGISTER THESE IN A CONFIG. See RegistryHelper
     public @Nullable ForgeConfigSpec CONFIG;
     public @Nullable ForgeConfigSpec.IntValue COST;
@@ -186,7 +130,7 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
     }
 
     public String getItemID(){
-        return "glyph_" + this.getTag();
+        return "glyph_" + this.getId();
     }
 
     public String getBookDescription(){
@@ -194,7 +138,7 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
     }
 
     public String getLocalizationKey() {
-        return "ars_nouveau.glyph_name." + tag;
+        return "ars_nouveau.glyph_name." + id;
     }
 
     public String getLocaleName(){

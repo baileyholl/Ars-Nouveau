@@ -51,11 +51,6 @@ public class EffectKnockback extends AbstractEffect {
     }
 
     @Override
-    public boolean dampenIsAllowed() {
-        return true;
-    }
-
-    @Override
     public int getDefaultManaCost() {
         return 15;
     }

@@ -36,7 +36,7 @@ public class Glyph extends ModItem{
         if(worldIn.isClientSide)
             return super.use(worldIn, playerIn, handIn);
 
-        if(!Config.isSpellEnabled(this.spellPart.tag)){
+        if(!Config.isSpellEnabled(this.spellPart.getId())){
             playerIn.sendMessage(new TranslatableComponent("ars_nouveau.spell.disabled"), Util.NIL_UUID);
             return super.use(worldIn, playerIn, handIn);
         }
@@ -57,7 +57,7 @@ public class Glyph extends ModItem{
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
         if(spellPart != null){
-            if(!Config.isSpellEnabled(this.spellPart.tag)){
+            if(!Config.isSpellEnabled(this.spellPart.getId())){
                 tooltip2.add(new TranslatableComponent("tooltip.ars_nouveau.glyph_disabled"));
             }else if(spellPart != null){
                 tooltip2.add(new TranslatableComponent("tooltip.ars_nouveau.glyph_level", spellPart.getTier().ordinal() + 1).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));

@@ -20,7 +20,7 @@ public class RegistryHelper {
             spellPart.buildConfig(spellBuilder);
             spec = spellBuilder.build();
             spellPart.CONFIG = spec;
-            ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, spellPart.CONFIG, modID + "/" + spellPart.getTag() +".toml");
+            ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, spellPart.CONFIG, modID + "/" + spellPart.getId() +".toml");
         }
     }
 }

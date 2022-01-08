@@ -115,7 +115,7 @@ public class APIRegistry {
     }
 
     public static void registerSpell(AbstractSpellPart spellPart) {
-        ArsNouveauAPI.getInstance().registerSpell(spellPart.getTag(), spellPart);
+        ArsNouveauAPI.getInstance().registerSpell(spellPart.getId(), spellPart);
     }
 
     public static void registerRitual(AbstractRitual ritual){

@@ -23,7 +23,7 @@ public class ItemModelGenerator extends net.minecraftforge.client.model.generato
         ItemsRegistry.RegistrationHandler.ITEMS.forEach(i ->{
             if(i instanceof Glyph){
                 try {
-                    getBuilder("glyph_" + ((Glyph) i).spellPart.getTag()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", spellTexture(i));
+                    getBuilder("glyph_" + ((Glyph) i).spellPart.getId()).parent(new ModelFile.UncheckedModelFile("item/generated")).texture("layer0", spellTexture(i));
                 }catch (Exception e){
                     System.out.println("No texture for " + i.toString());
                 }

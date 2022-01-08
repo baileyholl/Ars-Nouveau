@@ -58,10 +58,10 @@ public abstract class SpellPhraseValidator extends AbstractSpellValidator {
                 augments.add((AbstractAugment) currentPart);
 
                 // Note the position as well for easy lookup in the phrase validator
-                if (!augmentPositionMap.containsKey(currentPart.tag)) {
-                    augmentPositionMap.put(currentPart.tag, new LinkedList<>());
+                if (!augmentPositionMap.containsKey(currentPart.getId())) {
+                    augmentPositionMap.put(currentPart.getId(), new LinkedList<>());
                 }
-                augmentPositionMap.get(currentPart.tag).add(new SpellPhrase.SpellPartPosition<>((AbstractAugment) currentPart, pos));
+                augmentPositionMap.get(currentPart.getId()).add(new SpellPhrase.SpellPartPosition<>((AbstractAugment) currentPart, pos));
             } else if (currentPart != null) {
                 // Action changed, wrap up the current phrase and add it to the list
                 phrases.add(new SpellPhrase(action, augments, augmentPositionMap, phraseStart));

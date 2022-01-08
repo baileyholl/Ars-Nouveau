@@ -106,7 +106,7 @@ public class ArsNouveauAPI {
     }
 
     public Item getGlyphItem(AbstractSpellPart spell){
-        return getGlyphItem(spell.tag);
+        return getGlyphItem(spell.getId());
     }
 
     public Item getFamiliarItem(String id){
@@ -119,7 +119,7 @@ public class ArsNouveauAPI {
     }
 
     public AbstractSpellPart registerSpell(AbstractSpellPart part){
-        return registerSpell(part.getTag(), part);
+        return registerSpell(part.getId(), part);
     }
 
 

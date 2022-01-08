@@ -135,11 +135,6 @@ public class EffectBlink extends AbstractEffect {
         addAmpConfig(builder, 3.0);
     }
 
-    @Override
-    public boolean dampenIsAllowed() {
-        return true;
-    }
-
     /**
      * Checks is a player can be placed at a given position without suffocating.
      */
