@@ -867,8 +867,8 @@
 	"block.ars_nouveau.whirlisprig_flower": "Whirlisprig Blossom",
 	"ars_nouveau.page.relay": "Enables the transport of source between Source Jars and other Source Relays. To pull source from jars, use the Dominion Wand on the jar, and then on the relay. To send between relays or from a relay to a jar, use the wand on the relay and then the target you wish to send source to. Relays may only reach up to 30 blocks away. To clear connections, sneak while using the Dominion Wand on the relay.",
 	"ars_nouveau.page.relay_splitter": "Operates similar to the Source Relay, but will support taking from and transferring to multiple jars at once. The splitter has a much larger through-put than the Source Relay, and will split this throughput amongst all of its jars. See the instructions on the Source Relay for use.",
-	"ars_nouveau.page1.enchanting_apparatus": "The Enchanting Apparatus utilizes pedestals and Source for crafting. To use the Enchanting Apparatus, place any number of Arcane Pedestals nearby with their items. Once you have filled the pedestals, use the middle item on the Enchanting Apparatus block. The Enchanting Apparatus requires an Arcane Core beneath it in order to work.",
-	"ars_nouveau.page1.imbuement_chamber": "Imbues certain items with Source to create new items. The primary way to obtain Source Gems, amethyst and lapis may be used to create Source Gems. The Imbuement Chamber will passively accumulate source for recipes, or will draw from Source Jars 2 block away. Some recipes require additional items placed in pedestals around the Imbuement Chamber, such as Essences. Items in pedestals will not be consumed.",
+	"ars_nouveau.page1.enchanting_apparatus": "The Enchanting Apparatus utilizes pedestals and Source for crafting. To use the Enchanting Apparatus, place any number of Arcane Pedestals within 3 blocks with their items. Once you have filled the pedestals, use the middle item on the Enchanting Apparatus block. The Enchanting Apparatus requires an Arcane Core beneath it in order to work.",
+	"ars_nouveau.page1.imbuement_chamber": "Imbues certain items with Source to create new items. The primary way to obtain Source Gems, amethyst and lapis may be used to create Source Gems. The Imbuement Chamber will passively accumulate source for recipes, or will draw from Source Jars 2 block away. Some recipes require additional items placed in pedestals within 1 block of the Imbuement Chamber, such as Essences. Items in pedestals will not be consumed.",
 	"ars_nouveau.page1.potion_melder": "Converts three doses of a potion from two adjacent Potion Jars, and outputs a single dose of mixed potion into a Potion Jar beneath it. The Potion Melder requires source per mix.",
 	"ars_nouveau.page2.potion_melder": "Outputs mixed potions below in a 3:1 ratio.",
 	"ars_nouveau.page.warp_portal": "Warp Portals",
@@ -980,5 +980,7 @@
 	"item.ars_nouveau.dowsing_rod": "Dowsing Rod",
 	"effect.ars_nouveau.magic_find": "Magic Find",
 	"tooltip.essences": "Magical Essences created in an Imbuement Chamber.",
-	"ars_nouveau.page.dowsing_rod": "A Dowsing Rod provides the user a short duration of Scrying for Budding Amethyst and Magic Find, which will cause magical creatures to glow within 75 blocks of you. The Dowsing Rod has a limited number of uses."
+	"ars_nouveau.page.dowsing_rod": "A Dowsing Rod provides the user a short duration of Scrying for Budding Amethyst and Magic Find, which will cause magical creatures to glow within 75 blocks of you. The Dowsing Rod has a limited number of uses.",
+	"ars_nouveau.apparatus.norecipe": "No recipe found. Pedestals must be within 3 blocks.",
+	"ars_nouveau.imbuement.norecipe": "No recipe found. If pedestals are required, they must be placed within the 1 block cube around the chamber."
 }

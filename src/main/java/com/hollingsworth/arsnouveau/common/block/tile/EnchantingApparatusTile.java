@@ -110,7 +110,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
 
 
     public void clearItems(){
-        BlockPos.betweenClosedStream(this.getBlockPos().offset(5, -3, 5), this.getBlockPos().offset(-5, 3, -5)).forEach(blockPos -> {
+        BlockPos.betweenClosedStream(this.getBlockPos().offset(3, -3, 3), this.getBlockPos().offset(-3, 3, -3)).forEach(blockPos -> {
             if (level.getBlockEntity(blockPos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) level.getBlockEntity(blockPos)).stack != null) {
                 ArcanePedestalTile tile = ((ArcanePedestalTile) level.getBlockEntity(blockPos));
                 tile.stack = tile.stack == null ? ItemStack.EMPTY : tile.stack.getContainerItem();
@@ -123,7 +123,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
     // Used for rendering on the client
     public List<BlockPos> pedestalList(){
         ArrayList<BlockPos> posList = new ArrayList<>();
-        BlockPos.betweenClosedStream(this.getBlockPos().offset(5, -3, 5), this.getBlockPos().offset(-5, 3, -5)).forEach(blockPos -> {
+        BlockPos.betweenClosedStream(this.getBlockPos().offset(5, -3, 5), this.getBlockPos().offset(-3, 3, -3)).forEach(blockPos -> {
             if(level.getBlockEntity(blockPos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) level.getBlockEntity(blockPos)).stack != null &&  !((ArcanePedestalTile) level.getBlockEntity(blockPos)).stack.isEmpty()) {
                 posList.add(blockPos.immutable());
             }
@@ -133,7 +133,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
 
     public List<ItemStack> getPedestalItems(){
         ArrayList<ItemStack> pedestalItems = new ArrayList<>();
-        BlockPos.betweenClosedStream(this.getBlockPos().offset(5, -3, 5), this.getBlockPos().offset(-5, 3, -5)).forEach(blockPos -> {
+        BlockPos.betweenClosedStream(this.getBlockPos().offset(3, -3, 3), this.getBlockPos().offset(-3, 3, -3)).forEach(blockPos -> {
             if(level.getBlockEntity(blockPos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) level.getBlockEntity(blockPos)).stack != null && !((ArcanePedestalTile) level.getBlockEntity(blockPos)).stack.isEmpty()) {
                 pedestalItems.add(((ArcanePedestalTile) level.getBlockEntity(blockPos)).stack);
             }
@@ -298,8 +298,6 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
     }
 
     private <E extends BlockEntity & IAnimatable > PlayState idlePredicate(AnimationEvent<E> event) {
-//        if(this.isCrafting)
-//            return PlayState.STOP;
         event.getController().setAnimation(new AnimationBuilder().addAnimation("floating", true));
 
         return PlayState.CONTINUE;
@@ -308,8 +306,6 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
     private <E extends BlockEntity & IAnimatable > PlayState craftPredicate(AnimationEvent<E> event) {
         if(!this.isCrafting)
             return PlayState.STOP;
-        //event.getController().setAnimation(new AnimationBuilder().addAnimation("floating", true).addAnimation("enchanting", false));
-
         return PlayState.CONTINUE;
     }
     @Override

@@ -53,7 +53,7 @@ public class EnchantingApparatusBlock extends TickableModBlock {
         if(tile.catalystItem == null || tile.catalystItem.isEmpty()){
             IEnchantingRecipe recipe = tile.getRecipe(player.getMainHandItem(), player);
             if(recipe == null){
-                PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.norecipe"));
+                PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.apparatus.norecipe"));
             }else if(recipe.consumesSource() && !SourceUtil.hasSourceNearby(tile.getBlockPos(), tile.getLevel(), 10, recipe.getSourceCost())){
                 PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.apparatus.nomana"));
             }else{

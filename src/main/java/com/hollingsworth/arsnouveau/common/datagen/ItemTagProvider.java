@@ -43,7 +43,15 @@ public class ItemTagProvider extends ItemTagsProvider {
                         BlockRegistry.BLAZING_WOOD.asItem(),
                         BlockRegistry.CASCADING_WOOD.asItem(),
                         BlockRegistry.FLOURISHING_WOOD.asItem(),
-                        BlockRegistry.VEXING_WOOD.asItem());
+                        BlockRegistry.VEXING_WOOD.asItem(),
+                        BlockRegistry.STRIPPED_AWLOG_BLUE.asItem(),
+                        BlockRegistry.STRIPPED_AWWOOD_BLUE.asItem(),
+                        BlockRegistry.STRIPPED_AWLOG_GREEN.asItem(),
+                        BlockRegistry.STRIPPED_AWWOOD_GREEN.asItem(),
+                        BlockRegistry.STRIPPED_AWLOG_RED.asItem(),
+                        BlockRegistry.STRIPPED_AWWOOD_RED.asItem(),
+                        BlockRegistry.STRIPPED_AWLOG_PURPLE.asItem(),
+                        BlockRegistry.STRIPPED_AWWOOD_PURPLE.asItem());
         this.tag(ItemTags.LOGS).add(
                 BlockRegistry.BLAZING_LOG.asItem(),
                 BlockRegistry.CASCADING_LOG.asItem(),
@@ -52,7 +60,14 @@ public class ItemTagProvider extends ItemTagsProvider {
                 BlockRegistry.BLAZING_WOOD.asItem(),
                 BlockRegistry.CASCADING_WOOD.asItem(),
                 BlockRegistry.FLOURISHING_WOOD.asItem(),
-                BlockRegistry.VEXING_WOOD.asItem()
+                BlockRegistry.VEXING_WOOD.asItem(), BlockRegistry.STRIPPED_AWLOG_BLUE.asItem(),
+                BlockRegistry.STRIPPED_AWWOOD_BLUE.asItem(),
+                BlockRegistry.STRIPPED_AWLOG_GREEN.asItem(),
+                BlockRegistry.STRIPPED_AWWOOD_GREEN.asItem(),
+                BlockRegistry.STRIPPED_AWLOG_RED.asItem(),
+                BlockRegistry.STRIPPED_AWWOOD_RED.asItem(),
+                BlockRegistry.STRIPPED_AWLOG_PURPLE.asItem(),
+                BlockRegistry.STRIPPED_AWWOOD_PURPLE.asItem()
         );
         this.tag(ItemTags.LOGS_THAT_BURN).add(
                 BlockRegistry.BLAZING_LOG.asItem(),
@@ -62,7 +77,17 @@ public class ItemTagProvider extends ItemTagsProvider {
                 BlockRegistry.BLAZING_WOOD.asItem(),
                 BlockRegistry.CASCADING_WOOD.asItem(),
                 BlockRegistry.FLOURISHING_WOOD.asItem(),
-                BlockRegistry.VEXING_WOOD.asItem()
+                BlockRegistry.VEXING_WOOD.asItem(),
+                BlockRegistry.STRIPPED_AWLOG_BLUE.asItem(),
+                BlockRegistry.STRIPPED_AWWOOD_BLUE.asItem(),
+                BlockRegistry.STRIPPED_AWLOG_GREEN.asItem(),
+                BlockRegistry.STRIPPED_AWWOOD_GREEN.asItem(),
+                BlockRegistry.STRIPPED_AWLOG_RED.asItem(),
+                BlockRegistry.STRIPPED_AWWOOD_RED.asItem(),
+                BlockRegistry.STRIPPED_AWLOG_PURPLE.asItem(),
+                BlockRegistry.STRIPPED_AWWOOD_PURPLE.asItem()
+
+
         );
         this.tag(ItemTags.createOptional(new ResourceLocation("forge", "planks/archwood")))
                 .add(BlockRegistry.ARCHWOOD_PLANK.asItem());

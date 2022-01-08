@@ -47,7 +47,7 @@ public class ImbuementBlock extends TickableModBlock {
             ImbuementRecipe recipe = worldIn.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE).stream()
                     .filter(f -> f.matches(tile, worldIn)).findFirst().orElse(null);
             if(recipe == null){
-                PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.norecipe"));
+                PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.imbuement.norecipe"));
                 tile.stack = ItemStack.EMPTY;
             }else{
                 tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);
