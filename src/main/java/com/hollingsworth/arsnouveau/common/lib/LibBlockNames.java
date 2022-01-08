@@ -121,4 +121,5 @@ public class LibBlockNames {
     public static final String ARCHWOOD_CHEST = "archwood_chest";
     public static final String SPELL_PRISM = "spell_prism";
     public static final String WHIRLISPRIG_BLOCK = "whirlisprig_flower";
+    public static final String INSCRIPTION_BLOCK = "inscription_table";
 }

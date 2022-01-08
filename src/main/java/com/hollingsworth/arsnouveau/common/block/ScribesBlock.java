@@ -27,7 +27,6 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -138,13 +137,6 @@ public class ScribesBlock extends ModBlock implements EntityBlock {
         return p_196258_1_.getLevel().getBlockState(blockpos1).canBeReplaced(p_196258_1_) ? this.defaultBlockState().setValue(FACING, direction) : null;
     }
 
-    public static Direction getFacingFromEntity(BlockPos clickedBlock, LivingEntity entity) {
-        Vec3 vec = entity.position();
-        Direction direction = Direction.getNearest((float) (vec.x - clickedBlock.getX()), (float) (vec.y - clickedBlock.getY()), (float) (vec.z - clickedBlock.getZ()));
-        if(direction == Direction.UP || direction == Direction.DOWN)
-            direction = Direction.NORTH;
-        return direction;
-    }
     // If the user breaks the other side of the table, this side needs to drop its item
     public BlockState tearDown(BlockState state, Direction direction, BlockState state2, LevelAccessor world, BlockPos pos, BlockPos pos2){
         if(!world.isClientSide()) {

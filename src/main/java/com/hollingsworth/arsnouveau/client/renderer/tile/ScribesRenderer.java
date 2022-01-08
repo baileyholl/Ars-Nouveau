@@ -20,14 +20,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
+import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
 import javax.annotation.Nullable;
 
 public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
+    public static AnimatedGeoModel model = new GenericModel("scribes_table");
 
     public ScribesRenderer(BlockEntityRendererProvider.Context rendererDispatcherIn) {
-        super(rendererDispatcherIn, new ScribesModel());
+        super(rendererDispatcherIn, model);
     }
 
     @Override
@@ -107,6 +109,7 @@ public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(-y + 90f));
         matrixStack.mulPose(Vector3f.XP.rotationDegrees(90f));
         matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180F));
+
         if(direction == Direction.WEST){
             matrixStack.mulPose(Vector3f.ZP.rotationDegrees(90f));
         }
@@ -116,13 +119,14 @@ public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
         if(direction == Direction.SOUTH){
             matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180));
         }
+        matrixStack.translate(-0.8, 0, 0);
         matrixStack.scale(0.6f, 0.6f, 0.6f);
 
         Minecraft.getInstance().getItemRenderer().renderStatic(new ItemStack(itemToRender), ItemTransforms.TransformType.FIXED, i, il, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
         matrixStack.popPose();
     }
     public static GenericItemRenderer getISTER(){
-        return new GenericItemRenderer(new ScribesModel()).withTranslucency();
+        return new GenericItemRenderer(model);
     }
 
     @Override

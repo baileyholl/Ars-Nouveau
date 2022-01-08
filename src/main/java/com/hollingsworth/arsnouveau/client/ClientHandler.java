@@ -63,6 +63,8 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.MAGE_BLOCK_TILE, MageBlockRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.WHIRLISPRIG_TILE, WhirlisprigFlowerRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ARCANE_CORE_TILE, ArcaneCoreRenderer::new);
+//        event.registerBlockEntityRenderer(BlockRegistry.INSCRIPTION_TILE_TYPE, InscriptionRenderer::new);
+
 
         event.registerEntityRenderer( ModEntities.SPELL_PROJ,
                 renderManager -> new RenderSpell(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
@@ -147,6 +149,7 @@ public class ClientHandler {
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.BASIC_SPELL_TURRET, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.TIMER_SPELL_TURRET, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.WHIRLISPRIG_FLOWER, RenderType.cutout());
+//        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.INSCRIPTION_TABLE, RenderType.translucent());
         evt.enqueueWork(() -> {
             ItemProperties.register(ItemsRegistry.ENCHANTERS_SHIELD,new ResourceLocation(ArsNouveau.MODID,"blocking"), (item, resourceLocation, livingEntity, arg4) -> {
                 return livingEntity != null && livingEntity.isUsingItem() && livingEntity.getUseItem() == item ? 1.0F : 0.0F;

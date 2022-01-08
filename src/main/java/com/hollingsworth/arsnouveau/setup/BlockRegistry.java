@@ -201,6 +201,8 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.SPELL_PRISM) public static  SpellPrismBlock SPELL_PRISM;
     @ObjectHolder(LibBlockNames.WHIRLISPRIG_BLOCK) public static BlockEntityType<WhirlisprigTile> WHIRLISPRIG_TILE;
     @ObjectHolder(LibBlockNames.WHIRLISPRIG_BLOCK) public static WhirlisprigFlower WHIRLISPRIG_FLOWER;
+//    @ObjectHolder(LibBlockNames.INSCRIPTION_BLOCK) public static BlockEntityType<InscriptionTile> INSCRIPTION_TILE_TYPE;
+//    @ObjectHolder(LibBlockNames.INSCRIPTION_BLOCK) public static InscriptionTable INSCRIPTION_TABLE;
 
     @ObjectHolder(LibBlockNames.STATE_PROVIDER) public static BlockStateProviderType stateProviderType;
 
@@ -310,6 +312,7 @@ public class BlockRegistry {
             registry.register(new ArchwoodChest().setRegistryName(LibBlockNames.ARCHWOOD_CHEST));
             registry.register(new SpellPrismBlock(LibBlockNames.SPELL_PRISM));
             registry.register(new WhirlisprigFlower(LibBlockNames.WHIRLISPRIG_BLOCK));
+//            registry.register(new InscriptionTable(LibBlockNames.INSCRIPTION_BLOCK));
         }
         static Block.Properties woodProp = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD);
         public static MagicLeaves createLeavesBlock() {
@@ -354,7 +357,7 @@ public class BlockRegistry {
             event.getRegistry().register(BlockEntityType.Builder.of(TimerSpellTurretTile::new, BlockRegistry.TIMER_SPELL_TURRET).build(null).setRegistryName(LibBlockNames.TIMER_SPELL_TURRET));
             event.getRegistry().register(BlockEntityType.Builder.of(ArchwoodChestTile::new, BlockRegistry.ARCHWOOD_CHEST).build(null).setRegistryName(LibBlockNames.ARCHWOOD_CHEST));
             event.getRegistry().register(BlockEntityType.Builder.of(WhirlisprigTile::new, BlockRegistry.WHIRLISPRIG_FLOWER).build(null).setRegistryName(LibBlockNames.WHIRLISPRIG_BLOCK));
-
+//            event.getRegistry().register(BlockEntityType.Builder.of(InscriptionTile::new, BlockRegistry.INSCRIPTION_TABLE).build(null).setRegistryName(LibBlockNames.INSCRIPTION_BLOCK));
         }
 
         @SubscribeEvent
@@ -566,6 +569,13 @@ public class BlockRegistry {
                     return  WhirlisprigFlowerRenderer::getISTER;
                 }
             }.setRegistryName(LibBlockNames.WHIRLISPRIG_BLOCK));
+
+//            registry.register(new RendererBlockItem(BlockRegistry.INSCRIPTION_TABLE, ItemsRegistry.defaultItemProperties()) {
+//                @Override
+//                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+//                    return InscriptionRenderer::getISTER;
+//                }
+//            }.setRegistryName(LibBlockNames.INSCRIPTION_BLOCK));
         }
 
         public static Item getDefaultBlockItem(Block block, String registry){
