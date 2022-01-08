@@ -33,7 +33,7 @@ group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/g
 archivesBaseName = 'ars_nouveau-1.18.1'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-java.withSourcesJar()
+
 
 minecraft {
 
@@ -65,7 +65,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                examplemod {
+                ars_nouveau {
                     source sourceSets.main
                 }
             }
@@ -109,6 +109,7 @@ minecraft {
         }
     }
 }
+
 repositories {
 
     maven {
@@ -179,11 +180,11 @@ jar {
     manifest {
         attributes([
             "Specification-Title": "ArsNouveau",
-            "Specification-Vendor": "examplemodsareus",
+            "Specification-Vendor": "baileyh",
             "Specification-Version": "1", // We are version 1 of ourselves
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"examplemodsareus",
+            "Implementation-Vendor" :"baileyh",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
             "MixinConfigs": "ars_nouveau.mixins.json"
         ])
@@ -199,7 +200,15 @@ def reobfArtifact = artifacts.add('default', reobfFile) {
     type 'jar'
     builtBy 'reobfJar'
 }
-
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    archiveBaseName.set(project.archivesBaseName)
+    archiveVersion.set("${project.version}")
+    archiveClassifier.set('sources')
+}
+artifacts {
+    archives sourcesJar
+}
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -207,6 +216,7 @@ publishing {
             artifactId project.archivesBaseName
             version project.version
             artifact reobfArtifact
+            artifact sourcesJar
         }
     }
     repositories {
@@ -235,12 +245,4 @@ if (System.getProperty("idea.sync.active") == "true") {
             it.options.annotationProcessorPath = files()
         }
     }
-}
-
-task packageSources(type: Jar, dependsOn: 'classes') {
-    from sourceSets.main.allSource
-    classifier = 'sources'
-}
-artifacts {
-    archives packageSources
 }
