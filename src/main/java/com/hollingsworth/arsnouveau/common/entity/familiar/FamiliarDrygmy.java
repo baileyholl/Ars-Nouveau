@@ -31,7 +31,7 @@ public class FamiliarDrygmy extends FamiliarEntity implements ISpellCastListener
     }
 
     public void onLootingEvent(LootingLevelEvent event){
-        if (isAlive() && getOwner() != null && event.getDamageSource().getEntity() != null && getOwner().equals(event.getDamageSource().getEntity())) {
+        if (event.getDamageSource() != null && isAlive() && getOwner() != null && event.getDamageSource().getEntity() != null && getOwner().equals(event.getDamageSource().getEntity())) {
             if (level.random.nextFloat() > 0.4) {
                 event.setLootingLevel(event.getLootingLevel() + 1 + random.nextInt(3));
             }
