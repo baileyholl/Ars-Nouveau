@@ -236,3 +236,11 @@ if (System.getProperty("idea.sync.active") == "true") {
         }
     }
 }
+
+task packageSources(type: Jar, dependsOn: 'classes') {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+artifacts {
+    archives packageSources
+}
