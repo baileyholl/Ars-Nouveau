@@ -10,6 +10,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -90,12 +91,16 @@ public interface ISpellCaster {
         return caster.getSpell();
     }
 
+    default Spell modifySpellBeforeCasting(Level worldIn, @Nullable Entity playerIn, @Nullable InteractionHand handIn, Spell spell){
+        return spell;
+    }
+
     default InteractionResultHolder<ItemStack> castSpell(Level worldIn, Player playerIn, InteractionHand handIn, @Nullable TranslatableComponent invalidMessage, @Nonnull Spell spell){
         ItemStack stack = playerIn.getItemInHand(handIn);
 
         if(worldIn.isClientSide)
             return InteractionResultHolder.pass(playerIn.getItemInHand(handIn));
-
+        spell = modifySpellBeforeCasting(worldIn, playerIn, handIn, spell);
         if(!spell.isValid() && invalidMessage != null) {
             PortUtil.sendMessageNoSpam(playerIn,invalidMessage);
             return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);

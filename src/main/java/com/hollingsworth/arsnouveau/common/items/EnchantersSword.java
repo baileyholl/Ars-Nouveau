@@ -21,6 +21,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.client.IItemRenderProperties;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
@@ -73,7 +74,6 @@ public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatab
         recipe.addAll(spell.recipe);
         recipe.add(AugmentAmplify.INSTANCE);
         spell.recipe = recipe;
-        spell.setCost(spell.getCastingCost() - AugmentAmplify.INSTANCE.getDefaultManaCost());
         return ICasterTool.super.setSpell(caster, player, hand, stack, spell);
     }
 
@@ -91,7 +91,6 @@ public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatab
         getInformation(stack, worldIn, tooltip2, flagIn);
         super.appendHoverText(stack, worldIn, tooltip2, flagIn);
     }
-
 
     @Override
     public void registerControllers(AnimationData animationData) { }
@@ -114,5 +113,14 @@ public class EnchantersSword extends SwordItem implements ICasterTool, IAnimatab
                 return renderer;
             }
         });
+    }
+
+    @NotNull
+    @Override
+    public ISpellCaster getSpellCaster(ItemStack stack) {
+        return new BasicReductionCaster(stack, (spell -> {
+            spell.setCost(spell.getCastingCost() - AugmentAmplify.INSTANCE.getDefaultManaCost());
+            return spell;
+        }));
     }
 }

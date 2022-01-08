@@ -25,6 +25,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.IItemRenderProperties;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
@@ -283,5 +284,14 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
                 return renderer;
             }
         });
+    }
+
+    @NotNull
+    @Override
+    public ISpellCaster getSpellCaster(ItemStack stack) {
+        return new BasicReductionCaster(stack, (spell -> {
+            spell.setCost(spell.getCastingCost() - MethodProjectile.INSTANCE.getConfigCost());
+            return spell;
+        }));
     }
 }
