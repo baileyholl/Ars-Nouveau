@@ -23,6 +23,8 @@ import java.util.UUID;
 public class ANFakePlayer extends FakePlayer {
 
     private static final Connection NETWORK_MANAGER = new Connection(PacketFlow.CLIENTBOUND);
+
+
     public static final GameProfile PROFILE =
             new GameProfile(UUID.fromString("7400926d-1007-4e53-880f-b43e67f2bf29"), "Ars_Nouveau");
 
@@ -35,13 +37,14 @@ public class ANFakePlayer extends FakePlayer {
 
     public static ANFakePlayer getPlayer(ServerLevel world)
     {
-//        ANFakePlayer ret = FAKE_PLAYER != null ? FAKE_PLAYER.get() : null;
-//        if (ret == null)
-//        {
-//            ret = new ANFakePlayer(world);
-//            FAKE_PLAYER = new WeakReference<>(ret);
-//        }
-        return new ANFakePlayer(world);
+        ANFakePlayer ret = FAKE_PLAYER != null ? FAKE_PLAYER.get() : null;
+        if (ret == null)
+        {
+            ret = new ANFakePlayer(world);
+            FAKE_PLAYER = new WeakReference<>(ret);
+        }
+        FAKE_PLAYER.get().level = world;
+        return FAKE_PLAYER.get();
     }
 
 
