@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class AbstractSpellPart implements ISpellTier, Comparable<AbstractSpellPart> {
+public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart> {
 
     private String id;
     public String name;
@@ -52,8 +52,8 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
 
     public String getName(){return this.name;}
 
-    public ISpellTier.Tier getTier() {
-        return ISpellTier.Tier.ONE;
+    public SpellTier getTier() {
+        return SpellTier.ONE;
     }
 
     /**
@@ -80,7 +80,7 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
 
     @Override
     public int compareTo(AbstractSpellPart o) {
-        return this.getTier().ordinal() - o.getTier().ordinal();
+        return this.getTier().value - o.getTier().value;
     }
 
     public TranslatableComponent getBookDescLang(){

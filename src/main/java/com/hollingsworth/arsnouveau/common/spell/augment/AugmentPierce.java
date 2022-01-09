@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.augment;
 
+import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -20,8 +21,8 @@ public class AugmentPierce extends AbstractAugment {
     }
 
     @Override
-    public Tier getTier() {
-        return Tier.TWO;
+    public SpellTier getTier() {
+        return SpellTier.TWO;
     }
 
     @Nullable

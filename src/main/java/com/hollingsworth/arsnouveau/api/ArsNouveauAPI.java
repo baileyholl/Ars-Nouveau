@@ -10,8 +10,8 @@ import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.ritual.IScryer;
 import com.hollingsworth.arsnouveau.api.ritual.RitualContext;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.api.spell.ISpellValidator;
+import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
 import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
@@ -208,7 +208,7 @@ public class ArsNouveauAPI {
         return recipes;
     }
 
-    public GlyphPressRecipe getGlyphPressRecipe(Level world, Item reagent, @Nullable ISpellTier.Tier tier){
+    public GlyphPressRecipe getGlyphPressRecipe(Level world, Item reagent, @Nullable SpellTier tier){
         if(reagent == null || reagent == Items.AIR)
             return null;
 

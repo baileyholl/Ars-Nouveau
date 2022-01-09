@@ -61,7 +61,7 @@ public class KeyHandler {
             }
 
             if(stack.getItem() instanceof SpellBook && MINECRAFT.screen == null){
-                GuiSpellBook.open(stack, ((SpellBook) stack.getItem()).getTier().ordinal());
+                GuiSpellBook.open(stack, ((SpellBook) stack.getItem()).getTier().value);
             }
         }
     }

@@ -65,7 +65,7 @@ public class PacketUpdateSpellColors {
                     IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(ctx.get().getSender()).orElse(null);
                     Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->ctx.get().getSender()), new PacketUpdateBookGUI(stack));
                     Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->ctx.get().getSender()),
-                            new PacketOpenSpellBook(stack, ((SpellBook) stack.getItem()).tier.ordinal()));
+                            new PacketOpenSpellBook(stack, ((SpellBook) stack.getItem()).tier.value));
 
                 }
             }

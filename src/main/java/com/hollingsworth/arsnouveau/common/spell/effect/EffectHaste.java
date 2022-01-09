@@ -53,8 +53,8 @@ public class EffectHaste extends AbstractEffect {
     }
 
     @Override
-    public Tier getTier() {
-        return Tier.ONE;
+    public SpellTier getTier() {
+        return SpellTier.ONE;
     }
 
     @Nonnull

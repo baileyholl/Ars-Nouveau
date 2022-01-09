@@ -65,8 +65,8 @@ public class EffectIntangible extends AbstractEffect {
     }
 
     @Override
-    public Tier getTier() {
-        return Tier.THREE;
+    public SpellTier getTier() {
+        return SpellTier.THREE;
     }
 
     @Override

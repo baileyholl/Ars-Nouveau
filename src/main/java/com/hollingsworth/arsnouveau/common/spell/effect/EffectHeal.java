@@ -57,8 +57,8 @@ public class EffectHeal extends AbstractEffect {
     }
 
     @Override
-    public Tier getTier() {
-        return Tier.TWO;
+    public SpellTier getTier() {
+        return SpellTier.TWO;
     }
 
     @Nullable

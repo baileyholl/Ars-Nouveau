@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.google.common.collect.ImmutableList;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
+import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -105,7 +105,7 @@ public class GlyphPressTile extends AnimatedTile implements ITickable, IAnimatab
         if(recipe == null)
             return false;
 
-        int manaCost = recipe.tier == ISpellTier.Tier.ONE ? 1000 : (recipe.tier == ISpellTier.Tier.TWO ? 2000 : 3000);
+        int manaCost = recipe.tier == SpellTier.ONE ? 1000 : (recipe.tier == SpellTier.TWO ? 2000 : 3000);
         BlockPos jar = SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 5, manaCost);
         if(jar != null){
             isCrafting = true;
@@ -118,13 +118,13 @@ public class GlyphPressTile extends AnimatedTile implements ITickable, IAnimatab
     }
 
 
-    public ISpellTier.Tier getTier(Item clay){
+    public SpellTier getTier(Item clay){
         if(clay == ItemsRegistry.MAGIC_CLAY)
-            return ISpellTier.Tier.ONE;
+            return SpellTier.ONE;
         else if(clay == ItemsRegistry.MARVELOUS_CLAY){
-            return ISpellTier.Tier.TWO;
+            return SpellTier.TWO;
         }else if(clay == ItemsRegistry.MYTHICAL_CLAY)
-            return ISpellTier.Tier.THREE;
+            return SpellTier.THREE;
         return null;
     }
 
@@ -246,7 +246,7 @@ public class GlyphPressTile extends AnimatedTile implements ITickable, IAnimatab
         if(recipe == null)
             return false;
 
-        int manaCost = recipe.tier == ISpellTier.Tier.ONE ? 500 : (recipe.tier == ISpellTier.Tier.TWO ? 1500 : 3000);
+        int manaCost = recipe.tier == SpellTier.ONE ? 500 : (recipe.tier == SpellTier.TWO ? 1500 : 3000);
         AtomicBoolean valid = new AtomicBoolean(false);
         BlockPos.betweenClosedStream(this.getBlockPos().offset(5, -3, 5), this.getBlockPos().offset(-5, 3, -5)).forEach(blockPos -> {
             if(!valid.get() && level.getBlockEntity(blockPos) instanceof SourceJarTile && ((SourceJarTile) level.getBlockEntity(blockPos)).getSource() >= manaCost) {

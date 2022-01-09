@@ -9,7 +9,6 @@ import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.common.datagen.patchouli.*;
 import com.hollingsworth.arsnouveau.common.enchantment.EnchantmentRegistry;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
@@ -452,9 +451,9 @@ public class PatchouliProvider implements DataProvider {
 
     public void addGlyphPage(AbstractSpellPart spellPart){
         ResourceLocation category = null;
-        if(spellPart.getTier() == ISpellTier.Tier.ONE)
+        if(spellPart.getTier().value == 1)
             category = GLYPHS_1;
-        else if(spellPart.getTier() == ISpellTier.Tier.TWO)
+        else if(spellPart.getTier().value == 2)
             category = GLYPHS_2;
         else
             category = GLYPHS_3;
