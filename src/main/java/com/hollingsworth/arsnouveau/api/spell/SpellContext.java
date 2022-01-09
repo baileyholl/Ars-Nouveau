@@ -68,8 +68,7 @@ public class SpellContext implements Cloneable{
 
     public SpellContext withSpellResetCounter(Spell spell){
         this.spell = spell;
-        resetCastCounter();
-        return this;
+        return resetCastCounter();
     }
 
     public SpellContext withCaster(@Nullable LivingEntity caster){
