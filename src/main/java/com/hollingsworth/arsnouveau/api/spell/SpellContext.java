@@ -51,6 +51,10 @@ public class SpellContext implements Cloneable{
         return part;
     }
 
+    public boolean hasNextPart(){
+        return spell.isValid() && !isCanceled() && currentIndex < spell.recipe.size();
+    }
+
     public SpellContext resetCastCounter(){
         this.currentIndex = 0;
         this.isCanceled = false;
