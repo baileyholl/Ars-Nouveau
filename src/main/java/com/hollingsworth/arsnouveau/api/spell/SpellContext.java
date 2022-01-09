@@ -87,6 +87,11 @@ public class SpellContext implements Cloneable{
         return this;
     }
 
+    public SpellContext withSpell(Spell spell){
+        this.spell = spell;
+        return this;
+    }
+
     public CasterType getType(){
         return this.type == null ? CasterType.OTHER : type;
     }
