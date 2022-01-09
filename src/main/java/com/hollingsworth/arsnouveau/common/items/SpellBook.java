@@ -5,6 +5,8 @@ import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
 import com.hollingsworth.arsnouveau.api.spell.SpellTier;
+import com.hollingsworth.arsnouveau.client.gui.GuiRadialMenu;
+import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellBookRenderer;
 import com.hollingsworth.arsnouveau.common.capability.ANPlayerDataCap;
@@ -12,6 +14,7 @@ import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -99,7 +102,7 @@ public class SpellBook extends Item implements IAnimatable, ICasterTool {
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(final ItemStack stack, @Nullable final Level world, final List<Component> tooltip, final TooltipFlag flag) {
         super.appendHoverText(stack, world, tooltip, flag);
-        tooltip.add(new TranslatableComponent("ars_nouveau.spell_book.select", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_SPELL_SELECTION.getName()).get()));
+        tooltip.add(new TranslatableComponent("ars_nouveau.spell_book.select", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_RADIAL_HUD.getName()).get()));
         tooltip.add(new TranslatableComponent("ars_nouveau.spell_book.craft", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_BOOK.getName()).get()));
         tooltip.add(new TranslatableComponent("tooltip.ars_nouveau.caster_level", getTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
     }
@@ -135,6 +138,18 @@ public class SpellBook extends Item implements IAnimatable, ICasterTool {
                 return renderer;
             }
         });
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void onOpenBookMenuKeyPressed(ItemStack stack, Player player) {
+        GuiSpellBook.open(stack, ((SpellBook) stack.getItem()).getTier().value);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void onRadialKeyPressed(ItemStack stack, Player player) {
+        Minecraft.getInstance().setScreen(new GuiRadialMenu(stack));
     }
 
     public static class BookCaster extends SpellCaster{

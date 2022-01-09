@@ -18,7 +18,7 @@ public class ModKeyBindings {
     private static final String CATEGORY = "key.category.ars_nouveau.general";
 
     public static final KeyMapping OPEN_BOOK = new KeyMapping("key.ars_nouveau.open_book", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_C, CATEGORY);
-    public static final KeyMapping OPEN_SPELL_SELECTION = new KeyMapping("key.ars_nouveau.selection_hud", KeyConflictContext.IN_GAME,
+    public static final KeyMapping OPEN_RADIAL_HUD = new KeyMapping("key.ars_nouveau.selection_hud", KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_V, CATEGORY);
     public static final KeyMapping NEXT_SLOT = new KeyMapping("key.ars_nouveau.next_slot",
             KeyConflictContext.IN_GAME,
@@ -36,7 +36,7 @@ public class ModKeyBindings {
     @SubscribeEvent
     public static void registerKeyBindings(final FMLClientSetupEvent event) {
         ClientRegistry.registerKeyBinding(OPEN_BOOK);
-        ClientRegistry.registerKeyBinding(OPEN_SPELL_SELECTION);
+        ClientRegistry.registerKeyBinding(OPEN_RADIAL_HUD);
         ClientRegistry.registerKeyBinding(PREVIOUS_SLOT);
         ClientRegistry.registerKeyBinding(NEXT_SLOT);
     }

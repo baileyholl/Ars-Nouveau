@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * An interface for caster items that provides default behavior for scribing, displaying mana, and tooltips
  */
-public interface ICasterTool extends IScribeable, IDisplayMana {
+public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyListener {
     @Override
     default boolean onScribe(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack stack) {
         ItemStack heldStack = player.getItemInHand(handIn);

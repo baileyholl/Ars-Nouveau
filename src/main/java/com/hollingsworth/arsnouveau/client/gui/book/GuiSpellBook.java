@@ -11,7 +11,7 @@ import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellbook;
+import com.hollingsworth.arsnouveau.common.network.PacketUpdateCaster;
 import com.hollingsworth.arsnouveau.common.spell.validation.CombinedSpellValidator;
 import com.hollingsworth.arsnouveau.common.spell.validation.GlyphMaxTierValidator;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
@@ -401,7 +401,7 @@ public class GuiSpellBook extends BaseBook {
             for (CraftingButton slot : craftingCells) {
                 ids.add(slot.spellTag);
             }
-            Networking.INSTANCE.sendToServer(new PacketUpdateSpellbook(ids.toString(), this.selected_cast_slot, this.spell_name.getValue()));
+            Networking.INSTANCE.sendToServer(new PacketUpdateCaster(ids.toString(), this.selected_cast_slot, this.spell_name.getValue()));
         }
     }
 
