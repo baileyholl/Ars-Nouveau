@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
@@ -23,6 +24,8 @@ public class SpellContext implements Cloneable{
     public ParticleColor.IntWrapper colors;
 
     private CasterType type;
+
+    public CompoundTag tag = new CompoundTag();
 
     public SpellContext(@Nonnull Spell spell, @Nullable LivingEntity caster){
         this.spell = spell;
@@ -120,6 +123,7 @@ public class SpellContext implements Cloneable{
             SpellContext clone = (SpellContext) super.clone();
             clone.spell = this.spell.clone();
             clone.colors = this.colors.clone();
+            clone.tag = this.tag.copy();
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
