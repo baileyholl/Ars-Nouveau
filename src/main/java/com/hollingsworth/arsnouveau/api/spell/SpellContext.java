@@ -7,9 +7,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 
-public class SpellContext {
+public class SpellContext implements Cloneable{
 
     private boolean isCanceled;
 
@@ -24,12 +23,6 @@ public class SpellContext {
     public ParticleColor.IntWrapper colors;
 
     private CasterType type;
-
-
-    @Deprecated
-    public SpellContext(List<AbstractSpellPart> spell, @Nullable LivingEntity caster){
-        this(new Spell(spell), caster);
-    }
 
     public SpellContext(@Nonnull Spell spell, @Nullable LivingEntity caster){
         this.spell = spell;
@@ -111,6 +104,18 @@ public class SpellContext {
     @Nullable
     public LivingEntity getCaster() {
         return caster;
+    }
+
+    @Override
+    public SpellContext clone() {
+        try {
+            SpellContext clone = (SpellContext) super.clone();
+            clone.spell = this.spell.clone();
+            clone.colors = this.colors.clone();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 
     /**

@@ -6,7 +6,7 @@ import java.util.Random;
 /**
  * Modified class of ElementType: https://github.com/Sirttas/ElementalCraft/blob/b91ca42b3d139904d9754d882a595406bad1bd18/src/main/java/sirttas/elementalcraft/ElementType.java
  */
-public class ParticleColor {
+public class ParticleColor implements Cloneable{
 
     private final float r;
     private final float g;
@@ -69,7 +69,17 @@ public class ParticleColor {
         return new ParticleColor(Integer.parseInt(arr[0].trim()), Integer.parseInt(arr[1].trim()), Integer.parseInt(arr[2].trim()));
     }
 
-    public static class IntWrapper{
+    @Override
+    public ParticleColor clone() {
+        try {
+            ParticleColor clone = (ParticleColor) super.clone();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+
+    public static class IntWrapper implements Cloneable{
         public int r;
         public int g;
         public int b;
@@ -113,6 +123,16 @@ public class ParticleColor {
                 return color;
             }catch (Exception ignored){ }
             return color;
+        }
+
+        @Override
+        public IntWrapper clone() {
+            try {
+                IntWrapper clone = (IntWrapper) super.clone();
+                return clone;
+            } catch (CloneNotSupportedException e) {
+                throw new AssertionError();
+            }
         }
     }
 }
