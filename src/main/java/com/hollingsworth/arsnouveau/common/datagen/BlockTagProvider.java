@@ -259,7 +259,8 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.INTANGIBLE_AIR,
                 BlockRegistry.REDSTONE_AIR,
                 BlockRegistry.MAGE_BLOCK,
-                BlockRegistry.SCONCE_BLOCK
+                BlockRegistry.SCONCE_BLOCK,
+                BlockRegistry.LIGHT_BLOCK
         );
 
     }

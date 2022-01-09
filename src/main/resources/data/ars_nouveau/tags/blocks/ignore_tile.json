@@ -4,6 +4,7 @@
     "ars_nouveau:intangible_air",
     "ars_nouveau:redstone_air",
     "ars_nouveau:mage_block",
-    "ars_nouveau:sconce"
+    "ars_nouveau:sconce",
+    "ars_nouveau:light_block"
   ]
 }
