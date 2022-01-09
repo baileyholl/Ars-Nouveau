@@ -255,7 +255,12 @@ public class BlockTagProvider extends BlockTagsProvider {
         this.tag(BlockTags.WOODEN_STAIRS).add(BlockRegistry.ARCHWOOD_STAIRS);
         this.tag(BlockTags.WOODEN_TRAPDOORS).add(BlockRegistry.ARCHWOOD_TRAPDOOR);
 
-        this.tag(IGNORE_TILE).add(BlockRegistry.INTANGIBLE_AIR, BlockRegistry.REDSTONE_AIR, BlockRegistry.MAGE_BLOCK);
+        this.tag(IGNORE_TILE).add(
+                BlockRegistry.INTANGIBLE_AIR,
+                BlockRegistry.REDSTONE_AIR,
+                BlockRegistry.MAGE_BLOCK,
+                BlockRegistry.SCONCE_BLOCK
+        );
 
     }
     protected Path getPath(ResourceLocation p_126514_) {
