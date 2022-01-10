@@ -5,7 +5,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
+import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -82,7 +82,7 @@ public class GlyphPressRecipeCategory implements IRecipeCategory<GlyphPressRecip
 
     @Override
     public void setIngredients(GlyphPressRecipe glyphPressRecipe, IIngredients iIngredients) {
-        ItemStack clay = glyphPressRecipe.tier == ISpellTier.Tier.ONE ? new ItemStack(ItemsRegistry.MAGIC_CLAY) : glyphPressRecipe.tier == ISpellTier.Tier.TWO ? new ItemStack(ItemsRegistry.MARVELOUS_CLAY): new ItemStack(ItemsRegistry.MYTHICAL_CLAY);
+        ItemStack clay = glyphPressRecipe.tier == SpellTier.ONE ? new ItemStack(ItemsRegistry.MAGIC_CLAY) : glyphPressRecipe.tier == SpellTier.TWO ? new ItemStack(ItemsRegistry.MARVELOUS_CLAY): new ItemStack(ItemsRegistry.MYTHICAL_CLAY);
         List<List<ItemStack>> itemStacks = new ArrayList<>();
         itemStacks.add(Collections.singletonList(clay));
         itemStacks.add(Collections.singletonList(glyphPressRecipe.reagent));

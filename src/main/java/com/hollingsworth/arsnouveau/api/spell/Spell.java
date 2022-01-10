@@ -7,7 +7,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Spell {
+public class Spell implements Cloneable{
     public static final Spell EMPTY = new Spell();
 
     public List<AbstractSpellPart> recipe = new ArrayList<>();
@@ -152,6 +152,17 @@ public class Spell {
 
     public boolean isValid(){
         return !this.isEmpty();
+    }
+
+    @Override
+    public Spell clone() {
+        try {
+            Spell clone = (Spell) super.clone();
+            clone.recipe = new ArrayList<>(this.recipe);
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 
     public static class Builder{

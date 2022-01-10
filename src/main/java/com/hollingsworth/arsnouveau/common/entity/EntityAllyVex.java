@@ -48,7 +48,7 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
         super(EntityType.VEX, p_i50190_2_);
         this.owner = owner;
         this.limitedLifespan = false;
-        setOwnerId(owner.getUUID());
+        setOwnerID(owner.getUUID());
         this.moveControl = new EntityAllyVex.MoveHelperController(this);
     }
 
@@ -98,6 +98,7 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
     public void setOwner(LivingEntity owner) {
         this.owner = owner;
     }
+
 
     /**
      * Called to update the entity's position/logic.
@@ -217,7 +218,7 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
 
         if (s != null) {
             try {
-                this.setOwnerId(s);
+                this.setOwnerID(s);
 
             } catch (Throwable ignored) {
             }
@@ -227,24 +228,13 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
 
     public LivingEntity getOwnerFromID(){
         try {
-            UUID uuid = this.getOwnerId();
+            UUID uuid = this.getOwnerID();
 
             return uuid == null ? null : this.level.getPlayerByUUID(uuid);
         } catch (IllegalArgumentException var2) {
             return null;
         }
     }
-
-
-    @Nullable
-    public UUID getOwnerId() {
-        return this.entityData.get(OWNER_UNIQUE_ID).orElse(null);
-    }
-
-    public void setOwnerId(@Nullable UUID p_184754_1_) {
-        this.entityData.set(OWNER_UNIQUE_ID, Optional.ofNullable(p_184754_1_));
-    }
-
 
     protected void defineSynchedData() {
         super.defineSynchedData();
@@ -262,10 +252,10 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
         if (this.limitedLifespan) {
             compound.putInt("LifeTicks", this.limitedLifeTicks);
         }
-        if (this.getOwnerId() == null) {
+        if (this.getOwnerID() == null) {
             compound.putUUID("OwnerUUID", Util.NIL_UUID);
         } else {
-            compound.putUUID("OwnerUUID", this.getOwnerId());
+            compound.putUUID("OwnerUUID", this.getOwnerID());
         }
 
     }
@@ -290,12 +280,12 @@ public class EntityAllyVex extends Vex implements IFollowingSummon, ISummon {
     @Nullable
     @Override
     public UUID getOwnerID() {
-        return null;
+        return this.entityData.get(OWNER_UNIQUE_ID).orElse(null);
     }
 
     @Override
     public void setOwnerID(UUID uuid) {
-
+        this.entityData.set(OWNER_UNIQUE_ID, Optional.ofNullable(uuid));
     }
 
     class MoveHelperController extends MoveControl {

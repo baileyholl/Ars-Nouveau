@@ -33,10 +33,10 @@ public class Networking {
                 PacketOpenSpellBook::new,
                 PacketOpenSpellBook::handle);
         INSTANCE.registerMessage(nextID(),
-                PacketUpdateSpellbook.class,
-                PacketUpdateSpellbook::toBytes,
-                PacketUpdateSpellbook::new,
-                PacketUpdateSpellbook::handle);
+                PacketUpdateCaster.class,
+                PacketUpdateCaster::toBytes,
+                PacketUpdateCaster::new,
+                PacketUpdateCaster::handle);
 
         INSTANCE.registerMessage(nextID(),
                 PacketUpdateBookGUI.class,
@@ -133,6 +133,12 @@ public class Networking {
                 PacketTogglePathing::toBytes,
                 PacketTogglePathing::new,
                 PacketTogglePathing::handle);
+
+        INSTANCE.registerMessage(nextID(),
+                PacketHotkeyPressed.class,
+                PacketHotkeyPressed::toBytes,
+                PacketHotkeyPressed::new,
+                PacketHotkeyPressed::handle);
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend){

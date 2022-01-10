@@ -27,5 +27,6 @@ public class EntityTagProvider extends EntityTypeTagsProvider {
                         ModEntities.ENTITY_BOOKWYRM_TYPE,
                         ModEntities.ENTITY_WIXIE_TYPE
                 );
+        this.tag(EntityTypeTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "spell_can_hit")));
     }
 }

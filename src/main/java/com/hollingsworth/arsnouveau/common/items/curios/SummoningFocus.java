@@ -106,7 +106,7 @@ public class SummoningFocus extends ModItem implements ISpellModifierItem {
     public static void summonDeathEvent(SummonEvent.Death event){
         if(!event.world.isClientSide && SummoningFocus.containsThis(event.world, event.summon.getOwner((ServerLevel) event.world))){
             DamageSource source = event.source;
-            if(source != null && source.getEntity() != null){
+            if(source != null && source.getEntity() != null && source.getEntity() != event.summon.getOwner((ServerLevel) event.world)){
                 source.getEntity().hurt(DamageSource.thorns(source.getEntity()).bypassArmor(), 5.0f);
             }
         }

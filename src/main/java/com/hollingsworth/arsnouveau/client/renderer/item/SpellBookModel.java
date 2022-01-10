@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.item;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
+import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.resources.ResourceLocation;
@@ -22,16 +22,16 @@ public class SpellBookModel extends TransformAnimatedModel<SpellBook> {
     public ResourceLocation getModelLocation(SpellBook book, @Nullable ItemTransforms.TransformType transformType) {
 
         if(transformType == ItemTransforms.TransformType.GUI || transformType == ItemTransforms.TransformType.FIXED){
-            if(book.tier == ISpellTier.Tier.ONE)
+            if(book.tier == SpellTier.ONE)
                 return T1_CLOSED;
-            if(book.tier == ISpellTier.Tier.TWO)
+            if(book.tier == SpellTier.TWO)
                 return T2_CLOSED;
             return T3_CLOSED;
         }
 
-        if(book.tier == ISpellTier.Tier.ONE)
+        if(book.tier == SpellTier.ONE)
             return T1;
-        if(book.tier == ISpellTier.Tier.TWO)
+        if(book.tier == SpellTier.TWO)
             return T2;
         return T3;
     }

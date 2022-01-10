@@ -1,8 +1,10 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellResolveEvent;
+import com.hollingsworth.arsnouveau.api.mana.IManaCap;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
@@ -20,11 +22,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.hollingsworth.arsnouveau.api.util.ManaUtil.getPlayerDiscounts;
 
@@ -66,13 +66,13 @@ public class SpellResolver {
 
     boolean enoughMana(LivingEntity entity){
         int totalCost = getCastingCost(spell, entity);
-        AtomicBoolean canCast = new AtomicBoolean(false);
-        CapabilityRegistry.getMana(entity).ifPresent(mana -> {
-            canCast.set(totalCost <= mana.getCurrentMana() || (entity instanceof Player &&  ((Player) entity).isCreative()));
-            if(!canCast.get() && !entity.getCommandSenderWorld().isClientSide && !silent)
-                PortUtil.sendMessageNoSpam(entity,new TranslatableComponent("ars_nouveau.spell.no_mana"));
-        });
-        return canCast.get();
+        IManaCap manaCap = CapabilityRegistry.getMana(entity).orElse(null);
+        if(manaCap == null)
+            return false;
+        boolean canCast = totalCost <= manaCap.getCurrentMana() || (entity instanceof Player && ((Player) entity).isCreative());
+        if(!canCast && !entity.getCommandSenderWorld().isClientSide && !silent)
+            PortUtil.sendMessageNoSpam(entity,new TranslatableComponent("ars_nouveau.spell.no_mana"));
+        return canCast;
     }
 
     public boolean postEvent(LivingEntity entity){
@@ -123,15 +123,13 @@ public class SpellResolver {
         if(spellResolveEvent.isCanceled())
             return;
 
-        for(int i = 0; i < spell.recipe.size(); i++){
-            if(spellContext.isCanceled())
-                break;
+        while(spellContext.hasNextPart()){
             AbstractSpellPart part = spellContext.nextPart();
             if(part == null)
                 return;
             SpellStats.Builder builder = new SpellStats.Builder();
             SpellStats stats = builder
-                    .setAugments(spell.getAugments(i, shooter))
+                    .setAugments(spell.getAugments(spellContext.getCurrentIndex(), shooter))
                     .addItemsFromEntity(shooter)
                     .build(part, result, world, shooter, spellContext);
             if(part instanceof AbstractEffect){
@@ -145,11 +143,11 @@ public class SpellResolver {
     // Safely unwrap the living entity in the case that the caster is null, aka being cast by a non-player.
     public static LivingEntity getUnwrappedCaster(Level world, LivingEntity shooter, SpellContext spellContext){
         if(shooter == null && spellContext.castingTile != null) {
-            shooter = FakePlayerFactory.getMinecraft((ServerLevel) world);
+            shooter = ANFakePlayer.getPlayer((ServerLevel) world);
             BlockPos pos = spellContext.castingTile.getBlockPos();
             shooter.setPos(pos.getX(), pos.getY(), pos.getZ());
         }
-        shooter = shooter == null ? FakePlayerFactory.getMinecraft((ServerLevel) world) : shooter;
+        shooter = shooter == null ?  ANFakePlayer.getPlayer((ServerLevel) world) : shooter;
         return shooter;
     }
 
@@ -164,22 +162,9 @@ public class SpellResolver {
         return true;
     }
 
-    public boolean wouldCastSuccessfully(@Nullable ItemStack stack, LivingEntity caster, Level world, SpellStats stats){
-        return castType.wouldCastSuccessfully(stack, caster, world, stats, this);
-    }
-
-    public boolean wouldCastOnBlockSuccessfully(UseOnContext context,  SpellStats stats){
-        return castType.wouldCastOnBlockSuccessfully(context, stats,this );
-    }
-
     public boolean wouldCastOnBlockSuccessfully(BlockHitResult blockRayTraceResult, LivingEntity caster){
         return castType.wouldCastOnBlockSuccessfully(blockRayTraceResult, caster,  getCastStats(caster, blockRayTraceResult), this);
     }
-
-    public boolean wouldCastOnEntitySuccessfully(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, InteractionHand hand,  SpellStats stats){
-        return castType.wouldCastOnEntitySuccessfully(stack, caster, target, hand, stats,this);
-    }
-
 
     public void expendMana(LivingEntity entity){
         int totalCost = getCastingCost(spell, entity);

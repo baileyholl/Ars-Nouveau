@@ -2,14 +2,14 @@ package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 
-public class SpellContext {
+public class SpellContext implements Cloneable{
 
     private boolean isCanceled;
 
@@ -25,11 +25,7 @@ public class SpellContext {
 
     private CasterType type;
 
-
-    @Deprecated
-    public SpellContext(List<AbstractSpellPart> spell, @Nullable LivingEntity caster){
-        this(new Spell(spell), caster);
-    }
+    public CompoundTag tag = new CompoundTag();
 
     public SpellContext(@Nonnull Spell spell, @Nullable LivingEntity caster){
         this.spell = spell;
@@ -58,6 +54,10 @@ public class SpellContext {
         return part;
     }
 
+    public boolean hasNextPart(){
+        return spell.isValid() && !isCanceled() && currentIndex < spell.recipe.size();
+    }
+
     public SpellContext resetCastCounter(){
         this.currentIndex = 0;
         this.isCanceled = false;
@@ -71,8 +71,7 @@ public class SpellContext {
 
     public SpellContext withSpellResetCounter(Spell spell){
         this.spell = spell;
-        resetCastCounter();
-        return this;
+        return resetCastCounter();
     }
 
     public SpellContext withCaster(@Nullable LivingEntity caster){
@@ -87,6 +86,11 @@ public class SpellContext {
 
     public SpellContext withType(CasterType type){
         this.type = type;
+        return this;
+    }
+
+    public SpellContext withSpell(Spell spell){
+        this.spell = spell;
         return this;
     }
 
@@ -111,6 +115,19 @@ public class SpellContext {
     @Nullable
     public LivingEntity getCaster() {
         return caster;
+    }
+
+    @Override
+    public SpellContext clone() {
+        try {
+            SpellContext clone = (SpellContext) super.clone();
+            clone.spell = this.spell.clone();
+            clone.colors = this.colors.clone();
+            clone.tag = this.tag.copy();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 
     /**

@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.api.recipe;
 
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
+import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.core.Registry;
@@ -23,14 +23,14 @@ public class GlyphPressRecipe implements Recipe<Container> {
 
     private final ResourceLocation id;
 
-    public final ISpellTier.Tier tier;
+    public final SpellTier tier;
 
     public final ItemStack reagent;
 
     public final ItemStack output;
     public static final String RECIPE_ID = "glyph_recipe";
 
-    public GlyphPressRecipe(ResourceLocation id, ISpellTier.Tier tier, ItemStack reagent, ItemStack output){
+    public GlyphPressRecipe(ResourceLocation id, SpellTier tier, ItemStack reagent, ItemStack output){
         this.id = id;
         this.tier = tier;
         this.reagent = reagent;
@@ -76,22 +76,20 @@ public class GlyphPressRecipe implements Recipe<Container> {
         return getClayFromTier(tier);
     }
 
-    public static ItemStack getClayFromTier(ISpellTier.Tier tier){
-        switch (tier) {
-            case ONE:
-                return new ItemStack(ItemsRegistry.MAGIC_CLAY);
-            case TWO:
-                return new ItemStack(ItemsRegistry.MARVELOUS_CLAY);
-            default:
-                return new ItemStack(ItemsRegistry.MYTHICAL_CLAY);
+    public static ItemStack getClayFromTier(SpellTier tier){
+        if (SpellTier.ONE.equals(tier)) {
+            return new ItemStack(ItemsRegistry.MAGIC_CLAY);
+        } else if (SpellTier.TWO.equals(tier)) {
+            return new ItemStack(ItemsRegistry.MARVELOUS_CLAY);
         }
+        return new ItemStack(ItemsRegistry.MYTHICAL_CLAY);
     }
 
     public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<GlyphPressRecipe> {
 
         @Override
         public GlyphPressRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-            ISpellTier.Tier tier = ISpellTier.Tier.valueOf(GsonHelper.getAsString(json, "tier", "ONE"));
+            SpellTier tier = fromString(GsonHelper.getAsString(json, "tier", "ONE"));
             ItemStack input = new ItemStack(GsonHelper.getAsItem(json, "input"));
             ItemStack output = new ItemStack(GsonHelper.getAsItem(json, "output"));
             return new GlyphPressRecipe(recipeId, tier, input, output);
@@ -100,7 +98,7 @@ public class GlyphPressRecipe implements Recipe<Container> {
         @Nullable
         @Override
         public GlyphPressRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-            ISpellTier.Tier tier = ISpellTier.Tier.valueOf(buffer.readUtf());
+            SpellTier tier = fromString(buffer.readUtf());
             ItemStack input = buffer.readItem();
             ItemStack output = buffer.readItem();
             return new GlyphPressRecipe(recipeId, tier, input, output);
@@ -108,9 +106,34 @@ public class GlyphPressRecipe implements Recipe<Container> {
 
         @Override
         public void toNetwork(FriendlyByteBuf buf, GlyphPressRecipe recipe) {
-            buf.writeUtf(recipe.tier.toString());
+            buf.writeUtf(fromTier(recipe.tier));
             buf.writeItem(recipe.reagent);
             buf.writeItem(recipe.output);
+        }
+
+        public String fromTier(SpellTier tier){
+            if (SpellTier.ONE.equals(tier)) {
+                return "ONE";
+            }else if(SpellTier.TWO.equals(tier)){
+                return "TWO";
+            }else if(SpellTier.THREE.equals(tier)){
+                return "THREE";
+            }
+            return "ONE";
+        }
+
+        public SpellTier fromString(String s){
+            if(s == null)
+                return SpellTier.ONE;
+            if(s.equals("ONE"))
+                return SpellTier.ONE;
+            if(s.equals("TWO")){
+                return SpellTier.TWO;
+            }
+            if(s.equals("THREE")){
+                return SpellTier.THREE;
+            }
+            return SpellTier.ONE;
         }
     }
 }

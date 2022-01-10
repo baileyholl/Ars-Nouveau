@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.augment;
 
+import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import net.minecraft.world.item.Item;
@@ -20,8 +21,8 @@ public class AugmentSplit extends AbstractAugment {
     }
 
     @Override
-    public Tier getTier() {
-        return  Tier.THREE;
+    public SpellTier getTier() {
+        return  SpellTier.THREE;
     }
 
     @Nullable

@@ -93,8 +93,8 @@ public class MethodOrbit extends AbstractCastMethod {
     }
 
     @Override
-    public Tier getTier() {
-        return Tier.THREE;
+    public SpellTier getTier() {
+        return SpellTier.THREE;
     }
 
     @Override

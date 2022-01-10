@@ -3,8 +3,10 @@ package com.hollingsworth.arsnouveau.common.items;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
+import com.hollingsworth.arsnouveau.api.spell.SpellTier;
+import com.hollingsworth.arsnouveau.client.gui.GuiRadialMenu;
+import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellBookRenderer;
 import com.hollingsworth.arsnouveau.common.capability.ANPlayerDataCap;
@@ -12,6 +14,7 @@ import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -39,16 +42,16 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class SpellBook extends Item implements ISpellTier, IAnimatable, ICasterTool {
+public class SpellBook extends Item implements IAnimatable, ICasterTool {
 
-    public Tier tier;
+    public SpellTier tier;
 
-    public SpellBook(Tier tier){
+    public SpellBook(SpellTier tier){
         super(new Item.Properties().stacksTo(1).tab(ArsNouveau.itemGroup));
         this.tier = tier;
     }
     
-    public SpellBook(Properties properties, Tier tier) {
+    public SpellBook(Properties properties, SpellTier tier) {
         super(properties);
         this.tier = tier;
     }
@@ -63,8 +66,8 @@ public class SpellBook extends Item implements ISpellTier, IAnimatable, ICasterT
         ItemStack stack = playerIn.getItemInHand(handIn);
 
         CapabilityRegistry.getMana(playerIn).ifPresent(iMana -> {
-            if(iMana.getBookTier() < this.tier.ordinal()){
-                iMana.setBookTier(this.tier.ordinal());
+            if(iMana.getBookTier() < this.tier.value){
+                iMana.setBookTier(this.tier.value);
             }
             IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerIn).orElse(new ANPlayerDataCap());
             if(iMana.getGlyphBonus() < cap.getKnownGlyphs().size()){
@@ -99,13 +102,12 @@ public class SpellBook extends Item implements ISpellTier, IAnimatable, ICasterT
     @OnlyIn(Dist.CLIENT)
     public void appendHoverText(final ItemStack stack, @Nullable final Level world, final List<Component> tooltip, final TooltipFlag flag) {
         super.appendHoverText(stack, world, tooltip, flag);
-        tooltip.add(new TranslatableComponent("ars_nouveau.spell_book.select", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_SPELL_SELECTION.getName()).get()));
+        tooltip.add(new TranslatableComponent("ars_nouveau.spell_book.select", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_RADIAL_HUD.getName()).get()));
         tooltip.add(new TranslatableComponent("ars_nouveau.spell_book.craft", KeyMapping.createNameSupplier(ModKeyBindings.OPEN_BOOK.getName()).get()));
-        tooltip.add(new TranslatableComponent("tooltip.ars_nouveau.caster_level", getTier().ordinal() + 1).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
+        tooltip.add(new TranslatableComponent("tooltip.ars_nouveau.caster_level", getTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
     }
 
-    @Override
-    public Tier getTier() {
+    public SpellTier getTier() {
         return this.tier;
     }
 
@@ -136,6 +138,18 @@ public class SpellBook extends Item implements ISpellTier, IAnimatable, ICasterT
                 return renderer;
             }
         });
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void onOpenBookMenuKeyPressed(ItemStack stack, Player player) {
+        GuiSpellBook.open(stack, ((SpellBook) stack.getItem()).getTier().value);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    public void onRadialKeyPressed(ItemStack stack, Player player) {
+        Minecraft.getInstance().setScreen(new GuiRadialMenu(stack));
     }
 
     public static class BookCaster extends SpellCaster{
