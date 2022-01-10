@@ -12,4 +12,5 @@ public class EntityTags {
     public static final Tag.Named<EntityType<?>> DISINTEGRATION_BLACKLIST = EntityTypeTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "disintegration_blacklist"));
 
     public static final Tag.Named<EntityType<?>> MAGIC_FIND = EntityTypeTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "magic_find"));
+    public static final Tag.Named<EntityType<?>> SPELL_CAN_HIT = EntityTypeTags.createOptional(new ResourceLocation(ArsNouveau.MODID, "spell_can_hit"));
 }

@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.common.block.SpellPrismBlock;
+import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
@@ -246,6 +247,10 @@ public class EntityProjectileSpell extends ColoredProjectile {
         }
     }
 
+    @Override
+    protected boolean canHitEntity(Entity entity) {
+        return super.canHitEntity(entity) || EntityTags.SPELL_CAN_HIT.contains(entity.getType());
+    }
 
     public EntityProjectileSpell(PlayMessages.SpawnEntity packet, Level world){
         super(ModEntities.SPELL_PROJ, world);
