@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GlyphButton;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.inventory.PageButton;
@@ -64,6 +65,10 @@ public class GlyphUnlockMenu extends BaseBook{
             nextButton.visible = true;
             nextButton.active = true;
         }
+    }
+
+    public static void open(){
+        Minecraft.getInstance().setScreen(new GlyphUnlockMenu());
     }
 
     public void onSearchChanged(String str){

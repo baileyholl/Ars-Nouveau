@@ -139,6 +139,12 @@ public class Networking {
                 PacketHotkeyPressed::toBytes,
                 PacketHotkeyPressed::new,
                 PacketHotkeyPressed::handle);
+
+        INSTANCE.registerMessage(nextID(),
+                PacketOpenGlyphCraft.class,
+                PacketOpenGlyphCraft::toBytes,
+                PacketOpenGlyphCraft::new,
+                PacketOpenGlyphCraft::handle);
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend){
