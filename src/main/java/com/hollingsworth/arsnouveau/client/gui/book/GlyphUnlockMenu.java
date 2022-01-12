@@ -1,16 +1,23 @@
 package com.hollingsworth.arsnouveau.client.gui.book;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
+import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GlyphButton;
+import com.hollingsworth.arsnouveau.client.gui.buttons.UnlockGlyphButton;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.inventory.PageButton;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class GlyphUnlockMenu extends BaseBook{
@@ -21,16 +28,26 @@ public class GlyphUnlockMenu extends BaseBook{
     public int page = 0;
     public PageButton nextButton;
     public PageButton previousButton;
-    public List<GlyphButton> glyphButtons = new ArrayList<>();
+    public List<UnlockGlyphButton> glyphButtons = new ArrayList<>();
     public NoShadowTextField searchBar;
     public String previousString = "";
-    ArsNouveauAPI api = ArsNouveauAPI.getInstance();
-    int maxPerPage = 58;
+    public ArsNouveauAPI api = ArsNouveauAPI.getInstance();
+    int maxPerPage = 96;
+    int tier1Row = 0;
+    int tier2Row = 0;
+    int tier3Row = 0;
+    Filter filterSelected = Filter.ALL;
+    enum Filter{
+        ALL,
+        TIER1,
+        TIER2,
+        TIER3
+    }
 
     public GlyphUnlockMenu(){
         super();
         allParts = new ArrayList<>(ArsNouveauAPI.getInstance().getSpellpartMap().values());
-
+        this.displayedGlyphs = new ArrayList<>(allParts);
     }
 
     @Override
@@ -54,6 +71,7 @@ public class GlyphUnlockMenu extends BaseBook{
         updateNextPageButtons();
         previousButton.active = false;
         previousButton.visible = false;
+        layoutAllGlyphs(0);
     }
 
 
@@ -118,11 +136,94 @@ public class GlyphUnlockMenu extends BaseBook{
     }
 
     public void layoutAllGlyphs(int page){
+        clearButtons(glyphButtons);
+        tier1Row = -1;
+        tier2Row = -1;
+        tier3Row = -1;
+//        formTextRow = 0;
+//        augmentTextRow = 0;
+//        effectTextRow = 0;
+        final int PER_ROW = 6;
+        final int MAX_ROWS = 7;
+        boolean nextPage = false;
+        int xStart = nextPage ? bookLeft + 154 : bookLeft + 20;
+        int adjustedRowsPlaced = 0;
+        int yStart = bookTop + 20;
+        boolean foundTier1 = false;
+        boolean foundTier2 = false;
+        boolean foundTier3 = false;
+        List<AbstractSpellPart> sorted = new ArrayList<>();
+        Comparator<AbstractSpellPart> spellPartComparator = new Comparator<AbstractSpellPart>() {
+            @Override
+            public int compare(AbstractSpellPart o1, AbstractSpellPart o2) {
+
+                return fromType(o1) - fromType(o2);
+            }
+
+            public int fromType(AbstractSpellPart spellPart){
+                if(spellPart instanceof AbstractCastMethod)
+                    return 1;
+                if(spellPart instanceof AbstractAugment)
+                    return 2;
+                return 3;
+            }
+        }.thenComparingInt(o -> o.getTier().value)
+                .thenComparing(AbstractSpellPart::getLocaleName);
+
+//        sorted.addAll(displayedGlyphs.stream().filter(s -> s.getTier().value == 1).collect(Collectors.toList()));
+//        sorted.addAll(displayedGlyphs.stream().filter(s -> s.getTier().value == 2).collect(Collectors.toList()));
+//        sorted.addAll(displayedGlyphs.stream().filter(s -> s.getTier().value == 3).collect(Collectors.toList()));
+        sorted.addAll(displayedGlyphs);
+        sorted.sort(spellPartComparator);
+        sorted = sorted.subList(maxPerPage * page, Math.min(sorted.size(), maxPerPage * (page + 1)));
+        int adjustedXPlaced = 0;
+        int totalRowsPlaced = 0;
+        int row_offset = page == 0 ? 2 : 0;
+        tier1Row = 0;
+        adjustedRowsPlaced++;
+        for(int i = 0; i < sorted.size(); i++){
+            AbstractSpellPart part = sorted.get(i);
+
+            if (adjustedXPlaced >= PER_ROW) {
+                adjustedRowsPlaced++;
+                totalRowsPlaced++;
+                adjustedXPlaced = 0;
+            }
+
+            if(adjustedRowsPlaced > MAX_ROWS){
+                if(nextPage){
+                    break;
+                }
+                nextPage = true;
+                adjustedXPlaced = 0;
+                adjustedRowsPlaced = 0;
+            }
+            int xOffset = 20 * ((adjustedXPlaced ) % PER_ROW) + (nextPage ? 134 :0);
+            int yPlace = adjustedRowsPlaced * 18 + yStart;
+            UnlockGlyphButton cell = new UnlockGlyphButton(this, xStart + xOffset, yPlace, false, part.getIcon(), part.getId());
+            addRenderableWidget(cell);
+            glyphButtons.add(cell);
+            adjustedXPlaced++;
+        }
     }
 
+    public void onGlyphClick(Button button){
+        GlyphButton button1 = (GlyphButton) button;
+//
+//        if (button1.validationErrors.isEmpty()) {
+//            for (CraftingButton b : craftingCells) {
+//                if (b.resourceIcon.equals("")) {
+//                    b.resourceIcon = button1.resourceIcon;
+//                    b.spellTag = button1.spell_id;
+//                    validate();
+//                    return;
+//                }
+//            }
+//        }
+    }
 
-    public void clearButtons( List<GlyphButton> glyphButtons){
-        for (GlyphButton b : glyphButtons) {
+    public void clearButtons( List<UnlockGlyphButton> glyphButtons){
+        for (UnlockGlyphButton b : glyphButtons) {
             renderables.remove(b);
             children().remove(b);
         }
@@ -152,5 +253,26 @@ public class GlyphUnlockMenu extends BaseBook{
             nextButton.active = true;
         }
         layoutAllGlyphs(page);
+    }
+
+
+    @Override
+    public void drawBackgroundElements(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
+        super.drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
+        if(tier1Row != -1) {
+            minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.tier", 1).getString(), tier1Row > 7 ? 154 : 20 ,  5 + 18 * (tier1Row + (tier1Row == 1 ? 0 : 1)), -8355712);
+        }
+        if(tier2Row != -1) {
+            minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.tier", 2).getString(), tier2Row > 7 ? 154 : 20,  5 + 18 * (tier2Row  + 1), -8355712);
+        }
+        if(tier3Row >= 1) {
+            minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.tier", 3).getString(), tier3Row > 7 ? 154 : 20,  5 + 18 * (tier3Row + 1), -8355712);
+        }
+        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15,56,15, stack);
+
+        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15,72,15, stack);
+        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.spell_book_gui.create"), 233, 183, -8355712);
+
+
     }
 }

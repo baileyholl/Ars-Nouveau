@@ -849,7 +849,7 @@
 	"ars_nouveau.page.weald_walker": "Weald Walkers",
 	"ars_nouveau.spell_schools": "Spell Schools",
 	"ars_nouveau.casting_cost": "Casting Cost",
-	"ars_nouveau.tier": "Tier",
+	"ars_nouveau.tier": "Tier %s",
 	"ars_nouveau.glyph_reagents": "Glyph Press Reagents",
 	"ars_nouveau.page.agronomic_sourcelink": "The Agronomic Sourcelink generates source from nearby crop and tree growth. Bonus mana is generated for magical plants such as Mageblooms, Source Berry Bushes, and Archwood Saplings. Source will be output from the Sourcelink to nearby jars within 5 blocks. Note: Bonemealing crops will not grant Source.",
 	"ars_nouveau.page.source_jar": "Source Jars store source gathered from nearby Sourcelinks. Source is used in glyphs and rituals by powering devices like the Glyph Press and Enchanting Apparatus. Source may be moved using a bucket, or the jar can be picked up and moved. To use Source in a jar, simply place the jar near your desired device. Source Jars will provide a signal to Redstone Comparators based on their fill level.",
