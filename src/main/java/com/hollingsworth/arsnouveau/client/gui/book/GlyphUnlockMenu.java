@@ -5,16 +5,23 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.client.gui.GlyphRecipeTooltip;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GlyphButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.UnlockGlyphButton;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
+import com.mojang.math.Matrix4f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Widget;
 import net.minecraft.client.gui.screens.inventory.PageButton;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -208,7 +215,7 @@ public class GlyphUnlockMenu extends BaseBook{
     }
 
     public void onGlyphClick(Button button){
-        GlyphButton button1 = (GlyphButton) button;
+//        GlyphButton button1 = (GlyphButton) button;
 //
 //        if (button1.validationErrors.isEmpty()) {
 //            for (CraftingButton b : craftingCells) {
@@ -272,7 +279,93 @@ public class GlyphUnlockMenu extends BaseBook{
 
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15,72,15, stack);
         minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.spell_book_gui.create"), 233, 183, -8355712);
+    }
 
+    public void drawTooltip(PoseStack stack, int mouseX, int mouseY) {
+        if (tooltip != null && !tooltip.isEmpty()) {
 
+            List<ClientTooltipComponent> components = new ArrayList<>(net.minecraftforge.client.ForgeHooksClient.gatherTooltipComponents(ItemStack.EMPTY, tooltip, mouseX, width, height, this.font, this.font));
+            components.add(new GlyphRecipeTooltip(new ArrayList<>()));
+            renderTooltipInternal(stack, components, mouseX, mouseY);
+        }
+    }
+    private void renderTooltipInternal(PoseStack pPoseStack, List<ClientTooltipComponent> pClientTooltipComponents, int pMouseX, int pMouseY) {
+        if (!pClientTooltipComponents.isEmpty()) {
+            net.minecraftforge.client.event.RenderTooltipEvent.Pre preEvent = net.minecraftforge.client.ForgeHooksClient.onRenderTooltipPre(ItemStack.EMPTY, pPoseStack, pMouseX, pMouseY, width, height, pClientTooltipComponents, this.font, this.font);
+            if (preEvent.isCanceled()) return;
+            int i = 0;
+            int j = pClientTooltipComponents.size() == 1 ? -2 : 0;
+
+            for(ClientTooltipComponent clienttooltipcomponent : pClientTooltipComponents) {
+                int k = clienttooltipcomponent.getWidth(preEvent.getFont());
+                if (k > i) {
+                    i = k;
+                }
+
+                j += clienttooltipcomponent.getHeight();
+            }
+
+            int j2 = preEvent.getX() + 12;
+            int k2 = preEvent.getY() - 12;
+            if (j2 + i > this.width) {
+                j2 -= 28 + i;
+            }
+
+            if (k2 + j + 6 > this.height) {
+                k2 = this.height - j - 6;
+            }
+
+            pPoseStack.pushPose();
+            int l = -267386864;
+            int i1 = 1347420415;
+            int j1 = 1344798847;
+            int k1 = 400;
+            float f = this.itemRenderer.blitOffset;
+            this.itemRenderer.blitOffset = 400.0F;
+            Tesselator tesselator = Tesselator.getInstance();
+            BufferBuilder bufferbuilder = tesselator.getBuilder();
+            RenderSystem.setShader(GameRenderer::getPositionColorShader);
+            bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+            Matrix4f matrix4f = pPoseStack.last().pose();
+            net.minecraftforge.client.event.RenderTooltipEvent.Color colorEvent = net.minecraftforge.client.ForgeHooksClient.onRenderTooltipColor(ItemStack.EMPTY, pPoseStack, j2, k2, preEvent.getFont(), pClientTooltipComponents);
+            fillGradient(matrix4f, bufferbuilder, j2 - 3, k2 - 4, j2 + i + 3, k2 - 3, 400, colorEvent.getBackgroundStart(), colorEvent.getBackgroundStart());
+            fillGradient(matrix4f, bufferbuilder, j2 - 3, k2 + j + 3, j2 + i + 3, k2 + j + 4, 400, colorEvent.getBackgroundEnd(), colorEvent.getBackgroundEnd());
+            fillGradient(matrix4f, bufferbuilder, j2 - 3, k2 - 3, j2 + i + 3, k2 + j + 3, 400, colorEvent.getBackgroundStart(), colorEvent.getBackgroundEnd());
+            fillGradient(matrix4f, bufferbuilder, j2 - 4, k2 - 3, j2 - 3, k2 + j + 3, 400, colorEvent.getBackgroundStart(), colorEvent.getBackgroundEnd());
+            fillGradient(matrix4f, bufferbuilder, j2 + i + 3, k2 - 3, j2 + i + 4, k2 + j + 3, 400, colorEvent.getBackgroundStart(), colorEvent.getBackgroundEnd());
+            fillGradient(matrix4f, bufferbuilder, j2 - 3, k2 - 3 + 1, j2 - 3 + 1, k2 + j + 3 - 1, 400, colorEvent.getBorderStart(), colorEvent.getBorderEnd());
+            fillGradient(matrix4f, bufferbuilder, j2 + i + 2, k2 - 3 + 1, j2 + i + 3, k2 + j + 3 - 1, 400, colorEvent.getBorderStart(), colorEvent.getBorderEnd());
+            fillGradient(matrix4f, bufferbuilder, j2 - 3, k2 - 3, j2 + i + 3, k2 - 3 + 1, 400, colorEvent.getBorderStart(), colorEvent.getBorderStart());
+            fillGradient(matrix4f, bufferbuilder, j2 - 3, k2 + j + 2, j2 + i + 3, k2 + j + 3, 400, colorEvent.getBorderEnd(), colorEvent.getBorderEnd());
+            RenderSystem.enableDepthTest();
+            RenderSystem.disableTexture();
+            RenderSystem.enableBlend();
+            RenderSystem.defaultBlendFunc();
+            bufferbuilder.end();
+            BufferUploader.end(bufferbuilder);
+            RenderSystem.disableBlend();
+            RenderSystem.enableTexture();
+            MultiBufferSource.BufferSource multibuffersource$buffersource = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+            pPoseStack.translate(0.0D, 0.0D, 400.0D);
+            int l1 = k2;
+
+            for(int i2 = 0; i2 < pClientTooltipComponents.size(); ++i2) {
+                ClientTooltipComponent clienttooltipcomponent1 = pClientTooltipComponents.get(i2);
+                clienttooltipcomponent1.renderText(preEvent.getFont(), j2, l1, matrix4f, multibuffersource$buffersource);
+                l1 += clienttooltipcomponent1.getHeight() + (i2 == 0 ? 2 : 0);
+            }
+
+            multibuffersource$buffersource.endBatch();
+            pPoseStack.popPose();
+            l1 = k2;
+
+            for(int l2 = 0; l2 < pClientTooltipComponents.size(); ++l2) {
+                ClientTooltipComponent clienttooltipcomponent2 = pClientTooltipComponents.get(l2);
+                clienttooltipcomponent2.renderImage(preEvent.getFont(), j2, l1, pPoseStack, this.itemRenderer, 400);
+                l1 += clienttooltipcomponent2.getHeight() + (l2 == 0 ? 2 : 0);
+            }
+
+            this.itemRenderer.blitOffset = f;
+        }
     }
 }

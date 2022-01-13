@@ -40,7 +40,8 @@ public class ModdedScreen extends Screen {
 
         return mouseX >= x && mouseX <= x + w && mouseY >= y && mouseY <= y + h;
     }
-    public final void drawTooltip(PoseStack stack, int mouseX, int mouseY) {
+
+    public void drawTooltip(PoseStack stack, int mouseX, int mouseY) {
         if (tooltip != null && !tooltip.isEmpty()) {
             this.renderComponentTooltip(stack, tooltip, mouseX, mouseY, font);
         }
