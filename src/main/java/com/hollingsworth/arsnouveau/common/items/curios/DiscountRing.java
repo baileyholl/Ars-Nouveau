@@ -26,4 +26,9 @@ public abstract class DiscountRing extends ArsNouveauCurio implements IManaEquip
     public int getManaRegenBonus(ItemStack i) {
         return 1;
     }
+
+    @Override
+    public int getManaDiscount(ItemStack i) {
+        return getManaDiscount();
+    }
 }
