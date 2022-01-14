@@ -72,7 +72,7 @@ public class ScribesBlock extends ModBlock implements EntityBlock {
         }
         if(player.getItemInHand(handIn).getItem() instanceof SpellBook){
             Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()-> (ServerPlayer) player),
-                    new PacketOpenGlyphCraft());
+                    new PacketOpenGlyphCraft(pos));
             return InteractionResult.SUCCESS;
         }
         if(handIn != InteractionHand.MAIN_HAND || !(world.getBlockEntity(pos) instanceof ScribesTile))

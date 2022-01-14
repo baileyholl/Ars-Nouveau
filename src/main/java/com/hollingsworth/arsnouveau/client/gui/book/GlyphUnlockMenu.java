@@ -19,6 +19,7 @@ import net.minecraft.client.gui.screens.inventory.PageButton;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -43,6 +44,7 @@ public class GlyphUnlockMenu extends BaseBook{
     int tier1Row = 0;
     int tier2Row = 0;
     int tier3Row = 0;
+    BlockPos scribesPos;
     Filter filterSelected = Filter.ALL;
     enum Filter{
         ALL,
@@ -51,10 +53,11 @@ public class GlyphUnlockMenu extends BaseBook{
         TIER3
     }
 
-    public GlyphUnlockMenu(){
+    public GlyphUnlockMenu(BlockPos pos){
         super();
         allParts = new ArrayList<>(ArsNouveauAPI.getInstance().getSpellpartMap().values());
         this.displayedGlyphs = new ArrayList<>(allParts);
+        this.scribesPos = pos;
     }
 
     @Override
@@ -92,8 +95,8 @@ public class GlyphUnlockMenu extends BaseBook{
         }
     }
 
-    public static void open(){
-        Minecraft.getInstance().setScreen(new GlyphUnlockMenu());
+    public static void open(BlockPos scribePos){
+        Minecraft.getInstance().setScreen(new GlyphUnlockMenu(scribePos));
     }
 
     public void onSearchChanged(String str){

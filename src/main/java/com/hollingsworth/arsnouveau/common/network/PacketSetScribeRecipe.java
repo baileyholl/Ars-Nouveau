@@ -1,15 +1,14 @@
 package com.hollingsworth.arsnouveau.common.network;
 
-import com.hollingsworth.arsnouveau.client.gui.book.GlyphUnlockMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class PacketOpenGlyphCraft {
+public class PacketSetScribeRecipe {
     BlockPos scribePos;
-    public PacketOpenGlyphCraft(FriendlyByteBuf buf){
+    public PacketSetScribeRecipe(FriendlyByteBuf buf){
         this.scribePos = buf.readBlockPos();
     }
 
@@ -18,13 +17,14 @@ public class PacketOpenGlyphCraft {
         buf.writeBlockPos(scribePos);
     }
 
-    public PacketOpenGlyphCraft(BlockPos scribesPos){
+    public PacketSetScribeRecipe(BlockPos scribesPos){
         this.scribePos = scribesPos;
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx){
-        ctx.get().enqueueWork(()-> GlyphUnlockMenu.open(scribePos));
+        ctx.get().enqueueWork(()-> {
+
+        });
         ctx.get().setPacketHandled(true);
     }
-
 }
