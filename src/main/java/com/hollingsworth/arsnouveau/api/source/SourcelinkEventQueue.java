@@ -24,7 +24,7 @@ public class SourcelinkEventQueue {
         Set<BlockPos> worldList = posMap.getOrDefault(world.dimension().getRegistryName().toString(), new HashSet<>());
         for(BlockPos p : worldList){
             if(!world.isLoaded(p))
-                return;
+                continue;
             BlockEntity entity = world.getBlockEntity(p);
             if(world.getBlockEntity(p) == null || !(entity instanceof SourcelinkTile)){
                 stalePos.add(p);
