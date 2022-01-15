@@ -24,16 +24,21 @@ import java.util.List;
 public class GlyphRecipe implements Recipe<ScribesTile> {
 
     public static final String RECIPE_ID = "glyph";
-    ItemStack output;
-    List<Ingredient> inputs;
-    ResourceLocation id;
-    int exp;
+    public ItemStack output;
+    public List<Ingredient> inputs;
+    public ResourceLocation id;
+    public int exp;
 
     public GlyphRecipe(ResourceLocation id, ItemStack output, List<Ingredient> inputs, int exp){
         this.id = id;
         this.output = output;
         this.inputs = inputs;
         this.exp = exp;
+    }
+
+    public GlyphRecipe withIngredient(Ingredient i ){
+        this.inputs.add(i);
+        return this;
     }
 
     @Override
@@ -69,6 +74,22 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
     @Override
     public RecipeType<?> getType() {
         return RecipeRegistry.GLYPH_TYPE;
+    }
+
+    public JsonElement asRecipe(){
+        JsonObject jsonobject = new JsonObject();
+        jsonobject.addProperty("type", "ars_nouveau:" + GlyphRecipe.RECIPE_ID);
+        jsonobject.addProperty("count", this.output.getCount());
+        JsonArray pedestalArr = new JsonArray();
+        for(Ingredient i : this.inputs){
+            JsonObject object = new JsonObject();
+            object.add("item", i.toJson());
+            pedestalArr.add(object);
+        }
+        jsonobject.add("inputItems", pedestalArr);
+        jsonobject.addProperty("exp", exp);
+        jsonobject.addProperty("output", this.output.getItem().getRegistryName().toString());
+        return jsonobject;
     }
 
     public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<GlyphRecipe> {
@@ -115,7 +136,7 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
             for(int i = 0; i < length; i++){
                 try{ stacks.add(Ingredient.fromNetwork(buffer)); }catch (Exception e){
                     e.printStackTrace();
-                    break;q 
+                    break;
                 }
             }
             return new GlyphRecipe(recipeId, buffer.readItem(), stacks, buffer.readInt());

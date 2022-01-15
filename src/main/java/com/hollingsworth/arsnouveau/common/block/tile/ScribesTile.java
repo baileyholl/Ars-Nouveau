@@ -6,6 +6,7 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -41,8 +42,18 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
     }
 
     @Override
+    public void tick() {
+        if(recipe != null){
+            System.out.println(recipe.inputs);
+        }
+    }
+
+    @Override
     public void load(CompoundTag compound) {
         stack = ItemStack.of((CompoundTag)compound.get("itemStack"));
+        if(compound.contains("recipe")){
+            recipe = (GlyphRecipe) level.getRecipeManager().byKey(new ResourceLocation(compound.getString("recipe"))).orElse(null);
+        }
         super.load(compound);
     }
 
@@ -52,6 +63,9 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
             CompoundTag reagentTag = new CompoundTag();
             stack.save(reagentTag);
             compound.put("itemStack", reagentTag);
+        }
+        if(recipe !=  null){
+            compound.putString("recipe", recipe.getId().toString());
         }
     }
 
