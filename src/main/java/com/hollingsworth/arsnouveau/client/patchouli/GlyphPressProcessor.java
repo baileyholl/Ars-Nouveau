@@ -19,7 +19,9 @@ public class GlyphPressProcessor implements IComponentProcessor {
     public void setup(IVariableProvider variables) {
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
         String recipeID = variables.get("recipe").asString();
-        recipe = (GlyphPressRecipe) manager.byKey(new ResourceLocation(recipeID)).orElse(null);
+        try {
+            recipe = (GlyphPressRecipe) manager.byKey(new ResourceLocation(recipeID)).orElse(null);
+        }catch (Exception e){}
     }
 
     @Override

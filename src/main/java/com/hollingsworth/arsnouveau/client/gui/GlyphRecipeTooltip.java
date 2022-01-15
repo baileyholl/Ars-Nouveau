@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
+import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
@@ -8,9 +9,11 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GlyphRecipeTooltip implements ClientTooltipComponent {
@@ -20,10 +23,10 @@ public class GlyphRecipeTooltip implements ClientTooltipComponent {
     private static final int TEX_SIZE = 128;
     private static final int SLOT_SIZE_X = 18;
     private static final int SLOT_SIZE_Y = 20;
-    private final List<ItemStack> items;
+    private final List<Ingredient> items;
 
 
-    public GlyphRecipeTooltip(List<ItemStack> items) {
+    public GlyphRecipeTooltip(List<Ingredient> items) {
         this.items = items;
         for(int i = 0; i < 10; i++){
         //    items.add(new ItemStack(Items.DIRT));
@@ -61,14 +64,11 @@ public class GlyphRecipeTooltip implements ClientTooltipComponent {
         if (pItemIndex >= this.items.size()) {
             this.blit(pPoseStack, pX, pY, pBlitOffset, pIsBundleFull ? GlyphRecipeTooltip.Texture.BLOCKED_SLOT : GlyphRecipeTooltip.Texture.SLOT);
         } else {
-            ItemStack itemstack = this.items.get(pItemIndex);
+            List<ItemStack> items = new ArrayList<>(List.of(this.items.get(pItemIndex).getItems()));
+            ItemStack itemstack = items.get((ClientInfo.ticksInGame / 20) % items.size());
             this.blit(pPoseStack, pX, pY, pBlitOffset, GlyphRecipeTooltip.Texture.SLOT);
             pItemRenderer.renderAndDecorateItem(itemstack, pX + BORDER_WIDTH, pY + BORDER_WIDTH, pItemIndex);
             pItemRenderer.renderGuiItemDecorations(pFont, itemstack, pX + BORDER_WIDTH, pY + BORDER_WIDTH);
-//            if (pItemIndex == 0) {
-//                AbstractContainerScreen.renderSlotHighlight(pPoseStack, pX + BORDER_WIDTH, pY + BORDER_WIDTH, pBlitOffset);
-//            }
-
         }
     }
 
@@ -97,11 +97,16 @@ public class GlyphRecipeTooltip implements ClientTooltipComponent {
     }
 
     private int gridSizeX() {
-        return Math.max(1, (int)Math.ceil(Math.sqrt((double)this.items.size() + 1.0D)));
+        return this.items.size() == 0 ? 0 : Math.min(3, this.items.size());
     }
 
     private int gridSizeY() {
-        return this.items.size () == 0 ? 0 : (int)Math.ceil(((double)this.items.size() + 1.0D) / (double)this.gridSizeX());
+        if(items.isEmpty())
+            return 0;
+        if(items.size() % 3 != 0){
+            return items.size() / 3 + 1;
+        }
+        return items.size() / 3;
     }
 
     @OnlyIn(Dist.CLIENT)

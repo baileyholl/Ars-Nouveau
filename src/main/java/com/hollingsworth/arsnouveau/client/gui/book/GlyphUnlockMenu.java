@@ -9,9 +9,11 @@ import com.hollingsworth.arsnouveau.client.gui.GlyphRecipeTooltip;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GlyphButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.UnlockGlyphButton;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Widget;
@@ -20,7 +22,7 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
@@ -46,6 +48,7 @@ public class GlyphUnlockMenu extends BaseBook{
     int tier3Row = 0;
     BlockPos scribesPos;
     Filter filterSelected = Filter.ALL;
+    public GlyphRecipe hoveredRecipe;
     enum Filter{
         ALL,
         TIER1,
@@ -269,15 +272,9 @@ public class GlyphUnlockMenu extends BaseBook{
     @Override
     public void drawBackgroundElements(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
-        if(tier1Row != -1) {
-            minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.tier", 1).getString(), tier1Row > 7 ? 154 : 20 ,  5 + 18 * (tier1Row + (tier1Row == 1 ? 0 : 1)), -8355712);
-        }
-        if(tier2Row != -1) {
-            minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.tier", 2).getString(), tier2Row > 7 ? 154 : 20,  5 + 18 * (tier2Row  + 1), -8355712);
-        }
-        if(tier3Row >= 1) {
-            minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.tier", 3).getString(), tier3Row > 7 ? 154 : 20,  5 + 18 * (tier3Row + 1), -8355712);
-        }
+
+        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.tier", 1).getString(), tier1Row > 7 ? 154 : 20 ,  5 + 18 * (tier1Row + (tier1Row == 1 ? 0 : 1)), -8355712);
+
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15,56,15, stack);
 
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15,72,15, stack);
@@ -286,9 +283,13 @@ public class GlyphUnlockMenu extends BaseBook{
 
     public void drawTooltip(PoseStack stack, int mouseX, int mouseY) {
         if (tooltip != null && !tooltip.isEmpty()) {
-
+            MutableComponent component = new TextComponent("Levels required: 2").withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN));
+            tooltip.add(component);
             List<ClientTooltipComponent> components = new ArrayList<>(net.minecraftforge.client.ForgeHooksClient.gatherTooltipComponents(ItemStack.EMPTY, tooltip, mouseX, width, height, this.font, this.font));
-            components.add(new GlyphRecipeTooltip(new ArrayList<>()));
+
+            if(hoveredRecipe != null){
+                components.add(new GlyphRecipeTooltip(hoveredRecipe.inputs));
+            }
             renderTooltipInternal(stack, components, mouseX, mouseY);
         }
     }

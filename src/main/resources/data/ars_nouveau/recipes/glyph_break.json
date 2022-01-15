@@ -4,12 +4,7 @@
   "inputItems": [
     {
       "item": {
-        "item": "minecraft:dirt"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:amethyst_block"
+        "tag": "minecraft:dirt"
       }
     }
   ],

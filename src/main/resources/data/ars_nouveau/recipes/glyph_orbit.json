@@ -1,6 +1,53 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "THREE",
-  "input": "ars_nouveau:glyph_projectile",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "inputItems": [
+    {
+      "item": {
+        "item": "minecraft:dirt"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:amethyst_block"
+      }
+    },
+    {
+      "item": {
+        "tag": "minecraft:dirt"
+      }
+    },
+    {
+      "item": {
+        "tag": "minecraft:dirt"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:dirt"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:dirt"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:dirt"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:dirt"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:dirt"
+      }
+    }
+  ],
+  "exp": 2,
   "output": "ars_nouveau:glyph_orbit"
 }

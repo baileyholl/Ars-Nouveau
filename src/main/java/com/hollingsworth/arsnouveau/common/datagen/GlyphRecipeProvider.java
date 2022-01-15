@@ -7,10 +7,15 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectBreak;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodOrbit;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodSelf;
+import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.HashCache;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -40,7 +45,30 @@ public class GlyphRecipeProvider implements DataProvider {
         }
         List<GlyphRecipe> recipes = new ArrayList<>();
         recipes.add(new GlyphRecipe(new ResourceLocation(ArsNouveau.MODID, "glyph_break"), ArsNouveauAPI.getInstance().getGlyphItem(EffectBreak.INSTANCE).getDefaultInstance(), new ArrayList<>(), 2)
-                .withIngredient(Ingredient.of(Items.DIRT)).withIngredient(Ingredient.of(Items.AMETHYST_BLOCK)));
+                .withIngredient(Ingredient.of(ItemTags.DIRT)));
+        recipes.add(new GlyphRecipe(new ResourceLocation(ArsNouveau.MODID, "glyph_projectile"), ArsNouveauAPI.getInstance().getGlyphItem(MethodProjectile.INSTANCE).getDefaultInstance(), new ArrayList<>(), 2)
+                .withIngredient(Ingredient.of(ItemTags.DIRT)).withIngredient(Ingredient.of(Items.AMETHYST_BLOCK)));
+
+        recipes.add(new GlyphRecipe(new ResourceLocation(ArsNouveau.MODID, "glyph_self"), ArsNouveauAPI.getInstance().getGlyphItem(MethodSelf.INSTANCE).getDefaultInstance(), new ArrayList<>(), 2)
+                .withIngredient(Ingredient.of(Items.DIRT)).withIngredient(Ingredient.of(Items.AMETHYST_BLOCK)).withIngredient(Ingredient.of(ItemTags.DIRT)));
+
+        recipes.add(new GlyphRecipe(new ResourceLocation(ArsNouveau.MODID, "glyph_touch"), ArsNouveauAPI.getInstance().getGlyphItem(MethodTouch.INSTANCE).getDefaultInstance(), new ArrayList<>(), 2)
+                .withIngredient(Ingredient.of(Items.DIRT))
+                .withIngredient(Ingredient.of(Items.AMETHYST_BLOCK))
+                .withIngredient(Ingredient.of(ItemTags.DIRT))
+                .withIngredient(Ingredient.of(ItemTags.DIRT)));
+        recipes.add(new GlyphRecipe(new ResourceLocation(ArsNouveau.MODID, "glyph_orbit"), ArsNouveauAPI.getInstance().getGlyphItem(MethodOrbit.INSTANCE).getDefaultInstance(), new ArrayList<>(), 2)
+                .withIngredient(Ingredient.of(Items.DIRT))
+                .withIngredient(Ingredient.of(Items.AMETHYST_BLOCK))
+                .withIngredient(Ingredient.of(ItemTags.DIRT))
+                .withIngredient(Ingredient.of(ItemTags.DIRT))
+                .withIngredient(Ingredient.of(Items.DIRT))
+                .withIngredient(Ingredient.of(Items.DIRT))
+                .withIngredient(Ingredient.of(Items.DIRT))
+                .withIngredient(Ingredient.of(Items.DIRT))
+                .withIngredient(Ingredient.of(Items.DIRT))
+        );
+
         for(GlyphRecipe recipe : recipes){
             Path path = getScribeGlyphPath(output,  recipe.output.getItem());
             DataProvider.save(GSON, cache, recipe.asRecipe(), path);

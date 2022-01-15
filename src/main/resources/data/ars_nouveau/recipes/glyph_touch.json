@@ -1,6 +1,28 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "ONE",
-  "input": "minecraft:stone_button",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "inputItems": [
+    {
+      "item": {
+        "item": "minecraft:dirt"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:amethyst_block"
+      }
+    },
+    {
+      "item": {
+        "tag": "minecraft:dirt"
+      }
+    },
+    {
+      "item": {
+        "tag": "minecraft:dirt"
+      }
+    }
+  ],
+  "exp": 2,
   "output": "ars_nouveau:glyph_touch"
 }
