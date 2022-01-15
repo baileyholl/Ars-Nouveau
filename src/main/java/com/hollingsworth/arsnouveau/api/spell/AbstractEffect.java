@@ -107,7 +107,7 @@ public abstract class AbstractEffect extends AbstractSpellPart {
     }
 
     public int getBaseHarvestLevel(SpellStats stats){
-        return (int) (2 + stats.getAmpMultiplier());
+        return (int) (3 + stats.getAmpMultiplier());
     }
 
     public boolean canBlockBeHarvested(SpellStats stats, Level world, BlockPos pos){
