@@ -7,10 +7,11 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -18,6 +19,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.common.util.FakePlayer;
 
 import java.util.*;
@@ -39,15 +41,24 @@ public class SpellUtil {
         return calcAOEBlocks(caster, origin, mop, 1 + aoeBonus, 1 + aoeBonus, 1 + pierceBonus, -1);
     }
 
-    public static boolean isCorrectHarvestLevel(int strength, BlockState p_150816_) {
-        int i = strength;
-        if (i < 3 && p_150816_.is(BlockTags.NEEDS_DIAMOND_TOOL)) {
-            return false;
-        } else if (i < 2 && p_150816_.is(BlockTags.NEEDS_IRON_TOOL)) {
-            return false;
-        } else {
-            return i >= 1 || !p_150816_.is(BlockTags.NEEDS_STONE_TOOL);
-        }
+    public static boolean isCorrectHarvestLevel(int strength, BlockState state) {
+        Tier tier = switch (strength){
+            case 1:
+                yield Tiers.WOOD;
+            case 2:
+                yield Tiers.STONE;
+            case 3:
+                yield Tiers.IRON;
+            case 4:
+                yield Tiers.DIAMOND;
+            case 5:
+                yield Tiers.NETHERITE;
+            default:
+                yield Tiers.WOOD;
+        };
+        if(strength > 5)
+            tier = Tiers.NETHERITE;
+        return TierSortingRegistry.isCorrectTierForDrops(tier, state);
     }
 
 

@@ -32,7 +32,7 @@ public class GlyphPressProcessor implements IComponentProcessor {
         if(s.equals("reagent"))
             return IVariable.from(recipe.reagent);
         if(s.equals("tier"))
-            return IVariable.wrap(new TranslatableComponent("ars_nouveau.tier").getString() + ": " + new TranslatableComponent("ars_nouveau.spell_tier." + recipe.tier.toString().toLowerCase()).getString());
+            return IVariable.wrap(new TranslatableComponent("ars_nouveau.tier").getString() + ": " + new TranslatableComponent("ars_nouveau.spell_tier." + recipe.tier.value).getString());
         if(s.equals("schools")) {
             AbstractSpellPart part = ((Glyph) recipe.output.getItem()).spellPart;
             StringBuilder str = new StringBuilder(new TranslatableComponent("ars_nouveau.spell_schools").getString() +": ");
