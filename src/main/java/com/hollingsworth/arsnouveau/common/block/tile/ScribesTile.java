@@ -34,7 +34,8 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
     public int frames;
 
     List<ItemStack> consumedStacks = new ArrayList<>();
-    GlyphRecipe recipe;
+    public GlyphRecipe recipe;
+    ResourceLocation recipeID; // Cached for after load
 
 
     public ScribesTile(BlockPos pos, BlockState state) {
@@ -43,15 +44,14 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
 
     @Override
     public void tick() {
-        if(recipe != null){
-            System.out.println(recipe.inputs);
+        if(recipe == null && recipeID != null){
+            recipe = (GlyphRecipe) level.getRecipeManager().byKey(recipeID).orElse(null);
         }
     }
 
     public void setRecipe(GlyphRecipe recipe){
         this.recipe = recipe;
         updateBlock();
-        System.out.println("seetRecipe");
     }
 
     @Override
@@ -59,8 +59,18 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         super.load(compound);
         stack = ItemStack.of((CompoundTag)compound.get("itemStack"));
         if(compound.contains("recipe")){
-            recipe = (GlyphRecipe) level.getRecipeManager().byKey(new ResourceLocation(compound.getString("recipe"))).orElse(null);
+            recipeID = new ResourceLocation(compound.getString("recipe"));
         }
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        if(recipeID != null) {
+            recipe = (GlyphRecipe) level.getRecipeManager().byKey(recipeID).orElse(null);
+            updateBlock();
+        }
+
     }
 
     @Override
