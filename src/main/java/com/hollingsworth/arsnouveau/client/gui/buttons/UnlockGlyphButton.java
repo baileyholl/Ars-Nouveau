@@ -30,9 +30,9 @@ public class UnlockGlyphButton extends Button {
     public String resourceIcon;
     public String spell_id; //Reference to a spell ID for spell crafting
     private int id;
-    public String tooltip = "tooltip";
+    public String tooltip = "";
     public List<SpellValidationError> validationErrors;
-    GlyphRecipe recipe;
+    public GlyphRecipe recipe;
     GlyphUnlockMenu parent;
 
     public UnlockGlyphButton(GlyphUnlockMenu parent, int x, int y, boolean isCraftingSlot, String resource_image, String spell_id) {
@@ -90,6 +90,5 @@ public class UnlockGlyphButton extends Button {
             }
 
         }
-        //super.render(mouseX, mouseY, partialTicks);
     }
 }

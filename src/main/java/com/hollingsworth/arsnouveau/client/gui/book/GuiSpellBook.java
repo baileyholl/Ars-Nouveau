@@ -52,7 +52,6 @@ public class GuiSpellBook extends BaseBook {
 
     public List<GlyphButton> glyphButtons = new ArrayList<>();
     public int page = 0;
-    public List<SpellValidationError> validationErrors;
     PageButton nextButton;
     PageButton previousButton;
     ISpellValidator spellValidator;
@@ -62,7 +61,6 @@ public class GuiSpellBook extends BaseBook {
     int formTextRow = 0;
     int augmentTextRow = 0;
     int effectTextRow = 0;
-
 
     public GuiSpellBook(ItemStack bookStack, int tier, List<AbstractSpellPart> unlockedSpells) {
         super();

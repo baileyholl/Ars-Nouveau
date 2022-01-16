@@ -7,9 +7,13 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.client.gui.GlyphRecipeTooltip;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
+import com.hollingsworth.arsnouveau.client.gui.buttons.CreateSpellButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GlyphButton;
+import com.hollingsworth.arsnouveau.client.gui.buttons.ItemButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.UnlockGlyphButton;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketSetScribeRecipe;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Matrix4f;
@@ -22,9 +26,12 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.*;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -41,7 +48,6 @@ public class GlyphUnlockMenu extends BaseBook{
     public List<UnlockGlyphButton> glyphButtons = new ArrayList<>();
     public NoShadowTextField searchBar;
     public String previousString = "";
-    public ArsNouveauAPI api = ArsNouveauAPI.getInstance();
     int maxPerPage = 96;
     int tier1Row = 0;
     int tier2Row = 0;
@@ -49,12 +55,15 @@ public class GlyphUnlockMenu extends BaseBook{
     BlockPos scribesPos;
     Filter filterSelected = Filter.ALL;
     public GlyphRecipe hoveredRecipe;
+    public GlyphRecipe selectedRecipe;
     enum Filter{
         ALL,
         TIER1,
         TIER2,
         TIER3
     }
+
+    List<ItemButton> itemButtons = new ArrayList<>();
 
     public GlyphUnlockMenu(BlockPos pos){
         super();
@@ -78,13 +87,28 @@ public class GlyphUnlockMenu extends BaseBook{
             searchBar.setSuggestion(new TranslatableComponent("ars_nouveau.spell_book_gui.search").getString());
         searchBar.setResponder(this::onSearchChanged);
         addRenderableWidget(searchBar);
-
+        addRenderableWidget(new CreateSpellButton(this, bookRight - 71, bookBottom - 13, this::onSelectClick));
         this.nextButton = addRenderableWidget(new PageButton(bookRight -20, bookBottom -10, true, this::onPageIncrease, true));
         this.previousButton = addRenderableWidget(new PageButton(bookLeft - 5 , bookBottom -10, false, this::onPageDec, true));
         updateNextPageButtons();
         previousButton.active = false;
         previousButton.visible = false;
         layoutAllGlyphs(0);
+
+        //Crafting slots
+        for (int i = 0; i < 10; i++) {
+            int offset = i >= 5 ? 14 : 0;
+            ItemButton cell = new ItemButton(this,bookLeft + 19 + 24 * i + offset, bookTop + FULL_HEIGHT - 47);
+            addRenderableWidget(cell);
+            itemButtons.add(cell);
+        }
+    }
+
+    private void onSelectClick(Button button) {
+        if(selectedRecipe != null) {
+            Networking.INSTANCE.sendToServer(new PacketSetScribeRecipe(scribesPos, selectedRecipe.id));
+            Minecraft.getInstance().setScreen(null);
+        }
     }
 
 
@@ -157,7 +181,7 @@ public class GlyphUnlockMenu extends BaseBook{
 //        augmentTextRow = 0;
 //        effectTextRow = 0;
         final int PER_ROW = 6;
-        final int MAX_ROWS = 7;
+        final int MAX_ROWS = 6;
         boolean nextPage = false;
         int xStart = nextPage ? bookLeft + 154 : bookLeft + 20;
         int adjustedRowsPlaced = 0;
@@ -182,10 +206,6 @@ public class GlyphUnlockMenu extends BaseBook{
             }
         }.thenComparingInt(o -> o.getTier().value)
                 .thenComparing(AbstractSpellPart::getLocaleName);
-
-//        sorted.addAll(displayedGlyphs.stream().filter(s -> s.getTier().value == 1).collect(Collectors.toList()));
-//        sorted.addAll(displayedGlyphs.stream().filter(s -> s.getTier().value == 2).collect(Collectors.toList()));
-//        sorted.addAll(displayedGlyphs.stream().filter(s -> s.getTier().value == 3).collect(Collectors.toList()));
         sorted.addAll(displayedGlyphs);
         sorted.sort(spellPartComparator);
         sorted = sorted.subList(maxPerPage * page, Math.min(sorted.size(), maxPerPage * (page + 1)));
@@ -221,18 +241,22 @@ public class GlyphUnlockMenu extends BaseBook{
     }
 
     public void onGlyphClick(Button button){
-//        GlyphButton button1 = (GlyphButton) button;
-//
-//        if (button1.validationErrors.isEmpty()) {
-//            for (CraftingButton b : craftingCells) {
-//                if (b.resourceIcon.equals("")) {
-//                    b.resourceIcon = button1.resourceIcon;
-//                    b.spellTag = button1.spell_id;
-//                    validate();
-//                    return;
-//                }
-//            }
-//        }
+        for(ItemButton itemButton : itemButtons){
+            itemButton.visible = false;
+            itemButton.ingredient = Ingredient.EMPTY;
+        }
+        if(button instanceof UnlockGlyphButton unlockGlyphButton){
+            this.selectedRecipe = unlockGlyphButton.recipe;
+            if(selectedRecipe == null)
+                return;
+            for(int i = 0; i < selectedRecipe.inputs.size(); i++){
+                if(i > itemButtons.size())
+                    break;
+                itemButtons.get(i).visible = true;
+                itemButtons.get(i).ingredient = selectedRecipe.inputs.get(i);
+
+            }
+        }
     }
 
     public void clearButtons( List<UnlockGlyphButton> glyphButtons){
@@ -268,6 +292,10 @@ public class GlyphUnlockMenu extends BaseBook{
         layoutAllGlyphs(page);
     }
 
+    @Override
+    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
+    }
 
     @Override
     public void drawBackgroundElements(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
@@ -278,22 +306,23 @@ public class GlyphUnlockMenu extends BaseBook{
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15,56,15, stack);
 
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15,72,15, stack);
-        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.spell_book_gui.create"), 233, 183, -8355712);
+        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.spell_book_gui.select"), 233, 183, -8355712);
+
     }
 
     public void drawTooltip(PoseStack stack, int mouseX, int mouseY) {
         if (tooltip != null && !tooltip.isEmpty()) {
-            MutableComponent component = new TextComponent("Levels required: 2").withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN));
-            tooltip.add(component);
-            List<ClientTooltipComponent> components = new ArrayList<>(net.minecraftforge.client.ForgeHooksClient.gatherTooltipComponents(ItemStack.EMPTY, tooltip, mouseX, width, height, this.font, this.font));
-
-            if(hoveredRecipe != null){
-                components.add(new GlyphRecipeTooltip(hoveredRecipe.inputs));
+            if(hoveredRecipe != null) {
+                MutableComponent component = new TranslatableComponent("ars_nouveau.levels_required", hoveredRecipe.exp).withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN));
+                tooltip.add(component);
             }
+            List<ClientTooltipComponent> components = new ArrayList<>(net.minecraftforge.client.ForgeHooksClient.gatherTooltipComponents(ItemStack.EMPTY, tooltip, mouseX, width, height, this.font, this.font));
+            if(hoveredRecipe != null)
+                components.add(new GlyphRecipeTooltip(hoveredRecipe.inputs));
             renderTooltipInternal(stack, components, mouseX, mouseY);
         }
     }
-    private void renderTooltipInternal(PoseStack pPoseStack, List<ClientTooltipComponent> pClientTooltipComponents, int pMouseX, int pMouseY) {
+    public void renderTooltipInternal(PoseStack pPoseStack, List<ClientTooltipComponent> pClientTooltipComponents, int pMouseX, int pMouseY) {
         if (!pClientTooltipComponents.isEmpty()) {
             net.minecraftforge.client.event.RenderTooltipEvent.Pre preEvent = net.minecraftforge.client.ForgeHooksClient.onRenderTooltipPre(ItemStack.EMPTY, pPoseStack, pMouseX, pMouseY, width, height, pClientTooltipComponents, this.font, this.font);
             if (preEvent.isCanceled()) return;
@@ -320,10 +349,6 @@ public class GlyphUnlockMenu extends BaseBook{
             }
 
             pPoseStack.pushPose();
-            int l = -267386864;
-            int i1 = 1347420415;
-            int j1 = 1344798847;
-            int k1 = 400;
             float f = this.itemRenderer.blitOffset;
             this.itemRenderer.blitOffset = 400.0F;
             Tesselator tesselator = Tesselator.getInstance();

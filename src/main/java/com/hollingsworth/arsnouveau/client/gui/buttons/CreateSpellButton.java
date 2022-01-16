@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
+import com.hollingsworth.arsnouveau.client.gui.book.BaseBook;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -17,7 +18,7 @@ import java.util.List;
 public class CreateSpellButton extends GuiImageButton {
     private final ResourceLocation image = new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_icon.png");
 
-    public CreateSpellButton(GuiSpellBook parent, int x, int y, Button.OnPress onPress) {
+    public CreateSpellButton(BaseBook parent, int x, int y, Button.OnPress onPress) {
         super(x, y, 0,0,50, 12, 50, 12, "textures/gui/create_icon.png", onPress);
         this.parent = parent;
     }

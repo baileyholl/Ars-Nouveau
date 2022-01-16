@@ -28,9 +28,6 @@ public class GlyphRecipeTooltip implements ClientTooltipComponent {
 
     public GlyphRecipeTooltip(List<Ingredient> items) {
         this.items = items;
-        for(int i = 0; i < 10; i++){
-        //    items.add(new ItemStack(Items.DIRT));
-        }
     }
 
     public int getHeight() {

@@ -1,11 +1,17 @@
 package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
 import com.hollingsworth.arsnouveau.client.gui.ModdedScreen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BaseBook extends ModdedScreen {
 
@@ -16,9 +22,12 @@ public class BaseBook extends ModdedScreen {
     public int bookTop;
     public int bookRight;
     public int bookBottom;
-
+    public List<SpellValidationError> validationErrors = new ArrayList<>();
+    public ArsNouveauAPI api = ArsNouveauAPI.getInstance();
+    public ItemRenderer itemre;
     public BaseBook() {
         super(new TextComponent(""));
+        itemre = this.itemRenderer;
     }
 
     @Override

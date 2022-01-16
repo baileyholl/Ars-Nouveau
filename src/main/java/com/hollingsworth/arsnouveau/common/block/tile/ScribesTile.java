@@ -48,13 +48,19 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         }
     }
 
+    public void setRecipe(GlyphRecipe recipe){
+        this.recipe = recipe;
+        updateBlock();
+        System.out.println("seetRecipe");
+    }
+
     @Override
     public void load(CompoundTag compound) {
+        super.load(compound);
         stack = ItemStack.of((CompoundTag)compound.get("itemStack"));
         if(compound.contains("recipe")){
             recipe = (GlyphRecipe) level.getRecipeManager().byKey(new ResourceLocation(compound.getString("recipe"))).orElse(null);
         }
-        super.load(compound);
     }
 
     @Override

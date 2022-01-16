@@ -35,7 +35,7 @@ public class GuiSpellSlot extends GuiImageButton {
         if (visible)
         {
             if(parent.isMouseInRelativeRange(parX, parY, x, y, width, height)){
-                ISpellCaster caster = CasterUtil.getCaster(parent.bookStack);
+                ISpellCaster caster = CasterUtil.getCaster(((GuiSpellBook)parent).bookStack);
                 String name = caster.getSpellName(slotNum);
                 if(!name.isEmpty()){
                     List<Component> tip = new ArrayList<>();

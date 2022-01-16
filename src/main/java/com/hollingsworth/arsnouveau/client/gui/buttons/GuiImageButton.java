@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.gui.buttons;
 
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.client.gui.book.BaseBook;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -25,7 +26,7 @@ public class GuiImageButton extends Button
     public String resourceIcon;
 
     int u, v, image_width, image_height;
-    GuiSpellBook parent;
+    BaseBook parent;
     TranslatableComponent toolTip;
 
 

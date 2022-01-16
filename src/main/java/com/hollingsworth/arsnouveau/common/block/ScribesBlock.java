@@ -41,7 +41,7 @@ import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 
-public class ScribesBlock extends ModBlock implements EntityBlock {
+public class ScribesBlock extends TickableModBlock {
     public static final EnumProperty<BedPart> PART = BlockStateProperties.BED_PART;
     protected static final VoxelShape BASE = Block.box(0.0D, 0D, 0.0D, 16.0D, 16, 16.0D);
     protected static final VoxelShape LEG_NORTH_WEST = Block.box(0.0D, 0.0D, 0.0D, 3.0D, 3.0D, 3.0D);
