@@ -29,6 +29,7 @@ import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
     public static AnimatedGeoModel model = new GenericModel("scribes_table");
@@ -131,15 +132,16 @@ public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
         Minecraft.getInstance().getItemRenderer().renderStatic(new ItemStack(itemToRender), ItemTransforms.TransformType.FIXED, packedLight, packedOverlay, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
         matrixStack.popPose();
         if(tile.recipe != null){
+            List<Ingredient> inputs = tile.getRemainingRequired();
             float ticks = (partialTicks + (float) ClientInfo.ticksInGame);
-            float angleBetweenEach = 360.0f / tile.recipe.inputs.size();
+            float angleBetweenEach = 360.0f /inputs.size();
             // How far away from the center should they be.
             Vec3 distanceVec = new Vec3(1,-0.5,1);
-            for(int i = 0; i < tile.recipe.inputs.size(); i++){
-                Ingredient ingredient = tile.recipe.inputs.get(i);
+            for(int i = 0; i < inputs.size(); i++){
+                Ingredient ingredient = inputs.get(i);
                 matrixStack.pushPose();
                 matrixStack.translate(-0.5, 2.0, 0);
-                matrixStack.scale(0.4f, 0.4f, 0.4f);
+                matrixStack.scale(0.25f, 0.25f, 0.25f);
                 // This spaces them out from each other
                 matrixStack.mulPose(Vector3f.YP.rotationDegrees(ticks + (i * angleBetweenEach)));
                 // Controls the distance from the center, also makes them float up and down

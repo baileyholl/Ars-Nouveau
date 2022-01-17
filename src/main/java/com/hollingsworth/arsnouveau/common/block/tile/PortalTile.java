@@ -96,11 +96,10 @@ public class PortalTile extends ModdedTile implements ITickable, ITooltipProvide
     }
 
     @Override
-    public List<Component> getTooltip(List<Component> tooltip) {
+    public void getTooltip(List<Component> tooltip) {
         if (this.displayName != null) {
             tooltip.add(new TextComponent(this.displayName));
         }
-        return tooltip;
     }
 
     public boolean update(){

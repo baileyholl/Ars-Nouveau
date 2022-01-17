@@ -9,6 +9,6 @@ public interface ITooltipProvider {
     /**
      * A list of tool tips to render on the screen when looking at this target.
      */
-    List<Component> getTooltip(List<Component> tooltip);
+    void getTooltip(List<Component> tooltip);
 
 }

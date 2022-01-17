@@ -124,8 +124,9 @@ public class ScribesBlock extends TickableModBlock {
     @Override
     public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         super.playerWillDestroy(worldIn, pos, state, player);
-        if(worldIn.getBlockEntity(pos) instanceof ScribesTile && ((ScribesTile) worldIn.getBlockEntity(pos)).stack != null){
-            worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), ((ScribesTile) worldIn.getBlockEntity(pos)).stack));
+        if(worldIn.getBlockEntity(pos) instanceof ScribesTile tile && tile.stack != null){
+            worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.stack));
+            tile.refundConsumed();
         }
     }
 
@@ -151,8 +152,9 @@ public class ScribesBlock extends TickableModBlock {
     public BlockState tearDown(BlockState state, Direction direction, BlockState state2, LevelAccessor world, BlockPos pos, BlockPos pos2){
         if(!world.isClientSide()) {
             BlockEntity entity = world.getBlockEntity(pos);
-            if (entity instanceof ScribesTile && ((ScribesTile) entity).stack != null) {
+            if (entity instanceof ScribesTile tile && ((ScribesTile) entity).stack != null) {
                 world.addFreshEntity(new ItemEntity((Level) world, pos.getX(), pos.getY(), pos.getZ(), ((ScribesTile) entity).stack));
+                tile.refundConsumed();
             }
         }
         return Blocks.AIR.defaultBlockState();

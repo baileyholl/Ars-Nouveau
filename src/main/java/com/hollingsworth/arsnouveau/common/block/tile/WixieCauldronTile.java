@@ -380,10 +380,10 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
     }
 
     @Override
-    public List<Component> getTooltip(List<Component> tooltip) {
+    public void getTooltip(List<Component> tooltip) {
 
         if(craftingItem == null)
-            return new ArrayList<>();
+            return;
 
         if(!isCraftingPotion){
             tooltip.add(new TextComponent(
@@ -413,7 +413,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         if(this.needsPotionStorage)
             tooltip.add(new TranslatableComponent("ars_nouveau.wixie.needs_storage"));
 
-        return tooltip;
+        return;
     }
 
     public static class CraftingProgress{

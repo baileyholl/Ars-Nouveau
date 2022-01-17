@@ -234,7 +234,7 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
     }
 
     @Override
-    public List<Component> getTooltip(List<Component> tooltip) {
+    public void getTooltip(List<Component> tooltip) {
         Spell spellParts = Spell.deserialize(this.getRecipeString());
         String spellString = spellParts.getDisplayString();
         String itemString = this.getHeldStack() == ItemStack.EMPTY ? new TranslatableComponent("ars_nouveau.bookwyrm.no_item").getString() : this.getHeldStack().getHoverName().getString();
@@ -245,7 +245,6 @@ public class EntityBookwyrm extends FlyingMob implements IPickupResponder, IPlac
         tooltip.add(new TextComponent(itemAction + itemString));
         tooltip.add(new TextComponent(new TranslatableComponent("ars_nouveau.bookwyrm.strict").getString() +
                 new TranslatableComponent("ars_nouveau." + this.entityData.get(STRICT_MODE)).getString() ));
-        return tooltip;
     }
 
     @Override

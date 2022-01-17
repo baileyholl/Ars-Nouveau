@@ -235,8 +235,7 @@ public class EntityDrygmy extends PathfinderMob implements IAnimatable, ITooltip
         return list;
     }
     @Override
-    public List<Component> getTooltip(List<Component> tooltip) {
-        return null;
+    public void getTooltip(List<Component> tooltip) {
     }
 
     @Override

@@ -187,12 +187,12 @@ public class RitualTile extends ModdedTile implements ITooltipProvider, IAnimata
     }
 
     @Override
-    public List<Component> getTooltip(List<Component> tooltips) {
+    public void getTooltip(List<Component> tooltips) {
         if(ritual != null){
             tooltips.add(new TextComponent(ritual.getName()));
             if(isOff) {
                 tooltips.add(new TranslatableComponent("ars_nouveau.tooltip.turned_off"));
-                return tooltips;
+                return;
             }
             if(!ritual.isRunning()){
                 if(!ritual.canStart()){
@@ -212,7 +212,6 @@ public class RitualTile extends ModdedTile implements ITooltipProvider, IAnimata
             if(ritual.needsManaNow())
                 tooltips.add(new TranslatableComponent("ars_nouveau.wixie.need_mana"));
         }
-        return tooltips;
     }
 
 

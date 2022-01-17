@@ -146,7 +146,7 @@ public class RelaySplitterTile extends ArcaneRelayTile{
     }
 
     @Override
-    public List<Component> getTooltip(List<Component> tooltip) {
+    public void getTooltip(List<Component> tooltip) {
         if(toList == null || toList.isEmpty()){
             tooltip.add(new TranslatableComponent("ars_nouveau.relay.no_to"));
         }else{
@@ -157,7 +157,6 @@ public class RelaySplitterTile extends ArcaneRelayTile{
         }else{
             tooltip.add(new TranslatableComponent("ars_nouveau.relay.one_from", fromList.size()));
         }
-        return tooltip;
     }
 
 }

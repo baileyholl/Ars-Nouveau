@@ -136,7 +136,7 @@ public class PotionJarTile extends ModdedTile implements ITickable, ITooltipProv
     }
 
     @Override
-    public List<Component> getTooltip(List<Component> tooltip) {
+    public void getTooltip(List<Component> tooltip) {
         if(this.potion != null && this.potion != Potions.EMPTY) {
             ItemStack potionStack = new ItemStack(Items.POTION);
             PotionUtils.setPotion(potionStack, potion);
@@ -148,8 +148,6 @@ public class PotionJarTile extends ModdedTile implements ITickable, ITooltipProv
         tooltip.add(new TranslatableComponent("ars_nouveau.source_jar.fullness", (getCurrentFill()*100) / this.getMaxFill()));
         if(isLocked)
             tooltip.add(new TranslatableComponent("ars_nouveau.locked"));
-
-        return tooltip;
     }
 
     public void appendEffect(List<MobEffectInstance> effects){

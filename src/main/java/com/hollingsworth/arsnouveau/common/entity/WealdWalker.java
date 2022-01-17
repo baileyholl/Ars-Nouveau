@@ -314,14 +314,13 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
     }
 
     @Override
-    public List<Component> getTooltip(List<Component> tooltip) {
+    public void getTooltip(List<Component> tooltip) {
         if(getHome() != null){
             String home = getHome().getX() + ", " + getHome().getY() + ", " + getHome().getZ();
             tooltip.add(new TranslatableComponent("ars_nouveau.weald_walker.home",home));
         }else{
             tooltip.add(new TranslatableComponent("ars_nouveau.weald_walker.home",new TranslatableComponent("ars_nouveau.nothing").getString()));
         }
-        return tooltip;
     }
 
     public enum Animations{

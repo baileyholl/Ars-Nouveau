@@ -52,8 +52,7 @@ public class SourceJarTile extends AbstractSourceMachine implements ITickable, I
     }
 
     @Override
-    public List<Component> getTooltip(List<Component> tooltip) {
+    public void getTooltip(List<Component> tooltip) {
         tooltip.add(new TranslatableComponent("ars_nouveau.source_jar.fullness", (getSource()*100) / this.getMaxSource()));
-        return tooltip;
     }
 }

@@ -627,15 +627,14 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
     }
 
     @Override
-    public List<Component> getTooltip(List<Component> tooltip) {
+    public void getTooltip(List<Component> tooltip) {
         if(!isTamed())
-            return tooltip;
+            return;
         tooltip.add(new TranslatableComponent("ars_nouveau.starbuncle.storing", this.entityData.get(TO_POS)));
         tooltip.add(new TranslatableComponent("ars_nouveau.starbuncle.taking", this.entityData.get(FROM_POS)));
         if(pathBlockDesc() != null && !pathBlockDesc().isEmpty()){
             tooltip.add(new TranslatableComponent("ars_nouveau.starbuncle.pathing", this.entityData.get(PATH_BLOCK)));
         }
-        return tooltip;
     }
 
 

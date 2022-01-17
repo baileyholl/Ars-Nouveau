@@ -201,7 +201,7 @@ public class ArcaneRelayTile extends AbstractSourceMachine implements ITooltipPr
     }
 
     @Override
-    public List<Component> getTooltip(List<Component> tooltip) {
+    public void getTooltip(List<Component> tooltip) {
         if(toPos == null){
             tooltip.add(new TranslatableComponent("ars_nouveau.relay.no_to"));
         }else{
@@ -212,7 +212,6 @@ public class ArcaneRelayTile extends AbstractSourceMachine implements ITooltipPr
         }else{
             tooltip.add(new TranslatableComponent("ars_nouveau.relay.one_from", 1));
         }
-        return tooltip;
     }
     AnimationFactory factory = new AnimationFactory(this);
 

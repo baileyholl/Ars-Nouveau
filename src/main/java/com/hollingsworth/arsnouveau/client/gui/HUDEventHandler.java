@@ -4,6 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
@@ -15,6 +16,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -52,9 +54,11 @@ public class HUDEventHandler {
         if (mouseOver != null && mouseOver.getType() == HitResult.Type.ENTITY) {
 
           EntityHitResult result = (EntityHitResult) mouseOver;
-          if(result.getEntity() instanceof ITooltipProvider)
-              entityHUD.drawHUD(event.getMatrixStack(),((ITooltipProvider) result.getEntity()).getTooltip(new ArrayList<>()));
-
+          if(result.getEntity() instanceof ITooltipProvider) {
+              List<Component> components = new ArrayList<>();
+              ((ITooltipProvider) result.getEntity()).getTooltip(new ArrayList<>());
+              entityHUD.drawHUD(event.getMatrixStack(), components);
+          }
           if(result.getEntity() instanceof ItemFrame){
               scrollHUD.drawHUD(event.getMatrixStack(), (ItemFrame) result.getEntity());
           }
@@ -64,7 +68,9 @@ public class HUDEventHandler {
             BlockHitResult result = (BlockHitResult) mouseOver;
             BlockPos pos = result.getBlockPos();
             if(Minecraft.getInstance().level != null && Minecraft.getInstance().level.getBlockEntity(pos) instanceof ITooltipProvider){
-                entityHUD.drawHUD(event.getMatrixStack(), ((ITooltipProvider) Minecraft.getInstance().level.getBlockEntity(pos)).getTooltip(new ArrayList<>()));
+                List<Component> components = new ArrayList<>();
+                ((ITooltipProvider) Minecraft.getInstance().level.getBlockEntity(pos)).getTooltip(new ArrayList<>());
+                entityHUD.drawHUD(event.getMatrixStack(), components);
             }
         }
     }

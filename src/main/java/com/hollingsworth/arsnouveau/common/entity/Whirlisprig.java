@@ -346,9 +346,9 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
     protected void registerGoals() { /*Do not use. See above*/}
 
     @Override
-    public List<Component> getTooltip(List<Component> tooltip) {
+    public void getTooltip(List<Component> tooltip) {
         if(!this.entityData.get(TAMED))
-            return tooltip;
+            return;
         int mood = this.entityData.get(MOOD_SCORE);
         String moodStr = new TranslatableComponent("ars_nouveau.whirlisprig.tooltip_unhappy").getString();
         if(mood >= 1000)
@@ -360,7 +360,6 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
         else if(mood >= 250)
             moodStr = new TranslatableComponent("ars_nouveau.whirlisprig.tooltip_content").getString();
         tooltip.add(new TextComponent(new TranslatableComponent("ars_nouveau.whirlisprig.tooltip_mood").getString() + moodStr));
-        return tooltip;
     }
 
     @Override

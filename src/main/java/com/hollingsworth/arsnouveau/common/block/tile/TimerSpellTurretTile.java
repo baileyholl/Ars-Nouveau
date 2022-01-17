@@ -77,7 +77,7 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
     }
 
     @Override
-    public List<Component> getTooltip(List<Component> tooltip) {
+    public void getTooltip(List<Component> tooltip) {
         super.getTooltip(tooltip);
         if(ticksPerSignal <= 0 && !isOff){
             tooltip.add(new TranslatableComponent("ars_nouveau.tooltip.turned_off"));
@@ -88,7 +88,6 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWanda
             tooltip.add(new TranslatableComponent("ars_nouveau.tooltip.turned_off"));
         if(isLocked)
             tooltip.add(new TranslatableComponent("ars_nouveau.locked"));
-        return tooltip;
     }
 
     @Override

@@ -79,9 +79,8 @@ public class BasicSpellTurretTile extends ModdedTile implements IPickupResponder
     }
 
     @Override
-    public List<Component> getTooltip(List<Component> tooltip) {
+    public void getTooltip(List<Component> tooltip) {
         tooltip.add(new TextComponent(new TranslatableComponent("ars_nouveau.spell_turret.casting").getString() + spell.getDisplayString()));
-        return tooltip;
     }
 
     public PlayState walkPredicate(AnimationEvent event) {

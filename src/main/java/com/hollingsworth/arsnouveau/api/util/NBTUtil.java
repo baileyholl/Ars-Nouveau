@@ -36,23 +36,32 @@ public class NBTUtil {
 
     public static List<ItemStack> readItems(CompoundTag tag, String prefix){
         List<ItemStack> stacks = new ArrayList<>();
+
         if(tag == null)
             return stacks;
-
-        for(String s : tag.getAllKeys()){
-            if(s.contains(prefix)){
-                stacks.add(ItemStack.of(tag.getCompound(s)));
+        try {
+            CompoundTag itemsTag = tag.getCompound(prefix + "_tag");
+            int numItems = itemsTag.getInt("itemsSize");
+            for(int i = 0; i < numItems; i++){
+                String key = prefix +"_" + i;
+                stacks.add(ItemStack.of(itemsTag.getCompound(key)));
             }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return stacks;
     }
 
     public static void writeItems(CompoundTag tag, String prefix, List<ItemStack> items){
-        for(ItemStack item : items) {
+        CompoundTag allItemsTag = new CompoundTag();
+        for(int i = 0; i < items.size(); i++) {
+            ItemStack stack = items.get(i);
             CompoundTag itemTag = new CompoundTag();
-            item.save(itemTag);
-            tag.put(getItemKey(item, prefix), itemTag);
+            stack.save(itemTag);
+            allItemsTag.put(prefix + "_" + i, itemTag);
         }
+        allItemsTag.putInt("itemsSize", items.size());
+        tag.put(prefix + "_tag", allItemsTag);
     }
 
 
