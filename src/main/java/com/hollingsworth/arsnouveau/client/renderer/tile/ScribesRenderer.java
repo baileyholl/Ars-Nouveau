@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.client.renderer.item.GenericItemRenderer;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
@@ -15,6 +16,7 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -22,7 +24,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
-import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
@@ -100,6 +102,7 @@ public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
             // why must people change the rendering order of tesrs
         }
     }
+
     public void renderPressedItem(ScribesTile tile, Item itemToRender, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int packedLight, int packedOverlay, float partialTicks){
         Direction direction = tile.getLevel().getBlockState(tile.getBlockPos()).getValue(ScribesBlock.FACING);
 
@@ -130,43 +133,24 @@ public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
         if(tile.recipe != null){
             float ticks = (partialTicks + (float) ClientInfo.ticksInGame);
             float angleBetweenEach = 360.0f / tile.recipe.inputs.size();
-            float currentDegree = (partialTicks + (float) ClientInfo.ticksInGame);
-            Vec2 vec2 = new Vec2(1, 0);
-            Vec2 center = new Vec2(1,2);
-            int counter = 0;
-            for(Ingredient i : tile.recipe.inputs){
+            // How far away from the center should they be.
+            Vec3 distanceVec = new Vec3(1,-0.5,1);
+            for(int i = 0; i < tile.recipe.inputs.size(); i++){
+                Ingredient ingredient = tile.recipe.inputs.get(i);
                 matrixStack.pushPose();
-                matrixStack.translate(0, 2.5, 0);
-                matrixStack.scale(0.6f, 0.6f, 0.6f);
-                counter++;
-                vec2 = rotatePointAbout(vec2, center, angleBetweenEach);
-                matrixStack.translate(vec2.x, 0, vec2.y);
-                matrixStack.mulPose(Vector3f.YP.rotationDegrees(90 + ticks));
-                Minecraft.getInstance().getItemRenderer().renderStatic(i.getItems()[0], ItemTransforms.TransformType.FIXED, packedLight, packedOverlay, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
-                currentDegree += angleBetweenEach;
+                matrixStack.translate(-0.5, 2.0, 0);
+                matrixStack.scale(0.4f, 0.4f, 0.4f);
+                // This spaces them out from each other
+                matrixStack.mulPose(Vector3f.YP.rotationDegrees(ticks + (i * angleBetweenEach)));
+                // Controls the distance from the center, also makes them float up and down
+                matrixStack.translate(distanceVec.x(), distanceVec.y() + ((i % 2 == 0 ? -i : i) * Mth.sin(ticks / 60) * 0.0625), distanceVec.z());
+                // This rotates the individual stacks, with every 2nd stack rotating a different direction
+                matrixStack.mulPose((i % 2 == 0 ? Vector3f.ZP : Vector3f.XP).rotationDegrees(ticks));
+                RenderSystem.setShaderColor(1,1,1, 0.5f);
+                Minecraft.getInstance().getItemRenderer().renderStatic(ingredient.getItems()[0], ItemTransforms.TransformType.FIXED, packedLight, packedOverlay, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
                 matrixStack.popPose();
             }
         }
-    }
-
-    private void renderIngredientAtAngle(PoseStack ms, float angle) {
-
-        double x = 1;
-        double y = 1;
-        angle -= 90;
-        int radius = 32;
-        double xPos = x + Math.cos(angle * Math.PI / 180D) * radius + 32;
-        double yPos = y + Math.sin(angle * Math.PI / 180D) * radius + 32;
-
-        ms.translate(xPos - (int) xPos, 0, yPos - (int) yPos);
-
-    }
-
-    public static Vec2 rotatePointAbout(Vec2 in, Vec2 about, double degrees) {
-        double rad = degrees * Math.PI / 180.0;
-        double newX = Math.cos(rad) * (in.x - about.x) - Math.sin(rad) * (in.y - about.y) + about.x;
-        double newY = Math.sin(rad) * (in.x - about.x) + Math.cos(rad) * (in.y - about.y) + about.y;
-        return new Vec2((float) newX, (float) newY);
     }
 
     public static GenericItemRenderer getISTER(){

@@ -1,6 +1,8 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
+import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
+import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
@@ -11,7 +13,9 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -44,14 +48,23 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
 
     @Override
     public void tick() {
-        if(recipe == null && recipeID != null){
+        if(getBlockState().getValue(ScribesBlock.PART) != BedPart.HEAD)
+            return;
+        if(recipeID != null && (recipe == null || !recipe.id.equals(recipeID))){
             recipe = (GlyphRecipe) level.getRecipeManager().byKey(recipeID).orElse(null);
         }
     }
 
     public void setRecipe(GlyphRecipe recipe){
-        this.recipe = recipe;
-        updateBlock();
+        ScribesTile tile = this;
+        if(getBlockState().getValue(ScribesBlock.PART) != BedPart.HEAD) {
+            BlockEntity tileEntity = level.getBlockEntity(getBlockPos().relative(ScribesBlock.getConnectedDirection(getBlockState())));
+            tile = tileEntity instanceof ScribesTile ? (ScribesTile) tileEntity : null;
+            if(tile == null)
+                return;
+        }
+        tile.recipe = recipe;
+        tile.updateBlock();
     }
 
     @Override
@@ -61,16 +74,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         if(compound.contains("recipe")){
             recipeID = new ResourceLocation(compound.getString("recipe"));
         }
-    }
-
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        if(recipeID != null) {
-            recipe = (GlyphRecipe) level.getRecipeManager().byKey(recipeID).orElse(null);
-            updateBlock();
-        }
-
+        this.consumedStacks = NBTUtil.readItems(compound, "consumed");
     }
 
     @Override
@@ -82,6 +86,9 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         }
         if(recipe !=  null){
             compound.putString("recipe", recipe.getId().toString());
+        }
+        if(consumedStacks != null && !consumedStacks.isEmpty()){
+            NBTUtil.writeItems(compound, "consumed", consumedStacks);
         }
     }
 
