@@ -984,5 +984,6 @@
 	"ars_nouveau.apparatus.norecipe": "No recipe found. Pedestals must be within 3 blocks.",
 	"ars_nouveau.imbuement.norecipe": "No recipe found. If pedestals are required, they must be placed within the 1 block cube around the chamber.",
 	"ars_nouveau.spell_book_gui.select": "Select",
-	"ars_nouveau.levels_required": "Levels required: %s"
+	"ars_nouveau.levels_required": "Levels required: %s",
+	"ars_nouveau.crafting": "Crafting: %s"
 }

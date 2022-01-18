@@ -5,11 +5,14 @@ import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -26,6 +29,10 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
@@ -34,7 +41,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, Container, ITooltipProvider {
+public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, Container, ITooltipProvider,IAnimationListener {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
     public ItemEntity entity; // For rendering
     public ItemStack stack = ItemStack.EMPTY;
@@ -43,6 +50,8 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
     public List<ItemStack> consumedStacks = new ArrayList<>();
     public GlyphRecipe recipe;
     ResourceLocation recipeID; // Cached for after load
+    public boolean crafting;
+    public int craftingTicks;
 
 
     public ScribesTile(BlockPos pos, BlockState state) {
@@ -57,7 +66,14 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
             updateBlock();
             synced = true;
         }
-        if(recipeID != null && (recipe == null || !recipe.id.equals(recipeID))){
+        if(craftingTicks > 0)
+            craftingTicks--;
+
+        if(recipeID != null && recipeID.equals(new ResourceLocation(""))){
+            recipe = null; // Used on client to remove recipe since for some forsaken reason world is missing during load.
+        }
+
+        if(recipeID != null && !recipeID.toString().isEmpty() &&  (recipe == null || !recipe.id.equals(recipeID))){
             recipe = (GlyphRecipe) level.getRecipeManager().byKey(recipeID).orElse(null);
         }
         if(!level.isClientSide && level.getGameTime() % 20 == 0 && recipe != null){
@@ -72,6 +88,21 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
                     break;
                 }
             }
+
+            if(getRemainingRequired().isEmpty() && !crafting){
+                crafting = true;
+                craftingTicks = 120;
+                Networking.sendToNearby(level, getBlockPos(), new PacketOneShotAnimation(getBlockPos(), 0));
+                updateBlock();
+            }
+        }
+        if(!level.isClientSide && crafting && craftingTicks == 0 && recipe != null){
+            level.addFreshEntity(new ItemEntity(level, getX(), getY() + 1, getZ(), recipe.output.copy()));
+            recipe = null;
+            recipeID = new ResourceLocation("");
+            crafting = false;
+            consumedStacks = new ArrayList<>();
+            updateBlock();
         }
     }
 
@@ -93,6 +124,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
                 return;
         }
         tile.recipe = recipe;
+        tile.recipeID = recipe.getId();
         tile.updateBlock();
     }
 
@@ -137,10 +169,9 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         }
         CompoundTag itemsTag = new CompoundTag();
         itemsTag.putInt("numStacks", consumedStacks.size());
-        for(ItemStack i : consumedStacks){
-
-        }
         this.consumedStacks = NBTUtil.readItems(compound, "consumed");
+        this.craftingTicks = compound.getInt("craftingTicks");
+        this.crafting = compound.getBoolean("crafting");
     }
 
     @Override
@@ -150,15 +181,31 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
             stack.save(reagentTag);
             compound.put("itemStack", reagentTag);
         }
-        if(recipe !=  null){
+        if(recipe != null){
             compound.putString("recipe", recipe.getId().toString());
+        }else{
+            compound.putString("recipe", "");
         }
         NBTUtil.writeItems(compound, "consumed", consumedStacks);
+        compound.putInt("craftingTicks", craftingTicks);
+        compound.putBoolean("crafting", crafting);
+    }
 
+    private <E extends BlockEntity & IAnimatable > PlayState idlePredicate(AnimationEvent<E> event) {
+        return PlayState.CONTINUE;
+    }
+    @Override
+    public void startAnimation(int arg) {
+        AnimationData data = this.factory.getOrCreateAnimationData(this.hashCode());
+        AnimationController controller = data.getAnimationControllers().get("controller");
+        controller.markNeedsReload();
+        controller.setAnimation(new AnimationBuilder().addAnimation("create_glyph", false));
     }
 
     @Override
-    public void registerControllers(AnimationData data) {}
+    public void registerControllers(AnimationData data) {
+        data.addAnimationController(new AnimationController(this, "controller", 1, this::idlePredicate));
+    }
 
     @Override
     public AABB getRenderBoundingBox() {
@@ -235,6 +282,8 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-
+        if(recipe != null){
+            tooltip.add(new TranslatableComponent("ars_nouveau.crafting", recipe.output.getDisplayName()));
+        }
     }
 }

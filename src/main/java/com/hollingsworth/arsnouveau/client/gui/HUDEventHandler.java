@@ -56,7 +56,7 @@ public class HUDEventHandler {
           EntityHitResult result = (EntityHitResult) mouseOver;
           if(result.getEntity() instanceof ITooltipProvider) {
               List<Component> components = new ArrayList<>();
-              ((ITooltipProvider) result.getEntity()).getTooltip(new ArrayList<>());
+              ((ITooltipProvider) result.getEntity()).getTooltip(components);
               entityHUD.drawHUD(event.getMatrixStack(), components);
           }
           if(result.getEntity() instanceof ItemFrame){
@@ -69,7 +69,7 @@ public class HUDEventHandler {
             BlockPos pos = result.getBlockPos();
             if(Minecraft.getInstance().level != null && Minecraft.getInstance().level.getBlockEntity(pos) instanceof ITooltipProvider){
                 List<Component> components = new ArrayList<>();
-                ((ITooltipProvider) Minecraft.getInstance().level.getBlockEntity(pos)).getTooltip(new ArrayList<>());
+                ((ITooltipProvider) Minecraft.getInstance().level.getBlockEntity(pos)).getTooltip(components);
                 entityHUD.drawHUD(event.getMatrixStack(), components);
             }
         }
