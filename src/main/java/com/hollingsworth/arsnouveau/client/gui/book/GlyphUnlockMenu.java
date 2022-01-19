@@ -7,10 +7,9 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.client.gui.GlyphRecipeTooltip;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
-import com.hollingsworth.arsnouveau.client.gui.buttons.CreateSpellButton;
-import com.hollingsworth.arsnouveau.client.gui.buttons.GlyphButton;
-import com.hollingsworth.arsnouveau.client.gui.buttons.ItemButton;
-import com.hollingsworth.arsnouveau.client.gui.buttons.UnlockGlyphButton;
+import com.hollingsworth.arsnouveau.client.gui.buttons.*;
+import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetScribeRecipe;
@@ -63,6 +62,8 @@ public class GlyphUnlockMenu extends BaseBook{
         TIER3
     }
 
+    String orderingTitle = "";
+
     List<ItemButton> itemButtons = new ArrayList<>();
 
     public GlyphUnlockMenu(BlockPos pos){
@@ -75,6 +76,8 @@ public class GlyphUnlockMenu extends BaseBook{
     @Override
     public void init() {
         super.init();
+        this.orderingTitle = new TranslatableComponent("ars_nouveau.all").getString();
+
         searchBar = new NoShadowTextField(minecraft.font, bookRight - 73, bookTop +2,
                 54, 12, null, new TranslatableComponent("ars_nouveau.spell_book_gui.search"));
         searchBar.setBordered(false);
@@ -102,6 +105,12 @@ public class GlyphUnlockMenu extends BaseBook{
             addRenderableWidget(cell);
             itemButtons.add(cell);
         }
+
+        addRenderableWidget(new GuiImageButton(bookRight + 15, bookTop + 22, 0, 0, 23, 20, 23,20, "textures/gui/worn_book_bookmark.png", (b) -> {})
+                .withTooltip(this, new TranslatableComponent("ars_nouveau.gui.notebook")));
+//        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 46, 0, 0, 23, 20, 23,20, "textures/gui/color_wheel_bookmark.png",this::onColorClick)
+//                .withTooltip(this, new TranslatableComponent("ars_nouveau.gui.color")));
+//        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 70, 0, 0, 23, 20, 23,20, "textures/gui/summon_circle_bookmark.png",this::onFamiliarClick)
     }
 
     private void onSelectClick(Button button) {
@@ -177,18 +186,13 @@ public class GlyphUnlockMenu extends BaseBook{
         tier1Row = -1;
         tier2Row = -1;
         tier3Row = -1;
-//        formTextRow = 0;
-//        augmentTextRow = 0;
-//        effectTextRow = 0;
+
         final int PER_ROW = 6;
         final int MAX_ROWS = 6;
         boolean nextPage = false;
         int xStart = nextPage ? bookLeft + 154 : bookLeft + 20;
         int adjustedRowsPlaced = 0;
         int yStart = bookTop + 20;
-        boolean foundTier1 = false;
-        boolean foundTier2 = false;
-        boolean foundTier3 = false;
         List<AbstractSpellPart> sorted = new ArrayList<>();
         Comparator<AbstractSpellPart> spellPartComparator = new Comparator<AbstractSpellPart>() {
             @Override
@@ -234,6 +238,12 @@ public class GlyphUnlockMenu extends BaseBook{
             int xOffset = 20 * ((adjustedXPlaced ) % PER_ROW) + (nextPage ? 134 :0);
             int yPlace = adjustedRowsPlaced * 18 + yStart;
             UnlockGlyphButton cell = new UnlockGlyphButton(this, xStart + xOffset, yPlace, false, part.getIcon(), part.getId());
+            IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(Minecraft.getInstance().player).orElse(null);
+            if(cap != null){
+                if(cap.knowsGlyph(part)){
+                    cell.playerKnows = true;
+                }
+            }
             addRenderableWidget(cell);
             glyphButtons.add(cell);
             adjustedXPlaced++;
@@ -245,8 +255,12 @@ public class GlyphUnlockMenu extends BaseBook{
             itemButton.visible = false;
             itemButton.ingredient = Ingredient.EMPTY;
         }
+        for(UnlockGlyphButton button1 : glyphButtons){
+            button1.selected = false;
+        }
         if(button instanceof UnlockGlyphButton unlockGlyphButton){
             this.selectedRecipe = unlockGlyphButton.recipe;
+            unlockGlyphButton.selected = true;
             if(selectedRecipe == null)
                 return;
             for(int i = 0; i < selectedRecipe.inputs.size(); i++){
@@ -301,13 +315,12 @@ public class GlyphUnlockMenu extends BaseBook{
     public void drawBackgroundElements(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
 
-        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.tier", 1).getString(), tier1Row > 7 ? 154 : 20 ,  5 + 18 * (tier1Row + (tier1Row == 1 ? 0 : 1)), -8355712);
+        minecraft.font.draw(stack, orderingTitle, tier1Row > 7 ? 154 : 20 ,  5 + 18 * (tier1Row + (tier1Row == 1 ? 0 : 1)), -8355712);
 
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15,56,15, stack);
 
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/search_paper.png"), 203, 0, 0, 0, 72, 15,72,15, stack);
         minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.spell_book_gui.select"), 233, 183, -8355712);
-
     }
 
     public void drawTooltip(PoseStack stack, int mouseX, int mouseY) {

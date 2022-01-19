@@ -45,7 +45,7 @@ public class GuiImageButton extends Button
 
     }
 
-    public GuiImageButton withTooltip(GuiSpellBook parent, TranslatableComponent toolTip){
+    public GuiImageButton withTooltip(BaseBook parent, TranslatableComponent toolTip){
         this.parent = parent;
         this.toolTip = toolTip;
         return this;
