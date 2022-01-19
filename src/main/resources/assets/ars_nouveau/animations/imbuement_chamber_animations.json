@@ -7,7 +7,7 @@
 			"bones": {
 				"cage": {
 					"position": {
-						"vector": [0, "math.cos(query.anim_time * 115) * .5", 0]
+						"vector": [0, "math.cos(query.anim_time * 115) * 0.5", 0]
 					}
 				}
 			}

@@ -121,7 +121,7 @@ public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
         if(direction == Direction.SOUTH){
             matrixStack.mulPose(Vector3f.ZP.rotationDegrees(180));
         }
-        matrixStack.translate(-0.8, 0, 0);
+        matrixStack.translate(-0.7, 0, 0);
         matrixStack.scale(0.6f, 0.6f, 0.6f);
 
         Minecraft.getInstance().getItemRenderer().renderStatic(new ItemStack(itemToRender), ItemTransforms.TransformType.FIXED, packedLight, packedOverlay, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
