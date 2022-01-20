@@ -21,7 +21,7 @@ import java.util.List;
 @OnlyIn(Dist.CLIENT)
 public class GuiImageButton extends Button
 {
-    private ResourceLocation image;
+    public ResourceLocation image;
 
     public String resourceIcon;
 

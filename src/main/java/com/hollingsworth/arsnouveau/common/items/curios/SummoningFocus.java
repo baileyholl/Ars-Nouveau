@@ -57,12 +57,6 @@ public class SummoningFocus extends ModItem implements ISpellModifierItem {
         return builder;
     }
 
-    public SpellStats.Builder getSimpleStats(SpellStats.Builder builder){
-        builder.addDamageModifier(1.0f);
-        return builder;
-    }
-
-
     public static boolean containsThis(Level world, Entity entity){
         if(!world.isClientSide && entity instanceof Player) {
             IItemHandlerModifiable items = CuriosUtil.getAllWornItems((LivingEntity) entity).orElse(null);

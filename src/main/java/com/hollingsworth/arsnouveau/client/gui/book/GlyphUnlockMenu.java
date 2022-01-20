@@ -35,6 +35,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GlyphUnlockMenu extends BaseBook{
 
@@ -65,7 +66,7 @@ public class GlyphUnlockMenu extends BaseBook{
     String orderingTitle = "";
 
     List<ItemButton> itemButtons = new ArrayList<>();
-
+    List<SelectableButton> filterButtons = new ArrayList<>();
     public GlyphUnlockMenu(BlockPos pos){
         super();
         allParts = new ArrayList<>(ArsNouveauAPI.getInstance().getSpellpartMap().values());
@@ -76,7 +77,7 @@ public class GlyphUnlockMenu extends BaseBook{
     @Override
     public void init() {
         super.init();
-        this.orderingTitle = new TranslatableComponent("ars_nouveau.all").getString();
+        this.orderingTitle = new TranslatableComponent("ars_nouveau.all_glyphs").getString();
 
         searchBar = new NoShadowTextField(minecraft.font, bookRight - 73, bookTop +2,
                 54, 12, null, new TranslatableComponent("ars_nouveau.spell_book_gui.search"));
@@ -106,11 +107,33 @@ public class GlyphUnlockMenu extends BaseBook{
             itemButtons.add(cell);
         }
 
-        addRenderableWidget(new GuiImageButton(bookRight + 15, bookTop + 22, 0, 0, 23, 20, 23,20, "textures/gui/worn_book_bookmark.png", (b) -> {})
-                .withTooltip(this, new TranslatableComponent("ars_nouveau.gui.notebook")));
-//        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 46, 0, 0, 23, 20, 23,20, "textures/gui/color_wheel_bookmark.png",this::onColorClick)
-//                .withTooltip(this, new TranslatableComponent("ars_nouveau.gui.color")));
-//        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 70, 0, 0, 23, 20, 23,20, "textures/gui/summon_circle_bookmark.png",this::onFamiliarClick)
+        SelectableButton all = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 22, 0, 0, 23, 20, 23,20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_all.png"),
+                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_all_selected.png"), (b) -> this.setFilter(Filter.ALL, (SelectableButton) b, new TranslatableComponent("ars_nouveau.all_glyphs").getString())).withTooltip(this, new TranslatableComponent("ars_nouveau.all_glyphs"));
+        all.isSelected = true;
+        SelectableButton tier1 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 46, 0, 0, 23, 20, 23,20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier1.png"),
+                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier1_selected.png"), (b) -> this.setFilter(Filter.TIER1, (SelectableButton) b, new TranslatableComponent("ars_nouveau.tier", 1).getString())).withTooltip(this, new TranslatableComponent("ars_nouveau.tier", 1));
+
+        SelectableButton tier2 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 70, 0, 0, 23, 20, 23,20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier2.png"),
+                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier2_selected.png"), (b) ->  this.setFilter(Filter.TIER2, (SelectableButton) b, new TranslatableComponent("ars_nouveau.tier", 2).getString())).withTooltip(this, new TranslatableComponent("ars_nouveau.tier", 2));
+        SelectableButton tier3 = (SelectableButton) new SelectableButton(bookRight - 8, bookTop + 94, 0, 0, 23, 20, 23,20, new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier3.png"),
+                new ResourceLocation(ArsNouveau.MODID, "textures/gui/filter_tab_tier3_selected.png"), (b) ->  this.setFilter(Filter.TIER3, (SelectableButton) b, new TranslatableComponent("ars_nouveau.tier", 3).getString())).withTooltip(this, new TranslatableComponent("ars_nouveau.tier", 3));
+        filterButtons.add(all);
+        filterButtons.add(tier2);
+        filterButtons.add(tier1);
+        filterButtons.add(tier3);
+        for(SelectableButton button : filterButtons){
+            addRenderableWidget(button);
+        }
+    }
+
+    public void setFilter(Filter filter, SelectableButton button, String displayTitle){
+        for(SelectableButton b : filterButtons){
+            b.isSelected = false;
+        }
+        this.filterSelected = filter;
+        button.isSelected = true;
+        this.orderingTitle = displayTitle;
+        resetPageState();
     }
 
     private void onSelectClick(Button button) {
@@ -193,7 +216,6 @@ public class GlyphUnlockMenu extends BaseBook{
         int xStart = nextPage ? bookLeft + 154 : bookLeft + 20;
         int adjustedRowsPlaced = 0;
         int yStart = bookTop + 20;
-        List<AbstractSpellPart> sorted = new ArrayList<>();
         Comparator<AbstractSpellPart> spellPartComparator = new Comparator<AbstractSpellPart>() {
             @Override
             public int compare(AbstractSpellPart o1, AbstractSpellPart o2) {
@@ -210,7 +232,8 @@ public class GlyphUnlockMenu extends BaseBook{
             }
         }.thenComparingInt(o -> o.getTier().value)
                 .thenComparing(AbstractSpellPart::getLocaleName);
-        sorted.addAll(displayedGlyphs);
+        List<AbstractSpellPart> sorted = new ArrayList<>(displayedGlyphs);
+        sorted = applyFilter(sorted);
         sorted.sort(spellPartComparator);
         sorted = sorted.subList(maxPerPage * page, Math.min(sorted.size(), maxPerPage * (page + 1)));
         int adjustedXPlaced = 0;
@@ -248,6 +271,18 @@ public class GlyphUnlockMenu extends BaseBook{
             glyphButtons.add(cell);
             adjustedXPlaced++;
         }
+    }
+
+    public List<AbstractSpellPart> applyFilter(List<AbstractSpellPart> spellParts){
+        if(filterSelected == Filter.ALL)
+            return spellParts;
+        if(filterSelected == Filter.TIER1){
+            return spellParts.stream().filter(a -> a.getTier().value == 1).collect(Collectors.toList());
+        }
+        if(filterSelected == Filter.TIER2){
+            return spellParts.stream().filter(a -> a.getTier().value == 2).collect(Collectors.toList());
+        }
+        return spellParts.stream().filter(a -> a.getTier().value == 3).collect(Collectors.toList());
     }
 
     public void onGlyphClick(Button button){
