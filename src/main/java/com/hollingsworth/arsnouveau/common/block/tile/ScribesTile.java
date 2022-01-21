@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
@@ -76,7 +77,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         if(recipeID != null && !recipeID.toString().isEmpty() &&  (recipe == null || !recipe.id.equals(recipeID))){
             recipe = (GlyphRecipe) level.getRecipeManager().byKey(recipeID).orElse(null);
         }
-        if(!level.isClientSide && level.getGameTime() % 20 == 0 && recipe != null){
+        if(!level.isClientSide && level.getGameTime() % 8 == 0 && recipe != null){
             List<ItemEntity> nearbyItems = level.getEntitiesOfClass(ItemEntity.class, new AABB(getBlockPos()).inflate(2));
             for(ItemEntity e : nearbyItems){
                 if(canConsumeItemstack(e.getItem())){
@@ -84,6 +85,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
                     copyStack.setCount(1);
                     consumedStacks.add(copyStack);
                     e.getItem().shrink(1);
+                    ParticleUtil.spawnTouchPacket(level, e.getOnPos(), ParticleUtil.defaultParticleColorWrapper());
                     updateBlock();
                     break;
                 }
@@ -95,6 +97,10 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
                 Networking.sendToNearby(level, getBlockPos(), new PacketOneShotAnimation(getBlockPos(), 0));
                 updateBlock();
             }
+        }
+        if(level.isClientSide && craftingTicks == 0 && crafting){
+            crafting = false;
+
         }
         if(!level.isClientSide && crafting && craftingTicks == 0 && recipe != null){
             level.addFreshEntity(new ItemEntity(level, getX(), getY() + 1, getZ(), recipe.output.copy()));
@@ -115,17 +121,26 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
     }
 
     public void setRecipe(GlyphRecipe recipe){
-        ScribesTile tile = this;
-        refundConsumed();
-        if(getBlockState().getValue(ScribesBlock.PART) != BedPart.HEAD) {
-            BlockEntity tileEntity = level.getBlockEntity(getBlockPos().relative(ScribesBlock.getConnectedDirection(getBlockState())));
-            tile = tileEntity instanceof ScribesTile ? (ScribesTile) tileEntity : null;
-            if(tile == null)
-                return;
-        }
+        ScribesTile tile = getLogicTile();
+        tile.refundConsumed();
         tile.recipe = recipe;
         tile.recipeID = recipe.getId();
         tile.updateBlock();
+    }
+
+    public ScribesTile getLogicTile(){
+        ScribesTile tile = this;
+        if(!isMasterTile()) {
+            BlockEntity tileEntity = level.getBlockEntity(getBlockPos().relative(ScribesBlock.getConnectedDirection(getBlockState())));
+            tile = tileEntity instanceof ScribesTile ? (ScribesTile) tileEntity : null;
+            if(tile == null)
+                return this;
+        }
+        return tile;
+    }
+
+    public boolean isMasterTile(){
+        return getBlockState().getValue(ScribesBlock.PART) == BedPart.HEAD;
     }
 
     public boolean canConsumeItemstack(ItemStack stack){
@@ -282,8 +297,12 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
 
     @Override
     public void getTooltip(List<Component> tooltip) {
+        if(!isMasterTile()) {
+            getLogicTile().getTooltip(tooltip);
+            return;
+        }
         if(recipe != null){
-            tooltip.add(new TranslatableComponent("ars_nouveau.crafting", recipe.output.getDisplayName()));
+            tooltip.add(new TranslatableComponent("ars_nouveau.crafting", recipe.output.getHoverName()));
         }
     }
 }

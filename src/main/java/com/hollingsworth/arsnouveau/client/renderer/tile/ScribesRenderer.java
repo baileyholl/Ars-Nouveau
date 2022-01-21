@@ -126,7 +126,7 @@ public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
 
         Minecraft.getInstance().getItemRenderer().renderStatic(new ItemStack(itemToRender), ItemTransforms.TransformType.FIXED, packedLight, packedOverlay, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
         matrixStack.popPose();
-        if(tile.recipe != null){
+        if(tile.recipe != null && !tile.crafting){
             List<Ingredient> inputs = tile.getRemainingRequired();
             float ticks = (partialTicks + (float) ClientInfo.ticksInGame);
             float angleBetweenEach = 360.0f /inputs.size();
@@ -134,6 +134,7 @@ public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
             Vec3 distanceVec = new Vec3(1,-0.5,1);
             for(int i = 0; i < inputs.size(); i++){
                 Ingredient ingredient = inputs.get(i);
+                ItemStack stack = ingredient.getItems()[(ClientInfo.ticksInGame / 20) % ingredient.getItems().length];
                 matrixStack.pushPose();
                 matrixStack.translate(-0.5, 2.0, 0);
                 matrixStack.scale(0.25f, 0.25f, 0.25f);
@@ -144,7 +145,7 @@ public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
                 // This rotates the individual stacks, with every 2nd stack rotating a different direction
                 matrixStack.mulPose((i % 2 == 0 ? Vector3f.ZP : Vector3f.XP).rotationDegrees(ticks));
                 RenderSystem.setShaderColor(1,1,1, 0.5f);
-                Minecraft.getInstance().getItemRenderer().renderStatic(ingredient.getItems()[0], ItemTransforms.TransformType.FIXED, packedLight, packedOverlay, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
+                Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemTransforms.TransformType.FIXED, packedLight, packedOverlay, matrixStack, iRenderTypeBuffer, (int) tile.getBlockPos().asLong());
                 matrixStack.popPose();
             }
         }
