@@ -14,6 +14,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -38,6 +39,36 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
 
     public GlyphRecipe withIngredient(Ingredient i ){
         this.inputs.add(i);
+        return this;
+    }
+
+    public GlyphRecipe withIngredient(Ingredient ingredient, int count ){
+        for(int i = 0; i < count; i++){
+            withIngredient(ingredient);
+        }
+        return this;
+    }
+
+    public GlyphRecipe withItem(ItemLike i){
+        this.inputs.add(Ingredient.of(i));
+        return this;
+    }
+    public GlyphRecipe withItem(ItemLike item, int count){
+        for(int i = 0; i < count; i++){
+            withItem(item);
+        }
+        return this;
+    }
+
+    public GlyphRecipe withStack(ItemStack i){
+        this.inputs.add(Ingredient.of(i));
+        return this;
+    }
+
+    public GlyphRecipe withStack(ItemStack stack, int count){
+        for(int i = 0; i < count; i++){
+            withStack(stack);
+        }
         return this;
     }
 
