@@ -122,16 +122,18 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
             level.addFreshEntity(entity);
             consumedStacks = new ArrayList<>();
         }
-        int exp = recipe.exp;
-        if(level instanceof ServerLevel serverLevel)
-            ExperienceOrb.award(serverLevel, new Vec3(getX(), getY(), getZ()), exp);
+        if(recipe != null) {
+            int exp = recipe.exp;
+            if (level instanceof ServerLevel serverLevel)
+                ExperienceOrb.award(serverLevel, new Vec3(getX(), getY(), getZ()), exp);
+        }
     }
 
     public void setRecipe(GlyphRecipe recipe, Player player){
-        if(ScribesTile.getTotalPlayerExperience(player) < recipe.exp){
+        if(ScribesTile.getTotalPlayerExperience(player) < recipe.exp && !player.isCreative()){
             PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.not_enough_exp"));
             return;
-        }else{
+        }else if(!player.isCreative()){
             player.giveExperiencePoints(-recipe.exp);
         }
         ScribesTile tile = getLogicTile();
@@ -143,6 +145,15 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
 
     public static int getTotalPlayerExperience(Player player){
         return (int) (getExperienceForLevel(player.experienceLevel) + player.experienceProgress * player.getXpNeededForNextLevel());
+    }
+
+    public static int getLevelsFromExp(int exp){
+        if(exp <= 352){
+            return (int) (Math.sqrt(exp + 9) - 3);
+        }else if(exp <= 1507){
+            return (int) (8.1 + Math.sqrt(0.4 * (exp - 195.975)));
+        }
+        return (int) (18.056 + Math.sqrt(0.222 * (exp - 752.986)));
     }
 
     public static int getExperienceForLevel(int level) {

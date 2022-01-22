@@ -70,10 +70,7 @@ public class ScribesBlock extends TickableModBlock {
         if (world.isClientSide) {
             return InteractionResult.SUCCESS;
         }
-        if(player.getItemInHand(handIn).getItem() instanceof SpellBook){
-            System.out.println(player.experienceProgress);
-            System.out.println(player.totalExperience);
-            player.giveExperiencePoints(-5);
+        if(player.getItemInHand(handIn).getItem() instanceof SpellBook && !player.isShiftKeyDown()){
             Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()-> (ServerPlayer) player),
                     new PacketOpenGlyphCraft(pos));
             return InteractionResult.SUCCESS;

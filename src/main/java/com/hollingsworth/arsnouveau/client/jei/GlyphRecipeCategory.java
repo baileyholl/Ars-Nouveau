@@ -4,6 +4,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -80,7 +81,7 @@ public class GlyphRecipeCategory implements IRecipeCategory<GlyphRecipe> {
     @Override
     public void draw(GlyphRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
         Font renderer = Minecraft.getInstance().font;
-        renderer.draw(matrixStack, new TranslatableComponent("ars_nouveau.exp", recipe.exp), 0.0f,100f, 10);
+        renderer.draw(matrixStack, new TranslatableComponent("ars_nouveau.exp", ScribesTile.getLevelsFromExp(recipe.exp)), 0.0f,100f, 10);
     }
 
     @Override

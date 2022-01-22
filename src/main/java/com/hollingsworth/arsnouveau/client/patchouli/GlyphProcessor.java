@@ -29,13 +29,8 @@ public class GlyphProcessor implements IComponentProcessor {
         if(recipe == null)
             return null;
 
-//        if(s.equals("clay_type"))
-//            return IVariable.from(recipe.getClay());
-//        if(s.equals("reagent"))
-//            return IVariable.from(recipe.reagent);
         if(s.equals("tier"))
-           return IVariable.wrap("");
-            // return IVariable.wrap(new TranslatableComponent("ars_nouveau.tier").getString() + ": " + new TranslatableComponent("ars_nouveau.spell_tier." + recipe.tier.value).getString());
+            return IVariable.wrap(new TranslatableComponent("ars_nouveau.tier").getString() + ": " + new TranslatableComponent("ars_nouveau.spell_tier." + recipe.getSpellPart().getTier().value).getString());
         if(s.equals("schools")) {
             AbstractSpellPart part = ((Glyph) recipe.output.getItem()).spellPart;
             StringBuilder str = new StringBuilder(new TranslatableComponent("ars_nouveau.spell_schools").getString() +": ");

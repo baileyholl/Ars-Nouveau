@@ -1,44 +1,37 @@
 {
 	"processor": "com.hollingsworth.arsnouveau.client.patchouli.GlyphProcessor",
 	"components": [
-
 		{
-			"type": "patchouli:item",
-			"item": "#clay_type",
-			"framed": true,
-			"x": 20,
-			"y": 20
+		  "type": "patchouli:header",
+		  "text": "block.ars_nouveau.scribes_table",
+		  "x": -1,
+		  "y": -1
 		},
 		{
-			"type": "patchouli:item",
-			"item": "#reagent",
-			"framed": true,
-			"x": 80,
-			"y": 20
-		},
-		{
-			"type": "patchouli:header",
-			"text": "ars_nouveau.glyph_reagents",
-			"x": -1,
-			"y": -1
+		  "type": "patchouli:custom",
+		  "class": "com.hollingsworth.arsnouveau.client.patchouli.component.RotatingItemListComponent",
+		  "x": -1,
+		  "y": 21,
+		  "recipe_type": "glyph_recipe",
+		  "recipe_name": "#recipe"
 		},
 		{
 			"type": "patchouli:text",
 			"text": "#tier#",
 			"x": 0,
-			"y": 50
+			"y": 105
 		},
 		{
 			"type": "patchouli:text",
 			"text": "#mana_cost#",
 			"x": 0,
-			"y": 60
+			"y": 115
 		},
 		{
 			"type": "patchouli:text",
 			"text": "#schools#",
 			"x": 0,
-			"y": 70
+			"y": 125
 		}
 	]
 }

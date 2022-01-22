@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.client.patchouli.component;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.annotations.SerializedName;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.client.Minecraft;
@@ -33,8 +34,11 @@ public class RotatingItemListComponent extends RotatingItemListComponentBase{
         }else if("imbuement_chamber".equals(recipeType)){
             ImbuementRecipe recipe = world.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE).stream().filter(f -> f.id.toString().equals(recipeName)).findFirst().orElse(null);
             return recipe == null ? ImmutableList.of() : recipe.pedestalItems;
+        }else if("glyph_recipe".equals(recipeType)){
+            GlyphRecipe recipe = (GlyphRecipe) world.getRecipeManager().byKey(new ResourceLocation(recipeName)).orElse(null);
+            return recipe == null ? ImmutableList.of() : recipe.inputs;
         } else {
-            throw new IllegalArgumentException("Type must be 'enchanting_apparatus' or 'imbuement_chamber'!");
+            throw new IllegalArgumentException("Type must be 'enchanting_apparatus', 'glyph_recipe', or 'imbuement_chamber'!");
         }
     }
 

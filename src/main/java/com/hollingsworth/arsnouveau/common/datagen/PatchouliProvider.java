@@ -96,7 +96,7 @@ public class PatchouliProvider implements DataProvider {
                 .withIcon(ItemsRegistry.BLANK_GLYPH)
                 .withSortNum(4)
                 .withLocalizedText()
-                .withPage(new RelationsPage().withEntry(MACHINES, "glyph_press").withEntry(GETTING_STARTED, "source")), getPath(GETTING_STARTED, "new_glyphs"));
+                .withPage(new RelationsPage().withEntry(MACHINES, "scribes_block").withEntry(GETTING_STARTED, "source")), getPath(GETTING_STARTED, "new_glyphs"));
 
         addPage(new PatchouliBuilder(GETTING_STARTED, "source")
                 .withSortNum(5)
@@ -344,8 +344,8 @@ public class PatchouliProvider implements DataProvider {
 
         addBasicItem(BlockRegistry.RITUAL_BLOCK, MACHINES, new CraftingPage(BlockRegistry.RITUAL_BLOCK));
         addPage(new PatchouliBuilder(MACHINES, BlockRegistry.SCRIBES_BLOCK)
-                .withLocalizedText()
-                .withLocalizedText()
+                .withPage(new TextPage(getLangPath("scribes_table", 1)).withTitle("ars_nouveau.glyph_crafting"))
+                .withPage(new TextPage(getLangPath("scribes_table", 2)).withTitle("ars_nouveau.scribing"))
                 .withPage(new CraftingPage(ItemsRegistry.SPELL_PARCHMENT).withRecipe2(BlockRegistry.SCRIBES_BLOCK)), getPath(MACHINES, "scribes_block"));
 
         addPage(new PatchouliBuilder(MACHINES, "warp_portal")

@@ -10,7 +10,7 @@
     },
     {
       "entries": [
-        "ars_nouveau:machines/glyph_press",
+        "ars_nouveau:machines/scribes_block",
         "ars_nouveau:getting_started/source"
       ],
       "type": "patchouli:relations"

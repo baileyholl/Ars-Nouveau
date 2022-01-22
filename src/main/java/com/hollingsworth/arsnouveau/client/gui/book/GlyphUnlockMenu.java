@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.client.gui.GlyphRecipeTooltip;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
 import com.hollingsworth.arsnouveau.client.gui.buttons.*;
+import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
@@ -362,7 +363,7 @@ public class GlyphUnlockMenu extends BaseBook{
     public void drawTooltip(PoseStack stack, int mouseX, int mouseY) {
         if (tooltip != null && !tooltip.isEmpty()) {
             if(hoveredRecipe != null) {
-                MutableComponent component = new TranslatableComponent("ars_nouveau.levels_required", getLevelsFromExp(hoveredRecipe.exp)).withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN));
+                MutableComponent component = new TranslatableComponent("ars_nouveau.levels_required", ScribesTile.getLevelsFromExp(hoveredRecipe.exp)).withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN));
                 tooltip.add(component);
             }
             List<ClientTooltipComponent> components = new ArrayList<>(net.minecraftforge.client.ForgeHooksClient.gatherTooltipComponents(ItemStack.EMPTY, tooltip, mouseX, width, height, this.font, this.font));
@@ -370,15 +371,6 @@ public class GlyphUnlockMenu extends BaseBook{
                 components.add(new GlyphRecipeTooltip(hoveredRecipe.inputs));
             renderTooltipInternal(stack, components, mouseX, mouseY);
         }
-    }
-
-    public int getLevelsFromExp(int exp){
-        if(exp <= 352){
-            return (int) (Math.sqrt(exp + 9) - 3);
-        }else if(exp <= 1507){
-            return (int) (8.1 + Math.sqrt(0.4 * (exp - 195.975)));
-        }
-        return (int) (18.056 + Math.sqrt(0.222 * (exp - 752.986)));
     }
 
     public void renderTooltipInternal(PoseStack pPoseStack, List<ClientTooltipComponent> pClientTooltipComponents, int pMouseX, int pMouseY) {
