@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.block.ScribesBlock;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketOneShotAnimation;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -15,7 +16,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -24,6 +27,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -118,14 +122,48 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
             level.addFreshEntity(entity);
             consumedStacks = new ArrayList<>();
         }
+        int exp = recipe.exp;
+        if(level instanceof ServerLevel serverLevel)
+            ExperienceOrb.award(serverLevel, new Vec3(getX(), getY(), getZ()), exp);
     }
 
-    public void setRecipe(GlyphRecipe recipe){
+    public void setRecipe(GlyphRecipe recipe, Player player){
+        if(ScribesTile.getTotalPlayerExperience(player) < recipe.exp){
+            PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.not_enough_exp"));
+            return;
+        }else{
+            player.giveExperiencePoints(-recipe.exp);
+        }
         ScribesTile tile = getLogicTile();
         tile.refundConsumed();
         tile.recipe = recipe;
         tile.recipeID = recipe.getId();
         tile.updateBlock();
+    }
+
+    public static int getTotalPlayerExperience(Player player){
+        return (int) (getExperienceForLevel(player.experienceLevel) + player.experienceProgress * player.getXpNeededForNextLevel());
+    }
+
+    public static int getExperienceForLevel(int level) {
+        if (level == 0)
+            return 0;
+        if (level > 0 && level < 17)
+            return (int) (Math.pow(level, 2) + 6 * level);
+        else if (level > 16 && level < 32)
+            return (int) (2.5 * Math.pow(level, 2) - 40.5 * level + 360);
+        else
+            return (int) (4.5 * Math.pow(level, 2) - 162.5 * level + 2220);
+    }
+
+
+
+    public int getPlayerPoints(Player player){
+//        int levels = player.experienceLevel;
+//        if(levels == 0){
+//            return (int) (7 * player.experienceProgress);
+//        }
+        return 0;
     }
 
     public ScribesTile getLogicTile(){

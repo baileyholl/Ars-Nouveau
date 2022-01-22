@@ -3,10 +3,13 @@ package com.hollingsworth.arsnouveau.common.crafting.recipes;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
+import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.Tag;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -49,6 +52,14 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
         return this;
     }
 
+    public GlyphRecipe withIngredient(Tag.Named<Item> tag, int count ){
+        for(int i = 0; i < count; i++){
+            withIngredient(Ingredient.of(tag));
+        }
+        return this;
+    }
+
+
     public GlyphRecipe withItem(ItemLike i){
         this.inputs.add(Ingredient.of(i));
         return this;
@@ -70,6 +81,10 @@ public class GlyphRecipe implements Recipe<ScribesTile> {
             withStack(stack);
         }
         return this;
+    }
+
+    public AbstractSpellPart getSpellPart(){
+        return ((Glyph) this.output.getItem()).spellPart;
     }
 
     @Override

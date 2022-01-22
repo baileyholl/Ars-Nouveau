@@ -5,8 +5,8 @@ import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantmentRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.SpellWriteRecipe;
-import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.CrushRecipe;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.ImbuementRecipe;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectCrush;
@@ -43,7 +43,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
     @Override
     public void registerCategories(IRecipeCategoryRegistration registry) {
         registry.addRecipeCategories(
-            new GlyphPressRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
+            new GlyphRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
                 new EnchantingApparatusRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
                 new CrushRecipeCategory(registry.getJeiHelpers().getGuiHelper()),
                 new ImbuementRecipeCategory(registry.getJeiHelpers().getGuiHelper())
@@ -54,14 +54,14 @@ public class JEIArsNouveauPlugin implements IModPlugin {
     public void registerRecipes(IRecipeRegistration registry) {
 
 
-        List<GlyphPressRecipe> recipeList = new ArrayList<>();
+        List<GlyphRecipe> recipeList = new ArrayList<>();
         List<EnchantingApparatusRecipe> apparatus = new ArrayList<>();
         List<CrushRecipe> crushRecipes = new ArrayList<>();
         List<ImbuementRecipe> imbuementRecipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(RecipeRegistry.IMBUEMENT_TYPE);
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
         for(Recipe i : manager.getRecipes()){
-            if(i instanceof GlyphPressRecipe){
-                recipeList.add((GlyphPressRecipe) i);
+            if(i instanceof GlyphRecipe){
+                recipeList.add((GlyphRecipe) i);
             }
             if(i instanceof EnchantingApparatusRecipe && !(i instanceof EnchantmentRecipe || i instanceof SpellWriteRecipe)){
                 apparatus.add((EnchantingApparatusRecipe) i);
@@ -70,7 +70,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
                 crushRecipes.add((CrushRecipe) i);
             }
         }
-        registry.addRecipes(recipeList, GlyphPressRecipeCategory.UID);
+        registry.addRecipes(recipeList, GlyphRecipeCategory.UID);
 
 
         registry.addRecipes(apparatus, EnchantingApparatusRecipeCategory.UID);
@@ -84,7 +84,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registry) {
-        registry.addRecipeCatalyst(new ItemStack(BlockRegistry.GLYPH_PRESS_BLOCK), GlyphPressRecipeCategory.UID);
+        registry.addRecipeCatalyst(new ItemStack(BlockRegistry.SCRIBES_BLOCK), GlyphRecipeCategory.UID);
         registry.addRecipeCatalyst(new ItemStack(BlockRegistry.ENCHANTING_APP_BLOCK), EnchantingApparatusRecipeCategory.UID);
         registry.addRecipeCatalyst(new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(EffectCrush.INSTANCE)), CrushRecipeCategory.UID);
         registry.addRecipeCatalyst(new ItemStack(BlockRegistry.IMBUEMENT_BLOCK), ImbuementRecipeCategory.UID);

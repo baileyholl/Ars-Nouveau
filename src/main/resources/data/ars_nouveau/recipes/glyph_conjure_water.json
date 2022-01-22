@@ -1,6 +1,18 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "TWO",
-  "input": "minecraft:water_bucket",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "inputItems": [
+    {
+      "item": {
+        "item": "ars_nouveau:water_essence"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:water_bucket"
+      }
+    }
+  ],
+  "exp": 55,
   "output": "ars_nouveau:glyph_conjure_water"
 }

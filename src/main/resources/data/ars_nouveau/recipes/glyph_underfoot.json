@@ -1,6 +1,18 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "ONE",
-  "input": "minecraft:stone_pressure_plate",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "inputItems": [
+    {
+      "item": {
+        "item": "minecraft:iron_boots"
+      }
+    },
+    {
+      "item": {
+        "tag": "minecraft:wooden_pressure_plates"
+      }
+    }
+  ],
+  "exp": 27,
   "output": "ars_nouveau:glyph_underfoot"
 }

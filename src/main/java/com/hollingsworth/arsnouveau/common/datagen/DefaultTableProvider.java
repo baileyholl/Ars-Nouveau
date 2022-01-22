@@ -127,13 +127,10 @@ public class DefaultTableProvider extends LootTableProvider {
             registerDropSelf(BlockRegistry.SPELL_PRISM);
             registerDropSelf(BlockRegistry.LAVA_LILY);
 
-            registerDropSelf(BlockRegistry.GLYPH_PRESS_BLOCK);
-//        putStandardLoot(BlockRegistry.WARD_BLOCK);
             registerDropSelf(BlockRegistry.AGRONOMIC_SOURCELINK);
             registerDropSelf(BlockRegistry.ENCHANTING_APP_BLOCK);
             registerDropSelf(BlockRegistry.ARCANE_PEDESTAL);
             registerDropSelf(BlockRegistry.SCRIBES_BLOCK);
-//        putStandardLoot(BlockRegistry.SUMMONING_CRYSTAL);
             registerDropSelf(BlockRegistry.ARCANE_BRICKS);
             registerDropSelf(BlockRegistry.RELAY);
             registerDropSelf(BlockRegistry.RELAY_SPLITTER);

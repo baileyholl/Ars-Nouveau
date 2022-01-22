@@ -24,7 +24,6 @@ public class APIRegistry {
         registerSpell(EffectHeal.INSTANCE);
         registerSpell(EffectGrow.INSTANCE);
         registerSpell(EffectKnockback.INSTANCE);
-        registerSpell(EffectHaste.INSTANCE);
         registerSpell(EffectLight.INSTANCE);
         registerSpell(EffectDispel.INSTANCE);
         registerSpell(EffectFreeze.INSTANCE);

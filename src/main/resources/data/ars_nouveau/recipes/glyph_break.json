@@ -4,10 +4,10 @@
   "inputItems": [
     {
       "item": {
-        "tag": "minecraft:dirt"
+        "item": "minecraft:iron_pickaxe"
       }
     }
   ],
-  "exp": 2,
+  "exp": 27,
   "output": "ars_nouveau:glyph_break"
 }

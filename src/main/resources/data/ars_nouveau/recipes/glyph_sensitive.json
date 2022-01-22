@@ -1,6 +1,23 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "ONE",
-  "input": "minecraft:scaffolding",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "inputItems": [
+    {
+      "item": {
+        "item": "minecraft:scaffolding"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:poppy"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:water_bucket"
+      }
+    }
+  ],
+  "exp": 27,
   "output": "ars_nouveau:glyph_sensitive"
 }

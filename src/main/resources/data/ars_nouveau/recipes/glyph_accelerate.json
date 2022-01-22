@@ -1,6 +1,23 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "TWO",
-  "input": "minecraft:powered_rail",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "inputItems": [
+    {
+      "item": {
+        "item": "minecraft:powered_rail"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:sugar"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:clock"
+      }
+    }
+  ],
+  "exp": 55,
   "output": "ars_nouveau:glyph_accelerate"
 }

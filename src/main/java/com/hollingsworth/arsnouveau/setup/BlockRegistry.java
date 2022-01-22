@@ -50,8 +50,7 @@ public class BlockRegistry {
 
     @ObjectHolder(LibBlockNames.ENCHANTING_APPARATUS) public static BlockEntityType<EnchantingApparatusTile> ENCHANTING_APP_TILE;
     @ObjectHolder(LibBlockNames.ENCHANTING_APPARATUS) public static EnchantingApparatusBlock ENCHANTING_APP_BLOCK;
-    @ObjectHolder(LibBlockNames.GLYPH_PRESS) public static GlyphPressBlock GLYPH_PRESS_BLOCK;
-    @ObjectHolder(LibBlockNames.GLYPH_PRESS) public static BlockEntityType<GlyphPressTile> GLYPH_PRESS_TILE;
+
     @ObjectHolder(LibBlockNames.ARCANE_PEDESTAL) public static BlockEntityType<ArcanePedestalTile> ARCANE_PEDESTAL_TILE;
     @ObjectHolder(LibBlockNames.ARCANE_PEDESTAL) public static ArcanePedestal ARCANE_PEDESTAL;
     @ObjectHolder(LibBlockNames.SOURCE_JAR) public static SourceJar SOURCE_JAR;
@@ -201,8 +200,7 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.SPELL_PRISM) public static  SpellPrismBlock SPELL_PRISM;
     @ObjectHolder(LibBlockNames.WHIRLISPRIG_BLOCK) public static BlockEntityType<WhirlisprigTile> WHIRLISPRIG_TILE;
     @ObjectHolder(LibBlockNames.WHIRLISPRIG_BLOCK) public static WhirlisprigFlower WHIRLISPRIG_FLOWER;
-//    @ObjectHolder(LibBlockNames.INSCRIPTION_BLOCK) public static BlockEntityType<InscriptionTile> INSCRIPTION_TILE_TYPE;
-//    @ObjectHolder(LibBlockNames.INSCRIPTION_BLOCK) public static InscriptionTable INSCRIPTION_TABLE;
+
 
     @ObjectHolder(LibBlockNames.STATE_PROVIDER) public static BlockStateProviderType stateProviderType;
 
@@ -215,7 +213,6 @@ public class BlockRegistry {
             registry.register(new LightBlock());
             registry.register(new AgronomicSourcelinkBlock());
             registry.register(new SourceJar());
-            registry.register(new GlyphPressBlock());
             registry.register(new MageBloomCrop());
             registry.register(new EnchantingApparatusBlock());
             registry.register(new ArcanePedestal());
@@ -327,7 +324,6 @@ public class BlockRegistry {
             event.getRegistry().register(BlockEntityType.Builder.of(AgronomicSourcelinkTile::new, BlockRegistry.AGRONOMIC_SOURCELINK).build(null).setRegistryName(LibBlockNames.AGRONOMIC_SOURCELINK));
             event.getRegistry().register(BlockEntityType.Builder.of(SourceJarTile::new, BlockRegistry.SOURCE_JAR).build(null).setRegistryName(LibBlockNames.SOURCE_JAR));
             event.getRegistry().register(BlockEntityType.Builder.of(LightTile::new, BlockRegistry.LIGHT_BLOCK).build(null).setRegistryName(LibBlockNames.LIGHT_BLOCK));
-            event.getRegistry().register(BlockEntityType.Builder.of(GlyphPressTile::new, BlockRegistry.GLYPH_PRESS_BLOCK).build(null).setRegistryName(LibBlockNames.GLYPH_PRESS));
             event.getRegistry().register(BlockEntityType.Builder.of(EnchantingApparatusTile::new, BlockRegistry.ENCHANTING_APP_BLOCK).build(null).setRegistryName(LibBlockNames.ENCHANTING_APPARATUS));
             event.getRegistry().register(BlockEntityType.Builder.of(ArcanePedestalTile::new, BlockRegistry.ARCANE_PEDESTAL).build(null).setRegistryName(LibBlockNames.ARCANE_PEDESTAL));
             event.getRegistry().register(BlockEntityType.Builder.of(ScribesTile::new, BlockRegistry.SCRIBES_BLOCK).build(null).setRegistryName(LibBlockNames.SCRIBES_BLOCK));
@@ -376,12 +372,6 @@ public class BlockRegistry {
                 }
             }.setRegistryName(LibBlockNames.AGRONOMIC_SOURCELINK));
             registry.register(new BlockItem(BlockRegistry.SOURCE_JAR, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.SOURCE_JAR));
-            registry.register(new RendererBlockItem(BlockRegistry.GLYPH_PRESS_BLOCK, ItemsRegistry.defaultItemProperties()) {
-                @Override
-                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-                    return PressRenderer::getISTER;
-                }
-            }.setRegistryName(LibBlockNames.GLYPH_PRESS));
             registry.register(new BlockItem(BlockRegistry.MAGE_BLOOM_CROP, ItemsRegistry.defaultItemProperties()).setRegistryName(LibBlockNames.MAGE_BLOOM));
             registry.register(new RendererBlockItem(BlockRegistry.ENCHANTING_APP_BLOCK, ItemsRegistry.defaultItemProperties()) {
                 @Override

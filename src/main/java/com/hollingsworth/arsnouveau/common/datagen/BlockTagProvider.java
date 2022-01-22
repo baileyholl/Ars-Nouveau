@@ -30,7 +30,6 @@ public class BlockTagProvider extends BlockTagsProvider {
                 BlockRegistry.RELAY,
                 BlockRegistry.ARCANE_CORE_BLOCK,
                 BlockRegistry.ENCHANTING_APP_BLOCK,
-                BlockRegistry.GLYPH_PRESS_BLOCK,
                 BlockRegistry.ARCANE_PEDESTAL,
                 BlockRegistry.CREATIVE_SOURCE_JAR,
                 BlockRegistry.RUNE_BLOCK,

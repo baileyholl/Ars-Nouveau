@@ -1,6 +1,18 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "ONE",
-  "input": "minecraft:iron_hoe",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "inputItems": [
+    {
+      "item": {
+        "item": "ars_nouveau:earth_essence"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:iron_hoe"
+      }
+    }
+  ],
+  "exp": 27,
   "output": "ars_nouveau:glyph_harvest"
 }

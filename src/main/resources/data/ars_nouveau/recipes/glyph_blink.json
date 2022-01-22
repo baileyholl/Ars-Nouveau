@@ -1,6 +1,33 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "THREE",
-  "input": "minecraft:ender_pearl",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "inputItems": [
+    {
+      "item": {
+        "item": "ars_nouveau:manipulation_essence"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:ender_pearls"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:ender_pearls"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:ender_pearls"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:ender_pearls"
+      }
+    }
+  ],
+  "exp": 160,
   "output": "ars_nouveau:glyph_blink"
 }

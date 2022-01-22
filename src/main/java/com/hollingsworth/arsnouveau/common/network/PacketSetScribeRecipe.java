@@ -39,7 +39,7 @@ public class PacketSetScribeRecipe {
             if(player.level.getBlockEntity(scribePos) instanceof ScribesTile scribesTile){
                 Recipe recipe = player.level.getRecipeManager().byKey(recipeID).orElse(null);
                 if(recipe instanceof GlyphRecipe glyphRecipe) {
-                    scribesTile.setRecipe(glyphRecipe);
+                    scribesTile.setRecipe(glyphRecipe, player);
                 }
             }
         });

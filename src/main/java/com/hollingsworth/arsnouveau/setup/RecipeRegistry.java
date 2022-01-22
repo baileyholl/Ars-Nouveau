@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatus
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantmentRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.ReactiveEnchantmentRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.SpellWriteRecipe;
-import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.*;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -18,7 +17,6 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
 public class RecipeRegistry {
-    public static final RecipeType<GlyphPressRecipe> GLYPH_PRESS_TYPE = new ModRecipeType();
     public static final RecipeType<EnchantingApparatusRecipe> APPARATUS_TYPE = new ModRecipeType();
     public static final RecipeType<EnchantmentRecipe> ENCHANTMENT_TYPE = new ModRecipeType();
     public static final RecipeType<CrushRecipe> CRUSH_TYPE = new ModRecipeType();
@@ -31,7 +29,6 @@ public class RecipeRegistry {
     public static final RecipeType<SpellWriteRecipe> SPELL_WRITE_TYPE = new ModRecipeType<>();
     public static final RecipeType<GlyphRecipe> GLYPH_TYPE = new ModRecipeType<>();
 
-    public static final RecipeSerializer<GlyphPressRecipe> PRESS_SERIALIZER = new GlyphPressRecipe.Serializer();
     public static final RecipeSerializer<EnchantingApparatusRecipe> APPARATUS_SERIALIZER = new EnchantingApparatusRecipe.Serializer();
     public static final RecipeSerializer<EnchantmentRecipe> ENCHANTMENT_SERIALIZER = new EnchantmentRecipe.Serializer();
     public static final RecipeSerializer<CrushRecipe> CRUSH_SERIALIZER = new CrushRecipe.Serializer();
@@ -47,7 +44,6 @@ public class RecipeRegistry {
     @SubscribeEvent
     public static void register(final RegistryEvent.Register<RecipeSerializer<?>> evt) {
 
-        Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, GlyphPressRecipe.RECIPE_ID), GLYPH_PRESS_TYPE);
         Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, EnchantingApparatusRecipe.RECIPE_ID), APPARATUS_TYPE);
         Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, EnchantmentRecipe.RECIPE_ID), ENCHANTMENT_TYPE);
         Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, CrushRecipe.RECIPE_ID), CRUSH_TYPE);
@@ -60,7 +56,6 @@ public class RecipeRegistry {
         Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, SpellWriteRecipe.RECIPE_ID), SPELL_WRITE_TYPE);
         Registry.register(Registry.RECIPE_TYPE, new ResourceLocation(ArsNouveau.MODID, GlyphRecipe.RECIPE_ID), GLYPH_TYPE);
 
-        evt.getRegistry().register(PRESS_SERIALIZER.setRegistryName(new ResourceLocation(ArsNouveau.MODID, GlyphPressRecipe.RECIPE_ID)));
         evt.getRegistry().register(APPARATUS_SERIALIZER.setRegistryName(new ResourceLocation(ArsNouveau.MODID, EnchantingApparatusRecipe.RECIPE_ID)));
         evt.getRegistry().register(ENCHANTMENT_SERIALIZER.setRegistryName(new ResourceLocation(ArsNouveau.MODID, EnchantmentRecipe.RECIPE_ID)));
         evt.getRegistry().register(CRUSH_SERIALIZER.setRegistryName(new ResourceLocation(ArsNouveau.MODID, CrushRecipe.RECIPE_ID)));

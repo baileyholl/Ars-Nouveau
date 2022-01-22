@@ -1,6 +1,48 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "ONE",
-  "input": "minecraft:glass",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "inputItems": [
+    {
+      "item": {
+        "tag": "forge:glass"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:glass"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:glass"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:glass"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:glass"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:glass"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:glass"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:glass"
+      }
+    }
+  ],
+  "exp": 27,
   "output": "ars_nouveau:glyph_phantom_block"
 }

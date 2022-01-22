@@ -4,8 +4,8 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.api.spell.SpellTier;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class GlyphPressRecipeCategory implements IRecipeCategory<GlyphPressRecipe> {
+public class GlyphRecipeCategory implements IRecipeCategory<GlyphRecipe> {
 
     public IDrawable background;
     public IDrawable icon;
@@ -33,10 +33,10 @@ public class GlyphPressRecipeCategory implements IRecipeCategory<GlyphPressRecip
     public final static ResourceLocation UID = new ResourceLocation(ArsNouveau.MODID, "glyph_recipe");
     private final LoadingCache<Integer, IDrawableAnimated> cachedArrows;
 
-    public GlyphPressRecipeCategory(IGuiHelper helper){
+    public GlyphRecipeCategory(IGuiHelper helper){
         this.helper = helper;
         background = helper.createBlankDrawable(60,30);
-        icon = helper.createDrawableIngredient(new ItemStack(BlockRegistry.GLYPH_PRESS_BLOCK));
+        icon = helper.createDrawableIngredient(new ItemStack(BlockRegistry.SCRIBES_BLOCK));
         this.cachedArrows = CacheBuilder.newBuilder()
                 .maximumSize(25)
                 .build(new CacheLoader<>() {
@@ -54,8 +54,8 @@ public class GlyphPressRecipeCategory implements IRecipeCategory<GlyphPressRecip
     }
 
     @Override
-    public Class<? extends GlyphPressRecipe> getRecipeClass() {
-        return GlyphPressRecipe.class;
+    public Class<? extends GlyphRecipe> getRecipeClass() {
+        return GlyphRecipe.class;
     }
 
     @Override
@@ -74,14 +74,14 @@ public class GlyphPressRecipeCategory implements IRecipeCategory<GlyphPressRecip
     }
 
     @Override
-    public void draw(GlyphPressRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+    public void draw(GlyphRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
         IDrawableAnimated arrow = this.cachedArrows.getUnchecked(40);
         arrow.draw( matrixStack,38, 6);
     }
 
 
     @Override
-    public void setIngredients(GlyphPressRecipe glyphPressRecipe, IIngredients iIngredients) {
+    public void setIngredients(GlyphRecipe glyphPressRecipe, IIngredients iIngredients) {
         ItemStack clay = glyphPressRecipe.tier == SpellTier.ONE ? new ItemStack(ItemsRegistry.MAGIC_CLAY) : glyphPressRecipe.tier == SpellTier.TWO ? new ItemStack(ItemsRegistry.MARVELOUS_CLAY): new ItemStack(ItemsRegistry.MYTHICAL_CLAY);
         List<List<ItemStack>> itemStacks = new ArrayList<>();
         itemStacks.add(Collections.singletonList(clay));
@@ -93,7 +93,7 @@ public class GlyphPressRecipeCategory implements IRecipeCategory<GlyphPressRecip
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, GlyphPressRecipe o, IIngredients ingredients) {
+    public void setRecipe(IRecipeLayout recipeLayout, GlyphRecipe o, IIngredients ingredients) {
         int index = 0;
         recipeLayout.getItemStacks().init(index, true, 0, 4);
 

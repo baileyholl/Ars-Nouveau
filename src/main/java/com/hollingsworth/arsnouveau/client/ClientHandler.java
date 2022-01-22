@@ -36,7 +36,6 @@ import org.jetbrains.annotations.Nullable;
 public class ClientHandler {
     @SubscribeEvent
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event){
-        event.registerBlockEntityRenderer(BlockRegistry.GLYPH_PRESS_TILE, PressRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ARCANE_PEDESTAL_TILE, ArcanePedestalRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ENCHANTING_APP_TILE, EnchantingApparatusRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.SCRIBES_TABLE_TILE, ScribesRenderer::new);
@@ -113,7 +112,6 @@ public class ClientHandler {
     public static void init(final FMLClientSetupEvent evt) {
 //
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SOURCE_JAR, RenderType.translucent());
-        ItemBlockRenderTypes.setRenderLayer(BlockRegistry.GLYPH_PRESS_BLOCK, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.ARCANE_PEDESTAL, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.ENCHANTING_APP_BLOCK, RenderType.cutout());
         ItemBlockRenderTypes.setRenderLayer(BlockRegistry.LIGHT_BLOCK, RenderType.translucent());

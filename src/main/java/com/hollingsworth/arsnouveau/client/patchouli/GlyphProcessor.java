@@ -1,26 +1,26 @@
 package com.hollingsworth.arsnouveau.client.patchouli;
 
-import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
+import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeManager;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;
 
-public class GlyphPressProcessor implements IComponentProcessor {
+public class GlyphProcessor implements IComponentProcessor {
 
-    GlyphPressRecipe recipe;
+    GlyphRecipe recipe;
     @Override
     public void setup(IVariableProvider variables) {
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
         String recipeID = variables.get("recipe").asString();
         try {
-            recipe = (GlyphPressRecipe) manager.byKey(new ResourceLocation(recipeID)).orElse(null);
+            recipe = (GlyphRecipe) manager.byKey(new ResourceLocation(recipeID)).orElse(null);
         }catch (Exception e){}
     }
 
@@ -29,12 +29,13 @@ public class GlyphPressProcessor implements IComponentProcessor {
         if(recipe == null)
             return null;
 
-        if(s.equals("clay_type"))
-            return IVariable.from(recipe.getClay());
-        if(s.equals("reagent"))
-            return IVariable.from(recipe.reagent);
+//        if(s.equals("clay_type"))
+//            return IVariable.from(recipe.getClay());
+//        if(s.equals("reagent"))
+//            return IVariable.from(recipe.reagent);
         if(s.equals("tier"))
-            return IVariable.wrap(new TranslatableComponent("ars_nouveau.tier").getString() + ": " + new TranslatableComponent("ars_nouveau.spell_tier." + recipe.tier.value).getString());
+           return IVariable.wrap("");
+            // return IVariable.wrap(new TranslatableComponent("ars_nouveau.tier").getString() + ": " + new TranslatableComponent("ars_nouveau.spell_tier." + recipe.tier.value).getString());
         if(s.equals("schools")) {
             AbstractSpellPart part = ((Glyph) recipe.output.getItem()).spellPart;
             StringBuilder str = new StringBuilder(new TranslatableComponent("ars_nouveau.spell_schools").getString() +": ");

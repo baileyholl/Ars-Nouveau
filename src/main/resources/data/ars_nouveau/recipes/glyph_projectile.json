@@ -4,15 +4,15 @@
   "inputItems": [
     {
       "item": {
-        "tag": "minecraft:dirt"
+        "item": "minecraft:fletching_table"
       }
     },
     {
       "item": {
-        "item": "minecraft:amethyst_block"
+        "item": "minecraft:arrow"
       }
     }
   ],
-  "exp": 2,
+  "exp": 27,
   "output": "ars_nouveau:glyph_projectile"
 }

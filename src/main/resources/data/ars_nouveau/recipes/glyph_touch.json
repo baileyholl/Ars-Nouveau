@@ -4,25 +4,10 @@
   "inputItems": [
     {
       "item": {
-        "item": "minecraft:dirt"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:amethyst_block"
-      }
-    },
-    {
-      "item": {
-        "tag": "minecraft:dirt"
-      }
-    },
-    {
-      "item": {
-        "tag": "minecraft:dirt"
+        "tag": "minecraft:buttons"
       }
     }
   ],
-  "exp": 2,
+  "exp": 27,
   "output": "ars_nouveau:glyph_touch"
 }

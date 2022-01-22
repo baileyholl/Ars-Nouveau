@@ -1,6 +1,13 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "TWO",
-  "input": "minecraft:nether_brick",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "inputItems": [
+    {
+      "item": {
+        "item": "minecraft:nether_brick"
+      }
+    }
+  ],
+  "exp": 55,
   "output": "ars_nouveau:glyph_dampen"
 }

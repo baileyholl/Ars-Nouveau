@@ -4,50 +4,20 @@
   "inputItems": [
     {
       "item": {
-        "item": "minecraft:dirt"
+        "item": "minecraft:compass"
       }
     },
     {
       "item": {
-        "item": "minecraft:amethyst_block"
+        "item": "minecraft:ender_eye"
       }
     },
     {
       "item": {
-        "tag": "minecraft:dirt"
-      }
-    },
-    {
-      "item": {
-        "tag": "minecraft:dirt"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:dirt"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:dirt"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:dirt"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:dirt"
-      }
-    },
-    {
-      "item": {
-        "item": "minecraft:dirt"
+        "tag": "forge:rods/blaze"
       }
     }
   ],
-  "exp": 2,
+  "exp": 160,
   "output": "ars_nouveau:glyph_orbit"
 }

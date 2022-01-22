@@ -1,6 +1,18 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "TWO",
-  "input": "ars_nouveau:wilden_spike",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "inputItems": [
+    {
+      "item": {
+        "item": "minecraft:arrow"
+      }
+    },
+    {
+      "item": {
+        "item": "ars_nouveau:wilden_spike"
+      }
+    }
+  ],
+  "exp": 55,
   "output": "ars_nouveau:glyph_pierce"
 }

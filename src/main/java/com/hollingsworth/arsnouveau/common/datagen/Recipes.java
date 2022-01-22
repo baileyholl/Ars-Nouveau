@@ -95,12 +95,6 @@ public class Recipes extends RecipeProvider {
                     .pattern("x x")
                     .pattern("yyy").define('x', Tags.Items.GLASS).define('y', BlockRegistry.ARCHWOOD_SLABS).save(consumer);
 
-            ShapedRecipeBuilder.shaped(BlockRegistry.GLYPH_PRESS_BLOCK).unlockedBy("has_journal",InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                    .pattern("xxx")
-                    .pattern("xyx")
-                    .pattern("aba").define('x', BlockRegistry.ARCANE_STONE).define('y', Items.PISTON)
-                    .define('a', Tags.Items.STONE).define('b', Tags.Items.STORAGE_BLOCKS_IRON).save(consumer);
-
             ShapedRecipeBuilder.shaped(BlockRegistry.ARCANE_PEDESTAL).unlockedBy("has_journal",InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .pattern("xxx")
                     .pattern(" x ")

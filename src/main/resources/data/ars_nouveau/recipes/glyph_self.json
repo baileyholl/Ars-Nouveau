@@ -4,20 +4,15 @@
   "inputItems": [
     {
       "item": {
-        "item": "minecraft:dirt"
+        "tag": "minecraft:wooden_pressure_plates"
       }
     },
     {
       "item": {
-        "item": "minecraft:amethyst_block"
-      }
-    },
-    {
-      "item": {
-        "tag": "minecraft:dirt"
+        "item": "minecraft:iron_chestplate"
       }
     }
   ],
-  "exp": 2,
+  "exp": 27,
   "output": "ars_nouveau:glyph_self"
 }

@@ -329,11 +329,6 @@ public class PatchouliProvider implements DataProvider {
                 .withLocalizedText()
                 .withPage(new CraftingPage(BlockRegistry.ARCANE_PEDESTAL).withRecipe2(BlockRegistry.ARCANE_CORE_BLOCK))
                 .withPage(new CraftingPage(BlockRegistry.ENCHANTING_APP_BLOCK)), getPath(MACHINES, "enchanting_apparatus"));
-        addPage(new PatchouliBuilder(MACHINES, BlockRegistry.GLYPH_PRESS_BLOCK)
-                .withLocalizedText()
-                .withLocalizedText()
-                .withPage(new CraftingPage(BlockRegistry.GLYPH_PRESS_BLOCK).withRecipe2(ItemsRegistry.MAGIC_CLAY))
-                .withPage(new CraftingPage(ItemsRegistry.MARVELOUS_CLAY).withRecipe2(ItemsRegistry.MYTHICAL_CLAY)), getPath(MACHINES, "glyph_press"));
 
         addBasicItem(BlockRegistry.POTION_JAR, MACHINES, new CraftingPage(BlockRegistry.POTION_JAR));
 
