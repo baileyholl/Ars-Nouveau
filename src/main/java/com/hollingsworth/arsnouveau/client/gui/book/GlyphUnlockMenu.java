@@ -362,7 +362,7 @@ public class GlyphUnlockMenu extends BaseBook{
     public void drawTooltip(PoseStack stack, int mouseX, int mouseY) {
         if (tooltip != null && !tooltip.isEmpty()) {
             if(hoveredRecipe != null) {
-                MutableComponent component = new TranslatableComponent("ars_nouveau.levels_required", hoveredRecipe.exp).withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN));
+                MutableComponent component = new TranslatableComponent("ars_nouveau.levels_required", getLevelsFromExp(hoveredRecipe.exp)).withStyle(Style.EMPTY.withColor(ChatFormatting.GREEN));
                 tooltip.add(component);
             }
             List<ClientTooltipComponent> components = new ArrayList<>(net.minecraftforge.client.ForgeHooksClient.gatherTooltipComponents(ItemStack.EMPTY, tooltip, mouseX, width, height, this.font, this.font));
@@ -371,6 +371,16 @@ public class GlyphUnlockMenu extends BaseBook{
             renderTooltipInternal(stack, components, mouseX, mouseY);
         }
     }
+
+    public int getLevelsFromExp(int exp){
+        if(exp <= 352){
+            return (int) (Math.sqrt(exp + 9) - 3);
+        }else if(exp <= 1507){
+            return (int) (8.1 + Math.sqrt(0.4 * (exp - 195.975)));
+        }
+        return (int) (18.056 + Math.sqrt(0.222 * (exp - 752.986)));
+    }
+
     public void renderTooltipInternal(PoseStack pPoseStack, List<ClientTooltipComponent> pClientTooltipComponents, int pMouseX, int pMouseY) {
         if (!pClientTooltipComponents.isEmpty()) {
             net.minecraftforge.client.event.RenderTooltipEvent.Pre preEvent = net.minecraftforge.client.ForgeHooksClient.onRenderTooltipPre(ItemStack.EMPTY, pPoseStack, pMouseX, pMouseY, width, height, pClientTooltipComponents, this.font, this.font);

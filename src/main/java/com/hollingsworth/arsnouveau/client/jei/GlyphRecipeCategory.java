@@ -39,7 +39,7 @@ public class GlyphRecipeCategory implements IRecipeCategory<GlyphRecipe> {
 
     public GlyphRecipeCategory(IGuiHelper helper){
         this.helper = helper;
-        background = helper.createBlankDrawable(60,30);
+        background = helper.createBlankDrawable(114,108);
         icon = helper.createDrawableIngredient(new ItemStack(BlockRegistry.SCRIBES_BLOCK));
         this.cachedArrows = CacheBuilder.newBuilder()
                 .maximumSize(25)
@@ -69,7 +69,7 @@ public class GlyphRecipeCategory implements IRecipeCategory<GlyphRecipe> {
 
     @Override
     public IDrawable getBackground() {
-        return helper.createBlankDrawable(80,30);
+        return background;
     }
 
     @Override
