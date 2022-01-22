@@ -257,7 +257,7 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .buildEnchantmentRecipe(EnchantmentRegistry.REACTIVE_ENCHANTMENT, 2, 6000));
 
         addRecipe(builder()
-                .withPedestalItem(4, ItemsRegistry.MYTHICAL_CLAY)
+                .withPedestalItem(4,Ingredient.of(Tags.Items.GEMS_EMERALD))
                 .withPedestalItem(1,Ingredient.of(Tags.Items.ENDER_PEARLS))
                 .withPedestalItem(ItemsRegistry.ABJURATION_ESSENCE)
                 .withPedestalItem(ItemsRegistry.CONJURATION_ESSENCE)

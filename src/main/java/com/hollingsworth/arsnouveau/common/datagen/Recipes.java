@@ -54,30 +54,12 @@ public class Recipes extends RecipeProvider {
                    .requires(Items.BOOK).save(consumer);
 
 
-            ShapelessRecipeBuilder.shapeless(ItemsRegistry.MAGIC_CLAY).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                    .requires(Items.CLAY_BALL)
-                    .requires(SOURCE_GEM, 1)
-                    .requires(Items.REDSTONE, 2)
-                    .save(consumer);
-            ShapelessRecipeBuilder.shapeless(ItemsRegistry.MARVELOUS_CLAY).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                    .requires(ItemsRegistry.MAGIC_CLAY)
-                    .requires(Tags.Items.INGOTS_GOLD)
-                    .requires(SOURCE_GEM, 1)
-                    .requires(Items.LAPIS_LAZULI, 2)
-                    .save(consumer);
-
-            ShapelessRecipeBuilder.shapeless(ItemsRegistry.MYTHICAL_CLAY).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                    .requires(ItemsRegistry.MARVELOUS_CLAY)
-                    .requires(Items.DIAMOND, 2)
-                    .requires(Items.BLAZE_POWDER, 2)
-                    .save(consumer);
-
             ShapelessRecipeBuilder.shapeless(ItemsRegistry.MAGE_FIBER, 4).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
                     .requires(ItemsRegistry.MAGE_BLOOM)
                     .save(consumer);
 
             ShapelessRecipeBuilder.shapeless(ItemsRegistry.RUNIC_CHALK, 1).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))
-                    .requires(ItemsRegistry.MAGIC_CLAY).requires(Items.BONE_MEAL).requires(ItemsRegistry.MAGE_FIBER)
+                    .requires(ItemsRegistry.MANIPULATION_ESSENCE).requires(Items.BONE_MEAL).requires(ItemsRegistry.MAGE_FIBER)
                     .save(consumer);
 
             ShapelessRecipeBuilder.shapeless(ItemsRegistry.BLAZE_FIBER, 2).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK))

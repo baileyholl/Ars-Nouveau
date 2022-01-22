@@ -49,9 +49,6 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.CREATIVE_SPELL_BOOK) public static SpellBook CREATIVE_SPELLBOOK;
     @ObjectHolder(LibItemNames.BLANK_GLYPH) public static  Item BLANK_GLYPH;
     @ObjectHolder(LibItemNames.BUCKET_OF_SOURCE) public static ModItem BUCKET_OF_SOURCE;
-    @ObjectHolder(LibItemNames.MAGIC_CLAY) public static ModItem MAGIC_CLAY;
-    @ObjectHolder(LibItemNames.MARVELOUS_CLAY) public static ModItem MARVELOUS_CLAY;
-    @ObjectHolder(LibItemNames.MYTHICAL_CLAY) public static ModItem MYTHICAL_CLAY;
     @ObjectHolder(LibItemNames.MAGE_BLOOM) public static ModItem MAGE_BLOOM;
     @ObjectHolder(LibItemNames.MAGE_FIBER) public static ModItem MAGE_FIBER;
     @ObjectHolder(LibItemNames.BLAZE_FIBER) public static ModItem BLAZE_FIBER;
@@ -148,9 +145,6 @@ public class ItemsRegistry {
                     new RunicChalk(),
                     new ModItem(LibItemNames.BLANK_GLYPH),
                     new ModItem(LibItemNames.DULL_TRINKET).withTooltip(new TranslatableComponent("ars_nouveau.tooltip.dull")),
-                    new ModItem(LibItemNames.MARVELOUS_CLAY),
-                    new ModItem(LibItemNames.MAGIC_CLAY),
-                    new ModItem(LibItemNames.MYTHICAL_CLAY),
                     new ModItem(LibItemNames.BLAZE_FIBER),
                     new ModItem(LibItemNames.END_FIBER),
                     new CompostableItem(LibItemNames.MAGE_BLOOM, 0.65F).withTooltip(new TranslatableComponent("ars_nouveau.tooltip.magebloom")),
