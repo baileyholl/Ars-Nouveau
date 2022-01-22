@@ -4,10 +4,8 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.common.crafting.recipes.GlyphRecipe;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -16,14 +14,20 @@ import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.phys.Vec2;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
+
+import static com.hollingsworth.arsnouveau.client.jei.EnchantingApparatusRecipeCategory.rotatePointAbout;
 
 public class GlyphRecipeCategory implements IRecipeCategory<GlyphRecipe> {
 
@@ -60,7 +64,7 @@ public class GlyphRecipeCategory implements IRecipeCategory<GlyphRecipe> {
 
     @Override
     public Component getTitle() {
-        return new TranslatableComponent("block.ars_nouveau.glyph_press");
+        return new TranslatableComponent("block.ars_nouveau.scribes_table");
     }
 
     @Override
@@ -75,37 +79,33 @@ public class GlyphRecipeCategory implements IRecipeCategory<GlyphRecipe> {
 
     @Override
     public void draw(GlyphRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-        IDrawableAnimated arrow = this.cachedArrows.getUnchecked(40);
-        arrow.draw( matrixStack,38, 6);
+        Font renderer = Minecraft.getInstance().font;
+        renderer.draw(matrixStack, new TranslatableComponent("ars_nouveau.exp", recipe.exp), 0.0f,100f, 10);
     }
 
-
     @Override
-    public void setIngredients(GlyphRecipe glyphPressRecipe, IIngredients iIngredients) {
-        ItemStack clay = glyphPressRecipe.tier == SpellTier.ONE ? new ItemStack(ItemsRegistry.MAGIC_CLAY) : glyphPressRecipe.tier == SpellTier.TWO ? new ItemStack(ItemsRegistry.MARVELOUS_CLAY): new ItemStack(ItemsRegistry.MYTHICAL_CLAY);
+    public void setIngredients(GlyphRecipe o, IIngredients iIngredients) {
         List<List<ItemStack>> itemStacks = new ArrayList<>();
-        itemStacks.add(Collections.singletonList(clay));
-        itemStacks.add(Collections.singletonList(glyphPressRecipe.reagent));
+        for(Ingredient i : o.inputs){
+            itemStacks.add(Arrays.asList(i.getItems()));
+        }
         iIngredients.setInputLists(VanillaTypes.ITEM, itemStacks);
-     //   iIngredients.setInput(VanillaTypes.ITEM, glyphPressRecipe.reagent);
-        iIngredients.setOutput(VanillaTypes.ITEM, glyphPressRecipe.output);
-
+        iIngredients.setOutput(VanillaTypes.ITEM, o.output);
     }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, GlyphRecipe o, IIngredients ingredients) {
+    public void setRecipe(IRecipeLayout recipeLayout, GlyphRecipe apparatusRecipe, IIngredients ingredients) {
         int index = 0;
-        recipeLayout.getItemStacks().init(index, true, 0, 4);
+        double angleBetweenEach = 360.0 / ingredients.getInputs(VanillaTypes.ITEM).size();
+        Vec2 point = new Vec2(48, 13), center = new Vec2(48, 45);
 
-        recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM).get(0));
-
-        index++;
-        recipeLayout.getItemStacks().init(index, true, 16, 4);
-        recipeLayout.getItemStacks().set(index, ingredients.getInputs(VanillaTypes.ITEM).get(1));
-
-        index++;
-        recipeLayout.getItemStacks().init(index, true, 64, 4);
+        for (List<ItemStack> o : ingredients.getInputs(VanillaTypes.ITEM)) {
+            recipeLayout.getItemStacks().init(index, true, (int) point.x, (int) point.y);
+            recipeLayout.getItemStacks().set(index, o);
+            index += 1;
+            point = rotatePointAbout(point, center, angleBetweenEach);
+        }
+        recipeLayout.getItemStacks().init(index, false, 86, 10);
         recipeLayout.getItemStacks().set(index, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
-
     }
 }
