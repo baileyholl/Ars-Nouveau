@@ -137,6 +137,8 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
             player.giveExperiencePoints(-recipe.exp);
         }
         ScribesTile tile = getLogicTile();
+        if(tile == null)
+            return;
         tile.refundConsumed();
         tile.recipe = recipe;
         tile.recipeID = recipe.getId();
@@ -177,13 +179,13 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
         return 0;
     }
 
-    public ScribesTile getLogicTile(){
+    public @Nullable ScribesTile getLogicTile(){
         ScribesTile tile = this;
         if(!isMasterTile()) {
             BlockEntity tileEntity = level.getBlockEntity(getBlockPos().relative(ScribesBlock.getConnectedDirection(getBlockState())));
             tile = tileEntity instanceof ScribesTile ? (ScribesTile) tileEntity : null;
             if(tile == null)
-                return this;
+                return null;
         }
         return tile;
     }
@@ -347,7 +349,10 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
     @Override
     public void getTooltip(List<Component> tooltip) {
         if(!isMasterTile()) {
-            getLogicTile().getTooltip(tooltip);
+            ScribesTile tile = getLogicTile();
+            if(tile == null)
+                return;
+            tile.getTooltip(tooltip);
             return;
         }
         if(recipe != null){
