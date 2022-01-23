@@ -54,7 +54,6 @@ public class EffectColdSnap extends AbstractEffect {
             if(canDamage((LivingEntity) e)){
                 vec = e.position();
                 damage(vec, world, shooter, spellStats, damage, snareSec, (LivingEntity) e);
-
             }else{
                 ((LivingEntity) e).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * snareSec, (int) spellStats.getAmpMultiplier()));
             }

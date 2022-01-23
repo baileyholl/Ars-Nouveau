@@ -48,9 +48,7 @@ import java.util.List;
 
 public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, Container, ITooltipProvider,IAnimationListener {
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> new InvWrapper(this));
-    public ItemEntity entity; // For rendering
     public ItemStack stack = ItemStack.EMPTY;
-    public int frames;
     boolean synced;
     public List<ItemStack> consumedStacks = new ArrayList<>();
     public GlyphRecipe recipe;
@@ -167,16 +165,6 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
             return (int) (2.5 * Math.pow(level, 2) - 40.5 * level + 360);
         else
             return (int) (4.5 * Math.pow(level, 2) - 162.5 * level + 2220);
-    }
-
-
-
-    public int getPlayerPoints(Player player){
-//        int levels = player.experienceLevel;
-//        if(levels == 0){
-//            return (int) (7 * player.experienceProgress);
-//        }
-        return 0;
     }
 
     public @Nullable ScribesTile getLogicTile(){
