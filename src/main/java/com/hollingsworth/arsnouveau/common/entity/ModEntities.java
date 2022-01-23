@@ -94,6 +94,7 @@ public class ModEntities {
     public static EntityType<WealdWalker> ENTITY_FLOURISHING_WEALD = null;
     public static EntityType<WealdWalker> ENTITY_BLAZING_WEALD = null;
     public static EntityType<WealdWalker> ENTITY_VEXING_WEALD = null;
+    public static EntityType<AmethystGolem> AMETHYST_GOLEM = null;
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
@@ -234,6 +235,9 @@ public class ModEntities {
                         return walker;
                     }, MobCategory.CREATURE)
                     .sized(1.4F, 3F).setTrackingRange(10));
+
+            AMETHYST_GOLEM = build(LibEntityNames.AMETHYST_GOLEM, EntityType.Builder.of(AmethystGolem::new, MobCategory.CREATURE)
+                    .sized(0.7F, 0.63F).setTrackingRange(10));
             event.getRegistry().registerAll(
                     SPELL_PROJ,
                     ENTITY_EVOKER_FANGS_ENTITY_TYPE,
@@ -267,7 +271,8 @@ public class ModEntities {
                     ENTITY_CASCADING_WEALD,
                     ENTITY_BLAZING_WEALD,
                     ENTITY_VEXING_WEALD,
-                    ENTITY_FLOURISHING_WEALD
+                    ENTITY_FLOURISHING_WEALD,
+                    AMETHYST_GOLEM
             );
 
 
@@ -307,6 +312,7 @@ public class ModEntities {
             event.put(ENTITY_BLAZING_WEALD, WealdWalker.attributes().build());
             event.put(ENTITY_FLOURISHING_WEALD, WealdWalker.attributes().build());
             event.put(ENTITY_VEXING_WEALD, WealdWalker.attributes().build());
+            event.put(AMETHYST_GOLEM, AmethystGolem.attributes().build());
         }
     }
 

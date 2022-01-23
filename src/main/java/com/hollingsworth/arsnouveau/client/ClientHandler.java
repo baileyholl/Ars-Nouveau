@@ -105,6 +105,8 @@ public class ClientHandler {
         event.registerEntityRenderer(ModEntities.ENTITY_FLOURISHING_WEALD, (v) -> new WealdWalkerRenderer(v, "flourishing_weald"));
         event.registerEntityRenderer(ModEntities.ENTITY_VEXING_WEALD, (v) -> new WealdWalkerRenderer(v, "vexing_weald"));
 
+        event.registerEntityRenderer(ModEntities.AMETHYST_GOLEM, AmethystGolemRenderer::new);
+
 
     }
 
