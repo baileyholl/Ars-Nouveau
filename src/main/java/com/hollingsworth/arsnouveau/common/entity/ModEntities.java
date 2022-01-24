@@ -237,7 +237,7 @@ public class ModEntities {
                     .sized(1.4F, 3F).setTrackingRange(10));
 
             AMETHYST_GOLEM = build(LibEntityNames.AMETHYST_GOLEM, EntityType.Builder.of(AmethystGolem::new, MobCategory.CREATURE)
-                    .sized(0.7F, 0.63F).setTrackingRange(10));
+                    .sized(1.0f, 1.0f).setTrackingRange(10));
             event.getRegistry().registerAll(
                     SPELL_PROJ,
                     ENTITY_EVOKER_FANGS_ENTITY_TYPE,
