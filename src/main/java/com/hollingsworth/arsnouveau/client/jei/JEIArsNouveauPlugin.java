@@ -63,7 +63,7 @@ public class JEIArsNouveauPlugin implements IModPlugin {
             if(i instanceof GlyphRecipe){
                 recipeList.add((GlyphRecipe) i);
             }
-            if(i instanceof EnchantingApparatusRecipe && !(i instanceof EnchantmentRecipe || i instanceof SpellWriteRecipe)){
+            if(i instanceof EnchantingApparatusRecipe && !(i instanceof EnchantmentRecipe)  && !(i instanceof SpellWriteRecipe)){
                 apparatus.add((EnchantingApparatusRecipe) i);
             }
             if(i instanceof CrushRecipe){

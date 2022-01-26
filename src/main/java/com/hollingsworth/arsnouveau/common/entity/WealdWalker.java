@@ -106,7 +106,7 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         if(storedPos != null){
             setHome(storedPos);
-            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.weald_walker.setpos"));
+            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.home_set"));
         }
     }
 

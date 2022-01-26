@@ -984,5 +984,7 @@
 	"ars_nouveau.all_glyphs": "All Glyphs",
 	"ars_nouveau.not_enough_exp": "Not enough EXP for this glyph.",
 	"ars_nouveau.exp": "EXP levels required: %s",
-	"ars_nouveau.scribing": "Scribing Spells"
+	"ars_nouveau.scribing": "Scribing Spells",
+	"ars_nouveau.home_set": "Home set.",
+	"ars_nouveau.gathering_at": "Gathering at: %s"
 }

@@ -57,7 +57,7 @@ public class ScryEvents {
             Level world = playerEntity.level;
             Vec3i scrySize = scryer.getScryingSize();
             for(BlockPos p : BlockPos.withinManhattan(playerEntity.blockPosition(), scrySize.getX(), scrySize.getY(), scrySize.getZ())){
-                if(p.getY() >= world.getMaxBuildHeight() || world.getBlockState(p).isAir())
+                if(world.isOutsideBuildHeight(p) || world.getBlockState(p).isAir())
                     continue;
                 if(scryingPos.size() >= scryer.getScryMax())
                     break;

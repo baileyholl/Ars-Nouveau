@@ -24,6 +24,6 @@ public class GrowClusterGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        return canUse.get();
+        return canUse.get() && golem.growCooldown <= 0;
     }
 }

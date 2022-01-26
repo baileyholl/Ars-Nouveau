@@ -8,9 +8,11 @@ import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem.ConvertBuddingGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem.GrowClusterGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem.HarvestClusterGoal;
+import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -26,6 +28,7 @@ import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -35,15 +38,18 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class AmethystGolem  extends PathfinderMob implements IAnimatable, IDispellable, ITooltipProvider, IWandable {
     public static final EntityDataAccessor<Optional<BlockPos>> HOME = SynchedEntityData.defineId(WealdWalker.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
-    int growCooldown;
-    int convertCooldown;
-    int harvestCooldown;
-
+    public int growCooldown;
+    public int convertCooldown;
+    public int harvestCooldown;
+    public List<BlockPos> harvestables = new ArrayList<>();
+    public List<BlockPos> convertables = new ArrayList<>();
+    int scanCooldown;
     protected AmethystGolem(EntityType<? extends PathfinderMob> p_21683_, Level p_21684_) {
         super(p_21683_, p_21684_);
     }
@@ -70,18 +76,51 @@ public class AmethystGolem  extends PathfinderMob implements IAnimatable, IDispe
             growCooldown--;
         if(convertCooldown > 0)
             convertCooldown--;
+        if(scanCooldown > 0){
+            scanCooldown--;
+        }
+        if(!level.isClientSide && scanCooldown == 0 && getHome() != null){
+            scanCooldown = 500;
+            scanBlocks();
+        }
+    }
+
+    public void scanBlocks(){
+        BlockPos pos = getHome().immutable();
+        convertables = new ArrayList<>();
+        harvestables = new ArrayList<>();
+        for(BlockPos b : BlockPos.betweenClosed(pos.below(3).south(5).east(5), pos.above(10).north(5).west(5))){
+            if(level.getBlockState(b).isAir())
+                continue;
+            if(level.getBlockState(b).getBlock() == Blocks.AMETHYST_BLOCK){
+                convertables.add(b.immutable());
+            }
+            if(level.getBlockState(b).getBlock() == Blocks.BUDDING_AMETHYST){
+                harvestables.add(b);
+
+            }
+        }
+    }
+
+    @Override
+    public void onFinishedConnectionFirst(@javax.annotation.Nullable BlockPos storedPos, @javax.annotation.Nullable LivingEntity storedEntity, Player playerEntity) {
+        if(storedPos != null){
+            setHome(storedPos);
+            PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.home_set"));
+        }
     }
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-
+        if(getHome() != null){
+            tooltip.add(new TranslatableComponent("ars_nouveau.gathering_at", getHome().toShortString()));
+        }
     }
 
     @Override
     public boolean onDispel(@Nullable LivingEntity caster) {
         return false;
     }
-
 
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
