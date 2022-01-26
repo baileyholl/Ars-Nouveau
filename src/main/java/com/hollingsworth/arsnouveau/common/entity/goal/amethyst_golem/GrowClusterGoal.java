@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem;
 import com.hollingsworth.arsnouveau.common.entity.AmethystGolem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.function.Supplier;
 
@@ -19,7 +20,12 @@ public class GrowClusterGoal extends Goal {
 
     @Override
     public void start() {
-        super.start();
+        for(BlockPos p : golem.harvestables){
+            if(golem.level.getBlockState(p).getBlock() == Blocks.BUDDING_AMETHYST){
+
+
+            }
+        }
     }
 
     @Override
