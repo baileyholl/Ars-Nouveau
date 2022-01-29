@@ -25,7 +25,7 @@ apply plugin: 'org.parchmentmc.librarian.forgegradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = '2.1.1'
+version = '2.1.2'
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
@@ -161,7 +161,7 @@ dependencies {
 //    runtimeOnly fg.deobf("curse.maven:exp-449945:3429057")  // Per viam invenire
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.1-5.0.3.0:api")
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.1-5.0.3.0")
-    implementation fg.deobf('software.bernie.geckolib:geckolib-1.18-forge:3.0.3')
+    implementation fg.deobf('software.bernie.geckolib:geckolib-1.18-forge:3.0.10')
     runtimeOnly fg.deobf("curse.maven:exp-64760:3577168")
     compileOnly fg.deobf("curse.maven:exp-64760:3577168")
     
