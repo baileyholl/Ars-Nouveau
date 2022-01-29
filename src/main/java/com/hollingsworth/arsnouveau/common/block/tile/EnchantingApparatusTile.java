@@ -123,7 +123,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
     // Used for rendering on the client
     public List<BlockPos> pedestalList(){
         ArrayList<BlockPos> posList = new ArrayList<>();
-        BlockPos.betweenClosedStream(this.getBlockPos().offset(5, -3, 5), this.getBlockPos().offset(-3, 3, -3)).forEach(blockPos -> {
+        BlockPos.betweenClosedStream(this.getBlockPos().offset(3, -3, 3), this.getBlockPos().offset(-3, 3, -3)).forEach(blockPos -> {
             if(level.getBlockEntity(blockPos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) level.getBlockEntity(blockPos)).stack != null &&  !((ArcanePedestalTile) level.getBlockEntity(blockPos)).stack.isEmpty()) {
                 posList.add(blockPos.immutable());
             }
