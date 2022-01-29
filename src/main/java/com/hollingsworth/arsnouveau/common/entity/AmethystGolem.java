@@ -43,7 +43,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class AmethystGolem  extends PathfinderMob implements IAnimatable, IDispellable, ITooltipProvider, IWandable {
-    public static final EntityDataAccessor<Optional<BlockPos>> HOME = SynchedEntityData.defineId(WealdWalker.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
+    public static final EntityDataAccessor<Optional<BlockPos>> HOME = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
+    public static final EntityDataAccessor<Boolean> CHANNELING = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.BOOLEAN);
     public int growCooldown;
     public int convertCooldown;
     public int harvestCooldown;
@@ -58,13 +59,13 @@ public class AmethystGolem  extends PathfinderMob implements IAnimatable, IDispe
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(3, new GoBackHomeGoal(this, this::getHome, 10, () -> true));
+        this.goalSelector.addGoal(2, new GoBackHomeGoal(this, this::getHome, 10, () -> true));
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(2, new ConvertBuddingGoal(this, () -> convertCooldown <= 0 && getHome() != null));
-        this.goalSelector.addGoal(2, new GrowClusterGoal(this, () -> growCooldown <= 0 && getHome() != null));
-        this.goalSelector.addGoal(2, new HarvestClusterGoal(this, () -> harvestCooldown <= 0 && getHome() != null));
+        this.goalSelector.addGoal(3, new ConvertBuddingGoal(this, () -> convertCooldown <= 0 && getHome() != null));
+        this.goalSelector.addGoal(4, new GrowClusterGoal(this, () -> growCooldown <= 0 && getHome() != null));
+        this.goalSelector.addGoal(5, new HarvestClusterGoal(this, () -> harvestCooldown <= 0 && getHome() != null));
     }
 
     @Override
@@ -83,6 +84,14 @@ public class AmethystGolem  extends PathfinderMob implements IAnimatable, IDispe
             scanCooldown = 500;
             scanBlocks();
         }
+    }
+
+    public boolean isChanneling(){
+        return this.entityData.get(CHANNELING);
+    }
+
+    public void setChanneling(boolean channeling){
+        this.entityData.set(CHANNELING,channeling);
     }
 
     public void scanBlocks(){
@@ -174,6 +183,7 @@ public class AmethystGolem  extends PathfinderMob implements IAnimatable, IDispe
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(HOME, Optional.empty());
+        this.entityData.define(CHANNELING, false);
     }
 
     @Override
