@@ -34,7 +34,7 @@ public class RelaySplitterTile extends ArcaneRelayTile{
 
     @Override
     public boolean setSendTo(BlockPos pos) {
-        return closeEnough(pos) && toList.add(pos) && update();
+        return closeEnough(pos)  && toList.add(pos) && update();
     }
 
     @Override

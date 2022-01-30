@@ -15,6 +15,9 @@ public interface IPlayerCap  extends INBTSerializable<CompoundTag> {
      */
     Collection<AbstractSpellPart> getKnownGlyphs();
 
+
+    void setKnownGlyphs(Collection<AbstractSpellPart> glyphs);
+
     /**
      * Adds the glyph to the player data.
      * @return true if the glyph was unlocked, false if they already know it.

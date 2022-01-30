@@ -60,7 +60,7 @@ public class ArcaneRelayTile extends AbstractSourceMachine implements ITooltipPr
 
 
     public boolean setTakeFrom(BlockPos pos){
-        if(BlockUtil.distanceFrom(pos, this.worldPosition) > getMaxDistance()){
+        if(BlockUtil.distanceFrom(pos, this.worldPosition) > getMaxDistance()  || pos.equals(getBlockPos())){
             return false;
         }
         this.fromPos = pos;
@@ -69,7 +69,7 @@ public class ArcaneRelayTile extends AbstractSourceMachine implements ITooltipPr
     }
 
     public boolean setSendTo(BlockPos pos ){
-        if(BlockUtil.distanceFrom(pos, this.worldPosition) > getMaxDistance()){
+        if(BlockUtil.distanceFrom(pos, this.worldPosition) > getMaxDistance() || pos.equals(getBlockPos())){
             return false;
         }
         this.toPos = pos;
@@ -98,12 +98,12 @@ public class ArcaneRelayTile extends AbstractSourceMachine implements ITooltipPr
     }
 
     public boolean closeEnough(BlockPos pos){
-        return BlockUtil.distanceFrom(pos, this.worldPosition) <= getMaxDistance();
+        return BlockUtil.distanceFrom(pos, this.worldPosition) <= getMaxDistance() && !pos.equals(getBlockPos());
     }
 
     @Override
     public void onFinishedConnectionFirst(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        if(storedPos == null || level.isClientSide)
+        if(storedPos == null || level.isClientSide || storedPos.equals(getBlockPos()))
             return;
         // Let relays take from us, no action needed.
         if(this.setSendTo(storedPos.immutable())) {
@@ -116,7 +116,7 @@ public class ArcaneRelayTile extends AbstractSourceMachine implements ITooltipPr
 
     @Override
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
-        if(storedPos == null)
+        if(storedPos == null || storedPos.equals(getBlockPos()))
             return;
         if(level.getBlockEntity(storedPos) instanceof ArcaneRelayTile)
             return;

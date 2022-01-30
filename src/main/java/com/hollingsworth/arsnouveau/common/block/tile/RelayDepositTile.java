@@ -31,14 +31,4 @@ public class RelayDepositTile extends ArcaneRelayTile{
             }
         }
     }
-
-    @Override
-    public boolean setTakeFrom(BlockPos pos) {
-        return super.setTakeFrom(pos);
-    }
-
-    @Override
-    public boolean setSendTo(BlockPos pos) {
-        return super.setSendTo(pos);
-    }
 }

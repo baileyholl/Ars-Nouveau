@@ -23,6 +23,11 @@ public class ANPlayerDataCap implements IPlayerCap{
     }
 
     @Override
+    public void setKnownGlyphs(Collection<AbstractSpellPart> glyphs) {
+        this.glyphs = new HashSet<>(glyphs);
+    }
+
+    @Override
     public boolean unlockGlyph(AbstractSpellPart spellPart) {
         return glyphs.add(spellPart);
     }
