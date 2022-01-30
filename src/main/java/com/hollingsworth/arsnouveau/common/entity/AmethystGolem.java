@@ -4,6 +4,10 @@ import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
+import com.hollingsworth.arsnouveau.client.ClientInfo;
+import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
 import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem.ConvertBuddingGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem.GrowClusterGoal;
@@ -16,10 +20,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
@@ -29,6 +30,7 @@ import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -44,7 +46,9 @@ import java.util.Optional;
 
 public class AmethystGolem  extends PathfinderMob implements IAnimatable, IDispellable, ITooltipProvider, IWandable {
     public static final EntityDataAccessor<Optional<BlockPos>> HOME = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
-    public static final EntityDataAccessor<Boolean> CHANNELING = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> IMBUEING = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<BlockPos> IMBUE_POS = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.BLOCK_POS);
+
     public int growCooldown;
     public int convertCooldown;
     public int harvestCooldown;
@@ -84,14 +88,31 @@ public class AmethystGolem  extends PathfinderMob implements IAnimatable, IDispe
             scanCooldown = 500;
             scanBlocks();
         }
+
+        if(level.isClientSide && isImbueing() && getImbuePos() != null){
+            Vec3 vec = new Vec3(getImbuePos().getX() + 0.5, getImbuePos().getY(), getImbuePos().getZ() + 0.5);
+            level.addParticle(GlowParticleData.createData(new ParticleColor(255, 50, 150)),
+                    (float) (vec.x) - Math.sin((ClientInfo.ticksInGame ) / 8D) ,
+                    (float) (vec.y) + Math.sin(ClientInfo.ticksInGame/5d)/8D + 0.5  ,
+                    (float) (vec.z) - Math.cos((ClientInfo.ticksInGame) / 8D) ,
+                    0, 0, 0);
+        }
     }
 
-    public boolean isChanneling(){
-        return this.entityData.get(CHANNELING);
+    public boolean isImbueing(){
+        return this.entityData.get(IMBUEING);
     }
 
-    public void setChanneling(boolean channeling){
-        this.entityData.set(CHANNELING,channeling);
+    public void setImbueing(boolean imbueing){
+        this.entityData.set(IMBUEING,imbueing);
+    }
+
+    public BlockPos getImbuePos(){
+        return this.entityData.get(IMBUE_POS);
+    }
+
+    public void setImbuePos(BlockPos pos){
+        this.entityData.set(IMBUE_POS,pos);
     }
 
     public void scanBlocks(){
@@ -161,8 +182,9 @@ public class AmethystGolem  extends PathfinderMob implements IAnimatable, IDispe
     }
 
     private PlayState runController(AnimationEvent animationEvent) {
-        if(animationEvent.getController().getCurrentAnimation() != null && !(animationEvent.getController().getCurrentAnimation().animationName.equals("run"))) {
-            return PlayState.STOP;
+        if(isImbueing() || (level.isClientSide && PatchouliHandler.isPatchouliWorld())){
+            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("tending_master"));
+            return PlayState.CONTINUE;
         }
         if(animationEvent.isMoving()){
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
@@ -183,7 +205,8 @@ public class AmethystGolem  extends PathfinderMob implements IAnimatable, IDispe
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(HOME, Optional.empty());
-        this.entityData.define(CHANNELING, false);
+        this.entityData.define(IMBUEING, false);
+        this.entityData.define(IMBUE_POS, BlockPos.ZERO);
     }
 
     @Override
