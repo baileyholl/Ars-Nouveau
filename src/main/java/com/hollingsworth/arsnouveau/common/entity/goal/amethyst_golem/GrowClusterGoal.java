@@ -8,8 +8,6 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.pathfinder.Path;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Supplier;
 
 public class GrowClusterGoal extends Goal {
@@ -17,7 +15,6 @@ public class GrowClusterGoal extends Goal {
     public AmethystGolem golem;
     public Supplier<Boolean> canUse;
     BlockPos pathPos;
-    List<BlockPos> growables = new ArrayList<>();
     int usingTicks;
 
     boolean isDone;
@@ -52,7 +49,7 @@ public class GrowClusterGoal extends Goal {
     public void start() {
         usingTicks = 120;
         isDone = false;
-        for(BlockPos p : golem.harvestables){
+        for(BlockPos p : golem.buddingBlocks){
             Path path = golem.getNavigation().createPath(p, 2);
             if(path != null && path.canReach()) {
                 pathPos = p;
@@ -63,7 +60,7 @@ public class GrowClusterGoal extends Goal {
 
     public void growCluster(){
         int numGrown = 0;
-        for(BlockPos p : golem.harvestables){
+        for(BlockPos p : golem.buddingBlocks){
             if(numGrown > 3)
                 break;
             if(golem.level.getBlockState(p).getBlock() == Blocks.BUDDING_AMETHYST){
@@ -72,7 +69,12 @@ public class GrowClusterGoal extends Goal {
             }
         }
         isDone = true;
-        golem.growCooldown = 20 * 60;
+        golem.growCooldown = 20 * 15;
+        golem.setImbueing(false);
+    }
+
+    @Override
+    public void stop() {
         golem.setImbueing(false);
     }
 
@@ -88,6 +90,6 @@ public class GrowClusterGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        return canUse.get() && golem.growCooldown <= 0 && !golem.harvestables.isEmpty();
+        return canUse.get() && golem.growCooldown <= 0 && !golem.buddingBlocks.isEmpty();
     }
 }

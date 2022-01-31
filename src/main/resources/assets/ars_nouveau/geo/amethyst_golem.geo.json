@@ -16,6 +16,11 @@
 					"pivot": [0, 0, 0]
 				},
 				{
+					"name": "item",
+					"parent": "amethyst_golem",
+					"pivot": [0, 8, -7]
+				},
+				{
 					"name": "spin",
 					"parent": "amethyst_golem",
 					"pivot": [3, 0, 0]

@@ -53,7 +53,6 @@ public class CarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
     @Override
     public void renderRecursively(GeoBone bone, PoseStack stack, VertexConsumer bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) {
         if(bone.getName().equals("item")){
-//            System.out.println(bone);
             stack.pushPose();
             RenderUtils.moveToPivot(bone, stack);
             stack.translate(0, -0.10, 0);
@@ -62,9 +61,7 @@ public class CarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
             Minecraft.getInstance().getItemRenderer().renderStatic(itemstack, ItemTransforms.TransformType.GROUND, packedLightIn, OverlayTexture.NO_OVERLAY, stack, this.buffer, (int) carbuncle.getOnPos().asLong());
             stack.popPose();
             bufferIn = buffer.getBuffer(RenderType.entityCutoutNoCull(text));
-
         }
-
         super.renderRecursively(bone, stack, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
     }
 

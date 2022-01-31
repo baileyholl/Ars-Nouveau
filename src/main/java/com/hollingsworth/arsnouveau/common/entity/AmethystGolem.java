@@ -9,9 +9,7 @@ import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
 import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
-import com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem.ConvertBuddingGoal;
-import com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem.GrowClusterGoal;
-import com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem.HarvestClusterGoal;
+import com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem.*;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -28,6 +26,7 @@ import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
@@ -47,13 +46,15 @@ import java.util.Optional;
 public class AmethystGolem  extends PathfinderMob implements IAnimatable, IDispellable, ITooltipProvider, IWandable {
     public static final EntityDataAccessor<Optional<BlockPos>> HOME = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.OPTIONAL_BLOCK_POS);
     public static final EntityDataAccessor<Boolean> IMBUEING = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Boolean> STOMPING = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<BlockPos> IMBUE_POS = SynchedEntityData.defineId(AmethystGolem.class, EntityDataSerializers.BLOCK_POS);
 
     public int growCooldown;
     public int convertCooldown;
+    public int pickupCooldown;
     public int harvestCooldown;
-    public List<BlockPos> harvestables = new ArrayList<>();
-    public List<BlockPos> convertables = new ArrayList<>();
+    public List<BlockPos> buddingBlocks = new ArrayList<>();
+    public List<BlockPos> amethystBlocks = new ArrayList<>();
     int scanCooldown;
     protected AmethystGolem(EntityType<? extends PathfinderMob> p_21683_, Level p_21684_) {
         super(p_21683_, p_21684_);
@@ -67,9 +68,11 @@ public class AmethystGolem  extends PathfinderMob implements IAnimatable, IDispe
         this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 8.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(3, new ConvertBuddingGoal(this, () -> convertCooldown <= 0 && getHome() != null));
-        this.goalSelector.addGoal(4, new GrowClusterGoal(this, () -> growCooldown <= 0 && getHome() != null));
-        this.goalSelector.addGoal(5, new HarvestClusterGoal(this, () -> harvestCooldown <= 0 && getHome() != null));
+        this.goalSelector.addGoal(3, new ConvertBuddingGoal(this, () -> convertCooldown <= 0 && getHome() != null && getHeldStack().isEmpty()));
+        this.goalSelector.addGoal(4, new GrowClusterGoal(this, () -> growCooldown <= 0 && getHome() != null && getHeldStack().isEmpty()));
+        this.goalSelector.addGoal(5, new HarvestClusterGoal(this, () -> harvestCooldown <= 0 && getHome() != null && !isImbueing() && getHeldStack().isEmpty()));
+        this.goalSelector.addGoal(2, new PickupAmethystGoal(this,() -> getHome() != null && pickupCooldown <= 0));
+        this.goalSelector.addGoal(2, new DepositAmethystGoal(this,() -> getHome() != null && !getHeldStack().isEmpty()));
     }
 
     @Override
@@ -84,8 +87,10 @@ public class AmethystGolem  extends PathfinderMob implements IAnimatable, IDispe
         if(scanCooldown > 0){
             scanCooldown--;
         }
+        if(pickupCooldown > 0)
+            pickupCooldown--;
         if(!level.isClientSide && scanCooldown == 0 && getHome() != null){
-            scanCooldown = 500;
+            scanCooldown = 20 * 60 * 3;
             scanBlocks();
         }
 
@@ -97,6 +102,22 @@ public class AmethystGolem  extends PathfinderMob implements IAnimatable, IDispe
                     (float) (vec.z) - Math.cos((ClientInfo.ticksInGame) / 8D) ,
                     0, 0, 0);
         }
+    }
+
+    public void setHeldStack(ItemStack stack) {
+        this.setItemSlot(EquipmentSlot.MAINHAND, stack);
+    }
+
+    public ItemStack getHeldStack() {
+        return this.getMainHandItem();
+    }
+
+    public boolean isStomping(){
+        return this.entityData.get(STOMPING);
+    }
+
+    public void setStomping(boolean imbueing){
+        this.entityData.set(STOMPING,imbueing);
     }
 
     public boolean isImbueing(){
@@ -117,16 +138,16 @@ public class AmethystGolem  extends PathfinderMob implements IAnimatable, IDispe
 
     public void scanBlocks(){
         BlockPos pos = getHome().immutable();
-        convertables = new ArrayList<>();
-        harvestables = new ArrayList<>();
+        amethystBlocks = new ArrayList<>();
+        buddingBlocks = new ArrayList<>();
         for(BlockPos b : BlockPos.betweenClosed(pos.below(3).south(5).east(5), pos.above(10).north(5).west(5))){
             if(level.getBlockState(b).isAir())
                 continue;
             if(level.getBlockState(b).getBlock() == Blocks.AMETHYST_BLOCK){
-                convertables.add(b.immutable());
+                amethystBlocks.add(b.immutable());
             }
             if(level.getBlockState(b).getBlock() == Blocks.BUDDING_AMETHYST){
-                harvestables.add(b);
+                buddingBlocks.add(b.immutable());
 
             }
         }
@@ -159,6 +180,13 @@ public class AmethystGolem  extends PathfinderMob implements IAnimatable, IDispe
         tag.putInt("grow", growCooldown);
         tag.putInt("convert", convertCooldown);
         tag.putInt("harvest",harvestCooldown);
+        tag.putInt("pickup", pickupCooldown);
+
+        if (getHeldStack() != null) {
+            CompoundTag itemTag = new CompoundTag();
+            getHeldStack().save(itemTag);
+            tag.put("held", itemTag);
+        }
     }
 
     @Override
@@ -170,6 +198,10 @@ public class AmethystGolem  extends PathfinderMob implements IAnimatable, IDispe
         this.growCooldown = tag.getInt("grow");
         this.convertCooldown = tag.getInt("convert");
         this.harvestCooldown = tag.getInt("harvest");
+        this.pickupCooldown = tag.getInt("pickup");
+
+        if (tag.contains("held"))
+            setHeldStack(ItemStack.of((CompoundTag) tag.get("held")));
     }
 
     @Override
@@ -182,12 +214,23 @@ public class AmethystGolem  extends PathfinderMob implements IAnimatable, IDispe
     }
 
     private PlayState runController(AnimationEvent animationEvent) {
+        if(isStomping()){
+            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("harvest2"));
+            return PlayState.CONTINUE;
+        }
+
         if(isImbueing() || (level.isClientSide && PatchouliHandler.isPatchouliWorld())){
             animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("tending_master"));
             return PlayState.CONTINUE;
         }
         if(animationEvent.isMoving()){
-            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("run"));
+            String anim = getHeldStack().isEmpty() ? "run" : "run_carry";
+            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation(anim));
+            return PlayState.CONTINUE;
+        }
+
+        if(!getHeldStack().isEmpty()){
+            animationEvent.getController().setAnimation(new AnimationBuilder().addAnimation("carry_idle"));
             return PlayState.CONTINUE;
         }
         return PlayState.STOP;
@@ -207,6 +250,7 @@ public class AmethystGolem  extends PathfinderMob implements IAnimatable, IDispe
         this.entityData.define(HOME, Optional.empty());
         this.entityData.define(IMBUEING, false);
         this.entityData.define(IMBUE_POS, BlockPos.ZERO);
+        this.entityData.define(STOMPING, false);
     }
 
     @Override

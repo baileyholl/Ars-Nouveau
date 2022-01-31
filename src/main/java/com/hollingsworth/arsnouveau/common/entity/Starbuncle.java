@@ -85,7 +85,6 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
     public static final EntityDataAccessor<Integer> TO_POS = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Integer> FROM_POS = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.INT);
 
-    public static final EntityDataAccessor<ItemStack> HELD_ITEM = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.ITEM_STACK);
     public static final EntityDataAccessor<Boolean> TAMED = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<String> PATH_BLOCK = SynchedEntityData.defineId(Starbuncle.class, EntityDataSerializers.STRING);
@@ -486,7 +485,6 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(HELD_ITEM, ItemStack.EMPTY);
         this.entityData.define(TAMED, false);
         this.entityData.define(TO_POS, 0);
         this.entityData.define(FROM_POS, 0);

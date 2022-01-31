@@ -12,7 +12,6 @@ import java.util.function.Supplier;
 
 public class ConvertBuddingGoal extends Goal {
 
-
     public AmethystGolem golem;
     public Supplier<Boolean> canUse;
     BlockPos targetCluster;
@@ -62,7 +61,7 @@ public class ConvertBuddingGoal extends Goal {
     public void start() {
         this.isDone = false;
         this.usingTicks = 120;
-        for(BlockPos pos : golem.convertables){
+        for(BlockPos pos : golem.amethystBlocks){
             if(golem.level.getBlockState(pos).getBlock() == Blocks.AMETHYST_BLOCK){
                 targetCluster = pos;
                 break;
@@ -71,7 +70,17 @@ public class ConvertBuddingGoal extends Goal {
     }
 
     @Override
+    public void stop() {
+        golem.setImbueing(false);
+    }
+
+    @Override
+    public boolean isInterruptable() {
+        return false;
+    }
+
+    @Override
     public boolean canUse() {
-        return canUse.get() && golem.convertCooldown <= 0 && golem.convertables.size() > 0;
+        return canUse.get() && golem.convertCooldown <= 0 && golem.amethystBlocks.size() > 0;
     }
 }
