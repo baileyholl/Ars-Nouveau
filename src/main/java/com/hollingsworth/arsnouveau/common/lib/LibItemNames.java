@@ -120,6 +120,7 @@ public class LibItemNames {
     public static final String FIRE_ESSENCE = "fire_essence";
     public static final String MANIPULATION_ESSENCE = "manipulation_essence";
     public static final String WATER_ESSENCE = "water_essence";
+    public static final String AMETHYST_GOLEM_CHARM = "amethyst_golem_charm";
 
     public static final String DOWSING_ROD = "dowsing_rod";
 

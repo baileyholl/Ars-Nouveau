@@ -405,6 +405,16 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new LinkPage("https://www.redbubble.com/people/Gootastic/explore?page=1&sortOrder=recent", "ars_nouveau.store_text", "ars_nouveau.store")), getPath(MOD_NEWS, "mod_news"));
 
         addBasicItem(ItemsRegistry.DOWSING_ROD, EQUIPMENT, new CraftingPage(ItemsRegistry.DOWSING_ROD));
+
+        addPage(new PatchouliBuilder(AUTOMATION, ItemsRegistry.AMETHYST_GOLEM_CHARM)
+                .withLocalizedText()
+                .withPage(new EntityPage(ModEntities.AMETHYST_GOLEM.getRegistryName().toString())
+                        .withText(getLangPath("amethyst_golem_charm", 2)).withScale(0.75f).withOffset(0.2f))
+                .withPage(new TextPage(getLangPath("amethyst_golem_charm", 3)).withTitle("ars_nouveau.summoning"))
+                .withPage(new TextPage(getLangPath("amethyst_golem_charm", 4)).withTitle("ars_nouveau.amethyst_farming"))
+                .withPage(new TextPage(getLangPath("amethyst_golem_charm", 5)).withTitle("ars_nouveau.amethyst_storage")),
+                getPath(AUTOMATION, "amethyst_golem_charm"));
+
     }
 
     public String getLangPath(String name, int count){

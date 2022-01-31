@@ -7,10 +7,12 @@ import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.compat.PatchouliHandler;
 import com.hollingsworth.arsnouveau.common.entity.goal.GoBackHomeGoal;
 import com.hollingsworth.arsnouveau.common.entity.goal.amethyst_golem.*;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -18,6 +20,8 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -25,6 +29,7 @@ import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -56,7 +61,8 @@ public class AmethystGolem  extends PathfinderMob implements IAnimatable, IDispe
     public List<BlockPos> buddingBlocks = new ArrayList<>();
     public List<BlockPos> amethystBlocks = new ArrayList<>();
     int scanCooldown;
-    protected AmethystGolem(EntityType<? extends PathfinderMob> p_21683_, Level p_21684_) {
+
+    public AmethystGolem(EntityType<? extends PathfinderMob> p_21683_, Level p_21684_) {
         super(p_21683_, p_21684_);
     }
 
@@ -169,8 +175,30 @@ public class AmethystGolem  extends PathfinderMob implements IAnimatable, IDispe
     }
 
     @Override
+    public void die(DamageSource source) {
+        if (!level.isClientSide) {
+            ItemStack stack = new ItemStack(ItemsRegistry.AMETHYST_GOLEM_CHARM);
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
+            if (this.getHeldStack() != null)
+                level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), this.getHeldStack()));
+        }
+        super.die(source);
+    }
+
+    @Override
     public boolean onDispel(@Nullable LivingEntity caster) {
-        return false;
+        if (this.isRemoved())
+            return false;
+
+        if (!level.isClientSide) {
+            ItemStack stack = new ItemStack(ItemsRegistry.AMETHYST_GOLEM_CHARM);
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack.copy()));
+            stack = getHeldStack();
+            level.addFreshEntity(new ItemEntity(level, getX(), getY(), getZ(), stack));
+            ParticleUtil.spawnPoof((ServerLevel) level, blockPosition());
+            this.remove(RemovalReason.DISCARDED);
+        }
+        return true;
     }
 
     @Override
