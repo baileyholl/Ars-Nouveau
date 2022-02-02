@@ -226,7 +226,7 @@ public class PathResult<T extends Callable<Path>>
     {
         if (pathCalculation != null)
         {
-            pathCalculation.cancel(true);
+            pathCalculation.cancel(false);
             pathCalculation = null;
         }
 
