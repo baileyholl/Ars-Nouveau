@@ -224,11 +224,12 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
         this.smashCooldown = tag.getInt("smash");
         this.castCooldown = tag.getInt("cast");
     }
-
+    AnimationController attackController;
     @Override
     public void registerControllers(AnimationData data) {
         data.addAnimationController(new AnimationController(this,"run_controller", 1.0f, this::runController));
-        data.addAnimationController(new AnimationController(this,"attack_controller", 5f, this::attackController));
+        attackController = new AnimationController(this,"attack_controller", 5f, this::attackController);
+        data.addAnimationController(attackController);
     }
     private PlayState attackController(AnimationEvent animationEvent) {
         return PlayState.CONTINUE;
@@ -257,25 +258,21 @@ public class WealdWalker extends AgeableMob implements IAnimatable, IAnimationLi
     public void startAnimation(int arg) {
         try{
             if(arg == Animations.SMASH.ordinal()){
-                AnimationController controller = this.factory.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("attack_controller");
 
-                if(controller.getCurrentAnimation() != null && (controller.getCurrentAnimation().animationName.equals("smash"))) {
+                if(attackController.getCurrentAnimation() != null && (attackController.getCurrentAnimation().animationName.equals("smash"))) {
                     return;
                 }
-                controller.markNeedsReload();
-                controller.setAnimation(new AnimationBuilder().addAnimation("smash", false).addAnimation("idle", false));
+                attackController.markNeedsReload();
+                attackController.setAnimation(new AnimationBuilder().addAnimation("smash", false).addAnimation("idle", false));
             }
 
             if(arg == Animations.CAST.ordinal()){
-                AnimationController controller = this.factory.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("attack_controller");
-                if(controller.getCurrentAnimation() != null && controller.getCurrentAnimation().animationName.equals("cast")) {
+                if(attackController.getCurrentAnimation() != null && attackController.getCurrentAnimation().animationName.equals("cast")) {
                     return;
                 }
-                controller.markNeedsReload();
-                controller.setAnimation(new AnimationBuilder().addAnimation("cast", false).addAnimation("idle", false));
+                attackController.markNeedsReload();
+                attackController.setAnimation(new AnimationBuilder().addAnimation("cast", false).addAnimation("idle", false));
             }
-
-
         }catch (Exception e){
             e.printStackTrace();
         }

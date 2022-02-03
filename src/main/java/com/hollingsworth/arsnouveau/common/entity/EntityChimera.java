@@ -114,12 +114,15 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
         this.goalSelector.addGoal(3, new ChimeraDiveGoal(this));
         this.goalSelector.addGoal(3, new ChimeraSpikeGoal(this));
     }
-
+    AnimationController attackController;
+    AnimationController crouchController;
     @Override
     public void registerControllers(AnimationData animationData) {
         animationData.addAnimationController(new AnimationController<>(this, "walkController", 20, this::groundPredicate));
-        animationData.addAnimationController(new AnimationController<>(this, "attackController", 1, this::attackPredicate));
-        animationData.addAnimationController(new AnimationController<>(this, "crouchController", 1, this::crouchPredicate));
+        crouchController = new AnimationController<>(this, "crouchController", 1, this::crouchPredicate);
+        attackController = new AnimationController<>(this, "attackController", 1, this::attackPredicate);
+        animationData.addAnimationController(attackController);
+        animationData.addAnimationController(crouchController);
     }
 
 
@@ -568,40 +571,33 @@ public class EntityChimera extends Monster implements IAnimatable, IAnimationLis
     public void startAnimation(int arg) {
         try{
             if(arg == Animations.ATTACK.ordinal()){
-                AnimationController controller = this.factory.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("attackController");
-
-                if(controller.getCurrentAnimation() != null && (controller.getCurrentAnimation().animationName.equals("claw_swipe"))) {
+                if(attackController.getCurrentAnimation() != null && (attackController.getCurrentAnimation().animationName.equals("claw_swipe"))) {
                     return;
                 }
-                controller.markNeedsReload();
-                controller.setAnimation(new AnimationBuilder().addAnimation("claw_swipe", false).addAnimation("idle"));
+                attackController.markNeedsReload();
+                attackController.setAnimation(new AnimationBuilder().addAnimation("claw_swipe", false).addAnimation("idle"));
             }
 
             if(arg == Animations.HOWL.ordinal()){
-                AnimationController controller = this.factory.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("attackController");
-
-                if(controller.getCurrentAnimation() != null && (controller.getCurrentAnimation().animationName.equals("howl"))) {
+                if(attackController.getCurrentAnimation() != null && (attackController.getCurrentAnimation().animationName.equals("howl"))) {
                     return;
                 }
-                controller.markNeedsReload();
-                controller.setAnimation(new AnimationBuilder().addAnimation("howl", false).addAnimation("idle"));
+                attackController.markNeedsReload();
+                attackController.setAnimation(new AnimationBuilder().addAnimation("howl", false).addAnimation("idle"));
             }
 
             if(arg == Animations.CHARGE.ordinal()){
-                AnimationController controller = this.factory.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("attackController");
-                controller.markNeedsReload();
-                controller.setAnimation(new AnimationBuilder().addAnimation("ready_charge", false).addAnimation("charge", true));
+                attackController.markNeedsReload();
+                attackController.setAnimation(new AnimationBuilder().addAnimation("ready_charge", false).addAnimation("charge", true));
             }
 
             if(arg == Animations.FLYING.ordinal()){
-                AnimationController controller = this.factory.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("attackController");
-                controller.markNeedsReload();
-                controller.setAnimation(new AnimationBuilder().addAnimation("flying", true));
+                attackController.markNeedsReload();
+                attackController.setAnimation(new AnimationBuilder().addAnimation("flying", true));
             }
             if(arg == Animations.DIVE_BOMB.ordinal()){
-                AnimationController controller = this.factory.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("attackController");
-                controller.markNeedsReload();
-                controller.setAnimation(new AnimationBuilder().addAnimation("divebomb", true));
+                attackController.markNeedsReload();
+                attackController.setAnimation(new AnimationBuilder().addAnimation("divebomb", true));
             }
         }catch (Exception e){
             e.printStackTrace();

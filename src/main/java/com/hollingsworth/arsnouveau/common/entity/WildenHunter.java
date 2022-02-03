@@ -113,8 +113,6 @@ public class  WildenHunter extends Monster implements IAnimatable, IAnimationLis
     public void startAnimation(int arg) {
         try{
             if(arg == Animations.ATTACK.ordinal()){
-                AnimationController controller = this.manager.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("attackController");
-
                 if(controller.getCurrentAnimation() != null && (controller.getCurrentAnimation().animationName.equals("attack") || controller.getCurrentAnimation().animationName.equals("attack2") ||
                         controller.getCurrentAnimation().animationName.equals("howl"))) {
                     return;
@@ -124,7 +122,6 @@ public class  WildenHunter extends Monster implements IAnimatable, IAnimationLis
             }
 
             if(arg == Animations.RAM.ordinal()){
-                AnimationController controller = this.manager.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("attackController");
                 if(controller.getCurrentAnimation() != null && controller.getCurrentAnimation().animationName.equals("attack2")) {
                     return;
                 }
@@ -133,7 +130,6 @@ public class  WildenHunter extends Monster implements IAnimatable, IAnimationLis
             }
 
             if(arg == Animations.HOWL.ordinal()){
-                AnimationController controller = this.manager.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("attackController");
                 controller.markNeedsReload();
                 controller.setAnimation(new AnimationBuilder().addAnimation("howl").addAnimation("idle"));
             }
@@ -148,9 +144,11 @@ public class  WildenHunter extends Monster implements IAnimatable, IAnimationLis
         return PlayState.CONTINUE;
     }
 
+    AnimationController controller;
     @Override
     public void registerControllers(AnimationData animationData) {
-        animationData.addAnimationController(new AnimationController(this, "attackController", 1, this::attackPredicate));
+        controller = new AnimationController(this, "attackController", 1, this::attackPredicate);
+        animationData.addAnimationController(controller);
     }
 
     @Override

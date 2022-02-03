@@ -69,11 +69,16 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
         return 0;
     }
 
+    AnimationController summonController;
+    AnimationController castController;
+
     @Override
     public void registerControllers(AnimationData animationData) {
         animationData.addAnimationController(new AnimationController<>(this, "idleController", 20, this::idlePredicate));
-        animationData.addAnimationController(new AnimationController<>(this, "castController", 1, this::castPredicate));
-        animationData.addAnimationController(new AnimationController<>(this, "summonController", 1, this::summonPredicate));
+        castController = new AnimationController<>(this, "castController", 1, this::castPredicate);
+        summonController = new AnimationController<>(this, "summonController", 1, this::summonPredicate);
+        animationData.addAnimationController(castController);
+        animationData.addAnimationController(summonController);
     }
 
     @Override
@@ -187,14 +192,12 @@ public class EntityWixie extends AbstractFlyingCreature implements IAnimatable, 
 
     @Override
     public void startAnimation(int arg) {
-        if(arg == Animations.CAST.ordinal()){
-            AnimationController controller = this.manager.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("castController");
-            controller.markNeedsReload();
-            controller.setAnimation(new AnimationBuilder().addAnimation("cast", false));
-        }else if(arg == Animations.SUMMON_ITEM.ordinal()){
-            AnimationController controller = this.manager.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("summonController");
-            controller.markNeedsReload();
-            controller.setAnimation(new AnimationBuilder().addAnimation("summon_item", false));
+        if(arg == Animations.CAST.ordinal() && castController != null){
+            castController.markNeedsReload();
+            castController.setAnimation(new AnimationBuilder().addAnimation("cast", false));
+        }else if(arg == Animations.SUMMON_ITEM.ordinal() && summonController != null){
+            summonController.markNeedsReload();
+            summonController.setAnimation(new AnimationBuilder().addAnimation("summon_item", false));
         }
     }
     @Override

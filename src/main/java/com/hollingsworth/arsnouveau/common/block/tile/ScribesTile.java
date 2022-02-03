@@ -248,17 +248,21 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
     private <E extends BlockEntity & IAnimatable > PlayState idlePredicate(AnimationEvent<E> event) {
         return PlayState.CONTINUE;
     }
+
     @Override
     public void startAnimation(int arg) {
-        AnimationData data = this.factory.getOrCreateAnimationData(this.hashCode());
-        AnimationController controller = data.getAnimationControllers().get("controller");
+        if(controller == null){
+            System.out.println("NULL CONTROLLER");
+            return;
+        }
         controller.markNeedsReload();
         controller.setAnimation(new AnimationBuilder().addAnimation("create_glyph", false));
     }
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 1, this::idlePredicate));
+        this.controller = new AnimationController(this, "controller", 1, this::idlePredicate);
+        data.addAnimationController(controller);
     }
 
     @Override
@@ -267,6 +271,7 @@ public class ScribesTile extends ModdedTile implements IAnimatable, ITickable, C
     }
 
     AnimationFactory factory = new AnimationFactory(this);
+    AnimationController controller;
     @Override
     public AnimationFactory getFactory() {
         return factory;

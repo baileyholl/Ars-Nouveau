@@ -92,10 +92,11 @@ public class BasicSpellTurretTile extends ModdedTile implements IPickupResponder
         return PlayState.CONTINUE;
     }
 
+    AnimationController castController;
     @Override
     public void registerControllers(AnimationData data) {
-        AnimationController controller = new AnimationController<>(this, "castController", 0, this::walkPredicate);
-        data.addAnimationController(controller);
+        castController = new AnimationController<>(this, "castController", 0, this::walkPredicate);
+        data.addAnimationController(castController);
     }
 
     AnimationFactory factory = new AnimationFactory(this);
