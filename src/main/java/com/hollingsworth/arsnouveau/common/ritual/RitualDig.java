@@ -58,7 +58,7 @@ public class RitualDig extends AbstractRitual {
         Level world = tile.getLevel();
         if(world.getGameTime() % 20 == 0 && !world.isClientSide){
             BlockPos pos = tile.getBlockPos().north().below(getContext().progress);
-            if(pos.getY() < 1){
+            if(world.isOutsideBuildHeight(pos)){
                 onEnd();
                 return;
             }
