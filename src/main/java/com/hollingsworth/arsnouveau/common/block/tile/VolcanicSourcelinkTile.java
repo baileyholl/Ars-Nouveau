@@ -145,7 +145,7 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
 
     @Override
     public int getMaxSource() {
-        return 1000;
+        return 5000;
     }
 
 }
