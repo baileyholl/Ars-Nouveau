@@ -46,7 +46,6 @@ public class Config {
     public static ForgeConfigSpec.IntValue SYLPH_WEIGHT;
     public static ForgeConfigSpec.IntValue DRYGMY_WEIGHT;
 
-
     public static ForgeConfigSpec.IntValue DRYGMY_MANA_COST;
     public static ForgeConfigSpec.IntValue SYLPH_MANA_COST;
     public static ForgeConfigSpec.IntValue DRYGMY_MAX_PROGRESS;
@@ -68,6 +67,7 @@ public class Config {
     public static ForgeConfigSpec.IntValue ARCHWOOD_FOREST_WEIGHT;
     public static ForgeConfigSpec.ConfigValue<? extends String> CRYSTALLIZER_ITEM;
     public static ForgeConfigSpec.BooleanValue ENFORCE_AUGMENT_CAP_ON_CAST;
+    public static ForgeConfigSpec.IntValue CODEX_COST_PER_GLYPH;
 
     public static boolean isSpellEnabled(String tag){
         AbstractSpellPart spellPart = ArsNouveauAPI.getInstance().getSpellpartMap().get(tag);
@@ -140,6 +140,9 @@ public class Config {
         ENFORCE_AUGMENT_CAP_ON_CAST = SERVER_BUILDER.comment("Enforce augment cap on casting? Turn this off if you are a pack maker and want to create more powerful items than players.")
                 .define("enforceCapOnCast", true);
         SERVER_BUILDER.pop();
+
+        SERVER_BUILDER.comment("Items").push("item");
+        CODEX_COST_PER_GLYPH = SERVER_BUILDER.comment("Cost per glyph in a codex").defineInRange("codexCost", 10, 0, Integer.MAX_VALUE);
 
         SERVER_CONFIG = SERVER_BUILDER.build();
         RegistryHelper.generateConfig(ArsNouveau.MODID, new ArrayList<>(ArsNouveauAPI.getInstance().getSpellpartMap().values()));

@@ -993,5 +993,16 @@
 	"ars_nouveau.amethyst_farming": "Farming Amethyst",
 	"ars_nouveau.page4.amethyst_golem_charm": "Once a home has been set, the golem will begin performing tasks over time. They will convert Amethyst Blocks into Budding Amethyst, harvest Amethyst Clusters, speed up Budding Amethyst growth, and pick up and store Amethyst Shards.",
 	"ars_nouveau.amethyst_storage": "Storing Amethyst",
-	"ars_nouveau.page5.amethyst_golem_charm": "If a golem's home has been set to an inventory, golems will pick up and store Amethyst Shards in their bounded inventory block. If their home is not an inventory, they will simply ignore items on the ground."
+	"ars_nouveau.page5.amethyst_golem_charm": "If a golem's home has been set to an inventory, golems will pick up and store Amethyst Shards in their bounded inventory block. If their home is not an inventory, they will simply ignore items on the ground.",
+	"ars_nouveau.recorded_codex": "You record your known glyphs to the codex.",
+	"ars_nouveau.updated_codex": "You have updated the codex with %s glyphs",
+	"ars_nouveau.consumed_codex": "You consume to codex to learn %s glyphs.",
+	"ars_nouveau.codex_no_use": "This codex would not teach you anything new.",
+	"ars_nouveau.codex_up_to_date": "This codex is already up to date.",
+	"ars_nouveau.codex_not_enough_exp": "Not enough levels to record glyphs. %s levels needed.",
+	"ars_nouveau.recorded_by": "Created by %s",
+	"ars_nouveau.contains_glyphs": "Contains %s glyphs.",
+	"ars_nouveau.codex_tooltip": "Use to record your glyphs.",
+	"item.ars_nouveau.annotated_codex": "Annotated Codex",
+	"ars_nouveau.page.annotated_codex": "The Annoted Codex allows players to share their knowledge of glyphs with other players. To record your known glyphs, simply use the codex. Recording glyphs requires EXP for each glyph known, and the EXP will be consumed upon using the item. Using the item again will update the list of known glyphs. Other players may use the book to learn the glyphs, consuming the codex in the process."
 }

@@ -77,14 +77,4 @@ public class PatchouliBuilder {
         this.object.add("pages", pages);
         return this.object;
     }
-
-
-    public static abstract class RecipeProvider{
-
-        public abstract ResourceLocation getType(ItemLike item);
-
-        public ResourceLocation getPath(ItemLike item){
-            return item.asItem().getRegistryName();
-        }
-    }
 }

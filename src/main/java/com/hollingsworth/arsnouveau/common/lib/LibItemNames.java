@@ -123,5 +123,6 @@ public class LibItemNames {
     public static final String AMETHYST_GOLEM_CHARM = "amethyst_golem_charm";
 
     public static final String DOWSING_ROD = "dowsing_rod";
+    public static final String ANNOTATED_CODEX = "annotated_codex";
 
 }

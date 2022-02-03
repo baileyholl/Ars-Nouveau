@@ -414,7 +414,7 @@ public class PatchouliProvider implements DataProvider {
                 .withPage(new TextPage(getLangPath("amethyst_golem_charm", 4)).withTitle("ars_nouveau.amethyst_farming"))
                 .withPage(new TextPage(getLangPath("amethyst_golem_charm", 5)).withTitle("ars_nouveau.amethyst_storage")),
                 getPath(AUTOMATION, "amethyst_golem_charm"));
-
+        addBasicItem(ItemsRegistry.ANNOTATED_CODEX, EQUIPMENT, new CraftingPage(ItemsRegistry.ANNOTATED_CODEX));
     }
 
     public String getLangPath(String name, int count){
