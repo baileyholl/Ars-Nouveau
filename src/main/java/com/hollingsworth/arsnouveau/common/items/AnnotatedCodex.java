@@ -98,6 +98,7 @@ public class AnnotatedCodex extends ModItem{
             if(numUnlocked > 0){
                 stack.shrink(1);
                 PortUtil.sendMessageNoSpam(pPlayer, new TranslatableComponent("ars_nouveau.consumed_codex", numUnlocked));
+                CapabilityRegistry.EventHandler.syncPlayerCap(pPlayer);
             }else{
                 PortUtil.sendMessageNoSpam(pPlayer, new TranslatableComponent("ars_nouveau.codex_no_use"));
             }
