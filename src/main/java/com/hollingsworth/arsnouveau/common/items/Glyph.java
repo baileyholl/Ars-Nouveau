@@ -1,7 +1,5 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellSchool;
@@ -67,15 +65,5 @@ public class Glyph extends ModItem{
                 }
             }
         }
-    }
-
-    public JsonElement asRecipe(){
-        JsonObject jsonobject = new JsonObject();
-        jsonobject.addProperty("type", "ars_nouveau:glyph_recipe");
-        jsonobject.addProperty("tier", this.spellPart.getTier().toString());
-        if(this.spellPart.getCraftingReagent() != null)
-            jsonobject.addProperty("input", this.spellPart.getCraftingReagent().getRegistryName().toString());
-        jsonobject.addProperty("output", this.getRegistryName().toString());
-        return jsonobject;
     }
 }

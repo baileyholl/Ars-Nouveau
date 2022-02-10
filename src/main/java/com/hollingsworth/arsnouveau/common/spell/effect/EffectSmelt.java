@@ -14,9 +14,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
@@ -134,11 +132,6 @@ public class EffectSmelt extends AbstractEffect {
     @Override
     public int getDefaultManaCost() {
         return 100;
-    }
-
-    @Override
-    public Item getCraftingReagent() {
-        return Items.BLAST_FURNACE;
     }
 
     @Nonnull

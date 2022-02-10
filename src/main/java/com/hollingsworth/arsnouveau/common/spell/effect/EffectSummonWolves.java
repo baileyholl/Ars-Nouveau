@@ -4,10 +4,8 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.SummonWolf;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -70,12 +68,6 @@ public class EffectSummonWolves extends AbstractEffect {
     @Override
     public SpellTier getTier() {
         return SpellTier.ONE;
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return ItemsRegistry.WILDEN_HORN;
     }
 
     @Nonnull

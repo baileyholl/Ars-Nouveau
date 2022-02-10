@@ -6,8 +6,6 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -53,12 +51,6 @@ public class EffectKnockback extends AbstractEffect {
     @Override
     public int getDefaultManaCost() {
         return 15;
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.PISTON;
     }
 
     @Nonnull

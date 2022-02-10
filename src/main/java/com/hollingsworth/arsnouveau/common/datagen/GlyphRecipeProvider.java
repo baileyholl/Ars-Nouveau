@@ -42,10 +42,6 @@ public class GlyphRecipeProvider implements DataProvider {
     public void run(HashCache cache) throws IOException {
         List<Glyph> glyphList = ArsNouveauAPI.getInstance().getGlyphItemMap().values().stream().collect(Collectors.toList());
         Path output = this.generator.getOutputFolder();
-        for(Glyph g : glyphList){
-            Path path = getGlyphPath(output, g);
-            DataProvider.save(GSON, cache, g.asRecipe(), path);
-        }
 
         add(get(AugmentAccelerate.INSTANCE).withItem(Items.POWERED_RAIL).withItem(Items.SUGAR).withItem(Items.CLOCK));
         add(get(AugmentAmplify.INSTANCE).withItem(Items.DIAMOND_PICKAXE));

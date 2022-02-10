@@ -3,10 +3,6 @@ package com.hollingsworth.arsnouveau.common.spell.augment;
 import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.world.item.Item;
-
-import javax.annotation.Nullable;
 
 public class AugmentPierce extends AbstractAugment {
     public static AugmentPierce INSTANCE = new AugmentPierce();
@@ -23,12 +19,6 @@ public class AugmentPierce extends AbstractAugment {
     @Override
     public SpellTier getTier() {
         return SpellTier.TWO;
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return ItemsRegistry.WILDEN_SPIKE;
     }
 
     @Override

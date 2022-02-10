@@ -5,8 +5,6 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityLingeringSpell;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -48,12 +46,6 @@ public class EffectLinger extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "Creates a lingering field that applies spells on nearby entities for a short time. Applying Sensitive will make this spell target blocks instead. AOE will expand the effective range, Accelerate will cast spells faster, and Extend Time will increase the duration.";
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.DRAGON_BREATH;
     }
 
     @Override

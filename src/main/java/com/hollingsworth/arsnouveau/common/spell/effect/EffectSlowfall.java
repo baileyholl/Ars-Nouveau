@@ -4,8 +4,6 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -44,12 +42,6 @@ public class EffectSlowfall extends AbstractEffect {
     @Override
     public int getDefaultManaCost() {
         return 30;
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.FEATHER;
     }
 
     @Override

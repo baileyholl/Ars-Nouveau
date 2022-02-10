@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
@@ -13,7 +12,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
@@ -102,11 +100,6 @@ public class EffectColdSnap extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "Snares and causes a burst of damage to an entity that is afflicted by Slowness or is wet. Nearby enemies that are not afflicted by Slow will be slowed. Nearby Enemies afflicted by Slow or wetness will also be hit by Cold Snap. Can be augmented using Amplify, Extend Time, and AOE.";
-    }
-
-    @Override
-    public Item getCraftingReagent() {
-        return ArsNouveauAPI.getInstance().getGlyphItem(EffectFreeze.INSTANCE);
     }
 
     @Override
