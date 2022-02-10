@@ -10,8 +10,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -77,11 +75,6 @@ public class EffectConjureWater extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "Places water at a location or extinguishes entities on fire.";
-    }
-
-    @Override
-    public Item getCraftingReagent() {
-        return Items.WATER_BUCKET;
     }
 
     @Override

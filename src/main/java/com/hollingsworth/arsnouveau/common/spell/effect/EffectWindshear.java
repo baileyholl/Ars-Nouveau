@@ -1,7 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
@@ -11,7 +10,6 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -64,12 +62,6 @@ public class EffectWindshear extends AbstractEffect {
     @Override
     public int getDefaultManaCost() {
         return 50;
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return ArsNouveauAPI.getInstance().getGlyphItem(EffectKnockback.INSTANCE);
     }
 
     @Nonnull

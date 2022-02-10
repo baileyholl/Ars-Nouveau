@@ -5,10 +5,6 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-
-import javax.annotation.Nullable;
 
 public class AugmentAmplify extends AbstractAugment {
     public static AugmentAmplify INSTANCE = new AugmentAmplify();
@@ -21,12 +17,6 @@ public class AugmentAmplify extends AbstractAugment {
     @Override
     public int getDefaultManaCost() {
         return 20;
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.DIAMOND;
     }
 
     @Override

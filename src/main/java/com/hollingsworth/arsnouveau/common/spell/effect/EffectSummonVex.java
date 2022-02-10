@@ -8,8 +8,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.HitResult;
@@ -60,12 +58,6 @@ public class EffectSummonVex extends AbstractEffect {
     @Override
     public int getDefaultManaCost() {
         return 150;
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.TOTEM_OF_UNDYING;
     }
 
     @Override

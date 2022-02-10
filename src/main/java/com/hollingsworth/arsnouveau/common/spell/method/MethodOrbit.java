@@ -1,14 +1,12 @@
 package com.hollingsworth.arsnouveau.common.spell.method;
 
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityOrbitProjectile;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -100,12 +98,6 @@ public class MethodOrbit extends AbstractCastMethod {
     @Override
     public String getBookDescription() {
         return "Summons three orbiting projectiles around the caster that will cast a spell on any entities it may hit. Additional projectiles, their speed, radius, and duration may be augmented. Sensitive will cause Orbit to hit blocks.";
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return ArsNouveauAPI.getInstance().getGlyphItem(MethodProjectile.INSTANCE);
     }
 
     @Nonnull

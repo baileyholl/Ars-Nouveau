@@ -4,9 +4,7 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -56,11 +54,6 @@ public class EffectLeap extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "Launches the target in the direction they are looking. Amplification will increase the distance moved.";
-    }
-
-    @Override
-    public Item getCraftingReagent() {
-        return ItemsRegistry.WILDEN_WING;
     }
 
     @Override

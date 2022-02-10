@@ -5,10 +5,6 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-
-import javax.annotation.Nullable;
 
 public class AugmentExtendTime extends AbstractAugment {
     public static AugmentExtendTime INSTANCE = new AugmentExtendTime();
@@ -25,12 +21,6 @@ public class AugmentExtendTime extends AbstractAugment {
     @Override
     public SpellTier getTier() {
         return SpellTier.TWO;
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.CLOCK;
     }
 
     @Override

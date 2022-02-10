@@ -10,8 +10,6 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -57,11 +55,6 @@ public class EffectIntangible extends AbstractEffect {
         super.buildConfig(builder);
         addGenericInt(builder, 3, "Base duration, in seconds", "base");
         addExtendTimeConfig(builder, 1);
-    }
-
-    @Override
-    public Item getCraftingReagent() {
-        return Items.PHANTOM_MEMBRANE;
     }
 
     @Override

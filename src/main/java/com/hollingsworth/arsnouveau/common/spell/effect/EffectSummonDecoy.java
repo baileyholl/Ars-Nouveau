@@ -5,8 +5,6 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityDummy;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -63,12 +61,6 @@ public class EffectSummonDecoy extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "Summons a decoy of yourself. Upon summoning, the decoy will attract any nearby mobs to attack it. Does not apply summoning sickness.";
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.ARMOR_STAND;
     }
 
     @Nonnull

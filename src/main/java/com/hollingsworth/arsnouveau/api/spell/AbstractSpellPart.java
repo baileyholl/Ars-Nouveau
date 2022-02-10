@@ -2,13 +2,11 @@ package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.common.util.SpellPartConfigUtil;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.item.Item;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,24 +28,11 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
             spellSchool.addSpellPart(this);
         }
     }
-    // Final mana cost
-    public int getAdjustedManaCost(List<AbstractAugment> augmentTypes){
-        int cost = getConfigCost();
-        for(AbstractAugment a: augmentTypes){
-            cost += a.getConfigCost();
-        }
-        return Math.max(cost, 0);
-    }
 
     public abstract int getDefaultManaCost();
 
     public int getConfigCost(){
         return COST == null ? getDefaultManaCost() : COST.get();
-    }
-
-    @Nullable
-    public Item getCraftingReagent(){
-        return null;
     }
 
     public String getName(){return this.name;}

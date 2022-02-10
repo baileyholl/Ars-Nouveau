@@ -4,8 +4,6 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -39,12 +37,6 @@ public class EffectBounce extends AbstractEffect {
     @Override
     public int getDefaultManaCost() {
         return 50;
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.SLIME_BALL;
     }
 
 

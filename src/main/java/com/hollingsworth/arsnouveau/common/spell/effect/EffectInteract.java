@@ -12,9 +12,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
@@ -117,12 +115,6 @@ public class EffectInteract extends AbstractEffect {
     @Override
     public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         return nonAirAnythingSuccess(rayTraceResult, world);
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.LEVER;
     }
 
     @Nonnull

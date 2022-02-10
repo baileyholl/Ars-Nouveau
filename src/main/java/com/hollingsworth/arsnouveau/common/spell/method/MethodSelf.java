@@ -7,9 +7,7 @@ import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
@@ -93,11 +91,6 @@ public class MethodSelf extends AbstractCastMethod {
         return "A spell you start with. Applies spells on the caster.";
     }
 
-
-    @Override
-    public Item getCraftingReagent() {
-        return Items.GLASS_BOTTLE;
-    }
 
     @Override
     public boolean defaultedStarterGlyph() {

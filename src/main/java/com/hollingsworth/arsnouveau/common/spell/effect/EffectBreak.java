@@ -8,7 +8,6 @@ import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -91,12 +90,6 @@ public class EffectBreak extends AbstractEffect {
     @Override
     public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         return rayTraceResult instanceof BlockHitResult && world.getBlockState(((BlockHitResult) rayTraceResult).getBlockPos()).getMaterial() != Material.AIR && canBlockBeHarvested(spellStats, world, ((BlockHitResult) rayTraceResult).getBlockPos());
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.IRON_PICKAXE;
     }
 
     @Nonnull

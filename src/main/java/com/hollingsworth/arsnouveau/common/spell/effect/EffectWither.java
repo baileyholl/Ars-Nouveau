@@ -5,8 +5,6 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -40,11 +38,6 @@ public class EffectWither extends AbstractEffect {
     @Override
     public int getDefaultManaCost() {
         return 100;
-    }
-
-    @Override
-    public Item getCraftingReagent() {
-        return Items.WITHER_SKELETON_SKULL;
     }
 
     @Override

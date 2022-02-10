@@ -5,10 +5,6 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-
-import javax.annotation.Nullable;
 
 public class AugmentDampen extends AbstractAugment {
     public static AugmentDampen INSTANCE = new AugmentDampen();
@@ -20,12 +16,6 @@ public class AugmentDampen extends AbstractAugment {
     @Override
     public int getDefaultManaCost() {
         return -5;
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.NETHER_BRICK;
     }
 
     @Override

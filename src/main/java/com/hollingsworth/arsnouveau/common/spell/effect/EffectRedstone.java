@@ -10,8 +10,6 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
@@ -58,12 +56,6 @@ public class EffectRedstone extends AbstractEffect {
         super.buildConfig(builder);
         addGenericInt(builder, 5, "Base time in ticks", "base_duration");
         BONUS_TIME = builder.comment("Extend time bonus, in ticks").defineInRange("extend_time", 10, 0, Integer.MAX_VALUE);
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.REDSTONE_BLOCK;
     }
 
     @Nonnull

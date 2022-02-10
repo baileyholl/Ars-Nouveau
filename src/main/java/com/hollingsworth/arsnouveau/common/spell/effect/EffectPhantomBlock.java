@@ -11,8 +11,6 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -55,12 +53,6 @@ public class EffectPhantomBlock extends AbstractEffect {
     @Override
     public int getDefaultManaCost() {
         return 5;
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.GLASS;
     }
 
     @Nonnull

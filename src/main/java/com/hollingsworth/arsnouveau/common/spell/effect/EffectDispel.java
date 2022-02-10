@@ -6,7 +6,6 @@ import com.hollingsworth.arsnouveau.api.event.DispelEvent;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -60,12 +59,6 @@ public class EffectDispel extends AbstractEffect {
     @Override
     public int getDefaultManaCost() {
         return 30;
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.MILK_BUCKET;
     }
 
     @Nonnull

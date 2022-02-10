@@ -6,9 +6,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
@@ -85,9 +83,4 @@ public class MethodUnderfoot extends AbstractCastMethod {
         return "Targets the spell on the block beneath the player.";
     }
 
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.STONE_PRESSURE_PLATE;
-    }
 }

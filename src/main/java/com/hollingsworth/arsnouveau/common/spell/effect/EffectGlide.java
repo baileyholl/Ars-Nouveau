@@ -6,8 +6,6 @@ import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -51,12 +49,6 @@ public class EffectGlide extends AbstractEffect {
     @Override
     public SpellTier getTier() {
         return SpellTier.THREE;
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.ELYTRA;
     }
 
     @Nonnull

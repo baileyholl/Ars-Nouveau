@@ -10,8 +10,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.CraftingMenu;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 
@@ -55,11 +53,6 @@ public class EffectCraft extends AbstractEffect {
         public boolean stillValid(Player playerIn) {
             return true;
         }
-    }
-
-    @Override
-    public Item getCraftingReagent() {
-        return Items.CRAFTING_TABLE;
     }
 
     @Nonnull

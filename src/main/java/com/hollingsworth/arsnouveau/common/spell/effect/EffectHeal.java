@@ -4,8 +4,6 @@ import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -59,12 +57,6 @@ public class EffectHeal extends AbstractEffect {
     @Override
     public SpellTier getTier() {
         return SpellTier.TWO;
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.GLISTERING_MELON_SLICE;
     }
 
     @Nonnull

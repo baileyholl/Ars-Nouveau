@@ -13,9 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
@@ -111,12 +109,6 @@ public class EffectHarvest extends AbstractEffect {
         return cropsBlock.isMaxAge(state) && world instanceof ServerLevel;
     }
 
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.IRON_HOE;
-    }
 
     @Override
     public int getDefaultManaCost() {

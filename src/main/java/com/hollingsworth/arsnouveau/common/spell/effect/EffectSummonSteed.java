@@ -10,7 +10,6 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -80,12 +79,6 @@ public class EffectSummonSteed extends AbstractEffect {
     @Override
     public String getBookDescription() {
         return "Summons a saddled horse that will vanish after a few minutes. AOE will increase the amount summoned, while Extend Time will increase the duration of the summon. Applies Summoning Sickness to the caster, and cannot be cast while afflicted by this Sickness.";
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.LEATHER;
     }
 
     @Nonnull

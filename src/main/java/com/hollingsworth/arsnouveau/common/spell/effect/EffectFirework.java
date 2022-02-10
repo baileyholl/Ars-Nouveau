@@ -153,9 +153,4 @@ public class EffectFirework extends AbstractEffect {
         return SpellTier.TWO;
     }
 
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.FIREWORK_ROCKET;
-    }
 }
