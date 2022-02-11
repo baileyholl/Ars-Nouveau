@@ -169,7 +169,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
 
     @Override
     public ItemStack getResultItem() {
-        return this.result;
+        return this.result == null ? ItemStack.EMPTY : result;
     }
 
     @Override

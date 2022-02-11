@@ -211,7 +211,7 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
             }
         }else {
             for (Recipe r : level.getServer().getRecipeManager().getRecipes()) {
-                if (r.getResultItem().getItem() != stack.getItem())
+                if (r.getResultItem() == null || r.getResultItem().getItem() != stack.getItem())
                     continue;
 
                 if (r instanceof ShapedRecipe) {
