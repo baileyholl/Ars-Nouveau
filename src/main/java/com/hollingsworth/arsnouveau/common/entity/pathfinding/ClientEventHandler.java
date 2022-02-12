@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.pathfinding;
 
+import com.hollingsworth.arsnouveau.common.light.LightManager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLevelLastEvent;
@@ -26,5 +27,6 @@ public class ClientEventHandler
         {
             Pathfinding.debugDraw(event.getPartialTick(), event.getPoseStack());
         }
+        LightManager.updateAll(event.getLevelRenderer());
     }
 }

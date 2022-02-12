@@ -9,7 +9,9 @@
     "ElytraPlayerMixin",
     "ExpInvokerMixin",
     "MixinLivingEntity",
-    "PotionRecipeMixin"
+    "PotionRecipeMixin",
+    "LevelRendererMixin",
+    "LightEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
