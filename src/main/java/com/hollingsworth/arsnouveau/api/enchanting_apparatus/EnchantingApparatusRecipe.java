@@ -7,6 +7,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.block.tile.EnchantingApparatusTile;
 import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
 import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -36,7 +37,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
     public List<Ingredient> pedestalItems; // Items part of the recipe
     public ResourceLocation id;
     public int sourceCost;
-    public boolean keepEnchantmentsOfReagent = false;
+    public boolean keepNbtOfReagent = false;
 
     public static final String RECIPE_ID = "enchanting_apparatus";
 
@@ -52,13 +53,13 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         this(id, pedestalItems, reagent, result, 0, false);
     }
 
-    public EnchantingApparatusRecipe(ResourceLocation id,   List<Ingredient> pedestalItems, Ingredient reagent,ItemStack result, int cost, boolean keepEnchantmentsOfReagent){
+    public EnchantingApparatusRecipe(ResourceLocation id,   List<Ingredient> pedestalItems, Ingredient reagent,ItemStack result, int cost, boolean keepNbtOfReagent){
         this.reagent = reagent;
         this.pedestalItems = pedestalItems;
         this.result = result;
         sourceCost = cost;
         this.id = id;
-        this.keepEnchantmentsOfReagent = keepEnchantmentsOfReagent;
+        this.keepNbtOfReagent = keepNbtOfReagent;
     }
     public EnchantingApparatusRecipe(){
         reagent = Ingredient.EMPTY;
@@ -81,11 +82,9 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
     @Override
     public ItemStack getResult(List<ItemStack> pedestalItems, ItemStack reagent, EnchantingApparatusTile enchantingApparatusTile) {
         ItemStack result = this.result.copy();
-        if(keepEnchantmentsOfReagent) {
-            var enchantments = EnchantmentHelper.deserializeEnchantments(reagent.getEnchantmentTags());
-            for (Map.Entry<Enchantment, Integer> enchantmentEntry : enchantments.entrySet()) {
-                result.enchant(enchantmentEntry.getKey(), enchantmentEntry.getValue());
-            }
+        if(keepNbtOfReagent) {
+            result.deserializeNBT(reagent.serializeNBT());
+            result.setDamageValue(0);
         }
         return result;
     }
@@ -147,7 +146,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
         jsonobject.add("pedestalItems", pedestalArr);
         jsonobject.add("output", resultObj);
         jsonobject.addProperty("sourceCost", sourceCost);
-        jsonobject.addProperty("keepEnchantmentsOfReagent", keepEnchantmentsOfReagent);
+        jsonobject.addProperty("keepNbtOfReagent", keepNbtOfReagent);
         return jsonobject;
     }
 
@@ -207,7 +206,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
             Ingredient reagent = Ingredient.fromJson(GsonHelper.getAsJsonArray(json, "reagent"));
             ItemStack output = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "output"));
             int cost = json.has("sourceCost") ? GsonHelper.getAsInt(json, "sourceCost") : 0;
-            boolean keepEnchantmentsOfReagent = json.has("keepEnchantmentsOfReagent") && GsonHelper.getAsBoolean(json, "keepEnchantmentsOfReagent");
+            boolean keepNbtOfReagent = json.has("keepNbtOfReagent") && GsonHelper.getAsBoolean(json, "keepNbtOfReagent");
             JsonArray pedestalItems = GsonHelper.getAsJsonArray(json,"pedestalItems");
             List<Ingredient> stacks = new ArrayList<>();
 
@@ -221,7 +220,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
                 }
                 stacks.add(input);
             }
-            return new EnchantingApparatusRecipe(recipeId, stacks, reagent, output, cost, keepEnchantmentsOfReagent);
+            return new EnchantingApparatusRecipe(recipeId, stacks, reagent, output, cost, keepNbtOfReagent);
         }
 
         @Nullable
@@ -239,8 +238,8 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
                 }
             }
             int cost = buffer.readInt();
-            boolean keepEnchantmentsOfReagent = buffer.readBoolean();
-            return new EnchantingApparatusRecipe(recipeId, stacks, reagent, output, cost, keepEnchantmentsOfReagent);
+            boolean keepNbtOfReagent = buffer.readBoolean();
+            return new EnchantingApparatusRecipe(recipeId, stacks, reagent, output, cost, keepNbtOfReagent);
         }
 
         @Override
@@ -252,7 +251,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
                 i.toNetwork(buf);
             }
             buf.writeInt(recipe.sourceCost);
-            buf.writeBoolean(recipe.keepEnchantmentsOfReagent);
+            buf.writeBoolean(recipe.keepNbtOfReagent);
         }
     }
 }

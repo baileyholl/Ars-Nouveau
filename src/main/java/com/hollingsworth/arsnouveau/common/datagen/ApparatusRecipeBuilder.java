@@ -58,8 +58,8 @@ public class ApparatusRecipeBuilder {
         return this;
     }
 
-    public ApparatusRecipeBuilder keepEnchantmentsOfReagent(boolean keepEnchantmentsOfReagent) {
-        this.recipe.keepEnchantmentsOfReagent = keepEnchantmentsOfReagent;
+    public ApparatusRecipeBuilder keepNbtOfReagent(boolean keepEnchantmentsOfReagent) {
+        this.recipe.keepNbtOfReagent = keepEnchantmentsOfReagent;
         return this;
     }
 
