@@ -58,6 +58,11 @@ public class ApparatusRecipeBuilder {
         return this;
     }
 
+    public ApparatusRecipeBuilder keepEnchantmentsOfReagent(boolean keepEnchantmentsOfReagent) {
+        this.recipe.keepEnchantmentsOfReagent = keepEnchantmentsOfReagent;
+        return this;
+    }
+
     public EnchantingApparatusRecipe build(){
         if(recipe.id.getPath().equals("empty"))
             recipe.id = new ResourceLocation(ArsNouveau.MODID, recipe.result.getItem().getRegistryName().getPath());
