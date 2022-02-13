@@ -31,13 +31,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GlyphRecipeProvider implements DataProvider {
-    private final DataGenerator generator;
-    private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
+
+    protected final DataGenerator generator;
+    protected static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
     private static final Logger LOGGER = LogManager.getLogger();
+    protected List<GlyphRecipe> recipes = new ArrayList<>();
+
     public GlyphRecipeProvider(DataGenerator generatorIn) {
         this.generator = generatorIn;
     }
-    List<GlyphRecipe> recipes = new ArrayList<>();
+
     @Override
     public void run(HashCache cache) throws IOException {
         List<Glyph> glyphList = ArsNouveauAPI.getInstance().getGlyphItemMap().values().stream().collect(Collectors.toList());
@@ -149,10 +152,10 @@ public class GlyphRecipeProvider implements DataProvider {
         };
     }
 
-    private static Path getGlyphPath(Path pathIn, Glyph glyph) {
+    protected static Path getGlyphPath(Path pathIn, Glyph glyph) {
         return pathIn.resolve("data/ars_nouveau/recipes/glyphs/" + glyph.getRegistryName().getPath() + ".json");
     }
-    private static Path getScribeGlyphPath(Path pathIn, Item glyph) {
+    protected static Path getScribeGlyphPath(Path pathIn, Item glyph) {
         return pathIn.resolve("data/ars_nouveau/recipes/" + glyph.getRegistryName().getPath() + ".json");
     }
     @Override
