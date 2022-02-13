@@ -48,7 +48,7 @@ public class EffectWither extends AbstractEffect {
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return POTION_AUGMENTS;
+        return getPotionAugments();
     }
 
     @Override

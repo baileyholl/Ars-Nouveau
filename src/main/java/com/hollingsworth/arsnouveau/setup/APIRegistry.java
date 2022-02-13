@@ -26,7 +26,6 @@ public class APIRegistry {
         registerSpell(EffectKnockback.INSTANCE);
         registerSpell(EffectLight.INSTANCE);
         registerSpell(EffectDispel.INSTANCE);
-        registerSpell(EffectFreeze.INSTANCE);
         registerSpell(EffectLaunch.INSTANCE);
         registerSpell(EffectPull.INSTANCE);
         registerSpell(EffectBlink.INSTANCE);
@@ -76,6 +75,7 @@ public class APIRegistry {
         registerSpell(EffectGlide.INSTANCE);
         registerSpell(MethodOrbit.INSTANCE);
         registerSpell(EffectRune.INSTANCE);
+        registerSpell(EffectFreeze.INSTANCE);
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());
         registerRitual(new RitualCloudshaper());

@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Spell validation that checks a cast method or effect's augment compatibility.
  *
- * @see AbstractSpellPart#getCompatibleAugments()
+ * @see AbstractSpellPart#compatibleAugments
  */
 public class AugmentCompatibilityValidator extends SpellPhraseValidator {
     private static org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(ArsNouveau.MODID + ".AugmentCompatibilityValidator");
@@ -24,7 +24,7 @@ public class AugmentCompatibilityValidator extends SpellPhraseValidator {
             phrase.getAugmentPositionMap().values().stream()
                     .flatMap(Collection::stream)
                     .forEach(aug -> {
-                        if (!action.getCompatibleAugments().contains(aug.spellPart)) {
+                        if (!action.compatibleAugments.contains(aug.spellPart)) {
                             validationErrors.add(new AugmentCompatibilitySpellValidationError(aug.position, action, aug.spellPart));
                         }
                     });

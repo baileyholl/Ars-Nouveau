@@ -55,13 +55,13 @@ public class DataDumpCommand {
         // Collect the augment compatibilities
         List<Tuple<AbstractSpellPart, Set<AbstractAugment>>> augmentCompat = spells.values().stream()
                 .filter(part -> part instanceof AbstractCastMethod)
-                .map(part -> new Tuple<>(part, part.getCompatibleAugments()))
+                .map(part -> new Tuple<>(part, part.compatibleAugments))
                 .sorted(Comparator.comparing(t -> t.getA().getId()))
                 .collect(Collectors.toList());
         // Technically can be done in one sort, but writing a comparator based on type is ugly.
         augmentCompat.addAll(spells.values().stream()
                 .filter(part -> part instanceof AbstractEffect)
-                .map(part -> new Tuple<>(part, part.getCompatibleAugments()))
+                .map(part -> new Tuple<>(part, part.compatibleAugments))
                 .sorted(Comparator.comparing(t -> t.getA().getId()))
                 .collect(Collectors.toList()));
 

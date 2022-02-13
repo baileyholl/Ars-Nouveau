@@ -57,7 +57,7 @@ public class EffectSummonWolves extends AbstractEffect {
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
         // SummonEvent captures augments, but no uses of that field were found
-        return SUMMON_AUGMENTS;
+        return getSummonAugments();
     }
 
     @Override

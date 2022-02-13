@@ -60,7 +60,7 @@ public class Glyph extends ModItem{
             }else if(spellPart != null){
                 tooltip2.add(new TranslatableComponent("tooltip.ars_nouveau.glyph_level", spellPart.getTier().value).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
                 tooltip2.add(new TranslatableComponent("ars_nouveau.schools"));
-                for(SpellSchool s : spellPart.getSchools()){
+                for(SpellSchool s : spellPart.spellSchools){
                     tooltip2.add(s.getTextComponent());
                 }
             }
