@@ -112,7 +112,6 @@ public class PortalBlock extends ModBlock{
                 if(worldIn.getBlockEntity(blockPos) instanceof PortalTile){
                     PortalTile tile = (PortalTile) worldIn.getBlockEntity(blockPos);
                     tile.warpPos = warpPos;
-                    tile.dimID = dimID;
                     tile.rotationVec = rotation;
                     tile.displayName = displayName;
                     tile.isHorizontal = true;
@@ -316,7 +315,6 @@ public class PortalBlock extends ModBlock{
                     if(this.world.getBlockEntity(blockpos.above(j)) instanceof PortalTile){
                         PortalTile tile = (PortalTile) this.world.getBlockEntity(blockpos.above(j));
                         tile.warpPos = warpPos;
-                        tile.dimID = dimId;
                         tile.rotationVec = rotation;
                         tile.displayName = displayName;
                         tile.update();

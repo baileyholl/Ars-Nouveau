@@ -30,7 +30,6 @@ import static com.hollingsworth.arsnouveau.setup.BlockRegistry.PORTAL_TILE_TYPE;
 
 public class PortalTile extends TileEntity implements ITickableTileEntity, ITooltipProvider {
     public BlockPos warpPos;
-    public String dimID;
     public Vector2f rotationVec;
     public String displayName;
     public boolean isHorizontal;
@@ -55,7 +54,6 @@ public class PortalTile extends TileEntity implements ITickableTileEntity, ITool
     @Override
     public void load(BlockState state, CompoundNBT compound) {
         super.load(state, compound);
-        this.dimID = compound.getString("dim");
         this.warpPos = NBTUtil.getBlockPos(compound, "warp");
         this.rotationVec = new Vector2f(compound.getFloat("xRot"), compound.getFloat("yRot"));
         this.displayName = compound.getString("display");
@@ -67,7 +65,6 @@ public class PortalTile extends TileEntity implements ITickableTileEntity, ITool
         if (this.warpPos != null) {
             NBTUtil.storeBlockPos(compound, "warp", this.warpPos);
         }
-        compound.putString("dim", this.dimID);
         if (rotationVec != null) {
             compound.putFloat("xRot", rotationVec.x);
             compound.putFloat("yRot", rotationVec.y);
