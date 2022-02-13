@@ -84,6 +84,7 @@ public class EnchantingApparatusRecipeCategory implements IRecipeCategory<Enchan
     @Override
     public void setIngredients(EnchantingApparatusRecipe o, IIngredients iIngredients) {
         List<List<ItemStack>> itemStacks = new ArrayList<>();
+        itemStacks.add(Arrays.asList(o.reagent.getItems()));
         for(Ingredient i : o.pedestalItems){
             itemStacks.add(Arrays.asList(i.getItems()));
         }
@@ -97,14 +98,18 @@ public class EnchantingApparatusRecipeCategory implements IRecipeCategory<Enchan
         recipeLayout.getItemStacks().set(0, Arrays.asList(apparatusRecipe.reagent.getItems()));
 
         int index = 1;
-        double angleBetweenEach = 360.0 / ingredients.getInputs(VanillaTypes.ITEM).size();
-        Vec2 point = new Vec2(48, 13), center = new Vec2(48, 45);
+        List<List<ItemStack>> pedestalList = ingredients.getInputs(VanillaTypes.ITEM);
+        if(pedestalList.size() > 0) {
+            pedestalList = pedestalList.subList(1, pedestalList.size());
+            double angleBetweenEach = 360.0 / pedestalList.size();
+            Vec2 point = new Vec2(48, 13), center = new Vec2(48, 45);
 
-        for (List<ItemStack> o : ingredients.getInputs(VanillaTypes.ITEM)) {
-            recipeLayout.getItemStacks().init(index, true, (int) point.x, (int) point.y);
-            recipeLayout.getItemStacks().set(index, o);
-            index += 1;
-            point = rotatePointAbout(point, center, angleBetweenEach);
+            for (List<ItemStack> o : pedestalList) {
+                recipeLayout.getItemStacks().init(index, true, (int) point.x, (int) point.y);
+                recipeLayout.getItemStacks().set(index, o);
+                index += 1;
+                point = rotatePointAbout(point, center, angleBetweenEach);
+            }
         }
         recipeLayout.getItemStacks().init(index, false, 86, 10);
         recipeLayout.getItemStacks().set(index, ingredients.getOutputs(VanillaTypes.ITEM).get(0));
