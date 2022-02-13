@@ -29,9 +29,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ApparatusRecipeProvider implements DataProvider {
-    private final DataGenerator generator;
-    private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
+    protected final DataGenerator generator;
+    protected static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
     private static final Logger LOGGER = LogManager.getLogger();
+
     public ApparatusRecipeProvider(DataGenerator generatorIn) {
         this.generator = generatorIn;
     }
@@ -42,10 +43,10 @@ public class ApparatusRecipeProvider implements DataProvider {
         addEntries();
         Path output = this.generator.getOutputFolder();
         for(IEnchantingRecipe g : recipes){
-            if(g instanceof EnchantingApparatusRecipe){
+            if(g instanceof EnchantingApparatusRecipe recipe){
                 System.out.println(g);
-                Path path = getRecipePath(output, ((EnchantingApparatusRecipe) g).getId().getPath());
-                DataProvider.save(GSON, cache, ((EnchantingApparatusRecipe) g).asRecipe(), path);
+                Path path = getRecipePath(output, recipe.getId().getPath());
+                DataProvider.save(GSON, cache, recipe.asRecipe(), path);
 
             }
         }
@@ -894,11 +895,11 @@ public class ApparatusRecipeProvider implements DataProvider {
         recipes.add(recipe);
     }
 
-    private static Path getRecipePath(Path pathIn, Item item) {
+    protected static Path getRecipePath(Path pathIn, Item item) {
         return getRecipePath(pathIn, item.getRegistryName().getPath());
     }
 
-    private static Path getRecipePath(Path pathIn, String str){
+    protected static Path getRecipePath(Path pathIn, String str){
         return pathIn.resolve("data/ars_nouveau/recipes/" + str + ".json");
     }
     @Override

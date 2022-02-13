@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
@@ -33,8 +34,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class PatchouliProvider implements DataProvider {
-    private final DataGenerator generator;
-    private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
+    protected final DataGenerator generator;
+    protected static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
     private static final Logger LOGGER = LogManager.getLogger();
     public static ResourceLocation AUTOMATION = new ResourceLocation(ArsNouveau.MODID, "automation");
     public static ResourceLocation ENCHANTMENTS = new ResourceLocation(ArsNouveau.MODID, "enchantments");
@@ -448,20 +449,26 @@ public class PatchouliProvider implements DataProvider {
     public void run(HashCache cache) throws IOException {
         addEntries();
         for(PatchouliPage patchouliPage : pages){
-            DataProvider.save(GSON, cache, patchouliPage.builder.build(), patchouliPage.path);
+            DataProvider.save(GSON, cache, patchouliPage.build(), patchouliPage.path);
         }
     }
 
-    public static record PatchouliPage(PatchouliBuilder builder, Path path) { }
+    public static record PatchouliPage(PatchouliBuilder builder, Path path) {
+        @Override
+        public Path path(){
+            return path;
+        }
+        public JsonObject build() {
+            return builder.build();
+        }
+    }
 
     public void addGlyphPage(AbstractSpellPart spellPart){
-        ResourceLocation category = null;
-        if(spellPart.getTier().value == 1)
-            category = GLYPHS_1;
-        else if(spellPart.getTier().value == 2)
-            category = GLYPHS_2;
-        else
-            category = GLYPHS_3;
+        ResourceLocation category = switch (spellPart.getTier().value) {
+            case 1 -> GLYPHS_1;
+            case 2 -> GLYPHS_2;
+            default -> GLYPHS_3;
+        };
         PatchouliBuilder builder = new PatchouliBuilder(category, spellPart.getName())
                 .withName("ars_nouveau.glyph_name." + spellPart.getId())
                 .withIcon(ArsNouveau.MODID + ":" + spellPart.getItemID())
