@@ -189,7 +189,8 @@ public class WorldEvent {
                 new WeightedPlacedFeature(PLACED_BLAZING, 0.25f),
                 new WeightedPlacedFeature(PLACED_VEXING, 0.25f),
                 new WeightedPlacedFeature(PLACED_FLOURISHING, 0.25f)), PLACED_CASCADE)));
-        PlacementUtils.register("ars_nouveau:archwood",CONFIGURED.placed(VegetationPlacements.treePlacement(RarityFilter.onAverageOnceEvery(100))));
+        if(Config.TREE_SPAWN_RATE.get() > 0)
+            PlacementUtils.register("ars_nouveau:archwood",CONFIGURED.placed(VegetationPlacements.treePlacement(RarityFilter.onAverageOnceEvery(Config.TREE_SPAWN_RATE.get()))));
 //
 
         //
