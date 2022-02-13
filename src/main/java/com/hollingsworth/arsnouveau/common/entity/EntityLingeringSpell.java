@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.*;
 import net.minecraftforge.network.PlayMessages;
+import org.jetbrains.annotations.Nullable;
 
 public class EntityLingeringSpell extends EntityProjectileSpell{
 
@@ -28,15 +29,15 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
     public int totalProcs;
 
     public EntityLingeringSpell(EntityType<? extends EntityProjectileSpell> type, Level worldIn) {
-        super(type, worldIn);
+        super(ModEntities.LINGER_SPELL, worldIn);
     }
 
     public EntityLingeringSpell(Level worldIn, double x, double y, double z) {
-        super(worldIn, x, y, z);
+        super(ModEntities.LINGER_SPELL, worldIn, x, y, z);
     }
 
     public EntityLingeringSpell(Level worldIn, LivingEntity shooter) {
-        super(worldIn, shooter);
+        super(ModEntities.LINGER_SPELL, worldIn, shooter);
     }
 
     public void setAccelerates(int accelerates){
@@ -46,16 +47,29 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
 
     @Override
     public void tick() {
-
-        boolean isOnGround = level.getBlockState(blockPosition()).getMaterial().blocksMotion();
         if(!level.isClientSide) {
+            boolean isOnGround = level.getBlockState(blockPosition()).getMaterial().blocksMotion();
             this.setLanded(isOnGround);
-            if(spellResolver == null) {
-                this.remove(RemovalReason.DISCARDED);
-                return;
-            }
         }
-        int aoe =  getAoe();
+        super.tick();
+        castSpells();
+    }
+
+    @Override
+    public void traceAnyHit(@Nullable HitResult raytraceresult, Vec3 thisPosition, Vec3 nextPosition) {}
+
+    @Override
+    public void tickNextPosition() {
+        if(!getLanded()){
+            this.setDeltaMovement(0, -0.2, 0);
+        }else{
+            this.setDeltaMovement(0, 0, 0);
+        }
+        super.tickNextPosition();
+    }
+
+    public void castSpells(){
+        int aoe = getAoe();
         if(!level.isClientSide && age % (20 - 2* getAccelerates()) == 0){
             if(isSensitive()){
                 for(BlockPos p : BlockPos.betweenClosed(blockPosition().east(aoe).north(aoe), blockPosition().west(aoe).south(aoe))){
@@ -77,30 +91,34 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
                     this.remove(RemovalReason.DISCARDED);
             }
         }
-
-        if(!isOnGround){
-            this.setDeltaMovement(0, -0.2, 0);
-            super.tick();
-        }else{
-            age++;
-        }
-        if(age > 70 + extendedTime * 20)
-            this.remove(RemovalReason.DISCARDED);
-        if(level.isClientSide){
-            ParticleUtil.spawnRitualAreaEffect(getOnPos(), level, random, getParticleColor(), getAoe(), 5, 20);
-            ParticleUtil.spawnLight(level, getParticleColor(), position.add(0, 0.5, 0),10);
-        }
+    }
 
 
+    @Override
+    public int getExpirationTime() {
+        return (int) (70 + extendedTime * 20);
+    }
+
+    @Override
+    public int getParticleDelay() {
+        return 0;
+    }
+
+    @Override
+    public void playParticles() {
+        ParticleUtil.spawnRitualAreaEffect(getOnPos(), level, random, getParticleColor(), getAoe(), 5, 20);
+        ParticleUtil.spawnLight(level, getParticleColor(), position.add(0, 0.5, 0),10);
     }
 
     public EntityLingeringSpell(PlayMessages.SpawnEntity packet, Level world){
         super(ModEntities.LINGER_SPELL, world);
     }
+
     @Override
     public EntityType<?> getType() {
         return ModEntities.LINGER_SPELL;
     }
+
     @Override
     protected void onHit(HitResult result) {
         if (!level.isClientSide && result instanceof BlockHitResult && !this.isRemoved()) {
@@ -140,6 +158,7 @@ public class EntityLingeringSpell extends EntityProjectileSpell{
     public boolean isSensitive(){
         return entityData.get(SENSITIVE);
     }
+
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();

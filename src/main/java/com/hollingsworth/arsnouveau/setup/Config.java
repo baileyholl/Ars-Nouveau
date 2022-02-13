@@ -32,7 +32,7 @@ public class Config {
 
     public static ForgeConfigSpec.IntValue GLYPH_MAX_BONUS;
     public static ForgeConfigSpec.DoubleValue GLYPH_REGEN_BONUS;
-    public static ForgeConfigSpec.DoubleValue TREE_SPAWN_RATE;
+    public static ForgeConfigSpec.IntValue TREE_SPAWN_RATE;
 
 
     public static ForgeConfigSpec.IntValue TIER_MAX_BONUS;
@@ -100,7 +100,7 @@ public class Config {
 
         SERVER_BUILDER.comment("General settings").push(CATEGORY_GENERAL);
         DIMENSION_BLACKLIST = SERVER_BUILDER.comment("Dimensions where hostile mobs will not spawn. Ex: [\"minecraft:overworld\", \"undergarden:undergarden\"]. . Run /forge dimensions for a list.").defineList("dimensionBlacklist", new ArrayList<>(),(o) -> true);
-        TREE_SPAWN_RATE = SERVER_BUILDER.comment("Rate of tree spawn per chunk").defineInRange("genTrees", 0.002, 0.0d, 1.0d);
+        TREE_SPAWN_RATE = SERVER_BUILDER.comment("Rate of tree spawn per chunk").defineInRange("treeWeight", 100, 0, Integer.MAX_VALUE);
         SPAWN_BERRIES = SERVER_BUILDER.comment("Spawn Mana Berry Bushes in the world").define("genBerries", true);
         SPAWN_BOOK = SERVER_BUILDER.comment("Spawn a book in the players inventory on login").define("spawnBook", true);
         CARBUNCLE_WEIGHT = SERVER_BUILDER.comment("How often Carbuncles spawn").defineInRange("carbuncleWeight",5,0,100);

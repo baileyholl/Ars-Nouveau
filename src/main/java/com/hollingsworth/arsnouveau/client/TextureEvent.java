@@ -1,5 +1,6 @@
-package com.hollingsworth.arsnouveau;
+package com.hollingsworth.arsnouveau.client;
 
+import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;

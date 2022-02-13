@@ -88,7 +88,7 @@ public class EffectFreeze extends AbstractEffect {
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        Set<AbstractAugment> augments = new HashSet<>(POTION_AUGMENTS);
+        Set<AbstractAugment> augments = new HashSet<>(getPotionAugments());
         augments.add(AugmentAOE.INSTANCE);
         augments.add(AugmentPierce.INSTANCE);
         return augments;
