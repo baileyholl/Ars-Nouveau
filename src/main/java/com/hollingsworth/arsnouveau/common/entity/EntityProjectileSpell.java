@@ -12,12 +12,14 @@ import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,6 +31,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 
+import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,38 +41,52 @@ public class EntityProjectileSpell extends ColoredProjectile {
     public SpellResolver spellResolver;
     public int pierceLeft;
     public int numSensitive;
+    public boolean isNoGravity = true;
+    public boolean canTraversePortals = true;
+    public int expireTime = 60 * 20;
+
     public Set<BlockPos> hitList = new HashSet<>();
 
-    public EntityProjectileSpell(final EntityType<? extends EntityProjectileSpell> entityType, final Level world) {
+    public EntityProjectileSpell(EntityType<? extends EntityProjectileSpell> entityType, Level world) {
         super(entityType, world);
-
     }
 
-    public EntityProjectileSpell(final Level world, final double x, final double y, final double z) {
-        super(world, x, y, z);
+    public EntityProjectileSpell(EntityType<? extends EntityProjectileSpell> entityType, Level world, double x, double y, double z) {
+        super(entityType, world, x, y, z);
     }
 
-    public EntityProjectileSpell(Level world, SpellResolver resolver){
-        super(world, resolver.spellContext.caster);
+    public EntityProjectileSpell(EntityType<? extends EntityProjectileSpell> type, Level worldIn, LivingEntity shooter) {
+        super(type, worldIn, shooter);
+        setPos(shooter.getX(), shooter.getEyeY() - (double)0.1F, shooter.getZ());
+    }
+
+    public EntityProjectileSpell(Level world, double x, double y, double z) {
+        this(ModEntities.SPELL_PROJ, world, x, y, z);
+    }
+
+    public EntityProjectileSpell(EntityType<? extends EntityProjectileSpell> entityType,Level world, SpellResolver resolver){
+        this(entityType, world, resolver.spellContext.caster);
         this.spellResolver = resolver;
         this.pierceLeft = resolver.spell.getBuffsAtIndex(0, resolver.spellContext.caster, AugmentPierce.INSTANCE);
         this.numSensitive = resolver.spell.getBuffsAtIndex(0, resolver.spellContext.caster, AugmentSensitive.INSTANCE);
         resolver.spellContext.colors.makeVisible();
         setColor(resolver.spellContext.colors);
+
+    }
+
+    public EntityProjectileSpell(Level world, SpellResolver resolver){
+        this(ModEntities.SPELL_PROJ, world, resolver);
     }
 
     public EntityProjectileSpell(final Level world, final LivingEntity shooter) {
-        super(world, shooter);
+        this(ModEntities.SPELL_PROJ, world, shooter);
     }
-
     @Override
     public void tick() {
+        super.tick();
         age++;
 
-
-        Vec3 vector3d = this.getDeltaMovement();
-
-        if(this.age > 60*20){
+        if(this.age > getExpirationTime() || (!level.isClientSide && spellResolver == null)){
             this.remove(RemovalReason.DISCARDED);
             return;
         }
@@ -80,24 +97,41 @@ public class EntityProjectileSpell extends ColoredProjectile {
         this.zOld = this.getZ();
 
 
-        if (this.inGround) {
-            this.inGround = false;
-            this.setDeltaMovement(this.getDeltaMovement());
+        Vec3 thisPosition = this.position();
+        Vec3 nextPosition = getNextHitPosition();
+        traceAnyHit(getHitResult(), thisPosition, nextPosition);
+
+        tickNextPosition();
+
+        if(level.isClientSide && this.age > getParticleDelay()) {
+            playParticles();
         }
+    }
 
+    public HitResult getHitResult(){
+        Vec3 thisPosition = this.position();
+        Vec3 nextPosition = getNextHitPosition();
+        return this.level.clip(new ClipContext(thisPosition, nextPosition, numSensitive > 0 ? ClipContext.Block.OUTLINE : ClipContext.Block.COLLIDER,
+                ClipContext.Fluid.NONE, this));
+    }
 
-        Vec3 vector3d2 = this.position();
-        Vec3 vector3d3 = vector3d2.add(vector3d);
-        HitResult raytraceresult = this.level.clip(new ClipContext(vector3d2, vector3d3, numSensitive > 0 ? ClipContext.Block.OUTLINE : ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this));
+    /**
+     * The next position for ray tracing. Override if you need special tracing beyond the normal next position tracing.
+     */
+    public Vec3 getNextHitPosition(){
+        return this.position().add(this.getDeltaMovement());
+    }
+
+    public void traceAnyHit(@Nullable HitResult raytraceresult, Vec3 thisPosition, Vec3 nextPosition){
         if (raytraceresult != null && raytraceresult.getType() != HitResult.Type.MISS) {
-            vector3d3 = raytraceresult.getLocation();
+            nextPosition = raytraceresult.getLocation();
         }
-        EntityHitResult entityraytraceresult = this.findHitEntity(vector3d2, vector3d3);
+        EntityHitResult entityraytraceresult = this.findHitEntity(thisPosition, nextPosition);
         if (entityraytraceresult != null) {
             raytraceresult = entityraytraceresult;
         }
 
-        if (raytraceresult != null && raytraceresult instanceof EntityHitResult) {
+        if (raytraceresult instanceof EntityHitResult) {
             Entity entity = ((EntityHitResult)raytraceresult).getEntity();
             Entity entity1 = this.getOwner();
             if (entity instanceof Player && entity1 instanceof Player && !((Player)entity1).canHarmPlayer((Player)entity)) {
@@ -109,59 +143,64 @@ public class EntityProjectileSpell extends ColoredProjectile {
             this.onHit(raytraceresult);
             this.hasImpulse = true;
         }
-        if(raytraceresult != null && raytraceresult.getType() == HitResult.Type.MISS && raytraceresult instanceof BlockHitResult){
+        if(raytraceresult != null && raytraceresult.getType() == HitResult.Type.MISS && raytraceresult instanceof BlockHitResult
+         && canTraversePortals()){
             BlockRegistry.PORTAL_BLOCK.onProjectileHit(level,level.getBlockState(new BlockPos(raytraceresult.getLocation())),
                     (BlockHitResult)raytraceresult, this );
 
         }
+    }
 
+    public boolean canTraversePortals(){
+        return canTraversePortals;
+    }
 
+    public int getExpirationTime(){
+        return expireTime;
+    }
 
+    /**
+     * Moves the projectile to the next position
+     */
+    public void tickNextPosition(){
         Vec3 vec3d = this.getDeltaMovement();
         double x = this.getX() + vec3d.x;
         double y = this.getY() + vec3d.y;
         double z = this.getZ() + vec3d.z;
-
-
         if (!this.isNoGravity()) {
             Vec3 vec3d1 = this.getDeltaMovement();
             this.setDeltaMovement(vec3d1.x, vec3d1.y , vec3d1.z);
         }
-
         this.setPos(x,y,z);
+    }
 
-        if(level.isClientSide && this.age > 2) {
-//
-            for (int i = 0; i < 3; i++) {
+    public int getParticleDelay(){
+        return 2;
+    }
 
-                double deltaX = getX() - xOld;
-                double deltaY = getY() - yOld;
-                double deltaZ = getZ() - zOld;
-                double dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 8);
-
-                for (double j = 0; j < dist; j++) {
-                    double coeff = j / dist;
-
-                    level.addParticle(GlowParticleData.createData(getParticleColor()),
-                            (float) (xo + deltaX * coeff),
-                            (float) (yo + deltaY * coeff), (float)
-                                    (zo + deltaZ * coeff),
-                            0.0125f * (random.nextFloat() - 0.5f),
-                            0.0125f * (random.nextFloat() - 0.5f),
-                            0.0125f * (random.nextFloat() - 0.5f));
-
-                }
+    public void playParticles(){
+        for (int i = 0; i < 3; i++) {
+            double deltaX = getX() - xOld;
+            double deltaY = getY() - yOld;
+            double deltaZ = getZ() - zOld;
+            double dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 8.0);
+            for (double j = 0; j < dist; j++) {
+                double coeff = j / dist;
+                level.addParticle(GlowParticleData.createData(getParticleColor()),
+                        (float) (xo + deltaX * coeff),
+                        (float) (yo + deltaY * coeff), (float)
+                                (zo + deltaZ * coeff),
+                        0.0125f * (random.nextFloat() - 0.5f),
+                        0.0125f * (random.nextFloat() - 0.5f),
+                        0.0125f * (random.nextFloat() - 0.5f));
             }
         }
     }
 
-
-    @Override
-    public void baseTick() {
-        super.baseTick();
+    @Nullable
+    protected EntityHitResult findHitEntity(Vec3 pStartVec, Vec3 pEndVec) {
+        return ProjectileUtil.getEntityHitResult(this.level, this, pStartVec, pEndVec, this.getBoundingBox().expandTowards(this.getDeltaMovement()).inflate(1.0D), this::canHitEntity);
     }
-
-
 
     /**
      * Sets throwable heading based on an entity that's throwing it
@@ -193,7 +232,7 @@ public class EntityProjectileSpell extends ColoredProjectile {
 
     @Override
     public boolean isNoGravity() {
-        return true;
+        return isNoGravity;
     }
 
     @Override
@@ -261,18 +300,28 @@ public class EntityProjectileSpell extends ColoredProjectile {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
+    public void recreateFromPacket(ClientboundAddEntityPacket pPacket) {
+        super.recreateFromPacket(pPacket);
+        Entity entity = this.level.getEntity(pPacket.getData());
+        if (entity != null) {
+            this.setOwner(entity);
+        }
+    }
+
     @Override
     public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         if(tag.contains("pierce")){
             this.pierceLeft = tag.getInt("pierce");
         }
+        isNoGravity = tag.getBoolean("gravity");
     }
 
     @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putInt("pierce", this.pierceLeft);
+        tag.putBoolean("gravity", isNoGravity);
     }
 
     @Override

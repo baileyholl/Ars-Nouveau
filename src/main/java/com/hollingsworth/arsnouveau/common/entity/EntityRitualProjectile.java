@@ -18,11 +18,11 @@ public class EntityRitualProjectile extends ColoredProjectile{
     public BlockPos tilePos;
 
     public EntityRitualProjectile(Level worldIn, double x, double y, double z) {
-        super(worldIn, x, y, z);
+        super(ModEntities.ENTITY_RITUAL, worldIn, x, y, z);
     }
 
     public EntityRitualProjectile(Level worldIn, BlockPos pos) {
-        super(worldIn, pos.getX(), pos.getY(), pos.getZ());
+        super(ModEntities.ENTITY_RITUAL, worldIn, pos.getX(), pos.getY(), pos.getZ());
     }
 
     public EntityRitualProjectile(EntityType<EntityRitualProjectile> entityAOEProjectileEntityType, Level world) {
@@ -30,6 +30,7 @@ public class EntityRitualProjectile extends ColoredProjectile{
     }
     @Override
     public void tick() {
+        super.tick();
         if(!level.isClientSide() && (tilePos == null || !(level.getBlockEntity(tilePos) instanceof RitualTile) || ((RitualTile) level.getBlockEntity(tilePos)).ritual == null )) {
             this.remove(RemovalReason.DISCARDED);
             return;

@@ -112,6 +112,8 @@ public class  WildenHunter extends Monster implements IAnimatable, IAnimationLis
     @Override
     public void startAnimation(int arg) {
         try{
+            if(controller == null)
+                return;
             if(arg == Animations.ATTACK.ordinal()){
                 if(controller.getCurrentAnimation() != null && (controller.getCurrentAnimation().animationName.equals("attack") || controller.getCurrentAnimation().animationName.equals("attack2") ||
                         controller.getCurrentAnimation().animationName.equals("howl"))) {

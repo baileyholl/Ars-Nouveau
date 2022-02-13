@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.spell.method;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAccelerate;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
@@ -23,7 +23,6 @@ import net.minecraft.world.phys.Vec3;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 public class MethodProjectile extends AbstractCastMethod {
@@ -42,7 +41,6 @@ public class MethodProjectile extends AbstractCastMethod {
         ArrayList<EntityProjectileSpell> projectiles = new ArrayList<>();
         EntityProjectileSpell projectileSpell = new EntityProjectileSpell(world, resolver);
         projectiles.add(projectileSpell);
-        List<AbstractAugment> augments = stats.getAugments();
         int numSplits = stats.getBuffCount(AugmentSplit.INSTANCE);
 
         for(int i =1; i < numSplits + 1; i++){
