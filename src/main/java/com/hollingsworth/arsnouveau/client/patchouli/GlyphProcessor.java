@@ -34,10 +34,10 @@ public class GlyphProcessor implements IComponentProcessor {
         if(s.equals("schools")) {
             AbstractSpellPart part = ((Glyph) recipe.output.getItem()).spellPart;
             StringBuilder str = new StringBuilder(new TranslatableComponent("ars_nouveau.spell_schools").getString() +": ");
-            for(SpellSchool spellSchool : part.getSchools()){
+            for(SpellSchool spellSchool : part.spellSchools){
                 str.append(spellSchool.getTextComponent().getString()).append(",");
             }
-            if(!part.getSchools().isEmpty())
+            if(!part.spellSchools.isEmpty())
                 str = new StringBuilder(str.substring(0, str.length() - 1));
             return IVariable.wrap(str.toString());
         }

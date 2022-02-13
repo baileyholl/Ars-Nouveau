@@ -180,15 +180,6 @@ public abstract class AbstractEffect extends AbstractSpellPart {
         }
     }
 
-    protected Set<AbstractAugment> POTION_AUGMENTS = augmentSetOf(
-            AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE,
-            AugmentAmplify.INSTANCE
-    );
-
-    protected Set<AbstractAugment> SUMMON_AUGMENTS = augmentSetOf(
-            AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE
-    );
-
     public ForgeConfigSpec.DoubleValue DAMAGE;
     public ForgeConfigSpec.DoubleValue AMP_VALUE;
     public ForgeConfigSpec.IntValue POTION_TIME;
@@ -292,5 +283,14 @@ public abstract class AbstractEffect extends AbstractSpellPart {
             }
         }
         return stack;
+    }
+
+    protected Set<AbstractAugment> getPotionAugments() {
+        return setOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE,
+                AugmentAmplify.INSTANCE);
+    }
+
+    protected Set<AbstractAugment> getSummonAugments() {
+        return setOf(AugmentExtendTime.INSTANCE, AugmentDurationDown.INSTANCE);
     }
 }

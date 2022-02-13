@@ -68,7 +68,7 @@ public class EffectSummonVex extends AbstractEffect {
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return SUMMON_AUGMENTS;
+        return getSummonAugments();
     }
 
     @Override

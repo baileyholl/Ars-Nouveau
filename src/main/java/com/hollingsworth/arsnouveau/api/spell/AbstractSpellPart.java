@@ -6,9 +6,7 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart> {
 
@@ -21,12 +19,25 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
 
     public String getIcon(){return this.id + ".png";}
 
+    /**
+     * The list of schools that apply to this spell.
+     * Addons should add and access this list directly.
+     */
+    public List<SpellSchool> spellSchools = new ArrayList<>();
+    /**
+     * The list of augments that apply to a form or effect.
+     * Addons should add and access this set directly.
+     */
+    public Set<AbstractAugment> compatibleAugments = new HashSet<>();
+
     protected AbstractSpellPart(String id, String name){
         this.id = id;
         this.name = name;
         for(SpellSchool spellSchool : getSchools()){
             spellSchool.addSpellPart(this);
+            spellSchools.add(spellSchool);
         }
+        compatibleAugments = getCompatibleAugments();
     }
 
     public abstract int getDefaultManaCost();
@@ -43,9 +54,12 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
 
     /**
      * Returns the set of augments that this spell part can be enhanced by.
-     *
+     * Mods should use {@link AbstractSpellPart#compatibleAugments} for addon-supported augments.
      * @see AbstractSpellPart#augmentSetOf(AbstractAugment...) for easy syntax to make the Set.
+     * @deprecated This will be set to protected in a future update.
+     * This should not be accessed directly, but can be overriden.
      */
+    @Deprecated
     public abstract @Nonnull Set<AbstractAugment> getCompatibleAugments();
 
     /**
@@ -55,6 +69,12 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
         return setOf(augments);
     }
 
+    /**
+     * A helper for mods to add schools.
+     * @deprecated This will be set to protected in the future.
+     * Mods should use {@link AbstractSpellPart#spellSchools} to get the addon-supported list.
+     */
+    @Deprecated
     public @Nonnull Set<SpellSchool> getSchools(){
         return setOf();
     }
@@ -97,7 +117,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     }
 
     // Augment limits only apply to cast forms and effects, but not augments.
-    private SpellPartConfigUtil.AugmentLimits augmentLimits;
+    public SpellPartConfigUtil.AugmentLimits augmentLimits;
 
     /** Registers the glyph_limits configuration entry for augmentation limits. */
     protected void buildAugmentLimitsConfig(ForgeConfigSpec.Builder builder, Map<String, Integer> defaults) {
