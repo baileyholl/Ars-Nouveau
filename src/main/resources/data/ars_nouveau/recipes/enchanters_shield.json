@@ -30,6 +30,5 @@
   "output": {
     "item": "ars_nouveau:enchanters_shield"
   },
-  "sourceCost": 0,
-  "keepNbtOfReagent": true
+  "sourceCost": 0
 }

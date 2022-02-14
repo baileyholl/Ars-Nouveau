@@ -37,6 +37,7 @@ public class DominionWand extends ModItem{
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack doNotUseStack, Player playerEntity, LivingEntity target, InteractionHand hand) {
+
         if(playerEntity.level.isClientSide || hand != InteractionHand.MAIN_HAND)
             return InteractionResult.PASS;
 
