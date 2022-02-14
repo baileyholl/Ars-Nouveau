@@ -37,7 +37,7 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
             spellSchool.addSpellPart(this);
             spellSchools.add(spellSchool);
         }
-        compatibleAugments = getCompatibleAugments();
+        compatibleAugments.addAll(getCompatibleAugments());
     }
 
     public abstract int getDefaultManaCost();
