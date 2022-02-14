@@ -82,7 +82,7 @@ public class EnchantingApparatusRecipe implements IEnchantingRecipe{
             result.setTag(reagent.getTag());
             result.setDamageValue(0);
         }
-        return result.copy();
+        return result;
     }
 
 
