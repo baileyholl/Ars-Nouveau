@@ -2,10 +2,10 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
-import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
-import com.hollingsworth.arsnouveau.api.spell.SpellTier;
-import com.hollingsworth.arsnouveau.client.gui.GuiRadialMenu;
+import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.client.gui.RadialMenu.GuiRadialMenu;
+import com.hollingsworth.arsnouveau.client.gui.RadialMenu.RadialMenuProvider;
+import com.hollingsworth.arsnouveau.client.gui.RadialMenu.RadialMenuSlot;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellBookRenderer;
@@ -21,6 +21,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -33,14 +34,20 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IItemRenderProperties;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
+import software.bernie.example.registry.ItemRegistry;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.IntConsumer;
+import java.util.function.IntUnaryOperator;
 
 public class SpellBook extends Item implements IAnimatable, ICasterTool {
 
@@ -149,7 +156,35 @@ public class SpellBook extends Item implements IAnimatable, ICasterTool {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onRadialKeyPressed(ItemStack stack, Player player) {
-        Minecraft.getInstance().setScreen(new GuiRadialMenu(stack));
+        Minecraft.getInstance().setScreen(new GuiRadialMenu(getRadialMenuProvider(stack)));
+    }
+
+    private RadialMenuProvider getRadialMenuProvider(ItemStack itemStack) {
+        return new RadialMenuProvider((int slot) -> {
+            SpellCaster caster = new SpellCaster(itemStack);
+            caster.setCurrentSlot(slot);
+        }, getRadialMenuSlots(itemStack), itemStack);
+    }
+
+    private List<RadialMenuSlot> getRadialMenuSlots(ItemStack itemStack) {
+        BookCaster spellCaster = new BookCaster(itemStack);
+        List<RadialMenuSlot> radialMenuSlots = new ArrayList<>();
+        for(int i = 0; i < spellCaster.getMaxSlots(); i++) {
+            Spell spell = spellCaster.getSpell(i);
+            ResourceLocation primaryIcon = null;
+            List<ResourceLocation> secondaryIcons = new ArrayList<>();
+            for(AbstractSpellPart p : spell.recipe){
+                if(p instanceof AbstractCastMethod) {
+                    primaryIcon = new ResourceLocation(ArsNouveau.MODID, "textures/items/" + p.getIcon());
+                }
+
+                if(p instanceof AbstractEffect){
+                    secondaryIcons.add(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + p.getIcon()));
+                }
+            }
+            radialMenuSlots.add(new RadialMenuSlot(spellCaster.getSpellName(i),primaryIcon, secondaryIcons));
+        }
+        return radialMenuSlots;
     }
 
     public static class BookCaster extends SpellCaster{

@@ -1,11 +1,5 @@
-package com.hollingsworth.arsnouveau.client.gui;
+package com.hollingsworth.arsnouveau.client.gui.RadialMenu;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
-import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSetBookMode;
@@ -17,6 +11,7 @@ import net.minecraft.client.Options;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -28,25 +23,29 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.List;
+
 @Mod.EventBusSubscriber(Dist.CLIENT)
 public class GuiRadialMenu extends Screen {
     private static final float PRECISION = 5.0f;
+    private static final int MAX_SLOTS = 10;
 
     private boolean closing;
     private double startAnimation;
-    private ItemStack casterStack;
+    private RadialMenuProvider radialMenuProvider;
+    private List<RadialMenuSlot> radialMenuSlots;
     private int selectedItem;
 
 
-    public GuiRadialMenu(ItemStack casterStack) {
+    public GuiRadialMenu(RadialMenuProvider radialMenuProvider) {
         super(new TextComponent(""));
-        this.casterStack = casterStack;
+        this.radialMenuProvider = radialMenuProvider;
+        this.radialMenuSlots = this.radialMenuProvider.getRadialMenuSlots();
         this.closing = false;
         this.minecraft = Minecraft.getInstance();
         this.startAnimation = getMinecraft().level.getGameTime() + (double) getMinecraft().getFrameTime();
         this.selectedItem = -1;
     }
-
 
     public GuiRadialMenu(){
         super(new TextComponent(""));
@@ -100,7 +99,7 @@ public class GuiRadialMenu extends Screen {
         int x = width / 2;
         int y = height / 2;
 
-        int numberOfSlices = 10;
+        int numberOfSlices = Math.min(MAX_SLOTS, radialMenuSlots.size());
 
         double a = Math.toDegrees(Math.atan2(mouseY - y, mouseX - x));
         double d = Math.sqrt(Math.pow(mouseX - x, 2) + Math.pow(mouseY - y, 2));
@@ -152,11 +151,10 @@ public class GuiRadialMenu extends Screen {
         tessellator.end();
         RenderSystem.enableTexture();
         RenderSystem.disableBlend();
-        ISpellCaster caster = CasterUtil.getCaster(casterStack);
         if (hasMouseOver && mousedOverSlot != -1) {
             int adjusted =  (mousedOverSlot+ 6) % 10;
             adjusted = adjusted == 0 ? 10 : adjusted;
-            drawCenteredString(ms,font, caster.getSpellName(adjusted), width/2,(height - font.lineHeight) / 2,16777215);
+            drawCenteredString(ms,font, radialMenuSlots.get(adjusted).slotName(), width/2,(height - font.lineHeight) / 2,16777215);
         }
 
         ms.popPose();
@@ -166,24 +164,14 @@ public class GuiRadialMenu extends Screen {
             float posX = x - 8 + itemRadius * (float) Math.cos(angle1);
             float posY = y - 8 + itemRadius * (float) Math.sin(angle1);
 
-            String resourceIcon = "";
-            String castType = "";
-            for(AbstractSpellPart p : caster.getSpell(i + 1).recipe){
-                if(p instanceof AbstractCastMethod)
-                    castType = p.getIcon();
-
-                if(p instanceof AbstractEffect){
-                    resourceIcon = p.getIcon();
-                    break;
-                }
-            }
-
             RenderSystem.disableDepthTest();
-            if(!resourceIcon.isEmpty()) {
-                GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + resourceIcon),
+            ResourceLocation primarySlotIcon = radialMenuSlots.get(i).primarySlotIcon();
+//            ResourceLocation secondarySlotIcon = radialMenuSlots.get(i).secondarySlotIcons().get(0);
+            if(primarySlotIcon != null) {
+                GuiSpellBook.drawFromTexture(primarySlotIcon,
                         (int) posX, (int) posY, 0, 0, 16, 16, 16, 16,ms);
-                GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + castType),
-                        (int) posX +3 , (int) posY - 10, 0, 0, 10, 10, 10, 10,ms);
+//                GuiSpellBook.drawFromTexture(secondarySlotIcon,
+//                        (int) posX +3 , (int) posY - 10, 0, 0, 10, 10, 10, 10,ms);
             }
             this.itemRenderer.renderGuiItemDecorations(font, stack, (int) posX + 5, (int) posY, String.valueOf(i + 1));
 
@@ -213,9 +201,8 @@ public class GuiRadialMenu extends Screen {
     public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
 
         if(this.selectedItem != -1){
-            ISpellCaster caster =  CasterUtil.getCaster(casterStack);
-            caster.setCurrentSlot(selectedItem);
-            Networking.INSTANCE.sendToServer(new PacketSetBookMode(casterStack.getTag()));
+            radialMenuProvider.setCurrentSlot(selectedItem);
+            Networking.INSTANCE.sendToServer(new PacketSetBookMode(radialMenuProvider.getTag()));
             minecraft.player.closeContainer();
         }
         return true;
@@ -255,8 +242,6 @@ public class GuiRadialMenu extends Screen {
     public boolean isPauseScreen() {
         return false;
     }
-
-
 }
 
 /*
