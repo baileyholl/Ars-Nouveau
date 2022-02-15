@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
+import com.hollingsworth.arsnouveau.api.source.IMultiSourceTargetProvider;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
@@ -14,7 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RelaySplitterTile extends ArcaneRelayTile{
+public class RelaySplitterTile extends ArcaneRelayTile implements IMultiSourceTargetProvider {
 
     ArrayList<BlockPos> toList = new ArrayList<>();
     ArrayList<BlockPos> fromList = new ArrayList<>();
@@ -147,16 +148,25 @@ public class RelaySplitterTile extends ArcaneRelayTile{
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        if(toList == null || toList.isEmpty()){
+        if(toList == null || toList.isEmpty()) {
             tooltip.add(new TranslatableComponent("ars_nouveau.relay.no_to"));
-        }else{
+        } else {
             tooltip.add(new TranslatableComponent("ars_nouveau.relay.one_to", toList.size()));
         }
-        if(fromList == null || fromList.isEmpty()){
+        if(fromList == null || fromList.isEmpty()) {
             tooltip.add(new TranslatableComponent("ars_nouveau.relay.no_from"));
-        }else{
+        } else {
             tooltip.add(new TranslatableComponent("ars_nouveau.relay.one_from", fromList.size()));
         }
     }
 
+    @Override
+    public List<BlockPos> getFromList() {
+        return fromList;
+    }
+
+    @Override
+    public List<BlockPos> getToList() {
+        return toList;
+    }
 }

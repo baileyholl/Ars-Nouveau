@@ -37,7 +37,7 @@ public class ApparatusRecipeProvider implements DataProvider {
         this.generator = generatorIn;
     }
 
-    List<EnchantingApparatusRecipe> recipes = new ArrayList<>();
+    public List<EnchantingApparatusRecipe> recipes = new ArrayList<>();
     @Override
     public void run(HashCache cache) throws IOException {
         addEntries();
