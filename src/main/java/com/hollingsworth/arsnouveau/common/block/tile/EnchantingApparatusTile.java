@@ -206,7 +206,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements IInventory 
     public ItemStack removeItem(int index, int count) {
         if(isCrafting)
             return ItemStack.EMPTY;
-        ItemStack stack = catalystItem.copy();
+        ItemStack stack = catalystItem.copy().split(count);
         catalystItem.shrink(count);
         updateBlock();
         return stack;

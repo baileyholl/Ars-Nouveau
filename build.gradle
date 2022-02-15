@@ -24,7 +24,7 @@ apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
 
-version = '1.24.16'
+version = '1.24.17'
 if (System.getenv('BUILD_NUMBER') != null) {
     version += "." + System.getenv('BUILD_NUMBER')
 }
@@ -150,6 +150,9 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:exp-268560:3206392")  // Mekanism
 //    compileOnly fg.deobf("curse.maven:exp-268560:3206392")
 //    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50:api")
+    runtimeOnly fg.deobf("curse.maven:exp-260912:3598214") //xnet
+    runtimeOnly fg.deobf("curse.maven:exp-326041:3598201") //rftools base
+    runtimeOnly fg.deobf("curse.maven:exp-233105:3641836") //mcjty lib
     compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50")
     compileOnly fg.deobf("curse.maven:exp-238222:3530253") // JEI
