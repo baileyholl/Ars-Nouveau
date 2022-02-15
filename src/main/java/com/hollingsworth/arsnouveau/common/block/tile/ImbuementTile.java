@@ -205,7 +205,7 @@ public class ImbuementTile extends AbstractSourceMachine implements Container, I
 
     @Override
     public ItemStack removeItem(int index, int count) {
-        ItemStack copy = stack.copy();
+        ItemStack copy = stack.copy().split(count);
         stack.shrink(count);
         updateBlock();
         return copy;
