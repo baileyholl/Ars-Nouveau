@@ -1,9 +1,7 @@
 package com.hollingsworth.arsnouveau.common.mixin;
 
-import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
-import com.hollingsworth.arsnouveau.common.entity.ModEntities;
-import com.hollingsworth.arsnouveau.common.light.LambDynamicLight;
 import com.hollingsworth.arsnouveau.common.light.DynamLightUtil;
+import com.hollingsworth.arsnouveau.common.light.LambDynamicLight;
 import com.hollingsworth.arsnouveau.common.light.LightManager;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import net.minecraft.client.Minecraft;
@@ -13,7 +11,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
@@ -75,13 +72,14 @@ public abstract class LightEntityMixin implements LambDynamicLight {
     @Inject(method = "tick", at = @At("TAIL"))
     public void onTick(CallbackInfo ci) {
         // We do not want to update the entity on the server.
-        if (this.level.isClientSide()) {
+        if(level.isClientSide && !LightManager.shouldUpdateDynamicLight()){
+            lambdynlights$luminance = 0;
+        }
+        if (this.level.isClientSide() && LightManager.shouldUpdateDynamicLight() && LightManager.getLightRegistry().containsKey(getType())) {
             if (this.isRemoved()) {
                 this.setDynamicLightEnabled(false);
             } else {
                 this.dynamicLightTick();
-                if (this.getType() != EntityType.PLAYER && this.getType() != ModEntities.SPELL_PROJ)
-                    this.lambdynlights$luminance = 0;
                 LightManager.updateTracking(this);
             }
         }
@@ -89,8 +87,15 @@ public abstract class LightEntityMixin implements LambDynamicLight {
 
     @Inject(method = "remove", at = @At("TAIL"))
     public void onRemove(CallbackInfo ci) {
-        if (this.level.isClientSide())
+        if (this.level.isClientSide()) {
             this.setDynamicLightEnabled(false);
+        }
+    }
+    @Inject(method = "onClientRemoval", at=@At("TAIL"))
+    public void removed(CallbackInfo ci){
+        if (this.level.isClientSide()) {
+            this.setDynamicLightEnabled(false);
+        }
     }
 
     @Override
@@ -120,27 +125,12 @@ public abstract class LightEntityMixin implements LambDynamicLight {
 
     @Override
     public boolean shouldUpdateDynamicLight() {
-
-//        var mode = LambDynLights.get().config.getDynamicLightsMode();
-//        if (!mode.isEnabled())
-//            return false;
-//        if (mode.hasDelay()) {
-//            long currentTime = System.currentTimeMillis();
-//            if (currentTime < this.lambdynlights$lastUpdate + mode.getDelay()) {
-//                return false;
-//            }
-//
-//            this.lambdynlights$lastUpdate = currentTime;
-//        }
-        if((Object) this instanceof EntityProjectileSpell)
-            System.out.println("spell");
-        return (Object)this instanceof Player || (Object) this instanceof EntityProjectileSpell;
+        return LightManager.shouldUpdateDynamicLight() && LightManager.getLightRegistry().containsKey(getType());
     }
 
     @Override
     public void dynamicLightTick() {
-        this.lambdynlights$luminance = this.isOnFire() ? 15 : 0;
-
+        lambdynlights$luminance = 0;
         int luminance = DynamLightUtil.getLuminance((Entity) (Object) this);
         if (luminance > this.lambdynlights$luminance)
             this.lambdynlights$luminance = luminance;

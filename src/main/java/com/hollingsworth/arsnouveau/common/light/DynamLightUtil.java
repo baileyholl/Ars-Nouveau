@@ -1,10 +1,9 @@
 package com.hollingsworth.arsnouveau.common.light;
 
-import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Items;
+
+import java.util.function.Function;
 
 public class DynamLightUtil {
 
@@ -18,10 +17,14 @@ public class DynamLightUtil {
     }
 
     public static int getLuminance(Entity entity){
-        if(entity instanceof EntityProjectileSpell)
-            return 15;
-
-        return entity instanceof Player player && player.getMainHandItem().getItem() == Items.TORCH ? 15 : 0;
+        int level = 0;
+        if(LightManager.getLightRegistry().containsKey(entity.getType())){
+            for(Function<Entity, Integer> function : LightManager.getLightRegistry().get(entity.getType())){
+                int val = function.apply(entity);
+                level = Math.max(val, level);
+            }
+        }
+        return Math.min(15, level);
     }
 
 }

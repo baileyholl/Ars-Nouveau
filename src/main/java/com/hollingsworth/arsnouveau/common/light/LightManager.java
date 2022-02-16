@@ -1,17 +1,21 @@
 package com.hollingsworth.arsnouveau.common.light;
 
-import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
+import com.hollingsworth.arsnouveau.common.entity.ModEntities;
+import com.hollingsworth.arsnouveau.common.items.JarOfLight;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.Function;
 
 public class LightManager {
 
@@ -19,6 +23,41 @@ public class LightManager {
     private final static ReentrantReadWriteLock lightSourcesLock = new ReentrantReadWriteLock();
     public static long lastUpdate = System.currentTimeMillis();
     public static int lastUpdateCount = 0;
+    private static Map<EntityType<? extends Entity>, List<Function<Entity, Integer>>> LIGHT_REGISTRY = new HashMap<>();
+
+    public static void init(){
+
+        register(EntityType.PLAYER, (p ->{
+            if(p instanceof Player player){
+                if(player.getMainHandItem().getItem() instanceof JarOfLight){
+                    return 15;
+                }
+            }
+            return 0;
+        }));
+
+        register(ModEntities.SPELL_PROJ, (p ->{
+            return 15;
+        }));
+        register(ModEntities.ORBIT_SPELL, (p ->{
+            return 15;
+        }));
+        register(ModEntities.LINGER_SPELL, (p ->{
+            return 15;
+        }));
+    }
+
+    public static void register(EntityType<? extends Entity> type, Function<Entity, Integer> luminanceFunction){
+        if (!LIGHT_REGISTRY.containsKey(type)) {
+            LIGHT_REGISTRY.put(type, new ArrayList<>());
+        }
+        LIGHT_REGISTRY.get(type).add(luminanceFunction);
+    }
+
+    public static Map<EntityType<? extends Entity>, List<Function<Entity, Integer>>> getLightRegistry(){
+        return LIGHT_REGISTRY;
+    }
+
     /**
      * Adds the light source to the tracked light sources.
      *
@@ -261,19 +300,14 @@ public class LightManager {
     public static void updateTracking(@NotNull LambDynamicLight lightSource) {
         boolean enabled = lightSource.isDynamicLightEnabled();
         int luminance = lightSource.getLuminance();
-        if(lightSource instanceof EntityProjectileSpell){
-            System.out.println(lightSource.getLuminance());
-        }
         if (!enabled && luminance > 0) {
-            System.out.println();
-            System.out.println("set enable");
             lightSource.setDynamicLightEnabled(true);
         } else if (enabled && luminance < 1) {
             lightSource.setDynamicLightEnabled(false);
         }
     }
 
-    public boolean shouldUpdateDynamicLight(){
+    public static boolean shouldUpdateDynamicLight(){
         return true;
     }
 }
