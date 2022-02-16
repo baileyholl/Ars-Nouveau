@@ -57,15 +57,14 @@ public class BaseBook extends ModdedScreen {
         drawFromTexture(background,0, 0, 0, 0, FULL_WIDTH, FULL_HEIGHT, FULL_WIDTH, FULL_HEIGHT, stack);
     }
 
-    public static void drawFromTexture(ResourceLocation resourceLocation, int x, int y, int u, int v, int w, int h, int fileWidth, int fileHeight, PoseStack stack) {
+    public static void drawFromTexture(ResourceLocation resourceLocation, int x, int y, int uOffset, int vOffset, int width, int height, int fileWidth, int fileHeight, PoseStack stack) {
         RenderSystem.setShaderTexture(0, resourceLocation);
-        blit(stack,x, y, u, v, w, h, fileWidth, fileHeight);
+        blit(stack,x, y, uOffset, vOffset, width, height, fileWidth, fileHeight);
     }
 
     public void drawForegroundElements(int mouseX, int mouseY, float partialTicks) {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
-
 
     public void drawScreenAfterScale(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         resetTooltip();

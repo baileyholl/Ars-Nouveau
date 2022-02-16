@@ -30,5 +30,4 @@ public class RadialMenu {
         return itemStack.getTag();
     }
 
-
 }

@@ -46,7 +46,7 @@ public class GuiRadialMenu extends Screen {
         this.selectedItem = -1;
     }
 
-    public GuiRadialMenu(){
+    public GuiRadialMenu() {
         super(new TextComponent(""));
     }
 
@@ -58,6 +58,7 @@ public class GuiRadialMenu extends Screen {
             }
         }
     }
+
     @SubscribeEvent
     public static void updateInputEvent(MovementInputUpdateEvent event) {
         if (Minecraft.getInstance().screen instanceof GuiRadialMenu) {
@@ -74,16 +75,16 @@ public class GuiRadialMenu extends Screen {
             eInput.jumping = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyJump.getKey().getValue());
             eInput.shiftKeyDown = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyShift.getKey().getValue());
             if (Minecraft.getInstance().player.isMovingSlowly()) {
-                eInput.leftImpulse = (float)((double)eInput.leftImpulse * 0.3D);
-                eInput.forwardImpulse = (float)((double)eInput.forwardImpulse * 0.3D);
+                eInput.leftImpulse = (float) ((double) eInput.leftImpulse * 0.3D);
+                eInput.forwardImpulse = (float) ((double) eInput.forwardImpulse * 0.3D);
             }
         }
     }
 
 
     @Override
-    public void render(PoseStack ms,int mouseX, int mouseY, float partialTicks) {
-        super.render(ms,mouseX, mouseY, partialTicks);
+    public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+        super.render(ms, mouseX, mouseY, partialTicks);
         final float OPEN_ANIMATION_LENGTH = 2.5f;
         long worldTime = Minecraft.getInstance().level.getGameTime();
         float animationTime = (float) (worldTime + partialTicks - startAnimation);
@@ -95,16 +96,16 @@ public class GuiRadialMenu extends Screen {
         float radiusOut = radiusIn * 2;
         float itemRadius = (radiusIn + radiusOut) * 0.5f;
         float animTop = (1 - animProgress) * height / 2.0f;
-        int x = width / 2;
-        int y = height / 2;
+        int centerOfScreenX = width / 2;
+        int centerOfScreenY = height / 2;
 
         int numberOfSlices = Math.min(MAX_SLOTS, radialMenuSlots.size());
 
-        double a = Math.toDegrees(Math.atan2(mouseY - y, mouseX - x));
-        double d = Math.sqrt(Math.pow(mouseX - x, 2) + Math.pow(mouseY - y, 2));
-        float s0 = (((0 - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
-        if (a < s0) {
-            a += 360;
+        double mousePositionInDegreesInRelationToCenterOfScreen = Math.toDegrees(Math.atan2(mouseY - centerOfScreenY, mouseX - centerOfScreenX));
+        double mouseDistanceToCenterOfScreen = Math.sqrt(Math.pow(mouseX - centerOfScreenX, 2) + Math.pow(mouseY - centerOfScreenY, 2));
+        float slot0 = (((0 - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
+        if (mousePositionInDegreesInRelationToCenterOfScreen < slot0) {
+            mousePositionInDegreesInRelationToCenterOfScreen += 360;
         }
 
         ms.pushPose();
@@ -125,9 +126,9 @@ public class GuiRadialMenu extends Screen {
         if (!closing) {
             selectedItem = -1;
             for (int i = 0; i < numberOfSlices; i++) {
-                float s = (((i - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
-                float e = (((i + 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
-                if (a >= s && a < e && d >= radiusIn && d < radiusOut) {
+                float sliceBorderLeft = (((i - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
+                float sliceBorderRight = (((i + 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
+                if (mousePositionInDegreesInRelationToCenterOfScreen >= sliceBorderLeft && mousePositionInDegreesInRelationToCenterOfScreen < sliceBorderRight && mouseDistanceToCenterOfScreen >= radiusIn && mouseDistanceToCenterOfScreen < radiusOut) {
                     selectedItem = i;
                     break;
                 }
@@ -136,63 +137,68 @@ public class GuiRadialMenu extends Screen {
 
 
         for (int i = 0; i < numberOfSlices; i++) {
-            float s = (((i - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
-            float e = (((i + 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
+            float sliceBorderLeft = (((i - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
+            float sliceBorderRight = (((i + 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
             if (selectedItem == i) {
-                drawSlice(buffer, x, y, 10, radiusIn, radiusOut, s, e, 63, 161, 191, 60);
+                drawSlice(buffer, centerOfScreenX, centerOfScreenY, 10, radiusIn, radiusOut, sliceBorderLeft, sliceBorderRight, 63, 161, 191, 60);
                 hasMouseOver = true;
                 mousedOverSlot = selectedItem;
-            }
-            else
-                drawSlice(buffer, x, y, 10, radiusIn, radiusOut, s, e, 0, 0, 0, 64);
+            } else
+                drawSlice(buffer, centerOfScreenX, centerOfScreenY, 10, radiusIn, radiusOut, sliceBorderLeft, sliceBorderRight, 0, 0, 0, 64);
         }
 
         tessellator.end();
         RenderSystem.enableTexture();
         RenderSystem.disableBlend();
         if (hasMouseOver && mousedOverSlot != -1) {
-            int adjusted =  (mousedOverSlot+ 6) % 10;
-            adjusted = adjusted == 0 ? 9 : adjusted;
-            drawCenteredString(ms,font, radialMenuSlots.get(adjusted).slotName(), width/2,(height - font.lineHeight) / 2,16777215);
+            int adjusted = (mousedOverSlot + (numberOfSlices / 2 + 1)) % numberOfSlices;
+            adjusted = adjusted == 0 ? numberOfSlices - 1 : adjusted;
+            drawCenteredString(ms, font, radialMenuSlots.get(adjusted).slotName(), width / 2, (height - font.lineHeight) / 2, 16777215);
         }
 
         ms.popPose();
-        for(int i = 0; i< numberOfSlices; i++){
+        for (int i = 0; i < numberOfSlices; i++) {
             ItemStack stack = new ItemStack(Blocks.DIRT);
             float angle1 = ((i / (float) numberOfSlices) - 0.25f) * 2 * (float) Math.PI;
-            float posX = x - 8 + itemRadius * (float) Math.cos(angle1);
-            float posY = y - 8 + itemRadius * (float) Math.sin(angle1);
+            if(numberOfSlices % 2 != 0) {
+                angle1 += Math.PI / numberOfSlices;
+            }
+            float posX = centerOfScreenX - 8 + itemRadius * (float) Math.cos(angle1);
+            float posY = centerOfScreenY - 8 + itemRadius * (float) Math.sin(angle1);
 
             RenderSystem.disableDepthTest();
 
             ResourceLocation primarySlotIcon = radialMenuSlots.get(i).primarySlotIcon();
             List<ResourceLocation> secondarySlotIcons = radialMenuSlots.get(i).secondarySlotIcons();
-            if(primarySlotIcon != null) {
+            if (primarySlotIcon != null) {
                 GuiSpellBook.drawFromTexture(primarySlotIcon,
-                        (int) posX, (int) posY, 0, 0, 16, 16, 16, 16,ms);
-                if (secondarySlotIcons != null && !secondarySlotIcons.isEmpty())
-                GuiSpellBook.drawFromTexture(secondarySlotIcons.get(0),
-                        (int) posX +3 , (int) posY - 10, 0, 0, 10, 10, 10, 10,ms);
+                        (int) posX, (int) posY, 0, 0, 16, 16, 16, 16, ms);
+                if (secondarySlotIcons != null && !secondarySlotIcons.isEmpty()) {
+                    drawSecondaryIcons(ms, (int) posX, (int) posY, secondarySlotIcons, numberOfSlices);
+                }
             }
             this.itemRenderer.renderGuiItemDecorations(font, stack, (int) posX + 5, (int) posY, String.valueOf(i + 1));
-
         }
-
 
         if (mousedOverSlot != -1) {
-            int adjusted = (mousedOverSlot + 6) % 10;
-            adjusted = adjusted == 0 ? 10 : adjusted;
+            int adjusted = (mousedOverSlot + (numberOfSlices / 2 + 1)) % numberOfSlices;
+            adjusted = adjusted == 0 ? numberOfSlices - 1 : adjusted;
             selectedItem = adjusted;
         }
+    }
 
+    private void drawSecondaryIcons(PoseStack ms, int posX, int posY, List<ResourceLocation> secondarySlotIcons, int numberOfSlices) {
+        //TODO: Implement drawing multiple Secondary Items for smaller number of slices?
+        GuiSpellBook.drawFromTexture(secondarySlotIcons.get(0),
+                posX + 3, posY - 10, 0, 0, 10, 10, 10, 10, ms);
     }
 
     @Override
     public boolean keyPressed(int key, int scanCode, int modifiers) {
         int adjustedKey = key - 48;
-        if(adjustedKey >= 0 && adjustedKey < 10){
+        if (adjustedKey >= 0 && adjustedKey < 10) {
             selectedItem = adjustedKey == 0 ? 10 : adjustedKey;
-            mouseClicked(0,0,0);
+            mouseClicked(0, 0, 0);
             return true;
         }
         return super.keyPressed(key, scanCode, modifiers);
@@ -201,7 +207,7 @@ public class GuiRadialMenu extends Screen {
     @Override
     public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
 
-        if(this.selectedItem != -1){
+        if (this.selectedItem != -1) {
             radialMenu.setCurrentSlot(selectedItem);
             Networking.INSTANCE.sendToServer(new PacketSetBookMode(radialMenu.getTag()));
             minecraft.player.closeContainer();
@@ -218,8 +224,7 @@ public class GuiRadialMenu extends Screen {
         endAngle = (float) Math.toRadians(endAngle);
         angle = endAngle - startAngle;
 
-        for (int i = 0; i < sections; i++)
-        {
+        for (int i = 0; i < sections; i++) {
             float angle1 = startAngle + (i / (float) sections) * angle;
             float angle2 = startAngle + ((i + 1) / (float) sections) * angle;
 
