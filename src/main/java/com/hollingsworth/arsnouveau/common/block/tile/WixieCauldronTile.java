@@ -324,10 +324,17 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         if(inventories == null)
             return itemsAvailable;
         for(BlockPos p : inventories){
-            if(level.getBlockEntity(p) instanceof Container){
+            if(level.getBlockEntity(p) instanceof Container container){
                 Container inventory = (Container) level.getBlockEntity(p);
                 for(int i = 0; i < inventory.getContainerSize(); i++){
                     ItemStack stack = inventory.getItem(i);
+                    if(stack == null) {
+                        System.out.println("======");
+                        System.out.println("A MOD IS RETURNING A NULL STACK. THIS IS NOT ALLOWED YOU NERD. TELL THIS MOD AUTHOR TO FIX IT");
+                        System.out.println(container.toString());
+                        System.out.println("AT POS " + p.toString());
+                        continue;
+                    }
                     if(!itemsAvailable.containsKey(stack.getItem())) {
                         itemsAvailable.put(stack.getItem(), stack.getCount());
                         continue;

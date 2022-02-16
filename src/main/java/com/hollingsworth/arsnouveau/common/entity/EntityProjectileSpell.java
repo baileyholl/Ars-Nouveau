@@ -231,6 +231,14 @@ public class EntityProjectileSpell extends ColoredProjectile {
     }
 
     @Override
+    public void setRemoved(RemovalReason reason) {
+        if(reason == RemovalReason.UNLOADED_TO_CHUNK)
+            reason = RemovalReason.DISCARDED;
+        super.setRemoved(reason);
+    }
+
+
+    @Override
     public boolean isNoGravity() {
         return isNoGravity;
     }
