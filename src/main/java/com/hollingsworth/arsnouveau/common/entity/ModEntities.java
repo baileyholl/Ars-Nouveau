@@ -105,7 +105,7 @@ public class ModEntities {
             SPELL_PROJ = build(
                     LibEntityNames.SPELL_PROJ,
                     EntityType.Builder.<EntityProjectileSpell>of(EntityProjectileSpell::new, MobCategory.MISC)
-                            .sized(0.5f, 0.5f)
+                            .sized(0.5f, 0.5f).noSave()
                             .setTrackingRange(20)
                             .setShouldReceiveVelocityUpdates(true)
                             .setUpdateInterval(120).setCustomClientFactory(EntityProjectileSpell::new));
@@ -132,7 +132,7 @@ public class ModEntities {
             ENTITY_FOLLOW_PROJ = build(
                     LibEntityNames.FOLLOW_PROJ,
                     EntityType.Builder.<EntityFollowProjectile>of(EntityFollowProjectile::new, MobCategory.MISC)
-                            .sized(0.5f, 0.5f)
+                            .sized(0.5f, 0.5f).noSave()
                             .setTrackingRange(10)
                             .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityFollowProjectile::new));
 

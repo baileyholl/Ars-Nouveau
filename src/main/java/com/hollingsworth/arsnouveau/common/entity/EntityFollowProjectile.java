@@ -168,6 +168,12 @@ public class EntityFollowProjectile extends Arrow {
         }
     }
 
+    @Override
+    public void setRemoved(RemovalReason reason) {
+        if(reason == RemovalReason.UNLOADED_TO_CHUNK)
+            reason = RemovalReason.DISCARDED;
+        super.setRemoved(reason);
+    }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
