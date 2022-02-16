@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.client.gui.RadialMenu.GuiRadialMenu;
-import com.hollingsworth.arsnouveau.client.gui.RadialMenu.RadialMenuProvider;
+import com.hollingsworth.arsnouveau.client.gui.RadialMenu.RadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.RadialMenu.RadialMenuSlot;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
@@ -34,9 +34,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.IItemRenderProperties;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
-import software.bernie.example.registry.ItemRegistry;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
@@ -44,10 +42,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.IntConsumer;
-import java.util.function.IntUnaryOperator;
 
 public class SpellBook extends Item implements IAnimatable, ICasterTool {
 
@@ -159,9 +154,9 @@ public class SpellBook extends Item implements IAnimatable, ICasterTool {
         Minecraft.getInstance().setScreen(new GuiRadialMenu(getRadialMenuProvider(stack)));
     }
 
-    private RadialMenuProvider getRadialMenuProvider(ItemStack itemStack) {
-        return new RadialMenuProvider((int slot) -> {
-            SpellCaster caster = new SpellCaster(itemStack);
+    private RadialMenu getRadialMenuProvider(ItemStack itemStack) {
+        return new RadialMenu((int slot) -> {
+            BookCaster caster = new BookCaster(itemStack);
             caster.setCurrentSlot(slot);
         }, getRadialMenuSlots(itemStack), itemStack);
     }
@@ -169,7 +164,7 @@ public class SpellBook extends Item implements IAnimatable, ICasterTool {
     private List<RadialMenuSlot> getRadialMenuSlots(ItemStack itemStack) {
         BookCaster spellCaster = new BookCaster(itemStack);
         List<RadialMenuSlot> radialMenuSlots = new ArrayList<>();
-        for(int i = 0; i < spellCaster.getMaxSlots(); i++) {
+        for(int i = 1; i <= spellCaster.getMaxSlots(); i++) {
             Spell spell = spellCaster.getSpell(i);
             ResourceLocation primaryIcon = null;
             List<ResourceLocation> secondaryIcons = new ArrayList<>();

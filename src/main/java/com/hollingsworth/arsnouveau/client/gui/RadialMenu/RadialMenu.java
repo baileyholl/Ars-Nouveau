@@ -6,13 +6,13 @@ import net.minecraft.world.item.ItemStack;
 import java.util.List;
 import java.util.function.IntConsumer;
 
-public class RadialMenuProvider {
+public class RadialMenu {
 
     private final IntConsumer setSelectedSlot;
     private final List<RadialMenuSlot> radialMenuSlots;
     private final ItemStack itemStack;
 
-    public RadialMenuProvider(IntConsumer setSelectedSlot, List<RadialMenuSlot> radialMenuSlots, ItemStack itemStack) {
+    public RadialMenu(IntConsumer setSelectedSlot, List<RadialMenuSlot> radialMenuSlots, ItemStack itemStack) {
         this.setSelectedSlot = setSelectedSlot;
         this.radialMenuSlots = radialMenuSlots;
         this.itemStack = itemStack;

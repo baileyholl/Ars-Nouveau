@@ -11,7 +11,6 @@ import net.minecraft.client.Options;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -32,15 +31,15 @@ public class GuiRadialMenu extends Screen {
 
     private boolean closing;
     private double startAnimation;
-    private RadialMenuProvider radialMenuProvider;
+    private RadialMenu radialMenu;
     private List<RadialMenuSlot> radialMenuSlots;
     private int selectedItem;
 
 
-    public GuiRadialMenu(RadialMenuProvider radialMenuProvider) {
+    public GuiRadialMenu(RadialMenu radialMenu) {
         super(new TextComponent(""));
-        this.radialMenuProvider = radialMenuProvider;
-        this.radialMenuSlots = this.radialMenuProvider.getRadialMenuSlots();
+        this.radialMenu = radialMenu;
+        this.radialMenuSlots = this.radialMenu.getRadialMenuSlots();
         this.closing = false;
         this.minecraft = Minecraft.getInstance();
         this.startAnimation = getMinecraft().level.getGameTime() + (double) getMinecraft().getFrameTime();
@@ -153,7 +152,7 @@ public class GuiRadialMenu extends Screen {
         RenderSystem.disableBlend();
         if (hasMouseOver && mousedOverSlot != -1) {
             int adjusted =  (mousedOverSlot+ 6) % 10;
-            adjusted = adjusted == 0 ? 10 : adjusted;
+            adjusted = adjusted == 0 ? 9 : adjusted;
             drawCenteredString(ms,font, radialMenuSlots.get(adjusted).slotName(), width/2,(height - font.lineHeight) / 2,16777215);
         }
 
@@ -165,13 +164,15 @@ public class GuiRadialMenu extends Screen {
             float posY = y - 8 + itemRadius * (float) Math.sin(angle1);
 
             RenderSystem.disableDepthTest();
+
             ResourceLocation primarySlotIcon = radialMenuSlots.get(i).primarySlotIcon();
-//            ResourceLocation secondarySlotIcon = radialMenuSlots.get(i).secondarySlotIcons().get(0);
+            List<ResourceLocation> secondarySlotIcons = radialMenuSlots.get(i).secondarySlotIcons();
             if(primarySlotIcon != null) {
                 GuiSpellBook.drawFromTexture(primarySlotIcon,
                         (int) posX, (int) posY, 0, 0, 16, 16, 16, 16,ms);
-//                GuiSpellBook.drawFromTexture(secondarySlotIcon,
-//                        (int) posX +3 , (int) posY - 10, 0, 0, 10, 10, 10, 10,ms);
+                if (secondarySlotIcons != null && !secondarySlotIcons.isEmpty())
+                GuiSpellBook.drawFromTexture(secondarySlotIcons.get(0),
+                        (int) posX +3 , (int) posY - 10, 0, 0, 10, 10, 10, 10,ms);
             }
             this.itemRenderer.renderGuiItemDecorations(font, stack, (int) posX + 5, (int) posY, String.valueOf(i + 1));
 
@@ -201,8 +202,8 @@ public class GuiRadialMenu extends Screen {
     public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
 
         if(this.selectedItem != -1){
-            radialMenuProvider.setCurrentSlot(selectedItem);
-            Networking.INSTANCE.sendToServer(new PacketSetBookMode(radialMenuProvider.getTag()));
+            radialMenu.setCurrentSlot(selectedItem);
+            Networking.INSTANCE.sendToServer(new PacketSetBookMode(radialMenu.getTag()));
             minecraft.player.closeContainer();
         }
         return true;
