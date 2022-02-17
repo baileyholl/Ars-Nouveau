@@ -158,7 +158,7 @@ public class SpellBook extends Item implements IAnimatable, ICasterTool {
         return new RadialMenu((int slot) -> {
             BookCaster caster = new BookCaster(itemStack);
             caster.setCurrentSlot(slot);
-        }, getRadialMenuSlots(itemStack), itemStack);
+        }, getRadialMenuSlots(itemStack), itemStack, false);
     }
 
     private List<RadialMenuSlot> getRadialMenuSlots(ItemStack itemStack) {

@@ -11,11 +11,13 @@ public class RadialMenu {
     private final IntConsumer setSelectedSlot;
     private final List<RadialMenuSlot> radialMenuSlots;
     private final ItemStack itemStack;
+    private final boolean showMoreSecondaryItems;
 
-    public RadialMenu(IntConsumer setSelectedSlot, List<RadialMenuSlot> radialMenuSlots, ItemStack itemStack) {
+    public RadialMenu(IntConsumer setSelectedSlot, List<RadialMenuSlot> radialMenuSlots, ItemStack itemStack, boolean showMoreSecondaryItems) {
         this.setSelectedSlot = setSelectedSlot;
         this.radialMenuSlots = radialMenuSlots;
         this.itemStack = itemStack;
+        this.showMoreSecondaryItems = showMoreSecondaryItems;
     }
 
     public List<RadialMenuSlot> getRadialMenuSlots() {
@@ -28,6 +30,10 @@ public class RadialMenu {
 
     public CompoundTag getTag() {
         return itemStack.getTag();
+    }
+
+    public boolean isShowMoreSecondaryItems() {
+        return showMoreSecondaryItems;
     }
 
 }

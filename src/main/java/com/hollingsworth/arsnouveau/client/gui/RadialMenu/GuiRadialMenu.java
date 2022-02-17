@@ -177,7 +177,7 @@ public class GuiRadialMenu extends Screen {
                     drawSecondaryIcons(ms, (int) posX, (int) posY, secondarySlotIcons, numberOfSlices);
                 }
             }
-            this.itemRenderer.renderGuiItemDecorations(font, stack, (int) posX + 5, (int) posY, String.valueOf(i + 1));
+            drawSliceName(String.valueOf(i + 1), stack, (int) posX, (int) posY, numberOfSlices);
         }
 
         if (mousedOverSlot != -1) {
@@ -187,10 +187,40 @@ public class GuiRadialMenu extends Screen {
         }
     }
 
-    private void drawSecondaryIcons(PoseStack ms, int posX, int posY, List<ResourceLocation> secondarySlotIcons, int numberOfSlices) {
-        //TODO: Implement drawing multiple Secondary Items for smaller number of slices?
-        GuiSpellBook.drawFromTexture(secondarySlotIcons.get(0),
-                posX + 3, posY - 10, 0, 0, 10, 10, 10, 10, ms);
+    private void drawSecondaryIcons(PoseStack ms, int positionXOfPrimaryIcon, int positionYOfPrimaryIcon, List<ResourceLocation> secondarySlotIcons, int numberOfSlices) {
+        if(!radialMenu.isShowMoreSecondaryItems()) {
+            GuiSpellBook.drawFromTexture(secondarySlotIcons.get(0),
+                    positionXOfPrimaryIcon + 3, positionYOfPrimaryIcon - 10, 0, 0, 10, 10, 10, 10, ms);
+        } else {
+            for (int i = 0; i < secondarySlotIcons.size(); i++) {
+                switch (i) {
+                    case 0 -> {
+                        GuiSpellBook.drawFromTexture(secondarySlotIcons.get(0),
+                                positionXOfPrimaryIcon + 3, positionYOfPrimaryIcon - 11, 0, 0, 10, 10, 10, 10, ms);
+                    }
+                    case 1 -> {
+                        GuiSpellBook.drawFromTexture(secondarySlotIcons.get(1),
+                                positionXOfPrimaryIcon + 3, positionYOfPrimaryIcon + 17, 0, 0, 10, 10, 10, 10, ms);
+                    }
+                    case 2 -> {
+                        GuiSpellBook.drawFromTexture(secondarySlotIcons.get(2),
+                                positionXOfPrimaryIcon - 11, positionYOfPrimaryIcon + 3, 0, 0, 10, 10, 10, 10, ms);
+                    }
+                    case 3 -> {
+                        GuiSpellBook.drawFromTexture(secondarySlotIcons.get(3),
+                                positionXOfPrimaryIcon + 17, positionYOfPrimaryIcon + 3, 0, 0, 10, 10, 10, 10, ms);
+                    }
+                }
+            }
+        }
+    }
+
+    private void drawSliceName(String sliceName, ItemStack stack, int posX, int posY, int numberOfSlices) {
+        if(!radialMenu.isShowMoreSecondaryItems()) {
+            this.itemRenderer.renderGuiItemDecorations(font, stack, posX + 5, posY, sliceName);
+        } else {
+            this.itemRenderer.renderGuiItemDecorations(font, stack, posX + 5, posY + 5, sliceName);
+        }
     }
 
     @Override
