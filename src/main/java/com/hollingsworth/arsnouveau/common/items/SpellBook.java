@@ -197,7 +197,7 @@ public class SpellBook extends Item implements IAnimatable, ICasterTool {
 
         @Override
         public int getMaxSlots() {
-            return 20;
+            return 10;
         }
     }
 }
