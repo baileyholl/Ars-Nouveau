@@ -1,23 +1,25 @@
-package com.hollingsworth.arsnouveau.client.gui;
+package com.hollingsworth.arsnouveau.client.gui.RadialMenu;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-public class GuiUtils {
-    public static void drawItemAsIcon(PoseStack poseStack, Item item, double positionX, double positionY, int size) {
+public class GuiRadialMenuUtils {
+    public static void drawItemAsIcon(Object providedItem, PoseStack poseStack, int positionX, int positionY, int size) {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-        ItemStack itemStack = item.getDefaultInstance();
+        ItemStack itemStack = ((Item) providedItem).getDefaultInstance();
         //Code stolen from ItemRenderer.renderGuiItem and changed to suit scaled items instead of fixing size to 16
         BakedModel itemBakedModel = itemRenderer.getModel(itemStack, null, null, 0);
 
@@ -46,5 +48,10 @@ public class GuiUtils {
 
         poseStack.popPose();
         RenderSystem.applyModelViewMatrix();
+    }
+
+    public static void drawTextureFromResourceLocation(Object providedResourceLocation, PoseStack stack, int x, int y, int size) {
+        RenderSystem.setShaderTexture(0, (ResourceLocation) providedResourceLocation);
+        GuiComponent.blit(stack, x, y, 0, 0, size, size, size, size);
     }
 }
