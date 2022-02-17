@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.light;
 
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.items.JarOfLight;
+import com.hollingsworth.arsnouveau.setup.Config;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -10,6 +11,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.LightLayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,6 +19,9 @@ import java.util.*;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.Function;
 
+/**
+ * This code is taken from LambDynamicLights, an MIT fabric mod: https://github.com/LambdAurora/LambDynamicLights
+ */
 public class LightManager {
 
     private final static Set<LambDynamicLight> dynamicLightSources = new HashSet<>();
@@ -36,14 +41,14 @@ public class LightManager {
             return 0;
         }));
 
-        register(ModEntities.SPELL_PROJ, (p ->{
-            return 15;
-        }));
-        register(ModEntities.ORBIT_SPELL, (p ->{
-            return 15;
-        }));
-        register(ModEntities.LINGER_SPELL, (p ->{
-            return 15;
+        register(ModEntities.SPELL_PROJ, (p -> 15));
+        register(ModEntities.ORBIT_SPELL, (p -> 15));
+        register(ModEntities.LINGER_SPELL, (p -> 15));
+        register(ModEntities.STARBUNCLE_TYPE, (p ->{
+            if(p.level.getBrightness(LightLayer.BLOCK, p.blockPosition()) < 6){
+                return 10;
+            }
+            return 0;
         }));
     }
 
@@ -66,8 +71,8 @@ public class LightManager {
     public static void addLightSource(LambDynamicLight lightSource) {
         if (!lightSource.getDynamicLightWorld().isClientSide())
             return;
-//        if (!this.config.getDynamicLightsMode().isEnabled())
-//            return;
+        if (!shouldUpdateDynamicLight())
+            return;
         if (containsLightSource(lightSource))
             return;
         lightSourcesLock.writeLock().lock();
@@ -308,6 +313,6 @@ public class LightManager {
     }
 
     public static boolean shouldUpdateDynamicLight(){
-        return true;
+        return Config.DYNAMIC_LIGHTS_ENABLED != null && Config.DYNAMIC_LIGHTS_ENABLED.get();
     }
 }

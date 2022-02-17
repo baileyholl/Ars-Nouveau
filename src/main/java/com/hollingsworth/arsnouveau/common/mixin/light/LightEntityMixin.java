@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.common.mixin;
+package com.hollingsworth.arsnouveau.common.mixin.light;
 
 import com.hollingsworth.arsnouveau.common.light.DynamLightUtil;
 import com.hollingsworth.arsnouveau.common.light.LambDynamicLight;

@@ -151,6 +151,11 @@ public class Networking {
                 PacketSetScribeRecipe::toBytes,
                 PacketSetScribeRecipe::new,
                 PacketSetScribeRecipe::handle);
+        INSTANCE.registerMessage(nextID(),
+                PacketToggleLight.class,
+                PacketToggleLight::toBytes,
+                PacketToggleLight::new,
+                PacketToggleLight::handle);
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend){

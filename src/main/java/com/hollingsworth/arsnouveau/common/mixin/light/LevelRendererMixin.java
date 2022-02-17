@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.common.mixin;
+package com.hollingsworth.arsnouveau.common.mixin.light;
 
 import com.hollingsworth.arsnouveau.common.light.LightManager;
 import net.minecraft.client.renderer.LevelRenderer;

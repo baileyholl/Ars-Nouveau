@@ -45,6 +45,7 @@ public class ArsNouveau {
         caelusLoaded = ModList.get().isLoaded("caelus");
         APIRegistry.setup();
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SERVER_CONFIG);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(ClientEventHandler.class));
         Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(FMLEventHandler.class);
 
