@@ -177,11 +177,12 @@ public class SpellBook extends Item implements IAnimatable, ICasterTool {
             List<Object> secondaryIcons = new ArrayList<>();
             for (AbstractSpellPart p : spell.recipe) {
                 if (p instanceof AbstractCastMethod) {
-                    primaryIcon = new ResourceLocation(ArsNouveau.MODID, "textures/items/" + p.getIcon());
+                    secondaryIcons.add(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + p.getIcon()));
                 }
 
                 if (p instanceof AbstractEffect) {
-                    secondaryIcons.add(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + p.getIcon()));
+                    primaryIcon = new ResourceLocation(ArsNouveau.MODID, "textures/items/" + p.getIcon());
+                    break;
                 }
             }
             radialMenuSlots.add(new RadialMenuSlot(spellCaster.getSpellName(i), primaryIcon, secondaryIcons));
