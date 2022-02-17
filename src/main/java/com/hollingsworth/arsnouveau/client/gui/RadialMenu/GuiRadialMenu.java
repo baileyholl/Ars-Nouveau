@@ -1,8 +1,5 @@
 package com.hollingsworth.arsnouveau.client.gui.RadialMenu;
 
-import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketSetBookMode;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
@@ -12,8 +9,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
@@ -24,10 +21,12 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.List;
 
+import static com.hollingsworth.arsnouveau.client.gui.GuiUtils.drawItemAsIcon;
+
 @Mod.EventBusSubscriber(Dist.CLIENT)
 public class GuiRadialMenu extends Screen {
     private static final float PRECISION = 5.0f;
-    private static final int MAX_SLOTS = 10;
+    private static final int MAX_SLOTS = 20;
 
     private boolean closing;
     private double startAnimation;
@@ -160,7 +159,7 @@ public class GuiRadialMenu extends Screen {
         for (int i = 0; i < numberOfSlices; i++) {
             ItemStack stack = new ItemStack(Blocks.DIRT);
             float angle1 = ((i / (float) numberOfSlices) - 0.25f) * 2 * (float) Math.PI;
-            if(numberOfSlices % 2 != 0) {
+            if (numberOfSlices % 2 != 0) {
                 angle1 += Math.PI / numberOfSlices;
             }
             float posX = centerOfScreenX - 8 + itemRadius * (float) Math.cos(angle1);
@@ -168,16 +167,15 @@ public class GuiRadialMenu extends Screen {
 
             RenderSystem.disableDepthTest();
 
-            ResourceLocation primarySlotIcon = radialMenuSlots.get(i).primarySlotIcon();
-            List<ResourceLocation> secondarySlotIcons = radialMenuSlots.get(i).secondarySlotIcons();
+            Item primarySlotIcon = radialMenuSlots.get(i).primarySlotIcon();
+            List<Item> secondarySlotIcons = radialMenuSlots.get(i).secondarySlotIcons();
             if (primarySlotIcon != null) {
-                GuiSpellBook.drawFromTexture(primarySlotIcon,
-                        (int) posX, (int) posY, 0, 0, 16, 16, 16, 16, ms);
+                drawItemAsIcon(ms, primarySlotIcon, (int) posX, (int) posY, 15);
                 if (secondarySlotIcons != null && !secondarySlotIcons.isEmpty()) {
-                    drawSecondaryIcons(ms, (int) posX, (int) posY, secondarySlotIcons, numberOfSlices);
+                    drawSecondaryIcons(ms, (int) posX, (int) posY, secondarySlotIcons);
                 }
             }
-            drawSliceName(String.valueOf(i + 1), stack, (int) posX, (int) posY, numberOfSlices);
+            drawSliceName(String.valueOf(i + 1), stack, (int) posX, (int) posY);
         }
 
         if (mousedOverSlot != -1) {
@@ -187,36 +185,29 @@ public class GuiRadialMenu extends Screen {
         }
     }
 
-    private void drawSecondaryIcons(PoseStack ms, int positionXOfPrimaryIcon, int positionYOfPrimaryIcon, List<ResourceLocation> secondarySlotIcons, int numberOfSlices) {
-        if(!radialMenu.isShowMoreSecondaryItems()) {
-            GuiSpellBook.drawFromTexture(secondarySlotIcons.get(0),
-                    positionXOfPrimaryIcon + 3, positionYOfPrimaryIcon - 10, 0, 0, 10, 10, 10, 10, ms);
+    private void drawSecondaryIcons(PoseStack ms, int positionXOfPrimaryIcon, int positionYOfPrimaryIcon, List<Item> secondarySlotIcons) {
+        if (!radialMenu.isShowMoreSecondaryItems()) {
+            drawSecondaryIcon(ms, secondarySlotIcons.get(0), positionXOfPrimaryIcon, positionYOfPrimaryIcon, SecondaryIconPosition.SOUTH);
         } else {
-            for (int i = 0; i < secondarySlotIcons.size(); i++) {
-                switch (i) {
-                    case 0 -> {
-                        GuiSpellBook.drawFromTexture(secondarySlotIcons.get(0),
-                                positionXOfPrimaryIcon + 3, positionYOfPrimaryIcon - 11, 0, 0, 10, 10, 10, 10, ms);
-                    }
-                    case 1 -> {
-                        GuiSpellBook.drawFromTexture(secondarySlotIcons.get(1),
-                                positionXOfPrimaryIcon + 3, positionYOfPrimaryIcon + 17, 0, 0, 10, 10, 10, 10, ms);
-                    }
-                    case 2 -> {
-                        GuiSpellBook.drawFromTexture(secondarySlotIcons.get(2),
-                                positionXOfPrimaryIcon - 11, positionYOfPrimaryIcon + 3, 0, 0, 10, 10, 10, 10, ms);
-                    }
-                    case 3 -> {
-                        GuiSpellBook.drawFromTexture(secondarySlotIcons.get(3),
-                                positionXOfPrimaryIcon + 17, positionYOfPrimaryIcon + 3, 0, 0, 10, 10, 10, 10, ms);
-                    }
-                }
+            SecondaryIconPosition currentSecondaryIconPosition = radialMenu.getSecondaryIconStartingPosition();
+            for (Item secondarySlotIcon : secondarySlotIcons) {
+                drawSecondaryIcon(ms, secondarySlotIcon, positionXOfPrimaryIcon, positionYOfPrimaryIcon, currentSecondaryIconPosition);
+                currentSecondaryIconPosition = SecondaryIconPosition.getNextPositon(currentSecondaryIconPosition);
             }
         }
     }
 
-    private void drawSliceName(String sliceName, ItemStack stack, int posX, int posY, int numberOfSlices) {
-        if(!radialMenu.isShowMoreSecondaryItems()) {
+    private void drawSecondaryIcon(PoseStack poseStack, Item item, int positionXOfPrimaryIcon, int positionYOfPrimaryIcon, SecondaryIconPosition secondaryIconPosition) {
+        switch (secondaryIconPosition) {
+            case NORTH -> drawItemAsIcon(poseStack, item, positionXOfPrimaryIcon, positionYOfPrimaryIcon - 13, 10);
+            case EAST -> drawItemAsIcon(poseStack, item, positionXOfPrimaryIcon - 13, positionYOfPrimaryIcon, 10);
+            case SOUTH -> drawItemAsIcon(poseStack, item, positionXOfPrimaryIcon, positionYOfPrimaryIcon + 13, 10);
+            case WEST -> drawItemAsIcon(poseStack, item, positionXOfPrimaryIcon + 13, positionYOfPrimaryIcon, 10);
+        }
+    }
+
+    private void drawSliceName(String sliceName, ItemStack stack, int posX, int posY) {
+        if (!radialMenu.isShowMoreSecondaryItems()) {
             this.itemRenderer.renderGuiItemDecorations(font, stack, posX + 5, posY, sliceName);
         } else {
             this.itemRenderer.renderGuiItemDecorations(font, stack, posX + 5, posY + 5, sliceName);
@@ -236,10 +227,8 @@ public class GuiRadialMenu extends Screen {
 
     @Override
     public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
-
         if (this.selectedItem != -1) {
             radialMenu.setCurrentSlot(selectedItem);
-            Networking.INSTANCE.sendToServer(new PacketSetBookMode(radialMenu.getTag()));
             minecraft.player.closeContainer();
         }
         return true;
