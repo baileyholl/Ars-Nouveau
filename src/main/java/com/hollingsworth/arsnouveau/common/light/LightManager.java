@@ -40,7 +40,8 @@ public class LightManager {
             }
             return 0;
         }));
-
+        register(ModEntities.ENTITY_FLYING_ITEM, (p -> 10));
+        register(ModEntities.ENTITY_FOLLOW_PROJ, (p -> 10));
         register(ModEntities.SPELL_PROJ, (p -> 15));
         register(ModEntities.ORBIT_SPELL, (p -> 15));
         register(ModEntities.LINGER_SPELL, (p -> 15));
