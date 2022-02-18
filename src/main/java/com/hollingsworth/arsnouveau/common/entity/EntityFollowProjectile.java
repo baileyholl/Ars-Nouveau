@@ -14,18 +14,14 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PlayMessages;
 
-public class EntityFollowProjectile extends Arrow {
+public class EntityFollowProjectile extends ColoredProjectile {
     public static final EntityDataAccessor<BlockPos> to = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.BLOCK_POS);
     public static final EntityDataAccessor<BlockPos> from = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.BLOCK_POS);
-    public static final EntityDataAccessor<Integer> RED = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> GREEN = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.INT);
-    public static final EntityDataAccessor<Integer> BLUE = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.INT);
     public static final EntityDataAccessor<Boolean> SPAWN_TOUCH = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.BOOLEAN);
     public static final EntityDataAccessor<Integer> DESPAWN = SynchedEntityData.defineId(EntityFollowProjectile.class, EntityDataSerializers.INT);
 
@@ -34,7 +30,7 @@ public class EntityFollowProjectile extends Arrow {
     int maxAge = 500;
 
     public EntityFollowProjectile(Level world){
-        super(world, 0, 0,0);
+        super(ModEntities.ENTITY_FOLLOW_PROJ, world, 0, 0,0);
     }
 
 
@@ -80,9 +76,6 @@ public class EntityFollowProjectile extends Arrow {
         super.defineSynchedData();
         this.entityData.define(to,new BlockPos(0,0,0));
         this.entityData.define(from,new BlockPos(0,0,0));
-        this.entityData.define(RED, 0);
-        this.entityData.define(GREEN, 0);
-        this.entityData.define(BLUE, 0);
         this.entityData.define(SPAWN_TOUCH, defaultsBurst());
         this.entityData.define(DESPAWN, 10);
     }
@@ -94,6 +87,7 @@ public class EntityFollowProjectile extends Arrow {
 
     @Override
     public void tick() {
+        super.tick();
         this.age++;
         if(age > maxAge) {
             this.remove(RemovalReason.DISCARDED);
