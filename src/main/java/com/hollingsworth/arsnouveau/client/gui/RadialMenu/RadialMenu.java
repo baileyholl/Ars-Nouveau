@@ -5,22 +5,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import java.util.List;
 import java.util.function.IntConsumer;
 
-public class RadialMenu {
+public class RadialMenu<T> {
     private final IntConsumer setSelectedSlot;
-    private final List<RadialMenuSlot> radialMenuSlots;
+    private final List<RadialMenuSlot<T>> radialMenuSlots;
     private final boolean showMoreSecondaryItems;
     private final SecondaryIconPosition secondaryIconStartingPosition;
-    private final DrawCallback drawCallback;
+    private final DrawCallback<T> drawCallback;
     private final int offset;
-
-    private RadialMenu(IntConsumer setSelectedSlot, List<RadialMenuSlot> radialMenuSlots, boolean showMoreSecondaryItems, SecondaryIconPosition secondaryIconStartingPosition, DrawCallback drawCallback, int offset) {
-        this.setSelectedSlot = setSelectedSlot;
-        this.radialMenuSlots = radialMenuSlots;
-        this.showMoreSecondaryItems = showMoreSecondaryItems;
-        this.secondaryIconStartingPosition = secondaryIconStartingPosition;
-        this.drawCallback = drawCallback;
-        this.offset = offset;
-    }
 
     /**
      * Returns the basic SpellBook-Like Radial Menu configuration.
@@ -34,8 +25,13 @@ public class RadialMenu {
      *                        YOU are responsible to provide a method that handles the objects provided in your RadialMenuSlots
      * @param offset          Additional offset amount for secondary icons. If your Icons don't above each other try around with this parameter
      */
-    public static RadialMenu getRadialMenu(IntConsumer setSelectedSlot, List<RadialMenuSlot> radialMenuSlots, DrawCallback drawCallback, int offset) {
-        return new RadialMenu(setSelectedSlot, radialMenuSlots, false, SecondaryIconPosition.SOUTH, drawCallback, offset);
+    public RadialMenu(IntConsumer setSelectedSlot, List<RadialMenuSlot<T>> radialMenuSlots, DrawCallback<T> drawCallback, int offset) {
+        this.setSelectedSlot = setSelectedSlot;
+        this.radialMenuSlots = radialMenuSlots;
+        this.showMoreSecondaryItems = false;
+        this.secondaryIconStartingPosition = SecondaryIconPosition.NORTH;
+        this.drawCallback = drawCallback;
+        this.offset = offset;
     }
 
     /**
@@ -49,12 +45,16 @@ public class RadialMenu {
      *                        YOU are responsible to provide a method that handles the objects provided in your RadialMenuSlots
      * @param offset          Additional offset amount for secondary icons. If your Icons don't above each other try around with this parameter
      */
-    public static RadialMenu getAdvancedRadialMenu(IntConsumer setSelectedSlot, List<RadialMenuSlot> radialMenuSlots,
-                                                   SecondaryIconPosition secondaryIconStartingPosition, DrawCallback drawCallback, int offset) {
-        return new RadialMenu(setSelectedSlot, radialMenuSlots, true, secondaryIconStartingPosition, drawCallback, offset);
+    public RadialMenu(IntConsumer setSelectedSlot, List<RadialMenuSlot<T>> radialMenuSlots, SecondaryIconPosition secondaryIconStartingPosition, DrawCallback<T> drawCallback, int offset) {
+        this.setSelectedSlot = setSelectedSlot;
+        this.radialMenuSlots = radialMenuSlots;
+        this.showMoreSecondaryItems = true;
+        this.secondaryIconStartingPosition = secondaryIconStartingPosition;
+        this.drawCallback = drawCallback;
+        this.offset = offset;
     }
 
-    public List<RadialMenuSlot> getRadialMenuSlots() {
+    public List<RadialMenuSlot<T>> getRadialMenuSlots() {
         return radialMenuSlots;
     }
 
@@ -70,7 +70,7 @@ public class RadialMenu {
         return this.secondaryIconStartingPosition;
     }
 
-    public void drawIcon(Object objectToBeDrawn, PoseStack poseStack, int positionX, int positionY, int size) {
+    public void drawIcon(T objectToBeDrawn, PoseStack poseStack, int positionX, int positionY, int size) {
         this.drawCallback.accept(objectToBeDrawn, poseStack, positionX, positionY, size);
     }
 

@@ -157,24 +157,24 @@ public class SpellBook extends Item implements IAnimatable, ICasterTool {
         Minecraft.getInstance().setScreen(new GuiRadialMenu(getRadialMenuProvider(stack)));
     }
 
-    private RadialMenu getRadialMenuProvider(ItemStack itemStack) {
-        return RadialMenu.getRadialMenu((int slot) -> {
-                    BookCaster caster = new BookCaster(itemStack);
-                    caster.setCurrentSlot(slot);
-                    Networking.INSTANCE.sendToServer(new PacketSetBookMode(itemStack.getTag()));
-                },
+    private RadialMenu<ResourceLocation> getRadialMenuProvider(ItemStack itemStack) {
+        return new RadialMenu<>((int slot) -> {
+            BookCaster caster = new BookCaster(itemStack);
+            caster.setCurrentSlot(slot);
+            Networking.INSTANCE.sendToServer(new PacketSetBookMode(itemStack.getTag()));
+        },
                 getRadialMenuSlots(itemStack),
                 GuiRadialMenuUtils::drawTextureFromResourceLocation,
                 3);
     }
 
-    private List<RadialMenuSlot> getRadialMenuSlots(ItemStack itemStack) {
+    private List<RadialMenuSlot<ResourceLocation>> getRadialMenuSlots(ItemStack itemStack) {
         BookCaster spellCaster = new BookCaster(itemStack);
-        List<RadialMenuSlot> radialMenuSlots = new ArrayList<>();
+        List<RadialMenuSlot<ResourceLocation>> radialMenuSlots = new ArrayList<>();
         for (int i = 1; i <= spellCaster.getMaxSlots(); i++) {
             Spell spell = spellCaster.getSpell(i);
             ResourceLocation primaryIcon = null;
-            List<Object> secondaryIcons = new ArrayList<>();
+            List<ResourceLocation> secondaryIcons = new ArrayList<>();
             for (AbstractSpellPart p : spell.recipe) {
                 if (p instanceof AbstractCastMethod) {
                     secondaryIcons.add(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + p.getIcon()));
@@ -185,7 +185,7 @@ public class SpellBook extends Item implements IAnimatable, ICasterTool {
                     break;
                 }
             }
-            radialMenuSlots.add(new RadialMenuSlot(spellCaster.getSpellName(i), primaryIcon, secondaryIcons));
+            radialMenuSlots.add(new RadialMenuSlot<ResourceLocation>(spellCaster.getSpellName(i), primaryIcon, secondaryIcons));
         }
         return radialMenuSlots;
     }
