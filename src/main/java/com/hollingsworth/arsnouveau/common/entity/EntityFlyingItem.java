@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -22,7 +23,10 @@ import software.bernie.geckolib3.core.easing.EasingManager;
 import software.bernie.geckolib3.core.easing.EasingType;
 
 
-public class EntityFlyingItem extends EntityFollowProjectile {
+public class EntityFlyingItem extends ColoredProjectile {
+    public static final EntityDataAccessor<BlockPos> to = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.BLOCK_POS);
+    public static final EntityDataAccessor<BlockPos> from = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.BLOCK_POS);
+    public static final EntityDataAccessor<Boolean> SPAWN_TOUCH = SynchedEntityData.defineId(EntityFlyingItem.class, EntityDataSerializers.BOOLEAN);
 
     public int age;
     //    int age;
@@ -85,13 +89,13 @@ public class EntityFlyingItem extends EntityFollowProjectile {
      * is between min and max. 0 means value = max, and 1 means value = min.
      */
     public double normalize(double value, double min, double max) {
-        return 1 - ((value - min) / (max - min));
+        return 1.0 - ((value - min) / (max - min));
     }
     boolean wentUp;
 
     @Override
     public void tick() {
-
+        super.tick();
         this.age++;
 
 
@@ -162,37 +166,18 @@ public class EntityFlyingItem extends EntityFollowProjectile {
     public void setDistanceAdjust(float offset){
         this.entityData.set(OFFSET, offset);
         this.entityData.set(DIDOFFSET, true);
-
     }
 
     private double getDistanceAdjustment(BlockPos start, BlockPos end) {
         if(this.entityData.get(DIDOFFSET))
             return this.entityData.get(OFFSET);
-
         double distance = BlockUtil.distanceFrom(start, end);
-
         if(distance <= 1.5)
             return 2.5;
-
-
 
         return 3;
     }
 
-    public Vec3 getLerped(){
-        BlockPos start = entityData.get(from);
-        BlockPos end = entityData.get(to);
-        double startY = start.getY();
-        double endY = end.getY() +4.0;
-        double time = 1 - normalize(age, 0.0, 100);
-
-        double yOffset = -3.0;
-        EasingType type = EasingType.NONE;
-        double lerpX = lerp(time, (double)start.getX() +0.5, (double)end.getX()+0.5, type);
-        double lerpY = lerp(time, lerp(time, startY, endY, type), lerp(time,endY, startY, type), type);
-        double lerpZ = lerp(time,(double)start.getZ()+0.5, (double)end.getZ()+0.5, type);
-        return new Vec3(lerpX, lerpY, lerpZ);
-    }
     @Override
     public void load(CompoundTag compound) {
         super.load(compound);
@@ -202,6 +187,8 @@ public class EntityFlyingItem extends EntityFollowProjectile {
         this.age = compound.getInt("age");
         this.entityData.set(DIDOFFSET,compound.getBoolean("didoffset"));
         this.entityData.set(OFFSET,compound.getFloat("offset") );
+        this.entityData.set(EntityFollowProjectile.from, NBTUtil.getBlockPos(compound, "from"));
+        this.entityData.set(EntityFollowProjectile.to, NBTUtil.getBlockPos(compound, "to"));
     }
 
     @Override
@@ -215,6 +202,10 @@ public class EntityFlyingItem extends EntityFollowProjectile {
         compound.putInt("age", age);
         compound.putBoolean("didoffset", this.entityData.get(DIDOFFSET));
         compound.putFloat("offset", this.entityData.get(OFFSET));
+        if(from != null)
+            NBTUtil.storeBlockPos(compound, "from",  this.entityData.get(EntityFollowProjectile.from));
+        if(to != null)
+            NBTUtil.storeBlockPos(compound, "to",  this.entityData.get(EntityFollowProjectile.to));
     }
 
     public ItemStack getStack(){
@@ -227,12 +218,11 @@ public class EntityFlyingItem extends EntityFollowProjectile {
         this.entityData.define(HELD_ITEM, ItemStack.EMPTY);
         this.entityData.define(OFFSET, 0.0f);
         this.entityData.define(DIDOFFSET, false);
+        this.entityData.define(to,new BlockPos(0,0,0));
+        this.entityData.define(from,new BlockPos(0,0,0));
+        this.entityData.define(SPAWN_TOUCH, true);
     }
 
-    @Override
-    public boolean defaultsBurst() {
-        return true;
-    }
 
     @Override
     public EntityType<?> getType() {
