@@ -4,11 +4,17 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "ars_nouveau.refmap.json",
   "plugin": "com.hollingsworth.arsnouveau.common.mixin.MixinPlugin",
+  "client": [
+    "light.LevelRendererMixin",
+    "light.LightEntityMixin",
+    "light.EntityRendererMixin",
+    "light.ClientMixin"
+  ],
   "mixins": [
-    "ClientElytraMixin",
-    "ElytraPlayerMixin",
+    "elytra.ClientElytraMixin",
+    "elytra.ElytraPlayerMixin",
     "ExpInvokerMixin",
-    "MixinLivingEntity",
+    "elytra.MixinLivingEntity",
     "PotionRecipeMixin"
   ],
   "injectors": {

@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.common.mixin;
+package com.hollingsworth.arsnouveau.common.mixin.elytra;
 
 
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
