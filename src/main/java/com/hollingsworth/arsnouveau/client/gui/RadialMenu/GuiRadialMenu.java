@@ -182,7 +182,7 @@ public class GuiRadialMenu<T> extends Screen {
         }
     }
 
-    private void drawSecondaryIcons(PoseStack ms, int positionXOfPrimaryIcon, int positionYOfPrimaryIcon, List<T> secondarySlotIcons) {
+    public void drawSecondaryIcons(PoseStack ms, int positionXOfPrimaryIcon, int positionYOfPrimaryIcon, List<T> secondarySlotIcons) {
         if (!radialMenu.isShowMoreSecondaryItems()) {
             drawSecondaryIcon(ms, secondarySlotIcons.get(0), positionXOfPrimaryIcon, positionYOfPrimaryIcon, radialMenu.getSecondaryIconStartingPosition());
         } else {
@@ -194,7 +194,7 @@ public class GuiRadialMenu<T> extends Screen {
         }
     }
 
-    private void drawSecondaryIcon(PoseStack poseStack, T item, int positionXOfPrimaryIcon, int positionYOfPrimaryIcon, SecondaryIconPosition secondaryIconPosition) {
+    public void drawSecondaryIcon(PoseStack poseStack, T item, int positionXOfPrimaryIcon, int positionYOfPrimaryIcon, SecondaryIconPosition secondaryIconPosition) {
         int offset = radialMenu.getOffset();
         switch (secondaryIconPosition) {
             case NORTH -> radialMenu.drawIcon(item, poseStack, positionXOfPrimaryIcon + offset, positionYOfPrimaryIcon - 14 + offset, 10);
@@ -204,7 +204,7 @@ public class GuiRadialMenu<T> extends Screen {
         }
     }
 
-    private void drawSliceName(String sliceName, ItemStack stack, int posX, int posY) {
+    public void drawSliceName(String sliceName, ItemStack stack, int posX, int posY) {
         if (!radialMenu.isShowMoreSecondaryItems()) {
             this.itemRenderer.renderGuiItemDecorations(font, stack, posX + 5, posY, sliceName);
         } else {
@@ -232,7 +232,7 @@ public class GuiRadialMenu<T> extends Screen {
         return true;
     }
 
-    private void drawSlice(
+    public void drawSlice(
             BufferBuilder buffer, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int r, int g, int b, int a) {
         float angle = endAngle - startAngle;
         int sections = Math.max(1, Mth.ceil(angle / PRECISION));

@@ -157,7 +157,7 @@ public class SpellBook extends Item implements IAnimatable, ICasterTool {
         Minecraft.getInstance().setScreen(new GuiRadialMenu(getRadialMenuProvider(stack)));
     }
 
-    private RadialMenu<ResourceLocation> getRadialMenuProvider(ItemStack itemStack) {
+    public RadialMenu<ResourceLocation> getRadialMenuProvider(ItemStack itemStack) {
         return new RadialMenu<>((int slot) -> {
             BookCaster caster = new BookCaster(itemStack);
             caster.setCurrentSlot(slot);
@@ -168,7 +168,7 @@ public class SpellBook extends Item implements IAnimatable, ICasterTool {
                 3);
     }
 
-    private List<RadialMenuSlot<ResourceLocation>> getRadialMenuSlots(ItemStack itemStack) {
+    public List<RadialMenuSlot<ResourceLocation>> getRadialMenuSlots(ItemStack itemStack) {
         BookCaster spellCaster = new BookCaster(itemStack);
         List<RadialMenuSlot<ResourceLocation>> radialMenuSlots = new ArrayList<>();
         for (int i = 1; i <= spellCaster.getMaxSlots(); i++) {
