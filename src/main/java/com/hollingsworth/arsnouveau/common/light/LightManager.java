@@ -234,7 +234,7 @@ public class LightManager {
             // lightmap is (skyLevel << 20 | blockLevel << 4)
 
             // Get vanilla block light level.
-            int blockLevel =getBlockLightNoPatch(lightmap);
+            int blockLevel = getBlockLightNoPatch(lightmap);
             if (dynamicLightLevel > blockLevel) {
                 // Equivalent to a << 4 bitshift with a little quirk: this one ensure more precision (more decimals are saved).
                 int luminance = (int) (dynamicLightLevel * 16.0);

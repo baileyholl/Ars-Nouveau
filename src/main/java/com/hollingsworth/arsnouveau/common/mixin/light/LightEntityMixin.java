@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau.common.mixin.light;
 
+import com.hollingsworth.arsnouveau.api.event.EventQueue;
+import com.hollingsworth.arsnouveau.api.event.FadeLightTimedEvent;
 import com.hollingsworth.arsnouveau.common.light.DynamLightUtil;
 import com.hollingsworth.arsnouveau.common.light.LambDynamicLight;
 import com.hollingsworth.arsnouveau.common.light.LightManager;
@@ -13,6 +15,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -54,6 +57,15 @@ public abstract class LightEntityMixin implements LambDynamicLight {
 
     @Shadow private ChunkPos chunkPosition;
     @Shadow private BlockPos blockPosition;
+
+    @Shadow public abstract Level getLevel();
+
+    @Shadow public abstract BlockPos getOnPos();
+
+    @Shadow public abstract double getZ(double pScale);
+
+    @Shadow public abstract Vec3 position();
+
     @Unique
     protected int lambdynlights$luminance = 0;
     @Unique
@@ -95,6 +107,8 @@ public abstract class LightEntityMixin implements LambDynamicLight {
     public void removed(CallbackInfo ci){
         if (this.level.isClientSide()) {
             this.setDynamicLightEnabled(false);
+            if(lambdynlights$luminance > 0)
+                EventQueue.getClientQueue().addEvent(new FadeLightTimedEvent(this.getLevel(), this.position(), 8, lambdynlights$luminance));
         }
     }
 
