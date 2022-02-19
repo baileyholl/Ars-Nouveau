@@ -2,16 +2,19 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.item.ICasterTool;
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
-import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
-import com.hollingsworth.arsnouveau.api.spell.SpellTier;
-import com.hollingsworth.arsnouveau.client.gui.GuiRadialMenu;
+import com.hollingsworth.arsnouveau.api.spell.*;
+import com.hollingsworth.arsnouveau.client.gui.RadialMenu.GuiRadialMenu;
+import com.hollingsworth.arsnouveau.client.gui.RadialMenu.GuiRadialMenuUtils;
+import com.hollingsworth.arsnouveau.client.gui.RadialMenu.RadialMenu;
+import com.hollingsworth.arsnouveau.client.gui.RadialMenu.RadialMenuSlot;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
 import com.hollingsworth.arsnouveau.client.keybindings.ModKeyBindings;
 import com.hollingsworth.arsnouveau.client.renderer.item.SpellBookRenderer;
 import com.hollingsworth.arsnouveau.common.capability.ANPlayerDataCap;
 import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketSetBookMode;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -21,6 +24,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -39,18 +43,20 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
 public class SpellBook extends Item implements IAnimatable, ICasterTool {
 
     public SpellTier tier;
+    AnimationFactory factory = new AnimationFactory(this);
 
-    public SpellBook(SpellTier tier){
+    public SpellBook(SpellTier tier) {
         super(new Item.Properties().stacksTo(1).tab(ArsNouveau.itemGroup));
         this.tier = tier;
     }
-    
+
     public SpellBook(Properties properties, SpellTier tier) {
         super(properties);
         this.tier = tier;
@@ -66,11 +72,11 @@ public class SpellBook extends Item implements IAnimatable, ICasterTool {
         ItemStack stack = playerIn.getItemInHand(handIn);
 
         CapabilityRegistry.getMana(playerIn).ifPresent(iMana -> {
-            if(iMana.getBookTier() < this.tier.value){
+            if (iMana.getBookTier() < this.tier.value) {
                 iMana.setBookTier(this.tier.value);
             }
             IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(playerIn).orElse(new ANPlayerDataCap());
-            if(iMana.getGlyphBonus() < cap.getKnownGlyphs().size()){
+            if (iMana.getGlyphBonus() < cap.getKnownGlyphs().size()) {
                 iMana.setGlyphBonus(cap.getKnownGlyphs().size());
             }
         });
@@ -112,9 +118,8 @@ public class SpellBook extends Item implements IAnimatable, ICasterTool {
     }
 
     @Override
-    public void registerControllers(AnimationData data) {}
-
-    AnimationFactory factory = new AnimationFactory(this);
+    public void registerControllers(AnimationData data) {
+    }
 
     @Override
     public AnimationFactory getFactory() {
@@ -149,16 +154,74 @@ public class SpellBook extends Item implements IAnimatable, ICasterTool {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void onRadialKeyPressed(ItemStack stack, Player player) {
-        Minecraft.getInstance().setScreen(new GuiRadialMenu(stack));
+        Minecraft.getInstance().setScreen(new GuiRadialMenu(getRadialMenuProvider(stack)));
     }
 
-    public static class BookCaster extends SpellCaster{
+    public RadialMenu<ResourceLocation> getRadialMenuProvider(ItemStack itemStack) {
+        return new RadialMenu<>((int slot) -> {
+            BookCaster caster = new BookCaster(itemStack);
+            caster.setCurrentSlot(slot);
+            Networking.INSTANCE.sendToServer(new PacketSetBookMode(itemStack.getTag()));
+        },
+                getRadialMenuSlots(itemStack),
+                GuiRadialMenuUtils::drawTextureFromResourceLocation,
+                3);
+    }
 
-        public BookCaster(ItemStack stack){
+    public List<RadialMenuSlot<ResourceLocation>> getRadialMenuSlots(ItemStack itemStack) {
+        BookCaster spellCaster = new BookCaster(itemStack);
+        List<RadialMenuSlot<ResourceLocation>> radialMenuSlots = new ArrayList<>();
+        for (int i = 1; i <= spellCaster.getMaxSlots(); i++) {
+            Spell spell = spellCaster.getSpell(i);
+            ResourceLocation primaryIcon = null;
+            List<ResourceLocation> secondaryIcons = new ArrayList<>();
+            for (AbstractSpellPart p : spell.recipe) {
+                if (p instanceof AbstractCastMethod) {
+                    secondaryIcons.add(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + p.getIcon()));
+                }
+
+                if (p instanceof AbstractEffect) {
+                    primaryIcon = new ResourceLocation(ArsNouveau.MODID, "textures/items/" + p.getIcon());
+                    break;
+                }
+            }
+            radialMenuSlots.add(new RadialMenuSlot<ResourceLocation>(spellCaster.getSpellName(i), primaryIcon, secondaryIcons));
+        }
+        return radialMenuSlots;
+    }
+
+
+    /* I left this in as an example of how to set up a RadialMenu with Item-Icons instead of Png-Icons
+       Just use this method, set the offset to 0 and switch GuiRadialMenuUtils::drawTextureFromResourceLocation
+       with GuiRadialMenuUtils::drawItemAsIcon and suddenly you're using rendered Items instead of Pngs!
+    private List<RadialMenuSlot> getRadialMenuSlotsWithItemsAsTextures(ItemStack itemStack) {
+        BookCaster spellCaster = new BookCaster(itemStack);
+        List<RadialMenuSlot> radialMenuSlots = new ArrayList<>();
+        for (int i = 1; i <= spellCaster.getMaxSlots(); i++) {
+            Spell spell = spellCaster.getSpell(i);
+            Item primaryIcon = null;
+            List<Object> secondaryIcons = new ArrayList<>();
+            for (AbstractSpellPart p : spell.recipe) {
+                if (p instanceof AbstractCastMethod) {
+                    primaryIcon = ArsNouveauAPI.getInstance().getGlyphItemMap().get(p.getId());
+                }
+
+                if (p instanceof AbstractEffect) {
+                    secondaryIcons.add(ArsNouveauAPI.getInstance().getGlyphItem(p.getId()));
+                }
+            }
+            radialMenuSlots.add(new RadialMenuSlot(spellCaster.getSpellName(i), primaryIcon, secondaryIcons));
+        }
+        return radialMenuSlots;
+    }*/
+
+    public static class BookCaster extends SpellCaster {
+
+        public BookCaster(ItemStack stack) {
             super(stack);
         }
 
-        public BookCaster(CompoundTag tag){
+        public BookCaster(CompoundTag tag) {
             super(tag);
         }
 

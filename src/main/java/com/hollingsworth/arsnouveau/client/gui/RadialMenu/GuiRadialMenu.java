@@ -1,14 +1,5 @@
-package com.hollingsworth.arsnouveau.client.gui;
+package com.hollingsworth.arsnouveau.client.gui.RadialMenu;
 
-import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
-import com.hollingsworth.arsnouveau.api.spell.AbstractEffect;
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
-import com.hollingsworth.arsnouveau.api.util.CasterUtil;
-import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
-import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketSetBookMode;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
@@ -18,7 +9,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
@@ -28,27 +18,31 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.List;
+
 @Mod.EventBusSubscriber(Dist.CLIENT)
-public class GuiRadialMenu extends Screen {
+public class GuiRadialMenu<T> extends Screen {
     private static final float PRECISION = 5.0f;
+    private static final int MAX_SLOTS = 20;
 
     private boolean closing;
     private double startAnimation;
-    private ItemStack casterStack;
+    private RadialMenu<T> radialMenu;
+    private List<RadialMenuSlot<T>> radialMenuSlots;
     private int selectedItem;
 
 
-    public GuiRadialMenu(ItemStack casterStack) {
+    public GuiRadialMenu(RadialMenu<T> radialMenu) {
         super(new TextComponent(""));
-        this.casterStack = casterStack;
+        this.radialMenu = radialMenu;
+        this.radialMenuSlots = this.radialMenu.getRadialMenuSlots();
         this.closing = false;
         this.minecraft = Minecraft.getInstance();
         this.startAnimation = getMinecraft().level.getGameTime() + (double) getMinecraft().getFrameTime();
         this.selectedItem = -1;
     }
 
-
-    public GuiRadialMenu(){
+    public GuiRadialMenu() {
         super(new TextComponent(""));
     }
 
@@ -60,6 +54,7 @@ public class GuiRadialMenu extends Screen {
             }
         }
     }
+
     @SubscribeEvent
     public static void updateInputEvent(MovementInputUpdateEvent event) {
         if (Minecraft.getInstance().screen instanceof GuiRadialMenu) {
@@ -76,16 +71,16 @@ public class GuiRadialMenu extends Screen {
             eInput.jumping = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyJump.getKey().getValue());
             eInput.shiftKeyDown = InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), settings.keyShift.getKey().getValue());
             if (Minecraft.getInstance().player.isMovingSlowly()) {
-                eInput.leftImpulse = (float)((double)eInput.leftImpulse * 0.3D);
-                eInput.forwardImpulse = (float)((double)eInput.forwardImpulse * 0.3D);
+                eInput.leftImpulse = (float) ((double) eInput.leftImpulse * 0.3D);
+                eInput.forwardImpulse = (float) ((double) eInput.forwardImpulse * 0.3D);
             }
         }
     }
 
 
     @Override
-    public void render(PoseStack ms,int mouseX, int mouseY, float partialTicks) {
-        super.render(ms,mouseX, mouseY, partialTicks);
+    public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
+        super.render(ms, mouseX, mouseY, partialTicks);
         final float OPEN_ANIMATION_LENGTH = 2.5f;
         long worldTime = Minecraft.getInstance().level.getGameTime();
         float animationTime = (float) (worldTime + partialTicks - startAnimation);
@@ -97,16 +92,16 @@ public class GuiRadialMenu extends Screen {
         float radiusOut = radiusIn * 2;
         float itemRadius = (radiusIn + radiusOut) * 0.5f;
         float animTop = (1 - animProgress) * height / 2.0f;
-        int x = width / 2;
-        int y = height / 2;
+        int centerOfScreenX = width / 2;
+        int centerOfScreenY = height / 2;
 
-        int numberOfSlices = 10;
+        int numberOfSlices = Math.min(MAX_SLOTS, radialMenuSlots.size());
 
-        double a = Math.toDegrees(Math.atan2(mouseY - y, mouseX - x));
-        double d = Math.sqrt(Math.pow(mouseX - x, 2) + Math.pow(mouseY - y, 2));
-        float s0 = (((0 - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
-        if (a < s0) {
-            a += 360;
+        double mousePositionInDegreesInRelationToCenterOfScreen = Math.toDegrees(Math.atan2(mouseY - centerOfScreenY, mouseX - centerOfScreenX));
+        double mouseDistanceToCenterOfScreen = Math.sqrt(Math.pow(mouseX - centerOfScreenX, 2) + Math.pow(mouseY - centerOfScreenY, 2));
+        float slot0 = (((0 - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
+        if (mousePositionInDegreesInRelationToCenterOfScreen < slot0) {
+            mousePositionInDegreesInRelationToCenterOfScreen += 360;
         }
 
         ms.pushPose();
@@ -127,9 +122,9 @@ public class GuiRadialMenu extends Screen {
         if (!closing) {
             selectedItem = -1;
             for (int i = 0; i < numberOfSlices; i++) {
-                float s = (((i - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
-                float e = (((i + 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
-                if (a >= s && a < e && d >= radiusIn && d < radiusOut) {
+                float sliceBorderLeft = (((i - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
+                float sliceBorderRight = (((i + 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
+                if (mousePositionInDegreesInRelationToCenterOfScreen >= sliceBorderLeft && mousePositionInDegreesInRelationToCenterOfScreen < sliceBorderRight && mouseDistanceToCenterOfScreen >= radiusIn && mouseDistanceToCenterOfScreen < radiusOut) {
                     selectedItem = i;
                     break;
                 }
@@ -138,72 +133,91 @@ public class GuiRadialMenu extends Screen {
 
 
         for (int i = 0; i < numberOfSlices; i++) {
-            float s = (((i - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
-            float e = (((i + 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
+            float sliceBorderLeft = (((i - 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
+            float sliceBorderRight = (((i + 0.5f) / (float) numberOfSlices) + 0.25f) * 360;
             if (selectedItem == i) {
-                drawSlice(buffer, x, y, 10, radiusIn, radiusOut, s, e, 63, 161, 191, 60);
+                drawSlice(buffer, centerOfScreenX, centerOfScreenY, 10, radiusIn, radiusOut, sliceBorderLeft, sliceBorderRight, 63, 161, 191, 60);
                 hasMouseOver = true;
                 mousedOverSlot = selectedItem;
-            }
-            else
-                drawSlice(buffer, x, y, 10, radiusIn, radiusOut, s, e, 0, 0, 0, 64);
+            } else
+                drawSlice(buffer, centerOfScreenX, centerOfScreenY, 10, radiusIn, radiusOut, sliceBorderLeft, sliceBorderRight, 0, 0, 0, 64);
         }
 
         tessellator.end();
         RenderSystem.enableTexture();
         RenderSystem.disableBlend();
-        ISpellCaster caster = CasterUtil.getCaster(casterStack);
         if (hasMouseOver && mousedOverSlot != -1) {
-            int adjusted =  (mousedOverSlot+ 6) % 10;
-            adjusted = adjusted == 0 ? 10 : adjusted;
-            drawCenteredString(ms,font, caster.getSpellName(adjusted), width/2,(height - font.lineHeight) / 2,16777215);
+            int adjusted = (mousedOverSlot + (numberOfSlices / 2 + 1)) % numberOfSlices;
+            adjusted = adjusted == 0 ? numberOfSlices - 1 : adjusted;
+            drawCenteredString(ms, font, radialMenuSlots.get(adjusted).slotName(), width / 2, (height - font.lineHeight) / 2, 16777215);
         }
 
         ms.popPose();
-        for(int i = 0; i< numberOfSlices; i++){
+        for (int i = 0; i < numberOfSlices; i++) {
             ItemStack stack = new ItemStack(Blocks.DIRT);
             float angle1 = ((i / (float) numberOfSlices) - 0.25f) * 2 * (float) Math.PI;
-            float posX = x - 8 + itemRadius * (float) Math.cos(angle1);
-            float posY = y - 8 + itemRadius * (float) Math.sin(angle1);
-
-            String resourceIcon = "";
-            String castType = "";
-            for(AbstractSpellPart p : caster.getSpell(i + 1).recipe){
-                if(p instanceof AbstractCastMethod)
-                    castType = p.getIcon();
-
-                if(p instanceof AbstractEffect){
-                    resourceIcon = p.getIcon();
-                    break;
-                }
+            if (numberOfSlices % 2 != 0) {
+                angle1 += Math.PI / numberOfSlices;
             }
+            float posX = centerOfScreenX - 8 + itemRadius * (float) Math.cos(angle1);
+            float posY = centerOfScreenY - 8 + itemRadius * (float) Math.sin(angle1);
 
             RenderSystem.disableDepthTest();
-            if(!resourceIcon.isEmpty()) {
-                GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + resourceIcon),
-                        (int) posX, (int) posY, 0, 0, 16, 16, 16, 16,ms);
-                GuiSpellBook.drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/items/" + castType),
-                        (int) posX +3 , (int) posY - 10, 0, 0, 10, 10, 10, 10,ms);
+
+            T primarySlotIcon = radialMenuSlots.get(i).primarySlotIcon();
+            List<T> secondarySlotIcons = radialMenuSlots.get(i).secondarySlotIcons();
+            if (primarySlotIcon != null) {
+                radialMenu.drawIcon(primarySlotIcon, ms, (int) posX, (int) posY, 16);
+                if (secondarySlotIcons != null && !secondarySlotIcons.isEmpty()) {
+                    drawSecondaryIcons(ms, (int) posX, (int) posY, secondarySlotIcons);
+                }
             }
-            this.itemRenderer.renderGuiItemDecorations(font, stack, (int) posX + 5, (int) posY, String.valueOf(i + 1));
-
+            drawSliceName(String.valueOf(i + 1), stack, (int) posX, (int) posY);
         }
-
 
         if (mousedOverSlot != -1) {
-            int adjusted = (mousedOverSlot + 6) % 10;
-            adjusted = adjusted == 0 ? 10 : adjusted;
+            int adjusted = (mousedOverSlot + (numberOfSlices / 2 + 1)) % numberOfSlices;
+            adjusted = adjusted == 0 ? numberOfSlices - 1 : adjusted;
             selectedItem = adjusted;
         }
+    }
 
+    public void drawSecondaryIcons(PoseStack ms, int positionXOfPrimaryIcon, int positionYOfPrimaryIcon, List<T> secondarySlotIcons) {
+        if (!radialMenu.isShowMoreSecondaryItems()) {
+            drawSecondaryIcon(ms, secondarySlotIcons.get(0), positionXOfPrimaryIcon, positionYOfPrimaryIcon, radialMenu.getSecondaryIconStartingPosition());
+        } else {
+            SecondaryIconPosition currentSecondaryIconPosition = radialMenu.getSecondaryIconStartingPosition();
+            for (T secondarySlotIcon : secondarySlotIcons) {
+                drawSecondaryIcon(ms, secondarySlotIcon, positionXOfPrimaryIcon, positionYOfPrimaryIcon, currentSecondaryIconPosition);
+                currentSecondaryIconPosition = SecondaryIconPosition.getNextPositon(currentSecondaryIconPosition);
+            }
+        }
+    }
+
+    public void drawSecondaryIcon(PoseStack poseStack, T item, int positionXOfPrimaryIcon, int positionYOfPrimaryIcon, SecondaryIconPosition secondaryIconPosition) {
+        int offset = radialMenu.getOffset();
+        switch (secondaryIconPosition) {
+            case NORTH -> radialMenu.drawIcon(item, poseStack, positionXOfPrimaryIcon + offset, positionYOfPrimaryIcon - 14 + offset, 10);
+            case EAST -> radialMenu.drawIcon(item, poseStack, positionXOfPrimaryIcon + 14 + offset, positionYOfPrimaryIcon + offset, 10);
+            case SOUTH -> radialMenu.drawIcon(item, poseStack, positionXOfPrimaryIcon + offset, positionYOfPrimaryIcon + 14 + offset, 10);
+            case WEST -> radialMenu.drawIcon(item, poseStack, positionXOfPrimaryIcon - 14 + offset, positionYOfPrimaryIcon + offset, 10);
+        }
+    }
+
+    public void drawSliceName(String sliceName, ItemStack stack, int posX, int posY) {
+        if (!radialMenu.isShowMoreSecondaryItems()) {
+            this.itemRenderer.renderGuiItemDecorations(font, stack, posX + 5, posY, sliceName);
+        } else {
+            this.itemRenderer.renderGuiItemDecorations(font, stack, posX + 5, posY + 5, sliceName);
+        }
     }
 
     @Override
     public boolean keyPressed(int key, int scanCode, int modifiers) {
         int adjustedKey = key - 48;
-        if(adjustedKey >= 0 && adjustedKey < 10){
+        if (adjustedKey >= 0 && adjustedKey < 10) {
             selectedItem = adjustedKey == 0 ? 10 : adjustedKey;
-            mouseClicked(0,0,0);
+            mouseClicked(0, 0, 0);
             return true;
         }
         return super.keyPressed(key, scanCode, modifiers);
@@ -211,17 +225,14 @@ public class GuiRadialMenu extends Screen {
 
     @Override
     public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
-
-        if(this.selectedItem != -1){
-            ISpellCaster caster =  CasterUtil.getCaster(casterStack);
-            caster.setCurrentSlot(selectedItem);
-            Networking.INSTANCE.sendToServer(new PacketSetBookMode(casterStack.getTag()));
+        if (this.selectedItem != -1) {
+            radialMenu.setCurrentSlot(selectedItem);
             minecraft.player.closeContainer();
         }
         return true;
     }
 
-    private void drawSlice(
+    public void drawSlice(
             BufferBuilder buffer, float x, float y, float z, float radiusIn, float radiusOut, float startAngle, float endAngle, int r, int g, int b, int a) {
         float angle = endAngle - startAngle;
         int sections = Math.max(1, Mth.ceil(angle / PRECISION));
@@ -230,8 +241,7 @@ public class GuiRadialMenu extends Screen {
         endAngle = (float) Math.toRadians(endAngle);
         angle = endAngle - startAngle;
 
-        for (int i = 0; i < sections; i++)
-        {
+        for (int i = 0; i < sections; i++) {
             float angle1 = startAngle + (i / (float) sections) * angle;
             float angle2 = startAngle + ((i + 1) / (float) sections) * angle;
 
@@ -255,8 +265,6 @@ public class GuiRadialMenu extends Screen {
     public boolean isPauseScreen() {
         return false;
     }
-
-
 }
 
 /*
