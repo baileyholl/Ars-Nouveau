@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
+import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -31,9 +31,9 @@ public class RitualBrazierBlock extends TickableModBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if(!(worldIn.getBlockEntity(pos) instanceof RitualTile) || handIn != InteractionHand.MAIN_HAND || !player.getMainHandItem().isEmpty())
+        if(!(worldIn.getBlockEntity(pos) instanceof RitualBrazierTile) || handIn != InteractionHand.MAIN_HAND || !player.getMainHandItem().isEmpty())
             return super.use(state, worldIn, pos, player, handIn, hit);
-        RitualTile tile = (RitualTile) worldIn.getBlockEntity(pos);
+        RitualBrazierTile tile = (RitualBrazierTile) worldIn.getBlockEntity(pos);
         if(tile.ritual != null && !tile.isRitualDone()) {
             tile.startRitual();
         }
@@ -48,8 +48,8 @@ public class RitualBrazierBlock extends TickableModBlock {
     @Override
     public void neighborChanged(BlockState state, Level world, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, world, pos, blockIn, fromPos, isMoving);
-        if(!world.isClientSide() && world.getBlockEntity(pos) instanceof RitualTile){
-            ((RitualTile) world.getBlockEntity(pos)).isOff = world.hasNeighborSignal(pos);
+        if(!world.isClientSide() && world.getBlockEntity(pos) instanceof RitualBrazierTile){
+            ((RitualBrazierTile) world.getBlockEntity(pos)).isOff = world.hasNeighborSignal(pos);
             BlockUtil.safelyUpdateState(world, pos);
         }
     }
@@ -57,8 +57,8 @@ public class RitualBrazierBlock extends TickableModBlock {
     @Override
     public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         super.playerWillDestroy(worldIn, pos, state, player);
-        if(worldIn.getBlockEntity(pos) instanceof RitualTile){
-            RitualTile tile = (RitualTile) worldIn.getBlockEntity(pos);
+        if(worldIn.getBlockEntity(pos) instanceof RitualBrazierTile){
+            RitualBrazierTile tile = (RitualBrazierTile) worldIn.getBlockEntity(pos);
             if(tile.ritual != null && !tile.ritual.isRunning() && !tile.ritual.isDone()){
                 worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ArsNouveauAPI.getInstance().getRitualItemMap().get(tile.ritual.getID()))));
             }
@@ -86,6 +86,6 @@ public class RitualBrazierBlock extends TickableModBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new RitualTile(pos, state);
+        return new RitualBrazierTile(pos, state);
     }
 }

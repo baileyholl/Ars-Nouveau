@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleSparkleData;
-import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
+import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -31,7 +31,7 @@ public class EntityRitualProjectile extends ColoredProjectile{
     @Override
     public void tick() {
         super.tick();
-        if(!level.isClientSide() && (tilePos == null || !(level.getBlockEntity(tilePos) instanceof RitualTile) || ((RitualTile) level.getBlockEntity(tilePos)).ritual == null )) {
+        if(!level.isClientSide() && (tilePos == null || !(level.getBlockEntity(tilePos) instanceof RitualBrazierTile) || ((RitualBrazierTile) level.getBlockEntity(tilePos)).ritual == null )) {
             this.remove(RemovalReason.DISCARDED);
             return;
         }

@@ -4,7 +4,7 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.event.FlightRefreshEvent;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
+import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateFlight;
@@ -57,9 +57,9 @@ public class RitualFlight extends AbstractRitual {
 
         public static @Nullable RitualFlight getFlightRitual(Level world, BlockPos pos){
             BlockEntity entity = world.getBlockEntity(pos);
-            if(entity instanceof RitualTile){
-                if(((RitualTile) entity).ritual instanceof RitualFlight)
-                    return (RitualFlight) ((RitualTile) entity).ritual;
+            if(entity instanceof RitualBrazierTile){
+                if(((RitualBrazierTile) entity).ritual instanceof RitualFlight)
+                    return (RitualFlight) ((RitualBrazierTile) entity).ritual;
             }
             return null;
         }
@@ -69,9 +69,9 @@ public class RitualFlight extends AbstractRitual {
             if(pos == null)
                 return;
             BlockEntity tileEntity = entity.level.getBlockEntity(pos);
-            if(tileEntity instanceof RitualTile){
-                if(((RitualTile) tileEntity).ritual instanceof RitualFlight) {
-                    ((RitualTile) tileEntity).ritual.setNeedsMana(true);
+            if(tileEntity instanceof RitualBrazierTile){
+                if(((RitualBrazierTile) tileEntity).ritual instanceof RitualFlight) {
+                    ((RitualBrazierTile) tileEntity).ritual.setNeedsMana(true);
                     entity.addEffect(new MobEffectInstance(ModPotions.FLIGHT_EFFECT, 90 * 20));
                 }
             }
@@ -112,8 +112,8 @@ public class RitualFlight extends AbstractRitual {
                     e.getPlayer().abilities.flying = wasFlying;
                     Networking.sendToPlayer(new PacketUpdateFlight(true, wasFlying), e.getPlayer());
                     BlockEntity tile = e.getPlayer().level.getBlockEntity(validPos);
-                    if(tile instanceof RitualTile && ((RitualTile) tile).ritual instanceof RitualFlight){
-                        ((RitualTile) tile).ritual.setNeedsMana(true);
+                    if(tile instanceof RitualBrazierTile && ((RitualBrazierTile) tile).ritual instanceof RitualFlight){
+                        ((RitualBrazierTile) tile).ritual.setNeedsMana(true);
                     }
                 }
             }

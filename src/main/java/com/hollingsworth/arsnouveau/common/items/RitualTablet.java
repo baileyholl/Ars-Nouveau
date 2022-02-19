@@ -2,8 +2,9 @@ package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.common.block.RitualBrazierBlock;
-import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
+import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -33,7 +34,11 @@ public class RitualTablet extends ModItem{
         if(context.getLevel().getBlockState(context.getClickedPos()).getBlock() instanceof RitualBrazierBlock){
             Level world = context.getLevel();
             BlockPos pos = context.getClickedPos();
-            RitualTile tile = (RitualTile) world.getBlockEntity(pos);
+            RitualBrazierTile tile = (RitualBrazierTile) world.getBlockEntity(pos);
+            if(!world.isClientSide && !tile.canTakeAnotherRitual()){
+                context.getPlayer().sendMessage(new TranslatableComponent("ars_nouveau.ritual.no_start"), Util.NIL_UUID);
+                return InteractionResult.PASS;
+            }
             tile.setRitual(ritual.getID());
             if(!context.getPlayer().isCreative())
                 context.getItemInHand().shrink(1);

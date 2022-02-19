@@ -40,7 +40,7 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import java.util.List;
 import java.util.Random;
 
-public class RitualTile extends ModdedTile implements ITooltipProvider, IAnimatable, ILightable, ITickable {
+public class RitualBrazierTile extends ModdedTile implements ITooltipProvider, IAnimatable, ILightable, ITickable {
     public AbstractRitual ritual;
     AnimationFactory manager = new AnimationFactory(this);
     public boolean isDecorative;
@@ -49,11 +49,11 @@ public class RitualTile extends ModdedTile implements ITooltipProvider, IAnimata
     int green;
     public boolean isOff;
 
-    public RitualTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+    public RitualBrazierTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
         super(tileEntityTypeIn, pos, state);
     }
 
-    public RitualTile(BlockPos p, BlockState s){
+    public RitualBrazierTile(BlockPos p, BlockState s){
         super(BlockRegistry.RITUAL_TILE, p, s);
     }
 
@@ -173,6 +173,10 @@ public class RitualTile extends ModdedTile implements ITooltipProvider, IAnimata
         tag.putBoolean("off", isOff);
     }
 
+    public boolean canTakeAnotherRitual(){
+        return this.ritual == null || this.ritual.isRunning();
+    }
+
     public void setRitual(String selectedRitual) {
         this.ritual = ArsNouveauAPI.getInstance().getRitual(selectedRitual);
         if(ritual != null){
@@ -183,7 +187,6 @@ public class RitualTile extends ModdedTile implements ITooltipProvider, IAnimata
         }
         this.isDecorative = false;
         level.playSound(null, getBlockPos(), SoundEvents.FLINTANDSTEEL_USE, SoundSource.NEUTRAL, 1.0f, 1.0f);
-
     }
 
     @Override

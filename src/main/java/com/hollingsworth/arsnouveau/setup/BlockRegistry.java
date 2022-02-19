@@ -129,7 +129,7 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.ARCHWOOD_PLANK) public static ModBlock ARCHWOOD_PLANK;
 
     @ObjectHolder(LibBlockNames.RITUAL_BRAZIER) public static RitualBrazierBlock RITUAL_BLOCK;
-    @ObjectHolder(LibBlockNames.RITUAL_BRAZIER) public static BlockEntityType<RitualTile> RITUAL_TILE;
+    @ObjectHolder(LibBlockNames.RITUAL_BRAZIER) public static BlockEntityType<RitualBrazierTile> RITUAL_TILE;
 
     @ObjectHolder(LibBlockNames.ARCHWOOD_BUTTON) public static WoodButtonBlock ARCHWOOD_BUTTON;
     @ObjectHolder(LibBlockNames.ARCHWOOD_STAIRS) public static StairBlock ARCHWOOD_STAIRS;
@@ -338,7 +338,7 @@ public class BlockRegistry {
             event.getRegistry().register(BlockEntityType.Builder.of(VolcanicSourcelinkTile::new, BlockRegistry.VOLCANIC_BLOCK).build(null).setRegistryName(LibBlockNames.VOLCANIC_SOURCELINK));
             event.getRegistry().register(BlockEntityType.Builder.of(WixieCauldronTile::new, BlockRegistry.WIXIE_CAULDRON).build(null).setRegistryName(LibBlockNames.WIXIE_CAULDRON));
             event.getRegistry().register(BlockEntityType.Builder.of(CreativeSourceJarTile::new, BlockRegistry.CREATIVE_SOURCE_JAR).build(null).setRegistryName(LibBlockNames.CREATIVE_SOURCE_JAR));
-            event.getRegistry().register(BlockEntityType.Builder.of(RitualTile::new, BlockRegistry.RITUAL_BLOCK).build(null).setRegistryName(LibBlockNames.RITUAL_BRAZIER));
+            event.getRegistry().register(BlockEntityType.Builder.of(RitualBrazierTile::new, BlockRegistry.RITUAL_BLOCK).build(null).setRegistryName(LibBlockNames.RITUAL_BRAZIER));
             event.getRegistry().register(BlockEntityType.Builder.of(PotionJarTile::new, BlockRegistry.POTION_JAR).build(null).setRegistryName(LibBlockNames.POTION_JAR_BLOCK));
             event.getRegistry().register(BlockEntityType.Builder.of(PotionMelderTile::new, BlockRegistry.POTION_MELDER).build(null).setRegistryName(LibBlockNames.POTION_MELDER_BLOCK));
             event.getRegistry().register(BlockEntityType.Builder.of(SconceTile::new, BlockRegistry.SCONCE_BLOCK).build(null).setRegistryName(LibBlockNames.SCONCE));

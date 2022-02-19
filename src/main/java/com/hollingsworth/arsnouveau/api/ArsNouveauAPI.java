@@ -10,7 +10,7 @@ import com.hollingsworth.arsnouveau.api.ritual.IScryer;
 import com.hollingsworth.arsnouveau.api.ritual.RitualContext;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ISpellValidator;
-import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
+import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
@@ -149,7 +149,7 @@ public class ArsNouveauAPI {
         return null;
     }
 
-    public @Nullable AbstractRitual getRitual(String id, RitualTile tile, RitualContext context){
+    public @Nullable AbstractRitual getRitual(String id, RitualBrazierTile tile, RitualContext context){
         AbstractRitual ritual = getRitual(id);
         if(ritual != null){
             ritual.tile = tile;

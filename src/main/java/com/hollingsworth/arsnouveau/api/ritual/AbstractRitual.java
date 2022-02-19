@@ -2,7 +2,7 @@ package com.hollingsworth.arsnouveau.api.ritual;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
+import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -17,14 +17,14 @@ import java.util.Random;
 
 public abstract class AbstractRitual {
 
-    public RitualTile tile;
+    public RitualBrazierTile tile;
     private RitualContext context;
 
     public Random rand = new Random();
 
     public AbstractRitual() { }
 
-    public AbstractRitual(RitualTile tile, RitualContext context){
+    public AbstractRitual(RitualBrazierTile tile, RitualContext context){
         this.tile = tile;
         this.setContext(context);
     }

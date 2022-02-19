@@ -5,7 +5,7 @@ import com.hollingsworth.arsnouveau.api.ritual.RitualContext;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
+import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityRitualProjectile;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import net.minecraft.core.BlockPos;
@@ -24,7 +24,7 @@ public class RitualDig extends AbstractRitual {
         super();
     }
 
-    public RitualDig(RitualTile tile, RitualContext context) {
+    public RitualDig(RitualBrazierTile tile, RitualContext context) {
         super(tile, context);
     }
 
