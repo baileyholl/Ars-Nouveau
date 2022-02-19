@@ -101,7 +101,10 @@ public class PacketANEffect {
                                 double d0 = message.x +0.5; //+ world.rand.nextFloat();
                                 double d1 = message.y +1.2;//+ world.rand.nextFloat() ;
                                 double d2 = message.z +.5 ; //+ world.rand.nextFloat();
-                                world.addParticle(GlowParticleData.createData(new ParticleColor(message.red, message.green, message.blue)),d0, d1, d2, (world.random.nextFloat() * 1 - 0.5)/3, (world.random.nextFloat() * 1 - 0.5)/3, (world.random.nextFloat() * 1 - 0.5)/3);
+                                world.addParticle(GlowParticleData.createData(new ParticleColor(message.red, message.green, message.blue)),d0, d1, d2,
+                                        (world.random.nextFloat() - 0.5)/3.0,
+                                        (world.random.nextFloat() - 0.5)/3.0,
+                                        (world.random.nextFloat() - 0.5)/3.0);
                             }
                             break;
                         }

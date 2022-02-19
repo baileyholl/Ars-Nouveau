@@ -5,7 +5,6 @@ import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -88,6 +87,7 @@ public class EntityFollowProjectile extends ColoredProjectile {
     @Override
     public void tick() {
         super.tick();
+
         this.age++;
         if(age > maxAge) {
             this.remove(RemovalReason.DISCARDED);
@@ -130,33 +130,20 @@ public class EntityFollowProjectile extends ColoredProjectile {
         posY += motionY;
         posZ += motionZ;
         this.setPos(posX, posY, posZ);
-        this.setDeltaMovement(motionX, motionY, motionZ);
 
-//        if (getEntityWorld().isRemote){
-//            double deltaX = posX - prevPosX;
-//            double deltaY = posY - prevPosY;
-//            double deltaZ = posZ - prevPosZ;
-//            double dist = Math.ceil(Math.sqrt(deltaX*deltaX+deltaY*deltaY+deltaZ*deltaZ) * 20);
-//            for (double i = 0; i < dist; i ++){
-//                double coeff = i/dist;
-//                ParticleUtil.spawnParticleGlow(getEntityWorld(), (float)(prevPosX+ deltaX *coeff), (float)(prevPosY+ deltaY *coeff), (float)(prevPosZ+ deltaZ *coeff), 0.0125f*(rand.nextFloat()-0.5f), 0.0125f*(rand.nextFloat()-0.5f), 0.0125f*(rand.nextFloat()-0.5f), 255, 64, 16, 2.0f, 12);
-//            }
-//        }
+        this.setDeltaMovement(motionX, motionY, motionZ);
 
         if(level.isClientSide && this.age > 1) {
             double deltaX = getX() - xOld;
             double deltaY = getY() - yOld;
             double deltaZ = getZ() - zOld;
-            double dist = Math.ceil(Math.sqrt(deltaX*deltaX+deltaY*deltaY+deltaZ*deltaZ) * 20);
-            int counter = 0;
+            float dist = (float) (Math.sqrt(deltaX*deltaX+deltaY*deltaY+deltaZ*deltaZ) * 8.0f);
+            for (double i = 0.0; i <= dist; i ++){
+                double coeff = (i/dist);
+                level.addParticle(GlowParticleData.createData(new ParticleColor(this.entityData.get(RED),this.entityData.get(GREEN),this.entityData.get(BLUE))),
+                         (getX() + deltaX * coeff),  (getY() + deltaY * coeff), (getZ() + deltaZ * coeff),
+                        0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f));
 
-            for (double i = 0; i < dist; i ++){
-                double coeff = i/dist;
-                counter += level.random.nextInt(2);
-                if (counter % (Minecraft.getInstance().options.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles.getId()) == 0) {
-                    level.addParticle(GlowParticleData.createData(new ParticleColor(this.entityData.get(RED),this.entityData.get(GREEN),this.entityData.get(BLUE))),
-                            (float) (xo + deltaX * coeff), (float) (yo + deltaY * coeff), (float) (zo + deltaZ * coeff), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f));
-                }
             }
 
         }

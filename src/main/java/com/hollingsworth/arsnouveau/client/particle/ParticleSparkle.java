@@ -34,7 +34,6 @@ public class ParticleSparkle extends TextureSheetParticle {
         this.xd = ParticleUtil.inRange(-0.01, 0.01);
         this.yd = -0.02;
         this.zd = ParticleUtil.inRange(-0.01, 0.01);
-//        this.particleAngle = 2.0f*(float)Math.PI;
         this.pickSprite(sprite);
     }
     @Override
@@ -52,19 +51,8 @@ public class ParticleSparkle extends TextureSheetParticle {
     @Override
     public void tick(){
         super.tick();
-
-//        if (new Random().nextInt(6) == 0){
-//            this.age++;
-//        }
-
         float lifeCoeff = (float)this.age/(float)this.lifetime;
-//        this.particleScale = initScale-initScale*lifeCoeff;
         this.alpha = 1.0f-lifeCoeff;
-//        float lifeCoeff = (float)this.age/(float)this.maxAge;
-//        this.particleScale = initScale-initScale*lifeCoeff;
-//        this.particleAlpha = initAlpha*(1.0f-lifeCoeff);
-//        this.prevParticleAngle = particleAngle;
-//        particleAngle += 1.0f;
     }
 
     @Override

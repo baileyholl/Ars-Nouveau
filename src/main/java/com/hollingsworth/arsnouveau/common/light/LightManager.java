@@ -1,16 +1,18 @@
 package com.hollingsworth.arsnouveau.common.light;
 
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
-import com.hollingsworth.arsnouveau.common.items.JarOfLight;
 import com.hollingsworth.arsnouveau.setup.Config;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LightLayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,8 +36,12 @@ public class LightManager {
 
         register(EntityType.PLAYER, (p ->{
             if(p instanceof Player player){
-                if(player.getMainHandItem().getItem() instanceof JarOfLight){
-                    return 15;
+                NonNullList<ItemStack> list =  player.inventory.items;
+                for(int i = 0; i < 9; i++){
+                    ItemStack jar = list.get(i);
+                    if(jar.getItem() == ItemsRegistry.JAR_OF_LIGHT){
+                        return 15;
+                    }
                 }
             }
             return 0;
@@ -46,6 +52,13 @@ public class LightManager {
         register(ModEntities.ORBIT_SPELL, (p -> 15));
         register(ModEntities.LINGER_SPELL, (p -> 15));
         register(ModEntities.STARBUNCLE_TYPE, (p ->{
+            if(p.level.getBrightness(LightLayer.BLOCK, p.blockPosition()) < 6){
+                return 10;
+            }
+            return 0;
+        }));
+
+        register(ModEntities.ENTITY_FAMILIAR_STARBUNCLE, (p ->{
             if(p.level.getBrightness(LightLayer.BLOCK, p.blockPosition()) < 6){
                 return 10;
             }
