@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
 import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.Config;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -35,7 +36,7 @@ public class AnnotatedCodex extends ModItem{
     }
 
     public AnnotatedCodex(String registryName) {
-        super(registryName);
+        super(ItemsRegistry.defaultItemProperties().stacksTo(1), registryName);
     }
 
     public int getUnlockLevelCost(Collection<AbstractSpellPart> spellParts){
