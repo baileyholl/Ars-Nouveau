@@ -8,6 +8,16 @@ import net.minecraft.world.level.Level;
 
 public abstract class AbstractAdvancedPathNavigate extends GroundPathNavigation
 {
+
+    /**
+     * Type of restriction.
+     */
+    public enum RestrictionType
+    {
+        NONE,
+        XZ,
+        XYZ
+    }
     //  Parent class private members
     protected final Mob    ourEntity;
     protected       BlockPos     destination;

@@ -44,6 +44,12 @@ public class PathingOptions
      */
     public double swimCostEnter = 25D;
 
+
+    /**
+     * Cost to climb a vine.
+     */
+    public double vineCost = 2D;
+
     /**
      * Cost to traverse trap doors
      */
@@ -66,7 +72,14 @@ public class PathingOptions
      */
     private boolean canOpenDoors = false;
 
+
+    /**
+     * Whether to path through vines.
+     */
+    private boolean canClimbVines  = false;
+
     private boolean canFitInOneCube = false;
+
 
     private Function<BlockState, Boolean> isRoad = blockState -> false;
 
@@ -173,11 +186,22 @@ public class PathingOptions
         return this;
     }
 
+
+    public void setCanClimbVines(final boolean canClimbVines)
+    {
+        this.canClimbVines = canClimbVines;
+    }
+
+
     public PathingOptions withRoadState(Function<BlockState, Boolean> function){
         this.isRoad = function;
         return this;
     }
 
+    public boolean canClimbVines()
+    {
+        return canClimbVines;
+    }
     /**
      * Sets swimming ability
      *

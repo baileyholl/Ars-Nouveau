@@ -231,7 +231,7 @@ public class Whirlisprig extends AbstractFlyingCreature implements IAnimatable, 
     public void tick() {
         super.tick();
         if(!this.level.isClientSide){
-            if(level.getGameTime() % 20 == 0 && this.blockPosition().getY() < 0) {
+            if(level.getGameTime() % 20 == 0 && this.blockPosition().getY() < this.level.getMinBuildHeight()) {
                 this.remove(RemovalReason.DISCARDED);
                 return;
             }
