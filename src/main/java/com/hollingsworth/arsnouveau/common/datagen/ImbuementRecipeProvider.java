@@ -41,7 +41,7 @@ public class ImbuementRecipeProvider implements DataProvider {
                 .withPedestalItem(Items.TORCH).withPedestalItem(Items.GUNPOWDER));
         recipes.add(new ImbuementRecipe("air_essence", Recipes.SOURCE_GEM, new ItemStack(ItemsRegistry.AIR_ESSENCE), 2000)
                 .withPedestalItem(Items.FEATHER)
-                        .withPedestalItem(Items.PHANTOM_MEMBRANE)
+                        .withPedestalItem(ItemsRegistry.WILDEN_WING)
                 .withPedestalItem(Ingredient.of(ItemTags.ARROWS)));
         recipes.add(new ImbuementRecipe("earth_essence", Recipes.SOURCE_GEM, new ItemStack(ItemsRegistry.EARTH_ESSENCE), 2000)
                 .withPedestalItem(Ingredient.of(Tags.Items.INGOTS_IRON))

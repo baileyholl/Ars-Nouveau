@@ -13,7 +13,7 @@
     },
     {
       "item": {
-        "tag": "forge:storage_blocks/source"
+        "tag": "forge:gems/diamond"
       }
     },
     {
@@ -26,5 +26,6 @@
     "item": "ars_nouveau:amplify_arrow",
     "count": 32
   },
-  "sourceCost": 0
+  "sourceCost": 0,
+  "keepNbtOfReagent": false
 }

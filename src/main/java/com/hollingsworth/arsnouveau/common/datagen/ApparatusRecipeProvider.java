@@ -195,7 +195,8 @@ public class ApparatusRecipeProvider implements DataProvider {
         addRecipe(builder()
                 .withResult(new ItemStack(ItemsRegistry.AMPLIFY_ARROW, 32))
                 .withReagent( Ingredient.of(ItemTags.ARROWS))
-                .withPedestalItem(2, Recipes.SOURCE_GEM_BLOCK)
+                .withPedestalItem(1, Recipes.SOURCE_GEM_BLOCK)
+                .withPedestalItem(1, Ingredient.of(Tags.Items.GEMS_DIAMOND))
                 .withPedestalItem(ItemsRegistry.AIR_ESSENCE)
                 .build());
 
@@ -203,13 +204,15 @@ public class ApparatusRecipeProvider implements DataProvider {
         addRecipe(builder()
                 .withResult(new ItemStack(ItemsRegistry.SPLIT_ARROW, 32))
                 .withReagent( Ingredient.of(ItemTags.ARROWS))
-                .withPedestalItem(2, Recipes.SOURCE_GEM_BLOCK)
+                .withPedestalItem(1, Recipes.SOURCE_GEM_BLOCK)
+                .withPedestalItem(1, ItemsRegistry.WILDEN_HORN)
                 .withPedestalItem(ItemsRegistry.AIR_ESSENCE)
                 .build());
         addRecipe(builder()
                 .withResult(new ItemStack(ItemsRegistry.PIERCE_ARROW, 32))
                 .withReagent( Ingredient.of(ItemTags.ARROWS))
-                .withPedestalItem(2, Recipes.SOURCE_GEM_BLOCK)
+                .withPedestalItem(1, Recipes.SOURCE_GEM_BLOCK)
+                .withPedestalItem(ItemsRegistry.WILDEN_SPIKE)
                 .withPedestalItem(ItemsRegistry.AIR_ESSENCE)
                 .build());
 
