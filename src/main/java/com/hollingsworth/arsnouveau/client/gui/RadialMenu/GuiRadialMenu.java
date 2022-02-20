@@ -29,6 +29,9 @@ public class GuiRadialMenu<T> extends Screen {
     private double startAnimation;
     private RadialMenu<T> radialMenu;
     private List<RadialMenuSlot<T>> radialMenuSlots;
+    /**
+     * Zero-Based index
+     */
     private int selectedItem;
 
 
@@ -147,8 +150,8 @@ public class GuiRadialMenu<T> extends Screen {
         RenderSystem.enableTexture();
         RenderSystem.disableBlend();
         if (hasMouseOver && mousedOverSlot != -1) {
-            int adjusted = (mousedOverSlot + (numberOfSlices / 2 + 1)) % numberOfSlices;
-            adjusted = adjusted == 0 ? numberOfSlices - 1 : adjusted;
+            int adjusted = ((mousedOverSlot + (numberOfSlices / 2 + 1)) % numberOfSlices) - 1;
+            adjusted = adjusted == -1 ? numberOfSlices - 1 : adjusted;
             drawCenteredString(ms, font, radialMenuSlots.get(adjusted).slotName(), width / 2, (height - font.lineHeight) / 2, 16777215);
         }
 
@@ -176,8 +179,8 @@ public class GuiRadialMenu<T> extends Screen {
         }
 
         if (mousedOverSlot != -1) {
-            int adjusted = (mousedOverSlot + (numberOfSlices / 2 + 1)) % numberOfSlices;
-            adjusted = adjusted == 0 ? numberOfSlices - 1 : adjusted;
+            int adjusted = ((mousedOverSlot + (numberOfSlices / 2 + 1)) % numberOfSlices) - 1;
+            adjusted = adjusted == -1 ? numberOfSlices - 1 : adjusted;
             selectedItem = adjusted;
         }
     }
@@ -215,8 +218,8 @@ public class GuiRadialMenu<T> extends Screen {
     @Override
     public boolean keyPressed(int key, int scanCode, int modifiers) {
         int adjustedKey = key - 48;
-        if (adjustedKey >= 0 && adjustedKey < 10) {
-            selectedItem = adjustedKey == 0 ? 10 : adjustedKey;
+        if (adjustedKey >= 0 && adjustedKey < radialMenuSlots.size()) {
+            selectedItem = adjustedKey == 0 ? radialMenuSlots.size() : adjustedKey;
             mouseClicked(0, 0, 0);
             return true;
         }
@@ -226,7 +229,7 @@ public class GuiRadialMenu<T> extends Screen {
     @Override
     public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
         if (this.selectedItem != -1) {
-            radialMenu.setCurrentSlot(selectedItem);
+            radialMenu.setCurrentSlot(selectedItem + 1); // Caller expects slot index starting with 1, while internally we're using 0 based indexing
             minecraft.player.closeContainer();
         }
         return true;
