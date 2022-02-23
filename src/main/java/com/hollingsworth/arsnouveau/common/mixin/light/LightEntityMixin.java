@@ -40,8 +40,6 @@ public abstract class LightEntityMixin implements LambDynamicLight {
     @Shadow
     public abstract double getY();
 
-    @Shadow
-    public abstract boolean isOnFire();
 
     @Shadow
     public abstract EntityType<?> getType();
@@ -52,11 +50,7 @@ public abstract class LightEntityMixin implements LambDynamicLight {
     @Shadow
     public abstract boolean isRemoved();
 
-    @Shadow
-    public abstract ChunkPos chunkPosition();
-
     @Shadow private ChunkPos chunkPosition;
-    @Shadow private BlockPos blockPosition;
 
     @Shadow public abstract Level getLevel();
 
