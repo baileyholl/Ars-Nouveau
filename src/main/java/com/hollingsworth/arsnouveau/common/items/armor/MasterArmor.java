@@ -1,4 +1,4 @@
-package com.hollingsworth.arsnouveau.common.armor;
+package com.hollingsworth.arsnouveau.common.items.armor;
 
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.world.entity.EquipmentSlot;

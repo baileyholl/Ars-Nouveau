@@ -1,22 +1,21 @@
-package com.hollingsworth.arsnouveau.common.armor;
+package com.hollingsworth.arsnouveau.common.items.armor;
 
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
-public class NoviceArmor extends MagicArmor{
-
-    public NoviceArmor(EquipmentSlot slot) {
-        super(Materials.novice, slot, ItemsRegistry.defaultItemProperties());
+public class ApprenticeArmor extends MagicArmor{
+    public ApprenticeArmor(EquipmentSlot slot) {
+        super(Materials.apprentice, slot, ItemsRegistry.defaultItemProperties());
     }
 
     @Override
     public int getMaxManaBoost(ItemStack i) {
-        return 25;
+        return 40;
     }
 
     @Override
     public int getManaRegenBonus(ItemStack i) {
-        return 2;
+        return 4;
     }
 }
