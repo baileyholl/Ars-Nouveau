@@ -4,7 +4,10 @@ import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
+import com.hollingsworth.arsnouveau.common.network.PacketAddFadingLight;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
+import com.hollingsworth.arsnouveau.setup.Config;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -41,6 +44,7 @@ public class MethodTouch extends AbstractCastMethod {
         resolver.expendMana(context.getPlayer());
         Networking.sendToNearby(context.getLevel(), context.getPlayer(),
                 new PacketANEffect(PacketANEffect.EffectType.BURST, res.getBlockPos(), spellContext.colors));
+        addFadingLight(context.getLevel(),res.getBlockPos().getX() + 0.5, res.getBlockPos().getY()+ 0.5, res.getBlockPos().getZ()+ 0.5);
     }
 
     @Override
@@ -48,6 +52,7 @@ public class MethodTouch extends AbstractCastMethod {
         resolver.onResolveEffect(caster.getCommandSenderWorld(),caster, res);
         resolver.expendMana(caster);
         Networking.sendToNearby(caster.level, caster, new PacketANEffect(PacketANEffect.EffectType.BURST, res.getBlockPos(), spellContext.colors));
+        addFadingLight(caster.getLevel(),res.getBlockPos().getX() + 0.5, res.getBlockPos().getY()+ 0.5, res.getBlockPos().getZ()+ 0.5);
     }
 
     @Override
@@ -56,6 +61,11 @@ public class MethodTouch extends AbstractCastMethod {
         if(spellContext.getType() != SpellContext.CasterType.RUNE)
             resolver.expendMana(caster);
         Networking.sendToNearby(caster.level, caster, new PacketANEffect(PacketANEffect.EffectType.BURST, target.blockPosition(), spellContext.colors));
+        addFadingLight(caster.getLevel(),target.blockPosition().getX() + 0.5, target.blockPosition().getY()+ 0.5, target.blockPosition().getZ()+ 0.5);
+    }
+
+    public void addFadingLight(Level level, double x, double y, double z) {
+        Networking.sendToNearby(level, new BlockPos(x,y,z), new PacketAddFadingLight(x,y,z, Config.TOUCH_LIGHT_DURATION.get(), Config.TOUCH_LIGHT_LUMINANCE.get()));
     }
 
     @Override

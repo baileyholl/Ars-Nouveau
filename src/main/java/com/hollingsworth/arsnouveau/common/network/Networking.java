@@ -156,6 +156,11 @@ public class Networking {
                 PacketToggleLight::toBytes,
                 PacketToggleLight::new,
                 PacketToggleLight::handle);
+        INSTANCE.registerMessage(nextID(),
+                PacketAddFadingLight.class,
+                PacketAddFadingLight::encode,
+                PacketAddFadingLight::decode,
+                PacketAddFadingLight.Handler::handle);
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend){
