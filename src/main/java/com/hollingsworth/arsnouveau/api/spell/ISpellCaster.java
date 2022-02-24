@@ -6,7 +6,9 @@ import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import com.hollingsworth.arsnouveau.setup.SoundRegistry;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -122,16 +124,19 @@ public interface ISpellCaster {
 
         if(result instanceof EntityHitResult entityHitResult && entityHitResult.getEntity() instanceof LivingEntity){
             resolver.onCastOnEntity(stack, playerIn, entityHitResult.getEntity(), handIn);
+            worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundRegistry.FIRE_FAMILY, SoundSource.PLAYERS, 1.0F, 1.0F);
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
 
         if(result instanceof BlockHitResult && (result.getType() == HitResult.Type.BLOCK || isSensitive)){
             UseOnContext context = new UseOnContext(playerIn, handIn, (BlockHitResult) result);
             resolver.onCastOnBlock(context);
+            worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(),  SoundRegistry.FIRE_FAMILY, SoundSource.PLAYERS, 1.0F, 1.0F);
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
 
         resolver.onCast(stack,playerIn,worldIn);
+        worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(),  SoundRegistry.FIRE_FAMILY, SoundSource.PLAYERS, 1.0F, 1.0F);
         return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
     }
 

@@ -8,6 +8,7 @@ import com.hollingsworth.arsnouveau.api.recipe.VanillaPotionRecipe;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.ritual.IScryer;
 import com.hollingsworth.arsnouveau.api.ritual.RitualContext;
+import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ISpellValidator;
 import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
@@ -65,6 +66,8 @@ public class ArsNouveauAPI {
     private HashMap<String, RitualTablet> ritualParchmentMap = new HashMap<>();
 
     private HashMap<String, IScryer> scryerMap = new HashMap<>();
+
+    private HashMap<ResourceLocation, SpellSound> spellSoundsRegistry = new HashMap<>();
 
     /** Validator to use when crafting a spell in the spell book. */
     private ISpellValidator craftingSpellValidator;
@@ -253,6 +256,14 @@ public class ArsNouveauAPI {
     public boolean registerScryer(IScryer scryer){
         this.scryerMap.put(scryer.getID(), scryer);
         return true;
+    }
+
+    public HashMap<ResourceLocation, SpellSound> getSpellSoundsRegistry(){
+        return this.spellSoundsRegistry;
+    }
+
+    public SpellSound registerSpellSound(SpellSound sound){
+        return this.spellSoundsRegistry.put(sound.getId(), sound);
     }
 
     private ArsNouveauAPI(){}
