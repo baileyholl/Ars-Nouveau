@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
@@ -7,6 +8,7 @@ import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.SoundRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -70,6 +72,14 @@ public interface ISpellCaster {
 
     void setColor(ParticleColor.IntWrapper color, int slot);
 
+    @Nonnull ConfiguredSpellSound getSound(int slot);
+
+    void setSound(ConfiguredSpellSound sound, int slot);
+
+    default ConfiguredSpellSound getCurrentSound(){
+        return getSound(getCurrentSlot());
+    }
+
     void setFlavorText(String str);
 
     String getSpellName(int slot);
@@ -124,18 +134,19 @@ public interface ISpellCaster {
 
         if(result instanceof EntityHitResult entityHitResult && entityHitResult.getEntity() instanceof LivingEntity){
             resolver.onCastOnEntity(stack, playerIn, entityHitResult.getEntity(), handIn);
-            worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(), SoundRegistry.FIRE_FAMILY, SoundSource.PLAYERS, 1.0F, 1.0F);
+            playSound(playerIn.getOnPos(), worldIn, playerIn, getCurrentSound(), SoundSource.PLAYERS);
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
 
         if(result instanceof BlockHitResult && (result.getType() == HitResult.Type.BLOCK || isSensitive)){
             UseOnContext context = new UseOnContext(playerIn, handIn, (BlockHitResult) result);
             resolver.onCastOnBlock(context);
-            worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(),  SoundRegistry.FIRE_FAMILY, SoundSource.PLAYERS, 1.0F, 1.0F);
+            playSound(playerIn.getOnPos(), worldIn, playerIn, getCurrentSound(), SoundSource.PLAYERS);
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
 
         resolver.onCast(stack,playerIn,worldIn);
+        playSound(playerIn.getOnPos(), worldIn, playerIn, getCurrentSound(), SoundSource.PLAYERS);
         worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(),  SoundRegistry.FIRE_FAMILY, SoundSource.PLAYERS, 1.0F, 1.0F);
         return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
     }
@@ -146,6 +157,13 @@ public interface ISpellCaster {
 
     default SpellResolver getSpellResolver(SpellContext context, Level worldIn, Player playerIn, InteractionHand handIn){
         return new SpellResolver(context);
+    }
+
+    default void playSound(BlockPos pos, Level worldIn, Player playerIn, ConfiguredSpellSound configuredSound, SoundSource source){
+        if(configuredSound == null || configuredSound.sound == null || configuredSound.sound.getSoundEvent() == null)
+            return;
+
+        worldIn.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, configuredSound.sound.getSoundEvent(), source, configuredSound.volume, configuredSound.pitch);
     }
 
     String getTagID();

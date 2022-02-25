@@ -1,5 +1,6 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import net.minecraft.nbt.CompoundTag;
@@ -16,6 +17,8 @@ public class SpellCaster implements ISpellCaster{
     private Map<Integer, String> spellNames = new HashMap<>();
 
     private Map<Integer, ParticleColor.IntWrapper> spellColors = new HashMap<>();
+
+    private Map<Integer, ConfiguredSpellSound> spellSounds = new HashMap<>();
 
     private int slot;
     ItemStack stack = ItemStack.EMPTY;
@@ -118,6 +121,17 @@ public class SpellCaster implements ISpellCaster{
 
     @Nonnull
     @Override
+    public ConfiguredSpellSound getSound(int slot) {
+        return this.spellSounds.get(slot) == null ? ConfiguredSpellSound.EMPTY : this.spellSounds.get(slot);
+    }
+
+    @Override
+    public void setSound(ConfiguredSpellSound sound, int slot) {
+        this.spellSounds.put(slot, sound);
+    }
+
+    @Nonnull
+    @Override
     public ParticleColor.IntWrapper getColor() {
         return this.spellColors.getOrDefault(getCurrentSlot(), ParticleUtil.defaultParticleColorWrapper());
     }
@@ -145,6 +159,7 @@ public class SpellCaster implements ISpellCaster{
             tag.putString("spell_" + i, getSpell(i).serialize());
             tag.putString("spell_name_" + i, getSpellName(i));
             tag.putString("spell_color_" + i, getColor(i).serialize());
+            tag.put("spell_sound_" + i, getSound(i).serialize());
         }
         return tag;
     }
