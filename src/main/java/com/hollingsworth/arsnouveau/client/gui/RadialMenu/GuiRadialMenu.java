@@ -229,7 +229,7 @@ public class GuiRadialMenu<T> extends Screen {
     @Override
     public boolean mouseClicked(double p_mouseClicked_1_, double p_mouseClicked_3_, int p_mouseClicked_5_) {
         if (this.selectedItem != -1) {
-            radialMenu.setCurrentSlot(selectedItem + 1); // Caller expects slot index starting with 1, while internally we're using 0 based indexing
+            radialMenu.setCurrentSlot(selectedItem);
             minecraft.player.closeContainer();
         }
         return true;
