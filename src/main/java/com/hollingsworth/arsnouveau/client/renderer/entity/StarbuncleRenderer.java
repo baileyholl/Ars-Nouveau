@@ -18,14 +18,14 @@ import software.bernie.geckolib3.util.RenderUtils;
 
 import javax.annotation.Nullable;
 
-public class CarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
+public class StarbuncleRenderer extends GeoEntityRenderer<Starbuncle> {
     private static final ResourceLocation ORANGE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_orange.png");
     private static final ResourceLocation PURPLE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_purple.png");
     private static final ResourceLocation GREEN = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_green.png");
     private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_wild_orange.png");
 
-    public CarbuncleRenderer(EntityRendererProvider.Context  manager) {
-        super(manager,new CarbuncleModel());
+    public StarbuncleRenderer(EntityRendererProvider.Context  manager) {
+        super(manager,new StarbuncleModel());
 //        this.addLayer(new CarbuncleHeldItemLayer(this));
 //        this.addLayer(new ModelLayerRenderer(this, new CarbuncleShadesModel(this.getGeoModelProvider())));
     }

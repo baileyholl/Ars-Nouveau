@@ -33,7 +33,7 @@ public class CarbuncleShadesModel extends AnimatedGeoModel<Starbuncle> {
     public void setLivingAnimations(Starbuncle entity, Integer uniqueID, AnimationEvent customPredicate) {
         super.setLivingAnimations(entity, uniqueID, customPredicate);
         IBone head = this.getAnimationProcessor().getBone("specs");
-        IBone carby = ((CarbuncleModel) modelProvider).getBone("carbuncle");
+        IBone carby = ((StarbuncleModel) modelProvider).getBone("carbuncle");
         IBone parentHead = modelProvider.getModel(modelProvider.getModelLocation(entity)).getBone("head").get();
         head.setPivotX(parentHead.getPivotX());
         head.setPivotY(parentHead.getPivotY());
