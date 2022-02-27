@@ -29,13 +29,13 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ArcaneRelayTile extends AbstractSourceMachine implements ITooltipProvider, IWandable, IAnimatable, ITickable {
+public class RelayTile extends AbstractSourceMachine implements ITooltipProvider, IWandable, IAnimatable, ITickable {
 
-    public ArcaneRelayTile(BlockPos pos, BlockState state) {
+    public RelayTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.ARCANE_RELAY_TILE, pos, state);
     }
 
-    public ArcaneRelayTile(BlockEntityType<?> type, BlockPos pos, BlockState state){
+    public RelayTile(BlockEntityType<?> type, BlockPos pos, BlockState state){
         super(type, pos, state);
     }
 
@@ -118,7 +118,7 @@ public class ArcaneRelayTile extends AbstractSourceMachine implements ITooltipPr
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         if(storedPos == null || storedPos.equals(getBlockPos()))
             return;
-        if(level.getBlockEntity(storedPos) instanceof ArcaneRelayTile)
+        if(level.getBlockEntity(storedPos) instanceof RelayTile)
             return;
         if(this.setTakeFrom(storedPos.immutable())) {
             PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.connections.take", DominionWand.getPosString(storedPos)));

@@ -122,4 +122,5 @@ public class LibBlockNames {
     public static final String SPELL_PRISM = "spell_prism";
     public static final String WHIRLISPRIG_BLOCK = "whirlisprig_flower";
     public static final String INSCRIPTION_BLOCK = "inscription_table";
+    public static final String RELAY_COLLECTOR = "relay_collector";
 }

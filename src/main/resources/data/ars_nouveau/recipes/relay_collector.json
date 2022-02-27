@@ -1,0 +1,35 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "reagent": [
+    {
+      "item": "ars_nouveau:relay"
+    }
+  ],
+  "pedestalItems": [
+    {
+      "item": {
+        "tag": "forge:chests"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:chests"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:chests"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:chests"
+      }
+    }
+  ],
+  "output": {
+    "item": "ars_nouveau:relay_collector"
+  },
+  "sourceCost": 0,
+  "keepNbtOfReagent": false
+}

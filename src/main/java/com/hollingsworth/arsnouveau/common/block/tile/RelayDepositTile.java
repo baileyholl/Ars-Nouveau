@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
-public class RelayDepositTile extends ArcaneRelayTile{
+public class RelayDepositTile extends RelayTile {
 
     public RelayDepositTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.RELAY_DEPOSIT_TILE, pos, state);

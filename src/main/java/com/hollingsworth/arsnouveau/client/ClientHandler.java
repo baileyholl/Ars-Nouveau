@@ -62,7 +62,7 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.MAGE_BLOCK_TILE, MageBlockRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.WHIRLISPRIG_TILE, WhirlisprigFlowerRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ARCANE_CORE_TILE, ArcaneCoreRenderer::new);
-//        event.registerBlockEntityRenderer(BlockRegistry.INSCRIPTION_TILE_TYPE, InscriptionRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.RELAY_COLLECTOR_TILE, (t) -> new GenericRenderer(t, "source_collector"));
 
 
         event.registerEntityRenderer( ModEntities.SPELL_PROJ,

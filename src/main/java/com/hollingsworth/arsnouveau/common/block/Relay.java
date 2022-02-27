@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.common.block.tile.ArcaneRelayTile;
+import com.hollingsworth.arsnouveau.common.block.tile.RelayTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.RenderShape;
@@ -24,7 +24,7 @@ public class Relay extends TickableModBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new ArcaneRelayTile(pos, state);
+        return new RelayTile(pos, state);
     }
 
     @Override

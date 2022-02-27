@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RelaySplitterTile extends ArcaneRelayTile implements IMultiSourceTargetProvider {
+public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetProvider {
 
     ArrayList<BlockPos> toList = new ArrayList<>();
     ArrayList<BlockPos> fromList = new ArrayList<>();
