@@ -89,7 +89,7 @@ public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetPr
 
     @Override
     public void tick() {
-        if(level.getGameTime() % 20 != 0 || toList.isEmpty() || level.isClientSide)
+        if(level.getGameTime() % 20 != 0 || toList.isEmpty() || level.isClientSide || disabled)
             return;
 
         processFromList();

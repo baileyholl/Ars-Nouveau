@@ -1009,5 +1009,6 @@
 	"ars_nouveau.lights_on": "You have turned dynamic lights on. This can cause lag for users with weaker CPUs, low RAM allocation, and unexpected results with 'performance' mods like Optifine. Run this command or change the ars_nouveau-client config to disable this.",
 	"ars_nouveau.lights_off": "You have turned dynamic lights off.",
 	"ars_nouveau.page.relay_collector": "Operates similar to the Source Relay, but will automatically take from jars it is not linked to within 5 blocks. See the instructions on the Source Relay for use.",
-	"block.ars_nouveau.relay_collector": "Source Relay: Collector"
+	"block.ars_nouveau.relay_collector": "Source Relay: Collector",
+	"ars_nouveau.page2.relay": "A redstone signal will disable the relay."
 }

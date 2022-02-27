@@ -57,7 +57,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
 
     private BlockPos toPos;
     private BlockPos fromPos;
-
+    public boolean disabled;
 
     public boolean setTakeFrom(BlockPos pos){
         if(BlockUtil.distanceFrom(pos, this.worldPosition) > getMaxDistance()  || pos.equals(getBlockPos())){
@@ -136,7 +136,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
 
     @Override
     public void tick() {
-        if(level.isClientSide){
+        if(level.isClientSide || disabled){
             return;
         }
         if(level.getGameTime() % 20 != 0)
@@ -182,6 +182,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         }else{
             fromPos = null;
         }
+        this.disabled = tag.getBoolean("disabled");
         super.load(tag);
     }
 
@@ -198,6 +199,7 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
         }else{
             NBTUtil.removeBlockPos(tag, "from");
         }
+        tag.putBoolean("disabled", disabled);
     }
 
     @Override
@@ -211,6 +213,10 @@ public class RelayTile extends AbstractSourceMachine implements ITooltipProvider
             tooltip.add(new TranslatableComponent("ars_nouveau.relay.no_from"));
         }else{
             tooltip.add(new TranslatableComponent("ars_nouveau.relay.one_from", 1));
+        }
+
+        if(disabled){
+            tooltip.add(new TranslatableComponent("ars_nouveau.tooltip.turned_off"));
         }
     }
     AnimationFactory factory = new AnimationFactory(this);

@@ -18,6 +18,8 @@ public class RelayDepositTile extends RelayTile {
     @Override
     public void tick() {
         super.tick();
+        if(disabled)
+            return;
         if(!level.isClientSide && level.getGameTime() % 20 == 0 && getSource() > 0){
             List<BlockPos> posList = SourceUtil.canGiveSourceAny(worldPosition, level, 5);
             for(BlockPos jarPos : posList) {

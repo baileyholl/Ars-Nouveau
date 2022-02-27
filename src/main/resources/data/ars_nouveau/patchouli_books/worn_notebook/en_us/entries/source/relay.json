@@ -9,6 +9,7 @@
     },
     {
       "recipe": "ars_nouveau:relay",
+      "text": "ars_nouveau.page2.relay",
       "type": "patchouli:crafting"
     }
   ]

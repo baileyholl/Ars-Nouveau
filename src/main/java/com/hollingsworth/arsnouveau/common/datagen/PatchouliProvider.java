@@ -367,7 +367,7 @@ public class PatchouliProvider implements DataProvider {
         addBasicItem(BlockRegistry.MYCELIAL_BLOCK, SOURCE, new CraftingPage(BlockRegistry.MYCELIAL_BLOCK));
         addBasicItem(BlockRegistry.SOURCE_JAR, SOURCE, new CraftingPage(BlockRegistry.SOURCE_JAR));
 
-        addBasicItem(BlockRegistry.RELAY, SOURCE, new CraftingPage(BlockRegistry.RELAY));
+        addBasicItem(BlockRegistry.RELAY, SOURCE, new CraftingPage(BlockRegistry.RELAY).withText("ars_nouveau.page2.relay"));
 
         addBasicItem(BlockRegistry.RELAY_DEPOSIT, SOURCE, new ApparatusPage(BlockRegistry.RELAY_DEPOSIT));
         addBasicItem(BlockRegistry.RELAY_SPLITTER, SOURCE, new ApparatusPage(BlockRegistry.RELAY_SPLITTER));
