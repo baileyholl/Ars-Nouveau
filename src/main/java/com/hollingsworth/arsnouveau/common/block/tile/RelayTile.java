@@ -29,13 +29,13 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ArcaneRelayTile extends AbstractSourceMachine implements ITooltipProvider, IWandable, IAnimatable, ITickable {
+public class RelayTile extends AbstractSourceMachine implements ITooltipProvider, IWandable, IAnimatable, ITickable {
 
-    public ArcaneRelayTile(BlockPos pos, BlockState state) {
+    public RelayTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.ARCANE_RELAY_TILE, pos, state);
     }
 
-    public ArcaneRelayTile(BlockEntityType<?> type, BlockPos pos, BlockState state){
+    public RelayTile(BlockEntityType<?> type, BlockPos pos, BlockState state){
         super(type, pos, state);
     }
 
@@ -57,7 +57,7 @@ public class ArcaneRelayTile extends AbstractSourceMachine implements ITooltipPr
 
     private BlockPos toPos;
     private BlockPos fromPos;
-
+    public boolean disabled;
 
     public boolean setTakeFrom(BlockPos pos){
         if(BlockUtil.distanceFrom(pos, this.worldPosition) > getMaxDistance()  || pos.equals(getBlockPos())){
@@ -118,7 +118,7 @@ public class ArcaneRelayTile extends AbstractSourceMachine implements ITooltipPr
     public void onFinishedConnectionLast(@Nullable BlockPos storedPos, @Nullable LivingEntity storedEntity, Player playerEntity) {
         if(storedPos == null || storedPos.equals(getBlockPos()))
             return;
-        if(level.getBlockEntity(storedPos) instanceof ArcaneRelayTile)
+        if(level.getBlockEntity(storedPos) instanceof RelayTile)
             return;
         if(this.setTakeFrom(storedPos.immutable())) {
             PortUtil.sendMessage(playerEntity, new TranslatableComponent("ars_nouveau.connections.take", DominionWand.getPosString(storedPos)));
@@ -136,7 +136,7 @@ public class ArcaneRelayTile extends AbstractSourceMachine implements ITooltipPr
 
     @Override
     public void tick() {
-        if(level.isClientSide){
+        if(level.isClientSide || disabled){
             return;
         }
         if(level.getGameTime() % 20 != 0)
@@ -182,6 +182,7 @@ public class ArcaneRelayTile extends AbstractSourceMachine implements ITooltipPr
         }else{
             fromPos = null;
         }
+        this.disabled = tag.getBoolean("disabled");
         super.load(tag);
     }
 
@@ -198,6 +199,7 @@ public class ArcaneRelayTile extends AbstractSourceMachine implements ITooltipPr
         }else{
             NBTUtil.removeBlockPos(tag, "from");
         }
+        tag.putBoolean("disabled", disabled);
     }
 
     @Override
@@ -211,6 +213,10 @@ public class ArcaneRelayTile extends AbstractSourceMachine implements ITooltipPr
             tooltip.add(new TranslatableComponent("ars_nouveau.relay.no_from"));
         }else{
             tooltip.add(new TranslatableComponent("ars_nouveau.relay.one_from", 1));
+        }
+
+        if(disabled){
+            tooltip.add(new TranslatableComponent("ars_nouveau.tooltip.turned_off"));
         }
     }
     AnimationFactory factory = new AnimationFactory(this);

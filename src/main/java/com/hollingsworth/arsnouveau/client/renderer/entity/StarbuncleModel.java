@@ -10,7 +10,7 @@ import software.bernie.geckolib3.model.provider.data.EntityModelData;
 
 import javax.annotation.Nullable;
 
-public class CarbuncleModel extends AnimatedGeoModel<Starbuncle> {
+public class StarbuncleModel extends AnimatedGeoModel<Starbuncle> {
 
     private static final ResourceLocation WILD_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_wild_orange.png");
     private static final ResourceLocation TAMED_TEXTURE = new ResourceLocation(ArsNouveau.MODID, "textures/entity/carbuncle_orange.png");

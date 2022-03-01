@@ -392,6 +392,10 @@ public class WixieCauldronTile extends SummoningTile implements ITooltipProvider
         if(craftingItem == null)
             return;
 
+        if(isOff){
+            tooltip.add(new TranslatableComponent("ars_nouveau.tooltip.turned_off"));
+        }
+
         if(!isCraftingPotion){
             tooltip.add(new TextComponent(
                     new TranslatableComponent("ars_nouveau.wixie.crafting").getString() +

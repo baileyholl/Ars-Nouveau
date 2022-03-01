@@ -55,7 +55,7 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.ARCANE_PEDESTAL) public static ArcanePedestal ARCANE_PEDESTAL;
     @ObjectHolder(LibBlockNames.SOURCE_JAR) public static SourceJar SOURCE_JAR;
     @ObjectHolder(LibBlockNames.SOURCE_JAR) public static BlockEntityType<SourceJarTile> SOURCE_JAR_TILE;
-    @ObjectHolder(LibBlockNames.RELAY) public static BlockEntityType<ArcaneRelayTile> ARCANE_RELAY_TILE;
+    @ObjectHolder(LibBlockNames.RELAY) public static BlockEntityType<RelayTile> ARCANE_RELAY_TILE;
 
     @ObjectHolder(LibBlockNames.MAGE_BLOOM) public static MageBloomCrop MAGE_BLOOM_CROP;
     @ObjectHolder(LibBlockNames.ARCANE_BRICKS) public static ModBlock ARCANE_BRICKS;
@@ -200,6 +200,8 @@ public class BlockRegistry {
     @ObjectHolder(LibBlockNames.SPELL_PRISM) public static  SpellPrismBlock SPELL_PRISM;
     @ObjectHolder(LibBlockNames.WHIRLISPRIG_BLOCK) public static BlockEntityType<WhirlisprigTile> WHIRLISPRIG_TILE;
     @ObjectHolder(LibBlockNames.WHIRLISPRIG_BLOCK) public static WhirlisprigFlower WHIRLISPRIG_FLOWER;
+    @ObjectHolder(LibBlockNames.RELAY_COLLECTOR) public static RelayCollectorBlock RELAY_COLLECTOR;
+    @ObjectHolder(LibBlockNames.RELAY_COLLECTOR) public static BlockEntityType<RelayCollectorTile> RELAY_COLLECTOR_TILE;
 
 
     @ObjectHolder(LibBlockNames.STATE_PROVIDER) public static BlockStateProviderType stateProviderType;
@@ -309,7 +311,7 @@ public class BlockRegistry {
             registry.register(new ArchwoodChest().setRegistryName(LibBlockNames.ARCHWOOD_CHEST));
             registry.register(new SpellPrismBlock(LibBlockNames.SPELL_PRISM));
             registry.register(new WhirlisprigFlower(LibBlockNames.WHIRLISPRIG_BLOCK));
-//            registry.register(new InscriptionTable(LibBlockNames.INSCRIPTION_BLOCK));
+            registry.register(new RelayCollectorBlock(LibBlockNames.RELAY_COLLECTOR));
         }
         static Block.Properties woodProp = BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD);
         public static MagicLeaves createLeavesBlock() {
@@ -327,7 +329,7 @@ public class BlockRegistry {
             event.getRegistry().register(BlockEntityType.Builder.of(EnchantingApparatusTile::new, BlockRegistry.ENCHANTING_APP_BLOCK).build(null).setRegistryName(LibBlockNames.ENCHANTING_APPARATUS));
             event.getRegistry().register(BlockEntityType.Builder.of(ArcanePedestalTile::new, BlockRegistry.ARCANE_PEDESTAL).build(null).setRegistryName(LibBlockNames.ARCANE_PEDESTAL));
             event.getRegistry().register(BlockEntityType.Builder.of(ScribesTile::new, BlockRegistry.SCRIBES_BLOCK).build(null).setRegistryName(LibBlockNames.SCRIBES_BLOCK));
-            event.getRegistry().register(BlockEntityType.Builder.of(ArcaneRelayTile::new, BlockRegistry.RELAY).build(null).setRegistryName(LibBlockNames.RELAY));
+            event.getRegistry().register(BlockEntityType.Builder.of(RelayTile::new, BlockRegistry.RELAY).build(null).setRegistryName(LibBlockNames.RELAY));
             event.getRegistry().register(BlockEntityType.Builder.of(RuneTile::new, BlockRegistry.RUNE_BLOCK).build(null).setRegistryName(LibBlockNames.RUNE));
             event.getRegistry().register(BlockEntityType.Builder.of(PortalTile::new, BlockRegistry.PORTAL_BLOCK).build(null).setRegistryName(LibBlockNames.PORTAL));
             event.getRegistry().register(BlockEntityType.Builder.of(RelaySplitterTile::new, BlockRegistry.RELAY_SPLITTER).build(null).setRegistryName(LibBlockNames.RELAY_SPLITTER));
@@ -353,7 +355,7 @@ public class BlockRegistry {
             event.getRegistry().register(BlockEntityType.Builder.of(TimerSpellTurretTile::new, BlockRegistry.TIMER_SPELL_TURRET).build(null).setRegistryName(LibBlockNames.TIMER_SPELL_TURRET));
             event.getRegistry().register(BlockEntityType.Builder.of(ArchwoodChestTile::new, BlockRegistry.ARCHWOOD_CHEST).build(null).setRegistryName(LibBlockNames.ARCHWOOD_CHEST));
             event.getRegistry().register(BlockEntityType.Builder.of(WhirlisprigTile::new, BlockRegistry.WHIRLISPRIG_FLOWER).build(null).setRegistryName(LibBlockNames.WHIRLISPRIG_BLOCK));
-//            event.getRegistry().register(BlockEntityType.Builder.of(InscriptionTile::new, BlockRegistry.INSCRIPTION_TABLE).build(null).setRegistryName(LibBlockNames.INSCRIPTION_BLOCK));
+            event.getRegistry().register(BlockEntityType.Builder.of(RelayCollectorTile::new, BlockRegistry.RELAY_COLLECTOR).build(null).setRegistryName(LibBlockNames.RELAY_COLLECTOR));
         }
 
         @SubscribeEvent
@@ -559,13 +561,12 @@ public class BlockRegistry {
                     return  WhirlisprigFlowerRenderer::getISTER;
                 }
             }.setRegistryName(LibBlockNames.WHIRLISPRIG_BLOCK));
-
-//            registry.register(new RendererBlockItem(BlockRegistry.INSCRIPTION_TABLE, ItemsRegistry.defaultItemProperties()) {
-//                @Override
-//                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
-//                    return InscriptionRenderer::getISTER;
-//                }
-//            }.setRegistryName(LibBlockNames.INSCRIPTION_BLOCK));
+            registry.register(new RendererBlockItem(BlockRegistry.RELAY_COLLECTOR, ItemsRegistry.defaultItemProperties()) {
+                @Override
+                public Supplier<BlockEntityWithoutLevelRenderer> getRenderer() {
+                    return GenericRenderer.getISTER("source_collector");
+                }
+            }.setRegistryName(LibBlockNames.RELAY_COLLECTOR));
         }
 
         public static Item getDefaultBlockItem(Block block, String registry){

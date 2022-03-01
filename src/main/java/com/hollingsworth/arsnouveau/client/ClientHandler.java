@@ -62,7 +62,7 @@ public class ClientHandler {
         event.registerBlockEntityRenderer(BlockRegistry.MAGE_BLOCK_TILE, MageBlockRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.WHIRLISPRIG_TILE, WhirlisprigFlowerRenderer::new);
         event.registerBlockEntityRenderer(BlockRegistry.ARCANE_CORE_TILE, ArcaneCoreRenderer::new);
-//        event.registerBlockEntityRenderer(BlockRegistry.INSCRIPTION_TILE_TYPE, InscriptionRenderer::new);
+        event.registerBlockEntityRenderer(BlockRegistry.RELAY_COLLECTOR_TILE, (t) -> new GenericRenderer(t, "source_collector"));
 
 
         event.registerEntityRenderer( ModEntities.SPELL_PROJ,
@@ -71,7 +71,7 @@ public class ClientHandler {
                 renderManager -> new RenderBlank(renderManager, new ResourceLocation(ArsNouveau.MODID, "textures/entity/spell_proj.png")));
         event.registerEntityRenderer(ModEntities.ENTITY_EVOKER_FANGS_ENTITY_TYPE, RenderFangs::new);
         event.registerEntityRenderer(ModEntities.ALLY_VEX, RenderAllyVex::new);
-        event.registerEntityRenderer(ModEntities.STARBUNCLE_TYPE, CarbuncleRenderer::new);
+        event.registerEntityRenderer(ModEntities.STARBUNCLE_TYPE, StarbuncleRenderer::new);
         event.registerEntityRenderer(ModEntities.WHIRLISPRIG_TYPE, SylphRenderer::new);
         event.registerEntityRenderer(ModEntities.ENTITY_WIXIE_TYPE, WixieRenderer::new);
         event.registerEntityRenderer(ModEntities.WILDEN_STALKER,renderManager -> new com.hollingsworth.arsnouveau.client.renderer.entity.GenericRenderer(renderManager, new WildenStalkerModel()));

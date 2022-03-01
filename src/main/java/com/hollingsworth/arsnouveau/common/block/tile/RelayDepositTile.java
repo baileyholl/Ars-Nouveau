@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
-public class RelayDepositTile extends ArcaneRelayTile{
+public class RelayDepositTile extends RelayTile {
 
     public RelayDepositTile(BlockPos pos, BlockState state) {
         super(BlockRegistry.RELAY_DEPOSIT_TILE, pos, state);
@@ -18,6 +18,8 @@ public class RelayDepositTile extends ArcaneRelayTile{
     @Override
     public void tick() {
         super.tick();
+        if(disabled)
+            return;
         if(!level.isClientSide && level.getGameTime() % 20 == 0 && getSource() > 0){
             List<BlockPos> posList = SourceUtil.canGiveSourceAny(worldPosition, level, 5);
             for(BlockPos jarPos : posList) {

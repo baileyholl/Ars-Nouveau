@@ -37,7 +37,8 @@
 				{
 					"name": "framework",
 					"parent": "source_relay",
-					"pivot": [0, 8, 0]
+					"pivot": [0, 8, 0],
+					"rotation": [0, 0, -180]
 				},
 				{
 					"name": "frame1",

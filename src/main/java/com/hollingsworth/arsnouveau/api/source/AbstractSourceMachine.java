@@ -81,6 +81,11 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
 
     public boolean canAcceptSource(int source){return this.getSource() + source <= this.getMaxSource();}
 
+    /**
+     * Transfers the maximum possible amount of source from one tile to another.
+     * Takes the maximum transfer rate of the two tiles into account, and the space remaining.
+     * @return The amount of source that was transferred.
+     */
     public int transferSource(ISourceTile from, ISourceTile to){
         int transferRate = getTransferRate(from, to);
         from.removeSource(transferRate);
@@ -88,6 +93,9 @@ public abstract class AbstractSourceMachine extends ModdedTile implements ISourc
         return transferRate;
     }
 
+    /**
+     * Gets the maximum amount of source that can be transferred from one tile to another.
+     */
     public int getTransferRate(ISourceTile from, ISourceTile to){
         return Math.min(Math.min(from.getTransferRate(), from.getSource()), to.getMaxSource() - to.getSource());
     }

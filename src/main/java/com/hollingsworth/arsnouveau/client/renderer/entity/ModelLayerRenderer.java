@@ -67,9 +67,9 @@ public class ModelLayerRenderer<T extends Entity & IAnimatable> extends GeoLayer
         entityModelData.netHeadYaw = netHeadYaw;
         GeoModel model = geoModelProvider.getModel(geoModelProvider.getModelLocation(entity));
         AnimationEvent predicate = new AnimationEvent((IAnimatable)entity, limbSwing, limbSwingAmount, partialTicks, !(limbSwingAmount > -0.15F && limbSwingAmount < 0.15F), Collections.singletonList(entityModelData));
-        IBone carbuncle = ((CarbuncleModel)getEntityModel()).getBone("carbuncle");
+        IBone carbuncle = ((StarbuncleModel)getEntityModel()).getBone("carbuncle");
         geoModelProvider.setLivingAnimations((IAnimatable) entity, this.getUniqueID((T) entity), predicate);
-        IBone head = ((CarbuncleModel)getEntityModel()).getBone("head");
+        IBone head = ((StarbuncleModel)getEntityModel()).getBone("head");
 
         matrixStackIn.translate((carbuncle.getPositionX())/32f, (carbuncle.getPositionY())/16f ,
                 (carbuncle.getPositionZ()));

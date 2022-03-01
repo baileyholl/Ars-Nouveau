@@ -892,6 +892,12 @@ public class ApparatusRecipeProvider implements DataProvider {
                 .withPedestalItem(1,Ingredient.of(Tags.Items.ENDER_PEARLS))
                 .withPedestalItem(1, Ingredient.of(ItemsRegistry.WILDEN_TRIBUTE))
                 .buildEnchantmentRecipe(EnchantmentRegistry.REACTIVE_ENCHANTMENT, 4, 9000));
+
+        addRecipe(builder()
+                .withResult(BlockRegistry.RELAY_COLLECTOR)
+                .withReagent(BlockRegistry.RELAY)
+                .withPedestalItem(4,Ingredient.of(Tags.Items.CHESTS))
+                .build());
     }
 
     public void addRecipe(EnchantingApparatusRecipe recipe){

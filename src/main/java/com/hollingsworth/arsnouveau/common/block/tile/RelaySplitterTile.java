@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RelaySplitterTile extends ArcaneRelayTile implements IMultiSourceTargetProvider {
+public class RelaySplitterTile extends RelayTile implements IMultiSourceTargetProvider {
 
     ArrayList<BlockPos> toList = new ArrayList<>();
     ArrayList<BlockPos> fromList = new ArrayList<>();
@@ -89,7 +89,7 @@ public class RelaySplitterTile extends ArcaneRelayTile implements IMultiSourceTa
 
     @Override
     public void tick() {
-        if(level.getGameTime() % 20 != 0 || toList.isEmpty() || level.isClientSide)
+        if(level.getGameTime() % 20 != 0 || toList.isEmpty() || level.isClientSide || disabled)
             return;
 
         processFromList();
