@@ -122,7 +122,7 @@ public class SpellCaster implements ISpellCaster{
     @Nonnull
     @Override
     public ConfiguredSpellSound getSound(int slot) {
-        return this.spellSounds.get(slot) == null ? ConfiguredSpellSound.EMPTY : this.spellSounds.get(slot);
+        return this.spellSounds.get(slot) == null ? ConfiguredSpellSound.DEFAULT : this.spellSounds.get(slot);
     }
 
     @Override

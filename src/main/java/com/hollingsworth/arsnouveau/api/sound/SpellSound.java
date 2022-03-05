@@ -63,4 +63,8 @@ public class SpellSound {
         ResourceLocation id = new ResourceLocation(tag.getString("id"));
         return ArsNouveauAPI.getInstance().getSpellSoundsRegistry().get(id);
     }
+
+    public ResourceLocation getTexturePath(){
+        return new ResourceLocation(this.id.getNamespace(), "textures/sounds/" + this.id.getPath() + ".png");
+    }
 }

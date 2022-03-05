@@ -17,6 +17,9 @@ public class SoundRegistry {
     @ObjectHolder("fire_family")
     public static SoundEvent FIRE_FAMILY = new SoundEvent(new ResourceLocation(ArsNouveau.MODID, "fire_family")).setRegistryName(new ResourceLocation(ArsNouveau.MODID, "fire_family"));
 
+
+    public static SpellSound FIRE_SPELL_SOUND;
+
     @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistryEvents {
         @SubscribeEvent
@@ -24,8 +27,8 @@ public class SoundRegistry {
             soundRegistryEvent.getRegistry().registerAll(
                    FIRE_FAMILY
             );
-
-            ArsNouveauAPI.getInstance().registerSpellSound(new SpellSound(FIRE_FAMILY, new TranslatableComponent("ars_nouveau.sound.fire_family")));
+            FIRE_SPELL_SOUND = new SpellSound(FIRE_FAMILY, new TranslatableComponent("ars_nouveau.sound.fire_family"));
+            ArsNouveauAPI.getInstance().registerSpellSound(FIRE_SPELL_SOUND);
         }
     }
 

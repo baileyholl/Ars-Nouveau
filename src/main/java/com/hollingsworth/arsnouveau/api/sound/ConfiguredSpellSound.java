@@ -1,11 +1,13 @@
 package com.hollingsworth.arsnouveau.api.sound;
 
+import com.hollingsworth.arsnouveau.setup.SoundRegistry;
 import net.minecraft.nbt.CompoundTag;
 
 import javax.annotation.Nullable;
 
 public class ConfiguredSpellSound {
-    public static ConfiguredSpellSound EMPTY = new ConfiguredSpellSound(null);
+    public static ConfiguredSpellSound EMPTY = new ConfiguredSpellSound(null); // If the user wants no sound, make it empty.
+    public static ConfiguredSpellSound DEFAULT = new ConfiguredSpellSound(SoundRegistry.FIRE_SPELL_SOUND); // The default sound to be returned for null casters.
 
     public @Nullable SpellSound sound;
     public float volume;

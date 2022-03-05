@@ -1010,5 +1010,10 @@
 	"ars_nouveau.lights_off": "You have turned dynamic lights off.",
 	"ars_nouveau.page.relay_collector": "Operates similar to the Source Relay, but will automatically take from jars it is not linked to within 5 blocks. See the instructions on the Source Relay for use.",
 	"block.ars_nouveau.relay_collector": "Source Relay: Collector",
-	"ars_nouveau.page2.relay": "A redstone signal will disable the relay."
+	"ars_nouveau.page2.relay": "A redstone signal will disable the relay.",
+	"ars_nouveau.sounds.pitch": "Pitch: ",
+	"ars_nouveau.sounds.volume": "Volume: ",
+	"ars_nouveau.gui.sounds": "Sounds",
+	"ars_nouveau.sounds.title": "Spell Sound",
+	"ars_nouveau.sounds.fire_family": "Fire Family"
 }

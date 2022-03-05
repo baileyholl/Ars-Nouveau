@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
@@ -140,6 +141,8 @@ public class GuiSpellBook extends BaseBook {
                 .withTooltip(this, new TranslatableComponent("ars_nouveau.gui.color")));
         addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 70, 0, 0, 23, 20, 23,20, "textures/gui/summon_circle_bookmark.png",this::onFamiliarClick)
                 .withTooltip(this, new TranslatableComponent("ars_nouveau.gui.familiar")));
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 94, 0, 0, 23, 20, 23,20, "textures/gui/sounds_tab.png",this::onSoundsClick)
+                .withTooltip(this, new TranslatableComponent("ars_nouveau.gui.sounds")));
         this.nextButton = addRenderableWidget(new PageButton(bookRight -20, bookBottom -10, true, this::onPageIncrease, true));
         this.previousButton = addRenderableWidget(new PageButton(bookLeft - 5 , bookBottom -10, false, this::onPageDec, true));
 
@@ -323,6 +326,11 @@ public class GuiSpellBook extends BaseBook {
     public void onColorClick(Button button){
         ParticleColor.IntWrapper color = CasterUtil.getCaster(bookStack).getColor(selected_cast_slot);
         Minecraft.getInstance().setScreen(new GuiColorScreen(color.r, color.g, color.b, selected_cast_slot));
+    }
+
+    public void onSoundsClick(Button button){
+        ConfiguredSpellSound spellSound = CasterUtil.getCaster(bookStack).getSound(selected_cast_slot);
+        Minecraft.getInstance().setScreen(new SoundScreen(spellSound));
     }
 
     public void onFamiliarClick(Button button){
