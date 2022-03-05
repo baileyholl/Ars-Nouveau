@@ -54,7 +54,7 @@ public class ModEntities {
     public static EntityType<WildenHunter> WILDEN_HUNTER = build(
             "wilden_hunter",
             EntityType.Builder.<WildenHunter>of(WildenHunter::new, EntityClassification.MONSTER)
-                    .sized(1.0f, 2.0f)
+                    .sized(0.6F, 1.95F)
                     .setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
     public static EntityType<EntitySpellArrow> ENTITY_SPELL_ARROW = null;
@@ -63,14 +63,14 @@ public class ModEntities {
     public static EntityType<WildenStalker> WILDEN_STALKER = build(
             "wilden_stalker",
             EntityType.Builder.<WildenStalker>of(WildenStalker::new, EntityClassification.MONSTER)
-                    .sized(1.0f, 2.0f)
+                    .sized(0.6F, 1.95F)
                     .setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
     public static EntityType<SummonHorse> SUMMON_HORSE = null;
     public static EntityType<WildenGuardian> WILDEN_GUARDIAN =  build(
             "wilden_guardian",
             EntityType.Builder.<WildenGuardian>of(WildenGuardian::new, EntityClassification.MONSTER)
-                    .sized(1.0f, 2.0f)
+                    .sized(0.65f, 1.95f)
                     .setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
     public static EntityType<EntityChimera> WILDEN_BOSS =  build(
