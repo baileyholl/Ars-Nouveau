@@ -34,7 +34,7 @@ public class ParticleGlow extends SpriteTexturedParticle {
         }
         this.setColor(colorR, colorG, colorB);
         this.lifetime = (int)((float)lifetime*0.5f);
-        this.quadSize = scale/8;
+        this.quadSize = 0;
         this.initScale = scale;
         this.xd = vx*2.0f;
         this.yd = vy*2.0f;
