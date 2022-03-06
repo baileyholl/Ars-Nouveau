@@ -36,7 +36,7 @@ public class EffectLightning extends AbstractEffect {
         lightningBoltEntity.extendTimes = (int) spellStats.getDurationMultiplier();
         lightningBoltEntity.ampScalar = AMP_VALUE.get().floatValue();
         lightningBoltEntity.wetBonus = GENERIC_DOUBLE.get().floatValue();
-        lightningBoltEntity.setDamage(DAMAGE.get().floatValue());
+        lightningBoltEntity.setDamage((float) (DAMAGE.get().floatValue() + spellStats.getDamageModifier()));
         (world).addFreshEntity(lightningBoltEntity);
     }
 

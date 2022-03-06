@@ -173,6 +173,7 @@ public class GuiSpellBook extends BaseBook {
         sorted.addAll(displayedGlyphs.stream().filter(s -> s instanceof AbstractAugment).collect(Collectors.toList()));
         sorted.addAll(displayedGlyphs.stream().filter(s -> s instanceof AbstractEffect).collect(Collectors.toList()));
         int perPage = 58;
+        sorted.sort(COMPARE_TYPE_THEN_NAME);
         sorted = sorted.subList(perPage * page, Math.min(sorted.size(), perPage * (page + 1)));
         int adjustedXPlaced = 0;
         int totalRowsPlaced = 0;

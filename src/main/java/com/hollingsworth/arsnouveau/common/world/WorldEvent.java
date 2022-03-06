@@ -292,8 +292,8 @@ public class WorldEvent {
         //Feature.RANDOM_SELECTOR.withConfiguration(new MultipleRandomFeatureConfig(ImmutableList.of(MAGIC_TREE_CONFIG.withChance(0.2F)), MAGIC_TREE_CONFIG)),
 //        e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION,
 //                Objects.requireNonNull(BuiltinRegistries.CONFIGURED_FEATURE.get(BlockRegistry.VEXING_SAPLING.getRegistryName()))).build();
-
-        e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, Objects.requireNonNull(BuiltinRegistries.PLACED_FEATURE.get(new ResourceLocation(ArsNouveau.MODID, "archwood"))));
+        if(Config.TREE_SPAWN_RATE.get() > 0)
+            e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, Objects.requireNonNull(BuiltinRegistries.PLACED_FEATURE.get(new ResourceLocation(ArsNouveau.MODID, "archwood"))));
 
 //        e.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION,
 //                Objects.requireNonNull(BuiltinRegistries.CONFIGURED_FEATURE.get(BlockRegistry.BLAZING_SAPLING.getRegistryName()))).build();
