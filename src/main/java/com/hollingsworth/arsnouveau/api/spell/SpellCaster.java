@@ -122,12 +122,14 @@ public class SpellCaster implements ISpellCaster{
     @Nonnull
     @Override
     public ConfiguredSpellSound getSound(int slot) {
+        System.out.println(this.spellSounds.get(slot));
         return this.spellSounds.get(slot) == null ? ConfiguredSpellSound.DEFAULT : this.spellSounds.get(slot);
     }
 
     @Override
     public void setSound(ConfiguredSpellSound sound, int slot) {
         this.spellSounds.put(slot, sound);
+        writeItem(stack);
     }
 
     @Nonnull
@@ -179,6 +181,9 @@ public class SpellCaster implements ISpellCaster{
 
             if(tag.contains("spell_color_" + i)){
                 this.setColor(ParticleColor.IntWrapper.deserialize(tag.getString("spell_color_" + i)), i);
+            }
+            if(tag.contains("spell_sound_" + i)){
+                this.setSound(ConfiguredSpellSound.fromTag(tag.getCompound("spell_sound_" + i)), i);
             }
         }
     }

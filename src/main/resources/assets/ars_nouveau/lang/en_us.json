@@ -1015,5 +1015,6 @@
 	"ars_nouveau.sounds.volume": "Volume: ",
 	"ars_nouveau.gui.sounds": "Sounds",
 	"ars_nouveau.sounds.title": "Spell Sound",
-	"ars_nouveau.sounds.fire_family": "Fire Family"
+	"ars_nouveau.sound.fire_family": "Fire Family",
+	"ars_nouveau.sound.empty": "No Sound"
 }

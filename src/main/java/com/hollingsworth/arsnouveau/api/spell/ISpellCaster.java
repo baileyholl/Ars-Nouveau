@@ -7,7 +7,6 @@ import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import com.hollingsworth.arsnouveau.setup.SoundRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundSource;
@@ -147,7 +146,6 @@ public interface ISpellCaster {
 
         resolver.onCast(stack,playerIn,worldIn);
         playSound(playerIn.getOnPos(), worldIn, playerIn, getCurrentSound(), SoundSource.PLAYERS);
-        worldIn.playSound(null, playerIn.getX(), playerIn.getY(), playerIn.getZ(),  SoundRegistry.FIRE_FAMILY, SoundSource.PLAYERS, 1.0F, 1.0F);
         return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
     }
 
@@ -160,7 +158,7 @@ public interface ISpellCaster {
     }
 
     default void playSound(BlockPos pos, Level worldIn, Player playerIn, ConfiguredSpellSound configuredSound, SoundSource source){
-        if(configuredSound == null || configuredSound.sound == null || configuredSound.sound.getSoundEvent() == null)
+        if(configuredSound == null || configuredSound.sound == null || configuredSound.sound.getSoundEvent() == null || configuredSound.equals(ConfiguredSpellSound.EMPTY))
             return;
 
         worldIn.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, configuredSound.sound.getSoundEvent(), source, configuredSound.volume, configuredSound.pitch);

@@ -1,4 +1,7 @@
 {
+  "empty": {
+    "sounds": []
+  },
   "fire_family": {
     "sounds": [
       {

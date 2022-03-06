@@ -6,6 +6,9 @@ import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.SoundButton;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketSetSound;
+import com.hollingsworth.arsnouveau.setup.SoundRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
@@ -25,8 +28,8 @@ public class SoundScreen extends BaseBook{
     public int casterSlot;
     public SoundScreen(ConfiguredSpellSound configuredSpellSound, int slot) {
         super();
-        volume = configuredSpellSound.volume;
-        pitch = configuredSpellSound.pitch;
+        volume = configuredSpellSound.volume * 100;
+        pitch = configuredSpellSound.pitch * 100;
         selectedSound = configuredSpellSound.sound;
         casterSlot = slot;
     }
@@ -51,9 +54,9 @@ public class SoundScreen extends BaseBook{
         addRenderableWidget(pitchSlider);
         addRenderableWidget(new GuiImageButton(bookLeft + 55, bookBottom - 36, 0,0,37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveClick));
 
-        selectedButton = new SoundButton(this, bookLeft + 70, bookTop + 132, ArsNouveauAPI.getInstance().getSpellSoundsRegistry().values().stream().toList().get(0), (b) -> {
-            ((SoundButton)b).sound = null;
-            selectedSound = null;
+        selectedButton = new SoundButton(this, bookLeft + 70, bookTop + 132, selectedSound, (b) -> {
+            ((SoundButton)b).sound = SoundRegistry.EMPTY_SPELL_SOUND;
+            selectedSound = SoundRegistry.EMPTY_SPELL_SOUND;
         });
         addRenderableWidget(selectedButton);
         addPresets();
@@ -92,9 +95,6 @@ public class SoundScreen extends BaseBook{
         }
     }
 
-    public void setFromPreset(int r, int g, int b){
-    }
-
     public void onSoundClick(Button button){
         if(button instanceof SoundButton){
             SoundButton soundButton = (SoundButton)button;
@@ -104,7 +104,7 @@ public class SoundScreen extends BaseBook{
     }
 
     public void onSaveClick(Button button){
-        //Networking.INSTANCE.sendToServer(new PacketUpdateSpellColors(slot, red, green, blue));
+        Networking.INSTANCE.sendToServer(new PacketSetSound(casterSlot, selectedSound == null ? ConfiguredSpellSound.EMPTY : new ConfiguredSpellSound(selectedSound, (float)volume / 100f, (float) pitch / 100f)));
     }
 
     @Override

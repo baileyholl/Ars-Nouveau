@@ -331,7 +331,7 @@ public class GuiSpellBook extends BaseBook {
 
     public void onSoundsClick(Button button){
         ConfiguredSpellSound spellSound = CasterUtil.getCaster(bookStack).getSound(selected_cast_slot);
-        Minecraft.getInstance().setScreen(new SoundScreen(spellSound));
+        Minecraft.getInstance().setScreen(new SoundScreen(spellSound, selected_cast_slot));
     }
 
     public void onFamiliarClick(Button button){
