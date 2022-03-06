@@ -2,8 +2,6 @@ package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.client.gui.GlyphRecipeTooltip;
 import com.hollingsworth.arsnouveau.client.gui.NoShadowTextField;
@@ -205,6 +203,9 @@ public class GlyphUnlockMenu extends BaseBook{
         layoutAllGlyphs(page);
     }
 
+    public static Comparator<AbstractSpellPart> COMPARE_TIER_THEN_NAME = COMPARE_GLYPH_BY_TYPE.thenComparingInt(o -> o.getTier().value).thenComparing(AbstractSpellPart::getLocaleName);
+
+
     public void layoutAllGlyphs(int page){
         clearButtons(glyphButtons);
         tier1Row = -1;
@@ -217,25 +218,9 @@ public class GlyphUnlockMenu extends BaseBook{
         int xStart = nextPage ? bookLeft + 154 : bookLeft + 20;
         int adjustedRowsPlaced = 0;
         int yStart = bookTop + 20;
-        Comparator<AbstractSpellPart> spellPartComparator = new Comparator<AbstractSpellPart>() {
-            @Override
-            public int compare(AbstractSpellPart o1, AbstractSpellPart o2) {
-
-                return fromType(o1) - fromType(o2);
-            }
-
-            public int fromType(AbstractSpellPart spellPart){
-                if(spellPart instanceof AbstractCastMethod)
-                    return 1;
-                if(spellPart instanceof AbstractAugment)
-                    return 2;
-                return 3;
-            }
-        }.thenComparingInt(o -> o.getTier().value)
-                .thenComparing(AbstractSpellPart::getLocaleName);
         List<AbstractSpellPart> sorted = new ArrayList<>(displayedGlyphs);
         sorted = applyFilter(sorted);
-        sorted.sort(spellPartComparator);
+        sorted.sort(COMPARE_TIER_THEN_NAME);
         sorted = sorted.subList(maxPerPage * page, Math.min(sorted.size(), maxPerPage * (page + 1)));
         int adjustedXPlaced = 0;
         int totalRowsPlaced = 0;
