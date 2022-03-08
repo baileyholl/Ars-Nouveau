@@ -21,8 +21,8 @@ public class SpellCaster implements ISpellCaster{
     private Map<Integer, ConfiguredSpellSound> spellSounds = new HashMap<>();
 
     private int slot;
-    ItemStack stack = ItemStack.EMPTY;
-    String flavorText = "";
+    public ItemStack stack = ItemStack.EMPTY;
+    public String flavorText = "";
 
     public SpellCaster(ItemStack stack){
         this(stack.getOrCreateTag());
@@ -122,7 +122,6 @@ public class SpellCaster implements ISpellCaster{
     @Nonnull
     @Override
     public ConfiguredSpellSound getSound(int slot) {
-        System.out.println(this.spellSounds.get(slot));
         return this.spellSounds.get(slot) == null ? ConfiguredSpellSound.DEFAULT : this.spellSounds.get(slot);
     }
 

@@ -134,6 +134,7 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
             return;
 
         float f = getPowerForTime(useTime);
+        boolean didCastSpell = false;
         if ((double)f >= 0.1D) {
             boolean isArrowInfinite = playerentity.abilities.instabuild || (arrowStack.getItem() instanceof ArrowItem && ((ArrowItem)arrowStack.getItem()).isInfinite(arrowStack, bowStack, playerentity));
             if (!worldIn.isClientSide) {
@@ -142,7 +143,6 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
                 abstractarrowentity = customArrow(abstractarrowentity);
 
                 List<AbstractArrow> arrows = new ArrayList<>();
-                boolean didCastSpell = false;
                 if(arrowitem == Items.ARROW  && new SpellResolver(new SpellContext(caster.getSpell(), playerentity)).withSilent(true).canCast(playerentity)){
                     abstractarrowentity = buildSpellArrow(worldIn, playerentity, caster, isSpellArrow);
                     new SpellResolver(new SpellContext(caster.getSpell(), playerentity)).expendMana(playerentity);
@@ -183,7 +183,8 @@ public class SpellBow extends BowItem implements IAnimatable, ICasterTool {
             }
 
             worldIn.playSound(null, playerentity.getX(), playerentity.getY(), playerentity.getZ(), SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F, 1.0F / (worldIn.random.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
-
+            if(didCastSpell)
+                caster.playSound(playerentity.getOnPos(), playerentity.level, playerentity, caster.getCurrentSound(), SoundSource.PLAYERS);
             if (!isArrowInfinite && !playerentity.abilities.instabuild) {
                 arrowStack.shrink(1);
             }
