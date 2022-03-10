@@ -198,6 +198,15 @@ public class SpellCaster implements ISpellCaster{
         stack.setTag(tag);
     }
 
+    /**
+     * Writes this compound data to the provided tag, stored with the caster ID.
+     * @param tag The tag to add this serialized tag to.
+     */
+    public void serializeOnTag(CompoundTag tag){
+        CompoundTag thisData = writeTag(new CompoundTag());
+        tag.put(getTagID(), thisData);
+    }
+
     @Override
     public String getTagID() {
         return "ars_nouveau_spellCaster";

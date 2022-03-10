@@ -1,6 +1,7 @@
 package com.hollingsworth.arsnouveau.api.item;
 
 import com.hollingsworth.arsnouveau.api.client.IDisplayMana;
+import com.hollingsworth.arsnouveau.api.spell.ISpellCasterProvider;
 import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
 import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.api.spell.SpellCaster;
@@ -10,6 +11,7 @@ import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
@@ -27,7 +29,7 @@ import java.util.List;
 /**
  * An interface for caster items that provides default behavior for scribing, displaying mana, and tooltips
  */
-public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyListener {
+public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyListener, ISpellCasterProvider {
     @Override
     default boolean onScribe(Level world, BlockPos pos, Player player, InteractionHand handIn, ItemStack stack) {
         ItemStack heldStack = player.getItemInHand(handIn);
@@ -65,6 +67,16 @@ public interface ICasterTool extends IScribeable, IDisplayMana, ISpellHotkeyList
 
     default @Nonnull ISpellCaster getSpellCaster(ItemStack stack){
         return new SpellCaster(stack);
+    }
+
+    @Override
+    default ISpellCaster getSpellCaster(){
+        return new SpellCaster(new CompoundTag());
+    }
+
+    @Override
+    default ISpellCaster getSpellCaster(CompoundTag tag) {
+        return new SpellCaster(tag);
     }
 
     default boolean setSpell(ISpellCaster caster, Player player, InteractionHand hand, ItemStack stack, Spell spell){

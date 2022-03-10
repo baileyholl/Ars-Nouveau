@@ -153,6 +153,16 @@ public interface ISpellCaster {
         return castSpell(worldIn, playerIn, handIn, invalidMessage, getSpell(worldIn, playerIn, handIn, this));
     }
 
+    default void copyFromCaster(ISpellCaster other){
+        for(int i = 0; i < getMaxSlots() + 1 && i < other.getMaxSlots() + 1; i++){
+            setSpell(other.getSpell(i), i);
+            setSound(other.getSound(i), i);
+            setColor(other.getColor(i), i);
+            setSpellName(other.getSpellName(i), i);
+            setFlavorText(other.getFlavorText());
+        }
+    }
+
     default SpellResolver getSpellResolver(SpellContext context, Level worldIn, Player playerIn, InteractionHand handIn){
         return new SpellResolver(context);
     }

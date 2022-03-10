@@ -1,10 +1,7 @@
 package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
-import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
-import com.hollingsworth.arsnouveau.api.spell.Spell;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
-import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.BasicSpellTurretTile;
@@ -62,8 +59,8 @@ public class BasicSpellTurret extends TickableModBlock {
 
     public void shootSpell(ServerLevel world, BlockPos pos ) {
         BasicSpellTurretTile tile = (BasicSpellTurretTile) world.getBlockEntity(pos);
-
-        if(tile == null || tile.spell.isEmpty())
+        ISpellCaster caster = tile.getSpellCaster();
+        if(tile == null || caster.getSpell().isEmpty())
             return;
         int manaCost = tile.getManaCost();
         if(SourceUtil.takeSourceNearbyWithParticles(pos, world, 10, manaCost) == null)
@@ -73,9 +70,8 @@ public class BasicSpellTurret extends TickableModBlock {
         Direction direction = world.getBlockState(pos).getValue(FACING);
         FakePlayer fakePlayer = ANFakePlayer.getPlayer(world);
         fakePlayer.setPos(pos.getX(), pos.getY(), pos.getZ());
-        EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(tile.spell, fakePlayer)
-                .withCastingTile(world.getBlockEntity(pos)).withType(SpellContext.CasterType.TURRET)
-                .withColors(tile.color));
+        EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(caster, fakePlayer)
+                .withCastingTile(world.getBlockEntity(pos)).withType(SpellContext.CasterType.TURRET));
         if(resolver.castType instanceof MethodProjectile){
             shootProjectile(world,pos,tile, resolver);
             return;
@@ -163,9 +159,7 @@ public class BasicSpellTurret extends TickableModBlock {
                 return InteractionResult.SUCCESS;
             }
             BasicSpellTurretTile tile = (BasicSpellTurretTile) worldIn.getBlockEntity(pos);
-            tile.spell = spell;
-            tile.color = CasterUtil.getCaster(stack).getColor();
-            tile.color.makeVisible();
+            tile.spellCaster.copyFromCaster(CasterUtil.getCaster(stack));
             PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.alert.spell_set"));
             worldIn.sendBlockUpdated(pos, state, state, 2);
         }

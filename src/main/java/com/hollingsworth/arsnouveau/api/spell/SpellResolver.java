@@ -42,6 +42,10 @@ public class SpellResolver {
         this.spellValidator = ArsNouveauAPI.getInstance().getSpellCastingSpellValidator();
     }
 
+    public SpellResolver(ISpellCaster spellCaster, @Nullable LivingEntity castingEntity){
+        this(new SpellContext(spellCaster.getSpell(), castingEntity).withColors(spellCaster.getColor()));
+    }
+
     public SpellResolver withSilent(boolean isSilent){
         this.silent = isSilent;
         return this;

@@ -1,12 +1,8 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
-import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
-import com.hollingsworth.arsnouveau.api.spell.IPlaceBlockResponder;
-import com.hollingsworth.arsnouveau.api.spell.Spell;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import net.minecraft.core.BlockPos;
@@ -30,11 +26,11 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class BasicSpellTurretTile extends ModdedTile implements IPickupResponder, IPlaceBlockResponder, ITooltipProvider, IAnimatable, IAnimationListener, ITickable {
+public class BasicSpellTurretTile extends ModdedTile implements IPickupResponder, IPlaceBlockResponder, ITooltipProvider, IAnimatable, IAnimationListener, ITickable, ISpellCasterProvider {
 
-    public @Nonnull Spell spell = Spell.EMPTY;
     boolean playRecoil;
-    public ParticleColor.IntWrapper color = ParticleUtil.defaultParticleColor().toWrapper();
+    public TurretSpellCaster spellCaster = new TurretSpellCaster(new CompoundTag());
+
     public BasicSpellTurretTile(BlockEntityType<?> p_i48289_1_, BlockPos pos, BlockState state) {
         super(p_i48289_1_, pos, state);
     }
@@ -44,7 +40,7 @@ public class BasicSpellTurretTile extends ModdedTile implements IPickupResponder
     }
 
     public int getManaCost(){
-        return this.spell.getCastingCost();
+        return this.spellCaster.getSpell().getCastingCost();
     }
 
     @Override
@@ -65,22 +61,18 @@ public class BasicSpellTurretTile extends ModdedTile implements IPickupResponder
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        tag.putString("spell", spell.serialize());
-        tag.putString("color", color.serialize());
+        spellCaster.serializeOnTag(tag);
     }
 
     @Override
     public void load(CompoundTag tag) {
-        this.spell = Spell.deserialize(tag.getString("spell"));
-        if(tag.contains("color")){
-            this.color = ParticleColor.IntWrapper.deserialize(tag.getString("color"));
-        }
+        this.spellCaster = new TurretSpellCaster(tag);
         super.load(tag);
     }
 
     @Override
     public void getTooltip(List<Component> tooltip) {
-        tooltip.add(new TextComponent(new TranslatableComponent("ars_nouveau.spell_turret.casting").getString() + spell.getDisplayString()));
+        tooltip.add(new TextComponent(new TranslatableComponent("ars_nouveau.spell_turret.casting").getString() + spellCaster.getSpell().getDisplayString()));
     }
 
     public PlayState walkPredicate(AnimationEvent event) {
@@ -119,4 +111,13 @@ public class BasicSpellTurretTile extends ModdedTile implements IPickupResponder
         return false;
     }
 
+    @Override
+    public ISpellCaster getSpellCaster() {
+        return spellCaster;
+    }
+
+    @Override
+    public ISpellCaster getSpellCaster(CompoundTag tag) {
+        return spellCaster;
+    }
 }
