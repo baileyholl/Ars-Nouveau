@@ -16,6 +16,10 @@ public abstract class SummonBlock extends TickableModBlock {
         super(properties, registry);
     }
 
+    public SummonBlock(Properties properties) {
+        super(properties);
+    }
+
     public SummonBlock(String string){
         super(string);
     }

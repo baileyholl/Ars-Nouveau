@@ -28,10 +28,8 @@ public class EffectFlare extends AbstractEffect {
 
     @Override
     public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        Entity entity = rayTraceResult.getEntity();
-        if(!(entity instanceof LivingEntity))
+        if(!(rayTraceResult.getEntity() instanceof LivingEntity livingEntity))
             return;
-        LivingEntity livingEntity = (LivingEntity) entity;
         Vec3 vec = safelyGetHitPos(rayTraceResult);
         float damage = (float) (DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
         int range = 3 + spellStats.getBuffCount(AugmentAOE.INSTANCE);
