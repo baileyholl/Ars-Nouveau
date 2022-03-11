@@ -16,6 +16,7 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.core.*;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -33,15 +34,17 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.common.util.FakePlayerFactory;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.Random;
 
 public class BasicSpellTurret extends TickableModBlock {
 
     public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
+
+    public static HashMap<AbstractCastMethod, ITurretBehavior> TURRET_BEHAVIOR_MAP = new HashMap<>();
 
     public BasicSpellTurret(Properties properties, String registry) {
         super(properties, registry);
@@ -55,6 +58,34 @@ public class BasicSpellTurret extends TickableModBlock {
     @Override
     public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand) {
         this.shootSpell(worldIn, pos);
+    }
+
+    static {
+        TURRET_BEHAVIOR_MAP.put(MethodProjectile.INSTANCE, new ITurretBehavior() {
+            @Override
+            public void onCast(SpellResolver resolver, BasicSpellTurretTile tile, ServerLevel world, BlockPos pos, FakePlayer fakePlayer, Position iposition, Direction direction) {
+                EntityProjectileSpell spell = new EntityProjectileSpell(world,resolver);
+                spell.setOwner(fakePlayer);
+                spell.setPos(iposition.x(), iposition.y(), iposition.z());
+                spell.shoot(direction.getStepX(), ((float)direction.getStepY()), direction.getStepZ(), 0.5f, 0);
+                world.addFreshEntity(spell);
+            }
+        });
+
+        TURRET_BEHAVIOR_MAP.put(MethodTouch.INSTANCE, new ITurretBehavior() {
+            @Override
+            public void onCast(SpellResolver resolver, BasicSpellTurretTile tile, ServerLevel serverLevel, BlockPos pos, FakePlayer fakePlayer, Position dispensePosition, Direction direction) {
+                BlockPos touchPos = new BlockPos(dispensePosition.x(), dispensePosition.y(), dispensePosition.z());
+                if(direction == Direction.WEST || direction == Direction.NORTH){
+                    touchPos = touchPos.relative(direction);
+                }
+                if(direction == Direction.DOWN) // Why do I need to do this? Why does the vanilla dispenser code not offset correctly for DOWN?
+                    touchPos = touchPos.below();
+                resolver.onCastOnBlock(new BlockHitResult(new Vec3(touchPos.getX(), touchPos.getY(), touchPos.getZ()),
+                                direction.getOpposite(), new BlockPos(touchPos.getX(), touchPos.getY(), touchPos.getZ()), false),
+                        fakePlayer);
+            }
+        });
     }
 
     public void shootSpell(ServerLevel world, BlockPos pos ) {
@@ -72,34 +103,12 @@ public class BasicSpellTurret extends TickableModBlock {
         fakePlayer.setPos(pos.getX(), pos.getY(), pos.getZ());
         EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(caster, fakePlayer)
                 .withCastingTile(world.getBlockEntity(pos)).withType(SpellContext.CasterType.TURRET));
-        if(resolver.castType instanceof MethodProjectile){
-            shootProjectile(world,pos,tile, resolver);
-            return;
-        }
-        if(resolver.castType instanceof MethodTouch){
-            BlockPos touchPos = new BlockPos(iposition.x(), iposition.y(), iposition.z());
-            if(direction == Direction.WEST || direction == Direction.NORTH){
-                touchPos = touchPos.relative(direction);
-            }
-            if(direction == Direction.DOWN) // Why do I need to do this? Why does the vanilla dispenser code not offset correctly for DOWN?
-                touchPos = touchPos.below();
-            resolver.onCastOnBlock(new BlockHitResult(new Vec3(touchPos.getX(), touchPos.getY(), touchPos.getZ()),
-                            direction.getOpposite(), new BlockPos(touchPos.getX(), touchPos.getY(), touchPos.getZ()), false),
-                    fakePlayer);
+        if(resolver.castType != null && TURRET_BEHAVIOR_MAP.containsKey(resolver.castType)) {
+            TURRET_BEHAVIOR_MAP.get(resolver.castType).onCast(resolver, tile, world, pos, fakePlayer, iposition, direction);
+            caster.playSound(pos, world, null, caster.getCurrentSound(), SoundSource.BLOCKS);
         }
     }
 
-    public void shootProjectile(ServerLevel world,BlockPos pos, BasicSpellTurretTile tile, SpellResolver resolver){
-        Position iposition = getDispensePosition(new BlockSourceImpl(world, pos));
-        Direction direction = world.getBlockState(pos).getValue(DispenserBlock.FACING);
-        FakePlayer fakePlayer = FakePlayerFactory.getMinecraft(world);
-        fakePlayer.setPos(pos.getX(), pos.getY(), pos.getZ());
-        EntityProjectileSpell spell = new EntityProjectileSpell(world,resolver);
-        spell.setOwner(fakePlayer);
-        spell.setPos(iposition.x(), iposition.y(), iposition.z());
-        spell.shoot(direction.getStepX(), ((float)direction.getStepY()), direction.getStepZ(), 0.5f, 0);
-        world.addFreshEntity(spell);
-    }
 
     public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
         boolean neighborSignal = worldIn.hasNeighborSignal(pos) || worldIn.hasNeighborSignal(pos.above());
@@ -154,7 +163,7 @@ public class BasicSpellTurret extends TickableModBlock {
             Spell spell =  CasterUtil.getCaster(stack).getSpell();
             if(spell.isEmpty())
                 return InteractionResult.SUCCESS;
-            if(!(spell.recipe.get(0) instanceof MethodTouch || spell.recipe.get(0) instanceof MethodProjectile)){
+            if(!(TURRET_BEHAVIOR_MAP.containsKey(spell.getCastMethod()))){
                 PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.alert.turret_type"));
                 return InteractionResult.SUCCESS;
             }

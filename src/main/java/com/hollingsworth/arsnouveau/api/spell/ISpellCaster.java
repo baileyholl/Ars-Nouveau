@@ -167,11 +167,11 @@ public interface ISpellCaster {
         return new SpellResolver(context);
     }
 
-    default void playSound(BlockPos pos, Level worldIn, Player playerIn, ConfiguredSpellSound configuredSound, SoundSource source){
+    default void playSound(BlockPos pos, Level worldIn, @Nullable Player playerIn, ConfiguredSpellSound configuredSound, SoundSource source){
         if(configuredSound == null || configuredSound.sound == null || configuredSound.sound.getSoundEvent() == null || configuredSound.equals(ConfiguredSpellSound.EMPTY))
             return;
 
-        worldIn.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, configuredSound.sound.getSoundEvent(), source, configuredSound.volume, configuredSound.pitch);
+        worldIn.playSound(playerIn, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, configuredSound.sound.getSoundEvent(), source, configuredSound.volume, configuredSound.pitch);
     }
 
     String getTagID();
