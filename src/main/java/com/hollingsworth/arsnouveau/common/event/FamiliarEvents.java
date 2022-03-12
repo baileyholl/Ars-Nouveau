@@ -3,6 +3,7 @@ package com.hollingsworth.arsnouveau.common.event;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.event.FamiliarSummonEvent;
 import com.hollingsworth.arsnouveau.api.event.MaxManaCalcEvent;
+import com.hollingsworth.arsnouveau.api.event.SpellCastEvent;
 import com.hollingsworth.arsnouveau.api.event.SpellModifierEvent;
 import com.hollingsworth.arsnouveau.common.entity.familiar.*;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
@@ -22,14 +23,23 @@ public class FamiliarEvents {
         List<FamiliarEntity> stale = new ArrayList<>();
         List<FamiliarEntity> matching = new ArrayList<>();
         for(FamiliarEntity familiarEntity : FamiliarEntity.FAMILIAR_SET){
-            if(familiarEntity.removed || familiarEntity.terminatedFamiliar || familiarEntity.getOwner() == null) {
+            if(familiarEntity.isRemoved() || familiarEntity.terminatedFamiliar || familiarEntity.getOwner() == null) {
                 stale.add(familiarEntity);
             }else if(predicate.test(familiarEntity)){
                 matching.add(familiarEntity);
             }
         }
-        FamiliarEntity.FAMILIAR_SET.removeAll(stale);
+        stale.forEach(FamiliarEntity.FAMILIAR_SET::remove);
         return matching;
+    }
+
+    @SubscribeEvent
+    public static void castEvent(SpellCastEvent event) {
+        for(FamiliarEntity entity : getFamiliars((f) -> f instanceof ISpellCastListener)){
+            if(entity instanceof ISpellCastListener){
+                ((ISpellCastListener) entity).onCast(event);
+            }
+        }
     }
 
     @SubscribeEvent
@@ -82,9 +92,9 @@ public class FamiliarEvents {
 
     @SubscribeEvent
     public static void eatEvent(LivingEntityUseItemEvent.Finish event) {
-        for(FamiliarEntity entity : getFamiliars((familiarEntity -> familiarEntity instanceof FamiliarSylph))){
-            if(entity instanceof FamiliarSylph){
-                ((FamiliarSylph) entity).eatEvent(event);
+        for(FamiliarEntity entity : getFamiliars((familiarEntity -> familiarEntity instanceof FamiliarWhirlisprig))){
+            if(entity instanceof FamiliarWhirlisprig){
+                ((FamiliarWhirlisprig) entity).eatEvent(event);
             }
         }
     }

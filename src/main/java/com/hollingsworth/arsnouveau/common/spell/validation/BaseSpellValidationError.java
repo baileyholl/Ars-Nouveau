@@ -2,9 +2,9 @@ package com.hollingsworth.arsnouveau.common.spell.validation;
 
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import javax.annotation.Nullable;
 
@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
  * or <code>"ars_nouveau.spell.validation.adding."</code>.
  */
 public class BaseSpellValidationError implements SpellValidationError {
-    private static final ITextComponent[] NO_ARGS = new ITextComponent[0];
+    private static final Component[] NO_ARGS = new Component[0];
     private final int position;
     private final AbstractSpellPart spellPart;
     private final String localizationCode;
@@ -38,7 +38,7 @@ public class BaseSpellValidationError implements SpellValidationError {
     public BaseSpellValidationError(int position,
                                     AbstractSpellPart spellPart,
                                     String localizationCode,
-                                    ITextComponent... translationArguments) {
+                                    Component... translationArguments) {
         this.position = position;
         this.spellPart = spellPart;
         this.localizationCode = localizationCode;
@@ -85,26 +85,26 @@ public class BaseSpellValidationError implements SpellValidationError {
     }
 
     @Override
-    public IFormattableTextComponent makeTextComponentExisting() {
+    public MutableComponent makeTextComponentExisting() {
         return makeTextComponent("ars_nouveau.spell.validation.exists.");
     }
     @Override
-    public IFormattableTextComponent makeTextComponentAdding() {
+    public MutableComponent makeTextComponentAdding() {
         return makeTextComponent("ars_nouveau.spell.validation.adding.");
     }
 
-    private IFormattableTextComponent makeTextComponent(String keyPrefix) {
-        return new TranslationTextComponent(keyPrefix + localizationCode, translationArguments);
+    private MutableComponent makeTextComponent(String keyPrefix) {
+        return new TranslatableComponent(keyPrefix + localizationCode, translationArguments);
     }
 
     /**
      * Translates a number of spell parts into an array of ITextComponents suitable for use as the arguments
      * parameter of the constructor.
      */
-    private static ITextComponent[] translateGlyphs(AbstractSpellPart... parts) {
-        ITextComponent[] textComponents = new ITextComponent[parts.length];
+    private static Component[] translateGlyphs(AbstractSpellPart... parts) {
+        Component[] textComponents = new Component[parts.length];
         for (int i = 0; i < parts.length; i++) {
-            textComponents[i] = new TranslationTextComponent(parts[i].getLocalizationKey());
+            textComponents[i] = new TranslatableComponent(parts[i].getLocalizationKey());
         }
         return textComponents;
     }

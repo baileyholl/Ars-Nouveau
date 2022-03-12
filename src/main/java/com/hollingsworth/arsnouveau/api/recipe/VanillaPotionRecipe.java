@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.api.recipe;
 
-import net.minecraft.item.Item;
-import net.minecraft.potion.Potion;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.alchemy.Potion;
 
 public class VanillaPotionRecipe {
 

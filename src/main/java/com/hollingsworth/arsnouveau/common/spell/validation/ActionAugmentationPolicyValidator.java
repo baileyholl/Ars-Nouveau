@@ -3,7 +3,6 @@ package com.hollingsworth.arsnouveau.common.spell.validation;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
-import com.hollingsworth.arsnouveau.setup.Config;
 
 import java.util.List;
 

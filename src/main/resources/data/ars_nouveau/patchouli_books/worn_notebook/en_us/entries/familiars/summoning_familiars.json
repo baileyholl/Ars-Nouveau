@@ -1,0 +1,27 @@
+{
+  "name": "ars_nouveau.page.summoning_familiars",
+  "category": "ars_nouveau:familiars",
+  "sortnum": -1,
+  "icon": "ars_nouveau:ritual_binding",
+  "pages": [
+    {
+      "text": "ars_nouveau.page1.summoning_familiars",
+      "type": "patchouli:text"
+    },
+    {
+      "text": "ars_nouveau.page2.summoning_familiars",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:ritual_binding",
+      "type": "patchouli:crafting"
+    },
+    {
+      "entries": [
+        "ars_nouveau:machines/ritual_brazier",
+        "ars_nouveau:rituals/binding"
+      ],
+      "type": "patchouli:relations"
+    }
+  ]
+}

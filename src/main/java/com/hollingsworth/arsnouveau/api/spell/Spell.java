@@ -1,16 +1,16 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.entity.LivingEntity;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Spell {
+public class Spell implements Cloneable{
     public static final Spell EMPTY = new Spell();
 
-    public List<AbstractSpellPart> recipe;
+    public List<AbstractSpellPart> recipe = new ArrayList<>();
     private int cost;
 
     public Spell(List<AbstractSpellPart> recipe){
@@ -18,13 +18,21 @@ public class Spell {
         this.cost = getInitialCost();
     }
 
-    public Spell(){
-        this.recipe = new ArrayList<>();
-        this.cost = 0;
+    public Spell(){ }
+
+    public Spell(AbstractSpellPart... spellParts){
+        super();
+        add(spellParts);
     }
 
     public Spell add(AbstractSpellPart spellPart){
         recipe.add(spellPart);
+        return this;
+    }
+
+    public Spell add(AbstractSpellPart... spellParts){
+        for(AbstractSpellPart part : spellParts)
+            add(part);
         return this;
     }
 
@@ -63,29 +71,25 @@ public class Spell {
 
     public int getInstanceCount(AbstractSpellPart spellPart){
         int count = 0;
-        for(int i = 0; i < this.recipe.size(); i++){
-            if(this.recipe.get(i).equals(spellPart))
+        for (AbstractSpellPart abstractSpellPart : this.recipe) {
+            if (abstractSpellPart.equals(spellPart))
                 count++;
         }
         return count;
     }
 
-    public int getBuffsAtIndex(int startPosition, @Nullable LivingEntity caster, Class<? extends AbstractAugment> augmentClass){
-        return (int) getAugments(startPosition, caster).stream().filter(a -> a.getClass().equals(augmentClass)).count();
+    public int getBuffsAtIndex(int startPosition, @Nullable LivingEntity caster, AbstractAugment augment){
+        return (int) getAugments(startPosition, caster).stream().filter(a -> a.equals(augment)).count();
     }
 
     private int getInitialCost(){
         int cost = 0;
         if(recipe == null)
             return cost;
-        for (int i = 0; i < recipe.size(); i++) {
-            AbstractSpellPart spell = recipe.get(i);
-            if (!(spell instanceof AbstractAugment)) {
-                List<AbstractAugment> augments = getAugments(i, null);
-                cost += spell.getAdjustedManaCost(augments);
-            }
+        for (AbstractSpellPart spell : recipe) {
+            cost += spell.getConfigCost();
         }
-        return cost;
+        return Math.max(0, cost);
     }
 
     public int getCastingCost(){
@@ -103,7 +107,7 @@ public class Spell {
     public String serialize(){
         List<String> tags = new ArrayList<>();
         for(AbstractSpellPart slot : recipe){
-            tags.add(slot.tag);
+            tags.add(slot.getId());
         }
         return tags.toString();
     }
@@ -114,8 +118,8 @@ public class Spell {
             return new Spell(recipe);
         String[] recipeList = recipeStr.substring(1, recipeStr.length() - 1).split(",");
         for(String id : recipeList){
-            if (ArsNouveauAPI.getInstance().getSpell_map().containsKey(id.trim()))
-                recipe.add(ArsNouveauAPI.getInstance().getSpell_map().get(id.trim()));
+            if (ArsNouveauAPI.getInstance().getSpellpartMap().containsKey(id.trim()))
+                recipe.add(ArsNouveauAPI.getInstance().getSpellpartMap().get(id.trim()));
         }
         return new Spell(recipe);
     }
@@ -147,7 +151,18 @@ public class Spell {
     }
 
     public boolean isValid(){
-        return this.recipe != null && !this.recipe.isEmpty();
+        return !this.isEmpty();
+    }
+
+    @Override
+    public Spell clone() {
+        try {
+            Spell clone = (Spell) super.clone();
+            clone.recipe = new ArrayList<>(this.recipe);
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 
     public static class Builder{

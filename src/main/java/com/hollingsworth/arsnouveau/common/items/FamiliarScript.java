@@ -1,19 +1,19 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
-import com.hollingsworth.arsnouveau.api.familiar.FamiliarCap;
-import com.hollingsworth.arsnouveau.api.familiar.IFamiliarCap;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
+import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
+import net.minecraft.Util;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class FamiliarScript extends ModItem{
@@ -37,19 +37,19 @@ public class FamiliarScript extends ModItem{
     }
 
     @Override
-    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        if(worldIn.isClientSide)
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+        if(worldIn.isClientSide || handIn != InteractionHand.MAIN_HAND)
             return super.use(worldIn, playerIn, handIn);
 
-        IFamiliarCap familiarCap = FamiliarCap.getFamiliarCap(playerIn).orElse(null);
+        IPlayerCap familiarCap = CapabilityRegistry.getPlayerDataCap(playerIn).orElse(null);
         if(familiarCap != null){
-            if(familiarCap.ownsFamiliar(familiar.getId())){
-                playerIn.sendMessage(new TranslationTextComponent("ars_nouveau.familiar.owned"), Util.NIL_UUID);
+            if(familiarCap.ownsFamiliar(familiar)){
+                playerIn.sendMessage(new TranslatableComponent("ars_nouveau.familiar.owned"), Util.NIL_UUID);
                 return super.use(worldIn, playerIn, handIn);
             }
-            familiarCap.unlockFamiliar(familiar.getId());
-            FamiliarCap.syncFamiliars(playerIn);
-            playerIn.sendMessage(new TranslationTextComponent("ars_nouveau.familiar.unlocked"), Util.NIL_UUID);
+            familiarCap.unlockFamiliar(familiar);
+            CapabilityRegistry.EventHandler.syncPlayerCap(playerIn);
+            playerIn.sendMessage(new TranslatableComponent("ars_nouveau.familiar.unlocked"), Util.NIL_UUID);
             playerIn.getItemInHand(handIn).shrink(1);
         }
         return super.use(worldIn, playerIn, handIn);
@@ -57,7 +57,7 @@ public class FamiliarScript extends ModItem{
 
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip2, ITooltipFlag flagIn) {
-        tooltip2.add(new TranslationTextComponent("ars_nouveau.familiar.script"));
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip2, TooltipFlag flagIn) {
+        tooltip2.add(new TranslatableComponent("ars_nouveau.familiar.script"));
     }
 }

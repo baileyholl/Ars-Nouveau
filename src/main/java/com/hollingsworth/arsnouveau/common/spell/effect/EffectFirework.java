@@ -1,22 +1,22 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.google.common.collect.Lists;
-import com.hollingsworth.arsnouveau.GlyphLib;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSplit;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.FireworkRocketEntity;
-import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.FireworkRocketEntity;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,12 +27,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class EffectFirework extends AbstractEffect {
+
+    public static EffectFirework INSTANCE = new EffectFirework();
+
     public EffectFirework() {
         super(GlyphLib.EffectFireworkID, "Firework");
     }
 
     @Override
-    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         super.onResolveEntity(rayTraceResult, world, shooter, spellStats, spellContext);
         if(!(rayTraceResult.getEntity() instanceof LivingEntity)){
             return;
@@ -45,7 +48,7 @@ public class EffectFirework extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         super.onResolveBlock(rayTraceResult, world, shooter, spellStats, spellContext);
         ItemStack firework = getCorrectFirework(spellContext, spellStats, shooter);
         for(int i = 0; i < spellStats.getBuffCount(AugmentSplit.INSTANCE) + 1; i++) {
@@ -59,7 +62,7 @@ public class EffectFirework extends AbstractEffect {
         return !foundStack.isEmpty() ? foundStack : firework;
     }
 
-    public void spawnFireworkOnBlock(BlockRayTraceResult rayTraceResult, World world, LivingEntity shooter, int i, ItemStack fireworkStack, SpellContext context){
+    public void spawnFireworkOnBlock(BlockHitResult rayTraceResult, Level world, LivingEntity shooter, int i, ItemStack fireworkStack, SpellContext context){
         FireworkRocketEntity fireworkrocketentity;
         if(context.getType() == SpellContext.CasterType.TURRET){
             BlockPos pos = rayTraceResult.getBlockPos();
@@ -75,14 +78,14 @@ public class EffectFirework extends AbstractEffect {
         world.addFreshEntity(fireworkrocketentity);
     }
 
-    public void spawnFireworkOnEntity(EntityRayTraceResult rayTraceResult, World world, LivingEntity shooter, ItemStack firework){
+    public void spawnFireworkOnEntity(EntityHitResult rayTraceResult, Level world, LivingEntity shooter, ItemStack firework){
         FireworkRocketEntity fireworkrocketentity = new FireworkRocketEntity(world, firework, (LivingEntity) rayTraceResult.getEntity());
         fireworkrocketentity.setOwner(shooter);
         world.addFreshEntity(fireworkrocketentity);
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 50;
     }
 
@@ -117,9 +120,9 @@ public class EffectFirework extends AbstractEffect {
 
     public static ItemStack getFirework(int numGunpowder, int numStars){
         ItemStack stack = new ItemStack(Items.FIREWORK_ROCKET);
-        CompoundNBT rocketTag = stack.getOrCreateTagElement("Fireworks");
+        CompoundTag rocketTag = stack.getOrCreateTagElement("Fireworks");
         rocketTag.putByte("Flight", (byte)numGunpowder);
-        ListNBT listnbt = new ListNBT();
+        ListTag listnbt = new ListTag();
         for(int i = 0; i < numStars; i++){
             listnbt.add(getRandomStar().getTagElement("Explosion"));
         }
@@ -131,7 +134,7 @@ public class EffectFirework extends AbstractEffect {
 
     public static ItemStack getRandomStar(){
         ItemStack star = new ItemStack(Items.FIREWORK_STAR);
-        CompoundNBT starTag = star.getOrCreateTagElement("Explosion");
+        CompoundTag starTag = star.getOrCreateTagElement("Explosion");
         Random random = new Random();
         FireworkRocketItem.Shape fireworkrocketitem$shape = shapes[random.nextInt(shapes.length)];
         List<Integer> list = Lists.newArrayList();
@@ -146,13 +149,8 @@ public class EffectFirework extends AbstractEffect {
     }
 
     @Override
-    public Tier getTier() {
-        return Tier.TWO;
+    public SpellTier getTier() {
+        return SpellTier.TWO;
     }
 
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.FIREWORK_ROCKET;
-    }
 }

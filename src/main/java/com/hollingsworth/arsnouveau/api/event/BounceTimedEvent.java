@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.api.event;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
 
 public class BounceTimedEvent implements ITimedEvent{
     LivingEntity livingEntity;
@@ -17,7 +17,7 @@ public class BounceTimedEvent implements ITimedEvent{
         duration++;
         if(duration == 1){
             double f = 0.91d + 0.025d;
-            Vector3d vec3d = this.livingEntity.getDeltaMovement();
+            Vec3 vec3d = this.livingEntity.getDeltaMovement();
             this.livingEntity.setDeltaMovement(vec3d.x / f, oldY, vec3d.z / f);
             this.livingEntity.hurtMarked = true;
         }

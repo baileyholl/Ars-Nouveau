@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.util;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.List;

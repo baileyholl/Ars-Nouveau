@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.LightningEntity;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
@@ -8,13 +8,11 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
@@ -29,16 +27,16 @@ public class EffectLightning extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
-        Vector3d pos = safelyGetHitPos(rayTraceResult);
+    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        Vec3 pos = safelyGetHitPos(rayTraceResult);
         LightningEntity lightningBoltEntity = new LightningEntity(ModEntities.LIGHTNING_ENTITY,world);
         lightningBoltEntity.setPos(pos.x(), pos.y(), pos.z());
-        lightningBoltEntity.setCause(shooter instanceof ServerPlayerEntity ? (ServerPlayerEntity) shooter : null);
+        lightningBoltEntity.setCause(shooter instanceof ServerPlayer ? (ServerPlayer) shooter : null);
         lightningBoltEntity.amps = (float) spellStats.getAmpMultiplier();
         lightningBoltEntity.extendTimes = (int) spellStats.getDurationMultiplier();
         lightningBoltEntity.ampScalar = AMP_VALUE.get().floatValue();
         lightningBoltEntity.wetBonus = GENERIC_DOUBLE.get().floatValue();
-        lightningBoltEntity.setDamage(DAMAGE.get().floatValue());
+        lightningBoltEntity.setDamage((float) (DAMAGE.get().floatValue() + spellStats.getDamageModifier()));
         (world).addFreshEntity(lightningBoltEntity);
     }
 
@@ -51,19 +49,13 @@ public class EffectLightning extends AbstractEffect {
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 100;
     }
 
     @Override
-    public Tier getTier() {
-        return Tier.THREE;
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.HEART_OF_THE_SEA;
+    public SpellTier getTier() {
+        return SpellTier.THREE;
     }
 
     @Nonnull

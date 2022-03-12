@@ -1,0 +1,33 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "ars_nouveau:items/dowsing_rod_100"
+  },
+  "overrides": [
+
+    {
+      "predicate": {
+        "ars_nouveau:uses": 0.25
+      },
+      "model": "ars_nouveau:item/dowsing_rod_25"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:uses": 0.50
+      },
+      "model": "ars_nouveau:item/dowsing_rod_50"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:uses": 0.75
+      },
+      "model": "ars_nouveau:item/dowsing_rod_75"
+    },
+    {
+      "predicate": {
+        "ars_nouveau:uses": 1.0
+      },
+      "model": "ars_nouveau:item/dowsing_rod_100"
+    }
+  ]
+}

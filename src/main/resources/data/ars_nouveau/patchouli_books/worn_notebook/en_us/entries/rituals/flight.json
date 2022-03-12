@@ -1,15 +1,15 @@
 {
   "name": "item.ars_nouveau.ritual_flight",
+  "category": "ars_nouveau:rituals",
   "icon": "ars_nouveau:ritual_flight",
-  "category": "rituals",
   "pages": [
     {
-      "type": "text",
-      "text": "ars_nouveau.ritual_desc.flight"
+      "text": "ars_nouveau.ritual_desc.flight",
+      "type": "patchouli:text"
     },
     {
-      "type": "crafting",
-      "recipe": "ars_nouveau:ritual_flight"
+      "recipe": "ars_nouveau:ritual_flight",
+      "type": "patchouli:crafting"
     }
   ]
 }

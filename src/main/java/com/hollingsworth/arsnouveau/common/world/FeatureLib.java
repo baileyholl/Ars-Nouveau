@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.world;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public class FeatureLib {
     public static final ResourceLocation ARCHWOOD_TREES = new ResourceLocation(ArsNouveau.MODID, "archwood_trees");

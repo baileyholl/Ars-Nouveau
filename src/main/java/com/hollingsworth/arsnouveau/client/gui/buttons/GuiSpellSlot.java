@@ -1,14 +1,15 @@
 package com.hollingsworth.arsnouveau.client.gui.buttons;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
+import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
-import com.hollingsworth.arsnouveau.common.items.SpellBook;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,14 +31,14 @@ public class GuiSpellSlot extends GuiImageButton {
     }
 
     @Override
-    public void render(MatrixStack stack, int parX, int parY, float partialTicks) {
-        if (visible)
-        {
+    public void render(PoseStack stack, int parX, int parY, float partialTicks) {
+        if (visible){
             if(parent.isMouseInRelativeRange(parX, parY, x, y, width, height)){
-                String name = SpellBook.getSpellName(parent.spell_book_tag, slotNum);
+                ISpellCaster caster = CasterUtil.getCaster(((GuiSpellBook)parent).bookStack);
+                String name = caster.getSpellName(slotNum);
                 if(!name.isEmpty()){
-                    List<ITextComponent> tip = new ArrayList<>();
-                    tip.add(new StringTextComponent(name));
+                    List<Component> tip = new ArrayList<>();
+                    tip.add(new TextComponent(name));
                     parent.tooltip = tip;
                 }
             }
@@ -45,10 +46,9 @@ public class GuiSpellSlot extends GuiImageButton {
             ResourceLocation image;
             image = this.isSelected ? new ResourceLocation(ArsNouveau.MODID, "textures/gui/spell_tab_selected.png") : new ResourceLocation(ArsNouveau.MODID,"textures/gui/spell_tab.png");
             //GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, width, height);
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, image_width, image_height, stack);
             drawCenteredString(stack,Minecraft.getInstance().font, String.valueOf(this.slotNum), x + 8, y + 3,  16777215); // White
-
         }
     }
 }

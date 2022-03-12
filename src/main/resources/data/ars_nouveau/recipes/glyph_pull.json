@@ -1,6 +1,13 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "ONE",
-  "input": "minecraft:fishing_rod",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "inputItems": [
+    {
+      "item": {
+        "item": "minecraft:fishing_rod"
+      }
+    }
+  ],
+  "exp": 27,
   "output": "ars_nouveau:glyph_pull"
 }

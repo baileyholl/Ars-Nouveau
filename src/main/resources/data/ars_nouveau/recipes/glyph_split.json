@@ -1,6 +1,23 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "THREE",
-  "input": "minecraft:stonecutter",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "inputItems": [
+    {
+      "item": {
+        "item": "ars_nouveau:relay_splitter"
+      }
+    },
+    {
+      "item": {
+        "item": "ars_nouveau:wilden_spike"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:stonecutter"
+      }
+    }
+  ],
+  "exp": 160,
   "output": "ars_nouveau:glyph_split"
 }

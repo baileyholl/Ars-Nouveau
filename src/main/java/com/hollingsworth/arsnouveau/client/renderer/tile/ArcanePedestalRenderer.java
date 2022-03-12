@@ -1,34 +1,32 @@
 package com.hollingsworth.arsnouveau.client.renderer.tile;
 
-import com.hollingsworth.arsnouveau.api.util.MappingUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
 
-public class ArcanePedestalRenderer extends TileEntityRenderer<ArcanePedestalTile> {
+public class ArcanePedestalRenderer implements BlockEntityRenderer<ArcanePedestalTile> {
 
-    public ArcanePedestalRenderer(TileEntityRendererDispatcher p_i226006_1_) {
-        super(p_i226006_1_);
+    public ArcanePedestalRenderer(BlockEntityRendererProvider.Context p_i226006_1_) {
+
     }
 
-    public void renderFloatingItem(ArcanePedestalTile tileEntityIn, ItemEntity entityItem, double x, double y, double z, MatrixStack stack, IRenderTypeBuffer iRenderTypeBuffer, float partialFrames){
+    public void renderFloatingItem(ArcanePedestalTile tileEntityIn, ItemEntity entityItem, double x, double y, double z, PoseStack stack, MultiBufferSource iRenderTypeBuffer){
         stack.pushPose();
-        tileEntityIn.frames++;
+        tileEntityIn.frames += 1.5f * Minecraft.getInstance().getDeltaFrameTime();
         entityItem.setYHeadRot(tileEntityIn.frames);
-        ObfuscationReflectionHelper.setPrivateValue(ItemEntity.class, entityItem, (int) (800f - (tileEntityIn.frames + partialFrames)/2f), MappingUtil.getItemEntityAge());
+        entityItem.age = (int) tileEntityIn.frames;
         Minecraft.getInstance().getEntityRenderDispatcher().render(entityItem, 0.5,1,0.5, entityItem.yRot, 2.0f,stack, iRenderTypeBuffer,15728880);
-        Minecraft.getInstance().getEntityRenderDispatcher().getRenderer(entityItem);
+
         stack.popPose();
     }
 
     @Override
-    public void render(ArcanePedestalTile tileEntityIn, float v, MatrixStack matrixStack, IRenderTypeBuffer iRenderTypeBuffer, int i, int i1) {
+    public void render(ArcanePedestalTile tileEntityIn, float v, PoseStack matrixStack, MultiBufferSource iRenderTypeBuffer, int i, int i1) {
         double x = tileEntityIn.getBlockPos().getX();
         double y = tileEntityIn.getBlockPos().getY();
         double z = tileEntityIn.getBlockPos().getZ();
@@ -44,6 +42,6 @@ public class ArcanePedestalRenderer extends TileEntityRenderer<ArcanePedestalTil
         x = x + .5;
         y = y + 0.9;
         z = z +.5;
-        renderFloatingItem(tileEntityIn, entityItem, x, y , z, matrixStack, iRenderTypeBuffer, v);
+        renderFloatingItem(tileEntityIn, entityItem, x, y , z, matrixStack, iRenderTypeBuffer);
     }
 }

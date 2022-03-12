@@ -4,12 +4,12 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.*;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -18,10 +18,10 @@ public class ChimeraSummonEvent implements ITimedEvent {
 
     int duration;
     int phase;
-    World world;
+    Level world;
     BlockPos pos;
     int ownerID;
-    public ChimeraSummonEvent(int duration, int phase, World world, BlockPos pos, int ownerID){
+    public ChimeraSummonEvent(int duration, int phase, Level world, BlockPos pos, int ownerID){
         this.duration = duration;
         this.phase = phase;
         this.world = world;
@@ -29,7 +29,7 @@ public class ChimeraSummonEvent implements ITimedEvent {
         this.ownerID = ownerID;
     }
 
-    public static ChimeraSummonEvent get(CompoundNBT tag){
+    public static ChimeraSummonEvent get(CompoundTag tag){
         return new ChimeraSummonEvent(tag.getInt("duration"),
                 tag.getInt("phase"), ArsNouveau.proxy.getClientWorld(), NBTUtil.getBlockPos(tag, "loc"), -1);
     }
@@ -39,11 +39,10 @@ public class ChimeraSummonEvent implements ITimedEvent {
         duration--;
         if(serverSide){
             Entity owner = world.getEntity(ownerID);
-            if(!(owner instanceof EntityChimera)) {
+            if(!(owner instanceof EntityChimera boss)) {
                 duration = 0;
                 return;
             }
-            EntityChimera boss = (EntityChimera) owner;
             boolean summonedWilden = false;
             if(duration % 20 ==0){
                 Random random = boss.getRandom();
@@ -78,7 +77,7 @@ public class ChimeraSummonEvent implements ITimedEvent {
         }
     }
 
-    public void summon(MobEntity mob, BlockPos pos, @Nullable LivingEntity target){
+    public void summon(Mob mob, BlockPos pos, @Nullable LivingEntity target){
         mob.setPos(pos.getX(), pos.getY(), pos.getZ());
         mob.setTarget(target);
         mob.setAggressive(true);
@@ -96,11 +95,12 @@ public class ChimeraSummonEvent implements ITimedEvent {
     }
 
     @Override
-    public void serialize(CompoundNBT tag) {
+    public CompoundTag serialize(CompoundTag tag) {
         ITimedEvent.super.serialize(tag);
         tag.putInt("duration", duration);
         tag.putInt("phase", phase);
         NBTUtil.storeBlockPos(tag, "loc", pos);
+        return tag;
     }
 
     public static final String ID = "chimera";

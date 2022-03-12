@@ -1,22 +1,21 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.ClientInfo;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.Potions;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -25,27 +24,27 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class PotionMelderTile extends TileEntity implements IAnimatable, ITickableTileEntity {
+public class PotionMelderTile extends ModdedTile implements IAnimatable, ITickable {
     int timeMixing;
     boolean isMixing;
     boolean hasMana;
-    public PotionMelderTile() {
-        super(BlockRegistry.POTION_MELDER_TYPE);
-    }
 
     AnimationFactory manager = new AnimationFactory(this);
+
+    public PotionMelderTile(BlockPos pos, BlockState state) {
+        super(BlockRegistry.POTION_MELDER_TYPE, pos, state);
+    }
 
     @Override
     public void tick() {
 
         if(!level.isClientSide && !hasMana && level.getGameTime() % 20 == 0){
-            if(ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 5, 100) != null) {
+            if(SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 5, 100) != null) {
                 hasMana = true;
                 level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
             }
@@ -62,7 +61,7 @@ public class PotionMelderTile extends TileEntity implements IAnimatable, ITickab
                 continue;
             if(tile1 != null && tile2 != null)
                 break;
-            TileEntity tileEntity = level.getBlockEntity(worldPosition.relative(d));
+            BlockEntity tileEntity = level.getBlockEntity(worldPosition.relative(d));
             if(tileEntity instanceof PotionJarTile && ((PotionJarTile) tileEntity).getAmount() > 0){
                 if(tile1 == null)
                     tile1 = (PotionJarTile) tileEntity;
@@ -85,7 +84,7 @@ public class PotionMelderTile extends TileEntity implements IAnimatable, ITickab
             timeMixing = 0;
             return;
         }
-        List<EffectInstance> combined = getCombinedResult(tile1, tile2);
+        List<MobEffectInstance> combined = getCombinedResult(tile1, tile2);
         if(!(combJar.isMixEqual(combined) && combJar.getMaxFill() - combJar.getCurrentFill() >= 100) && combJar.getAmount() != 0){
             isMixing = false;
             timeMixing = 0;
@@ -184,20 +183,20 @@ public class PotionMelderTile extends TileEntity implements IAnimatable, ITickab
 
     }
 
-    public List<EffectInstance> getCombinedCustomResult(PotionJarTile jar1, PotionJarTile jar2){
-        Set<EffectInstance> set = new HashSet<>();
+    public List<MobEffectInstance> getCombinedCustomResult(PotionJarTile jar1, PotionJarTile jar2){
+        Set<MobEffectInstance> set = new HashSet<>();
         set.addAll(jar1.getCustomEffects());
         set.addAll(jar2.getCustomEffects());
-        return new ArrayList<EffectInstance>(set);
+        return new ArrayList<>(set);
     }
 
-    public List<EffectInstance> getCombinedResult(PotionJarTile jar1, PotionJarTile jar2){
-        Set<EffectInstance> set = new HashSet<>();
+    public List<MobEffectInstance> getCombinedResult(PotionJarTile jar1, PotionJarTile jar2){
+        Set<MobEffectInstance> set = new HashSet<>();
         set.addAll(jar1.getFullEffects());
         set.addAll(jar2.getFullEffects());
-        return new ArrayList<EffectInstance>(set);
+        return new ArrayList<>(set);
     }
-    private <E extends TileEntity  & IAnimatable > PlayState idlePredicate(AnimationEvent<E> event) {
+    private <E extends BlockEntity  & IAnimatable > PlayState idlePredicate(AnimationEvent<E> event) {
         event.getController().setAnimation(new AnimationBuilder().addAnimation("spin", true));
         return this.isMixing ? PlayState.CONTINUE : PlayState.STOP;
     }
@@ -212,35 +211,17 @@ public class PotionMelderTile extends TileEntity implements IAnimatable, ITickab
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT nbt) {
-        super.load(state, nbt);
+    public void load(CompoundTag nbt) {
+        super.load(nbt);
         this.timeMixing = nbt.getInt("mixing");
         this.isMixing = nbt.getBoolean("isMixing");
         this.hasMana = nbt.getBoolean("hasMana");
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
+    public void saveAdditional(CompoundTag compound) {
         compound.putInt("mixing", timeMixing);
         compound.putBoolean("isMixing", isMixing);
         compound.putBoolean("hasMana", hasMana);
-        return super.save(compound);
-    }
-
-    @Override
-    @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 3, this.getUpdateTag());
-    }
-
-    @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        super.onDataPacket(net, pkt);
-        handleUpdateTag(level.getBlockState(worldPosition),pkt.getTag());
     }
 }

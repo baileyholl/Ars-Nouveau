@@ -1,11 +1,8 @@
 package com.hollingsworth.arsnouveau.common.spell.augment;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
+import com.hollingsworth.arsnouveau.api.spell.SpellTier;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-
-import javax.annotation.Nullable;
 
 public class AugmentFortune extends AbstractAugment {
     public static AugmentFortune INSTANCE = new AugmentFortune();
@@ -15,19 +12,13 @@ public class AugmentFortune extends AbstractAugment {
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 80;
     }
 
     @Override
-    public Tier getTier() {
-        return Tier.TWO;
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.RABBIT_FOOT;
+    public SpellTier getTier() {
+        return SpellTier.TWO;
     }
 
     @Override

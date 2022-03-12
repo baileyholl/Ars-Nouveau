@@ -1,19 +1,19 @@
 {
   "name": "enchantment.minecraft.unbreaking",
+  "category": "ars_nouveau:enchantments",
   "icon": "minecraft:enchanted_book",
-  "category": "enchantments",
   "pages": [
     {
-      "type": "enchanting_recipe",
-      "recipe": "ars_nouveau:unbreaking_1"
+      "recipe": "ars_nouveau:unbreaking_1",
+      "type": "ars_nouveau:enchanting_recipe"
     },
     {
-      "type": "enchanting_recipe",
-      "recipe": "ars_nouveau:unbreaking_2"
+      "recipe": "ars_nouveau:unbreaking_2",
+      "type": "ars_nouveau:enchanting_recipe"
     },
     {
-      "type": "enchanting_recipe",
-      "recipe": "ars_nouveau:unbreaking_3"
+      "recipe": "ars_nouveau:unbreaking_3",
+      "type": "ars_nouveau:enchanting_recipe"
     }
   ]
 }

@@ -3,16 +3,16 @@ package com.hollingsworth.arsnouveau.api;
 import com.mojang.authlib.GameProfile;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.PacketDirection;
-import net.minecraft.network.play.ServerPlayNetHandler;
+import net.minecraft.network.Connection;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.world.MenuProvider;
 import net.minecraftforge.common.util.FakePlayer;
 
 import java.lang.ref.WeakReference;
@@ -22,47 +22,50 @@ import java.util.UUID;
 // https://github.com/Creators-of-Create/Create/blob/mc1.15/dev/src/main/java/com/simibubi/create/content/contraptions/components/deployer/DeployerFakePlayer.java#L57
 public class ANFakePlayer extends FakePlayer {
 
-    private static final NetworkManager NETWORK_MANAGER = new NetworkManager(PacketDirection.CLIENTBOUND);
+    private static final Connection NETWORK_MANAGER = new Connection(PacketFlow.CLIENTBOUND);
+
+
     public static final GameProfile PROFILE =
             new GameProfile(UUID.fromString("7400926d-1007-4e53-880f-b43e67f2bf29"), "Ars_Nouveau");
 
 
-    private ANFakePlayer(ServerWorld world) {
+    private ANFakePlayer(ServerLevel world) {
         super(world, PROFILE);
         connection = new FakePlayNetHandler(world.getServer(), this);
     }
     private static WeakReference<ANFakePlayer> FAKE_PLAYER = null;
 
-    public static ANFakePlayer getPlayer(ServerWorld world)
+    public static ANFakePlayer getPlayer(ServerLevel world)
     {
         ANFakePlayer ret = FAKE_PLAYER != null ? FAKE_PLAYER.get() : null;
         if (ret == null)
         {
             ret = new ANFakePlayer(world);
-            FAKE_PLAYER = new WeakReference<ANFakePlayer>(ret);
+            FAKE_PLAYER = new WeakReference<>(ret);
         }
-        return ret;
+        FAKE_PLAYER.get().level = world;
+        return FAKE_PLAYER.get();
     }
 
 
     @Override
-    public OptionalInt openMenu(INamedContainerProvider container) {
+    public OptionalInt openMenu(MenuProvider container) {
         return OptionalInt.empty();
     }
 
     @Override
-    public ITextComponent getDisplayName() {
-        return new StringTextComponent("AN_Fake_Player");
+    public Component getDisplayName() {
+        return new TextComponent("AN_Fake_Player");
     }
-    private static class FakePlayNetHandler extends ServerPlayNetHandler {
-        public FakePlayNetHandler(MinecraftServer server, ServerPlayerEntity playerIn) {
+    private static class FakePlayNetHandler extends ServerGamePacketListenerImpl {
+        public FakePlayNetHandler(MinecraftServer server, ServerPlayer playerIn) {
             super(server, NETWORK_MANAGER, playerIn);
         }
 
         @Override
-        public void send(IPacket<?> packetIn) {}
+        public void send(Packet<?> packetIn) {}
 
         @Override
-        public void send(IPacket<?> packetIn, GenericFutureListener<? extends Future<? super Void>> futureListeners) { }
+        public void send(Packet<?> packetIn, GenericFutureListener<? extends Future<? super Void>> futureListeners) { }
     }
 }

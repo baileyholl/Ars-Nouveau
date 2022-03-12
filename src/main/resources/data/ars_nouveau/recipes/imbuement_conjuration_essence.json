@@ -1,0 +1,26 @@
+{
+  "type": "ars_nouveau:imbuement",
+  "input": {
+    "tag": "forge:gems/source"
+  },
+  "output": "ars_nouveau:conjuration_essence",
+  "count": 1,
+  "source": 2000,
+  "pedestalItems": [
+    {
+      "item": {
+        "item": "ars_nouveau:wilden_horn"
+      }
+    },
+    {
+      "item": {
+        "item": "ars_nouveau:starbuncle_shards"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:book"
+      }
+    }
+  ]
+}

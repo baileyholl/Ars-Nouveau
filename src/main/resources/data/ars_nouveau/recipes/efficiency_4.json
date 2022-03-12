@@ -2,45 +2,47 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:efficiency",
   "level": 4,
-  "mana": 6500,
-  "item_1": [
+  "sourceCost": 6500,
+  "pedestalItems": [
     {
-      "tag": "forge:storage_blocks/redstone"
-    }
-  ],
-  "item_2": [
+      "item": {
+        "tag": "forge:storage_blocks/redstone"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/redstone"
-    }
-  ],
-  "item_3": [
+      "item": {
+        "tag": "forge:storage_blocks/redstone"
+      }
+    },
     {
-      "item": "minecraft:diamond_pickaxe"
-    }
-  ],
-  "item_4": [
+      "item": {
+        "item": "minecraft:diamond_pickaxe"
+      }
+    },
     {
-      "item": "minecraft:iron_shovel"
-    }
-  ],
-  "item_5": [
+      "item": {
+        "item": "minecraft:iron_shovel"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/mana"
-    }
-  ],
-  "item_6": [
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/mana"
-    }
-  ],
-  "item_7": [
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
+    },
     {
-      "tag": "forge:obsidian"
-    }
-  ],
-  "item_8": [
+      "item": {
+        "tag": "forge:obsidian"
+      }
+    },
     {
-      "tag": "forge:obsidian"
+      "item": {
+        "tag": "forge:obsidian"
+      }
     }
   ]
 }

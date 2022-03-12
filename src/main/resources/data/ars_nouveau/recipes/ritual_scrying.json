@@ -17,7 +17,7 @@
       "item": "minecraft:glowstone"
     },
     {
-      "tag": "forge:storage_blocks/mana"
+      "tag": "forge:storage_blocks/source"
     }
   ],
   "result": {

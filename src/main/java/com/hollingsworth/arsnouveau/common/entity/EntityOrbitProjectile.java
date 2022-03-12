@@ -1,45 +1,48 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
-import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
+import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.FMLPlayMessages;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PlayMessages;
 
 public class EntityOrbitProjectile extends EntityProjectileSpell{
     public Entity wardedEntity;
-    int ticksLeft;
-    private static final DataParameter<Integer> OWNER_UUID = EntityDataManager.defineId(EntityOrbitProjectile.class, DataSerializers.INT);
-    public static final DataParameter<Integer> OFFSET = EntityDataManager.defineId(EntityOrbitProjectile.class, DataSerializers.INT);
-    public static final DataParameter<Integer> ACCELERATES = EntityDataManager.defineId(EntityOrbitProjectile.class, DataSerializers.INT);
-    public static final DataParameter<Integer> AOE = EntityDataManager.defineId(EntityOrbitProjectile.class, DataSerializers.INT);
-    public static final DataParameter<Integer> TOTAL = EntityDataManager.defineId(EntityOrbitProjectile.class, DataSerializers.INT);
+    public int ticksLeft;
+    public static final EntityDataAccessor<Integer> OWNER_UUID = SynchedEntityData.defineId(EntityOrbitProjectile.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> OFFSET = SynchedEntityData.defineId(EntityOrbitProjectile.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> ACCELERATES = SynchedEntityData.defineId(EntityOrbitProjectile.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> AOE = SynchedEntityData.defineId(EntityOrbitProjectile.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> TOTAL = SynchedEntityData.defineId(EntityOrbitProjectile.class, EntityDataSerializers.INT);
     public int extendTimes;
 
-    public EntityOrbitProjectile(World worldIn, double x, double y, double z) {
-        super(worldIn, x, y, z);
+    public EntityOrbitProjectile(Level worldIn, double x, double y, double z) {
+        super(ModEntities.ORBIT_SPELL, worldIn, x, y, z);
     }
 
-    public EntityOrbitProjectile(World worldIn, LivingEntity shooter) {
-        super(worldIn, shooter);
+    public EntityOrbitProjectile(Level worldIn, LivingEntity shooter) {
+        super(ModEntities.ORBIT_SPELL, worldIn, shooter);
     }
 
-    public EntityOrbitProjectile(EntityType<EntityOrbitProjectile> entityWardProjectileEntityType, World world) {
+    public EntityOrbitProjectile(Level world, SpellResolver resolver){
+        super(ModEntities.ORBIT_SPELL, world, resolver);
+    }
+
+    public EntityOrbitProjectile(EntityType<EntityOrbitProjectile> entityWardProjectileEntityType, Level world) {
         super(entityWardProjectileEntityType, world);
     }
 
@@ -76,98 +79,77 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
     public int getAoe(){
         return entityData.get(AOE);
     }
+
+    public double getRotateSpeed(){
+        return 10.0 - getAccelerates();
+    }
+
+    public double getRadiusMultiplier(){
+        return 1.5 + 0.5 * getAoe();
+    }
+
     @Override
     public void tick() {
-        this.age++;
-        if(!level.isClientSide && this.age > 60 * 20 + 30 * 20 * extendTimes){
-            this.remove();
-            return;
-        }
-        if(!level.isClientSide && spellResolver == null)
-            this.remove();
         Entity owner = level.getEntity(getOwnerID());
-//        this.remove();
         if(!level.isClientSide && owner == null) {
-            this.remove();
+            this.remove(RemovalReason.DISCARDED);
+            return;
+        }else if(owner == null) {
             return;
         }
-
-        if(owner == null)
-            return;
-        double rotateSpeed = 10.0 - getAccelerates();
-        double radiusMultiplier = 1.5 + 0.5*getAoe();
-
-        this.setPos(owner.getX()- radiusMultiplier * Math.sin(tickCount/rotateSpeed + getOffset()),
-                owner.getY() + 1,
-                owner.getZ()- radiusMultiplier * Math.cos(tickCount/rotateSpeed + getOffset()));
-
-        Vector3d vector3d2 = this.position();
-        int nextTick = tickCount + 3;
-        Vector3d vector3d3 = new Vector3d(
-                owner.getX() - radiusMultiplier * Math.sin(nextTick/rotateSpeed + getOffset()),
-                owner.getY() + 1,
-                owner.getZ()- radiusMultiplier * Math.cos(nextTick/rotateSpeed + getOffset()));
-        RayTraceResult raytraceresult = this.level.clip(new RayTraceContext(vector3d2, vector3d3, RayTraceContext.BlockMode.COLLIDER, RayTraceContext.FluidMode.NONE, this));
-        if (raytraceresult != null && raytraceresult.getType() != RayTraceResult.Type.MISS) {
-            vector3d3 = raytraceresult.getLocation();
-        }
-        EntityRayTraceResult entityraytraceresult = this.findHitEntity(vector3d2, vector3d3);
-        if (entityraytraceresult != null) {
-            raytraceresult = entityraytraceresult;
-        }
-
-        if (raytraceresult != null && raytraceresult instanceof EntityRayTraceResult) {
-            Entity entity = ((EntityRayTraceResult)raytraceresult).getEntity();
-            Entity entity1 = this.getOwner();
-            if (entity instanceof PlayerEntity && entity1 instanceof PlayerEntity && !((PlayerEntity)entity1).canHarmPlayer((PlayerEntity)entity)) {
-                raytraceresult = null;
-            }
-        }
-
-        if (raytraceresult != null && raytraceresult.getType() != RayTraceResult.Type.MISS  && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {
-            this.onHit(raytraceresult);
-            this.hasImpulse = true;
-        }
-        if(level.isClientSide && this.age > 2) {
-                double deltaX = getX() - xOld;
-                double deltaY = getY() - yOld;
-                double deltaZ = getZ() - zOld;
-                double dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 8);
-
-                for (double j = 0; j < dist; j++) {
-                    double coeff = j / dist;
-
-                    level.addParticle(GlowParticleData.createData(getParticleColor()),
-                            (float) (xo + deltaX * coeff),
-                            (float) (yo + deltaY * coeff), (float)
-                                    (zo + deltaZ * coeff),
-                            0.0125f * (random.nextFloat() - 0.5f),
-                            0.0125f * (random.nextFloat() - 0.5f),
-                            0.0125f * (random.nextFloat() - 0.5f));
-
-                }
-            }
-
-    }
-
-    protected void attemptRemoval(){
-        this.pierceLeft--;
-        if(this.pierceLeft < 0){
-            this.level.broadcastEntityEvent(this, (byte)3);
-            this.remove();
-        }
+        super.tick();
     }
 
     @Override
-    protected void onHit(RayTraceResult result) {
-        if(!level.isClientSide &&  result != null && result.getType() == RayTraceResult.Type.ENTITY) {
-            if (((EntityRayTraceResult) result).getEntity().equals(this.getOwner())) return;
+    public Vec3 getNextHitPosition() {
+        return getAngledPosition(tickCount + 3); // trace 3 ticks ahead for hit
+    }
+
+    @Override
+    public void tickNextPosition() {
+        this.setPos(getAngledPosition(tickCount));
+    }
+
+    public Vec3 getAngledPosition(int nextTick){
+        double rotateSpeed = getRotateSpeed();
+        double radiusMultiplier = getRadiusMultiplier();
+        Entity owner = level.getEntity(getOwnerID());
+        return new Vec3(
+                owner.getX() - radiusMultiplier * Math.sin(nextTick/rotateSpeed + getOffset()),
+                owner.getY() + 1 - (owner.isShiftKeyDown() ? 0.25 : 0),
+                owner.getZ()- radiusMultiplier * Math.cos(nextTick/rotateSpeed + getOffset()));
+    }
+
+    @Override
+    public boolean canTraversePortals() {
+        return false;
+    }
+
+    @Override
+    public int getExpirationTime() {
+        return 60 * 20 + 30 * 20 * extendTimes;
+    }
+
+    @Override
+    protected void onHit(HitResult result) {
+        if(level.isClientSide || result == null)
+            return;
+
+        if(result.getType() == HitResult.Type.ENTITY) {
+            if (((EntityHitResult) result).getEntity().equals(this.getOwner())) return;
             if(this.spellResolver != null) {
                 this.spellResolver.onResolveEffect(level, (LivingEntity) this.getOwner(), result);
                 Networking.sendToNearby(level, new BlockPos(result.getLocation()), new PacketANEffect(PacketANEffect.EffectType.BURST,
                         new BlockPos(result.getLocation()),getParticleColorWrapper()));
                 attemptRemoval();
             }
+        }else if(numSensitive > 0 && result instanceof BlockHitResult blockraytraceresult && !this.isRemoved()){
+            if(this.spellResolver != null) {
+                this.spellResolver.onResolveEffect(this.level, (LivingEntity) this.getOwner(), blockraytraceresult);
+            }
+            Networking.sendToNearby(level, ((BlockHitResult) result).getBlockPos(), new PacketANEffect(PacketANEffect.EffectType.BURST,
+                    new BlockPos(result.getLocation()).below(), getParticleColorWrapper()));
+            attemptRemoval();
         }
     }
     @Override
@@ -181,7 +163,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT tag) {
+    public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putInt("left", ticksLeft);
         tag.putInt("offset", getOffset());
@@ -192,7 +174,7 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT tag) {
+    public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         this.ticksLeft = tag.getInt("left");
         setOffset(tag.getInt("offset"));
@@ -204,24 +186,16 @@ public class EntityOrbitProjectile extends EntityProjectileSpell{
 
     @Override
     public EntityType<?> getType() {
-        return ModEntities.ENTITY_WARD;
+        return ModEntities.ORBIT_SPELL;
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public EntityOrbitProjectile(FMLPlayMessages.SpawnEntity packet, World world) {
-        super(ModEntities.ENTITY_WARD, world);
-    }
-
-    public int getTicksLeft() {
-        return ticksLeft;
-    }
-
-    public void setTicksLeft(int ticks) {
-        this.ticksLeft = ticks;
+    public EntityOrbitProjectile(PlayMessages.SpawnEntity packet, Level world) {
+        super(ModEntities.ORBIT_SPELL, world);
     }
 
     public int getOwnerID() {

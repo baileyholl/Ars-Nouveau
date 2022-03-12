@@ -1,13 +1,13 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.guardian;
 
 import com.hollingsworth.arsnouveau.common.entity.WildenGuardian;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.DamageSource;
 import net.minecraft.world.Difficulty;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
 
@@ -51,7 +51,7 @@ public class LaserAttackGoal extends Goal {
      * Reset the task's internal state. Called when this task is interrupted by another one
      */
     public void stop() {
-        this.guardian.setTarget((LivingEntity)null);
+        this.guardian.setTarget(null);
         this.guardian.setLaser(false);
     }
 
@@ -62,8 +62,8 @@ public class LaserAttackGoal extends Goal {
         LivingEntity livingentity = this.guardian.getTarget();
         this.guardian.getNavigation().stop();
         this.guardian.getLookControl().setLookAt(livingentity, 90.0F, 90.0F);
-        if (!this.guardian.canSee(livingentity)) {
-            this.guardian.setTarget((LivingEntity)null);
+        if (!this.guardian.hasLineOfSight(livingentity)) {
+            this.guardian.setTarget(null);
         } else {
             ++this.tickCounter;
             if (this.tickCounter == 0) {
@@ -76,10 +76,10 @@ public class LaserAttackGoal extends Goal {
 
                 livingentity.hurt(DamageSource.indirectMagic(this.guardian, this.guardian), f);
                 livingentity.hurt(DamageSource.mobAttack(this.guardian), (float)this.guardian.getAttributeValue(Attributes.ATTACK_DAMAGE));
-                livingentity.addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 100, 2));
+                livingentity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 2));
 
 
-                this.guardian.setTarget((LivingEntity)null);
+                this.guardian.setTarget(null);
                 this.guardian.laserCooldown = 100;
                 this.guardian.setClientAttackTime(0);
             }

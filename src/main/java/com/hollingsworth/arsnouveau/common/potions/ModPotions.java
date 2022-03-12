@@ -6,10 +6,15 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.lib.LibPotions;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.potion.*;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.RegistryEvent;
@@ -33,9 +38,12 @@ public class ModPotions {
     public static final SnareEffect SNARE_EFFECT = new SnareEffect();
     public static final FlightEffect FLIGHT_EFFECT = new FlightEffect();
     public static final GravityEffect GRAVITY_EFFECT = new GravityEffect();
-    public static final Effect SPELL_DAMAGE_EFFECT = new PublicEffect(EffectType.BENEFICIAL, new ParticleColor(30, 200, 200).getColor()).setRegistryName(ArsNouveau.MODID, LibPotions.SPELL_DAMAGE);
-    public static final Effect FAMILIAR_SICKNESS_EFFECT = new PublicEffect(EffectType.NEUTRAL, new ParticleColor(30, 200, 200).getColor(), new ArrayList<>()).setRegistryName(ArsNouveau.MODID, LibPotions.FAMILIAR_SICKNESS);
+    public static final MobEffect SPELL_DAMAGE_EFFECT = new PublicEffect(MobEffectCategory.BENEFICIAL, new ParticleColor(30, 200, 200).getColor()).setRegistryName(ArsNouveau.MODID, LibPotions.SPELL_DAMAGE);
+    public static final MobEffect FAMILIAR_SICKNESS_EFFECT = new PublicEffect(MobEffectCategory.NEUTRAL, new ParticleColor(30, 200, 200).getColor(), new ArrayList<>()).setRegistryName(ArsNouveau.MODID, LibPotions.FAMILIAR_SICKNESS);
     public static final BounceEffect BOUNCE_EFFECT = new BounceEffect();
+    public static final MagicFindEffect MAGIC_FIND_EFFECT = new MagicFindEffect();
+
+
     @ObjectHolder(LibPotions.MANA_REGEN) public static Potion MANA_REGEN_POTION;
     @ObjectHolder(LibPotions.MANA_REGEN_LONG) public static Potion LONG_MANA_REGEN_POTION;
     @ObjectHolder(LibPotions.MANA_REGEN_STRONG) public static Potion STRONG_MANA_REGEN_POTION;
@@ -51,7 +59,7 @@ public class ModPotions {
         ItemStack manaPotLong = PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotions.LONG_MANA_REGEN_POTION);
         ItemStack manaPotStrong = PotionUtils.setPotion(new ItemStack(Items.POTION), ModPotions.STRONG_MANA_REGEN_POTION);
 
-        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(AWKWARD), Ingredient.of(BlockRegistry.MANA_BERRY_BUSH),  manaPot));
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(AWKWARD), Ingredient.of(BlockRegistry.SOURCEBERRY_BUSH),  manaPot));
         BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(manaPot), Ingredient.of(Items.GLOWSTONE_DUST),  manaPotStrong));
         BrewingRecipeRegistry.addRecipe(new BrewingRecipe(new PotionIngredient(manaPot), Ingredient.of(Items.REDSTONE),  manaPotLong));
 
@@ -69,13 +77,15 @@ public class ModPotions {
         BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(water), Ingredient.of(ItemsRegistry.WILDEN_WING), PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LEAPING)));
         BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(water), Ingredient.of(ItemsRegistry.WILDEN_HORN), PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.STRENGTH)));
         BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(water), Ingredient.of(ItemsRegistry.WILDEN_SPIKE), PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.LONG_WATER_BREATHING)));
+
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(Ingredient.of(water), Ingredient.of(ItemsRegistry.ABJURATION_ESSENCE), PotionUtils.setPotion(new ItemStack(Items.POTION), Potions.AWKWARD)));
     }
 
     @Mod.EventBusSubscriber(modid = ArsNouveau.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
     public static class RegistrationHandler {
         @SubscribeEvent
-        public static void registerEffects(final RegistryEvent.Register<Effect> event) {
-            final IForgeRegistry<Effect> registry = event.getRegistry();
+        public static void registerEffects(final RegistryEvent.Register<MobEffect> event) {
+            final IForgeRegistry<MobEffect> registry = event.getRegistry();
             registry.registerAll(SCRYING_EFFECT,
                     SHIELD_POTION,
                     MANA_REGEN_EFFECT,
@@ -88,7 +98,8 @@ public class ModPotions {
                     GRAVITY_EFFECT,
                     SPELL_DAMAGE_EFFECT,
                     FAMILIAR_SICKNESS_EFFECT,
-                    BOUNCE_EFFECT
+                    BOUNCE_EFFECT,
+                    MAGIC_FIND_EFFECT
             );
         }
 
@@ -96,12 +107,12 @@ public class ModPotions {
         public static void registerPotions(final RegistryEvent.Register<Potion> event) {
             final IForgeRegistry<Potion> registry = event.getRegistry();
 
-            registry.register(new Potion(new EffectInstance(MANA_REGEN_EFFECT, 3600)).setRegistryName(LibPotions.MANA_REGEN));
-            registry.register(new Potion(new EffectInstance(MANA_REGEN_EFFECT, 9600)).setRegistryName(LibPotions.MANA_REGEN_LONG));
-            registry.register(new Potion(new EffectInstance(MANA_REGEN_EFFECT, 3600, 1)).setRegistryName(LibPotions.MANA_REGEN_STRONG));
-            registry.register(new Potion(new EffectInstance(SPELL_DAMAGE_EFFECT, 3600)).setRegistryName(LibPotions.SPELL_DAMAGE));
-            registry.register(new Potion(new EffectInstance(SPELL_DAMAGE_EFFECT, 9600)).setRegistryName(LibPotions.SPELL_DAMAGE_LONG));
-            registry.register(new Potion(new EffectInstance(SPELL_DAMAGE_EFFECT, 3600, 1)).setRegistryName(LibPotions.SPELL_DAMAGE_STRONG));
+            registry.register(new Potion(new MobEffectInstance(MANA_REGEN_EFFECT, 3600)).setRegistryName(LibPotions.MANA_REGEN));
+            registry.register(new Potion(new MobEffectInstance(MANA_REGEN_EFFECT, 9600)).setRegistryName(LibPotions.MANA_REGEN_LONG));
+            registry.register(new Potion(new MobEffectInstance(MANA_REGEN_EFFECT, 3600, 1)).setRegistryName(LibPotions.MANA_REGEN_STRONG));
+            registry.register(new Potion(new MobEffectInstance(SPELL_DAMAGE_EFFECT, 3600)).setRegistryName(LibPotions.SPELL_DAMAGE));
+            registry.register(new Potion(new MobEffectInstance(SPELL_DAMAGE_EFFECT, 9600)).setRegistryName(LibPotions.SPELL_DAMAGE_LONG));
+            registry.register(new Potion(new MobEffectInstance(SPELL_DAMAGE_EFFECT, 3600, 1)).setRegistryName(LibPotions.SPELL_DAMAGE_STRONG));
         }
     }
 }

@@ -1,20 +1,20 @@
 package com.hollingsworth.arsnouveau.common.entity;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.EvokerFangsEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.world.World;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.EvokerFangs;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.UUID;
 
 // Copy of EvokerFangsEntity with the ability to override damage
-public class EntityEvokerFangs extends EvokerFangsEntity {
+public class EntityEvokerFangs extends EvokerFangs {
 
 
     private int warmupDelayTicks;
@@ -25,13 +25,13 @@ public class EntityEvokerFangs extends EvokerFangsEntity {
     private UUID casterUuid;
 
     float damage;
-    public EntityEvokerFangs(EntityType<? extends EvokerFangsEntity> p_i50170_1_, World p_i50170_2_) {
+    public EntityEvokerFangs(EntityType<? extends EvokerFangs> p_i50170_1_, Level p_i50170_2_) {
         super(p_i50170_1_, p_i50170_2_);
     }
 
 
 
-    public EntityEvokerFangs(World worldIn, double x, double y, double z, float p_i47276_8_, int p_i47276_9_, LivingEntity casterIn, float damage) {
+    public EntityEvokerFangs(Level worldIn, double x, double y, double z, float p_i47276_8_, int p_i47276_9_, LivingEntity casterIn, float damage) {
         this(EntityType.EVOKER_FANGS, worldIn);
         this.warmupDelayTicks = p_i47276_9_;
         this.setOwner(casterIn);
@@ -47,7 +47,7 @@ public class EntityEvokerFangs extends EvokerFangsEntity {
     public void tick() {
         // Entity.super
         if (!this.level.isClientSide) {
-            this.setSharedFlag(6, this.isGlowing());
+            this.setSharedFlag(6, this.isCurrentlyGlowing());
         }
         this.baseTick();
         if (this.level.isClientSide) {
@@ -78,7 +78,7 @@ public class EntityEvokerFangs extends EvokerFangsEntity {
             }
 
             if (--this.lifeTicks < 0) {
-                this.remove();
+                this.remove(RemovalReason.DISCARDED);
             }
         }
 
@@ -100,7 +100,7 @@ public class EntityEvokerFangs extends EvokerFangsEntity {
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
-    protected void readAdditionalSaveData(CompoundNBT compound) {
+    protected void readAdditionalSaveData(CompoundTag compound) {
         this.warmupDelayTicks = compound.getInt("Warmup");
         if (compound.hasUUID("OwnerUUID")) {
             this.casterUuid = compound.getUUID("OwnerUUID");
@@ -108,7 +108,7 @@ public class EntityEvokerFangs extends EvokerFangsEntity {
 
     }
 
-    protected void addAdditionalSaveData(CompoundNBT compound) {
+    protected void addAdditionalSaveData(CompoundTag compound) {
         compound.putInt("Warmup", this.warmupDelayTicks);
         if (this.casterUuid != null) {
             compound.putUUID("OwnerUUID", this.casterUuid);

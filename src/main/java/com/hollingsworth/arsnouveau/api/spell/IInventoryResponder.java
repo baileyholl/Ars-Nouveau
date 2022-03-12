@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -20,7 +20,7 @@ public interface IInventoryResponder {
     @Nonnull default List<IItemHandler> getInventory(){return new ArrayList<>();}
 
     /**
-     * @return a specific matching itemstack from the inventories
+     * @return a specific matching itemstack from the inventories. DO NOT MODIFY. USE EXTRACT
      */
     @Nonnull default ItemStack getItem(ItemStack stack){
         return getItem((i) -> i.sameItem(stack));
@@ -31,6 +31,16 @@ public interface IInventoryResponder {
             for(int slots = 0; slots < i.getSlots(); slots ++ ){
                 if(predicate.test(i.getStackInSlot(slots)))
                     return i.getStackInSlot(slots);
+            }
+        }
+        return ItemStack.EMPTY;
+    }
+
+    @Nonnull default ItemStack extractItem(Predicate<ItemStack> predicate, int count){
+        for(IItemHandler i : getInventory()){
+            for(int slots = 0; slots < i.getSlots(); slots ++ ){
+                if(predicate.test(i.getStackInSlot(slots)))
+                    return i.extractItem(slots, count, false);
             }
         }
         return ItemStack.EMPTY;

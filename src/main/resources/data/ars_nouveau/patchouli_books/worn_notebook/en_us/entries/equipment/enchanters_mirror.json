@@ -1,0 +1,15 @@
+{
+  "name": "item.ars_nouveau.enchanters_mirror",
+  "category": "ars_nouveau:equipment",
+  "icon": "ars_nouveau:enchanters_mirror",
+  "pages": [
+    {
+      "text": "ars_nouveau.page.enchanters_mirror",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:enchanters_mirror",
+      "type": "ars_nouveau:apparatus_recipe"
+    }
+  ]
+}

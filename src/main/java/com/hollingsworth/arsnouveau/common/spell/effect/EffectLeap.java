@@ -1,20 +1,17 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Set;
 
 public class EffectLeap extends AbstractEffect {
@@ -25,7 +22,7 @@ public class EffectLeap extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         if(rayTraceResult.getEntity() instanceof LivingEntity){
             LivingEntity e = (LivingEntity) rayTraceResult.getEntity();
             double bonus = GENERIC_DOUBLE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier();
@@ -44,7 +41,7 @@ public class EffectLeap extends AbstractEffect {
     }
 
     @Override
-    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
+    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         return livingEntityHitSuccess(rayTraceResult);
     }
 
@@ -60,12 +57,7 @@ public class EffectLeap extends AbstractEffect {
     }
 
     @Override
-    public Item getCraftingReagent() {
-        return ItemsRegistry.WILDEN_WING;
-    }
-
-    @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 25;
     }
 

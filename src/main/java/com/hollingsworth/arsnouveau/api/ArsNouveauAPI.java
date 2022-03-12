@@ -1,31 +1,29 @@
 package com.hollingsworth.arsnouveau.api;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.EnchantingApparatusRecipe;
 import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
-import com.hollingsworth.arsnouveau.api.recipe.GlyphPressRecipe;
 import com.hollingsworth.arsnouveau.api.recipe.PotionIngredient;
 import com.hollingsworth.arsnouveau.api.recipe.VanillaPotionRecipe;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
+import com.hollingsworth.arsnouveau.api.ritual.IScryer;
 import com.hollingsworth.arsnouveau.api.ritual.RitualContext;
+import com.hollingsworth.arsnouveau.api.sound.SpellSound;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.api.spell.ISpellTier;
 import com.hollingsworth.arsnouveau.api.spell.ISpellValidator;
-import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
+import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
 import com.hollingsworth.arsnouveau.common.spell.validation.StandardSpellValidator;
 import com.hollingsworth.arsnouveau.setup.Config;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.RecipeManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 
@@ -43,58 +41,56 @@ import java.util.stream.Collectors;
  */
 public class ArsNouveauAPI {
 
-
-    public enum PatchouliCategories{
-        spells,
-        machines,
-        equipment,
-        resources,
-        getting_started,
-        automation
-    }
-
     /**
      * Map of all spells to be registered in the spell system
      *
      * key: Unique spell ID. Please make this snake_case!
      * value: Associated glyph
      */
-    private HashMap<String, AbstractSpellPart> spell_map;
+    private HashMap<String, AbstractSpellPart> spellpartMap = new HashMap<>();
 
-    private HashMap<String, AbstractRitual> ritualMap;
+    private HashMap<String, AbstractRitual> ritualMap = new HashMap<>();
 
-    private HashMap<String, AbstractFamiliarHolder> familiarHolderMap;
+    private HashMap<String, AbstractFamiliarHolder> familiarHolderMap = new HashMap<>();
 
     /**
      * Contains the list of glyph item instances used by the glyph press.
      */
-    private HashMap<String, Glyph> glyphMap;
+    private HashMap<String, Glyph> glyphItemMap = new HashMap<>();
 
-    private HashMap<String, FamiliarScript> familiarScriptMap;
+    private HashMap<String, FamiliarScript> familiarScriptMap = new HashMap<>();
 
     /**
      * Contains the list of parchment item instances created during registration
      */
-    private HashMap<String, RitualTablet> ritualParchmentMap;
+    private HashMap<String, RitualTablet> ritualParchmentMap = new HashMap<>();
+
+    private HashMap<String, IScryer> scryerMap = new HashMap<>();
+
+    private HashMap<ResourceLocation, SpellSound> spellSoundsRegistry = new HashMap<>();
 
     /** Validator to use when crafting a spell in the spell book. */
     private ISpellValidator craftingSpellValidator;
     /** Validator to use when casting a spell. */
     private ISpellValidator castingSpellValidator;
 
-    private List<IEnchantingRecipe> enchantingApparatusRecipes;
+    private List<IEnchantingRecipe> enchantingApparatusRecipes = new ArrayList<>();
+
+    public List<VanillaPotionRecipe> vanillaPotionRecipes = new ArrayList<>();
+
+    private List<BrewingRecipe> brewingRecipes = new ArrayList<>();
     /**
      * Spells that all spellbooks contain
      */
-    private List<AbstractSpellPart> startingSpells;
+    private List<AbstractSpellPart> startingSpells = new ArrayList<>();
 
     public List<AbstractSpellPart> getDefaultStartingSpells(){
-        return spell_map.values().stream().filter(Config::isStarterEnabled).collect(Collectors.toList());
+        return spellpartMap.values().stream().filter(Config::isStarterEnabled).collect(Collectors.toList());
     }
 
     public boolean addStartingSpell(String tag){
-        if(ArsNouveauAPI.getInstance().getSpell_map().containsKey(tag)){
-            return startingSpells.add(ArsNouveauAPI.getInstance().getSpell_map().get(tag));
+        if(ArsNouveauAPI.getInstance().getSpellpartMap().containsKey(tag)){
+            return startingSpells.add(ArsNouveauAPI.getInstance().getSpellpartMap().get(tag));
         }else{
             throw new IllegalStateException("Attempted to add a starting spell for an unregistered spell. Spells must be added to the Spell Map first!");
         }
@@ -110,7 +106,7 @@ public class ArsNouveauAPI {
     }
 
     public Item getGlyphItem(AbstractSpellPart spell){
-        return getGlyphItem(spell.tag);
+        return getGlyphItem(spell.getId());
     }
 
     public Item getFamiliarItem(String id){
@@ -118,12 +114,12 @@ public class ArsNouveauAPI {
     }
 
     public AbstractSpellPart registerSpell(String id, AbstractSpellPart part){
-        glyphMap.put(id, new Glyph(getSpellRegistryName(id), part));
-        return spell_map.put(id, part);
+        glyphItemMap.put(id, new Glyph(getSpellRegistryName(id), part));
+        return spellpartMap.put(id, part);
     }
 
     public AbstractSpellPart registerSpell(AbstractSpellPart part){
-        return registerSpell(part.getTag(), part);
+        return registerSpell(part.getId(), part);
     }
 
 
@@ -156,7 +152,7 @@ public class ArsNouveauAPI {
         return null;
     }
 
-    public @Nullable AbstractRitual getRitual(String id, RitualTile tile, RitualContext context){
+    public @Nullable AbstractRitual getRitual(String id, RitualBrazierTile tile, RitualContext context){
         AbstractRitual ritual = getRitual(id);
         if(ritual != null){
             ritual.tile = tile;
@@ -173,12 +169,12 @@ public class ArsNouveauAPI {
         return "ritual_"+ id.toLowerCase();
     }
 
-    public Map<String, AbstractSpellPart> getSpell_map() {
-        return spell_map;
+    public Map<String, AbstractSpellPart> getSpellpartMap() {
+        return spellpartMap;
     }
 
-    public Map<String, Glyph> getGlyphMap(){
-        return glyphMap;
+    public Map<String, Glyph> getGlyphItemMap(){
+        return glyphItemMap;
     }
 
     public Map<String, AbstractRitual> getRitualMap(){
@@ -196,39 +192,24 @@ public class ArsNouveauAPI {
     public Map<String, AbstractFamiliarHolder> getFamiliarHolderMap(){
         return this.familiarHolderMap;
     }
+
     public Map<String, FamiliarScript> getFamiliarScriptMap(){
         return this.familiarScriptMap;
     }
-    public List<IEnchantingRecipe> getEnchantingApparatusRecipes(World world) {
+
+    public List<IEnchantingRecipe> getEnchantingApparatusRecipes(Level world) {
         List<IEnchantingRecipe> recipes = new ArrayList<>(enchantingApparatusRecipes);
         RecipeManager manager = world.getRecipeManager();
-        for(IRecipe i : manager.getRecipes()){
-            if(i instanceof EnchantingApparatusRecipe){
+        for(Recipe i : manager.getRecipes()){
+            if(i instanceof IEnchantingRecipe){
                 recipes.add((IEnchantingRecipe) i);
             }
         }
         return recipes;
     }
 
-    public GlyphPressRecipe getGlyphPressRecipe(World world, Item reagent, @Nullable ISpellTier.Tier tier){
-        if(reagent == null || reagent == Items.AIR)
-            return null;
-
-        RecipeManager manager = world.getRecipeManager();
-        for(IRecipe i : manager.getRecipes()){
-            if(i instanceof GlyphPressRecipe){
-                if(((GlyphPressRecipe) i).reagent.getItem() == reagent && ((GlyphPressRecipe) i).tier == tier)
-                    return (GlyphPressRecipe) i;
-            }
-        }
-        return null;
-    }
-    public List<VanillaPotionRecipe> vanillaPotionRecipes = new ArrayList<>();
-    private List<BrewingRecipe> brewingRecipes;
-
     public List<BrewingRecipe> getAllPotionRecipes(){
-        if(brewingRecipes == null){
-            brewingRecipes = new ArrayList<>();
+        if(brewingRecipes.isEmpty()){
             BrewingRecipeRegistry.getRecipes().forEach(ib ->{
                 if(ib instanceof BrewingRecipe)
                     brewingRecipes.add((BrewingRecipe) ib);
@@ -253,6 +234,8 @@ public class ArsNouveauAPI {
      * onto caster items, which generally have a built-in cast method.
      */
     public ISpellValidator getSpellCraftingSpellValidator() {
+        if(craftingSpellValidator == null)
+            craftingSpellValidator = new StandardSpellValidator(false);
         return craftingSpellValidator;
     }
 
@@ -261,27 +244,35 @@ public class ArsNouveauAPI {
      * This validator enforces all rules, asserting that a spell can be cast.
      */
     public ISpellValidator getSpellCastingSpellValidator() {
+        if(castingSpellValidator == null) // Lazy init this because we need configs to load.
+            castingSpellValidator = new StandardSpellValidator(true);
         return castingSpellValidator;
     }
 
-    private ArsNouveauAPI(){
-        spell_map = new HashMap<>();
-        glyphMap = new HashMap<>();
-        startingSpells = new ArrayList<>();
-        enchantingApparatusRecipes = new ArrayList<>();
-        ritualMap = new HashMap<>();
-        ritualParchmentMap = new HashMap<>();
-        craftingSpellValidator = new StandardSpellValidator(false);
-        castingSpellValidator = new StandardSpellValidator(true);
-        familiarHolderMap = new HashMap<>();
-        familiarScriptMap = new HashMap<>();
+    public @Nullable IScryer getScryer(String id){
+        return this.scryerMap.get(id);
     }
+
+    public boolean registerScryer(IScryer scryer){
+        this.scryerMap.put(scryer.getID(), scryer);
+        return true;
+    }
+
+    public HashMap<ResourceLocation, SpellSound> getSpellSoundsRegistry(){
+        return this.spellSoundsRegistry;
+    }
+
+    public SpellSound registerSpellSound(SpellSound sound){
+        return this.spellSoundsRegistry.put(sound.getId(), sound);
+    }
+
+    private ArsNouveauAPI(){}
 
     /** Retrieves a handle to the singleton instance. */
     public static ArsNouveauAPI getInstance() {
-        return arsNouveauAPI;
+        return ARS_NOUVEAU_API;
     }
 
     // This is needed internally by the mod, so just make it eagerly.
-    private static final ArsNouveauAPI arsNouveauAPI = new ArsNouveauAPI();
+    private static final ArsNouveauAPI ARS_NOUVEAU_API = new ArsNouveauAPI();
 }

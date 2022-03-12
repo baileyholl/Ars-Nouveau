@@ -1,0 +1,20 @@
+{
+  "name": "ars_nouveau.page.spell_books",
+  "category": "ars_nouveau:equipment",
+  "icon": "ars_nouveau:archmage_spell_book",
+  "pages": [
+    {
+      "text": "ars_nouveau.page1.spell_books",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:novice_spell_book",
+      "recipe2": "ars_nouveau:apprentice_spell_book_upgrade",
+      "type": "patchouli:crafting"
+    },
+    {
+      "recipe": "ars_nouveau:archmage_spell_book_upgrade",
+      "type": "patchouli:crafting"
+    }
+  ]
+}

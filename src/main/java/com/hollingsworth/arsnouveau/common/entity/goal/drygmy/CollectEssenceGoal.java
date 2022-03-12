@@ -4,10 +4,10 @@ import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.DrygmyTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityDrygmy;
 import com.hollingsworth.arsnouveau.common.entity.EntityFlyingItem;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.pathfinding.Path;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.pathfinder.Path;
 
 import java.util.EnumSet;
 
@@ -48,7 +48,7 @@ public class CollectEssenceGoal extends Goal {
 
     @Override
     public boolean canContinueToUse() {
-        return !complete && canUse() && target != null && !target.removed && target.isAlive() && drygmy.getHome() != null;
+        return !complete && canUse() && target != null && !target.isRemoved() && target.isAlive() && drygmy.getHome() != null;
     }
 
     @Override

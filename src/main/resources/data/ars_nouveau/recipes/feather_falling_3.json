@@ -2,45 +2,47 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:feather_falling",
   "level": 3,
-  "mana": 5000,
-  "item_1": [
+  "sourceCost": 5000,
+  "pedestalItems": [
     {
-      "item": "ars_nouveau:glyph_slowfall"
-    }
-  ],
-  "item_2": [
+      "item": {
+        "item": "ars_nouveau:air_essence"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_slowfall"
-    }
-  ],
-  "item_3": [
+      "item": {
+        "item": "ars_nouveau:air_essence"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_slowfall"
-    }
-  ],
-  "item_4": [
+      "item": {
+        "item": "ars_nouveau:air_essence"
+      }
+    },
     {
-      "tag": "forge:slimeballs"
-    }
-  ],
-  "item_5": [
+      "item": {
+        "tag": "forge:slimeballs"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/mana"
-    }
-  ],
-  "item_6": [
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/mana"
-    }
-  ],
-  "item_7": [
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/lapis"
-    }
-  ],
-  "item_8": [
+      "item": {
+        "tag": "forge:storage_blocks/lapis"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/lapis"
+      "item": {
+        "tag": "forge:storage_blocks/lapis"
+      }
     }
   ]
 }

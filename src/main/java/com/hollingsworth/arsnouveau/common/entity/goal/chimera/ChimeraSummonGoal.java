@@ -7,9 +7,9 @@ import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
 import com.hollingsworth.arsnouveau.common.network.PacketTimedEvent;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
 
@@ -57,7 +57,7 @@ public class ChimeraSummonGoal extends Goal {
             ChimeraSummonEvent summonEvent = new ChimeraSummonEvent(40 + mob.getPhase() * 20, mob.getPhase(), mob.level, mob.blockPosition(), this.mob.getId());
             EventQueue.getServerInstance().addEvent(summonEvent);
             Networking.sendToNearby(mob.level, mob, new PacketTimedEvent(summonEvent));
-            mob.level.playSound(null, mob.blockPosition(), SoundEvents.WOLF_HOWL, SoundCategory.HOSTILE, 1.0f, 0.2f);
+            mob.level.playSound(null, mob.blockPosition(), SoundEvents.WOLF_HOWL, SoundSource.HOSTILE, 1.0f, 0.2f);
         }
         howling = true;
         timeSummoning++;

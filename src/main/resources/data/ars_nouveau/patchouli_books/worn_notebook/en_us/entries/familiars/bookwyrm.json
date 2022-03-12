@@ -1,15 +1,15 @@
 {
   "name": "entity.ars_nouveau.bookwyrm",
+  "category": "ars_nouveau:familiars",
   "icon": "ars_nouveau:familiar_bookwyrm",
-  "category": "familiars",
   "pages": [
     {
-      "type": "text",
-      "text": "ars_nouveau.familiar_desc.bookwyrm"
+      "text": "ars_nouveau.familiar_desc.bookwyrm",
+      "type": "patchouli:text"
     },
     {
-      "type": "entity",
-      "entity": "ars_nouveau:whelp"
+      "entity": "ars_nouveau:bookwyrm",
+      "type": "patchouli:entity"
     }
   ]
 }

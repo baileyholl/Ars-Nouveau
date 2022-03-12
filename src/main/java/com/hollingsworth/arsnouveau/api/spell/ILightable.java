@@ -1,13 +1,13 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.HitResult;
 
 public interface ILightable {
 
     /**
      * Called when a light spell is cast on this block or entity.
      */
-    void onLight(RayTraceResult rayTraceResult, World world, LivingEntity shooter, SpellStats augments, SpellContext spellContext);
+    void onLight(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats augments, SpellContext spellContext);
 }

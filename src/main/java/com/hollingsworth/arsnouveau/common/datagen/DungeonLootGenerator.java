@@ -2,19 +2,19 @@ package com.hollingsworth.arsnouveau.common.datagen;
 
 import com.google.gson.JsonObject;
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.loot.LootTables;
+import com.hollingsworth.arsnouveau.api.loot.DungeonLootTables;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.data.GlobalLootModifierProvider;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.common.loot.LootModifier;
 import net.minecraftforge.common.loot.LootTableIdCondition;
-import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class DungeonLootGenerator extends GlobalLootModifierProvider {
 
     @Override
     protected void start() {
-        add("dungeon_loot", DUNGEON_LOOT.get(), new DungeonLootEnhancerModifier(  new ILootCondition[] {
+        add("dungeon_loot", DUNGEON_LOOT.get(), new DungeonLootEnhancerModifier(  new LootItemCondition[] {
                 getList(new String[]{
                         "chests/simple_dungeon","chests/jungle_temple", "chests/abandoned_mineshaft","chests/bastion_treasure","chests/desert_pyramid","chests/end_city_treasure",
                         "chests/ruined_portal","chests/pillager_outpost", "chests/nether_bridge","chests/stronghold_corridor",  "chests/stronghold_crossing", "chests/stronghold_library"
@@ -37,8 +37,8 @@ public class DungeonLootGenerator extends GlobalLootModifierProvider {
         }));
     }
 
-    public ILootCondition getList(String[] chests){
-        ILootCondition.IBuilder condition = null;
+    public LootItemCondition getList(String[] chests){
+        LootItemCondition.Builder condition = null;
 
         for(String s : chests){
             if(condition == null) {
@@ -61,7 +61,7 @@ public class DungeonLootGenerator extends GlobalLootModifierProvider {
         public int rareRolls;
 
 
-        public DungeonLootEnhancerModifier(final ILootCondition[] conditionsIn, double commonChance, double uncommonChance, double rareChance, int commonRolls, int uncommonRolls, int rareRolls) {
+        public DungeonLootEnhancerModifier(final LootItemCondition[] conditionsIn, double commonChance, double uncommonChance, double rareChance, int commonRolls, int uncommonRolls, int rareRolls) {
             super(conditionsIn);
             this.commonChance = commonChance;
             this.uncommonChance = uncommonChance;
@@ -72,7 +72,7 @@ public class DungeonLootGenerator extends GlobalLootModifierProvider {
             this.rareRolls = rareRolls;
         }
 
-        public DungeonLootEnhancerModifier(final ILootCondition[] conditionsIn) {
+        public DungeonLootEnhancerModifier(final LootItemCondition[] conditionsIn) {
             super(conditionsIn);
             this.commonChance = 0.30;
             this.uncommonChance = 0.2;
@@ -85,13 +85,13 @@ public class DungeonLootGenerator extends GlobalLootModifierProvider {
 
         @Override
         protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
-            generatedLoot.addAll(LootTables.getRandomRoll(this));
+            generatedLoot.addAll(DungeonLootTables.getRandomRoll(this));
             return generatedLoot;
         }
 
         public static class Serializer extends GlobalLootModifierSerializer<DungeonLootEnhancerModifier> {
             @Override
-            public DungeonLootEnhancerModifier read(ResourceLocation location, JsonObject object, ILootCondition[] conditions) {
+            public DungeonLootEnhancerModifier read(ResourceLocation location, JsonObject object, LootItemCondition[] conditions) {
                 return new DungeonLootEnhancerModifier(conditions,
                         object.get("common_chance").getAsDouble(),
                         object.get("uncommon_chance").getAsDouble(),

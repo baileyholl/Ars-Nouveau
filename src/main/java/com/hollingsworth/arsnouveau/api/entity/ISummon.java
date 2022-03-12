@@ -1,12 +1,12 @@
 package com.hollingsworth.arsnouveau.api.entity;
 
 import com.hollingsworth.arsnouveau.api.event.SummonEvent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.DamageSource;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nullable;
@@ -27,22 +27,22 @@ public interface ISummon {
 
     @Nullable UUID getOwnerID();
 
-    default @Nullable Entity getOwner(ServerWorld world){
+    default @Nullable Entity getOwner(ServerLevel world){
         return getOwnerID() != null ? world.getEntity(getOwnerID()) : null;
     }
 
     void setOwnerID(UUID uuid);
 
-    default void onSummonDeath(World world, @Nullable DamageSource source, boolean didExpire){
+    default void onSummonDeath(Level world, @Nullable DamageSource source, boolean didExpire){
         MinecraftForge.EVENT_BUS.post(new SummonEvent.Death(world,this, source, didExpire));
     }
 
-    default void writeOwner(CompoundNBT tag){
+    default void writeOwner(CompoundTag tag){
         if(getOwnerID() != null)
             tag.putUUID("owner", getOwnerID());
     }
 
-    default @Nullable Entity readOwner(ServerWorld world, CompoundNBT tag){
+    default @Nullable Entity readOwner(ServerLevel world, CompoundTag tag){
         return tag.contains("owner") ? world.getEntity(tag.getUUID("owner")) : null;
     }
 }

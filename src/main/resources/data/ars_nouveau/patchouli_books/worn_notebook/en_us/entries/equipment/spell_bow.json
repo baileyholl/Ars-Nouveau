@@ -1,0 +1,15 @@
+{
+  "name": "item.ars_nouveau.spell_bow",
+  "category": "ars_nouveau:equipment",
+  "icon": "ars_nouveau:spell_bow",
+  "pages": [
+    {
+      "text": "ars_nouveau.page.spell_bow",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:spell_bow",
+      "type": "ars_nouveau:apparatus_recipe"
+    }
+  ]
+}

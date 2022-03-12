@@ -1,21 +1,24 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
 import com.google.gson.JsonObject;
-import com.hollingsworth.arsnouveau.common.crafting.ModCrafting;
 import com.hollingsworth.arsnouveau.common.items.PotionFlask;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.PotionItem;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapelessRecipe;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.potion.*;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -29,12 +32,12 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
 
 
     @Override
-    public ItemStack assemble(final CraftingInventory inv) {
+    public ItemStack assemble(final CraftingContainer inv) {
         final ItemStack output = super.assemble(inv); // Get the default output
         int newCount = 0;
         Potion flaskPotion = Potions.EMPTY;
-        List<EffectInstance> effectsList = new ArrayList<>();
-        List<EffectInstance> flaskEffects = new ArrayList<>();
+        List<MobEffectInstance> effectsList = new ArrayList<>();
+        List<MobEffectInstance> flaskEffects = new ArrayList<>();
         if(output.isEmpty())
             return ItemStack.EMPTY;
 
@@ -45,7 +48,7 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
                 if(((PotionFlask) ingredient.getItem()).isMax(ingredient))
                     return ItemStack.EMPTY;
 
-                CompoundNBT tag = ingredient.hasTag() ? ingredient.getTag() : new CompoundNBT();
+                CompoundTag tag = ingredient.hasTag() ? ingredient.getTag() : new CompoundTag();
 
                 newCount = tag.getInt("count") + 1;
                 flaskPotion = PotionUtils.getPotion(ingredient);
@@ -70,7 +73,7 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
         }
 
         if(!output.hasTag()){
-            output.setTag(new CompoundNBT());
+            output.setTag(new CompoundTag());
             output.getTag().putInt("count", newCount);
             PotionUtils.setPotion(output, flaskPotion);
 //            for(EffectInstance e : flaskPotion.getEffects()){
@@ -87,7 +90,7 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
     }
 
     @Override
-    public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv) {
+    public NonNullList<ItemStack> getRemainingItems(CraftingContainer inv) {
         NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getContainerSize(), ItemStack.EMPTY);
 
         for(int i = 0; i < nonnulllist.size(); ++i) {
@@ -103,22 +106,22 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer() {
-        return ModCrafting.Recipes.POTION_FLASK_RECIPE;
+    public RecipeSerializer<?> getSerializer() {
+        return RecipeRegistry.POTION_FLASK_RECIPE;
     }
 
-    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<PotionFlaskRecipe> {
+    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<PotionFlaskRecipe> {
         @Override
         public PotionFlaskRecipe fromJson(final ResourceLocation recipeID, final JsonObject json) {
-            final String group = JSONUtils.getAsString(json, "group", "");
+            final String group = GsonHelper.getAsString(json, "group", "");
             final NonNullList<Ingredient> ingredients = RecipeUtil.parseShapeless(json);
-            final ItemStack result = CraftingHelper.getItemStack(JSONUtils.getAsJsonObject(json, "result"), true);
+            final ItemStack result = CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "result"), true);
 
             return new PotionFlaskRecipe(recipeID, group, result, ingredients);
         }
 
         @Override
-        public PotionFlaskRecipe fromNetwork(final ResourceLocation recipeID, final PacketBuffer buffer) {
+        public PotionFlaskRecipe fromNetwork(final ResourceLocation recipeID, final FriendlyByteBuf buffer) {
             final String group = buffer.readUtf(Short.MAX_VALUE);
             final int numIngredients = buffer.readVarInt();
             final NonNullList<Ingredient> ingredients = NonNullList.withSize(numIngredients, Ingredient.EMPTY);
@@ -133,7 +136,7 @@ public class PotionFlaskRecipe extends ShapelessRecipe {
         }
 
         @Override
-        public void toNetwork(final PacketBuffer buffer, final PotionFlaskRecipe recipe) {
+        public void toNetwork(final FriendlyByteBuf buffer, final PotionFlaskRecipe recipe) {
             buffer.writeUtf(recipe.getGroup());
             buffer.writeVarInt(recipe.getIngredients().size());
 

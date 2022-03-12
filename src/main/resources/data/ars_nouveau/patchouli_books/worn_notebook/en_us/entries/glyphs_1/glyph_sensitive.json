@@ -1,0 +1,16 @@
+{
+  "name": "ars_nouveau.glyph_name.sensitive",
+  "category": "ars_nouveau:glyphs_1",
+  "icon": "ars_nouveau:glyph_sensitive",
+  "sortnum": 3,
+  "pages": [
+    {
+      "text": "ars_nouveau.glyph_desc.sensitive",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:glyph_sensitive",
+      "type": "ars_nouveau:glyph_recipe"
+    }
+  ]
+}

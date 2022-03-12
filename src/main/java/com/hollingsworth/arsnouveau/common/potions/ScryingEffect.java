@@ -1,12 +1,12 @@
 package com.hollingsworth.arsnouveau.common.potions;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectType;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
 
-public class ScryingEffect extends Effect {
+public class ScryingEffect extends MobEffect {
     protected ScryingEffect() {
-        super(EffectType.BENEFICIAL, 2039587);
+        super(MobEffectCategory.BENEFICIAL, 2039587);
         setRegistryName(ArsNouveau.MODID, "scrying");
     }
 }

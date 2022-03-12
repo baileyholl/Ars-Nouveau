@@ -5,7 +5,8 @@ import com.hollingsworth.arsnouveau.api.familiar.IFamiliar;
 import com.hollingsworth.arsnouveau.common.entity.EntityBookwyrm;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.familiar.FamiliarBookwyrm;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
 
 public class BookwyrmFamiliar extends AbstractFamiliarHolder {
     public BookwyrmFamiliar() {
@@ -13,8 +14,10 @@ public class BookwyrmFamiliar extends AbstractFamiliarHolder {
     }
 
     @Override
-    public IFamiliar getSummonEntity(World world) {
-        return new FamiliarBookwyrm(ModEntities.ENTITY_FAMILIAR_BOOKWYRM, world);
+    public IFamiliar getSummonEntity(Level world, CompoundTag tag) {
+        FamiliarBookwyrm bookwyrm = new FamiliarBookwyrm(ModEntities.ENTITY_FAMILIAR_BOOKWYRM, world);
+        bookwyrm.setTagData(tag);
+        return bookwyrm;
     }
 
     @Override
@@ -29,6 +32,6 @@ public class BookwyrmFamiliar extends AbstractFamiliarHolder {
 
     @Override
     public String getEntityKey() {
-        return "whelp";
+        return "bookwyrm";
     }
 }

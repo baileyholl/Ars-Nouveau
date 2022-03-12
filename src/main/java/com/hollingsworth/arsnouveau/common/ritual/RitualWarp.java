@@ -6,27 +6,26 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleLineData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.items.WarpScroll;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
 public class RitualWarp extends AbstractRitual {
     @Override
     protected void tick() {
-        World world = getWorld();
+        Level world = getWorld();
         if(world.isClientSide){
             BlockPos pos = getPos();
 
             for(int i =0; i< 100; i++){
-                Vector3d particlePos = new Vector3d(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0, 0.5);
+                Vec3 particlePos = new Vec3(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0, 0.5);
                 particlePos = particlePos.add(ParticleUtil.pointInSphere().multiply(5,5,5));
                 world.addParticle(ParticleLineData.createData(getCenterColor()),
                         particlePos.x(), particlePos.y(), particlePos.z(),
@@ -36,16 +35,16 @@ public class RitualWarp extends AbstractRitual {
         if(!world.isClientSide && world.getGameTime() % 20 == 0){
             incrementProgress();
             if(getProgress() >= 3){
-                List<Entity> entities = getWorld().getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(getPos()).inflate(5));
+                List<LivingEntity> entities = getWorld().getEntitiesOfClass(LivingEntity.class, new AABB(getPos()).inflate(5));
 
                 ItemStack i = getConsumedItems().get(0);
                 BlockPos b = WarpScroll.getPos(i);
-                for(Entity a : entities){
+                for(LivingEntity a : entities){
                     if(b != null)
                         a.teleportTo(b.getX(), b.getY(), b.getZ());
                 }
                 if(b != null)
-                    world.playSound(null, b, SoundEvents.PORTAL_TRAVEL, SoundCategory.NEUTRAL, 1.0f, 1.0f);
+                    world.playSound(null, b, SoundEvents.PORTAL_TRAVEL, SoundSource.NEUTRAL, 1.0f, 1.0f);
                 setFinished();
             }
         }

@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.api.ritual;
 
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ public class RitualContext {
     }
 
 
-    public void write(CompoundNBT tag){
+    public void write(CompoundTag tag){
         tag.putInt("progress", progress);
         tag.putBoolean("complete", isDone);
         tag.putBoolean("started", isStarted);
@@ -31,7 +31,7 @@ public class RitualContext {
         NBTUtil.writeItems(tag,"item_", consumedItems);
     }
 
-    public static RitualContext read(CompoundNBT tag){
+    public static RitualContext read(CompoundTag tag){
         RitualContext context = new RitualContext();
         context.progress = tag.getInt("progress");
         context.isDone = tag.getBoolean("complete");

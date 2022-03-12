@@ -1,6 +1,53 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "TWO",
-  "input": "minecraft:bone_block",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "inputItems": [
+    {
+      "item": {
+        "item": "ars_nouveau:earth_essence"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:bone_block"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:bone_block"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:bone_block"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:bone_block"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:bone_block"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:seeds"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:seeds"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:seeds"
+      }
+    }
+  ],
+  "exp": 55,
   "output": "ars_nouveau:glyph_grow"
 }

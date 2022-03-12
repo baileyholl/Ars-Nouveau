@@ -1,10 +1,11 @@
 package com.hollingsworth.arsnouveau.api.familiar;
 
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import java.util.function.Predicate;
 
@@ -19,7 +20,7 @@ public abstract class AbstractFamiliarHolder {
         this.isEntity = isConversionEntity;
     }
 
-    public abstract IFamiliar getSummonEntity(World world);
+    public abstract IFamiliar getSummonEntity(Level world, CompoundTag tag);
 
     public ItemStack getOutputItem(){
         return new ItemStack(ArsNouveauAPI.getInstance().getFamiliarItem(getId()));
@@ -33,12 +34,12 @@ public abstract class AbstractFamiliarHolder {
         return this.id;
     }
 
-    public TranslationTextComponent getLangDescription(){
-        return new TranslationTextComponent("ars_nouveau.familiar_desc." + this.id);
+    public TranslatableComponent getLangDescription(){
+        return new TranslatableComponent("ars_nouveau.familiar_desc." + this.id);
     }
 
-    public TranslationTextComponent getLangName(){
-        return new TranslationTextComponent("ars_nouveau.familiar_name." + this.id);
+    public TranslatableComponent getLangName(){
+        return new TranslatableComponent("ars_nouveau.familiar_name." + this.id);
     }
 
     public String getEntityKey(){

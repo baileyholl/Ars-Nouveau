@@ -1,31 +1,34 @@
 {
   "type": "ars_nouveau:enchanting_apparatus",
-  "item_1": [
-    {
-      "item": "ars_nouveau:blaze_fiber"
-    }
-  ],
-  "item_2": [
-    {
-      "item": "ars_nouveau:blaze_fiber"
-    }
-  ],
-  "item_3": [
-    {
-      "tag": "forge:storage_blocks/mana"
-    }
-  ],
-  "item_4": [
-    {
-      "tag": "forge:storage_blocks/gold"
-    }
-  ],
   "reagent": [
     {
       "item": "minecraft:glass_bottle"
     }
   ],
+  "pedestalItems": [
+    {
+      "item": {
+        "item": "ars_nouveau:abjuration_essence"
+      }
+    },
+    {
+      "item": {
+        "item": "ars_nouveau:abjuration_essence"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:storage_blocks/gold"
+      }
+    }
+  ],
   "output": {
     "item": "ars_nouveau:potion_flask"
-  }
+  },
+  "sourceCost": 0
 }

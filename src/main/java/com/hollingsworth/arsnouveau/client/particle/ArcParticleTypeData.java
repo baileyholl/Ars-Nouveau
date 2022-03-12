@@ -2,21 +2,20 @@ package com.hollingsworth.arsnouveau.client.particle;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleType;
-
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class ArcParticleTypeData implements IParticleData {
+public class ArcParticleTypeData implements ParticleOptions {
 
     private ParticleType<ArcParticleTypeData> type;
-    public Vector3d source;
-    public Vector3d target;
-    static final IParticleData.IDeserializer<ArcParticleTypeData> DESERIALIZER = new IParticleData.IDeserializer<ArcParticleTypeData>() {
+    public Vec3 source;
+    public Vec3 target;
+    static final ParticleOptions.Deserializer<ArcParticleTypeData> DESERIALIZER = new ParticleOptions.Deserializer<>() {
         @Override
         public ArcParticleTypeData fromCommand(ParticleType<ArcParticleTypeData> type, StringReader reader) throws CommandSyntaxException {
             reader.expect(' ');
@@ -24,12 +23,12 @@ public class ArcParticleTypeData implements IParticleData {
         }
 
         @Override
-        public ArcParticleTypeData fromNetwork(ParticleType<ArcParticleTypeData> type, PacketBuffer buffer) {
+        public ArcParticleTypeData fromNetwork(ParticleType<ArcParticleTypeData> type, FriendlyByteBuf buffer) {
             return new ArcParticleTypeData(type, deseralizeVec(buffer.readUtf()), deseralizeVec(buffer.readUtf()));
         }
     };
 
-    public ArcParticleTypeData(ParticleType<ArcParticleTypeData> particleTypeData, Vector3d source, Vector3d target){
+    public ArcParticleTypeData(ParticleType<ArcParticleTypeData> particleTypeData, Vec3 source, Vec3 target){
         this.type = particleTypeData;
         this.source = source;
         this.target = target;
@@ -41,7 +40,7 @@ public class ArcParticleTypeData implements IParticleData {
     }
 
     @Override
-    public void writeToNetwork(PacketBuffer packetBuffer) {
+    public void writeToNetwork(FriendlyByteBuf packetBuffer) {
         packetBuffer.writeUtf(serializeVec(target));
         packetBuffer.writeUtf(serializeVec(source));
     }
@@ -51,12 +50,12 @@ public class ArcParticleTypeData implements IParticleData {
         return type.getRegistryName().toString() + " " + serializeVec(target) + " " + serializeVec(source);
     }
 
-    public String serializeVec(Vector3d vec3d){
+    public String serializeVec(Vec3 vec3d){
         return ""+vec3d.x + "," + vec3d.y + "," + vec3d.z;
     }
-    public static Vector3d deseralizeVec(String string){
+    public static Vec3 deseralizeVec(String string){
         String[] arr = string.split(",");
-        return new Vector3d(Double.parseDouble(arr[0].trim()), Double.parseDouble(arr[1].trim()),Double.parseDouble(arr[2].trim()));
+        return new Vec3(Double.parseDouble(arr[0].trim()), Double.parseDouble(arr[1].trim()),Double.parseDouble(arr[2].trim()));
     }
 }
 

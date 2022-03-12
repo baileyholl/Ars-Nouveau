@@ -2,62 +2,58 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.common.block.tile.ArcanePedestalTile;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.Nullable;
-
-public class ArcanePedestal extends ModBlock{
+public class ArcanePedestal extends ModBlock implements EntityBlock {
 
     public ArcanePedestal() {
         super(ModBlock.defaultProperties().noOcclusion(),LibBlockNames.ARCANE_PEDESTAL);
     }
 
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
 
     @Override
-    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(handIn != Hand.MAIN_HAND)
-            return ActionResultType.PASS;
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        if(handIn != InteractionHand.MAIN_HAND)
+            return InteractionResult.PASS;
         if(!world.isClientSide) {
             ArcanePedestalTile tile = (ArcanePedestalTile) world.getBlockEntity(pos);
             if (tile.stack != null && player.getItemInHand(handIn).isEmpty()) {
                 if(world.getBlockState(pos.above()).getMaterial() != Material.AIR)
-                    return ActionResultType.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
                 world.addFreshEntity(item);
-                tile.stack = null;
-            } else if (!player.inventory.getSelected().isEmpty()) {
+                tile.stack = ItemStack.EMPTY;
+            } else if (!player.getInventory().getSelected().isEmpty()) {
                 if(tile.stack != null){
                     ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
                     world.addFreshEntity(item);
                 }
 
-                tile.stack = player.inventory.removeItem(player.inventory.selected, 1);
+                tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);
 
             }
             world.sendBlockUpdated(pos, state, state, 2);
         }
-        return  ActionResultType.SUCCESS;
+        return  InteractionResult.SUCCESS;
     }
 
     @Override
-    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         super.playerWillDestroy(worldIn, pos, state, player);
         if(worldIn.getBlockEntity(pos) instanceof ArcanePedestalTile && ((ArcanePedestalTile) worldIn.getBlockEntity(pos)).stack != null){
             worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), ((ArcanePedestalTile) worldIn.getBlockEntity(pos)).stack));
@@ -65,13 +61,12 @@ public class ArcanePedestal extends ModBlock{
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return Block.box(1D, 0.0D, 1.0D, 15, 16, 15);
     }
 
-    @Nullable
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new ArcanePedestalTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new ArcanePedestalTile(pos, state);
     }
 }

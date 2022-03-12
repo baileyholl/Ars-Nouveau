@@ -1,0 +1,16 @@
+{
+  "name": "ars_nouveau.glyph_name.conjure_water",
+  "category": "ars_nouveau:glyphs_2",
+  "icon": "ars_nouveau:glyph_conjure_water",
+  "sortnum": 2,
+  "pages": [
+    {
+      "text": "ars_nouveau.glyph_desc.conjure_water",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:glyph_conjure_water",
+      "type": "ars_nouveau:glyph_recipe"
+    }
+  ]
+}

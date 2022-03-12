@@ -2,45 +2,47 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "ars_nouveau:mana_boost",
   "level": 3,
-  "mana": 5000,
-  "item_1": [
+  "sourceCost": 5000,
+  "pedestalItems": [
     {
-      "item": "ars_nouveau:mana_berry"
-    }
-  ],
-  "item_2": [
+      "item": {
+        "item": "ars_nouveau:source_berry"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_amplify"
-    }
-  ],
-  "item_3": [
+      "item": {
+        "tag": "forge:gems/diamond"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_amplify"
-    }
-  ],
-  "item_4": [
+      "item": {
+        "tag": "forge:gems/diamond"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/mana"
-    }
-  ],
-  "item_5": [
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/mana"
-    }
-  ],
-  "item_6": [
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/mana"
-    }
-  ],
-  "item_7": [
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/mana"
-    }
-  ],
-  "item_8": [
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/lapis"
+      "item": {
+        "tag": "forge:storage_blocks/lapis"
+      }
     }
   ]
 }

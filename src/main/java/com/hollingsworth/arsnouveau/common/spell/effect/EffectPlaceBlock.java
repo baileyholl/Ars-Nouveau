@@ -1,27 +1,30 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.FakePlayer;
 
 import javax.annotation.Nonnull;
@@ -37,9 +40,10 @@ public class EffectPlaceBlock extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         List<BlockPos> posList = SpellUtil.calcAOEBlocks(shooter, rayTraceResult.getBlockPos(), rayTraceResult, spellStats);
-        BlockRayTraceResult result = rayTraceResult;
+        BlockHitResult result = rayTraceResult;
+        FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) world);
         for(BlockPos pos1 : posList) {
             BlockPos hitPos = result.isInside() ? pos1 : pos1.relative(result.getDirection());
             if(spellContext.castingTile instanceof IPlaceBlockResponder){
@@ -48,8 +52,7 @@ public class EffectPlaceBlock extends AbstractEffect {
                     return;
 
                 BlockItem item = (BlockItem) stack.getItem();
-                FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerWorld) world);
-                fakePlayer.setItemInHand(Hand.MAIN_HAND, stack);
+                fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack);
 
                 // Special offset for touch
                 boolean isTouch = spellContext.getSpell().recipe.get(0) instanceof MethodTouch;
@@ -58,7 +61,7 @@ public class EffectPlaceBlock extends AbstractEffect {
                     continue;
                 // Special offset because we are placing a block against the face we are looking at (in the case of touch)
                 Direction direction = isTouch ? result.getDirection().getOpposite() : result.getDirection();
-                BlockItemUseContext context = BlockItemUseContext.at(new BlockItemUseContext(new ItemUseContext(fakePlayer, Hand.MAIN_HAND, result)),
+                BlockPlaceContext context = BlockPlaceContext.at(new BlockPlaceContext(new UseOnContext(fakePlayer, InteractionHand.MAIN_HAND, result)),
                         hitPos.relative(direction), direction);
                 item.place(context);
             }else if(shooter instanceof IPlaceBlockResponder){
@@ -67,22 +70,22 @@ public class EffectPlaceBlock extends AbstractEffect {
                     return;
                 BlockItem item = (BlockItem) stack.getItem();
                 if(world.getBlockState(hitPos).getMaterial() != Material.AIR){
-                    result = new BlockRayTraceResult(result.getLocation().add(0, 1, 0), Direction.UP, result.getBlockPos(),false);
+                    result = new BlockHitResult(result.getLocation().add(0, 1, 0), Direction.UP, result.getBlockPos(),false);
                 }
-                attemptPlace(world, stack, item, result);
-            }else if(shooter instanceof PlayerEntity){
-                PlayerEntity playerEntity = (PlayerEntity) shooter;
+                attemptPlace(world, stack, item, result, fakePlayer);
+            }else if(shooter instanceof Player){
+                Player playerEntity = (Player) shooter;
                 NonNullList<ItemStack> list =  playerEntity.inventory.items;
                 if(!world.getBlockState(hitPos).getMaterial().isReplaceable())
                     continue;
                 for(int i = 0; i < 9; i++){
                     ItemStack stack = list.get(i);
-                    if(stack.getItem() instanceof BlockItem && world instanceof ServerWorld){
+                    if(stack.getItem() instanceof BlockItem && world instanceof ServerLevel){
                         BlockItem item = (BlockItem)stack.getItem();
 
-                        BlockRayTraceResult resolveResult = new BlockRayTraceResult(new Vector3d(hitPos.getX(), hitPos.getY(), hitPos.getZ()), result.getDirection(), hitPos, false);
-                        ActionResultType resultType = attemptPlace(world, stack, item, resolveResult);
-                        if(ActionResultType.FAIL != resultType)
+                        BlockHitResult resolveResult = new BlockHitResult(new Vec3(hitPos.getX(), hitPos.getY(), hitPos.getZ()), result.getDirection(), hitPos, false);
+                        InteractionResult resultType = attemptPlace(world, stack, item, resolveResult, fakePlayer);
+                        if(InteractionResult.FAIL != resultType)
                             break;
                     }
                 }
@@ -91,26 +94,19 @@ public class EffectPlaceBlock extends AbstractEffect {
     }
 
     @Override
-    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
+    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         return nonAirBlockSuccess(rayTraceResult, world);
     }
 
-    public static ActionResultType attemptPlace(World world, ItemStack stack, BlockItem item, BlockRayTraceResult result){
-        FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerWorld) world);
-        fakePlayer.setItemInHand(Hand.MAIN_HAND, stack);
-        BlockItemUseContext context = BlockItemUseContext.at(new BlockItemUseContext(new ItemUseContext(fakePlayer, Hand.MAIN_HAND, result)), result.getBlockPos(), result.getDirection());
+    public static InteractionResult attemptPlace(Level world, ItemStack stack, BlockItem item, BlockHitResult result, Player fakePlayer){
+        fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack);
+        BlockPlaceContext context = BlockPlaceContext.at(new BlockPlaceContext(new UseOnContext(fakePlayer, InteractionHand.MAIN_HAND, result)), result.getBlockPos(), result.getDirection());
         return item.place(context);
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 10;
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.DISPENSER;
     }
 
     @Nonnull

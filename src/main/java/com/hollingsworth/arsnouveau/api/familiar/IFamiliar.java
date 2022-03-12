@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.api.familiar;
 
 import com.hollingsworth.arsnouveau.api.event.FamiliarSummonEvent;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 
 import javax.annotation.Nullable;
 import java.util.UUID;
@@ -19,7 +19,7 @@ public interface IFamiliar {
     }
 
     default @Nullable Entity getOwnerServerside(){
-        return ((ServerWorld) getThisEntity().level).getEntity(getOwnerID());
+        return ((ServerLevel) getThisEntity().level).getEntity(getOwnerID());
     }
 
     /**
@@ -28,7 +28,7 @@ public interface IFamiliar {
      */
     default void onFamiliarSpawned(FamiliarSummonEvent event){
         if(event.owner.equals(getOwner()) && !event.getEntity().equals(this)){
-            this.getThisEntity().remove();
+            this.getThisEntity().remove(Entity.RemovalReason.DISCARDED);
         }
     }
 
@@ -36,7 +36,7 @@ public interface IFamiliar {
         if(getThisEntity().level.isClientSide || getOwnerID() == null)
             return null;
 
-        return (LivingEntity) ((ServerWorld)getThisEntity().level).getEntity(getOwnerID());
+        return (LivingEntity) ((ServerLevel)getThisEntity().level).getEntity(getOwnerID());
     }
 
     default boolean wantsToAttack(LivingEntity ownerLastHurt, LivingEntity owner) {

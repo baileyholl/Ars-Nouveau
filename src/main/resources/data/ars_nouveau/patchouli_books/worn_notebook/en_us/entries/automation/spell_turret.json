@@ -1,0 +1,35 @@
+{
+  "name": "block.ars_nouveau.basic_spell_turret",
+  "icon": "ars_nouveau:basic_spell_turret",
+  "category": "ars_nouveau:automation",
+  "pages": [
+    {
+      "text": "ars_nouveau.page1.basic_spell_turret",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:basic_spell_turret",
+      "type": "patchouli:crafting"
+    },
+    {
+      "text": "ars_nouveau.page2.basic_spell_turret",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:spell_turret",
+      "type": "ars_nouveau:apparatus_recipe"
+    },
+    {
+      "text": "ars_nouveau.page3.basic_spell_turret",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:timer_spell_turret",
+      "type": "ars_nouveau:apparatus_recipe"
+    },
+    {
+      "text": "ars_nouveau.page4.basic_spell_turret",
+      "type": "patchouli:text"
+    }
+  ]
+}

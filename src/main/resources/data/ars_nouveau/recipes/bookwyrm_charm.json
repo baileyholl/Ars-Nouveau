@@ -1,0 +1,54 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "reagent": [
+    {
+      "item": "minecraft:book"
+    }
+  ],
+  "pedestalItems": [
+    {
+      "item": {
+        "tag": "forge:ingots/iron"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:ingots/iron"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:ingots/iron"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:ingots/iron"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    }
+  ],
+  "output": {
+    "item": "ars_nouveau:bookwyrm_charm"
+  },
+  "sourceCost": 0
+}

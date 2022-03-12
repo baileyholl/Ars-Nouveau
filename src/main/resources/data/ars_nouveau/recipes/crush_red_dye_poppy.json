@@ -1,0 +1,13 @@
+{
+  "type": "ars_nouveau:crush",
+  "input": {
+    "item": "minecraft:poppy"
+  },
+  "output": [
+    {
+      "item": "minecraft:red_dye",
+      "chance": 1.0,
+      "count": 2
+    }
+  ]
+}

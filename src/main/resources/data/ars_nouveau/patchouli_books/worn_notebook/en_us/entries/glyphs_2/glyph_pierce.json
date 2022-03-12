@@ -1,0 +1,16 @@
+{
+  "name": "ars_nouveau.glyph_name.pierce",
+  "category": "ars_nouveau:glyphs_2",
+  "icon": "ars_nouveau:glyph_pierce",
+  "sortnum": 3,
+  "pages": [
+    {
+      "text": "ars_nouveau.glyph_desc.pierce",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:glyph_pierce",
+      "type": "ars_nouveau:glyph_recipe"
+    }
+  ]
+}

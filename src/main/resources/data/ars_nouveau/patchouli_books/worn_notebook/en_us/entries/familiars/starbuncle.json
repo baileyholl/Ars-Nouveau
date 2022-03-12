@@ -1,0 +1,15 @@
+{
+  "name": "entity.ars_nouveau.starbuncle",
+  "category": "ars_nouveau:familiars",
+  "icon": "ars_nouveau:familiar_starbuncle",
+  "pages": [
+    {
+      "text": "ars_nouveau.familiar_desc.starbuncle",
+      "type": "patchouli:text"
+    },
+    {
+      "entity": "ars_nouveau:starbuncle",
+      "type": "patchouli:entity"
+    }
+  ]
+}

@@ -1,16 +1,19 @@
 {
   "type": "ars_nouveau:enchanting_apparatus",
-  "item_1": [
-    {
-      "item": "minecraft:clock"
-    }
-  ],
   "reagent": [
     {
       "item": "ars_nouveau:basic_spell_turret"
     }
   ],
+  "pedestalItems": [
+    {
+      "item": {
+        "item": "minecraft:clock"
+      }
+    }
+  ],
   "output": {
     "item": "ars_nouveau:timer_spell_turret"
-  }
+  },
+  "sourceCost": 0
 }

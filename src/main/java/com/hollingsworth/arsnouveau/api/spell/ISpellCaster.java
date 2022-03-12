@@ -1,25 +1,31 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
-import com.hollingsworth.arsnouveau.api.util.MathUtil;
+import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
+import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.common.block.tile.IntangibleAirTile;
-import com.hollingsworth.arsnouveau.common.block.tile.PhantomBlockTile;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
+import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Map;
 
 /**
@@ -30,7 +36,7 @@ public interface ISpellCaster {
 
     @Nonnull Spell getSpell();
 
-    Spell getSpell(int slot);
+    @Nonnull Spell getSpell(int slot);
 
     int getMaxSlots();
 
@@ -38,66 +44,135 @@ public interface ISpellCaster {
 
     void setCurrentSlot(int slot);
 
+    default void setNextSlot(){
+        int slot = getCurrentSlot() + 1;
+        if(slot > getMaxSlots()){
+            slot = 1;
+        }
+        setCurrentSlot(slot);
+    }
+
+    default void setPreviousSlot(){
+        int slot = getCurrentSlot() - 1;
+        if(slot < 1)
+            slot = getMaxSlots();
+        setCurrentSlot(slot);
+    }
+
     void setSpell(Spell spell, int slot);
 
     void setSpell(Spell spell);
 
+    @Nonnull ParticleColor.IntWrapper getColor(int slot);
+
+    @Nonnull ParticleColor.IntWrapper getColor();
+
     void setColor(ParticleColor.IntWrapper color);
+
+    void setColor(ParticleColor.IntWrapper color, int slot);
+
+    @Nonnull ConfiguredSpellSound getSound(int slot);
+
+    void setSound(ConfiguredSpellSound sound, int slot);
+
+    default ConfiguredSpellSound getCurrentSound(){
+        return getSound(getCurrentSlot());
+    }
 
     void setFlavorText(String str);
 
-    String getFlavorText();
+    String getSpellName(int slot);
 
-    ParticleColor.IntWrapper getColor();
+    String getSpellName();
+
+    void setSpellName(String name);
+
+    void setSpellName(String name, int slot);
+
+    String getFlavorText();
 
     Map<Integer, Spell> getSpells();
 
+    Map<Integer, String> getSpellNames();
 
-    default Spell getSpell(World world, PlayerEntity playerEntity, Hand hand, ISpellCaster caster){
+    Map<Integer, ParticleColor.IntWrapper> getColors();
+
+    @Nonnull
+    default Spell getSpell(Level world, Player playerEntity, InteractionHand hand, ISpellCaster caster){
         return caster.getSpell();
     }
 
-    default ActionResult<ItemStack> castSpell(World worldIn, PlayerEntity playerIn, Hand handIn, TranslationTextComponent invalidMessage, Spell spell){
+    default Spell modifySpellBeforeCasting(Level worldIn, @Nullable Entity playerIn, @Nullable InteractionHand handIn, Spell spell){
+        return spell;
+    }
+
+    default InteractionResultHolder<ItemStack> castSpell(Level worldIn, Player playerIn, InteractionHand handIn, @Nullable TranslatableComponent invalidMessage, @Nonnull Spell spell){
         ItemStack stack = playerIn.getItemInHand(handIn);
 
         if(worldIn.isClientSide)
-            return ActionResult.pass(playerIn.getItemInHand(handIn));
-
-        RayTraceResult result = playerIn.pick(5, 0, false);
-        if(result instanceof BlockRayTraceResult && worldIn.getBlockEntity(((BlockRayTraceResult) result).getBlockPos()) instanceof ScribesTile)
-            return new ActionResult<>(ActionResultType.SUCCESS, stack);
-        if(result instanceof BlockRayTraceResult && !playerIn.isShiftKeyDown()){
-            if(worldIn.getBlockEntity(((BlockRayTraceResult) result).getBlockPos()) != null &&
-                    !(worldIn.getBlockEntity(((BlockRayTraceResult) result).getBlockPos()) instanceof IntangibleAirTile
-                            ||(worldIn.getBlockEntity(((BlockRayTraceResult) result).getBlockPos()) instanceof PhantomBlockTile))) {
-                return new ActionResult<>(ActionResultType.SUCCESS, stack);
-            }
-        }
-        if(spell == null) {
+            return InteractionResultHolder.pass(playerIn.getItemInHand(handIn));
+        spell = modifySpellBeforeCasting(worldIn, playerIn, handIn, spell);
+        if(!spell.isValid() && invalidMessage != null) {
             PortUtil.sendMessageNoSpam(playerIn,invalidMessage);
-            return new ActionResult<>(ActionResultType.CONSUME, stack);
+            return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
         }
-        SpellResolver resolver = new SpellResolver(new SpellContext(spell, playerIn)
-                .withColors(getColor()));
-        EntityRayTraceResult entityRes = MathUtil.getLookedAtEntity(playerIn, 25);
+        SpellResolver resolver = getSpellResolver(new SpellContext(spell, playerIn).withColors(getColor()), worldIn, playerIn, handIn);
+        boolean isSensitive = resolver.spell.getBuffsAtIndex(0, playerIn, AugmentSensitive.INSTANCE) > 0;
+        HitResult result = SpellUtil.rayTrace(playerIn, 5, 0, isSensitive);
+        if(result instanceof BlockHitResult blockHit){
+            BlockEntity tile = worldIn.getBlockEntity(blockHit.getBlockPos());
+            if(tile instanceof ScribesTile)
+                return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
 
-        if(entityRes != null && entityRes.getEntity() instanceof LivingEntity){
-            resolver.onCastOnEntity(stack, playerIn, (LivingEntity) entityRes.getEntity(), handIn);
-            return new ActionResult<>(ActionResultType.CONSUME, stack);
+            if(!playerIn.isShiftKeyDown() && tile != null && !(worldIn.getBlockState(blockHit.getBlockPos()).is(BlockTagProvider.IGNORE_TILE))){
+                return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
+            }
+
         }
 
-        if(result instanceof BlockRayTraceResult){
-            ItemUseContext context = new ItemUseContext(playerIn, handIn, (BlockRayTraceResult) result);
+
+        if(result instanceof EntityHitResult entityHitResult && entityHitResult.getEntity() instanceof LivingEntity){
+            resolver.onCastOnEntity(stack, playerIn, entityHitResult.getEntity(), handIn);
+            playSound(playerIn.getOnPos(), worldIn, playerIn, getCurrentSound(), SoundSource.PLAYERS);
+            return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
+        }
+
+        if(result instanceof BlockHitResult && (result.getType() == HitResult.Type.BLOCK || isSensitive)){
+            UseOnContext context = new UseOnContext(playerIn, handIn, (BlockHitResult) result);
             resolver.onCastOnBlock(context);
-            return new ActionResult<>(ActionResultType.CONSUME, stack);
+            playSound(playerIn.getOnPos(), worldIn, playerIn, getCurrentSound(), SoundSource.PLAYERS);
+            return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
 
         resolver.onCast(stack,playerIn,worldIn);
-        return new ActionResult<>(ActionResultType.CONSUME, stack);
+        playSound(playerIn.getOnPos(), worldIn, playerIn, getCurrentSound(), SoundSource.PLAYERS);
+        return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
     }
 
-    default ActionResult<ItemStack> castSpell(World worldIn, PlayerEntity playerIn, Hand handIn, TranslationTextComponent invalidMessage){
+    default InteractionResultHolder<ItemStack> castSpell(Level worldIn, Player playerIn, InteractionHand handIn, TranslatableComponent invalidMessage){
         return castSpell(worldIn, playerIn, handIn, invalidMessage, getSpell(worldIn, playerIn, handIn, this));
     }
 
+    default void copyFromCaster(ISpellCaster other){
+        for(int i = 0; i < getMaxSlots() + 1 && i < other.getMaxSlots() + 1; i++){
+            setSpell(other.getSpell(i), i);
+            setSound(other.getSound(i), i);
+            setColor(other.getColor(i), i);
+            setSpellName(other.getSpellName(i), i);
+            setFlavorText(other.getFlavorText());
+        }
+    }
+
+    default SpellResolver getSpellResolver(SpellContext context, Level worldIn, Player playerIn, InteractionHand handIn){
+        return new SpellResolver(context);
+    }
+
+    default void playSound(BlockPos pos, Level worldIn, @Nullable Player playerIn, ConfiguredSpellSound configuredSound, SoundSource source){
+        if(configuredSound == null || configuredSound.sound == null || configuredSound.sound.getSoundEvent() == null || configuredSound.equals(ConfiguredSpellSound.EMPTY))
+            return;
+
+        worldIn.playSound(playerIn, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, configuredSound.sound.getSoundEvent(), source, configuredSound.volume, configuredSound.pitch);
+    }
+
+    String getTagID();
 }

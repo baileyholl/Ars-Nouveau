@@ -1,0 +1,16 @@
+{
+  "name": "ars_nouveau.glyph_name.dampen",
+  "category": "ars_nouveau:glyphs_2",
+  "icon": "ars_nouveau:glyph_dampen",
+  "sortnum": 3,
+  "pages": [
+    {
+      "text": "ars_nouveau.glyph_desc.dampen",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:glyph_dampen",
+      "type": "ars_nouveau:glyph_recipe"
+    }
+  ]
+}

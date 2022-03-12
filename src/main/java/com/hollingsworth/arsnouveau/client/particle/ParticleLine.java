@@ -1,24 +1,24 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
-import net.minecraft.client.particle.IAnimatedSprite;
-import net.minecraft.client.particle.IParticleRenderType;
-import net.minecraft.client.particle.SpriteTexturedParticle;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.world.World;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.world.level.Level;
 
-public class ParticleLine extends SpriteTexturedParticle {
-    public float colorR = 0;
-    public float colorG = 0;
-    public float colorB = 0;
-    public float initScale = 0;
-    public float initX = 0;
-    public float initY = 0;
-    public float initZ = 0;
-    public float destX = 0;
-    public float destY = 0;
-    public float destZ = 0;
-    protected ParticleLine(World worldIn, double x, double y, double z, double vx, double vy, double vz, float r, float g, float b, float scale, int lifetime, IAnimatedSprite sprite) {
-        super((ClientWorld) worldIn, x,y,z,0,0,0);
+public class ParticleLine extends TextureSheetParticle {
+    public float colorR;
+    public float colorG;
+    public float colorB;
+    public float initScale;
+    public float initX;
+    public float initY;
+    public float initZ;
+    public float destX;
+    public float destY;
+    public float destZ;
+    protected ParticleLine(Level worldIn, double x, double y, double z, double vx, double vy, double vz, float r, float g, float b, float scale, int lifetime, SpriteSet sprite) {
+        super((ClientLevel) worldIn, x,y,z,0,0,0);
         this.colorR = r;
         this.colorG = g;
         this.colorB = b;
@@ -71,8 +71,8 @@ public class ParticleLine extends SpriteTexturedParticle {
     }
 
     @Override
-    public IParticleRenderType getRenderType() {
-        return RenderTypes.EMBER_RENDER;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderTypes.EMBER_RENDER;
     }
 
 

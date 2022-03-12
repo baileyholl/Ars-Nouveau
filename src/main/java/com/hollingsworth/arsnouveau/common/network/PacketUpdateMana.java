@@ -1,9 +1,9 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -17,7 +17,7 @@ public class PacketUpdateMana {
 
     public int tierBonus;
     //Decoder
-    public PacketUpdateMana(PacketBuffer buf){
+    public PacketUpdateMana(FriendlyByteBuf buf){
         mana = buf.readDouble();
         maxMana = buf.readInt();
         glyphBonus = buf.readInt();
@@ -25,7 +25,7 @@ public class PacketUpdateMana {
     }
 
     //Encoder
-    public void toBytes(PacketBuffer buf){
+    public void toBytes(FriendlyByteBuf buf){
         buf.writeDouble(mana);
         buf.writeInt(maxMana);
         buf.writeInt(glyphBonus);
@@ -43,7 +43,7 @@ public class PacketUpdateMana {
         ctx.get().enqueueWork(()->{
             if(ArsNouveau.proxy.getPlayer() == null)
                 return;
-            ManaCapability.getMana(ArsNouveau.proxy.getPlayer()).ifPresent(mana ->{
+            CapabilityRegistry.getMana(ArsNouveau.proxy.getPlayer()).ifPresent(mana ->{
                 mana.setMana(this.mana);
                 mana.setMaxMana(this.maxMana);
                 mana.setGlyphBonus(this.glyphBonus);

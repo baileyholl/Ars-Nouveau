@@ -1,0 +1,38 @@
+package com.hollingsworth.arsnouveau.common.potions;
+
+import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.common.lib.EntityTags;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+
+public class MagicFindEffect extends MobEffect {
+    protected MagicFindEffect() {
+        super(MobEffectCategory.BENEFICIAL, new ParticleColor(30, 200, 200).getColor());
+        setRegistryName(ArsNouveau.MODID,"magic_find");
+    }
+
+    @Override
+    public void applyEffectTick(LivingEntity pLivingEntity, int pAmplifier) {
+        super.applyEffectTick(pLivingEntity, pAmplifier);
+        Level level = pLivingEntity.level;
+        if(level.isClientSide || level.getGameTime() % 60 != 0)
+            return;
+        for(Entity e : level.getEntities(pLivingEntity, new AABB(pLivingEntity.blockPosition()).inflate(75))){
+            if(e instanceof LivingEntity living && EntityTags.MAGIC_FIND.contains(living.getType())){
+                living.addEffect(new MobEffectInstance(MobEffects.GLOWING, 60*20));
+            }
+        }
+    }
+
+    @Override
+    public boolean isDurationEffectTick(int pDuration, int pAmplifier) {
+        return true;
+    }
+}

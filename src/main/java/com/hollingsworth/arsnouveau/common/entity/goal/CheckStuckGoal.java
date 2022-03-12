@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.common.entity.goal;
 
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.function.Function;
 import java.util.function.Supplier;

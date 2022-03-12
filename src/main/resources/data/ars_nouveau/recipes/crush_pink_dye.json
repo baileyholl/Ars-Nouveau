@@ -1,0 +1,13 @@
+{
+  "type": "ars_nouveau:crush",
+  "input": {
+    "item": "minecraft:pink_tulip"
+  },
+  "output": [
+    {
+      "item": "minecraft:pink_dye",
+      "chance": 1.0,
+      "count": 2
+    }
+  ]
+}

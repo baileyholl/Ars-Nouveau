@@ -3,8 +3,10 @@ package com.hollingsworth.arsnouveau.common.spell.validation;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ISpellValidator;
 import com.hollingsworth.arsnouveau.api.spell.SpellValidationError;
+import com.hollingsworth.arsnouveau.setup.Config;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Primary class containing the logic to decide if a spell's recipe is <em>valid</em>.
@@ -38,18 +40,21 @@ public class StandardSpellValidator implements ISpellValidator {
         // Unconditional validators
         validators.add(MAX_ONE_CAST_METHOD);
         validators.add(GLYPH_OCCURRENCES_POLICY);
-        validators.add(EFFECT_AUGMENTATION_POLICY);
 
         // Validators only applicable at crafting time
         if (!enforceCastTimeValidations) {
             // Not enforcing this at cast time so we don't break existing spells with ineffective augments
             validators.add(AUGMENT_COMPATIBILITY);
+            validators.add(EFFECT_AUGMENTATION_POLICY);
         }
 
         // Validators only applicable at casting time
         if (enforceCastTimeValidations) {
             validators.add(NON_EMPTY_SPELL);
             validators.add(REQUIRE_CAST_METHOD_START);
+            if(Config.ENFORCE_AUGMENT_CAP_ON_CAST.get()){
+                validators.add(EFFECT_AUGMENTATION_POLICY);
+            }
         }
 
         // Combine them all together.

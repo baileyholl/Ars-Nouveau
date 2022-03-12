@@ -1,17 +1,18 @@
 package com.hollingsworth.arsnouveau.common.entity.goal.chimera;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.pathfinding.Path;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.world.phys.AABB;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -88,24 +89,31 @@ public class ChimeraRamGoal extends Goal {
             attack();
         }
 
-        if(hasHit && BlockUtil.distanceFrom(boss.position, boss.getTarget().position) <= 2.0f){
+        if(boss != null && boss.getTarget() != null && hasHit && BlockUtil.distanceFrom(boss.position, boss.getTarget().position) <= 2.0f){
             endRam();
         }
     }
 
     public void breakBlocks(){
+        if(!net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.boss.level, this.boss)){
+            return;
+        }
         Direction facing = boss.getDirection();
         BlockPos facingPos = boss.blockPosition().above().relative(facing);
         for(int i = 0; i < 2; i++){
             facingPos = facingPos.above(i);
-            boss.level.destroyBlock(facingPos.above(), true);
-            boss.level.destroyBlock(facingPos.east(), true);
-            boss.level.destroyBlock(facingPos.west(), true);
-            boss.level.destroyBlock(facingPos.south(), true);
-            boss.level.destroyBlock(facingPos.north(), true);
+            destroyBlock(facingPos.above());
+            destroyBlock(facingPos.east());
+            destroyBlock(facingPos.west());
+            destroyBlock(facingPos.south());
+            destroyBlock(facingPos.north());
         }
+    }
 
-
+    public void destroyBlock(BlockPos pos){
+        if(SpellUtil.isCorrectHarvestLevel(4, boss.level.getBlockState(pos))) {
+            boss.level.destroyBlock(pos, true);
+        }
     }
 
     @Override
@@ -125,12 +133,12 @@ public class ChimeraRamGoal extends Goal {
     }
 
     protected void attack() {
-        List<LivingEntity> nearbyEntities = boss.level.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(boss.blockPosition()).inflate(1, 1, 1));
+        List<LivingEntity> nearbyEntities = boss.level.getEntitiesOfClass(LivingEntity.class, new AABB(boss.blockPosition()).inflate(1, 1, 1));
         for(LivingEntity enemy: nearbyEntities){
             if(enemy.equals(boss))
                 continue;
             this.boss.doHurtTarget(enemy);
-            enemy.knockback(3.0f, (double) MathHelper.sin(boss.yRot * ((float)Math.PI / 180F)), (double)(-MathHelper.cos(boss.yRot * ((float)Math.PI / 180F))));
+            enemy.knockback(3.0f, Mth.sin(boss.yRot * ((float)Math.PI / 180F)), -Mth.cos(boss.yRot * ((float)Math.PI / 180F)));
             hasHit = true;
         }
     }

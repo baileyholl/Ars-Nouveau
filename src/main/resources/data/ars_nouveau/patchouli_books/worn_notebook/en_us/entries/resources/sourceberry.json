@@ -1,0 +1,16 @@
+{
+  "name": "block.ars_nouveau.sourceberry_bush",
+  "icon": "ars_nouveau:source_berry",
+  "category": "ars_nouveau:resources",
+  "pages": [
+    {
+      "text": "ars_nouveau.page1.source_berry",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:source_berry_pie",
+      "recipe2": "ars_nouveau:source_berry_roll",
+      "type": "patchouli:crafting"
+    }
+  ]
+}

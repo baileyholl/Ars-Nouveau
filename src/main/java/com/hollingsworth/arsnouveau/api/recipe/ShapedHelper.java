@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.api.recipe;
 
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.util.NonNullList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,9 +58,6 @@ public class ShapedHelper {
                 }
                 if(ingredient.getItems().length != 0)
                     ingredientList.add(ingredient);
-//                if (!ingredient.test(craftingInventory.getStackInSlot(i + j * craftingInventory.getWidth()))) {
-//                    return false;
-//                }
             }
         }
 

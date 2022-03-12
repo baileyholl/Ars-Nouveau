@@ -4,12 +4,12 @@ import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.monster.ZombieVillagerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.ZombieVillager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
@@ -20,24 +20,24 @@ public class RitualHealing extends AbstractRitual {
     @Override
     protected void tick() {
         if(getWorld().isClientSide){
-            ParticleUtil.spawnRitualAreaEffect(tile, rand, getCenterColor(), 5);
+            ParticleUtil.spawnRitualAreaEffect(getPos(), getWorld(), rand, getCenterColor(), 5);
         }else{
             if(getWorld().getGameTime() % 100 == 0){
-                List<LivingEntity> entities = getWorld().getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(getPos()).inflate(5));
-                Optional<LivingEntity> player = entities.stream().filter(e -> e instanceof PlayerEntity).findFirst();
+                List<LivingEntity> entities = getWorld().getEntitiesOfClass(LivingEntity.class, new AABB(getPos()).inflate(5));
+                Optional<LivingEntity> player = entities.stream().filter(e -> e instanceof Player).findFirst();
 
                 boolean didWorkOnce = false;
                 for(LivingEntity a : entities){
-                    if(a instanceof ZombieVillagerEntity){
+                    if(a instanceof ZombieVillager){
 
-                        ((ZombieVillagerEntity) a).startConverting(player.isPresent() ? player.get().getUUID() : null, 0);
+                        ((ZombieVillager) a).startConverting(player.isPresent() ? player.get().getUUID() : null, 0);
                         didWorkOnce = true;
                         continue;
                     }
 
                     if(a.getHealth() < a.getMaxHealth() || a.isInvertedHealAndHarm()) {
                         if(a.isInvertedHealAndHarm()){
-                            FakePlayer player1 = FakePlayerFactory.getMinecraft((ServerWorld) getWorld());
+                            FakePlayer player1 = FakePlayerFactory.getMinecraft((ServerLevel) getWorld());
                             a.hurt(DamageSource.playerAttack(player1).setMagic(), 10.0f);
                         }else{
                             a.heal(10.0f);

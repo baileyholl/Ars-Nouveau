@@ -1,0 +1,13 @@
+{
+  "type": "ars_nouveau:crush",
+  "input": {
+    "item": "minecraft:allium"
+  },
+  "output": [
+    {
+      "item": "minecraft:magenta_dye",
+      "chance": 1.0,
+      "count": 2
+    }
+  ]
+}

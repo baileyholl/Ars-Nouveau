@@ -2,30 +2,32 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:blast_protection",
   "level": 2,
-  "mana": 4000,
-  "item_1": [
+  "sourceCost": 4000,
+  "pedestalItems": [
     {
-      "tag": "forge:storage_blocks/iron"
-    }
-  ],
-  "item_2": [
+      "item": {
+        "tag": "forge:storage_blocks/iron"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/iron"
-    }
-  ],
-  "item_3": [
+      "item": {
+        "tag": "forge:storage_blocks/iron"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/mana"
-    }
-  ],
-  "item_4": [
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/lapis"
-    }
-  ],
-  "item_5": [
+      "item": {
+        "tag": "forge:storage_blocks/lapis"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/lapis"
+      "item": {
+        "tag": "forge:storage_blocks/lapis"
+      }
     }
   ]
 }

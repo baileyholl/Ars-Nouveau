@@ -1,6 +1,33 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "THREE",
-  "input": "minecraft:elytra",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "inputItems": [
+    {
+      "item": {
+        "item": "ars_nouveau:air_essence"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:elytra"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/diamond"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/diamond"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/diamond"
+      }
+    }
+  ],
+  "exp": 160,
   "output": "ars_nouveau:glyph_glide"
 }

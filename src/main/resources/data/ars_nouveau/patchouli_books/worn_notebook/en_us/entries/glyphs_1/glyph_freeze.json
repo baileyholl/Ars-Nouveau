@@ -1,0 +1,16 @@
+{
+  "name": "ars_nouveau.glyph_name.freeze",
+  "category": "ars_nouveau:glyphs_1",
+  "icon": "ars_nouveau:glyph_freeze",
+  "sortnum": 2,
+  "pages": [
+    {
+      "text": "ars_nouveau.glyph_desc.freeze",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:glyph_freeze",
+      "type": "ars_nouveau:glyph_recipe"
+    }
+  ]
+}

@@ -1,15 +1,17 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.mana.AbstractManaTile;
+import com.hollingsworth.arsnouveau.api.source.AbstractSourceMachine;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleSparkleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -20,12 +22,12 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import java.util.Random;
 
-public class SummoningCrystalTile extends AbstractManaTile implements IAnimatable {
+public class SummoningCrystalTile extends AbstractSourceMachine implements IAnimatable, ITickable {
 
     public boolean isOff;
 
-    public SummoningCrystalTile() {
-        super(BlockRegistry.SUMMONING_CRYSTAL_TILE);
+    public SummoningCrystalTile(BlockPos pos, BlockState state) {
+        super(BlockRegistry.SUMMONING_CRYSTAL_TILE, pos, state);
     }
 
     AnimationFactory manager = new AnimationFactory(this);
@@ -34,7 +36,7 @@ public class SummoningCrystalTile extends AbstractManaTile implements IAnimatabl
         animationData.addAnimationController(new AnimationController(this, "rotate_controller", 0, this::idlePredicate));
     }
 
-    private <E extends TileEntity & IAnimatable > PlayState idlePredicate(AnimationEvent<E> event) {
+    private <E extends BlockEntity & IAnimatable > PlayState idlePredicate(AnimationEvent<E> event) {
         event.getController().setAnimation(new AnimationBuilder().addAnimation("summoning_crystal", true));
         return PlayState.CONTINUE;
     }
@@ -54,11 +56,11 @@ public class SummoningCrystalTile extends AbstractManaTile implements IAnimatabl
     }
 
     public boolean enoughMana(int manaCost){
-        return ManaUtil.hasManaNearby(worldPosition, level, 7, manaCost);
+        return SourceUtil.hasSourceNearby(worldPosition, level, 7, manaCost);
     }
 
     public boolean removeManaAround(int manaCost){
-        return ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 7, manaCost) != null;
+        return SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 7, manaCost) != null;
     }
 
     @Override
@@ -74,14 +76,13 @@ public class SummoningCrystalTile extends AbstractManaTile implements IAnimatabl
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT tag) {
-        super.load(state,tag);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         isOff = tag.getBoolean("is_off");
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
+    public void saveAdditional(CompoundTag tag) {
         tag.putBoolean("is_off", isOff);
-        return super.save(tag);
     }
 }

@@ -2,25 +2,27 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:respiration",
   "level": 1,
-  "mana": 3000,
-  "item_1": [
+  "sourceCost": 3000,
+  "pedestalItems": [
     {
-      "item": "ars_nouveau:glyph_aquatic"
-    }
-  ],
-  "item_2": [
+      "item": {
+        "item": "ars_nouveau:water_essence"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_aquatic"
-    }
-  ],
-  "item_3": [
+      "item": {
+        "item": "ars_nouveau:water_essence"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/mana"
-    }
-  ],
-  "item_4": [
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/mana"
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
     }
   ]
 }

@@ -1,0 +1,15 @@
+{
+  "name": "item.ars_nouveau.ring_of_lesser_discount",
+  "category": "ars_nouveau:equipment",
+  "icon": "ars_nouveau:ring_of_lesser_discount",
+  "pages": [
+    {
+      "text": "ars_nouveau.page.ring_of_lesser_discount",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:ring_of_lesser_discount",
+      "type": "ars_nouveau:apparatus_recipe"
+    }
+  ]
+}

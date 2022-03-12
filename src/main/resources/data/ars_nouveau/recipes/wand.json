@@ -1,51 +1,54 @@
 {
   "type": "ars_nouveau:enchanting_apparatus",
-  "item_1": [
-    {
-      "tag": "forge:gems/mana"
-    }
-  ],
-  "item_2": [
-    {
-      "tag": "forge:gems/mana"
-    }
-  ],
-  "item_3": [
-    {
-      "tag": "forge:gems/mana"
-    }
-  ],
-  "item_4": [
-    {
-      "tag": "forge:gems/mana"
-    }
-  ],
-  "item_5": [
-    {
-      "tag": "forge:ingots/gold"
-    }
-  ],
-  "item_6": [
-    {
-      "tag": "forge:ingots/gold"
-    }
-  ],
-  "item_7": [
-    {
-      "item": "ars_nouveau:glyph_projectile"
-    }
-  ],
-  "item_8": [
-    {
-      "item": "ars_nouveau:glyph_accelerate"
-    }
-  ],
   "reagent": [
     {
       "tag": "forge:logs/archwood"
     }
   ],
+  "pedestalItems": [
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:ingots/gold"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:ingots/gold"
+      }
+    },
+    {
+      "item": {
+        "item": "ars_nouveau:air_essence"
+      }
+    },
+    {
+      "item": {
+        "item": "ars_nouveau:manipulation_essence"
+      }
+    }
+  ],
   "output": {
     "item": "ars_nouveau:wand"
-  }
+  },
+  "sourceCost": 0
 }

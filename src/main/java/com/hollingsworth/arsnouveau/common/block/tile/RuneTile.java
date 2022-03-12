@@ -1,60 +1,65 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
-import com.hollingsworth.arsnouveau.api.spell.EntitySpellResolver;
-import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.api.util.ManaUtil;
-import com.hollingsworth.arsnouveau.api.util.SpellRecipeUtil;
+import com.hollingsworth.arsnouveau.api.util.SourceUtil;
+import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
+import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
+import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.common.block.RuneBlock;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.items.IItemHandler;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.UUID;
 
-public class RuneTile extends AnimatedTile implements IPickupResponder {
-    public List<AbstractSpellPart> recipe;
+public class RuneTile extends AnimatedTile implements IPickupResponder, IAnimatable, ITickable {
+    public Spell spell = Spell.EMPTY;
     public boolean isTemporary;
     public boolean isCharged;
     public int ticksUntilCharge;
     public UUID uuid;
-    public RuneTile() {
-        super(BlockRegistry.RUNE_TILE);
+    public ParticleColor color = ParticleUtil.defaultParticleColor();
+    public Entity touchedEntity;
+
+    public RuneTile(BlockPos pos, BlockState state) {
+        super(BlockRegistry.RUNE_TILE, pos, state);
         isCharged = true;
         isTemporary = false;
         ticksUntilCharge = 0;
     }
 
-    public void setRecipe(List<AbstractSpellPart> recipe) {
-        this.recipe = recipe;
+    public void setSpell(Spell spell) {
+        this.spell = spell;
     }
 
     public void castSpell(Entity entity){
-
-        if(!this.isCharged || recipe == null || recipe.isEmpty() || !(entity instanceof LivingEntity) || !(level instanceof ServerWorld) || !(recipe.get(0) instanceof MethodTouch))
+        if(entity == null)
+            return;
+        if(!this.isCharged || spell.isEmpty() || !(level instanceof ServerLevel) || !(spell.recipe.get(0) instanceof MethodTouch))
             return;
         try {
 
-            PlayerEntity playerEntity = uuid != null ? level.getPlayerByUUID(uuid) : FakePlayerFactory.getMinecraft((ServerWorld) level);
-            playerEntity = playerEntity == null ?  FakePlayerFactory.getMinecraft((ServerWorld) level) : playerEntity;
-            EntitySpellResolver resolver = new EntitySpellResolver(recipe, new SpellContext(recipe, playerEntity).withCastingTile(this).withType(SpellContext.CasterType.RUNE));
-            resolver.onCastOnEntity(ItemStack.EMPTY, playerEntity, (LivingEntity) entity, Hand.MAIN_HAND);
+            Player playerEntity = uuid != null ? level.getPlayerByUUID(uuid) : FakePlayerFactory.getMinecraft((ServerLevel) level);
+            playerEntity = playerEntity == null ?  FakePlayerFactory.getMinecraft((ServerLevel) level) : playerEntity;
+            EntitySpellResolver resolver = new EntitySpellResolver(new SpellContext(spell, playerEntity).withCastingTile(this).withType(SpellContext.CasterType.RUNE).withColors(this.color.toWrapper()));
+            resolver.onCastOnEntity(ItemStack.EMPTY, playerEntity, entity, InteractionHand.MAIN_HAND);
             if (this.isTemporary) {
                 level.destroyBlock(worldPosition, false);
                 return;
@@ -64,42 +69,35 @@ public class RuneTile extends AnimatedTile implements IPickupResponder {
             level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).cycle(RuneBlock.POWERED));
             ticksUntilCharge = 20 * 2;
         }catch (Exception e){
-            PortUtil.sendMessage(entity, new TranslationTextComponent("ars_nouveau.rune.error"));
+            PortUtil.sendMessage(entity, new TranslatableComponent("ars_nouveau.rune.error"));
             e.printStackTrace();
             level.destroyBlock(worldPosition, false);
         }
     }
 
-    public void setParsedSpell(List<AbstractSpellPart> spell){
-        if(spell.size() <= 1){
-            this.recipe = null;
-            return;
-        }
-        spell.set(0, MethodTouch.INSTANCE);
-        this.recipe = spell;
-    }
-
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
-        if(recipe != null)
-            tag.putString("spell", SpellRecipeUtil.serializeForNBT(recipe));
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.putString("spell", spell.serialize());
         tag.putBoolean("charged", isCharged);
         tag.putBoolean("temp", isTemporary);
         tag.putInt("cooldown", ticksUntilCharge);
         if(uuid != null)
             tag.putUUID("uuid", uuid);
-        return super.save(tag);
+        if(color != null)
+            tag.putString("color", color.toWrapper().serialize());
     }
 
     @Override
-    public void load( BlockState state, CompoundNBT tag) {
-        this.recipe = SpellRecipeUtil.getSpellsFromTagString(tag.getString("spell"));
+    public void load(CompoundTag tag) {
+        this.spell = Spell.deserialize(tag.getString("spell"));
         this.isCharged = tag.getBoolean("charged");
         this.isTemporary = tag.getBoolean("temp");
         this.ticksUntilCharge = tag.getInt("cooldown");
         if(tag.contains("uuid"))
             this.uuid = tag.getUUID("uuid");
-        super.load(state, tag);
+        this.color = ParticleColor.IntWrapper.deserialize(tag.getString("color")).toParticleColor();
+        super.load(tag);
     }
 
     @Override
@@ -119,7 +117,7 @@ public class RuneTile extends AnimatedTile implements IPickupResponder {
             level.destroyBlock(this.worldPosition, false);
         }
         if(!level.isClientSide){
-            BlockPos fromPos = ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 10, 100);
+            BlockPos fromPos = SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 10, 100);
             if(fromPos != null) {
                 this.isCharged = true;
                 level.setBlockAndUpdate(worldPosition, level.getBlockState(worldPosition).cycle(RuneBlock.POWERED));
@@ -136,5 +134,15 @@ public class RuneTile extends AnimatedTile implements IPickupResponder {
     @Override
     public @Nonnull ItemStack onPickup(ItemStack stack) {
         return BlockUtil.insertItemAdjacent(level, worldPosition, stack);
+    }
+
+    @Override
+    public void registerControllers(AnimationData data) {
+
+    }
+    AnimationFactory factory = new AnimationFactory(this);
+    @Override
+    public AnimationFactory getFactory() {
+        return factory;
     }
 }

@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.client.jei;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public class JEIConstants {
     public static final String TEXTURE_GUI_PATH = "textures/gui/";

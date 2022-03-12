@@ -1,12 +1,12 @@
 package com.hollingsworth.arsnouveau.common.potions;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectType;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectCategory;
 
-public class HexEffect extends Effect {
+public class HexEffect extends MobEffect {
     protected HexEffect() {
-        super(EffectType.HARMFUL, 8080895);
+        super(MobEffectCategory.HARMFUL, 8080895);
         setRegistryName(ArsNouveau.MODID, "hex");
     }
 }

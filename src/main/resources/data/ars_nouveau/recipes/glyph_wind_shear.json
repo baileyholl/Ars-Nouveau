@@ -1,0 +1,28 @@
+{
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "inputItems": [
+    {
+      "item": {
+        "item": "ars_nouveau:air_essence"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:iron_sword"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:iron_sword"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:iron_sword"
+      }
+    }
+  ],
+  "exp": 55,
+  "output": "ars_nouveau:glyph_wind_shear"
+}

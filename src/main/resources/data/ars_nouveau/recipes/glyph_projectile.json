@@ -1,6 +1,18 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "ONE",
-  "input": "minecraft:bow",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "inputItems": [
+    {
+      "item": {
+        "item": "minecraft:fletching_table"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:arrow"
+      }
+    }
+  ],
+  "exp": 27,
   "output": "ars_nouveau:glyph_projectile"
 }

@@ -1,26 +1,23 @@
 package com.hollingsworth.arsnouveau.common.network;
 
+import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
+import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.function.Supplier;
 
 public class PacketUpdateSpellColors {
 
-   String spellRecipe;
    int castSlot;
-   String spellName;
    int r;
    int g;
    int b;
-
-    public PacketUpdateSpellColors(){}
 
     public PacketUpdateSpellColors(int castSlot, int r, int g, int b){
         this.castSlot = castSlot;
@@ -30,7 +27,7 @@ public class PacketUpdateSpellColors {
     }
 
     //Decoder
-    public PacketUpdateSpellColors(PacketBuffer buf){
+    public PacketUpdateSpellColors(FriendlyByteBuf buf){
         castSlot = buf.readInt();
         r = buf.readInt();
         g = buf.readInt();
@@ -42,7 +39,7 @@ public class PacketUpdateSpellColors {
     }
 
     //Encoder
-    public void toBytes(PacketBuffer buf){
+    public void toBytes(FriendlyByteBuf buf){
         buf.writeInt(castSlot);
         buf.writeInt(r);
         buf.writeInt(g);
@@ -53,19 +50,17 @@ public class PacketUpdateSpellColors {
         ctx.get().enqueueWork(()->{
             if(ctx.get().getSender() != null){
                 ItemStack stack = StackUtil.getHeldSpellbook(ctx.get().getSender());
-                if(stack != null && stack.getItem() instanceof SpellBook){
-                    CompoundNBT tag = stack.hasTag() ? stack.getTag() : new CompoundNBT();
-                    SpellBook.setSpellColor(tag, new ParticleColor.IntWrapper(r, g, b), castSlot);
-                    stack.setTag(tag);
-                    SpellBook.setMode(tag, castSlot);
-                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->ctx.get().getSender()), new PacketUpdateBookGUI(tag));
+                if(stack.getItem() instanceof SpellBook){
+                    ISpellCaster caster = CasterUtil.getCaster(stack);
+                    caster.setColor(new ParticleColor.IntWrapper(r, g, b), castSlot);
+                    caster.setCurrentSlot(castSlot);
+                    Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->ctx.get().getSender()), new PacketUpdateBookGUI(stack));
                     Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()->ctx.get().getSender()),
-                            new PacketOpenSpellBook(stack.getTag(), ((SpellBook) stack.getItem()).tier.ordinal(), SpellBook.getUnlockedSpellString(tag)));
+                            new PacketOpenSpellBook(stack, ((SpellBook) stack.getItem()).tier.value));
 
                 }
             }
         });
         ctx.get().setPacketHandled(true);
-
     }
 }

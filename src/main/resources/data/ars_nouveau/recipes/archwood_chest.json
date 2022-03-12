@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "xxx",
+    "xyx",
+    "xxx"
+  ],
+  "key": {
+    "x": {
+      "item": "ars_nouveau:archwood_planks"
+    },
+    "y": {
+      "item": "minecraft:gold_nugget"
+    }
+  },
+  "result": {
+    "item": "ars_nouveau:archwood_chest"
+  }
+}

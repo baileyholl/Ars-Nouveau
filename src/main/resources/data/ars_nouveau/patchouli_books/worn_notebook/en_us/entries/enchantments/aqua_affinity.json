@@ -1,11 +1,11 @@
 {
   "name": "enchantment.minecraft.aqua_affinity",
+  "category": "ars_nouveau:enchantments",
   "icon": "minecraft:enchanted_book",
-  "category": "enchantments",
   "pages": [
     {
-      "type": "enchanting_recipe",
-      "recipe": "ars_nouveau:aqua_affinity_1"
+      "recipe": "ars_nouveau:aqua_affinity_1",
+      "type": "ars_nouveau:enchanting_recipe"
     }
   ]
 }

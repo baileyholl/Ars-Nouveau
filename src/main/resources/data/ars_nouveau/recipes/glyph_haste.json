@@ -1,6 +1,0 @@
-{
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "ONE",
-  "input": "minecraft:minecart",
-  "output": "ars_nouveau:glyph_haste"
-}

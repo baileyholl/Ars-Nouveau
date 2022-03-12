@@ -2,25 +2,27 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:sharpness",
   "level": 3,
-  "mana": 500,
-  "item_1": [
+  "sourceCost": 500,
+  "pedestalItems": [
     {
-      "tag": "forge:storage_blocks/quartz"
-    }
-  ],
-  "item_2": [
+      "item": {
+        "tag": "forge:storage_blocks/quartz"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/quartz"
-    }
-  ],
-  "item_3": [
+      "item": {
+        "tag": "forge:storage_blocks/quartz"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_amplify"
-    }
-  ],
-  "item_4": [
+      "item": {
+        "tag": "forge:gems/diamond"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/lapis"
+      "item": {
+        "tag": "forge:storage_blocks/lapis"
+      }
     }
   ]
 }

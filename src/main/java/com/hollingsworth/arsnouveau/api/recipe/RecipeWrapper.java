@@ -1,16 +1,16 @@
 package com.hollingsworth.arsnouveau.api.recipe;
 
 import com.hollingsworth.arsnouveau.common.block.tile.WixieCauldronTile;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.Level;
 
 import java.util.*;
 
@@ -27,7 +27,7 @@ public class RecipeWrapper {
         return recipes.add(recipe);
     }
 
-    public boolean addRecipe(List<Ingredient> recipe, ItemStack outputStack, IRecipe iRecipe){
+    public boolean addRecipe(List<Ingredient> recipe, ItemStack outputStack, Recipe iRecipe){
         return recipes.add(new SingleRecipe(recipe, outputStack, iRecipe));
     }
 
@@ -40,7 +40,7 @@ public class RecipeWrapper {
         return null;
     }
 
-    public SingleRecipe canCraftPotionFromInventory(Map<Item, Integer> inventory, World world, BlockPos pos){
+    public SingleRecipe canCraftPotionFromInventory(Map<Item, Integer> inventory, Level world, BlockPos pos){
         for(SingleRecipe recipe: recipes){
             List<ItemStack> itemsNeeded = recipe.canCraftPotionFromInventory(inventory, world, pos);
             if(itemsNeeded != null )
@@ -52,16 +52,16 @@ public class RecipeWrapper {
     public static class SingleRecipe{
         public List<Ingredient> recipe;
         public ItemStack outputStack;
-        public IRecipe iRecipe;
+        public Recipe iRecipe;
 
 
-        public SingleRecipe(List<Ingredient> ingredients, ItemStack outputStack, IRecipe iRecipe){
+        public SingleRecipe(List<Ingredient> ingredients, ItemStack outputStack, Recipe iRecipe){
             this.recipe = ingredients;
             this.outputStack = outputStack;
             this.iRecipe = iRecipe;
         }
 
-        public List<ItemStack> canCraftPotionFromInventory(Map<Item, Integer> inventory, World world, BlockPos pos){
+        public List<ItemStack> canCraftPotionFromInventory(Map<Item, Integer> inventory, Level world, BlockPos pos){
             Map<Item, Integer> map = new HashMap<>(inventory);
 
             List<ItemStack> items = new ArrayList<>();

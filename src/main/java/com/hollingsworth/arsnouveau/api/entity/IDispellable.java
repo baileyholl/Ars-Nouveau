@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.api.entity;
 
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.entity.LivingEntity;
 
 import javax.annotation.Nullable;
 

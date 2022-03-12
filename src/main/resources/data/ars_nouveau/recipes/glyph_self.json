@@ -1,6 +1,18 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "ONE",
-  "input": "minecraft:glass_bottle",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "inputItems": [
+    {
+      "item": {
+        "tag": "minecraft:wooden_pressure_plates"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:iron_chestplate"
+      }
+    }
+  ],
+  "exp": 27,
   "output": "ars_nouveau:glyph_self"
 }

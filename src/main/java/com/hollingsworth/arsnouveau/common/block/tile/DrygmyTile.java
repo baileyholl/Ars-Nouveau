@@ -3,7 +3,7 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.api.util.ManaUtil;
+import com.hollingsworth.arsnouveau.api.util.SourceUtil;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
@@ -12,25 +12,26 @@ import com.hollingsworth.arsnouveau.common.entity.EntityFollowProjectile;
 import com.hollingsworth.arsnouveau.common.mixin.ExpInvokerMixin;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.setup.Config;
-import com.hollingsworth.arsnouveau.setup.EntityTags;
+import com.hollingsworth.arsnouveau.common.lib.EntityTags;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MobEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameterSets;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.loot.LootTable;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.AABB;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -47,8 +48,8 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
     public boolean needsMana;
     private List<LivingEntity> nearbyEntities;
 
-    public DrygmyTile() {
-        super(BlockRegistry.DRYGMY_TILE);
+    public DrygmyTile(BlockPos pos, BlockState state) {
+        super(BlockRegistry.DRYGMY_TILE, pos, state);
     }
 
     @Override
@@ -74,7 +75,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
             refreshEntitiesAndBonus();
         }
 
-        if(!level.isClientSide && level.getGameTime() % 80 == 0 && needsMana && ManaUtil.takeManaNearbyWithParticles(worldPosition, level, 7, Config.DRYGMY_MANA_COST.get()) != null){
+        if(!level.isClientSide && level.getGameTime() % 80 == 0 && needsMana && SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 7, Config.DRYGMY_MANA_COST.get()) != null){
             this.needsMana = false;
             level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
         }
@@ -118,7 +119,7 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
             entityDrygmy.setPos(worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ() + 0.5);
             entityDrygmy.homePos = new BlockPos(getBlockPos());
             level.addFreshEntity(entityDrygmy);
-            ParticleUtil.spawnPoof((ServerWorld) level, worldPosition.above());
+            ParticleUtil.spawnPoof((ServerLevel) level, worldPosition.above());
             tickCounter = 0;
             return;
         }
@@ -133,15 +134,15 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
 
     public void refreshEntitiesAndBonus(){
         Set<ResourceLocation> uniqueEntities;
-        this.nearbyEntities = level.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(getBlockPos().north(10).west(10).below(6), getBlockPos().south(10).east(10).above(6)));
-        this.nearbyEntities = this.nearbyEntities.stream().filter(l -> !(l instanceof EntityDrygmy) && !(l instanceof PlayerEntity)).collect(Collectors.toList());
+        this.nearbyEntities = level.getEntitiesOfClass(LivingEntity.class, new AABB(getBlockPos().north(10).west(10).below(6), getBlockPos().south(10).east(10).above(6)));
+        this.nearbyEntities = this.nearbyEntities.stream().filter(l -> !(l instanceof EntityDrygmy) && !(l instanceof Player)).collect(Collectors.toList());
         uniqueEntities = nearbyEntities.stream().map(l -> EntityType.getKey(l.getType())).collect(Collectors.toSet());
         this.bonus = uniqueEntities.size() * Config.DRYGMY_UNIQUE_BONUS.get() + Math.min(Config.DRYGMY_QUANTITY_CAP.get(), nearbyEntities.size());
     }
 
     public void generateItems(){
         List<ItemStack> stacks = new ArrayList<>();
-        ANFakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerWorld) level);
+        ANFakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerLevel) level);
         DamageSource damageSource = DamageSource.playerAttack(fakePlayer);
         int numberItems = Config.DRYGMY_BASE_ITEM.get() + this.bonus;
         int exp = 0;
@@ -152,25 +153,25 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
             }
 
             LootTable loottable = this.level.getServer().getLootTables().get(entity.getLootTable());
-            LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerWorld)this.level)).withRandom(level.getRandom())
-                    .withParameter(LootParameters.THIS_ENTITY, entity).withParameter(LootParameters.ORIGIN, entity.position())
-                    .withParameter(LootParameters.DAMAGE_SOURCE, damageSource)
-                    .withOptionalParameter(LootParameters.KILLER_ENTITY, fakePlayer.getEntity())
-                    .withOptionalParameter(LootParameters.DIRECT_KILLER_ENTITY, damageSource.getDirectEntity());
-            lootcontext$builder = lootcontext$builder.withParameter(LootParameters.LAST_DAMAGE_PLAYER, fakePlayer)
+            LootContext.Builder lootcontext$builder = (new LootContext.Builder((ServerLevel)this.level)).withRandom(level.getRandom())
+                    .withParameter(LootContextParams.THIS_ENTITY, entity).withParameter(LootContextParams.ORIGIN, entity.position())
+                    .withParameter(LootContextParams.DAMAGE_SOURCE, damageSource)
+                    .withOptionalParameter(LootContextParams.KILLER_ENTITY, fakePlayer)
+                    .withOptionalParameter(LootContextParams.DIRECT_KILLER_ENTITY, damageSource.getDirectEntity());
+            lootcontext$builder = lootcontext$builder.withParameter(LootContextParams.LAST_DAMAGE_PLAYER, fakePlayer)
                     .withLuck(fakePlayer.getLuck());
 
-            LootContext ctx = lootcontext$builder.create(LootParameterSets.ENTITY);
+            LootContext ctx = lootcontext$builder.create(LootContextParamSets.ENTITY);
             stacks.addAll(loottable.getRandomItems(ctx));
             int oldExp = 0;
-            if(entity instanceof MobEntity){
-                oldExp = ((MobEntity) entity).xpReward;
+            if(entity instanceof Mob){
+                oldExp = ((Mob) entity).xpReward;
             }
             exp += ((ExpInvokerMixin) entity).an_getExperienceReward(fakePlayer);
 
-            if(entity instanceof MobEntity){
+            if(entity instanceof Mob){
                 // EVERY TIME GET EXPERIENCE REWARD IS CALLED IN ZOMBIE ENTITY IT MULTIPLIES BY 2.5X.
-                ((MobEntity) entity).xpReward = oldExp;
+                ((Mob) entity).xpReward = oldExp;
             }
         }
         // Pull our items randomly and break once our stack count is over our max item list
@@ -187,9 +188,9 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
 
         exp *= .25;
         if(exp > 3){
-            int numGreater = (int) (exp / 12);
+            int numGreater = exp / 12;
             exp -= numGreater * 12;
-            int numLesser = (int) (exp / 3);
+            int numLesser = exp / 3;
             if ((exp - numLesser * 3) > 0)
                 numLesser++;
             if(numGreater > 0)
@@ -205,27 +206,25 @@ public class DrygmyTile extends SummoningTile implements ITooltipProvider {
 
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
+    public void load(CompoundTag compound) {
         this.progress = compound.getInt("progress");
         this.bonus = compound.getInt("bonus");
         this.needsMana = compound.getBoolean("needsMana");
-        super.load(state, compound);
+        super.load(compound);
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
-        compound.putInt("progress", progress);
-        compound.putInt("bonus", bonus);
-        compound.putBoolean("needsMana", needsMana);
-        return super.save(compound);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.putInt("progress", progress);
+        tag.putInt("bonus", bonus);
+        tag.putBoolean("needsMana", needsMana);
     }
 
     @Override
-    public List<String> getTooltip() {
-        List<String> list = new ArrayList<>();
+    public void getTooltip(List<Component> tooltip) {
         if(this.needsMana){
-            list.add(new TranslationTextComponent("ars_nouveau.wixie.need_mana").getString());
+            tooltip.add(new TranslatableComponent("ars_nouveau.wixie.need_mana"));
         }
-        return list;
     }
 }

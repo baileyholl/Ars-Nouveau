@@ -1,32 +1,29 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentPierce;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FlowingFluidBlock;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class EffectFreeze extends AbstractEffect {
@@ -37,7 +34,7 @@ public class EffectFreeze extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         BlockPos pos = rayTraceResult.getBlockPos();
         for(BlockPos p : SpellUtil.calcAOEBlocks(shooter, pos, rayTraceResult, spellStats.getBuffCount(AugmentAOE.INSTANCE), spellStats.getBuffCount(AugmentPierce.INSTANCE))){
             extinguishOrFreeze(world, p);
@@ -48,21 +45,21 @@ public class EffectFreeze extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         if(!(rayTraceResult.getEntity() instanceof LivingEntity))
             return;
-        applyConfigPotion((LivingEntity) (rayTraceResult).getEntity(), Effects.MOVEMENT_SLOWDOWN, spellStats);
+        applyConfigPotion((LivingEntity) (rayTraceResult).getEntity(), MobEffects.MOVEMENT_SLOWDOWN, spellStats);
     }
 
-    public void extinguishOrFreeze(World world, BlockPos p){
+    public void extinguishOrFreeze(Level world, BlockPos p){
         BlockState state = world.getBlockState(p.above());
         FluidState fluidState = world.getFluidState(p.above());
-        if(fluidState.getType() == Fluids.WATER && state.getBlock() instanceof FlowingFluidBlock){
+        if(fluidState.getType() == Fluids.WATER && state.getBlock() instanceof LiquidBlock){
             world.setBlockAndUpdate(p.above(), Blocks.ICE.defaultBlockState());
         }
-        else if(fluidState.getType() == Fluids.LAVA && state.getBlock() instanceof FlowingFluidBlock){
+        else if(fluidState.getType() == Fluids.LAVA && state.getBlock() instanceof LiquidBlock){
             world.setBlockAndUpdate(p.above(), Blocks.OBSIDIAN.defaultBlockState());
-        }else if(fluidState.getType() == Fluids.FLOWING_LAVA && state.getBlock() instanceof FlowingFluidBlock){
+        }else if(fluidState.getType() == Fluids.FLOWING_LAVA && state.getBlock() instanceof LiquidBlock){
             world.setBlockAndUpdate(p.above(), Blocks.COBBLESTONE.defaultBlockState());
         }
         else if(state.getMaterial() == Material.FIRE){
@@ -79,25 +76,19 @@ public class EffectFreeze extends AbstractEffect {
     }
 
     @Override
-    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
+    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         return nonAirAnythingSuccess(rayTraceResult, world);
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 15;
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.SNOW_BLOCK;
     }
 
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        Set<AbstractAugment> augments = new HashSet<>(POTION_AUGMENTS);
+        Set<AbstractAugment> augments = new HashSet<>(getPotionAugments());
         augments.add(AugmentAOE.INSTANCE);
         augments.add(AugmentPierce.INSTANCE);
         return augments;

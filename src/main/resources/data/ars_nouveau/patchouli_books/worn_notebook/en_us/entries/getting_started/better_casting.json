@@ -1,0 +1,18 @@
+{
+  "name": "ars_nouveau.page.better_casting",
+  "category": "ars_nouveau:getting_started",
+  "sortnum": 7,
+  "icon": "ars_nouveau:novice_robes",
+  "pages": [
+    {
+      "text": "ars_nouveau.page1.better_casting",
+      "type": "patchouli:text"
+    },
+    {
+      "entries": [
+        "ars_nouveau:machines/enchanting_apparatus"
+      ],
+      "type": "patchouli:relations"
+    }
+  ]
+}

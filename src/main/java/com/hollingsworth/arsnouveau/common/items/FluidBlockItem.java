@@ -1,18 +1,16 @@
 package com.hollingsworth.arsnouveau.common.items;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.world.World;
-
-import net.minecraft.item.Item.Properties;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.BlockHitResult;
 
 public class FluidBlockItem extends BlockItem {
     public FluidBlockItem(Block blockIn, Properties builder) {
@@ -22,20 +20,20 @@ public class FluidBlockItem extends BlockItem {
     /**
      * Called when this item is used when targetting a Block
      */
-    public ActionResultType useOn(ItemUseContext context) {
-        return ActionResultType.PASS;
+    public InteractionResult useOn(UseOnContext context) {
+        return InteractionResult.PASS;
     }
 
     /**
      * Called to trigger the item's "innate" right click behavior. To handle when this item is used on a Block, see
-     * {@link #onItemUse}.
+     * .
      */
-    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        BlockRayTraceResult blockraytraceresult = getPlayerPOVHitResult(worldIn, playerIn, RayTraceContext.FluidMode.ANY);
-        BlockRayTraceResult blockraytraceresult1 = blockraytraceresult.withPosition(blockraytraceresult.getBlockPos().above());
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+        BlockHitResult blockraytraceresult = getPlayerPOVHitResult(worldIn, playerIn, ClipContext.Fluid.ANY);
+        BlockHitResult blockraytraceresult1 = blockraytraceresult.withPosition(blockraytraceresult.getBlockPos().above());
         if(worldIn.getBlockState(blockraytraceresult.getBlockPos()).isAir())
-            return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getItemInHand(handIn));
-        super.useOn(new ItemUseContext(playerIn, handIn, blockraytraceresult1));
-        return new ActionResult<>(ActionResultType.FAIL, playerIn.getItemInHand(handIn));
+            return new InteractionResultHolder<>(InteractionResult.SUCCESS, playerIn.getItemInHand(handIn));
+        super.useOn(new UseOnContext(playerIn, handIn, blockraytraceresult1));
+        return new InteractionResultHolder<>(InteractionResult.FAIL, playerIn.getItemInHand(handIn));
     }
 }

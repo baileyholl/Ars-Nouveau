@@ -1,23 +1,23 @@
 {
   "name": "enchantment.minecraft.fire_protection",
+  "category": "ars_nouveau:enchantments",
   "icon": "minecraft:enchanted_book",
-  "category": "enchantments",
   "pages": [
     {
-      "type": "enchanting_recipe",
-      "recipe": "ars_nouveau:fire_protection_1"
+      "recipe": "ars_nouveau:fire_protection_1",
+      "type": "ars_nouveau:enchanting_recipe"
     },
     {
-      "type": "enchanting_recipe",
-      "recipe": "ars_nouveau:fire_protection_2"
+      "recipe": "ars_nouveau:fire_protection_2",
+      "type": "ars_nouveau:enchanting_recipe"
     },
     {
-      "type": "enchanting_recipe",
-      "recipe": "ars_nouveau:fire_protection_3"
+      "recipe": "ars_nouveau:fire_protection_3",
+      "type": "ars_nouveau:enchanting_recipe"
     },
     {
-      "type": "enchanting_recipe",
-      "recipe": "ars_nouveau:fire_protection_4"
+      "recipe": "ars_nouveau:fire_protection_4",
+      "type": "ars_nouveau:enchanting_recipe"
     }
   ]
 }

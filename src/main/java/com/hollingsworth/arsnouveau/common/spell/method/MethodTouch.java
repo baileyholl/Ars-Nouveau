@@ -1,25 +1,24 @@
 package com.hollingsworth.arsnouveau.common.spell.method;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.spell.AbstractAugment;
-import com.hollingsworth.arsnouveau.api.spell.AbstractCastMethod;
-import com.hollingsworth.arsnouveau.api.spell.SpellContext;
-import com.hollingsworth.arsnouveau.api.spell.SpellResolver;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.item.Items;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.world.World;
+import com.hollingsworth.arsnouveau.common.network.PacketAddFadingLight;
+import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
+import com.hollingsworth.arsnouveau.setup.Config;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Set;
 
 public class MethodTouch extends AbstractCastMethod {
@@ -30,64 +29,71 @@ public class MethodTouch extends AbstractCastMethod {
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 5;
     }
 
     @Override
-    public void onCast(ItemStack stack, LivingEntity caster, World world, List<AbstractAugment> augments, SpellContext context, SpellResolver resolver) { }
+    public void onCast(ItemStack stack, LivingEntity caster, Level world, SpellStats spellStats, SpellContext context, SpellResolver resolver) { }
 
     @Override
-    public void onCastOnBlock(ItemUseContext context, List<AbstractAugment> augments, SpellContext spellContext, SpellResolver resolver) {
-        World world = context.getLevel();
-        BlockRayTraceResult res = new BlockRayTraceResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), false);
+    public void onCastOnBlock(UseOnContext context, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        Level world = context.getLevel();
+        BlockHitResult res = new BlockHitResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), false);
         resolver.onResolveEffect(world, context.getPlayer(), res);
         resolver.expendMana(context.getPlayer());
         Networking.sendToNearby(context.getLevel(), context.getPlayer(),
                 new PacketANEffect(PacketANEffect.EffectType.BURST, res.getBlockPos(), spellContext.colors));
+        addFadingLight(context.getLevel(),res.getBlockPos().getX() + 0.5, res.getBlockPos().getY()+ 0.5, res.getBlockPos().getZ()+ 0.5);
     }
 
     @Override
-    public void onCastOnBlock(BlockRayTraceResult res, LivingEntity caster, List<AbstractAugment> augments, SpellContext spellContext, SpellResolver resolver) {
+    public void onCastOnBlock(BlockHitResult res, LivingEntity caster, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
         resolver.onResolveEffect(caster.getCommandSenderWorld(),caster, res);
         resolver.expendMana(caster);
         Networking.sendToNearby(caster.level, caster, new PacketANEffect(PacketANEffect.EffectType.BURST, res.getBlockPos(), spellContext.colors));
+        addFadingLight(caster.getLevel(),res.getBlockPos().getX() + 0.5, res.getBlockPos().getY()+ 0.5, res.getBlockPos().getZ()+ 0.5);
     }
 
     @Override
-    public void onCastOnEntity(ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments, SpellContext spellContext, SpellResolver resolver) {
-        resolver.onResolveEffect(caster.getCommandSenderWorld(), caster, new EntityRayTraceResult(target));
+    public void onCastOnEntity(ItemStack stack, LivingEntity caster, Entity target, InteractionHand hand, SpellStats spellStats, SpellContext spellContext, SpellResolver resolver) {
+        resolver.onResolveEffect(caster.getCommandSenderWorld(), caster, new EntityHitResult(target));
         if(spellContext.getType() != SpellContext.CasterType.RUNE)
             resolver.expendMana(caster);
         Networking.sendToNearby(caster.level, caster, new PacketANEffect(PacketANEffect.EffectType.BURST, target.blockPosition(), spellContext.colors));
+        addFadingLight(caster.getLevel(),target.blockPosition().getX() + 0.5, target.blockPosition().getY()+ 0.5, target.blockPosition().getZ()+ 0.5);
+    }
+
+    public void addFadingLight(Level level, double x, double y, double z) {
+        Networking.sendToNearby(level, new BlockPos(x,y,z), new PacketAddFadingLight(x,y,z, Config.TOUCH_LIGHT_DURATION.get(), Config.TOUCH_LIGHT_LUMINANCE.get()));
     }
 
     @Override
-    public boolean wouldCastSuccessfully(@Nullable ItemStack stack, LivingEntity playerEntity, World world, List<AbstractAugment> augments, SpellResolver resolver) {
+    public boolean wouldCastSuccessfully(@Nullable ItemStack stack, LivingEntity playerEntity, Level world, SpellStats spellStats, SpellResolver resolver) {
         return false;
     }
 
     @Override
-    public boolean wouldCastOnBlockSuccessfully(ItemUseContext context, List<AbstractAugment> augments, SpellResolver resolver) {
-        World world = context.getLevel();
-        BlockRayTraceResult res = new BlockRayTraceResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), false);
-        return resolver.wouldAllEffectsDoWork(res, world, context.getPlayer(), augments);
+    public boolean wouldCastOnBlockSuccessfully(UseOnContext context, SpellStats spellStats, SpellResolver resolver) {
+        Level world = context.getLevel();
+        BlockHitResult res = new BlockHitResult(context.getClickLocation(), context.getClickedFace(), context.getClickedPos(), false);
+        return resolver.wouldAllEffectsDoWork(res, world, context.getPlayer(), spellStats);
     }
 
     @Override
-    public boolean wouldCastOnBlockSuccessfully(BlockRayTraceResult blockRayTraceResult, LivingEntity caster, List<AbstractAugment> augments, SpellResolver resolver) {
-        return resolver.wouldAllEffectsDoWork(blockRayTraceResult, caster.getCommandSenderWorld(), caster, augments);
+    public boolean wouldCastOnBlockSuccessfully(BlockHitResult blockRayTraceResult, LivingEntity caster, SpellStats spellStats, SpellResolver resolver) {
+        return resolver.wouldAllEffectsDoWork(blockRayTraceResult, caster.getCommandSenderWorld(), caster, spellStats);
     }
 
     @Override
-    public boolean wouldCastOnEntitySuccessfully(@Nullable ItemStack stack, LivingEntity caster, LivingEntity target, Hand hand, List<AbstractAugment> augments, SpellResolver resolver) {
-        return resolver.wouldAllEffectsDoWork(new EntityRayTraceResult(target), caster.getCommandSenderWorld(), caster, augments);
+    public boolean wouldCastOnEntitySuccessfully(@Nullable ItemStack stack, LivingEntity caster, Entity target, InteractionHand hand, SpellStats spellStats, SpellResolver resolver) {
+        return resolver.wouldAllEffectsDoWork(new EntityHitResult(target), caster.getCommandSenderWorld(), caster, spellStats);
     }
 
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return augmentSetOf();
+        return augmentSetOf(AugmentSensitive.INSTANCE);
     }
 
     @Override
@@ -95,11 +101,6 @@ public class MethodTouch extends AbstractCastMethod {
         return "Applies spells at the block or entity that is targeted.";
     }
 
-
-    @Override
-    public Item getCraftingReagent() {
-        return Items.STONE_BUTTON;
-    }
 
     @Override
     public boolean defaultedStarterGlyph() {

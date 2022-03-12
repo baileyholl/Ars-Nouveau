@@ -1,0 +1,11 @@
+{
+  "type": "ars_nouveau:spell_write",
+  "sourceCost": 0,
+  "pedestalItems": [
+    {
+      "item": {
+        "item": "ars_nouveau:spell_parchment"
+      }
+    }
+  ]
+}

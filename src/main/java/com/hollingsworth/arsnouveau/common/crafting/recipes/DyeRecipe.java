@@ -1,18 +1,18 @@
 package com.hollingsworth.arsnouveau.common.crafting.recipes;
 
 import com.google.gson.JsonObject;
-import com.hollingsworth.arsnouveau.common.crafting.ModCrafting;
 import com.hollingsworth.arsnouveau.common.items.SpellBook;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapelessRecipe;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import com.hollingsworth.arsnouveau.setup.RecipeRegistry;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -24,7 +24,7 @@ public class DyeRecipe extends ShapelessRecipe {
     }
 
     @Override
-    public ItemStack assemble(final CraftingInventory inv) {
+    public ItemStack assemble(final CraftingContainer inv) {
         final ItemStack output = super.assemble(inv); // Get the default output
 
         if (!output.isEmpty()) {
@@ -49,22 +49,22 @@ public class DyeRecipe extends ShapelessRecipe {
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer() {
-        return ModCrafting.Recipes.DYE_RECIPE;
+    public RecipeSerializer<?> getSerializer() {
+        return RecipeRegistry.DYE_RECIPE;
     }
 
-    public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<DyeRecipe> {
+    public static class Serializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<DyeRecipe> {
         @Override
         public DyeRecipe fromJson(final ResourceLocation recipeID, final JsonObject json) {
-            final String group = JSONUtils.getAsString(json, "group", "");
+            final String group = GsonHelper.getAsString(json, "group", "");
             final NonNullList<Ingredient> ingredients = RecipeUtil.parseShapeless(json);
-            final ItemStack result = CraftingHelper.getItemStack(JSONUtils.getAsJsonObject(json, "result"), true);
+            final ItemStack result = CraftingHelper.getItemStack(GsonHelper.getAsJsonObject(json, "result"), true);
 
             return new DyeRecipe(recipeID, group, result, ingredients);
         }
 
         @Override
-        public DyeRecipe fromNetwork(final ResourceLocation recipeID, final PacketBuffer buffer) {
+        public DyeRecipe fromNetwork(final ResourceLocation recipeID, final FriendlyByteBuf buffer) {
             final String group = buffer.readUtf(Short.MAX_VALUE);
             final int numIngredients = buffer.readVarInt();
             final NonNullList<Ingredient> ingredients = NonNullList.withSize(numIngredients, Ingredient.EMPTY);
@@ -79,7 +79,7 @@ public class DyeRecipe extends ShapelessRecipe {
         }
 
         @Override
-        public void toNetwork(final PacketBuffer buffer, final DyeRecipe recipe) {
+        public void toNetwork(final FriendlyByteBuf buffer, final DyeRecipe recipe) {
             buffer.writeUtf(recipe.getGroup());
             buffer.writeVarInt(recipe.getIngredients().size());
 

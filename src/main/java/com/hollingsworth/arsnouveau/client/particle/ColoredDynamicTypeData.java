@@ -4,13 +4,11 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.particles.IParticleData;
-import net.minecraft.particles.ParticleType;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
+import net.minecraft.network.FriendlyByteBuf;
 
-import net.minecraft.particles.IParticleData.IDeserializer;
-
-public class ColoredDynamicTypeData implements IParticleData {
+public class ColoredDynamicTypeData implements ParticleOptions {
 
     private ParticleType<ColoredDynamicTypeData> type;
     public ParticleColor color;
@@ -31,7 +29,7 @@ public class ColoredDynamicTypeData implements IParticleData {
         return type;
     }
 
-    static final IDeserializer<ColoredDynamicTypeData> DESERIALIZER = new IDeserializer<ColoredDynamicTypeData>() {
+    static final Deserializer<ColoredDynamicTypeData> DESERIALIZER = new Deserializer<>() {
         @Override
         public ColoredDynamicTypeData fromCommand(ParticleType<ColoredDynamicTypeData> type, StringReader reader) throws CommandSyntaxException {
             reader.expect(' ');
@@ -39,7 +37,7 @@ public class ColoredDynamicTypeData implements IParticleData {
         }
 
         @Override
-        public ColoredDynamicTypeData fromNetwork(ParticleType<ColoredDynamicTypeData> type, PacketBuffer buffer) {
+        public ColoredDynamicTypeData fromNetwork(ParticleType<ColoredDynamicTypeData> type, FriendlyByteBuf buffer) {
             return new ColoredDynamicTypeData(type, ParticleColor.deserialize(buffer.readUtf()), buffer.readFloat(), buffer.readInt());
         }
     };
@@ -59,7 +57,7 @@ public class ColoredDynamicTypeData implements IParticleData {
     }
 
     @Override
-    public void writeToNetwork(PacketBuffer buffer) {
+    public void writeToNetwork(FriendlyByteBuf buffer) {
         buffer.writeUtf(color.serialize());
         buffer.writeFloat(scale);
         buffer.writeInt(age);

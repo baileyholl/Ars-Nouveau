@@ -1,0 +1,16 @@
+{
+  "name": "ars_nouveau.glyph_name.summon_steed",
+  "category": "ars_nouveau:glyphs_1",
+  "icon": "ars_nouveau:glyph_summon_steed",
+  "sortnum": 2,
+  "pages": [
+    {
+      "text": "ars_nouveau.glyph_desc.summon_steed",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:glyph_summon_steed",
+      "type": "ars_nouveau:glyph_recipe"
+    }
+  ]
+}

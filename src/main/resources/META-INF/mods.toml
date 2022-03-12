@@ -36,7 +36,7 @@ Craft spells, create powerful baubles, and summon magical creatures!
     # Does this dependency have to exist - if not, ordering below must be specified
     mandatory=true #mandatory
     # The version range of the dependency
-    versionRange="[36.1.61,)" #mandatory
+    versionRange="[38.0.12,)" #mandatory
     # An ordering relationship for the dependency - BEFORE or AFTER required if the relationship is not mandatory
     ordering="NONE"
     # Side this dependency is applied on - BOTH, CLIENT or SERVER
@@ -45,20 +45,20 @@ Craft spells, create powerful baubles, and summon magical creatures!
 [[dependencies.ars_nouveau]]
     modId="patchouli"
     mandatory=true
-    versionRange="[1.16-42,)"
+    versionRange="[1.18.1-61,)"
     ordering="AFTER"
     side="BOTH"
 
 [[dependencies.ars_nouveau]]
     modId="curios"
     mandatory=true
-    versionRange="[1.16.3-4.0.1.0,)"
+    versionRange="[1.18.1-5.0.3.0,)"
     ordering="AFTER"
     side="BOTH"
 
 [[dependencies.ars_nouveau]]
     modId="geckolib3"
     mandatory=true
-    versionRange="[3.0.0-beta.8,)"
+    versionRange="[3.0.10,)"
     ordering="AFTER"
     side="BOTH"

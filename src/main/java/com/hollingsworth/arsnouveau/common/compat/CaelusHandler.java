@@ -1,14 +1,14 @@
 package com.hollingsworth.arsnouveau.common.compat;
 
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.player.Player;
 import top.theillusivec4.caelus.api.CaelusApi;
 
 public class CaelusHandler {
 
-    public static void setFlying(PlayerEntity entity){
-        ModifiableAttributeInstance attributeInstance = entity.getAttribute(CaelusApi.ELYTRA_FLIGHT.get());
-        if(attributeInstance != null && !attributeInstance.hasModifier(CaelusApi.ELYTRA_MODIFIER))
-            attributeInstance.addTransientModifier(CaelusApi.ELYTRA_MODIFIER);
+    public static void setFlying(Player entity){
+        AttributeInstance attributeInstance = entity.getAttribute(CaelusApi.getInstance().getFlightAttribute());
+        if(attributeInstance != null && !attributeInstance.hasModifier(CaelusApi.getInstance().getElytraModifier()))
+            attributeInstance.addTransientModifier(CaelusApi.getInstance().getElytraModifier());
     }
 }

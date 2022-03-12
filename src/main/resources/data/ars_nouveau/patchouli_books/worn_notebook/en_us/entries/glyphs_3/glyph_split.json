@@ -1,0 +1,16 @@
+{
+  "name": "ars_nouveau.glyph_name.split",
+  "category": "ars_nouveau:glyphs_3",
+  "icon": "ars_nouveau:glyph_split",
+  "sortnum": 3,
+  "pages": [
+    {
+      "text": "ars_nouveau.glyph_desc.split",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:glyph_split",
+      "type": "ars_nouveau:glyph_recipe"
+    }
+  ]
+}

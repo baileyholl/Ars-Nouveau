@@ -1,36 +1,19 @@
 package com.hollingsworth.arsnouveau.setup;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.IEnchantingRecipe;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.ReactiveEnchantmentRecipe;
-import com.hollingsworth.arsnouveau.api.enchanting_apparatus.SpellWriteRecipe;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
+import com.hollingsworth.arsnouveau.api.ritual.SingleBlockScryer;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.common.familiars.*;
 import com.hollingsworth.arsnouveau.common.ritual.*;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
 import com.hollingsworth.arsnouveau.common.spell.effect.*;
 import com.hollingsworth.arsnouveau.common.spell.method.*;
-import net.minecraft.item.ItemStack;
 
 public class APIRegistry {
 
-    public static void registerApparatusRecipes() {
-        registerApparatusRecipe(new ReactiveEnchantmentRecipe(new ItemStack[]{new ItemStack(ItemsRegistry.spellParchment),
-                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentAmplifyID)),
-                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentAmplifyID)),
-                new ItemStack(ArsNouveauAPI.getInstance().getGlyphItem(GlyphLib.AugmentAmplifyID))}, 3000));
-
-        registerApparatusRecipe(new SpellWriteRecipe());
-    }
-
-    public static void registerApparatusRecipe(IEnchantingRecipe recipe) {
-        ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes().add(recipe);
-    }
-
-    public static void registerSpells() {
+    public static void setup() {
         registerSpell(MethodProjectile.INSTANCE);
         registerSpell(MethodTouch.INSTANCE);
         registerSpell(MethodSelf.INSTANCE);
@@ -41,21 +24,17 @@ public class APIRegistry {
         registerSpell(EffectHeal.INSTANCE);
         registerSpell(EffectGrow.INSTANCE);
         registerSpell(EffectKnockback.INSTANCE);
-        registerSpell(EffectHaste.INSTANCE);
         registerSpell(EffectLight.INSTANCE);
         registerSpell(EffectDispel.INSTANCE);
-        registerSpell(EffectFreeze.INSTANCE);
         registerSpell(EffectLaunch.INSTANCE);
         registerSpell(EffectPull.INSTANCE);
         registerSpell(EffectBlink.INSTANCE);
         registerSpell(EffectExplosion.INSTANCE);
         registerSpell(EffectLightning.INSTANCE);
         registerSpell(EffectSlowfall.INSTANCE);
-        registerSpell(EffectShield.INSTANCE);
         registerSpell(EffectAquatic.INSTANCE);
         registerSpell(EffectFangs.INSTANCE);
         registerSpell(EffectSummonVex.INSTANCE);
-        registerSpell(EffectStrength.INSTANCE);
         registerSpell(AugmentAccelerate.INSTANCE);
         registerSpell(AugmentSplit.INSTANCE);
         registerSpell(AugmentAmplify.INSTANCE);
@@ -71,7 +50,6 @@ public class APIRegistry {
         registerSpell(EffectPickup.INSTANCE);
         registerSpell(EffectInteract.INSTANCE);
         registerSpell(EffectPlaceBlock.INSTANCE);
-        registerSpell(MethodRune.INSTANCE);
         registerSpell(EffectSnare.INSTANCE);
         registerSpell(EffectSmelt.INSTANCE);
         registerSpell(EffectLeap.INSTANCE);
@@ -96,6 +74,8 @@ public class APIRegistry {
         registerSpell(MethodUnderfoot.INSTANCE);
         registerSpell(EffectGlide.INSTANCE);
         registerSpell(MethodOrbit.INSTANCE);
+        registerSpell(EffectRune.INSTANCE);
+        registerSpell(EffectFreeze.INSTANCE);
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());
         registerRitual(new RitualCloudshaper());
@@ -110,17 +90,23 @@ public class APIRegistry {
         registerRitual(new RitualFlight());
         registerRitual(new RitualWildenSummoning());
         registerRitual(new RitualBinding());
-
-        registerFamiliar(new CarbuncleFamiliar());
+        registerRitual(new RitualAwakening());
+        registerFamiliar(new StarbuncleFamiliar());
         registerFamiliar(new DrygmyFamiliar());
-        registerFamiliar(new SylphFamiliar());
+        registerFamiliar(new WhirlisprigFamiliar());
         registerFamiliar(new WixieFamiliar());
 //        registerFamiliar(new JabberwogFamiliar());
         registerFamiliar(new BookwyrmFamiliar());
 
-        registerSpell(new EffectFirework());
-        registerSpell(new EffectToss());
-        registerSpell(new EffectBounce());
+        registerSpell(EffectFirework.INSTANCE);
+        registerSpell(EffectToss.INSTANCE);
+        registerSpell(EffectBounce.INSTANCE);
+        registerSpell(AugmentSensitive.INSTANCE);
+        registerSpell(EffectWindshear.INSTANCE);
+        registerSpell(EffectEvaporate.INSTANCE);
+        registerSpell(EffectLinger.INSTANCE);
+
+        ArsNouveauAPI.getInstance().registerScryer(SingleBlockScryer.INSTANCE);
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar){
@@ -128,7 +114,7 @@ public class APIRegistry {
     }
 
     public static void registerSpell(AbstractSpellPart spellPart) {
-        ArsNouveauAPI.getInstance().registerSpell(spellPart.getTag(), spellPart);
+        ArsNouveauAPI.getInstance().registerSpell(spellPart.getId(), spellPart);
     }
 
     public static void registerRitual(AbstractRitual ritual){

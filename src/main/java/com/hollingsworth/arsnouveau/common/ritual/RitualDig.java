@@ -3,16 +3,17 @@ package com.hollingsworth.arsnouveau.common.ritual;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.ritual.RitualContext;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
-import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
+import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import com.hollingsworth.arsnouveau.common.entity.EntityRitualProjectile;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
 import static com.hollingsworth.arsnouveau.api.util.BlockUtil.destroyBlockSafely;
@@ -23,7 +24,7 @@ public class RitualDig extends AbstractRitual {
         super();
     }
 
-    public RitualDig(RitualTile tile, RitualContext context) {
+    public RitualDig(RitualBrazierTile tile, RitualContext context) {
         super(tile, context);
     }
 
@@ -39,25 +40,25 @@ public class RitualDig extends AbstractRitual {
     }
 
     public boolean canBlockBeHarvested(BlockPos pos){
-        return getWorld().getBlockState(pos).getDestroySpeed(getWorld(), pos) >= 0 && 5 >= getWorld().getBlockState(pos).getHarvestLevel();
+        return getWorld().getBlockState(pos).getDestroySpeed(getWorld(), pos) >= 0 && SpellUtil.isCorrectHarvestLevel(5, getWorld().getBlockState(pos));
     }
 
     public void breakBlock(BlockPos pos){
-        if(!canBlockBeHarvested(pos) || !BlockUtil.destroyRespectsClaim( FakePlayerFactory.getMinecraft((ServerWorld) getWorld()), getWorld(), pos)){
+        if(!canBlockBeHarvested(pos) || !BlockUtil.destroyRespectsClaim( FakePlayerFactory.getMinecraft((ServerLevel) getWorld()), getWorld(), pos)){
             return;
         }
         BlockState state = getWorld().getBlockState(pos);
         ItemStack stack = new ItemStack(Items.DIAMOND_PICKAXE);
-        state.getBlock().playerDestroy(getWorld(), FakePlayerFactory.getMinecraft((ServerWorld) getWorld()), pos, getWorld().getBlockState(pos), getWorld().getBlockEntity(pos), stack);
-        destroyBlockSafely(getWorld(), pos, false,  FakePlayerFactory.getMinecraft((ServerWorld) getWorld()));
+        state.getBlock().playerDestroy(getWorld(), FakePlayerFactory.getMinecraft((ServerLevel) getWorld()), pos, getWorld().getBlockState(pos), getWorld().getBlockEntity(pos), stack);
+        destroyBlockSafely(getWorld(), pos, false,  FakePlayerFactory.getMinecraft((ServerLevel) getWorld()));
     }
 
     @Override
     public void tick() {
-        World world = tile.getLevel();
+        Level world = tile.getLevel();
         if(world.getGameTime() % 20 == 0 && !world.isClientSide){
             BlockPos pos = tile.getBlockPos().north().below(getContext().progress);
-            if(pos.getY() < 1){
+            if(world.isOutsideBuildHeight(pos)){
                 onEnd();
                 return;
             }

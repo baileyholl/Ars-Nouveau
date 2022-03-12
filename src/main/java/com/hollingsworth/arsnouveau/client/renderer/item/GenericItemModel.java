@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.client.renderer.item;
 
 import com.hollingsworth.arsnouveau.common.items.AnimBlockItem;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 
 public class GenericItemModel extends AnimatedGeoModel<AnimBlockItem> {

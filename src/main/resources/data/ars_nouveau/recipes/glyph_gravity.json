@@ -1,6 +1,38 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "TWO",
-  "input": "minecraft:anvil",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "inputItems": [
+    {
+      "item": {
+        "item": "ars_nouveau:air_essence"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:anvil"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:anvil"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:feathers"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:feathers"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:feathers"
+      }
+    }
+  ],
+  "exp": 55,
   "output": "ars_nouveau:glyph_gravity"
 }

@@ -1,0 +1,34 @@
+{
+  "type": "ars_nouveau:enchanting_apparatus",
+  "reagent": [
+    {
+      "tag": "forge:seeds"
+    }
+  ],
+  "pedestalItems": [
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    }
+  ],
+  "output": {
+    "item": "ars_nouveau:magebloom_crop"
+  },
+  "sourceCost": 0
+}

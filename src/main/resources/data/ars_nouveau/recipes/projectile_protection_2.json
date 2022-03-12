@@ -2,30 +2,32 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:projectile_protection",
   "level": 2,
-  "mana": 3500,
-  "item_1": [
+  "sourceCost": 3500,
+  "pedestalItems": [
     {
-      "item": "ars_nouveau:glyph_projectile"
-    }
-  ],
-  "item_2": [
+      "item": {
+        "item": "ars_nouveau:air_essence"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_projectile"
-    }
-  ],
-  "item_3": [
+      "item": {
+        "item": "ars_nouveau:air_essence"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_shield"
-    }
-  ],
-  "item_4": [
+      "item": {
+        "item": "ars_nouveau:abjuration_essence"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/mana"
-    }
-  ],
-  "item_5": [
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/mana"
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
     }
   ]
 }

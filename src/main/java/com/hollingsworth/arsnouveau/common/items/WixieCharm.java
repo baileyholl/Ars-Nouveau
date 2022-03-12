@@ -5,12 +5,12 @@ import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.CauldronBlock;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.CauldronBlock;
 
 public class WixieCharm extends ModItem{
     public WixieCharm() {
@@ -20,10 +20,10 @@ public class WixieCharm extends ModItem{
     /**
      * Called when this item is used when targetting a Block
      */
-    public ActionResultType useOn(ItemUseContext context) {
-        World world = context.getLevel();
+    public InteractionResult useOn(UseOnContext context) {
+        Level world = context.getLevel();
         if(world.isClientSide)
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         BlockPos pos = context.getClickedPos();
         if(world.getBlockState(pos).getBlock() instanceof CauldronBlock){
             world.setBlockAndUpdate(pos, BlockRegistry.WIXIE_CAULDRON.defaultBlockState());
@@ -37,9 +37,9 @@ public class WixieCharm extends ModItem{
                 tile.entityID = wixie.getId();
                 context.getItemInHand().shrink(1);
             }else{
-                PortUtil.sendMessage(context.getPlayer(), new TranslationTextComponent("ars_nouveau.wixie.has_wixie"));
+                PortUtil.sendMessage(context.getPlayer(), new TranslatableComponent("ars_nouveau.wixie.has_wixie"));
             }
         }
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 }

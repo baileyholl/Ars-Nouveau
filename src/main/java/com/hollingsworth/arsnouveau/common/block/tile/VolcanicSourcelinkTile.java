@@ -5,14 +5,15 @@ import com.hollingsworth.arsnouveau.common.datagen.Recipes;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tags.ITag;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.Tags;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -22,8 +23,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatable {
 
-    public VolcanicSourcelinkTile() {
-        super(BlockRegistry.VOLCANIC_TILE);
+    public VolcanicSourcelinkTile(BlockPos pos, BlockState state) {
+        super(BlockRegistry.VOLCANIC_TILE, pos, state);
     }
 
     @Override
@@ -36,11 +37,11 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
         super.tick();
         if(level.isClientSide)
             return;
-        if(level.getGameTime() % 20 == 0 && this.canAcceptMana()){
-            for(ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(worldPosition).inflate(1.0))){
+        if(level.getGameTime() % 20 == 0 && this.canAcceptSource()){
+            for(ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, new AABB(worldPosition).inflate(1.0))){
                 int source = getSourceValue(i.getItem());
                 if(source > 0) {
-                    this.addMana(source);
+                    this.addSource(source);
                     ItemStack containerItem = i.getItem().getContainerItem();
                     i.getItem().shrink(1);
                     if(!containerItem.isEmpty()){
@@ -54,8 +55,10 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
             for(ArcanePedestalTile i : getSurroundingPedestals()){
                 int sourceValue = getSourceValue(i.getItem(0));
                 if(sourceValue > 0){
-                    this.addMana(sourceValue);
+                    this.addSource(sourceValue);
+                    ItemStack containerItem = i.getItem(0).getContainerItem();
                     i.removeItem(0, 1);
+                    i.setItem(0, containerItem);
                     Networking.sendToNearby(level, getBlockPos(),
                             new PacketANEffect(PacketANEffect.EffectType.BURST, i.getBlockPos().above(), new ParticleColor.IntWrapper(255, 0, 0)));
                 }
@@ -71,10 +74,10 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
             source = burnTime / 12;
             progress = 1;
         }
-        if(i.getItem().getItem() == BlockRegistry.BLAZING_LOG.asItem()){
+        if(i.getItem() == BlockRegistry.BLAZING_LOG.asItem()){
             source += 100;
             progress += 5;
-        }else if(i.getItem().getItem().is(Recipes.ARCHWOOD_LOG_TAG)){
+        }else if(i.is(Recipes.ARCHWOOD_LOG_TAG)){
             source += 50;
             progress += 3;
         }
@@ -87,7 +90,7 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
             return;
         AtomicBoolean set = new AtomicBoolean(false);
         BlockPos.withinManhattanStream(worldPosition, 1, 0,1).forEach(p ->{
-            if(!set.get() && level.getBlockState(p).isAir() && level.getFluidState(p.below()).getType() == Fluids.LAVA || level.getFluidState(p.below()).getType() == Fluids.FLOWING_LAVA){
+            if(!set.get() && level.getBlockState(p).isAir() && (level.getFluidState(p.below()).getType() == Fluids.LAVA || level.getFluidState(p.below()).getType() == Fluids.FLOWING_LAVA)){
                 level.setBlockAndUpdate(p, BlockRegistry.LAVA_LILY.getState(level, p));
                 set.set(true);
             }
@@ -116,11 +119,11 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
         }
     }
 
-    public BlockPos getTagInArea(ITag<Block> block, int range){
+    public BlockPos getTagInArea(Tag<Block> block, int range){
         AtomicReference<BlockPos> posFound = new AtomicReference<>();
         BlockPos.betweenClosedStream(worldPosition.offset(range, -1, range), worldPosition.offset(-range, -1, -range)).forEach(blockPos -> {
             blockPos = blockPos.immutable();
-            if(posFound.get() == null && level.getBlockState(blockPos).getBlock().is(block))
+            if(posFound.get() == null && level.getBlockState(blockPos).is(block))
                 posFound.set(blockPos);
         });
 
@@ -141,8 +144,8 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
     }
 
     @Override
-    public int getMaxMana() {
-        return 1000;
+    public int getMaxSource() {
+        return 5000;
     }
 
 }

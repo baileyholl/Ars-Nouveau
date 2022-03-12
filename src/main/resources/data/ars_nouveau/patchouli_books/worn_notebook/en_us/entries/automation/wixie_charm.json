@@ -1,0 +1,34 @@
+{
+  "name": "item.ars_nouveau.wixie_charm",
+  "icon": "ars_nouveau:wixie_charm",
+  "category": "ars_nouveau:automation",
+  "pages": [
+    {
+      "text": "ars_nouveau.page1.wixie_charm",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:wixie_charm",
+      "type": "ars_nouveau:apparatus_recipe"
+    },
+    {
+      "entity": "ars_nouveau:wixie",
+      "text": "ars_nouveau.page2.wixie_charm",
+      "type": "patchouli:entity"
+    },
+    {
+      "text": "ars_nouveau.page3.wixie_charm",
+      "title": "ars_nouveau.item_crafting",
+      "type": "patchouli:text"
+    },
+    {
+      "text": "ars_nouveau.page4.wixie_charm",
+      "title": "ars_nouveau.potion_crafting",
+      "type": "patchouli:text"
+    },
+    {
+      "text": "ars_nouveau.page5.wixie_charm",
+      "type": "patchouli:text"
+    }
+  ]
+}

@@ -2,56 +2,63 @@ package com.hollingsworth.arsnouveau.common.block;
 
 import com.hollingsworth.arsnouveau.api.item.IScribeable;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
+import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
+import com.hollingsworth.arsnouveau.common.network.Networking;
+import com.hollingsworth.arsnouveau.common.network.PacketOpenGlyphCraft;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.PushReaction;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BedPart;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BedPart;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 
-public class ScribesBlock extends ModBlock{
+public class ScribesBlock extends TickableModBlock {
     public static final EnumProperty<BedPart> PART = BlockStateProperties.BED_PART;
     protected static final VoxelShape BASE = Block.box(0.0D, 0D, 0.0D, 16.0D, 16, 16.0D);
     protected static final VoxelShape LEG_NORTH_WEST = Block.box(0.0D, 0.0D, 0.0D, 3.0D, 3.0D, 3.0D);
     protected static final VoxelShape LEG_SOUTH_WEST = Block.box(0.0D, 0.0D, 16.0D, 3.0D, 3.0D, 16.0D);
     protected static final VoxelShape LEG_NORTH_EAST = Block.box(16.0D, 0.0D, 0.0D, 16.0D, 3.0D, 3.0D);
     protected static final VoxelShape LEG_SOUTH_EAST = Block.box(16.0D, 0.0D, 16.0D, 16.0D, 3.0D, 16.0D);
-    protected static final VoxelShape NORTH_SHAPE = VoxelShapes.or(BASE, LEG_NORTH_WEST, LEG_NORTH_EAST);
-    protected static final VoxelShape SOUTH_SHAPE = VoxelShapes.or(BASE, LEG_SOUTH_WEST, LEG_SOUTH_EAST);
-    protected static final VoxelShape WEST_SHAPE = VoxelShapes.or(BASE, LEG_NORTH_WEST, LEG_SOUTH_WEST);
-    protected static final VoxelShape EAST_SHAPE = VoxelShapes.or(BASE, LEG_NORTH_EAST, LEG_SOUTH_EAST);
+    protected static final VoxelShape NORTH_SHAPE = Shapes.or(BASE, LEG_NORTH_WEST, LEG_NORTH_EAST);
+    protected static final VoxelShape SOUTH_SHAPE = Shapes.or(BASE, LEG_SOUTH_WEST, LEG_SOUTH_EAST);
+    protected static final VoxelShape WEST_SHAPE = Shapes.or(BASE, LEG_NORTH_WEST, LEG_SOUTH_WEST);
+    protected static final VoxelShape EAST_SHAPE = Shapes.or(BASE, LEG_NORTH_EAST, LEG_SOUTH_EAST);
 
     public ScribesBlock() {
         super(Block.Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(2.0f, 3.0f).noOcclusion(), LibBlockNames.SCRIBES_BLOCK);
         this.registerDefaultState(this.stateDefinition.any().setValue(PART, BedPart.FOOT));
         MinecraftForge.EVENT_BUS.register(this);
     }
-    public static final DirectionProperty FACING = HorizontalBlock.FACING;
+    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
     @Override
     public PushReaction getPistonPushReaction(BlockState p_149656_1_) {
@@ -59,18 +66,23 @@ public class ScribesBlock extends ModBlock{
     }
 
     @Override
-    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (world.isClientSide) {
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        if(handIn != Hand.MAIN_HAND || !(world.getBlockEntity(pos) instanceof ScribesTile))
-            return ActionResultType.PASS;
+        if(player.getItemInHand(handIn).getItem() instanceof SpellBook && !player.isShiftKeyDown()){
+            Networking.INSTANCE.send(PacketDistributor.PLAYER.with(()-> (ServerPlayer) player),
+                    new PacketOpenGlyphCraft(pos));
+            return InteractionResult.SUCCESS;
+        }
+        if(handIn != InteractionHand.MAIN_HAND || !(world.getBlockEntity(pos) instanceof ScribesTile))
+            return InteractionResult.PASS;
         ScribesTile tile = (ScribesTile) world.getBlockEntity(pos);
         if(state.getValue(ScribesBlock.PART) != BedPart.HEAD) {
-            TileEntity tileEntity = world.getBlockEntity(pos.relative(ScribesBlock.getConnectedDirection(state)));
+            BlockEntity tileEntity = world.getBlockEntity(pos.relative(ScribesBlock.getConnectedDirection(state)));
             tile = tileEntity instanceof ScribesTile ? (ScribesTile) tileEntity : null;
             if(tile == null)
-                return ActionResultType.PASS;
+                return InteractionResult.PASS;
         }
 
 
@@ -81,13 +93,13 @@ public class ScribesBlock extends ModBlock{
                 ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
                 world.addFreshEntity(item);
                 tile.stack = null;
-            } else if (!player.inventory.getSelected().isEmpty()) {
+            } else if (!player.getInventory().getSelected().isEmpty()) {
                 if(tile.stack != null){
                     ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);
                     world.addFreshEntity(item);
                 }
 
-                tile.stack = player.inventory.removeItem(player.inventory.selected, 1);
+                tile.stack = player.getInventory().removeItem(player.getInventory().selected, 1);
 
             }
             BlockState updateState = world.getBlockState(tile.getBlockPos());
@@ -98,7 +110,7 @@ public class ScribesBlock extends ModBlock{
             ItemStack stack = tile.stack;
 
             if(stack == null || stack.isEmpty())
-                return ActionResultType.SUCCESS;
+                return InteractionResult.SUCCESS;
 
             if(stack.getItem() instanceof IScribeable){
                 ((IScribeable) stack.getItem()).onScribe(world,pos,player,handIn, stack);
@@ -106,19 +118,20 @@ public class ScribesBlock extends ModBlock{
             }
         }
 
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public void playerWillDestroy(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+    public void playerWillDestroy(Level worldIn, BlockPos pos, BlockState state, Player player) {
         super.playerWillDestroy(worldIn, pos, state, player);
-        if(worldIn.getBlockEntity(pos) instanceof ScribesTile && ((ScribesTile) worldIn.getBlockEntity(pos)).stack != null){
-            worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), ((ScribesTile) worldIn.getBlockEntity(pos)).stack));
+        if(worldIn.getBlockEntity(pos) instanceof ScribesTile tile && tile.stack != null){
+            worldIn.addFreshEntity(new ItemEntity(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.stack));
+            tile.refundConsumed();
         }
     }
 
     @Override
-    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
+    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
         if (!world.isClientSide) {
             BlockPos blockpos = pos.relative(state.getValue(FACING));
             world.setBlock(blockpos, state.setValue(PART, BedPart.HEAD), 3);
@@ -128,32 +141,26 @@ public class ScribesBlock extends ModBlock{
     }
 
     @Nullable
-    public BlockState getStateForPlacement(BlockItemUseContext p_196258_1_) {
+    public BlockState getStateForPlacement(BlockPlaceContext p_196258_1_) {
         Direction direction = p_196258_1_.getHorizontalDirection();
         BlockPos blockpos = p_196258_1_.getClickedPos();
         BlockPos blockpos1 = blockpos.relative(direction);
         return p_196258_1_.getLevel().getBlockState(blockpos1).canBeReplaced(p_196258_1_) ? this.defaultBlockState().setValue(FACING, direction) : null;
     }
 
-    public static Direction getFacingFromEntity(BlockPos clickedBlock, LivingEntity entity) {
-        Vector3d vec = entity.position();
-        Direction direction = Direction.getNearest((float) (vec.x - clickedBlock.getX()), (float) (vec.y - clickedBlock.getY()), (float) (vec.z - clickedBlock.getZ()));
-        if(direction == Direction.UP || direction == Direction.DOWN)
-            direction = Direction.NORTH;
-        return direction;
-    }
     // If the user breaks the other side of the table, this side needs to drop its item
-    public BlockState tearDown(BlockState state, Direction direction, BlockState state2, IWorld world, BlockPos pos, BlockPos pos2){
+    public BlockState tearDown(BlockState state, Direction direction, BlockState state2, LevelAccessor world, BlockPos pos, BlockPos pos2){
         if(!world.isClientSide()) {
-            TileEntity entity = world.getBlockEntity(pos);
-            if (entity instanceof ScribesTile && ((ScribesTile) entity).stack != null) {
-                world.addFreshEntity(new ItemEntity((World) world, pos.getX(), pos.getY(), pos.getZ(), ((ScribesTile) entity).stack));
+            BlockEntity entity = world.getBlockEntity(pos);
+            if (entity instanceof ScribesTile tile && ((ScribesTile) entity).stack != null) {
+                world.addFreshEntity(new ItemEntity((Level) world, pos.getX(), pos.getY(), pos.getZ(), ((ScribesTile) entity).stack));
+                tile.refundConsumed();
             }
         }
         return Blocks.AIR.defaultBlockState();
     }
 
-    public BlockState updateShape(BlockState state, Direction direction, BlockState state2, IWorld world, BlockPos pos, BlockPos pos2) {
+    public BlockState updateShape(BlockState state, Direction direction, BlockState state2, LevelAccessor world, BlockPos pos, BlockPos pos2) {
         if (direction == getNeighbourDirection(state.getValue(PART), state.getValue(FACING))) {
             return state2.is(this) && state2.getValue(PART) != state.getValue(PART) ? state : tearDown(state, direction, state2, world, pos, pos2);
         } else {
@@ -169,7 +176,7 @@ public class ScribesBlock extends ModBlock{
     public void rightClick(PlayerInteractEvent.RightClickBlock event) {
         if(!(event.getWorld().getBlockEntity(event.getPos()) instanceof ScribesTile))
             return;
-        World world = event.getWorld();
+        Level world = event.getWorld();
         BlockPos pos = event.getPos();
         if(world.getBlockState(pos).getBlock() instanceof ScribesBlock){
             BlockRegistry.SCRIBES_BLOCK.use(world.getBlockState(pos), world, pos, event.getPlayer(), event.getHand(), null);
@@ -181,7 +188,7 @@ public class ScribesBlock extends ModBlock{
         Direction direction = p_226862_0_.getValue(FACING);
         return p_226862_0_.getValue(PART) == BedPart.HEAD ? direction.getOpposite() : direction;
     }
-    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
+    public VoxelShape getShape(BlockState p_220053_1_, BlockGetter p_220053_2_, BlockPos p_220053_3_, CollisionContext p_220053_4_) {
         Direction direction = getConnectedDirection(p_220053_1_).getOpposite();
         switch(direction) {
             case NORTH:
@@ -196,7 +203,7 @@ public class ScribesBlock extends ModBlock{
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, PART);
     }
 
@@ -209,19 +216,13 @@ public class ScribesBlock extends ModBlock{
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Nullable
-    @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new ScribesTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new ScribesTile(pos, state);
     }
 
     @Override
-    public BlockRenderType getRenderShape(BlockState state) {
-        return BlockRenderType.ENTITYBLOCK_ANIMATED;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
 }

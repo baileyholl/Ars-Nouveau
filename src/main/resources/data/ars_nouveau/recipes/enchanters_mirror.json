@@ -1,51 +1,54 @@
 {
   "type": "ars_nouveau:enchanting_apparatus",
-  "item_1": [
-    {
-      "tag": "forge:glass"
-    }
-  ],
-  "item_2": [
-    {
-      "tag": "forge:glass"
-    }
-  ],
-  "item_3": [
-    {
-      "item": "ars_nouveau:glyph_self"
-    }
-  ],
-  "item_4": [
-    {
-      "item": "ars_nouveau:glyph_self"
-    }
-  ],
-  "item_5": [
-    {
-      "tag": "forge:logs/archwood"
-    }
-  ],
-  "item_6": [
-    {
-      "tag": "forge:logs/archwood"
-    }
-  ],
-  "item_7": [
-    {
-      "tag": "forge:ingots/gold"
-    }
-  ],
-  "item_8": [
-    {
-      "tag": "forge:ingots/gold"
-    }
-  ],
   "reagent": [
     {
-      "tag": "forge:storage_blocks/mana"
+      "tag": "forge:storage_blocks/source"
+    }
+  ],
+  "pedestalItems": [
+    {
+      "item": {
+        "tag": "forge:glass"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:glass"
+      }
+    },
+    {
+      "item": {
+        "item": "ars_nouveau:manipulation_essence"
+      }
+    },
+    {
+      "item": {
+        "item": "ars_nouveau:manipulation_essence"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:logs/archwood"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:logs/archwood"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:ingots/gold"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:ingots/gold"
+      }
     }
   ],
   "output": {
     "item": "ars_nouveau:enchanters_mirror"
-  }
+  },
+  "sourceCost": 0
 }

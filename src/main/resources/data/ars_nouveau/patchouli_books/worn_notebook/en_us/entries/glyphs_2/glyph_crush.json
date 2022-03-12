@@ -1,0 +1,16 @@
+{
+  "name": "ars_nouveau.glyph_name.crush",
+  "category": "ars_nouveau:glyphs_2",
+  "icon": "ars_nouveau:glyph_crush",
+  "sortnum": 2,
+  "pages": [
+    {
+      "text": "ars_nouveau.glyph_desc.crush",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:glyph_crush",
+      "type": "ars_nouveau:glyph_recipe"
+    }
+  ]
+}

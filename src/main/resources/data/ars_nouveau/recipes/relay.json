@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "g g",
+    "gMg",
+    "g g"
+  ],
+  "key": {
+    "g": {
+      "tag": "forge:ingots/gold"
+    },
+    "M": {
+      "tag": "forge:storage_blocks/source"
+    }
+  },
+  "result": {
+    "item": "ars_nouveau:relay"
+  }
+}

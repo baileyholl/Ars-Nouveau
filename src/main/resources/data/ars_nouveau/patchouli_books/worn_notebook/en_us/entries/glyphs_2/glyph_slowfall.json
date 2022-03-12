@@ -1,0 +1,16 @@
+{
+  "name": "ars_nouveau.glyph_name.slowfall",
+  "category": "ars_nouveau:glyphs_2",
+  "icon": "ars_nouveau:glyph_slowfall",
+  "sortnum": 2,
+  "pages": [
+    {
+      "text": "ars_nouveau.glyph_desc.slowfall",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:glyph_slowfall",
+      "type": "ars_nouveau:glyph_recipe"
+    }
+  ]
+}

@@ -1,20 +1,13 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
-
-import java.util.List;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * A special Spell resolver that ignores player limits such as mana.
  */
 public class EntitySpellResolver extends SpellResolver {
-
-    @Deprecated
-    public EntitySpellResolver(List<AbstractSpellPart> spell_recipe, SpellContext context) {
-        super(spell_recipe, context);
-    }
 
     public EntitySpellResolver(SpellContext context){
         super(context);
@@ -22,7 +15,7 @@ public class EntitySpellResolver extends SpellResolver {
 
 
     public void onCastOnEntity(LivingEntity target){
-        super.onCastOnEntity(ItemStack.EMPTY, spellContext.caster, target, Hand.MAIN_HAND);
+        super.onCastOnEntity(ItemStack.EMPTY, spellContext.caster, target, InteractionHand.MAIN_HAND);
     }
 
     @Override

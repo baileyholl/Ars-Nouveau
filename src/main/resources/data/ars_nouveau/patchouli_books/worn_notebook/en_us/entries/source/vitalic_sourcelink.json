@@ -1,15 +1,15 @@
 {
-    "name": "block.ars_nouveau.vitalic_sourcelink",
-    "icon": "ars_nouveau:vitalic_sourcelink",
-    "category": "source",
-    "pages": [
-        {
-            "type": "text",
-            "text": "ars_nouveau.page1.vitalic_sourcelink"
-        },
-		{
-            "type":"crafting",
-			"recipe":"ars_nouveau:vitalic_sourcelink"
-		}
-    ]
+  "name": "block.ars_nouveau.vitalic_sourcelink",
+  "category": "ars_nouveau:source",
+  "icon": "ars_nouveau:vitalic_sourcelink",
+  "pages": [
+    {
+      "text": "ars_nouveau.page.vitalic_sourcelink",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:vitalic_sourcelink",
+      "type": "patchouli:crafting"
+    }
+  ]
 }

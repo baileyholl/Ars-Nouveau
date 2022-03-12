@@ -6,7 +6,7 @@ import java.util.Random;
 /**
  * Modified class of ElementType: https://github.com/Sirttas/ElementalCraft/blob/b91ca42b3d139904d9754d882a595406bad1bd18/src/main/java/sirttas/elementalcraft/ElementType.java
  */
-public class ParticleColor {
+public class ParticleColor implements Cloneable{
 
     private final float r;
     private final float g;
@@ -18,6 +18,10 @@ public class ParticleColor {
         this.g = g / 255F;
         this.b = b / 255F;
         this.color = (r << 16) | (g << 8) | b;
+    }
+
+    public ParticleColor(double red, double green, double blue) {
+        this((int)red,(int) green,(int) blue);
     }
 
     public static ParticleColor makeRandomColor(int r, int g, int b, Random random){
@@ -32,7 +36,7 @@ public class ParticleColor {
     public static ParticleColor fromInt(int color){
         int r = (color >> 16) & 0xFF;
         int g = (color >> 8) & 0xFF;
-        int b = (color >> 0) & 0xFF;
+        int b = (color) & 0xFF;
         return new ParticleColor(r,g,b);
     }
 
@@ -59,11 +63,23 @@ public class ParticleColor {
     }
 
     public static ParticleColor deserialize(String string){
+        if(string == null || string.isEmpty())
+            return ParticleUtil.defaultParticleColor();
         String[] arr = string.split(",");
         return new ParticleColor(Integer.parseInt(arr[0].trim()), Integer.parseInt(arr[1].trim()), Integer.parseInt(arr[2].trim()));
     }
 
-    public static class IntWrapper{
+    @Override
+    public ParticleColor clone() {
+        try {
+            ParticleColor clone = (ParticleColor) super.clone();
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
+
+    public static class IntWrapper implements Cloneable{
         public int r;
         public int g;
         public int b;
@@ -98,14 +114,25 @@ public class ParticleColor {
 
         public static @Nonnull ParticleColor.IntWrapper deserialize(String string){
             ParticleColor.IntWrapper color = ParticleUtil.defaultParticleColorWrapper();
+            if(string == null || string.isEmpty())
+                return color;
+
             try{
                 String[] arr = string.split(",");
                 color = new ParticleColor.IntWrapper(Integer.parseInt(arr[0].trim()), Integer.parseInt(arr[1].trim()), Integer.parseInt(arr[2].trim()));
                 return color;
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+            }catch (Exception ignored){ }
             return color;
+        }
+
+        @Override
+        public IntWrapper clone() {
+            try {
+                IntWrapper clone = (IntWrapper) super.clone();
+                return clone;
+            } catch (CloneNotSupportedException e) {
+                throw new AssertionError();
+            }
         }
     }
 }

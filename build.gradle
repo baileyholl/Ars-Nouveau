@@ -8,27 +8,32 @@ buildscript {
             name "Sponge"
             url "https://repo.spongepowered.org/repository/maven-public/"
         }
+        maven { url = 'https://maven.parchmentmc.org' }
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
-        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7.+'
+        classpath 'org.parchmentmc:librarian:1.+'
     }
 
 }
 
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
-
+apply plugin: 'org.parchmentmc.librarian.forgegradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-
-version = '1.23.1'
+version = '2.2.10'
+if (System.getenv('BUILD_NUMBER') != null) {
+    version += "." + System.getenv('BUILD_NUMBER')
+}
 group = 'com.hollingsworth.ars_nouveau' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'ars_nouveau-1.16.5'
+archivesBaseName = 'ars_nouveau-1.18.1'
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
 
 minecraft {
 
@@ -39,7 +44,7 @@ minecraft {
     // Use non-default mappings at your own risk. they may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
 
-    mappings channel: 'official', version: '1.16.5'
+    mappings channel: 'parchment', version: '2021.12.19-1.18.1'
 	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
     
@@ -60,7 +65,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             mods {
-                examplemod {
+                ars_nouveau {
                     source sourceSets.main
                 }
             }
@@ -104,6 +109,7 @@ minecraft {
         }
     }
 }
+
 repositories {
 
     maven {
@@ -128,35 +134,42 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+    maven {
+        name 'LDTTeam - Modding'
+        url 'https://ldtteam.jfrog.io/ldtteam/modding/'
+    }
     maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
     jcenter()
     mavenCentral()
 }
 dependencies {
 
-    minecraft 'net.minecraftforge:forge:1.16.5-36.1.62'
-    runtimeOnly fg.deobf("curse.maven:exp-406201:3419814") //Blame
-    runtimeOnly fg.deobf("curse.maven:exp-248787:3395800")  // Appleskin
-    runtimeOnly fg.deobf("curse.maven:exp-407174:3188120")  // Shutup experimental settings
+    implementation 'org.jetbrains:annotations:20.1.0'
+    minecraft 'net.minecraftforge:forge:1.18.1-39.0.9'
+//    runtimeOnly fg.deobf("curse.maven:exp-406201:3419814") //Blame
+//    runtimeOnly fg.deobf("curse.maven:exp-248787:3395800")  // Appleskin
+//    runtimeOnly fg.deobf("curse.maven:exp-407174:3188120")  // Shutup experimental settings
 //    runtimeOnly fg.deobf("curse.maven:exp-231951:3326143")  // Immersive engineering
 //    compileOnly fg.deobf("curse.maven:exp-231951:3326143")
-    runtimeOnly fg.deobf("curse.maven:exp-268560:3206392")  // Mekanism
+//    runtimeOnly fg.deobf("curse.maven:exp-268560:3206392")  // Mekanism
 //    compileOnly fg.deobf("curse.maven:exp-268560:3206392")
-//    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50:api")
-    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50")
-    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.16.4-50")
-    compileOnly fg.deobf("mezz.jei:jei-1.16.2:7.3.2.25:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.16.2:7.3.2.25")
-
-    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.1.0:api")
-    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.16.3-4.0.1.0")
-    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.16.5:3.0.45')
+    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.1-61:api")
+    compileOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.1-61")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:1.18.1-61")
+    compileOnly fg.deobf("mezz.jei:jei-1.18:9.0.0.40:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.18:9.0.0.40")
+//    runtimeOnly fg.deobf("curse.maven:exp-449945:3429057")  // Per viam invenire
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.1-5.0.3.0:api")
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.1-5.0.3.0")
+    implementation fg.deobf('software.bernie.geckolib:geckolib-1.18-forge:3.0.10')
+    runtimeOnly fg.deobf("curse.maven:exp-64760:3577168")
+    compileOnly fg.deobf("curse.maven:exp-64760:3577168")
     
-    compileOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.4:7.1.0.84")
+//    compileOnly fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.4:7.1.0.84")
 
-  //  runtimeOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:1.16.5-2.1.3.0")
-    compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:1.16.5-2.1.3.0:api")
-    annotationProcessor 'org.spongepowered:mixin:0.8.2:processor'
+    runtimeOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:1.18-3.0.0.1")
+    compileOnly fg.deobf("top.theillusivec4.caelus:caelus-forge:1.18-3.0.0.1:api")
+    annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
 
 
 }
@@ -167,11 +180,11 @@ jar {
     manifest {
         attributes([
             "Specification-Title": "ArsNouveau",
-            "Specification-Vendor": "examplemodsareus",
+            "Specification-Vendor": "baileyh",
             "Specification-Version": "1", // We are version 1 of ourselves
             "Implementation-Title": project.name,
             "Implementation-Version": "${version}",
-            "Implementation-Vendor" :"examplemodsareus",
+            "Implementation-Vendor" :"baileyh",
             "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
             "MixinConfigs": "ars_nouveau.mixins.json"
         ])
@@ -187,17 +200,37 @@ def reobfArtifact = artifacts.add('default', reobfFile) {
     type 'jar'
     builtBy 'reobfJar'
 }
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    archiveBaseName.set(project.archivesBaseName)
+    archiveVersion.set("${project.version}")
+    archiveClassifier.set('sources')
+}
+artifacts {
+    archives sourcesJar
+}
 publishing {
     publications {
         mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
             artifact reobfArtifact
+            artifact sourcesJar
         }
     }
     repositories {
         maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
+            url "file://" + System.getenv("local_maven")
         }
     }
+}
+// Disables Gradle's custom module metadata from being published to maven. The
+// metadata includes mapped dependencies which are not reasonably consumable by
+// other mod developers.
+tasks.withType(GenerateModuleMetadata) {
+
+    enabled = false
 }
 
 mixin {

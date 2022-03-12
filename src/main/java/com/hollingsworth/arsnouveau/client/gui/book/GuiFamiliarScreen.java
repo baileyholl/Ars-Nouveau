@@ -7,11 +7,11 @@ import com.hollingsworth.arsnouveau.client.gui.buttons.FamiliarButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketSummonFamiliar;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 
@@ -39,18 +39,18 @@ public class GuiFamiliarScreen extends BaseBook{
             int xOffset = 20 * (i % PER_ROW);
             int yOffset = (i / PER_ROW) * 18;
             FamiliarButton cell = new FamiliarButton(this, xStart + xOffset, yStart + yOffset, false, part);
-            addButton(cell);
+            addRenderableWidget(cell);
         }
-        addButton(new GuiImageButton(bookRight - 71, bookBottom - 13, 0,0,41, 12, 41, 12, "textures/gui/clear_icon.png", (e) -> {Minecraft.getInstance().setScreen(null);}));
+        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 13, 0,0,41, 12, 41, 12, "textures/gui/clear_icon.png", (e) -> {Minecraft.getInstance().setScreen(null);}));
 
     }
 
     @Override
-    public void drawBackgroundElements(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+    public void drawBackgroundElements(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
         drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/create_paper.png"), 216, 179, 0, 0, 56, 15,56,15, stack);
-        minecraft.font.draw(stack,new TranslationTextComponent("ars_nouveau.spell_book_gui.familiar").getString(), 20, 24, -8355712);
-        minecraft.font.draw(stack, new TranslationTextComponent("ars_nouveau.spell_book_gui.close"), 238, 183, -8355712);
+        minecraft.font.draw(stack,new TranslatableComponent("ars_nouveau.spell_book_gui.familiar").getString(), 20, 24, -8355712);
+        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.spell_book_gui.close"), 238, 183, -8355712);
     }
 
     public void onGlyphClick(Button button){

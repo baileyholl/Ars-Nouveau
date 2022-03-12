@@ -1,6 +1,38 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "THREE",
-  "input": "ars_nouveau:glyph_wither",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "inputItems": [
+    {
+      "item": {
+        "item": "ars_nouveau:abjuration_essence"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:fermented_spider_eye"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:blaze_rod"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:blaze_rod"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:blaze_rod"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:wither_rose"
+      }
+    }
+  ],
+  "exp": 160,
   "output": "ars_nouveau:glyph_hex"
 }

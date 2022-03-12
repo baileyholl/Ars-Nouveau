@@ -1,26 +1,26 @@
 package com.hollingsworth.arsnouveau.client.gui;
 
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.entity.item.ItemFrameEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.hollingsworth.arsnouveau.common.items.ItemScroll.ITEM_PREFIX;
 
-public class GuiScrollHUD extends AbstractGui {
+public class GuiScrollHUD extends GuiComponent {
 
     private static final Minecraft minecraft = Minecraft.getInstance();
 
-    public void drawHUD(MatrixStack matrixStack, ItemFrameEntity entity){
+    public void drawHUD(PoseStack matrixStack, ItemFrame entity){
         if(entity.getItem().getItem() instanceof ItemScroll){
             ItemStack stack = entity.getItem();
-            CompoundNBT tag = stack.getTag();
+            CompoundTag tag = stack.getTag();
             if(tag == null)
                 return;
             List<ItemStack> stacks = new ArrayList<>();

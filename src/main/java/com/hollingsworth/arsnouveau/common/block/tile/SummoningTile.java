@@ -1,24 +1,20 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
+import com.hollingsworth.arsnouveau.common.block.ITickable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 
-import javax.annotation.Nullable;
-
-public class SummoningTile extends TileEntity implements ITickableTileEntity {
+public class SummoningTile extends ModdedTile implements ITickable {
     public int tickCounter; // just for animation, not saved
     public boolean converted;
 
     public static final BooleanProperty CONVERTED = BooleanProperty.create("converted");
 
-    public SummoningTile(TileEntityType<?> p_i48289_1_) {
-        super(p_i48289_1_);
+    public SummoningTile(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
 
     @Override
@@ -37,31 +33,14 @@ public class SummoningTile extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT compound) {
-        super.load(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         this.converted = compound.getBoolean("converted");
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT compound) {
-        compound.putBoolean("converted", converted);
-        return super.save(compound);
+    public void saveAdditional(CompoundTag tag) {
+        tag.putBoolean("converted", converted);
     }
 
-    @Override
-    @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 3, this.getUpdateTag());
-    }
-
-    @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        super.onDataPacket(net, pkt);
-        handleUpdateTag(level.getBlockState(worldPosition),pkt.getTag());
-    }
 }

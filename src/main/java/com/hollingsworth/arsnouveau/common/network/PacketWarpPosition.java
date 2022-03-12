@@ -1,10 +1,10 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.Entity;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -32,11 +32,11 @@ public class PacketWarpPosition {
         this.yRot = yRot;
     }
 
-    public static PacketWarpPosition decode(PacketBuffer buf) {
+    public static PacketWarpPosition decode(FriendlyByteBuf buf) {
         return new PacketWarpPosition(buf.readInt(),buf.readDouble(), buf.readDouble(), buf.readDouble(), buf.readFloat(), buf.readFloat());
     }
 
-    public static void encode(PacketWarpPosition msg, PacketBuffer buf) {
+    public static void encode(PacketWarpPosition msg, FriendlyByteBuf buf) {
         buf.writeInt(msg.entityID);
         buf.writeDouble(msg.x);
         buf.writeDouble(msg.y);
@@ -56,13 +56,13 @@ public class PacketWarpPosition {
                 @Override
                 public void run() {
                     Minecraft mc = Minecraft.getInstance();
-                    ClientWorld world = mc.level;
+                    ClientLevel world = mc.level;
                     Entity e = world.getEntity(message.entityID);
                     if(e == null)
                         return;
                     e.setPos(message.x, message.y, message.z);
-                    e.xRot = message.xRot;
-                    e.yRot = message.yRot;
+                    e.setXRot(message.xRot);
+                    e.setYRot(message.yRot);
                 }
             });
             ctx.get().setPacketHandled(true);

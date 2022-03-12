@@ -2,35 +2,37 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:thorns",
   "level": 2,
-  "mana": 3500,
-  "item_1": [
+  "sourceCost": 3500,
+  "pedestalItems": [
     {
-      "item": "ars_nouveau:wilden_spike"
-    }
-  ],
-  "item_2": [
+      "item": {
+        "item": "ars_nouveau:wilden_spike"
+      }
+    },
     {
-      "item": "ars_nouveau:wilden_spike"
-    }
-  ],
-  "item_3": [
+      "item": {
+        "item": "ars_nouveau:wilden_spike"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/mana"
-    }
-  ],
-  "item_4": [
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/mana"
-    }
-  ],
-  "item_5": [
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/lapis"
-    }
-  ],
-  "item_6": [
+      "item": {
+        "tag": "forge:storage_blocks/lapis"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/lapis"
+      "item": {
+        "tag": "forge:storage_blocks/lapis"
+      }
     }
   ]
 }

@@ -4,24 +4,23 @@ import com.hollingsworth.arsnouveau.common.block.tile.PotionJarTile;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
 import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.*;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DrinkHelper;
-import net.minecraft.util.Hand;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,18 +43,18 @@ public abstract class PotionFlask extends ModItem {
     }
 
     @Override
-    public ActionResultType useOn(ItemUseContext context) {
+    public InteractionResult useOn(UseOnContext context) {
         if(context.getLevel().isClientSide)
             return super.useOn(context);
         ItemStack thisStack = context.getItemInHand();
         Potion potion = PotionUtils.getPotion(thisStack);
-        PlayerEntity playerEntity = context.getPlayer();
+        Player playerEntity = context.getPlayer();
         if(!(context.getLevel().getBlockEntity(context.getClickedPos()) instanceof PotionJarTile))
             return super.useOn(context);
         PotionJarTile jarTile = (PotionJarTile) context.getLevel().getBlockEntity(context.getClickedPos());
         int count = thisStack.getTag().getInt("count");
         if(jarTile == null)
-            return ActionResultType.PASS;
+            return InteractionResult.PASS;
         if(playerEntity.isShiftKeyDown() && potion != Potions.EMPTY && count > 0 && jarTile.getMaxFill() - jarTile.getCurrentFill() >= 0){
             if(jarTile.getPotion() == Potions.EMPTY || jarTile.isMixEqual(thisStack)){
                 if(jarTile.getPotion() == Potions.EMPTY) {
@@ -99,19 +98,19 @@ public abstract class PotionFlask extends ModItem {
     }
 
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, World worldIn, LivingEntity entityLiving) {
-        PlayerEntity playerentity = entityLiving instanceof PlayerEntity ? (PlayerEntity)entityLiving : null;
-        if (playerentity instanceof ServerPlayerEntity) {
-            CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayerEntity)playerentity, stack);
+    public ItemStack finishUsingItem(ItemStack stack, Level worldIn, LivingEntity entityLiving) {
+        Player playerentity = entityLiving instanceof Player ? (Player)entityLiving : null;
+        if (playerentity instanceof ServerPlayer) {
+            CriteriaTriggers.CONSUME_ITEM.trigger((ServerPlayer)playerentity, stack);
         }
 
         if (!worldIn.isClientSide) {
-            for(EffectInstance effectinstance : PotionUtils.getMobEffects(stack)) {
+            for(MobEffectInstance effectinstance : PotionUtils.getMobEffects(stack)) {
                 effectinstance = getEffectInstance(effectinstance);
                 if (effectinstance.getEffect().isInstantenous()) {
                     effectinstance.getEffect().applyInstantenousEffect(playerentity, playerentity, entityLiving, effectinstance.getAmplifier(), 1.0D);
                 } else {
-                    entityLiving.addEffect(new EffectInstance(effectinstance));
+                    entityLiving.addEffect(new MobEffectInstance(effectinstance));
                 }
             }
             if(stack.hasTag()){
@@ -123,15 +122,15 @@ public abstract class PotionFlask extends ModItem {
     }
 
     //Get the modified EffectInstance from the parent class.
-    public abstract @Nonnull EffectInstance getEffectInstance(EffectInstance effectInstance);
+    public abstract @Nonnull MobEffectInstance getEffectInstance(MobEffectInstance effectInstance);
 
     @Override
-    public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+    public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
         if(!worldIn.isClientSide){
          //   PotionUtils.addPotionToItemStack(stack, Potions.WEAKNESS);
             if(!stack.hasTag())
-                stack.setTag(new CompoundNBT());
+                stack.setTag(new CompoundTag());
         }
     }
 
@@ -145,25 +144,21 @@ public abstract class PotionFlask extends ModItem {
     /**
      * returns the action that specifies what animation to play when the items is being used
      */
-    public UseAction getUseAnimation(ItemStack stack) {
-        return UseAction.DRINK;
+    public UseAnim getUseAnimation(ItemStack stack) {
+        return UseAnim.DRINK;
     }
 
-    /**
-     * Called to trigger the item's "innate" right click behavior. To handle when this item is used on a Block, see
-     * {@link #onItemUse}.
-     */
-    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack stack = playerIn.getItemInHand(handIn);
 
-        return stack.hasTag() && stack.getTag().getInt("count") > 0 ? DrinkHelper.useDrink(worldIn, playerIn, handIn) : ActionResult.pass(playerIn.getItemInHand(handIn));
+        return stack.hasTag() && stack.getTag().getInt("count") > 0 ? ItemUtils.startUsingInstantly(worldIn, playerIn, handIn) : InteractionResultHolder.pass(playerIn.getItemInHand(handIn));
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+    public void appendHoverText(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn) {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if(stack.hasTag()){
-            tooltip.add(new TranslationTextComponent("ars_nouveau.flask.charges", stack.getTag().getInt("count")));
+            tooltip.add(new TranslatableComponent("ars_nouveau.flask.charges", stack.getTag().getInt("count")));
             PotionUtils.addPotionTooltip(stack, tooltip, 1.0F);
         }
     }

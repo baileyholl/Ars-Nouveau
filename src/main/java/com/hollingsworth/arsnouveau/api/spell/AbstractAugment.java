@@ -18,7 +18,7 @@ public abstract class AbstractAugment extends AbstractSpellPart implements ISpel
     }
 
     @Override
-    abstract public int getManaCost();
+    abstract public int getDefaultManaCost();
 
     public SpellStats.Builder applyModifiers(SpellStats.Builder builder, AbstractSpellPart spellPart){
         return builder;

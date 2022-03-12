@@ -1,7 +1,7 @@
 package com.hollingsworth.arsnouveau.api.ritual;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ public class RitualCaster implements IRitualCaster{
 
     public static RitualCaster deserialize(ItemStack stack){
         RitualCaster instance = new RitualCaster(stack);
-        CompoundNBT tag = stack.getOrCreateTag();
+        CompoundTag tag = stack.getOrCreateTag();
         ArrayList<String> rituals = new ArrayList<>();
         for(int i = 0; i < tag.getInt("numrituals"); i++){
             if(tag.contains("ritual_" + i))
@@ -59,7 +59,7 @@ public class RitualCaster implements IRitualCaster{
     }
 
     public void write(ItemStack stack){
-        CompoundNBT tag = stack.getOrCreateTag();
+        CompoundTag tag = stack.getOrCreateTag();
         tag.putString("selected", selectedRitualID);
         tag.putInt("numrituals", this.ritualIDs.size());
         for(int i = 0; i < ritualIDs.size(); i++){

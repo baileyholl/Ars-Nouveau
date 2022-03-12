@@ -2,45 +2,47 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "minecraft:looting",
   "level": 2,
-  "mana": 8000,
-  "item_1": [
+  "sourceCost": 8000,
+  "pedestalItems": [
     {
-      "item": "ars_nouveau:glyph_fortune"
-    }
-  ],
-  "item_2": [
+      "item": {
+        "item": "ars_nouveau:earth_essence"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_fortune"
-    }
-  ],
-  "item_3": [
+      "item": {
+        "item": "ars_nouveau:earth_essence"
+      }
+    },
     {
-      "tag": "forge:gems/emerald"
-    }
-  ],
-  "item_4": [
+      "item": {
+        "tag": "forge:gems/emerald"
+      }
+    },
     {
-      "tag": "forge:gems/emerald"
-    }
-  ],
-  "item_5": [
+      "item": {
+        "tag": "forge:gems/emerald"
+      }
+    },
     {
-      "tag": "forge:gems/emerald"
-    }
-  ],
-  "item_6": [
+      "item": {
+        "tag": "forge:gems/emerald"
+      }
+    },
     {
-      "tag": "forge:gems/emerald"
-    }
-  ],
-  "item_7": [
+      "item": {
+        "tag": "forge:gems/emerald"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/mana"
-    }
-  ],
-  "item_8": [
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/mana"
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
     }
   ]
 }

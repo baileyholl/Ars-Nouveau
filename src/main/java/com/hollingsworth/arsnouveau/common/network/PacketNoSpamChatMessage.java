@@ -2,10 +2,10 @@ package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.NewChatGui;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.client.gui.components.ChatComponent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -13,7 +13,7 @@ import java.util.function.Supplier;
  * A text message sent from player to client
  */
 public class PacketNoSpamChatMessage {
-    private final ITextComponent message;
+    private final Component message;
     private final int messageChannelId;
     private final boolean overlayMessage;
 
@@ -31,21 +31,21 @@ public class PacketNoSpamChatMessage {
      * @param overlayMessage if true, the message will instead be displayed briefly in the center of the screen just
      *                       above the main bar.  If true, <code>messageChannelId</code> will be ignored.
      */
-    public PacketNoSpamChatMessage(ITextComponent message, int messageChannelId, boolean overlayMessage) {
+    public PacketNoSpamChatMessage(Component message, int messageChannelId, boolean overlayMessage) {
         this.message = message;
         this.messageChannelId = MESSAGE_ID + messageChannelId;
         this.overlayMessage = overlayMessage;
     }
 
     // Decoder
-    public PacketNoSpamChatMessage(PacketBuffer buf) {
+    public PacketNoSpamChatMessage(FriendlyByteBuf buf) {
         this.message = buf.readComponent();
         this.messageChannelId = buf.readInt();
         this.overlayMessage = buf.readBoolean();
     }
 
     // Encoder
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeComponent(message);
         buf.writeInt(messageChannelId);
         buf.writeBoolean(overlayMessage);
@@ -61,7 +61,7 @@ public class PacketNoSpamChatMessage {
                     Minecraft.getInstance().player.displayClientMessage(message, true);
                 }
             } else {
-                NewChatGui gui = Minecraft.getInstance().gui.getChat();
+                ChatComponent gui = Minecraft.getInstance().gui.getChat();
                 gui.addMessage(message, messageChannelId);
             }
         });

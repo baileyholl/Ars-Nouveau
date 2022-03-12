@@ -1,17 +1,19 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.item.IWandable;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
 import com.hollingsworth.arsnouveau.common.spell.effect.EffectRedstone;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodProjectile;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.controller.AnimationController;
@@ -20,23 +22,24 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 
 import java.util.List;
 
-public class TimerSpellTurretTile extends BasicSpellTurretTile implements ITickableTileEntity, IWandable {
+public class TimerSpellTurretTile extends BasicSpellTurretTile implements IWandable {
 
     private int ticksPerSignal = 20;
     public boolean isLocked;
     public boolean isOff;
-    public TimerSpellTurretTile(TileEntityType<?> p_i48289_1_) {
-        super(p_i48289_1_);
+
+    public TimerSpellTurretTile(BlockEntityType<?> p_i48289_1_, BlockPos pos, BlockState state) {
+        super(p_i48289_1_, pos, state);
     }
 
-    public TimerSpellTurretTile(){
-        super(BlockRegistry.TIMER_SPELL_TURRET_TILE);
+    public TimerSpellTurretTile(BlockPos pos, BlockState state){
+        super(BlockRegistry.TIMER_SPELL_TURRET_TILE, pos, state);
     }
 
     @Override
     public void tick() {
         if(!level.isClientSide && ticksPerSignal > 0 && !isOff & level.getGameTime() % ticksPerSignal == 0){
-            getBlockState().tick((ServerWorld) level, getBlockPos(), getLevel().random);
+            getBlockState().tick((ServerLevel) level, getBlockPos(), getLevel().random);
 
         }
     }
@@ -44,9 +47,10 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements ITicka
     @Override
     public int getManaCost() {
         int cost = super.getManaCost();
-        cost -= this.spell.getInstanceCount(MethodTouch.INSTANCE) * MethodTouch.INSTANCE.getConfigCost();
-        cost -= this.spell.getInstanceCount(EffectRedstone.INSTANCE) * EffectRedstone.INSTANCE.getConfigCost();
-        cost -= this.spell.getInstanceCount(MethodProjectile.INSTANCE) * MethodProjectile.INSTANCE.getConfigCost();
+        Spell spell = this.getSpellCaster().getSpell();
+        cost -= spell.getInstanceCount(MethodTouch.INSTANCE) * MethodTouch.INSTANCE.getConfigCost();
+        cost -= spell.getInstanceCount(EffectRedstone.INSTANCE) * EffectRedstone.INSTANCE.getConfigCost();
+        cost -= spell.getInstanceCount(MethodProjectile.INSTANCE) * MethodProjectile.INSTANCE.getConfigCost();
         return Math.max(0, cost);
     }
 
@@ -63,7 +67,7 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements ITicka
     }
 
     @Override
-    public void onWanded(PlayerEntity playerEntity) {
+    public void onWanded(Player playerEntity) {
         this.isLocked = !isLocked;
         update();
     }
@@ -75,33 +79,32 @@ public class TimerSpellTurretTile extends BasicSpellTurretTile implements ITicka
     }
 
     @Override
-    public List<String> getTooltip() {
-        List<String> tooltip = super.getTooltip();
+    public void getTooltip(List<Component> tooltip) {
+        super.getTooltip(tooltip);
         if(ticksPerSignal <= 0 && !isOff){
-            tooltip.add(new TranslationTextComponent("ars_nouveau.tooltip.turned_off").getString());
+            tooltip.add(new TranslatableComponent("ars_nouveau.tooltip.turned_off"));
         }else{
-            tooltip.add(new TranslationTextComponent("ars_nouveau.seconds", ticksPerSignal/20).getString());
+            tooltip.add(new TranslatableComponent("ars_nouveau.seconds", ticksPerSignal/20));
         }
         if(isOff)
-            tooltip.add(new TranslationTextComponent("ars_nouveau.tooltip.turned_off").getString());
+            tooltip.add(new TranslatableComponent("ars_nouveau.tooltip.turned_off"));
         if(isLocked)
-            tooltip.add(new TranslationTextComponent("ars_nouveau.locked").getString());
-        return tooltip;
+            tooltip.add(new TranslatableComponent("ars_nouveau.locked"));
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT tag) {
-        super.load(state, tag);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         this.isLocked = tag.getBoolean("locked");
         this.ticksPerSignal = tag.getInt("time");
         this.isOff = tag.getBoolean("off");
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putBoolean("locked", isLocked);
         tag.putInt("time", ticksPerSignal);
         tag.putBoolean("off", isOff);
-        return super.save(tag);
     }
 }

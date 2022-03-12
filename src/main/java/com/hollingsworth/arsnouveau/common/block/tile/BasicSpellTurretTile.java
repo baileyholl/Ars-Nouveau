@@ -1,20 +1,19 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
-import com.hollingsworth.arsnouveau.api.spell.IPickupResponder;
-import com.hollingsworth.arsnouveau.api.spell.IPlaceBlockResponder;
-import com.hollingsworth.arsnouveau.api.spell.Spell;
+import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
+import com.hollingsworth.arsnouveau.common.block.ITickable;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.IItemHandler;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -25,23 +24,23 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 
-public class BasicSpellTurretTile extends TileEntity implements IPickupResponder, IPlaceBlockResponder, ITooltipProvider, IAnimatable, IAnimationListener {
-    public @Nonnull Spell spell = Spell.EMPTY;
+public class BasicSpellTurretTile extends ModdedTile implements IPickupResponder, IPlaceBlockResponder, ITooltipProvider, IAnimatable, IAnimationListener, ITickable, ISpellCasterProvider {
+
     boolean playRecoil;
-    public BasicSpellTurretTile(TileEntityType<?> p_i48289_1_) {
-        super(p_i48289_1_);
+    public TurretSpellCaster spellCaster = new TurretSpellCaster(new CompoundTag());
+
+    public BasicSpellTurretTile(BlockEntityType<?> p_i48289_1_, BlockPos pos, BlockState state) {
+        super(p_i48289_1_, pos, state);
     }
 
-    public BasicSpellTurretTile(){
-        super(BlockRegistry.BASIC_SPELL_TURRET_TILE);
+    public BasicSpellTurretTile(BlockPos pos, BlockState state){
+        super(BlockRegistry.BASIC_SPELL_TURRET_TILE, pos, state);
     }
 
     public int getManaCost(){
-        return this.spell.getCastingCost();
+        return this.spellCaster.getSpell().getCastingCost();
     }
 
     @Override
@@ -60,39 +59,20 @@ public class BasicSpellTurretTile extends TileEntity implements IPickupResponder
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
-        tag.putString("spell", spell.serialize());
-        return super.save(tag);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        spellCaster.serializeOnTag(tag);
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT tag) {
-        this.spell = Spell.deserialize(tag.getString("spell"));
-        super.load(state, tag);
+    public void load(CompoundTag tag) {
+        this.spellCaster = new TurretSpellCaster(tag);
+        super.load(tag);
     }
 
     @Override
-    public List<String> getTooltip() {
-        List<String> list = new ArrayList<>();
-        list.add(new TranslationTextComponent("ars_nouveau.spell_turret.casting").getString() + spell.getDisplayString());
-        return list;
-    }
-
-    @Override
-    public CompoundNBT getUpdateTag() {
-        return this.save(new CompoundNBT());
-    }
-
-    @Override
-    @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.worldPosition, 3, this.getUpdateTag());
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        super.onDataPacket(net, pkt);
-        handleUpdateTag(level.getBlockState(worldPosition), pkt.getTag());
+    public void getTooltip(List<Component> tooltip) {
+        tooltip.add(new TextComponent(new TranslatableComponent("ars_nouveau.spell_turret.casting").getString() + spellCaster.getSpell().getDisplayString()));
     }
 
     public PlayState walkPredicate(AnimationEvent event) {
@@ -104,10 +84,11 @@ public class BasicSpellTurretTile extends TileEntity implements IPickupResponder
         return PlayState.CONTINUE;
     }
 
+    AnimationController castController;
     @Override
     public void registerControllers(AnimationData data) {
-        AnimationController controller = new AnimationController<>(this, "castController", 0, this::walkPredicate);
-        data.addAnimationController(controller);
+        castController = new AnimationController<>(this, "castController", 0, this::walkPredicate);
+        data.addAnimationController(castController);
     }
 
     AnimationFactory factory = new AnimationFactory(this);
@@ -120,13 +101,6 @@ public class BasicSpellTurretTile extends TileEntity implements IPickupResponder
     @Override
     public void startAnimation(int arg) {
         this.playRecoil = true;
-//        try {
-//            AnimationController controller = this.factory.getOrCreateAnimationData(this.hashCode()).getAnimationControllers().get("castController");
-//            controller.markNeedsReload();
-//            controller.setAnimation(new AnimationBuilder().addAnimation("recoil", false));
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
     }
 
     public boolean update(){
@@ -137,4 +111,13 @@ public class BasicSpellTurretTile extends TileEntity implements IPickupResponder
         return false;
     }
 
+    @Override
+    public ISpellCaster getSpellCaster() {
+        return spellCaster;
+    }
+
+    @Override
+    public ISpellCaster getSpellCaster(CompoundTag tag) {
+        return spellCaster;
+    }
 }

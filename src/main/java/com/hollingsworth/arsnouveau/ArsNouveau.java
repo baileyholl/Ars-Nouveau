@@ -1,17 +1,20 @@
 package com.hollingsworth.arsnouveau;
 
-import com.hollingsworth.arsnouveau.api.familiar.FamiliarCap;
-import com.hollingsworth.arsnouveau.api.util.MappingUtil;
 import com.hollingsworth.arsnouveau.client.ClientHandler;
-import com.hollingsworth.arsnouveau.common.capability.ManaCapability;
+import com.hollingsworth.arsnouveau.client.TextureEvent;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.FMLEventHandler;
+import com.hollingsworth.arsnouveau.common.entity.pathfinding.Pathfinding;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.world.WorldEvent;
 import com.hollingsworth.arsnouveau.setup.*;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.BiomeManager;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.server.ServerStoppingEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -31,19 +34,21 @@ public class ArsNouveau {
     public static IProxy proxy = DistExecutor.runForDist(()-> () -> new ClientProxy(), () -> ()-> new ServerProxy());
     public static boolean caelusLoaded = false;
 
-    public static ItemGroup itemGroup = new ItemGroup(MODID) {
-
+    public static CreativeModeTab itemGroup = new CreativeModeTab(CreativeModeTab.getGroupCountSafe(), MODID) {
         @Override
         public ItemStack makeIcon() {
-            return ItemsRegistry.archmageSpellBook.getDefaultInstance();
+            return ItemsRegistry.CREATIVE_SPELLBOOK.getDefaultInstance();
         }
     };
 
     public ArsNouveau(){
         caelusLoaded = ModList.get().isLoaded("caelus");
-        APIRegistry.registerSpells();
-        MappingUtil.setup();
+        APIRegistry.setup();
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SERVER_CONFIG);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
+        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(ClientEventHandler.class));
+        Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(FMLEventHandler.class);
+
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::sendImc);
@@ -53,22 +58,27 @@ public class ArsNouveau {
     }
 
     public void setup (final FMLCommonSetupEvent event){
-        ManaCapability.register();
-        FamiliarCap.register();
-        APIRegistry.registerApparatusRecipes();
         event.enqueueWork(WorldEvent::registerFeatures);
         Networking.registerMessages();
         event.enqueueWork(ModPotions::addRecipes);
-        if(Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
-            BiomeManager.addBiome(BiomeManager.BiomeType.COOL, new BiomeManager.BiomeEntry(WorldEvent.archwoodKey, Config.ARCHWOOD_FOREST_WEIGHT.get()));
+        //TODO: Restore archwood forest
+        if(false && Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
+           // BiomeManager.addBiome(BiomeManager.BiomeType.COOL, new BiomeManager.BiomeEntry(WorldEvent.archwoodKey, Config.ARCHWOOD_FOREST_WEIGHT.get()));
         }
     }
 
     public void clientSetup(final FMLClientSetupEvent event){
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientHandler::init);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(TextureEvent::textEvent);
     }
 
     public void sendImc(InterModEnqueueEvent evt) {
         ModSetup.sendIntercoms();
+    }
+
+    @SubscribeEvent
+    public static void onServerStopped(final ServerStoppingEvent event)
+    {
+        Pathfinding.shutdown();
     }
 }

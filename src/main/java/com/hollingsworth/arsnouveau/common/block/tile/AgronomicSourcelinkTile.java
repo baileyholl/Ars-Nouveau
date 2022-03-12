@@ -1,10 +1,12 @@
 package com.hollingsworth.arsnouveau.common.block.tile;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.mana.SourcelinkEventQueue;
+import com.hollingsworth.arsnouveau.api.source.SourcelinkEventQueue;
 import com.hollingsworth.arsnouveau.common.datagen.Recipes;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.SaplingGrowTreeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -13,12 +15,12 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class AgronomicSourcelinkTile extends SourcelinkTile {
 
-    public AgronomicSourcelinkTile() {
-        super(BlockRegistry.AGRONOMIC_SOURCELINK_TILE);
+    public AgronomicSourcelinkTile(BlockPos pos, BlockState state) {
+        super(BlockRegistry.AGRONOMIC_SOURCELINK_TILE, pos, state);
     }
 
     @Override
-    public int getMaxMana() {
+    public int getMaxSource() {
         return 1000;
     }
 
@@ -28,28 +30,29 @@ public class AgronomicSourcelinkTile extends SourcelinkTile {
     }
 
     @Override
-    public int getCurrentMana() {
-        return super.getCurrentMana();
+    public int getSource() {
+        return super.getSource();
     }
 
     @SubscribeEvent
     public static void cropGrow(BlockEvent.CropGrowEvent.Post event) {
         int mana = 20;
-        if(event.getWorld().getBlockState(event.getPos()).getBlock().is(Recipes.MAGIC_PLANTS)) {
+
+        if(event.getWorld().getBlockState(event.getPos()).is(Recipes.MAGIC_PLANTS)) {
             mana += 25;
         }
-        if(event.getWorld() instanceof World)
-            SourcelinkEventQueue.addManaEvent((World) event.getWorld(), AgronomicSourcelinkTile.class, mana, event, event.getPos());
+        if(event.getWorld() instanceof Level)
+            SourcelinkEventQueue.addManaEvent((Level) event.getWorld(), AgronomicSourcelinkTile.class, mana, event, event.getPos());
     }
 
     @SubscribeEvent
     public static void treeGrow(SaplingGrowTreeEvent event) {
         int mana = 50;
-        if(event.getWorld().getBlockState(event.getPos()).getBlock().is(Recipes.MAGIC_SAPLINGS)) {
+        if(event.getWorld().getBlockState(event.getPos()).is(Recipes.MAGIC_SAPLINGS)) {
             mana += 50;
         }
-        if(event.getWorld() instanceof World)
-            SourcelinkEventQueue.addManaEvent((World) event.getWorld(), AgronomicSourcelinkTile.class, mana, event, event.getPos());
+        if(event.getWorld() instanceof Level)
+            SourcelinkEventQueue.addManaEvent((Level) event.getWorld(), AgronomicSourcelinkTile.class, mana, event, event.getPos());
     }
 
     @Override

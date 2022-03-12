@@ -2,45 +2,47 @@
   "type": "ars_nouveau:enchantment",
   "enchantment": "ars_nouveau:mana_regen",
   "level": 2,
-  "mana": 3500,
-  "item_1": [
+  "sourceCost": 3500,
+  "pedestalItems": [
     {
-      "item": "ars_nouveau:mana_berry"
-    }
-  ],
-  "item_2": [
+      "item": {
+        "item": "ars_nouveau:source_berry"
+      }
+    },
     {
-      "item": "ars_nouveau:mana_berry"
-    }
-  ],
-  "item_3": [
+      "item": {
+        "item": "ars_nouveau:source_berry"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_extend_time"
-    }
-  ],
-  "item_4": [
+      "item": {
+        "item": "ars_nouveau:abjuration_essence"
+      }
+    },
     {
-      "item": "ars_nouveau:glyph_extend_time"
-    }
-  ],
-  "item_5": [
+      "item": {
+        "item": "ars_nouveau:abjuration_essence"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/mana"
-    }
-  ],
-  "item_6": [
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/mana"
-    }
-  ],
-  "item_7": [
+      "item": {
+        "tag": "forge:storage_blocks/source"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/lapis"
-    }
-  ],
-  "item_8": [
+      "item": {
+        "tag": "forge:storage_blocks/lapis"
+      }
+    },
     {
-      "tag": "forge:storage_blocks/lapis"
+      "item": {
+        "tag": "forge:storage_blocks/lapis"
+      }
     }
   ]
 }

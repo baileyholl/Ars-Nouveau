@@ -1,0 +1,13 @@
+{
+  "type": "ars_nouveau:crush",
+  "input": {
+    "tag": "forge:cobblestone"
+  },
+  "output": [
+    {
+      "item": "minecraft:gravel",
+      "chance": 1.0,
+      "count": 1
+    }
+  ]
+}

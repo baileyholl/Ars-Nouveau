@@ -1,8 +1,8 @@
 package com.hollingsworth.arsnouveau.common.items.itemscrolls;
 
 import com.hollingsworth.arsnouveau.common.items.ItemScroll;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
 public class MimicItemScroll extends ItemScroll {
@@ -16,7 +16,7 @@ public class MimicItemScroll extends ItemScroll {
     }
 
     @Override
-    public SortPref getSortPref(ItemStack stackToStore, CompoundNBT scrollTag, IItemHandler inventory) {
+    public SortPref getSortPref(ItemStack stackToStore, CompoundTag scrollTag, IItemHandler inventory) {
         for(int i = 0; i < inventory.getSlots(); i++){
             if(inventory.getStackInSlot(i).sameItemStackIgnoreDurability(stackToStore))
                 return SortPref.HIGHEST;

@@ -1,10 +1,11 @@
 package com.hollingsworth.arsnouveau.common.ritual;
 
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
+import com.hollingsworth.arsnouveau.api.util.MathUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 
 public class RitualMoonfall extends AbstractRitual {
     @Override
@@ -13,8 +14,8 @@ public class RitualMoonfall extends AbstractRitual {
         if(getWorld().getGameTime() % 20 == 0 && !getWorld().isClientSide) {
             incrementProgress();
             if(getProgress() >= 18){
-                ServerWorld world = (ServerWorld) getWorld();
-                world.setDayTime(13000);
+                ServerLevel world = (ServerLevel) getWorld();
+                world.setDayTime(MathUtil.getNextDaysTime(world, MathUtil.NIGHT_TIME));
                 setFinished();
             }
         }

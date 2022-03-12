@@ -6,7 +6,7 @@ import com.hollingsworth.arsnouveau.common.entity.EntityWixie;
 import com.hollingsworth.arsnouveau.common.entity.goal.ExtendedRangeGoal;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class CompleteCraftingGoal extends ExtendedRangeGoal {
     EntityWixie wixie;
@@ -31,7 +31,7 @@ public class CompleteCraftingGoal extends ExtendedRangeGoal {
         if(wixie.cauldronPos == null)
             return false;
 
-        TileEntity tileEntity = wixie.level.getBlockEntity(wixie.cauldronPos);
+        BlockEntity tileEntity = wixie.level.getBlockEntity(wixie.cauldronPos);
         return tileEntity instanceof WixieCauldronTile && ((WixieCauldronTile) tileEntity).isCraftingDone();
     }
 
@@ -45,7 +45,7 @@ public class CompleteCraftingGoal extends ExtendedRangeGoal {
                 wixie.inventoryBackoff = 40;
             }
             if(ticksNearby >= 40){
-                TileEntity tileEntity = wixie.level.getBlockEntity(wixie.cauldronPos);
+                BlockEntity tileEntity = wixie.level.getBlockEntity(wixie.cauldronPos);
                 if(tileEntity instanceof WixieCauldronTile && ((WixieCauldronTile) tileEntity).isCraftingDone()){
                     ((WixieCauldronTile) tileEntity).attemptFinish();
                 }

@@ -1,0 +1,15 @@
+{
+  "name": "item.ars_nouveau.dowsing_rod",
+  "category": "ars_nouveau:equipment",
+  "icon": "ars_nouveau:dowsing_rod",
+  "pages": [
+    {
+      "text": "ars_nouveau.page.dowsing_rod",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:dowsing_rod",
+      "type": "patchouli:crafting"
+    }
+  ]
+}

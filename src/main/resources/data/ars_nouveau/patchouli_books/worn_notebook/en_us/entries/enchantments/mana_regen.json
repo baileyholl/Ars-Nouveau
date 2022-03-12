@@ -1,19 +1,19 @@
 {
   "name": "enchantment.ars_nouveau.mana_regen",
+  "category": "ars_nouveau:enchantments",
   "icon": "minecraft:enchanted_book",
-  "category": "enchantments",
   "pages": [
     {
-      "type": "enchanting_recipe",
-      "recipe": "ars_nouveau:mana_regen_1"
+      "recipe": "ars_nouveau:mana_regen_1",
+      "type": "ars_nouveau:enchanting_recipe"
     },
     {
-      "type": "enchanting_recipe",
-      "recipe": "ars_nouveau:mana_regen_2"
+      "recipe": "ars_nouveau:mana_regen_2",
+      "type": "ars_nouveau:enchanting_recipe"
     },
     {
-      "type": "enchanting_recipe",
-      "recipe": "ars_nouveau:mana_regen_3"
+      "recipe": "ars_nouveau:mana_regen_3",
+      "type": "ars_nouveau:enchanting_recipe"
     }
   ]
 }

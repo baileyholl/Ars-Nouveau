@@ -1,0 +1,16 @@
+{
+  "name": "ars_nouveau.glyph_name.phantom_block",
+  "category": "ars_nouveau:glyphs_1",
+  "icon": "ars_nouveau:glyph_phantom_block",
+  "sortnum": 2,
+  "pages": [
+    {
+      "text": "ars_nouveau.glyph_desc.phantom_block",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:glyph_phantom_block",
+      "type": "ars_nouveau:glyph_recipe"
+    }
+  ]
+}

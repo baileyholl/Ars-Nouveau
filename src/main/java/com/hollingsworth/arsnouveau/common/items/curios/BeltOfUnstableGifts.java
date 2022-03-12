@@ -2,11 +2,11 @@ package com.hollingsworth.arsnouveau.common.items.curios;
 
 import com.hollingsworth.arsnouveau.api.item.ArsNouveauCurio;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.potion.Effect;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.world.World;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,19 +16,19 @@ public class BeltOfUnstableGifts extends ArsNouveauCurio {
     public BeltOfUnstableGifts(String registry){
         super(registry);
     }
-    public static ArrayList<Effect> effectTable = new ArrayList<>(Arrays.asList(
-            Effects.SLOW_FALLING, Effects.NIGHT_VISION, Effects.CONDUIT_POWER, Effects.ABSORPTION, Effects.DAMAGE_BOOST,
-            Effects.FIRE_RESISTANCE, Effects.DIG_SPEED, Effects.MOVEMENT_SPEED, Effects.REGENERATION, Effects.DAMAGE_RESISTANCE,
+    public static ArrayList<MobEffect> effectTable = new ArrayList<>(Arrays.asList(
+            MobEffects.SLOW_FALLING, MobEffects.NIGHT_VISION, MobEffects.CONDUIT_POWER, MobEffects.ABSORPTION, MobEffects.DAMAGE_BOOST,
+            MobEffects.FIRE_RESISTANCE, MobEffects.DIG_SPEED, MobEffects.MOVEMENT_SPEED, MobEffects.REGENERATION, MobEffects.DAMAGE_RESISTANCE,
             ModPotions.SHIELD_POTION
             ));
 
     @Override
     public void wearableTick(LivingEntity wearer) {
-        World world = wearer.getCommandSenderWorld();
+        Level world = wearer.getCommandSenderWorld();
         if(world.isClientSide())
             return;
         if(world.getGameTime() % (20 * 6)  == 0){
-            wearer.addEffect(new EffectInstance(effectTable.get(new Random().nextInt(effectTable.size())), 6 * 20, new Random().nextInt(3)));
+            wearer.addEffect(new MobEffectInstance(effectTable.get(new Random().nextInt(effectTable.size())), 6 * 20, new Random().nextInt(3)));
         }
     }
 }

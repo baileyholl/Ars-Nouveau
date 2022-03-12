@@ -3,10 +3,10 @@ package com.hollingsworth.arsnouveau.common.network;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -53,7 +53,7 @@ public class PacketANEffect {
         this(type, pos.getX(), pos.getY(), pos.getZ(),wrapper, args);
     }
 
-    public static PacketANEffect decode(PacketBuffer buf) {
+    public static PacketANEffect decode(FriendlyByteBuf buf) {
         EffectType type = EffectType.values()[buf.readByte()];
         double x = buf.readDouble();
         double y = buf.readDouble();
@@ -69,7 +69,7 @@ public class PacketANEffect {
         return new PacketANEffect(type, x, y, z,new ParticleColor.IntWrapper(red,green,blue), args);
     }
 
-    public static void encode(PacketANEffect msg, PacketBuffer buf) {
+    public static void encode(PacketANEffect msg, FriendlyByteBuf buf) {
         buf.writeByte(msg.type.ordinal());
         buf.writeDouble(msg.x);
         buf.writeDouble(msg.y);
@@ -93,7 +93,7 @@ public class PacketANEffect {
                 @Override
                 public void run() {
                     Minecraft mc = Minecraft.getInstance();
-                    ClientWorld world = mc.level;
+                    ClientLevel world = mc.level;
                     switch (message.type){
 
                         case BURST:{
@@ -101,13 +101,16 @@ public class PacketANEffect {
                                 double d0 = message.x +0.5; //+ world.rand.nextFloat();
                                 double d1 = message.y +1.2;//+ world.rand.nextFloat() ;
                                 double d2 = message.z +.5 ; //+ world.rand.nextFloat();
-                                world.addParticle(GlowParticleData.createData(new ParticleColor(message.red, message.green, message.blue)),d0, d1, d2, (world.random.nextFloat() * 1 - 0.5)/3, (world.random.nextFloat() * 1 - 0.5)/3, (world.random.nextFloat() * 1 - 0.5)/3);
+                                world.addParticle(GlowParticleData.createData(new ParticleColor(message.red, message.green, message.blue)),d0, d1, d2,
+                                        (world.random.nextFloat() - 0.5)/3.0,
+                                        (world.random.nextFloat() - 0.5)/3.0,
+                                        (world.random.nextFloat() - 0.5)/3.0);
                             }
                             break;
                         }
                     }
 
-                };
+                }
             });
             ctx.get().setPacketHandled(true);
 

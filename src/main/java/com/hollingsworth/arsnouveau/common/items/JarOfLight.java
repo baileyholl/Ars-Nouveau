@@ -1,22 +1,22 @@
 package com.hollingsworth.arsnouveau.common.items;
 
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.setup.BlockRegistry;
 import com.hollingsworth.arsnouveau.common.block.LightBlock;
 import com.hollingsworth.arsnouveau.common.lib.LibItemNames;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 
 public class JarOfLight extends ModItem {
 
@@ -27,14 +27,14 @@ public class JarOfLight extends ModItem {
 
 
     @Override
-    public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+    public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
         super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
 
         if(worldIn.isClientSide)
             return;
-        CompoundNBT tag = stack.getTag();
+        CompoundTag tag = stack.getTag();
         if(tag == null)
-            stack.setTag(new CompoundNBT());
+            stack.setTag(new CompoundTag());
         tag = stack.getTag();
         if(lightExists(tag)){
 
@@ -65,26 +65,26 @@ public class JarOfLight extends ModItem {
     }
 
     @Override
-    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
         ItemStack itemstack = playerIn.getItemInHand(handIn);
         if(worldIn.isClientSide)
-            return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
+            return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
 
-        CompoundNBT tag = playerIn.getItemInHand(handIn).getTag();
+        CompoundTag tag = playerIn.getItemInHand(handIn).getTag();
 
         if(tag == null)
-            return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
+            return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
         //Remove light
         if(lightExists(tag)){
             removeLight(worldIn, tag);
-            return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
+            return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
         }
         // No light exists. Place a new one.
         placeLight(worldIn, playerIn.blockPosition(), tag);
-        return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
+        return new InteractionResultHolder<>(InteractionResult.SUCCESS, itemstack);
     }
 
-    public boolean placeLight(World world, BlockPos pos, CompoundNBT tag){
+    public boolean placeLight(Level world, BlockPos pos, CompoundTag tag){
         if(world.getBlockState(pos).getMaterial() == Material.AIR){
             world.setBlockAndUpdate(pos, BlockRegistry.LIGHT_BLOCK.defaultBlockState());
             setLightExists(tag, true);
@@ -94,7 +94,7 @@ public class JarOfLight extends ModItem {
         return false;
     }
 
-    public void removeLight(World world, CompoundNBT tag){
+    public void removeLight(Level world, CompoundTag tag){
         if(getLightLocation(tag) == null)
             return;
 
@@ -105,21 +105,21 @@ public class JarOfLight extends ModItem {
     }
 
 
-    public boolean lightExists(CompoundNBT tag){
+    public boolean lightExists(CompoundTag tag){
         return tag.contains("light_exists") && tag.getBoolean("light_exists");
     }
 
-    public void setLightExists(CompoundNBT tag, boolean lightExists){
+    public void setLightExists(CompoundTag tag, boolean lightExists){
         tag.putBoolean("light_exists", lightExists);
     }
 
-    public BlockPos getLightLocation(CompoundNBT tag){
+    public BlockPos getLightLocation(CompoundTag tag){
         if(!tag.contains("x") || !tag.contains("y") || !tag.contains("z"))
             return null;
         return new BlockPos(tag.getInt("x"), tag.getInt("y"), tag.getInt("z"));
     }
 
-    public void setLightLocation(CompoundNBT tag, BlockPos pos){
+    public void setLightLocation(CompoundTag tag, BlockPos pos){
         if(pos == null){
             tag.remove("x");
             tag.remove("y");

@@ -1,19 +1,17 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.entity.EntityAllyVex;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
@@ -28,11 +26,11 @@ public class EffectSummonVex extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         if(!canSummon(shooter))
             return;
 
-        Vector3d vector3d = safelyGetHitPos(rayTraceResult);
+        Vec3 vector3d = safelyGetHitPos(rayTraceResult);
         int ticks = (int) (20 * (GENERIC_INT.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier()));
         BlockPos pos = new BlockPos(vector3d);
 
@@ -40,13 +38,13 @@ public class EffectSummonVex extends AbstractEffect {
             BlockPos blockpos = pos.offset(-2 + shooter.getRandom().nextInt(5), 2, -2 + shooter.getRandom().nextInt(5));
             EntityAllyVex vexentity = new EntityAllyVex(world, shooter);
             vexentity.moveTo(blockpos, 0.0F, 0.0F);
-            vexentity.finalizeSpawn((IServerWorld) world, world.getCurrentDifficultyAt(blockpos), SpawnReason.MOB_SUMMONED, null, null);
+            vexentity.finalizeSpawn((ServerLevelAccessor) world, world.getCurrentDifficultyAt(blockpos), MobSpawnType.MOB_SUMMONED, null, null);
             vexentity.setOwner(shooter);
             vexentity.setBoundOrigin(blockpos);
             vexentity.setLimitedLife(ticks);
-            world.addFreshEntity(vexentity);
+            summonLivingEntity(rayTraceResult, world, shooter, spellStats, spellContext, vexentity);
         }
-        shooter.addEffect(new EffectInstance(ModPotions.SUMMONING_SICKNESS, ticks));
+        shooter.addEffect(new MobEffectInstance(ModPotions.SUMMONING_SICKNESS, ticks));
     }
 
 
@@ -58,25 +56,19 @@ public class EffectSummonVex extends AbstractEffect {
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 150;
     }
 
-    @Nullable
     @Override
-    public Item getCraftingReagent() {
-        return Items.TOTEM_OF_UNDYING;
-    }
-
-    @Override
-    public Tier getTier() {
-        return Tier.THREE;
+    public SpellTier getTier() {
+        return SpellTier.THREE;
     }
 
     @Nonnull
     @Override
     public Set<AbstractAugment> getCompatibleAugments() {
-        return SUMMON_AUGMENTS;
+        return getSummonAugments();
     }
 
     @Override

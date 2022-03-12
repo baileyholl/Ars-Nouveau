@@ -5,7 +5,7 @@
 		"0": "ars_nouveau:blocks/active_inner",
 		"1": "ars_nouveau:blocks/active_middle",
 		"2": "ars_nouveau:blocks/active_outer",
-		"particle": "ars_nouveau:blocks/active_inner"
+		"particle": "ars_nouveau:blocks/rune"
 	},
 	"elements": [
 		{

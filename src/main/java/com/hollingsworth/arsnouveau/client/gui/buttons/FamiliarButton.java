@@ -4,12 +4,12 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.familiar.AbstractFamiliarHolder;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiFamiliarScreen;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +23,7 @@ public class FamiliarButton extends Button {
     GuiFamiliarScreen parent;
     public AbstractFamiliarHolder familiarHolder;
     public FamiliarButton(GuiFamiliarScreen parent, int x, int y, boolean isCraftingSlot, AbstractFamiliarHolder familiar) {
-        super(x, y,  16, 16, ITextComponent.nullToEmpty(""), parent::onGlyphClick);
+        super(x, y,  16, 16, Component.nullToEmpty(""), parent::onGlyphClick);
         this.parent = parent;
         this.x = x;
         this.y = y;
@@ -34,14 +34,8 @@ public class FamiliarButton extends Button {
         this.familiarHolder = familiar;
     }
 
-
     @Override
-    public boolean isHovered() {
-        return super.isHovered();
-    }
-
-    @Override
-    public void render(MatrixStack ms, int mouseX, int mouseY, float partialTicks) {
+    public void render(PoseStack ms, int mouseX, int mouseY, float partialTicks) {
         if (visible)
         {
             if(this.resourceIcon != null && !this.resourceIcon.equals("")) {
@@ -50,12 +44,12 @@ public class FamiliarButton extends Button {
 
             if(parent.isMouseInRelativeRange(mouseX, mouseY, x, y, width, height)){
 
-                List<ITextComponent> tip = new ArrayList<>();
+                List<Component> tip = new ArrayList<>();
                 if(Screen.hasShiftDown()){
                     tip.add(familiarHolder.getLangDescription());
                 }else{
                     tip.add(familiarHolder.getLangName());
-                    tip.add(new TranslationTextComponent("tooltip.ars_nouveau.hold_shift"));
+                    tip.add(new TranslatableComponent("tooltip.ars_nouveau.hold_shift"));
                 }
 
                 parent.tooltip = tip;

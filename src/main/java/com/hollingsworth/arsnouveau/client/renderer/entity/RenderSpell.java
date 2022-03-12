@@ -4,17 +4,17 @@ package com.hollingsworth.arsnouveau.client.renderer.entity;
 import com.hollingsworth.arsnouveau.client.particle.GlowParticleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityProjectileSpell;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
 
 public class RenderSpell extends EntityRenderer<EntityProjectileSpell> {
     private final ResourceLocation entityTexture; // new ResourceLocation(ExampleMod.MODID, "textures/entity/spell_proj.png");
 
 
-    public RenderSpell(EntityRendererManager renderManagerIn, ResourceLocation entityTexture)
+    public RenderSpell(EntityRendererProvider.Context renderManagerIn, ResourceLocation entityTexture)
     {
         super(renderManagerIn);
         this.entityTexture = entityTexture;
@@ -22,9 +22,9 @@ public class RenderSpell extends EntityRenderer<EntityProjectileSpell> {
     }
 
     @Override
-    public void render(EntityProjectileSpell proj, float entityYaw, float partialTicks, MatrixStack p_225623_4_, IRenderTypeBuffer p_225623_5_, int p_225623_6_) {
+    public void render(EntityProjectileSpell proj, float entityYaw, float partialTicks, PoseStack p_225623_4_, MultiBufferSource p_225623_5_, int p_225623_6_) {
 //        super.render(p_225623_1_, p_225623_2_, p_225623_3_, p_225623_4_, p_225623_5_, p_225623_6_);
-        if(proj.age < 1 || true)
+        if(true)
             return;
 
         double deltaX = proj.getX() - proj.xOld;

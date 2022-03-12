@@ -5,10 +5,10 @@ import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketAnimEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.Explosion;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;
 
@@ -81,7 +81,7 @@ public class ChimeraDiveGoal extends Goal {
             }
             if(divePos != null) {
                 boss.flyingNavigator.moveTo(divePos.getX() + 0.5, divePos.getY(), divePos.getZ(), 4f);
-                boss.orbitOffset = new Vector3d(divePos.getX() + 0.5, divePos.getY(), divePos.getZ() + 0.5);
+                boss.orbitOffset = new Vec3(divePos.getX() + 0.5, divePos.getY(), divePos.getZ() + 0.5);
             }
         }
         if((isDiving && (boss.isOnGround() || BlockUtil.distanceFrom(boss.position, divePos) <= 1.0d) ||  (boss.orbitOffset != null && BlockUtil.distanceFrom(boss.position, boss.orbitOffset) <= 1.7d))) {
@@ -114,7 +114,8 @@ public class ChimeraDiveGoal extends Goal {
     }
 
     public void makeExplosion(){
-        boss.level.explode(boss, boss.getX() + 0.5, boss.getY(), boss.getZ() + 0.5, 4.5f, Explosion.Mode.BREAK);
+        Explosion.BlockInteraction mode = net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(this.boss.level, this.boss) ? Explosion.BlockInteraction.BREAK : Explosion.BlockInteraction.NONE;
+        boss.level.explode(boss, boss.getX() + 0.5, boss.getY(), boss.getZ() + 0.5, 4.5f, mode);
         Networking.sendToNearby(boss.level, boss, new PacketAnimEntity(boss.getId(), EntityChimera.Animations.HOWL.ordinal()));
     }
 

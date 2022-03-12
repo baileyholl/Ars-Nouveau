@@ -1,23 +1,21 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import com.hollingsworth.arsnouveau.common.spell.augment.*;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.EntityDamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.util.FakePlayerFactory;
 
@@ -34,12 +32,11 @@ public class EffectColdSnap extends AbstractEffect {
     }
 
     @Override
-    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         Entity entity = rayTraceResult.getEntity();
-        if(!(entity instanceof LivingEntity))
+        if(!(entity instanceof LivingEntity livingEntity))
             return;
-        LivingEntity livingEntity = (LivingEntity) entity;
-        Vector3d vec = safelyGetHitPos(rayTraceResult);
+        Vec3 vec = safelyGetHitPos(rayTraceResult);
         float damage = (float) (DAMAGE.get() + AMP_VALUE.get() * spellStats.getAmpMultiplier());
         int range = 3 + spellStats.getBuffCount(AugmentAOE.INSTANCE);
         int snareSec = (int) (POTION_TIME.get() + EXTEND_TIME.get() * spellStats.getDurationMultiplier());
@@ -49,30 +46,29 @@ public class EffectColdSnap extends AbstractEffect {
 
         damage(vec, world, shooter, spellStats, damage, snareSec, livingEntity);
 
-        for(Entity e : world.getEntitiesOfClass(LivingEntity.class, new AxisAlignedBB(livingEntity.blockPosition().north(range).east(range).above(range),  livingEntity.blockPosition().south(range).west(range).below(range)))){
+        for(Entity e : world.getEntitiesOfClass(LivingEntity.class, new AABB(livingEntity.blockPosition().north(range).east(range).above(range),  livingEntity.blockPosition().south(range).west(range).below(range)))){
             if(e.equals(livingEntity) || !(e instanceof LivingEntity) || e.equals(shooter))
                 continue;
             if(canDamage((LivingEntity) e)){
                 vec = e.position();
                 damage(vec, world, shooter, spellStats, damage, snareSec, (LivingEntity) e);
-
             }else{
-                ((LivingEntity) e).addEffect(new EffectInstance(Effects.MOVEMENT_SLOWDOWN, 20 * snareSec, (int) spellStats.getAmpMultiplier()));
+                ((LivingEntity) e).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * snareSec, (int) spellStats.getAmpMultiplier()));
             }
         }
     }
 
     public boolean canDamage(LivingEntity livingEntity){
-        return livingEntity.isInWaterOrRain() || livingEntity.getEffect(Effects.MOVEMENT_SLOWDOWN) != null;
+        return livingEntity.isInWaterOrRain() || livingEntity.getEffect(MobEffects.MOVEMENT_SLOWDOWN) != null;
     }
 
-    public void damage(Vector3d vec, World world, @Nullable LivingEntity shooter, SpellStats stats, float damage, int snareTime, LivingEntity livingEntity){
-        EntityDamageSource damageSource = new EntityDamageSource("cold", shooter == null ? FakePlayerFactory.getMinecraft((ServerWorld) world) : shooter);
+    public void damage(Vec3 vec, Level world, @Nullable LivingEntity shooter, SpellStats stats, float damage, int snareTime, LivingEntity livingEntity){
+        EntityDamageSource damageSource = new EntityDamageSource("cold", shooter == null ? FakePlayerFactory.getMinecraft((ServerLevel) world) : shooter);
         damageSource.setMagic();
         dealDamage(world, shooter, damage, stats, livingEntity, damageSource);
-        ((ServerWorld)world).sendParticles(ParticleTypes.SPIT, vec.x, vec.y +0.5, vec.z,50,
+        ((ServerLevel)world).sendParticles(ParticleTypes.SPIT, vec.x, vec.y +0.5, vec.z,50,
                 ParticleUtil.inRange(-0.1, 0.1), ParticleUtil.inRange(-0.1, 0.1),ParticleUtil.inRange(-0.1, 0.1), 0.3);
-        livingEntity.addEffect(new EffectInstance(ModPotions.SNARE_EFFECT, 20 * snareTime));
+        livingEntity.addEffect(new MobEffectInstance(ModPotions.SNARE_EFFECT, 20 * snareTime));
     }
 
     @Override
@@ -86,7 +82,7 @@ public class EffectColdSnap extends AbstractEffect {
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 30;
     }
 
@@ -107,13 +103,8 @@ public class EffectColdSnap extends AbstractEffect {
     }
 
     @Override
-    public Item getCraftingReagent() {
-        return ArsNouveauAPI.getInstance().getGlyphItem(EffectFreeze.INSTANCE);
-    }
-
-    @Override
-    public Tier getTier() {
-        return Tier.TWO;
+    public SpellTier getTier() {
+        return SpellTier.TWO;
     }
 
     @Nonnull

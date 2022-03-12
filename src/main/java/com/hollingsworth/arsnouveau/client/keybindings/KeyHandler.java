@@ -2,16 +2,19 @@ package com.hollingsworth.arsnouveau.client.keybindings;
 
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.item.ISpellHotkeyListener;
+import com.hollingsworth.arsnouveau.api.spell.ISpellCaster;
+import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.api.util.StackUtil;
-import com.hollingsworth.arsnouveau.client.gui.GuiRadialMenu;
+import com.hollingsworth.arsnouveau.client.gui.RadialMenu.GuiRadialMenu;
 import com.hollingsworth.arsnouveau.client.gui.book.GuiSpellBook;
-import com.hollingsworth.arsnouveau.common.items.SpellBook;
 import com.hollingsworth.arsnouveau.common.network.Networking;
-import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellbook;
+import com.hollingsworth.arsnouveau.common.network.PacketHotkeyPressed;
+import com.hollingsworth.arsnouveau.common.network.PacketUpdateCaster;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,39 +25,35 @@ public class KeyHandler {
     private static final Minecraft MINECRAFT = Minecraft.getInstance();
 
     public static void checkKeysPressed(int key){
-        ItemStack stack = StackUtil.getHeldSpellbook(MINECRAFT.player);
-
-        if(key == ModKeyBindings.NEXT_SLOT.getKey().getValue()  && stack.getItem() instanceof SpellBook){
-            if(!stack.hasTag())
-                return;
-            CompoundNBT tag = stack.getTag();
-            int newMode = SpellBook.getMode(tag) + 1;
-            if(newMode > 10)
-                newMode = 0;
-
-            sendUpdatePacket(tag, newMode);
-            return;
-        }
-
-        if(key == ModKeyBindings.PREVIOUS__SLOT.getKey().getValue()  && stack.getItem() instanceof SpellBook){
-            if(!stack.hasTag())
-                return;
-            CompoundNBT tag = stack.getTag();
-            int newMode = SpellBook.getMode(tag) - 1;
-            if(newMode < 0)
-                newMode = 10;
-
-            sendUpdatePacket(tag, newMode);
-            return;
-        }
-
-        if(key == ModKeyBindings.OPEN_SPELL_SELECTION.getKey().getValue()){
-            if(MINECRAFT.screen instanceof GuiRadialMenu) {
+        if(key == ModKeyBindings.OPEN_RADIAL_HUD.getKey().getValue()) {
+            if (MINECRAFT.screen instanceof GuiRadialMenu) {
                 MINECRAFT.player.closeContainer();
                 return;
             }
-            if(stack.getItem() instanceof SpellBook && stack.hasTag() && MINECRAFT.screen == null){
-                MINECRAFT.setScreen(new GuiRadialMenu(stack.getTag()));
+        }
+
+        Player player = MINECRAFT.player;
+        InteractionHand hand = StackUtil.getHeldCasterTool(player);
+        if(hand == null)
+            return;
+        ItemStack stack = player.getItemInHand(hand);
+        if(stack.isEmpty() || !(stack.getItem() instanceof ISpellHotkeyListener hotkeyListener))
+            return;
+
+        if(key == ModKeyBindings.NEXT_SLOT.getKey().getValue()){
+            sendHotkeyPacket(PacketHotkeyPressed.Key.NEXT);
+            return;
+        }
+
+        if(key == ModKeyBindings.PREVIOUS_SLOT.getKey().getValue()){
+            sendHotkeyPacket(PacketHotkeyPressed.Key.PREVIOUS);
+            return;
+        }
+
+        if(key == ModKeyBindings.OPEN_RADIAL_HUD.getKey().getValue()){
+            if(MINECRAFT.screen == null){
+                hotkeyListener.onRadialKeyPressed(stack, player);
+                return;
             }
         }
 
@@ -64,8 +63,8 @@ public class KeyHandler {
                 return;
             }
 
-            if(stack.getItem() instanceof SpellBook && stack.hasTag() && MINECRAFT.screen == null){
-                GuiSpellBook.open(ArsNouveauAPI.getInstance(), stack.getTag(), ((SpellBook) stack.getItem()).getTier().ordinal(), SpellBook.getUnlockedSpellString(stack.getTag()));
+            if(MINECRAFT.screen == null){
+                hotkeyListener.onOpenBookMenuKeyPressed(stack, player);
             }
         }
     }
@@ -84,10 +83,15 @@ public class KeyHandler {
 
     }
 
-    public static void sendUpdatePacket(CompoundNBT tag, int newMode){
-        String recipe = SpellBook.getRecipeString(tag, newMode);
-        String name = SpellBook.getSpellName(tag, newMode);
-        Networking.INSTANCE.sendToServer(new PacketUpdateSpellbook(recipe, newMode, name));
+    public static void sendUpdatePacket(ItemStack stack, int newMode){
+        ISpellCaster caster = CasterUtil.getCaster(stack);
+        String recipe = caster.getSpell(newMode).serialize();
+        String name = caster.getSpellName(newMode);
+        Networking.INSTANCE.sendToServer(new PacketUpdateCaster(recipe, newMode, name));
+    }
+
+    public static void sendHotkeyPacket(PacketHotkeyPressed.Key key){
+        Networking.INSTANCE.sendToServer(new PacketHotkeyPressed(key));
     }
 
 

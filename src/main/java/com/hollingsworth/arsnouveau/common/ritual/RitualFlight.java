@@ -4,16 +4,16 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.event.FlightRefreshEvent;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
-import com.hollingsworth.arsnouveau.common.block.tile.RitualTile;
+import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import com.hollingsworth.arsnouveau.common.lib.RitualLib;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateFlight;
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -55,11 +55,11 @@ public class RitualFlight extends AbstractRitual {
     public static class RitualFlightHandler{
         public static Set<BlockPos> activePositions = new HashSet<>();
 
-        public static @Nullable RitualFlight getFlightRitual(World world, BlockPos pos){
-            TileEntity entity = world.getBlockEntity(pos);
-            if(entity instanceof RitualTile){
-                if(((RitualTile) entity).ritual instanceof RitualFlight)
-                    return (RitualFlight) ((RitualTile) entity).ritual;
+        public static @Nullable RitualFlight getFlightRitual(Level world, BlockPos pos){
+            BlockEntity entity = world.getBlockEntity(pos);
+            if(entity instanceof RitualBrazierTile){
+                if(((RitualBrazierTile) entity).ritual instanceof RitualFlight)
+                    return (RitualFlight) ((RitualBrazierTile) entity).ritual;
             }
             return null;
         }
@@ -68,16 +68,16 @@ public class RitualFlight extends AbstractRitual {
             BlockPos pos = getValidPosition(entity.level, entity.blockPosition());
             if(pos == null)
                 return;
-            TileEntity tileEntity = entity.level.getBlockEntity(pos);
-            if(tileEntity instanceof RitualTile){
-                if(((RitualTile) tileEntity).ritual instanceof RitualFlight) {
-                    ((RitualTile) tileEntity).ritual.setNeedsMana(true);
-                    entity.addEffect(new EffectInstance(ModPotions.FLIGHT_EFFECT, 90 * 20));
+            BlockEntity tileEntity = entity.level.getBlockEntity(pos);
+            if(tileEntity instanceof RitualBrazierTile){
+                if(((RitualBrazierTile) tileEntity).ritual instanceof RitualFlight) {
+                    ((RitualBrazierTile) tileEntity).ritual.setNeedsMana(true);
+                    entity.addEffect(new MobEffectInstance(ModPotions.FLIGHT_EFFECT, 90 * 20));
                 }
             }
         }
 
-        public static BlockPos getValidPosition(World world, BlockPos fromPos){
+        public static BlockPos getValidPosition(Level world, BlockPos fromPos){
             List<BlockPos> stalePositions = new ArrayList<>();
             BlockPos foundPos = null;
             for(BlockPos p : activePositions){
@@ -93,7 +93,7 @@ public class RitualFlight extends AbstractRitual {
                     }
                 }
             }
-            activePositions.removeAll(stalePositions);
+            stalePositions.forEach(activePositions::remove);
             return foundPos;
         }
 
@@ -107,13 +107,13 @@ public class RitualFlight extends AbstractRitual {
                 BlockPos validPos = canPlayerStillFly(e.getEntityLiving());
                 boolean wasFlying = e.getPlayer().abilities.flying;
                 if (validPos != null && wasFlying) {
-                    e.getEntityLiving().addEffect(new EffectInstance(ModPotions.FLIGHT_EFFECT, 60 * 20));
+                    e.getEntityLiving().addEffect(new MobEffectInstance(ModPotions.FLIGHT_EFFECT, 60 * 20));
                     e.getPlayer().abilities.mayfly = true;
                     e.getPlayer().abilities.flying = wasFlying;
                     Networking.sendToPlayer(new PacketUpdateFlight(true, wasFlying), e.getPlayer());
-                    TileEntity tile = e.getPlayer().level.getBlockEntity(validPos);
-                    if(tile instanceof RitualTile && ((RitualTile) tile).ritual instanceof RitualFlight){
-                        ((RitualTile) tile).ritual.setNeedsMana(true);
+                    BlockEntity tile = e.getPlayer().level.getBlockEntity(validPos);
+                    if(tile instanceof RitualBrazierTile && ((RitualBrazierTile) tile).ritual instanceof RitualFlight){
+                        ((RitualBrazierTile) tile).ritual.setNeedsMana(true);
                     }
                 }
             }

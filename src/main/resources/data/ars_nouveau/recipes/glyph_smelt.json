@@ -1,6 +1,38 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "TWO",
-  "input": "minecraft:blast_furnace",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "inputItems": [
+    {
+      "item": {
+        "item": "ars_nouveau:fire_essence"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:blast_furnace"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:blast_furnace"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:blast_furnace"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:blast_furnace"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:rods/blaze"
+      }
+    }
+  ],
+  "exp": 55,
   "output": "ars_nouveau:glyph_smelt"
 }

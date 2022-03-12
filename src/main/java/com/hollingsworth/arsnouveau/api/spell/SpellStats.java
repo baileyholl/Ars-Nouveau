@@ -3,14 +3,14 @@ package com.hollingsworth.arsnouveau.api.spell;
 import com.hollingsworth.arsnouveau.api.event.SpellModifierEvent;
 import com.hollingsworth.arsnouveau.api.item.ISpellModifierItem;
 import com.hollingsworth.arsnouveau.api.util.CuriosUtil;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nullable;
@@ -48,13 +48,13 @@ public class SpellStats {
         return getBuffCount(abstractAugment) > 0;
     }
 
-    public List<ITextComponent> addTooltip(List<ITextComponent> components){
+    public List<Component> addTooltip(List<Component> components){
         if(this.damageModifier != 0.0d)
-            components.add(new TranslationTextComponent("tooltip.ars_nouveau.spell_damage", this.damageModifier).setStyle(Style.EMPTY.withColor(TextFormatting.BLUE)));
+            components.add(new TranslatableComponent("tooltip.ars_nouveau.spell_damage", this.damageModifier).setStyle(Style.EMPTY.withColor(ChatFormatting.BLUE)));
         if(this.durationMultiplier != 0.0d)
-            components.add(new TranslationTextComponent("tooltip.ars_nouveau.duration_modifier", this.durationMultiplier).setStyle(Style.EMPTY.withColor(TextFormatting.GREEN)));
+            components.add(new TranslatableComponent("tooltip.ars_nouveau.duration_modifier", this.durationMultiplier).setStyle(Style.EMPTY.withColor(ChatFormatting.GREEN)));
         if(this.amplification != 0.0d)
-            components.add(new TranslationTextComponent("tooltip.ars_nouveau.amp_modifier", this.amplification).setStyle(Style.EMPTY.withColor(TextFormatting.RED)));
+            components.add(new TranslatableComponent("tooltip.ars_nouveau.amp_modifier", this.amplification).setStyle(Style.EMPTY.withColor(ChatFormatting.RED)));
 
         return components;
     }
@@ -106,7 +106,7 @@ public class SpellStats {
             this.spellStats = new SpellStats();
         }
 
-        public SpellStats build(AbstractSpellPart spellPart, RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellContext spellContext){
+        public SpellStats build(AbstractSpellPart spellPart, @Nullable HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellContext spellContext){
             for(AbstractAugment abstractAugment : spellStats.augments){
                 abstractAugment.applyModifiers(this, spellPart);
             }

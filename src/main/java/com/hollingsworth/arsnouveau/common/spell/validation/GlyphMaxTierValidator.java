@@ -24,7 +24,7 @@ public class GlyphMaxTierValidator extends ScanningSpellValidator<Unit> {
 
     @Override
     protected void digestSpellPart(Unit context, int position, AbstractSpellPart spellPart, List<SpellValidationError> validationErrors) {
-        if (spellPart.getTier().ordinal() > maxTier) {
+        if (spellPart.getTier().value > maxTier) {
             validationErrors.add(new GlyphTierValidationError(position, spellPart, "glyph_tier"));
         }
     }

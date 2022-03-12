@@ -1,6 +1,23 @@
 {
-  "type": "ars_nouveau:glyph_recipe",
-  "tier": "TWO",
-  "input": "ars_nouveau:glyph_freeze",
+  "type": "ars_nouveau:glyph",
+  "count": 1,
+  "inputItems": [
+    {
+      "item": {
+        "item": "ars_nouveau:water_essence"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:powder_snow_bucket"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:ice"
+      }
+    }
+  ],
+  "exp": 55,
   "output": "ars_nouveau:glyph_cold_snap"
 }

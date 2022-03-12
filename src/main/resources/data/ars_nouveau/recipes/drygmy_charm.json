@@ -1,51 +1,54 @@
 {
   "type": "ars_nouveau:enchanting_apparatus",
-  "item_1": [
-    {
-      "tag": "minecraft:fishes"
-    }
-  ],
-  "item_2": [
-    {
-      "item": "minecraft:wheat"
-    }
-  ],
-  "item_3": [
-    {
-      "item": "minecraft:apple"
-    }
-  ],
-  "item_4": [
-    {
-      "item": "minecraft:carrot"
-    }
-  ],
-  "item_5": [
-    {
-      "tag": "forge:seeds"
-    }
-  ],
-  "item_6": [
-    {
-      "tag": "forge:gems/mana"
-    }
-  ],
-  "item_7": [
-    {
-      "tag": "forge:gems/mana"
-    }
-  ],
-  "item_8": [
-    {
-      "tag": "forge:gems/mana"
-    }
-  ],
   "reagent": [
     {
       "item": "ars_nouveau:drygmy_shard"
     }
   ],
+  "pedestalItems": [
+    {
+      "item": {
+        "tag": "minecraft:fishes"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:wheat"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:apple"
+      }
+    },
+    {
+      "item": {
+        "item": "minecraft:carrot"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:seeds"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:gems/source"
+      }
+    }
+  ],
   "output": {
     "item": "ars_nouveau:drygmy_charm"
-  }
+  },
+  "sourceCost": 0
 }

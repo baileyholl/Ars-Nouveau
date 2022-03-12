@@ -3,8 +3,8 @@ package com.hollingsworth.arsnouveau.common.entity.goal.chimera;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.common.entity.EntityChimera;
 import com.hollingsworth.arsnouveau.common.entity.EntityChimeraProjectile;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
 
@@ -50,7 +50,7 @@ public class ChimeraSpikeGoal extends Goal {
                     double d0 = boss.getTarget().getX() - boss.getX();
                     double d1 = boss.getTarget().getY(0.3333333333333333D) - abstractarrowentity.getY();
                     double d2 = boss.getTarget().getZ() - boss.getZ();
-                    double d3 = (double) MathHelper.sqrt(d0 * d0 + d2 * d2);
+                    double d3 = Mth.sqrt((float) (d0 * d0 + d2 * d2));
                     abstractarrowentity.shoot(d0, d1 + d3 * (double) 0.2F, d2, 1.6F, 1.0f);
                     this.boss.level.addFreshEntity(abstractarrowentity);
                 }

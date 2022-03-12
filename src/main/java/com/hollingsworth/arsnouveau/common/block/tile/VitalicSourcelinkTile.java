@@ -3,12 +3,14 @@ package com.hollingsworth.arsnouveau.common.block.tile;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.entity.ISummon;
-import com.hollingsworth.arsnouveau.api.mana.SourcelinkEventQueue;
+import com.hollingsworth.arsnouveau.api.source.SourcelinkEventQueue;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -17,19 +19,19 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = ArsNouveau.MODID)
 public class VitalicSourcelinkTile extends SourcelinkTile{
-    public VitalicSourcelinkTile(TileEntityType<?> tileEntityTypeIn) {
-        super(tileEntityTypeIn);
+    public VitalicSourcelinkTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+        super(tileEntityTypeIn, pos, state);
     }
 
     // Test for a quark tag that has disabled baby growth.
     private static final String TAG_POISONED = "quark:poison_potato_applied";
 
-    public VitalicSourcelinkTile(){
-        super(BlockRegistry.VITALIC_TILE);
+    public VitalicSourcelinkTile(BlockPos pos, BlockState state){
+        super(BlockRegistry.VITALIC_TILE, pos, state);
     }
 
     @Override
-    public int getMaxMana() {
+    public int getMaxSource() {
         return 2500;
     }
 
@@ -37,14 +39,14 @@ public class VitalicSourcelinkTile extends SourcelinkTile{
     public void tick() {
         super.tick();
         if(!level.isClientSide && level.getGameTime() % 60 == 0){
-            for(AnimalEntity entity : level.getLoadedEntitiesOfClass(AnimalEntity.class, new AxisAlignedBB(worldPosition).inflate(6))){
+            for(Animal entity : level.getEntitiesOfClass(Animal.class, new AABB(worldPosition).inflate(6))){
                 if(entity.isBaby()){
                     if(entity.getAge() < 0){
                         if(ModList.get().isLoaded("quark") && entity.getPersistentData().contains(TAG_POISONED)){
                             return;
                         }
                         entity.setAge(Math.min(0,entity.getAge() + 500));
-                        this.addMana(10);
+                        this.addSource(10);
                         ParticleUtil.spawnFollowProjectile(level, entity.blockPosition(), this.worldPosition);
                     }
                 }

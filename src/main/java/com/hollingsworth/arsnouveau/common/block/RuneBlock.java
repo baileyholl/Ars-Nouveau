@@ -1,108 +1,119 @@
 package com.hollingsworth.arsnouveau.common.block;
 
-import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
+import com.hollingsworth.arsnouveau.api.spell.Spell;
+import com.hollingsworth.arsnouveau.api.util.CasterUtil;
 import com.hollingsworth.arsnouveau.common.block.tile.RuneTile;
 import com.hollingsworth.arsnouveau.common.items.RunicChalk;
 import com.hollingsworth.arsnouveau.common.items.SpellParchment;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.common.spell.method.MethodTouch;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
-import java.util.List;
 import java.util.Random;
 
-public class RuneBlock extends ModBlock{
+public class RuneBlock extends TickableModBlock {
+
+    public static VoxelShape shape =  Block.box(0.0D, 0.0D, 0.0D, 16D, 0.5D, 16D);
     public RuneBlock() {
         super(defaultProperties().noCollission().noOcclusion().strength(0f,0f), LibBlockNames.RUNE);
     }
 
+    public RuneBlock(BlockBehaviour.Properties properties, String registryName){
+        super(properties, registryName);
+    }
+
     @Override
-    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(worldIn, pos, state, placer, stack);
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         ItemStack stack = player.getItemInHand(handIn);
 
         if(!worldIn.isClientSide && stack.getItem() instanceof RunicChalk){
             if(((RuneTile)worldIn.getBlockEntity(pos)).isTemporary){
                 ((RuneTile)worldIn.getBlockEntity(pos)).isTemporary = false;
-                PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.rune.setperm"));
-                return ActionResultType.SUCCESS;
+                PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.rune.setperm"));
+                return InteractionResult.SUCCESS;
             }
         }
         if(!(stack.getItem() instanceof SpellParchment) || worldIn.isClientSide)
-            return ActionResultType.SUCCESS;
-        List<AbstractSpellPart> recipe = SpellParchment.getSpellRecipe(stack);
-        if(recipe == null || recipe.isEmpty())
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
+        Spell spell = CasterUtil.getCaster(stack).getSpell();
+        if(spell.isEmpty())
+            return InteractionResult.SUCCESS;
 
-        if(!(recipe.get(0) instanceof MethodTouch)){
-            PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.rune.touch"));
-            return ActionResultType.SUCCESS;
+        if(!(spell.recipe.get(0) instanceof MethodTouch)){
+            PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.rune.touch"));
+            return InteractionResult.SUCCESS;
         }
-        ((RuneTile)worldIn.getBlockEntity(pos)).setRecipe(recipe);
-        PortUtil.sendMessage(player, new TranslationTextComponent("ars_nouveau.spell_set"));
+        ((RuneTile)worldIn.getBlockEntity(pos)).setSpell(spell);
+        PortUtil.sendMessage(player, new TranslatableComponent("ars_nouveau.spell_set"));
         return super.use(state, worldIn, pos, player, handIn, hit);
     }
 
     @Override
-    public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
+    public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand) {
         super.tick(state, worldIn, pos, rand);
-        List<Entity> entities = worldIn.getEntitiesOfClass(Entity.class, new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX(), pos.getY() +1, pos.getZ()).inflate(1));
-        if(!entities.isEmpty() && worldIn.getBlockEntity(pos) instanceof RuneTile)
-            ((RuneTile) worldIn.getBlockEntity(pos)).castSpell(entities.get(0));
+
+        if(worldIn.getBlockEntity(pos) instanceof RuneTile && ((RuneTile) worldIn.getBlockEntity(pos)).touchedEntity != null) {
+            RuneTile rune = ((RuneTile) worldIn.getBlockEntity(pos));
+            rune.castSpell(rune.touchedEntity);
+            rune.touchedEntity = null;
+        }
     }
 
     @Override
-    public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+    public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
         super.entityInside(state, worldIn, pos, entityIn);
-        if(worldIn.getBlockEntity(pos) instanceof RuneTile)
-            worldIn.getBlockTicks().scheduleTick(pos, this, 1);
+        if(worldIn.getBlockEntity(pos) instanceof RuneTile) {
+            ((RuneTile) worldIn.getBlockEntity(pos)).touchedEntity = entityIn;
+            worldIn.scheduleTick(pos, this,1);
+        }
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        return Block.box(0.0D, 0.0D, 0.0D, 16D, 0.5D, 16D);
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+        return shape;
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
+    public RenderShape getRenderShape(BlockState p_149645_1_) {
+        return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
-
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new RuneTile();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new RuneTile(pos, state);
     }
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(POWERED);
     }
 }

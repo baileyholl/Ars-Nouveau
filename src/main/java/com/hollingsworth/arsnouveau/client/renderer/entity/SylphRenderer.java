@@ -4,16 +4,17 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.client.particle.ParticleSparkleData;
 import com.hollingsworth.arsnouveau.client.particle.ParticleUtil;
-import com.hollingsworth.arsnouveau.common.entity.EntitySylph;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import com.hollingsworth.arsnouveau.common.entity.Whirlisprig;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import software.bernie.geckolib3.core.processor.IBone;
 import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
@@ -22,16 +23,18 @@ import java.util.Random;
 
 public class SylphRenderer extends GeoEntityRenderer {
 
-    public SylphRenderer(EntityRendererManager manager) {
+    public SylphRenderer(EntityRendererProvider.Context manager) {
         super(manager, new SylphModel());
     }
 
     @Override
-    public void render(LivingEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+    public void render(LivingEntity entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
-        World world = entityIn.getCommandSenderWorld();
+        if(Minecraft.getInstance().isPaused())
+            return;
+        Level world = entityIn.getCommandSenderWorld();
         Random rand = ParticleUtil.r;
-        Vector3d particlePos = entityIn.position();
+        Vec3 particlePos = entityIn.position();
 
         IBone sylph = ((SylphModel) getGeoModelProvider()).getBone("sylph");
         IBone propellers = ((SylphModel) getGeoModelProvider()).getBone("propellers");
@@ -51,14 +54,14 @@ public class SylphRenderer extends GeoEntityRenderer {
 
     @Override
     public ResourceLocation getTextureLocation(LivingEntity entity) {
-        if(entity instanceof EntitySylph){
-            return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_" + (((EntitySylph) entity).getColor().isEmpty() ? "summer" : ((EntitySylph) entity).getColor())+ ".png");
+        if(entity instanceof Whirlisprig){
+            return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_" + (((Whirlisprig) entity).getColor().isEmpty() ? "summer" : ((Whirlisprig) entity).getColor())+ ".png");
         }
         return new ResourceLocation(ArsNouveau.MODID, "textures/entity/sylph_summer.png");
     }
 
     @Override
-    public RenderType getRenderType(Object animatable, float partialTicks, MatrixStack stack, @Nullable IRenderTypeBuffer renderTypeBuffer, @Nullable IVertexBuilder vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
+    public RenderType getRenderType(Object animatable, float partialTicks, PoseStack stack, @Nullable MultiBufferSource renderTypeBuffer, @Nullable VertexConsumer vertexBuilder, int packedLightIn, ResourceLocation textureLocation) {
         return RenderType.entityCutoutNoCull(textureLocation);
     }
 }

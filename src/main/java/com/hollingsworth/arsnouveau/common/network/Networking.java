@@ -1,20 +1,20 @@
 package com.hollingsworth.arsnouveau.common.network;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.common.thread.EffectiveSide;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.PacketDistributor;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.fml.util.thread.EffectiveSide;
+import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.network.simple.SimpleChannel;
 
 import java.util.Optional;
 
@@ -33,10 +33,10 @@ public class Networking {
                 PacketOpenSpellBook::new,
                 PacketOpenSpellBook::handle);
         INSTANCE.registerMessage(nextID(),
-                PacketUpdateSpellbook.class,
-                PacketUpdateSpellbook::toBytes,
-                PacketUpdateSpellbook::new,
-                PacketUpdateSpellbook::handle);
+                PacketUpdateCaster.class,
+                PacketUpdateCaster::toBytes,
+                PacketUpdateCaster::new,
+                PacketUpdateCaster::handle);
 
         INSTANCE.registerMessage(nextID(),
                 PacketUpdateBookGUI.class,
@@ -123,28 +123,68 @@ public class Networking {
                 PacketSummonFamiliar::new,
                 PacketSummonFamiliar::handle);
         INSTANCE.registerMessage(nextID(),
-                PacketSyncFamiliars.class,
-                PacketSyncFamiliars::toBytes,
-                PacketSyncFamiliars::new,
-                PacketSyncFamiliars::handle);
+                PacketSyncPlayerCap.class,
+                PacketSyncPlayerCap::toBytes,
+                PacketSyncPlayerCap::new,
+                PacketSyncPlayerCap::handle);
+
+        INSTANCE.registerMessage(nextID(),
+                PacketTogglePathing.class,
+                PacketTogglePathing::toBytes,
+                PacketTogglePathing::new,
+                PacketTogglePathing::handle);
+
+        INSTANCE.registerMessage(nextID(),
+                PacketHotkeyPressed.class,
+                PacketHotkeyPressed::toBytes,
+                PacketHotkeyPressed::new,
+                PacketHotkeyPressed::handle);
+
+        INSTANCE.registerMessage(nextID(),
+                PacketOpenGlyphCraft.class,
+                PacketOpenGlyphCraft::toBytes,
+                PacketOpenGlyphCraft::new,
+                PacketOpenGlyphCraft::handle);
+
+        INSTANCE.registerMessage(nextID(),
+                PacketSetScribeRecipe.class,
+                PacketSetScribeRecipe::toBytes,
+                PacketSetScribeRecipe::new,
+                PacketSetScribeRecipe::handle);
+        INSTANCE.registerMessage(nextID(),
+                PacketToggleLight.class,
+                PacketToggleLight::toBytes,
+                PacketToggleLight::new,
+                PacketToggleLight::handle);
+        INSTANCE.registerMessage(nextID(),
+                PacketAddFadingLight.class,
+                PacketAddFadingLight::encode,
+                PacketAddFadingLight::decode,
+                PacketAddFadingLight.Handler::handle);
+
+        INSTANCE.registerMessage(nextID(),
+                PacketSetSound.class,
+                PacketSetSound::toBytes,
+                PacketSetSound::new,
+                PacketSetSound::handle);
     }
 
-    public static void sendToNearby(World world, BlockPos pos, Object toSend){
-        if (world instanceof ServerWorld) {
-            ServerWorld ws = (ServerWorld) world;
-            ws.getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false)
+    public static void sendToNearby(Level world, BlockPos pos, Object toSend){
+        if (world instanceof ServerLevel) {
+            ServerLevel ws = (ServerLevel) world;
+            ws.getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false).stream()
                     .filter(p -> p.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) < 64 * 64)
                     .forEach(p -> INSTANCE.send(PacketDistributor.PLAYER.with(() -> p), toSend));
         }
     }
 
-    public static void sendToNearby(World world, Entity e, Object toSend) {
+    public static void sendToNearby(Level world, Entity e, Object toSend) {
         sendToNearby(world, e.blockPosition(), toSend);
     }
 
-    public static void sendToPlayer(Object msg, PlayerEntity player) {
+    public static void sendToPlayer(Object msg, Player player) {
         if (EffectiveSide.get() == LogicalSide.SERVER) {
-            ServerPlayerEntity serverPlayer = (ServerPlayerEntity) player;
+            ServerPlayer serverPlayer = (ServerPlayer) player;
             INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), msg);
         }
     }

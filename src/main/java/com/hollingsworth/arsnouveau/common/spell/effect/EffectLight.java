@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.ANFakePlayer;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
@@ -11,16 +11,14 @@ import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDurationDown;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentExtendTime;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
@@ -31,11 +29,11 @@ public class EffectLight extends AbstractEffect {
     public static EffectLight INSTANCE = new EffectLight();
 
     private EffectLight() {
-        super(GlyphLib.EffectLightID, "Light");
+        super(GlyphLib.EffectLightID, "Conjure Magelight");
     }
 
     @Override
-    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         if(rayTraceResult.getEntity() instanceof ILightable){
             ((ILightable) rayTraceResult.getEntity()).onLight(rayTraceResult, world, shooter, spellStats, spellContext);
         }
@@ -43,15 +41,15 @@ public class EffectLight extends AbstractEffect {
         if(!(rayTraceResult.getEntity() instanceof LivingEntity))
             return;
         if (shooter == null || !shooter.equals(rayTraceResult.getEntity())) {
-            applyConfigPotion((LivingEntity) rayTraceResult.getEntity(), Effects.GLOWING, spellStats);
+            applyConfigPotion((LivingEntity) rayTraceResult.getEntity(), MobEffects.GLOWING, spellStats);
         }
-        applyConfigPotion((LivingEntity) rayTraceResult.getEntity(), Effects.NIGHT_VISION, spellStats);
+        applyConfigPotion((LivingEntity) rayTraceResult.getEntity(), MobEffects.NIGHT_VISION, spellStats);
     }
 
     @Override
-    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         BlockPos pos = rayTraceResult.getBlockPos().relative(rayTraceResult.getDirection());
-        if(!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerWorld) world), world, pos))
+        if(!BlockUtil.destroyRespectsClaim(getPlayer(shooter, (ServerLevel) world), world, pos))
             return;
 
         if(world.getBlockEntity( rayTraceResult.getBlockPos()) instanceof ILightable){
@@ -59,7 +57,7 @@ public class EffectLight extends AbstractEffect {
             return;
         }
 
-        if (world.getBlockState(pos).getMaterial().isReplaceable() && world.isUnobstructed(BlockRegistry.LIGHT_BLOCK.defaultBlockState(), pos, ISelectionContext.of(ANFakePlayer.getPlayer((ServerWorld) world)))) {
+        if (world.getBlockState(pos).getMaterial().isReplaceable() && world.isUnobstructed(BlockRegistry.LIGHT_BLOCK.defaultBlockState(), pos, CollisionContext.of(ANFakePlayer.getPlayer((ServerLevel) world)))) {
             world.setBlockAndUpdate(pos, BlockRegistry.LIGHT_BLOCK.defaultBlockState().setValue(SconceBlock.LIGHT_LEVEL, Math.max(0,Math.min(15, 14 + (int) spellStats.getAmpMultiplier()))));
             LightTile tile = ((LightTile)world.getBlockEntity(pos));
             if(tile != null){
@@ -77,18 +75,9 @@ public class EffectLight extends AbstractEffect {
     }
 
     @Override
-    public boolean dampenIsAllowed() {
-        return true;
-    }
-
-    @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 25;
     }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent(){return Items.LANTERN;}
 
     @Nonnull
     @Override

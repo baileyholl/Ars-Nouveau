@@ -1,0 +1,13 @@
+{
+  "type": "ars_nouveau:crush",
+  "input": {
+    "item": "minecraft:lily_of_the_valley"
+  },
+  "output": [
+    {
+      "item": "minecraft:white_dye",
+      "chance": 1.0,
+      "count": 2
+    }
+  ]
+}

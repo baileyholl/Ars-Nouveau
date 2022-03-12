@@ -1,18 +1,18 @@
 package com.hollingsworth.arsnouveau.client.particle;
 
-import net.minecraft.client.particle.IAnimatedSprite;
-import net.minecraft.client.particle.IParticleRenderType;
-import net.minecraft.client.particle.SpriteTexturedParticle;
-import net.minecraft.client.world.ClientWorld;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.particle.TextureSheetParticle;
 
-public class ParticleSparkle extends SpriteTexturedParticle {
-    public float colorR = 0;
-    public float colorG = 0;
-    public float colorB = 0;
-    public float initScale = 0;
+public class ParticleSparkle extends TextureSheetParticle {
+    public float colorR;
+    public float colorG;
+    public float colorB;
+    public float initScale;
     public float initAlpha = 0;
 
-    protected ParticleSparkle(ClientWorld worldIn, double x, double y, double z, double vx, double vy, double vz, float r, float g, float b, float scale, int lifetime, IAnimatedSprite sprite) {
+    protected ParticleSparkle(ClientLevel worldIn, double x, double y, double z, double vx, double vy, double vz, float r, float g, float b, float scale, int lifetime, SpriteSet sprite) {
         super(worldIn, x,y,z,0,0,0);
         this.colorR = r;
         this.colorG = g;
@@ -34,12 +34,11 @@ public class ParticleSparkle extends SpriteTexturedParticle {
         this.xd = ParticleUtil.inRange(-0.01, 0.01);
         this.yd = -0.02;
         this.zd = ParticleUtil.inRange(-0.01, 0.01);
-//        this.particleAngle = 2.0f*(float)Math.PI;
         this.pickSprite(sprite);
     }
     @Override
-    public IParticleRenderType getRenderType() {
-        return RenderTypes.EMBER_RENDER;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderTypes.EMBER_RENDER;
     }
 
 
@@ -52,19 +51,8 @@ public class ParticleSparkle extends SpriteTexturedParticle {
     @Override
     public void tick(){
         super.tick();
-
-//        if (new Random().nextInt(6) == 0){
-//            this.age++;
-//        }
-
         float lifeCoeff = (float)this.age/(float)this.lifetime;
-//        this.particleScale = initScale-initScale*lifeCoeff;
         this.alpha = 1.0f-lifeCoeff;
-//        float lifeCoeff = (float)this.age/(float)this.maxAge;
-//        this.particleScale = initScale-initScale*lifeCoeff;
-//        this.particleAlpha = initAlpha*(1.0f-lifeCoeff);
-//        this.prevParticleAngle = particleAngle;
-//        particleAngle += 1.0f;
     }
 
     @Override

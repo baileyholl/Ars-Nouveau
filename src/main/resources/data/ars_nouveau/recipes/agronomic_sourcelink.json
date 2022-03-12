@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " s ",
+    "gig",
+    " s "
+  ],
+  "key": {
+    "g": {
+      "tag": "forge:ingots/gold"
+    },
+    "s": {
+      "tag": "forge:gems/source"
+    },
+    "i": {
+      "item": "minecraft:wheat"
+    }
+  },
+  "result": {
+    "item": "ars_nouveau:agronomic_sourcelink"
+  }
+}

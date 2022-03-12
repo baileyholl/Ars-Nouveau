@@ -1,0 +1,6 @@
+{
+	"name": "ars_nouveau.tier_1_spells",
+	"description": "ars_nouveau.tier_1_spells_desc",
+	"icon": "ars_nouveau:glyph_projectile",
+	"sortnum":2
+}

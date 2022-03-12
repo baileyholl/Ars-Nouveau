@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.entity.goal;
 
-import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.Goal;
 
 public class ExtendedRangeGoal extends Goal {
 

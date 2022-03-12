@@ -3,9 +3,9 @@ package com.hollingsworth.arsnouveau.api.event;
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.SpellContext;
 import com.hollingsworth.arsnouveau.api.spell.SpellStats;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.eventbus.api.Event;
 
 import javax.annotation.Nullable;
@@ -18,11 +18,11 @@ public class SpellModifierEvent extends Event {
     public SpellStats.Builder builder;
     public @Nullable LivingEntity caster;
     public AbstractSpellPart spellPart;
-    public RayTraceResult rayTraceResult;
-    public World world;
+    public HitResult rayTraceResult;
+    public Level world;
     public SpellContext spellContext;
 
-    public SpellModifierEvent(LivingEntity caster, SpellStats.Builder builder, AbstractSpellPart spellPart, RayTraceResult rayTraceResult, World world, SpellContext spellContext) {
+    public SpellModifierEvent(LivingEntity caster, SpellStats.Builder builder, AbstractSpellPart spellPart, HitResult rayTraceResult, Level world, SpellContext spellContext) {
         this.caster = caster;
         this.builder = builder;
         this.spellPart = spellPart;

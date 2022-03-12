@@ -1,36 +1,39 @@
 {
   "type": "ars_nouveau:enchanting_apparatus",
-  "item_1": [
-    {
-      "item": "ars_nouveau:wilden_horn"
-    }
-  ],
-  "item_2": [
-    {
-      "item": "ars_nouveau:wilden_spike"
-    }
-  ],
-  "item_3": [
-    {
-      "item": "ars_nouveau:wilden_wing"
-    }
-  ],
-  "item_4": [
-    {
-      "item": "ars_nouveau:wilden_tribute"
-    }
-  ],
-  "item_5": [
-    {
-      "tag": "forge:ingots/gold"
-    }
-  ],
   "reagent": [
     {
-      "tag": "forge:storage_blocks/mana"
+      "tag": "forge:storage_blocks/source"
+    }
+  ],
+  "pedestalItems": [
+    {
+      "item": {
+        "item": "ars_nouveau:wilden_horn"
+      }
+    },
+    {
+      "item": {
+        "item": "ars_nouveau:wilden_spike"
+      }
+    },
+    {
+      "item": {
+        "item": "ars_nouveau:wilden_wing"
+      }
+    },
+    {
+      "item": {
+        "item": "ars_nouveau:wilden_tribute"
+      }
+    },
+    {
+      "item": {
+        "tag": "forge:ingots/gold"
+      }
     }
   ],
   "output": {
     "item": "ars_nouveau:summon_focus"
-  }
+  },
+  "sourceCost": 0
 }

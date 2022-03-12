@@ -1,90 +1,65 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.hollingsworth.arsnouveau.ArsNouveau;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAmplify;
-import com.hollingsworth.arsnouveau.common.spell.augment.AugmentDampen;
 import com.hollingsworth.arsnouveau.common.util.SpellPartConfigUtil;
-import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
-import net.minecraft.item.Item;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public abstract class AbstractSpellPart implements ISpellTier, Comparable<AbstractSpellPart> {
-    // TODO: Clarify that this is the default cost.
-    public abstract int getManaCost();
-    public String tag;
+public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart> {
+
+    private String id;
     public String name;
-    /*Tag for NBT data and SpellManager#spellList*/
-    public String getTag(){
-        return this.tag;
+    /*ID for NBT data and SpellManager#spellList*/
+    public String getId(){
+        return this.id;
     }
 
-    public String getIcon(){return this.tag + ".png";}
+    public String getIcon(){return this.id + ".png";}
 
-    protected AbstractSpellPart(String tag, String name){
-        this.tag = tag;
+    /**
+     * The list of schools that apply to this spell.
+     * Addons should add and access this list directly.
+     */
+    public List<SpellSchool> spellSchools = new ArrayList<>();
+    /**
+     * The list of augments that apply to a form or effect.
+     * Addons should add and access this set directly.
+     */
+    public Set<AbstractAugment> compatibleAugments = new HashSet<>();
+
+    protected AbstractSpellPart(String id, String name){
+        this.id = id;
         this.name = name;
         for(SpellSchool spellSchool : getSchools()){
             spellSchool.addSpellPart(this);
+            spellSchools.add(spellSchool);
         }
+        compatibleAugments.addAll(getCompatibleAugments());
     }
-    // Final mana cost
-    public int getAdjustedManaCost(List<AbstractAugment> augmentTypes){
-        int cost = getConfigCost();
-        for(AbstractAugment a: augmentTypes){
-            if(a instanceof AugmentDampen && !dampenIsAllowed()){
-                continue;
-            }
-            cost += a.getConfigCost();
-        }
-        return Math.max(cost, 0);
-    }
+
+    public abstract int getDefaultManaCost();
 
     public int getConfigCost(){
-        return COST == null ? getManaCost() : COST.get();
-    }
-
-    @Nullable
-    public Item getCraftingReagent(){
-        return null;
-    }
-
-    // Check for mana reduction exploit
-    public boolean dampenIsAllowed(){
-        return false;
+        return COST == null ? getDefaultManaCost() : COST.get();
     }
 
     public String getName(){return this.name;}
 
-    public ISpellTier.Tier getTier() {
-        return ISpellTier.Tier.ONE;
-    }
-    // TODO: Move to SpellStats
-    @Deprecated
-    public static int getBuffCount(List<AbstractAugment> augments, Class<? extends AbstractSpellPart> spellClass){
-        return (int) augments.stream().filter(spellClass::isInstance).count();
-    }
-
-    public boolean hasBuff(List<AbstractAugment> augments, Class spellClass){
-        return getBuffCount(augments, spellClass) > 0;
-    }
-
-    public int getAmplificationBonus(List<AbstractAugment> augmentTypes){
-        return getBuffCount(augmentTypes, AugmentAmplify.class) - getBuffCount(augmentTypes, AugmentDampen.class);
+    public SpellTier getTier() {
+        return SpellTier.ONE;
     }
 
     /**
      * Returns the set of augments that this spell part can be enhanced by.
-     *
+     * Mods should use {@link AbstractSpellPart#compatibleAugments} for addon-supported augments.
      * @see AbstractSpellPart#augmentSetOf(AbstractAugment...) for easy syntax to make the Set.
+     * @deprecated This will be set to protected in a future update.
+     * This should not be accessed directly, but can be overriden.
      */
+    @Deprecated
     public abstract @Nonnull Set<AbstractAugment> getCompatibleAugments();
 
     /**
@@ -94,65 +69,29 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
         return setOf(augments);
     }
 
+    /**
+     * A helper for mods to add schools.
+     * @deprecated This will be set to protected in the future.
+     * Mods should use {@link AbstractSpellPart#spellSchools} to get the addon-supported list.
+     */
+    @Deprecated
     public @Nonnull Set<SpellSchool> getSchools(){
         return setOf();
     }
 
     protected <T> Set<T> setOf(T... list) {
-        return Collections.unmodifiableSet(new HashSet<>(Arrays.asList(list)));
+        return Set.of(list);
     }
 
     @Override
     public int compareTo(AbstractSpellPart o) {
-        return this.getTier().ordinal() - o.getTier().ordinal();
+        return this.getTier().value - o.getTier().value;
     }
 
-
-    public TranslationTextComponent getBookDescLang(){
-        return new TranslationTextComponent("ars_nouveau.glyph_desc." + getTag());
+    public TranslatableComponent getBookDescLang(){
+        return new TranslatableComponent("ars_nouveau.glyph_desc." + getId());
     }
-    /**
-     * Converts to a patchouli documentation page
-     */
-    public JsonElement serialize() {
-        JsonObject jsonobject = new JsonObject();
 
-        jsonobject.addProperty("name", this.getName());
-        jsonobject.addProperty("icon", ArsNouveau.MODID + ":" + getItemID());
-        jsonobject.addProperty("category", "spells_"+(getTier().ordinal() + 1));
-        jsonobject.addProperty("sortnum", this instanceof AbstractCastMethod ? 1 : this instanceof AbstractEffect ? 2 : 3);
-        JsonArray jsonArray = new JsonArray();
-        JsonObject descPage = new JsonObject();
-        descPage.addProperty("type", "text");
-        descPage.addProperty("text","ars_nouveau.glyph_desc." + tag);
-
-        JsonObject infoPage = new JsonObject();
-        infoPage.addProperty("type", "glyph_recipe");
-        infoPage.addProperty("recipe", ArsNouveau.MODID + ":" + "glyph_" + this.tag);
-        infoPage.addProperty("tier",this.getTier().name());
-
-        String manaCost = this.getManaCost() < 20 ? "Low" : "Medium";
-        manaCost = this.getManaCost() > 50 ? "High" : manaCost;
-        infoPage.addProperty("mana_cost", manaCost);
-        if(this.getCraftingReagent() != null){
-            String clayType;
-            if(this.getTier() == Tier.ONE){
-                clayType = ItemsRegistry.magicClay.getRegistryName().toString();
-            }else if(this.getTier() == Tier.TWO){
-                clayType = ItemsRegistry.marvelousClay.getRegistryName().toString();
-            }else{
-                clayType = ItemsRegistry.mythicalClay.getRegistryName().toString();
-            }
-            infoPage.addProperty("clay_type", clayType);
-            infoPage.addProperty("reagent", this.getCraftingReagent().getRegistryName().toString());
-        }
-
-
-        jsonArray.add(descPage);
-        jsonArray.add(infoPage);
-        jsonobject.add("pages", jsonArray);
-        return jsonobject;
-    }
     // Can be null if addons do not create a config. PLEASE REGISTER THESE IN A CONFIG. See RegistryHelper
     public @Nullable ForgeConfigSpec CONFIG;
     public @Nullable ForgeConfigSpec.IntValue COST;
@@ -163,7 +102,7 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
     public void buildConfig(ForgeConfigSpec.Builder builder){
         builder.comment("General settings").push("general");
         ENABLED = builder.comment("Is Enabled?").define("enabled", true);
-        COST = builder.comment("Cost").defineInRange("cost", getManaCost(), Integer.MIN_VALUE, Integer.MAX_VALUE);
+        COST = builder.comment("Cost").defineInRange("cost", getDefaultManaCost(), Integer.MIN_VALUE, Integer.MAX_VALUE);
         STARTER_SPELL = builder.comment("Is Starter Glyph?").define("starter", defaultedStarterGlyph());
         PER_SPELL_LIMIT = builder.comment("The maximum number of times this glyph may appear in a single spell").defineInRange("per_spell_limit", Integer.MAX_VALUE, 1, Integer.MAX_VALUE);
     }
@@ -178,7 +117,7 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
     }
 
     // Augment limits only apply to cast forms and effects, but not augments.
-    private SpellPartConfigUtil.AugmentLimits augmentLimits;
+    public SpellPartConfigUtil.AugmentLimits augmentLimits;
 
     /** Registers the glyph_limits configuration entry for augmentation limits. */
     protected void buildAugmentLimitsConfig(ForgeConfigSpec.Builder builder, Map<String, Integer> defaults) {
@@ -196,7 +135,7 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
     }
 
     public String getItemID(){
-        return "glyph_" + this.getTag();
+        return "glyph_" + this.getId();
     }
 
     public String getBookDescription(){
@@ -204,10 +143,10 @@ public abstract class AbstractSpellPart implements ISpellTier, Comparable<Abstra
     }
 
     public String getLocalizationKey() {
-        return "ars_nouveau.glyph_name." + tag;
+        return "ars_nouveau.glyph_name." + id;
     }
 
     public String getLocaleName(){
-        return new TranslationTextComponent(getLocalizationKey()).getString();
+        return new TranslatableComponent(getLocalizationKey()).getString();
     }
 }

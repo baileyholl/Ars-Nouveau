@@ -1,19 +1,17 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
 import com.hollingsworth.arsnouveau.common.items.VoidJar;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.HitResult;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -28,17 +26,17 @@ public class EffectPickup extends AbstractEffect {
     }
 
     @Override
-    public void onResolve(RayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolve(HitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         BlockPos pos = new BlockPos(rayTraceResult.getLocation());
         int expansion = 2 + spellStats.getBuffCount(AugmentAOE.INSTANCE);
 
-        List<ItemEntity> entityList = world.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(pos.east(expansion).north(expansion).above(expansion),
+        List<ItemEntity> entityList = world.getEntitiesOfClass(ItemEntity.class, new AABB(pos.east(expansion).north(expansion).above(expansion),
                 pos.west(expansion).south(expansion).below(expansion)));
         for(ItemEntity i : entityList){
 
             if(isRealPlayer(shooter) && spellContext.castingTile == null){
                 ItemStack stack = i.getItem();
-                PlayerEntity player = (PlayerEntity) shooter;
+                Player player = (Player) shooter;
                 VoidJar.tryVoiding(player, stack);
                 if(!player.addItem(stack)){
                     i.setPos(player.getX(), player.getY(), player.getZ());
@@ -53,7 +51,7 @@ public class EffectPickup extends AbstractEffect {
     }
 
     @Override
-    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
+    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         return true;
     }
 
@@ -68,14 +66,8 @@ public class EffectPickup extends AbstractEffect {
         return "Picks up nearby items in a medium radius where this spell is activated. The range may be expanded with AOE.";
     }
 
-    @Nullable
     @Override
-    public Item getCraftingReagent() {
-        return Items.HOPPER;
-    }
-
-    @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 10;
     }
 

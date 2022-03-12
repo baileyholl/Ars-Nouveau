@@ -1,0 +1,15 @@
+{
+  "name": "entity.ars_nouveau.whirlisprig",
+  "category": "ars_nouveau:familiars",
+  "icon": "ars_nouveau:familiar_whirlisprig",
+  "pages": [
+    {
+      "text": "ars_nouveau.familiar_desc.whirlisprig",
+      "type": "patchouli:text"
+    },
+    {
+      "entity": "ars_nouveau:whirlisprig",
+      "type": "patchouli:entity"
+    }
+  ]
+}

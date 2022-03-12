@@ -1,15 +1,15 @@
 {
   "name": "item.ars_nouveau.ritual_cloudshaping",
+  "category": "ars_nouveau:rituals",
   "icon": "ars_nouveau:ritual_cloudshaping",
-  "category": "rituals",
   "pages": [
     {
-      "type": "text",
-      "text": "ars_nouveau.ritual_desc.cloudshaping"
+      "text": "ars_nouveau.ritual_desc.cloudshaping",
+      "type": "patchouli:text"
     },
     {
-      "type": "crafting",
-      "recipe": "ars_nouveau:ritual_cloudshaping"
+      "recipe": "ars_nouveau:ritual_cloudshaping",
+      "type": "patchouli:crafting"
     }
   ]
 }

@@ -1,35 +1,37 @@
 {
-    "name": "block.ars_nouveau.potion_melder",
-    "icon": "ars_nouveau:potion_melder",
-    "category": "machines",
-    "pages": [
-        {
-            "type": "text",
-            "text": "ars_nouveau.page1.potion_melder"
-        },
+  "name": "block.ars_nouveau.potion_melder",
+  "icon": "ars_nouveau:potion_melder",
+  "category": "ars_nouveau:machines",
+  "pages": [
     {
-      "type": "apparatus_recipe",
-      "recipe": "ars_nouveau:potion_melder"
-    },{
-	"type":"multiblock",
-	"multiblock":{
-		"mapping":{
-			"C":"ars_nouveau:potion_jar",
-			"0":"ars_nouveau:potion_melder",
-			"J":"ars_nouveau:mana_jar"
-		},
-		"pattern":[
-			["   "],
-			["C0C"],
-			[" C "]
-		],
-		"symmetrical": true
-	},
-	"text":"Takes from two adjacent jars and outputs beneath in a 3:1 ratio."
-	},
-		{
-            "type": "relations",
-            "entries":["machines/potion_jar"]        
+      "text": "ars_nouveau.page1.potion_melder",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:potion_melder",
+      "type": "ars_nouveau:apparatus_recipe"
+    },
+    {
+      "name": "block.ars_nouveau.potion_melder",
+      "text": "ars_nouveau.page2.potion_melder",
+      "multiblock": {
+        "pattern": [
+          [
+            "   "
+          ],
+          [
+            "C0C"
+          ],
+          [
+            " C "
+          ]
+        ],
+        "mapping": {
+          "C": "ars_nouveau:potion_jar",
+          "0": "ars_nouveau:potion_melder"
         }
-    ]
+      },
+      "type": "patchouli:multiblock"
+    }
+  ]
 }

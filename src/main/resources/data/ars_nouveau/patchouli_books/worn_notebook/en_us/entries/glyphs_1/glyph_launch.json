@@ -1,0 +1,16 @@
+{
+  "name": "ars_nouveau.glyph_name.launch",
+  "category": "ars_nouveau:glyphs_1",
+  "icon": "ars_nouveau:glyph_launch",
+  "sortnum": 2,
+  "pages": [
+    {
+      "text": "ars_nouveau.glyph_desc.launch",
+      "type": "patchouli:text"
+    },
+    {
+      "recipe": "ars_nouveau:glyph_launch",
+      "type": "ars_nouveau:glyph_recipe"
+    }
+  ]
+}

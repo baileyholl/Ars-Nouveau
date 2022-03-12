@@ -1,24 +1,22 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.GlyphLib;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
 import com.hollingsworth.arsnouveau.api.event.DispelEvent;
 import com.hollingsworth.arsnouveau.api.spell.*;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.EntityRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.World;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.common.MinecraftForge;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 public class EffectDispel extends AbstractEffect {
@@ -30,16 +28,16 @@ public class EffectDispel extends AbstractEffect {
 
 
     @Override
-    public void onResolveEntity(EntityRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveEntity(EntityHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         if(rayTraceResult.getEntity() instanceof LivingEntity){
             LivingEntity entity = (LivingEntity) rayTraceResult.getEntity();
-            Collection<EffectInstance> effects = entity.getActiveEffects();
-            EffectInstance[] array = effects.toArray(new EffectInstance[effects.size()]);
-            for(EffectInstance e : array){
+            Collection<MobEffectInstance> effects = entity.getActiveEffects();
+            MobEffectInstance[] array = effects.toArray(new MobEffectInstance[0]);
+            for(MobEffectInstance e : array){
                 if(e.isCurativeItem(new ItemStack(Items.MILK_BUCKET)))
                     entity.removeEffect(e.getEffect());
             }
-            if(entity instanceof IDispellable && entity.isAlive() && entity.getHealth() > 0 && !entity.removed){
+            if(entity instanceof IDispellable && entity.isAlive() && entity.getHealth() > 0 && !entity.isRemoved()){
                 ((IDispellable) entity).onDispel(shooter);
             }
             MinecraftForge.EVENT_BUS.post(new DispelEvent(rayTraceResult, world, shooter, spellStats.getAugments(), spellContext));
@@ -47,26 +45,20 @@ public class EffectDispel extends AbstractEffect {
     }
 
     @Override
-    public void onResolveBlock(BlockRayTraceResult rayTraceResult, World world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+    public void onResolveBlock(BlockHitResult rayTraceResult, Level world, @Nullable LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
         if(world.getBlockState(rayTraceResult.getBlockPos()) instanceof IDispellable){
             ((IDispellable) world.getBlockState(rayTraceResult.getBlockPos())).onDispel(shooter);
         }
     }
 
     @Override
-    public boolean wouldSucceed(RayTraceResult rayTraceResult, World world, LivingEntity shooter, List<AbstractAugment> augments) {
-        return rayTraceResult instanceof EntityRayTraceResult || (rayTraceResult instanceof BlockRayTraceResult && world.getBlockState(((BlockRayTraceResult) rayTraceResult).getBlockPos()).getBlock() instanceof IDispellable);
+    public boolean wouldSucceed(HitResult rayTraceResult, Level world, LivingEntity shooter, SpellStats spellStats, SpellContext spellContext) {
+        return rayTraceResult instanceof EntityHitResult || (rayTraceResult instanceof BlockHitResult && world.getBlockState(((BlockHitResult) rayTraceResult).getBlockPos()).getBlock() instanceof IDispellable);
     }
 
     @Override
-    public int getManaCost() {
+    public int getDefaultManaCost() {
         return 30;
-    }
-
-    @Nullable
-    @Override
-    public Item getCraftingReagent() {
-        return Items.MILK_BUCKET;
     }
 
     @Nonnull

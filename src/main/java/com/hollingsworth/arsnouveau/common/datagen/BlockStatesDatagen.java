@@ -3,9 +3,9 @@ package com.hollingsworth.arsnouveau.common.datagen;
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.common.lib.LibBlockNames;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.Block;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
@@ -29,7 +29,7 @@ public class BlockStatesDatagen extends BlockStateProvider {
         registerNormalCube(BlockRegistry.AB_CLOVER, LibBlockNames.AB_CLOVER);
         registerNormalCube(BlockRegistry.AB_SMOOTH, LibBlockNames.AB_SMOOTH);
         registerNormalCube(BlockRegistry.AB_SMOOTH_SLAB, LibBlockNames.AB_SMOOTH_SLAB);
-        registerNormalCube(BlockRegistry.MANA_GEM_BLOCK, LibBlockNames.MANA_GEM_BLOCK);
+        registerNormalCube(BlockRegistry.SOURCE_GEM_BLOCK, LibBlockNames.SOURCE_GEM_BLOCK);
 
         registerNormalCube(BlockRegistry.AB_SMOOTH_BASKET, LibBlockNames.AB_SMOOTH_BASKET);
         registerNormalCube(BlockRegistry.AB_SMOOTH_CLOVER, LibBlockNames.AB_SMOOTH_CLOVER);

@@ -2,44 +2,44 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.common.potions.ModPotions;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.block.AbstractFireBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.effect.LightningBoltEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.IPacket;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Difficulty;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LightningBolt;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseFireBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fml.network.FMLPlayMessages;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.network.PlayMessages;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 // Copy of LightningBoltEntity
-public class LightningEntity extends LightningBoltEntity {
+public class LightningEntity extends LightningBolt {
     private int lightningState;
     public long boltVertex;
     private int boltLivingTime;
     private boolean effectOnly;
     List<Integer> hitEntities = new ArrayList<>();
     @Nullable
-    private ServerPlayerEntity caster;
+    private ServerPlayer caster;
 
     public float amps;
     public int extendTimes;
@@ -47,7 +47,7 @@ public class LightningEntity extends LightningBoltEntity {
     public float ampScalar;
     public float wetBonus;
 
-    public LightningEntity(EntityType<? extends LightningBoltEntity> p_i231491_1_, World world) {
+    public LightningEntity(EntityType<? extends LightningBolt> p_i231491_1_, Level world) {
         super(p_i231491_1_, world);
         this.noCulling = true;
         this.lightningState = 2;
@@ -59,11 +59,11 @@ public class LightningEntity extends LightningBoltEntity {
         this.effectOnly = effectOnly;
     }
 
-    public SoundCategory getSoundSource() {
-        return SoundCategory.WEATHER;
+    public SoundSource getSoundSource() {
+        return SoundSource.WEATHER;
     }
 
-    public void setCause(@Nullable ServerPlayerEntity casterIn) {
+    public void setCause(@Nullable ServerPlayer casterIn) {
         this.caster = casterIn;
     }
 
@@ -71,18 +71,18 @@ public class LightningEntity extends LightningBoltEntity {
      * Called to update the entity's position/logic.
      */
     public void tick() {
-        super.tick();
+        this.baseTick();
         if (this.lightningState == 2) {
             Difficulty difficulty = this.level.getDifficulty();
 
-            this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.LIGHTNING_BOLT_THUNDER, SoundCategory.WEATHER, 1.0f, 0.8F + this.random.nextFloat() * 0.2F);
-            this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.LIGHTNING_BOLT_IMPACT, SoundCategory.WEATHER, 1.0F, 0.5F + this.random.nextFloat() * 0.2F);
+            this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.WEATHER, 1.0f, 0.8F + this.random.nextFloat() * 0.2F);
+            this.level.playSound(null, this.getX(), this.getY(), this.getZ(), SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.WEATHER, 1.0F, 0.5F + this.random.nextFloat() * 0.2F);
         }
 
         --this.lightningState;
         if (this.lightningState < 0) {
             if (this.boltLivingTime == 0) {
-                this.remove();
+                this.remove(RemovalReason.DISCARDED);
             } else if (this.lightningState < -this.random.nextInt(10)) {
                 --this.boltLivingTime;
                 this.lightningState = 1;
@@ -91,24 +91,24 @@ public class LightningEntity extends LightningBoltEntity {
         }
 
         if (this.lightningState >= 0) {
-            if (!(this.level instanceof ServerWorld)) {
+            if (!(this.level instanceof ServerLevel)) {
                 this.level.setSkyFlashTime(2);
             } else if (!this.effectOnly) {
                 double d0 = 3.0D;
-                List<Entity> list = this.level.getEntities(this, new AxisAlignedBB(this.getX() - 3.0D, this.getY() - 3.0D, this.getZ() - 3.0D, this.getX() + 3.0D, this.getY() + 6.0D + 3.0D, this.getZ() + 3.0D), Entity::isAlive);
+                List<Entity> list = this.level.getEntities(this, new AABB(this.getX() - 3.0D, this.getY() - 3.0D, this.getZ() - 3.0D, this.getX() + 3.0D, this.getY() + 6.0D + 3.0D, this.getZ() + 3.0D), Entity::isAlive);
 
                 for(Entity entity : list) {
                     if (!net.minecraftforge.event.ForgeEventFactory.onEntityStruckByLightning(entity, this)) {
                         float origDamage = this.getDamage();
                         this.setDamage(this.getDamage(entity));
-                        entity.thunderHit((ServerWorld) this.level, this);
+                        entity.thunderHit((ServerLevel) this.level, this);
                         this.setDamage(origDamage);
                         if(!level.isClientSide && !hitEntities.contains(entity.getId()) && entity instanceof LivingEntity){
-                            EffectInstance effectInstance = ((LivingEntity) entity).getEffect(ModPotions.SHOCKED_EFFECT);
+                            MobEffectInstance effectInstance = ((LivingEntity) entity).getEffect(ModPotions.SHOCKED_EFFECT);
                             int amp = effectInstance != null ? effectInstance.getAmplifier() : -1;
-                            ((LivingEntity) entity).addEffect(new EffectInstance(ModPotions.SHOCKED_EFFECT, 200 + 10*20*extendTimes, Math.min(2, amp + 1)));
+                            ((LivingEntity) entity).addEffect(new MobEffectInstance(ModPotions.SHOCKED_EFFECT, 200 + 10*20*extendTimes, Math.min(2, amp + 1)));
                         }
-                        if(!level.isClientSide && !hitEntities.contains(entity))
+                        if(!level.isClientSide && !hitEntities.contains(entity.getId()))
                             hitEntities.add(entity.getId());
 
                     }
@@ -124,14 +124,14 @@ public class LightningEntity extends LightningBoltEntity {
     private void igniteBlocks(int extraIgnitions) {
         if (!this.effectOnly && !this.level.isClientSide && this.level.getGameRules().getBoolean(GameRules.RULE_DOFIRETICK)) {
             BlockPos blockpos = this.blockPosition();
-            BlockState blockstate = AbstractFireBlock.getState(this.level, blockpos);
+            BlockState blockstate = BaseFireBlock.getState(this.level, blockpos);
             if (this.level.getBlockState(blockpos).isAir() && blockstate.canSurvive(this.level, blockpos)) {
                 this.level.setBlockAndUpdate(blockpos, blockstate);
             }
 
             for(int i = 0; i < extraIgnitions; ++i) {
                 BlockPos blockpos1 = blockpos.offset(this.random.nextInt(3) - 1, this.random.nextInt(3) - 1, this.random.nextInt(3) - 1);
-                blockstate = AbstractFireBlock.getState(this.level, blockpos1);
+                blockstate = BaseFireBlock.getState(this.level, blockpos1);
                 if (this.level.getBlockState(blockpos1).isAir() && blockstate.canSurvive(this.level, blockpos1)) {
                     this.level.setBlockAndUpdate(blockpos1, blockstate);
                 }
@@ -176,10 +176,10 @@ public class LightningEntity extends LightningBoltEntity {
     /**
      * (abstract) Protected helper method to read subclass entity data from NBT.
      */
-    protected void readAdditionalSaveData(CompoundNBT compound) {
+    protected void readAdditionalSaveData(CompoundTag compound) {
     }
 
-    protected void addAdditionalSaveData(CompoundNBT compound) {
+    protected void addAdditionalSaveData(CompoundTag compound) {
     }
 
     @Override
@@ -188,11 +188,11 @@ public class LightningEntity extends LightningBoltEntity {
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 
-    public LightningEntity(FMLPlayMessages.SpawnEntity packet, World world) {
+    public LightningEntity(PlayMessages.SpawnEntity packet, Level world) {
         super(ModEntities.LIGHTNING_ENTITY, world);
     }
 }

@@ -5,25 +5,26 @@ import com.hollingsworth.arsnouveau.common.datagen.Recipes;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Food;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 import java.util.concurrent.atomic.AtomicReference;
 
 public class MycelialSourcelinkTile extends SourcelinkTile{
-    public MycelialSourcelinkTile(TileEntityType<?> tileEntityTypeIn) {
-        super(tileEntityTypeIn);
+    public MycelialSourcelinkTile(BlockEntityType<?> tileEntityTypeIn, BlockPos pos, BlockState state) {
+        super(tileEntityTypeIn, pos, state);
     }
 
-    public MycelialSourcelinkTile(){
-        super(BlockRegistry.MYCELIAL_TILE);
+    public MycelialSourcelinkTile(BlockPos pos, BlockState state) {
+        super(BlockRegistry.MYCELIAL_TILE, pos, state);
     }
 
 
@@ -32,11 +33,11 @@ public class MycelialSourcelinkTile extends SourcelinkTile{
         super.tick();
         if(level.isClientSide)
             return;
-        if(level.getGameTime() % 40 == 0 && this.canAcceptMana()){
-            for(ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, new AxisAlignedBB(worldPosition).inflate(1.0))){
+        if(level.getGameTime() % 40 == 0 && this.canAcceptSource()){
+            for(ItemEntity i : level.getEntitiesOfClass(ItemEntity.class, new AABB(worldPosition).inflate(1.0))){
                 if(i.getItem().getItem().isEdible()){
                    int source = getSourceValue(i.getItem());
-                    this.addMana(source);
+                    this.addSource(source);
                     ItemStack containerItem = i.getItem().getContainerItem();
                     i.getItem().shrink(1);
                     if(!containerItem.isEmpty()){
@@ -49,8 +50,10 @@ public class MycelialSourcelinkTile extends SourcelinkTile{
             for(ArcanePedestalTile i : getSurroundingPedestals()){
                 int sourceValue = getSourceValue(i.getItem(0));
                 if(sourceValue > 0){
-                    this.addMana(sourceValue);
+                    this.addSource(sourceValue);
+                    ItemStack containerItem = i.getItem(0).getContainerItem();
                     i.removeItem(0, 1);
+                    i.setItem(0, containerItem);
                     Networking.sendToNearby(level, getBlockPos(),
                             new PacketANEffect(PacketANEffect.EffectType.BURST, i.getBlockPos().above(), new ParticleColor.IntWrapper(255, 255, 255)));
                 }
@@ -59,13 +62,14 @@ public class MycelialSourcelinkTile extends SourcelinkTile{
     }
 
     public int getSourceValue(ItemStack i){
-        if(i.getItem().getItem().isEdible()){
+        if(i.getItem().isEdible()){
             int mana = 0;
-            Food food = i.getItem().getItem().getFoodProperties();
+            FoodProperties food = i.getItem().getFoodProperties();
             mana += 11 * food.getNutrition();
             mana += 30 * food.getSaturationModifier();
             progress += 1;
-            if(i.getItem().getItem().is(Recipes.MAGIC_FOOD) || (i.getItem().getItem() instanceof BlockItem && Recipes.MAGIC_PLANTS.contains(((BlockItem) i.getItem().getItem()).getBlock()))){
+
+            if(i.is(Recipes.MAGIC_FOOD) || (i.getItem() instanceof BlockItem && Recipes.MAGIC_PLANTS.contains(((BlockItem) i.getItem()).getBlock()))){
                 progress += 4;
                 mana += 10;
                 mana *= 2;
