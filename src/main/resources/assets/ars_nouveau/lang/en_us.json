@@ -54,8 +54,6 @@
 	"block.ars_nouveau.mage_block": "Mage Block",
 	"block.ars_nouveau.agronomic_sourcelink": "Agronomic Sourcelink",
 	"block.ars_nouveau.source_jar": "Source Jar",
-	"block.ars_nouveau.glyph_painter": "Glyph Painter",
-	"block.ars_nouveau.glyph_imbuer": "Glyph Imbuer",
 	"block.ars_nouveau.rune": "Rune",
 	"block.ars_nouveau.warding_stone": "Warding Stone",
 	"block.ars_nouveau.arcane_pedestal": "Arcane Pedestal",
@@ -1010,5 +1008,9 @@
 	"ars_nouveau.lights_off": "You have turned dynamic lights off.",
 	"ars_nouveau.page.relay_collector": "Operates similar to the Source Relay, but will automatically take from jars it is not linked to within 5 blocks. See the instructions on the Source Relay for use.",
 	"block.ars_nouveau.relay_collector": "Source Relay: Collector",
-	"ars_nouveau.page2.relay": "A redstone signal will disable the relay."
+	"ars_nouveau.page2.relay": "A redstone signal will disable the relay.",
+	"ars_nouveau.earth_essence.tooltip": "Can be used on Dirt to turn it into Grass.",
+	"ars_nouveau.fire_essence.tooltip": "Can be used a a fuel source.",
+	"tooltip.ars_nouveau.glyph_known": "You have unlocked this glyph.",
+	"tooltip.ars_nouveau.glyph_unknown": "You have not unlocked this glyph."
 }

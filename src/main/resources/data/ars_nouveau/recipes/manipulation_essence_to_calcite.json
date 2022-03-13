@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "xxx",
+    "xyx",
+    "xxx"
+  ],
+  "key": {
+    "x": {
+      "item": "minecraft:tuff"
+    },
+    "y": {
+      "item": "ars_nouveau:manipulation_essence"
+    }
+  },
+  "result": {
+    "item": "minecraft:calcite",
+    "count": 8
+  }
+}

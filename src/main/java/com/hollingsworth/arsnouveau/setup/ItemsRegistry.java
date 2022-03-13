@@ -69,7 +69,6 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.AMULET_OF_MANA_REGEN)public static AbstractManaCurio AMULET_OF_MANA_REGEN;
     @ObjectHolder(LibItemNames.DULL_TRINKET)public static ModItem DULL_TRINKET;
     @ObjectHolder(LibItemNames.STARBUNCLE_CHARM) public static StarbuncleCharm STARBUNCLE_CHARM;
-    @ObjectHolder(LibItemNames.DOMINION_WAND)public static DominionWand DOMINION_WAND;
     @ObjectHolder("debug")public static Debug debug;
     @ObjectHolder(LibItemNames.STARBUNCLE_SHARDS)public static ModItem STARBUNCLE_SHARD;
     @ObjectHolder(LibItemNames.WHIRLISPRIG_CHARM)public static WhirlisprigCharm WHIRLISPRIG_CHARM;
@@ -122,8 +121,8 @@ public class ItemsRegistry {
     @ObjectHolder(LibItemNames.ABJURATION_ESSENCE)public static ModItem ABJURATION_ESSENCE;
     @ObjectHolder(LibItemNames.CONJURATION_ESSENCE)public static ModItem CONJURATION_ESSENCE;
     @ObjectHolder(LibItemNames.AIR_ESSENCE)public static ModItem AIR_ESSENCE;
-    @ObjectHolder(LibItemNames.EARTH_ESSENCE)public static ModItem EARTH_ESSENCE;
-    @ObjectHolder(LibItemNames.FIRE_ESSENCE)public static ModItem FIRE_ESSENCE;
+    @ObjectHolder(LibItemNames.EARTH_ESSENCE)public static EarthEssence EARTH_ESSENCE;
+    @ObjectHolder(LibItemNames.FIRE_ESSENCE)public static FireEssence FIRE_ESSENCE;
     @ObjectHolder(LibItemNames.MANIPULATION_ESSENCE)public static ModItem MANIPULATION_ESSENCE;
     @ObjectHolder(LibItemNames.WATER_ESSENCE)public static ModItem WATER_ESSENCE;
     @ObjectHolder(LibItemNames.AMETHYST_GOLEM_CHARM)public static AmethystGolemCharm AMETHYST_GOLEM_CHARM;
@@ -273,8 +272,8 @@ public class ItemsRegistry {
                     new ModItem(LibItemNames.ABJURATION_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
                     new ModItem(LibItemNames.CONJURATION_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
                     new ModItem(LibItemNames.AIR_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
-                    new ModItem(LibItemNames.EARTH_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
-                    new ModItem(LibItemNames.FIRE_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
+                    new EarthEssence(LibItemNames.EARTH_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
+                    new FireEssence(LibItemNames.FIRE_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
                     new ModItem(LibItemNames.MANIPULATION_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
                     new ModItem(LibItemNames.WATER_ESSENCE).withTooltip(new TranslatableComponent("tooltip.essences")),
                     new DowsingRod(LibItemNames.DOWSING_ROD),
