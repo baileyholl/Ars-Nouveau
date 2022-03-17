@@ -37,6 +37,8 @@ import java.util.stream.Collectors;
  * Main class of the Ars Nouveau API.
  *
  * Obtain an instance with {@link ArsNouveauAPI#getInstance()}.
+ * FOR ADDON AUTHORS: All registration should occur from the {@link com.hollingsworth.arsnouveau.api.event.ArsNouveauAPIEvent.Init event}.
+ * That event is fired after mod loading. Adding to these maps during mod loading IS NOT THREAD SAFE.
  */
 public class ArsNouveauAPI {
 
@@ -180,10 +182,6 @@ public class ArsNouveauAPI {
 
     public Map<String, RitualTablet> getRitualItemMap(){
         return ritualParchmentMap;
-    }
-
-    public List<IEnchantingRecipe> getEnchantingApparatusRecipes() {
-        return enchantingApparatusRecipes;
     }
 
     public Map<String, AbstractFamiliarHolder> getFamiliarHolderMap(){

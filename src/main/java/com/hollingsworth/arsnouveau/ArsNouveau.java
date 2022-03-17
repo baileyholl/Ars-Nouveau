@@ -1,5 +1,7 @@
 package com.hollingsworth.arsnouveau;
 
+import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
+import com.hollingsworth.arsnouveau.api.event.ArsNouveauAPIEvent;
 import com.hollingsworth.arsnouveau.client.ClientHandler;
 import com.hollingsworth.arsnouveau.client.TextureEvent;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
@@ -22,6 +24,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -50,6 +53,7 @@ public class ArsNouveau {
         Mod.EventBusSubscriber.Bus.FORGE.bus().get().register(FMLEventHandler.class);
 
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::postModLoadEvent);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::sendImc);
         MinecraftForge.EVENT_BUS.register(this);
@@ -65,6 +69,11 @@ public class ArsNouveau {
         if(false && Config.ARCHWOOD_FOREST_WEIGHT.get() > 0) {
            // BiomeManager.addBiome(BiomeManager.BiomeType.COOL, new BiomeManager.BiomeEntry(WorldEvent.archwoodKey, Config.ARCHWOOD_FOREST_WEIGHT.get()));
         }
+    }
+
+    public void postModLoadEvent(final FMLLoadCompleteEvent event){
+        MinecraftForge.EVENT_BUS.post(new ArsNouveauAPIEvent.Init(ArsNouveauAPI.getInstance()));
+        MinecraftForge.EVENT_BUS.post(new ArsNouveauAPIEvent.PostInit(ArsNouveauAPI.getInstance()));
     }
 
     public void clientSetup(final FMLClientSetupEvent event){
