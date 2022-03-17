@@ -55,7 +55,7 @@ public class ArsNouveauAPI {
     private HashMap<String, AbstractFamiliarHolder> familiarHolderMap = new HashMap<>();
 
     /**
-     * Contains the list of glyph item instances used by the glyph press.
+     * Contains the list of glyph item instances.
      */
     private HashMap<String, Glyph> glyphItemMap = new HashMap<>();
 

@@ -1,7 +1,5 @@
 package com.hollingsworth.arsnouveau;
 
-import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.event.ArsNouveauAPIEvent;
 import com.hollingsworth.arsnouveau.client.ClientHandler;
 import com.hollingsworth.arsnouveau.client.TextureEvent;
 import com.hollingsworth.arsnouveau.common.entity.pathfinding.ClientEventHandler;
@@ -71,10 +69,7 @@ public class ArsNouveau {
         }
     }
 
-    public void postModLoadEvent(final FMLLoadCompleteEvent event){
-        MinecraftForge.EVENT_BUS.post(new ArsNouveauAPIEvent.Init(ArsNouveauAPI.getInstance()));
-        MinecraftForge.EVENT_BUS.post(new ArsNouveauAPIEvent.PostInit(ArsNouveauAPI.getInstance()));
-    }
+    public void postModLoadEvent(final FMLLoadCompleteEvent event){}
 
     public void clientSetup(final FMLClientSetupEvent event){
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientHandler::init);
