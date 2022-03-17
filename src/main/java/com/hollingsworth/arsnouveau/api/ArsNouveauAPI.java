@@ -202,14 +202,16 @@ public class ArsNouveauAPI {
     }
 
     public List<IEnchantingRecipe> getEnchantingApparatusRecipes(World world) {
-        List<IEnchantingRecipe> recipes = new ArrayList<>(enchantingApparatusRecipes);
+        List<IEnchantingRecipe> allRecipes = new ArrayList<>(enchantingApparatusRecipes);
         RecipeManager manager = world.getRecipeManager();
-        for(IRecipe i : manager.getRecipes()){
+        List<IEnchantingRecipe> recipes = manager.getAllRecipesFor(RecipeRegistry.APPARATUS_TYPE);
+        recipes.addAll(manager.getAllRecipesFor(RecipeRegistry.ENCHANTMENT_TYPE));
+        for(IRecipe i : recipes){
             if(i instanceof IEnchantingRecipe){
-                recipes.add((IEnchantingRecipe) i);
+                allRecipes.add((IEnchantingRecipe) i);
             }
         }
-        return recipes;
+        return allRecipes;
     }
 
     public @Nullable GlyphPressRecipe getGlyphPressRecipe(World world, Item reagent, @Nullable ISpellTier.Tier tier){
