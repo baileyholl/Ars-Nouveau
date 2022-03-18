@@ -2,7 +2,6 @@ package com.hollingsworth.arsnouveau.setup;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
-import com.hollingsworth.arsnouveau.api.event.ArsNouveauAPIEvent;
 import com.hollingsworth.arsnouveau.api.spell.SpellTier;
 import com.hollingsworth.arsnouveau.common.armor.ApprenticeArmor;
 import com.hollingsworth.arsnouveau.common.armor.MasterArmor;
@@ -29,7 +28,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.Tiers;
 import net.minecraftforge.common.ForgeSpawnEggItem;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -140,8 +138,6 @@ public class ItemsRegistry {
 
         @SubscribeEvent
         public static void registerItems(final RegistryEvent.Register<Item> event) {
-            MinecraftForge.EVENT_BUS.post(new ArsNouveauAPIEvent.Init(ArsNouveauAPI.getInstance()));
-
             Item[] items = {
                     new Debug(),
                     new BookwyrmCharm(),
@@ -304,7 +300,6 @@ public class ItemsRegistry {
                 registry.register(item);
                 ITEMS.add(item);
             }
-            MinecraftForge.EVENT_BUS.post(new ArsNouveauAPIEvent.PostInit(ArsNouveauAPI.getInstance()));
         }
     }
 
