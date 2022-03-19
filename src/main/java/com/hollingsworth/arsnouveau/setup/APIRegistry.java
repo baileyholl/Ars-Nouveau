@@ -106,7 +106,14 @@ public class APIRegistry {
         registerSpell(EffectEvaporate.INSTANCE);
         registerSpell(EffectLinger.INSTANCE);
 
-        ArsNouveauAPI.getInstance().registerScryer(SingleBlockScryer.INSTANCE);
+        ArsNouveauAPI api = ArsNouveauAPI.getInstance();
+        api.registerScryer(SingleBlockScryer.INSTANCE);
+        api.getEnchantingRecipeTypes().add(RecipeRegistry.APPARATUS_TYPE);
+        api.getEnchantingRecipeTypes().add(RecipeRegistry.ENCHANTMENT_TYPE);
+        api.getEnchantingRecipeTypes().add(RecipeRegistry.REACTIVE_TYPE);
+        api.getEnchantingRecipeTypes().add(RecipeRegistry.SPELL_WRITE_TYPE);
+
+
     }
 
     public static void registerFamiliar(AbstractFamiliarHolder familiar){

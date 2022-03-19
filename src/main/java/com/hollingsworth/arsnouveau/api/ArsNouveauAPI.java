@@ -18,8 +18,8 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
@@ -28,6 +28,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -65,6 +66,8 @@ public class ArsNouveauAPI {
     private ConcurrentHashMap<String, RitualTablet> ritualParchmentMap = new ConcurrentHashMap<>();
 
     private ConcurrentHashMap<String, IScryer> scryerMap = new ConcurrentHashMap<>();
+
+    private Set<RecipeType<? extends IEnchantingRecipe>> enchantingRecipeTypes = ConcurrentHashMap.newKeySet();
 
     /** Validator to use when crafting a spell in the spell book. */
     private ISpellValidator craftingSpellValidator;
@@ -160,22 +163,26 @@ public class ArsNouveauAPI {
         return this.familiarScriptMap;
     }
 
+    public Set<RecipeType<? extends IEnchantingRecipe>> getEnchantingRecipeTypes() {
+        return enchantingRecipeTypes;
+    }
+
     public List<IEnchantingRecipe> getEnchantingApparatusRecipes(Level world) {
         List<IEnchantingRecipe> recipes = new ArrayList<>(enchantingApparatusRecipes);
         RecipeManager manager = world.getRecipeManager();
-        for(Recipe i : manager.getRecipes()){
-            if(i instanceof IEnchantingRecipe){
-                recipes.add((IEnchantingRecipe) i);
-            }
+        List<IEnchantingRecipe> recipesByType = new ArrayList<>(); // todo lazy init enchanting types
+        for(RecipeType<? extends IEnchantingRecipe> type : enchantingRecipeTypes){
+            recipesByType.addAll(manager.getAllRecipesFor(type));
         }
+        recipes.addAll(recipesByType);
         return recipes;
     }
 
     public List<BrewingRecipe> getAllPotionRecipes(){
         if(brewingRecipes.isEmpty()){
             BrewingRecipeRegistry.getRecipes().forEach(ib ->{
-                if(ib instanceof BrewingRecipe)
-                    brewingRecipes.add((BrewingRecipe) ib);
+                if(ib instanceof BrewingRecipe brewingRecipe)
+                    brewingRecipes.add(brewingRecipe);
             });
 
             vanillaPotionRecipes.forEach(vanillaPotionRecipe -> {
