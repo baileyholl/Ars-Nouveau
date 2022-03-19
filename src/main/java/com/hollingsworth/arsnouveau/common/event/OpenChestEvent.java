@@ -19,16 +19,26 @@ public class OpenChestEvent implements ITimedEvent {
 
     public void open(){
         Level world = fakePlayer.level;
-        if(world.getBlockEntity(pos) instanceof ChestBlockEntity){
-            ((ChestBlockEntity) world.getBlockEntity(pos)).startOpen(fakePlayer);
-
+        try {
+            if (world.getBlockEntity(pos) instanceof ChestBlockEntity chestBlockEntity) {
+                fakePlayer.nextContainerCounter();
+                fakePlayer.containerMenu = chestBlockEntity.createMenu(fakePlayer.containerCounter, fakePlayer.inventory, fakePlayer);
+                fakePlayer.setPos(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
     public void attemptClose(){
         Level world = fakePlayer.level;
-        if(world.getBlockEntity(pos) instanceof ChestBlockEntity){
-            ((ChestBlockEntity) world.getBlockEntity(pos)).stopOpen(fakePlayer);
+        try {
+            if (world.getBlockEntity(pos) instanceof ChestBlockEntity) {
+                fakePlayer.setPos(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+                fakePlayer.containerMenu = null;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
