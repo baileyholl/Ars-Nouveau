@@ -15,9 +15,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -52,9 +55,12 @@ public class SoundScreen extends BaseBook{
 
         addRenderableWidget(volumeSlider);
         addRenderableWidget(pitchSlider);
-        addRenderableWidget(new GuiImageButton(bookLeft + 55, bookBottom - 36, 0,0,37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveClick));
+        addRenderableWidget(new GuiImageButton(bookLeft + 25 , bookBottom - 36, 0,0,37, 12, 37, 12, "textures/gui/save_icon.png", this::onSaveClick));
+        GuiImageButton testButton = new GuiImageButton(bookLeft + 90, bookBottom - 36, 0,0,37, 12, 37, 12, "textures/gui/sound_test_icon.png", this::onTestClick);
+        testButton.soundDisabled = true;
+        addRenderableWidget(testButton);
 
-        selectedButton = new SoundButton(this, bookLeft + 70, bookTop + 132, selectedSound, (b) -> {
+        selectedButton = new SoundButton(this, bookLeft + 69, bookTop + 131, selectedSound, (b) -> {
             ((SoundButton)b).sound = SoundRegistry.EMPTY_SPELL_SOUND;
             selectedSound = SoundRegistry.EMPTY_SPELL_SOUND;
         });
@@ -103,6 +109,14 @@ public class SoundScreen extends BaseBook{
         }
     }
 
+    public void onTestClick(Button button){
+        if(selectedSound == null)
+            return;
+        LocalPlayer localPlayer = Minecraft.getInstance().player;
+        BlockPos pos = localPlayer.getOnPos().above(2);
+        localPlayer.level.playLocalSound(pos.getX(), pos.getY(), pos.getZ(), selectedSound.getSoundEvent(), SoundSource.PLAYERS, (float)volume/100f, (float)pitch/100f, false);
+    }
+
     public void onSaveClick(Button button){
         Networking.INSTANCE.sendToServer(new PacketSetSound(casterSlot, selectedSound == null ? ConfiguredSpellSound.EMPTY : new ConfiguredSpellSound(selectedSound, (float)volume / 100f, (float) pitch / 100f)));
     }
@@ -110,10 +124,11 @@ public class SoundScreen extends BaseBook{
     @Override
     public void drawBackgroundElements(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
         super.drawBackgroundElements(stack, mouseX, mouseY, partialTicks);
-        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/slider_gilding.png"), 22, 47, 0, 0, 112, 104,112,104, stack);
+        drawFromTexture(new ResourceLocation(ArsNouveau.MODID, "textures/gui/sound_slider_gilding.png"), 22, 47, 0, 0, 112, 104,112,104, stack);
         int color = -8355712;
         minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.sounds.title").getString(), 51, 24,  color);
-        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.color_gui.save").getString(), 67, 160,  color);
+        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.color_gui.save").getString(), 37, 160,  color);
+        minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.sounds.test").getString(), 102, 160,  color);
 
     }
 

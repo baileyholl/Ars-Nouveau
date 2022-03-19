@@ -1018,5 +1018,6 @@
 	"ars_nouveau.earth_essence.tooltip": "Can be used on Dirt to turn it into Grass.",
 	"ars_nouveau.fire_essence.tooltip": "Can be used a a fuel source.",
 	"tooltip.ars_nouveau.glyph_known": "You have unlocked this glyph.",
-	"tooltip.ars_nouveau.glyph_unknown": "You have not unlocked this glyph."
+	"tooltip.ars_nouveau.glyph_unknown": "You have not unlocked this glyph.",
+	"ars_nouveau.sounds.test": "Test"
 }

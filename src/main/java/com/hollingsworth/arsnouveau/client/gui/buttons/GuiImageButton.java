@@ -8,6 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -28,6 +29,7 @@ public class GuiImageButton extends Button
     int u, v, image_width, image_height;
     BaseBook parent;
     TranslatableComponent toolTip;
+    public boolean soundDisabled = false;
 
 
     public GuiImageButton( int x, int y,int u,int v,int w, int h, int image_width, int image_height, String resource_image, Button.OnPress onPress) {
@@ -71,5 +73,12 @@ public class GuiImageButton extends Button
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, image_width, image_height,ms);
         }
+    }
+
+    @Override
+    public void playDownSound(SoundManager pHandler) {
+        if(soundDisabled)
+            return;
+        super.playDownSound(pHandler);
     }
 }
