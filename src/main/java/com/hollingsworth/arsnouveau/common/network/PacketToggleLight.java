@@ -1,6 +1,6 @@
 package com.hollingsworth.arsnouveau.common.network;
 
-import com.hollingsworth.arsnouveau.setup.Config;
+import com.hollingsworth.arsnouveau.common.light.LightManager;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -24,8 +24,7 @@ public class PacketToggleLight {
 
     public void handle(Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(()->{
-            Config.DYNAMIC_LIGHTS_ENABLED.set(enabled);
-            Config.DYNAMIC_LIGHTS_ENABLED.save();
+            LightManager.toggleLightsAndConfig(enabled);
         } );
         ctx.get().setPacketHandled(true);
     }

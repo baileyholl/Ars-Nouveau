@@ -1020,5 +1020,8 @@
 	"tooltip.ars_nouveau.glyph_known": "You have unlocked this glyph.",
 	"tooltip.ars_nouveau.glyph_unknown": "You have not unlocked this glyph.",
 	"ars_nouveau.sounds.test": "Test",
-	"ars_nouveau.gui.settings": "Settings for Dynamic Lighting"
+	"ars_nouveau.gui.settings": "Settings for Dynamic Lighting",
+	"ars_nouveau.settings.title": "Settings",
+	"ars_nouveau.dynamic_lights.button_on": "Dynamic lights are turned on.  This can cause lag for users with weaker CPUs, low RAM allocation, and unexpected results with 'performance' mods like Optifine.",
+	"ars_nouveau.dynamic_lights.button_off": "Dynamic lights are turned off."
 }

@@ -143,7 +143,7 @@ public class GuiSpellBook extends BaseBook {
                 .withTooltip(this, new TranslatableComponent("ars_nouveau.gui.familiar")));
         addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 94, 0, 0, 23, 20, 23,20, "textures/gui/sounds_tab.png",this::onSoundsClick)
                 .withTooltip(this, new TranslatableComponent("ars_nouveau.gui.sounds")));
-        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 108, 0, 0, 23, 20, 23,20, "textures/gui/settings_tab.png",(b) ->{
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 118, 0, 0, 23, 20, 23,20, "textures/gui/settings_tab.png",(b) ->{
             Minecraft.getInstance().setScreen(new GuiSettingsScreen(this));
         }).withTooltip(this, new TranslatableComponent("ars_nouveau.gui.settings")));
         this.nextButton = addRenderableWidget(new PageButton(bookRight -20, bookBottom -10, true, this::onPageIncrease, true));
