@@ -1,13 +1,13 @@
 package com.hollingsworth.arsnouveau.client.gui.book;
 
 import com.hollingsworth.arsnouveau.ArsNouveau;
+import com.hollingsworth.arsnouveau.client.gui.book.slider.ANProgressOption;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketUpdateSpellColors;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
-import net.minecraft.client.ProgressOption;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.SliderButton;
 import net.minecraft.network.chat.TextComponent;
@@ -128,7 +128,7 @@ public class GuiColorScreen extends BaseBook {
         super.drawForegroundElements(mouseX, mouseY, partialTicks);
     }
 
-    protected ProgressOption buildSlider(String key, Function<Options, Double> getter, BiConsumer<Options, Double> setter){
-        return new ProgressOption(key, 1.0D, 255.0D, 1.0F, getter, setter, (settings, optionValues) -> new TextComponent(key + (int)optionValues.get(settings)));
+    protected ANProgressOption buildSlider(String key, Function<Options, Double> getter, BiConsumer<Options, Double> setter){
+        return new ANProgressOption(key, 1.0D, 255.0D, 1.0F, getter, setter, (settings, optionValues) -> new TextComponent(key + (int)optionValues.get(settings)));
     }
 }
