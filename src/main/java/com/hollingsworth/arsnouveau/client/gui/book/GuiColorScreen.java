@@ -38,9 +38,9 @@ public class GuiColorScreen extends BaseBook {
     @Override
     public void init() {
         super.init();
-        redW = (SliderButton)buildSlider(new TranslatableComponent("ars_nouveau.color_gui.red_slider").getString(), s -> red, (settings, d) -> red = d).createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 49, 100);
-        greenW = (SliderButton)buildSlider(new TranslatableComponent("ars_nouveau.color_gui.green_slider").getString(), s -> green, (settings, d) -> green = d).createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 89, 100);
-        blueW = (SliderButton)buildSlider(new TranslatableComponent("ars_nouveau.color_gui.blue_slider").getString(), s -> blue, (settings, d) -> blue = d).createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 129, 100);
+        redW = buildSlider(new TranslatableComponent("ars_nouveau.color_gui.red_slider").getString(), s -> red, (settings, d) -> red = d).createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 49, 100);
+        greenW = buildSlider(new TranslatableComponent("ars_nouveau.color_gui.green_slider").getString(), s -> green, (settings, d) -> green = d).createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 89, 100);
+        blueW = buildSlider(new TranslatableComponent("ars_nouveau.color_gui.blue_slider").getString(), s -> blue, (settings, d) -> blue = d).createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 129, 100);
         addRenderableWidget(redW);
         addRenderableWidget(greenW);
         addRenderableWidget(blueW);
@@ -117,10 +117,7 @@ public class GuiColorScreen extends BaseBook {
         minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.color_gui.white").getString(), 228, 70,  color);
         minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.color_gui.orange").getString(), 228, 94,  color);
         minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.color_gui.cyan").getString(), 228, 118,  color);
-       // minecraft.fontRenderer.drawString(stack, "Ice", 218, 115,  0);
         minecraft.font.draw(stack, new TranslatableComponent("ars_nouveau.color_gui.save").getString(), 67, 160,  color);
-
-
     }
 
     @Override

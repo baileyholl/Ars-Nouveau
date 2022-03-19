@@ -143,6 +143,9 @@ public class GuiSpellBook extends BaseBook {
                 .withTooltip(this, new TranslatableComponent("ars_nouveau.gui.familiar")));
         addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 94, 0, 0, 23, 20, 23,20, "textures/gui/sounds_tab.png",this::onSoundsClick)
                 .withTooltip(this, new TranslatableComponent("ars_nouveau.gui.sounds")));
+        addRenderableWidget(new GuiImageButton(bookLeft - 15, bookTop + 108, 0, 0, 23, 20, 23,20, "textures/gui/settings_tab.png",(b) ->{
+            Minecraft.getInstance().setScreen(new GuiSettingsScreen(this));
+        }).withTooltip(this, new TranslatableComponent("ars_nouveau.gui.settings")));
         this.nextButton = addRenderableWidget(new PageButton(bookRight -20, bookBottom -10, true, this::onPageIncrease, true));
         this.previousButton = addRenderableWidget(new PageButton(bookLeft - 5 , bookBottom -10, false, this::onPageDec, true));
 
@@ -341,7 +344,7 @@ public class GuiSpellBook extends BaseBook {
             familiarHolders = cap.getUnlockedFamiliars().stream().map(s -> s.familiarHolder.id).collect(Collectors.toList());
         }
         Collection<String> finalFamiliarHolders = familiarHolders;
-        Minecraft.getInstance().setScreen(new GuiFamiliarScreen(api, ArsNouveauAPI.getInstance().getFamiliarHolderMap().values().stream().filter(f -> finalFamiliarHolders.contains(f.id)).collect(Collectors.toList())));
+        Minecraft.getInstance().setScreen(new GuiFamiliarScreen(api, ArsNouveauAPI.getInstance().getFamiliarHolderMap().values().stream().filter(f -> finalFamiliarHolders.contains(f.id)).collect(Collectors.toList()), this));
     }
 
     public void onCraftingSlotClick(Button button){
