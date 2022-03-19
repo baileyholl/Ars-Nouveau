@@ -5,6 +5,7 @@ import com.hollingsworth.arsnouveau.common.datagen.Recipes;
 import com.hollingsworth.arsnouveau.common.network.Networking;
 import com.hollingsworth.arsnouveau.common.network.PacketANEffect;
 import com.hollingsworth.arsnouveau.setup.BlockRegistry;
+import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.Tag;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -80,6 +81,9 @@ public class VolcanicSourcelinkTile extends SourcelinkTile implements IAnimatabl
         }else if(i.is(Recipes.ARCHWOOD_LOG_TAG)){
             source += 50;
             progress += 3;
+        }
+        if(i.getItem() == ItemsRegistry.FIRE_ESSENCE){
+            source = 2000;
         }
         this.progress += progress;
         return source;

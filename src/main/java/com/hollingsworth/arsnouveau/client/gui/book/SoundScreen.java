@@ -4,6 +4,8 @@ import com.hollingsworth.arsnouveau.ArsNouveau;
 import com.hollingsworth.arsnouveau.api.ArsNouveauAPI;
 import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.sound.SpellSound;
+import com.hollingsworth.arsnouveau.client.gui.BookSlider;
+import com.hollingsworth.arsnouveau.client.gui.book.slider.ANProgressOption;
 import com.hollingsworth.arsnouveau.client.gui.buttons.GuiImageButton;
 import com.hollingsworth.arsnouveau.client.gui.buttons.SoundButton;
 import com.hollingsworth.arsnouveau.common.network.Networking;
@@ -12,9 +14,7 @@ import com.hollingsworth.arsnouveau.setup.SoundRegistry;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
-import net.minecraft.client.ProgressOption;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.SliderButton;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -34,8 +34,8 @@ public class SoundScreen extends BaseBook{
         casterSlot = slot;
     }
 
-    public SliderButton volumeSlider;
-    public SliderButton pitchSlider;
+    public BookSlider volumeSlider;
+    public BookSlider pitchSlider;
 
 
     public double volume;
@@ -45,9 +45,9 @@ public class SoundScreen extends BaseBook{
     @Override
     public void init() {
         super.init();
-        volumeSlider = (SliderButton)buildSlider(new TranslatableComponent("ars_nouveau.sounds.volume").getString(), s -> volume, (settings, d) -> volume = d, 0, 100, 1)
+        volumeSlider = buildSlider(new TranslatableComponent("ars_nouveau.sounds.volume").getString(), s -> volume, (settings, d) -> volume = d, 0, 100, 1)
                 .createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 49, 100);
-        pitchSlider = (SliderButton)buildSlider(new TranslatableComponent("ars_nouveau.sounds.pitch").getString(), s -> pitch, (settings, d) -> pitch = d, 0, 200, 1)
+        pitchSlider = buildSlider(new TranslatableComponent("ars_nouveau.sounds.pitch").getString(), s -> pitch, (settings, d) -> pitch = d, 0, 200, 1)
                 .createButton(Minecraft.getInstance().options, bookLeft + 28, bookTop + 89, 100);
 
         addRenderableWidget(volumeSlider);
@@ -122,7 +122,7 @@ public class SoundScreen extends BaseBook{
         super.drawForegroundElements(mouseX, mouseY, partialTicks);
     }
 
-    protected ProgressOption buildSlider(String key, Function<Options, Double> getter, BiConsumer<Options, Double> setter, double min, double max, float step){
-        return new ProgressOption(key, min, max, step, getter, setter, (settings, optionValues) -> new TextComponent(key + (int)optionValues.get(settings)));
+    protected ANProgressOption buildSlider(String key, Function<Options, Double> getter, BiConsumer<Options, Double> setter, double min, double max, float step){
+        return new ANProgressOption(key, min, max, step, getter, setter, (settings, optionValues) -> new TextComponent(key + (int)optionValues.get(settings)));
     }
 }

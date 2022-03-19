@@ -46,24 +46,24 @@ public class EffectColdSnap extends AbstractEffect {
 
         damage(vec, world, shooter, spellStats, damage, snareSec, livingEntity);
 
-        for(Entity e : world.getEntitiesOfClass(LivingEntity.class, new AABB(livingEntity.blockPosition().north(range).east(range).above(range),  livingEntity.blockPosition().south(range).west(range).below(range)))){
-            if(e.equals(livingEntity) || !(e instanceof LivingEntity) || e.equals(shooter))
+        for(LivingEntity e : world.getEntitiesOfClass(LivingEntity.class, new AABB(livingEntity.blockPosition().north(range).east(range).above(range),  livingEntity.blockPosition().south(range).west(range).below(range)))){
+            if(e.equals(livingEntity) || e.equals(shooter))
                 continue;
-            if(canDamage((LivingEntity) e)){
+            if(canDamage(e)){
                 vec = e.position();
-                damage(vec, world, shooter, spellStats, damage, snareSec, (LivingEntity) e);
+                damage(vec, world, shooter, spellStats, damage, snareSec, e);
             }else{
-                ((LivingEntity) e).addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * snareSec, (int) spellStats.getAmpMultiplier()));
+                e.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 20 * snareSec, (int) spellStats.getAmpMultiplier()));
             }
         }
     }
 
     public boolean canDamage(LivingEntity livingEntity){
-        return livingEntity.isInWaterOrRain() || livingEntity.getEffect(MobEffects.MOVEMENT_SLOWDOWN) != null;
+        return livingEntity.isInWaterOrRain() || livingEntity.hasEffect(MobEffects.MOVEMENT_SLOWDOWN);
     }
 
     public void damage(Vec3 vec, Level world, @Nullable LivingEntity shooter, SpellStats stats, float damage, int snareTime, LivingEntity livingEntity){
-        EntityDamageSource damageSource = new EntityDamageSource("cold", shooter == null ? FakePlayerFactory.getMinecraft((ServerLevel) world) : shooter);
+        EntityDamageSource damageSource = new EntityDamageSource("freeze", shooter == null ? FakePlayerFactory.getMinecraft((ServerLevel) world) : shooter);
         damageSource.setMagic();
         dealDamage(world, shooter, damage, stats, livingEntity, damageSource);
         ((ServerLevel)world).sendParticles(ParticleTypes.SPIT, vec.x, vec.y +0.5, vec.z,50,
