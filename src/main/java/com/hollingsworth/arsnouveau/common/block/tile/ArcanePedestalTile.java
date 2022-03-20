@@ -66,7 +66,7 @@ public class ArcanePedestalTile extends AnimatedTile implements IInventory {
 
     @Override
     public ItemStack removeItem(int index, int count) {
-        ItemStack toReturn = getItem(0).copy();
+        ItemStack toReturn = getItem(0).copy().split(count);
         stack.shrink(1);
         updateBlock();
         return toReturn;
@@ -74,10 +74,7 @@ public class ArcanePedestalTile extends AnimatedTile implements IInventory {
 
     @Override
     public ItemStack removeItemNoUpdate(int index) {
-        ItemStack toReturn = getItem(0).copy();
-        stack.shrink(1);
-        updateBlock();
-        return toReturn;
+       return getItem(0);
     }
 
     @Override
