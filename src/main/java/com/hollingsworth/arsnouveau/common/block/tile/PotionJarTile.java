@@ -192,10 +192,18 @@ public class PotionJarTile extends TileEntity implements ITickableTileEntity, IT
 
     //If the effect list of jars or flasks are equal
     public boolean isMixEqual(Potion potion){
+        if(potion.getEffects().isEmpty() && this.potion.getEffects().isEmpty()){
+            return potion == this.potion;
+        }
         return isMixEqual(potion.getEffects());
     }
 
     public boolean isMixEqual(ItemStack stack){
+        // Checking for same effect sets is not sufficient for potions that have no effects, like water and awkward.
+        if(PotionUtils.getMobEffects(stack).isEmpty() && potion.getEffects().isEmpty()){
+            return PotionUtils.getPotion(stack) == potion;
+        }
+
         return isMixEqual(PotionUtils.getMobEffects(stack));
     }
 

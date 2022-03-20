@@ -84,10 +84,9 @@ public class ArcanePedestalTile extends AnimatedTile implements IInventory {
 
     @Override
     public void setItem(int index, ItemStack s) {
-        if(stack == null || stack.isEmpty()) {
-            stack = s;
-            updateBlock();
-        }
+        stack = s;
+        updateBlock();
+
     }
 
     @Override
