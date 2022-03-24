@@ -76,6 +76,8 @@ public class APIRegistry {
         registerSpell(MethodOrbit.INSTANCE);
         registerSpell(EffectRune.INSTANCE);
         registerSpell(EffectFreeze.INSTANCE);
+        registerSpell(EffectName.INSTANCE);
+        registerSpell(EffectSummonUndead.INSTANCE);
         registerRitual(new RitualDig());
         registerRitual(new RitualMoonfall());
         registerRitual(new RitualCloudshaper());

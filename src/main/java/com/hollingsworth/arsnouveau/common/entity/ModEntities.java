@@ -66,6 +66,7 @@ public class ModEntities {
                     .setTrackingRange(10)
                     .setShouldReceiveVelocityUpdates(true));
     public static EntityType<SummonHorse> SUMMON_HORSE = null;
+    public static EntityType<SummonSkeleton> SUMMON_SKELETON = null;
     public static EntityType<WildenGuardian> WILDEN_GUARDIAN = build(
             LibEntityNames.WILDEN_GUARDIAN,
             EntityType.Builder.<WildenGuardian>of(WildenGuardian::new, MobCategory.MONSTER)
@@ -168,6 +169,8 @@ public class ModEntities {
                     LibEntityNames.SUMMONED_HORSE,
                     EntityType.Builder.<SummonHorse>of(SummonHorse::new, MobCategory.CREATURE).sized(1.3964844F, 1.6F).clientTrackingRange(10));
 
+            SUMMON_SKELETON = build(LibEntityNames.SUMMONED_SKELETON,
+                    EntityType.Builder.<SummonSkeleton>of(SummonSkeleton::new, MobCategory.CREATURE).sized(1.0F, 1.8F).clientTrackingRange(10));
 
             ENTITY_DUMMY = build(
                     LibEntityNames.DUMMY,
@@ -273,7 +276,8 @@ public class ModEntities {
                     ENTITY_BLAZING_WEALD,
                     ENTITY_VEXING_WEALD,
                     ENTITY_FLOURISHING_WEALD,
-                    AMETHYST_GOLEM
+                    AMETHYST_GOLEM,
+                    SUMMON_SKELETON
             );
 
 
@@ -316,6 +320,7 @@ public class ModEntities {
             event.put(ENTITY_FLOURISHING_WEALD, WealdWalker.attributes().build());
             event.put(ENTITY_VEXING_WEALD, WealdWalker.attributes().build());
             event.put(AMETHYST_GOLEM, AmethystGolem.attributes().build());
+            event.put(SUMMON_SKELETON, SummonSkeleton.createAttributes().build());
         }
     }
 
