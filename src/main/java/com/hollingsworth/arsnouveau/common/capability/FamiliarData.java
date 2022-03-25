@@ -8,7 +8,7 @@ import net.minecraft.world.level.Level;
 
 
 public class FamiliarData {
-
+    public static final String ENTITY_TAG = "entityTag";
     public AbstractFamiliarHolder familiarHolder;
     CompoundTag entityTag;
 
@@ -18,14 +18,14 @@ public class FamiliarData {
     }
 
     public FamiliarData(CompoundTag tag){
-        this.entityTag = tag.contains("entityTag") ? tag.getCompound("entityTag") : new CompoundTag();
+        this.entityTag = tag.contains(ENTITY_TAG) ? tag.getCompound(ENTITY_TAG) : new CompoundTag();
         this.familiarHolder = ArsNouveauAPI.getInstance().getFamiliarHolderMap().getOrDefault(tag.getString("familiar"),ArsNouveauAPI.getInstance().getFamiliarHolderMap().get("wixie"));
     }
 
     public CompoundTag toTag(){
         CompoundTag tag = new CompoundTag();
         tag.putString("familiar", familiarHolder.id);
-        tag.put("entityTag", entityTag);
+        tag.put(ENTITY_TAG, entityTag);
         return tag;
     }
 

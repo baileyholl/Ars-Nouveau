@@ -194,18 +194,18 @@ public class ModEntities {
                             .clientTrackingRange(20).updateInterval(20).setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityChimeraProjectile::new));
 
             ENTITY_FAMILIAR_STARBUNCLE = build(LibEntityNames.FAMILIAR_STARBUNCLE, EntityType.Builder.of(FamiliarStarbuncle::new, MobCategory.CREATURE)
-                    .sized(0.7F, 0.63F).setTrackingRange(10));
+                    .sized(0.5f, 0.5f).setTrackingRange(10));
 
             ENTITY_FAMILIAR_BOOKWYRM = build(LibEntityNames.FAMILIAR_BOOKWYRM, EntityType.Builder.of(FamiliarBookwyrm::new, MobCategory.CREATURE)
-                    .sized(0.7f, 0.9f).setTrackingRange(10));
+                    .sized(0.5f, 0.5f).setTrackingRange(10));
             ENTITY_FAMILIAR_DRYGMY = build(LibEntityNames.FAMILIAR_DRYGMY, EntityType.Builder.of(FamiliarDrygmy::new, MobCategory.CREATURE)
-                    .sized(0.6f, 0.85f).setTrackingRange(10));
+                    .sized(0.5f, 0.5f).setTrackingRange(10));
             ENTITY_FAMILIAR_SYLPH = build(LibEntityNames.FAMILIAR_WHIRLISPRIG, EntityType.Builder.of(FamiliarWhirlisprig::new, MobCategory.CREATURE)
-                    .sized(0.7F, 0.63F).setTrackingRange(10));
+                    .sized(0.5f, 0.5f).setTrackingRange(10));
             ENTITY_FAMILIAR_JABBERWOG = build(LibEntityNames.FAMILIAR_JABBERWOG, EntityType.Builder.of(FamiliarJabberwog::new, MobCategory.CREATURE)
-                    .sized(0.7F, 0.63F).setTrackingRange(10));
+                    .sized(0.5f, 0.5f).setTrackingRange(10));
             ENTITY_FAMILIAR_WIXIE = build(LibEntityNames.FAMILIAR_WIXIE, EntityType.Builder.of(FamiliarWixie::new, MobCategory.CREATURE)
-                    .sized(0.7F, 0.63F).setTrackingRange(10));
+                    .sized(0.5f, 0.5f).setTrackingRange(10));
             ENTITY_CASCADING_WEALD = build(LibEntityNames.CASCADING_WEALD_WALKER, EntityType.Builder.<WealdWalker>of((type, world) -> {
                         WealdWalker walker = new WealdWalker(type, world);
                         walker.spell = new Spell(MethodProjectile.INSTANCE, EffectFreeze.INSTANCE, EffectColdSnap.INSTANCE);

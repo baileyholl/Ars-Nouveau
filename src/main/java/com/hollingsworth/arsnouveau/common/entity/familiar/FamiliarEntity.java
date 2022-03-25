@@ -36,6 +36,7 @@ import java.util.*;
 
 public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamiliar, IDispellable {
 
+    public double manaReserveModifier = 0.15;
     private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(FamiliarEntity.class, EntityDataSerializers.OPTIONAL_UUID);
 
     public static Set<FamiliarEntity> FAMILIAR_SET = Collections.newSetFromMap(new WeakHashMap<>());
@@ -59,7 +60,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
     }
 
     public double getManaReserveModifier(){
-        return 0.15;
+        return manaReserveModifier;
     }
 
     @Override
@@ -89,6 +90,9 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
             return false;
         if(source.getEntity() == null)
             return false;
+        if(source.getEntity() == getOwner())
+            return false;
+
         return super.hurt(source, amount);
     }
 
@@ -166,7 +170,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
     }
 
     public static AttributeSupplier.Builder attributes() {
-        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 40d)
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 100d)
                 .add(Attributes.MOVEMENT_SPEED, 0.2d).add(Attributes.FLYING_SPEED, Attributes.FLYING_SPEED.getDefaultValue())
                 .add(Attributes.FOLLOW_RANGE, 16D);
     }
