@@ -107,7 +107,7 @@ public class ModEntities {
                     "spell_proj",
                     EntityType.Builder.<EntityProjectileSpell>of(EntityProjectileSpell::new, EntityClassification.MISC)
                             .sized(0.5f, 0.5f)
-                            .setTrackingRange(20)
+                            .setTrackingRange(20).noSave()
                             .setShouldReceiveVelocityUpdates(true)
                             .setUpdateInterval(120).setCustomClientFactory(EntityProjectileSpell::new));
             LINGER_SPELL = build(
@@ -134,6 +134,7 @@ public class ModEntities {
                     "follow_proj",
                     EntityType.Builder.<EntityFollowProjectile>of(EntityFollowProjectile::new, EntityClassification.MISC)
                             .sized(0.5f, 0.5f)
+                            .noSave()
                             .setTrackingRange(10)
                             .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityFollowProjectile::new));
 
@@ -146,6 +147,7 @@ public class ModEntities {
                     "flying_item",
                     EntityType.Builder.<EntityFlyingItem>of(EntityFlyingItem::new, EntityClassification.MISC)
                             .sized(0.5f, 0.5f)
+                            .noSave()
                             .setTrackingRange(10).setUpdateInterval(60)
                             .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityFlyingItem::new));
             ENTITY_RITUAL = build(
