@@ -61,6 +61,10 @@ public class EntityFlyingItem extends ColoredProjectile {
         super(entityAOEProjectileEntityType, world);
     }
 
+    public void setStack(ItemStack stack) {
+        this.entityData.set(HELD_ITEM, stack.copy());
+    }
+
     /**
      * This is the actual function that smoothly interpolates (lerp) between keyframes
      *

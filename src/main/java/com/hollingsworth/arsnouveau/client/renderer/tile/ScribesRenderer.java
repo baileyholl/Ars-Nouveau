@@ -75,14 +75,14 @@ public class ScribesRenderer extends GeoBlockRenderer<ScribesTile> {
             }
 
             if(direction == Direction.SOUTH){
-                stack.mulPose(Vector3f.YP.rotationDegrees(90));
-                stack.translate(-1, 0, 0);
+                stack.mulPose(Vector3f.YP.rotationDegrees(270));
+                stack.translate(-1, 0, -1);
             }
 
             if(direction == Direction.WEST){
-                stack.mulPose(Vector3f.YP.rotationDegrees(90));
-                stack.translate(-1, 0, 0);
+                stack.mulPose(Vector3f.YP.rotationDegrees(270));
 
+                stack.translate(0, 0, -2);
             }
 
             if(direction == Direction.EAST){

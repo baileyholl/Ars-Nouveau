@@ -147,7 +147,7 @@ public class ModEntities {
                     EntityType.Builder.<EntityFlyingItem>of(EntityFlyingItem::new, MobCategory.MISC)
                             .sized(0.5f, 0.5f)
                             .setTrackingRange(10).setUpdateInterval(60)
-                            .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityFlyingItem::new));
+                            .setShouldReceiveVelocityUpdates(true).setCustomClientFactory(EntityFlyingItem::new).noSave());
             ENTITY_RITUAL = build(
                     LibEntityNames.RITUAL_PROJ,
                     EntityType.Builder.<EntityRitualProjectile>of(EntityRitualProjectile::new, MobCategory.MISC)
