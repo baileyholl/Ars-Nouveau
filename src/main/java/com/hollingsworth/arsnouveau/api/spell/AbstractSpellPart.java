@@ -7,6 +7,8 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart> {
 
@@ -23,12 +25,12 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
      * The list of schools that apply to this spell.
      * Addons should add and access this list directly.
      */
-    public List<SpellSchool> spellSchools = new ArrayList<>();
+    public List<SpellSchool> spellSchools = new CopyOnWriteArrayList<>();
     /**
      * The list of augments that apply to a form or effect.
      * Addons should add and access this set directly.
      */
-    public Set<AbstractAugment> compatibleAugments = new HashSet<>();
+    public Set<AbstractAugment> compatibleAugments = ConcurrentHashMap.newKeySet();
 
     protected AbstractSpellPart(String id, String name){
         this.id = id;
@@ -132,6 +134,10 @@ public abstract class AbstractSpellPart implements Comparable<AbstractSpellPart>
     // Default value for the starter spell config
     public boolean defaultedStarterGlyph(){
         return false;
+    }
+
+    public boolean isRenderAsIcon() {
+        return true;
     }
 
     public String getItemID(){
