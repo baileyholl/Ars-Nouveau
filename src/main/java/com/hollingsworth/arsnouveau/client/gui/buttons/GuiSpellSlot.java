@@ -32,8 +32,7 @@ public class GuiSpellSlot extends GuiImageButton {
 
     @Override
     public void render(PoseStack stack, int parX, int parY, float partialTicks) {
-        if (visible)
-        {
+        if (visible){
             if(parent.isMouseInRelativeRange(parX, parY, x, y, width, height)){
                 ISpellCaster caster = CasterUtil.getCaster(((GuiSpellBook)parent).bookStack);
                 String name = caster.getSpellName(slotNum);
@@ -50,7 +49,6 @@ public class GuiSpellSlot extends GuiImageButton {
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
             GuiSpellBook.drawFromTexture(image, x, y, u, v, width, height, image_width, image_height, stack);
             drawCenteredString(stack,Minecraft.getInstance().font, String.valueOf(this.slotNum), x + 8, y + 3,  16777215); // White
-
         }
     }
 }

@@ -169,22 +169,22 @@ public class EntitySpellArrow extends Arrow {
         this.checkInsideBlocks();
 
         if (level.isClientSide && tickCount > 1) {
-            for (int i = 0; i < 10; i++) {
-                double deltaX = getX() - xOld;
-                double deltaY = getY() - yOld;
-                double deltaZ = getZ() - zOld;
-                double dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 8);
-                int counter = 0;
 
-                for (double j = 0; j < dist; j++) {
-                    double coeff = j / dist;
-                    counter += level.random.nextInt(3);
-                    if (counter % (Minecraft.getInstance().options.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles.getId()) == 0) {
-                        level.addParticle(GlowParticleData.createData(new ParticleColor(entityData.get(RED), entityData.get(GREEN), entityData.get(BLUE))), (float) (xo + deltaX * coeff), (float) (yo + deltaY * coeff), (float) (zo + deltaZ * coeff), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f));
-                    }
+            double deltaX = getX() - xOld;
+            double deltaY = getY() - yOld;
+            double deltaZ = getZ() - zOld;
+            double dist = Math.ceil(Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) * 8);
+            int counter = 0;
+
+            for (double j = 0; j < dist; j++) {
+                double coeff = j / dist;
+                counter += level.random.nextInt(3);
+                if (counter % (Minecraft.getInstance().options.particles.getId() == 0 ? 1 : 2 * Minecraft.getInstance().options.particles.getId()) == 0) {
+                    level.addParticle(GlowParticleData.createData(new ParticleColor(entityData.get(RED), entityData.get(GREEN), entityData.get(BLUE))), (float) (xo + deltaX * coeff), (float) (yo + deltaY * coeff), (float) (zo + deltaZ * coeff), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f), 0.0125f * (random.nextFloat() - 0.5f));
                 }
             }
         }
+
     }
 
     protected void attemptRemoval() {

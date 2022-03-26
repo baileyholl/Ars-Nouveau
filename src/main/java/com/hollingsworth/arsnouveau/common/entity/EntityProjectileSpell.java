@@ -18,7 +18,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
@@ -129,14 +128,6 @@ public class EntityProjectileSpell extends ColoredProjectile {
         EntityHitResult entityraytraceresult = this.findHitEntity(thisPosition, nextPosition);
         if (entityraytraceresult != null) {
             raytraceresult = entityraytraceresult;
-        }
-
-        if (raytraceresult instanceof EntityHitResult) {
-            Entity entity = ((EntityHitResult)raytraceresult).getEntity();
-            Entity entity1 = this.getOwner();
-            if (entity instanceof Player && entity1 instanceof Player && !((Player)entity1).canHarmPlayer((Player)entity)) {
-                raytraceresult = null;
-            }
         }
 
         if (raytraceresult != null && raytraceresult.getType() != HitResult.Type.MISS  && !net.minecraftforge.event.ForgeEventFactory.onProjectileImpact(this, raytraceresult)) {

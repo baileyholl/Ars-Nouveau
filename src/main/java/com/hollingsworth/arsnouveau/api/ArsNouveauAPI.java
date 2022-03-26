@@ -8,9 +8,10 @@ import com.hollingsworth.arsnouveau.api.recipe.VanillaPotionRecipe;
 import com.hollingsworth.arsnouveau.api.ritual.AbstractRitual;
 import com.hollingsworth.arsnouveau.api.ritual.IScryer;
 import com.hollingsworth.arsnouveau.api.ritual.RitualContext;
+import com.hollingsworth.arsnouveau.api.sound.SpellSound;
+
 import com.hollingsworth.arsnouveau.api.spell.AbstractSpellPart;
 import com.hollingsworth.arsnouveau.api.spell.ISpellValidator;
-import com.hollingsworth.arsnouveau.common.block.tile.RitualBrazierTile;
 import com.hollingsworth.arsnouveau.common.items.FamiliarScript;
 import com.hollingsworth.arsnouveau.common.items.Glyph;
 import com.hollingsworth.arsnouveau.common.items.RitualTablet;
@@ -20,23 +21,26 @@ import com.hollingsworth.arsnouveau.setup.ItemsRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.brewing.BrewingRecipe;
 import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
  * Main class of the Ars Nouveau API.
  *
  * Obtain an instance with {@link ArsNouveauAPI#getInstance()}.
+ * FOR ADDON AUTHORS: All registration should occur from YOUR MOD CONSTRUCTOR. BEFORE ITEMS REGISTER.
+ * If you need to access data from other addons, use the FMLLoadingComplete event.
  */
 public class ArsNouveauAPI {
 
@@ -46,25 +50,29 @@ public class ArsNouveauAPI {
      * key: Unique spell ID. Please make this snake_case!
      * value: Associated glyph
      */
-    private HashMap<String, AbstractSpellPart> spellpartMap = new HashMap<>();
+    private ConcurrentHashMap<String, AbstractSpellPart> spellpartMap = new ConcurrentHashMap<>();
 
-    private HashMap<String, AbstractRitual> ritualMap = new HashMap<>();
+    private ConcurrentHashMap<String, AbstractRitual> ritualMap = new ConcurrentHashMap<>();
 
-    private HashMap<String, AbstractFamiliarHolder> familiarHolderMap = new HashMap<>();
+    private ConcurrentHashMap<String, AbstractFamiliarHolder> familiarHolderMap = new ConcurrentHashMap<>();
 
     /**
-     * Contains the list of glyph item instances used by the glyph press.
+     * Contains the list of glyph item instances.
      */
-    private HashMap<String, Glyph> glyphItemMap = new HashMap<>();
+    private ConcurrentHashMap<String, Glyph> glyphItemMap = new ConcurrentHashMap<>();
 
-    private HashMap<String, FamiliarScript> familiarScriptMap = new HashMap<>();
+    private ConcurrentHashMap<String, FamiliarScript> familiarScriptMap = new ConcurrentHashMap<>();
 
     /**
      * Contains the list of parchment item instances created during registration
      */
-    private HashMap<String, RitualTablet> ritualParchmentMap = new HashMap<>();
+    private ConcurrentHashMap<String, RitualTablet> ritualParchmentMap = new ConcurrentHashMap<>();
 
-    private HashMap<String, IScryer> scryerMap = new HashMap<>();
+    private ConcurrentHashMap<String, IScryer> scryerMap = new ConcurrentHashMap<>();
+
+    private Set<RecipeType<? extends IEnchantingRecipe>> enchantingRecipeTypes = ConcurrentHashMap.newKeySet();
+
+    private ConcurrentHashMap<ResourceLocation, SpellSound> spellSoundsRegistry = new ConcurrentHashMap<>();
 
     /** Validator to use when crafting a spell in the spell book. */
     private ISpellValidator craftingSpellValidator;
@@ -76,21 +84,9 @@ public class ArsNouveauAPI {
     public List<VanillaPotionRecipe> vanillaPotionRecipes = new ArrayList<>();
 
     private List<BrewingRecipe> brewingRecipes = new ArrayList<>();
-    /**
-     * Spells that all spellbooks contain
-     */
-    private List<AbstractSpellPart> startingSpells = new ArrayList<>();
 
     public List<AbstractSpellPart> getDefaultStartingSpells(){
         return spellpartMap.values().stream().filter(Config::isStarterEnabled).collect(Collectors.toList());
-    }
-
-    public boolean addStartingSpell(String tag){
-        if(ArsNouveauAPI.getInstance().getSpellpartMap().containsKey(tag)){
-            return startingSpells.add(ArsNouveauAPI.getInstance().getSpellpartMap().get(tag));
-        }else{
-            throw new IllegalStateException("Attempted to add a starting spell for an unregistered spell. Spells must be added to the Spell Map first!");
-        }
     }
 
     public Item getGlyphItem(String glyphName){
@@ -119,15 +115,6 @@ public class ArsNouveauAPI {
         return registerSpell(part.getId(), part);
     }
 
-
-    /**
-     * A registration helper for addons. Adds mana costs into the fallback cost map.
-     */
-    public AbstractSpellPart registerSpell(String id, AbstractSpellPart part, int manaCost){
-        Config.addonSpellCosts.put(id, manaCost);
-        return registerSpell(id, part);
-    }
-
     public AbstractRitual registerRitual(String id, AbstractRitual ritual){
         ritualParchmentMap.put(id, new RitualTablet(getRitualRegistryName(id), ritual));
         return ritualMap.put(id, ritual);
@@ -147,15 +134,6 @@ public class ArsNouveauAPI {
             e.printStackTrace();
         }
         return null;
-    }
-
-    public @Nullable AbstractRitual getRitual(String id, RitualBrazierTile tile, RitualContext context){
-        AbstractRitual ritual = getRitual(id);
-        if(ritual != null){
-            ritual.tile = tile;
-            ritual.setContext(context);
-        }
-        return ritual;
     }
 
     public String getSpellRegistryName(String id){
@@ -182,10 +160,6 @@ public class ArsNouveauAPI {
         return ritualParchmentMap;
     }
 
-    public List<IEnchantingRecipe> getEnchantingApparatusRecipes() {
-        return enchantingApparatusRecipes;
-    }
-
     public Map<String, AbstractFamiliarHolder> getFamiliarHolderMap(){
         return this.familiarHolderMap;
     }
@@ -194,22 +168,26 @@ public class ArsNouveauAPI {
         return this.familiarScriptMap;
     }
 
+    public Set<RecipeType<? extends IEnchantingRecipe>> getEnchantingRecipeTypes() {
+        return enchantingRecipeTypes;
+    }
+
     public List<IEnchantingRecipe> getEnchantingApparatusRecipes(Level world) {
         List<IEnchantingRecipe> recipes = new ArrayList<>(enchantingApparatusRecipes);
         RecipeManager manager = world.getRecipeManager();
-        for(Recipe i : manager.getRecipes()){
-            if(i instanceof IEnchantingRecipe){
-                recipes.add((IEnchantingRecipe) i);
-            }
+        List<IEnchantingRecipe> recipesByType = new ArrayList<>(); // todo lazy init enchanting types
+        for(RecipeType<? extends IEnchantingRecipe> type : enchantingRecipeTypes){
+            recipesByType.addAll(manager.getAllRecipesFor(type));
         }
+        recipes.addAll(recipesByType);
         return recipes;
     }
 
     public List<BrewingRecipe> getAllPotionRecipes(){
         if(brewingRecipes.isEmpty()){
             BrewingRecipeRegistry.getRecipes().forEach(ib ->{
-                if(ib instanceof BrewingRecipe)
-                    brewingRecipes.add((BrewingRecipe) ib);
+                if(ib instanceof BrewingRecipe brewingRecipe)
+                    brewingRecipes.add(brewingRecipe);
             });
 
             vanillaPotionRecipes.forEach(vanillaPotionRecipe -> {
@@ -253,6 +231,14 @@ public class ArsNouveauAPI {
     public boolean registerScryer(IScryer scryer){
         this.scryerMap.put(scryer.getID(), scryer);
         return true;
+    }
+
+    public ConcurrentHashMap<ResourceLocation, SpellSound> getSpellSoundsRegistry(){
+        return this.spellSoundsRegistry;
+    }
+
+    public SpellSound registerSpellSound(SpellSound sound){
+        return this.spellSoundsRegistry.put(sound.getId(), sound);
     }
 
     private ArsNouveauAPI(){}

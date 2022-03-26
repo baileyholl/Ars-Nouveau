@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "xxx",
+    "xyx",
+    "xxx"
+  ],
+  "key": {
+    "x": {
+      "tag": "forge:sand"
+    },
+    "y": {
+      "item": "ars_nouveau:conjuration_essence"
+    }
+  },
+  "result": {
+    "item": "minecraft:soul_sand",
+    "count": 8
+  }
+}

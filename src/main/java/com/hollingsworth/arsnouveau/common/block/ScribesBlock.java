@@ -67,7 +67,7 @@ public class ScribesBlock extends TickableModBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (world.isClientSide) {
+        if (world.isClientSide || handIn != InteractionHand.MAIN_HAND || !(world.getBlockEntity(pos) instanceof ScribesTile)) {
             return InteractionResult.SUCCESS;
         }
         if(player.getItemInHand(handIn).getItem() instanceof SpellBook && !player.isShiftKeyDown()){
@@ -75,8 +75,7 @@ public class ScribesBlock extends TickableModBlock {
                     new PacketOpenGlyphCraft(pos));
             return InteractionResult.SUCCESS;
         }
-        if(handIn != InteractionHand.MAIN_HAND || !(world.getBlockEntity(pos) instanceof ScribesTile))
-            return InteractionResult.PASS;
+
         ScribesTile tile = (ScribesTile) world.getBlockEntity(pos);
         if(state.getValue(ScribesBlock.PART) != BedPart.HEAD) {
             BlockEntity tileEntity = world.getBlockEntity(pos.relative(ScribesBlock.getConnectedDirection(state)));
@@ -85,9 +84,10 @@ public class ScribesBlock extends TickableModBlock {
                 return InteractionResult.PASS;
         }
 
-
-
         if(!player.isShiftKeyDown()) {
+            if(tile.consumeStack(player.getItemInHand(handIn))) {
+                return InteractionResult.SUCCESS;
+            }
 
             if (tile.stack != null && player.getItemInHand(handIn).isEmpty()) {
                 ItemEntity item = new ItemEntity(world, player.getX(), player.getY(), player.getZ(), tile.stack);

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:lava_bucket"
+    },
+    {
+      "item": "ars_nouveau:water_essence"
+    }
+  ],
+  "result": {
+    "item": "minecraft:obsidian"
+  }
+}

@@ -19,13 +19,11 @@ import java.util.List;
 
 public class ItemButton extends GuiImageButton{
 
-    int slotNum;
     public String spellTag;
     public Ingredient ingredient = Ingredient.of();
 
     public ItemButton(BaseBook parent, int x, int y) {
         super( x, y, 0, 0, 22, 20, 22, 20, "textures/gui/spell_glyph_slot.png", (b) -> {});
-        this.slotNum = slotNum;
         this.spellTag = "";
         this.resourceIcon = "";
         this.parent = parent;

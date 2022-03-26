@@ -10,7 +10,6 @@ import com.hollingsworth.arsnouveau.common.util.PortUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.common.MinecraftForge;
@@ -65,9 +64,6 @@ public class PacketSummonFamiliar {
                 if(!summonEvent.isCanceled()) {
                     owner.level.addFreshEntity(familiarEntity.getThisEntity());
                     ParticleUtil.spawnPoof((ServerLevel) owner.level, familiarEntity.getThisEntity().blockPosition());
-                    if (owner instanceof LivingEntity) {
-                        ((LivingEntity) owner).addEffect(new MobEffectInstance(ModPotions.FAMILIAR_SICKNESS_EFFECT, 20 * 300, 0, false, false, true));
-                    }
                 }
             }
         });

@@ -329,4 +329,12 @@ public class LightManager {
     public static boolean shouldUpdateDynamicLight(){
         return Config.DYNAMIC_LIGHTS_ENABLED != null && Config.DYNAMIC_LIGHTS_ENABLED.get();
     }
+
+    public static void toggleLightsAndConfig(boolean enabled){
+        Config.DYNAMIC_LIGHTS_ENABLED.set(enabled);
+        Config.DYNAMIC_LIGHTS_ENABLED.save();
+        if(!enabled){
+            clearLightSources();
+        }
+    }
 }

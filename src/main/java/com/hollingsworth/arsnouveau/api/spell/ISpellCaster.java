@@ -1,12 +1,15 @@
 package com.hollingsworth.arsnouveau.api.spell;
 
+import com.hollingsworth.arsnouveau.api.sound.ConfiguredSpellSound;
 import com.hollingsworth.arsnouveau.api.util.SpellUtil;
 import com.hollingsworth.arsnouveau.client.particle.ParticleColor;
 import com.hollingsworth.arsnouveau.common.block.tile.ScribesTile;
 import com.hollingsworth.arsnouveau.common.datagen.BlockTagProvider;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentSensitive;
 import com.hollingsworth.arsnouveau.common.util.PortUtil;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -68,6 +71,14 @@ public interface ISpellCaster {
 
     void setColor(ParticleColor.IntWrapper color, int slot);
 
+    @Nonnull ConfiguredSpellSound getSound(int slot);
+
+    void setSound(ConfiguredSpellSound sound, int slot);
+
+    default ConfiguredSpellSound getCurrentSound(){
+        return getSound(getCurrentSlot());
+    }
+
     void setFlavorText(String str);
 
     String getSpellName(int slot);
@@ -122,16 +133,19 @@ public interface ISpellCaster {
 
         if(result instanceof EntityHitResult entityHitResult && entityHitResult.getEntity() instanceof LivingEntity){
             resolver.onCastOnEntity(stack, playerIn, entityHitResult.getEntity(), handIn);
+            playSound(playerIn.getOnPos(), worldIn, playerIn, getCurrentSound(), SoundSource.PLAYERS);
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
 
         if(result instanceof BlockHitResult && (result.getType() == HitResult.Type.BLOCK || isSensitive)){
             UseOnContext context = new UseOnContext(playerIn, handIn, (BlockHitResult) result);
             resolver.onCastOnBlock(context);
+            playSound(playerIn.getOnPos(), worldIn, playerIn, getCurrentSound(), SoundSource.PLAYERS);
             return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
         }
 
         resolver.onCast(stack,playerIn,worldIn);
+        playSound(playerIn.getOnPos(), worldIn, playerIn, getCurrentSound(), SoundSource.PLAYERS);
         return new InteractionResultHolder<>(InteractionResult.CONSUME, stack);
     }
 
@@ -139,8 +153,24 @@ public interface ISpellCaster {
         return castSpell(worldIn, playerIn, handIn, invalidMessage, getSpell(worldIn, playerIn, handIn, this));
     }
 
+    default void copyFromCaster(ISpellCaster other){
+        for(int i = 0; i < getMaxSlots() + 1 && i < other.getMaxSlots() + 1; i++){
+            setSpell(other.getSpell(i), i);
+            setSound(other.getSound(i), i);
+            setColor(other.getColor(i), i);
+            setSpellName(other.getSpellName(i), i);
+            setFlavorText(other.getFlavorText());
+        }
+    }
+
     default SpellResolver getSpellResolver(SpellContext context, Level worldIn, Player playerIn, InteractionHand handIn){
         return new SpellResolver(context);
+    }
+
+    default void playSound(BlockPos pos, Level worldIn, @Nullable Player playerIn, ConfiguredSpellSound configuredSound, SoundSource source){
+        if(configuredSound == null || configuredSound.sound == null || configuredSound.sound.getSoundEvent() == null || configuredSound.equals(ConfiguredSpellSound.EMPTY))
+            return;
+        worldIn.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, configuredSound.sound.getSoundEvent(), source, configuredSound.volume, configuredSound.pitch);
     }
 
     String getTagID();

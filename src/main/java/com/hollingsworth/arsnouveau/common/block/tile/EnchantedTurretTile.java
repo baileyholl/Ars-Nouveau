@@ -20,7 +20,7 @@ public class EnchantedTurretTile extends BasicSpellTurretTile  implements IPicku
 
     @Override
     public int getManaCost() {
-        return spell.getCastingCost() / 2;
+        return getSpellCaster().getSpell().getCastingCost() / 2;
     }
 
     @Override

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "xxx",
+    "xyx",
+    "xxx"
+  ],
+  "key": {
+    "x": {
+      "item": "minecraft:deepslate"
+    },
+    "y": {
+      "item": "ars_nouveau:manipulation_essence"
+    }
+  },
+  "result": {
+    "item": "minecraft:tuff",
+    "count": 8
+  }
+}

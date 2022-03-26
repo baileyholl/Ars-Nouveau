@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModItem extends Item {
-    public List<Component> tooltip;
+    public List<Component> tooltip = new ArrayList<>();
     public Rarity rarity;
 
     public ModItem(Properties properties) {
@@ -33,7 +33,6 @@ public class ModItem extends Item {
     }
 
     public ModItem withTooltip(Component tip){
-        tooltip = new ArrayList<>();
         tooltip.add(tip);
         return this;
     }

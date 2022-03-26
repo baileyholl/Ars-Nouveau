@@ -35,6 +35,12 @@ public class SpellContext implements Cloneable{
         this.colors = ParticleUtil.defaultParticleColorWrapper();
     }
 
+    public SpellContext(ISpellCaster caster, @Nullable LivingEntity casterEntity){
+        this(caster.getSpell(), casterEntity);
+        withColors(caster.getColor());
+
+    }
+
     public @Nullable AbstractSpellPart nextPart(){
         this.currentIndex++;
         AbstractSpellPart part = null;

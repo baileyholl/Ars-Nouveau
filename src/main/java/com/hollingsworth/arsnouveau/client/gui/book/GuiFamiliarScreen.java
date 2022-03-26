@@ -10,6 +10,7 @@ import com.hollingsworth.arsnouveau.common.network.PacketSummonFamiliar;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 
@@ -18,9 +19,11 @@ import java.util.List;
 public class GuiFamiliarScreen extends BaseBook{
     public ArsNouveauAPI api;
     public List<AbstractFamiliarHolder> familiars;
-    public GuiFamiliarScreen(ArsNouveauAPI api, List<AbstractFamiliarHolder> familiars){
+    public Screen parent;
+    public GuiFamiliarScreen(ArsNouveauAPI api, List<AbstractFamiliarHolder> familiars, Screen parent) {
         this.api = api;
         this.familiars = familiars;
+        this.parent = parent;
     }
 
     @Override
@@ -41,7 +44,7 @@ public class GuiFamiliarScreen extends BaseBook{
             FamiliarButton cell = new FamiliarButton(this, xStart + xOffset, yStart + yOffset, false, part);
             addRenderableWidget(cell);
         }
-        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 13, 0,0,41, 12, 41, 12, "textures/gui/clear_icon.png", (e) -> {Minecraft.getInstance().setScreen(null);}));
+        addRenderableWidget(new GuiImageButton(bookRight - 71, bookBottom - 13, 0,0,41, 12, 41, 12, "textures/gui/clear_icon.png", (e) -> {Minecraft.getInstance().setScreen(parent);}));
 
     }
 

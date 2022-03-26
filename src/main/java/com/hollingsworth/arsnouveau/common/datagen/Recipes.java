@@ -506,8 +506,124 @@ public class Recipes extends RecipeProvider {
                     .save(consumer);
 
             shapelessBuilder(ItemsRegistry.ANNOTATED_CODEX).requires(ItemsRegistry.SPELL_PARCHMENT).requires(Items.LEATHER).save(consumer);
+            shapelessBuilder(Items.POWDER_SNOW_BUCKET).requires(ItemsRegistry.AIR_ESSENCE).requires(Items.BUCKET).requires(Items.SNOW_BLOCK).save(consumer, new ResourceLocation(ArsNouveau.MODID, "air_essence_to_snow_bucket"));
+            shapedBuilder(Items.SOUL_SAND, 8)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx")
+                    .define('x', Tags.Items.SAND)
+                    .define('y', ItemsRegistry.CONJURATION_ESSENCE)
+                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "conjuration_essence_to_soul_sand"));
+            shapedBuilder(Items.END_STONE, 8)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx")
+                    .define('x', Tags.Items.STONE)
+                    .define('y', ItemsRegistry.CONJURATION_ESSENCE)
+                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "conjuration_essence_to_end_stone"));
 
+            shapelessBuilder(Items.OBSIDIAN).requires(Items.LAVA_BUCKET).requires(ItemsRegistry.WATER_ESSENCE).save(consumer, new ResourceLocation(ArsNouveau.MODID, "water_essence_to_obsidian"));
+            shapedBuilder(Items.MAGMA_BLOCK, 8)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx")
+                    .define('x', Tags.Items.STONE)
+                    .define('y', ItemsRegistry.FIRE_ESSENCE)
+                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "fire_essence_to_magma_block"));
+
+            shapedBuilder(Items.GRANITE, 8)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx")
+                    .define('x', Items.DIORITE)
+                    .define('y', ItemsRegistry.MANIPULATION_ESSENCE)
+                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_granite"));
+            shapedBuilder(Items.ANDESITE, 8)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx")
+                    .define('x', Items.GRANITE)
+                    .define('y', ItemsRegistry.MANIPULATION_ESSENCE)
+                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_andesite"));
+            shapedBuilder(Items.DIORITE, 8)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx")
+                    .define('x', Items.ANDESITE)
+                    .define('y', ItemsRegistry.MANIPULATION_ESSENCE)
+                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_diorite"));
+
+            shapedBuilder(Items.MYCELIUM, 8)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx")
+                    .define('x', Items.GRASS_BLOCK)
+                    .define('y', ItemsRegistry.MANIPULATION_ESSENCE)
+                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_mycelium"));
+
+            shapedBuilder(Items.MOSS_BLOCK, 8)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx")
+                    .define('x', Items.MYCELIUM)
+                    .define('y', ItemsRegistry.MANIPULATION_ESSENCE)
+                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_moss_block"));
+
+            shapedBuilder(Items.GRASS_BLOCK, 8)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx")
+                    .define('x', Items.MOSS_BLOCK)
+                    .define('y', ItemsRegistry.MANIPULATION_ESSENCE)
+                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_grass_block"));
+
+            shapedBuilder(Items.TUFF, 8)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx")
+                    .define('x', Items.DEEPSLATE)
+                    .define('y', ItemsRegistry.MANIPULATION_ESSENCE)
+                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_tuff"));
+
+            shapedBuilder(Items.CALCITE, 8)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx")
+                    .define('x', Items.TUFF)
+                    .define('y', ItemsRegistry.MANIPULATION_ESSENCE)
+                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_calcite"));
+
+            shapedBuilder(Items.DEEPSLATE, 8)
+                    .pattern("xxx")
+                    .pattern("xyx")
+                    .pattern("xxx")
+                    .define('x', Items.CALCITE)
+                    .define('y', ItemsRegistry.MANIPULATION_ESSENCE)
+                    .save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_deepslate"));
+
+            shapelessBuilder(BlockRegistry.CASCADING_SAPLING)
+                    .requires(ItemsRegistry.MANIPULATION_ESSENCE)
+                    .requires(BlockRegistry.BLAZING_SAPLING).save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_cascading_sapling"));
+
+            shapelessBuilder(BlockRegistry.FLOURISHING_SAPLING)
+                    .requires(ItemsRegistry.MANIPULATION_ESSENCE)
+                    .requires(BlockRegistry.CASCADING_SAPLING).save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_flourishing_sapling"));
+
+            shapelessBuilder(BlockRegistry.VEXING_SAPLING)
+                    .requires(ItemsRegistry.MANIPULATION_ESSENCE)
+                    .requires(BlockRegistry.FLOURISHING_SAPLING).save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_vexing_sapling"));
+
+            shapelessBuilder(BlockRegistry.BLAZING_SAPLING)
+                    .requires(ItemsRegistry.MANIPULATION_ESSENCE)
+                    .requires(BlockRegistry.VEXING_SAPLING).save(consumer, new ResourceLocation(ArsNouveau.MODID, "manipulation_essence_to_blazin_sapling"));
         }
+    }
+    public ShapedRecipeBuilder shapedBuilder(ItemLike item) {
+        return shapedBuilder(item, 1);
+    }
+
+    public ShapedRecipeBuilder shapedBuilder(ItemLike result, int count){
+        return ShapedRecipeBuilder.shaped(result, count).unlockedBy("has_journal", InventoryChangeTrigger.TriggerInstance.hasItems(ItemsRegistry.WORN_NOTEBOOK));
     }
 
     public Item getRitualItem(String id) {

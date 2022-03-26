@@ -161,6 +161,12 @@ public class Networking {
                 PacketAddFadingLight::encode,
                 PacketAddFadingLight::decode,
                 PacketAddFadingLight.Handler::handle);
+
+        INSTANCE.registerMessage(nextID(),
+                PacketSetSound.class,
+                PacketSetSound::toBytes,
+                PacketSetSound::new,
+                PacketSetSound::handle);
     }
 
     public static void sendToNearby(Level world, BlockPos pos, Object toSend){

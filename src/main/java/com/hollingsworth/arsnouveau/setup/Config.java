@@ -10,9 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Mod.EventBusSubscriber
 public class Config {
@@ -61,9 +59,6 @@ public class Config {
     public static ForgeConfigSpec.BooleanValue GUARDIAN_ATTACK_ANIMALS;
     public static ForgeConfigSpec.ConfigValue<List<? extends String>> DIMENSION_BLACKLIST;
 
-    public static Map<String, Integer> addonSpellCosts = new HashMap<>();
-
-
     public static ForgeConfigSpec.IntValue ARCHWOOD_FOREST_WEIGHT;
     public static ForgeConfigSpec.ConfigValue<? extends String> CRYSTALLIZER_ITEM;
     public static ForgeConfigSpec.BooleanValue ENFORCE_AUGMENT_CAP_ON_CAST;
@@ -77,26 +72,6 @@ public class Config {
     public static boolean isSpellEnabled(String tag){
         AbstractSpellPart spellPart = ArsNouveauAPI.getInstance().getSpellpartMap().get(tag);
         return spellPart.ENABLED == null || spellPart.ENABLED.get();
-    }
-
-    public static void putAddonSpellCost(String tag, int cost){
-        addonSpellCosts.put(tag,cost);
-    }
-
-
-    public static int getAddonSpellCost(String tag){
-        return addonSpellCosts.getOrDefault(tag,
-                ArsNouveauAPI.getInstance().getSpellpartMap().containsKey(tag) ?
-                        ArsNouveauAPI.getInstance().getSpellpartMap().get(tag).getDefaultManaCost() : 0);
-    }
-
-    private static Map<String, ForgeConfigSpec.IntValue> spellCost = new HashMap<>();
-    /**
-     * Returns the mana cost specified in the Ars Nouveau config, or falls back to the addon spell cost map. If not there, falls back to the method cost.
-     */
-    @Deprecated // Use config sensitive cost
-    public static int getSpellCost(String tag){
-        return spellCost.containsKey(tag + "_cost") ? spellCost.get(tag+"_cost").get() : getAddonSpellCost(tag);
     }
 
     static {

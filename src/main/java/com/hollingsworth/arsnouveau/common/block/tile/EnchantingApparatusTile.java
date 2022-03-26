@@ -58,37 +58,37 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
     @Override
     public void tick() {
         int craftingLength = 210;
-        if(level.isClientSide) {
-            if(this.isCrafting){
+        if (level.isClientSide) {
+            if (this.isCrafting) {
                 Level world = getLevel();
-                BlockPos pos  = getBlockPos().offset(0, 0.5, 0);
+                BlockPos pos = getBlockPos().offset(0, 0.5, 0);
                 Random rand = world.getRandom();
 
                 Vec3 particlePos = new Vec3(pos.getX(), pos.getY(), pos.getZ()).add(0.5, 0, 0.5);
                 particlePos = particlePos.add(ParticleUtil.pointInSphere());
-                world.addParticle(ParticleLineData.createData(new ParticleColor(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255))),
+                world.addParticle(ParticleLineData.createData(new ParticleColor(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255))),
                         particlePos.x(), particlePos.y(), particlePos.z(),
-                        pos.getX()  +0.5, pos.getY() + 1  , pos.getZ() +0.5);
+                        pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
 
-                for(BlockPos p : pedestalList()){
-                    if(level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile && pedestalTile.stack != null && !pedestalTile.stack.isEmpty())
-                    getLevel().addParticle(
-                            GlowParticleData.createData(new ParticleColor(rand.nextInt(255),rand.nextInt(255),rand.nextInt(255))),
-                            p.getX() +0.5 + ParticleUtil.inRange(-0.2, 0.2)  , p.getY() +1.5  + ParticleUtil.inRange(-0.3, 0.3) , p.getZ() +0.5 + ParticleUtil.inRange(-0.2, 0.2),
-                            0,0,0);
+                for (BlockPos p : pedestalList()) {
+                    if (level.getBlockEntity(p) instanceof ArcanePedestalTile pedestalTile && pedestalTile.stack != null && !pedestalTile.stack.isEmpty())
+                        getLevel().addParticle(
+                                GlowParticleData.createData(new ParticleColor(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255))),
+                                p.getX() + 0.5 + ParticleUtil.inRange(-0.2, 0.2), p.getY() + 1.5 + ParticleUtil.inRange(-0.3, 0.3), p.getZ() + 0.5 + ParticleUtil.inRange(-0.2, 0.2),
+                                0, 0, 0);
                 }
 
             }
             return;
         }
 
-        if(isCrafting){
-            if(this.getRecipe(catalystItem, null) == null)
+        if (isCrafting) {
+            if (this.getRecipe(catalystItem, null) == null)
                 this.isCrafting = false;
             counter += 1;
         }
 
-        if(counter > craftingLength) {
+        if (counter > craftingLength) {
             counter = 1;
 
             if (this.isCrafting) {
@@ -108,51 +108,51 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
     }
 
 
-    public void clearItems(){
-        for(BlockPos blockPos : pedestalList()){
+    public void clearItems() {
+        for (BlockPos blockPos : pedestalList()) {
             if (level.getBlockEntity(blockPos) instanceof ArcanePedestalTile tile && tile.stack != null) {
                 tile.stack = tile.stack.getContainerItem();
                 BlockState state = level.getBlockState(blockPos);
                 level.sendBlockUpdated(blockPos, state, state, 3);
             }
-        };
+        }
     }
 
     // Used for rendering on the client
-    public List<BlockPos> pedestalList(){
+    public List<BlockPos> pedestalList() {
         int offset = 3;
         ArrayList<BlockPos> posList = new ArrayList<>();
-        for(BlockPos b : BlockPos.betweenClosed(this.getBlockPos().offset(offset, -offset, offset), this.getBlockPos().offset(-offset, offset, -offset))){
-            if(level.getBlockEntity(b) instanceof  ArcanePedestalTile tile){
+        for (BlockPos b : BlockPos.betweenClosed(this.getBlockPos().offset(offset, -offset, offset), this.getBlockPos().offset(-offset, offset, -offset))) {
+            if (level.getBlockEntity(b) instanceof ArcanePedestalTile tile) {
                 posList.add(b.immutable());
             }
         }
         return posList;
     }
 
-    public List<ItemStack> getPedestalItems(){
+    public List<ItemStack> getPedestalItems() {
         ArrayList<ItemStack> pedestalItems = new ArrayList<>();
-        for(BlockPos blockPos : pedestalList()){
-            if(level.getBlockEntity(blockPos) instanceof ArcanePedestalTile tile && tile.stack != null && !tile.stack.isEmpty()) {
+        for (BlockPos blockPos : pedestalList()) {
+            if (level.getBlockEntity(blockPos) instanceof ArcanePedestalTile tile && tile.stack != null && !tile.stack.isEmpty()) {
                 pedestalItems.add(tile.stack);
             }
         }
         return pedestalItems;
     }
 
-    public IEnchantingRecipe getRecipe(ItemStack stack, @Nullable Player playerEntity){
+    public IEnchantingRecipe getRecipe(ItemStack stack, @Nullable Player playerEntity) {
         List<ItemStack> pedestalItems = getPedestalItems();
-        return ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes(level).stream().filter(r-> r.isMatch(pedestalItems, stack, this, playerEntity)).findFirst().orElse(null);
+        return ArsNouveauAPI.getInstance().getEnchantingApparatusRecipes(level).stream().filter(r -> r.isMatch(pedestalItems, stack, this, playerEntity)).findFirst().orElse(null);
     }
 
-    public boolean attemptCraft(ItemStack catalyst, @Nullable Player playerEntity){
-        if(isCrafting)
+    public boolean attemptCraft(ItemStack catalyst, @Nullable Player playerEntity) {
+        if (isCrafting)
             return false;
         if (!craftingPossible(catalyst, playerEntity)) {
             return false;
         }
         IEnchantingRecipe recipe = this.getRecipe(catalyst, playerEntity);
-        if(recipe.consumesSource())
+        if (recipe.consumesSource())
             SourceUtil.takeSourceNearbyWithParticles(worldPosition, level, 10, recipe.getSourceCost());
         this.isCrafting = true;
         updateBlock();
@@ -160,16 +160,16 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
         return true;
     }
 
-    public boolean craftingPossible(ItemStack stack, Player playerEntity){
-        if(isCrafting || stack.isEmpty())
+    public boolean craftingPossible(ItemStack stack, Player playerEntity) {
+        if (isCrafting || stack.isEmpty())
             return false;
         IEnchantingRecipe recipe = this.getRecipe(stack, playerEntity);
 
         return recipe != null && (!recipe.consumesSource() || (recipe.consumesSource() && SourceUtil.hasSourceNearby(worldPosition, level, 10, recipe.getSourceCost())));
     }
 
-    public void updateBlock(){
-        if(counter == 0)
+    public void updateBlock() {
+        if (counter == 0)
             counter = 1;
         BlockState state = level.getBlockState(worldPosition);
         level.sendBlockUpdated(worldPosition, state, state, 2);
@@ -177,7 +177,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
 
     @Override
     public void load(CompoundTag compound) {
-        catalystItem = ItemStack.of((CompoundTag)compound.get("itemStack"));
+        catalystItem = ItemStack.of((CompoundTag) compound.get("itemStack"));
         isCrafting = compound.getBoolean("is_crafting");
         counter = compound.getInt("counter");
         super.load(compound);
@@ -186,7 +186,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
     @Override
     public void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        if(catalystItem != null) {
+        if (catalystItem != null) {
             CompoundTag reagentTag = new CompoundTag();
             catalystItem.save(reagentTag);
             tag.put("itemStack", reagentTag);
@@ -195,6 +195,7 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
         tag.putInt("counter", counter);
 
     }
+
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag tag = new CompoundTag();
@@ -216,21 +217,21 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
 
     @Override
     public ItemStack getItem(int index) {
-        if(isCrafting)
+        if (isCrafting)
             return ItemStack.EMPTY;
         return catalystItem;
     }
 
     @Override
     public boolean canPlaceItem(int slot, ItemStack stack) {
-        if(isCrafting || stack.isEmpty())
+        if (isCrafting || stack.isEmpty())
             return false;
-        return catalystItem.isEmpty() && craftingPossible(stack,null);
+        return catalystItem.isEmpty() && craftingPossible(stack, null);
     }
 
     @Override
     public ItemStack removeItem(int index, int count) {
-        if(isCrafting)
+        if (isCrafting)
             return ItemStack.EMPTY;
         ItemStack stack = catalystItem.copy().split(count);
         catalystItem.shrink(count);
@@ -240,14 +241,14 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
 
     @Override
     public ItemStack removeItemNoUpdate(int index) {
-        if(isCrafting)
+        if (isCrafting)
             return ItemStack.EMPTY;
         return catalystItem;
     }
 
     @Override
     public void setItem(int index, ItemStack stack) {
-        if(isCrafting)
+        if (isCrafting)
             return;
         this.catalystItem = stack;
         updateBlock();
@@ -283,15 +284,18 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
         itemHandler.invalidate();
         super.invalidateCaps();
     }
+
     AnimationController craftController;
     AnimationController idleController;
+
     @Override
     public void registerControllers(AnimationData animationData) {
-        idleController = new AnimationController(this, "controller", 1,  this::idlePredicate);
+        idleController = new AnimationController(this, "controller", 1, this::idlePredicate);
         animationData.addAnimationController(idleController);
-        craftController = new AnimationController(this, "craft_controller", 1,  this::craftPredicate);
+        craftController = new AnimationController(this, "craft_controller", 1, this::craftPredicate);
         animationData.addAnimationController(craftController);
     }
+
     AnimationFactory manager = new AnimationFactory(this);
 
     @Override
@@ -299,20 +303,21 @@ public class EnchantingApparatusTile extends AnimatedTile implements Container, 
         return manager;
     }
 
-    private <E extends BlockEntity & IAnimatable > PlayState idlePredicate(AnimationEvent<E> event) {
+    private <E extends BlockEntity & IAnimatable> PlayState idlePredicate(AnimationEvent<E> event) {
         event.getController().setAnimation(new AnimationBuilder().addAnimation("floating", true));
 
         return PlayState.CONTINUE;
     }
 
-    private <E extends BlockEntity & IAnimatable > PlayState craftPredicate(AnimationEvent<E> event) {
-        if(!this.isCrafting)
+    private <E extends BlockEntity & IAnimatable> PlayState craftPredicate(AnimationEvent<E> event) {
+        if (!this.isCrafting)
             return PlayState.STOP;
         return PlayState.CONTINUE;
     }
+
     @Override
     public void startAnimation(int arg) {
-        if(craftController != null){
+        if (craftController != null) {
             craftController.markNeedsReload();
             craftController.setAnimation(new AnimationBuilder().addAnimation("enchanting", false));
         }
