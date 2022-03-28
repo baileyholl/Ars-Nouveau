@@ -9,6 +9,7 @@ import com.hollingsworth.arsnouveau.common.entity.goal.familiar.FamOwnerHurtTarg
 import com.hollingsworth.arsnouveau.common.entity.goal.familiar.FamiliarFollowGoal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -42,6 +43,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
     public static Set<FamiliarEntity> FAMILIAR_SET = Collections.newSetFromMap(new WeakHashMap<>());
 
     public boolean terminatedFamiliar;
+    public String holder_id;
 
     public FamiliarEntity(EntityType<? extends PathfinderMob> p_i48575_1_, Level p_i48575_2_) {
         super(p_i48575_1_, p_i48575_2_);
@@ -62,6 +64,17 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
     public double getManaReserveModifier(){
         return manaReserveModifier;
     }
+
+    @Override
+    public void setCustomName(@Nullable Component pName) {
+        super.setCustomName(pName);
+    }
+
+    /**
+     * Sync the data you want to store from the familiar on the player cap here.
+     * Get the owner from getOwner
+     */
+    public void syncTag(){}
 
     @Override
     public boolean isAlive() {
@@ -204,5 +217,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
             this.terminatedFamiliar = true;
     }
 
-    public void setTagData(@Nullable CompoundTag tag){}
+    public void setTagData(@Nullable CompoundTag tag){
+
+    }
 }
