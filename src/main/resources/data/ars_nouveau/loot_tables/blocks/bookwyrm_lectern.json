@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "ars_nouveau:bookwyrm_lectern"
+          "name": "minecraft:lectern"
         }
       ],
       "conditions": [
