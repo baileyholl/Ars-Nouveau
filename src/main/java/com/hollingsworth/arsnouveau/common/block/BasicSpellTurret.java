@@ -91,10 +91,10 @@ public class BasicSpellTurret extends TickableModBlock {
     public void shootSpell(ServerLevel world, BlockPos pos ) {
         BasicSpellTurretTile tile = (BasicSpellTurretTile) world.getBlockEntity(pos);
         ISpellCaster caster = tile.getSpellCaster();
-        if(tile == null || caster.getSpell().isEmpty())
+        if(caster.getSpell().isEmpty())
             return;
         int manaCost = tile.getManaCost();
-        if(SourceUtil.takeSourceNearbyWithParticles(pos, world, 10, manaCost) == null)
+        if(manaCost > 0 && SourceUtil.takeSourceNearbyWithParticles(pos, world, 10, manaCost) == null)
             return;
         Networking.sendToNearby(world, pos, new PacketOneShotAnimation(pos));
         Position iposition = getDispensePosition(new BlockSourceImpl(world, pos));
