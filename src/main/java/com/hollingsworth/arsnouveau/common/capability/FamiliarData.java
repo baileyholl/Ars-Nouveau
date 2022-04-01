@@ -30,6 +30,8 @@ public class FamiliarData {
     }
 
     public IFamiliar getEntity(Level level){
-        return familiarHolder.getSummonEntity(level, entityTag);
+        IFamiliar familiar = familiarHolder.getSummonEntity(level, entityTag);
+        familiar.setHolderID(familiarHolder.id);
+        return familiar;
     }
 }

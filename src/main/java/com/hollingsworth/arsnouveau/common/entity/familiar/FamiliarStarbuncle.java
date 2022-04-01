@@ -2,14 +2,10 @@ package com.hollingsworth.arsnouveau.common.entity.familiar;
 
 import com.hollingsworth.arsnouveau.api.ritual.CompoundScryer;
 import com.hollingsworth.arsnouveau.api.ritual.TagScryer;
-import com.hollingsworth.arsnouveau.common.capability.CapabilityRegistry;
-import com.hollingsworth.arsnouveau.common.capability.IPlayerCap;
 import com.hollingsworth.arsnouveau.common.entity.ModEntities;
 import com.hollingsworth.arsnouveau.common.entity.Starbuncle;
-import com.hollingsworth.arsnouveau.common.lib.LibEntityNames;
 import com.hollingsworth.arsnouveau.common.ritual.ScryingRitual;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
@@ -23,7 +19,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
-import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
@@ -33,8 +28,6 @@ import java.util.Arrays;
 import static com.hollingsworth.arsnouveau.common.entity.Starbuncle.COLOR;
 
 public class FamiliarStarbuncle extends FamiliarEntity {
-
-    public Starbuncle.StarbuncleData starbuncleData;
 
     public FamiliarStarbuncle(EntityType<? extends PathfinderMob> ent, Level world) {
         super(ent, world);
@@ -71,27 +64,13 @@ public class FamiliarStarbuncle extends FamiliarEntity {
         return super.mobInteract(player, hand);
     }
 
-    @Override
-    public void setCustomName(@Nullable Component pName) {
-        super.setCustomName(pName);
-        starbuncleData.name = pName;
-        syncTag();
-    }
-
-    public void syncTag(){
-        IPlayerCap cap = CapabilityRegistry.getPlayerDataCap(getOwner()).orElse(null);
-        if(cap != null){
-            cap.getFamiliarData(LibEntityNames.STARBUNCLE).entityTag.put("starbuncleData", starbuncleData.toTag());
-        }
-    }
-
     public String getColor(){
         return this.entityData.get(COLOR);
     }
 
     public void setColor(DyeColor color){
         this.entityData.set(COLOR, color.getName());
-        this.starbuncleData.color = color.getName();
+        this.getPersistentFamiliarData().color = color.getName();
     }
 
     @Override
@@ -115,30 +94,18 @@ public class FamiliarStarbuncle extends FamiliarEntity {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
-        super.readAdditionalSaveData(tag);
-        this.starbuncleData = new Starbuncle.StarbuncleData(tag.getCompound("starbuncleData"));
-        this.entityData.set(COLOR, starbuncleData.color);
+    public void syncAfterPersistentFamiliarInit() {
+        super.syncAfterPersistentFamiliarInit();
+        this.entityData.set(COLOR, getPersistentFamiliarData().color);
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
-        super.addAdditionalSaveData(tag);
-        if(this.starbuncleData != null)
-            tag.put("starbuncleData", this.starbuncleData.toTag());
+    public Starbuncle.StarbuncleData getPersistentFamiliarData() {
+        return (Starbuncle.StarbuncleData) this.persistentData;
     }
 
     @Override
-    public void setTagData(@Nullable CompoundTag tag) {
-        super.setTagData(tag);
-        if(tag != null && tag.contains("starbuncleData")) {
-            this.starbuncleData = new Starbuncle.StarbuncleData(tag.getCompound("starbuncleData"));
-            syncFromData();
-        }
-    }
-
-    public void syncFromData(){
-        this.entityData.set(COLOR, starbuncleData.color);
-        this.setCustomName(starbuncleData.name);
+    public Starbuncle.StarbuncleData deserializePersistentData(CompoundTag tag) {
+        return new Starbuncle.StarbuncleData(tag);
     }
 }

@@ -2,6 +2,7 @@ package com.hollingsworth.arsnouveau.common.entity;
 
 import com.hollingsworth.arsnouveau.api.client.ITooltipProvider;
 import com.hollingsworth.arsnouveau.api.entity.IDispellable;
+import com.hollingsworth.arsnouveau.api.familiar.PersistentFamiliarData;
 import com.hollingsworth.arsnouveau.api.item.IWandable;
 import com.hollingsworth.arsnouveau.api.util.BlockUtil;
 import com.hollingsworth.arsnouveau.api.util.NBTUtil;
@@ -799,23 +800,22 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
         GREEN
     }
 
-    public static class StarbuncleData{
+    public static class StarbuncleData extends PersistentFamiliarData<Starbuncle> {
 //        List<BlockPos> TO_LIST = new ArrayList<>();
 //        List<BlockPos> FROM_LIST = new ArrayList<>();
 //        List<ItemStack> allowedItems = new ArrayList<>();
 //        List<ItemStack> ignoreItems = new ArrayList<>();
 //        Block pathBlock;
         public String color;
-        public Component name;
 
 
         public StarbuncleData(CompoundTag tag){
-            if(tag == null)
-                return;
+            super(tag);
             this.color = tag.getString("color");
-            this.name = tag.contains("name") ? Component.Serializer.fromJson(tag.getString("name")) : null;
         }
 
+
+        @Override
         public void setData(Starbuncle starbuncle){
             if(color != null)
                 starbuncle.entityData.set(Starbuncle.COLOR, color);
@@ -823,13 +823,11 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
                 starbuncle.setCustomName(name);
         }
 
-        public CompoundTag toTag(){
-            CompoundTag pCompound = new CompoundTag();
+        public CompoundTag toTag(CompoundTag tag){
+            super.toTag(tag);
             if(color != null)
-                pCompound.putString("color", color);
-            if(name != null)
-                pCompound.putString("name", Component.Serializer.toJson(name));
-            return pCompound;
+                tag.putString("color", color);
+            return tag;
         }
     }
 

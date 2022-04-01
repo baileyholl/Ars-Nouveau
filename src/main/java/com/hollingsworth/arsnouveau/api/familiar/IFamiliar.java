@@ -10,6 +10,13 @@ import java.util.UUID;
 
 public interface IFamiliar {
 
+    /**
+     * The ID of the AbstractFamiliarHolder. Used for retreiving and storing persistent familiar data.
+     */
+    String getHolderID();
+
+    void setHolderID(String id);
+
     UUID getOwnerID();
 
     void setOwnerID(UUID uuid);
