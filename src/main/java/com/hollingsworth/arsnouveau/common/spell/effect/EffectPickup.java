@@ -1,8 +1,7 @@
 package com.hollingsworth.arsnouveau.common.spell.effect;
 
-import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
-import com.hollingsworth.arsnouveau.common.items.VoidJar;
+import com.hollingsworth.arsnouveau.common.lib.GlyphLib;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,6 +11,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,11 +38,10 @@ public class EffectPickup extends AbstractEffect {
             if(isRealPlayer(shooter) && spellContext.castingTile == null){
                 ItemStack stack = i.getItem();
                 Player player = (Player) shooter;
-                VoidJar.tryVoiding(player, stack);
-                if(!player.addItem(stack)){
+                MinecraftForge.EVENT_BUS.post(new PlayerEvent.ItemPickupEvent(player, i, stack));
+                if(!stack.isEmpty() && !player.addItem(stack)) {
                     i.setPos(player.getX(), player.getY(), player.getZ());
                 }
-
             }else if(shooter instanceof IPickupResponder){
                 i.setItem(((IPickupResponder) shooter).onPickup(i.getItem()));
             }else if(spellContext.castingTile instanceof IPickupResponder){
