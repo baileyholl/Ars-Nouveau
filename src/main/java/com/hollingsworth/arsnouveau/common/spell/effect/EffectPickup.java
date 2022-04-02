@@ -2,9 +2,9 @@ package com.hollingsworth.arsnouveau.common.spell.effect;
 
 import com.hollingsworth.arsnouveau.GlyphLib;
 import com.hollingsworth.arsnouveau.api.spell.*;
-import com.hollingsworth.arsnouveau.common.items.VoidJar;
 import com.hollingsworth.arsnouveau.common.spell.augment.AugmentAOE;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -14,6 +14,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -39,8 +41,9 @@ public class EffectPickup extends AbstractEffect {
             if(isRealPlayer(shooter) && spellContext.castingTile == null){
                 ItemStack stack = i.getItem();
                 PlayerEntity player = (PlayerEntity) shooter;
-                VoidJar.tryVoiding(player, stack);
-                if(!player.addItem(stack)){
+                if(MinecraftForge.EVENT_BUS.post(new PlayerEvent.ItemPickupEvent(player, i, stack)))
+                    continue;
+                if(!stack.isEmpty() && !player.addItem(stack)){
                     i.setPos(player.getX(), player.getY(), player.getZ());
                 }
 
@@ -48,6 +51,17 @@ public class EffectPickup extends AbstractEffect {
                 i.setItem(((IPickupResponder) shooter).onPickup(i.getItem()));
             }else if(spellContext.castingTile instanceof IPickupResponder){
                 i.setItem(((IPickupResponder) spellContext.castingTile).onPickup(i.getItem()));
+            }
+        }
+        List<ExperienceOrbEntity> orbList = world.getEntitiesOfClass(ExperienceOrbEntity.class, new AxisAlignedBB(pos.east(expansion).north(expansion).above(expansion),
+                pos.west(expansion).south(expansion).below(expansion)));
+        for(ExperienceOrbEntity i : orbList) {
+            if (isRealPlayer(shooter) && spellContext.castingTile == null) {
+                PlayerEntity player = (PlayerEntity) shooter;
+                if (net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerXpEvent.PickupXp(player, i)))
+                    continue;
+                player.giveExperiencePoints(i.value);
+                i.remove();
             }
         }
     }

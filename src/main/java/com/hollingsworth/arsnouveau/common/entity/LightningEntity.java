@@ -23,8 +23,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
+import net.minecraftforge.event.entity.EntityStruckByLightningEvent;
 import net.minecraftforge.fml.network.FMLPlayMessages;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -94,13 +96,15 @@ public class LightningEntity extends LightningBoltEntity {
             if (!(this.level instanceof ServerWorld)) {
                 this.level.setSkyFlashTime(2);
             } else if (!this.effectOnly) {
-                double d0 = 3.0D;
                 List<Entity> list = this.level.getEntities(this, new AxisAlignedBB(this.getX() - 3.0D, this.getY() - 3.0D, this.getZ() - 3.0D, this.getX() + 3.0D, this.getY() + 6.0D + 3.0D, this.getZ() + 3.0D), Entity::isAlive);
-
                 for(Entity entity : list) {
                     if (!net.minecraftforge.event.ForgeEventFactory.onEntityStruckByLightning(entity, this)) {
                         float origDamage = this.getDamage();
                         this.setDamage(this.getDamage(entity));
+                        EntityStruckByLightningEvent event = new EntityStruckByLightningEvent(entity, this);
+                        MinecraftForge.EVENT_BUS.post(event);
+                        if(event.isCanceled())
+                            continue;
                         entity.thunderHit((ServerWorld) this.level, this);
                         this.setDamage(origDamage);
                         if(!level.isClientSide && !hitEntities.contains(entity.getId()) && entity instanceof LivingEntity){
