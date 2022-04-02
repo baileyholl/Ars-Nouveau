@@ -22,7 +22,10 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.event.world.BlockEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -43,6 +46,7 @@ public class EffectPlaceBlock extends AbstractEffect {
         FakePlayer fakePlayer = ANFakePlayer.getPlayer((ServerWorld) world);
         for(BlockPos pos1 : posList) {
             BlockPos hitPos = result.isInside() ? pos1 : pos1.relative(result.getDirection());
+
             if(spellContext.castingTile instanceof IPlaceBlockResponder){
                 ItemStack stack = ((IPlaceBlockResponder) spellContext.castingTile).onPlaceBlock();
                 if(stack.isEmpty() || !(stack.getItem() instanceof BlockItem))
@@ -50,7 +54,9 @@ public class EffectPlaceBlock extends AbstractEffect {
 
                 BlockItem item = (BlockItem) stack.getItem();
                 fakePlayer.setItemInHand(Hand.MAIN_HAND, stack);
-
+                if(MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer))){
+                    continue;
+                }
                 // Special offset for touch
                 boolean isTouch = spellContext.getSpell().recipe.get(0) instanceof MethodTouch;
                 BlockState blockTargetted = isTouch ? world.getBlockState(hitPos.relative(result.getDirection().getOpposite())) : world.getBlockState(hitPos.relative(result.getDirection()));
@@ -69,12 +75,18 @@ public class EffectPlaceBlock extends AbstractEffect {
                 if(world.getBlockState(hitPos).getMaterial() != Material.AIR){
                     result = new BlockRayTraceResult(result.getLocation().add(0, 1, 0), Direction.UP, result.getBlockPos(),false);
                 }
+                if(MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer))){
+                    continue;
+                }
                 attemptPlace(world, stack, item, result, fakePlayer);
             }else if(shooter instanceof PlayerEntity){
                 PlayerEntity playerEntity = (PlayerEntity) shooter;
                 NonNullList<ItemStack> list =  playerEntity.inventory.items;
                 if(!world.getBlockState(hitPos).getMaterial().isReplaceable())
                     continue;
+                if(MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer))){
+                    continue;
+                }
                 for(int i = 0; i < 9; i++){
                     ItemStack stack = list.get(i);
                     if(stack.getItem() instanceof BlockItem && world instanceof ServerWorld){
