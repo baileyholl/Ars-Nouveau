@@ -75,7 +75,7 @@ public class EffectPlaceBlock extends AbstractEffect {
                 if(world.getBlockState(hitPos).getMaterial() != Material.AIR){
                     result = new BlockRayTraceResult(result.getLocation().add(0, 1, 0), Direction.UP, result.getBlockPos(),false);
                 }
-                if(MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer))){
+                if(MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), shooter))){
                     continue;
                 }
                 attemptPlace(world, stack, item, result, fakePlayer);
@@ -84,7 +84,7 @@ public class EffectPlaceBlock extends AbstractEffect {
                 NonNullList<ItemStack> list =  playerEntity.inventory.items;
                 if(!world.getBlockState(hitPos).getMaterial().isReplaceable())
                     continue;
-                if(MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer))){
+                if(MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), playerEntity))){
                     continue;
                 }
                 for(int i = 0; i < 9; i++){
