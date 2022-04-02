@@ -25,7 +25,10 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.BlockSnapshot;
 import net.minecraftforge.common.util.FakePlayer;
+import net.minecraftforge.event.world.BlockEvent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,7 +56,9 @@ public class EffectPlaceBlock extends AbstractEffect {
 
                 BlockItem item = (BlockItem) stack.getItem();
                 fakePlayer.setItemInHand(InteractionHand.MAIN_HAND, stack);
-
+                if(MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), fakePlayer))){
+                    continue;
+                }
                 // Special offset for touch
                 boolean isTouch = spellContext.getSpell().recipe.get(0) instanceof MethodTouch;
                 BlockState blockTargetted = isTouch ? world.getBlockState(hitPos.relative(result.getDirection().getOpposite())) : world.getBlockState(hitPos.relative(result.getDirection()));
@@ -72,12 +77,18 @@ public class EffectPlaceBlock extends AbstractEffect {
                 if(world.getBlockState(hitPos).getMaterial() != Material.AIR){
                     result = new BlockHitResult(result.getLocation().add(0, 1, 0), Direction.UP, result.getBlockPos(),false);
                 }
+                if(MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), shooter))){
+                    continue;
+                }
                 attemptPlace(world, stack, item, result, fakePlayer);
             }else if(shooter instanceof Player){
                 Player playerEntity = (Player) shooter;
                 NonNullList<ItemStack> list =  playerEntity.inventory.items;
                 if(!world.getBlockState(hitPos).getMaterial().isReplaceable())
                     continue;
+                if(MinecraftForge.EVENT_BUS.post(new BlockEvent.EntityPlaceEvent(BlockSnapshot.create(world.dimension(), world, pos1), world.getBlockState(pos1), playerEntity))){
+                    continue;
+                }
                 for(int i = 0; i < 9; i++){
                     ItemStack stack = list.get(i);
                     if(stack.getItem() instanceof BlockItem && world instanceof ServerLevel){
