@@ -25,8 +25,6 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 
 import java.util.Arrays;
 
-import static com.hollingsworth.arsnouveau.common.entity.Starbuncle.COLOR;
-
 public class FamiliarStarbuncle extends FamiliarEntity {
 
     public FamiliarStarbuncle(EntityType<? extends PathfinderMob> ent, Level world) {
@@ -85,18 +83,12 @@ public class FamiliarStarbuncle extends FamiliarEntity {
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(COLOR, Starbuncle.COLORS.ORANGE.name());
+        this.entityData.set(COLOR, Starbuncle.COLORS.ORANGE.name());
     }
 
     @Override
     public EntityType<?> getType() {
         return ModEntities.ENTITY_FAMILIAR_STARBUNCLE;
-    }
-
-    @Override
-    public void syncAfterPersistentFamiliarInit() {
-        super.syncAfterPersistentFamiliarInit();
-        this.entityData.set(COLOR, getPersistentFamiliarData().color);
     }
 
     @Override

@@ -806,27 +806,16 @@ public class Starbuncle extends PathfinderMob implements IAnimatable, IDispellab
 //        List<ItemStack> allowedItems = new ArrayList<>();
 //        List<ItemStack> ignoreItems = new ArrayList<>();
 //        Block pathBlock;
-        public String color;
+
 
 
         public StarbuncleData(CompoundTag tag){
             super(tag);
-            this.color = tag.getString("color");
-        }
 
-
-        @Override
-        public void setData(Starbuncle starbuncle){
-            if(color != null)
-                starbuncle.entityData.set(Starbuncle.COLOR, color);
-            if(name != null)
-                starbuncle.setCustomName(name);
         }
 
         public CompoundTag toTag(CompoundTag tag){
             super.toTag(tag);
-            if(color != null)
-                tag.putString("color", color);
             return tag;
         }
     }

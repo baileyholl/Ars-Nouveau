@@ -25,6 +25,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.NetworkHooks;
@@ -42,7 +43,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
 
     public double manaReserveModifier = 0.15;
     private static final EntityDataAccessor<Optional<UUID>> OWNER_UUID = SynchedEntityData.defineId(FamiliarEntity.class, EntityDataSerializers.OPTIONAL_UUID);
-
+    public static final EntityDataAccessor<String> COLOR = SynchedEntityData.defineId(FamiliarEntity.class, EntityDataSerializers.STRING);
     public static Set<FamiliarEntity> FAMILIAR_SET = Collections.newSetFromMap(new WeakHashMap<>());
 
     public boolean terminatedFamiliar;
@@ -151,6 +152,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(OWNER_UUID, Optional.empty());
+        this.entityData.define(COLOR, "");
     }
 
     @Override
@@ -233,6 +235,15 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
             this.terminatedFamiliar = true;
     }
 
+    public String getColor(){
+        return this.entityData.get(COLOR);
+    }
+
+    public void setColor(DyeColor color){
+        this.entityData.set(COLOR, color.getName());
+        this.getPersistentFamiliarData().color = color.getName();
+    }
+
     /**
      * Called after the Familiar is returned and summoned from AbstractFamiliarHolder.
      * @param tag The persistent data tag stored on the player.
@@ -240,6 +251,7 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
     public void setTagData(@Nullable CompoundTag tag){
         this.persistentData = deserializePersistentData(tag != null && tag.contains("familiarData") ? tag.getCompound("familiarData") : new CompoundTag());
         syncAfterPersistentFamiliarInit();
+
     }
 
     /**
@@ -270,5 +282,8 @@ public class FamiliarEntity extends PathfinderMob implements IAnimatable, IFamil
      */
     public void syncAfterPersistentFamiliarInit(){
         setCustomName(persistentData.name);
+        if(persistentData.color != null){
+            setColor(DyeColor.byName(persistentData.color, DyeColor.BLUE));
+        }
     }
 }
